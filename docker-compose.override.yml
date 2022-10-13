@@ -7,22 +7,23 @@ services:
       - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
 
   ui:
+    mem_limit: 1g
+    stdin_open: true
+    volumes:
+      - ./ui:/app:z
+      - /app/.next
+      - /app/node_modules
     build:
       context: ui
       dockerfile: Dockerfile.dev
-       args:
+      args:
         - NEXT_PUBLIC_ENV=dev
         - NEXT_PUBLIC_BASE_URL=http://localhost
         - NEXT_PUBLIC_BASE_HOST=localhost
         - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
-    volumes:
-      - ./ui:/app:z
-      - /app/node_modules
-      - /app/.next
-    mem_limit: 1g
-    stdin_open: true
+
 
   server:
     command: ["yarn", "debug"]
@@ -38,6 +39,8 @@ services:
       - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
       - PILOTAGE_SMTP_HOST=smtp
       - PILOTAGE_SMTP_PORT=1025
+    depends_on:
+      - smtp
 
   mongodb:
     ports:
@@ -47,12 +50,12 @@ services:
 
   smtp:
     image: mailhog/mailhog
-    container_name:  pilotage_smtp
+    container_name: pilotage_smtp
     mem_limit: 128m
     ports:
       - 1025:1025
     networks:
-      -  pilotage_network
+      - pilotage_network
     environment:
       - MH_UI_WEB_PATH=smtp
 
