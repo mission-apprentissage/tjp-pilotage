@@ -1,0 +1,8 @@
+{
+  "root": true,
+  "extends": ["eslint:recommended", "next", "next/core-web-vitals", "plugin:prettier/recommended"],
+  "rules": {
+    "import/no-anonymous-default-export": [0],
+    "no-async-promise-executor": [0]
+  }
+}

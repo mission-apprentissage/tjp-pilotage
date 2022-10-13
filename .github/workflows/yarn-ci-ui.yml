@@ -1,0 +1,32 @@
+# Worflow pour IC
+name: Yarn CI UI
+
+on: [pull_request]
+
+jobs:
+  # Single job
+  ciui:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checks-out the repository
+      - uses: actions/checkout@v2
+
+      # Install dependencies
+      - name: Run Yarn Install
+        run: |
+          yarn --cwd ui install
+
+      # TODO Run tests
+      # - name: Run Tests
+      #   run: |
+      #     yarn --cwd ui test:coverage
+
+      # codecov
+      # - name: Upload coverage to Codecov
+      #   uses: codecov/codecov-action@v2
+      #   with:
+      #     token: ${{ secrets.CODECOV_TOKEN }}
+      #     directory: ./ui/coverage
+      #     name: codecov-ui
+      #     verbose: true
