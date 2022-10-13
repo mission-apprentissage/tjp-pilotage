@@ -1,0 +1,6 @@
+- name: "Deploy branch {{ git_revision }}"
+  shell: "sudo /opt/pilotage/start-app.sh {{ git_revision }}"
+  register: output
+
+- debug:
+    var: output

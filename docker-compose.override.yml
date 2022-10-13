@@ -1,0 +1,68 @@
+# Override containers for local / dev environnement
+version: "2.4"
+services:
+  reverse_proxy:
+    volumes:
+      - pilotage_nginx_data:/data:z
+      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
+
+  ui:
+    build:
+      context: ui
+      dockerfile: Dockerfile.dev
+       args:
+        - NEXT_PUBLIC_ENV=dev
+        - NEXT_PUBLIC_BASE_URL=http://localhost
+        - NEXT_PUBLIC_BASE_HOST=localhost
+        - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_SECRET_KEY=
+        - SKIP_PREFLIGHT_CHECK=true
+    volumes:
+      - ./ui:/app:z
+      - /app/node_modules
+      - /app/.next
+    mem_limit: 1g
+    stdin_open: true
+
+  server:
+    command: ["yarn", "debug"]
+    ports:
+      - "127.0.0.1:9229:9229" # Allows remote debugging
+    volumes:
+      - ./server/src:/app/src:z # Allows source folders to be watched
+      - ./server/config:/app/config:z
+      - pilotage_server_data:/data:z
+    environment:
+      - PILOTAGE_ENV=dev
+      - PILOTAGE_LOG_LEVEL=debug
+      - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
+      - PILOTAGE_SMTP_HOST=smtp
+      - PILOTAGE_SMTP_PORT=1025
+
+  mongodb:
+    ports:
+      - "127.0.0.1:27017:27017"
+    volumes:
+      - pilotage_mongodb_data:/data:z
+
+  smtp:
+    image: mailhog/mailhog
+    container_name:  pilotage_smtp
+    mem_limit: 128m
+    ports:
+      - 1025:1025
+    networks:
+      -  pilotage_network
+    environment:
+      - MH_UI_WEB_PATH=smtp
+
+volumes:
+  pilotage_mongodb_data:
+    driver: local
+    name: pilotage_mongodb_data
+  pilotage_nginx_data:
+    driver: local
+    name: pilotage_nginx_data
+  pilotage_server_data:
+    driver: local
+    name: pilotage_server_data

@@ -1,0 +1,8 @@
+- name: Add server jobs script. Creates an entry "0 1 * * bash /opt/pilotage/server-jobs.sh >> /var/log/server-jobs.log"
+  cron:
+    name: "server jobs"
+    minute: "30"
+    hour: "*"
+    weekday: "*"
+    job: "bash /opt/pilotage/server-jobs.sh >> /var/log/server-jobs.log"
+

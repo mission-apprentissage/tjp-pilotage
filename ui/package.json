@@ -1,0 +1,43 @@
+{
+  "name": "tjp-pilotage-ui",
+  "description": "[MNA] pilotage ui",
+  "repository": "https://github.com/mission-apprentissage/tjp-pilotage.git",
+  "version": "0.1.0",
+  "author": "MNA",
+  "license": "MIT",
+  "private": true,
+  "scripts": {
+    "docker-dev": "yarn install && yarn dev",
+    "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
+    "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
+    "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
+    "lint": "next lint",
+    "test": "jest --watch",
+    "test:ci": "jest --ci",
+    "test:coverage": "jest --coverage"
+  },
+  "dependencies": {
+    "next": "12.1.5",
+    "react": "18.1.0",
+    "react-dom": "18.1.0"
+  },
+  "devDependencies": {
+    "@testing-library/dom": "8.11.1",
+    "@testing-library/jest-dom": "5.16.4",
+    "@testing-library/react": "13.1.1",
+    "@testing-library/react-hooks": "7.0.2",
+    "@testing-library/user-event": "13.3.0",
+    "eslint": "8.14.0",
+    "eslint-config-next": "12.1.5",
+    "eslint-config-prettier": "8.5.0",
+    "eslint-plugin-prettier": "4.0.0",
+    "jest": "28.0.3",
+    "jest-environment-jsdom": "28.0.2",
+    "prettier": "2.5.1"
+  },
+  "prettier": {
+    "printWidth": 120,
+    "bracketSpacing": true,
+    "trailingComma": "es5"
+  }
+}
