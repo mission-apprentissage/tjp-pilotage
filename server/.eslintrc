@@ -6,7 +6,8 @@
     "mocha/no-skipped-tests": "error",
     "mocha/no-exclusive-tests": "error",
     "no-nonoctal-decimal-escape": 0,
-    "no-unsafe-optional-chaining": 0
+    "no-unsafe-optional-chaining": 0,
+    "node/no-unsupported-features/es-syntax": 0
   },
   "overrides": [
     {
@@ -24,7 +25,7 @@
     "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 2020
-    // "sourceType": "module"
+    "ecmaVersion": 2020,
+    "sourceType": "module"
   }
 }
