@@ -9,7 +9,7 @@
       apt:
         name: nfs-client
 
-   - name: Mount backup NFS partition
+    - name: Mount backup NFS partition
       when: backup_cron|bool == true
       ansible.posix.mount:
         src: "10.16.100.163:zpool-128310/{{backup_partition_name}}"
