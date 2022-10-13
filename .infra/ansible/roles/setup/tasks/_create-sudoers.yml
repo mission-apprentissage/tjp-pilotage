@@ -6,7 +6,7 @@
 - name: "Création utilisateur {{ habilitation.username }}"
   user:
     name: "{{ habilitation.username }}"
-    password: "{{ vault[env_type].PILOTAGE_HABILITATION_PASSWORD }}"
+    password: "{{ vault.DEFAULT_SUDOERS_PASSWORD }}"
     update_password: on_create
     shell: /bin/bash
     groups: sudo,mna
@@ -25,4 +25,3 @@
   loop: "{{ habilitation.authorized_keys }}"
   loop_control:
     loop_var: key
-
