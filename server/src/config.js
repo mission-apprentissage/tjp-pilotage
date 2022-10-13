@@ -10,10 +10,7 @@ const config = {
   },
   slackWebhookUrl: env.get("PILOTAGE_SLACK_WEBHOOK_URL").asString(),
   mongodb: {
-    uri: env
-      .get("PILOTAGE_MONGODB_URI")
-      .default("mongodb://127.0.0.1:27017/referentiel?retryWrites=true&w=majority")
-      .asString(),
+    uri: env.get("PILOTAGE_MONGODB_URI").asString(),
   },
 };
 
