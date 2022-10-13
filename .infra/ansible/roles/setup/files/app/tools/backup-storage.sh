@@ -11,7 +11,7 @@ function backup() {
   echo "Creating backup..."
   mkdir -p "${BACKUP_LOCAL_DIR}"
   # bash /opt/pilotage/server-yarn.sh zipStorage | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
-  docker exec pilotage_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault.PILOTAGE_MONGODB_BACKUP_PASSWORD }}" \
+  docker exec pilotage_mongodb bash -c "mongodump --gzip --archive -u backup -p {{ vault[env_type].PILOTAGE_MONGODB_BACKUP_PASSWORD }}" \
   | bash "${SCRIPT_DIR}/gpg/encrypt.sh" >"${BACKUP_FILE}"
 }
 
