@@ -1,9 +1,15 @@
 /* eslint-disable */
 
+db.getSiblingDB("admin").createRole({
+  role: "app",
+  privileges: [{ resource: { db: "{{ vault.DB_NAME }}" }, actions: ["colMod"] }],
+  roles: [{ role: "readWrite", db: "{{ vault.DB_NAME }}" }],
+});
+
 db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
   user: "{{ vault[env_type].PILOTAGE_MONGODB_USER }}",
   pwd: "{{ vault[env_type].PILOTAGE_MONGODB_USER_PASSWORD }}",
-  roles: [{ role: "readWrite", db: "{{ vault.DB_NAME }}" }],
+  roles: [{ role: "app", db: "{{ vault.DB_NAME }}" }],
 });
 
 db.getSiblingDB("{{ vault.DB_SIBLING_NAME }}").createUser({
