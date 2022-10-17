@@ -27,7 +27,7 @@ export async function connectToMongodb(uri = config.mongodb.uri) {
     useNewUrlParser: true,
     useUnifiedTopology: true,
     // useFindAndModify: false,
-    keepAlive: true,
+    // keepAlive: true,
   });
 
   await client.connect();
