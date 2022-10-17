@@ -2,7 +2,7 @@
 
 db.getSiblingDB("admin").createRole({
   role: "app",
-  privileges: [{ resource: { db: "{{ vault.DB_NAME }}" }, actions: ["colMod"] }],
+  privileges: [{ resource: { db: "{{ vault.DB_NAME }}" }, actions: ["collMod"] }],
   roles: [{ role: "readWrite", db: "{{ vault.DB_NAME }}" }],
 });
 
