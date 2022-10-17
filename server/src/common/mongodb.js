@@ -26,8 +26,6 @@ export async function connectToMongodb(uri = config.mongodb.uri) {
   let client = await new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
-    // useFindAndModify: false,
-    // keepAlive: true,
   });
 
   await client.connect();
