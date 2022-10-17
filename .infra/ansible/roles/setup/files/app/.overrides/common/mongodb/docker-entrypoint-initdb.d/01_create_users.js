@@ -1,6 +1,6 @@
 /* eslint-disable */
 
-db.createRole({
+db.getSiblingDB("{{ vault.DB_NAME }}").createRole({
   role: "app",
   privileges: [{ resource: { db: "{{ vault.DB_NAME }}", collection: "" }, actions: ["collMod"] }],
   roles: [{ role: "readWrite", db: "{{ vault.DB_NAME }}" }],
