@@ -2,9 +2,8 @@ import { MongoClient } from "mongodb";
 import { writeData } from "oleoduc";
 import config from "../config.js";
 import { getCollectionDescriptors } from "./collections/collections.js";
-import { getLoggerWithContext } from "./logger.js";
 
-const logger = getLoggerWithContext("db");
+import { logger } from "./logger.js";
 
 let clientHolder;
 function ensureInitialization() {
@@ -27,6 +26,8 @@ export async function connectToMongodb(uri = config.mongodb.uri) {
   let client = await new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
+    useFindAndModify: false,
+    keepAlive: true,
   });
 
   await client.connect();
