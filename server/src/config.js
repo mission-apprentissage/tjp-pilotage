@@ -12,6 +12,14 @@ const config = {
   mongodb: {
     uri: env.get("PILOTAGE_MONGODB_URI").asString(),
   },
+  smtp: {
+    host: env.get("PILOTAGE_SMTP_HOST").asString(),
+    port: env.get("PILOTAGE_SMTP_PORT").asString(),
+    auth: {
+      user: env.get("PILOTAGE_SMTP_AUTH_USER").asString(),
+      pass: env.get("PILOTAGE_SMTP_AUTH_PASS").asString(),
+    },
+  },
 };
 
 export default config;
