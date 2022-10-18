@@ -9,7 +9,8 @@ import hello from "./routes/helloRoutes.js";
 import { dbCollection } from "../common/mongodb.js";
 import { packageJson } from "../common/esm.js";
 
-export default async () => {
+// eslint-disable-next-line no-unused-vars
+export default async (services) => {
   const app = express();
 
   app.use(bodyParser.json());
