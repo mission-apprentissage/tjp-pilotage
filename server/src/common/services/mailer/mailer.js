@@ -2,7 +2,7 @@ import nodemailer from "nodemailer";
 import { omit } from "lodash-es";
 import { htmlToText } from "nodemailer-html-to-text";
 import config from "../../../config.js";
-import { getPublicUrl, generateHtml } from "../../utils/emailsUtils";
+import { getPublicUrl, generateHtml } from "../../utils/emailsUtils.js";
 
 function createTransporter(smtp) {
   const needsAuthentication = !!smtp.auth.user;

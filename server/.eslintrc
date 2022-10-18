@@ -7,7 +7,8 @@
     "mocha/no-exclusive-tests": "error",
     "no-nonoctal-decimal-escape": 0,
     "no-unsafe-optional-chaining": 0,
-    "node/exports-style": ["error", "exports"]
+    "node/exports-style": ["error", "exports"],
+    "node/file-extension-in-import": ["error", "always"]
   },
   "overrides": [
     {
@@ -21,10 +22,10 @@
   ],
   "env": {
     "node": true,
-    "es6": true,
+    "es2022": true,
     "mocha": true
   },
   "parserOptions": {
-    "ecmaVersion": 2020
+    "ecmaVersion": 2022
   }
 }
