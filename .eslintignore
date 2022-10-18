@@ -4,3 +4,4 @@ dist
 .data
 build
 .infra
+release.config.js
