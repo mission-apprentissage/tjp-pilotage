@@ -22,7 +22,6 @@ function sendLogsToMongodb() {
 }
 
 export async function connectToMongodb(uri = config.mongodb.uri) {
-  logger.info(`MongoDB: Connection to ${uri}`);
   let client = await new MongoClient(uri, {
     useNewUrlParser: true,
     useUnifiedTopology: true,
