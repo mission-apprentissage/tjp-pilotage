@@ -1,4 +1,4 @@
-import "dotenv/config";
+import "dotenv/config.js";
 import { program as cli } from "commander";
 import { runScript } from "./common/runScript.js";
 import { migrate } from "./jobs/migrate.js";

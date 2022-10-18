@@ -21,9 +21,8 @@ const contentSecurityPolicy = `
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
-  experimental: {
-    outputStandalone: true,
-  },
+  swcMinify: true,
+  output: "standalone",
   async headers() {
     return [
       {

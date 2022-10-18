@@ -1,7 +1,9 @@
-import { createMailer } from "./mailer/mailer";
+import { createMailer } from "./mailer/mailer.js";
 
-export function async(options = {}) {
+const createServices = async (options = {}) => {
   return {
     mailer: options.mailer || createMailer(),
   };
-}
+};
+
+export default createServices;

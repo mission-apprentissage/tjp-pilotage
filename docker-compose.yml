@@ -58,7 +58,7 @@ services:
       - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
 
   mongodb:
-    image: mongo:5.0.6-focal
+    image: mongo:6.0.2-focal
     container_name: pilotage_mongodb
     mem_limit: 2g
     restart: unless-stopped
