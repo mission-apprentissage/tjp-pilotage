@@ -7,7 +7,6 @@
   "author": "MNA",
   "license": "MIT",
   "main": "src/index.js",
-  "type": "module",
   "scripts": {
     "start": "nodemon --ignore tests/ src/index.js",
     "debug": "nodemon --inspect=0.0.0.0 --signal SIGINT --ignore tests/ src/index.js",
@@ -47,6 +46,7 @@
     "rate-limiter-flexible": "2.3.6",
     "sha512crypt-node": "0.1.0"
   },
+  "type": "module",
   "engines": {
     "node": ">=16.0.0"
   },
