@@ -48,6 +48,11 @@ services:
     volumes:
       - pilotage_mongodb_data:/data:z
 
+  clamav:
+    image: clamav/clamav
+    ports:
+      - 3310:3310
+
   smtp:
     image: mailhog/mailhog
     container_name: pilotage_smtp

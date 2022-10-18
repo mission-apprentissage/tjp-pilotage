@@ -20,6 +20,9 @@ const config = {
       pass: env.get("PILOTAGE_SMTP_AUTH_PASS").asString(),
     },
   },
+  clamav: {
+    uri: env.get("PILOTAGE_CLAMAV_URI").default("127.0.0.1:3310").asString(),
+  },
 };
 
 export default config;

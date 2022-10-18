@@ -53,9 +53,11 @@ services:
       - pilotage_network
     depends_on:
       - mongodb
+      - clamav
     environment:
       - PILOTAGE_MONGODB_URI=mongodb://mongodb:27017/pilotage?retryWrites=true&w=majority
       - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
+      - PILOTAGE_CLAMAV_URI=clamav:3310
 
   mongodb:
     image: mongo:6.0.2-focal
@@ -64,6 +66,19 @@ services:
     restart: unless-stopped
     networks:
       - pilotage_network
+
+  clamav:
+    image: clamav/clamav:0.105.1
+    container_name: pilotage_clamav
+    mem_limit: 3g
+    restart: unless-stopped
+    networks:
+      - pilotage_network
+    healthcheck:
+      test: [ "CMD", "/usr/local/bin/clamdcheck.sh" ]
+      interval: 60s
+      retries: 3
+      start_period: 120s
 
 networks:
   pilotage_network:
