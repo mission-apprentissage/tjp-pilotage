@@ -1,8 +1,32 @@
 import env from "env-var";
 
 const config = {
+  appName: env.get("PILOTAGE_NAME").default("Pilotage App").asString(),
   env: env.get("PILOTAGE_ENV").default("local").asString(),
   publicUrl: env.get("PILOTAGE_PUBLIC_URL").default("http://localhost").asString(),
+  auth: {
+    passwordHashRounds: env.get("PILOTAGE_AUTH_PASSWORD_HASH_ROUNDS").asString(),
+    user: {
+      jwtSecret: env.get("PILOTAGE_AUTH_USER_JWT_SECRET").asString(),
+      expiresIn: "24h",
+    },
+    activation: {
+      jwtSecret: env.get("PILOTAGE_AUTH_ACTIVATION_JWT_SECRET").asString(),
+      expiresIn: "96h",
+    },
+    actionToken: {
+      jwtSecret: env.get("PILOTAGE__AUTH_ACTION_TOKEN_JWT_SECRET").asString(),
+      expiresIn: "90 days",
+    },
+    resetPasswordToken: {
+      jwtSecret: env.get("PILOTAGE_AUTH_PASSWORD_JWT_SECRET").asString(),
+      expiresIn: "1h",
+    },
+    apiToken: {
+      jwtSecret: env.get("PILOTAGE_AUTH_API_TOKEN_JWT_SECRET").asString(),
+      expiresIn: "24h",
+    },
+  },
   log: {
     level: env.get("PILOTAGE_LOG_LEVEL").default("info").asString(),
     format: env.get("PILOTAGE_LOG_FORMAT").default("pretty").asString(),
