@@ -1,7 +1,7 @@
 import "dotenv/config.js";
 import server from "./http/server.js";
 import { logger } from "./common/logger.js";
-import { connectToMongodb, configureValidation } from "./common/mongodb.js";
+import { connectToMongodb, configureValidation, configureIndexes } from "./common/mongodb.js";
 import createServices from "./common/services/services.js";
 
 process.on("unhandledRejection", (e) => logger.error(e, "An unexpected error occurred"));
@@ -9,6 +9,7 @@ process.on("uncaughtException", (e) => logger.error(e, "An unexpected error occu
 
 (async function () {
   await connectToMongodb();
+  await configureIndexes();
   await configureValidation();
   const services = await createServices();
 
