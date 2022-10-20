@@ -1,4 +1,4 @@
-import { defaultUser, validationUser } from "../collections/users.js";
+import { defaultValuesUser, validateUser } from "../collections/users.js";
 import { dbCollection } from "../mongodb.js";
 
 /**
@@ -8,10 +8,11 @@ import { dbCollection } from "../mongodb.js";
  */
 export const createUser = async (userProps) => {
   const { insertedId } = await dbCollection("users").insertOne(
-    validationUser({
-      ...defaultUser(),
+    validateUser({
+      ...defaultValuesUser(),
       ...userProps,
     })
   );
+
   console.log(insertedId);
 };
