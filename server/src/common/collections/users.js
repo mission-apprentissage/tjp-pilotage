@@ -38,7 +38,7 @@ export function schema() {
 }
 
 // Default value
-export function defaultUser() {
+export function defaultValuesUser() {
   return {
     account_status: "FORCE_RESET_PASSWORD",
     created_at: new Date(),
@@ -46,7 +46,7 @@ export function defaultUser() {
 }
 
 // Extra validation
-export function validationUser(props) {
+export function validateUser(props) {
   return schemaValidation(props, schema(), [
     {
       name: "password",

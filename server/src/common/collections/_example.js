@@ -30,7 +30,7 @@ export function schema() {
 }
 
 // Default value
-export function defaultEntity() {
+export function defaultValuesEntity() {
   return {
     keyEnum: "FORCE_RESET_PASSWORD",
     created_at: new Date(),
@@ -38,7 +38,8 @@ export function defaultEntity() {
 }
 
 // Extra validation
-export function validationEntity(props, schema) {
+export function validateEntity(props) {
+  const schema = schema();
   if (props.draft === false) {
     schema.required = [...schema.required, "password"];
   }
