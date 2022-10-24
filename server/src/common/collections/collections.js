@@ -7,14 +7,14 @@ export function getCollectionDescriptors() {
   return [logsDescriptor, migrationsDescriptor, usersDescriptor];
 }
 
-export function migrations() {
+export function migrationsDb() {
   return dbCollection(migrationsDescriptor.name);
 }
 
-export function logs() {
+export function logsDb() {
   return dbCollection(logsDescriptor.name);
 }
 
-export function users() {
+export function usersDb() {
   return dbCollection(usersDescriptor.name);
 }

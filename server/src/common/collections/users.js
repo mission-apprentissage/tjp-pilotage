@@ -1,3 +1,4 @@
+import Joi from "joi";
 import { integer, object, objectId, string, boolean, arrayOf, date } from "./jsonSchema/jsonSchemaTypes.js";
 import { schemaValidation } from "../utils/schemaUtils.js";
 import { siretSchema, passwordSchema } from "../utils/validationUtils.js";
@@ -24,13 +25,17 @@ export function schema() {
         enum: ["FORCE_RESET_PASSWORD", "FORCE_COMPLETE_PROFILE", "CONFIRMED"],
       }),
       has_accept_cgu_version: string({ description: "Version des cgu accepté par l'utilisateur" }),
-      orign_register: string({ description: "Origine de l'inscription" }),
-      isAdmin: boolean({ description: "true si l'utilisateur est administrateur" }),
-      roles: arrayOf(objectId(), { description: "Roles de l'utilisateur" }),
-      acl: arrayOf(string(), { description: "Access control level array" }),
+      orign_register: string({ description: "Origine de l'inscription", enum: ["ORIGIN"] }),
+      is_admin: boolean({ description: "true si l'utilisateur est administrateur" }),
+      type: string({
+        description: "Type de l'utilisateur",
+        enum: ["USER", "OF", "ENTREPRISE"],
+      }),
+      custom_acl: arrayOf(string(), { description: "Custom Access control level array" }),
       created_at: date({ description: "Date de création du compte" }),
       last_connection: date({ description: "Date de dernière connexion" }),
       invalided_token: boolean({ description: "true si besoin de reset le token" }),
+      password_updated_at: date({ description: "Date de dernière mise à jour mot de passe" }),
       v: integer(),
     },
     { required: ["email"], additionalProperties: true }
@@ -41,6 +46,13 @@ export function schema() {
 export function defaultValuesUser() {
   return {
     account_status: "FORCE_RESET_PASSWORD",
+    orign_register: "ORIGIN",
+    type: "USER",
+    has_accept_cgu_version: "",
+    is_admin: false,
+    custom_acl: [],
+    invalided_token: false,
+    password_updated_at: new Date(),
     created_at: new Date(),
   };
 }
@@ -48,6 +60,10 @@ export function defaultValuesUser() {
 // Extra validation
 export function validateUser(props) {
   return schemaValidation(props, schema(), [
+    {
+      name: "email",
+      base: Joi.string().email(),
+    },
     {
       name: "password",
       base: passwordSchema(),

@@ -21,7 +21,7 @@ export default () => {
         }
       );
 
-      await createUser({ email: "h@ck.me", password: "SuperGRAND8LONGPASSWORD!", siret: "98765432400019" });
+      await createUser({ email: "h+re@ck.me", password: "SuperGRANDPiPO8LONGPASSWORD!" });
 
       logger.info("Hello :", { messages });
 
