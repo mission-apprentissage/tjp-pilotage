@@ -48,6 +48,13 @@ const config = {
   clamav: {
     uri: env.get("PILOTAGE_CLAMAV_URI").default("127.0.0.1:3310").asString(),
   },
+  ovh: {
+    storage: {
+      encryptionKey: env.get("PILOTAGE_OVH_STORAGE_ENCRYPTION_KEY").asString(),
+      uri: env.get("PILOTAGE_OVH_STORAGE_URI").asString(),
+      storageName: env.get("PILOTAGE_OVH_STORAGE_NAME").default("mna-pilotage").asString(),
+    },
+  },
 };
 
 export default config;
