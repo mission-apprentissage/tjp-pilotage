@@ -31,7 +31,7 @@ export default async (services) => {
   app.use("/api/v1/auth", auth(services));
 
   // private access
-  app.use("/api/v1/authentified", checkJwtToken, authentified());
+  app.use("/api/v1/authentified", checkJwtToken, authentified()); // TODO Rename route
 
   app.get(
     "/api",
