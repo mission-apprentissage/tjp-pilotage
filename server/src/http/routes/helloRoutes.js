@@ -1,7 +1,7 @@
 import express from "express";
 import { logger } from "../../common/logger.js";
 import { tryCatch } from "../middlewares/tryCatchMiddleware.js";
-import { arrayOf, validate } from "../utils/validators.js";
+import { arrayOf, validate } from "../../common/utils/validationUtils.js";
 import Joi from "joi";
 import { createUser } from "../../common/components/usersComponent.js";
 
