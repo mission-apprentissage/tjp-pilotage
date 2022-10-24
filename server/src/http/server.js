@@ -6,7 +6,7 @@ import { logMiddleware } from "./middlewares/logMiddleware.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { tryCatch } from "./middlewares/tryCatchMiddleware.js";
 import { corsMiddleware } from "./middlewares/corsMiddleware.js";
-import { dbCollection } from "../common/mongodb.js";
+import { dbCollection } from "../common/mongodbClient.js";
 import { packageJson } from "../common/esm.js";
 
 import passport from "passport";

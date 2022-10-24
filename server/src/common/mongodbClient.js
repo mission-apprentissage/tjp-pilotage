@@ -6,6 +6,10 @@ import { getCollectionDescriptors } from "./collections/collections.js";
 import { logger } from "./logger.js";
 
 let clientHolder;
+
+/**
+ * Vérification de la connexion mongodb
+ */
 function ensureInitialization() {
   if (!clientHolder) {
     throw new Error("Database connection does not exist. Please call connectToMongodb before.");
@@ -21,6 +25,11 @@ function sendLogsToMongodb() {
   });
 }
 
+/**
+ * Connexion à la MongoDb
+ * @param {*} uri
+ * @returns
+ */
 export async function connectToMongodb(uri = config.mongodb.uri) {
   let client = await new MongoClient(uri, {
     useNewUrlParser: true,
@@ -37,21 +46,40 @@ export async function connectToMongodb(uri = config.mongodb.uri) {
   return client;
 }
 
+/**
+ * Fermeture de la connexion mongodb
+ * @returns
+ */
 export function closeMongodbConnection() {
   ensureInitialization();
   return clientHolder.close();
 }
 
+/**
+ * Récupère la db depuis la connexion mongodb
+ * @returns
+ */
 export function getDatabase() {
   ensureInitialization();
   return clientHolder.db();
 }
 
+/**
+ * Retourne la collection avec le nom spécifié
+ * @param {*} name
+ * @returns
+ */
 export function dbCollection(name) {
   ensureInitialization();
   return clientHolder.db().collection(name);
 }
 
+///////
+
+/**
+ * Création d'une collection si elle n'existe pas
+ * @param {*} name
+ */
 export async function createCollectionIfNeeded(name) {
   let db = getDatabase();
   let collections = await db.listCollections().toArray();
@@ -60,6 +88,15 @@ export async function createCollectionIfNeeded(name) {
     await db.createCollection(name).catch(() => {});
   }
 }
+
+/**
+ * Clear de toutes les collections
+ * @returns
+ */
+export const clearAllCollections = async () => {
+  let collections = await getDatabase().collections();
+  return Promise.all(collections.map((c) => c.deleteMany({})));
+};
 
 export function clearCollection(name) {
   logger.warn(`Suppression des données de la collection ${name}...`);

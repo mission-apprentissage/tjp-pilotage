@@ -1,4 +1,4 @@
-import { configureIndexes, configureValidation, dbCollection } from "../common/mongodb.js";
+import { configureIndexes, configureValidation, dbCollection } from "../common/mongodbClient.js";
 
 const VERSION = 0;
 

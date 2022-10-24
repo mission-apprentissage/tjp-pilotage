@@ -27,6 +27,7 @@ const config = {
       expiresIn: "24h",
     },
   },
+  outputDir: env.get("PILOTAGE_OUTPUT_DIR").default(".local/output").asString(),
   log: {
     level: env.get("PILOTAGE_LOG_LEVEL").default("info").asString(),
     format: env.get("PILOTAGE_LOG_FORMAT").default("pretty").asString(),
