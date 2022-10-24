@@ -1,10 +1,11 @@
 import * as logsDescriptor from "./logs.js";
 import * as migrationsDescriptor from "./migrations.js";
 import * as usersDescriptor from "./users.js";
+import * as jwtSessionsDescriptor from "./jwtSessions.js";
 import { dbCollection } from "../mongodb.js";
 
 export function getCollectionDescriptors() {
-  return [logsDescriptor, migrationsDescriptor, usersDescriptor];
+  return [logsDescriptor, migrationsDescriptor, usersDescriptor, jwtSessionsDescriptor];
 }
 
 export function migrationsDb() {
@@ -17,4 +18,8 @@ export function logsDb() {
 
 export function usersDb() {
   return dbCollection(usersDescriptor.name);
+}
+
+export function jwtSessionsDb() {
+  return dbCollection(jwtSessionsDescriptor.name);
 }

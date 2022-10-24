@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
 import config from "../../config.js";
-import { pick } from "lodash";
+import { pick } from "lodash-es";
 
 const createToken = (type, subject = null, options = {}) => {
   const defaults = config.auth[type];

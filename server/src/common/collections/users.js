@@ -34,6 +34,7 @@ export function schema() {
       custom_acl: arrayOf(string(), { description: "Custom Access control level array" }),
       created_at: date({ description: "Date de création du compte" }),
       last_connection: date({ description: "Date de dernière connexion" }),
+      connection_history: arrayOf(date(), { description: "Historique des dates de connexion" }),
       invalided_token: boolean({ description: "true si besoin de reset le token" }),
       password_updated_at: date({ description: "Date de dernière mise à jour mot de passe" }),
       v: integer(),
@@ -53,6 +54,7 @@ export function defaultValuesUser() {
     custom_acl: [],
     invalided_token: false,
     password_updated_at: new Date(),
+    connection_history: [],
     created_at: new Date(),
   };
 }

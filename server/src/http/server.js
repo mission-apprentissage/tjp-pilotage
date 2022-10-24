@@ -5,17 +5,27 @@ import { logger } from "../common/logger.js";
 import { logMiddleware } from "./middlewares/logMiddleware.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { tryCatch } from "./middlewares/tryCatchMiddleware.js";
-import hello from "./routes/helloRoutes.js";
+import { corsMiddleware } from "./middlewares/corsMiddleware.js";
 import { dbCollection } from "../common/mongodb.js";
 import { packageJson } from "../common/esm.js";
 
-// TODO
-// eslint-disable-next-line no-unused-vars
+import passport from "passport";
+import cookieParser from "cookie-parser";
+
+import auth from "./routes/auth.js";
+import hello from "./routes/helloRoutes.js";
+
 export default async (services) => {
   const app = express();
 
   app.use(bodyParser.json());
+  app.use(corsMiddleware());
   app.use(logMiddleware());
+  app.use(cookieParser());
+  app.use(passport.initialize());
+
+  // public access
+  app.use("/api/v1/auth", auth(services));
   app.use(hello());
 
   app.get(
