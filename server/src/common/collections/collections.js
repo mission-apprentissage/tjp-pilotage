@@ -2,7 +2,7 @@ import * as logsDescriptor from "./logs.js";
 import * as migrationsDescriptor from "./migrations.js";
 import * as usersDescriptor from "./users.js";
 import * as jwtSessionsDescriptor from "./jwtSessions.js";
-import { dbCollection } from "../mongodb.js";
+import { dbCollection } from "../mongodbClient.js";
 
 export function getCollectionDescriptors() {
   return [logsDescriptor, migrationsDescriptor, usersDescriptor, jwtSessionsDescriptor];
