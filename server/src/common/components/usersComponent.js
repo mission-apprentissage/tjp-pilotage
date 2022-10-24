@@ -1,3 +1,4 @@
+import { pick } from "lodash-es";
 import { usersDb } from "../collections/collections.js";
 import { defaultValuesUser, validateUser } from "../collections/users.js";
 import { hash as hashUtil, compare, isTooWeak } from "../utils/passwordUtils.js";
@@ -152,6 +153,37 @@ export const updateUser = async (_id, data) => {
   );
 
   return updated;
+};
+
+export const structureUser = async (user) => {
+  const permissions = pick(user, ["is_admin"]);
+
+  return {
+    permissions,
+    email: user.email,
+    civility: user.civility,
+    nom: user.nom,
+    prenom: user.prenom,
+    telephone: user.telephone,
+    siret: user.siret,
+    account_status: user.account_status,
+    type: user.type,
+    custom_acl: user.custom_acl,
+    orign_register: user.orign_register,
+    has_accept_cgu_version: user.has_accept_cgu_version,
+  };
+};
+
+export const loggedInUser = async (email) => {
+  await usersDb().findOneAndUpdate(
+    { email },
+    {
+      $set: {
+        last_connection: new Date(),
+      },
+      $push: { connection_history: new Date() },
+    }
+  );
 };
 
 /**
