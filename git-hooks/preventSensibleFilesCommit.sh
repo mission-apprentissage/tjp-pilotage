@@ -4,7 +4,7 @@
 
 sensible_files_pattern="\.(csv|xls|xls(x?)|json|env)$"
 exception="(package.json|custom-environment-variables.json"
-exception="$exception|manifest.json"
+exception="$exception|manifest.json|settings.json"
 exception="$exception|sample.json"
 exception="$exception|eslintrc.json|app.json|jsconfig.json"
 exception="$exception)$"
