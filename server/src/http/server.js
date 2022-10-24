@@ -6,17 +6,20 @@ import { logMiddleware } from "./middlewares/logMiddleware.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { tryCatch } from "./middlewares/tryCatchMiddleware.js";
 import { corsMiddleware } from "./middlewares/corsMiddleware.js";
+import { authMiddleware } from "./middlewares/authMiddleware.js";
 import { dbCollection } from "../common/mongodbClient.js";
 import { packageJson } from "../common/esm.js";
 
 import passport from "passport";
 import cookieParser from "cookie-parser";
 
-import auth from "./routes/auth.js";
-import hello from "./routes/helloRoutes.js";
+import auth from "./routes/auth.route.js";
+import authentified from "./routes/authentified.route.js";
 
 export default async (services) => {
   const app = express();
+
+  const checkJwtToken = authMiddleware();
 
   app.use(bodyParser.json());
   app.use(corsMiddleware());
@@ -26,7 +29,9 @@ export default async (services) => {
 
   // public access
   app.use("/api/v1/auth", auth(services));
-  app.use(hello());
+
+  // private access
+  app.use("/api/v1/authentified", checkJwtToken, authentified());
 
   app.get(
     "/api",

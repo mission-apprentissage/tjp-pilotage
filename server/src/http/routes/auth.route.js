@@ -14,6 +14,7 @@ export default () => {
   router.post(
     "/login",
     tryCatch(async (req, res) => {
+      // TODO Joi verif
       const { email, password } = req.body;
       const user = await getUser(email.toLowerCase());
       if (!user) {
