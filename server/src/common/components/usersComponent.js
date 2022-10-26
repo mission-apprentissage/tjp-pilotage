@@ -186,6 +186,25 @@ export const loggedInUser = async (email) => {
   );
 };
 
+export const activateUser = async (email) => {
+  const user = await usersDb().findOne({ email });
+  if (!user) {
+    throw new Error(`Unable to find user`);
+  }
+
+  const updated = await usersDb().findOneAndUpdate(
+    { _id: user._id },
+    {
+      $set: {
+        account_status: "FORCE_RESET_PASSWORD",
+      },
+    },
+    { returnDocument: "after" }
+  );
+
+  return updated;
+};
+
 /**
  * Méthode de mise à jour du mot de passe d'un user
  * @param {*} _id

@@ -1,5 +1,5 @@
-import uuid from "uuid";
-import { createMailer } from "../../src/common/services/mailer/mailer.js";
+import { v4 as uuidv4 } from "uuid";
+import { createMailerService } from "../../src/common/services/mailer.js";
 
 function stubbedTransporter(options = {}) {
   const calls = options.calls || [];
@@ -11,12 +11,12 @@ function stubbedTransporter(options = {}) {
       }
 
       calls.push(args[0]);
-      return Promise.resolve({ messageId: uuid.v4() });
+      return Promise.resolve({ messageId: uuidv4() });
     },
   };
 }
 
 export function createFakeMailer(options) {
   const transporter = stubbedTransporter(options);
-  return createMailer(transporter);
+  return createMailerService(transporter);
 }
