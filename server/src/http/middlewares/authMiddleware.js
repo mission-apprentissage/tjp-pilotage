@@ -5,12 +5,13 @@ import { compose } from "compose-middleware";
 
 import { getUser, updateUser, structureUser } from "../../common/components/usersComponent.js";
 import * as sessions from "../../common/components/sessionsComponent.js";
+import { COOKIE_NAME } from "../../common/constants/cookieName.js";
 
 const cookieExtractor = (req) => {
   let jwt = null;
 
   if (req && req.cookies) {
-    jwt = req.cookies[`tjp-pilotage-${config.env}-jwt`];
+    jwt = req.cookies[COOKIE_NAME];
   }
 
   return jwt;
@@ -51,13 +52,13 @@ export const authMiddleware = () => {
   return compose([
     passport.authenticate("jwt", { session: false }),
     async (req, res, next) => {
-      const activeSession = await sessions.findJwt(req.cookies[`tjp-pilotage-${config.env}-jwt`]);
+      const activeSession = await sessions.findJwt(req.cookies[COOKIE_NAME]);
       if (!activeSession) {
         return res.status(400).json({ error: "Accès non autorisé" });
       }
       if (req.user.invalided_token) {
-        await sessions.removeJwt(req.cookies[`tjp-pilotage-${config.env}-jwt`]);
-        return res.clearCookie(`tjp-pilotage-${config.env}-jwt`).status(401).json({
+        await sessions.removeJwt(req.cookies[COOKIE_NAME]);
+        return res.clearCookie(COOKIE_NAME).status(401).json({
           error: "Invalid jwt",
         });
       }

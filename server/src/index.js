@@ -2,7 +2,7 @@ import "dotenv/config.js";
 import server from "./http/server.js";
 import { logger } from "./common/logger.js";
 import { connectToMongodb, configureValidation, configureIndexes } from "./common/mongodbClient.js";
-import createServices from "./common/services/services.js";
+import createServices from "./services.js";
 
 process.on("unhandledRejection", (e) => logger.error(e, "An unexpected error occurred"));
 process.on("uncaughtException", (e) => logger.error(e, "An unexpected error occurred"));

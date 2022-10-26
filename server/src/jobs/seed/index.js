@@ -7,7 +7,8 @@ const createUsers = async ({ adminEmail }) => {
     {
       nom: "Admin",
       prenom: "test",
-      permissions: { isAdmin: true },
+      permissions: { is_admin: true },
+      account_status: "FORCE_RESET_PASSWORD",
     }
   );
   logger.info(`User ${adminEmail} with password 'Secret!Password1' and admin is successfully created `);

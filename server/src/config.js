@@ -55,6 +55,7 @@ const config = {
       storageName: env.get("PILOTAGE_OVH_STORAGE_NAME").default("mna-pilotage").asString(),
     },
   },
+  apiEntreprise: env.get("PILOTAGE_API_ENTREPRISE_KEY").asString(),
 };
 
 export default config;

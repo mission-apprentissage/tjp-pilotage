@@ -5,7 +5,7 @@ import {
   configureValidation,
 } from "../common/mongodbClient.js";
 import { DateTime } from "luxon";
-import createServices from "../common/services/services.js";
+import createServices from "../services.js";
 import config from "../config.js";
 import { access, mkdir } from "fs/promises";
 import { logger } from "../common/logger.js";
