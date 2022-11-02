@@ -1,12 +1,10 @@
-/* eslint-disable no-unused-vars */
-// TODO
 import React, { useState, useEffect, useRef, createContext } from "react";
 import { useRouter } from "next/router";
 import { Box, Text, Spinner } from "@chakra-ui/react";
 import { _get, _post, _put } from "../../common/httpClient";
 import useAuth from "../../hooks/useAuth";
-// import { Cgu, cguVersion } from "../legal/Cgu";
-// import AcknowledgeModal from "../../components/Modals/AcknowledgeModal";
+import { Cgu, cguVersion } from "../legal/Cgu";
+import AcknowledgeModal from "../../components/Modals/AcknowledgeModal";
 import { anonymous } from "../../common/anonymous";
 import { emitter } from "../../common/emitter";
 
@@ -34,62 +32,62 @@ const AccountWrapper = ({ children }) => {
   return <>{children}</>;
 };
 
-// const ForceAcceptCGU = ({ children }) => {
-//   let [auth, setAuth] = useAuth();
-//   const cguContainer = useRef(null);
+const ForceAcceptCGU = ({ children }) => {
+  let [auth, setAuth] = useAuth();
+  const cguContainer = useRef(null);
 
-//   const onAcceptCguClicked = async () => {
-//     try {
-//       let user = await _put(`/api/v1/profile/acceptCgu`, {
-//         cguVersion: cguVersion(),
-//       });
-//       setAuth(user);
-//     } catch (e) {
-//       console.error(e);
-//     }
-//   };
+  const onAcceptCguClicked = async () => {
+    try {
+      let user = await _put(`/api/v1/profile/acceptCgu`, {
+        has_accept_cgu_version: cguVersion(),
+      });
+      setAuth(user);
+    } catch (e) {
+      console.error(e);
+    }
+  };
 
-//   return (
-//     <>
-//       {auth.sub !== "anonymous" && auth.confirmed && auth.account_status === "CONFIRMED" && (
-//         <AcknowledgeModal
-//           title="Conditions générales d'utilisation"
-//           acknowledgeText="Accepter"
-//           isOpen={auth.cgu !== cguVersion()}
-//           onAcknowledgement={onAcceptCguClicked}
-//           canBeClosed={false}
-//           bgOverlay="rgba(0, 0, 0, 0.28)"
-//         >
-//           <Box mb={3}>
-//             {!auth.cgu && (
-//               <Text fontSize="1.1rem" fontWeight="bold">
-//                 Merci de lire attentivement les conditions générales d&apos;utilisation avant de les accepter.
-//               </Text>
-//             )}
-//             {auth.cgu && (
-//               <Text fontSize="1.1rem" fontWeight="bold">
-//                 Nos conditions générales d&apos;utilisation ont changé depuis votre dernières visite. ({auth.cgu} -&gt;{" "}
-//                 {cguVersion()}) <br />
-//                 <br />
-//                 Merci de lire attentivement les conditions générales d&apos;utilisation avant de les accepter.
-//               </Text>
-//             )}
-//           </Box>
-//           <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh" ref={cguContainer}>
-//             <Cgu
-//               onLoad={async () => {
-//                 // eslint-disable-next-line no-undef
-//                 await new Promise((resolve) => setTimeout(resolve, 500));
-//                 cguContainer.current?.scrollTo(0, 0);
-//               }}
-//             />
-//           </Box>
-//         </AcknowledgeModal>
-//       )}
-//       {children}
-//     </>
-//   );
-// };
+  return (
+    <>
+      {auth.sub !== "anonymous" && auth.account_status === "CONFIRMED" && (
+        <AcknowledgeModal
+          title="Conditions générales d'utilisation"
+          acknowledgeText="Accepter"
+          isOpen={auth.has_accept_cgu_version !== cguVersion()}
+          onAcknowledgement={onAcceptCguClicked}
+          canBeClosed={false}
+          bgOverlay="rgba(0, 0, 0, 0.28)"
+        >
+          <Box mb={3}>
+            {!auth.has_accept_cgu_version && (
+              <Text fontSize="1.1rem" fontWeight="bold">
+                Merci de lire attentivement les conditions générales d&apos;utilisation avant de les accepter.
+              </Text>
+            )}
+            {auth.has_accept_cgu_version && (
+              <Text fontSize="1.1rem" fontWeight="bold">
+                Nos conditions générales d&apos;utilisation ont changé depuis votre dernières visite. (
+                {auth.has_accept_cgu_version} -&gt; {cguVersion()}) <br />
+                <br />
+                Merci de lire attentivement les conditions générales d&apos;utilisation avant de les accepter.
+              </Text>
+            )}
+          </Box>
+          <Box borderColor={"dgalt"} borderWidth={1} overflowY="scroll" px={8} py={4} h="30vh" ref={cguContainer}>
+            <Cgu
+              onLoad={async () => {
+                // eslint-disable-next-line no-undef
+                await new Promise((resolve) => setTimeout(resolve, 500));
+                cguContainer.current?.scrollTo(0, 0);
+              }}
+            />
+          </Box>
+        </AcknowledgeModal>
+      )}
+      {children}
+    </>
+  );
+};
 
 export const AuthenticationContext = createContext({});
 
@@ -133,9 +131,7 @@ const UserWrapper = ({ children, ssrAuth }) => {
   return (
     <AuthenticationContext.Provider value={{ auth, token, setAuth, setToken }}>
       <AccountWrapper>
-        {/* <ForceAcceptCGU> */}
-        {children}
-        {/* </ForceAcceptCGU> */}
+        <ForceAcceptCGU>{children}</ForceAcceptCGU>
       </AccountWrapper>
     </AuthenticationContext.Provider>
   );

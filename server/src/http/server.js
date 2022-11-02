@@ -16,6 +16,7 @@ import cookieParser from "cookie-parser";
 import auth from "./routes/user.routes/auth.routes.js";
 import register from "./routes/user.routes/register.routes.js";
 import password from "./routes/user.routes/password.routes.js";
+import profile from "./routes/user.routes/profile.routes.js";
 import session from "./routes/session.routes.js";
 import emails from "./routes/emails.routes.js";
 
@@ -38,6 +39,7 @@ export default async (services) => {
 
   // private access
   app.use("/api/v1/session", checkJwtToken, session());
+  app.use("/api/v1/profile", checkJwtToken, profile());
 
   app.get(
     "/api",
