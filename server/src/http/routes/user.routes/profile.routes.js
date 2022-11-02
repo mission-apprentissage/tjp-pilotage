@@ -7,6 +7,7 @@ import { getUser, structureUser, updateUser } from "../../../common/components/u
 export default () => {
   const router = express.Router();
 
+  // TODO
   // router.put(
   //   "/user",
   //   tryCatch(async ({ body, user }, res) => {

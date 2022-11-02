@@ -37,7 +37,7 @@ export function createUserToken(options = {}) {
 
 export function createApiToken(user, options = {}) {
   return createToken("apiToken", user.username, {
-    payload: { type: user.type, permissions: pick(user, ["isAdmin"]) },
+    payload: { type: user.type, permissions: pick(user, ["is_admin"]) },
     ...options,
   });
 }

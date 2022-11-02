@@ -1,17 +1,19 @@
 import express from "express";
 import bodyParser from "body-parser";
+import passport from "passport";
+import cookieParser from "cookie-parser";
+
 import config from "../config.js";
 import { logger } from "../common/logger.js";
+import { dbCollection } from "../common/mongodbClient.js";
+import { packageJson } from "../common/esm.js";
+
 import { logMiddleware } from "./middlewares/logMiddleware.js";
 import { errorMiddleware } from "./middlewares/errorMiddleware.js";
 import { tryCatch } from "./middlewares/tryCatchMiddleware.js";
 import { corsMiddleware } from "./middlewares/corsMiddleware.js";
 import { authMiddleware } from "./middlewares/authMiddleware.js";
-import { dbCollection } from "../common/mongodbClient.js";
-import { packageJson } from "../common/esm.js";
-
-import passport from "passport";
-import cookieParser from "cookie-parser";
+import { pageAccessMiddleware } from "./middlewares/pageAccessMiddleware.js";
 
 import auth from "./routes/user.routes/auth.routes.js";
 import register from "./routes/user.routes/register.routes.js";
@@ -19,6 +21,9 @@ import password from "./routes/user.routes/password.routes.js";
 import profile from "./routes/user.routes/profile.routes.js";
 import session from "./routes/session.routes.js";
 import emails from "./routes/emails.routes.js";
+
+import usersAdmin from "./routes/admin.routes/users.routes.js";
+import rolesAdmin from "./routes/admin.routes/roles.routes.js";
 
 export default async (services) => {
   const app = express();
@@ -40,6 +45,20 @@ export default async (services) => {
   // private access
   app.use("/api/v1/session", checkJwtToken, session());
   app.use("/api/v1/profile", checkJwtToken, profile());
+
+  // private admin access
+  app.use(
+    "/api/v1/admin",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_gestion_utilisateurs"]),
+    usersAdmin(services)
+  );
+  app.use(
+    "/api/v1/admin",
+    checkJwtToken,
+    pageAccessMiddleware(["admin/page_gestion_utilisateurs", "admin/page_gestion_roles"]),
+    rolesAdmin()
+  );
 
   app.get(
     "/api",

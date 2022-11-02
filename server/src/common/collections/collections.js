@@ -1,11 +1,12 @@
+import { dbCollection } from "../mongodbClient.js";
 import * as logsDescriptor from "./logs.js";
 import * as migrationsDescriptor from "./migrations.js";
 import * as usersDescriptor from "./users.js";
+import * as rolesDescriptor from "./roles.js";
 import * as jwtSessionsDescriptor from "./jwtSessions.js";
-import { dbCollection } from "../mongodbClient.js";
 
 export function getCollectionDescriptors() {
-  return [logsDescriptor, migrationsDescriptor, usersDescriptor, jwtSessionsDescriptor];
+  return [logsDescriptor, migrationsDescriptor, usersDescriptor, rolesDescriptor, jwtSessionsDescriptor];
 }
 
 export function migrationsDb() {
@@ -18,6 +19,10 @@ export function logsDb() {
 
 export function usersDb() {
   return dbCollection(usersDescriptor.name);
+}
+
+export function rolesDb() {
+  return dbCollection(rolesDescriptor.name);
 }
 
 export function jwtSessionsDb() {

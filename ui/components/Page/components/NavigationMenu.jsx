@@ -45,7 +45,7 @@ const UserMenu = () => {
     }
   };
 
-  let accountType = auth.type !== "USER" ? auth.type : isUserAdmin(auth) ? "admin" : "utilisateur";
+  let accountType = auth.roles.length ? auth.roles[0].name : isUserAdmin(auth) ? "admin" : "utilisateur";
 
   return (
     <>

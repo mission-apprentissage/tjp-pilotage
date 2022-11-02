@@ -1,5 +1,7 @@
 import { logger } from "../../common/logger.js";
 import { createUser } from "../../common/components/usersComponent.js";
+import defaultRolesAcls from "./fixtures/defaultRolesAcls.js";
+import { createRole } from "../../common/components/rolesComponent.js";
 
 const createUsers = async ({ adminEmail }) => {
   await createUser(
@@ -16,5 +18,11 @@ const createUsers = async ({ adminEmail }) => {
 
 export const seed = async ({ adminEmail }) => {
   await createUsers({ adminEmail });
+
+  for (const key of Object.keys(defaultRolesAcls)) {
+    await createRole(defaultRolesAcls[key]);
+    logger.info(`Role ${key} created`);
+  }
+
   logger.info(`Seed tjp-pilotage created`);
 };
