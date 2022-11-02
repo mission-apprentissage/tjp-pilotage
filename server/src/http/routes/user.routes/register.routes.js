@@ -12,6 +12,7 @@ import {
   structureUser,
   activateUser,
   createUser,
+  getUserById,
 } from "../../../common/components/usersComponent.js";
 import * as sessions from "../../../common/components/sessionsComponent.js";
 import { createUserToken } from "../../../common/utils/jwtUtils.js";
@@ -63,7 +64,7 @@ export default ({ mailer }) => {
         throw Boom.conflict(`Unable to create`, { message: `email already in use` });
       }
 
-      const user = await createUser(
+      const userId = await createUser(
         { email, password },
         {
           type,
@@ -74,19 +75,12 @@ export default ({ mailer }) => {
         }
       );
 
-      if (!user) {
+      if (!userId) {
         throw Boom.badRequest("Something went wrong");
       }
 
-      console.log(mailer); // TODO
-      // await mailer.sendEmail({ email: "test@admin.fr" }, "activation_user");
-      // await mailer.sendEmail(user.email, `[${config.env} Contrat publique apprentissage] Bienvenue`, "grettings", {
-      //   username: user.username,
-      //   civility: user.civility,
-      //   tmpPwd: password,
-      //   publicUrl: config.publicUrl,
-      //   activationToken: createActivationToken(user.email.toLowerCase(), { payload: { tmpPwd: password } }),
-      // });
+      const user = await getUserById(userId);
+      await mailer.sendEmail({ ...user, tmpPwd: password }, "activation_user");
 
       return res.json({ succeeded: true });
     })

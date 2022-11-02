@@ -3,6 +3,7 @@ import env from "env-var";
 const config = {
   appName: env.get("PILOTAGE_NAME").default("Pilotage App").asString(),
   env: env.get("PILOTAGE_ENV").default("local").asString(),
+  email: env.get("PILOTAGE_EMAIL").asString(),
   publicUrl: env.get("PILOTAGE_PUBLIC_URL").default("http://localhost").asString(),
   auth: {
     passwordHashRounds: env.get("PILOTAGE_AUTH_PASSWORD_HASH_ROUNDS").asString(),

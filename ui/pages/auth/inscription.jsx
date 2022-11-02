@@ -151,7 +151,7 @@ const Register = ({ onSucceeded, ...props }) => {
               <RadioGroup id="type" name="type" value={values.type} mt={8}>
                 <VStack alignItems="baseline" fontSize="1.2rem" spacing={8}>
                   <Radio
-                    value="employeur"
+                    value="EMPLOYEUR"
                     onChange={(e) => {
                       setStep(1);
                       handleChange(e);
@@ -161,7 +161,7 @@ const Register = ({ onSucceeded, ...props }) => {
                     Un employeur
                   </Radio>
                   <Radio
-                    value="of"
+                    value="OF"
                     onChange={(e) => {
                       setStep(1);
                       handleChange(e);
@@ -178,7 +178,7 @@ const Register = ({ onSucceeded, ...props }) => {
 
           {step === 1 && (
             <>
-              <Text fontWeight="bold">Vous êtes {values.type === "employeur" ? "un employeur" : "un OF"}</Text>
+              <Text fontWeight="bold">Vous êtes {values.type === "EMPLOYEUR" ? "un employeur" : "un OF"}</Text>
               <FormControl mt={4} py={2} isRequired isInvalid={errors.siret && touched.siret}>
                 <FormLabel>Votre Siret</FormLabel>
                 <Input
@@ -242,7 +242,7 @@ const Register = ({ onSucceeded, ...props }) => {
           )}
           {step === 2 && (
             <>
-              <Text fontWeight="bold">Vous êtes {values.type === "employeur" ? "un employeur public." : "un OF"}</Text>
+              <Text fontWeight="bold">Vous êtes {values.type === "EMPLOYEUR" ? "un employeur public." : "un OF"}</Text>
               <FormControl mt={4} py={2} isRequired isInvalid={errors.email && touched.email}>
                 <FormLabel>Votre courriel</FormLabel>
                 <Input
