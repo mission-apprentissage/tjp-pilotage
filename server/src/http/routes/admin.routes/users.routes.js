@@ -14,7 +14,6 @@ import {
   updateUser,
 } from "../../../common/components/usersComponent.js";
 import { findRoleById, findRolesByNames } from "../../../common/components/rolesComponent.js";
-import { rolesDb } from "../../../common/collections/collections.js";
 
 // TODO
 // eslint-disable-next-line no-unused-vars
@@ -36,14 +35,6 @@ export default ({ mailer }) => {
       }
 
       return res.json(usersList);
-    })
-  );
-
-  router.get(
-    "/roles",
-    tryCatch(async (req, res) => {
-      const rolesList = await rolesDb().find({}).toArray();
-      return res.json(rolesList || []);
     })
   );
 
