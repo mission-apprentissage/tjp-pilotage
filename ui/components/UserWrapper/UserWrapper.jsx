@@ -18,7 +18,7 @@ const AccountWrapper = ({ children }) => {
     (async () => {
       if (auth.sub !== "anonymous") {
         if (auth.account_status === "NOT_CONFIRMED") {
-          if (router.pathname !== "/auth/en-attente-confirmation") {
+          if (router.pathname !== "/auth/en-attente-confirmation" && router.pathname !== "/auth/confirmation") {
             router.push(`/auth/en-attente-confirmation`);
           }
         } else {

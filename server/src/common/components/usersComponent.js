@@ -53,7 +53,7 @@ const rehashPassword = async (_id, password) => {
     { returnDocument: "after" }
   );
 
-  return updated;
+  return updated.value;
 };
 
 /**
@@ -86,10 +86,6 @@ export const authenticate = async (email, password) => {
  */
 export const getUser = async (email) => {
   const user = await usersDb().findOne({ email });
-  if (!user) {
-    throw new Error(`Unable to find user`);
-  }
-
   return user;
 };
 
@@ -152,7 +148,7 @@ export const updateUser = async (_id, data) => {
     { returnDocument: "after" }
   );
 
-  return updated;
+  return updated.value;
 };
 
 export const structureUser = async (user) => {
@@ -202,7 +198,7 @@ export const activateUser = async (email) => {
     { returnDocument: "after" }
   );
 
-  return updated;
+  return updated.value;
 };
 
 /**
@@ -232,7 +228,7 @@ export const changePassword = async (email, newPassword) => {
     { returnDocument: "after" }
   );
 
-  return updated;
+  return updated.value;
 };
 
 /**
