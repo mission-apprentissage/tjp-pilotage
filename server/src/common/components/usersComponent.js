@@ -1,5 +1,5 @@
-import { pick } from "lodash-es";
-import { usersDb } from "../collections/collections.js";
+import { pick, uniq } from "lodash-es";
+import { rolesDb, usersDb } from "../collections/collections.js";
 import { defaultValuesUser, validateUser } from "../collections/users.js";
 import { hash as hashUtil, compare, isTooWeak } from "../utils/passwordUtils.js";
 import { escapeRegExp } from "../utils/regexUtils.js";
@@ -14,7 +14,19 @@ export const createUser = async ({ email, password }, options = {}) => {
   const passwordHash = options.hash || hashUtil(password);
   const permissions = options.permissions || {};
 
-  const { civility, nom, prenom, telephone, siret, account_status, custom_acl, orign_register, type } = options;
+  const { civility, nom, prenom, telephone, siret, account_status, custom_acl, orign_register, roles } = options;
+
+  let rolesMatchIds = [];
+  if (roles && roles.length > 0) {
+    rolesMatchIds = await rolesDb()
+      .find({ name: { $in: roles } }, { projection: { _id: 1 } })
+      .toArray();
+    rolesMatchIds = rolesMatchIds.map(({ _id }) => _id.toString());
+    if (!rolesMatchIds.length === 0) {
+      throw new Error("Roles doesn't exist");
+    }
+  }
+
   const { insertedId } = await usersDb().insertOne(
     validateUser({
       ...defaultValuesUser(),
@@ -28,7 +40,7 @@ export const createUser = async ({ email, password }, options = {}) => {
       ...(siret ? { siret } : {}),
       ...(account_status ? { account_status } : {}),
       ...(custom_acl ? { custom_acl } : {}),
-      ...(type ? { type } : {}),
+      ...(roles ? { roles: rolesMatchIds } : {}),
       ...(orign_register ? { orign_register } : {}),
     })
   );
@@ -94,8 +106,8 @@ export const getUser = async (email) => {
  * @param {*} _id
  * @returns
  */
-export const getUserById = async (_id, select = {}) => {
-  const user = await usersDb().findOne({ _id }, select);
+export const getUserById = async (_id, projection = {}) => {
+  const user = await usersDb().findOne({ _id }, { projection });
 
   if (!user) {
     throw new Error(`Unable to find user`);
@@ -109,7 +121,10 @@ export const getUserById = async (_id, select = {}) => {
  * @param {*} query
  * @returns
  */
-export const getAllUsers = async (query = {}) => await usersDb().find(query, { password: 0, __v: 0 }).toArray();
+export const getAllUsers = async (query = {}) =>
+  await usersDb()
+    .find(query, { projection: { password: 0, __v: 0 } })
+    .toArray();
 
 /**
  * Méthode de suppresion d'un user depuis son id
@@ -154,6 +169,11 @@ export const updateUser = async (_id, data) => {
 export const structureUser = async (user) => {
   const permissions = pick(user, ["is_admin"]);
 
+  const rolesList = await rolesDb()
+    .find({ _id: { $in: user.roles } })
+    .toArray();
+  const rolesAcl = rolesList.reduce((acc, { acl }) => [...acc, ...acl], []);
+
   return {
     permissions,
     email: user.email,
@@ -163,8 +183,8 @@ export const structureUser = async (user) => {
     telephone: user.telephone,
     siret: user.siret,
     account_status: user.account_status,
-    type: user.type,
-    custom_acl: user.custom_acl,
+    roles: rolesList,
+    acl: uniq([...rolesAcl, ...user.custom_acl]),
     orign_register: user.orign_register,
     has_accept_cgu_version: user.has_accept_cgu_version,
   };
@@ -233,12 +253,10 @@ export const changePassword = async (email, newPassword) => {
 
 /**
  * Méthode de recherche d'utilisateurs selon plusieurs critères
- * @param {*} searchCriteria
+ * @param {*} searchTerm
  * @returns
  */
-export const searchUsers = async (searchCriteria) => {
-  const { searchTerm } = searchCriteria;
-
+export const searchUsers = async (searchTerm) => {
   const matchStage = {};
   if (searchTerm) {
     matchStage.$or = [
