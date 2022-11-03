@@ -8,9 +8,7 @@ const contentSecurityPolicy = `
       block-all-mixed-content;
       font-src 'self' https: data:;
       frame-ancestors 'self';
-      img-src 'self' https://www.notion.so data: ${
-        process.env.NEXT_PUBLIC_ENV !== "production" ? "" : ""
-      };
+      img-src 'self' https://www.notion.so data: ${process.env.NEXT_PUBLIC_ENV !== "production" ? "" : ""};
       object-src 'none';
       script-src 'self'  https://plausible.io ${process.env.NEXT_PUBLIC_ENV === "dev" ? "'unsafe-eval'" : ""};
       script-src-attr 'none';

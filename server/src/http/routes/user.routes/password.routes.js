@@ -19,6 +19,7 @@ const checkPasswordToken = () => {
         secretOrKey: config.auth.resetPasswordToken.jwtSecret,
       },
       (jwt_payload, done) => {
+        console.log(jwt_payload);
         return getUser(jwt_payload.sub)
           .then((user) => {
             if (!user) {
@@ -34,7 +35,7 @@ const checkPasswordToken = () => {
   return passport.authenticate("jwt-password", { session: false, failWithError: true });
 };
 
-export default () => {
+export default ({ mailer }) => {
   const router = express.Router();
 
   router.post(
@@ -51,23 +52,12 @@ export default () => {
       }
 
       const token = createResetPasswordToken(user.email);
-      // const url = `${config.publicUrl}/auth/modifier-mot-de-passe?passwordToken=${token}`; // TODO
 
       if (noEmail) {
         return res.json({ token });
       }
 
-      // await mailer.sendEmail(
-      //   user.email,
-      //   `[${config.env} Contrat publique apprentissage] Réinitialiser votre mot de passe`,
-      //   "forgotten-password",
-      //   {
-      //     url,
-      //     civility: user.civility,
-      //     username: user.username,
-      //     publicUrl: config.publicUrl,
-      //   }
-      // );
+      await mailer.sendEmail(user, "reset_password");
 
       return res.json({});
     })
