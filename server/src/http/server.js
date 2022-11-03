@@ -40,7 +40,7 @@ export default async (services) => {
   app.use("/api/emails", emails()); // No versionning to be sure emails links are always working
   app.use("/api/v1/auth", auth());
   app.use("/api/v1/auth", register(services));
-  app.use("/api/v1/password", password());
+  app.use("/api/v1/password", password(services));
 
   // private access
   app.use("/api/v1/session", checkJwtToken, session());

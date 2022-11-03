@@ -63,6 +63,12 @@ services:
       - pilotage_network
     environment:
       - MH_UI_WEB_PATH=smtp
+      - MH_STORAGE=mongodb
+      - MH_MONGO_URI=mongodb:27017
+      - MH_MONGO_DB=pilotage
+      - MH_MONGO_COLLECTION=mailhog
+    depends_on:
+      - mongodb
 
 volumes:
   pilotage_mongodb_data:
