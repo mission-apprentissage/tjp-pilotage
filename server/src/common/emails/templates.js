@@ -1,11 +1,10 @@
 import { createActionToken, createResetPasswordToken, createActivationToken } from "../utils/jwtUtils.js";
 import path from "path";
-import { fileURLToPath } from "url";
 import config from "../../config.js";
+import { __dirname } from "../esm.js";
 
 function getTemplateFile(name) {
-  const __dirname = fileURLToPath(new URL(".", import.meta.url));
-  return path.join(__dirname, `${name}.mjml.ejs`);
+  return path.join(__dirname(import.meta.url), `${name}.mjml.ejs`);
 }
 
 export function activation_user(user, token, options = {}) {

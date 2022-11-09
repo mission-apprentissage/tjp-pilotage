@@ -156,7 +156,7 @@ const NavLinks = ({ isOpen }) => {
         {auth?.sub !== "anonymous" && (
           <>
             {" "}
-            <NavItem to="/mes-dossiers/mon-espace">Mes dossiers</NavItem>
+            <NavItem to="/mes-dossiers/mon-espace">Mon espace</NavItem>
           </>
         )}
       </Flex>
