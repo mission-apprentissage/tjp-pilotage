@@ -1,7 +1,7 @@
 name: Release version develop
 on:
   push:
-    branches: [ develop ]
+    branches: []
 
 jobs:
   release:
@@ -41,7 +41,7 @@ jobs:
   #     - name: Checkout project
   #       uses: actions/checkout@v2
 
-  #     - shell: bash 
+  #     - shell: bash
   #       run: echo 'PILOTAGE_HEAD_REF=${{ github.head_ref }}' >> $GITHUB_ENV
 
   #     - shell: bash
