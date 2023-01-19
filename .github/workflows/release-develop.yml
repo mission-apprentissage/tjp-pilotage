@@ -1,7 +1,7 @@
 name: Release version develop
 on:
   push:
-    branches: []
+    branches: [develop_leg]
 
 jobs:
   release:
