@@ -73,7 +73,6 @@ yarn --cwd server imports
 - Un serveur Node Express, _défini dans le service `server` du docker-compose_.
 - Une base de donnée mongoDb _défini dans le service `mongodb` du docker-compose_.
 - Un serveur Front sous NextJs _défini dans le service `ui` du docker-compose_.
-- Un antivirus _défini dans le service `clamav` du docker-compose_.
 
 ### Seulement sur les environnements production, recette et test
 
