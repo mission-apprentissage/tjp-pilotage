@@ -1,0 +1,71 @@
+version: "2.4"
+services:
+  reverse_proxy:
+    image: pilotage_reverse_proxy
+    container_name: pilotage_reverse_proxy
+    build:
+      context: reverse_proxy
+    mem_limit: 256m
+    restart: unless-stopped
+    ports:
+      - 80:80
+      - 443:443
+    networks:
+      - pilotage_network
+    depends_on:
+      - server
+      - ui
+    environment:
+      - PARANOIA=1
+      - ANOMALY_INBOUND=5
+      - ANOMALY_OUTBOUND=4
+      - REPORTING_LEVEL=4
+      - DNS_SERVER=127.0.0.11
+      - PROXY=1
+      - SERVERNAME=localhost
+      - ACCESSLOG=/data/access.log
+      - ERRORLOG=/data/error.log
+      - LOGLEVEL=warn
+      - NGINX_ALWAYS_TLS_REDIRECT=false
+      - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
+
+  ui:
+    image: pilotage_ui
+    container_name: pilotage_ui
+    build:
+      context: ui
+    mem_limit: 256m
+    networks:
+      - pilotage_network
+    depends_on:
+      - server
+    environment:
+      - SERVER_URI=http://server:5000
+
+  server:
+    image: pilotage_server
+    container_name: pilotage_server
+    build:
+      context: server
+    mem_limit: 1g
+    restart: unless-stopped
+    networks:
+      - pilotage_network
+    depends_on:
+      - mongodb
+    environment:
+      - PILOTAGE_MONGODB_URI=mongodb://mongodb:27017/pilotage?retryWrites=true&w=majority
+      - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
+      - PILOTAGE_CLAMAV_URI=clamav:3310
+
+  mongodb:
+    image: mongo:6.0.2-focal
+    container_name: pilotage_mongodb
+    mem_limit: 2g
+    restart: unless-stopped
+    networks:
+      - pilotage_network
+
+networks:
+  pilotage_network:
+    name: pilotage_network

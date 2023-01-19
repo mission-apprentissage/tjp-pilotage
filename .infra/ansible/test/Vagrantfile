@@ -1,0 +1,37 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+# Can be configured with GIT_REVISION, ANSIBLE_TAGS,ANSIBLE_PLAYBOOK env variables
+# eg.
+# > GIT_REVISION=main run-setup-playbook-tests.sh
+# > ANSIBLE_TAGS=app run-setup-playbook-tests.sh
+Vagrant.configure(2) do |config|
+
+  config.vm.box = "ubuntu/focal64"
+  config.vm.hostname = "pilotage-dev".gsub('_', '-')
+  config.vm.network "private_network", ip: "192.168.56.7"
+  config.vm.disk :disk, size: "1GB", name: "data"
+  config.vm.provider :virtualbox do |provider|
+    provider.name = "pilotage-dev"
+    provider.memory = 2048
+    provider.cpus = 2
+  end
+
+  config.vm.provision :shell, inline: "command -v python || (apt-get update && apt-get install -y python)" #Because Ansible needs python 2
+  config.vm.provision :ansible do |ansible|
+
+    ansible.playbook = "../#{ENV['ANSIBLE_PLAYBOOK']}.yml"
+    ansible.raw_arguments = ['--vault-password-file=../../scripts/vault/get-vault-password-client.sh']
+    ansible.extra_vars = {
+      env_type: "recette",
+      git_revision: "#{ENV['GIT_REVISION']}",
+      dns_name: "localhost",
+      host_name: "tjp-pilotage-test",
+      update_sshd_config: "false",
+      backup_device: "/dev/sdc"
+    }
+
+    unless ENV['ANSIBLE_TAGS'].to_s.strip.empty?
+      ansible.tags = "#{ENV['ANSIBLE_TAGS']}"
+    end
+  end
+end
