@@ -22,6 +22,10 @@
     "npm:release": "semantic-release",
     "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release"
   },
+  "workspaces": [
+    "ui",
+    "server"
+  ],
   "devDependencies": {
     "@commitlint/cli": "16.2.4",
     "@commitlint/config-conventional": "16.2.4",

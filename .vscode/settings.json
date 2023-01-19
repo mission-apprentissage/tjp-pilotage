@@ -10,8 +10,6 @@
     "**/.hg": true,
     "**/CVS": true,
     "**/.DS_Store": true,
-    "**/node_modules": true,
-    ".next": true,
     "**/*/lib": true,
     "**/*/dist": true,
     "**/*/build": true,
@@ -21,12 +19,15 @@
     "**/*/lib": true,
     "**/*/dist": true,
     "**/*/build": true,
-    "**/.webpack": true
+    "**/.webpack": true,
+    "**/node_modules": false
   },
   "search.exclude": {
     "**/*/lib": true,
     "**/*/dist": true,
     "**/*/build": true,
-    "**/.webpack": true
+    "**/.webpack": true,
+    "**/.next": true,
+    "**/node_modules": true
   }
 }
