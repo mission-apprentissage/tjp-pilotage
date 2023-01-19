@@ -24,7 +24,6 @@ services:
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
 
-
   server:
     command: ["yarn", "debug"]
     ports:
@@ -47,11 +46,6 @@ services:
       - "127.0.0.1:27017:27017"
     volumes:
       - pilotage_mongodb_data:/data:z
-
-  clamav:
-    image: clamav/clamav
-    ports:
-      - 3310:3310
 
   smtp:
     image: mailhog/mailhog

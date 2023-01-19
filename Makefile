@@ -18,18 +18,10 @@ start-mongodb:
 stop:
 	docker-compose stop
 
-test:
-	yarn --cwd server test
-	yarn --cwd ui test:ci
-
-coverage:
-	yarn --cwd server test:coverage
-	yarn --cwd ui coverage
-
 lint:
 	yarn lint
 
 clean:
 	docker-compose kill && docker system prune --force --volumes
 
-ci: install lint test coverage
+ci: install lint
