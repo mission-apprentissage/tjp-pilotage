@@ -34,7 +34,7 @@ services:
     container_name: pilotage_ui
     build:
       context: .
-      dockerfile: ui/Dockerfile.dev
+      dockerfile: ui/Dockerfile
     mem_limit: 256m
     networks:
       - pilotage_network
