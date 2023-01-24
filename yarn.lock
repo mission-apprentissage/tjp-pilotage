@@ -7977,6 +7977,30 @@ __metadata:
   languageName: node
   linkType: hard
 
+"server@workspace:server":
+  version: 0.0.0-use.local
+  resolution: "server@workspace:server"
+  dependencies:
+    axios: 0.24.0
+    boom: 7.3.0
+    bunyan: 1.8.15
+    bunyan-mongodb-stream: 0.0.3
+    bunyan-prettystream: 0.1.3
+    bunyan-slack: 0.0.10
+    chalk: 4.1.2
+    dotenv: 16.0.0
+    env-var: 7.1.1
+    eslint: 8.25.0
+    jsonwebtoken: 8.5.1
+    lodash: 4.17.21
+    lodash-es: 4.17.21
+    luxon: 2.3.0
+    nodemon: 2.0.16
+    rate-limiter-flexible: 2.3.6
+    uuid: 9.0.0
+  languageName: unknown
+  linkType: soft
+
 "set-blocking@npm:^2.0.0":
   version: 2.0.0
   resolution: "set-blocking@npm:2.0.0"
@@ -8545,29 +8569,6 @@ __metadata:
   checksum: 82a1fa2f3b00cd77c3ff0cf45380dad9e5befa8ee344d8de8076525efda4e6bd6af8f7f483e103b5834dc34bbed337fab7ac151f1d1a429a20f434a3744057b4
   languageName: node
   linkType: hard
-
-"tjp-pilotage-server@workspace:server":
-  version: 0.0.0-use.local
-  resolution: "tjp-pilotage-server@workspace:server"
-  dependencies:
-    axios: 0.24.0
-    boom: 7.3.0
-    bunyan: 1.8.15
-    bunyan-mongodb-stream: 0.0.3
-    bunyan-prettystream: 0.1.3
-    bunyan-slack: 0.0.10
-    chalk: 4.1.2
-    dotenv: 16.0.0
-    env-var: 7.1.1
-    jsonwebtoken: 8.5.1
-    lodash: 4.17.21
-    lodash-es: 4.17.21
-    luxon: 2.3.0
-    nodemon: 2.0.16
-    rate-limiter-flexible: 2.3.6
-    uuid: 9.0.0
-  languageName: unknown
-  linkType: soft
 
 "tjp-pilotage@workspace:.":
   version: 0.0.0-use.local
