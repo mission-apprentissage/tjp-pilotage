@@ -7987,6 +7987,8 @@ __metadata:
 "shared@*, shared@workspace:shared":
   version: 0.0.0-use.local
   resolution: "shared@workspace:shared"
+  dependencies:
+    react: 18.2.0
   languageName: unknown
   linkType: soft
 
