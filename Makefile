@@ -1,4 +1,4 @@
-install: 
+install:
 	yarn install --frozen-lockfile
 
 start:
