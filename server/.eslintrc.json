@@ -1,6 +1,10 @@
 {
   "root": true,
-  "extends": ["eslint:recommended", "plugin:node/recommended-module", "plugin:prettier/recommended"],
+  "extends": [
+    "eslint:recommended",
+    "plugin:node/recommended-module",
+    "plugin:prettier/recommended"
+  ],
   "plugins": ["mocha"],
   "rules": {
     "mocha/no-skipped-tests": "error",
