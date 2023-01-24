@@ -1,5 +1,5 @@
 install: 
-	yarn install
+	yarn install --frozen-lockfile
 
 start:
 	docker-compose up --build --force-recreate
