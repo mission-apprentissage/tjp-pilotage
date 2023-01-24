@@ -10,12 +10,10 @@ services:
     mem_limit: 1g
     stdin_open: true
     volumes:
-      - ./ui:/app:z
-      - /app/.next
-      - /app/node_modules
+      - ./:/app/:z
     build:
-      context: ui
-      dockerfile: Dockerfile.dev
+      context: .
+      dockerfile: ui/Dockerfile.dev
       args:
         - NEXT_PUBLIC_ENV=dev
         - NEXT_PUBLIC_BASE_URL=http://localhost

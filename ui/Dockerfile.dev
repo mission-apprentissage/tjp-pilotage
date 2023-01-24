@@ -1,6 +1,6 @@
 FROM node:18-alpine
 
-WORKDIR /app
+WORKDIR /app/ui
 
 # Map arguments to react-scripts env variables
 ARG NEXT_PUBLIC_ENV
