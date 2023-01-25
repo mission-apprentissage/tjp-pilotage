@@ -1,5 +1,5 @@
 {
-  "name": "tjp-pilotage-server",
+  "name": "server",
   "version": "0.0.1",
   "description": "[MNA] pilotage server",
   "repository": "https://github.com/mission-apprentissage/tjp-pilotage.git",
@@ -21,6 +21,7 @@
     "bunyan-slack": "0.0.10",
     "dotenv": "16.0.0",
     "env-var": "7.1.1",
+    "eslint": "8.25.0",
     "jsonwebtoken": "8.5.1",
     "lodash": "4.17.21",
     "lodash-es": "4.17.21",

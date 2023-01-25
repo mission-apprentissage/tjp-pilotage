@@ -1,0 +1,13 @@
+{
+  "name": "shared",
+  "version": "1.0.0",
+  "main": "./index.ts",
+  "types": "./index.ts",
+  "author": "flodlc",
+  "type": "commonjs",
+  "license": "MIT",
+  "private": true,
+  "dependencies": {
+    "react": "18.2.0"
+  }
+}

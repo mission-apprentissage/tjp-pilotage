@@ -7,7 +7,7 @@
     "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
     "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "lint": "next lint",
-    "docker-dev": "yarn install && yarn dev"
+    "docker-dev": "yarn dev"
   },
   "dependencies": {
     "@next/font": "13.1.2",
@@ -18,6 +18,7 @@
     "next": "13.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
+    "shared": "*",
     "typescript": "4.9.4"
   }
 }
