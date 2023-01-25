@@ -1,13 +1,5 @@
-install: install-root install-server install-ui
-
-install-root:
-	yarn install
-
-install-server:
-	yarn --cwd server install --frozen-lockfile
-
-install-ui:
-	yarn --cwd ui install --frozen-lockfile
+install:
+	yarn install --frozen-lockfile
 
 start:
 	docker-compose up --build --force-recreate

@@ -16,10 +16,7 @@ jobs:
           node-version: 18
 
       # Install dependencies
-      - name: Run Yarn Install
-        run: |
-          yarn --cwd ui install
-
+      - run: make ci
       # TODO Run tests
       # - name: Run Tests
       #   run: |
