@@ -21,9 +21,5 @@
     "forceConsistentCasingInFileNames": true,
     "allowJs": false,
     "baseUrl": "."
-  },
-  "ts-node": {
-    "esm": true,
-    "swc": true
   }
 }

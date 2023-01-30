@@ -22,9 +22,5 @@
     "allowJs": false,
     "baseUrl": ".",
     "jsx": "react"
-  },
-  "ts-node": {
-    "esm": true,
-    "swc": true
   }
 }
