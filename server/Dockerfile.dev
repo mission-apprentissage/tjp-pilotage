@@ -1,0 +1,4 @@
+FROM node:18-alpine
+WORKDIR /app/server
+EXPOSE 5000
+CMD yarn dev

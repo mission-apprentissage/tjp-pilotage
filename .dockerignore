@@ -1,0 +1,7 @@
+.github
+.git-hooks
+.git/
+.infra
+.vscode
+**/node_modules
+**/dist

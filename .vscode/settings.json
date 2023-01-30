@@ -11,7 +11,6 @@
     "**/CVS": true,
     "**/.DS_Store": true,
     "**/*/lib": true,
-    "**/*/dist": true,
     "**/*/build": true,
     "**/.webpack": true
   },

@@ -21,15 +21,17 @@ services:
         - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
-
   server:
-    command: ["yarn", "debug"]
+    restart: "no"
     ports:
       - "127.0.0.1:9229:9229" # Allows remote debugging
+      - "127.0.0.1:5000:5000"
     volumes:
-      - ./server/src:/app/src:z # Allows source folders to be watched
-      - ./server/config:/app/config:z
+      - ./:/app/:z
       - pilotage_server_data:/data:z
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
     environment:
       - PILOTAGE_ENV=dev
       - PILOTAGE_LOG_LEVEL=debug

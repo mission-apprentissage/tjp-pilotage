@@ -47,7 +47,8 @@ services:
     image: pilotage_server
     container_name: pilotage_server
     build:
-      context: server
+      context: .
+      dockerfile: server/Dockerfile
     mem_limit: 1g
     restart: unless-stopped
     networks:
