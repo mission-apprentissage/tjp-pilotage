@@ -1,4 +1,4 @@
-import { Server, server } from "../../server";
+import { Server } from "../../server";
 import { coreRoutes } from "./routes/core.routes";
 
 export const registerCoreModule = ({ server }: { server: Server }) => {

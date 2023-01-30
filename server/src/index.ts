@@ -1,5 +1,7 @@
-import fastifyCors from "@fastify/cors";
 import "dotenv/config";
+
+import fastifyCors from "@fastify/cors";
+
 import { registerCoreModule } from "./modules/core";
 import { server } from "./server";
 

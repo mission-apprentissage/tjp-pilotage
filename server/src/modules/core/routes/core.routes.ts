@@ -1,4 +1,5 @@
 import { salut } from "shared";
+
 import { Server } from "../../../server";
 
 export const coreRoutes = ({ server }: { server: Server }) => {
