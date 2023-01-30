@@ -1,15 +1,27 @@
-FROM node:18-alpine
+FROM node:18-alpine AS deps
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
+COPY . .
 
-#Install and cache node_modules
-COPY package.json yarn.lock /tmp/
-RUN cd /tmp && \
-    yarn install --frozen-lockfile && \
-    mkdir -p /app && \
-    mv /tmp/node_modules /app/
+RUN yarn plugin import workspace-tools
+RUN yarn workspaces focus server 
 
-COPY ./ /app
+# Rebuild the source code only when needed
+FROM node:18-alpine AS builder
 WORKDIR /app
 
-VOLUME /data
+COPY --from=deps /app/. .
+
+RUN yarn --cwd server build
+
+# Production image, copy all the files and run next
+FROM node:18-alpine AS runner
+WORKDIR /app
+
+ENV NODE_ENV production
+
+COPY --from=builder ./app/. .
+
 EXPOSE 5000
-CMD ["yarn", "start"]
+
+CMD ["node", "server/dist/index.js"]
