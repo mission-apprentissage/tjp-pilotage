@@ -6,7 +6,6 @@
     "dev": "NEXT_PUBLIC_VERSION=$npm_package_version next dev",
     "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
     "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
-    "lint": "next lint",
     "docker-dev": "yarn dev"
   },
   "dependencies": {
@@ -14,7 +13,6 @@
     "@types/node": "18.11.18",
     "@types/react": "18.0.27",
     "@types/react-dom": "18.0.10",
-    "eslint-config-next": "13.1.2",
     "next": "13.1.2",
     "react": "18.2.0",
     "react-dom": "18.2.0",
