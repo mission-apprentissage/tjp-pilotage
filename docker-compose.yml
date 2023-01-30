@@ -55,6 +55,7 @@ services:
       - pilotage_network
     depends_on:
       - mongodb
+      - postgres
     environment:
       - PILOTAGE_MONGODB_URI=mongodb://mongodb:27017/pilotage?retryWrites=true&w=majority
       - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
@@ -67,6 +68,16 @@ services:
     restart: unless-stopped
     networks:
       - pilotage_network
+
+  postgres:
+      image: postgres:14.2
+      container_name: pilotage_postgres
+      restart: unless-stopped
+      networks:
+        - pilotage_network
+      volumes:
+        - pilotage_postgres_data:/var/lib/postgresql/data:z
+      
 
 networks:
   pilotage_network:
