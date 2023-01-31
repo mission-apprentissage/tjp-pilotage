@@ -1,0 +1,60 @@
+# Override containers for local / dev environnement
+version: "2.4"
+services:
+  reverse_proxy:
+    volumes:
+      - pilotage_nginx_data:/data:z
+      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
+
+  ui:
+    mem_limit: 1g
+    stdin_open: true
+    volumes:
+      - ./:/app/:z
+    build:
+      context: .
+      dockerfile: ui/Dockerfile.dev
+      args:
+        - NEXT_PUBLIC_ENV=dev
+        - NEXT_PUBLIC_BASE_URL=http://localhost
+        - NEXT_PUBLIC_BASE_HOST=localhost
+        - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_SECRET_KEY=
+        - SKIP_PREFLIGHT_CHECK=true
+  server:
+    restart: "no"
+    ports:
+      - "127.0.0.1:9229:9229" # Allows remote debugging
+      - "127.0.0.1:5000:5000"
+    volumes:
+      - ./:/app/:z
+      - pilotage_server_data:/data:z
+    build:
+      context: .
+      dockerfile: server/Dockerfile.dev
+    environment:
+      - PILOTAGE_POSTGRES_URI=postgresql://postgres:password@postgres:5432/postgres
+      - PILOTAGE_ENV=dev
+      - PILOTAGE_LOG_LEVEL=debug
+      - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
+    depends_on:
+      - postgres
+
+  postgres:
+      environment:
+          - POSTGRES_PASSWORD=password
+      ports:
+          - "5432:5432"
+      volumes:
+          - pilotage_postgres_data:/var/lib/postgresql/data:z
+
+volumes:
+  pilotage_postgres_data:
+    driver: local
+    name: pilotage_postgres_data
+  pilotage_nginx_data:
+    driver: local
+    name: pilotage_nginx_data
+  pilotage_server_data:
+    driver: local
+    name: pilotage_server_data
