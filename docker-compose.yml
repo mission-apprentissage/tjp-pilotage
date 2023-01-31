@@ -71,3 +71,8 @@ services:
 networks:
   pilotage_network:
     name: pilotage_network
+
+volumes:
+  pilotage_postgres_data:
+    driver: local
+    name: pilotage_postgres_data
