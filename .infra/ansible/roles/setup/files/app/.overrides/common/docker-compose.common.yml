@@ -16,16 +16,6 @@ services:
     volumes:
       - /opt/pilotage/data/server:/data
 
-  mongodb:
-    command: mongod --auth
-    volumes:
-      - /opt/pilotage/data/mongodb/db:/data/db
-      - /opt/pilotage/data/mongodb/configdb:/data/configdb
-      - /opt/pilotage/data/mongodb/backups:/data/backups
-      - /opt/pilotage/.overrides/mongodb/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d:ro
-    ports:
-      - "127.0.0.1:27017:27017"
-
   metabase:
     image: metabase/metabase:v0.42.0
     container_name: pilotage_metabase
@@ -33,8 +23,6 @@ services:
     volumes:
       - /opt/pilotage/data/metabase:/data/metabase
       - /opt/pilotage/backups/metabase:/data/backups
-    depends_on:
-      - mongodb
     environment:
       MB_DB_FILE: /data/metabase/metabase.db
       MB_SITE_LOCALE: fr

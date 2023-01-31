@@ -4,9 +4,6 @@ install:
 start:
 	docker-compose up --build --force-recreate
 
-start-mongodb:
-	docker-compose up -d mongodb
-
 stop:
 	docker-compose stop
 

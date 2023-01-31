@@ -40,12 +40,6 @@ services:
     depends_on:
       - postgres
 
-  mongodb:
-    ports:
-      - "127.0.0.1:27017:27017"
-    volumes:
-      - pilotage_mongodb_data:/data:z
-
   postgres:
       environment:
           - POSTGRES_PASSWORD=password
@@ -55,9 +49,6 @@ services:
           - pilotage_postgres_data:/var/lib/postgresql/data:z
 
 volumes:
-  pilotage_mongodb_data:
-    driver: local
-    name: pilotage_mongodb_data
   pilotage_postgres_data:
     driver: local
     name: pilotage_postgres_data
