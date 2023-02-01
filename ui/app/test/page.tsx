@@ -2,7 +2,7 @@ import { Suspense } from "react";
 import { SharedCompo } from "shared";
 
 const fetchData = async () => {
-  const rep = await fetch("http://server:5000/api");
+  const rep = await fetch("http://server:5000/api", { cache: "no-store" });
   return await rep.json();
 };
 

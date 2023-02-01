@@ -7,13 +7,13 @@ Copyright (C) 2020 - 2022 George MacKerron
 Released under the MIT licence: see LICENCE file
 */
 
-declare module "zapatos/schema" {
-  import type * as db from "zapatos/db";
+declare module 'zapatos/schema' {
+
+  import type * as db from 'zapatos/db';
 
   // got a type error on schemaVersionCanary below? update by running `npx zapatos`
-  export interface schemaVersionCanary extends db.SchemaVersionCanary {
-    version: 104;
-  }
+  export interface schemaVersionCanary extends db.SchemaVersionCanary { version: 104 }
+
 
   /* === schema: public === */
 
@@ -27,248 +27,141 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace knex_migrations {
-    export type Table = "knex_migrations";
+    export type Table = 'knex_migrations';
     export interface Selectable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       name: string | null;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       batch: number | null;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
       migration_time: Date | null;
     }
     export interface JSONSelectable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       name: string | null;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       batch: number | null;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
       migration_time: db.TimestampTzString | null;
     }
     export interface Whereable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "knex_migrations_pkey";
+    export type UniqueIndex = 'knex_migrations_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -277,133 +170,81 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace knex_migrations_lock {
-    export type Table = "knex_migrations_lock";
+    export type Table = 'knex_migrations_lock';
     export interface Selectable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index: number;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       is_locked: number | null;
     }
     export interface JSONSelectable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index: number;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       is_locked: number | null;
     }
     export interface Whereable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
-      index?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
+      index?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
-      index?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
+      index?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "knex_migrations_lock_pkey";
+    export type UniqueIndex = 'knex_migrations_lock_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -412,317 +253,251 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace newtable {
-    export type Table = "newtable";
+    export type Table = 'newtable';
     export interface Selectable {
       /**
-       * **newtable.column1**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      column1: string | null;
-    }
-    export interface JSONSelectable {
-      /**
-       * **newtable.column1**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      column1: string | null;
-    }
-    export interface Whereable {
-      /**
-       * **newtable.column1**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      column1?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
-    }
-    export interface Insertable {
-      /**
-       * **newtable.column1**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      column1?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-       * **newtable.column1**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      column1?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
-    }
-    export type UniqueIndex = never;
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  /**
-   * **test**
-   * - Table in database
-   */
-  export namespace test {
-    export type Table = "test";
-    export interface Selectable {
-      /**
-       * **test.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('test_id_seq'::regclass)`
-       */
+      * **newtable.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **test.first_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       first_name: string;
       /**
-       * **test.last_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       last_name: string;
     }
     export interface JSONSelectable {
       /**
-       * **test.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('test_id_seq'::regclass)`
-       */
+      * **newtable.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **test.first_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       first_name: string;
       /**
-       * **test.last_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       last_name: string;
     }
     export interface Whereable {
       /**
-       * **test.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('test_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **newtable.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **test.first_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      first_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **newtable.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **test.last_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      last_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **newtable.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **test.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('test_id_seq'::regclass)`
-       */
+      * **newtable.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **test.first_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       first_name: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **test.last_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **newtable.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       last_name: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **test.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('test_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **newtable.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **test.first_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      first_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **newtable.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **test.last_name**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      last_name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **newtable.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "test_pkey";
+    export type UniqueIndex = 'newtable_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **toto**
+   * - Table in database
+   */
+  export namespace toto {
+    export type Table = 'toto';
+    export interface Selectable {
+      /**
+      * **toto.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **toto.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string;
+      /**
+      * **toto.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **toto.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **toto.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string;
+      /**
+      * **toto.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name: string;
+    }
+    export interface Whereable {
+      /**
+      * **toto.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **toto.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **toto.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **toto.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **toto.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **toto.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **toto.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **toto.first_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      first_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **toto.last_name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      last_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'toto_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
   /* --- aggregate types --- */
 
-  export namespace public {
-    export type Table =
-      | knex_migrations.Table
-      | knex_migrations_lock.Table
-      | newtable.Table
-      | test.Table;
-    export type Selectable =
-      | knex_migrations.Selectable
-      | knex_migrations_lock.Selectable
-      | newtable.Selectable
-      | test.Selectable;
-    export type JSONSelectable =
-      | knex_migrations.JSONSelectable
-      | knex_migrations_lock.JSONSelectable
-      | newtable.JSONSelectable
-      | test.JSONSelectable;
-    export type Whereable =
-      | knex_migrations.Whereable
-      | knex_migrations_lock.Whereable
-      | newtable.Whereable
-      | test.Whereable;
-    export type Insertable =
-      | knex_migrations.Insertable
-      | knex_migrations_lock.Insertable
-      | newtable.Insertable
-      | test.Insertable;
-    export type Updatable =
-      | knex_migrations.Updatable
-      | knex_migrations_lock.Updatable
-      | newtable.Updatable
-      | test.Updatable;
-    export type UniqueIndex =
-      | knex_migrations.UniqueIndex
-      | knex_migrations_lock.UniqueIndex
-      | newtable.UniqueIndex
-      | test.UniqueIndex;
-    export type Column =
-      | knex_migrations.Column
-      | knex_migrations_lock.Column
-      | newtable.Column
-      | test.Column;
-
-    export type AllBaseTables = [
-      knex_migrations.Table,
-      knex_migrations_lock.Table,
-      newtable.Table,
-      test.Table
-    ];
+  export namespace public {  
+    export type Table = knex_migrations.Table | knex_migrations_lock.Table | newtable.Table | toto.Table;
+    export type Selectable = knex_migrations.Selectable | knex_migrations_lock.Selectable | newtable.Selectable | toto.Selectable;
+    export type JSONSelectable = knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | newtable.JSONSelectable | toto.JSONSelectable;
+    export type Whereable = knex_migrations.Whereable | knex_migrations_lock.Whereable | newtable.Whereable | toto.Whereable;
+    export type Insertable = knex_migrations.Insertable | knex_migrations_lock.Insertable | newtable.Insertable | toto.Insertable;
+    export type Updatable = knex_migrations.Updatable | knex_migrations_lock.Updatable | newtable.Updatable | toto.Updatable;
+    export type UniqueIndex = knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | newtable.UniqueIndex | toto.UniqueIndex;
+    export type Column = knex_migrations.Column | knex_migrations_lock.Column | newtable.Column | toto.Column;
+  
+    export type AllBaseTables = [knex_migrations.Table, knex_migrations_lock.Table, newtable.Table, toto.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [
-      knex_migrations.Table,
-      knex_migrations_lock.Table,
-      newtable.Table,
-      test.Table
-    ];
+    export type AllTablesAndViews = [knex_migrations.Table, knex_migrations_lock.Table, newtable.Table, toto.Table];
   }
+
+
 
   /* === global aggregate types === */
 
-  export type Schema = "public";
+  export type Schema = 'public';
   export type Table = public.Table;
   export type Selectable = public.Selectable;
   export type JSONSelectable = public.JSONSelectable;
@@ -732,68 +507,70 @@ declare module "zapatos/schema" {
   export type UniqueIndex = public.UniqueIndex;
   export type Column = public.Column;
 
-  export type AllSchemas = ["public"];
+  export type AllSchemas = ['public'];
   export type AllBaseTables = [...public.AllBaseTables];
   export type AllForeignTables = [...public.AllForeignTables];
   export type AllViews = [...public.AllViews];
   export type AllMaterializedViews = [...public.AllMaterializedViews];
   export type AllTablesAndViews = [...public.AllTablesAndViews];
 
+
   /* === lookups === */
 
   export type SelectableForTable<T extends Table> = {
-    knex_migrations: knex_migrations.Selectable;
-    knex_migrations_lock: knex_migrations_lock.Selectable;
-    newtable: newtable.Selectable;
-    test: test.Selectable;
+    "knex_migrations": knex_migrations.Selectable;
+    "knex_migrations_lock": knex_migrations_lock.Selectable;
+    "newtable": newtable.Selectable;
+    "toto": toto.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
-    knex_migrations: knex_migrations.JSONSelectable;
-    knex_migrations_lock: knex_migrations_lock.JSONSelectable;
-    newtable: newtable.JSONSelectable;
-    test: test.JSONSelectable;
+    "knex_migrations": knex_migrations.JSONSelectable;
+    "knex_migrations_lock": knex_migrations_lock.JSONSelectable;
+    "newtable": newtable.JSONSelectable;
+    "toto": toto.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
-    knex_migrations: knex_migrations.Whereable;
-    knex_migrations_lock: knex_migrations_lock.Whereable;
-    newtable: newtable.Whereable;
-    test: test.Whereable;
+    "knex_migrations": knex_migrations.Whereable;
+    "knex_migrations_lock": knex_migrations_lock.Whereable;
+    "newtable": newtable.Whereable;
+    "toto": toto.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
-    knex_migrations: knex_migrations.Insertable;
-    knex_migrations_lock: knex_migrations_lock.Insertable;
-    newtable: newtable.Insertable;
-    test: test.Insertable;
+    "knex_migrations": knex_migrations.Insertable;
+    "knex_migrations_lock": knex_migrations_lock.Insertable;
+    "newtable": newtable.Insertable;
+    "toto": toto.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
-    knex_migrations: knex_migrations.Updatable;
-    knex_migrations_lock: knex_migrations_lock.Updatable;
-    newtable: newtable.Updatable;
-    test: test.Updatable;
+    "knex_migrations": knex_migrations.Updatable;
+    "knex_migrations_lock": knex_migrations_lock.Updatable;
+    "newtable": newtable.Updatable;
+    "toto": toto.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
-    knex_migrations: knex_migrations.UniqueIndex;
-    knex_migrations_lock: knex_migrations_lock.UniqueIndex;
-    newtable: newtable.UniqueIndex;
-    test: test.UniqueIndex;
+    "knex_migrations": knex_migrations.UniqueIndex;
+    "knex_migrations_lock": knex_migrations_lock.UniqueIndex;
+    "newtable": newtable.UniqueIndex;
+    "toto": toto.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
-    knex_migrations: knex_migrations.Column;
-    knex_migrations_lock: knex_migrations_lock.Column;
-    newtable: newtable.Column;
-    test: test.Column;
+    "knex_migrations": knex_migrations.Column;
+    "knex_migrations_lock": knex_migrations_lock.Column;
+    "newtable": newtable.Column;
+    "toto": toto.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
-    knex_migrations: knex_migrations.SQL;
-    knex_migrations_lock: knex_migrations_lock.SQL;
-    newtable: newtable.SQL;
-    test: test.SQL;
+    "knex_migrations": knex_migrations.SQL;
+    "knex_migrations_lock": knex_migrations_lock.SQL;
+    "newtable": newtable.SQL;
+    "toto": toto.SQL;
   }[T];
+
 }
