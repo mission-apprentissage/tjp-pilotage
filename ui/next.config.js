@@ -1,13 +1,14 @@
 /** @type {import('next').NextConfig} */
 
-import { join } from "path";
+const path = require("path");
+
 const nextConfig = {
   transpilePackages: ['shared'],
   experimental: {
     appDir: true,
-    outputFileTracingRoot: join(__dirname, '../')
+    outputFileTracingRoot: path.join(__dirname, '../')
   },
   output: 'standalone'
 }
 
-export default nextConfig
+module.exports = nextConfig

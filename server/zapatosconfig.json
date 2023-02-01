@@ -1,0 +1,6 @@
+{
+  "db": {
+    "connectionString": "{{PILOTAGE_POSTGRES_URI}}"
+  },
+  "outDir": "./src"
+}
