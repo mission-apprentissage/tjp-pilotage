@@ -11,9 +11,12 @@
     "start": "node dist/index.js",
     "dev": "tsup src/index.ts --watch . --onSuccess 'yarn run start'",
     "build": "tsup src/index.ts",
-    "create-migration": "knex --esm migrate:make",
-    "migrate": "knex --esm migrate:latest",
-    "zapatos": "zapatos"
+    "create-migration": "knex migrate:make",
+    "create-migration-docker": "docker exec -it pilotage_server yarn create-migration",
+    "migrate": "knex migrate:latest",
+    "migrate-docker": "docker exec -it pilotage_server yarn migrate",
+    "zapatos": "zapatos",
+    "zapatos-docker": "docker exec -it pilotage_server yarn zapatos"
   },
   "type": "module",
   "dependencies": {
