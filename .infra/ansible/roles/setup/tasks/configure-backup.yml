@@ -19,14 +19,6 @@
         fstype: nfs
         boot: yes
 
-    - name: Add mongodb backup cron
-      when: backup_cron|bool == true
-      cron:
-        name: "backup"
-        minute: "0"
-        hour: "4"
-        job: "bash /opt/pilotage/tools/backup-mongodb.sh>> /var/log/cron.log 2>&1"
-
     - name: Add metabase backup cron"
       become: true
       cron:
@@ -50,4 +42,3 @@
     path: /mnt/backups
     state: directory
     mode: 700
-

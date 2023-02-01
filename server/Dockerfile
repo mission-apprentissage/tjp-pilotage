@@ -23,5 +23,5 @@ ENV NODE_ENV production
 COPY --from=builder ./app/. .
 
 EXPOSE 5000
-
-CMD ["node", "server/dist/index.js"]
+WORKDIR /app/server
+CMD ["node", "dist/index.js"]

@@ -1,5 +1,5 @@
 {
-  "include": ["./src"],
+  "include": ["."],
   "compilerOptions": {
     "strictPropertyInitialization": false,
     "declarationMap": true,

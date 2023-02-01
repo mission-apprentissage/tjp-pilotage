@@ -34,12 +34,10 @@
     "@typescript-eslint/parser": "^5.49.0",
     "eslint": "8.25.0",
     "eslint-config-next": "13.0.1",
-    "eslint-config-prettier": "8.5.0",
     "eslint-plugin-import": "2.25.3",
     "eslint-plugin-jsx-a11y": "6.5.1",
     "eslint-plugin-mocha": "10.1.0",
     "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-prettier": "4.2.1",
     "eslint-plugin-simple-import-sort": "^10.0.0",
     "husky": "4.3.8",
     "lint-staged": "11.2.6",
@@ -61,16 +59,11 @@
     }
   },
   "lint-staged": {
-    "./server/*.{js,jsx}": [
-      "eslint --cache --fix ./server/src ./server/tests"
+    "*.{ts,js,tsx}": [
+      "eslint .",
+      "prettier ./ui ./server"
     ],
-    "./ui/*.{jsx}": [
-      "yarn --cwd ui lint"
-    ],
-    "*.{js,jsx}": [
-      "prettier --write ./ui ./server"
-    ],
-    "*.{md,json,html}": "prettier --write ./ui ./server"
+    "*.{md,json,html}": "prettier ./ui ./server ./shared"
   },
   "packageManager": "yarn@3.3.1"
 }

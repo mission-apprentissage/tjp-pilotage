@@ -2,10 +2,7 @@ install:
 	docker-compose -f docker-compose-install.yml up --build
 
 start:
-	docker-compose up --build
-
-start-mongodb:
-	docker-compose up -d mongodb
+	docker-compose up --build --force-recreate
 
 stop:
 	docker-compose stop
