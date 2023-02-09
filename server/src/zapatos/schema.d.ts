@@ -23,6 +23,209 @@ declare module 'zapatos/schema' {
   /* --- tables --- */
 
   /**
+   * **famillesMetiers**
+   * - Table in database
+   */
+  export namespace famillesMetiers {
+    export type Table = 'famillesMetiers';
+    export interface Selectable {
+      /**
+      * **famillesMetiers.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **famillesMetiers.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille: string;
+      /**
+      * **famillesMetiers.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite: string;
+      /**
+      * **famillesMetiers.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle: string;
+      /**
+      * **famillesMetiers.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille: string;
+      /**
+      * **famillesMetiers.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **famillesMetiers.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **famillesMetiers.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille: string;
+      /**
+      * **famillesMetiers.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite: string;
+      /**
+      * **famillesMetiers.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle: string;
+      /**
+      * **famillesMetiers.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille: string;
+      /**
+      * **famillesMetiers.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite: string;
+    }
+    export interface Whereable {
+      /**
+      * **famillesMetiers.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **famillesMetiers.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **famillesMetiers.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **famillesMetiers.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **famillesMetiers.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **famillesMetiers.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **famillesMetiers.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **famillesMetiers.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **famillesMetiers.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **famillesMetiers.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **famillesMetiers.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **famillesMetiers.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **famillesMetiers.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **famillesMetiers.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **famillesMetiers.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **famillesMetiers.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **famillesMetiers.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **famillesMetiers.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'famillesMetiers_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **knex_migrations**
    * - Table in database
    */
@@ -248,249 +451,23 @@ declare module 'zapatos/schema' {
     export type SQL = SQLExpression | SQLExpression[];
   }
 
-  /**
-   * **newtable**
-   * - Table in database
-   */
-  export namespace newtable {
-    export type Table = 'newtable';
-    export interface Selectable {
-      /**
-      * **newtable.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **newtable.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string;
-      /**
-      * **newtable.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string;
-    }
-    export interface JSONSelectable {
-      /**
-      * **newtable.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **newtable.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string;
-      /**
-      * **newtable.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string;
-    }
-    export interface Whereable {
-      /**
-      * **newtable.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **newtable.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **newtable.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **newtable.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **newtable.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **newtable.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string | db.Parameter<string> | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **newtable.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('newtable_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **newtable.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **newtable.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'newtable_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  /**
-   * **toto**
-   * - Table in database
-   */
-  export namespace toto {
-    export type Table = 'toto';
-    export interface Selectable {
-      /**
-      * **toto.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **toto.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string;
-      /**
-      * **toto.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string;
-    }
-    export interface JSONSelectable {
-      /**
-      * **toto.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **toto.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string;
-      /**
-      * **toto.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string;
-    }
-    export interface Whereable {
-      /**
-      * **toto.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **toto.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **toto.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **toto.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **toto.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **toto.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name: string | db.Parameter<string> | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **toto.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('toto_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **toto.first_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      first_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **toto.last_name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      last_name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'toto_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = knex_migrations.Table | knex_migrations_lock.Table | newtable.Table | toto.Table;
-    export type Selectable = knex_migrations.Selectable | knex_migrations_lock.Selectable | newtable.Selectable | toto.Selectable;
-    export type JSONSelectable = knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | newtable.JSONSelectable | toto.JSONSelectable;
-    export type Whereable = knex_migrations.Whereable | knex_migrations_lock.Whereable | newtable.Whereable | toto.Whereable;
-    export type Insertable = knex_migrations.Insertable | knex_migrations_lock.Insertable | newtable.Insertable | toto.Insertable;
-    export type Updatable = knex_migrations.Updatable | knex_migrations_lock.Updatable | newtable.Updatable | toto.Updatable;
-    export type UniqueIndex = knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | newtable.UniqueIndex | toto.UniqueIndex;
-    export type Column = knex_migrations.Column | knex_migrations_lock.Column | newtable.Column | toto.Column;
+    export type Table = famillesMetiers.Table | knex_migrations.Table | knex_migrations_lock.Table;
+    export type Selectable = famillesMetiers.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable;
+    export type JSONSelectable = famillesMetiers.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable;
+    export type Whereable = famillesMetiers.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable;
+    export type Insertable = famillesMetiers.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable;
+    export type Updatable = famillesMetiers.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable;
+    export type UniqueIndex = famillesMetiers.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex;
+    export type Column = famillesMetiers.Column | knex_migrations.Column | knex_migrations_lock.Column;
   
-    export type AllBaseTables = [knex_migrations.Table, knex_migrations_lock.Table, newtable.Table, toto.Table];
+    export type AllBaseTables = [famillesMetiers.Table, knex_migrations.Table, knex_migrations_lock.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [knex_migrations.Table, knex_migrations_lock.Table, newtable.Table, toto.Table];
+    export type AllTablesAndViews = [famillesMetiers.Table, knex_migrations.Table, knex_migrations_lock.Table];
   }
 
 
@@ -518,59 +495,51 @@ declare module 'zapatos/schema' {
   /* === lookups === */
 
   export type SelectableForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.Selectable;
     "knex_migrations": knex_migrations.Selectable;
     "knex_migrations_lock": knex_migrations_lock.Selectable;
-    "newtable": newtable.Selectable;
-    "toto": toto.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.JSONSelectable;
     "knex_migrations": knex_migrations.JSONSelectable;
     "knex_migrations_lock": knex_migrations_lock.JSONSelectable;
-    "newtable": newtable.JSONSelectable;
-    "toto": toto.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.Whereable;
     "knex_migrations": knex_migrations.Whereable;
     "knex_migrations_lock": knex_migrations_lock.Whereable;
-    "newtable": newtable.Whereable;
-    "toto": toto.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.Insertable;
     "knex_migrations": knex_migrations.Insertable;
     "knex_migrations_lock": knex_migrations_lock.Insertable;
-    "newtable": newtable.Insertable;
-    "toto": toto.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.Updatable;
     "knex_migrations": knex_migrations.Updatable;
     "knex_migrations_lock": knex_migrations_lock.Updatable;
-    "newtable": newtable.Updatable;
-    "toto": toto.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.UniqueIndex;
     "knex_migrations": knex_migrations.UniqueIndex;
     "knex_migrations_lock": knex_migrations_lock.UniqueIndex;
-    "newtable": newtable.UniqueIndex;
-    "toto": toto.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.Column;
     "knex_migrations": knex_migrations.Column;
     "knex_migrations_lock": knex_migrations_lock.Column;
-    "newtable": newtable.Column;
-    "toto": toto.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
+    "famillesMetiers": famillesMetiers.SQL;
     "knex_migrations": knex_migrations.SQL;
     "knex_migrations_lock": knex_migrations_lock.SQL;
-    "newtable": newtable.SQL;
-    "toto": toto.SQL;
   }[T];
 
 }
