@@ -218,7 +218,240 @@ declare module 'zapatos/schema' {
       */
       mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = 'famillesMetiers_pkey';
+    export type UniqueIndex = 'famillesMetiers_mefStat11Specialite_key' | 'famillesMetiers_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **formations**
+   * - Table in database
+   */
+  export namespace formations {
+    export type Table = 'formations';
+    export interface Selectable {
+      /**
+      * **formations.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **formations.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome: string;
+      /**
+      * **formations.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp: number;
+      /**
+      * **formations.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome: string;
+      /**
+      * **formations.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string;
+      /**
+      * **formations.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture: Date;
+      /**
+      * **formations.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture: Date | null;
+    }
+    export interface JSONSelectable {
+      /**
+      * **formations.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id: string;
+      /**
+      * **formations.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome: string;
+      /**
+      * **formations.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp: number;
+      /**
+      * **formations.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome: string;
+      /**
+      * **formations.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string;
+      /**
+      * **formations.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture: db.DateString;
+      /**
+      * **formations.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture: db.DateString | null;
+    }
+    export interface Whereable {
+      /**
+      * **formations.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formations.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **formations.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
+      /**
+      * **formations.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **formations.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp: number | db.Parameter<number> | db.SQLFragment;
+      /**
+      * **formations.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **formations.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **formations.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment;
+      /**
+      * **formations.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **formations.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **formations.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **formations.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      /**
+      * **formations.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **formations.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **formations.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment>;
+      /**
+      * **formations.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'formations_codeFormationDiplome_key' | 'formations_pkey';
     export type Column = keyof Selectable;
     export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
     export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
@@ -454,20 +687,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = famillesMetiers.Table | knex_migrations.Table | knex_migrations_lock.Table;
-    export type Selectable = famillesMetiers.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable;
-    export type JSONSelectable = famillesMetiers.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable;
-    export type Whereable = famillesMetiers.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable;
-    export type Insertable = famillesMetiers.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable;
-    export type Updatable = famillesMetiers.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable;
-    export type UniqueIndex = famillesMetiers.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex;
-    export type Column = famillesMetiers.Column | knex_migrations.Column | knex_migrations_lock.Column;
+    export type Table = famillesMetiers.Table | formations.Table | knex_migrations.Table | knex_migrations_lock.Table;
+    export type Selectable = famillesMetiers.Selectable | formations.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable;
+    export type JSONSelectable = famillesMetiers.JSONSelectable | formations.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable;
+    export type Whereable = famillesMetiers.Whereable | formations.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable;
+    export type Insertable = famillesMetiers.Insertable | formations.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable;
+    export type Updatable = famillesMetiers.Updatable | formations.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable;
+    export type UniqueIndex = famillesMetiers.UniqueIndex | formations.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex;
+    export type Column = famillesMetiers.Column | formations.Column | knex_migrations.Column | knex_migrations_lock.Column;
   
-    export type AllBaseTables = [famillesMetiers.Table, knex_migrations.Table, knex_migrations_lock.Table];
+    export type AllBaseTables = [famillesMetiers.Table, formations.Table, knex_migrations.Table, knex_migrations_lock.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [famillesMetiers.Table, knex_migrations.Table, knex_migrations_lock.Table];
+    export type AllTablesAndViews = [famillesMetiers.Table, formations.Table, knex_migrations.Table, knex_migrations_lock.Table];
   }
 
 
@@ -496,48 +729,56 @@ declare module 'zapatos/schema' {
 
   export type SelectableForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.Selectable;
+    "formations": formations.Selectable;
     "knex_migrations": knex_migrations.Selectable;
     "knex_migrations_lock": knex_migrations_lock.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.JSONSelectable;
+    "formations": formations.JSONSelectable;
     "knex_migrations": knex_migrations.JSONSelectable;
     "knex_migrations_lock": knex_migrations_lock.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.Whereable;
+    "formations": formations.Whereable;
     "knex_migrations": knex_migrations.Whereable;
     "knex_migrations_lock": knex_migrations_lock.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.Insertable;
+    "formations": formations.Insertable;
     "knex_migrations": knex_migrations.Insertable;
     "knex_migrations_lock": knex_migrations_lock.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.Updatable;
+    "formations": formations.Updatable;
     "knex_migrations": knex_migrations.Updatable;
     "knex_migrations_lock": knex_migrations_lock.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.UniqueIndex;
+    "formations": formations.UniqueIndex;
     "knex_migrations": knex_migrations.UniqueIndex;
     "knex_migrations_lock": knex_migrations_lock.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.Column;
+    "formations": formations.Column;
     "knex_migrations": knex_migrations.Column;
     "knex_migrations_lock": knex_migrations_lock.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
     "famillesMetiers": famillesMetiers.SQL;
+    "formations": formations.SQL;
     "knex_migrations": knex_migrations.SQL;
     "knex_migrations_lock": knex_migrations_lock.SQL;
   }[T];

@@ -32,7 +32,6 @@
     "cli": "^1.0.1",
     "commander": "^10.0.0",
     "csv-parse": "^5.3.5",
-    "dotenv": "16.0.0",
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
     "jsonwebtoken": "8.5.1",
@@ -52,6 +51,7 @@
   },
   "devDependencies": {
     "@types/lodash": "^4.14.191",
+    "@types/luxon": "^3.2.0",
     "@types/pg": "^8.6.6",
     "chalk": "4.1.2",
     "nodemon": "^2.0.20",

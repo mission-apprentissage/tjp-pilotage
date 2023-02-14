@@ -2,7 +2,7 @@ import pg from "pg";
 import * as db from "zapatos/db";
 import { conditions } from "zapatos/db";
 
-import { config } from "./../../config/config";
+import { config } from "../../config/config";
 
 const pool = new pg.Pool({
   connectionString: config.PILOTAGE_POSTGRES_URI,

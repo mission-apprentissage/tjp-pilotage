@@ -1,10 +1,9 @@
+import { IsolationLevel } from "zapatos/db";
+
 import { db, pool } from "../../../../db/zapatos";
-export const createFamilleMetier = async (line: {
-  libelleOfficielFamille: string;
-  libelleOfficielSpecialite: string;
-  mefStat11Famille: string;
-  mefStat11Specialite: string;
-  codeMinistereTutelle: string;
-}) => {
-  await db.insert("famillesMetiers", line).run(pool);
-};
+import { FamilleMetier } from "../../entities/FamillesMetiers";
+
+export const createFamillesMetiers = async (famillesMetiers: FamilleMetier[]) =>
+  await db.transaction(pool, IsolationLevel.Serializable, (tr) =>
+    db.upsert("famillesMetiers", famillesMetiers, "mefStat11Specialite").run(tr)
+  );
