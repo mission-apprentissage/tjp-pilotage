@@ -1,9 +1,8 @@
 import pg from "pg";
 import * as db from "zapatos/db";
 import { conditions } from "zapatos/db";
-import type * as schema from "zapatos/schema";
 
-import { config } from './../../config/config';
+import { config } from "../../config/config";
 
 const pool = new pg.Pool({
   connectionString: config.PILOTAGE_POSTGRES_URI,
@@ -15,4 +14,4 @@ db.setConfig({
   castArrayParamsToJson: true,
 });
 
-export { db, conditions, pool, schema };
+export { db, conditions, pool };
