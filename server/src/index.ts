@@ -1,5 +1,3 @@
-import "dotenv/config";
-
 import fastifyCors from "@fastify/cors";
 import { config } from "config/config";
 import knex from "knex";
