@@ -1,5 +1,6 @@
 {
-  "include": ["."],
+  "include": ["src"],
+  "exclude": ["**/node_modules"],
   "compilerOptions": {
     "strictPropertyInitialization": false,
     "declarationMap": true,

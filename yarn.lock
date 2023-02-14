@@ -1087,6 +1087,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinclair/typebox@npm:^0.25.21":
+  version: 0.25.21
+  resolution: "@sinclair/typebox@npm:0.25.21"
+  checksum: 763af1163fe4eabee9b914d4e4548a39fbba3287d2b3b1ff043c1da3c5a321e99d50a3ca94eb182988131e00b006a6f019799cde8da2f61e2f118b30b0276a00
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.4.14":
   version: 0.4.14
   resolution: "@swc/helpers@npm:0.4.14"
@@ -8727,6 +8734,7 @@ __metadata:
   dependencies:
     "@fastify/cors": ^8.2.0
     "@fastify/type-provider-typebox": ^2.4.0
+    "@sinclair/typebox": ^0.25.21
     "@types/lodash": ^4.14.191
     "@types/luxon": ^3.2.0
     "@types/pg": ^8.6.6

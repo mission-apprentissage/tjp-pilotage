@@ -13,4 +13,7 @@ lint:
 clean:
 	docker-compose kill && docker system prune --force --volumes
 
-ci: install lint
+typecheck:
+	yarn --cwd server typecheck && yarn --cwd ui typecheck
+
+ci: install lint typecheck

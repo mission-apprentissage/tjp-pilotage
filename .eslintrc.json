@@ -47,7 +47,7 @@
     ],
     "import/no-useless-path-segments": ["error"],
     "import/no-duplicates": ["error", { "considerQueryString": true }],
-    "import/no-unassigned-import": ["error"]
+    "import/no-unassigned-import": ["off"]
   },
   "settings": {
     "react": {

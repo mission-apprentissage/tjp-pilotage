@@ -11,6 +11,7 @@
     "start": "node dist/src/index.js",
     "dev": "tsup src/index.ts migrations --watch . --onSuccess 'yarn run start'",
     "build": "tsup src/index.ts migrations",
+    "typecheck": "tsc",
     "create-migration": "knex migrate:make --migrations-directory migrations",
     "create-migration-docker": "docker exec -it pilotage_server yarn create-migration",
     "migrate": "knex migrate:latest",
@@ -23,6 +24,7 @@
   "dependencies": {
     "@fastify/cors": "^8.2.0",
     "@fastify/type-provider-typebox": "^2.4.0",
+    "@sinclair/typebox": "^0.25.21",
     "axios": "0.24.0",
     "boom": "7.3.0",
     "bunyan": "1.8.15",
