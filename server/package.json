@@ -10,7 +10,7 @@
   "scripts": {
     "start": "node dist/src/index.js",
     "dev": "tsup src/index.ts migrations --watch . --onSuccess 'yarn run start'",
-    "build": "tsup src/index.ts",
+    "build": "tsup src/index.ts migrations",
     "create-migration": "knex migrate:make --migrations-directory migrations",
     "create-migration-docker": "docker exec -it pilotage_server yarn create-migration",
     "migrate": "knex migrate:latest",
