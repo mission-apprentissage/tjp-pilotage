@@ -1,5 +1,6 @@
 {
-  "include": ["."],
+  "include": ["src"],
+  "exclude": ["**/node_modules"],
   "compilerOptions": {
     "strictPropertyInitialization": false,
     "declarationMap": true,
@@ -8,7 +9,7 @@
     "pretty": true,
     "isolatedModules": false,
     "lib": ["ES2020"] /* Emit ECMAScript-standard-compliant class fields. */,
-    "module": "ESNext" /* Specify what module code is generated. */,
+    // "module": "ES2020" /* Specify what module code is generated. */,
     "moduleResolution": "node" /* Specify how TypeScript looks up a file from a given module specifier. */,
     "resolveJsonModule": true,
     "target": "ES2020",
