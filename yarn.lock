@@ -2962,13 +2962,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.0.0":
-  version: 16.0.0
-  resolution: "dotenv@npm:16.0.0"
-  checksum: 664cebb51f0a9a1d1b930f51f0271e72e26d62feaecc9dc03df39453dd494b4e724809ca480fb3ec3213382b1ed3f791aaeb83569a137f9329ce58efd4853dbf
-  languageName: node
-  linkType: hard
-
 "dtrace-provider@npm:~0.8":
   version: 0.8.8
   resolution: "dtrace-provider@npm:0.8.8"
@@ -8747,7 +8740,6 @@ __metadata:
     cli: ^1.0.1
     commander: ^10.0.0
     csv-parse: ^5.3.5
-    dotenv: 16.0.0
     env-var: 7.1.1
     fastify: ^4.12.0
     jsonwebtoken: 8.5.1

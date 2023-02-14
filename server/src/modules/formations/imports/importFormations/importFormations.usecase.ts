@@ -99,7 +99,7 @@ export const importFormationsFactory =
       }))
       .map((value) => ({
         codeFormationDiplome: value["Code diplôme"],
-        rncp: parseInt(value["Code RNCP"]) || undefined,
+        rncp: parseInt(value["Code RNCP"]),
         libelleDiplome: value["Intitulé de la spécialité (et options)"],
         codeNiveauDiplome: value["Code diplôme"].slice(0, 3),
         dateOuverture: DateTime.fromFormat(

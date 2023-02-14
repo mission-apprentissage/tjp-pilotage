@@ -1,6 +1,7 @@
 const defaultConfig = {
   client: "pg",
   connection: process.env.PILOTAGE_POSTGRES_URI,
+  migrations: { directory: "dist/migrations" },
 };
 
 export default {
