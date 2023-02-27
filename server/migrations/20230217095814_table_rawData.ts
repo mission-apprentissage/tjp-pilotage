@@ -4,10 +4,12 @@ export async function up() {
   await db.sql`
   CREATE TABLE "rawData" (
     "type" varchar NOT NULL,
-    "data" jsonb,
-    INDEX "rawData_daftar_data" 
-      ON "rawData" USING GIN(data)
+    "data" jsonb
   );
+  `.run(pool);
+  await db.sql`
+  INDEX "rawData_gin_data" 
+      ON "rawData" USING GIN(data)
   `.run(pool);
 }
 
