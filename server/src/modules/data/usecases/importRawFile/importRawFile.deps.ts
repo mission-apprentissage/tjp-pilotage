@@ -5,7 +5,7 @@ import { db, pool } from "../../../../db/zapatos";
 export const createRawDatas = async ({
   data,
 }: {
-  data: { type: string; key: string; data: JSONValue }[];
+  data: { type: string; data: JSONValue }[];
 }) => {
   return await db.insert("rawData", data).run(pool);
 };
