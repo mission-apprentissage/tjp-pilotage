@@ -12,7 +12,7 @@ export async function up() {
       FOREIGN KEY("ancienCFD") 
 	    REFERENCES formation("codeFormationDiplome"),
     CONSTRAINT formationhistorique_pk
-      PRIMARY KEY (codeFormationDiplome, ancienCFD)
+      PRIMARY KEY ("codeFormationDiplome", "ancienCFD")
   );
   `.run(pool);
 }
