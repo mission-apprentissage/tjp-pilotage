@@ -8,8 +8,8 @@ export async function up() {
   );
   `.run(pool);
   await db.sql`
-  INDEX "rawData_gin_data" 
-      ON "rawData" USING GIN(data)
+  CREATE INDEX "rawData_gin_data" 
+      ON "rawData" USING GIN(data);
   `.run(pool);
 }
 
