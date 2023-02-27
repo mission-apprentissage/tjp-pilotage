@@ -27,7 +27,7 @@ cli.command("toto").action(async () => {
 
 cli
   .command("importFiles")
-  .argument("<filename>")
+  .argument("[filename]>")
   .action(async (filename: string) => {
     const actions = {
       nMef: () =>
@@ -122,7 +122,7 @@ cli.command("truncateImports").action(async () => {
 
 cli
   .command("import")
-  .argument("<usecase>")
+  .argument("[usecase]")
   .action(async (usecaseName: string) => {
     const usecases = {
       importRegions,

@@ -29,7 +29,7 @@ const findRawData = async <T extends keyof LineTypes>({
     .selectOne("rawData", {
       ...(filter
         ? {
-            filter: db.sql`${db.self}@>${db.param(filter)}`,
+            data: db.sql`${db.self}@>${db.param(filter)}`,
           }
         : undefined),
       type,
