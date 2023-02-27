@@ -1,10 +1,11 @@
 import { dataDI } from "../../data.DI";
 import { streamIt } from "../../utils/streamIt";
+import { importFamillesMetiersDeps } from "./importFamillesMetiers.deps";
 
 export const importFamillesMetiersFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
-    createFamillesMetiers = dataDI.createFamillesMetiers,
+    createFamillesMetiers = importFamillesMetiersDeps.createFamillesMetiers,
   }) =>
   async () => {
     console.log(`Import des familles de métiers`);

@@ -2,7 +2,7 @@ import { DateTime } from "luxon";
 
 import { dataDI } from "../../data.DI";
 import { streamIt } from "../../utils/streamIt";
-import { getFormations } from "./createFormationsHistoriques";
+import { createFormationsHistoriquesDeps } from "./importFormationsHistoriques.deps";
 
 const ancienDiplomeFields = [
   "ANCIEN_DIPLOME_1",
@@ -16,7 +16,8 @@ const ancienDiplomeFields = [
 
 export const importFormationHistoriqueFactory =
   ({
-    createFormationsHistoriques = dataDI.createFormationsHistoriques,
+    createFormationsHistoriques = createFormationsHistoriquesDeps.createFormationsHistoriques,
+    getFormations = createFormationsHistoriquesDeps.getFormations,
     findRawData = dataDI.rawDataRepository.findRawData,
   }) =>
   async () => {
@@ -27,7 +28,7 @@ export const importFormationHistoriqueFactory =
       async (item) => {
         const formationData = await findRawData({
           type: "nFormationDiplome_",
-          key: item.codeFormationDiplome,
+          filter: { FORMATION_DIPLOME: item.codeFormationDiplome },
         });
 
         const dataPromises = ancienDiplomeFields
@@ -36,7 +37,7 @@ export const importFormationHistoriqueFactory =
           .map(async (ancienCFD) => {
             const ancienneFormationData = await findRawData({
               type: "nFormationDiplome_",
-              key: ancienCFD,
+              filter: { FORMATION_DIPLOME: ancienCFD },
             });
             return {
               nouveauCFD: item.codeFormationDiplome,
