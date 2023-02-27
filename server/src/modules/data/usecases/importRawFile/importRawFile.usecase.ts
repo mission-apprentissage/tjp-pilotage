@@ -38,7 +38,7 @@ export const importRawFileFactory =
             return;
           }
           await createRawDatas({
-            data: [{ type, key: line[key], data: line }],
+            data: [{ type, data: line }],
           });
           count++;
           console.log(`Added line ${count}`);
