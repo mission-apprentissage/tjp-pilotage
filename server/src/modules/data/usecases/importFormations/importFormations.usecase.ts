@@ -3,6 +3,7 @@ import { DateTime } from "luxon";
 import { dataDI } from "../../data.DI";
 import { DiplomeProfessionnelLine } from "../../files/DiplomesProfessionnels";
 import { streamIt } from "../../utils/streamIt";
+import { importFormationsDeps } from "./importFormations.deps";
 import { CFDOverride, RNCPOverride } from "./overrides";
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
@@ -33,7 +34,7 @@ const formatRNCP = (line: DiplomeProfessionnelLine) => {
 export const importFormationsFactory =
   () =>
   async ({
-    createFormation = dataDI.createFormation,
+    createFormation = importFormationsDeps.createFormation,
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     findRawData = dataDI.rawDataRepository.findRawData,
   } = {}) => {
@@ -61,14 +62,14 @@ export const importFormationsFactory =
 
         const nFormationDiplome = await findRawData({
           type: "nFormationDiplome_",
-          key: diplomeProfessionel["Code diplôme"],
+          filter: { FORMATION_DIPLOME: diplomeProfessionel["Code diplôme"] },
         });
         if (!nFormationDiplome) return;
 
         count++;
         process.stdout.write(`\r${count}`);
 
-        const data = {
+        const formation = {
           codeFormationDiplome: diplomeProfessionel["Code diplôme"],
           rncp: parseInt(diplomeProfessionel["Code RNCP"]),
           libelleDiplome:
@@ -86,7 +87,11 @@ export const importFormationsFactory =
             : undefined,
         };
 
-        await createFormation([data]);
+        await createFormation([formation]);
+
+        // createFormationHistorique
+        // createFormationEtablissement
+        // createEtablissement
       }
     );
 

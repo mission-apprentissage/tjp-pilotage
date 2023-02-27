@@ -4,6 +4,7 @@ import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../files/FamilleMetiers";
 import { LyceesACCELine } from "../files/LyceesACCELine";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
+import { NMefLine } from "../files/NMef";
 import { RegionLine } from "../files/Region";
 
 type LineTypes = {
@@ -13,38 +14,41 @@ type LineTypes = {
   affelnet2nde: Affelnet2ndeLine;
   lyceesACCE: LyceesACCELine;
   regions: RegionLine;
+  nMef: NMefLine;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
-  key,
   type,
+  filter,
 }: {
-  key?: string;
   type: T;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  filter?: any;
 }) => {
   const item = await db
-    .selectOne("rawData", { ...(key ? { key } : undefined), type })
+    .selectOne("rawData", {
+      ...(filter
+        ? {
+            filter: db.sql`${db.self}@>${db.param(filter)}`,
+          }
+        : undefined),
+      type,
+    })
     .run(pool);
   return (item?.data as LineTypes[T]) ?? undefined;
 };
 
 const findRawDatas = async <T extends keyof LineTypes>({
-  key,
   type,
   offset = 0,
   limit,
 }: {
-  key?: string;
   type: T;
   offset?: number;
   limit?: number;
 }) => {
   const items = await db
-    .select(
-      "rawData",
-      { ...(key ? { key } : undefined), type },
-      { offset, limit }
-    )
+    .select("rawData", { type }, { offset, limit })
     .run(pool);
   return items.map((item) => item.data as LineTypes[T]);
 };

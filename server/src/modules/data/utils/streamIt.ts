@@ -2,7 +2,7 @@ import { Readable, Writable } from "stream";
 import { pipeline } from "stream/promises";
 export const streamIt = <T>(
   load: (count: number) => Promise<T[]>,
-  write: (chunk: T) => Promise<void>
+  write: (chunk: T, writeCount: number) => Promise<void>
 ) => {
   let count = 0;
 
@@ -21,11 +21,12 @@ export const streamIt = <T>(
       }
     },
   });
-
+  let writeCount = 0;
   const writable = new Writable({
     objectMode: true,
     write: async (chunk, _, callback) => {
-      await write(chunk);
+      await write(chunk, writeCount);
+      writeCount++;
       callback();
     },
   });

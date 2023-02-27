@@ -1,11 +1,14 @@
 import { Readable, Writable } from "stream";
 import { pipeline } from "stream/promises";
 
-import { dataDI } from "../../data.DI";
 import { getStreamParser } from "../../utils/parse";
+import { importRawFileDeps } from "./importRawFile.deps";
 
 export const importRawFileFactory =
-  ({ createRawDatas = dataDI.createRawDatas }) =>
+  ({
+    createRawDatas = importRawFileDeps.createRawDatas,
+    deleteRawData = importRawFileDeps.deleteRawData,
+  }) =>
   async ({
     fileStream,
     key,
@@ -16,6 +19,8 @@ export const importRawFileFactory =
     type: string;
   }) => {
     console.log(`Import des lignes de fichier`);
+
+    await deleteRawData({ type });
 
     let count = 0;
     await pipeline(
