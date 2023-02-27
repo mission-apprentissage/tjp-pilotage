@@ -8,6 +8,19 @@ import { dependencies } from "./dependencies.di";
 import { formatToEtablissement } from "./formatToEtablissement";
 import { getLastMefstat11 } from "./getLastMefstat11";
 
+const logs = {
+  uais: [] as {
+    status: "missing_uai" | "ok";
+    millesime: string;
+    uai: string;
+  }[],
+  mefstats: [] as {
+    uai: string;
+    mefstat: string;
+    millesime: string;
+    status: "missing_uai" | "ok" | "missing_mefstat";
+  }[],
+};
 export const importFormationEtablissementFactory = ({
   findFormations = dependencies.findFormations,
   findAffelnet2ndes = dependencies.findAffelnet2ndes,
@@ -16,63 +29,77 @@ export const importFormationEtablissementFactory = ({
   importFormationEtablissements = importFormationEtablissementsFactory(),
   importEtablissement = importEtablissementFactory(),
 }) => {
-  const logs = { uais: [] as unknown[] };
+  const uaiFormationsMap: Record<
+    string,
+    { cfd: string; mefstat11LastYear: string; dispositifId: string }[]
+  > = {};
 
   return async () => {
-    const count = 0;
-    let countF = 0;
     await streamIt(
       async (count) => findFormations({ offset: count, limit: 30 }),
-      async (item, it) => {
-        console.log("count", it);
+      async (item) => {
         const nMefs = await findNMefs({ cfd: item.codeFormationDiplome });
-        if (nMefs.length) countF++;
-
         const nMefsAnnee1 = nMefs.filter(
           (item) => parseInt(item.ANNEE_DISPOSITIF) === 1
         );
 
         for (const nMefAnnee1 of nMefsAnnee1) {
+          const affelnet2ndes = await findAffelnet2ndes({
+            mefStat11: nMefAnnee1.MEF_STAT_11,
+          });
+
           const nMefLast = getLastMefstat11({
             nMefs,
             nMefAnnee1,
           });
 
-          if (!nMefLast) {
-            console.log("pas de mefstat de dernière année");
-            continue;
-          }
-
-          const affelnet2ndes = await findAffelnet2ndes({
-            mefStat11: nMefAnnee1.MEF_STAT_11,
-          });
+          if (!nMefLast) continue;
 
           for (const affelnet2nde of affelnet2ndes) {
-            const uai = affelnet2nde.Etablissement;
-
-            const deppMillesimeDatas = await Promise.all(
-              ["2018_2019", "2019_2020", "2020_2021"].map(async (millesime) => {
-                const data = await getDeppEtablissement({ uai, millesime });
-                return { millesime, data };
-              })
-            );
-
-            await importEtablissement({ uai, deppMillesimeDatas });
-            await importFormationEtablissements({
-              uai,
-              deppMillesimeDatas,
-              cfd: item.codeFormationDiplome,
-              dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
-              mefstat11LastYear: nMefLast.MEF_STAT_11,
-            });
+            uaiFormationsMap[affelnet2nde.Etablissement] = [
+              ...(uaiFormationsMap[affelnet2nde.Etablissement] ?? []),
+              {
+                cfd: item.codeFormationDiplome,
+                mefstat11LastYear: nMefLast.MEF_STAT_11,
+                dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
+              },
+            ];
           }
         }
       }
     );
 
-    fs.writeFileSync("uais", JSON.stringify(logs, undefined, " "));
+    let count = 1;
+    for (const uaiFormations of Object.entries(uaiFormationsMap)) {
+      const [uai, formationsData] = uaiFormations;
+      console.log(
+        "uai",
+        uai,
+        `${count} of ${Object.entries(uaiFormationsMap).length}`
+      );
+      count++;
 
-    console.log(countF, count);
+      const deppMillesimeDatas = await Promise.all(
+        ["2018_2019", "2019_2020", "2020_2021"].map(async (millesime) => {
+          const data = await getDeppEtablissement({ uai, millesime });
+          return { millesime, data };
+        })
+      );
+      await importEtablissement({ uai, deppMillesimeDatas });
+
+      for (const formationData of formationsData) {
+        const { cfd, mefstat11LastYear, dispositifId } = formationData;
+        await importFormationEtablissements({
+          deppMillesimeDatas,
+          cfd,
+          mefstat11LastYear,
+          dispositifId,
+          uai,
+        });
+      }
+    }
+
+    fs.writeFileSync("uais", JSON.stringify(logs, undefined, " "));
   };
 };
 
@@ -100,18 +127,36 @@ export const importFormationEtablissementsFactory =
     const formationEtablissements: FormationEtablissement[] = deppMillesimeDatas
       .map(({ data, millesime }) => {
         if (!data) {
+          logs.mefstats.push({
+            uai,
+            millesime: millesime,
+            status: "missing_uai",
+            mefstat: mefstat11LastYear,
+          });
           console.log(`uai ${uai}: no depp result`);
           return;
         }
 
         const mefData = data.meftstats?.[mefstat11LastYear];
         if (!mefData) {
+          logs.mefstats.push({
+            uai,
+            millesime: millesime,
+            status: "missing_mefstat",
+            mefstat: mefstat11LastYear,
+          });
           console.log(
             `uai ${uai} mefstat ${mefstat11LastYear} : no mefstat result from depp`
           );
           return;
         }
 
+        logs.mefstats.push({
+          uai,
+          millesime: millesime,
+          status: "ok",
+          mefstat: mefstat11LastYear,
+        });
         console.log(`uai ${uai} mefstat ${mefstat11LastYear} : ok`);
         return {
           cfd,
@@ -153,7 +198,19 @@ export const importEtablissementFactory =
     );
 
     for (const deppMillesimeData of deppMillesimeDatas) {
-      if (!deppMillesimeData.data) return;
+      if (!deppMillesimeData.data) {
+        logs.uais.push({
+          uai,
+          millesime: deppMillesimeData.millesime,
+          status: "missing_uai",
+        });
+        return;
+      }
+      logs.uais.push({
+        uai,
+        millesime: deppMillesimeData.millesime,
+        status: "ok",
+      });
       const indicateur = {
         UAI: uai,
         millesime: deppMillesimeData.millesime,
@@ -176,9 +233,6 @@ export const getDeppEtablissementFactory =
       return ijUaiData[`${uai}_${millesime}`];
     }
     const data = await getUaiData({ uai, millesime });
-    if (!data) {
-      // logs.uais.push({ uai, millesime });
-    }
     ijUaiData[`${uai}_${millesime}`] = data;
     return data;
   };

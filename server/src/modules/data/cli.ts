@@ -4,10 +4,11 @@ import fs from "fs";
 import { db, pool } from "../../db/zapatos";
 import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissement } from "./usecases/importFormationEtablissement2/importFormationEtablissement.usecase";
+import { importFormationEtablissement } from "./usecases/importFormationEtablissement/importFormationEtablissement.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
+import { importRegions } from "./usecases/importRegions/importRegion.usecase";
 // import { importRegions } from "./usecases/importRegions/importRegions.usecase";
 
 cli.command("truncateRawData").action(async () => {
@@ -124,7 +125,7 @@ cli
   .argument("<usecase>")
   .action(async (usecaseName: string) => {
     const usecases = {
-      // importRegions,
+      importRegions,
       importFamillesMetiers,
       importFormations,
       importFormationHistorique,
