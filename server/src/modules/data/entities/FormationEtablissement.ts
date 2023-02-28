@@ -2,6 +2,7 @@ export type FormationEtablissement = {
   UAI: string;
   cfd: string;
   dispositifId: string;
+  voie: string;
   millesimeEntree: string;
   millesimeIJ: string;
   capacite?: number;

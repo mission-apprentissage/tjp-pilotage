@@ -18,6 +18,7 @@ export const createFormationEtablissement = async (
       "cfd",
       "dispositifId",
       "millesimeIJ",
+      "voie",
     ])
     .run(pool);
 };
