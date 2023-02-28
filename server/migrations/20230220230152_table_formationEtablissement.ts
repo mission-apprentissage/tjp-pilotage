@@ -6,7 +6,7 @@ export async function up() {
     "cfd" varchar(8) NOT NULL,
     "UAI" varchar(8) NOT NULL,
     "dispositifId" varchar(3) NOT NULL,
-    "voie" varchar(20) varchar(3) NOT NULL,
+    "voie" varchar(20) NOT NULL,
     "millesimeEntree" varchar(4) NOT NULL,
     "millesimeIJ" varchar(9) NOT NULL,
     "capacite" int,
