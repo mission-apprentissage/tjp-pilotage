@@ -9,7 +9,6 @@ import { importFormations } from "./usecases/importFormations/importFormations.u
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importRegions } from "./usecases/importRegions/importRegion.usecase";
-// import { importRegions } from "./usecases/importRegions/importRegions.usecase";
 
 cli.command("truncateRawData").action(async () => {
   await db.truncate(["rawData"], "CASCADE").run(pool);

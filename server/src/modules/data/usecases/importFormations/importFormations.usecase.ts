@@ -15,6 +15,7 @@ const formatCFD = (line: DiplomeProfessionnelLine) => {
 
   if (!line["Code diplôme"]) return;
   const cfd = line["Code diplôme"].replace("-", "").slice(0, 8);
+
   if (isNaN(parseInt(cfd))) return;
   return cfd;
 };
@@ -30,6 +31,8 @@ const formatRNCP = (line: DiplomeProfessionnelLine) => {
   if (isNaN(parseInt(line["Code RNCP"]))) return;
   return line["Code RNCP"];
 };
+
+const cfds: string[] = [];
 
 export const importFormationsFactory =
   () =>
@@ -68,6 +71,8 @@ export const importFormationsFactory =
 
         count++;
         process.stdout.write(`\r${count}`);
+
+        cfds.push(diplomeProfessionel["Code diplôme"]);
 
         const formation = {
           codeFormationDiplome: diplomeProfessionel["Code diplôme"],
