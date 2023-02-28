@@ -48,7 +48,11 @@ const findRawDatas = async <T extends keyof LineTypes>({
   limit?: number;
 }) => {
   const items = await db
-    .select("rawData", { type }, { offset, limit })
+    .select(
+      "rawData",
+      { type },
+      { offset, limit, order: { by: "data", direction: "ASC" } }
+    )
     .run(pool);
   return items.map((item) => item.data as LineTypes[T]);
 };
