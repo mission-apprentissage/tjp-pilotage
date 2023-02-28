@@ -16,12 +16,12 @@ cli.command("truncateRawData").action(async () => {
 
 cli.command("toto").action(async () => {
   const data = await inserJeunesApi.getUaiData({
-    uai: "0021502X",
-    millesime: "2020_2021",
+    uai: "0130150T",
+    millesime: "2018_2019",
   });
 
   console.log(data);
-  fs.writeFileSync("aa.json", JSON.stringify(data, undefined, " "));
+  fs.writeFileSync("bb.json", JSON.stringify(data, undefined, " "));
 });
 
 cli

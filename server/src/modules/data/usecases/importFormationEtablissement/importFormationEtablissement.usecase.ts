@@ -31,7 +31,12 @@ export const importFormationEtablissementFactory = ({
 }) => {
   const uaiFormationsMap: Record<
     string,
-    { cfd: string; mefstat11LastYear: string; dispositifId: string }[]
+    {
+      cfd: string;
+      mefstat11LastYear: string;
+      dispositifId: string;
+      voie: "scolaire" | "apprentissage";
+    }[]
   > = {};
 
   return async () => {
@@ -62,6 +67,8 @@ export const importFormationEtablissementFactory = ({
                 cfd: item.codeFormationDiplome,
                 mefstat11LastYear: nMefLast.MEF_STAT_11,
                 dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
+                voie:
+                  affelnet2nde.Statut === "ST" ? "scolaire" : "apprentissage",
               },
             ];
           }
@@ -70,14 +77,19 @@ export const importFormationEtablissementFactory = ({
     );
 
     let count = 1;
-    for (const uaiFormations of Object.entries(uaiFormationsMap)) {
-      const [uai, formationsData] = uaiFormations;
+    for (const [uai, formationsData] of Object.entries(uaiFormationsMap)) {
       console.log(
         "uai",
         uai,
         `${count} of ${Object.entries(uaiFormationsMap).length}`
       );
       count++;
+
+      const hasFormationsScolaires = formationsData.some(
+        (item) => item.voie === "scolaire"
+      );
+
+      if (!hasFormationsScolaires) continue;
 
       const deppMillesimeDatas = await Promise.all(
         ["2018_2019", "2019_2020", "2020_2021"].map(async (millesime) => {
@@ -95,6 +107,7 @@ export const importFormationEtablissementFactory = ({
           mefstat11LastYear,
           dispositifId,
           uai,
+          voie: formationData.voie,
         });
       }
     }
@@ -117,13 +130,16 @@ export const importFormationEtablissementsFactory =
     cfd,
     mefstat11LastYear,
     dispositifId,
+    voie,
   }: {
     deppMillesimeDatas: { data: DeppEtablissement; millesime: string }[];
     uai: string;
     cfd: string;
     mefstat11LastYear: string;
     dispositifId: string;
+    voie: "scolaire" | "apprentissage";
   }) => {
+    if (voie !== "scolaire") return;
     const formationEtablissements: FormationEtablissement[] = deppMillesimeDatas
       .map(({ data, millesime }) => {
         if (!data) {
@@ -162,6 +178,7 @@ export const importFormationEtablissementsFactory =
           cfd,
           UAI: uai,
           dispositifId,
+          voie,
           nbInsertion6mois: mefData?.nb_en_emploi_6_mois,
           effectifSortie: mefData?.nb_annee_term,
           nbPoursuiteEtudes: mefData?.nb_poursuite_etudes,

@@ -867,6 +867,12 @@ declare module 'zapatos/schema' {
       */
       dispositifId: string;
       /**
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie: string;
+      /**
       * **formationEtablissement.millesimeEntree**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -946,6 +952,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       dispositifId: string;
+      /**
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie: string;
       /**
       * **formationEtablissement.millesimeEntree**
       * - `varchar` in database
@@ -1027,6 +1039,12 @@ declare module 'zapatos/schema' {
       */
       dispositifId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
       * **formationEtablissement.millesimeEntree**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -1107,6 +1125,12 @@ declare module 'zapatos/schema' {
       */
       dispositifId: string | db.Parameter<string> | db.SQLFragment;
       /**
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie: string | db.Parameter<string> | db.SQLFragment;
+      /**
       * **formationEtablissement.millesimeEntree**
       * - `varchar` in database
       * - `NOT NULL`, no default
@@ -1186,6 +1210,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       dispositifId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **formationEtablissement.millesimeEntree**
       * - `varchar` in database
