@@ -4,7 +4,7 @@ import fs from "fs";
 import { db, pool } from "../../db/zapatos";
 import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissement } from "./usecases/importFormationEtablissement/importFormationEtablissement.usecase";
+import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
@@ -128,7 +128,7 @@ cli
       importFamillesMetiers,
       importFormations,
       importFormationHistorique,
-      importFormationEtablissement,
+      importFormationEtablissements,
     };
 
     if (usecaseName) {
