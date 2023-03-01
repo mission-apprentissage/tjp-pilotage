@@ -1,6 +1,6 @@
 import { DateTime } from "luxon";
 
-import { dataDI } from "../../data.DI";
+import { dataDI } from "../../data.di";
 import { DiplomeProfessionnelLine } from "../../files/DiplomesProfessionnels";
 import { streamIt } from "../../utils/streamIt";
 import { importFormationsDeps } from "./importFormations.deps";

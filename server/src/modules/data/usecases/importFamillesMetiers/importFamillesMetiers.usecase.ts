@@ -1,4 +1,4 @@
-import { dataDI } from "../../data.DI";
+import { dataDI } from "../../data.di";
 import { streamIt } from "../../utils/streamIt";
 import { importFamillesMetiersDeps } from "./importFamillesMetiers.deps";
 

@@ -3,27 +3,38 @@ import { formatEtablissement } from "../../adapters/formatEtablissement";
 import { formatFormation } from "../../adapters/formatFormation";
 import { Etablissement } from "../../entities/Etablissement";
 import { Formation } from "../../entities/Formation";
-import { FormationEtablissement } from "../../entities/FormationEtablissement";
+import {
+  FormationEtablissement,
+  IndicateurSortie,
+} from "../../entities/FormationEtablissement";
 import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
 import { Affelnet2ndeLine } from "../../files/Affelnet2ndeLine";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { NMefLine } from "../../files/NMef";
 
-export const createFormationEtablissement = async (
-  formationEtablissement: FormationEtablissement
-) => {
+const createFormationEtablissement = async (
+  formationEtablissement: Omit<FormationEtablissement, "id">
+): Promise<FormationEtablissement> => {
   return db
     .upsert("formationEtablissement", formationEtablissement, [
       "UAI",
       "cfd",
       "dispositifId",
-      "millesimeIJ",
       "voie",
     ])
     .run(pool);
 };
 
-export const createEtablissement = async (
+const createIndicateurSortie = async (indicateurSortie: IndicateurSortie[]) => {
+  return db
+    .upsert("indicateurSortie", indicateurSortie, [
+      "formationEtablissementId",
+      "millesimeSortie",
+    ])
+    .run(pool);
+};
+
+const createEtablissement = async (
   etablissement: Omit<Etablissement, "id">
 ): Promise<Etablissement> => {
   const dbEtablissement = await db
@@ -41,7 +52,7 @@ const findEtablissement = async ({
   return etablissement && formatEtablissement(etablissement);
 };
 
-export const findAffelnet2ndes = async ({ mefStat11 }: { mefStat11: string }) =>
+const findAffelnet2ndes = async ({ mefStat11 }: { mefStat11: string }) =>
   (
     await db
       .select("rawData", {
@@ -53,7 +64,7 @@ export const findAffelnet2ndes = async ({ mefStat11 }: { mefStat11: string }) =>
       .run(pool)
   ).map((item) => item.data as Affelnet2ndeLine);
 
-export const findLyceeACCE = async ({ uai }: { uai: string }) =>
+const findLyceeACCE = async ({ uai }: { uai: string }) =>
   (
     await db
       .selectOne("rawData", {
@@ -65,7 +76,7 @@ export const findLyceeACCE = async ({ uai }: { uai: string }) =>
       .run(pool)
   )?.data as LyceesACCELine | undefined;
 
-export const findNMefs = async ({ cfd }: { cfd: string }) =>
+const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
     await db
       .select("rawData", {
@@ -100,6 +111,7 @@ const upsertIndicateurEtablissement = async (
 };
 
 export const dependencies = {
+  createIndicateurSortie,
   upsertIndicateurEtablissement,
   findFormations,
   createFormationEtablissement,

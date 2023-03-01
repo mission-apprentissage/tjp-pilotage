@@ -21,8 +21,7 @@ export const login = async () => {
 };
 
 instance.interceptors.response.use(undefined, async (err) => {
-  const { config, response, name, message } = err;
-  console.log("errorrrr", name, response?.status, message);
+  const { config, response } = err;
   if (config.retried || ![500, 401, undefined].includes(response?.status)) {
     return Promise.reject(err);
   }
@@ -51,7 +50,6 @@ export const getUaiData = async ({
   try {
     const response = await instance.get(`/UAI/${uai}/millesime/${millesime}`);
     const data = JSON.parse(response.data);
-    // return data;
     return formatUaiData(data);
   } catch (e) {
     if (axios.isAxiosError(e)) return undefined;
