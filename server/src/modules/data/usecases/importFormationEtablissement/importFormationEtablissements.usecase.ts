@@ -8,20 +8,6 @@ import { importFormationEtablissementFactory } from "./importFormationEtablissem
 import { Logs } from "./types/Logs";
 import { getLastMefstat11 } from "./utils/getLastMefstat11";
 
-type LogsO = {
-  uais: {
-    status: "missing_uai" | "ok";
-    millesime: string;
-    uai: string;
-  }[];
-  mefstats: {
-    uai: string;
-    mefstat: string;
-    millesime: string;
-    status: "missing_uai" | "ok" | "missing_mefstat";
-  }[];
-};
-
 const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
 
 export const importFormationEtablissementsFactory = ({

@@ -1,12 +1,12 @@
 import { db, pool } from "../../../db/zapatos";
 import { Affelnet2ndeLine } from "../files/Affelnet2ndeLine";
+import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../files/FamilleMetiers";
 import { LyceesACCELine } from "../files/LyceesACCELine";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
 import { NMefLine } from "../files/NMef";
 import { RegionLine } from "../files/Region";
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 
 type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
