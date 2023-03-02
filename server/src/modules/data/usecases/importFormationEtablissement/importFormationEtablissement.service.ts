@@ -1,5 +1,5 @@
 import { dataDI } from "../../data.di";
-import { IndicateurSortie } from "../../entities/FormationEtablissement";
+import { IndicateurSortie } from "../../entities/IndicateurSortie";
 import { dependencies } from "./dependencies.di";
 
 type DeppEtablissement = Awaited<

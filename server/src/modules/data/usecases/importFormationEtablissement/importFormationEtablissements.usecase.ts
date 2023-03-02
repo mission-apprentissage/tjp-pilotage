@@ -3,9 +3,9 @@ import fs from "fs";
 import { inserJeunesApi } from "../../services/inserJeunesApi/inserJeunes.api";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies.di";
-import { getLastMefstat11 } from "./getLastMefstat11";
 import { importEtablissementFactory } from "./importEtablissement.service";
 import { importFormationEtablissementFactory } from "./importFormationEtablissement.service";
+import { getLastMefstat11 } from "./utils/getLastMefstat11";
 
 type Logs = {
   uais: {
