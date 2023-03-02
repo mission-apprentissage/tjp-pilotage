@@ -14,14 +14,15 @@ cli.command("truncateRawData").action(async () => {
   await db.truncate(["rawData"], "CASCADE").run(pool);
 });
 
-cli.command("toto").action(async () => {
-  const data = await inserJeunesApi.getUaiData({
-    uai: "0130150T",
-    millesime: "2018_2019",
-  });
+cli.command("importDepp").action(async () => {
+  const uai = "0750783U";
+  const millesime = "2020_2021";
+  const data = await inserJeunesApi.getUaiData({ uai, millesime });
 
-  console.log(data);
-  fs.writeFileSync("bb.json", JSON.stringify(data, undefined, " "));
+  fs.writeFileSync(
+    `logs/${uai}_${millesime}.json`,
+    JSON.stringify(data, undefined, " ")
+  );
 });
 
 cli
@@ -44,6 +45,15 @@ cli
           key: "MEFSTAT11 TLEPRO",
           fileStream: fs.createReadStream(
             `${__dirname}/files/familleMetiers.csv`,
+            "utf8"
+          ),
+        }),
+      "Cab-nbre_division_effectifs_par_etab_mefst11": () =>
+        importRawFile({
+          type: "Cab-nbre_division_effectifs_par_etab_mefst11",
+          key: "Numéro d'établissement",
+          fileStream: fs.createReadStream(
+            `${__dirname}/files/Cab-nbre_division_effectifs_par_etab_mefst11.csv`,
             "utf8"
           ),
         }),
