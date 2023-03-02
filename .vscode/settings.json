@@ -31,5 +31,7 @@
     "**/.webpack": true,
     "**/.next": true,
     "**/node_modules": true
-  }
+  },
+  "javascript.preferences.importModuleSpecifier": "relative",
+  "typescript.preferences.importModuleSpecifier": "relative"
 }
