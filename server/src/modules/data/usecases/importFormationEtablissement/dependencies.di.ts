@@ -3,11 +3,9 @@ import { formatEtablissement } from "../../adapters/formatEtablissement";
 import { formatFormation } from "../../adapters/formatFormation";
 import { Etablissement } from "../../entities/Etablissement";
 import { Formation } from "../../entities/Formation";
-import {
-  FormationEtablissement,
-  IndicateurSortie,
-} from "../../entities/FormationEtablissement";
+import { FormationEtablissement } from "../../entities/FormationEtablissement";
 import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
+import { IndicateurSortie } from "../../entities/IndicateurSortie";
 import { Affelnet2ndeLine } from "../../files/Affelnet2ndeLine";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { NMefLine } from "../../files/NMef";
@@ -26,12 +24,10 @@ const createFormationEtablissement = async (
 };
 
 const createIndicateurSortie = async (indicateurSortie: IndicateurSortie[]) => {
-  return db
-    .upsert("indicateurSortie", indicateurSortie, [
-      "formationEtablissementId",
-      "millesimeSortie",
-    ])
-    .run(pool);
+  db.upsert("indicateurSortie", indicateurSortie, [
+    "formationEtablissementId",
+    "millesimeSortie",
+  ]).run(pool);
 };
 
 const createEtablissement = async (
