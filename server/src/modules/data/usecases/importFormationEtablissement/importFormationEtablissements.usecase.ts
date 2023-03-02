@@ -1,0 +1,120 @@
+import fs from "fs";
+
+import { inserJeunesApi } from "../../services/inserJeunesApi/inserJeunes.api";
+import { streamIt } from "../../utils/streamIt";
+import { dependencies } from "./dependencies.di";
+import { importEtablissementFactory } from "./importEtablissement.service";
+import { importFormationEtablissementFactory } from "./importFormationEtablissement.service";
+import { getLastMefstat11 } from "./utils/getLastMefstat11";
+
+type Logs = {
+  uais: {
+    status: "missing_uai" | "ok";
+    millesime: string;
+    uai: string;
+  }[];
+  mefstats: {
+    uai: string;
+    mefstat: string;
+    millesime: string;
+    status: "missing_uai" | "ok" | "missing_mefstat";
+  }[];
+};
+
+const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
+
+export const importFormationEtablissementsFactory = ({
+  findFormations = dependencies.findFormations,
+  findAffelnet2ndes = dependencies.findAffelnet2ndes,
+  findNMefs = dependencies.findNMefs,
+  getUaiData = inserJeunesApi.getUaiData,
+  importFormationEtablissement = importFormationEtablissementFactory(),
+  importEtablissement = importEtablissementFactory(),
+}) => {
+  const logs: Logs = { uais: [], mefstats: [] };
+
+  const uaiFormationsMap: Record<
+    string,
+    {
+      cfd: string;
+      mefstat11LastYear: string;
+      dispositifId: string;
+      voie: "scolaire" | "apprentissage";
+    }[]
+  > = {};
+
+  return async () => {
+    await streamIt(
+      async (count) => findFormations({ offset: count, limit: 30 }),
+      async (item) => {
+        const nMefs = await findNMefs({ cfd: item.codeFormationDiplome });
+        const nMefsAnnee1 = nMefs.filter(
+          (item) => parseInt(item.ANNEE_DISPOSITIF) === 1
+        );
+
+        for (const nMefAnnee1 of nMefsAnnee1) {
+          const affelnet2ndes = await findAffelnet2ndes({
+            mefStat11: nMefAnnee1.MEF_STAT_11,
+          });
+
+          const nMefLast = getLastMefstat11({
+            nMefs,
+            nMefAnnee1,
+          });
+          if (!nMefLast) continue;
+
+          for (const affelnet2nde of affelnet2ndes) {
+            const voie =
+              affelnet2nde.Statut === "ST" ? "scolaire" : "apprentissage";
+            if (voie !== "scolaire") continue;
+            const uaiFormation = {
+              cfd: item.codeFormationDiplome,
+              mefstat11LastYear: nMefLast.MEF_STAT_11,
+              dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
+              voie,
+            } as const;
+            uaiFormationsMap[affelnet2nde.Etablissement] = [
+              ...(uaiFormationsMap[affelnet2nde.Etablissement] ?? []),
+              uaiFormation,
+            ];
+          }
+        }
+      }
+    );
+
+    let count = 1;
+    const uaiFormationEntries = Object.entries(uaiFormationsMap);
+    for (const [uai, formationsData] of uaiFormationEntries) {
+      if (!formationsData.length) continue;
+      console.log("uai", uai, `${count} of ${uaiFormationEntries.length}`);
+      count++;
+
+      const deppMillesimeDatas = await Promise.all(
+        MILLESIMES.map(async (millesime) => ({
+          millesime,
+          data: await getUaiData({ uai, millesime }),
+        }))
+      );
+
+      const uaiLogs = await importEtablissement({
+        uai,
+        deppMillesimeDatas,
+      });
+      logs.uais.push(...uaiLogs);
+
+      for (const formationData of formationsData) {
+        const mefstatLogs = await importFormationEtablissement({
+          uai,
+          ...formationData,
+          deppMillesimeDatas,
+        });
+        logs.mefstats.push(...mefstatLogs);
+      }
+    }
+
+    fs.writeFileSync("uais", JSON.stringify(logs, undefined, " "));
+  };
+};
+
+export const importFormationEtablissements =
+  importFormationEtablissementsFactory({});

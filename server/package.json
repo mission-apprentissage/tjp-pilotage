@@ -14,12 +14,14 @@
     "typecheck": "tsc",
     "create-migration": "knex migrate:make --migrations-directory migrations",
     "create-migration-docker": "docker exec -it pilotage_server yarn create-migration",
+    "build-migrations": "tsup src/index.ts migrations",
+    "build-migrations-docker": "docker exec -it pilotage_server yarn build-migrations",
     "migrate": "knex migrate:latest",
     "migrate-docker": "docker exec -it pilotage_server yarn migrate",
     "zapatos": "zapatos",
     "zapatos-docker": "docker exec -it pilotage_server yarn zapatos",
-    "cli": "node -r ts-node/register src/modules/core/cli.ts",
-    "cli-docker": "docker exec -it pilotage_server node -r ts-node/register src/modules/core/cli.ts"
+    "cli": "node -r ts-node/register src/modules/data/cli.ts",
+    "cli-docker": "docker exec -it pilotage_server yarn cli"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
@@ -34,6 +36,7 @@
     "cli": "^1.0.1",
     "commander": "^10.0.0",
     "csv-parse": "^5.3.5",
+    "dotenv": "^16.0.3",
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
     "jsonwebtoken": "8.5.1",
