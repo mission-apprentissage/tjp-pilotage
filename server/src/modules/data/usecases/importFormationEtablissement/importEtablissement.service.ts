@@ -24,26 +24,11 @@ export const importEtablissementFactory =
     const lyceeACCE = await findLyceeACCE({ uai });
     await createEtablissement(formatToEtablissement({ uai, lyceeACCE }));
 
-    const uaiLogs: {
-      status: "missing_uai" | "ok";
-      millesime: string;
-      uai: string;
-    }[] = [];
-
     for (const deppMillesimeData of deppMillesimeDatas) {
       if (!deppMillesimeData.data) {
-        uaiLogs.push({
-          uai,
-          millesime: deppMillesimeData.millesime,
-          status: "missing_uai",
-        });
         continue;
       }
-      uaiLogs.push({
-        uai,
-        millesime: deppMillesimeData.millesime,
-        status: "ok",
-      });
+
       const indicateur = {
         UAI: uai,
         millesime: deppMillesimeData.millesime,
@@ -51,7 +36,7 @@ export const importEtablissementFactory =
       };
       await upsertIndicateurEtablissement(indicateur);
     }
-    return uaiLogs;
+    return [];
   };
 
 const formatToEtablissement = ({

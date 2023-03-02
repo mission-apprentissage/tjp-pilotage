@@ -1,5 +1,6 @@
 import { db, pool } from "../../../db/zapatos";
 import { Affelnet2ndeLine } from "../files/Affelnet2ndeLine";
+import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../files/FamilleMetiers";
 import { LyceesACCELine } from "../files/LyceesACCELine";
@@ -15,6 +16,7 @@ type LineTypes = {
   lyceesACCE: LyceesACCELine;
   regions: RegionLine;
   nMef: NMefLine;
+  "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
@@ -23,7 +25,7 @@ const findRawData = async <T extends keyof LineTypes>({
 }: {
   type: T;
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  filter?: any;
+  filter?: Partial<LineTypes[T]>;
 }) => {
   const item = await db
     .selectOne("rawData", {

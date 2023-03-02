@@ -5,21 +5,8 @@ import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies.di";
 import { importEtablissementFactory } from "./importEtablissement.service";
 import { importFormationEtablissementFactory } from "./importFormationEtablissement.service";
+import { Logs } from "./types/Logs";
 import { getLastMefstat11 } from "./utils/getLastMefstat11";
-
-type Logs = {
-  uais: {
-    status: "missing_uai" | "ok";
-    millesime: string;
-    uai: string;
-  }[];
-  mefstats: {
-    uai: string;
-    mefstat: string;
-    millesime: string;
-    status: "missing_uai" | "ok" | "missing_mefstat";
-  }[];
-};
 
 const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
 
@@ -31,13 +18,20 @@ export const importFormationEtablissementsFactory = ({
   importFormationEtablissement = importFormationEtablissementFactory(),
   importEtablissement = importEtablissementFactory(),
 }) => {
-  const logs: Logs = { uais: [], mefstats: [] };
+  const logs: Logs = [];
+  const insertLog = (newLogs: Logs) => {
+    newLogs.forEach((log) =>
+      console.log(`log ${log.type} ${JSON.stringify(log.log, undefined, "")}`)
+    );
+    logs.push(...newLogs);
+  };
 
   const uaiFormationsMap: Record<
     string,
     {
       cfd: string;
       mefstat11LastYear: string;
+      mefstat11FirstYear: string;
       dispositifId: string;
       voie: "scolaire" | "apprentissage";
     }[]
@@ -45,7 +39,7 @@ export const importFormationEtablissementsFactory = ({
 
   return async () => {
     await streamIt(
-      async (count) => findFormations({ offset: count, limit: 30 }),
+      async (count) => findFormations({ offset: count, limit: 50 }),
       async (item) => {
         const nMefs = await findNMefs({ cfd: item.codeFormationDiplome });
         const nMefsAnnee1 = nMefs.filter(
@@ -70,6 +64,7 @@ export const importFormationEtablissementsFactory = ({
             const uaiFormation = {
               cfd: item.codeFormationDiplome,
               mefstat11LastYear: nMefLast.MEF_STAT_11,
+              mefstat11FirstYear: nMefAnnee1.MEF_STAT_11,
               dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
               voie,
             } as const;
@@ -96,23 +91,22 @@ export const importFormationEtablissementsFactory = ({
         }))
       );
 
-      const uaiLogs = await importEtablissement({
+      await importEtablissement({
         uai,
         deppMillesimeDatas,
       });
-      logs.uais.push(...uaiLogs);
 
       for (const formationData of formationsData) {
-        const mefstatLogs = await importFormationEtablissement({
+        const newLogs = await importFormationEtablissement({
           uai,
           ...formationData,
           deppMillesimeDatas,
         });
-        logs.mefstats.push(...mefstatLogs);
+        insertLog(newLogs);
       }
     }
 
-    fs.writeFileSync("uais", JSON.stringify(logs, undefined, " "));
+    fs.writeFileSync("logs/uais", JSON.stringify(logs, undefined, " "));
   };
 };
 
