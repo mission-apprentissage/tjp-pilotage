@@ -4,6 +4,7 @@ import { formatFormation } from "../../adapters/formatFormation";
 import { Etablissement } from "../../entities/Etablissement";
 import { Formation } from "../../entities/Formation";
 import { FormationEtablissement } from "../../entities/FormationEtablissement";
+import { IndicateurEntree } from "../../entities/IndicateurEntree";
 import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
 import { IndicateurSortie } from "../../entities/IndicateurSortie";
 import { Affelnet2ndeLine } from "../../files/Affelnet2ndeLine";
@@ -27,6 +28,13 @@ const createIndicateurSortie = async (indicateurSortie: IndicateurSortie[]) => {
   db.upsert("indicateurSortie", indicateurSortie, [
     "formationEtablissementId",
     "millesimeSortie",
+  ]).run(pool);
+};
+
+const createIndicateurEntree = async (indicateurEntree: IndicateurEntree[]) => {
+  db.upsert("indicateurEntree", indicateurEntree, [
+    "formationEtablissementId",
+    "millesimeEntree",
   ]).run(pool);
 };
 
@@ -108,6 +116,7 @@ const upsertIndicateurEtablissement = async (
 
 export const dependencies = {
   createIndicateurSortie,
+  createIndicateurEntree,
   upsertIndicateurEtablissement,
   findFormations,
   createFormationEtablissement,
