@@ -9,15 +9,7 @@ export const importRawFileFactory =
     createRawDatas = importRawFileDeps.createRawDatas,
     deleteRawData = importRawFileDeps.deleteRawData,
   }) =>
-  async ({
-    fileStream,
-    key,
-    type,
-  }: {
-    fileStream: Readable;
-    key: string;
-    type: string;
-  }) => {
+  async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
     console.log(`Import des lignes de fichier`);
 
     await deleteRawData({ type });
@@ -33,13 +25,7 @@ export const importRawFileFactory =
         },
         objectMode: true,
         write: async (line, _, callback) => {
-          if (!line[key]) {
-            callback();
-            return;
-          }
-          await createRawDatas({
-            data: [{ type, data: line }],
-          });
+          await createRawDatas({ data: [{ type, data: line }] });
           count++;
           console.log(`Added line ${count}`);
           callback();

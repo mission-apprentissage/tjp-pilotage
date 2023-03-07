@@ -1,9 +1,11 @@
 import { DateTime } from "luxon";
 
 import { dataDI } from "../../data.di";
+import { Departement } from "../../entities/Departement";
 import { Etablissement } from "../../entities/Etablissement";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { dependencies } from "./dependencies.di";
+import { Logs } from "./types/Logs";
 
 type DeppEtablissement = Awaited<
   ReturnType<typeof dataDI.inserJeunesApi.getUaiData>
@@ -13,6 +15,7 @@ export const importEtablissementFactory =
     createEtablissement = dependencies.createEtablissement,
     findLyceeACCE = dependencies.findLyceeACCE,
     upsertIndicateurEtablissement = dependencies.upsertIndicateurEtablissement,
+    findDepartement = dependencies.findDepartement,
   } = {}) =>
   async ({
     uai,
@@ -20,45 +23,84 @@ export const importEtablissementFactory =
   }: {
     uai: string;
     deppMillesimeDatas: { data: DeppEtablissement; millesime: string }[];
-  }) => {
+  }): Promise<Logs> => {
     const lyceeACCE = await findLyceeACCE({ uai });
-    await createEtablissement(formatToEtablissement({ uai, lyceeACCE }));
+
+    const codeDepartement = formatCodeDepartement(
+      lyceeACCE?.departement_insee_3
+    );
+    const departement =
+      codeDepartement && (await findDepartement({ codeDepartement }));
+
+    const etablissement = formatToEtablissement({
+      uai,
+      lyceeACCE,
+      departement,
+    });
+    await createEtablissement(etablissement);
 
     for (const deppMillesimeData of deppMillesimeDatas) {
-      if (!deppMillesimeData.data) {
-        continue;
-      }
-
-      const indicateur = {
-        UAI: uai,
+      const indicateur = getIndicateurEtablissement({
+        deppEtablissement: deppMillesimeData.data,
         millesime: deppMillesimeData.millesime,
-        valeurAjoutee: deppMillesimeData.data.ensemble?.valeur_ajoutee_6_mois,
-      };
+        uai,
+      });
+      if (!indicateur) continue;
       await upsertIndicateurEtablissement(indicateur);
     }
     return [];
   };
 
+const formatCodeDepartement = (codeInsee: string | undefined) => {
+  if (!codeInsee) return;
+  if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;
+  if (codeInsee.length === 2)
+    return `0${codeInsee}` as `${number}${number}${string}`;
+};
+
+const getIndicateurEtablissement = ({
+  deppEtablissement,
+  uai,
+  millesime,
+}: {
+  deppEtablissement: DeppEtablissement;
+  millesime: string;
+  uai: string;
+}) => {
+  if (!deppEtablissement) return;
+  return {
+    UAI: uai,
+    millesime,
+    valeurAjoutee: deppEtablissement.ensemble?.valeur_ajoutee_6_mois,
+  };
+};
+
 const formatToEtablissement = ({
   uai,
   lyceeACCE,
+  departement,
 }: {
   uai: string;
   lyceeACCE?: LyceesACCELine;
-}): Omit<Etablissement, "id"> => ({
-  UAI: uai,
-  siret: lyceeACCE?.numero_siren_siret_uai,
-  codeAcademie: lyceeACCE?.academie,
-  natureUAI: lyceeACCE?.nature_uai,
-  libelleEtablissement: lyceeACCE?.appellation_officielle,
-  adresseEtablissement: lyceeACCE?.adresse_uai,
-  codePostal: lyceeACCE?.code_postal_uai,
-  secteur: lyceeACCE?.secteur_public_prive,
-  dateOuverture:
-    lyceeACCE &&
-    DateTime.fromFormat(lyceeACCE.date_ouverture, "dd/LL/yyyy").toJSDate(),
-  dateFermeture: lyceeACCE?.date_fermeture
-    ? DateTime.fromFormat(lyceeACCE.date_fermeture, "dd/LL/yyyy").toJSDate()
-    : undefined,
-  codeMinistereTutuelle: lyceeACCE?.ministere_tutelle,
-});
+  departement?: Departement;
+}): Omit<Etablissement, "id"> => {
+  return {
+    UAI: uai,
+    siret: lyceeACCE?.numero_siren_siret_uai,
+    codeAcademie: departement?.codeAcademie,
+    codeRegion: departement?.codeRegion,
+    codeDepartement: departement?.codeDepartement,
+    natureUAI: lyceeACCE?.nature_uai,
+    libelleEtablissement: lyceeACCE?.appellation_officielle,
+    adresseEtablissement: lyceeACCE?.adresse_uai,
+    codePostal: lyceeACCE?.code_postal_uai,
+    secteur: lyceeACCE?.secteur_public_prive,
+    dateOuverture:
+      lyceeACCE &&
+      DateTime.fromFormat(lyceeACCE.date_ouverture, "dd/LL/yyyy").toJSDate(),
+    dateFermeture: lyceeACCE?.date_fermeture
+      ? DateTime.fromFormat(lyceeACCE.date_fermeture, "dd/LL/yyyy").toJSDate()
+      : undefined,
+    codeMinistereTutuelle: lyceeACCE?.ministere_tutelle,
+  };
+};

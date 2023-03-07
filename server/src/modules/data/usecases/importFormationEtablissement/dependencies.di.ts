@@ -1,6 +1,7 @@
 import { db, pool } from "../../../../db/zapatos";
 import { formatEtablissement } from "../../adapters/formatEtablissement";
 import { formatFormation } from "../../adapters/formatFormation";
+import { Departement } from "../../entities/Departement";
 import { Etablissement } from "../../entities/Etablissement";
 import { Formation } from "../../entities/Formation";
 import { FormationEtablissement } from "../../entities/FormationEtablissement";
@@ -80,6 +81,13 @@ const findLyceeACCE = async ({ uai }: { uai: string }) =>
       .run(pool)
   )?.data as LyceesACCELine | undefined;
 
+const findDepartement = async ({
+  codeDepartement,
+}: {
+  codeDepartement: string;
+}): Promise<Departement | undefined> =>
+  await db.selectOne("departement", { codeDepartement }).run(pool);
+
 const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
     await db
@@ -115,6 +123,7 @@ const upsertIndicateurEtablissement = async (
 };
 
 export const dependencies = {
+  findDepartement,
   createIndicateurSortie,
   createIndicateurEntree,
   upsertIndicateurEtablissement,
