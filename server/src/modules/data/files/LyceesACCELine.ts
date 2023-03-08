@@ -10,4 +10,5 @@ export type LyceesACCELine = {
   date_ouverture: string;
   date_fermeture: string;
   ministere_tutelle: string;
+  departement_insee_3?: string;
 };

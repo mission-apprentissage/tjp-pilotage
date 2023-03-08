@@ -3,10 +3,10 @@ import fs from "fs";
 import { inserJeunesApi } from "../../services/inserJeunesApi/inserJeunes.api";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies.di";
-import { importEtablissementFactory } from "./importEtablissement.service";
-import { importFormationEtablissementFactory } from "./importFormationEtablissement.service";
+import { getLastMefstat11 } from "./domain/getLastMefstat11";
+import { importEtablissementFactory } from "./importEtablissement.step";
+import { importFormationEtablissementFactory } from "./importFormationEtablissement.step";
 import { Logs } from "./types/Logs";
-import { getLastMefstat11 } from "./utils/getLastMefstat11";
 
 const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
 

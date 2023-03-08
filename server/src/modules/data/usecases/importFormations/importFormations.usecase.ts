@@ -1,7 +1,8 @@
 import { DateTime } from "luxon";
 
-import { dataDI } from "../../data.di";
+import { Formation } from "../../entities/Formation";
 import { DiplomeProfessionnelLine } from "../../files/DiplomesProfessionnels";
+import { NFormationDiplomeLine } from "../../files/NFormationDiplome";
 import { streamIt } from "../../utils/streamIt";
 import { importFormationsDeps } from "./importFormations.deps";
 import { CFDOverride, RNCPOverride } from "./overrides";
@@ -32,75 +33,91 @@ const formatRNCP = (line: DiplomeProfessionnelLine) => {
   return line["Code RNCP"];
 };
 
-const cfds: string[] = [];
+type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
+  "Code RNCP": string;
+  "Code diplôme": string;
+};
+
+const isCompleteDiplomePorfessionelLine = (
+  diplomeProfessionnelLine: DiplomeProfessionnelLine
+): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
+  !!(
+    diplomeProfessionnelLine["Code diplôme"] &&
+    diplomeProfessionnelLine["Code RNCP"]
+  );
+
+const formatDisplomeProfessionel = (
+  line: DiplomeProfessionnelLine
+): CompleteDiplomePorfessionelLine | undefined => {
+  const formattedLine = {
+    ...line,
+    "Code diplôme": formatCFD(line),
+    "Code RNCP": formatRNCP(line),
+  };
+  if (!isCompleteDiplomePorfessionelLine(formattedLine)) return;
+  return formattedLine;
+};
 
 export const importFormationsFactory =
-  () =>
-  async ({
+  ({
     createFormation = importFormationsDeps.createFormation,
-    findRawDatas = dataDI.rawDataRepository.findRawDatas,
-    findRawData = dataDI.rawDataRepository.findRawData,
-  } = {}) => {
+    findDiplomesProfessionnels = importFormationsDeps.findDiplomesProfessionnels,
+    findNFormationDiplome = importFormationsDeps.findNFormationDiplome,
+  } = {}) =>
+  async () => {
     console.log(`Import des formations`);
-
     let count = 0;
-    await streamIt(
-      (count) =>
-        findRawDatas({
-          type: "diplomesProfessionnels",
-          offset: count,
-          limit: 20,
-        }),
-      async (item) => {
-        const diplomeProfessionel = {
-          ...item,
-          "Code diplôme": formatCFD(item),
-          "Code RNCP": formatRNCP(item),
-        };
-        if (
-          !diplomeProfessionel["Code diplôme"] ||
-          !diplomeProfessionel["Code RNCP"]
-        )
-          return;
 
-        const nFormationDiplome = await findRawData({
-          type: "nFormationDiplome_",
-          filter: { FORMATION_DIPLOME: diplomeProfessionel["Code diplôme"] },
+    await streamIt(
+      (offset) => findDiplomesProfessionnels({ offset, limit: 20 }),
+      async (item) => {
+        const diplomeProfessionel = formatDisplomeProfessionel(item);
+        if (!diplomeProfessionel) return;
+
+        const nFormationDiplome = await findNFormationDiplome({
+          cfd: diplomeProfessionel["Code diplôme"],
         });
         if (!nFormationDiplome) return;
 
         count++;
         process.stdout.write(`\r${count}`);
 
-        cfds.push(diplomeProfessionel["Code diplôme"]);
-
-        const formation = {
-          codeFormationDiplome: diplomeProfessionel["Code diplôme"],
-          rncp: parseInt(diplomeProfessionel["Code RNCP"]),
-          libelleDiplome:
-            diplomeProfessionel["Intitulé de la spécialité (et options)"],
-          codeNiveauDiplome: diplomeProfessionel["Code diplôme"].slice(0, 3),
-          dateOuverture: DateTime.fromFormat(
-            nFormationDiplome.DATE_OUVERTURE,
-            "dd/LL/yyyy"
-          ).toJSDate(),
-          dateFermeture: nFormationDiplome.DATE_FERMETURE
-            ? DateTime.fromFormat(
-                nFormationDiplome.DATE_FERMETURE,
-                "dd/LL/yyyy"
-              ).toJSDate()
-            : undefined,
-        };
-
+        const formation = createFormationFromDiplomePorfessionel({
+          nFormationDiplome,
+          diplomeProfessionel,
+        });
+        if (!formation) return;
         await createFormation([formation]);
-
-        // createFormationHistorique
-        // createFormationEtablissement
-        // createEtablissement
       }
     );
 
     process.stdout.write(`\r${count} formations ajoutées ou mises à jour\n`);
   };
 
-export const importFormations = importFormationsFactory();
+const createFormationFromDiplomePorfessionel = ({
+  diplomeProfessionel,
+  nFormationDiplome,
+}: {
+  diplomeProfessionel: CompleteDiplomePorfessionelLine;
+  nFormationDiplome: NFormationDiplomeLine;
+}): Omit<Formation, "id"> | undefined => {
+  return {
+    codeFormationDiplome: diplomeProfessionel["Code diplôme"],
+    rncp: parseInt(diplomeProfessionel["Code RNCP"]),
+    libelleDiplome:
+      diplomeProfessionel["Intitulé de la spécialité (et options)"],
+    codeNiveauDiplome: diplomeProfessionel["Code diplôme"].slice(0, 3),
+    dateOuverture: DateTime.fromFormat(
+      nFormationDiplome.DATE_OUVERTURE,
+      "dd/LL/yyyy"
+    ).toJSDate(),
+    dateFermeture: nFormationDiplome.DATE_FERMETURE
+      ? DateTime.fromFormat(
+          nFormationDiplome.DATE_FERMETURE,
+          "dd/LL/yyyy"
+        ).toJSDate()
+      : undefined,
+  };
+};
+
+export const importFormations = importFormationsFactory({});

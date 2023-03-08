@@ -3,6 +3,8 @@ export type Etablissement = {
   UAI: string;
   siret?: string;
   codeAcademie?: string;
+  codeDepartement?: string;
+  codeRegion?: string;
   natureUAI?: string;
   libelleEtablissement?: string;
   adresseEtablissement?: string;

@@ -18,6 +18,7 @@ type R = {
   >;
 } & { [s: string]: { valeur_ajoutee_6_mois: number } };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatUaiData = (rawData: any): R => {
   return rawData.data.reduce(
     (

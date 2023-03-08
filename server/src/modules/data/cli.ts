@@ -8,7 +8,7 @@ import { importFormationEtablissements } from "./usecases/importFormationEtablis
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
-import { importRegions } from "./usecases/importRegions/importRegion.usecase";
+import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
 
 cli.command("truncateRawData").action(async () => {
   await db.truncate(["rawData"], "CASCADE").run(pool);
@@ -33,7 +33,6 @@ cli
       nMef: () =>
         importRawFile({
           type: "nMef",
-          key: "FORMATION_DIPLOME",
           fileStream: fs.createReadStream(
             `${__dirname}/files/nMef.csv`,
             "utf8"
@@ -42,7 +41,6 @@ cli
       familleMetiers: () =>
         importRawFile({
           type: "familleMetiers",
-          key: "MEFSTAT11 TLEPRO",
           fileStream: fs.createReadStream(
             `${__dirname}/files/familleMetiers.csv`,
             "utf8"
@@ -51,25 +49,22 @@ cli
       "Cab-nbre_division_effectifs_par_etab_mefst11": () =>
         importRawFile({
           type: "Cab-nbre_division_effectifs_par_etab_mefst11",
-          key: "Numéro d'établissement",
           fileStream: fs.createReadStream(
             `${__dirname}/files/Cab-nbre_division_effectifs_par_etab_mefst11.csv`,
             "utf8"
           ),
         }),
-      regions: () =>
+      departements_academies_regions: () =>
         importRawFile({
-          type: "regions",
-          key: "codeRegion",
+          type: "departements_academies_regions",
           fileStream: fs.createReadStream(
-            `${__dirname}/files/regions.csv`,
+            `${__dirname}/files/departements_academies_regions.csv`,
             "utf8"
           ),
         }),
       diplomesProfessionnels: () =>
         importRawFile({
           type: "diplomesProfessionnels",
-          key: "Code diplôme",
           fileStream: fs.createReadStream(
             `${__dirname}/files/diplomesProfessionnels.csv`,
             "utf8"
@@ -78,7 +73,6 @@ cli
       nFormationDiplome_: () =>
         importRawFile({
           type: "nFormationDiplome_",
-          key: "FORMATION_DIPLOME",
           fileStream: fs.createReadStream(
             `${__dirname}/files/nFormationDiplome_.csv`,
             "utf8"
@@ -87,7 +81,6 @@ cli
       affelnet2nde: () =>
         importRawFile({
           type: "affelnet2nde",
-          key: "Etablissement",
           fileStream: fs.createReadStream(
             `${__dirname}/files/affelnet2nde.csv`,
             "utf8"
@@ -96,7 +89,6 @@ cli
       lyceesACCE: () =>
         importRawFile({
           type: "lyceesACCE",
-          key: "numero_uai",
           fileStream: fs.createReadStream(
             `${__dirname}/files/lyceesACCE.csv`,
             "utf8"
@@ -134,7 +126,7 @@ cli
   .argument("[usecase]")
   .action(async (usecaseName: string) => {
     const usecases = {
-      importRegions,
+      importLieuxGeographiques,
       importFamillesMetiers,
       importFormations,
       importFormationHistorique,
