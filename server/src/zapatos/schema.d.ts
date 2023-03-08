@@ -7,13 +7,13 @@ Copyright (C) 2020 - 2022 George MacKerron
 Released under the MIT licence: see LICENCE file
 */
 
-declare module "zapatos/schema" {
-  import type * as db from "zapatos/db";
+declare module 'zapatos/schema' {
+
+  import type * as db from 'zapatos/db';
 
   // got a type error on schemaVersionCanary below? update by running `npx zapatos`
-  export interface schemaVersionCanary extends db.SchemaVersionCanary {
-    version: 104;
-  }
+  export interface schemaVersionCanary extends db.SchemaVersionCanary { version: 104 }
+
 
   /* === schema: public === */
 
@@ -23,689 +23,701 @@ declare module "zapatos/schema" {
   /* --- tables --- */
 
   /**
+   * **academie**
+   * - Table in database
+   */
+  export namespace academie {
+    export type Table = 'academie';
+    export interface Selectable {
+      /**
+      * **academie.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string;
+      /**
+      * **academie.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string;
+      /**
+      * **academie.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **academie.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string;
+      /**
+      * **academie.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string;
+      /**
+      * **academie.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
+    }
+    export interface Whereable {
+      /**
+      * **academie.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **academie.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **academie.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **academie.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **academie.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **academie.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **academie.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **academie.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **academie.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'academie_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **departement**
+   * - Table in database
+   */
+  export namespace departement {
+    export type Table = 'departement';
+    export interface Selectable {
+      /**
+      * **departement.codeDepartement**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDepartement: string;
+      /**
+      * **departement.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string;
+      /**
+      * **departement.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string;
+      /**
+      * **departement.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **departement.codeDepartement**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDepartement: string;
+      /**
+      * **departement.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string;
+      /**
+      * **departement.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string;
+      /**
+      * **departement.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
+    }
+    export interface Whereable {
+      /**
+      * **departement.codeDepartement**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDepartement?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **departement.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **departement.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **departement.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **departement.codeDepartement**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDepartement: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **departement.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **departement.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **departement.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **departement.codeDepartement**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDepartement?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **departement.libelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelle?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **departement.codeAcademie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **departement.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'departement_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **etablissement**
    * - Table in database
    */
   export namespace etablissement {
-    export type Table = "etablissement";
+    export type Table = 'etablissement';
     export interface Selectable {
       /**
-       * **etablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **etablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **etablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **etablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **etablissement.siret**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.siret**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       siret: string | null;
       /**
-       * **etablissement.codeAcademie**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codeAcademie**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codeAcademie: string | null;
       /**
-       * **etablissement.natureUAI**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.natureUAI**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       natureUAI: string | null;
       /**
-       * **etablissement.libelleEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.libelleEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       libelleEtablissement: string | null;
       /**
-       * **etablissement.adresseEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.adresseEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       adresseEtablissement: string | null;
       /**
-       * **etablissement.codePostal**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codePostal**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codePostal: string | null;
       /**
-       * **etablissement.secteur**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.secteur**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       secteur: string | null;
       /**
-       * **etablissement.dateOuverture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **etablissement.dateOuverture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateOuverture: Date | null;
       /**
-       * **etablissement.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **etablissement.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateFermeture: Date | null;
       /**
-       * **etablissement.codeMinistereTutuelle**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codeMinistereTutuelle**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codeMinistereTutuelle: string | null;
+      /**
+      * **etablissement.codeRegion**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeRegion: string | null;
+      /**
+      * **etablissement.codeDepartement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeDepartement: string | null;
     }
     export interface JSONSelectable {
       /**
-       * **etablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **etablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **etablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **etablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **etablissement.siret**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.siret**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       siret: string | null;
       /**
-       * **etablissement.codeAcademie**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codeAcademie**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codeAcademie: string | null;
       /**
-       * **etablissement.natureUAI**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.natureUAI**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       natureUAI: string | null;
       /**
-       * **etablissement.libelleEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.libelleEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       libelleEtablissement: string | null;
       /**
-       * **etablissement.adresseEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.adresseEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       adresseEtablissement: string | null;
       /**
-       * **etablissement.codePostal**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codePostal**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codePostal: string | null;
       /**
-       * **etablissement.secteur**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.secteur**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       secteur: string | null;
       /**
-       * **etablissement.dateOuverture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **etablissement.dateOuverture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateOuverture: db.DateString | null;
       /**
-       * **etablissement.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **etablissement.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateFermeture: db.DateString | null;
       /**
-       * **etablissement.codeMinistereTutuelle**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **etablissement.codeMinistereTutuelle**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       codeMinistereTutuelle: string | null;
+      /**
+      * **etablissement.codeRegion**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeRegion: string | null;
+      /**
+      * **etablissement.codeDepartement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeDepartement: string | null;
     }
     export interface Whereable {
       /**
-       * **etablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.siret**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      siret?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.siret**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      siret?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.codeAcademie**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeAcademie?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.codeAcademie**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.natureUAI**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      natureUAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.natureUAI**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      natureUAI?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.libelleEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      libelleEtablissement?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.libelleEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      libelleEtablissement?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.adresseEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      adresseEtablissement?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.adresseEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      adresseEtablissement?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.codePostal**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codePostal?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.codePostal**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codePostal?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.secteur**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      secteur?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.secteur**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      secteur?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.dateOuverture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateOuverture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **etablissement.dateOuverture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **etablissement.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **etablissement.codeMinistereTutuelle**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeMinistereTutuelle?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **etablissement.codeMinistereTutuelle**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeMinistereTutuelle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **etablissement.codeRegion**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **etablissement.codeDepartement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeDepartement?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **etablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **etablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **etablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **etablissement.siret**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      siret?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.siret**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      siret?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.codeAcademie**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeAcademie?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.codeAcademie**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.natureUAI**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      natureUAI?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.natureUAI**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      natureUAI?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.libelleEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      libelleEtablissement?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.libelleEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      libelleEtablissement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.adresseEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      adresseEtablissement?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.adresseEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      adresseEtablissement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.codePostal**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codePostal?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.codePostal**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codePostal?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.secteur**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      secteur?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.secteur**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      secteur?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.dateOuverture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateOuverture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.dateOuverture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **etablissement.codeMinistereTutuelle**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeMinistereTutuelle?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **etablissement.codeMinistereTutuelle**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeMinistereTutuelle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **etablissement.codeRegion**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeRegion?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **etablissement.codeDepartement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeDepartement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **etablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.DefaultType | db.SQLFragment
-          >;
+      * **etablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **etablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **etablissement.siret**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      siret?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.siret**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      siret?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.codeAcademie**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeAcademie?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.codeAcademie**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeAcademie?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.natureUAI**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      natureUAI?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.natureUAI**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      natureUAI?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.libelleEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      libelleEtablissement?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.libelleEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      libelleEtablissement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.adresseEtablissement**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      adresseEtablissement?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.adresseEtablissement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      adresseEtablissement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.codePostal**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codePostal?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.codePostal**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codePostal?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.secteur**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      secteur?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.secteur**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      secteur?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.dateOuverture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateOuverture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.dateOuverture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **etablissement.codeMinistereTutuelle**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      codeMinistereTutuelle?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **etablissement.codeMinistereTutuelle**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeMinistereTutuelle?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **etablissement.codeRegion**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeRegion?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **etablissement.codeDepartement**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      codeDepartement?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "etablissement_UAI_key" | "etablissement_pkey";
+    export type UniqueIndex = 'etablissement_UAI_key' | 'etablissement_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -714,289 +726,201 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace familleMetier {
-    export type Table = "familleMetier";
+    export type Table = 'familleMetier';
     export interface Selectable {
       /**
-       * **familleMetier.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **familleMetier.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **familleMetier.libelleOfficielFamille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielFamille: string;
       /**
-       * **familleMetier.libelleOfficielSpecialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielSpecialite: string;
       /**
-       * **familleMetier.codeMinistereTutelle**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeMinistereTutelle: string;
       /**
-       * **familleMetier.mefStat11Famille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Famille: string;
       /**
-       * **familleMetier.mefStat11Specialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Specialite: string;
     }
     export interface JSONSelectable {
       /**
-       * **familleMetier.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **familleMetier.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **familleMetier.libelleOfficielFamille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielFamille: string;
       /**
-       * **familleMetier.libelleOfficielSpecialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielSpecialite: string;
       /**
-       * **familleMetier.codeMinistereTutelle**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeMinistereTutelle: string;
       /**
-       * **familleMetier.mefStat11Famille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Famille: string;
       /**
-       * **familleMetier.mefStat11Specialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Specialite: string;
     }
     export interface Whereable {
       /**
-       * **familleMetier.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **familleMetier.libelleOfficielFamille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleOfficielFamille?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **familleMetier.libelleOfficielSpecialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleOfficielSpecialite?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **familleMetier.codeMinistereTutelle**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeMinistereTutelle?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **familleMetier.mefStat11Famille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      mefStat11Famille?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **familleMetier.mefStat11Specialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      mefStat11Specialite?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **familleMetier.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **familleMetier.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **familleMetier.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
-       * **familleMetier.libelleOfficielFamille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielFamille: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **familleMetier.libelleOfficielSpecialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleOfficielSpecialite: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **familleMetier.codeMinistereTutelle**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeMinistereTutelle: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **familleMetier.mefStat11Famille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Famille: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **familleMetier.mefStat11Specialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **familleMetier.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       mefStat11Specialite: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **familleMetier.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.DefaultType | db.SQLFragment
-          >;
+      * **familleMetier.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-       * **familleMetier.libelleOfficielFamille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleOfficielFamille?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **familleMetier.libelleOfficielFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielFamille?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **familleMetier.libelleOfficielSpecialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleOfficielSpecialite?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **familleMetier.libelleOfficielSpecialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleOfficielSpecialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **familleMetier.codeMinistereTutelle**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeMinistereTutelle?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **familleMetier.codeMinistereTutelle**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeMinistereTutelle?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **familleMetier.mefStat11Famille**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      mefStat11Famille?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **familleMetier.mefStat11Famille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Famille?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **familleMetier.mefStat11Specialite**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      mefStat11Specialite?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **familleMetier.mefStat11Specialite**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex =
-      | "familleMetier_mefStat11Specialite_key"
-      | "familleMetier_pkey";
+    export type UniqueIndex = 'familleMetier_mefStat11Specialite_key' | 'familleMetier_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -1005,359 +929,231 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace formation {
-    export type Table = "formation";
+    export type Table = 'formation';
     export interface Selectable {
       /**
-       * **formation.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formation.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **formation.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string;
       /**
-       * **formation.rncp**
-       * - `int4` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
       rncp: number;
       /**
-       * **formation.libelleDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleDiplome: string;
       /**
-       * **formation.codeNiveauDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeNiveauDiplome: string;
       /**
-       * **formation.dateOuverture**
-       * - `date` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
       dateOuverture: Date;
       /**
-       * **formation.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **formation.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateFermeture: Date | null;
     }
     export interface JSONSelectable {
       /**
-       * **formation.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formation.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **formation.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string;
       /**
-       * **formation.rncp**
-       * - `int4` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
       rncp: number;
       /**
-       * **formation.libelleDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleDiplome: string;
       /**
-       * **formation.codeNiveauDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeNiveauDiplome: string;
       /**
-       * **formation.dateOuverture**
-       * - `date` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
       dateOuverture: db.DateString;
       /**
-       * **formation.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
+      * **formation.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
       dateFermeture: db.DateString | null;
     }
     export interface Whereable {
       /**
-       * **formation.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formation.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeFormationDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formation.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.rncp**
-       * - `int4` in database
-       * - `NOT NULL`, no default
-       */
-      rncp?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formation.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.libelleDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formation.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.codeNiveauDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeNiveauDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formation.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.dateOuverture**
-       * - `date` in database
-       * - `NOT NULL`, no default
-       */
-      dateOuverture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **formation.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formation.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **formation.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **formation.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formation.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
-       * **formation.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formation.rncp**
-       * - `int4` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
       rncp: number | db.Parameter<number> | db.SQLFragment;
       /**
-       * **formation.libelleDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleDiplome: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formation.codeNiveauDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formation.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeNiveauDiplome: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formation.dateOuverture**
-       * - `date` in database
-       * - `NOT NULL`, no default
-       */
-      dateOuverture:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment;
+      * **formation.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment;
       /**
-       * **formation.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **formation.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **formation.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.DefaultType | db.SQLFragment
-          >;
+      * **formation.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-       * **formation.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeFormationDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formation.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formation.rncp**
-       * - `int4` in database
-       * - `NOT NULL`, no default
-       */
-      rncp?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      * **formation.rncp**
+      * - `int4` in database
+      * - `NOT NULL`, no default
+      */
+      rncp?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
       /**
-       * **formation.libelleDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formation.libelleDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formation.codeNiveauDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeNiveauDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formation.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formation.dateOuverture**
-       * - `date` in database
-       * - `NOT NULL`, no default
-       */
-      dateOuverture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | db.SQLFragment
-          >;
+      * **formation.dateOuverture**
+      * - `date` in database
+      * - `NOT NULL`, no default
+      */
+      dateOuverture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment>;
       /**
-       * **formation.dateFermeture**
-       * - `date` in database
-       * - Nullable, no default
-       */
-      dateFermeture?:
-        | (db.DateString | Date)
-        | db.Parameter<db.DateString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.DateString | Date)
-            | db.Parameter<db.DateString | Date>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **formation.dateFermeture**
+      * - `date` in database
+      * - Nullable, no default
+      */
+      dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex =
-      | "formation_codeFormationDiplome_key"
-      | "formation_pkey";
+    export type UniqueIndex = 'formation_codeFormationDiplome_key' | 'formation_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -1366,247 +1162,171 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace formationEtablissement {
-    export type Table = "formationEtablissement";
+    export type Table = 'formationEtablissement';
     export interface Selectable {
       /**
-       * **formationEtablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formationEtablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **formationEtablissement.cfd**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.cfd**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       cfd: string;
       /**
-       * **formationEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **formationEtablissement.dispositifId**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.dispositifId**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       dispositifId: string;
       /**
-       * **formationEtablissement.voie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       voie: string;
     }
     export interface JSONSelectable {
       /**
-       * **formationEtablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formationEtablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id: string;
       /**
-       * **formationEtablissement.cfd**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.cfd**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       cfd: string;
       /**
-       * **formationEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **formationEtablissement.dispositifId**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.dispositifId**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       dispositifId: string;
       /**
-       * **formationEtablissement.voie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       voie: string;
     }
     export interface Whereable {
       /**
-       * **formationEtablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationEtablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formationEtablissement.cfd**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      cfd?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationEtablissement.cfd**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfd?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formationEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formationEtablissement.dispositifId**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      dispositifId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationEtablissement.dispositifId**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      dispositifId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formationEtablissement.voie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      voie?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **formationEtablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
+      * **formationEtablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
       id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment;
       /**
-       * **formationEtablissement.cfd**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.cfd**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       cfd: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formationEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formationEtablissement.dispositifId**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.dispositifId**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       dispositifId: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formationEtablissement.voie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       voie: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **formationEtablissement.id**
-       * - `uuid` in database
-       * - `NOT NULL`, default: `uuid_generate_v4()`
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.DefaultType | db.SQLFragment
-          >;
+      * **formationEtablissement.id**
+      * - `uuid` in database
+      * - `NOT NULL`, default: `uuid_generate_v4()`
+      */
+      id?: string | db.Parameter<string> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.DefaultType | db.SQLFragment>;
       /**
-       * **formationEtablissement.cfd**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      cfd?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationEtablissement.cfd**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfd?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formationEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formationEtablissement.dispositifId**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      dispositifId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationEtablissement.dispositifId**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      dispositifId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formationEtablissement.voie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      voie?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationEtablissement.voie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      voie?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex =
-      | "formationEtablissement_pkey"
-      | "formationetablissement_pk";
+    export type UniqueIndex = 'formationEtablissement_pkey' | 'formationetablissement_pk';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -1615,115 +1335,81 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace formationHistorique {
-    export type Table = "formationHistorique";
+    export type Table = 'formationHistorique';
     export interface Selectable {
       /**
-       * **formationHistorique.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string;
       /**
-       * **formationHistorique.ancienCFD**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.ancienCFD**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       ancienCFD: string;
     }
     export interface JSONSelectable {
       /**
-       * **formationHistorique.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string;
       /**
-       * **formationHistorique.ancienCFD**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.ancienCFD**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       ancienCFD: string;
     }
     export interface Whereable {
       /**
-       * **formationHistorique.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeFormationDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationHistorique.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **formationHistorique.ancienCFD**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      ancienCFD?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **formationHistorique.ancienCFD**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      ancienCFD?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **formationHistorique.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       codeFormationDiplome: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **formationHistorique.ancienCFD**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **formationHistorique.ancienCFD**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       ancienCFD: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **formationHistorique.codeFormationDiplome**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      codeFormationDiplome?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationHistorique.codeFormationDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeFormationDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **formationHistorique.ancienCFD**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      ancienCFD?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **formationHistorique.ancienCFD**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      ancienCFD?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "formationhistorique_pk";
+    export type UniqueIndex = 'formationhistorique_pk';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -1732,283 +1418,171 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace indicateurEntree {
-    export type Table = "indicateurEntree";
+    export type Table = 'indicateurEntree';
     export interface Selectable {
       /**
-       * **indicateurEntree.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string;
       /**
-       * **indicateurEntree.millesimeEntree**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.millesimeEntree**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeEntree: string;
       /**
-       * **indicateurEntree.capacite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.capacite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       capacite: number | null;
       /**
-       * **indicateurEntree.effectifEntree**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.effectifEntree**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       effectifEntree: number | null;
       /**
-       * **indicateurEntree.nbPremiersVoeux**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.nbPremiersVoeux**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbPremiersVoeux: number | null;
     }
     export interface JSONSelectable {
       /**
-       * **indicateurEntree.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string;
       /**
-       * **indicateurEntree.millesimeEntree**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.millesimeEntree**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeEntree: string;
       /**
-       * **indicateurEntree.capacite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.capacite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       capacite: number | null;
       /**
-       * **indicateurEntree.effectifEntree**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.effectifEntree**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       effectifEntree: number | null;
       /**
-       * **indicateurEntree.nbPremiersVoeux**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEntree.nbPremiersVoeux**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbPremiersVoeux: number | null;
     }
     export interface Whereable {
       /**
-       * **indicateurEntree.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
-      formationEtablissementId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEntree.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEntree.millesimeEntree**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesimeEntree?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEntree.millesimeEntree**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEntree.capacite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      capacite?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEntree.capacite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      capacite?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEntree.effectifEntree**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifEntree?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEntree.effectifEntree**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifEntree?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEntree.nbPremiersVoeux**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPremiersVoeux?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEntree.nbPremiersVoeux**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPremiersVoeux?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **indicateurEntree.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurEntree.millesimeEntree**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEntree.millesimeEntree**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeEntree: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurEntree.capacite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      capacite?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurEntree.capacite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      capacite?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurEntree.effectifEntree**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifEntree?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurEntree.effectifEntree**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifEntree?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurEntree.nbPremiersVoeux**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPremiersVoeux?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurEntree.nbPremiersVoeux**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPremiersVoeux?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **indicateurEntree.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
-      formationEtablissementId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurEntree.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurEntree.millesimeEntree**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesimeEntree?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurEntree.millesimeEntree**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurEntree.capacite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      capacite?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurEntree.capacite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      capacite?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurEntree.effectifEntree**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifEntree?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurEntree.effectifEntree**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifEntree?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurEntree.nbPremiersVoeux**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPremiersVoeux?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurEntree.nbPremiersVoeux**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPremiersVoeux?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "indicateurentree_pk";
+    export type UniqueIndex = 'indicateurentree_pk';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2017,171 +1591,111 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace indicateurEtablissement {
-    export type Table = "indicateurEtablissement";
+    export type Table = 'indicateurEtablissement';
     export interface Selectable {
       /**
-       * **indicateurEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **indicateurEtablissement.millesime**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.millesime**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesime: string;
       /**
-       * **indicateurEtablissement.valeurAjoutee**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEtablissement.valeurAjoutee**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       valeurAjoutee: number | null;
     }
     export interface JSONSelectable {
       /**
-       * **indicateurEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string;
       /**
-       * **indicateurEtablissement.millesime**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.millesime**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesime: string;
       /**
-       * **indicateurEtablissement.valeurAjoutee**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurEtablissement.valeurAjoutee**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       valeurAjoutee: number | null;
     }
     export interface Whereable {
       /**
-       * **indicateurEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEtablissement.millesime**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesime?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEtablissement.millesime**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesime?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurEtablissement.valeurAjoutee**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      valeurAjoutee?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurEtablissement.valeurAjoutee**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      valeurAjoutee?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **indicateurEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       UAI: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurEtablissement.millesime**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurEtablissement.millesime**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesime: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurEtablissement.valeurAjoutee**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      valeurAjoutee?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurEtablissement.valeurAjoutee**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      valeurAjoutee?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **indicateurEtablissement.UAI**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      UAI?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurEtablissement.UAI**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      UAI?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurEtablissement.millesime**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesime?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurEtablissement.millesime**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesime?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurEtablissement.valeurAjoutee**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      valeurAjoutee?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurEtablissement.valeurAjoutee**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      valeurAjoutee?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "indicateuretablissement_pk";
+    export type UniqueIndex = 'indicateuretablissement_pk';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2190,395 +1704,231 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace indicateurSortie {
-    export type Table = "indicateurSortie";
+    export type Table = 'indicateurSortie';
     export interface Selectable {
       /**
-       * **indicateurSortie.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string;
       /**
-       * **indicateurSortie.millesimeSortie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.millesimeSortie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeSortie: string;
       /**
-       * **indicateurSortie.reussite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.reussite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       reussite: number | null;
       /**
-       * **indicateurSortie.effectifSortie**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.effectifSortie**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       effectifSortie: number | null;
       /**
-       * **indicateurSortie.nbSortants**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbSortants**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbSortants: number | null;
       /**
-       * **indicateurSortie.nbPoursuiteEtudes**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbPoursuiteEtudes**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbPoursuiteEtudes: number | null;
       /**
-       * **indicateurSortie.nbInsertion6mois**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbInsertion6mois**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbInsertion6mois: number | null;
     }
     export interface JSONSelectable {
       /**
-       * **indicateurSortie.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string;
       /**
-       * **indicateurSortie.millesimeSortie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.millesimeSortie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeSortie: string;
       /**
-       * **indicateurSortie.reussite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.reussite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       reussite: number | null;
       /**
-       * **indicateurSortie.effectifSortie**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.effectifSortie**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       effectifSortie: number | null;
       /**
-       * **indicateurSortie.nbSortants**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbSortants**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbSortants: number | null;
       /**
-       * **indicateurSortie.nbPoursuiteEtudes**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbPoursuiteEtudes**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbPoursuiteEtudes: number | null;
       /**
-       * **indicateurSortie.nbInsertion6mois**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **indicateurSortie.nbInsertion6mois**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       nbInsertion6mois: number | null;
     }
     export interface Whereable {
       /**
-       * **indicateurSortie.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
-      formationEtablissementId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.millesimeSortie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesimeSortie?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.millesimeSortie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesimeSortie?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.reussite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      reussite?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.reussite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      reussite?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.effectifSortie**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifSortie?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.effectifSortie**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifSortie?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.nbSortants**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbSortants?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.nbSortants**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbSortants?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.nbPoursuiteEtudes**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPoursuiteEtudes?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.nbPoursuiteEtudes**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPoursuiteEtudes?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **indicateurSortie.nbInsertion6mois**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbInsertion6mois?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **indicateurSortie.nbInsertion6mois**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbInsertion6mois?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **indicateurSortie.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
       formationEtablissementId: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurSortie.millesimeSortie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **indicateurSortie.millesimeSortie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       millesimeSortie: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **indicateurSortie.reussite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      reussite?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurSortie.reussite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      reussite?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurSortie.effectifSortie**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifSortie?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurSortie.effectifSortie**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifSortie?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurSortie.nbSortants**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbSortants?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurSortie.nbSortants**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbSortants?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurSortie.nbPoursuiteEtudes**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPoursuiteEtudes?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurSortie.nbPoursuiteEtudes**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPoursuiteEtudes?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **indicateurSortie.nbInsertion6mois**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbInsertion6mois?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **indicateurSortie.nbInsertion6mois**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbInsertion6mois?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **indicateurSortie.formationEtablissementId**
-       * - `uuid` in database
-       * - `NOT NULL`, no default
-       */
-      formationEtablissementId?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurSortie.formationEtablissementId**
+      * - `uuid` in database
+      * - `NOT NULL`, no default
+      */
+      formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurSortie.millesimeSortie**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      millesimeSortie?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **indicateurSortie.millesimeSortie**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      millesimeSortie?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **indicateurSortie.reussite**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      reussite?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurSortie.reussite**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      reussite?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurSortie.effectifSortie**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      effectifSortie?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurSortie.effectifSortie**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      effectifSortie?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurSortie.nbSortants**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbSortants?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurSortie.nbSortants**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbSortants?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurSortie.nbPoursuiteEtudes**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbPoursuiteEtudes?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurSortie.nbPoursuiteEtudes**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbPoursuiteEtudes?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **indicateurSortie.nbInsertion6mois**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      nbInsertion6mois?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **indicateurSortie.nbInsertion6mois**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      nbInsertion6mois?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "indicateursortie_pk";
+    export type UniqueIndex = 'indicateursortie_pk';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2587,248 +1937,141 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace knex_migrations {
-    export type Table = "knex_migrations";
+    export type Table = 'knex_migrations';
     export interface Selectable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       name: string | null;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       batch: number | null;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
       migration_time: Date | null;
     }
     export interface JSONSelectable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id: number;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
       name: string | null;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       batch: number | null;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
       migration_time: db.TimestampTzString | null;
     }
     export interface Whereable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
       id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **knex_migrations.id**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
-       */
-      id?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **knex_migrations.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.name**
-       * - `varchar` in database
-       * - Nullable, no default
-       */
-      name?:
-        | string
-        | db.Parameter<string>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | string
-            | db.Parameter<string>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.name**
+      * - `varchar` in database
+      * - Nullable, no default
+      */
+      name?: string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.batch**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      batch?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.batch**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      batch?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations.migration_time**
-       * - `timestamptz` in database
-       * - Nullable, no default
-       */
-      migration_time?:
-        | (db.TimestampTzString | Date)
-        | db.Parameter<db.TimestampTzString | Date>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | (db.TimestampTzString | Date)
-            | db.Parameter<db.TimestampTzString | Date>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations.migration_time**
+      * - `timestamptz` in database
+      * - Nullable, no default
+      */
+      migration_time?: (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.TimestampTzString | Date) | db.Parameter<(db.TimestampTzString | Date)> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "knex_migrations_pkey";
+    export type UniqueIndex = 'knex_migrations_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2837,133 +2080,194 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace knex_migrations_lock {
-    export type Table = "knex_migrations_lock";
+    export type Table = 'knex_migrations_lock';
     export interface Selectable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index: number;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       is_locked: number | null;
     }
     export interface JSONSelectable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index: number;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
       is_locked: number | null;
     }
     export interface Whereable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
-      index?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
+      index?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.SQLFragment | db.ParentColumn
-          >;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
       index?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **knex_migrations_lock.index**
-       * - `int4` in database
-       * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
-       */
-      index?:
-        | number
-        | db.Parameter<number>
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            number | db.Parameter<number> | db.DefaultType | db.SQLFragment
-          >;
+      * **knex_migrations_lock.index**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('knex_migrations_lock_index_seq'::regclass)`
+      */
+      index?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
       /**
-       * **knex_migrations_lock.is_locked**
-       * - `int4` in database
-       * - Nullable, no default
-       */
-      is_locked?:
-        | number
-        | db.Parameter<number>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | number
-            | db.Parameter<number>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **knex_migrations_lock.is_locked**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      is_locked?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
     }
-    export type UniqueIndex = "knex_migrations_lock_pkey";
+    export type UniqueIndex = 'knex_migrations_lock_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
+   * **pg_mate**
+   * - Table in database
+   */
+  export namespace pg_mate {
+    export type Table = 'pg_mate';
+    export interface Selectable {
+      /**
+      * **pg_mate.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **pg_mate.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **pg_mate.date**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      date: Date;
+    }
+    export interface JSONSelectable {
+      /**
+      * **pg_mate.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
+      */
+      id: number;
+      /**
+      * **pg_mate.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string;
+      /**
+      * **pg_mate.date**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      date: db.TimestampString;
+    }
+    export interface Whereable {
+      /**
+      * **pg_mate.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pg_mate.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pg_mate.date**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **pg_mate.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
+      /**
+      * **pg_mate.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **pg_mate.date**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      date: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **pg_mate.id**
+      * - `int4` in database
+      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
+      */
+      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
+      /**
+      * **pg_mate.name**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **pg_mate.date**
+      * - `timestamp` in database
+      * - `NOT NULL`, no default
+      */
+      date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'pg_mate_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -2972,132 +2276,81 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace rawData {
-    export type Table = "rawData";
+    export type Table = 'rawData';
     export interface Selectable {
       /**
-       * **rawData.type**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **rawData.type**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       type: string;
       /**
-       * **rawData.data**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
+      * **rawData.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
       data: db.JSONValue | null;
     }
     export interface JSONSelectable {
       /**
-       * **rawData.type**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **rawData.type**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       type: string;
       /**
-       * **rawData.data**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
+      * **rawData.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
       data: db.JSONValue | null;
     }
     export interface Whereable {
       /**
-       * **rawData.type**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **rawData.type**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      type?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **rawData.data**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      data?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | db.SQLFragment
-            | db.ParentColumn
-          >;
+      * **rawData.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **rawData.type**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **rawData.type**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       type: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **rawData.data**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      data?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | null
-        | db.DefaultType
-        | db.SQLFragment;
+      * **rawData.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **rawData.type**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      type?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **rawData.type**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      type?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **rawData.data**
-       * - `jsonb` in database
-       * - Nullable, no default
-       */
-      data?:
-        | db.JSONValue
-        | db.Parameter<db.JSONValue>
-        | null
-        | db.DefaultType
-        | db.SQLFragment
-        | db.SQLFragment<
-            any,
-            | db.JSONValue
-            | db.Parameter<db.JSONValue>
-            | null
-            | db.DefaultType
-            | db.SQLFragment
-          >;
+      * **rawData.data**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      data?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = never;
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
@@ -3106,262 +2359,108 @@ declare module "zapatos/schema" {
    * - Table in database
    */
   export namespace region {
-    export type Table = "region";
+    export type Table = 'region';
     export interface Selectable {
       /**
-       * **region.id**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      id: string;
+      * **region.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
       /**
-       * **region.libelleRegion**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **region.libelleRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleRegion: string;
     }
     export interface JSONSelectable {
       /**
-       * **region.id**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      id: string;
+      * **region.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string;
       /**
-       * **region.libelleRegion**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **region.libelleRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleRegion: string;
     }
     export interface Whereable {
       /**
-       * **region.id**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **region.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-       * **region.libelleRegion**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleRegion?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.ParentColumn
-        | db.SQLFragment<
-            any,
-            string | db.Parameter<string> | db.SQLFragment | db.ParentColumn
-          >;
+      * **region.libelleRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleRegion?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
-       * **region.id**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      id: string | db.Parameter<string> | db.SQLFragment;
+      * **region.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion: string | db.Parameter<string> | db.SQLFragment;
       /**
-       * **region.libelleRegion**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
+      * **region.libelleRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
       libelleRegion: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
-       * **region.id**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      id?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **region.codeRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeRegion?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-       * **region.libelleRegion**
-       * - `varchar` in database
-       * - `NOT NULL`, no default
-       */
-      libelleRegion?:
-        | string
-        | db.Parameter<string>
-        | db.SQLFragment
-        | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      * **region.libelleRegion**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleRegion?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
-    export type UniqueIndex = "region_libelleRegion_key" | "region_pkey";
+    export type UniqueIndex = 'region_libelleRegion_key' | 'region_pkey';
     export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<
-      Selectable,
-      T[number]
-    >;
-    export type SQLExpression =
-      | Table
-      | db.ColumnNames<Updatable | (keyof Updatable)[]>
-      | db.ColumnValues<Updatable>
-      | Whereable
-      | Column
-      | db.ParentColumn
-      | db.GenericSQLExpression;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
     export type SQL = SQLExpression | SQLExpression[];
   }
 
   /* --- aggregate types --- */
 
-  export namespace public {
-    export type Table =
-      | etablissement.Table
-      | familleMetier.Table
-      | formation.Table
-      | formationEtablissement.Table
-      | formationHistorique.Table
-      | indicateurEntree.Table
-      | indicateurEtablissement.Table
-      | indicateurSortie.Table
-      | knex_migrations.Table
-      | knex_migrations_lock.Table
-      | rawData.Table
-      | region.Table;
-    export type Selectable =
-      | etablissement.Selectable
-      | familleMetier.Selectable
-      | formation.Selectable
-      | formationEtablissement.Selectable
-      | formationHistorique.Selectable
-      | indicateurEntree.Selectable
-      | indicateurEtablissement.Selectable
-      | indicateurSortie.Selectable
-      | knex_migrations.Selectable
-      | knex_migrations_lock.Selectable
-      | rawData.Selectable
-      | region.Selectable;
-    export type JSONSelectable =
-      | etablissement.JSONSelectable
-      | familleMetier.JSONSelectable
-      | formation.JSONSelectable
-      | formationEtablissement.JSONSelectable
-      | formationHistorique.JSONSelectable
-      | indicateurEntree.JSONSelectable
-      | indicateurEtablissement.JSONSelectable
-      | indicateurSortie.JSONSelectable
-      | knex_migrations.JSONSelectable
-      | knex_migrations_lock.JSONSelectable
-      | rawData.JSONSelectable
-      | region.JSONSelectable;
-    export type Whereable =
-      | etablissement.Whereable
-      | familleMetier.Whereable
-      | formation.Whereable
-      | formationEtablissement.Whereable
-      | formationHistorique.Whereable
-      | indicateurEntree.Whereable
-      | indicateurEtablissement.Whereable
-      | indicateurSortie.Whereable
-      | knex_migrations.Whereable
-      | knex_migrations_lock.Whereable
-      | rawData.Whereable
-      | region.Whereable;
-    export type Insertable =
-      | etablissement.Insertable
-      | familleMetier.Insertable
-      | formation.Insertable
-      | formationEtablissement.Insertable
-      | formationHistorique.Insertable
-      | indicateurEntree.Insertable
-      | indicateurEtablissement.Insertable
-      | indicateurSortie.Insertable
-      | knex_migrations.Insertable
-      | knex_migrations_lock.Insertable
-      | rawData.Insertable
-      | region.Insertable;
-    export type Updatable =
-      | etablissement.Updatable
-      | familleMetier.Updatable
-      | formation.Updatable
-      | formationEtablissement.Updatable
-      | formationHistorique.Updatable
-      | indicateurEntree.Updatable
-      | indicateurEtablissement.Updatable
-      | indicateurSortie.Updatable
-      | knex_migrations.Updatable
-      | knex_migrations_lock.Updatable
-      | rawData.Updatable
-      | region.Updatable;
-    export type UniqueIndex =
-      | etablissement.UniqueIndex
-      | familleMetier.UniqueIndex
-      | formation.UniqueIndex
-      | formationEtablissement.UniqueIndex
-      | formationHistorique.UniqueIndex
-      | indicateurEntree.UniqueIndex
-      | indicateurEtablissement.UniqueIndex
-      | indicateurSortie.UniqueIndex
-      | knex_migrations.UniqueIndex
-      | knex_migrations_lock.UniqueIndex
-      | rawData.UniqueIndex
-      | region.UniqueIndex;
-    export type Column =
-      | etablissement.Column
-      | familleMetier.Column
-      | formation.Column
-      | formationEtablissement.Column
-      | formationHistorique.Column
-      | indicateurEntree.Column
-      | indicateurEtablissement.Column
-      | indicateurSortie.Column
-      | knex_migrations.Column
-      | knex_migrations_lock.Column
-      | rawData.Column
-      | region.Column;
-
-    export type AllBaseTables = [
-      etablissement.Table,
-      familleMetier.Table,
-      formation.Table,
-      formationEtablissement.Table,
-      formationHistorique.Table,
-      indicateurEntree.Table,
-      indicateurEtablissement.Table,
-      indicateurSortie.Table,
-      knex_migrations.Table,
-      knex_migrations_lock.Table,
-      rawData.Table,
-      region.Table
-    ];
+  export namespace public {  
+    export type Table = academie.Table | departement.Table | etablissement.Table | familleMetier.Table | formation.Table | formationEtablissement.Table | formationHistorique.Table | indicateurEntree.Table | indicateurEtablissement.Table | indicateurSortie.Table | knex_migrations.Table | knex_migrations_lock.Table | pg_mate.Table | rawData.Table | region.Table;
+    export type Selectable = academie.Selectable | departement.Selectable | etablissement.Selectable | familleMetier.Selectable | formation.Selectable | formationEtablissement.Selectable | formationHistorique.Selectable | indicateurEntree.Selectable | indicateurEtablissement.Selectable | indicateurSortie.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable | pg_mate.Selectable | rawData.Selectable | region.Selectable;
+    export type JSONSelectable = academie.JSONSelectable | departement.JSONSelectable | etablissement.JSONSelectable | familleMetier.JSONSelectable | formation.JSONSelectable | formationEtablissement.JSONSelectable | formationHistorique.JSONSelectable | indicateurEntree.JSONSelectable | indicateurEtablissement.JSONSelectable | indicateurSortie.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | pg_mate.JSONSelectable | rawData.JSONSelectable | region.JSONSelectable;
+    export type Whereable = academie.Whereable | departement.Whereable | etablissement.Whereable | familleMetier.Whereable | formation.Whereable | formationEtablissement.Whereable | formationHistorique.Whereable | indicateurEntree.Whereable | indicateurEtablissement.Whereable | indicateurSortie.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable | pg_mate.Whereable | rawData.Whereable | region.Whereable;
+    export type Insertable = academie.Insertable | departement.Insertable | etablissement.Insertable | familleMetier.Insertable | formation.Insertable | formationEtablissement.Insertable | formationHistorique.Insertable | indicateurEntree.Insertable | indicateurEtablissement.Insertable | indicateurSortie.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable | pg_mate.Insertable | rawData.Insertable | region.Insertable;
+    export type Updatable = academie.Updatable | departement.Updatable | etablissement.Updatable | familleMetier.Updatable | formation.Updatable | formationEtablissement.Updatable | formationHistorique.Updatable | indicateurEntree.Updatable | indicateurEtablissement.Updatable | indicateurSortie.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable | pg_mate.Updatable | rawData.Updatable | region.Updatable;
+    export type UniqueIndex = academie.UniqueIndex | departement.UniqueIndex | etablissement.UniqueIndex | familleMetier.UniqueIndex | formation.UniqueIndex | formationEtablissement.UniqueIndex | formationHistorique.UniqueIndex | indicateurEntree.UniqueIndex | indicateurEtablissement.UniqueIndex | indicateurSortie.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | pg_mate.UniqueIndex | rawData.UniqueIndex | region.UniqueIndex;
+    export type Column = academie.Column | departement.Column | etablissement.Column | familleMetier.Column | formation.Column | formationEtablissement.Column | formationHistorique.Column | indicateurEntree.Column | indicateurEtablissement.Column | indicateurSortie.Column | knex_migrations.Column | knex_migrations_lock.Column | pg_mate.Column | rawData.Column | region.Column;
+  
+    export type AllBaseTables = [academie.Table, departement.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, pg_mate.Table, rawData.Table, region.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [
-      etablissement.Table,
-      familleMetier.Table,
-      formation.Table,
-      formationEtablissement.Table,
-      formationHistorique.Table,
-      indicateurEntree.Table,
-      indicateurEtablissement.Table,
-      indicateurSortie.Table,
-      knex_migrations.Table,
-      knex_migrations_lock.Table,
-      rawData.Table,
-      region.Table
-    ];
+    export type AllTablesAndViews = [academie.Table, departement.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, pg_mate.Table, rawData.Table, region.Table];
   }
+
+
 
   /* === global aggregate types === */
 
-  export type Schema = "public";
+  export type Schema = 'public';
   export type Table = public.Table;
   export type Selectable = public.Selectable;
   export type JSONSelectable = public.JSONSelectable;
@@ -3371,132 +2470,158 @@ declare module "zapatos/schema" {
   export type UniqueIndex = public.UniqueIndex;
   export type Column = public.Column;
 
-  export type AllSchemas = ["public"];
+  export type AllSchemas = ['public'];
   export type AllBaseTables = [...public.AllBaseTables];
   export type AllForeignTables = [...public.AllForeignTables];
   export type AllViews = [...public.AllViews];
   export type AllMaterializedViews = [...public.AllMaterializedViews];
   export type AllTablesAndViews = [...public.AllTablesAndViews];
 
+
   /* === lookups === */
 
   export type SelectableForTable<T extends Table> = {
-    etablissement: etablissement.Selectable;
-    familleMetier: familleMetier.Selectable;
-    formation: formation.Selectable;
-    formationEtablissement: formationEtablissement.Selectable;
-    formationHistorique: formationHistorique.Selectable;
-    indicateurEntree: indicateurEntree.Selectable;
-    indicateurEtablissement: indicateurEtablissement.Selectable;
-    indicateurSortie: indicateurSortie.Selectable;
-    knex_migrations: knex_migrations.Selectable;
-    knex_migrations_lock: knex_migrations_lock.Selectable;
-    rawData: rawData.Selectable;
-    region: region.Selectable;
+    "academie": academie.Selectable;
+    "departement": departement.Selectable;
+    "etablissement": etablissement.Selectable;
+    "familleMetier": familleMetier.Selectable;
+    "formation": formation.Selectable;
+    "formationEtablissement": formationEtablissement.Selectable;
+    "formationHistorique": formationHistorique.Selectable;
+    "indicateurEntree": indicateurEntree.Selectable;
+    "indicateurEtablissement": indicateurEtablissement.Selectable;
+    "indicateurSortie": indicateurSortie.Selectable;
+    "knex_migrations": knex_migrations.Selectable;
+    "knex_migrations_lock": knex_migrations_lock.Selectable;
+    "pg_mate": pg_mate.Selectable;
+    "rawData": rawData.Selectable;
+    "region": region.Selectable;
   }[T];
 
   export type JSONSelectableForTable<T extends Table> = {
-    etablissement: etablissement.JSONSelectable;
-    familleMetier: familleMetier.JSONSelectable;
-    formation: formation.JSONSelectable;
-    formationEtablissement: formationEtablissement.JSONSelectable;
-    formationHistorique: formationHistorique.JSONSelectable;
-    indicateurEntree: indicateurEntree.JSONSelectable;
-    indicateurEtablissement: indicateurEtablissement.JSONSelectable;
-    indicateurSortie: indicateurSortie.JSONSelectable;
-    knex_migrations: knex_migrations.JSONSelectable;
-    knex_migrations_lock: knex_migrations_lock.JSONSelectable;
-    rawData: rawData.JSONSelectable;
-    region: region.JSONSelectable;
+    "academie": academie.JSONSelectable;
+    "departement": departement.JSONSelectable;
+    "etablissement": etablissement.JSONSelectable;
+    "familleMetier": familleMetier.JSONSelectable;
+    "formation": formation.JSONSelectable;
+    "formationEtablissement": formationEtablissement.JSONSelectable;
+    "formationHistorique": formationHistorique.JSONSelectable;
+    "indicateurEntree": indicateurEntree.JSONSelectable;
+    "indicateurEtablissement": indicateurEtablissement.JSONSelectable;
+    "indicateurSortie": indicateurSortie.JSONSelectable;
+    "knex_migrations": knex_migrations.JSONSelectable;
+    "knex_migrations_lock": knex_migrations_lock.JSONSelectable;
+    "pg_mate": pg_mate.JSONSelectable;
+    "rawData": rawData.JSONSelectable;
+    "region": region.JSONSelectable;
   }[T];
 
   export type WhereableForTable<T extends Table> = {
-    etablissement: etablissement.Whereable;
-    familleMetier: familleMetier.Whereable;
-    formation: formation.Whereable;
-    formationEtablissement: formationEtablissement.Whereable;
-    formationHistorique: formationHistorique.Whereable;
-    indicateurEntree: indicateurEntree.Whereable;
-    indicateurEtablissement: indicateurEtablissement.Whereable;
-    indicateurSortie: indicateurSortie.Whereable;
-    knex_migrations: knex_migrations.Whereable;
-    knex_migrations_lock: knex_migrations_lock.Whereable;
-    rawData: rawData.Whereable;
-    region: region.Whereable;
+    "academie": academie.Whereable;
+    "departement": departement.Whereable;
+    "etablissement": etablissement.Whereable;
+    "familleMetier": familleMetier.Whereable;
+    "formation": formation.Whereable;
+    "formationEtablissement": formationEtablissement.Whereable;
+    "formationHistorique": formationHistorique.Whereable;
+    "indicateurEntree": indicateurEntree.Whereable;
+    "indicateurEtablissement": indicateurEtablissement.Whereable;
+    "indicateurSortie": indicateurSortie.Whereable;
+    "knex_migrations": knex_migrations.Whereable;
+    "knex_migrations_lock": knex_migrations_lock.Whereable;
+    "pg_mate": pg_mate.Whereable;
+    "rawData": rawData.Whereable;
+    "region": region.Whereable;
   }[T];
 
   export type InsertableForTable<T extends Table> = {
-    etablissement: etablissement.Insertable;
-    familleMetier: familleMetier.Insertable;
-    formation: formation.Insertable;
-    formationEtablissement: formationEtablissement.Insertable;
-    formationHistorique: formationHistorique.Insertable;
-    indicateurEntree: indicateurEntree.Insertable;
-    indicateurEtablissement: indicateurEtablissement.Insertable;
-    indicateurSortie: indicateurSortie.Insertable;
-    knex_migrations: knex_migrations.Insertable;
-    knex_migrations_lock: knex_migrations_lock.Insertable;
-    rawData: rawData.Insertable;
-    region: region.Insertable;
+    "academie": academie.Insertable;
+    "departement": departement.Insertable;
+    "etablissement": etablissement.Insertable;
+    "familleMetier": familleMetier.Insertable;
+    "formation": formation.Insertable;
+    "formationEtablissement": formationEtablissement.Insertable;
+    "formationHistorique": formationHistorique.Insertable;
+    "indicateurEntree": indicateurEntree.Insertable;
+    "indicateurEtablissement": indicateurEtablissement.Insertable;
+    "indicateurSortie": indicateurSortie.Insertable;
+    "knex_migrations": knex_migrations.Insertable;
+    "knex_migrations_lock": knex_migrations_lock.Insertable;
+    "pg_mate": pg_mate.Insertable;
+    "rawData": rawData.Insertable;
+    "region": region.Insertable;
   }[T];
 
   export type UpdatableForTable<T extends Table> = {
-    etablissement: etablissement.Updatable;
-    familleMetier: familleMetier.Updatable;
-    formation: formation.Updatable;
-    formationEtablissement: formationEtablissement.Updatable;
-    formationHistorique: formationHistorique.Updatable;
-    indicateurEntree: indicateurEntree.Updatable;
-    indicateurEtablissement: indicateurEtablissement.Updatable;
-    indicateurSortie: indicateurSortie.Updatable;
-    knex_migrations: knex_migrations.Updatable;
-    knex_migrations_lock: knex_migrations_lock.Updatable;
-    rawData: rawData.Updatable;
-    region: region.Updatable;
+    "academie": academie.Updatable;
+    "departement": departement.Updatable;
+    "etablissement": etablissement.Updatable;
+    "familleMetier": familleMetier.Updatable;
+    "formation": formation.Updatable;
+    "formationEtablissement": formationEtablissement.Updatable;
+    "formationHistorique": formationHistorique.Updatable;
+    "indicateurEntree": indicateurEntree.Updatable;
+    "indicateurEtablissement": indicateurEtablissement.Updatable;
+    "indicateurSortie": indicateurSortie.Updatable;
+    "knex_migrations": knex_migrations.Updatable;
+    "knex_migrations_lock": knex_migrations_lock.Updatable;
+    "pg_mate": pg_mate.Updatable;
+    "rawData": rawData.Updatable;
+    "region": region.Updatable;
   }[T];
 
   export type UniqueIndexForTable<T extends Table> = {
-    etablissement: etablissement.UniqueIndex;
-    familleMetier: familleMetier.UniqueIndex;
-    formation: formation.UniqueIndex;
-    formationEtablissement: formationEtablissement.UniqueIndex;
-    formationHistorique: formationHistorique.UniqueIndex;
-    indicateurEntree: indicateurEntree.UniqueIndex;
-    indicateurEtablissement: indicateurEtablissement.UniqueIndex;
-    indicateurSortie: indicateurSortie.UniqueIndex;
-    knex_migrations: knex_migrations.UniqueIndex;
-    knex_migrations_lock: knex_migrations_lock.UniqueIndex;
-    rawData: rawData.UniqueIndex;
-    region: region.UniqueIndex;
+    "academie": academie.UniqueIndex;
+    "departement": departement.UniqueIndex;
+    "etablissement": etablissement.UniqueIndex;
+    "familleMetier": familleMetier.UniqueIndex;
+    "formation": formation.UniqueIndex;
+    "formationEtablissement": formationEtablissement.UniqueIndex;
+    "formationHistorique": formationHistorique.UniqueIndex;
+    "indicateurEntree": indicateurEntree.UniqueIndex;
+    "indicateurEtablissement": indicateurEtablissement.UniqueIndex;
+    "indicateurSortie": indicateurSortie.UniqueIndex;
+    "knex_migrations": knex_migrations.UniqueIndex;
+    "knex_migrations_lock": knex_migrations_lock.UniqueIndex;
+    "pg_mate": pg_mate.UniqueIndex;
+    "rawData": rawData.UniqueIndex;
+    "region": region.UniqueIndex;
   }[T];
 
   export type ColumnForTable<T extends Table> = {
-    etablissement: etablissement.Column;
-    familleMetier: familleMetier.Column;
-    formation: formation.Column;
-    formationEtablissement: formationEtablissement.Column;
-    formationHistorique: formationHistorique.Column;
-    indicateurEntree: indicateurEntree.Column;
-    indicateurEtablissement: indicateurEtablissement.Column;
-    indicateurSortie: indicateurSortie.Column;
-    knex_migrations: knex_migrations.Column;
-    knex_migrations_lock: knex_migrations_lock.Column;
-    rawData: rawData.Column;
-    region: region.Column;
+    "academie": academie.Column;
+    "departement": departement.Column;
+    "etablissement": etablissement.Column;
+    "familleMetier": familleMetier.Column;
+    "formation": formation.Column;
+    "formationEtablissement": formationEtablissement.Column;
+    "formationHistorique": formationHistorique.Column;
+    "indicateurEntree": indicateurEntree.Column;
+    "indicateurEtablissement": indicateurEtablissement.Column;
+    "indicateurSortie": indicateurSortie.Column;
+    "knex_migrations": knex_migrations.Column;
+    "knex_migrations_lock": knex_migrations_lock.Column;
+    "pg_mate": pg_mate.Column;
+    "rawData": rawData.Column;
+    "region": region.Column;
   }[T];
 
   export type SQLForTable<T extends Table> = {
-    etablissement: etablissement.SQL;
-    familleMetier: familleMetier.SQL;
-    formation: formation.SQL;
-    formationEtablissement: formationEtablissement.SQL;
-    formationHistorique: formationHistorique.SQL;
-    indicateurEntree: indicateurEntree.SQL;
-    indicateurEtablissement: indicateurEtablissement.SQL;
-    indicateurSortie: indicateurSortie.SQL;
-    knex_migrations: knex_migrations.SQL;
-    knex_migrations_lock: knex_migrations_lock.SQL;
-    rawData: rawData.SQL;
-    region: region.SQL;
+    "academie": academie.SQL;
+    "departement": departement.SQL;
+    "etablissement": etablissement.SQL;
+    "familleMetier": familleMetier.SQL;
+    "formation": formation.SQL;
+    "formationEtablissement": formationEtablissement.SQL;
+    "formationHistorique": formationHistorique.SQL;
+    "indicateurEntree": indicateurEntree.SQL;
+    "indicateurEtablissement": indicateurEtablissement.SQL;
+    "indicateurSortie": indicateurSortie.SQL;
+    "knex_migrations": knex_migrations.SQL;
+    "knex_migrations_lock": knex_migrations_lock.SQL;
+    "pg_mate": pg_mate.SQL;
+    "rawData": rawData.SQL;
+    "region": region.SQL;
   }[T];
+
 }

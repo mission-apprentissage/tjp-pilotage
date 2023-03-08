@@ -1,4 +1,4 @@
 export type Region = {
-  id: string;
+  codeRegion: string;
   libelleRegion: string;
 };
