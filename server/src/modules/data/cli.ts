@@ -7,6 +7,7 @@ import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFa
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
+import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
 
@@ -35,6 +36,14 @@ cli
           type: "nMef",
           fileStream: fs.createReadStream(
             `${__dirname}/files/nMef.csv`,
+            "utf8"
+          ),
+        }),
+      nNiveauFormationDiplome_: () =>
+        importRawFile({
+          type: "nNiveauFormationDiplome_",
+          fileStream: fs.createReadStream(
+            `${__dirname}/files/nNiveauFormationDiplome_.csv`,
             "utf8"
           ),
         }),
@@ -131,6 +140,7 @@ cli
       importFormations,
       importFormationHistorique,
       importFormationEtablissements,
+      importNiveauxDiplome,
     };
 
     if (usecaseName) {
