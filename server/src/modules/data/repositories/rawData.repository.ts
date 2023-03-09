@@ -7,7 +7,6 @@ import { FamillesMetiersLine } from "../files/FamilleMetiers";
 import { LyceesACCELine } from "../files/LyceesACCELine";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
 import { NMefLine } from "../files/NMef";
-import { RegionLine } from "../files/Region";
 
 type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
@@ -15,7 +14,6 @@ type LineTypes = {
   familleMetiers: FamillesMetiersLine;
   affelnet2nde: Affelnet2ndeLine;
   lyceesACCE: LyceesACCELine;
-  regions: RegionLine;
   nMef: NMefLine;
   "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
   departements_academies_regions: Departements_academies_regions;
