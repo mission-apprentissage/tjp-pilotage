@@ -6,10 +6,6 @@ export async function up() {
     "codeNiveauDiplome" varchar(3) PRIMARY KEY,
     "libelleNiveauDiplome" varchar(300)
   );
-  ALTER TABLE formation
-    ADD CONSTRAINT fk_formation_niveauDiplome
-        FOREIGN KEY("codeNiveauDiplome")
-        REFERENCES "niveauDiplome"("codeNiveauDiplome");
   `.run(pool);
 }
 
