@@ -15,6 +15,7 @@ export const importFormationEtablissementsFactory = ({
   findAffelnet2ndes = dependencies.findAffelnet2ndes,
   findNMefs = dependencies.findNMefs,
   getUaiData = inserJeunesApi.getUaiData,
+  findContratRentrees = dependencies.findContratRentrees,
   importFormationEtablissement = importFormationEtablissementFactory(),
   importEtablissement = importEtablissementFactory(),
 }) => {
@@ -47,6 +48,9 @@ export const importFormationEtablissementsFactory = ({
         );
 
         for (const nMefAnnee1 of nMefsAnnee1) {
+          const constatRentrees = await findContratRentrees({
+            mefStat11: nMefAnnee1.MEF_STAT_11,
+          });
           const affelnet2ndes = await findAffelnet2ndes({
             mefStat11: nMefAnnee1.MEF_STAT_11,
           });
@@ -57,9 +61,8 @@ export const importFormationEtablissementsFactory = ({
           });
           if (!nMefLast) continue;
 
-          for (const affelnet2nde of affelnet2ndes) {
-            const voie =
-              affelnet2nde.Statut === "ST" ? "scolaire" : "apprentissage";
+          for (const constatRentree of constatRentrees) {
+            const voie = "scolaire";
             if (voie !== "scolaire") continue;
             const uaiFormation = {
               cfd: item.codeFormationDiplome,
@@ -68,8 +71,9 @@ export const importFormationEtablissementsFactory = ({
               dispositifId: nMefAnnee1.DISPOSITIF_FORMATION,
               voie,
             } as const;
-            uaiFormationsMap[affelnet2nde.Etablissement] = [
-              ...(uaiFormationsMap[affelnet2nde.Etablissement] ?? []),
+            uaiFormationsMap[constatRentree["Numéro d'établissement"]] = [
+              ...(uaiFormationsMap[constatRentree["Numéro d'établissement"]] ??
+                []),
               uaiFormation,
             ];
           }

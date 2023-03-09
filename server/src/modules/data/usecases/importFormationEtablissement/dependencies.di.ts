@@ -9,6 +9,7 @@ import { IndicateurEntree } from "../../entities/IndicateurEntree";
 import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
 import { IndicateurSortie } from "../../entities/IndicateurSortie";
 import { Affelnet2ndeLine } from "../../files/Affelnet2ndeLine";
+import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { NMefLine } from "../../files/NMef";
 
@@ -68,6 +69,19 @@ const findAffelnet2ndes = async ({ mefStat11 }: { mefStat11: string }) =>
       })
       .run(pool)
   ).map((item) => item.data as Affelnet2ndeLine);
+
+const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
+  return (
+    await db
+      .select("rawData", {
+        type: "Cab-nbre_division_effectifs_par_etab_mefst11",
+        data: db.sql`${db.self}@>${db.param({
+          "Mef Bcp 11": mefStat11,
+        })}`,
+      })
+      .run(pool)
+  ).map((item) => item.data as Cab_bre_division_effectifs_par_etab_mefst11);
+};
 
 const findLyceeACCE = async ({ uai }: { uai: string }) =>
   (
@@ -130,6 +144,7 @@ export const dependencies = {
   findFormations,
   createFormationEtablissement,
   findAffelnet2ndes,
+  findContratRentrees,
   findNMefs,
   findLyceeACCE,
   findEtablissement,
