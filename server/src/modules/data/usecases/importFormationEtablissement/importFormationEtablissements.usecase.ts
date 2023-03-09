@@ -51,9 +51,6 @@ export const importFormationEtablissementsFactory = ({
           const constatRentrees = await findContratRentrees({
             mefStat11: nMefAnnee1.MEF_STAT_11,
           });
-          const affelnet2ndes = await findAffelnet2ndes({
-            mefStat11: nMefAnnee1.MEF_STAT_11,
-          });
 
           const nMefLast = getLastMefstat11({
             nMefs,
