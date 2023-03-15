@@ -32,7 +32,7 @@ export const importEtablissementFactory =
     const departement =
       codeDepartement && (await findDepartement({ codeDepartement }));
 
-    const etablissement = formatToEtablissement({
+    const etablissement = toEtablissement({
       uai,
       lyceeACCE,
       departement,
@@ -75,7 +75,7 @@ const getIndicateurEtablissement = ({
   };
 };
 
-const formatToEtablissement = ({
+const toEtablissement = ({
   uai,
   lyceeACCE,
   departement,
@@ -93,6 +93,7 @@ const formatToEtablissement = ({
     natureUAI: lyceeACCE?.nature_uai,
     libelleEtablissement: lyceeACCE?.appellation_officielle,
     adresseEtablissement: lyceeACCE?.adresse_uai,
+    commune: lyceeACCE?.commune,
     codePostal: lyceeACCE?.code_postal_uai,
     secteur: lyceeACCE?.secteur_public_prive,
     dateOuverture:

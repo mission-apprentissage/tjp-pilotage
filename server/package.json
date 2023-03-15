@@ -20,7 +20,7 @@
     "migrate-docker": "docker exec -it pilotage_server yarn migrate",
     "zapatos": "zapatos",
     "zapatos-docker": "docker exec -it pilotage_server yarn zapatos",
-    "cli": "node -r ts-node/register src/modules/data/cli.ts",
+    "cli": "ts-node -T src/modules/data/cli.ts ",
     "cli-docker": "docker exec -it pilotage_server yarn cli"
   },
   "dependencies": {

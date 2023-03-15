@@ -3,6 +3,7 @@ import fs from "fs";
 
 import { db, pool } from "../../db/zapatos";
 import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
+import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
@@ -44,6 +45,14 @@ cli
           type: "nNiveauFormationDiplome_",
           fileStream: fs.createReadStream(
             `${__dirname}/files/nNiveauFormationDiplome_.csv`,
+            "utf8"
+          ),
+        }),
+      nDispositifFormation_: () =>
+        importRawFile({
+          type: "nDispositifFormation_",
+          fileStream: fs.createReadStream(
+            `${__dirname}/files/nDispositifFormation_.csv`,
             "utf8"
           ),
         }),
@@ -136,11 +145,12 @@ cli
   .action(async (usecaseName: string) => {
     const usecases = {
       importLieuxGeographiques,
+      importNiveauxDiplome,
+      importDispositifs,
       importFamillesMetiers,
       importFormations,
       importFormationHistorique,
       importFormationEtablissements,
-      importNiveauxDiplome,
     };
 
     if (usecaseName) {
