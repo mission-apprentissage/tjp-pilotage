@@ -907,6 +907,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       mefStat11Specialite: string;
+      /**
+      * **familleMetier.cfdFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfdFamille: string;
     }
     export interface JSONSelectable {
       /**
@@ -945,6 +951,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       mefStat11Specialite: string;
+      /**
+      * **familleMetier.cfdFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfdFamille: string;
     }
     export interface Whereable {
       /**
@@ -983,6 +995,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **familleMetier.cfdFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfdFamille?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1021,6 +1039,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       mefStat11Specialite: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **familleMetier.cfdFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfdFamille: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1059,6 +1083,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       mefStat11Specialite?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **familleMetier.cfdFamille**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      cfdFamille?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'familleMetier_mefStat11Specialite_key' | 'familleMetier_pkey';
     export type Column = keyof Selectable;

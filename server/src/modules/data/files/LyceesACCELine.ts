@@ -7,6 +7,8 @@ export type LyceesACCELine = {
   commune: string;
   adresse_uai: string;
   code_postal_uai: string;
+  coordonnee_x?: string;
+  coordonnee_y?: string;
   secteur_public_prive: string;
   date_ouverture: string;
   date_fermeture: string;
