@@ -8,6 +8,7 @@ export type Etablissement = {
   natureUAI?: string;
   libelleEtablissement?: string;
   adresseEtablissement?: string;
+  commune?: string;
   codePostal?: string;
   secteur?: string;
   dateOuverture?: Date;
