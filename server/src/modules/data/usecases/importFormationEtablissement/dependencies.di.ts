@@ -8,7 +8,6 @@ import { FormationEtablissement } from "../../entities/FormationEtablissement";
 import { IndicateurEntree } from "../../entities/IndicateurEntree";
 import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
 import { IndicateurSortie } from "../../entities/IndicateurSortie";
-import { Affelnet2ndeLine } from "../../files/Affelnet2ndeLine";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { NMefLine } from "../../files/NMef";
@@ -57,18 +56,6 @@ const findEtablissement = async ({
   const etablissement = await db.selectOne("etablissement", { UAI }).run(pool);
   return etablissement && formatEtablissement(etablissement);
 };
-
-const findAffelnet2ndes = async ({ mefStat11 }: { mefStat11: string }) =>
-  (
-    await db
-      .select("rawData", {
-        type: "affelnet2nde",
-        data: db.sql`${db.self}@>${db.param({
-          "Code spécialité": mefStat11,
-        })}`,
-      })
-      .run(pool)
-  ).map((item) => item.data as Affelnet2ndeLine);
 
 const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
   return (
@@ -143,7 +130,6 @@ export const dependencies = {
   upsertIndicateurEtablissement,
   findFormations,
   createFormationEtablissement,
-  findAffelnet2ndes,
   findContratRentrees,
   findNMefs,
   findLyceeACCE,

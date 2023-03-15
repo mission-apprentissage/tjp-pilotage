@@ -12,7 +12,6 @@ const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
 
 export const importFormationEtablissementsFactory = ({
   findFormations = dependencies.findFormations,
-  findAffelnet2ndes = dependencies.findAffelnet2ndes,
   findNMefs = dependencies.findNMefs,
   getUaiData = inserJeunesApi.getUaiData,
   findContratRentrees = dependencies.findContratRentrees,
