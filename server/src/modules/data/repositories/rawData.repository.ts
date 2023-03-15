@@ -5,6 +5,7 @@ import { Departements_academies_regions } from "../files/Departements_academies_
 import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../files/FamilleMetiers";
 import { LyceesACCELine } from "../files/LyceesACCELine";
+import { NDispositifFormation } from "../files/NDispositifFormation";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
 import { NMefLine } from "../files/NMef";
 import { NNiveauFormationDiplome } from "../files/NNiveauFormationDiplome";
@@ -19,6 +20,7 @@ type LineTypes = {
   "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
   departements_academies_regions: Departements_academies_regions;
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
+  nDispositifFormation_: NDispositifFormation;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
