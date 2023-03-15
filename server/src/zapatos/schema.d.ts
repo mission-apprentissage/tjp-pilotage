@@ -279,6 +279,119 @@ declare module 'zapatos/schema' {
   }
 
   /**
+   * **dispositif**
+   * - Table in database
+   */
+  export namespace dispositif {
+    export type Table = 'dispositif';
+    export interface Selectable {
+      /**
+      * **dispositif.codeDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDispositif: string;
+      /**
+      * **dispositif.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string;
+      /**
+      * **dispositif.libelleDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDispositif: string;
+    }
+    export interface JSONSelectable {
+      /**
+      * **dispositif.codeDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDispositif: string;
+      /**
+      * **dispositif.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string;
+      /**
+      * **dispositif.libelleDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDispositif: string;
+    }
+    export interface Whereable {
+      /**
+      * **dispositif.codeDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDispositif?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **dispositif.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **dispositif.libelleDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDispositif?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+    }
+    export interface Insertable {
+      /**
+      * **dispositif.codeDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDispositif: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **dispositif.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome: string | db.Parameter<string> | db.SQLFragment;
+      /**
+      * **dispositif.libelleDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDispositif: string | db.Parameter<string> | db.SQLFragment;
+    }
+    export interface Updatable {
+      /**
+      * **dispositif.codeDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeDispositif?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **dispositif.codeNiveauDiplome**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      codeNiveauDiplome?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      /**
+      * **dispositif.libelleDispositif**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      libelleDispositif?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+    }
+    export type UniqueIndex = 'dispositif_pkey';
+    export type Column = keyof Selectable;
+    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
+    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
+    export type SQL = SQLExpression | SQLExpression[];
+  }
+
+  /**
    * **etablissement**
    * - Table in database
    */
@@ -2523,20 +2636,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = academie.Table | departement.Table | etablissement.Table | familleMetier.Table | formation.Table | formationEtablissement.Table | formationHistorique.Table | indicateurEntree.Table | indicateurEtablissement.Table | indicateurSortie.Table | knex_migrations.Table | knex_migrations_lock.Table | niveauDiplome.Table | pg_mate.Table | rawData.Table | region.Table;
-    export type Selectable = academie.Selectable | departement.Selectable | etablissement.Selectable | familleMetier.Selectable | formation.Selectable | formationEtablissement.Selectable | formationHistorique.Selectable | indicateurEntree.Selectable | indicateurEtablissement.Selectable | indicateurSortie.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable | niveauDiplome.Selectable | pg_mate.Selectable | rawData.Selectable | region.Selectable;
-    export type JSONSelectable = academie.JSONSelectable | departement.JSONSelectable | etablissement.JSONSelectable | familleMetier.JSONSelectable | formation.JSONSelectable | formationEtablissement.JSONSelectable | formationHistorique.JSONSelectable | indicateurEntree.JSONSelectable | indicateurEtablissement.JSONSelectable | indicateurSortie.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | niveauDiplome.JSONSelectable | pg_mate.JSONSelectable | rawData.JSONSelectable | region.JSONSelectable;
-    export type Whereable = academie.Whereable | departement.Whereable | etablissement.Whereable | familleMetier.Whereable | formation.Whereable | formationEtablissement.Whereable | formationHistorique.Whereable | indicateurEntree.Whereable | indicateurEtablissement.Whereable | indicateurSortie.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable | niveauDiplome.Whereable | pg_mate.Whereable | rawData.Whereable | region.Whereable;
-    export type Insertable = academie.Insertable | departement.Insertable | etablissement.Insertable | familleMetier.Insertable | formation.Insertable | formationEtablissement.Insertable | formationHistorique.Insertable | indicateurEntree.Insertable | indicateurEtablissement.Insertable | indicateurSortie.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable | niveauDiplome.Insertable | pg_mate.Insertable | rawData.Insertable | region.Insertable;
-    export type Updatable = academie.Updatable | departement.Updatable | etablissement.Updatable | familleMetier.Updatable | formation.Updatable | formationEtablissement.Updatable | formationHistorique.Updatable | indicateurEntree.Updatable | indicateurEtablissement.Updatable | indicateurSortie.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable | niveauDiplome.Updatable | pg_mate.Updatable | rawData.Updatable | region.Updatable;
-    export type UniqueIndex = academie.UniqueIndex | departement.UniqueIndex | etablissement.UniqueIndex | familleMetier.UniqueIndex | formation.UniqueIndex | formationEtablissement.UniqueIndex | formationHistorique.UniqueIndex | indicateurEntree.UniqueIndex | indicateurEtablissement.UniqueIndex | indicateurSortie.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | niveauDiplome.UniqueIndex | pg_mate.UniqueIndex | rawData.UniqueIndex | region.UniqueIndex;
-    export type Column = academie.Column | departement.Column | etablissement.Column | familleMetier.Column | formation.Column | formationEtablissement.Column | formationHistorique.Column | indicateurEntree.Column | indicateurEtablissement.Column | indicateurSortie.Column | knex_migrations.Column | knex_migrations_lock.Column | niveauDiplome.Column | pg_mate.Column | rawData.Column | region.Column;
+    export type Table = academie.Table | departement.Table | dispositif.Table | etablissement.Table | familleMetier.Table | formation.Table | formationEtablissement.Table | formationHistorique.Table | indicateurEntree.Table | indicateurEtablissement.Table | indicateurSortie.Table | knex_migrations.Table | knex_migrations_lock.Table | niveauDiplome.Table | pg_mate.Table | rawData.Table | region.Table;
+    export type Selectable = academie.Selectable | departement.Selectable | dispositif.Selectable | etablissement.Selectable | familleMetier.Selectable | formation.Selectable | formationEtablissement.Selectable | formationHistorique.Selectable | indicateurEntree.Selectable | indicateurEtablissement.Selectable | indicateurSortie.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable | niveauDiplome.Selectable | pg_mate.Selectable | rawData.Selectable | region.Selectable;
+    export type JSONSelectable = academie.JSONSelectable | departement.JSONSelectable | dispositif.JSONSelectable | etablissement.JSONSelectable | familleMetier.JSONSelectable | formation.JSONSelectable | formationEtablissement.JSONSelectable | formationHistorique.JSONSelectable | indicateurEntree.JSONSelectable | indicateurEtablissement.JSONSelectable | indicateurSortie.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | niveauDiplome.JSONSelectable | pg_mate.JSONSelectable | rawData.JSONSelectable | region.JSONSelectable;
+    export type Whereable = academie.Whereable | departement.Whereable | dispositif.Whereable | etablissement.Whereable | familleMetier.Whereable | formation.Whereable | formationEtablissement.Whereable | formationHistorique.Whereable | indicateurEntree.Whereable | indicateurEtablissement.Whereable | indicateurSortie.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable | niveauDiplome.Whereable | pg_mate.Whereable | rawData.Whereable | region.Whereable;
+    export type Insertable = academie.Insertable | departement.Insertable | dispositif.Insertable | etablissement.Insertable | familleMetier.Insertable | formation.Insertable | formationEtablissement.Insertable | formationHistorique.Insertable | indicateurEntree.Insertable | indicateurEtablissement.Insertable | indicateurSortie.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable | niveauDiplome.Insertable | pg_mate.Insertable | rawData.Insertable | region.Insertable;
+    export type Updatable = academie.Updatable | departement.Updatable | dispositif.Updatable | etablissement.Updatable | familleMetier.Updatable | formation.Updatable | formationEtablissement.Updatable | formationHistorique.Updatable | indicateurEntree.Updatable | indicateurEtablissement.Updatable | indicateurSortie.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable | niveauDiplome.Updatable | pg_mate.Updatable | rawData.Updatable | region.Updatable;
+    export type UniqueIndex = academie.UniqueIndex | departement.UniqueIndex | dispositif.UniqueIndex | etablissement.UniqueIndex | familleMetier.UniqueIndex | formation.UniqueIndex | formationEtablissement.UniqueIndex | formationHistorique.UniqueIndex | indicateurEntree.UniqueIndex | indicateurEtablissement.UniqueIndex | indicateurSortie.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | niveauDiplome.UniqueIndex | pg_mate.UniqueIndex | rawData.UniqueIndex | region.UniqueIndex;
+    export type Column = academie.Column | departement.Column | dispositif.Column | etablissement.Column | familleMetier.Column | formation.Column | formationEtablissement.Column | formationHistorique.Column | indicateurEntree.Column | indicateurEtablissement.Column | indicateurSortie.Column | knex_migrations.Column | knex_migrations_lock.Column | niveauDiplome.Column | pg_mate.Column | rawData.Column | region.Column;
   
-    export type AllBaseTables = [academie.Table, departement.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
+    export type AllBaseTables = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [academie.Table, departement.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
+    export type AllTablesAndViews = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
   }
 
 
@@ -2566,6 +2679,7 @@ declare module 'zapatos/schema' {
   export type SelectableForTable<T extends Table> = {
     "academie": academie.Selectable;
     "departement": departement.Selectable;
+    "dispositif": dispositif.Selectable;
     "etablissement": etablissement.Selectable;
     "familleMetier": familleMetier.Selectable;
     "formation": formation.Selectable;
@@ -2585,6 +2699,7 @@ declare module 'zapatos/schema' {
   export type JSONSelectableForTable<T extends Table> = {
     "academie": academie.JSONSelectable;
     "departement": departement.JSONSelectable;
+    "dispositif": dispositif.JSONSelectable;
     "etablissement": etablissement.JSONSelectable;
     "familleMetier": familleMetier.JSONSelectable;
     "formation": formation.JSONSelectable;
@@ -2604,6 +2719,7 @@ declare module 'zapatos/schema' {
   export type WhereableForTable<T extends Table> = {
     "academie": academie.Whereable;
     "departement": departement.Whereable;
+    "dispositif": dispositif.Whereable;
     "etablissement": etablissement.Whereable;
     "familleMetier": familleMetier.Whereable;
     "formation": formation.Whereable;
@@ -2623,6 +2739,7 @@ declare module 'zapatos/schema' {
   export type InsertableForTable<T extends Table> = {
     "academie": academie.Insertable;
     "departement": departement.Insertable;
+    "dispositif": dispositif.Insertable;
     "etablissement": etablissement.Insertable;
     "familleMetier": familleMetier.Insertable;
     "formation": formation.Insertable;
@@ -2642,6 +2759,7 @@ declare module 'zapatos/schema' {
   export type UpdatableForTable<T extends Table> = {
     "academie": academie.Updatable;
     "departement": departement.Updatable;
+    "dispositif": dispositif.Updatable;
     "etablissement": etablissement.Updatable;
     "familleMetier": familleMetier.Updatable;
     "formation": formation.Updatable;
@@ -2661,6 +2779,7 @@ declare module 'zapatos/schema' {
   export type UniqueIndexForTable<T extends Table> = {
     "academie": academie.UniqueIndex;
     "departement": departement.UniqueIndex;
+    "dispositif": dispositif.UniqueIndex;
     "etablissement": etablissement.UniqueIndex;
     "familleMetier": familleMetier.UniqueIndex;
     "formation": formation.UniqueIndex;
@@ -2680,6 +2799,7 @@ declare module 'zapatos/schema' {
   export type ColumnForTable<T extends Table> = {
     "academie": academie.Column;
     "departement": departement.Column;
+    "dispositif": dispositif.Column;
     "etablissement": etablissement.Column;
     "familleMetier": familleMetier.Column;
     "formation": formation.Column;
@@ -2699,6 +2819,7 @@ declare module 'zapatos/schema' {
   export type SQLForTable<T extends Table> = {
     "academie": academie.SQL;
     "departement": departement.SQL;
+    "dispositif": dispositif.SQL;
     "etablissement": etablissement.SQL;
     "familleMetier": familleMetier.SQL;
     "formation": formation.SQL;
