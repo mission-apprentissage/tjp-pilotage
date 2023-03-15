@@ -10,6 +10,7 @@ export const formatEtablissement = (
       codeMinistereTutuelle: etablissementDB.codeMinistereTutuelle ?? undefined,
       libelleEtablissement: etablissementDB.libelleEtablissement ?? undefined,
       codePostal: etablissementDB.codePostal ?? undefined,
+      commune: etablissementDB.commune ?? undefined,
       codeDepartement: etablissementDB.codeDepartement ?? undefined,
       codeRegion: etablissementDB.codeRegion ?? undefined,
       natureUAI: etablissementDB.natureUAI ?? undefined,
