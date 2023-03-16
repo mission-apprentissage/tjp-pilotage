@@ -1,8 +1,10 @@
 import { db, pool } from "../../../../db/zapatos";
+import { cleanNull } from "../../../../utils/noNull";
 import { formatEtablissement } from "../../adapters/formatEtablissement";
 import { formatFormation } from "../../adapters/formatFormation";
 import { Departement } from "../../entities/Departement";
 import { Etablissement } from "../../entities/Etablissement";
+import { FamilleMetier } from "../../entities/FamilleMetier";
 import { Formation } from "../../entities/Formation";
 import { FormationEtablissement } from "../../entities/FormationEtablissement";
 import { IndicateurEntree } from "../../entities/IndicateurEntree";
@@ -123,7 +125,20 @@ const upsertIndicateurEtablissement = async (
     .run(pool);
 };
 
+const findFamilleMetier = async ({
+  cfdSpecialite,
+}: {
+  cfdSpecialite: string;
+}): Promise<FamilleMetier | undefined> => {
+  const result = await db
+    .selectOne("familleMetier", { cfdSpecialite })
+    .run(pool);
+
+  return result ? cleanNull(result) : undefined;
+};
+
 export const dependencies = {
+  findFamilleMetier,
   findDepartement,
   createIndicateurSortie,
   createIndicateurEntree,
