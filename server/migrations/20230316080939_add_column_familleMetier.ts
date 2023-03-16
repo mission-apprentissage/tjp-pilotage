@@ -4,7 +4,7 @@ export async function up() {
   await db.sql`
   TRUNCATE "familleMetier";
   ALTER TABLE "familleMetier" 
-    ADD COLUMN "cfdSpecialite" varchar(8);
+    ADD COLUMN "cfdSpecialite" varchar(8) NOT NULL;
   `.run(pool);
 }
 
