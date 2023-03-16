@@ -16,11 +16,17 @@ export const importFamillesMetiersFactory =
       (count) =>
         findRawDatas({ type: "familleMetiers", offset: count, limit: 20 }),
       async (item) => {
-        const nMef = await findNMef({ mefstat: item["MEFSTAT11 2NDE PRO"] });
+        const nMefFamille = await findNMef({
+          mefstat: item["MEFSTAT11 2NDE PRO"],
+        });
+        const nMefSpecialite = await findNMef({
+          mefstat: item["MEFSTAT11 TLEPRO"],
+        });
 
         const data = {
           libelleOfficielFamille: item.FAMILLE,
-          cfdFamille: nMef.FORMATION_DIPLOME,
+          cfdFamille: nMefFamille.FORMATION_DIPLOME,
+          cfdSpecialite: nMefSpecialite.FORMATION_DIPLOME,
           libelleOfficielSpecialite: item.SPECIALITE,
           mefStat11Famille: item["MEFSTAT11 2NDE PRO"],
           mefStat11Specialite: item["MEFSTAT11 TLEPRO"],
