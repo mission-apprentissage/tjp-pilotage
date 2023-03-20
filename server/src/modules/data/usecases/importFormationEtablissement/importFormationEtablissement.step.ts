@@ -47,30 +47,27 @@ export const importFormationEtablissementFactory = ({
         "Numéro d'établissement": uai,
       },
     });
-    const { logs: logEntree, indicateurEntrees } = await importIndicateurEntree(
-      {
-        mefstat11FirstYear,
-        formationEtablissementId: formationEtablissement.id,
-        uai,
-        cab_nbre_division_effectifs_par_etab_mefst11,
-      }
-    );
+    const { logs: logEntree, indicateurEntrees } = toIndicateurEntree({
+      mefstat11FirstYear,
+      formationEtablissementId: formationEtablissement.id,
+      uai,
+      cab_nbre_division_effectifs_par_etab_mefst11,
+    });
     await createIndicateurEntree(indicateurEntrees);
 
-    const { logs: logSortie, indicateurSorties } =
-      await importIndicateurSorties({
-        deppMillesimeDatas,
-        mefstat11LastYear,
-        uai,
-        formationEtablissementId: formationEtablissement.id,
-      });
+    const { logs: logSortie, indicateurSorties } = toIndicateurSorties({
+      deppMillesimeDatas,
+      mefstat11LastYear,
+      uai,
+      formationEtablissementId: formationEtablissement.id,
+    });
     await createIndicateurSortie(indicateurSorties);
 
     return [...logEntree, ...logSortie];
   };
 };
 
-const importIndicateurSorties = async ({
+const toIndicateurSorties = ({
   deppMillesimeDatas,
   mefstat11LastYear,
   uai,
@@ -103,6 +100,8 @@ const importIndicateurSorties = async ({
       return {
         formationEtablissementId,
         nbInsertion6mois: mefData?.nb_en_emploi_6_mois,
+        nbInsertion12mois: mefData.nb_en_emploi_12_mois,
+        nbInsertion24mois: mefData?.nb_en_emploi_24_mois,
         effectifSortie: mefData?.nb_annee_term,
         nbPoursuiteEtudes: mefData?.nb_poursuite_etudes,
         nbSortants: mefData?.nb_sortant,
@@ -114,7 +113,7 @@ const importIndicateurSorties = async ({
   return { indicateurSorties, logs };
 };
 
-const importIndicateurEntree = async ({
+const toIndicateurEntree = ({
   mefstat11FirstYear,
   formationEtablissementId,
   uai,

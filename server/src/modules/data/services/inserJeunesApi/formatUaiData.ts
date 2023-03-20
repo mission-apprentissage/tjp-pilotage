@@ -10,7 +10,6 @@ type R = {
       nb_poursuite_etudes: number;
       nb_sortant: number;
       taux_emploi_12_mois: number;
-      taux_emploi_18_mois: number;
       taux_emploi_24_mois: number;
       taux_emploi_6_mois: number;
       taux_poursuite_etudes: number;
