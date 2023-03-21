@@ -1,4 +1,5 @@
 import { db, pool } from "../../../db/zapatos";
+import { Affelnet1PROspe } from "../files/Affelnet1PROspe";
 import { Affelnet2ndeLine } from "../files/Affelnet2ndeLine";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { Departements_academies_regions } from "../files/Departements_academies_regions";
@@ -15,6 +16,7 @@ type LineTypes = {
   nFormationDiplome_: NFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
   affelnet2nde: Affelnet2ndeLine;
+  affelnet1PROspe: Affelnet1PROspe;
   lyceesACCE: LyceesACCELine;
   nMef: NMefLine;
   "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;

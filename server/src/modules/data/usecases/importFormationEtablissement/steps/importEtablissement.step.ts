@@ -1,11 +1,11 @@
 import { DateTime } from "luxon";
 
-import { dataDI } from "../../data.di";
-import { Departement } from "../../entities/Departement";
-import { Etablissement } from "../../entities/Etablissement";
-import { LyceesACCELine } from "../../files/LyceesACCELine";
-import { dependencies } from "./dependencies.di";
-import { Logs } from "./types/Logs";
+import { dataDI } from "../../../data.di";
+import { Departement } from "../../../entities/Departement";
+import { Etablissement } from "../../../entities/Etablissement";
+import { LyceesACCELine } from "../../../files/LyceesACCELine";
+import { dependencies } from "../dependencies.di";
+import { Logs } from "../types/Logs";
 
 type DeppEtablissement = Awaited<
   ReturnType<typeof dataDI.inserJeunesApi.getUaiData>

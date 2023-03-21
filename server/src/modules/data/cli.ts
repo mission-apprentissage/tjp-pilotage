@@ -104,6 +104,14 @@ cli
             "utf8"
           ),
         }),
+      affelnet1PROspe: () =>
+        importRawFile({
+          type: "affelnet1PROspe",
+          fileStream: fs.createReadStream(
+            `${__dirname}/files/affelnet1PROspe.csv`,
+            "utf8"
+          ),
+        }),
       lyceesACCE: () =>
         importRawFile({
           type: "lyceesACCE",
