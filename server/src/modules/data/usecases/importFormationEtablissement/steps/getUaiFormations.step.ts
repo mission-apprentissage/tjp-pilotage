@@ -1,6 +1,6 @@
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
-import { NMefLine } from "../../files/NMef";
-import { dependencies } from "./dependencies.di";
+import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
+import { NMefLine } from "../../../files/NMef";
+import { dependencies } from "../dependencies.di";
 
 const toCfdMefs = ({
   nMefs,
@@ -21,7 +21,7 @@ const toCfdMefs = ({
       );
       if (!nMefFin) return;
 
-      return { nMefDebut, nMefFin };
+      return { nMefDebut, nMefFin, isSpecialite };
     })
     .filter((item): item is Exclude<typeof item, undefined> => !!item);
 };
@@ -31,11 +31,13 @@ const toUaiFormations = ({
   cfd,
   nMefDebut,
   nMefFin,
+  isSpecialite,
 }: {
   constatRentrees: Cab_bre_division_effectifs_par_etab_mefst11[];
   cfd: string;
   nMefDebut: NMefLine;
   nMefFin: NMefLine;
+  isSpecialite: boolean;
 }) => {
   return constatRentrees.map(
     (constatRentree) =>
@@ -43,9 +45,11 @@ const toUaiFormations = ({
         cfd,
         mefstat11LastYear: nMefFin.MEF_STAT_11,
         mefstat11FirstYear: nMefDebut.MEF_STAT_11,
+        libelleDebut: nMefDebut.LIBELLE_LONG,
         dispositifId: nMefDebut.DISPOSITIF_FORMATION,
         voie: "scolaire",
         uai: constatRentree["Numéro d'établissement"],
+        isSpecialite,
       } as const)
   );
 };
@@ -64,7 +68,7 @@ export const getUaiFormationsFactory =
 
     const cfdMefs = toCfdMefs({ nMefs, isSpecialite });
 
-    for (const { nMefDebut, nMefFin } of cfdMefs) {
+    for (const { nMefDebut, nMefFin, isSpecialite } of cfdMefs) {
       const constatRentrees = await findContratRentrees({
         mefStat11: nMefDebut.MEF_STAT_11,
       });
@@ -74,6 +78,7 @@ export const getUaiFormationsFactory =
         constatRentrees,
         nMefDebut,
         nMefFin,
+        isSpecialite,
       });
 
       cfdUaiFormations = [...cfdUaiFormations, ...uaiFormations];

@@ -1,6 +1,6 @@
 export type Affelnet2ndeLine = {
-  Académie: string;
-  Etablissement: string;
-  "Code spécialité": string;
-  Statut: string;
+  ID_ETAB: string;
+  CO_MEFSTAT: string;
+  CO_STA: string;
+  VAL_CARSCO: string;
 };
