@@ -3,9 +3,9 @@ import fs from "fs";
 import { inserJeunesApi } from "../../services/inserJeunesApi/inserJeunes.api";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies.di";
-import { getUaiFormationsFactory } from "./getUaiFormations.step";
-import { importEtablissementFactory } from "./importEtablissement.step";
-import { importFormationEtablissementFactory } from "./importFormationEtablissement.step";
+import { getUaiFormationsFactory } from "./steps/getUaiFormations.step";
+import { importEtablissementFactory } from "./steps/importEtablissement.step";
+import { importFormationEtablissementFactory } from "./steps/importFormationEtablissement.step";
 import { Logs } from "./types/Logs";
 
 const MILLESIMES = ["2018_2019", "2019_2020", "2020_2021"];
@@ -31,9 +31,11 @@ export const importFormationEtablissementsFactory = ({
       cfd: string;
       mefstat11LastYear: string;
       mefstat11FirstYear: string;
+      libelleDebut: string;
       dispositifId: string;
       voie: "scolaire" | "apprentissage";
       uai: string;
+      isSpecialite: boolean;
     }[]
   > = {};
 
