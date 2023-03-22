@@ -2,6 +2,8 @@ import { NotionAPI } from "notion-client";
 
 import { Doc } from "@/app/components/NotionDoc";
 
+export const revalidate = 60;
+
 const fetchData = async () => {
   const notion = new NotionAPI();
   const recordMap = await notion.getPage(
