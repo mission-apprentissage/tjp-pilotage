@@ -93,7 +93,7 @@ const toEtablissement = ({
     natureUAI: lyceeACCE?.nature_uai,
     libelleEtablissement: lyceeACCE?.appellation_officielle,
     adresseEtablissement: lyceeACCE?.adresse_uai,
-    commune: lyceeACCE?.commune,
+    commune: lyceeACCE?.commune_libe,
     codePostal: lyceeACCE?.code_postal_uai,
     secteur: lyceeACCE?.secteur_public_prive,
     dateOuverture:
