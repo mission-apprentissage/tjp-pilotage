@@ -2,8 +2,9 @@ import "./globals.css";
 import "react-notion-x/src/styles.css";
 
 import Link from "next/link";
+import PlausibleProvider from "next-plausible";
 
-import { Nav } from "@/app/components/Nav";
+import { Nav } from "./components/Nav";
 
 const Header = () => {
   return (
@@ -31,11 +32,21 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en">
-      <head />
+    <html lang="fr">
+      <head>
+        <PlausibleProvider
+          trackLocalhost={false}
+          enabled={true}
+          domain="pilotage-recette.trajectoirespro.beta.gouv.fr"
+        />
+      </head>
       <body>
         <main
-          style={{ display: "flex", flexDirection: "column", height: "100vh" }}
+          style={{
+            display: "flex",
+            flexDirection: "column",
+            height: "100vh",
+          }}
         >
           <div>
             <Header />
