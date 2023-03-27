@@ -2,6 +2,7 @@ import "./globals.css";
 import "react-notion-x/src/styles.css";
 
 import Link from "next/link";
+import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 
 import { Nav } from "./components/Nav";
@@ -31,12 +32,13 @@ export default function RootLayout({
 }: {
   children: React.ReactNode;
 }) {
+  const searchParams = useSearchParams();
   return (
     <html lang="fr">
       <head>
         <PlausibleProvider
           trackLocalhost={false}
-          enabled={true}
+          enabled={searchParams.get("notracking") !== "true"}
           domain="pilotage-recette.trajectoirespro.beta.gouv.fr"
         />
       </head>
