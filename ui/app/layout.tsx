@@ -1,3 +1,4 @@
+"use client";
 import "./globals.css";
 import "react-notion-x/src/styles.css";
 
