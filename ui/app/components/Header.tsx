@@ -16,7 +16,7 @@ export const Header = () => {
         />
       }
       align={"start"}
-      boxShadow="0 2px 6px 1px rgba(0, 0, 0, 0.1)"
+      boxShadow="0 2px 3px rgba(0,0,18,0.16)"
     >
       <HStack as={Container} py={2} maxWidth={"container.xl"}>
         <HStack as={Link} spacing={10} align="center" href="/">
