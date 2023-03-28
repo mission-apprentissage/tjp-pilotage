@@ -11,7 +11,7 @@ import {
 import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 
-import { Arianne } from "@/app/components/Arianne";
+import { Breadcrumb } from "../../components/Breadcrumb";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "formations") return 0;
@@ -24,7 +24,19 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   return (
     <>
       <Container maxWidth={"container.xl"} py="4">
-        <Arianne />
+        <Breadcrumb
+          ml={4}
+          pages={[
+            { title: "Accueil", to: "/" },
+            segment === "formations"
+              ? { title: "Formations", to: "/console/formations", active: true }
+              : {
+                  title: "Etablissements",
+                  to: "/console/etablissements",
+                  active: true,
+                },
+          ]}
+        />
       </Container>
       <Tabs
         isLazy={true}
@@ -40,7 +52,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Par formations
           </Tab>
           <Tab as={Link} href="/console/etablissements">
-            Par établissement
+            Par établissements
           </Tab>
         </TabList>
         <TabPanels display="flex" flexDirection="column" flex="1">

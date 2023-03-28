@@ -18,14 +18,14 @@ export const Header = () => {
       align={"start"}
       boxShadow="0 2px 6px 1px rgba(0, 0, 0, 0.1)"
     >
-      <Container py={2} maxWidth={"container.xl"}>
+      <HStack as={Container} py={2} maxWidth={"container.xl"}>
         <HStack as={Link} spacing={10} align="center" href="/">
           <Img src="/logo_gouvernement.svg" />
           <Heading as={"h1"} size={"md"}>
             Orion, pilotage de la carte des formations
           </Heading>
         </HStack>
-      </Container>
+      </HStack>
       <Container maxWidth={"container.xl"}>
         <Nav />
       </Container>

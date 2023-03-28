@@ -1,6 +1,7 @@
 import { extendBaseTheme } from "@chakra-ui/react";
 import chakraTheme from "@chakra-ui/theme";
 
+import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
 
 import { buttonTheme } from "./Button.theme";
@@ -32,11 +33,17 @@ export const theme = extendBaseTheme(chakraTheme, {
       900: "#dddddd",
       "900_hover": "#bbbbbb",
       "900_active": "#a7a7a7",
+      425: "#666666",
+      "425_hover": "#919191",
+      "425_active": "#a6a6a6",
     },
   },
   components: {
     ...chakraTheme.components,
     Button: buttonTheme,
     Tabs: tabsTheme,
+    Breadcrumb: BreadcrumbTheme,
   },
 });
+
+console.log(theme);
