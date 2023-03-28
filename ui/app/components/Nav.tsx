@@ -1,24 +1,46 @@
 "use client";
-import Link from "next/link";
+import { HStack, Link } from "@chakra-ui/react";
+import NextLink from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
-export const Nav = () => {
-  const activeSegment = useSelectedLayoutSegment();
-  const getDeco = (segment: string | null) => ({
-    color: "inherit",
-    textDecoration: activeSegment === segment ? "underline" : "none",
-  });
+import { ReactNode } from "react";
 
+const NavLink = ({
+  children,
+  segment,
+  href,
+}: {
+  children: ReactNode;
+  segment: string | null;
+  href: string;
+}) => {
+  const activeSegment = useSelectedLayoutSegment();
+  const isActive = activeSegment === segment;
   return (
-    <div style={{ padding: 20, display: "flex", gap: 20 }}>
-      <Link style={getDeco(null)} href="/">
-        Documentation
-      </Link>
-      <Link style={getDeco("formations")} href="/formations">
-        Formations
-      </Link>
-      <Link style={getDeco("etablissements")} href="/etablissements">
-        Etablissements
-      </Link>
-    </div>
+    <Link
+      variant={"unstyled"}
+      as={NextLink}
+      href={href}
+      fontSize={14}
+      p={4}
+      color="bluefrance.113"
+      borderBottomWidth={3}
+      borderColor={isActive ? "bluefrance.113" : "transparent"}
+      _hover={{ textDecoration: "unset", bg: "grey.1000_hover" }}
+    >
+      {children}
+    </Link>
+  );
+};
+
+export const Nav = () => {
+  return (
+    <HStack spacing={4}>
+      <NavLink href="/" segment={null}>
+        Accueil
+      </NavLink>
+      <NavLink href="/console/formations" segment="console">
+        Console
+      </NavLink>
+    </HStack>
   );
 };
