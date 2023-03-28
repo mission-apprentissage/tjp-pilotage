@@ -2,3 +2,28 @@ body {
     margin: 0;
     font-family: sans-serif;
 }
+
+/**
+*
+* MARIANNE (titres)
+*
+*/
+
+@font-face {
+    font-family: "Marianne";
+    src: local("Marianne"), url("../public/fonts/Marianne/Marianne-Bold.woff") format("woff"), url("../public/fonts/Marianne/Marianne-Bold.woff2") format("woff2");
+    font-weight: 700;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Marianne";
+    src: local("Marianne"), url("../public/fonts/Marianne/Marianne-Medium.woff") format("woff"), url("../public/fonts/Marianne/Marianne-Medium.woff2") format("woff2");
+    font-weight: 500;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: "Marianne";
+    src: local("Marianne"), url("../public/fonts/Marianne/Marianne-Regular.woff") format("woff"), url("../public/fonts/Marianne/Marianne-Regular.woff2") format("woff2");
+    font-weight: 400;
+    font-display: swap;
+  }
