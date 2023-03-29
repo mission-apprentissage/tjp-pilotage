@@ -15,7 +15,7 @@ server.register(fastifySwagger, {
       title: "Documentation Orion",
       version: "0.1.0",
     },
-    schemes: ["http"],
+    // schemes: ["https"],
     consumes: ["application/json"],
     produces: ["application/json"],
   },
