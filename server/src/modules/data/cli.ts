@@ -8,6 +8,7 @@ import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFa
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
 import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
+import { importIJRawData } from "./usecases/importIJRawData/importIJRawData.usecase";
 import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
@@ -32,6 +33,7 @@ cli
   .argument("[filename]>")
   .action(async (filename: string) => {
     const actions = {
+      ij: importIJRawData,
       nMef: () =>
         importRawFile({
           type: "nMef",
