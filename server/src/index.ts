@@ -1,4 +1,6 @@
 import fastifyCors from "@fastify/cors";
+import fastifySwagger from "@fastify/swagger";
+import fastifySwaggerUi from "@fastify/swagger-ui";
 import { config } from "config/config";
 import knex from "knex";
 
@@ -6,6 +8,26 @@ import { registerCoreModule } from "./modules/core";
 import { server } from "./server";
 
 server.register(fastifyCors, {});
+
+server.register(fastifySwagger, {
+  swagger: {
+    info: {
+      title: "Documentation Orion",
+      version: "0.1.0",
+    },
+    schemes: ["http"],
+    consumes: ["application/json"],
+    produces: ["application/json"],
+  },
+});
+
+server.register(fastifySwaggerUi, {
+  routePrefix: "/api/documentation",
+  uiConfig: {
+    docExpansion: "full",
+    deepLinking: false,
+  },
+});
 
 server.register(
   async (instance) => {
