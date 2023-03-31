@@ -1,29 +1,17 @@
 import { DateTime } from "luxon";
 
-import { dataDI } from "../../../data.di";
 import { Departement } from "../../../entities/Departement";
 import { Etablissement } from "../../../entities/Etablissement";
 import { LyceesACCELine } from "../../../files/LyceesACCELine";
 import { dependencies } from "../dependencies.di";
-import { Logs } from "../types/Logs";
 
-type DeppEtablissement = Awaited<
-  ReturnType<typeof dataDI.inserJeunesApi.getUaiData>
->;
 export const importEtablissementFactory =
   ({
     createEtablissement = dependencies.createEtablissement,
     findLyceeACCE = dependencies.findLyceeACCE,
-    upsertIndicateurEtablissement = dependencies.upsertIndicateurEtablissement,
     findDepartement = dependencies.findDepartement,
   } = {}) =>
-  async ({
-    uai,
-    deppMillesimeDatas,
-  }: {
-    uai: string;
-    deppMillesimeDatas: { data: DeppEtablissement; millesime: string }[];
-  }): Promise<Logs> => {
+  async ({ uai }: { uai: string }) => {
     const lyceeACCE = await findLyceeACCE({ uai });
 
     const codeDepartement = formatCodeDepartement(
@@ -38,17 +26,6 @@ export const importEtablissementFactory =
       departement,
     });
     await createEtablissement(etablissement);
-
-    for (const deppMillesimeData of deppMillesimeDatas) {
-      const indicateur = getIndicateurEtablissement({
-        deppEtablissement: deppMillesimeData.data,
-        millesime: deppMillesimeData.millesime,
-        uai,
-      });
-      if (!indicateur) continue;
-      await upsertIndicateurEtablissement(indicateur);
-    }
-    return [];
   };
 
 const formatCodeDepartement = (codeInsee: string | undefined) => {
@@ -56,23 +33,6 @@ const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (codeInsee.length === 3) return codeInsee as `${number}${number}${string}`;
   if (codeInsee.length === 2)
     return `0${codeInsee}` as `${number}${number}${string}`;
-};
-
-const getIndicateurEtablissement = ({
-  deppEtablissement,
-  uai,
-  millesime,
-}: {
-  deppEtablissement: DeppEtablissement;
-  millesime: string;
-  uai: string;
-}) => {
-  if (!deppEtablissement) return;
-  return {
-    UAI: uai,
-    millesime,
-    valeurAjoutee: deppEtablissement.ensemble?.valeur_ajoutee_6_mois,
-  };
 };
 
 const toEtablissement = ({
