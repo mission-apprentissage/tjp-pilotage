@@ -7,14 +7,13 @@ import { importDispositifs } from "./usecases/importDispositifs/importDispositif
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importFormations } from "./usecases/importFormations/importFormations.usecase";
-import { importFormationHistorique } from "./usecases/importFormationsHistoriques/importFormationsHistoriques.usecase";
 import { importIJRawData } from "./usecases/importIJRawData/importIJRawData.usecase";
 import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
 
 cli.command("truncateRawData").action(async () => {
-  await db.truncate(["rawData"], "CASCADE").run(pool);
+  await db.truncate(["rawData"]).run(pool);
 });
 
 cli.command("importDepp").action(async () => {
@@ -159,7 +158,6 @@ cli
       importDispositifs,
       importFamillesMetiers,
       importFormations,
-      importFormationHistorique,
       importFormationEtablissements,
     };
 

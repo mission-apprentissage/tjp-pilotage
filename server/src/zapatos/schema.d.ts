@@ -1176,6 +1176,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture: Date | null;
+      /**
+      * **formation.officielle**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      officielle: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -1220,6 +1226,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture: db.DateString | null;
+      /**
+      * **formation.officielle**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      officielle: boolean;
     }
     export interface Whereable {
       /**
@@ -1264,6 +1276,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **formation.officielle**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      officielle?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1308,6 +1326,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **formation.officielle**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      officielle?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1352,6 +1376,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **formation.officielle**
+      * - `bool` in database
+      * - `NOT NULL`, default: `false`
+      */
+      officielle?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'formation_codeFormationDiplome_key' | 'formation_pkey';
     export type Column = keyof Selectable;
@@ -2529,6 +2559,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: Date;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string;
     }
     export interface JSONSelectable {
       /**
@@ -2549,6 +2585,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: db.TimestampString;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string;
     }
     export interface Whereable {
       /**
@@ -2569,6 +2611,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2589,6 +2637,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2609,6 +2663,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'pg_mate_pkey';
     export type Column = keyof Selectable;
