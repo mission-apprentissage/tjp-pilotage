@@ -1,4 +1,4 @@
-type R = {
+export type R = {
   meftstats: Record<
     string,
     {
