@@ -13,6 +13,7 @@ import { IndicateurSortie } from "../../entities/IndicateurSortie";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { LyceesACCELine } from "../../files/LyceesACCELine";
 import { NMefLine } from "../../files/NMef";
+import { R } from "../../services/inserJeunesApi/formatUaiData";
 
 const createFormationEtablissement = async (
   formationEtablissement: Omit<FormationEtablissement, "id">
@@ -137,8 +138,29 @@ const findFamilleMetier = async ({
   return result ? cleanNull(result) : undefined;
 };
 
+const getUaiData = async ({
+  uai,
+  millesime,
+}: {
+  uai: string;
+  millesime: string;
+}) => {
+  return (
+    await db
+      .selectOne("rawData", {
+        type: "ij",
+        data: db.sql`${db.self}@>${db.param({
+          uai,
+          millesime,
+        })}`,
+      })
+      .run(pool)
+  )?.data as R;
+};
+
 export const dependencies = {
   findFamilleMetier,
+  getUaiData,
   findDepartement,
   createIndicateurSortie,
   createIndicateurEntree,

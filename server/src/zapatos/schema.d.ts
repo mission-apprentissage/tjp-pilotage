@@ -2529,6 +2529,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: Date;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string;
     }
     export interface JSONSelectable {
       /**
@@ -2549,6 +2555,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: db.TimestampString;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string;
     }
     export interface Whereable {
       /**
@@ -2569,6 +2581,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -2589,6 +2607,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id: string | db.Parameter<string> | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -2609,6 +2633,12 @@ declare module 'zapatos/schema' {
       * - `NOT NULL`, no default
       */
       date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
+      /**
+      * **pg_mate.batch_id**
+      * - `varchar` in database
+      * - `NOT NULL`, no default
+      */
+      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
     }
     export type UniqueIndex = 'pg_mate_pkey';
     export type Column = keyof Selectable;

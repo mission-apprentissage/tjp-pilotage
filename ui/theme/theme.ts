@@ -45,5 +45,3 @@ export const theme = extendBaseTheme(chakraTheme, {
     Breadcrumb: BreadcrumbTheme,
   },
 });
-
-console.log(theme);

@@ -6,6 +6,7 @@ import { NFormationDiplomeLine } from "../../files/NFormationDiplome";
 import { streamIt } from "../../utils/streamIt";
 import { importFormationsDeps } from "./importFormations.deps";
 import { CFDOverride, RNCPOverride } from "./overrides";
+import { importFormationHistoriqueFactory } from "./steps/importFormationsHistoriques.step";
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
   const cfdOverride =
@@ -46,7 +47,7 @@ const isCompleteDiplomePorfessionelLine = (
     diplomeProfessionnelLine["Code RNCP"]
   );
 
-const formatDisplomeProfessionel = (
+const formatDiplomeProfessionel = (
   line: DiplomeProfessionnelLine
 ): CompleteDiplomePorfessionelLine | undefined => {
   const formattedLine = {
@@ -63,6 +64,7 @@ export const importFormationsFactory =
     createFormation = importFormationsDeps.createFormation,
     findDiplomesProfessionnels = importFormationsDeps.findDiplomesProfessionnels,
     findNFormationDiplome = importFormationsDeps.findNFormationDiplome,
+    importFormationHistorique = importFormationHistoriqueFactory({}),
   } = {}) =>
   async () => {
     console.log(`Import des formations`);
@@ -71,30 +73,29 @@ export const importFormationsFactory =
     await streamIt(
       (offset) => findDiplomesProfessionnels({ offset, limit: 20 }),
       async (item) => {
-        const diplomeProfessionel = formatDisplomeProfessionel(item);
+        const diplomeProfessionel = formatDiplomeProfessionel(item);
         if (!diplomeProfessionel) return;
+        const cfd = diplomeProfessionel["Code diplôme"];
 
-        const nFormationDiplome = await findNFormationDiplome({
-          cfd: diplomeProfessionel["Code diplôme"],
-        });
+        const nFormationDiplome = await findNFormationDiplome({ cfd });
         if (!nFormationDiplome) return;
 
-        count++;
-        process.stdout.write(`\r${count}`);
-
-        const formation = createFormationFromDiplomePorfessionel({
+        const formation = createFormationFromDiplomeProfessionel({
           nFormationDiplome,
           diplomeProfessionel,
         });
         if (!formation) return;
+        count++;
+        process.stdout.write(`\r${count}`);
         await createFormation([formation]);
+        await importFormationHistorique({ cfd });
       }
     );
 
     process.stdout.write(`\r${count} formations ajoutées ou mises à jour\n`);
   };
 
-const createFormationFromDiplomePorfessionel = ({
+const createFormationFromDiplomeProfessionel = ({
   diplomeProfessionel,
   nFormationDiplome,
 }: {
