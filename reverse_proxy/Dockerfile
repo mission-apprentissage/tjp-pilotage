@@ -6,23 +6,23 @@ ARG HEADERS_MORE_VERSION="v0.33"
 RUN set -eux; \
     apt-get update; \
     apt-get install -y --no-install-recommends \
-        automake \
-        cmake \
-        doxygen \
-        g++ \
-        git \
-        libcurl4-gnutls-dev \
-        libgeoip-dev \
-        liblua5.3-dev \
-        libpcre++-dev \
-        libtool \
-        libxml2-dev \
-        make \
-        ruby \
-        pkg-config \
-        zlib1g-dev; \
-     apt-get clean; \
-     rm -rf /var/lib/apt/lists/*
+    automake \
+    cmake \
+    doxygen \
+    g++ \
+    git \
+    libcurl4-gnutls-dev \
+    libgeoip-dev \
+    liblua5.3-dev \
+    libpcre++-dev \
+    libtool \
+    libxml2-dev \
+    make \
+    ruby \
+    pkg-config \
+    zlib1g-dev; \
+    apt-get clean; \
+    rm -rf /var/lib/apt/lists/*
 
 WORKDIR /sources
 
@@ -44,6 +44,9 @@ RUN apt-get update \
     && apt-get install -y logrotate
 
 COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
+
+# Disable some owasp-crs rules
+COPY app/nginx/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf /etc/modsecurity.d/owasp-crs/rules/REQUEST-900-EXCLUSION-RULES-BEFORE-CRS.conf
 
 #Logrotate
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
