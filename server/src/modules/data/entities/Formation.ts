@@ -1,6 +1,5 @@
 export type Formation = {
   id: string;
-  officielle: boolean;
   codeFormationDiplome: string;
   rncp: number;
   libelleDiplome: string;

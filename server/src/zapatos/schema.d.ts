@@ -1176,12 +1176,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture: Date | null;
-      /**
-      * **formation.officielle**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      officielle: boolean;
     }
     export interface JSONSelectable {
       /**
@@ -1226,12 +1220,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture: db.DateString | null;
-      /**
-      * **formation.officielle**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      officielle: boolean;
     }
     export interface Whereable {
       /**
@@ -1276,12 +1264,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **formation.officielle**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      officielle?: boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1326,12 +1308,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment;
-      /**
-      * **formation.officielle**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      officielle?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1376,12 +1352,6 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       dateFermeture?: (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, (db.DateString | Date) | db.Parameter<(db.DateString | Date)> | null | db.DefaultType | db.SQLFragment>;
-      /**
-      * **formation.officielle**
-      * - `bool` in database
-      * - `NOT NULL`, default: `false`
-      */
-      officielle?: boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, boolean | db.Parameter<boolean> | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'formation_codeFormationDiplome_key' | 'formation_pkey';
     export type Column = keyof Selectable;

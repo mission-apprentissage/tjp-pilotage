@@ -103,7 +103,6 @@ const createFormationFromDiplomeProfessionel = ({
   nFormationDiplome: NFormationDiplomeLine;
 }): Omit<Formation, "id"> | undefined => {
   return {
-    officielle: true,
     codeFormationDiplome: diplomeProfessionel["Code diplôme"],
     rncp: parseInt(diplomeProfessionel["Code RNCP"]),
     libelleDiplome:

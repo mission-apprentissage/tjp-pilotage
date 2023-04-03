@@ -1,6 +1,7 @@
 import { DateTime } from "luxon";
 
 import { dataDI } from "../../../data.di";
+import { AncienneFormation } from "../../../entities/Formation";
 import { NFormationDiplomeLine } from "../../../files/NFormationDiplome";
 import { importFormationsDeps } from "../importFormations.deps";
 
@@ -22,11 +23,10 @@ const toAncienneFormation = ({
   cfd: string;
   ancienCfd: string;
   ancienneFormationData?: NFormationDiplomeLine;
-}) => {
+}): Omit<AncienneFormation, "id"> | undefined => {
   if (!ancienneFormationData) return;
   if (!ancienneFormationData.DATE_OUVERTURE) return;
   return {
-    officielle: false,
     nouveauCFD: cfd,
     codeFormationDiplome: ancienCfd,
     rncp: 123,
