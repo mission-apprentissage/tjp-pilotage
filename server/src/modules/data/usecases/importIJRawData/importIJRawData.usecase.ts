@@ -76,12 +76,15 @@ export const importIJRawDataFactory =
     let count = 0;
     for (const uai of uais) {
       console.log(count++);
-      for (const millesime of ["2018_2019", "2019_2020", "2020_2021"]) {
-        const data = await getUaiData({ uai, millesime });
-        console.log(uai, millesime, !!data);
-        if (!data) continue;
-        await cacheIj({ data, uai, millesime });
-      }
+      const promises = ["2018_2019", "2019_2020", "2020_2021"].map(
+        async (millesime) => {
+          const data = getUaiData({ uai, millesime });
+          console.log(uai, millesime, !!data);
+          if (!data) return;
+          await cacheIj({ data, uai, millesime });
+        }
+      );
+      Promise.all(promises);
     }
     console.log(uais.length);
   };
