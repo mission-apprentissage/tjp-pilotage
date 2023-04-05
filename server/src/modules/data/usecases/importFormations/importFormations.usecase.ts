@@ -5,14 +5,14 @@ import { DiplomeProfessionnelLine } from "../../files/DiplomesProfessionnels";
 import { NFormationDiplomeLine } from "../../files/NFormationDiplome";
 import { streamIt } from "../../utils/streamIt";
 import { importFormationsDeps } from "./importFormations.deps";
-import { CFDOverride, RNCPOverride } from "./overrides";
+import { overrides } from "./overrides";
 import { importFormationHistoriqueFactory } from "./steps/importFormationsHistoriques.step";
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
   const cfdOverride =
-    CFDOverride[
+    overrides[
       `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
-    ];
+    ]?.cfd;
   if (cfdOverride) return cfdOverride;
 
   if (!line["Code diplôme"]) return;
@@ -24,9 +24,9 @@ const formatCFD = (line: DiplomeProfessionnelLine) => {
 
 const formatRNCP = (line: DiplomeProfessionnelLine) => {
   const rncpOverride =
-    RNCPOverride[
+    overrides[
       `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
-    ];
+    ]?.rncp;
   if (rncpOverride) return rncpOverride;
 
   if (!line["Code RNCP"]) return;
@@ -35,17 +35,13 @@ const formatRNCP = (line: DiplomeProfessionnelLine) => {
 };
 
 type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
-  "Code RNCP": string;
   "Code diplôme": string;
 };
 
 const isCompleteDiplomePorfessionelLine = (
   diplomeProfessionnelLine: DiplomeProfessionnelLine
 ): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
-  !!(
-    diplomeProfessionnelLine["Code diplôme"] &&
-    diplomeProfessionnelLine["Code RNCP"]
-  );
+  !!diplomeProfessionnelLine["Code diplôme"];
 
 const formatDiplomeProfessionel = (
   line: DiplomeProfessionnelLine
@@ -104,7 +100,9 @@ const createFormationFromDiplomeProfessionel = ({
 }): Omit<Formation, "id"> | undefined => {
   return {
     codeFormationDiplome: diplomeProfessionel["Code diplôme"],
-    rncp: parseInt(diplomeProfessionel["Code RNCP"]),
+    rncp: diplomeProfessionel["Code RNCP"]
+      ? parseInt(diplomeProfessionel["Code RNCP"])
+      : undefined,
     libelleDiplome:
       diplomeProfessionel["Intitulé de la spécialité (et options)"],
     codeNiveauDiplome: diplomeProfessionel["Code diplôme"].slice(0, 3),
