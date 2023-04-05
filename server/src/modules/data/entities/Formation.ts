@@ -1,7 +1,7 @@
 export type Formation = {
   id: string;
   codeFormationDiplome: string;
-  rncp: number;
+  rncp?: number;
   libelleDiplome: string;
   codeNiveauDiplome: string;
   dateOuverture: Date;

@@ -1149,9 +1149,9 @@ declare module 'zapatos/schema' {
       /**
       * **formation.rncp**
       * - `int4` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      rncp: number;
+      rncp: number | null;
       /**
       * **formation.libelleDiplome**
       * - `varchar` in database
@@ -1193,9 +1193,9 @@ declare module 'zapatos/schema' {
       /**
       * **formation.rncp**
       * - `int4` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      rncp: number;
+      rncp: number | null;
       /**
       * **formation.libelleDiplome**
       * - `varchar` in database
@@ -1237,7 +1237,7 @@ declare module 'zapatos/schema' {
       /**
       * **formation.rncp**
       * - `int4` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
       rncp?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
       /**
@@ -1281,9 +1281,9 @@ declare module 'zapatos/schema' {
       /**
       * **formation.rncp**
       * - `int4` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      rncp: number | db.Parameter<number> | db.SQLFragment;
+      rncp?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
       /**
       * **formation.libelleDiplome**
       * - `varchar` in database
@@ -1325,9 +1325,9 @@ declare module 'zapatos/schema' {
       /**
       * **formation.rncp**
       * - `int4` in database
-      * - `NOT NULL`, no default
+      * - Nullable, no default
       */
-      rncp?: number | db.Parameter<number> | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment>;
+      rncp?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
       /**
       * **formation.libelleDiplome**
       * - `varchar` in database
