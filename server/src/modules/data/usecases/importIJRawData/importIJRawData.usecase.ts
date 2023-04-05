@@ -78,13 +78,13 @@ export const importIJRawDataFactory =
       console.log(count++);
       const promises = ["2018_2019", "2019_2020", "2020_2021"].map(
         async (millesime) => {
-          const data = getUaiData({ uai, millesime });
+          const data = await getUaiData({ uai, millesime });
           console.log(uai, millesime, !!data);
           if (!data) return;
           await cacheIj({ data, uai, millesime });
         }
       );
-      Promise.all(promises);
+      await Promise.all(promises);
     }
     console.log(uais.length);
   };
