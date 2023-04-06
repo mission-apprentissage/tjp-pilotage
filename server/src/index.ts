@@ -33,7 +33,6 @@ server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
     registerFormationModule({ server: instance });
-    instance.get("/aa", {}, (_, rep) => rep.send(200));
   },
   { prefix: "/api" }
 );
