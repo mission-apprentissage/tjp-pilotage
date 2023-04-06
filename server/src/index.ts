@@ -5,6 +5,7 @@ import { config } from "config/config";
 import knex from "knex";
 
 import { registerCoreModule } from "./modules/core";
+import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
 
 server.register(fastifyCors, {});
@@ -31,6 +32,8 @@ server.register(fastifySwaggerUi, {
 server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
+    registerFormationModule({ server: instance });
+    instance.get("/aa", {}, (_, rep) => rep.send(200));
   },
   { prefix: "/api" }
 );
