@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  ArrowLeftIcon,
-  ArrowRightIcon,
-  ChevronDownIcon,
-  ChevronUpIcon,
-} from "@chakra-ui/icons";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
 import {
   Box,
   Center,
@@ -23,6 +18,7 @@ import axios from "axios";
 import { useEffect, useState } from "react";
 
 import { Graph } from "../../../components/Graph";
+import { OrderIcon } from "../../../components/OrderIcon";
 
 type DATA = {
   id: string;
@@ -33,10 +29,8 @@ type DATA = {
   libelleNiveauDiplome: string;
   nbEtablissement: number;
   effectif: number;
-  nbInsertion6mois: number;
-  nbPoursuiteEtudes: number;
-  nbSortants: number;
-  effectifSortie: number;
+  tauxInsertion6mois: number;
+  tauxPoursuiteEtudes: number;
 };
 
 const PAGE_SIZE = 30;
@@ -85,36 +79,14 @@ const GraphWrapper = ({ value }: { value: number }) => (
   <>
     {value !== undefined && !Number.isNaN(value) ? (
       <>
-        {(value * 100).toFixed()}%{" "}
-        <Graph
-          value={value * 100}
-          width="100px"
-          display="inline-block"
-          ml="2"
-        />
+        {value.toFixed()}%
+        <Graph value={value} width="100px" display="inline-block" ml="2" />
       </>
     ) : (
       "-"
     )}
   </>
 );
-
-const OrderIcon = ({
-  column,
-  order,
-}: {
-  column: string;
-  order?: {
-    orderBy: string;
-    order: "desc" | "asc";
-  };
-}) => {
-  if (!order || order.orderBy !== column) return null;
-  if (order.order === "desc") {
-    return <ChevronDownIcon />;
-  }
-  return <ChevronUpIcon />;
-};
 
 export default function Home() {
   const [page, setPage] = useState(0);
@@ -127,7 +99,6 @@ export default function Home() {
   const data = useFormations({ page, order });
 
   const handleOrder = (column: string) => {
-    console.log(order?.orderBy !== column);
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -151,8 +122,11 @@ export default function Home() {
             zIndex={1}
           >
             <Tr>
-              <Th>Libellé</Th>
               <Th>Diplome</Th>
+              <Th onClick={() => handleOrder("libelleDiplome")}>
+                <OrderIcon order={order} column="libelleDiplome" />
+                Formation
+              </Th>
               <Th isNumeric onClick={() => handleOrder("nbEtablissement")}>
                 <OrderIcon order={order} column="nbEtablissement" />
                 nb Etablissement
@@ -161,9 +135,15 @@ export default function Home() {
                 <OrderIcon order={order} column="effectif" />
                 effectif
               </Th>
-              <Th>Tx d'emploi 6 mois</Th>
+              <Th onClick={() => handleOrder("tauxInsertion6mois")}>
+                <OrderIcon order={order} column="tauxInsertion6mois" />
+                Tx d'emploi 6 mois
+              </Th>
               <Th>Delta régional insertion</Th>
-              <Th>Tx de poursuite d'études</Th>
+              <Th onClick={() => handleOrder("tauxPoursuiteEtudes")}>
+                <OrderIcon order={order} column="tauxPoursuiteEtudes" />
+                Tx de poursuite d'études
+              </Th>
               <Th>Delta régional poursuite</Th>
               <Th>Dispositif</Th>
               <Th>Famille de métiers</Th>
@@ -179,11 +159,9 @@ export default function Home() {
                 effectif,
                 nbEtablissement,
                 libelleDispositif,
-                nbInsertion6mois,
+                tauxInsertion6mois,
+                tauxPoursuiteEtudes,
                 libelleNiveauDiplome,
-                nbSortants,
-                nbPoursuiteEtudes,
-                effectifSortie,
                 libelleOfficielFamille,
               }) => (
                 <Tr key={`${libelleDiplome}_${libelleDispositif}`}>
@@ -192,11 +170,11 @@ export default function Home() {
                   <Td isNumeric>{nbEtablissement ?? "-"}</Td>
                   <Td isNumeric>{effectif ?? "-"}</Td>
                   <Td>
-                    <GraphWrapper value={nbInsertion6mois / nbSortants} />
+                    <GraphWrapper value={tauxInsertion6mois} />
                   </Td>
                   <Td>-</Td>
                   <Td>
-                    <GraphWrapper value={nbPoursuiteEtudes / effectifSortie} />
+                    <GraphWrapper value={tauxPoursuiteEtudes} />
                   </Td>
                   <Td>-</Td>
                   <Td>{libelleDispositif ?? "-"}</Td>
