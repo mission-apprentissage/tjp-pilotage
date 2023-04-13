@@ -16,7 +16,7 @@ export const theme = extendBaseTheme(chakraTheme, {
       },
     },
   },
-  fonts: { heading: "Marianne, Arial" },
+  fonts: { heading: "Marianne, Arial", body: "Marianne, Arial" },
   colors: {
     bluefrance: {
       113: "#000091",

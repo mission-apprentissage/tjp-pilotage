@@ -31,9 +31,11 @@ export default function RootLayout({
       <body>
         <CacheProvider>
           <ChakraProvider theme={theme}>
-            <Flex direction="column" height="100vh">
+            <Flex direction="column" height="100vh" overflow="auto">
               <Header />
-              <Box flex={1}>{children}</Box>
+              <Box display="flex" flexDirection="column" flex={1} minHeight="0">
+                {children}
+              </Box>
             </Flex>
           </ChakraProvider>
         </CacheProvider>

@@ -43,9 +43,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         index={tabIndex}
         display="flex"
         px={5}
-        height="100%"
+        flex="1"
         flexDirection="column"
         variant="enclosed-colored"
+        minHeight="0"
       >
         <TabList px={5}>
           <Tab as={Link} href="/console/formations">
@@ -55,11 +56,17 @@ export default function Layout({ children }: { children: React.ReactNode }) {
             Par établissements
           </Tab>
         </TabList>
-        <TabPanels display="flex" flexDirection="column" flex="1">
-          <TabPanel p="0" height="100%">
+        <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">
+          <TabPanel
+            p="0"
+            display="flex"
+            flexDirection={"column"}
+            flex="1"
+            minHeight="0"
+          >
             {children}
           </TabPanel>
-          <TabPanel p="0" height="100%">
+          <TabPanel p="0" display="flex" flex="1" minHeight="0">
             {children}
           </TabPanel>
         </TabPanels>
