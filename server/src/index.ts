@@ -24,7 +24,7 @@ server.register(fastifySwagger, {
 server.register(fastifySwaggerUi, {
   routePrefix: "/api/documentation",
   uiConfig: {
-    docExpansion: "full",
+    docExpansion: "list",
     deepLinking: false,
   },
 });

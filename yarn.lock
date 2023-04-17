@@ -1860,6 +1860,33 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@json2csv/formatters@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@json2csv/formatters@npm:6.1.3"
+  checksum: cec4956364f45220f9d109de5c1b193e970bd83e53ce1b912879b878ef93c3e60f63aa31de226e30e3a4d2f344ac895421153a3e4b136d774283134dd117e550
+  languageName: node
+  linkType: hard
+
+"@json2csv/node@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@json2csv/node@npm:6.1.3"
+  dependencies:
+    "@json2csv/plainjs": ^6.1.3
+  checksum: b89e49c02b8159547a8cd30e17d1ba4fdd0a29b4f3d992aed25dec4fddcc1e8589a5dd1f80bf8307ed5c9550c52a083cc386b5a54464e13ee6ca358d55fa1869
+  languageName: node
+  linkType: hard
+
+"@json2csv/plainjs@npm:^6.1.3":
+  version: 6.1.3
+  resolution: "@json2csv/plainjs@npm:6.1.3"
+  dependencies:
+    "@json2csv/formatters": ^6.1.3
+    "@streamparser/json": ^0.0.12
+    lodash.get: ^4.4.2
+  checksum: 2d90b68958cf4390ec332f604b2e8ee87526125ddb4dafe965c0d68cd49d977ac360fade6ba9e4b993d529a4821ef066c5768e7433d3dc71fa996e86b69b7a66
+  languageName: node
+  linkType: hard
+
 "@lukeed/ms@npm:^2.0.1":
   version: 2.0.1
   resolution: "@lukeed/ms@npm:2.0.1"
@@ -2582,6 +2609,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@streamparser/json@npm:^0.0.12":
+  version: 0.0.12
+  resolution: "@streamparser/json@npm:0.0.12"
+  checksum: 976975f0169253c6397240434ca8bb87c09be09597b949a8d473be009a6aac6469d5e0df8c8bc47b5a0a9e679ebb48d415f4bcef3169cb1707e45e9296211197
+  languageName: node
+  linkType: hard
+
 "@swc/helpers@npm:0.4.14":
   version: 0.4.14
   resolution: "@swc/helpers@npm:0.4.14"
@@ -2597,6 +2631,32 @@ __metadata:
   dependencies:
     defer-to-connect: ^2.0.0
   checksum: c29df3bcec6fc3bdec2b17981d89d9c9fc9bd7d0c9bcfe92821dc533f4440bc890ccde79971838b4ceed1921d456973c4180d7175ee1d0023ad0562240a58d95
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:4.29.1":
+  version: 4.29.1
+  resolution: "@tanstack/query-core@npm:4.29.1"
+  checksum: e7a5a73e5e743411e39348bee3ded4b6c5dd3a70009e72e067e257d5f3d612bfe8df0998cddff6ad7a078e0bcf7a3c92ded669758ca697055472ce910e23a368
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:^4.29.3":
+  version: 4.29.3
+  resolution: "@tanstack/react-query@npm:4.29.3"
+  dependencies:
+    "@tanstack/query-core": 4.29.1
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: 7d33fe001ba6ec2332c28749312e5268e6bc060ea0e7c3faa37a28a12fd4b4fddd3803fdfb4e6551997f06d4cd32568e39d9cc9a26c19f40cfef276fad1eaaee
   languageName: node
   linkType: hard
 
@@ -2668,6 +2728,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/json2csv@npm:^5.0.3":
+  version: 5.0.3
+  resolution: "@types/json2csv@npm:5.0.3"
+  dependencies:
+    "@types/node": "*"
+  checksum: 7a9faf4a7ec0fb488cf953ba18aea1e48fb586476e7aa9d8c6d03860b729a508cfe836170c90f3ba3656d9621df95a264bf0452f69771e8df06d1ce221980533
+  languageName: node
+  linkType: hard
+
 "@types/json5@npm:^0.0.29":
   version: 0.0.29
   resolution: "@types/json5@npm:0.0.29"
@@ -2730,6 +2799,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@types/node@npm:^18.15.11":
+  version: 18.15.11
+  resolution: "@types/node@npm:18.15.11"
+  checksum: 977b4ad04708897ff0eb049ecf82246d210939c82461922d20f7d2dcfd81bbc661582ba3af28869210f7e8b1934529dcd46bff7d448551400f9d48b9d3bddec3
+  languageName: node
+  linkType: hard
+
 "@types/normalize-package-data@npm:^2.4.0":
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
@@ -2759,6 +2835,13 @@ __metadata:
   version: 15.7.5
   resolution: "@types/prop-types@npm:15.7.5"
   checksum: 5b43b8b15415e1f298243165f1d44390403bb2bd42e662bca3b5b5633fdd39c938e91b7fce3a9483699db0f7a715d08cef220c121f723a634972fdf596aec980
+  languageName: node
+  linkType: hard
+
+"@types/qs@npm:^6.9.7":
+  version: 6.9.7
+  resolution: "@types/qs@npm:6.9.7"
+  checksum: 7fd6f9c25053e9b5bb6bc9f9f76c1d89e6c04f7707a7ba0e44cc01f17ef5284adb82f230f542c2d5557d69407c9a40f0f3515e8319afd14e1e16b5543ac6cdba
   languageName: node
   linkType: hard
 
@@ -3484,12 +3567,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:0.24.0":
-  version: 0.24.0
-  resolution: "axios@npm:0.24.0"
+"axios@npm:1.3.5":
+  version: 1.3.5
+  resolution: "axios@npm:1.3.5"
   dependencies:
-    follow-redirects: ^1.14.4
-  checksum: 468cf496c08a6aadfb7e699bebdac02851e3043d4e7d282350804ea8900e30d368daa6e3cd4ab83b8ddb5a3b1e17a5a21ada13fc9cebd27b74828f47a4236316
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 4d6bcf933b1cdff86d4993752aaeeeedc4a7f7a4b1c942847f6884bb13fc6106610ff826b076acf0b08d8ced55dee9344bb9a11f3624c3e70ab1da1a40bb5506
   languageName: node
   linkType: hard
 
@@ -4128,7 +4213,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"combined-stream@npm:^1.0.6, combined-stream@npm:~1.0.6":
+"combined-stream@npm:^1.0.6, combined-stream@npm:^1.0.8, combined-stream@npm:~1.0.6":
   version: 1.0.8
   resolution: "combined-stream@npm:1.0.8"
   dependencies:
@@ -5869,10 +5954,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify-plugin@npm:^4.0.0":
+"fastify-plugin@npm:^4.0.0, fastify-plugin@npm:^4.2.1":
   version: 4.5.0
   resolution: "fastify-plugin@npm:4.5.0"
   checksum: 3cc36a43ec72ee9974d3cd1989027e77b277b0994e4fc02ed4e6492aabd83a0be66f14fdec56e60d9a41911ea1ff1ea70c9d957a87e46bcdb8fedd859f4988fe
+  languageName: node
+  linkType: hard
+
+"fastify-qs@npm:^4.0.1":
+  version: 4.0.1
+  resolution: "fastify-qs@npm:4.0.1"
+  dependencies:
+    fastify-plugin: ^4.2.1
+    qs: ^6.11.0
+  checksum: 269126a6d2a976190071a5b2d9ae8ecc5484db6632ecc2567c8efa5c39dde0159103ecfd0172bc626a68df30d749e9cc59d22ce41230782ad2d382e954f3ede8
   languageName: node
   linkType: hard
 
@@ -6038,7 +6133,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.14.4":
+"follow-redirects@npm:^1.15.0":
   version: 1.15.2
   resolution: "follow-redirects@npm:1.15.2"
   peerDependenciesMeta:
@@ -6061,6 +6156,17 @@ __metadata:
   version: 0.6.1
   resolution: "forever-agent@npm:0.6.1"
   checksum: 766ae6e220f5fe23676bb4c6a99387cec5b7b62ceb99e10923376e27bfea72f3c3aeec2ba5f45f3f7ba65d6616965aa7c20b15002b6860833bb6e394dea546a8
+  languageName: node
+  linkType: hard
+
+"form-data@npm:^4.0.0":
+  version: 4.0.0
+  resolution: "form-data@npm:4.0.0"
+  dependencies:
+    asynckit: ^0.4.0
+    combined-stream: ^1.0.8
+    mime-types: ^2.1.12
+  checksum: 01135bf8675f9d5c61ff18e2e2932f719ca4de964e3be90ef4c36aacfc7b9cb2fceb5eca0b7e0190e3383fe51c5b37f4cb80b62ca06a99aaabfcfd6ac7c9328c
   languageName: node
   linkType: hard
 
@@ -8073,6 +8179,13 @@ __metadata:
   version: 4.1.2
   resolution: "lodash.escaperegexp@npm:4.1.2"
   checksum: 6d99452b1cfd6073175a9b741a9b09ece159eac463f86f02ea3bee2e2092923fce812c8d2bf446309cc52d1d61bf9af51c8118b0d7421388e6cead7bd3798f0f
+  languageName: node
+  linkType: hard
+
+"lodash.get@npm:^4.4.2":
+  version: 4.4.2
+  resolution: "lodash.get@npm:4.4.2"
+  checksum: e403047ddb03181c9d0e92df9556570e2b67e0f0a930fcbbbd779370972368f5568e914f913e93f3b08f6d492abc71e14d4e9b7a18916c31fa04bd2306efe545
   languageName: node
   linkType: hard
 
@@ -10280,6 +10393,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"proxy-from-env@npm:^1.1.0":
+  version: 1.1.0
+  resolution: "proxy-from-env@npm:1.1.0"
+  checksum: ed7fcc2ba0a33404958e34d95d18638249a68c430e30fcb6c478497d72739ba64ce9810a24f53a7d921d0c065e5b78e3822759800698167256b04659366ca4d4
+  languageName: node
+  linkType: hard
+
 "psl@npm:^1.1.28":
   version: 1.9.0
   resolution: "psl@npm:1.9.0"
@@ -10324,6 +10444,15 @@ __metadata:
   bin:
     qrcode-terminal: ./bin/qrcode-terminal.js
   checksum: 51638d11d080e06ef79ef2d5cfe911202159e48d2873d6a80a3c5489b4b767acf4754811ceba4e113db8f41f61a06c163bcb17e6e18e6b34e04a7a5155dac974
+  languageName: node
+  linkType: hard
+
+"qs@npm:^6.11.0, qs@npm:^6.11.1":
+  version: 6.11.1
+  resolution: "qs@npm:6.11.1"
+  dependencies:
+    side-channel: ^1.0.4
+  checksum: 82ee78ef12a16f3372fae5b64f76f8aedecb000feea882bbff1af146c147f6eb66b08f9c3f34d7e076f28563586956318b9b2ca41141846cdd6d5ad6f241d52f
   languageName: node
   linkType: hard
 
@@ -11358,11 +11487,16 @@ __metadata:
     "@fastify/swagger": ^8.3.1
     "@fastify/swagger-ui": ^1.6.0
     "@fastify/type-provider-typebox": ^2.4.0
+    "@json2csv/node": ^6.1.3
+    "@json2csv/plainjs": ^6.1.3
     "@sinclair/typebox": ^0.25.21
+    "@types/json2csv": ^5.0.3
     "@types/lodash": ^4.14.191
     "@types/luxon": ^3.2.0
+    "@types/node": ^18.15.11
     "@types/pg": ^8.6.6
-    axios: 0.24.0
+    "@types/qs": ^6.9.7
+    axios: 1.3.5
     boom: 7.3.0
     bunyan: 1.8.15
     bunyan-mongodb-stream: 0.0.3
@@ -11375,12 +11509,14 @@ __metadata:
     dotenv: ^16.0.3
     env-var: 7.1.1
     fastify: ^4.12.0
+    fastify-qs: ^4.0.1
     jsonwebtoken: 8.5.1
     knex: ^2.4.2
     lodash: ^4.17.21
     luxon: 2.3.0
     nodemon: ^2.0.20
     pg: ^8.9.0
+    qs: ^6.11.1
     rate-limiter-flexible: 2.3.6
     shared: "*"
     stream-transform: ^3.2.2
@@ -12599,9 +12735,11 @@ __metadata:
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
     "@next/font": 13.1.2
+    "@tanstack/react-query": ^4.29.3
     "@types/node": 18.11.18
     "@types/react": 18.0.27
     "@types/react-dom": 18.0.10
+    axios: 1.3.5
     framer-motion: ^10.9.1
     next: 13.2.4
     next-plausible: ^3.7.2
@@ -12785,6 +12923,15 @@ __metadata:
     "@types/react":
       optional: true
   checksum: 925d1922f9853e516eaad526b6fed1be38008073067274f0ecc3f56b17bb8ab63480140dd7c271f94150027c996cea4efe83d3e3525e8f3eda22055f6a39220b
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.0
+  resolution: "use-sync-external-store@npm:1.2.0"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: 5c639e0f8da3521d605f59ce5be9e094ca772bd44a4ce7322b055a6f58eeed8dda3c94cabd90c7a41fb6fa852210092008afe48f7038792fd47501f33299116a
   languageName: node
   linkType: hard
 

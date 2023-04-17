@@ -1,3 +1,6 @@
+/* eslint-disable unused-imports/no-unused-vars */
+//@ts-nocheck
+
 "use client";
 
 import {
@@ -13,6 +16,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
@@ -21,9 +25,8 @@ import { TableFooter } from "@/components/TableFooter";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
-import { OrderIcon } from "../../../components/OrderIcon";
 
-type Query = Awaited<Parameters<typeof api.getFormations>[0]["query"]>;
+type Query = Awaited<Parameters<typeof api.getEtablissements.call>[0]["query"]>;
 
 type Filters = Pick<
   Query,
@@ -35,18 +38,18 @@ type Filters = Pick<
   | "codeDispositif"
   | "codeRegion"
   | "commune"
+  | "uai"
 >;
-
-type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
 
-const fetchFormations = async (query: Query) =>
-  api.getFormations({ query }).call();
+const fetchEtablissements = async (query: Query) =>
+  api.getEtablissements({ query }).call();
 
-export default function Formations() {
+export default function Etablissements() {
   const [page, setPage] = useState(0);
 
+  //@ts-ignore
   const [order, setOrder] = useState<{
     orderBy?: Query["orderBy"];
     order?: Query["order"];
@@ -54,30 +57,23 @@ export default function Formations() {
     order: "asc",
   });
 
-  const [filters, setFilters] = useState<Filters>({});
+  const params = useSearchParams();
+
+  const [filters, setFilters] = useState<Filters>(new Map());
 
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["formations", page, order, filters],
-    queryFn: () =>
-      fetchFormations({
+    queryKey: ["etablissements", page, order, filters],
+    queryFn: () => {
+      return fetchEtablissements({
         ...filters,
         ...order,
         offset: page * PAGE_SIZE,
-      }),
+        limit: PAGE_SIZE,
+      });
+    },
   });
-
-  const handleOrder = (column: Order["orderBy"]) => {
-    if (order?.orderBy !== column) {
-      setOrder({ order: "desc", orderBy: column });
-      return;
-    }
-    setOrder({
-      order: order?.order === "asc" ? "desc" : "asc",
-      orderBy: column,
-    });
-  };
 
   const handleFilters = (
     type: keyof Filters,
@@ -172,77 +168,45 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
+                <Th>Nom d'établissement</Th>
+                <Th>Commune</Th>
                 <Th>Diplome</Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("libelleDiplome")}
-                >
-                  <OrderIcon {...order} column="libelleDiplome" />
-                  Formation
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  onClick={() => handleOrder("nbEtablissement")}
-                >
-                  <OrderIcon {...order} column="nbEtablissement" />
-                  nb Etab
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  onClick={() => handleOrder("effectif")}
-                >
-                  <OrderIcon {...order} column="effectif" />
-                  effectif
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
-                >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  Tx d'emploi 6 mois
-                </Th>
-                <Th isNumeric>Delta régional insertion</Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
-                >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  Tx de poursuite d'études
-                </Th>
-                <Th isNumeric>Delta régional poursuite</Th>
+                <Th>Formation</Th>
+                <Th isNumeric>Capacité</Th>
+                <Th isNumeric>Effectif</Th>
+                <Th isNumeric>Tx Remplissage</Th>
+                <Th isNumeric>Tx Pression</Th>
+                <Th isNumeric>Tx Poursuite d'études</Th>
+                <Th isNumeric>Valeur ajoutée</Th>
+                <Th isNumeric>Décrochage</Th>
+                <Th isNumeric>Secteur</Th>
+                <Th isNumeric>UAI</Th>
                 <Th>Dispositif</Th>
-                <Th>Famille de métiers</Th>
-                <Th>codeFormationDiplome</Th>
-                <Th>Décrochage</Th>
+                <Th>Famille de métier</Th>
               </Tr>
             </Thead>
             <Tbody>
-              {data?.formations.map((line) => (
-                <Tr key={`${line.libelleDiplome}_${line.libelleDispositif}`}>
+              {data?.etablissements.map((line) => (
+                <Tr
+                  key={`${line.libelleEtablissement}_${line.libelleDispositif}_${line.codeFormationDiplome}`}
+                >
+                  <Td>{line.libelleEtablissement ?? "-"}</Td>
+                  <Td>{line.commune ?? "-"}</Td>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
-                  <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
+                  <Td isNumeric>{line.capacite ?? "-"}</Td>
                   <Td isNumeric>{line.effectif ?? "-"}</Td>
                   <Td isNumeric>
-                    <GraphWrapper value={line.tauxInsertion6mois} />
+                    <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaInsertion6mois} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxPoursuiteEtudes} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
-                  </Td>
+                  <Td>-</Td>
+                  <Td isNumeric>-</Td>
+                  <Td isNumeric>-</Td>
+                  <Td isNumeric>-</Td>
+                  <Td>-</Td>
+                  <Td>-</Td>
                   <Td>{line.libelleDispositif ?? "-"}</Td>
                   <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-                  <Td>{line.codeFormationDiplome ?? "-"}</Td>
-                  <Td>-</Td>
                 </Tr>
               ))}
             </Tbody>
@@ -250,7 +214,7 @@ export default function Formations() {
         </TableContainer>
         <TableFooter
           downloadLink={
-            api.getFormationsCsv({
+            api.getEtablissementsCsv({
               query: { ...filters, ...order },
             }).url
           }

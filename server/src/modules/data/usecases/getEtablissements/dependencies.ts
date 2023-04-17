@@ -3,9 +3,10 @@ import { SQL } from "zapatos/db";
 import { db, pool } from "../../../../db/zapatos";
 import { schema } from "../../../../db/zapatos.schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { Etablissement } from "../../entities/Etablissement";
 import { Formation } from "../../entities/Formation";
 
-const findFormationsInDb = async ({
+const findEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
   millesimeEntree = "2022",
@@ -19,6 +20,7 @@ const findFormationsInDb = async ({
   cfd,
   cfdFamille,
   orderBy,
+  uai,
 }: {
   offset?: number;
   limit?: number;
@@ -32,41 +34,41 @@ const findFormationsInDb = async ({
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
+  uai?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}): Promise<{
   count: number;
-  formations: (Formation & {
-    libelleDispositif: string;
-    libelleNiveauDiplome: string;
-    nbEtablissement: number;
-    effectif: number;
-    tauxInsertion6mois: number;
-    tauxPoursuiteEtudes: number;
-  })[];
-}> => {
-  const query = await db.sql<
-    SQL,
-    (schema.formation.Selectable & {
-      count: number;
-      libelleOfficielFamille?: string;
+  etablissements: (Etablissement &
+    Formation & {
       libelleDispositif: string;
       libelleNiveauDiplome: string;
       nbEtablissement: number;
       effectif: number;
-      tauxInsertion6mois: number;
-      tauxPoursuiteEtudes: number;
-    })[]
+    })[];
+}> => {
+  const query = await db.sql<
+    SQL,
+    (schema.etablissement.Selectable &
+      schema.formation.Selectable & {
+        count: number;
+        libelleOfficielFamille?: string;
+        libelleDispositif: string;
+        libelleNiveauDiplome: string;
+        nbEtablissement: number;
+        effectif: number;
+      })[]
   >`
     SELECT
         COUNT(*) OVER() as count,
-        "formation".*, 
+        "etablissement".*, 
+        "formation".*,
         "libelleOfficielFamille",
         "libelleDispositif",
         "libelleNiveauDiplome",
-        COUNT(etablissement.*) as "nbEtablissement", 
-        SUM("indicateurEntree"."effectifEntree") as effectif,
-        (100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes",
-        (100 * SUM("indicateurSortie"."nbInsertion6mois") / SUM("indicateurSortie"."nbSortants")) as "tauxInsertion6mois"
+        SUM("indicateurEntree"."effectifEntree") as capacite,
+        SUM("indicateurEntree"."capacite") as effectif,
+        SUM("indicateurSortie"."nbSortants") as "nbSortants",
+        (100* SUM("indicateurEntree"."effectifEntree") / SUM("indicateurEntree"."capacite")) as "tauxRemplissage"
     FROM "formation"
     LEFT JOIN "formationEtablissement"
         ON "formationEtablissement"."cfd" = "formation"."codeFormationDiplome"
@@ -133,9 +135,11 @@ const findFormationsInDb = async ({
             ? db.sql`"familleMetier"."cfdFamille" IN (${db.vals(cfdFamille)})`
             : {}
         }
+        AND ${uai ? db.sql`"etablissement"."UAI" IN (${db.vals(uai)})` : {}}
         AND "codeFormationDiplome" NOT IN (SELECT DISTINCT "ancienCFD" FROM "formationHistorique")
     GROUP BY
-        "formation".id,
+        "formation"."id",
+        "etablissement"."id",
         "libelleOfficielFamille",
         "indicateurEntree"."millesimeEntree",
         "libelleDispositif",
@@ -148,13 +152,13 @@ const findFormationsInDb = async ({
               ? db.sql`ASC NULLS FIRST`
               : db.sql`DESC NULLS LAST`
           }`
-        : db.sql`ORDER BY formation."libelleDiplome" ASC`
+        : db.sql`ORDER BY "etablissement"."libelleEtablissement" ASC`
     },
-    "libelleDiplome" asc,
+    "formation"."libelleDiplome" ASC,
     "libelleNiveauDiplome" asc,
-    "libelleDispositif" asc,
-    "nbEtablissement" desc,
-    "codeFormationDiplome" ASC
+    "effectif" DESC,
+    "nbSortants" DESC
+
     OFFSET ${db.param(offset)}
     LIMIT ${db.param(limit)};
 `;
@@ -163,7 +167,7 @@ const findFormationsInDb = async ({
 
   return {
     count: data[0]?.count ?? 0,
-    formations: data.map(cleanNull),
+    etablissements: data.map(cleanNull),
   };
 };
 
@@ -206,8 +210,8 @@ const findFiltersInDb = async ({
   const regions = db.sql<
     SQL,
     {
-      label: schema.region.Selectable;
-      value: schema.region.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "region"."libelleRegion" as label, "region"."codeRegion" as value
     ${from}
@@ -232,8 +236,8 @@ const findFiltersInDb = async ({
   const academies = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "academie"."libelle" as label, "academie"."codeAcademie" as value
     ${from}
@@ -256,8 +260,8 @@ const findFiltersInDb = async ({
   const departements = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "departement"."libelle" as label, "departement"."codeDepartement" as value
     ${from}
@@ -280,8 +284,8 @@ const findFiltersInDb = async ({
   const communes = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "etablissement"."commune" as label, "etablissement"."commune" as value
     ${from}
@@ -306,8 +310,8 @@ const findFiltersInDb = async ({
   const diplomes = db.sql<
     SQL,
     {
-      label: schema.niveauDiplome.Selectable["libelleNiveauDiplome"];
-      value: schema.niveauDiplome.Selectable["codeNiveauDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "niveauDiplome"."libelleNiveauDiplome" as label, "niveauDiplome"."codeNiveauDiplome" as value
     ${from}
@@ -332,8 +336,8 @@ const findFiltersInDb = async ({
   const dispositifs = db.sql<
     SQL,
     {
-      label: schema.niveauDiplome.Selectable["libelleNiveauDiplome"];
-      value: schema.niveauDiplome.Selectable["codeNiveauDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "dispositif"."libelleDispositif" as label, "dispositif"."codeDispositif" as value
     ${from}
@@ -350,8 +354,8 @@ const findFiltersInDb = async ({
   const familles = db.sql<
     SQL,
     {
-      label: schema.familleMetier.Selectable["libelleOfficielFamille"];
-      value: schema.familleMetier.Selectable["cfdFamille"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "familleMetier"."libelleOfficielFamille" as label, "familleMetier"."cfdFamille" as "value"
     ${from}
@@ -361,8 +365,8 @@ const findFiltersInDb = async ({
   const formations = db.sql<
     SQL,
     {
-      label: schema.formation.Selectable["libelleDiplome"];
-      value: schema.formation.Selectable["codeFormationDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "formation"."libelleDiplome" as label, "formation"."codeFormationDiplome" as value
   ${from}
@@ -385,50 +389,10 @@ const findFiltersInDb = async ({
     dispositifs: (await dispositifs).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
-    // formations: formations.map(cleanNull),
   };
 };
 
-const findReferencesInDb = async ({ codeRegion }: { codeRegion: string[] }) => {
-  const references = await db.sql<
-    SQL,
-    {
-      tauxPoursuiteEtudes: number;
-      tauxInsertion: number;
-      codeNiveauDiplome: string;
-    }[]
-  >`
-  SELECT
-    "niveauDiplome"."codeNiveauDiplome",
-    (100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes",
-    (100 * SUM("indicateurSortie"."nbInsertion6mois") / SUM("indicateurSortie"."nbSortants")) as "tauxInsertion"
-  FROM formation
-  LEFT JOIN "formationEtablissement"
-      ON "formationEtablissement"."cfd" = "formation"."codeFormationDiplome"
-  LEFT JOIN dispositif
-      ON "dispositif"."codeDispositif" = "formationEtablissement"."dispositifId"
-  LEFT JOIN "familleMetier" 
-      ON "formation"."codeFormationDiplome" = "familleMetier"."cfdSpecialite"
-  LEFT JOIN "niveauDiplome"
-      ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
-  LEFT JOIN "indicateurEntree"
-      ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
-  LEFT JOIN "indicateurSortie"
-      ON "indicateurSortie"."formationEtablissementId" = "formationEtablissement"."id" 
-      AND "indicateurSortie"."millesimeSortie" = '2020_2021'
-  LEFT JOIN "etablissement"
-      ON "etablissement"."UAI" = "formationEtablissement"."UAI"
-  LEFT JOIN "region"
-      ON "region"."codeRegion" = "etablissement"."codeRegion"
-  WHERE "region"."codeRegion" IN (${db.vals(codeRegion)})
-  GROUP BY "niveauDiplome"."codeNiveauDiplome"
-  `.run(pool);
-
-  return references;
-};
-
 export const dependencies = {
-  findFormationsInDb,
+  findEtablissementsInDb,
   findFiltersInDb,
-  findReferencesInDb,
 };
