@@ -11530,6 +11530,8 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "shared@workspace:shared"
   dependencies:
+    "@sinclair/typebox": ^0.25.21
+    axios: 1.3.5
     react: 18.2.0
   languageName: unknown
   linkType: soft
