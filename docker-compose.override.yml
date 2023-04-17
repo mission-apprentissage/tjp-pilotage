@@ -1,6 +1,14 @@
 # Override containers for local / dev environnement
 version: "2.4"
 services:
+  repo_modules:
+    restart: "no"
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    volumes:
+      - ./:/app/:z
+
   reverse_proxy:
     volumes:
       - pilotage_nginx_data:/data:z
@@ -22,6 +30,8 @@ services:
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
+    depends_on:
+      - server
   server:
     restart: "no"
     ports:
@@ -48,6 +58,9 @@ services:
           - "5432:5432"
       volumes:
           - pilotage_postgres_data:/var/lib/postgresql/data:z
+      depends_on:
+          repo_modules:
+              condition: service_completed_successfully
 
 volumes:
   pilotage_postgres_data:

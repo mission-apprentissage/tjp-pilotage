@@ -55,7 +55,6 @@ const getEtablissementsFactory =
       commune,
       cfd,
       cfdFamille,
-      uai,
     });
 
     const { filters, count, etablissements } = {
