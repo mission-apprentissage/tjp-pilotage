@@ -63,12 +63,16 @@ const findEtablissement = async ({
 const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
   return (
     await db
-      .select("rawData", {
-        type: "Cab-nbre_division_effectifs_par_etab_mefst11",
-        data: db.sql`${db.self}@>${db.param({
-          "Mef Bcp 11": mefStat11,
-        })}`,
-      })
+      .select(
+        "rawData",
+        {
+          type: "Cab-nbre_division_effectifs_par_etab_mefst11",
+          data: db.sql`${db.self}@>${db.param({
+            "Mef Bcp 11": mefStat11,
+          })}`,
+        },
+        { order: { by: "data", direction: "ASC" } }
+      )
       .run(pool)
   ).map((item) => item.data as Cab_bre_division_effectifs_par_etab_mefst11);
 };
@@ -95,12 +99,16 @@ const findDepartement = async ({
 const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
     await db
-      .select("rawData", {
-        type: "nMef",
-        data: db.sql`${db.self}@>${db.param({
-          FORMATION_DIPLOME: cfd,
-        })}`,
-      })
+      .select(
+        "rawData",
+        {
+          type: "nMef",
+          data: db.sql`${db.self}@>${db.param({
+            FORMATION_DIPLOME: cfd,
+          })}`,
+        },
+        { order: { by: "data", direction: "ASC" } }
+      )
       .run(pool)
   ).map((item) => item.data as NMefLine);
 
