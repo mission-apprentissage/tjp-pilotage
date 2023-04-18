@@ -61,6 +61,7 @@ const findFormationsInDb = async ({
         COUNT(*) OVER() as count,
         "formation".*, 
         "libelleOfficielFamille",
+        "dispositifId",
         "libelleDispositif",
         "libelleNiveauDiplome",
         COUNT(etablissement.*) as "nbEtablissement", 
@@ -139,6 +140,7 @@ const findFormationsInDb = async ({
         "libelleOfficielFamille",
         "indicateurEntree"."millesimeEntree",
         "libelleDispositif",
+        "dispositifId",
         "libelleOfficielFamille",
         "libelleNiveauDiplome"
     ${

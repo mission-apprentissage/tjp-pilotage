@@ -219,7 +219,7 @@ export default function Etablissements() {
             <Tbody>
               {data?.etablissements.map((line) => (
                 <Tr
-                  key={`${line.UAI}_${line.libelleDispositif}_${line.codeFormationDiplome}`}
+                  key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
                   <Td>{line.libelleEtablissement ?? "-"}</Td>
                   <Td>{line.commune ?? "-"}</Td>

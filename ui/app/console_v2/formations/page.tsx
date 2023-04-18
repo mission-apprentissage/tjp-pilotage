@@ -223,7 +223,7 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Tr key={`${line.libelleDiplome}_${line.libelleDispositif}`}>
+                <Tr key={`${line.codeFormationDiplome}_${line.dispositifId}`}>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
                   <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>

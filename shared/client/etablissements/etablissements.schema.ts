@@ -54,6 +54,7 @@ export const etablissementSchemas = {
             libelleDiplome: Type.String(),
             codeNiveauDiplome: Type.String(),
             libelleOfficielFamille: Type.Optional(Type.String()),
+            dispositifId: Type.Optional(Type.String()),
             libelleDispositif: Type.Optional(Type.String()),
             libelleNiveauDiplome: Type.String(),
             capacite: Type.Optional(Type.Number()),

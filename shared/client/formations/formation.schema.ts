@@ -56,6 +56,7 @@ export const formationSchemas = {
             // dateOuverture: Type.Optional(Type.String()),
             // dateFermeture: Type.Optional(Type.String()),
             libelleOfficielFamille: Type.Optional(Type.String()),
+            dispositifId: Type.Optional(Type.String()),
             libelleDispositif: Type.Optional(Type.String()),
             libelleNiveauDiplome: Type.String(),
             nbEtablissement: Type.Optional(Type.Number()),

@@ -30,6 +30,8 @@ services:
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
+    environment:
+      - NEXT_PUBLIC_SERVER_URL=http://localhost/api
     depends_on:
       - server
   server:
