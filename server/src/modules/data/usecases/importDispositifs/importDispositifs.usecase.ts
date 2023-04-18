@@ -21,6 +21,7 @@ const importDispositifsFactory =
       (count) => findNDispositifFormation({ offset: count, limit: 30 }),
       async (item) => {
         const dispositif = toDispositif(item);
+        console.log(dispositif);
         await createDispositif(dispositif);
       }
     );

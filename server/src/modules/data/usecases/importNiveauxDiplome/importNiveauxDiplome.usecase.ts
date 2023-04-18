@@ -20,7 +20,7 @@ export const importNiveauxDiplomeFactory =
     createNiveauDiplome = dependencies.createNiveauDiplome,
   }) =>
   async () => {
-    streamIt(
+    await streamIt(
       (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
       async (nNiveauDiplome) => {
         const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
