@@ -7,18 +7,37 @@ import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { theme } from "../theme/theme";
 import { Header } from "./components/Header";
+
+const useTracking = () => {
+  const searchParams = useSearchParams();
+  const param = searchParams.get("notracking");
+  const noTracking = useRef(
+    param !== "reset" &&
+      (!!param || localStorage.getItem("notracking") === "true")
+  );
+  useEffect(() => {
+    if (param === "reset") {
+      localStorage.removeItem("notracking");
+      return;
+    }
+    if (param) {
+      localStorage.setItem("notracking", "true");
+    }
+  }, [param]);
+  if (process.env.NEXT_PUBLIC_ENV !== "production") return false;
+  return !!noTracking.current;
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const tracking = useRef(searchParams.get("notracking") !== "true");
+  const tracking = useTracking();
   const queryClient = new QueryClient();
 
   return (
@@ -26,7 +45,7 @@ export default function RootLayout({
       <head>
         <PlausibleProvider
           trackLocalhost={false}
-          enabled={tracking.current}
+          enabled={tracking}
           domain="pilotage-recette.trajectoirespro.beta.gouv.fr"
         />
       </head>
