@@ -1,10 +1,3 @@
-ARG NEXT_PUBLIC_ENV
-ARG NEXT_PUBLIC_BASE_URL
-ARG NEXT_PUBLIC_BASE_HOST
-ARG NEXT_PUBLIC_METABASE_URL
-ARG NEXT_PUBLIC_METABASE_SECRET_KEY
-ARG NEXT_PUBLIC_SERVER_URL
-
 # Install dependencies only when needed
 FROM node:18-alpine AS deps
 # Check https://github.com/nodejs/docker-node/tree/b4117f9333da4138b03a546ec926ef50a31506c3#nodealpine to understand why libc6-compat might be needed.
@@ -25,6 +18,13 @@ COPY --from=deps /app/. .
 # Learn more here: https://nextjs.org/telemetry
 # Uncomment the following line in case you want to disable telemetry during the build.
 ENV NEXT_TELEMETRY_DISABLED 1
+
+ARG NEXT_PUBLIC_ENV
+ARG NEXT_PUBLIC_BASE_URL
+ARG NEXT_PUBLIC_BASE_HOST
+ARG NEXT_PUBLIC_METABASE_URL
+ARG NEXT_PUBLIC_METABASE_SECRET_KEY
+ARG NEXT_PUBLIC_SERVER_URL
 # Map arguments to react-scripts env variables
 ENV NEXT_PUBLIC_ENV=$NEXT_PUBLIC_ENV
 ENV NEXT_PUBLIC_BASE_URL=$NEXT_PUBLIC_BASE_URL
