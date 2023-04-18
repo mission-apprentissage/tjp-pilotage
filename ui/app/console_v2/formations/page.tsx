@@ -23,7 +23,7 @@ import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
 
-type Query = Awaited<Parameters<typeof api.getFormations>[0]["query"]>;
+type Query = Parameters<typeof api.getFormations>[0]["query"];
 
 type Filters = Pick<
   Query,
@@ -65,6 +65,7 @@ export default function Formations() {
         ...filters,
         ...order,
         offset: page * PAGE_SIZE,
+        limit: PAGE_SIZE,
       }),
   });
 
@@ -136,33 +137,33 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           width="52"
+          onChange={(selected) => handleFilters("cfdFamille", selected)}
+          options={data?.filters.familles}
+        >
+          Famille
+        </Multiselect>{" "}
+        <Multiselect
+          width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
         >
           Formation
         </Multiselect>
-        <Multiselect
-          width="52"
-          onChange={(selected) => handleFilters("cfdFamille", selected)}
-          options={data?.filters.familles}
-        >
-          Famille
-        </Multiselect>
       </Flex>
 
-      <>
+      <Flex direction="column" flex={1} position="relative" minH="0">
+        {isFetching && (
+          <Center
+            height="100%"
+            width="100%"
+            position="absolute"
+            bg="rgb(255,255,255,0.8)"
+            zIndex="1"
+          >
+            <Spinner />
+          </Center>
+        )}
         <TableContainer overflowY="auto" flex={1} position="relative">
-          {isFetching && (
-            <Center
-              height="100%"
-              width="100%"
-              position="absolute"
-              bg="rgb(255,255,255,0.8)"
-              zIndex="1"
-            >
-              <Spinner />
-            </Center>
-          )}
           <Table variant="simple" size={"sm"}>
             <Thead
               position="sticky"
@@ -186,7 +187,7 @@ export default function Formations() {
                   onClick={() => handleOrder("nbEtablissement")}
                 >
                   <OrderIcon {...order} column="nbEtablissement" />
-                  nb Etab
+                  Nb Etab
                 </Th>
                 <Th
                   isNumeric
@@ -194,7 +195,7 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif")}
                 >
                   <OrderIcon {...order} column="effectif" />
-                  effectif
+                  Effectif
                 </Th>
                 <Th
                   isNumeric
@@ -248,18 +249,18 @@ export default function Formations() {
             </Tbody>
           </Table>
         </TableContainer>
-        <TableFooter
-          downloadLink={
-            api.getFormationsCsv({
-              query: { ...filters, ...order },
-            }).url
-          }
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={data?.count}
-          onPageChange={setPage}
-        />
-      </>
+      </Flex>
+      <TableFooter
+        downloadLink={
+          api.getFormationsCsv({
+            query: { ...filters, ...order },
+          }).url
+        }
+        page={page}
+        pageSize={PAGE_SIZE}
+        count={data?.count}
+        onPageChange={setPage}
+      />
     </>
   );
 }

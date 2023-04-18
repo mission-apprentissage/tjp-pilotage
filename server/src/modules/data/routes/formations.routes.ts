@@ -14,7 +14,6 @@ export const formationsRoutes = ({ server }: { server: Server }) => {
         ...rest,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
-      //@ts-ignore
       response.status(200).send(formations);
     }
   );

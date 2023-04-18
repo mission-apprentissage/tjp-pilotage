@@ -14,16 +14,11 @@ const FiltersSchema = Type.Object({
   codeDiplome: Type.Optional(Type.Array(Type.String())),
   codeDispositif: Type.Optional(Type.Array(Type.String())),
   cfdFamille: Type.Optional(Type.Array(Type.String())),
+  secteur: Type.Optional(Type.Array(Type.String())),
   uai: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(
-    Type.Union([
-      Type.Literal("libelleDiplome"),
-      Type.Literal("effectif"),
-      Type.Literal("nbEtablissement"),
-      Type.Literal("tauxInsertion6mois"),
-      Type.Literal("tauxPoursuiteEtudes"),
-    ])
+    Type.Union([Type.Literal("libelleDiplome"), Type.Literal("effectif")])
   ),
 });
 
@@ -52,6 +47,8 @@ export const etablissementSchemas = {
         etablissements: Type.Array(
           Type.Object({
             libelleEtablissement: Type.Optional(Type.String()),
+            UAI: Type.Optional(Type.String()),
+            secteur: Type.Optional(Type.String()),
             commune: Type.Optional(Type.String()),
             codeFormationDiplome: Type.String(),
             libelleDiplome: Type.String(),
@@ -62,6 +59,8 @@ export const etablissementSchemas = {
             capacite: Type.Optional(Type.Number()),
             effectif: Type.Optional(Type.Number()),
             tauxRemplissage: Type.Optional(Type.Number()),
+            tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+            valeurAjoutee: Type.Optional(Type.Number()),
           })
         ),
       }),

@@ -206,8 +206,8 @@ const findFiltersInDb = async ({
   const regions = db.sql<
     SQL,
     {
-      label: schema.region.Selectable;
-      value: schema.region.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "region"."libelleRegion" as label, "region"."codeRegion" as value
     ${from}
@@ -232,8 +232,8 @@ const findFiltersInDb = async ({
   const academies = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "academie"."libelle" as label, "academie"."codeAcademie" as value
     ${from}
@@ -256,8 +256,8 @@ const findFiltersInDb = async ({
   const departements = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "departement"."libelle" as label, "departement"."codeDepartement" as value
     ${from}
@@ -280,8 +280,8 @@ const findFiltersInDb = async ({
   const communes = db.sql<
     SQL,
     {
-      label: schema.academie.Selectable;
-      value: schema.academie.Selectable;
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "etablissement"."commune" as label, "etablissement"."commune" as value
     ${from}
@@ -306,8 +306,8 @@ const findFiltersInDb = async ({
   const diplomes = db.sql<
     SQL,
     {
-      label: schema.niveauDiplome.Selectable["libelleNiveauDiplome"];
-      value: schema.niveauDiplome.Selectable["codeNiveauDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "niveauDiplome"."libelleNiveauDiplome" as label, "niveauDiplome"."codeNiveauDiplome" as value
     ${from}
@@ -332,8 +332,8 @@ const findFiltersInDb = async ({
   const dispositifs = db.sql<
     SQL,
     {
-      label: schema.niveauDiplome.Selectable["libelleNiveauDiplome"];
-      value: schema.niveauDiplome.Selectable["codeNiveauDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "dispositif"."libelleDispositif" as label, "dispositif"."codeDispositif" as value
     ${from}
@@ -350,8 +350,8 @@ const findFiltersInDb = async ({
   const familles = db.sql<
     SQL,
     {
-      label: schema.familleMetier.Selectable["libelleOfficielFamille"];
-      value: schema.familleMetier.Selectable["cfdFamille"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "familleMetier"."libelleOfficielFamille" as label, "familleMetier"."cfdFamille" as "value"
     ${from}
@@ -361,8 +361,8 @@ const findFiltersInDb = async ({
   const formations = db.sql<
     SQL,
     {
-      label: schema.formation.Selectable["libelleDiplome"];
-      value: schema.formation.Selectable["codeFormationDiplome"];
+      label: string;
+      value: string;
     }[]
   >`SELECT DISTINCT "formation"."libelleDiplome" as label, "formation"."codeFormationDiplome" as value
   ${from}

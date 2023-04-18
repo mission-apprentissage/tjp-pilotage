@@ -1,6 +1,3 @@
-/* eslint-disable unused-imports/no-unused-vars */
-//@ts-nocheck
-
 "use client";
 
 import {
@@ -16,17 +13,17 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
 import { api } from "@/api.client";
+import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 
-type Query = Awaited<Parameters<typeof api.getEtablissements.call>[0]["query"]>;
+type Query = Parameters<typeof api.getEtablissements>[0]["query"];
 
 type Filters = Pick<
   Query,
@@ -39,7 +36,10 @@ type Filters = Pick<
   | "codeRegion"
   | "commune"
   | "uai"
+  | "secteur"
 >;
+
+type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
 
@@ -49,7 +49,6 @@ const fetchEtablissements = async (query: Query) =>
 export default function Etablissements() {
   const [page, setPage] = useState(0);
 
-  //@ts-ignore
   const [order, setOrder] = useState<{
     orderBy?: Query["orderBy"];
     order?: Query["order"];
@@ -57,9 +56,7 @@ export default function Etablissements() {
     order: "asc",
   });
 
-  const params = useSearchParams();
-
-  const [filters, setFilters] = useState<Filters>(new Map());
+  const [filters, setFilters] = useState<Filters>({});
 
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
@@ -74,6 +71,17 @@ export default function Etablissements() {
       });
     },
   });
+
+  const handleOrder = (column: Order["orderBy"]) => {
+    if (order?.orderBy !== column) {
+      setOrder({ order: "desc", orderBy: column });
+      return;
+    }
+    setOrder({
+      order: order?.order === "asc" ? "desc" : "asc",
+      orderBy: column,
+    });
+  };
 
   const handleFilters = (
     type: keyof Filters,
@@ -118,6 +126,16 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           width="52"
+          onChange={(selected) => handleFilters("secteur", selected)}
+          options={[
+            { label: "PR", value: "PR" },
+            { label: "PU", value: "PU" },
+          ]}
+        >
+          Secteur
+        </Multiselect>
+        <Multiselect
+          width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
         >
@@ -132,33 +150,33 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           width="52"
-          onChange={(selected) => handleFilters("cfd", selected)}
-          options={data?.filters.formations}
-        >
-          Formation
-        </Multiselect>
-        <Multiselect
-          width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
         >
           Famille
         </Multiselect>
+        <Multiselect
+          width="52"
+          onChange={(selected) => handleFilters("cfd", selected)}
+          options={data?.filters.formations}
+        >
+          Formation
+        </Multiselect>
       </Flex>
 
-      <>
-        <TableContainer overflowY="auto" flex={1} position="relative">
-          {isFetching && (
-            <Center
-              height="100%"
-              width="100%"
-              position="absolute"
-              bg="rgb(255,255,255,0.8)"
-              zIndex="1"
-            >
-              <Spinner />
-            </Center>
-          )}
+      <Flex direction="column" flex={1} position="relative" minH="0">
+        {isFetching && (
+          <Center
+            height="100%"
+            width="100%"
+            position="absolute"
+            bg="rgb(255,255,255,0.8)"
+            zIndex="1"
+          >
+            <Spinner />
+          </Center>
+        )}
+        <TableContainer overflowY="auto">
           <Table variant="simple" size={"sm"}>
             <Thead
               position="sticky"
@@ -171,9 +189,22 @@ export default function Etablissements() {
                 <Th>Nom d'établissement</Th>
                 <Th>Commune</Th>
                 <Th>Diplome</Th>
-                <Th>Formation</Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleDiplome")}
+                >
+                  <OrderIcon {...order} column="libelleDiplome" />
+                  Formation
+                </Th>
                 <Th isNumeric>Capacité</Th>
-                <Th isNumeric>Effectif</Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectif")}
+                >
+                  <OrderIcon {...order} column="effectif" />
+                  Effectif
+                </Th>
                 <Th isNumeric>Tx Remplissage</Th>
                 <Th isNumeric>Tx Pression</Th>
                 <Th isNumeric>Tx Poursuite d'études</Th>
@@ -188,7 +219,7 @@ export default function Etablissements() {
             <Tbody>
               {data?.etablissements.map((line) => (
                 <Tr
-                  key={`${line.libelleEtablissement}_${line.libelleDispositif}_${line.codeFormationDiplome}`}
+                  key={`${line.UAI}_${line.libelleDispositif}_${line.codeFormationDiplome}`}
                 >
                   <Td>{line.libelleEtablissement ?? "-"}</Td>
                   <Td>{line.commune ?? "-"}</Td>
@@ -200,11 +231,13 @@ export default function Etablissements() {
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
                   <Td>-</Td>
+                  <Td isNumeric>
+                    <GraphWrapper value={line.tauxPoursuiteEtudes} />
+                  </Td>
+                  <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
                   <Td isNumeric>-</Td>
-                  <Td isNumeric>-</Td>
-                  <Td isNumeric>-</Td>
-                  <Td>-</Td>
-                  <Td>-</Td>
+                  <Td>{line.secteur ?? "-"} </Td>
+                  <Td>{line.UAI ?? "-"} </Td>
                   <Td>{line.libelleDispositif ?? "-"}</Td>
                   <Td>{line.libelleOfficielFamille ?? "-"}</Td>
                 </Tr>
@@ -212,18 +245,18 @@ export default function Etablissements() {
             </Tbody>
           </Table>
         </TableContainer>
-        <TableFooter
-          downloadLink={
-            api.getEtablissementsCsv({
-              query: { ...filters, ...order },
-            }).url
-          }
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={data?.count}
-          onPageChange={setPage}
-        />
-      </>
+      </Flex>
+      <TableFooter
+        downloadLink={
+          api.getEtablissementsCsv({
+            query: { ...filters, ...order },
+          }).url
+        }
+        page={page}
+        pageSize={PAGE_SIZE}
+        count={data?.count}
+        onPageChange={setPage}
+      />
     </>
   );
 }

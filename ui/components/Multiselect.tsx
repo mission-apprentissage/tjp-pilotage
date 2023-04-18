@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
@@ -191,7 +190,9 @@ export const Multiselect = chakra(
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
                 value={search}
-                onInput={(e) => handleSearch(e.target.value)}
+                onInput={(e) =>
+                  handleSearch((e.target as HTMLInputElement).value)
+                }
                 px="3"
                 py="2"
                 variant="unstyled"
@@ -215,7 +216,10 @@ export const Multiselect = chakra(
                   key={value}
                   checked={!!selected.get(value)}
                   onChange={(e) =>
-                    handleChange({ value, label }, e.target.checked)
+                    handleChange(
+                      { value, label },
+                      (e.target as HTMLInputElement).checked
+                    )
                   }
                   value={value}
                 >

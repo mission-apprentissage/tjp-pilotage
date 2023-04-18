@@ -21,6 +21,7 @@ const findEtablissementsInDb = async ({
   cfdFamille,
   orderBy,
   uai,
+  secteur,
 }: {
   offset?: number;
   limit?: number;
@@ -35,6 +36,7 @@ const findEtablissementsInDb = async ({
   cfd?: string[];
   cfdFamille?: string[];
   uai?: string[];
+  secteur?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}): Promise<{
   count: number;
@@ -56,6 +58,7 @@ const findEtablissementsInDb = async ({
         libelleNiveauDiplome: string;
         nbEtablissement: number;
         effectif: number;
+        valeurAjoutee: number;
       })[]
   >`
     SELECT
@@ -65,10 +68,12 @@ const findEtablissementsInDb = async ({
         "libelleOfficielFamille",
         "libelleDispositif",
         "libelleNiveauDiplome",
-        SUM("indicateurEntree"."effectifEntree") as capacite,
-        SUM("indicateurEntree"."capacite") as effectif,
+        "indicateurEtablissement"."valeurAjoutee" as "valeurAjoutee",
+        SUM("indicateurEntree"."effectifEntree") as effectif,
+        SUM("indicateurEntree"."capacite") as capacite,
         SUM("indicateurSortie"."nbSortants") as "nbSortants",
-        (100* SUM("indicateurEntree"."effectifEntree") / SUM("indicateurEntree"."capacite")) as "tauxRemplissage"
+        (100* SUM("indicateurEntree"."effectifEntree") / SUM("indicateurEntree"."capacite")) as "tauxRemplissage",
+        (100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes"
     FROM "formation"
     LEFT JOIN "formationEtablissement"
         ON "formationEtablissement"."cfd" = "formation"."codeFormationDiplome"
@@ -86,6 +91,9 @@ const findEtablissementsInDb = async ({
         AND "indicateurSortie"."millesimeSortie" = ${db.param(millesimeSortie)}
     LEFT JOIN "etablissement"
         ON "etablissement"."UAI" = "formationEtablissement"."UAI"
+    LEFT JOIN "indicateurEtablissement"
+        ON "indicateurEtablissement"."UAI" = "etablissement"."UAI" 
+        AND "indicateurEtablissement"."millesime" = ${db.param(millesimeSortie)}
     WHERE 
         ${
           codeRegion
@@ -136,15 +144,23 @@ const findEtablissementsInDb = async ({
             : {}
         }
         AND ${uai ? db.sql`"etablissement"."UAI" IN (${db.vals(uai)})` : {}}
+        AND ${
+          secteur
+            ? db.sql`"etablissement"."secteur" IN (${db.vals(secteur)})`
+            : {}
+        }
         AND "codeFormationDiplome" NOT IN (SELECT DISTINCT "ancienCFD" FROM "formationHistorique")
     GROUP BY
         "formation"."id",
         "etablissement"."id",
         "libelleOfficielFamille",
         "indicateurEntree"."millesimeEntree",
+        "indicateurSortie"."millesimeSortie",
         "libelleDispositif",
         "libelleOfficielFamille",
-        "libelleNiveauDiplome"
+        "libelleNiveauDiplome",
+        "indicateurEtablissement"."UAI",
+        "indicateurEtablissement"."millesime"
     ${
       orderBy
         ? db.sql`ORDER BY ${db.cols({ [orderBy.column]: true })} ${

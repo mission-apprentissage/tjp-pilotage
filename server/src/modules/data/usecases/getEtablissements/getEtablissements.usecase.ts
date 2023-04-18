@@ -18,6 +18,7 @@ const getEtablissementsFactory =
     cfd,
     cfdFamille,
     uai,
+    secteur,
   }: {
     offset?: number;
     limit?: number;
@@ -30,6 +31,7 @@ const getEtablissementsFactory =
     cfd?: string[];
     cfdFamille?: string[];
     uai?: string[];
+    secteur?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
     const etablissementsPromise = findEtablissementsInDb({
@@ -45,6 +47,7 @@ const getEtablissementsFactory =
       cfdFamille,
       uai,
       orderBy,
+      secteur,
     });
     const filtersPromise = findFiltersInDb({
       codeRegion,

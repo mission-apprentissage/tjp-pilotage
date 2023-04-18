@@ -26,7 +26,7 @@ services:
         - NEXT_PUBLIC_ENV=dev
         - NEXT_PUBLIC_BASE_URL=http://localhost
         - NEXT_PUBLIC_BASE_HOST=localhost
-        - NEXT_PUBLIC_METABASE_URL=https://pilotage.trajectoirespro.beta.gouv.fr/
+        - NEXT_PUBLIC_METABASE_URL=https://orion.inserjeunes.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
