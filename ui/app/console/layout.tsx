@@ -49,10 +49,10 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         minHeight="0"
       >
         <TabList px={5}>
-          <Tab as={Link} href="/console_v2/formations">
+          <Tab as={Link} href="/console/formations">
             Par formations
           </Tab>
-          <Tab as={Link} href="/console_v2/etablissements">
+          <Tab as={Link} href="/console/etablissements">
             Par établissements
           </Tab>
         </TabList>
