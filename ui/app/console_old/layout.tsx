@@ -1,10 +1,10 @@
 "use client";
 
 import {
-  Box,
   Container,
   Tab,
   TabList,
+  TabPanel,
   TabPanels,
   Tabs,
 } from "@chakra-ui/react";
@@ -43,29 +43,25 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         index={tabIndex}
         display="flex"
         px={5}
-        flex="1"
+        height="100%"
         flexDirection="column"
         variant="enclosed-colored"
-        minHeight="0"
       >
         <TabList px={5}>
-          <Tab as={Link} href="/console_v2/formations">
+          <Tab as={Link} href="/console/formations">
             Par formations
           </Tab>
-          <Tab as={Link} href="/console_v2/etablissements">
+          <Tab as={Link} href="/console/etablissements">
             Par établissements
           </Tab>
         </TabList>
-        <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">
-          <Box
-            p="0"
-            display="flex"
-            flexDirection={"column"}
-            flex="1"
-            minHeight="0"
-          >
+        <TabPanels display="flex" flexDirection="column" flex="1">
+          <TabPanel p="0" height="100%">
             {children}
-          </Box>
+          </TabPanel>
+          <TabPanel p="0" height="100%">
+            {children}
+          </TabPanel>
         </TabPanels>
       </Tabs>
     </>
