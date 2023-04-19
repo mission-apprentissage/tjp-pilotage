@@ -18,7 +18,17 @@ const FiltersSchema = Type.Object({
   uai: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(
-    Type.Union([Type.Literal("libelleDiplome"), Type.Literal("effectif")])
+    Type.Union([
+      Type.Literal("libelleDiplome"),
+      Type.Literal("effectif"),
+      Type.Literal("libelleEtablissement"),
+      Type.Literal("commune"),
+      Type.Literal("capacite"),
+      Type.Literal("effectif"),
+      Type.Literal("tauxRemplissage"),
+      Type.Literal("tauxPoursuiteEtudes"),
+      Type.Literal("valeurAjoutee"),
+    ])
   ),
 });
 

@@ -167,11 +167,12 @@ const findEtablissementsInDb = async ({
       orderBy
         ? db.sql`ORDER BY ${db.cols({ [orderBy.column]: true })} ${
             orderBy.order === "asc"
-              ? db.sql`ASC NULLS FIRST`
-              : db.sql`DESC NULLS LAST`
+              ? db.sql`ASC NULLS LAST,`
+              : db.sql`DESC NULLS LAST,`
           }`
-        : db.sql`ORDER BY "etablissement"."libelleEtablissement" ASC`
-    },
+        : db.sql`ORDER BY`
+    }
+    "etablissement"."libelleEtablissement" ASC,
     "formation"."libelleDiplome" ASC,
     "libelleNiveauDiplome" asc,
     "effectif" DESC,

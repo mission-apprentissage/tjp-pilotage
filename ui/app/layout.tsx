@@ -17,7 +17,9 @@ const useTracking = () => {
   const param = searchParams.get("notracking");
   const noTracking = useRef(
     param !== "reset" &&
-      (!!param || localStorage.getItem("notracking") === "true")
+      (!!param ||
+        (typeof localStorage !== "undefined" &&
+          localStorage.getItem("notracking") === "true"))
   );
   useEffect(() => {
     if (param === "reset") {

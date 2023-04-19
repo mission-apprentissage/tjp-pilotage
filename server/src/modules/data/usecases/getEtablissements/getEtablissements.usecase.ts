@@ -34,6 +34,7 @@ const getEtablissementsFactory =
     secteur?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
+    console.log(orderBy);
     const etablissementsPromise = findEtablissementsInDb({
       offset,
       limit,

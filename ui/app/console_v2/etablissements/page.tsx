@@ -194,8 +194,17 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
-                <Th>{ETABLISSEMENTS_COLUMNS.libelleEtablissement}</Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.commune}</Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleEtablissement")}
+                >
+                  <OrderIcon {...order} column="libelleEtablissement" />
+                  {ETABLISSEMENTS_COLUMNS.libelleEtablissement}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("commune")}>
+                  <OrderIcon {...order} column="commune" />
+                  {ETABLISSEMENTS_COLUMNS.commune}
+                </Th>
                 <Th>{ETABLISSEMENTS_COLUMNS.libelleNiveauDiplome}</Th>
                 <Th
                   cursor="pointer"
@@ -204,7 +213,14 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="libelleDiplome" />
                   {ETABLISSEMENTS_COLUMNS.libelleDiplome}
                 </Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.capacite}</Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("capacite")}
+                >
+                  <OrderIcon {...order} column="capacite" />
+                  {ETABLISSEMENTS_COLUMNS.capacite}
+                </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -213,10 +229,31 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="effectif" />
                   {ETABLISSEMENTS_COLUMNS.effectif}
                 </Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxRemplissage}</Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxRemplissage")}
+                >
+                  <OrderIcon {...order} column="tauxRemplissage" />
+                  {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
+                </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPression}</Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtudes}</Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.valeurAjoutee}</Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                >
+                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtudes}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("valeurAjoutee")}
+                >
+                  <OrderIcon {...order} column="valeurAjoutee" />
+                  {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
+                </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
                 <Th>{ETABLISSEMENTS_COLUMNS.secteur}</Th>
                 <Th>{ETABLISSEMENTS_COLUMNS.UAI}</Th>
