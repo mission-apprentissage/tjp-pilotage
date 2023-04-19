@@ -43,6 +43,7 @@ export const etablissementSchemas = {
           dispositifs: Type.Array(OptionSchema),
           familles: Type.Array(OptionSchema),
           formations: Type.Array(OptionSchema),
+          etablissements: Type.Array(OptionSchema),
         }),
         etablissements: Type.Array(
           Type.Object({

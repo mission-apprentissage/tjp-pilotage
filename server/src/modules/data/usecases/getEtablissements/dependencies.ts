@@ -398,6 +398,41 @@ const findFiltersInDb = async ({
   }}
   ORDER BY "formation"."libelleDiplome" ASC`.run(pool);
 
+  const etablissements = db.sql<
+    SQL,
+    {
+      label: string;
+      value: string;
+    }[]
+  >`SELECT DISTINCT "etablissement"."libelleEtablissement" as label, "etablissement"."UAI" as value
+  ${from}
+  AND ${{
+    UAI: db.sql`"etablissement"."UAI" IS NOT NULL`,
+    ...(cfdFamille && {
+      cfdFamille: db.sql`"familleMetier"."cfdFamille" IN (${db.vals(
+        cfdFamille
+      )})`,
+    }),
+    ...(codeRegion && {
+      codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
+    }),
+    ...(codeAcademie && {
+      codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
+        codeAcademie
+      )})`,
+    }),
+    ...(codeDepartement && {
+      codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
+        codeDepartement
+      )})`,
+    }),
+    ...(commune && {
+      commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
+    }),
+  }}
+  AND ${{ UAI: db.sql`"etablissement"."UAI" IS NOT NULL` }}
+  ORDER BY "etablissement"."libelleEtablissement" ASC`.run(pool);
+
   return await {
     regions: (await regions).map(cleanNull),
     departements: (await departements).map(cleanNull),
@@ -407,6 +442,7 @@ const findFiltersInDb = async ({
     dispositifs: (await dispositifs).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
+    etablissements: (await etablissements).map(cleanNull),
   };
 };
 

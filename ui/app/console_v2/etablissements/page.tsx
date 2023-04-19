@@ -150,6 +150,13 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           width="52"
+          onChange={(selected) => handleFilters("uai", selected)}
+          options={data?.filters.etablissements}
+        >
+          Etablissement
+        </Multiselect>
+        <Multiselect
+          width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
         >
@@ -210,8 +217,8 @@ export default function Etablissements() {
                 <Th isNumeric>Tx Poursuite d'études</Th>
                 <Th isNumeric>Valeur ajoutée</Th>
                 <Th isNumeric>Décrochage</Th>
-                <Th isNumeric>Secteur</Th>
-                <Th isNumeric>UAI</Th>
+                <Th>Secteur</Th>
+                <Th>UAI</Th>
                 <Th>Dispositif</Th>
                 <Th>Famille de métier</Th>
               </Tr>
@@ -230,7 +237,7 @@ export default function Etablissements() {
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
-                  <Td>-</Td>
+                  <Td isNumeric>-</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxPoursuiteEtudes} />
                   </Td>
