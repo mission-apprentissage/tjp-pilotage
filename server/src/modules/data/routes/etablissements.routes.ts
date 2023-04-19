@@ -1,6 +1,6 @@
 //@ts-ignore
 import { Parser } from "@json2csv/plainjs";
-import { ROUTES_CONFIG } from "shared";
+import { ETABLISSEMENTS_COLUMNS, ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { getEtablissements } from "../usecases/getEtablissements/getEtablissements.usecase";
@@ -29,7 +29,14 @@ export const etablissementsRoutes = ({ server }: { server: Server }) => {
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
-      const parser = new Parser();
+      const parser = new Parser({
+        fields: Object.entries(ETABLISSEMENTS_COLUMNS).map(
+          ([value, label]) => ({
+            label,
+            value,
+          })
+        ),
+      });
       const csv = parser.parse(etablissements.etablissements);
       response
         .status(200)

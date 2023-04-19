@@ -15,6 +15,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
@@ -173,13 +174,13 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th>Diplome</Th>
+                <Th>{FORMATIONS_COLUMNS.libelleNiveauDiplome}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDiplome")}
                 >
                   <OrderIcon {...order} column="libelleDiplome" />
-                  Formation
+                  {FORMATIONS_COLUMNS.libelleDiplome}
                 </Th>
                 <Th
                   isNumeric
@@ -187,7 +188,7 @@ export default function Formations() {
                   onClick={() => handleOrder("nbEtablissement")}
                 >
                   <OrderIcon {...order} column="nbEtablissement" />
-                  Nb Etab
+                  {FORMATIONS_COLUMNS.nbEtablissement}
                 </Th>
                 <Th
                   isNumeric
@@ -195,7 +196,7 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif")}
                 >
                   <OrderIcon {...order} column="effectif" />
-                  Effectif
+                  {FORMATIONS_COLUMNS.effectif}
                 </Th>
                 <Th
                   isNumeric
@@ -203,7 +204,7 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxInsertion6mois")}
                 >
                   <OrderIcon {...order} column="tauxInsertion6mois" />
-                  Tx d'emploi 6 mois
+                  {FORMATIONS_COLUMNS.tauxInsertion6mois}
                 </Th>
                 <Th isNumeric>Delta régional insertion</Th>
                 <Th
@@ -212,13 +213,13 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxPoursuiteEtudes")}
                 >
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  Tx de poursuite d'études
+                  {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
-                <Th isNumeric>Delta régional poursuite</Th>
-                <Th>Dispositif</Th>
-                <Th>Famille de métiers</Th>
-                <Th>codeFormationDiplome</Th>
-                <Th>Décrochage</Th>
+                <Th isNumeric>{FORMATIONS_COLUMNS.deltaPoursuiteEtudes}</Th>
+                <Th>{FORMATIONS_COLUMNS.libelleDispositif}</Th>
+                <Th>{FORMATIONS_COLUMNS.libelleOfficielFamille}</Th>
+                <Th>{FORMATIONS_COLUMNS.CodeFormationDiplome}</Th>
+                <Th>{FORMATIONS_COLUMNS.decrochage}</Th>
               </Tr>
             </Thead>
             <Tbody>

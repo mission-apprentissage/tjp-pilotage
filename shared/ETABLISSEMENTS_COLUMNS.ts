@@ -1,0 +1,17 @@
+export const ETABLISSEMENTS_COLUMNS = {
+  libelleEtablissement: "Nom D'établissement",
+  commune: "Commune",
+  libelleNiveauDiplome: "Diplome",
+  libelleDiplome: "Formation",
+  capacite: "Capacité",
+  effectif: "Effectif",
+  tauxRemplissage: "Tx Remplissage",
+  tauxPression: "Tx Pression",
+  tauxPoursuiteEtudes: "Tx De Poursuite D'études",
+  valeurAjoutee: "Valeur ajoutée",
+  decrochage: "Décrochage",
+  secteur: "secteur",
+  UAI: "UAI",
+  libelleDispositif: "Dispositif",
+  libelleOfficielFamille: "	Famille De Métiers",
+} as const;

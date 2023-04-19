@@ -15,6 +15,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { ETABLISSEMENTS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -193,34 +194,34 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
-                <Th>Nom d'établissement</Th>
-                <Th>Commune</Th>
-                <Th>Diplome</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.libelleEtablissement}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.commune}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.libelleNiveauDiplome}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDiplome")}
                 >
                   <OrderIcon {...order} column="libelleDiplome" />
-                  Formation
+                  {ETABLISSEMENTS_COLUMNS.libelleDiplome}
                 </Th>
-                <Th isNumeric>Capacité</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.capacite}</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("effectif")}
                 >
                   <OrderIcon {...order} column="effectif" />
-                  Effectif
+                  {ETABLISSEMENTS_COLUMNS.effectif}
                 </Th>
-                <Th isNumeric>Tx Remplissage</Th>
-                <Th isNumeric>Tx Pression</Th>
-                <Th isNumeric>Tx Poursuite d'études</Th>
-                <Th isNumeric>Valeur ajoutée</Th>
-                <Th isNumeric>Décrochage</Th>
-                <Th>Secteur</Th>
-                <Th>UAI</Th>
-                <Th>Dispositif</Th>
-                <Th>Famille de métier</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxRemplissage}</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPression}</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtudes}</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.valeurAjoutee}</Th>
+                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.secteur}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.UAI}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.libelleDispositif}</Th>
+                <Th>{ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}</Th>
               </Tr>
             </Thead>
             <Tbody>
