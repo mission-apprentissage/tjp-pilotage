@@ -22,8 +22,6 @@ import {
 } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
-import { LoadingContent } from "./LoadingContent";
-
 const ButtonContent = ({
   selected,
   children,
@@ -213,6 +211,9 @@ export const Multiselect = chakra(
       selected,
     ]);
     const ref = useRef<HTMLDivElement>(null);
+    const inputRef = useRef<HTMLInputElement>(null);
+
+    const [limit, setLimit] = useState(150);
 
     return (
       <Menu
@@ -222,7 +223,9 @@ export const Multiselect = chakra(
             prepareOptions();
             handleSearch("");
           });
+          setTimeout(() => inputRef.current?.focus(), 100);
         }}
+        onClose={() => setLimit(150)}
         closeOnSelect={false}
       >
         <MenuButton
@@ -238,38 +241,48 @@ export const Multiselect = chakra(
         </MenuButton>
         <Portal>
           <MenuList maxWidth={450} pt="0">
-            <LoadingContent>
-              <Box borderBottom="1px solid" borderBottomColor="grey.900">
-                <Input
-                  placeholder="Rechercher dans la liste"
-                  value={search}
-                  onInput={(e) =>
-                    handleSearch((e.target as HTMLInputElement).value)
-                  }
-                  px="3"
-                  py="2"
-                  variant="unstyled"
-                />
-              </Box>
-              <Flex
-                direction="column"
-                ref={ref}
-                maxHeight={300}
-                overflow="auto"
-                sx={{ "> *": { px: "3", py: "1.5" } }}
-              >
-                {filteredOptions.map(({ value, label }) => (
-                  <InputWapper
-                    key={value}
-                    checked={!!selected.get(value)}
-                    onChange={dispatch}
-                    value={value}
+            <Box borderBottom="1px solid" borderBottomColor="grey.900">
+              <Input
+                ref={inputRef}
+                placeholder="Rechercher dans la liste"
+                value={search}
+                onInput={(e) =>
+                  handleSearch((e.target as HTMLInputElement).value)
+                }
+                px="3"
+                py="2"
+                variant="unstyled"
+              />
+            </Box>
+            <Flex
+              direction="column"
+              ref={ref}
+              maxHeight={300}
+              overflow="auto"
+              sx={{ "> *": { px: "3", py: "1.5" } }}
+            >
+              {filteredOptions.slice(0, limit).map(({ value, label }) => (
+                <InputWapper
+                  key={value}
+                  checked={!!selected.get(value)}
+                  onChange={dispatch}
+                  value={value}
+                >
+                  {label}
+                </InputWapper>
+              ))}
+              {filteredOptions.length > limit && (
+                <Box px="3">
+                  <Button
+                    size="sm"
+                    w="100%"
+                    onClick={() => setLimit(limit + 100)}
                   >
-                    {label}
-                  </InputWapper>
-                ))}
-              </Flex>
-            </LoadingContent>
+                    Afficher plus
+                  </Button>
+                </Box>
+              )}
+            </Flex>
           </MenuList>
         </Portal>
       </Menu>
