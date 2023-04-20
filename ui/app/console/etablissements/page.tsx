@@ -33,7 +33,6 @@ type Filters = Pick<
   | "codeAcademie"
   | "codeDepartement"
   | "codeDiplome"
-  | "codeDispositif"
   | "codeRegion"
   | "commune"
   | "uai"
@@ -73,7 +72,7 @@ export default function Etablissements() {
     },
   });
 
-  const handleOrder = (column: Order["orderBy"]) => {
+  const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -144,13 +143,6 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           width="52"
-          onChange={(selected) => handleFilters("codeDispositif", selected)}
-          options={data?.filters.dispositifs}
-        >
-          Dispositif
-        </Multiselect>
-        <Multiselect
-          width="52"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
         >
@@ -205,7 +197,17 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="commune" />
                   {ETABLISSEMENTS_COLUMNS.commune}
                 </Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.libelleNiveauDiplome}</Th>
+                <Th cursor="pointer" onClick={() => handleOrder("departement")}>
+                  <OrderIcon {...order} column="departement" />
+                  {ETABLISSEMENTS_COLUMNS.departement}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleNiveauDiplome")}
+                >
+                  <OrderIcon {...order} column="libelleNiveauDiplome" />
+                  {ETABLISSEMENTS_COLUMNS.libelleNiveauDiplome}
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDiplome")}
@@ -255,10 +257,28 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
                 </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.secteur}</Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.UAI}</Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.libelleDispositif}</Th>
-                <Th>{ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}</Th>
+                <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
+                  <OrderIcon {...order} column="secteur" />
+                  {ETABLISSEMENTS_COLUMNS.secteur}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("UAI")}>
+                  <OrderIcon {...order} column="UAI" />
+                  {ETABLISSEMENTS_COLUMNS.UAI}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleDispositif")}
+                >
+                  <OrderIcon {...order} column="libelleDispositif" />
+                  {ETABLISSEMENTS_COLUMNS.libelleDispositif}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleOfficielFamille")}
+                >
+                  <OrderIcon {...order} column="libelleOfficielFamille" />
+                  {ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -268,6 +288,7 @@ export default function Etablissements() {
                 >
                   <Td>{line.libelleEtablissement ?? "-"}</Td>
                   <Td>{line.commune ?? "-"}</Td>
+                  <Td>{line.departement ?? "-"}</Td>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
                   <Td isNumeric>{line.capacite ?? "-"}</Td>

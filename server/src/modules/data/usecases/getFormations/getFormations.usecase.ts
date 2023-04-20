@@ -6,19 +6,7 @@ const getFormationsFactory =
     findFiltersInDb = dependencies.findFiltersInDb,
     findReferencesInDb = dependencies.findReferencesInDb,
   }) =>
-  async ({
-    offset,
-    limit,
-    orderBy,
-    codeRegion,
-    codeAcademie,
-    codeDepartement,
-    codeDiplome,
-    codeDispositif,
-    commune,
-    cfd,
-    cfdFamille,
-  }: {
+  async (activeFilters: {
     offset?: number;
     limit?: number;
     codeRegion?: string[];
@@ -31,30 +19,10 @@ const getFormationsFactory =
     cfdFamille?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
-    const formationsPromise = findFormationsInDb({
-      offset,
-      limit,
-      codeRegion,
-      codeAcademie,
-      codeDepartement,
-      codeDiplome,
-      codeDispositif,
-      commune,
-      cfd,
-      cfdFamille,
-      orderBy,
-    });
-    const filtersPromise = findFiltersInDb({
-      codeRegion,
-      codeAcademie,
-      codeDepartement,
-      codeDiplome,
-      codeDispositif,
-      commune,
-      cfd,
-      cfdFamille,
-    });
+    const formationsPromise = findFormationsInDb(activeFilters);
+    const filtersPromise = findFiltersInDb(activeFilters);
 
+    const codeRegion = activeFilters.codeRegion;
     const { filters, references, count, formations } = {
       filters: await filtersPromise,
       ...(await formationsPromise),
@@ -95,9 +63,9 @@ const toFormationWithDelta = ({
 
   const refInsertion6mois = references.find(
     (item) => formation.codeNiveauDiplome === item.codeNiveauDiplome
-  )?.tauxInsertion;
+  )?.tauxInsertion12mois;
 
-  const { tauxPoursuiteEtudes, tauxInsertion6mois } = formation;
+  const { tauxPoursuiteEtudes, tauxInsertion12mois } = formation;
 
   return {
     ...formation,
@@ -106,8 +74,8 @@ const toFormationWithDelta = ({
         ? tauxPoursuiteEtudes - refPoursuiteEtudes
         : undefined,
     deltaInsertion6mois:
-      refInsertion6mois && tauxInsertion6mois
-        ? tauxInsertion6mois - refInsertion6mois
+      refInsertion6mois && tauxInsertion12mois
+        ? tauxInsertion12mois - refInsertion6mois
         : undefined,
   };
 };

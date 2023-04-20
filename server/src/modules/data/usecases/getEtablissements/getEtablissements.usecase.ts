@@ -5,21 +5,7 @@ const getEtablissementsFactory =
     findEtablissementsInDb = dependencies.findEtablissementsInDb,
     findFiltersInDb = dependencies.findFiltersInDb,
   }) =>
-  async ({
-    offset,
-    limit,
-    orderBy,
-    codeRegion,
-    codeAcademie,
-    codeDepartement,
-    codeDiplome,
-    codeDispositif,
-    commune,
-    cfd,
-    cfdFamille,
-    uai,
-    secteur,
-  }: {
+  async (activeFilters: {
     offset?: number;
     limit?: number;
     codeRegion?: string[];
@@ -34,32 +20,8 @@ const getEtablissementsFactory =
     secteur?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
-    console.log(orderBy);
-    const etablissementsPromise = findEtablissementsInDb({
-      offset,
-      limit,
-      codeRegion,
-      codeAcademie,
-      codeDepartement,
-      codeDiplome,
-      codeDispositif,
-      commune,
-      cfd,
-      cfdFamille,
-      uai,
-      orderBy,
-      secteur,
-    });
-    const filtersPromise = findFiltersInDb({
-      codeRegion,
-      codeAcademie,
-      codeDepartement,
-      codeDiplome,
-      codeDispositif,
-      commune,
-      cfd,
-      cfdFamille,
-    });
+    const etablissementsPromise = findEtablissementsInDb(activeFilters);
+    const filtersPromise = findFiltersInDb(activeFilters);
 
     const { filters, count, etablissements } = {
       filters: await filtersPromise,

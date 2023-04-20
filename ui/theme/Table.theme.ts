@@ -5,7 +5,7 @@ const { definePartsStyle, defineMultiStyleConfig } =
   createMultiStyleConfigHelpers(tableAnatomy.keys);
 
 const sm = definePartsStyle({
-  th: { px: 3, textTransform: "capitalize", fontSize: "12" },
+  th: { px: 3, textTransform: "unset", fontSize: "12" },
   td: { px: 3, fontSize: "12" },
 });
 

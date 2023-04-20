@@ -10,10 +10,10 @@ import {
   MenuButton,
   MenuList,
   Portal,
-  VStack,
 } from "@chakra-ui/react";
 import {
   ChangeEventHandler,
+  memo,
   ReactNode,
   useMemo,
   useRef,
@@ -33,64 +33,67 @@ const ButtonContent = ({
   return <>{selected.length} séléctionné</>;
 };
 
-const Checkbox = chakra(
-  ({
-    value,
-    onChange,
-    children,
-    className,
-    checked,
-  }: {
-    value: string;
-    onChange: ChangeEventHandler;
-    children: ReactNode;
-    className?: string;
-    checked: boolean;
-  }) => {
-    return (
-      <Flex className={className} as="label" align={"center"}>
-        <input
-          checked={checked}
-          value={value}
-          onChange={onChange}
-          hidden
-          type="checkbox"
-        />
-        <Flex
-          align="center"
-          justify="center"
-          border="2px solid"
-          height="1rem"
-          width="1rem"
-          mr="2"
-          mt="2px"
-          borderRadius="2"
-          color="white"
-          bg={checked ? "bluefrance.113" : ""}
-          transition="background 200ms, border-color 200ms"
-          flexShrink="0"
-          borderColor={checked ? "bluefrance.113" : "grey.900"}
+const Checkbox = ({
+  value,
+  onChange,
+  children,
+  checked,
+}: {
+  value: string;
+  onChange: ChangeEventHandler;
+  children: ReactNode;
+  checked: boolean;
+}) => {
+  return (
+    <label style={{ display: "flex", alignItems: "center" }}>
+      <input
+        checked={checked}
+        value={value}
+        onChange={onChange}
+        hidden
+        type="checkbox"
+      />
+      <CheckboxIcon checked={checked} />
+      {children}
+    </label>
+  );
+};
+
+const CheckboxIcon = memo(({ checked }: { checked: boolean }) => {
+  return (
+    <Flex
+      align="center"
+      justify="center"
+      border="2px solid"
+      height="1rem"
+      width="1rem"
+      mr="2"
+      mt="2px"
+      borderRadius="2"
+      bg={checked ? "bluefrance.113" : ""}
+      transition="background 200ms, border-color 200ms"
+      flexShrink="0"
+      borderColor={checked ? "bluefrance.113" : "grey.900"}
+    >
+      {checked && (
+        <svg
+          fontSize="8px"
+          viewBox="0 0 12 10"
+          style={{
+            width: "1.2em",
+            height: "1.2em",
+            fill: "none",
+            strokeWidth: 2,
+            stroke: "white",
+            strokeDasharray: 16,
+          }}
         >
-          <svg
-            fontSize="8px"
-            viewBox="0 0 12 10"
-            style={{
-              visibility: checked ? "visible" : "hidden",
-              width: "1.2em",
-              fill: "none",
-              strokeWidth: 2,
-              stroke: "currentcolor",
-              strokeDasharray: 16,
-            }}
-          >
-            <polyline points="1.5 6 4.5 9 10.5 1" />
-          </svg>
-        </Flex>
-        {children}
-      </Flex>
-    );
-  }
-);
+          <polyline points="1.5 6 4.5 9 10.5 1" />
+        </svg>
+      )}
+    </Flex>
+  );
+});
 
 export const Multiselect = chakra(
   ({
@@ -198,10 +201,9 @@ export const Multiselect = chakra(
                 variant="unstyled"
               />
             </Box>
-            <VStack
+            <Flex
+              direction="column"
               ref={ref}
-              spacing={0}
-              align="stretch"
               maxHeight={300}
               overflow="auto"
               sx={{
@@ -226,7 +228,7 @@ export const Multiselect = chakra(
                   {label}
                 </Checkbox>
               ))}
-            </VStack>
+            </Flex>
           </MenuList>
         </Portal>
       </Menu>

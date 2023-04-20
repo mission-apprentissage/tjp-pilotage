@@ -33,7 +33,6 @@ type Filters = Pick<
   | "codeAcademie"
   | "codeDepartement"
   | "codeDiplome"
-  | "codeDispositif"
   | "codeRegion"
   | "commune"
 >;
@@ -131,13 +130,6 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           width="52"
-          onChange={(selected) => handleFilters("codeDispositif", selected)}
-          options={data?.filters.dispositifs}
-        >
-          Dispositif
-        </Multiselect>
-        <Multiselect
-          width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
         >
@@ -174,7 +166,13 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th>{FORMATIONS_COLUMNS.libelleNiveauDiplome}</Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("codeNiveauDiplome")}
+                >
+                  <OrderIcon {...order} column="codeNiveauDiplome" />
+                  {FORMATIONS_COLUMNS.libelleNiveauDiplome}
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDiplome")}
@@ -201,12 +199,12 @@ export default function Formations() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
+                  onClick={() => handleOrder("tauxInsertion12mois")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  {FORMATIONS_COLUMNS.tauxInsertion6mois}
+                  <OrderIcon {...order} column="tauxInsertion12mois" />
+                  {FORMATIONS_COLUMNS.tauxInsertion12mois}
                 </Th>
-                <Th isNumeric>Delta régional insertion</Th>
+                <Th cursor="pointer">Delta régional insertion</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -216,9 +214,27 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
                 <Th isNumeric>{FORMATIONS_COLUMNS.deltaPoursuiteEtudes}</Th>
-                <Th>{FORMATIONS_COLUMNS.libelleDispositif}</Th>
-                <Th>{FORMATIONS_COLUMNS.libelleOfficielFamille}</Th>
-                <Th>{FORMATIONS_COLUMNS.CodeFormationDiplome}</Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleDispositif")}
+                >
+                  <OrderIcon {...order} column="libelleDispositif" />
+                  {FORMATIONS_COLUMNS.libelleDispositif}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleOfficielFamille")}
+                >
+                  <OrderIcon {...order} column="libelleOfficielFamille" />
+                  {FORMATIONS_COLUMNS.libelleOfficielFamille}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("codeFormationDiplome")}
+                >
+                  <OrderIcon {...order} column="codeFormationDiplome" />
+                  {FORMATIONS_COLUMNS.CodeFormationDiplome}
+                </Th>
                 <Th>{FORMATIONS_COLUMNS.decrochage}</Th>
               </Tr>
             </Thead>
@@ -230,10 +246,10 @@ export default function Formations() {
                   <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
                   <Td isNumeric>{line.effectif ?? "-"}</Td>
                   <Td isNumeric>
-                    <GraphWrapper value={line.tauxInsertion6mois} />
+                    <GraphWrapper value={line.tauxInsertion12mois} />
                   </Td>
                   <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaInsertion6mois} />
+                    <GraphWrapper centered value={line.deltaInsertion12mois} />
                   </Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxPoursuiteEtudes} />

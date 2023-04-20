@@ -65,6 +65,7 @@ const findEtablissementsInDb = async ({
         COUNT(*) OVER() as count,
         "etablissement".*, 
         "formation".*,
+        "departement"."libelle" as "departement",
         "libelleOfficielFamille",
         "libelleDispositif",
         "dispositifId",
@@ -95,6 +96,8 @@ const findEtablissementsInDb = async ({
     LEFT JOIN "indicateurEtablissement"
         ON "indicateurEtablissement"."UAI" = "etablissement"."UAI" 
         AND "indicateurEtablissement"."millesime" = ${db.param(millesimeSortie)}
+    LEFT JOIN "departement"
+        ON "departement"."codeDepartement" = "etablissement"."codeDepartement" 
     WHERE 
         ${
           codeRegion
@@ -154,6 +157,7 @@ const findEtablissementsInDb = async ({
     GROUP BY
         "formation"."id",
         "etablissement"."id",
+        "departement"."codeDepartement",
         "libelleOfficielFamille",
         "indicateurEntree"."millesimeEntree",
         "indicateurSortie"."millesimeSortie",
@@ -196,6 +200,8 @@ const findFiltersInDb = async ({
   codeDepartement,
   commune,
   cfdFamille,
+  codeDiplome,
+  cfd,
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -226,6 +232,42 @@ const findFiltersInDb = async ({
         ON "etablissement"."codeAcademie" = "academie"."codeAcademie"
     WHERE "codeFormationDiplome" NOT IN (SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`;
 
+  const cfdFamilleCondition = cfdFamille && {
+    cfdFamille: db.sql`"familleMetier"."cfdFamille" IN (${db.vals(
+      cfdFamille
+    )})`,
+  };
+
+  const codeAcademieConditon = codeAcademie && {
+    codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
+      codeAcademie
+    )})`,
+  };
+
+  const codeDepartementCondition = codeDepartement && {
+    codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
+      codeDepartement
+    )})`,
+  };
+
+  const communeConditon = commune && {
+    commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
+  };
+
+  const codeRegionConditon = codeRegion && {
+    codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
+  };
+
+  const cfdConditon = cfd && {
+    cfd: db.sql`"formation"."codeFormationDiplome" IN (${db.vals(cfd)})`,
+  };
+
+  const codeDiplomeConditon = codeDiplome && {
+    codeNiveauDiplome: db.sql`"formation"."codeNiveauDiplome" IN (${db.vals(
+      codeDiplome
+    )})`,
+  };
+
   const regions = db.sql<
     SQL,
     {
@@ -236,19 +278,9 @@ const findFiltersInDb = async ({
     ${from}
     AND ${{
       codeRegion: db.sql`"region"."codeRegion" IS NOT NULL`,
-      ...(codeAcademie && {
-        codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-          codeAcademie
-        )})`,
-      }),
-      ...(codeDepartement && {
-        codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-          codeDepartement
-        )})`,
-      }),
-      ...(commune && {
-        commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
-      }),
+      ...codeAcademieConditon,
+      ...codeDepartementCondition,
+      ...communeConditon,
     }}
     ORDER BY "region"."libelleRegion" ASC`.run(pool);
 
@@ -262,14 +294,8 @@ const findFiltersInDb = async ({
     ${from}
     AND ${{
       codeAcademie: db.sql`"academie"."codeAcademie" IS NOT NULL`,
-      ...(codeRegion && {
-        codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
-      }),
-      ...(codeDepartement && {
-        codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-          codeDepartement
-        )})`,
-      }),
+      ...codeRegionConditon,
+      ...codeDepartementCondition,
       ...(commune && {
         commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
       }),
@@ -289,14 +315,8 @@ const findFiltersInDb = async ({
       ...(codeRegion && {
         codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
       }),
-      ...(codeAcademie && {
-        codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-          codeAcademie
-        )})`,
-      }),
-      ...(commune && {
-        commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
-      }),
+      ...codeAcademieConditon,
+      ...communeConditon,
     }}
     ORDER BY "departement"."libelle" ASC`.run(pool);
 
@@ -310,94 +330,11 @@ const findFiltersInDb = async ({
     ${from}
     AND ${{
       commune: db.sql`"etablissement"."commune" IS NOT NULL`,
-      ...(codeRegion && {
-        codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
-      }),
-      ...(codeAcademie && {
-        codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-          codeAcademie
-        )})`,
-      }),
-      ...(codeDepartement && {
-        codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-          codeDepartement
-        )})`,
-      }),
+      ...codeRegionConditon,
+      ...codeAcademieConditon,
+      ...codeDepartementCondition,
     }}
     ORDER BY "etablissement"."commune" ASC`.run(pool);
-
-  const diplomes = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "niveauDiplome"."libelleNiveauDiplome" as label, "niveauDiplome"."codeNiveauDiplome" as value
-    ${from}
-    AND ${{
-      codeNiveauDiplome: db.sql`"niveauDiplome"."codeNiveauDiplome" IS NOT NULL`,
-      ...(codeRegion && {
-        codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
-      }),
-      ...(codeAcademie && {
-        codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-          codeAcademie
-        )})`,
-      }),
-      ...(codeDepartement && {
-        codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-          codeDepartement
-        )})`,
-      }),
-    }}
-    ORDER BY "niveauDiplome"."libelleNiveauDiplome" ASC`.run(pool);
-
-  const dispositifs = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "dispositif"."libelleDispositif" as label, "dispositif"."codeDispositif" as value
-    ${from}
-    AND ${{
-      codeDispositif: db.sql`"dispositif"."codeDispositif" IS NOT NULL`,
-      ...(codeDepartement && {
-        codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-          codeDepartement
-        )})`,
-      }),
-    }}
-    ORDER BY "dispositif"."libelleDispositif" ASC`.run(pool);
-
-  const familles = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "familleMetier"."libelleOfficielFamille" as label, "familleMetier"."cfdFamille" as "value"
-    ${from}
-    AND ${{ cfdFamille: db.sql`"familleMetier"."cfdFamille" IS NOT NULL` }}
-    ORDER BY "familleMetier"."libelleOfficielFamille" ASC`.run(pool);
-
-  const formations = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "formation"."libelleDiplome" as label, "formation"."codeFormationDiplome" as value
-  ${from}
-  AND ${{
-    codeFormationDiplome: db.sql`"formation"."codeFormationDiplome" IS NOT NULL`,
-    ...(cfdFamille && {
-      cfdFamille: db.sql`"familleMetier"."cfdFamille" IN (${db.vals(
-        cfdFamille
-      )})`,
-    }),
-  }}
-  ORDER BY "formation"."libelleDiplome" ASC`.run(pool);
 
   const etablissements = db.sql<
     SQL,
@@ -414,25 +351,58 @@ const findFiltersInDb = async ({
         cfdFamille
       )})`,
     }),
-    ...(codeRegion && {
-      codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
-    }),
-    ...(codeAcademie && {
-      codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-        codeAcademie
-      )})`,
-    }),
-    ...(codeDepartement && {
-      codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-        codeDepartement
-      )})`,
-    }),
-    ...(commune && {
-      commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
-    }),
+    ...codeRegionConditon,
+    ...codeAcademieConditon,
+    ...codeDepartementCondition,
+    ...communeConditon,
   }}
   AND ${{ UAI: db.sql`"etablissement"."UAI" IS NOT NULL` }}
   ORDER BY "etablissement"."libelleEtablissement" ASC`.run(pool);
+
+  const diplomes = db.sql<
+    SQL,
+    {
+      label: string;
+      value: string;
+    }[]
+  >`SELECT DISTINCT "niveauDiplome"."libelleNiveauDiplome" as label, "niveauDiplome"."codeNiveauDiplome" as value
+    ${from}
+    AND ${{
+      codeNiveauDiplome: db.sql`"niveauDiplome"."codeNiveauDiplome" IS NOT NULL`,
+      ...cfdFamilleCondition,
+      ...cfdConditon,
+    }}
+    ORDER BY "niveauDiplome"."libelleNiveauDiplome" ASC`.run(pool);
+
+  const familles = db.sql<
+    SQL,
+    {
+      label: string;
+      value: string;
+    }[]
+  >`SELECT DISTINCT "familleMetier"."libelleOfficielFamille" as label, "familleMetier"."cfdFamille" as "value"
+    ${from}
+    AND ${{
+      cfdFamille: db.sql`"familleMetier"."cfdFamille" IS NOT NULL`,
+      ...cfdConditon,
+      ...codeDiplomeConditon,
+    }}
+    ORDER BY "familleMetier"."libelleOfficielFamille" ASC`.run(pool);
+
+  const formations = db.sql<
+    SQL,
+    {
+      label: string;
+      value: string;
+    }[]
+  >`SELECT DISTINCT "formation"."libelleDiplome" as label, "formation"."codeFormationDiplome" as value
+  ${from}
+  AND ${{
+    codeFormationDiplome: db.sql`"formation"."codeFormationDiplome" IS NOT NULL`,
+    ...cfdFamilleCondition,
+    ...codeDiplomeConditon,
+  }}
+  ORDER BY "formation"."libelleDiplome" ASC`.run(pool);
 
   return await {
     regions: (await regions).map(cleanNull),
@@ -440,7 +410,6 @@ const findFiltersInDb = async ({
     academies: (await academies).map(cleanNull),
     communes: (await communes).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
-    dispositifs: (await dispositifs).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
     etablissements: (await etablissements).map(cleanNull),
