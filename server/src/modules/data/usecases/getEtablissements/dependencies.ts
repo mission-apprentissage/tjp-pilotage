@@ -137,7 +137,7 @@ const findEtablissementsInDb = async ({
         } 
         AND ${
           codeDiplome
-            ? db.sql`"dispositif"."codeNiveauDiplome" IN (${db.vals(
+            ? db.sql`"niveauDiplome"."codeNiveauDiplome" IN (${db.vals(
                 codeDiplome
               )})`
             : {}

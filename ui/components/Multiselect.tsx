@@ -16,10 +16,13 @@ import {
   memo,
   ReactNode,
   useMemo,
+  useReducer,
   useRef,
   useState,
 } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+
+import { LoadingContent } from "./LoadingContent";
 
 const ButtonContent = ({
   selected,
@@ -41,7 +44,7 @@ const Checkbox = ({
 }: {
   value: string;
   onChange: ChangeEventHandler;
-  children: ReactNode;
+  children: string;
   checked: boolean;
 }) => {
   return (
@@ -58,6 +61,31 @@ const Checkbox = ({
     </label>
   );
 };
+
+const InputWapper = memo(
+  ({
+    onChange,
+    ...props
+  }: {
+    value: string;
+    onChange: (_: { checked: boolean; value: string; label: string }) => void;
+    children: string;
+    checked: boolean;
+  }) => {
+    return (
+      <Checkbox
+        onChange={(e) =>
+          onChange({
+            checked: (e.target as HTMLInputElement).checked,
+            label: props.children,
+            value: props.value,
+          })
+        }
+        {...props}
+      ></Checkbox>
+    );
+  }
+);
 
 const CheckboxIcon = memo(({ checked }: { checked: boolean }) => {
   return (
@@ -95,6 +123,30 @@ const CheckboxIcon = memo(({ checked }: { checked: boolean }) => {
   );
 });
 
+function useController<A, I>(
+  reducer: (s: I, _: A) => I,
+  initial: I,
+  effect?: (v: I) => void
+) {
+  const [state, dispatch] = useReducer(reducer, initial);
+
+  const stateRef = useRef(initial);
+  stateRef.current = state;
+
+  const effectRef = useRef(effect);
+  effectRef.current = effect;
+
+  const controller = useRef([
+    state,
+    (v: A) => {
+      const val = reducer(stateRef.current, v);
+      dispatch(v);
+      effectRef.current?.(val);
+    },
+  ] as const);
+  return [state, controller.current[1]] as const;
+}
+
 export const Multiselect = chakra(
   ({
     children,
@@ -107,24 +159,26 @@ export const Multiselect = chakra(
     onChange?: (value: string[]) => void;
     className?: string;
   }) => {
-    const [selected, setSelected] = useState(new Map());
-
-    const handleChange = (
-      { value, label }: typeof options[number],
-      checked: boolean
-    ) => {
-      if (checked) {
-        const newSelected = new Map(selected);
-        newSelected.set(value, label);
-        setSelected(newSelected);
-        onChange?.(Array.from(newSelected.keys()));
-      } else {
-        const newSelected = new Map(selected);
+    const [selected, dispatch] = useController(
+      (
+        state,
+        {
+          checked,
+          value,
+          label,
+        }: { checked: boolean; value: string; label: string }
+      ) => {
+        const newSelected = new Map(state);
+        if (checked) {
+          newSelected.set(value, label);
+          return newSelected;
+        }
         newSelected.delete(value);
-        setSelected(newSelected);
-        onChange?.(Array.from(newSelected.keys()));
-      }
-    };
+        return newSelected;
+      },
+      new Map(),
+      (value) => onChange?.(Array.from(value.keys()))
+    );
 
     const [search, setSearch] = useState("");
 
@@ -147,10 +201,8 @@ export const Multiselect = chakra(
 
     const filterOptions = () => {
       return search
-        ? preparedOptions.filter(
-            (item) =>
-              item.label &&
-              item.label?.toLowerCase().includes(search.toLowerCase())
+        ? preparedOptions.filter((item) =>
+            item.label?.toLowerCase().includes(search.toLowerCase())
           )
         : preparedOptions;
     };
@@ -161,7 +213,6 @@ export const Multiselect = chakra(
       selected,
     ]);
     const ref = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
 
     return (
       <Menu
@@ -171,7 +222,6 @@ export const Multiselect = chakra(
             prepareOptions();
             handleSearch("");
           });
-          setTimeout(() => inputRef.current?.focus());
         }}
         closeOnSelect={false}
       >
@@ -188,47 +238,38 @@ export const Multiselect = chakra(
         </MenuButton>
         <Portal>
           <MenuList maxWidth={450} pt="0">
-            <Box borderBottom="1px solid" borderBottomColor="grey.900">
-              <Input
-                ref={inputRef}
-                placeholder="Rechercher dans la liste"
-                value={search}
-                onInput={(e) =>
-                  handleSearch((e.target as HTMLInputElement).value)
-                }
-                px="3"
-                py="2"
-                variant="unstyled"
-              />
-            </Box>
-            <Flex
-              direction="column"
-              ref={ref}
-              maxHeight={300}
-              overflow="auto"
-              sx={{
-                "> *": {
-                  px: "3",
-                  py: "1.5",
-                },
-              }}
-            >
-              {filteredOptions.map(({ value, label }) => (
-                <Checkbox
-                  key={value}
-                  checked={!!selected.get(value)}
-                  onChange={(e) =>
-                    handleChange(
-                      { value, label },
-                      (e.target as HTMLInputElement).checked
-                    )
+            <LoadingContent>
+              <Box borderBottom="1px solid" borderBottomColor="grey.900">
+                <Input
+                  placeholder="Rechercher dans la liste"
+                  value={search}
+                  onInput={(e) =>
+                    handleSearch((e.target as HTMLInputElement).value)
                   }
-                  value={value}
-                >
-                  {label}
-                </Checkbox>
-              ))}
-            </Flex>
+                  px="3"
+                  py="2"
+                  variant="unstyled"
+                />
+              </Box>
+              <Flex
+                direction="column"
+                ref={ref}
+                maxHeight={300}
+                overflow="auto"
+                sx={{ "> *": { px: "3", py: "1.5" } }}
+              >
+                {filteredOptions.map(({ value, label }) => (
+                  <InputWapper
+                    key={value}
+                    checked={!!selected.get(value)}
+                    onChange={dispatch}
+                    value={value}
+                  >
+                    {label}
+                  </InputWapper>
+                ))}
+              </Flex>
+            </LoadingContent>
           </MenuList>
         </Portal>
       </Menu>
