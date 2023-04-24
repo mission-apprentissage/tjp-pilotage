@@ -40,7 +40,12 @@ server.register(
 if (process.env.PILOTAGE_ENV !== "dev") {
   const knexClient = knex({
     client: "pg",
-    connection: config.PILOTAGE_POSTGRES_URI,
+    connection: {
+      connectionString: config.PILOTAGE_POSTGRES_URI,
+      ssl: config.PILOTAGE_POSTGRES_CA
+        ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
+        : undefined,
+    },
   });
 
   knexClient.migrate
