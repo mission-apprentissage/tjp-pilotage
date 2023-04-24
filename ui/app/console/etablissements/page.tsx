@@ -126,6 +126,13 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           width="52"
+          onChange={(selected) => handleFilters("uai", selected)}
+          options={data?.filters.etablissements}
+        >
+          Etablissement
+        </Multiselect>
+        <Multiselect
+          width="52"
           onChange={(selected) => handleFilters("secteur", selected)}
           options={[
             { label: "PR", value: "PR" },
@@ -140,13 +147,6 @@ export default function Etablissements() {
           options={data?.filters.diplomes}
         >
           Diplôme
-        </Multiselect>
-        <Multiselect
-          width="52"
-          onChange={(selected) => handleFilters("uai", selected)}
-          options={data?.filters.etablissements}
-        >
-          Etablissement
         </Multiselect>
         <Multiselect
           width="52"

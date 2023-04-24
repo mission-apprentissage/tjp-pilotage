@@ -85,7 +85,7 @@ const InputWapper = memo(
   }
 );
 
-const CheckboxIcon = memo(({ checked }: { checked: boolean }) => {
+const CheckboxIcon = ({ checked }: { checked: boolean }) => {
   return (
     <Flex
       align="center"
@@ -119,7 +119,7 @@ const CheckboxIcon = memo(({ checked }: { checked: boolean }) => {
       )}
     </Flex>
   );
-});
+};
 
 function useController<A, I>(
   reducer: (s: I, _: A) => I,

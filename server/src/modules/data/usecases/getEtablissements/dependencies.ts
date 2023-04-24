@@ -395,14 +395,14 @@ const findFiltersInDb = async ({
       label: string;
       value: string;
     }[]
-  >`SELECT DISTINCT "formation"."libelleDiplome" as label, "formation"."codeFormationDiplome" as value
+  >`SELECT DISTINCT ("formation"."libelleDiplome" || ' (' || "niveauDiplome"."libelleNiveauDiplome" || ')') as label, "formation"."codeFormationDiplome" as value
   ${from}
   AND ${{
     codeFormationDiplome: db.sql`"formation"."codeFormationDiplome" IS NOT NULL`,
     ...cfdFamilleCondition,
     ...codeDiplomeConditon,
   }}
-  ORDER BY "formation"."libelleDiplome" ASC`.run(pool);
+  ORDER BY label ASC`.run(pool);
 
   return await {
     regions: (await regions).map(cleanNull),

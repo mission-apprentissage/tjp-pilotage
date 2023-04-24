@@ -6,7 +6,7 @@ export const FORMATIONS_COLUMNS = {
   tauxInsertion12mois: "Tx d'emploi 12 mois",
   deltaInsertion6mois: "Delta régional insertion",
   tauxPoursuiteEtudes: "Tx de Poursuite D'études	",
-  deltaPoursuiteEtudes: "Delta régional ioursuite	",
+  deltaPoursuiteEtudes: "Delta régional poursuite	",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
   CodeFormationDiplome: "CodeDiplome",
