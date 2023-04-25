@@ -5,6 +5,7 @@ import { config } from "config/config";
 import knex from "knex";
 
 import { registerCoreModule } from "./modules/core";
+import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
 
 server.register(fastifyCors, {});
@@ -23,7 +24,7 @@ server.register(fastifySwagger, {
 server.register(fastifySwaggerUi, {
   routePrefix: "/api/documentation",
   uiConfig: {
-    docExpansion: "full",
+    docExpansion: "list",
     deepLinking: false,
   },
 });
@@ -31,6 +32,7 @@ server.register(fastifySwaggerUi, {
 server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
+    registerFormationModule({ server: instance });
   },
   { prefix: "/api" }
 );
@@ -38,7 +40,12 @@ server.register(
 if (process.env.PILOTAGE_ENV !== "dev") {
   const knexClient = knex({
     client: "pg",
-    connection: config.PILOTAGE_POSTGRES_URI,
+    connection: {
+      connectionString: config.PILOTAGE_POSTGRES_URI,
+      ssl: config.PILOTAGE_POSTGRES_CA
+        ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
+        : undefined,
+    },
   });
 
   knexClient.migrate

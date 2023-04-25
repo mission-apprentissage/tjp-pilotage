@@ -6,6 +6,7 @@ export const config = {
     .get("PILOTAGE_POSTGRES_URI")
     .default("local")
     .asString(),
+  PILOTAGE_POSTGRES_CA: env.get("PILOTAGE_POSTGRES_CA").asString(),
   PILOTAGE_INSERJEUNES_USERNAME: env
     .get("PILOTAGE_INSERJEUNES_USERNAME")
     .required()

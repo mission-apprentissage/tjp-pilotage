@@ -1,5 +1,5 @@
 install:
-	docker-compose -f docker-compose-install.yml up --build
+	yarn install
 
 start:
 	docker-compose up --build --force-recreate

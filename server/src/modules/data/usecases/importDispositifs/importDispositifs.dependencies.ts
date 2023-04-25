@@ -16,7 +16,7 @@ const findNDispositifFormation = async ({
         {
           type: "nDispositifFormation_",
         },
-        { offset, limit }
+        { offset, limit, order: { by: "data", direction: "ASC" } }
       )
       .run(pool)
   ).map((item) => item.data as NDispositifFormation);

@@ -6,6 +6,9 @@ import { config } from "../../config/config";
 
 const pool = new pg.Pool({
   connectionString: config.PILOTAGE_POSTGRES_URI,
+  ssl: config.PILOTAGE_POSTGRES_CA
+    ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
+    : undefined,
 });
 
 pool.on("error", (err) => console.error(err)); // don't let a pg restart kill your app

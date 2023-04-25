@@ -22,12 +22,16 @@ const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
 const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
     await db
-      .select("rawData", {
-        type: "nMef",
-        data: db.sql`${db.self}@>${db.param({
-          FORMATION_DIPLOME: cfd,
-        })}`,
-      })
+      .select(
+        "rawData",
+        {
+          type: "nMef",
+          data: db.sql`${db.self}@>${db.param({
+            FORMATION_DIPLOME: cfd,
+          })}`,
+        },
+        { order: { by: "data", direction: "ASC" } }
+      )
       .run(pool)
   ).map((item) => item.data as NMefLine);
 
