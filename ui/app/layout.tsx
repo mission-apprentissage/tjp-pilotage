@@ -4,39 +4,71 @@ import "react-notion-x/src/styles.css";
 
 import { CacheProvider } from "@chakra-ui/next-js";
 import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 
 import { theme } from "../theme/theme";
 import { Header } from "./components/Header";
+
+const useTracking = () => {
+  const searchParams = useSearchParams();
+  const param = searchParams.get("notracking");
+  const noTracking = useRef(
+    param !== "reset" &&
+      (!!param ||
+        (typeof localStorage !== "undefined" &&
+          localStorage.getItem("notracking") === "true"))
+  );
+  useEffect(() => {
+    if (param === "reset") {
+      localStorage.removeItem("notracking");
+      return;
+    }
+    if (param) {
+      localStorage.setItem("notracking", "true");
+    }
+  }, [param]);
+  if (process.env.NEXT_PUBLIC_ENV !== "production") return false;
+  return !!noTracking.current;
+};
 
 export default function RootLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const searchParams = useSearchParams();
-  const tracking = useRef(searchParams.get("notracking") !== "true");
+  const tracking = useTracking();
+  const queryClient = new QueryClient();
 
   return (
     <html lang="fr">
       <head>
         <PlausibleProvider
           trackLocalhost={false}
-          enabled={tracking.current}
+          enabled={tracking}
           domain="pilotage-recette.trajectoirespro.beta.gouv.fr"
         />
       </head>
       <body>
-        <CacheProvider>
-          <ChakraProvider theme={theme}>
-            <Flex direction="column" height="100vh">
-              <Header />
-              <Box flex={1}>{children}</Box>
-            </Flex>
-          </ChakraProvider>
-        </CacheProvider>
+        <QueryClientProvider client={queryClient}>
+          <CacheProvider>
+            <ChakraProvider theme={theme}>
+              <Flex direction="column" height="100vh" overflow="auto">
+                <Header />
+                <Box
+                  display="flex"
+                  flexDirection="column"
+                  flex={1}
+                  minHeight="0"
+                >
+                  {children}
+                </Box>
+              </Flex>
+            </ChakraProvider>
+          </CacheProvider>
+        </QueryClientProvider>
       </body>
     </html>
   );
