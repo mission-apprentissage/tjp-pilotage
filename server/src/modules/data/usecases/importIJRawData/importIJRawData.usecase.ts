@@ -2,13 +2,13 @@ import _ from "lodash";
 
 import { inserJeunesApi } from "../../services/inserJeunesApi/inserJeunes.api";
 import { streamIt } from "../../utils/streamIt";
-import { getCfdUais as getCfdUaisDep } from "../getCfdUais/getCfdUais.usecase";
+import { getCfdRentrees as getCfdRentreesDep } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "./dependencies.di";
 
 export const getUaisFactory =
   ({
     findFormations = dependencies.findFormations,
-    getCfdUais = getCfdUaisDep,
+    getCfdRentrees = getCfdRentreesDep,
   }) =>
   async () => {
     let uais: string[] = [];
@@ -16,7 +16,7 @@ export const getUaisFactory =
     await streamIt(
       async (offset) => findFormations({ offset, limit: 30 }),
       async ({ codeFormationDiplome }) => {
-        const daaa = await getCfdUais({ cfd: codeFormationDiplome });
+        const daaa = await getCfdRentrees({ cfd: codeFormationDiplome });
         uais = [...uais, ...daaa.map((item) => item.uai)];
       }
     );

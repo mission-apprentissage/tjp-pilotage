@@ -2,7 +2,7 @@ import _ from "lodash";
 
 import { dependencies } from "./dependencies.di";
 
-export type Mefs = {
+export type CfdRentrees = {
   cfd: string;
   dispositifId: string;
   voie: "scolaire" | "apprentissage";
@@ -11,19 +11,20 @@ export type Mefs = {
     mefstat: string;
     libelle: string;
     annee: number;
-    effectif: number;
+    effectif?: number;
+    constatee: boolean;
   }[];
 };
 
-export const getCfdUaisFactory =
+export const getCfdRentreesFactory =
   ({
     findNMefs = dependencies.findNMefs,
     findContratRentrees = dependencies.findContratRentrees,
   }) =>
-  async ({ cfd }: { cfd: string }): Promise<Mefs[]> => {
+  async ({ cfd }: { cfd: string }): Promise<CfdRentrees[]> => {
     const nMefs = await findNMefs({ cfd });
     const dispositifs = _.chain(nMefs)
-      .orderBy("annee")
+      .orderBy("ANNEE_DISPOSITIF")
       .groupBy("DISPOSITIF_FORMATION")
       .value();
 
@@ -32,34 +33,36 @@ export const getCfdUaisFactory =
         Object.entries(dispositifs).map(
           async ([dispositifId, dispositifNMefs]) => {
             const chain1 = dispositifNMefs.map(async (nMef) => {
-              return (
-                await findContratRentrees({
-                  mefStat11: nMef.MEF_STAT_11,
-                })
-              ).map((constat) => ({
-                libelle: nMef.LIBELLE_LONG,
-                annee: parseInt(nMef.ANNEE_DISPOSITIF),
-                constat,
-              }));
+              return await findContratRentrees({
+                mefStat11: nMef.MEF_STAT_11,
+              });
             });
 
             const chain2 = await Promise.all(chain1);
 
             return _.chain(chain2)
               .flatMap()
-              .groupBy((v) => v.constat["Numéro d'établissement"])
+              .groupBy((v) => v["Numéro d'établissement"])
               .entries()
               .map(([uai, annees]) => ({
                 uai,
                 cfd,
                 voie: "scolaire" as const,
                 dispositifId,
-                annees: annees.map(({ constat, annee, libelle }) => ({
-                  mefstat: constat["Mef Bcp 11"],
-                  libelle,
-                  annee,
-                  effectif: parseInt(constat["Nombre d'élèves"]) ?? undefined,
-                })),
+                annees: dispositifNMefs.map((dis) => {
+                  const constat = annees.find(
+                    (constat) => constat["Mef Bcp 11"] === dis.MEF_STAT_11
+                  );
+                  return {
+                    libelle: dis.LIBELLE_LONG,
+                    mefstat: dis.MEF_STAT_11,
+                    annee: parseInt(dis.ANNEE_DISPOSITIF),
+                    effectif: constat
+                      ? parseInt(constat?.["Nombre d'élèves"])
+                      : undefined,
+                    constatee: !!constat,
+                  };
+                }),
               }))
               .value();
           }
@@ -68,4 +71,4 @@ export const getCfdUaisFactory =
     ).flat();
   };
 
-export const getCfdUais = getCfdUaisFactory({});
+export const getCfdRentrees = getCfdRentreesFactory({});

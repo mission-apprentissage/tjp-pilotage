@@ -1,48 +1,32 @@
-import { dataDI } from "../../../data.di";
 import { IndicateurEntree } from "../../../entities/IndicateurEntree";
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
+import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
 import { logger } from "../importLogger";
 import { getIndicateursAffelnetFactory } from "./getIndicateurAffelnet.step";
 
 export const importIndicateurEntreeFactory = ({
   createIndicateurEntree = dependencies.createIndicateurEntree,
-  findRawData = dataDI.rawDataRepository.findRawData,
   getIndicateursAffelnet = getIndicateursAffelnetFactory(),
+  findFamilleMetier = dependencies.findFamilleMetier,
 } = {}) => {
   return async ({
     formationEtablissementId,
-    uai,
-    mefstat11FirstYear,
-    libelleDebut,
-    isSpecialite,
+    dispositifRentrees,
   }: {
     formationEtablissementId: string;
-    uai: string;
-    mefstat11FirstYear: string;
-    libelleDebut: string;
-    isSpecialite: boolean;
+    dispositifRentrees: CfdRentrees;
   }) => {
-    const cab_nbre_division_effectifs_par_etab_mefst11 = await findRawData({
-      type: "Cab-nbre_division_effectifs_par_etab_mefst11",
-      filter: {
-        "Mef Bcp 11": mefstat11FirstYear,
-        "Numéro d'établissement": uai,
-      },
-    });
-
+    const isSpecialite = !!(await findFamilleMetier({
+      cfdSpecialite: dispositifRentrees.cfd,
+    }));
     const { capacite } = await getIndicateursAffelnet({
       isSpecialite,
-      mefstat11FirstYear,
-      libelleDebut,
-      uai,
+      dispositifRentrees,
     });
 
     const indicateurEntree = toIndicateurEntree({
-      mefstat11FirstYear,
+      dispositifRentrees,
       formationEtablissementId,
-      uai,
-      cab_nbre_division_effectifs_par_etab_mefst11,
       capacite,
     });
     if (!indicateurEntree) return;
@@ -51,16 +35,12 @@ export const importIndicateurEntreeFactory = ({
 };
 
 const toIndicateurEntree = ({
-  mefstat11FirstYear,
+  dispositifRentrees,
   formationEtablissementId,
-  uai,
-  cab_nbre_division_effectifs_par_etab_mefst11,
   capacite,
 }: {
-  mefstat11FirstYear: string;
+  dispositifRentrees: CfdRentrees;
   formationEtablissementId: string;
-  uai: string;
-  cab_nbre_division_effectifs_par_etab_mefst11: Cab_bre_division_effectifs_par_etab_mefst11;
   capacite?: number;
 }) => {
   const type = "effectifEntree";
@@ -68,16 +48,15 @@ const toIndicateurEntree = ({
   const indicateurEntree: IndicateurEntree = {
     formationEtablissementId,
     millesimeEntree: "2022",
-    effectifEntree:
-      parseInt(
-        cab_nbre_division_effectifs_par_etab_mefst11?.["Nombre d'élèves"]
-      ) || undefined,
+    // effectifs: mefs.annees.map((annee) => annee.effectif),
+    effectifEntree: dispositifRentrees.annees.find((annee) => annee.constatee)
+      ?.effectif,
     capacite,
   };
 
   const status =
     indicateurEntree.effectifEntree !== undefined ? "ok" : "missing";
-  logger.log({ type, log: { uai, mefstat11FirstYear, status } });
+  logger.log({ type, log: { uai: dispositifRentrees.uai, status } });
   if (!indicateurEntree) return;
   return indicateurEntree;
 };
