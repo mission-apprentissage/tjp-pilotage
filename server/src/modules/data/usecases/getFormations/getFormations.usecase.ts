@@ -61,7 +61,7 @@ const toFormationWithDelta = ({
     (item) => formation.codeNiveauDiplome === item.codeNiveauDiplome
   )?.tauxPoursuiteEtudes;
 
-  const refInsertion6mois = references.find(
+  const refInsertion12mois = references.find(
     (item) => formation.codeNiveauDiplome === item.codeNiveauDiplome
   )?.tauxInsertion12mois;
 
@@ -73,9 +73,9 @@ const toFormationWithDelta = ({
       refPoursuiteEtudes && tauxPoursuiteEtudes
         ? tauxPoursuiteEtudes - refPoursuiteEtudes
         : undefined,
-    deltaInsertion6mois:
-      refInsertion6mois && tauxInsertion12mois
-        ? tauxInsertion12mois - refInsertion6mois
+    deltaInsertion12mois:
+      refInsertion12mois && tauxInsertion12mois
+        ? tauxInsertion12mois - refInsertion12mois
         : undefined,
   };
 };
