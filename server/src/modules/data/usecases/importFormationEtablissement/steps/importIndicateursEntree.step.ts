@@ -53,7 +53,7 @@ const toIndicateurEntree = ({
 
   const indicateurEntree: IndicateurEntree = {
     formationEtablissementId,
-    millesimeEntree: "2022",
+    rentreeScolaire: "2022",
     anneeDebut: isSpecialite ? 1 : dispositifRentrees.anneeDebut,
     effectifs: dispositifRentrees.annees.map((annee) => annee.effectif ?? null),
     capacites: dispositifRentrees.annees.map((_, i) => capacites?.[i] ?? null),

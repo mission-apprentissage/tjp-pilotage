@@ -8,7 +8,7 @@ import { Formation } from "../../entities/Formation";
 const findFormationsInDb = async ({
   offset = 0,
   limit = 20,
-  millesimeEntree = "2022",
+  rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
@@ -22,7 +22,7 @@ const findFormationsInDb = async ({
 }: {
   offset?: number;
   limit?: number;
-  millesimeEntree?: string;
+  rentreeScolaire?: string;
   millesimeSortie?: string;
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -101,7 +101,7 @@ const findFormationsInDb = async ({
         ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
     LEFT JOIN "indicateurEntree"
         ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
-        AND "indicateurEntree"."millesimeEntree" = ${db.param(millesimeEntree)}
+        AND "indicateurEntree"."rentreeScolaire" = ${db.param(rentreeScolaire)}
     LEFT JOIN "indicateurSortie"
         ON "indicateurSortie"."formationEtablissementId" = "formationEtablissement"."id" 
         AND "indicateurSortie"."millesimeSortie" = ${db.param(millesimeSortie)}
@@ -160,7 +160,7 @@ const findFormationsInDb = async ({
     GROUP BY
         "formation".id,
         "libelleOfficielFamille",
-        "indicateurEntree"."millesimeEntree",
+        "indicateurEntree"."rentreeScolaire",
         "libelleDispositif",
         "dispositifId",
         "libelleOfficielFamille",

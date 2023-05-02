@@ -1630,11 +1630,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string;
+      rentreeScolaire: string;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1680,11 +1680,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string;
+      rentreeScolaire: string;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1730,11 +1730,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      rentreeScolaire?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1780,11 +1780,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string | db.Parameter<string> | db.SQLFragment;
+      rentreeScolaire: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1830,11 +1830,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      rentreeScolaire?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database

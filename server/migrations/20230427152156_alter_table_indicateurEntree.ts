@@ -5,7 +5,8 @@ export async function up() {
   ALTER TABLE "indicateurEntree"
     ADD COLUMN "effectifs" jsonb,
     ADD COLUMN "capacites" jsonb,
-    ADD COLUMN "anneeDebut" int
+    ADD COLUMN "anneeDebut" int,
+    RENAME COLUMN "millesimeEntree" TO "rentreeScolaire"
   `.run(pool);
 }
 
