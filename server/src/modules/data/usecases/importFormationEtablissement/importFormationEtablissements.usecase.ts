@@ -29,6 +29,7 @@ export const importFormationEtablissementsFactory = ({
 
         for (const dispositifRentrees of cfdRentrees) {
           const { uai, voie, dispositifId } = dispositifRentrees;
+          console.log(dispositifRentrees);
 
           if (!processedUais.includes(uai)) {
             await importEtablissement({ uai });

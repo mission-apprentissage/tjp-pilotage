@@ -7,6 +7,7 @@ export type CfdRentrees = {
   dispositifId: string;
   voie: "scolaire" | "apprentissage";
   uai: string;
+  anneeDebut: number;
   annees: {
     mefstat: string;
     libelle: string;
@@ -19,7 +20,7 @@ export type CfdRentrees = {
 export const getCfdRentreesFactory =
   ({
     findNMefs = dependencies.findNMefs,
-    findContratRentrees = dependencies.findContratRentrees,
+    findConstatRentrees = dependencies.findContratRentrees,
   }) =>
   async ({ cfd }: { cfd: string }): Promise<CfdRentrees[]> => {
     const nMefs = await findNMefs({ cfd });
@@ -32,13 +33,16 @@ export const getCfdRentreesFactory =
       await Promise.all(
         Object.entries(dispositifs).map(
           async ([dispositifId, dispositifNMefs]) => {
-            const chain1 = dispositifNMefs.map(async (nMef) => {
-              return await findContratRentrees({
-                mefStat11: nMef.MEF_STAT_11,
-              });
-            });
+            const chain1 = dispositifNMefs.map(
+              async (nMef) =>
+                await findConstatRentrees({ mefStat11: nMef.MEF_STAT_11 })
+            );
 
             const chain2 = await Promise.all(chain1);
+
+            const anneeDebut = chain2.findIndex((nMef) =>
+              nMef.some((constat) => constat)
+            );
 
             return _.chain(chain2)
               .flatMap()
@@ -49,6 +53,7 @@ export const getCfdRentreesFactory =
                 cfd,
                 voie: "scolaire" as const,
                 dispositifId,
+                anneeDebut,
                 annees: dispositifNMefs.map((dis) => {
                   const constat = annees.find(
                     (constat) => constat["Mef Bcp 11"] === dis.MEF_STAT_11

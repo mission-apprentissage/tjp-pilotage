@@ -19,7 +19,7 @@ export const importIndicateurEntreeFactory = ({
     const isSpecialite = !!(await findFamilleMetier({
       cfdSpecialite: dispositifRentrees.cfd,
     }));
-    const { capacite } = await getIndicateursAffelnet({
+    const { capacite, capacites } = await getIndicateursAffelnet({
       isSpecialite,
       dispositifRentrees,
     });
@@ -28,6 +28,8 @@ export const importIndicateurEntreeFactory = ({
       dispositifRentrees,
       formationEtablissementId,
       capacite,
+      capacites,
+      isSpecialite,
     });
     if (!indicateurEntree) return;
     await createIndicateurEntree([indicateurEntree]);
@@ -38,17 +40,23 @@ const toIndicateurEntree = ({
   dispositifRentrees,
   formationEtablissementId,
   capacite,
+  capacites,
+  isSpecialite,
 }: {
   dispositifRentrees: CfdRentrees;
   formationEtablissementId: string;
   capacite?: number;
+  capacites?: (number | null)[];
+  isSpecialite: boolean;
 }) => {
   const type = "effectifEntree";
 
   const indicateurEntree: IndicateurEntree = {
     formationEtablissementId,
     millesimeEntree: "2022",
-    // effectifs: mefs.annees.map((annee) => annee.effectif),
+    anneeDebut: isSpecialite ? 1 : dispositifRentrees.anneeDebut,
+    effectifs: dispositifRentrees.annees.map((annee) => annee.effectif ?? null),
+    capacites: dispositifRentrees.annees.map((_, i) => capacites?.[i] ?? null),
     effectifEntree: dispositifRentrees.annees.find((annee) => annee.constatee)
       ?.effectif,
     capacite,

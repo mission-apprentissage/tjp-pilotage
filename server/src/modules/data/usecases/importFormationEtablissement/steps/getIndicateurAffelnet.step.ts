@@ -8,7 +8,7 @@ export const getIndicateursAffelnetFactory =
   }: {
     isSpecialite: boolean;
     dispositifRentrees: CfdRentrees;
-  }): Promise<{ capacite?: number }> => {
+  }): Promise<{ capacite?: number; capacites: (number | null)[] }> => {
     if (isSpecialite) {
       if (!dispositifRentrees.annees[1]) {
         console.log(dispositifRentrees);
@@ -26,6 +26,7 @@ export const getIndicateursAffelnetFactory =
       const rawCapacite = affelnet1ere?.["Capacité carte scolaire"];
       return {
         capacite: parseInt(rawCapacite) || undefined,
+        capacites: [null, parseInt(rawCapacite) || null],
       };
     }
 
@@ -42,5 +43,6 @@ export const getIndicateursAffelnetFactory =
     const capacite = rawCapacite === "999" ? "" : rawCapacite;
     return {
       capacite: parseInt(capacite) || undefined,
+      capacites: [parseInt(capacite) || null, null],
     };
   };
