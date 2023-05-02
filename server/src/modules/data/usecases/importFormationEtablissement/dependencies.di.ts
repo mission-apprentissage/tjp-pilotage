@@ -38,7 +38,7 @@ const createIndicateurSortie = async (indicateurSortie: IndicateurSortie[]) => {
 const createIndicateurEntree = async (indicateurEntree: IndicateurEntree[]) => {
   db.upsert("indicateurEntree", indicateurEntree, [
     "formationEtablissementId",
-    "millesimeEntree",
+    "rentreeScolaire",
   ]).run(pool);
 };
 

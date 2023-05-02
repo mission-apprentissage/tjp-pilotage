@@ -1,23 +1,24 @@
 import { rawDataRepository } from "../../../repositories/rawData.repository";
+import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 export const getIndicateursAffelnetFactory =
   () =>
   async ({
     isSpecialite,
-    uai,
-    mefstat11FirstYear,
-    libelleDebut,
+    dispositifRentrees,
   }: {
     isSpecialite: boolean;
-    uai: string;
-    mefstat11FirstYear: string;
-    libelleDebut: string;
-  }): Promise<{ capacite?: number }> => {
+    dispositifRentrees: CfdRentrees;
+  }): Promise<{ capacite?: number; capacites: (number | null)[] }> => {
     if (isSpecialite) {
+      if (!dispositifRentrees.annees[1]) {
+        console.log(dispositifRentrees);
+      }
       const affelnet1ere = await rawDataRepository.findRawData({
         type: "affelnet1PROspe",
         filter: {
-          "Etablissement d'accueil": uai,
-          "Libellé du MEF national de rattachement": libelleDebut,
+          "Etablissement d'accueil": dispositifRentrees.uai,
+          "Libellé du MEF national de rattachement":
+            dispositifRentrees.annees[1].libelle,
           "Statut Offre de formation": "ST",
         },
       });
@@ -25,14 +26,15 @@ export const getIndicateursAffelnetFactory =
       const rawCapacite = affelnet1ere?.["Capacité carte scolaire"];
       return {
         capacite: parseInt(rawCapacite) || undefined,
+        capacites: [null, parseInt(rawCapacite) || null],
       };
     }
 
     const affelnet2nde = await rawDataRepository.findRawData({
       type: "affelnet2nde",
       filter: {
-        ID_ETAB: uai,
-        CO_MEFSTAT: mefstat11FirstYear,
+        ID_ETAB: dispositifRentrees.uai,
+        CO_MEFSTAT: dispositifRentrees.annees[0].mefstat,
         CO_STA: "ST",
       },
     });
@@ -41,5 +43,6 @@ export const getIndicateursAffelnetFactory =
     const capacite = rawCapacite === "999" ? "" : rawCapacite;
     return {
       capacite: parseInt(capacite) || undefined,
+      capacites: [parseInt(capacite) || null, null],
     };
   };

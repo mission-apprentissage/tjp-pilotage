@@ -226,10 +226,26 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("effectif")}
+                  onClick={() => handleOrder("effectif1")}
                 >
-                  <OrderIcon {...order} column="effectif" />
-                  {ETABLISSEMENTS_COLUMNS.effectif}
+                  <OrderIcon {...order} column="effectif1" />
+                  {ETABLISSEMENTS_COLUMNS.effectif1}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectif2")}
+                >
+                  <OrderIcon {...order} column="effectif2" />
+                  {ETABLISSEMENTS_COLUMNS.effectif2}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectif3")}
+                >
+                  <OrderIcon {...order} column="effectif3" />
+                  {ETABLISSEMENTS_COLUMNS.effectif3}
                 </Th>
                 <Th
                   isNumeric
@@ -292,7 +308,9 @@ export default function Etablissements() {
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif1 ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif2 ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif3 ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>

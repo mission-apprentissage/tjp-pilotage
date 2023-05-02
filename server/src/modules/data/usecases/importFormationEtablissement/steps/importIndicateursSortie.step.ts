@@ -1,30 +1,36 @@
 import { IndicateurSortie } from "../../../entities/IndicateurSortie";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
+import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
 import { logger } from "../importLogger";
 
 const toIndicateurSorties = ({
   ijData,
-  mefstat11LastYear,
-  uai,
+  dispositifRentrees,
   formationEtablissementId,
   millesime,
 }: {
   ijData: R | undefined;
-  mefstat11LastYear: string;
-  uai: string;
+  dispositifRentrees: CfdRentrees;
   formationEtablissementId: string;
   millesime: string;
 }): IndicateurSortie | undefined => {
+  const mefstatLastYear =
+    dispositifRentrees.annees[dispositifRentrees.annees.length - 1].mefstat;
   const type = "depp_mefstat";
 
-  const log = { uai, millesime, mefstat: mefstat11LastYear };
+  const log = {
+    uai: dispositifRentrees.uai,
+    millesime,
+    mefstat: mefstatLastYear,
+  };
   if (!ijData) {
     logger.log({ type, log: { ...log, status: "missing_uai" } });
     return;
   }
 
-  const mefData = ijData.meftstats?.[mefstat11LastYear];
+  const mefData = ijData.meftstats?.[mefstatLastYear];
+
   if (!mefData) {
     logger.log({ type, log: { ...log, status: "missing_mefstat" } });
     return;
@@ -51,21 +57,18 @@ export const importIndicateurSortieFactory = ({
 } = {}) => {
   return async ({
     formationEtablissementId,
-    uai,
-    mefstat11LastYear,
     millesime,
+    dispositifRentrees,
   }: {
     formationEtablissementId: string;
-    uai: string;
-    mefstat11LastYear: string;
     millesime: string;
+    dispositifRentrees: CfdRentrees;
   }) => {
-    const ijData = await getUaiData({ millesime, uai });
+    const ijData = await getUaiData({ millesime, uai: dispositifRentrees.uai });
     const indicateurSortie = toIndicateurSorties({
       ijData,
       millesime,
-      mefstat11LastYear,
-      uai,
+      dispositifRentrees,
       formationEtablissementId,
     });
     if (!indicateurSortie) return;

@@ -9,7 +9,7 @@ import { Formation } from "../../entities/Formation";
 const findEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
-  millesimeEntree = "2022",
+  rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
@@ -25,7 +25,7 @@ const findEtablissementsInDb = async ({
 }: {
   offset?: number;
   limit?: number;
-  millesimeEntree?: string;
+  rentreeScolaire?: string;
   millesimeSortie?: string;
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -48,6 +48,14 @@ const findEtablissementsInDb = async ({
       effectif: number;
     })[];
 }> => {
+  const effectifAnnee = (annee: db.SQLFragment) => {
+    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
+  };
+
+  const capaciteAnnee = (annee: db.SQLFragment) => {
+    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
+  };
+
   const query = await db.sql<
     SQL,
     (schema.etablissement.Selectable &
@@ -71,10 +79,19 @@ const findEtablissementsInDb = async ({
         "dispositifId",
         "libelleNiveauDiplome",
         "indicateurEtablissement"."valeurAjoutee" as "valeurAjoutee",
-        SUM("indicateurEntree"."effectifEntree") as effectif,
-        SUM("indicateurEntree"."capacite") as capacite,
+        "indicateurEntree"."anneeDebut",
+        (100 * ${effectifAnnee(db.sql`"anneeDebut"::text`)}
+          / ${capaciteAnnee(db.sql`"anneeDebut"::text`)})
+        as "tauxRemplissage",
+        ${effectifAnnee(db.sql`"anneeDebut"::text`)} as "effectif",
+        ${effectifAnnee(db.sql`'0'`)} as "effectif1",
+        ${effectifAnnee(db.sql`'1'`)} as "effectif2",
+        ${effectifAnnee(db.sql`'2'`)} as "effectif3",
+        ${capaciteAnnee(db.sql`"anneeDebut"::text`)} as "capacite",
+        ${capaciteAnnee(db.sql`'0'`)} as "capacite1",
+        ${capaciteAnnee(db.sql`'1'`)} as "capacite2",
+        ${capaciteAnnee(db.sql`'2'`)} as "capacite3",
         SUM("indicateurSortie"."nbSortants") as "nbSortants",
-        (100* SUM("indicateurEntree"."effectifEntree") / SUM("indicateurEntree"."capacite")) as "tauxRemplissage",
         (100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes"
     FROM "formation"
     LEFT JOIN "formationEtablissement"
@@ -87,7 +104,7 @@ const findEtablissementsInDb = async ({
         ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
     LEFT JOIN "indicateurEntree"
         ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
-        AND "indicateurEntree"."millesimeEntree" = ${db.param(millesimeEntree)}
+        AND "indicateurEntree"."rentreeScolaire" = ${db.param(rentreeScolaire)}
     LEFT JOIN "indicateurSortie"
         ON "indicateurSortie"."formationEtablissementId" = "formationEtablissement"."id" 
         AND "indicateurSortie"."millesimeSortie" = ${db.param(millesimeSortie)}
@@ -159,7 +176,8 @@ const findEtablissementsInDb = async ({
         "etablissement"."id",
         "departement"."codeDepartement",
         "libelleOfficielFamille",
-        "indicateurEntree"."millesimeEntree",
+        "indicateurEntree"."rentreeScolaire",
+        "indicateurEntree"."formationEtablissementId",
         "indicateurSortie"."millesimeSortie",
         "dispositifId",
         "libelleDispositif",

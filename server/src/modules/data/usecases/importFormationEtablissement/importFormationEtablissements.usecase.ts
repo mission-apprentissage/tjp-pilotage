@@ -1,8 +1,8 @@
 import { streamIt } from "../../utils/streamIt";
+import { getCfdRentreesFactory } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "./dependencies.di";
 import { MILLESIMES } from "./domain/millesimes";
 import { logger } from "./importLogger";
-import { getUaiFormationsFactory } from "./steps/getUaiFormations.step";
 import { importEtablissementFactory } from "./steps/importEtablissement.step";
 import { importIndicateurEtablissementFactory } from "./steps/importIndicateurEtablissement";
 import { importIndicateurEntreeFactory } from "./steps/importIndicateursEntree.step";
@@ -12,10 +12,10 @@ export const importFormationEtablissementsFactory = ({
   findFormations = dependencies.findFormations,
   createFormationEtablissement = dependencies.createFormationEtablissement,
   importEtablissement = importEtablissementFactory(),
-  getUaiFormations = getUaiFormationsFactory({}),
   importIndicateurEtablissement = importIndicateurEtablissementFactory({}),
   importIndicateurEntree = importIndicateurEntreeFactory({}),
   importIndicateurSortie = importIndicateurSortieFactory({}),
+  getCfdRentrees = getCfdRentreesFactory({}),
 }) => {
   logger.reset();
   return async () => {
@@ -24,39 +24,36 @@ export const importFormationEtablissementsFactory = ({
       async (item, count) => {
         const processedUais: string[] = [];
         const cfd = item.codeFormationDiplome;
-        const uaiFormations = await getUaiFormations({ cfd });
+        const cfdRentrees = await getCfdRentrees({ cfd });
         console.log("cfd", cfd, count);
 
-        for (const uaiFormation of uaiFormations) {
-          const uai = uaiFormation.uai;
+        for (const dispositifRentrees of cfdRentrees) {
+          const { uai, voie, dispositifId } = dispositifRentrees;
 
           if (!processedUais.includes(uai)) {
             await importEtablissement({ uai });
             await importIndicateurEtablissement({ uai });
             processedUais.push(uai);
           }
+          if (voie !== "scolaire") continue;
 
-          if (uaiFormation.voie !== "scolaire") continue;
           const formationEtablissement = await createFormationEtablissement({
             UAI: uai,
             cfd,
-            dispositifId: uaiFormation.dispositifId,
-            voie: uaiFormation.voie,
+            dispositifId,
+            voie,
           });
+
           await importIndicateurEntree({
-            isSpecialite: uaiFormation.isSpecialite,
             formationEtablissementId: formationEtablissement.id,
-            mefstat11FirstYear: uaiFormation.mefstat11FirstYear,
-            libelleDebut: uaiFormation.libelleDebut,
-            uai,
+            dispositifRentrees,
           });
 
           for (const millesime of MILLESIMES) {
             await importIndicateurSortie({
               formationEtablissementId: formationEtablissement.id,
-              mefstat11LastYear: uaiFormation.mefstat11LastYear,
+              dispositifRentrees,
               millesime,
-              uai,
             });
           }
         }
