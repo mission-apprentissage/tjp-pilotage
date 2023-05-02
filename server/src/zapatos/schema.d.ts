@@ -1630,11 +1630,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string;
+      rentreeScolaire: string;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1653,6 +1653,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nbPremiersVoeux: number | null;
+      /**
+      * **indicateurEntree.effectifs**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      effectifs: db.JSONValue | null;
+      /**
+      * **indicateurEntree.anneeDebut**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      anneeDebut: number | null;
+      /**
+      * **indicateurEntree.capacites**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      capacites: db.JSONValue | null;
     }
     export interface JSONSelectable {
       /**
@@ -1662,11 +1680,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string;
+      rentreeScolaire: string;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1685,6 +1703,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nbPremiersVoeux: number | null;
+      /**
+      * **indicateurEntree.effectifs**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      effectifs: db.JSONValue | null;
+      /**
+      * **indicateurEntree.anneeDebut**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      anneeDebut: number | null;
+      /**
+      * **indicateurEntree.capacites**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      capacites: db.JSONValue | null;
     }
     export interface Whereable {
       /**
@@ -1694,11 +1730,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
+      rentreeScolaire?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1717,6 +1753,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nbPremiersVoeux?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **indicateurEntree.effectifs**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      effectifs?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **indicateurEntree.anneeDebut**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      anneeDebut?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **indicateurEntree.capacites**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      capacites?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1726,11 +1780,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId: string | db.Parameter<string> | db.SQLFragment;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree: string | db.Parameter<string> | db.SQLFragment;
+      rentreeScolaire: string | db.Parameter<string> | db.SQLFragment;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1749,6 +1803,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nbPremiersVoeux?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **indicateurEntree.effectifs**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      effectifs?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **indicateurEntree.anneeDebut**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      anneeDebut?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **indicateurEntree.capacites**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      capacites?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1758,11 +1830,11 @@ declare module 'zapatos/schema' {
       */
       formationEtablissementId?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
-      * **indicateurEntree.millesimeEntree**
+      * **indicateurEntree.rentreeScolaire**
       * - `varchar` in database
       * - `NOT NULL`, no default
       */
-      millesimeEntree?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
+      rentreeScolaire?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
       /**
       * **indicateurEntree.capacite**
       * - `int4` in database
@@ -1781,6 +1853,24 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       nbPremiersVoeux?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **indicateurEntree.effectifs**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      effectifs?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **indicateurEntree.anneeDebut**
+      * - `int4` in database
+      * - Nullable, no default
+      */
+      anneeDebut?: number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **indicateurEntree.capacites**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      capacites?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'indicateurentree_pk';
     export type Column = keyof Selectable;
@@ -2505,149 +2595,6 @@ declare module 'zapatos/schema' {
   }
 
   /**
-   * **pg_mate**
-   * - Table in database
-   */
-  export namespace pg_mate {
-    export type Table = 'pg_mate';
-    export interface Selectable {
-      /**
-      * **pg_mate.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **pg_mate.name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      name: string;
-      /**
-      * **pg_mate.date**
-      * - `timestamp` in database
-      * - `NOT NULL`, no default
-      */
-      date: Date;
-      /**
-      * **pg_mate.batch_id**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      batch_id: string;
-    }
-    export interface JSONSelectable {
-      /**
-      * **pg_mate.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
-      */
-      id: number;
-      /**
-      * **pg_mate.name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      name: string;
-      /**
-      * **pg_mate.date**
-      * - `timestamp` in database
-      * - `NOT NULL`, no default
-      */
-      date: db.TimestampString;
-      /**
-      * **pg_mate.batch_id**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      batch_id: string;
-    }
-    export interface Whereable {
-      /**
-      * **pg_mate.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, number | db.Parameter<number> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **pg_mate.name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      name?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **pg_mate.date**
-      * - `timestamp` in database
-      * - `NOT NULL`, no default
-      */
-      date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.ParentColumn>;
-      /**
-      * **pg_mate.batch_id**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment | db.ParentColumn>;
-    }
-    export interface Insertable {
-      /**
-      * **pg_mate.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment;
-      /**
-      * **pg_mate.name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      name: string | db.Parameter<string> | db.SQLFragment;
-      /**
-      * **pg_mate.date**
-      * - `timestamp` in database
-      * - `NOT NULL`, no default
-      */
-      date: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment;
-      /**
-      * **pg_mate.batch_id**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      batch_id: string | db.Parameter<string> | db.SQLFragment;
-    }
-    export interface Updatable {
-      /**
-      * **pg_mate.id**
-      * - `int4` in database
-      * - `NOT NULL`, default: `nextval('pg_mate_id_seq'::regclass)`
-      */
-      id?: number | db.Parameter<number> | db.DefaultType | db.SQLFragment | db.SQLFragment<any, number | db.Parameter<number> | db.DefaultType | db.SQLFragment>;
-      /**
-      * **pg_mate.name**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      name?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-      /**
-      * **pg_mate.date**
-      * - `timestamp` in database
-      * - `NOT NULL`, no default
-      */
-      date?: (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment | db.SQLFragment<any, (db.TimestampString | Date) | db.Parameter<(db.TimestampString | Date)> | db.SQLFragment>;
-      /**
-      * **pg_mate.batch_id**
-      * - `varchar` in database
-      * - `NOT NULL`, no default
-      */
-      batch_id?: string | db.Parameter<string> | db.SQLFragment | db.SQLFragment<any, string | db.Parameter<string> | db.SQLFragment>;
-    }
-    export type UniqueIndex = 'pg_mate_pkey';
-    export type Column = keyof Selectable;
-    export type OnlyCols<T extends readonly Column[]> = Pick<Selectable, T[number]>;
-    export type SQLExpression = Table | db.ColumnNames<Updatable | (keyof Updatable)[]> | db.ColumnValues<Updatable> | Whereable | Column | db.ParentColumn | db.GenericSQLExpression;
-    export type SQL = SQLExpression | SQLExpression[];
-  }
-
-  /**
    * **rawData**
    * - Table in database
    */
@@ -2816,20 +2763,20 @@ declare module 'zapatos/schema' {
   /* --- aggregate types --- */
 
   export namespace public {  
-    export type Table = academie.Table | departement.Table | dispositif.Table | etablissement.Table | familleMetier.Table | formation.Table | formationEtablissement.Table | formationHistorique.Table | indicateurEntree.Table | indicateurEtablissement.Table | indicateurSortie.Table | knex_migrations.Table | knex_migrations_lock.Table | niveauDiplome.Table | pg_mate.Table | rawData.Table | region.Table;
-    export type Selectable = academie.Selectable | departement.Selectable | dispositif.Selectable | etablissement.Selectable | familleMetier.Selectable | formation.Selectable | formationEtablissement.Selectable | formationHistorique.Selectable | indicateurEntree.Selectable | indicateurEtablissement.Selectable | indicateurSortie.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable | niveauDiplome.Selectable | pg_mate.Selectable | rawData.Selectable | region.Selectable;
-    export type JSONSelectable = academie.JSONSelectable | departement.JSONSelectable | dispositif.JSONSelectable | etablissement.JSONSelectable | familleMetier.JSONSelectable | formation.JSONSelectable | formationEtablissement.JSONSelectable | formationHistorique.JSONSelectable | indicateurEntree.JSONSelectable | indicateurEtablissement.JSONSelectable | indicateurSortie.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | niveauDiplome.JSONSelectable | pg_mate.JSONSelectable | rawData.JSONSelectable | region.JSONSelectable;
-    export type Whereable = academie.Whereable | departement.Whereable | dispositif.Whereable | etablissement.Whereable | familleMetier.Whereable | formation.Whereable | formationEtablissement.Whereable | formationHistorique.Whereable | indicateurEntree.Whereable | indicateurEtablissement.Whereable | indicateurSortie.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable | niveauDiplome.Whereable | pg_mate.Whereable | rawData.Whereable | region.Whereable;
-    export type Insertable = academie.Insertable | departement.Insertable | dispositif.Insertable | etablissement.Insertable | familleMetier.Insertable | formation.Insertable | formationEtablissement.Insertable | formationHistorique.Insertable | indicateurEntree.Insertable | indicateurEtablissement.Insertable | indicateurSortie.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable | niveauDiplome.Insertable | pg_mate.Insertable | rawData.Insertable | region.Insertable;
-    export type Updatable = academie.Updatable | departement.Updatable | dispositif.Updatable | etablissement.Updatable | familleMetier.Updatable | formation.Updatable | formationEtablissement.Updatable | formationHistorique.Updatable | indicateurEntree.Updatable | indicateurEtablissement.Updatable | indicateurSortie.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable | niveauDiplome.Updatable | pg_mate.Updatable | rawData.Updatable | region.Updatable;
-    export type UniqueIndex = academie.UniqueIndex | departement.UniqueIndex | dispositif.UniqueIndex | etablissement.UniqueIndex | familleMetier.UniqueIndex | formation.UniqueIndex | formationEtablissement.UniqueIndex | formationHistorique.UniqueIndex | indicateurEntree.UniqueIndex | indicateurEtablissement.UniqueIndex | indicateurSortie.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | niveauDiplome.UniqueIndex | pg_mate.UniqueIndex | rawData.UniqueIndex | region.UniqueIndex;
-    export type Column = academie.Column | departement.Column | dispositif.Column | etablissement.Column | familleMetier.Column | formation.Column | formationEtablissement.Column | formationHistorique.Column | indicateurEntree.Column | indicateurEtablissement.Column | indicateurSortie.Column | knex_migrations.Column | knex_migrations_lock.Column | niveauDiplome.Column | pg_mate.Column | rawData.Column | region.Column;
+    export type Table = academie.Table | departement.Table | dispositif.Table | etablissement.Table | familleMetier.Table | formation.Table | formationEtablissement.Table | formationHistorique.Table | indicateurEntree.Table | indicateurEtablissement.Table | indicateurSortie.Table | knex_migrations.Table | knex_migrations_lock.Table | niveauDiplome.Table | rawData.Table | region.Table;
+    export type Selectable = academie.Selectable | departement.Selectable | dispositif.Selectable | etablissement.Selectable | familleMetier.Selectable | formation.Selectable | formationEtablissement.Selectable | formationHistorique.Selectable | indicateurEntree.Selectable | indicateurEtablissement.Selectable | indicateurSortie.Selectable | knex_migrations.Selectable | knex_migrations_lock.Selectable | niveauDiplome.Selectable | rawData.Selectable | region.Selectable;
+    export type JSONSelectable = academie.JSONSelectable | departement.JSONSelectable | dispositif.JSONSelectable | etablissement.JSONSelectable | familleMetier.JSONSelectable | formation.JSONSelectable | formationEtablissement.JSONSelectable | formationHistorique.JSONSelectable | indicateurEntree.JSONSelectable | indicateurEtablissement.JSONSelectable | indicateurSortie.JSONSelectable | knex_migrations.JSONSelectable | knex_migrations_lock.JSONSelectable | niveauDiplome.JSONSelectable | rawData.JSONSelectable | region.JSONSelectable;
+    export type Whereable = academie.Whereable | departement.Whereable | dispositif.Whereable | etablissement.Whereable | familleMetier.Whereable | formation.Whereable | formationEtablissement.Whereable | formationHistorique.Whereable | indicateurEntree.Whereable | indicateurEtablissement.Whereable | indicateurSortie.Whereable | knex_migrations.Whereable | knex_migrations_lock.Whereable | niveauDiplome.Whereable | rawData.Whereable | region.Whereable;
+    export type Insertable = academie.Insertable | departement.Insertable | dispositif.Insertable | etablissement.Insertable | familleMetier.Insertable | formation.Insertable | formationEtablissement.Insertable | formationHistorique.Insertable | indicateurEntree.Insertable | indicateurEtablissement.Insertable | indicateurSortie.Insertable | knex_migrations.Insertable | knex_migrations_lock.Insertable | niveauDiplome.Insertable | rawData.Insertable | region.Insertable;
+    export type Updatable = academie.Updatable | departement.Updatable | dispositif.Updatable | etablissement.Updatable | familleMetier.Updatable | formation.Updatable | formationEtablissement.Updatable | formationHistorique.Updatable | indicateurEntree.Updatable | indicateurEtablissement.Updatable | indicateurSortie.Updatable | knex_migrations.Updatable | knex_migrations_lock.Updatable | niveauDiplome.Updatable | rawData.Updatable | region.Updatable;
+    export type UniqueIndex = academie.UniqueIndex | departement.UniqueIndex | dispositif.UniqueIndex | etablissement.UniqueIndex | familleMetier.UniqueIndex | formation.UniqueIndex | formationEtablissement.UniqueIndex | formationHistorique.UniqueIndex | indicateurEntree.UniqueIndex | indicateurEtablissement.UniqueIndex | indicateurSortie.UniqueIndex | knex_migrations.UniqueIndex | knex_migrations_lock.UniqueIndex | niveauDiplome.UniqueIndex | rawData.UniqueIndex | region.UniqueIndex;
+    export type Column = academie.Column | departement.Column | dispositif.Column | etablissement.Column | familleMetier.Column | formation.Column | formationEtablissement.Column | formationHistorique.Column | indicateurEntree.Column | indicateurEtablissement.Column | indicateurSortie.Column | knex_migrations.Column | knex_migrations_lock.Column | niveauDiplome.Column | rawData.Column | region.Column;
   
-    export type AllBaseTables = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
+    export type AllBaseTables = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, rawData.Table, region.Table];
     export type AllForeignTables = [];
     export type AllViews = [];
     export type AllMaterializedViews = [];
-    export type AllTablesAndViews = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, pg_mate.Table, rawData.Table, region.Table];
+    export type AllTablesAndViews = [academie.Table, departement.Table, dispositif.Table, etablissement.Table, familleMetier.Table, formation.Table, formationEtablissement.Table, formationHistorique.Table, indicateurEntree.Table, indicateurEtablissement.Table, indicateurSortie.Table, knex_migrations.Table, knex_migrations_lock.Table, niveauDiplome.Table, rawData.Table, region.Table];
   }
 
 
@@ -2871,7 +2818,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.Selectable;
     "knex_migrations_lock": knex_migrations_lock.Selectable;
     "niveauDiplome": niveauDiplome.Selectable;
-    "pg_mate": pg_mate.Selectable;
     "rawData": rawData.Selectable;
     "region": region.Selectable;
   }[T];
@@ -2891,7 +2837,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.JSONSelectable;
     "knex_migrations_lock": knex_migrations_lock.JSONSelectable;
     "niveauDiplome": niveauDiplome.JSONSelectable;
-    "pg_mate": pg_mate.JSONSelectable;
     "rawData": rawData.JSONSelectable;
     "region": region.JSONSelectable;
   }[T];
@@ -2911,7 +2856,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.Whereable;
     "knex_migrations_lock": knex_migrations_lock.Whereable;
     "niveauDiplome": niveauDiplome.Whereable;
-    "pg_mate": pg_mate.Whereable;
     "rawData": rawData.Whereable;
     "region": region.Whereable;
   }[T];
@@ -2931,7 +2875,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.Insertable;
     "knex_migrations_lock": knex_migrations_lock.Insertable;
     "niveauDiplome": niveauDiplome.Insertable;
-    "pg_mate": pg_mate.Insertable;
     "rawData": rawData.Insertable;
     "region": region.Insertable;
   }[T];
@@ -2951,7 +2894,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.Updatable;
     "knex_migrations_lock": knex_migrations_lock.Updatable;
     "niveauDiplome": niveauDiplome.Updatable;
-    "pg_mate": pg_mate.Updatable;
     "rawData": rawData.Updatable;
     "region": region.Updatable;
   }[T];
@@ -2971,7 +2913,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.UniqueIndex;
     "knex_migrations_lock": knex_migrations_lock.UniqueIndex;
     "niveauDiplome": niveauDiplome.UniqueIndex;
-    "pg_mate": pg_mate.UniqueIndex;
     "rawData": rawData.UniqueIndex;
     "region": region.UniqueIndex;
   }[T];
@@ -2991,7 +2932,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.Column;
     "knex_migrations_lock": knex_migrations_lock.Column;
     "niveauDiplome": niveauDiplome.Column;
-    "pg_mate": pg_mate.Column;
     "rawData": rawData.Column;
     "region": region.Column;
   }[T];
@@ -3011,7 +2951,6 @@ declare module 'zapatos/schema' {
     "knex_migrations": knex_migrations.SQL;
     "knex_migrations_lock": knex_migrations_lock.SQL;
     "niveauDiplome": niveauDiplome.SQL;
-    "pg_mate": pg_mate.SQL;
     "rawData": rawData.SQL;
     "region": region.SQL;
   }[T];

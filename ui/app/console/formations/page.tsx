@@ -191,10 +191,26 @@ export default function Formations() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("effectif")}
+                  onClick={() => handleOrder("effectif1")}
                 >
-                  <OrderIcon {...order} column="effectif" />
-                  {FORMATIONS_COLUMNS.effectif}
+                  <OrderIcon {...order} column="effectif1" />
+                  {FORMATIONS_COLUMNS.effectif1}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectif2")}
+                >
+                  <OrderIcon {...order} column="effectif2" />
+                  {FORMATIONS_COLUMNS.effectif2}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectif3")}
+                >
+                  <OrderIcon {...order} column="effectif3" />
+                  {FORMATIONS_COLUMNS.effectif3}
                 </Th>
                 <Th
                   isNumeric
@@ -244,7 +260,9 @@ export default function Formations() {
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
                   <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif1 ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif2 ?? "-"}</Td>
+                  <Td isNumeric>{line.effectif3 ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxInsertion12mois} />
                   </Td>
