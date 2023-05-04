@@ -24,6 +24,7 @@ import { TableFooter } from "@/components/TableFooter";
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
+import { getBg } from "../../../utils/getBgScale";
 
 type Query = Parameters<typeof api.getFormations>[0]["query"];
 
@@ -96,16 +97,6 @@ export default function Formations() {
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
-  };
-
-  const getBg = (
-    value: number | undefined,
-    [min, max]: [number, number],
-    color = "255,174,174"
-  ) => {
-    if (value === undefined) return "";
-    const opacity = Math.min(Math.max(value / (max - min), 0.12), 1);
-    return `rgba(${color},${opacity})`;
   };
 
   return (
