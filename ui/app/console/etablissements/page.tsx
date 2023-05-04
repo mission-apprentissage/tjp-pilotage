@@ -13,6 +13,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ETABLISSEMENTS_COLUMNS } from "shared";
@@ -72,7 +73,10 @@ export default function Etablissements() {
     },
   });
 
+  const trackEvent = usePlausible();
   const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {
+    trackEvent("ordre_formation", { props: { colonne: column } });
+
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -93,10 +97,15 @@ export default function Etablissements() {
     });
   };
 
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("filtre_formation", { props: { filter_name: filterName } });
+  };
+
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Multiselect
+          onClose={filterTracker("codeRegion")}
           width="52"
           onChange={(selected) => handleFilters("codeRegion", selected)}
           options={data?.filters.regions}
@@ -104,6 +113,7 @@ export default function Etablissements() {
           Région
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeAcademie")}
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
@@ -111,6 +121,7 @@ export default function Etablissements() {
           Académie
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDepartement")}
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
@@ -118,6 +129,7 @@ export default function Etablissements() {
           Département
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("commune")}
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
@@ -125,6 +137,7 @@ export default function Etablissements() {
           Commune
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("uai")}
           width="52"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
@@ -132,6 +145,7 @@ export default function Etablissements() {
           Etablissement
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("secteur")}
           width="52"
           onChange={(selected) => handleFilters("secteur", selected)}
           options={[
@@ -142,6 +156,7 @@ export default function Etablissements() {
           Secteur
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDiplome")}
           width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
@@ -149,6 +164,7 @@ export default function Etablissements() {
           Diplôme
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("cfdFamille")}
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
@@ -156,6 +172,7 @@ export default function Etablissements() {
           Famille
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("cfd")}
           width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
@@ -331,6 +348,7 @@ export default function Etablissements() {
         </TableContainer>
       </Flex>
       <TableFooter
+        onExport={() => trackEvent("export_etablissements")}
         downloadLink={
           api.getEtablissementsCsv({
             query: { ...filters, ...order },

@@ -1,6 +1,7 @@
 import { db, pool } from "../../../db/zapatos";
 import { Affelnet1PROspe } from "../files/Affelnet1PROspe";
 import { Affelnet2ndeLine } from "../files/Affelnet2ndeLine";
+import { Attractivite_capacite } from "../files/Attractivite_capacite";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { Departements_academies_regions } from "../files/Departements_academies_regions";
 import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
@@ -23,6 +24,7 @@ type LineTypes = {
   departements_academies_regions: Departements_academies_regions;
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
   nDispositifFormation_: NDispositifFormation;
+  attractivite_capacite: Attractivite_capacite;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
@@ -42,7 +44,7 @@ const findRawData = async <T extends keyof LineTypes>({
       type,
     })
     .run(pool);
-  return (item?.data as LineTypes[T]) ?? undefined;
+  return (item?.data ?? undefined) as LineTypes[T] | undefined;
 };
 
 const findRawDatas = async <T extends keyof LineTypes>({

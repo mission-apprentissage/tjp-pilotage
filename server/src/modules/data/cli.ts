@@ -33,6 +33,14 @@ cli
   .action(async (filename: string) => {
     const actions = {
       ij: importIJRawData,
+      attractivite_capacite: () =>
+        importRawFile({
+          type: "attractivite_capacite",
+          fileStream: fs.createReadStream(
+            `${__dirname}/files/attractivite_capacite.csv`,
+            "utf8"
+          ),
+        }),
       nMef: () =>
         importRawFile({
           type: "nMef",

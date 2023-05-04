@@ -13,6 +13,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { FORMATIONS_COLUMNS } from "shared";
@@ -69,7 +70,10 @@ export default function Formations() {
       }),
   });
 
+  const trackEvent = usePlausible();
+
   const handleOrder = (column: Order["orderBy"]) => {
+    trackEvent("ordre_formation", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -90,10 +94,15 @@ export default function Formations() {
     });
   };
 
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("filtre_formation", { props: { filter_name: filterName } });
+  };
+
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Multiselect
+          onClose={filterTracker("codeRegion")}
           width="52"
           onChange={(selected) => handleFilters("codeRegion", selected)}
           options={data?.filters.regions}
@@ -101,6 +110,7 @@ export default function Formations() {
           Région
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeAcademie")}
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
@@ -108,6 +118,7 @@ export default function Formations() {
           Académie
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDepartement")}
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
@@ -115,6 +126,7 @@ export default function Formations() {
           Département
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("commune")}
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
@@ -122,6 +134,7 @@ export default function Formations() {
           Commune
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDiplome")}
           width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
@@ -129,6 +142,7 @@ export default function Formations() {
           Diplôme
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("cfdFamille")}
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
@@ -136,6 +150,7 @@ export default function Formations() {
           Famille
         </Multiselect>{" "}
         <Multiselect
+          onClose={filterTracker("cfd")}
           width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
@@ -189,6 +204,8 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.nbEtablissement}
                 </Th>
                 <Th
+                  display="flex"
+                  align="center"
                   isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("effectif1")}
@@ -211,6 +228,14 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {FORMATIONS_COLUMNS.effectif3}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPression")}
+                >
+                  <OrderIcon {...order} column="tauxPression" />
+                  {FORMATIONS_COLUMNS.tauxPression}
                 </Th>
                 <Th
                   isNumeric
@@ -249,7 +274,7 @@ export default function Formations() {
                   onClick={() => handleOrder("codeFormationDiplome")}
                 >
                   <OrderIcon {...order} column="codeFormationDiplome" />
-                  {FORMATIONS_COLUMNS.CodeFormationDiplome}
+                  {FORMATIONS_COLUMNS.codeFormationDiplome}
                 </Th>
                 <Th>{FORMATIONS_COLUMNS.decrochage}</Th>
               </Tr>
@@ -263,6 +288,7 @@ export default function Formations() {
                   <Td isNumeric>{line.effectif1 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+                  <Td isNumeric>{line.tauxPression ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxInsertion12mois} />
                   </Td>
@@ -286,6 +312,7 @@ export default function Formations() {
         </TableContainer>
       </Flex>
       <TableFooter
+        onExport={() => trackEvent("export_formations")}
         downloadLink={
           api.getFormationsCsv({
             query: { ...filters, ...order },

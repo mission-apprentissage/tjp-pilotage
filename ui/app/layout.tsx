@@ -48,7 +48,7 @@ export default function RootLayout({
         <PlausibleProvider
           trackLocalhost={false}
           enabled={tracking}
-          domain="pilotage-recette.trajectoirespro.beta.gouv.fr"
+          domain="orion.inserjeunes.beta.gouv.fr"
         />
       </head>
       <body>

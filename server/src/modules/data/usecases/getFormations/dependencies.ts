@@ -52,6 +52,10 @@ const findFormationsInDb = async ({
     return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
   };
 
+  const premierVoeuxAnnee = (annee: db.SQLFragment) => {
+    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
+  };
+
   const query = await db.sql<
     SQL,
     (schema.formation.Selectable & {
@@ -78,7 +82,7 @@ const findFormationsInDb = async ({
           case when ${capaciteAnnee(db.sql`"anneeDebut"::text`)} is not null 
           then ${effectifAnnee(db.sql`"anneeDebut"::text`)} 
           else null end)
-          / sum(${capaciteAnnee(db.sql`"anneeDebut"::text`)}))
+          / NULLIF(sum(${capaciteAnnee(db.sql`"anneeDebut"::text`)}), 0))
         as "tauxRemplissage",
         SUM(${effectifAnnee(db.sql`"anneeDebut"::text`)}) as "effectif",
         SUM(${effectifAnnee(db.sql`'0'`)}) as "effectif1",
@@ -88,6 +92,13 @@ const findFormationsInDb = async ({
         SUM(${capaciteAnnee(db.sql`'0'`)}) as "capacite1",
         SUM(${capaciteAnnee(db.sql`'1'`)}) as "capacite2",
         SUM(${capaciteAnnee(db.sql`'2'`)}) as "capacite3",
+        SUM(${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)}) as "premierVoeux",
+        (100 * sum(
+          case when ${capaciteAnnee(db.sql`"anneeDebut"::text`)} is not null 
+          then ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} 
+          else null end)
+          / NULLIF(sum(${capaciteAnnee(db.sql`"anneeDebut"::text`)}), 0))
+        as "tauxPression",
         (100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes",
         (100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants")) as "tauxInsertion12mois"
     FROM "formation"
