@@ -21,6 +21,7 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { getBg } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
@@ -344,7 +345,14 @@ export default function Etablissements() {
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
-                  <Td isNumeric>{line.tauxPression ?? "-"}</Td>
+                  <Td
+                    style={{ background: getBg(line.tauxPression, [0, 300]) }}
+                    isNumeric
+                  >
+                    {line.tauxPression !== undefined
+                      ? line.tauxPression / 100
+                      : "-"}
+                  </Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
