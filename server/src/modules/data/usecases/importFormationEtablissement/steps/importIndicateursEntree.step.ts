@@ -1,11 +1,11 @@
 import { IndicateurEntree } from "../../../entities/IndicateurEntree";
 import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
-import { getIndicateursAffelnetFactory } from "./getIndicateurAffelnet.step";
+import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "./getIndicateurAffelnet.step";
 
 export const importIndicateurEntreeFactory = ({
   createIndicateurEntree = dependencies.createIndicateurEntree,
-  getIndicateursAffelnet = getIndicateursAffelnetFactory({}),
+  getIndicateursAffelnet = getIndicateursAffelnetDep,
   findFamilleMetier = dependencies.findFamilleMetier,
 } = {}) => {
   return async ({

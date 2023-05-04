@@ -7406,6 +7406,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"injecti@npm:^1.0.5":
+  version: 1.0.5
+  resolution: "injecti@npm:1.0.5"
+  checksum: 3f8eb215c329a6ab7cb76d75b55ff3a166175f0bab55894b01b36baedaacf12569b0c796b10c6696bedc03c9158432b91f17edbe04325a608e64633df11de69c
+  languageName: node
+  linkType: hard
+
 "inline-style-prefixer@npm:^6.0.0":
   version: 6.0.4
   resolution: "inline-style-prefixer@npm:6.0.4"
@@ -12400,6 +12407,7 @@ __metadata:
     env-var: 7.1.1
     fastify: ^4.12.0
     fastify-qs: ^4.0.1
+    injecti: ^1.0.5
     jsonwebtoken: 8.5.1
     knex: ^2.4.2
     lodash: ^4.17.21
