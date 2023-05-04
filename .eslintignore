@@ -1,0 +1,7 @@
+node_modules
+dist
+.webpack
+.data
+build
+.infra
+release.config.js
