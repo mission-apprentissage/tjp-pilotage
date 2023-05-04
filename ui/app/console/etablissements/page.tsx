@@ -75,7 +75,7 @@ export default function Etablissements() {
 
   const trackEvent = usePlausible();
   const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {
-    trackEvent("ordre_formation", { props: { colonne: column } });
+    trackEvent("etablissements:ordre", { props: { colonne: column } });
 
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
@@ -98,7 +98,7 @@ export default function Etablissements() {
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("filtre_formation", { props: { filter_name: filterName } });
+    trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
   };
 
   return (
@@ -348,7 +348,7 @@ export default function Etablissements() {
         </TableContainer>
       </Flex>
       <TableFooter
-        onExport={() => trackEvent("export_etablissements")}
+        onExport={() => trackEvent("etablissements:export")}
         downloadLink={
           api.getEtablissementsCsv({
             query: { ...filters, ...order },
