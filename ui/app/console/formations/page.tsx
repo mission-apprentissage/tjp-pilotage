@@ -73,7 +73,7 @@ export default function Formations() {
   const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("ordre_formation", { props: { colonne: column } });
+    trackEvent("formations:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -95,7 +95,7 @@ export default function Formations() {
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("filtre_formation", { props: { filter_name: filterName } });
+    trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
 
   return (
@@ -312,7 +312,7 @@ export default function Formations() {
         </TableContainer>
       </Flex>
       <TableFooter
-        onExport={() => trackEvent("export_formations")}
+        onExport={() => trackEvent("formations:export")}
         downloadLink={
           api.getFormationsCsv({
             query: { ...filters, ...order },
