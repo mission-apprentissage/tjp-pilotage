@@ -1,48 +1,43 @@
 import { rawDataRepository } from "../../../repositories/rawData.repository";
 import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 export const getIndicateursAffelnetFactory =
-  () =>
+  ({ findRawData = rawDataRepository.findRawData }) =>
   async ({
-    isSpecialite,
     dispositifRentrees,
+    anneeDebut,
   }: {
-    isSpecialite: boolean;
     dispositifRentrees: CfdRentrees;
-  }): Promise<{ capacite?: number; capacites: (number | null)[] }> => {
-    if (isSpecialite) {
-      if (!dispositifRentrees.annees[1]) {
-        console.log(dispositifRentrees);
-      }
-      const affelnet1ere = await rawDataRepository.findRawData({
-        type: "affelnet1PROspe",
+    anneeDebut: number;
+  }): Promise<{
+    capacites: (number | null)[];
+    premiersVoeux: (number | null)[];
+  }> => {
+    const {
+      "Capacité  carte scolaire": rawCapacite,
+      "Demandes vœux 1": rawPremierVoeux,
+    } =
+      (await findRawData({
+        type: "attractivite_capacite",
         filter: {
+          "MEF STAT 11": dispositifRentrees.annees[anneeDebut].mefstat,
           "Etablissement d'accueil": dispositifRentrees.uai,
-          "Libellé du MEF national de rattachement":
-            dispositifRentrees.annees[1].libelle,
-          "Statut Offre de formation": "ST",
         },
-      });
+      })) ?? {};
 
-      const rawCapacite = affelnet1ere?.["Capacité carte scolaire"];
-      return {
-        capacite: parseInt(rawCapacite) || undefined,
-        capacites: [null, parseInt(rawCapacite) || null],
-      };
-    }
+    const capacite =
+      rawCapacite && rawCapacite !== "0" && rawCapacite !== "999"
+        ? parseInt(rawCapacite)
+        : undefined;
+    const premiersVoeux = rawPremierVoeux
+      ? parseInt(rawPremierVoeux)
+      : undefined;
 
-    const affelnet2nde = await rawDataRepository.findRawData({
-      type: "affelnet2nde",
-      filter: {
-        ID_ETAB: dispositifRentrees.uai,
-        CO_MEFSTAT: dispositifRentrees.annees[0].mefstat,
-        CO_STA: "ST",
-      },
-    });
-
-    const rawCapacite = affelnet2nde?.VAL_CARSCO;
-    const capacite = rawCapacite === "999" ? "" : rawCapacite;
     return {
-      capacite: parseInt(capacite) || undefined,
-      capacites: [parseInt(capacite) || null, null],
+      capacites:
+        anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],
+      premiersVoeux:
+        anneeDebut === 0
+          ? [premiersVoeux ?? null]
+          : [null, premiersVoeux ?? null],
     };
   };
