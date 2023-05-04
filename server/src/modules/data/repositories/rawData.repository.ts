@@ -51,15 +51,24 @@ const findRawDatas = async <T extends keyof LineTypes>({
   type,
   offset = 0,
   limit,
+  filter,
 }: {
   type: T;
   offset?: number;
   limit?: number;
+  filter?: Partial<LineTypes[T]>;
 }) => {
   const items = await db
     .select(
       "rawData",
-      { type },
+      {
+        ...(filter
+          ? {
+              data: db.sql`${db.self}@>${db.param(filter)}`,
+            }
+          : undefined),
+        type,
+      },
       { offset, limit, order: { by: "data", direction: "ASC" } }
     )
     .run(pool);

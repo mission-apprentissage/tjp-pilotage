@@ -92,7 +92,9 @@ const findFormationsInDb = async ({
         SUM(${capaciteAnnee(db.sql`'0'`)}) as "capacite1",
         SUM(${capaciteAnnee(db.sql`'1'`)}) as "capacite2",
         SUM(${capaciteAnnee(db.sql`'2'`)}) as "capacite3",
-        SUM(${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)}) as "premierVoeux",
+        SUM(${premierVoeuxAnnee(
+          db.sql`"anneeDebut"::text`
+        )}) as "premiersVoeux",
         (100 * sum(
           case when ${capaciteAnnee(db.sql`"anneeDebut"::text`)} is not null 
           then ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} 
