@@ -98,6 +98,16 @@ export default function Formations() {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
 
+  const getBg = (
+    value: number | undefined,
+    [min, max]: [number, number],
+    color = "255,174,174"
+  ) => {
+    if (value === undefined) return "";
+    const opacity = Math.min(Math.max(value / (max - min), 0.12), 1);
+    return `rgba(${color},${opacity})`;
+  };
+
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
@@ -232,14 +242,6 @@ export default function Formations() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("capacite")}
-                >
-                  <OrderIcon {...order} column="capacite" />
-                  {FORMATIONS_COLUMNS.capacite}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
@@ -252,6 +254,22 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {FORMATIONS_COLUMNS.tauxRemplissage}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("capacite")}
+                >
+                  <OrderIcon {...order} column="capacite" />
+                  {FORMATIONS_COLUMNS.capacite}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("premiersVoeux")}
+                >
+                  <OrderIcon {...order} column="premiersVoeux" />
+                  {FORMATIONS_COLUMNS.premiersVoeux}
                 </Th>
                 <Th
                   isNumeric
@@ -304,9 +322,19 @@ export default function Formations() {
                   <Td isNumeric>{line.effectif1 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+                  <Td
+                    style={{ background: getBg(line.tauxPression, [0, 300]) }}
+                    isNumeric
+                  >
+                    {line.tauxPression !== undefined
+                      ? line.tauxPression / 100
+                      : "-"}
+                  </Td>
+                  <Td isNumeric>
+                    <GraphWrapper value={line.tauxRemplissage} />
+                  </Td>
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
-                  <Td isNumeric>{line.tauxPression ?? "-"}</Td>
-                  <Td isNumeric>{line.tauxRemplissage ?? "-"}</Td>
+                  <Td isNumeric>{line.premiersVoeux ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxInsertion12mois} />
                   </Td>

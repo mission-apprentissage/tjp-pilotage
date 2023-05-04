@@ -10,6 +10,7 @@ export const ETABLISSEMENTS_COLUMNS = {
   capacite: "Capacité",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
+  premiersVoeux: "Nb premiers voeux",
   tauxPoursuiteEtudes: "Tx de poursuite d'études",
   valeurAjoutee: "Valeur ajoutée",
   decrochage: "Décrochage",
