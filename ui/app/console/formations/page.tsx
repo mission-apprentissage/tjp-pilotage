@@ -232,10 +232,26 @@ export default function Formations() {
                 <Th
                   isNumeric
                   cursor="pointer"
+                  onClick={() => handleOrder("capacite")}
+                >
+                  <OrderIcon {...order} column="capacite" />
+                  {FORMATIONS_COLUMNS.capacite}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {FORMATIONS_COLUMNS.tauxPression}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxRemplissage")}
+                >
+                  <OrderIcon {...order} column="tauxRemplissage" />
+                  {FORMATIONS_COLUMNS.tauxRemplissage}
                 </Th>
                 <Th
                   isNumeric
@@ -288,7 +304,9 @@ export default function Formations() {
                   <Td isNumeric>{line.effectif1 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+                  <Td isNumeric>{line.capacite ?? "-"}</Td>
                   <Td isNumeric>{line.tauxPression ?? "-"}</Td>
+                  <Td isNumeric>{line.tauxRemplissage ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxInsertion12mois} />
                   </Td>

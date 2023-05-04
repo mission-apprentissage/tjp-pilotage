@@ -235,14 +235,6 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("capacite")}
-                >
-                  <OrderIcon {...order} column="capacite" />
-                  {ETABLISSEMENTS_COLUMNS.capacite}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
@@ -267,12 +259,27 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
+                  onClick={() => handleOrder("capacite")}
+                >
+                  <OrderIcon {...order} column="capacite" />
+                  {ETABLISSEMENTS_COLUMNS.capacite}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPression")}
+                >
+                  <OrderIcon {...order} column="tauxPression" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPression}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
                   onClick={() => handleOrder("tauxRemplissage")}
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
                 </Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPression}</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -324,14 +331,15 @@ export default function Etablissements() {
                   <Td>{line.departement ?? "-"}</Td>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
-                  <Td isNumeric>{line.capacite ?? "-"}</Td>
+
                   <Td isNumeric>{line.effectif1 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+                  <Td isNumeric>{line.capacite ?? "-"}</Td>
+                  <Td isNumeric>{line.tauxPression ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
-                  <Td isNumeric>-</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxPoursuiteEtudes} />
                   </Td>
