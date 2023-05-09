@@ -284,14 +284,6 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("premiersVoeux")}
-                >
-                  <OrderIcon {...order} column="premiersVoeux" />
-                  {ETABLISSEMENTS_COLUMNS.premiersVoeux}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
                   onClick={() => handleOrder("tauxPoursuiteEtudes")}
                 >
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
@@ -346,7 +338,13 @@ export default function Etablissements() {
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
                   <Td
-                    style={{ background: getBg(line.tauxPression, [0, 300]) }}
+                    style={{
+                      background: getBg(
+                        line.tauxPression !== undefined
+                          ? line.tauxPression / 100
+                          : undefined
+                      ),
+                    }}
                     isNumeric
                   >
                     {line.tauxPression !== undefined
@@ -356,7 +354,6 @@ export default function Etablissements() {
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
-                  <Td isNumeric>{line.premiersVoeux ?? "-"}</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxPoursuiteEtudes} />
                   </Td>
