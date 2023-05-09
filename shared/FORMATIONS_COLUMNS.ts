@@ -7,8 +7,6 @@ export const FORMATIONS_COLUMNS = {
   effectif3: "Effectif 3",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  capacite: "Capacité",
-  premiersVoeux: "Nb premiers voeux",
   tauxInsertion12mois: "Tx d'emploi 12 mois",
   deltaInsertion6mois: "Delta régional insertion",
   tauxPoursuiteEtudes: "Tx de poursuite d'études	",

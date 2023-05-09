@@ -176,7 +176,10 @@ const findFormationsInDb = async ({
     })
     .$call((query) => {
       if (!orderBy) return query;
-      return query.orderBy(orderBy.column as any, orderBy.order);
+      return query.orderBy(
+        sql.ref(orderBy.column),
+        sql`${sql.raw(orderBy.order)} NULLS LAST`
+      );
     })
     .orderBy("libelleDiplome", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
