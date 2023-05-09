@@ -12,7 +12,7 @@ const FormationLineSchema = Type.Object({
   libelleOfficielFamille: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
-  libelleNiveauDiplome: Type.String(),
+  libelleNiveauDiplome: Type.Optional(Type.String()),
   nbEtablissement: Type.Optional(Type.Number()),
   anneeDebut: Type.Optional(Type.Number()),
   effectifNat: Type.Optional(Type.Number()),

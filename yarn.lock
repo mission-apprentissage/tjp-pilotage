@@ -8226,6 +8226,41 @@ __metadata:
   languageName: node
   linkType: hard
 
+"kysely-codegen@npm:^0.10.0":
+  version: 0.10.0
+  resolution: "kysely-codegen@npm:0.10.0"
+  dependencies:
+    chalk: 4.1.2
+    dotenv: ^16.0.3
+    micromatch: ^4.0.5
+    minimist: ^1.2.8
+  peerDependencies:
+    better-sqlite3: ">=7.6.2"
+    kysely: ">=0.19.12"
+    mysql2: ^2.3.3
+    pg: ^8.8.0
+  peerDependenciesMeta:
+    better-sqlite3:
+      optional: true
+    kysely:
+      optional: false
+    mysql2:
+      optional: true
+    pg:
+      optional: true
+  bin:
+    kysely-codegen: dist/bin/index.js
+  checksum: fb8cc854fbe1b493cec9df1156b04c2184230934cca714a8a2df510f658225c19514bb78c83e99d9d68da82fd80b2deff80396a3a8a995e733bfdb7dd536b4d3
+  languageName: node
+  linkType: hard
+
+"kysely@npm:^0.24.2":
+  version: 0.24.2
+  resolution: "kysely@npm:0.24.2"
+  checksum: b45a820c098f60440d6d601aae227cdbb58503a94a71dda928095b0f2cf7205a0b173a0940a36c89b4ff99c95174f223c0ff018c3845c1575fa779a6e297ca93
+  languageName: node
+  linkType: hard
+
 "language-subtag-registry@npm:^0.3.20, language-subtag-registry@npm:~0.3.2":
   version: 0.3.22
   resolution: "language-subtag-registry@npm:0.3.22"
@@ -9204,7 +9239,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"micromatch@npm:^4.0.0, micromatch@npm:^4.0.2, micromatch@npm:^4.0.4":
+"micromatch@npm:^4.0.0, micromatch@npm:^4.0.2, micromatch@npm:^4.0.4, micromatch@npm:^4.0.5":
   version: 4.0.5
   resolution: "micromatch@npm:4.0.5"
   dependencies:
@@ -9334,6 +9369,13 @@ __metadata:
   version: 1.2.7
   resolution: "minimist@npm:1.2.7"
   checksum: 7346574a1038ca23c32e02252f603801f09384dd1d78b69a943a4e8c2c28730b80e96193882d3d3b22a063445f460e48316b29b8a25addca2d7e5e8f75478bec
+  languageName: node
+  linkType: hard
+
+"minimist@npm:^1.2.8":
+  version: 1.2.8
+  resolution: "minimist@npm:1.2.8"
+  checksum: 75a6d645fb122dad29c06a7597bddea977258957ed88d7a6df59b5cd3fe4a527e253e9bbf2e783e4b73657f9098b96a5fe96ab8a113655d4109108577ecf85b0
   languageName: node
   linkType: hard
 
@@ -12410,6 +12452,8 @@ __metadata:
     injecti: ^1.0.5
     jsonwebtoken: 8.5.1
     knex: ^2.4.2
+    kysely: ^0.24.2
+    kysely-codegen: ^0.10.0
     lodash: ^4.17.21
     luxon: 2.3.0
     nodemon: ^2.0.20
