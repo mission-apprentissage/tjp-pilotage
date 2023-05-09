@@ -35,7 +35,7 @@ export const importFamillesMetiersFactory =
 
         count++;
         process.stdout.write(`\r${count}`);
-        await createFamillesMetiers([data]);
+        await createFamillesMetiers(data);
       }
     );
 

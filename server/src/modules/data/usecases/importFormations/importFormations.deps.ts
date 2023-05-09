@@ -1,12 +1,17 @@
 import _ from "lodash";
-import { IsolationLevel } from "zapatos/db";
 
-import { db, pool } from "../../../../db/zapatos";
+import { kdb } from "../../../../db/db";
 import { AncienneFormation, Formation } from "../../entities/Formation";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 
-const createFormation = async (formations: Omit<Formation, "id">[]) => {
-  await db.upsert("formation", formations, "codeFormationDiplome").run(pool);
+const createFormation = async (formation: Omit<Formation, "id">) => {
+  await kdb
+    .insertInto("formation")
+    .values(formation)
+    .onConflict((oc) =>
+      oc.column("codeFormationDiplome").doUpdateSet(formation)
+    )
+    .execute();
 };
 
 const findDiplomesProfessionnels = ({
@@ -37,23 +42,20 @@ export const createFormationHistorique = async (
     codeFormationDiplome: ancienneFormation.nouveauCFD,
     ancienCFD: ancienneFormation.codeFormationDiplome,
   };
+  kdb.transaction().execute(async (t) => {
+    await t
+      .insertInto("formation")
+      .values(_.omit(ancienneFormation, "nouveauCFD"))
+      .onConflict((oc) => oc.column("codeFormationDiplome").doNothing())
+      .execute();
 
-  await db.transaction(pool, IsolationLevel.Serializable, async (tr) => {
-    await db
-      .upsert(
-        "formation",
-        _.omit(ancienneFormation, "nouveauCFD"),
-        "codeFormationDiplome",
-        { updateColumns: db.doNothing }
+    await t
+      .insertInto("formationHistorique")
+      .values(formationHistorique)
+      .onConflict((oc) =>
+        oc.columns(["ancienCFD", "codeFormationDiplome"]).doNothing()
       )
-      .run(tr);
-
-    await db
-      .upsert("formationHistorique", formationHistorique, [
-        "ancienCFD",
-        "codeFormationDiplome",
-      ])
-      .run(tr);
+      .execute();
   });
 };
 
