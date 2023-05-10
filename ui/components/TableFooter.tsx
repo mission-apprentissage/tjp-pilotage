@@ -6,17 +6,26 @@ export const TableFooter = ({
   count = 0,
   onPageChange,
   downloadLink,
+  onExport,
 }: {
   pageSize: number;
   page: number;
   count?: number;
   onPageChange: (page: number) => void;
   downloadLink?: string;
+  onExport?: () => void;
 }) => {
   return (
     <Flex align="center" borderTop="1px solid" borderColor="grey.900" py="1.5">
       {downloadLink && (
-        <Button href={downloadLink} as="a" mr="auto" size="sm" variant="ghost">
+        <Button
+          onClick={onExport}
+          href={downloadLink}
+          as="a"
+          mr="auto"
+          size="sm"
+          variant="ghost"
+        >
           <DownloadIcon mr="2" />
           Exporter en CSV
         </Button>

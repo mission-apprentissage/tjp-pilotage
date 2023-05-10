@@ -150,11 +150,13 @@ export const Multiselect = chakra(
     children,
     options = [],
     onChange,
+    onClose,
     className,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
+    onClose?: () => void;
     className?: string;
   }) => {
     const [selected, dispatch] = useController(
@@ -225,7 +227,10 @@ export const Multiselect = chakra(
           });
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
-        onClose={() => setLimit(150)}
+        onClose={() => {
+          setLimit(150);
+          onClose?.();
+        }}
         closeOnSelect={false}
       >
         <MenuButton

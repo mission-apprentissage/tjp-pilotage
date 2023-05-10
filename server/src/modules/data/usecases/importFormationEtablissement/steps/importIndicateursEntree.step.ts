@@ -1,12 +1,11 @@
 import { IndicateurEntree } from "../../../entities/IndicateurEntree";
 import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
-import { logger } from "../importLogger";
-import { getIndicateursAffelnetFactory } from "./getIndicateurAffelnet.step";
+import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "./getIndicateurAffelnet.step";
 
 export const importIndicateurEntreeFactory = ({
   createIndicateurEntree = dependencies.createIndicateurEntree,
-  getIndicateursAffelnet = getIndicateursAffelnetFactory(),
+  getIndicateursAffelnet = getIndicateursAffelnetDep,
   findFamilleMetier = dependencies.findFamilleMetier,
 } = {}) => {
   return async ({
@@ -19,17 +18,20 @@ export const importIndicateurEntreeFactory = ({
     const isSpecialite = !!(await findFamilleMetier({
       cfdSpecialite: dispositifRentrees.cfd,
     }));
-    const { capacite, capacites } = await getIndicateursAffelnet({
-      isSpecialite,
+
+    const anneeDebut = isSpecialite ? 1 : dispositifRentrees.anneeDebutConstate;
+
+    const { capacites, premiersVoeux } = await getIndicateursAffelnet({
       dispositifRentrees,
+      anneeDebut,
     });
 
     const indicateurEntree = toIndicateurEntree({
       dispositifRentrees,
       formationEtablissementId,
-      capacite,
       capacites,
-      isSpecialite,
+      anneeDebut,
+      premiersVoeux,
     });
     if (!indicateurEntree) return;
     await createIndicateurEntree([indicateurEntree]);
@@ -39,32 +41,25 @@ export const importIndicateurEntreeFactory = ({
 const toIndicateurEntree = ({
   dispositifRentrees,
   formationEtablissementId,
-  capacite,
   capacites,
-  isSpecialite,
+  anneeDebut,
+  premiersVoeux,
 }: {
   dispositifRentrees: CfdRentrees;
   formationEtablissementId: string;
-  capacite?: number;
   capacites?: (number | null)[];
-  isSpecialite: boolean;
+  anneeDebut: number;
+  premiersVoeux: (number | null)[];
 }) => {
-  const type = "effectifEntree";
-
   const indicateurEntree: IndicateurEntree = {
     formationEtablissementId,
     rentreeScolaire: "2022",
-    anneeDebut: isSpecialite ? 1 : dispositifRentrees.anneeDebut,
+    anneeDebut: anneeDebut,
     effectifs: dispositifRentrees.annees.map((annee) => annee.effectif ?? null),
     capacites: dispositifRentrees.annees.map((_, i) => capacites?.[i] ?? null),
-    effectifEntree: dispositifRentrees.annees.find((annee) => annee.constatee)
-      ?.effectif,
-    capacite,
+    premiersVoeux,
   };
 
-  const status =
-    indicateurEntree.effectifEntree !== undefined ? "ok" : "missing";
-  logger.log({ type, log: { uai: dispositifRentrees.uai, status } });
   if (!indicateurEntree) return;
   return indicateurEntree;
 };

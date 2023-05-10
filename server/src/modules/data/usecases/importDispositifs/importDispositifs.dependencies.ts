@@ -1,4 +1,4 @@
-import { db, pool } from "../../../../db/zapatos";
+import { kdb } from "../../../../db/db";
 import { Dispositif } from "../../entities/Dispositif";
 import { NDispositifFormation } from "../../files/NDispositifFormation";
 
@@ -10,20 +10,23 @@ const findNDispositifFormation = async ({
   limit: number;
 }) => {
   return (
-    await db
-      .select(
-        "rawData",
-        {
-          type: "nDispositifFormation_",
-        },
-        { offset, limit, order: { by: "data", direction: "ASC" } }
-      )
-      .run(pool)
+    await kdb
+      .selectFrom("rawData")
+      .selectAll("rawData")
+      .where("type", "=", "nDispositifFormation_")
+      .orderBy("data", "asc")
+      .offset(offset)
+      .limit(limit)
+      .execute()
   ).map((item) => item.data as NDispositifFormation);
 };
 
 const createDispositif = async (dispositif: Dispositif) => {
-  await db.upsert("dispositif", dispositif, "codeDispositif").run(pool);
+  await kdb
+    .insertInto("dispositif")
+    .values(dispositif)
+    .onConflict((oc) => oc.column("codeDispositif").doUpdateSet(dispositif))
+    .execute();
 };
 
 export const dependencies = {

@@ -83,7 +83,7 @@ export const importFormationsFactory =
         if (!formation) return;
         count++;
         process.stdout.write(`\r${count}`);
-        await createFormation([formation]);
+        await createFormation(formation);
         await importFormationHistorique({ cfd });
       }
     );
