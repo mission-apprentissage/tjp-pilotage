@@ -1,9 +1,15 @@
-import { db, pool } from "../../../../db/zapatos";
+import { kdb } from "../../../../db/db";
 import { FamilleMetier } from "../../entities/FamilleMetier";
 import { NMefLine } from "../../files/NMef";
 
-export const createFamillesMetiers = async (famillesMetiers: FamilleMetier[]) =>
-  db.upsert("familleMetier", famillesMetiers, "mefStat11Specialite").run(pool);
+export const createFamillesMetiers = async (famillesMetier: FamilleMetier) =>
+  kdb
+    .insertInto("familleMetier")
+    .values(famillesMetier)
+    .onConflict((oc) =>
+      oc.column("mefStat11Specialite").doUpdateSet(famillesMetier)
+    )
+    .execute();
 
 const findNMef = async ({
   mefstat,
@@ -11,14 +17,14 @@ const findNMef = async ({
   mefstat: string;
 }): Promise<NMefLine> => {
   return (
-    await db
-      .selectExactlyOne("rawData", {
-        type: "nMef",
-        data: db.sql`${db.self}@>${db.param({
-          MEF_STAT_11: mefstat,
-        })}`,
+    await kdb
+      .selectFrom("rawData")
+      .selectAll("rawData")
+      .where("type", "=", "nMef")
+      .where("data", "@>", {
+        MEF_STAT_11: mefstat,
       })
-      .run(pool)
+      .executeTakeFirst()
   )?.data as NMefLine;
 };
 

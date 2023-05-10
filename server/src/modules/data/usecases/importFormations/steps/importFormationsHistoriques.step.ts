@@ -68,6 +68,7 @@ export const importFormationHistoriqueFactory =
       type: "nFormationDiplome_",
       filter: { FORMATION_DIPLOME: cfd },
     });
+    if (!formationData) return;
 
     const ancienCfds = toAncienCfds({ formationData });
 

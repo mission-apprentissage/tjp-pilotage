@@ -7,7 +7,7 @@ export type CfdRentrees = {
   dispositifId: string;
   voie: "scolaire" | "apprentissage";
   uai: string;
-  anneeDebut: number;
+  anneeDebutConstate: number;
   annees: {
     mefstat: string;
     libelle: string;
@@ -40,7 +40,7 @@ export const getCfdRentreesFactory =
 
             const chain2 = await Promise.all(chain1);
 
-            const anneeDebut = chain2.findIndex((nMef) =>
+            const anneeDebutConstate = chain2.findIndex((nMef) =>
               nMef.some((constat) => constat)
             );
 
@@ -53,7 +53,7 @@ export const getCfdRentreesFactory =
                 cfd,
                 voie: "scolaire" as const,
                 dispositifId,
-                anneeDebut,
+                anneeDebutConstate,
                 annees: dispositifNMefs.map((dis) => {
                   const constat = annees.find(
                     (constat) => constat["Mef Bcp 11"] === dis.MEF_STAT_11

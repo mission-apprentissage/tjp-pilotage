@@ -24,6 +24,7 @@ const EtablissementLineSchema = Type.Object({
   effectif1: Type.Optional(Type.Number()),
   effectif2: Type.Optional(Type.Number()),
   effectif3: Type.Optional(Type.Number()),
+  tauxPression: Type.Optional(Type.Number()),
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   valeurAjoutee: Type.Optional(Type.Number()),

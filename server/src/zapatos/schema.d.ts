@@ -1671,6 +1671,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       capacites: db.JSONValue | null;
+      /**
+      * **indicateurEntree.premiersVoeux**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      premiersVoeux: db.JSONValue | null;
     }
     export interface JSONSelectable {
       /**
@@ -1721,6 +1727,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       capacites: db.JSONValue | null;
+      /**
+      * **indicateurEntree.premiersVoeux**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      premiersVoeux: db.JSONValue | null;
     }
     export interface Whereable {
       /**
@@ -1771,6 +1783,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       capacites?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
+      /**
+      * **indicateurEntree.premiersVoeux**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      premiersVoeux?: db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | db.SQLFragment | db.ParentColumn>;
     }
     export interface Insertable {
       /**
@@ -1821,6 +1839,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       capacites?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
+      /**
+      * **indicateurEntree.premiersVoeux**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      premiersVoeux?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment;
     }
     export interface Updatable {
       /**
@@ -1871,6 +1895,12 @@ declare module 'zapatos/schema' {
       * - Nullable, no default
       */
       capacites?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
+      /**
+      * **indicateurEntree.premiersVoeux**
+      * - `jsonb` in database
+      * - Nullable, no default
+      */
+      premiersVoeux?: db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment | db.SQLFragment<any, db.JSONValue | db.Parameter<db.JSONValue> | null | db.DefaultType | db.SQLFragment>;
     }
     export type UniqueIndex = 'indicateurentree_pk';
     export type Column = keyof Selectable;

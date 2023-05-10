@@ -13,6 +13,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ETABLISSEMENTS_COLUMNS } from "shared";
@@ -20,6 +21,7 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { getBg } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
@@ -72,7 +74,10 @@ export default function Etablissements() {
     },
   });
 
+  const trackEvent = usePlausible();
   const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {
+    trackEvent("etablissements:ordre", { props: { colonne: column } });
+
     if (order?.orderBy !== column) {
       setOrder({ order: "desc", orderBy: column });
       return;
@@ -93,10 +98,15 @@ export default function Etablissements() {
     });
   };
 
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
+  };
+
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Multiselect
+          onClose={filterTracker("codeRegion")}
           width="52"
           onChange={(selected) => handleFilters("codeRegion", selected)}
           options={data?.filters.regions}
@@ -104,6 +114,7 @@ export default function Etablissements() {
           Région
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeAcademie")}
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
@@ -111,6 +122,7 @@ export default function Etablissements() {
           Académie
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDepartement")}
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
@@ -118,6 +130,7 @@ export default function Etablissements() {
           Département
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("commune")}
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
@@ -125,6 +138,7 @@ export default function Etablissements() {
           Commune
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("uai")}
           width="52"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
@@ -132,6 +146,7 @@ export default function Etablissements() {
           Etablissement
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("secteur")}
           width="52"
           onChange={(selected) => handleFilters("secteur", selected)}
           options={[
@@ -142,6 +157,7 @@ export default function Etablissements() {
           Secteur
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDiplome")}
           width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
@@ -149,6 +165,7 @@ export default function Etablissements() {
           Diplôme
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("cfdFamille")}
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
@@ -156,6 +173,7 @@ export default function Etablissements() {
           Famille
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("cfd")}
           width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
@@ -218,14 +236,6 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("capacite")}
-                >
-                  <OrderIcon {...order} column="capacite" />
-                  {ETABLISSEMENTS_COLUMNS.capacite}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
@@ -250,12 +260,27 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
+                  onClick={() => handleOrder("capacite")}
+                >
+                  <OrderIcon {...order} column="capacite" />
+                  {ETABLISSEMENTS_COLUMNS.capacite}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPression")}
+                >
+                  <OrderIcon {...order} column="tauxPression" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPression}
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
                   onClick={() => handleOrder("tauxRemplissage")}
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
                 </Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.tauxPression}</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -307,14 +332,28 @@ export default function Etablissements() {
                   <Td>{line.departement ?? "-"}</Td>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
-                  <Td isNumeric>{line.capacite ?? "-"}</Td>
+
                   <Td isNumeric>{line.effectif1 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif2 ?? "-"}</Td>
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+                  <Td isNumeric>{line.capacite ?? "-"}</Td>
+                  <Td
+                    style={{
+                      background: getBg(
+                        line.tauxPression !== undefined
+                          ? line.tauxPression / 100
+                          : undefined
+                      ),
+                    }}
+                    isNumeric
+                  >
+                    {line.tauxPression !== undefined
+                      ? line.tauxPression / 100
+                      : "-"}
+                  </Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxRemplissage} />
                   </Td>
-                  <Td isNumeric>-</Td>
                   <Td isNumeric>
                     <GraphWrapper value={line.tauxPoursuiteEtudes} />
                   </Td>
@@ -331,6 +370,7 @@ export default function Etablissements() {
         </TableContainer>
       </Flex>
       <TableFooter
+        onExport={() => trackEvent("etablissements:export")}
         downloadLink={
           api.getEtablissementsCsv({
             query: { ...filters, ...order },

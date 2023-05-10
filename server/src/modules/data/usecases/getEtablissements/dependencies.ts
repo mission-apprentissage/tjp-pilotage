@@ -56,6 +56,10 @@ const findEtablissementsInDb = async ({
     return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
   };
 
+  const premierVoeuxAnnee = (annee: db.SQLFragment) => {
+    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
+  };
+
   const query = await db.sql<
     SQL,
     (schema.etablissement.Selectable &
@@ -91,6 +95,10 @@ const findEtablissementsInDb = async ({
         ${capaciteAnnee(db.sql`'0'`)} as "capacite1",
         ${capaciteAnnee(db.sql`'1'`)} as "capacite2",
         ${capaciteAnnee(db.sql`'2'`)} as "capacite3",
+        ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} as "premiersVoeux",
+        (100 * ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} 
+          / NULLIF(${capaciteAnnee(db.sql`"anneeDebut"::text`)}, 0))
+        as "tauxPression",
         SUM("indicateurSortie"."nbSortants") as "nbSortants",
         (100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes"
     FROM "formation"
