@@ -1,11 +1,11 @@
 import { streamIt } from "../../utils/streamIt";
-import { getCfdRentreesFactory } from "../getCfdRentrees/getCfdRentrees.usecase";
+import { getCfdRentrees as getCfdRentreesDep } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "./dependencies.di";
-import { MILLESIMES } from "./domain/millesimes";
+import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { logger } from "./importLogger";
 import { importEtablissementFactory } from "./steps/importEtablissement.step";
 import { importIndicateurEtablissementFactory } from "./steps/importIndicateurEtablissement";
-import { importIndicateurEntreeFactory } from "./steps/importIndicateursEntree.step";
+import { importIndicateurEntree as importIndicateurEntreeDep } from "./steps/importIndicateursEntree.step";
 import { importIndicateurSortieFactory } from "./steps/importIndicateursSortie.step";
 
 export const importFormationEtablissementsFactory = ({
@@ -13,9 +13,9 @@ export const importFormationEtablissementsFactory = ({
   createFormationEtablissement = dependencies.createFormationEtablissement,
   importEtablissement = importEtablissementFactory(),
   importIndicateurEtablissement = importIndicateurEtablissementFactory({}),
-  importIndicateurEntree = importIndicateurEntreeFactory({}),
+  importIndicateurEntree = importIndicateurEntreeDep,
   importIndicateurSortie = importIndicateurSortieFactory({}),
-  getCfdRentrees = getCfdRentreesFactory({}),
+  getCfdRentrees = getCfdRentreesDep,
 }) => {
   logger.reset();
   return async () => {
@@ -24,7 +24,7 @@ export const importFormationEtablissementsFactory = ({
       async (item, count) => {
         const processedUais: string[] = [];
         const cfd = item.codeFormationDiplome;
-        const cfdRentrees = await getCfdRentrees({ cfd });
+        const cfdRentrees = await getCfdRentrees({ cfd, year: "2022" });
         console.log("cfd", cfd, count);
 
         for (const dispositifRentrees of cfdRentrees) {
@@ -32,7 +32,9 @@ export const importFormationEtablissementsFactory = ({
 
           if (!processedUais.includes(uai)) {
             await importEtablissement({ uai });
-            await importIndicateurEtablissement({ uai });
+            for (const millesime of MILLESIMES_IJ) {
+              await importIndicateurEtablissement({ uai, millesime });
+            }
             processedUais.push(uai);
           }
           if (voie !== "scolaire") continue;
@@ -44,12 +46,15 @@ export const importFormationEtablissementsFactory = ({
             voie,
           });
 
-          await importIndicateurEntree({
-            formationEtablissementId: formationEtablissement.id,
-            dispositifRentrees,
-          });
+          for (const rentreeScolaire of RENTREES_SCOLAIRES) {
+            await importIndicateurEntree({
+              formationEtablissementId: formationEtablissement.id,
+              dispositifRentrees,
+              rentreeScolaire,
+            });
+          }
 
-          for (const millesime of MILLESIMES) {
+          for (const millesime of MILLESIMES_IJ) {
             await importIndicateurSortie({
               formationEtablissementId: formationEtablissement.id,
               dispositifRentrees,

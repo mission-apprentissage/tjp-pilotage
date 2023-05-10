@@ -97,28 +97,26 @@ const findFormationsInDb = async ({
       "dispositifId",
       "libelleDispositif",
       "libelleNiveauDiplome",
-      sql<number>`COUNT(etablissement.*)`.as("nbEtablissement"),
+      sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
+      `.as("nbEtablissement"),
       sql<number>`avg("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       sql<number>`(100 * sum(
         case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
         then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
         / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
       `.as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})`.as(
-        "effectif"
-      ),
+      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})
+      `.as("effectif"),
       sql<number>`SUM(${effectifAnnee(sql`'0'`)})`.as("effectif1"),
       sql<number>`SUM(${effectifAnnee(sql`'1'`)})`.as("effectif2"),
       sql<number>`SUM(${effectifAnnee(sql`'2'`)})`.as("effectif3"),
-      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})`.as(
-        "capacite"
-      ),
+      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})
+      `.as("capacite"),
       sql<number>`SUM(${capaciteAnnee(sql`'0'`)})`.as("capacite1"),
       sql<number>`SUM(${capaciteAnnee(sql`'1'`)})`.as("capacite2"),
       sql<number>`SUM(${capaciteAnnee(sql`'2'`)})`.as("capacite3"),
-      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})`.as(
-        "premiersVoeux"
-      ),
+      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})
+      `.as("premiersVoeux"),
       sql<number>`(100 * sum(
         case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
         then ${premierVoeuxAnnee(sql`"anneeDebut"::text`)} end)

@@ -31,104 +31,31 @@ cli
   .command("importFiles")
   .argument("[filename]>")
   .action(async (filename: string) => {
+    const getImport = (type: string, year?: string) =>
+      importRawFile({
+        type: year ? `${type}_${year}` : type,
+        fileStream: fs.createReadStream(
+          year
+            ? `${__dirname}/files/${year}/${type}.csv`
+            : `${__dirname}/files/${type}.csv`,
+          "utf8"
+        ),
+      });
     const actions = {
       ij: importIJRawData,
-      attractivite_capacite: () =>
-        importRawFile({
-          type: "attractivite_capacite",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/attractivite_capacite.csv`,
-            "utf8"
-          ),
-        }),
-      nMef: () =>
-        importRawFile({
-          type: "nMef",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/nMef.csv`,
-            "utf8"
-          ),
-        }),
-      nNiveauFormationDiplome_: () =>
-        importRawFile({
-          type: "nNiveauFormationDiplome_",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/nNiveauFormationDiplome_.csv`,
-            "utf8"
-          ),
-        }),
-      nDispositifFormation_: () =>
-        importRawFile({
-          type: "nDispositifFormation_",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/nDispositifFormation_.csv`,
-            "utf8"
-          ),
-        }),
-      familleMetiers: () =>
-        importRawFile({
-          type: "familleMetiers",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/familleMetiers.csv`,
-            "utf8"
-          ),
-        }),
-      "Cab-nbre_division_effectifs_par_etab_mefst11": () =>
-        importRawFile({
-          type: "Cab-nbre_division_effectifs_par_etab_mefst11",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/Cab-nbre_division_effectifs_par_etab_mefst11.csv`,
-            "utf8"
-          ),
-        }),
+      attractivite_capacite_2022: () =>
+        getImport("attractivite_capacite", "2022"),
+      "Cab-nbre_division_effectifs_par_etab_mefst11_2022": () =>
+        getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2022"),
+      nMef: () => getImport("nMef"),
+      nNiveauFormationDiplome_: () => getImport("nNiveauFormationDiplome_"),
+      nDispositifFormation_: () => getImport("nDispositifFormation_"),
+      familleMetiers: () => getImport("familleMetiers"),
       departements_academies_regions: () =>
-        importRawFile({
-          type: "departements_academies_regions",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/departements_academies_regions.csv`,
-            "utf8"
-          ),
-        }),
-      diplomesProfessionnels: () =>
-        importRawFile({
-          type: "diplomesProfessionnels",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/diplomesProfessionnels.csv`,
-            "utf8"
-          ),
-        }),
-      nFormationDiplome_: () =>
-        importRawFile({
-          type: "nFormationDiplome_",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/nFormationDiplome_.csv`,
-            "utf8"
-          ),
-        }),
-      affelnet2nde: () =>
-        importRawFile({
-          type: "affelnet2nde",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/affelnet2nde.csv`,
-            "utf8"
-          ),
-        }),
-      affelnet1PROspe: () =>
-        importRawFile({
-          type: "affelnet1PROspe",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/affelnet1PROspe.csv`,
-            "utf8"
-          ),
-        }),
-      lyceesACCE: () =>
-        importRawFile({
-          type: "lyceesACCE",
-          fileStream: fs.createReadStream(
-            `${__dirname}/files/lyceesACCE.csv`,
-            "utf8"
-          ),
-        }),
+        getImport("departements_academies_regions"),
+      diplomesProfessionnels: () => getImport("diplomesProfessionnels"),
+      nFormationDiplome_: () => getImport("nFormationDiplome_"),
+      lyceesACCE: () => getImport("lyceesACCE"),
     };
 
     if (filename) {

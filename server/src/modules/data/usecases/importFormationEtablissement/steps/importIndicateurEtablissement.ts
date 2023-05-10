@@ -1,7 +1,6 @@
 import { IndicateurEtablissement } from "../../../entities/IndicateurEtablissement";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
 import { dependencies } from "../dependencies.di";
-import { MILLESIMES } from "../domain/millesimes";
 
 const toIndicateurEtablissement = ({
   deppEtablissement,
@@ -25,15 +24,13 @@ export const importIndicateurEtablissementFactory =
     getUaiData = dependencies.getUaiData,
     upsertIndicateurEtablissement = dependencies.upsertIndicateurEtablissement,
   }) =>
-  async ({ uai }: { uai: string }) => {
-    for (const millesime of MILLESIMES) {
-      const ijData = await getUaiData({ uai, millesime });
-      const indicateur = toIndicateurEtablissement({
-        deppEtablissement: ijData,
-        millesime,
-        uai,
-      });
-      if (!indicateur) continue;
-      await upsertIndicateurEtablissement(indicateur);
-    }
+  async ({ uai, millesime }: { uai: string; millesime: string }) => {
+    const ijData = await getUaiData({ uai, millesime });
+    const indicateur = toIndicateurEtablissement({
+      deppEtablissement: ijData,
+      millesime,
+      uai,
+    });
+    if (!indicateur) return;
+    await upsertIndicateurEtablissement(indicateur);
   };

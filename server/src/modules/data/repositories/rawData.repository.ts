@@ -1,6 +1,4 @@
-import { db, pool } from "../../../db/zapatos";
-import { Affelnet1PROspe } from "../files/Affelnet1PROspe";
-import { Affelnet2ndeLine } from "../files/Affelnet2ndeLine";
+import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../files/Attractivite_capacite";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { Departements_academies_regions } from "../files/Departements_academies_regions";
@@ -16,8 +14,6 @@ type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
   nFormationDiplome_: NFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
-  affelnet2nde: Affelnet2ndeLine;
-  affelnet1PROspe: Affelnet1PROspe;
   lyceesACCE: LyceesACCELine;
   nMef: NMefLine;
   "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
@@ -30,20 +26,23 @@ type LineTypes = {
 const findRawData = async <T extends keyof LineTypes>({
   type,
   filter,
+  year,
 }: {
   type: T;
   filter?: Partial<LineTypes[T]>;
+  year?: string;
 }) => {
-  const item = await db
-    .selectOne("rawData", {
-      ...(filter
-        ? {
-            data: db.sql`${db.self}@>${db.param(filter)}`,
-          }
-        : undefined),
-      type,
+  const item = await kdb
+    .selectFrom("rawData")
+    .selectAll("rawData")
+    .where("type", "=", year ? `${type}_${year}` : type)
+    .$call((q) => {
+      if (!filter) return q;
+      return q.where("data", "@>", filter);
     })
-    .run(pool);
+    .limit(1)
+    .executeTakeFirst();
+
   return (item?.data ?? undefined) as LineTypes[T] | undefined;
 };
 
@@ -52,26 +51,30 @@ const findRawDatas = async <T extends keyof LineTypes>({
   offset = 0,
   limit,
   filter,
+  year,
 }: {
   type: T;
   offset?: number;
   limit?: number;
   filter?: Partial<LineTypes[T]>;
+  year?: string;
 }) => {
-  const items = await db
-    .select(
-      "rawData",
-      {
-        ...(filter
-          ? {
-              data: db.sql`${db.self}@>${db.param(filter)}`,
-            }
-          : undefined),
-        type,
-      },
-      { offset, limit, order: { by: "data", direction: "ASC" } }
-    )
-    .run(pool);
+  const items = await kdb
+    .selectFrom("rawData")
+    .selectAll("rawData")
+    .where("type", "=", year ? `${type}_${year}` : type)
+    .$call((q) => {
+      if (!filter) return q;
+      return q.where("data", "@>", filter);
+    })
+    .offset(offset)
+    .$call((q) => {
+      if (!limit) return q;
+      return q.limit(limit);
+    })
+    .orderBy("data", "asc")
+    .execute();
+
   return items.map((item) => item.data as LineTypes[T]);
 };
 
