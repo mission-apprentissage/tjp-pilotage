@@ -1,3 +1,5 @@
+import { inject } from "injecti";
+
 import { IndicateurSortie } from "../../../entities/IndicateurSortie";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
 import { AnneeDispositif } from "../../getCfdRentrees/getCfdRentrees.usecase";
@@ -52,30 +54,33 @@ const toIndicateurSorties = ({
   return indicateurSortie;
 };
 
-export const importIndicateurSortieFactory = ({
-  createIndicateurSortie = dependencies.createIndicateurSortie,
-  getUaiData = dependencies.getUaiData,
-} = {}) => {
-  return async ({
-    uai,
-    formationEtablissementId,
-    millesime,
-    anneesDispositif,
-  }: {
-    uai: string;
-    formationEtablissementId: string;
-    millesime: string;
-    anneesDispositif: AnneeDispositif[];
-  }) => {
-    const ijData = await getUaiData({ millesime, uai });
-    const indicateurSortie = toIndicateurSorties({
-      ijData,
-      millesime,
-      anneesDispositif,
+export const [importIndicateurSortie] = inject(
+  {
+    createIndicateurSortie: dependencies.createIndicateurSortie,
+    getUaiData: dependencies.getUaiData,
+  },
+  (deps) => {
+    return async ({
       uai,
       formationEtablissementId,
-    });
-    if (!indicateurSortie) return;
-    await createIndicateurSortie([indicateurSortie]);
-  };
-};
+      millesime,
+      anneesDispositif,
+    }: {
+      uai: string;
+      formationEtablissementId: string;
+      millesime: string;
+      anneesDispositif: AnneeDispositif[];
+    }) => {
+      const ijData = await deps.getUaiData({ millesime, uai });
+      const indicateurSortie = toIndicateurSorties({
+        ijData,
+        millesime,
+        anneesDispositif,
+        uai,
+        formationEtablissementId,
+      });
+      if (!indicateurSortie) return;
+      await deps.createIndicateurSortie([indicateurSortie]);
+    };
+  }
+);
