@@ -21,7 +21,9 @@
     "zapatos": "zapatos",
     "zapatos-docker": "docker exec -it pilotage_server yarn zapatos",
     "cli": "ts-node -T src/modules/data/cli.ts ",
-    "cli-docker": "docker exec -it pilotage_server yarn cli"
+    "cli-docker": "docker exec -it pilotage_server yarn cli",
+    "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres",
+    "kysely-docker": "docker exec -it pilotage_server yarn kysely"
   },
   "dependencies": {
     "@fastify/cors": "^8.2.0",
