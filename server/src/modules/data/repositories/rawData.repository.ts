@@ -38,7 +38,7 @@ const findRawData = async <T extends keyof LineTypes>({
     .where("type", "=", year ? `${type}_${year}` : type)
     .$call((q) => {
       if (!filter) return q;
-      return q.where("data", "@>", filter);
+      return q.where("data", "@>", filter as never);
     })
     .limit(1)
     .executeTakeFirst();
@@ -65,7 +65,7 @@ const findRawDatas = async <T extends keyof LineTypes>({
     .where("type", "=", year ? `${type}_${year}` : type)
     .$call((q) => {
       if (!filter) return q;
-      return q.where("data", "@>", filter);
+      return q.where("data", "@>", filter as never);
     })
     .offset(offset)
     .$call((q) => {
