@@ -110,7 +110,7 @@ const findEtablissementsInDb = async ({
         ON "formation"."codeFormationDiplome" = "familleMetier"."cfdSpecialite"
     LEFT JOIN "niveauDiplome"
         ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
-    LEFT JOIN "indicateurEntree"
+    INNER JOIN "indicateurEntree"
         ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
         AND "indicateurEntree"."rentreeScolaire" = ${db.param(rentreeScolaire)}
     LEFT JOIN "indicateurSortie"

@@ -47,6 +47,10 @@ cli
         getImport("attractivite_capacite", "2022"),
       "Cab-nbre_division_effectifs_par_etab_mefst11_2022": () =>
         getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2022"),
+      attractivite_capacite_2021: () =>
+        getImport("attractivite_capacite", "2021"),
+      "Cab-nbre_division_effectifs_par_etab_mefst11_2021": () =>
+        getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2021"),
       nMef: () => getImport("nMef"),
       nNiveauFormationDiplome_: () => getImport("nNiveauFormationDiplome_"),
       nDispositifFormation_: () => getImport("nDispositifFormation_"),

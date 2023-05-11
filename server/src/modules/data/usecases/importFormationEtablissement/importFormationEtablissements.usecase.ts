@@ -24,42 +24,62 @@ export const importFormationEtablissementsFactory = ({
       async (item, count) => {
         const processedUais: string[] = [];
         const cfd = item.codeFormationDiplome;
-        const cfdRentrees = await getCfdRentrees({ cfd, year: "2022" });
-        console.log("cfd", cfd, count);
 
-        for (const dispositifRentrees of cfdRentrees) {
-          const { uai, voie, dispositifId } = dispositifRentrees;
-
-          if (!processedUais.includes(uai)) {
-            await importEtablissement({ uai });
-            for (const millesime of MILLESIMES_IJ) {
-              await importIndicateurEtablissement({ uai, millesime });
-            }
-            processedUais.push(uai);
-          }
-          if (voie !== "scolaire") continue;
-
-          const formationEtablissement = await createFormationEtablissement({
-            UAI: uai,
+        for (const rentreeScolaire of RENTREES_SCOLAIRES) {
+          const cfdDispositifs = await getCfdRentrees({
             cfd,
-            dispositifId,
-            voie,
+            year: rentreeScolaire,
           });
 
-          for (const rentreeScolaire of RENTREES_SCOLAIRES) {
-            await importIndicateurEntree({
-              formationEtablissementId: formationEtablissement.id,
-              dispositifRentrees,
-              rentreeScolaire,
-            });
-          }
+          console.log("cfd", cfd, count);
 
-          for (const millesime of MILLESIMES_IJ) {
-            await importIndicateurSortie({
-              formationEtablissementId: formationEtablissement.id,
-              dispositifRentrees,
-              millesime,
-            });
+          for (const cfdDispositif of cfdDispositifs) {
+            const {
+              dispositifId,
+              enseignements,
+              anneesDispositif,
+              anneeDebutConstate,
+            } = cfdDispositif;
+
+            for (const enseignement of enseignements) {
+              const { uai, anneesEnseignement, voie } = enseignement;
+              if (!processedUais.includes(uai)) {
+                await importEtablissement({ uai });
+                for (const millesime of MILLESIMES_IJ) {
+                  await importIndicateurEtablissement({ uai, millesime });
+                }
+                processedUais.push(uai);
+              }
+              if (voie !== "scolaire") continue;
+
+              const formationEtablissement = await createFormationEtablissement(
+                {
+                  UAI: uai,
+                  cfd,
+                  dispositifId,
+                  voie,
+                }
+              );
+
+              await importIndicateurEntree({
+                formationEtablissementId: formationEtablissement.id,
+                rentreeScolaire,
+                cfd,
+                uai,
+                anneeDebutConstate,
+                anneesEnseignement,
+                anneesDispositif,
+              });
+
+              for (const millesime of MILLESIMES_IJ) {
+                await importIndicateurSortie({
+                  uai,
+                  anneesDispositif,
+                  formationEtablissementId: formationEtablissement.id,
+                  millesime,
+                });
+              }
+            }
           }
         }
       }

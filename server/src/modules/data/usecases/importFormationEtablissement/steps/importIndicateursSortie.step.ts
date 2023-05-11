@@ -1,26 +1,27 @@
 import { IndicateurSortie } from "../../../entities/IndicateurSortie";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
-import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
+import { AnneeDispositif } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
 import { logger } from "../importLogger";
 
 const toIndicateurSorties = ({
+  uai,
   ijData,
-  dispositifRentrees,
   formationEtablissementId,
   millesime,
+  anneesDispositif,
 }: {
+  uai: string;
   ijData: R | undefined;
-  dispositifRentrees: CfdRentrees;
+  anneesDispositif: AnneeDispositif[];
   formationEtablissementId: string;
   millesime: string;
 }): IndicateurSortie | undefined => {
-  const mefstatLastYear =
-    dispositifRentrees.annees[dispositifRentrees.annees.length - 1].mefstat;
+  const mefstatLastYear = anneesDispositif[anneesDispositif.length - 1].mefstat;
   const type = "depp_mefstat";
 
   const log = {
-    uai: dispositifRentrees.uai,
+    uai,
     millesime,
     mefstat: mefstatLastYear,
   };
@@ -56,19 +57,22 @@ export const importIndicateurSortieFactory = ({
   getUaiData = dependencies.getUaiData,
 } = {}) => {
   return async ({
+    uai,
     formationEtablissementId,
     millesime,
-    dispositifRentrees,
+    anneesDispositif,
   }: {
+    uai: string;
     formationEtablissementId: string;
     millesime: string;
-    dispositifRentrees: CfdRentrees;
+    anneesDispositif: AnneeDispositif[];
   }) => {
-    const ijData = await getUaiData({ millesime, uai: dispositifRentrees.uai });
+    const ijData = await getUaiData({ millesime, uai });
     const indicateurSortie = toIndicateurSorties({
       ijData,
       millesime,
-      dispositifRentrees,
+      anneesDispositif,
+      uai,
       formationEtablissementId,
     });
     if (!indicateurSortie) return;

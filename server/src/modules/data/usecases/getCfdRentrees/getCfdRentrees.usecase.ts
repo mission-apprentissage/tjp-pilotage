@@ -19,6 +19,32 @@ export type CfdRentrees = {
   }[];
 };
 
+export type AnneeEnseignement = {
+  mefstat: string;
+  libelle: string;
+  annee: number;
+  effectif?: number;
+  constatee: boolean;
+};
+
+export type AnneeDispositif = {
+  mefstat: string;
+  libelleDispositif: string;
+};
+
+export type CfdDispositif = {
+  cfd: string;
+  dispositifId: string;
+  dureeDispositif: number;
+  anneeDebutConstate: number;
+  anneesDispositif: AnneeDispositif[];
+  enseignements: {
+    voie: "scolaire" | "apprentissage";
+    uai: string;
+    anneesEnseignement: AnneeEnseignement[];
+  }[];
+};
+
 export const [getCfdRentrees, getCfdRentreesFactory] = inject(
   {
     findNMefs,
@@ -31,7 +57,7 @@ export const [getCfdRentrees, getCfdRentreesFactory] = inject(
     }: {
       cfd: string;
       year: string;
-    }): Promise<CfdRentrees[]> => {
+    }): Promise<CfdDispositif[]> => {
       const nMefs = await deps.findNMefs({ cfd });
       const dispositifs = _.chain(nMefs)
         .orderBy("ANNEE_DISPOSITIF")
@@ -54,7 +80,7 @@ export const [getCfdRentrees, getCfdRentreesFactory] = inject(
             nMef.some((constat) => constat)
           );
 
-          return _.chain(chain2)
+          const enseignements = _.chain(chain2)
             .flatMap()
             .groupBy((v) => v["Numéro d'établissement"])
             .entries()
@@ -64,7 +90,7 @@ export const [getCfdRentrees, getCfdRentreesFactory] = inject(
               voie: "scolaire" as const,
               dispositifId,
               anneeDebutConstate,
-              annees: dispositifNMefs.map((dis) => {
+              anneesEnseignement: dispositifNMefs.map((dis) => {
                 const constat = annees.find(
                   (constat) => constat["Mef Bcp 11"] === dis.MEF_STAT_11
                 );
@@ -80,8 +106,21 @@ export const [getCfdRentrees, getCfdRentreesFactory] = inject(
               }),
             }))
             .value();
+
+          return {
+            cfd,
+            dispositifId,
+            dureeDispositif:
+              parseInt(dispositifNMefs[0].DUREE_DISPOSITIF) ?? undefined,
+            anneeDebutConstate,
+            anneesDispositif: dispositifNMefs.map((item) => ({
+              mefstat: item.MEF_STAT_11,
+              libelleDispositif: item.LIBELLE_LONG,
+            })),
+            enseignements,
+          };
         }
       );
-      return (await Promise.all(promises)).flat();
+      return await Promise.all(promises);
     }
 );
