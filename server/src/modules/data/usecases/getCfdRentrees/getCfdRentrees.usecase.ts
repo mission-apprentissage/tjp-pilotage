@@ -45,7 +45,7 @@ export type CfdDispositif = {
   }[];
 };
 
-export const [getCfdRentrees, getCfdRentreesFactory] = inject(
+export const [getCfdRentrees] = inject(
   {
     findNMefs,
     findConstatRentrees,
@@ -66,12 +66,11 @@ export const [getCfdRentrees, getCfdRentreesFactory] = inject(
 
       const promises = Object.entries(dispositifs).map(
         async ([dispositifId, dispositifNMefs]) => {
-          const chain1 = dispositifNMefs.map(
-            async (nMef) =>
-              await deps.findConstatRentrees({
-                mefStat11: nMef.MEF_STAT_11,
-                year,
-              })
+          const chain1 = dispositifNMefs.map((nMef) =>
+            deps.findConstatRentrees({
+              mefStat11: nMef.MEF_STAT_11,
+              year,
+            })
           );
 
           const chain2 = await Promise.all(chain1);

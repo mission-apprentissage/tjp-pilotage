@@ -72,7 +72,7 @@ const findRawDatas = async <T extends keyof LineTypes>({
       if (!limit) return q;
       return q.limit(limit);
     })
-    .orderBy("data", "asc")
+    .orderBy("id", "asc")
     .execute();
 
   return items.map((item) => item.data as LineTypes[T]);

@@ -71,7 +71,7 @@ const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
             "Mef Bcp 11": mefStat11,
           })}`,
         },
-        { order: { by: "data", direction: "ASC" } }
+        { order: { by: "id", direction: "ASC" } }
       )
       .run(pool)
   ).map((item) => item.data as Cab_bre_division_effectifs_par_etab_mefst11);
@@ -107,7 +107,7 @@ const findNMefs = async ({ cfd }: { cfd: string }) =>
             FORMATION_DIPLOME: cfd,
           })}`,
         },
-        { order: { by: "data", direction: "ASC" } }
+        { order: { by: "id", direction: "ASC" } }
       )
       .run(pool)
   ).map((item) => item.data as NMefLine);
