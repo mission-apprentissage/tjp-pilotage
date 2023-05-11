@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 
 import { rawDataRepository } from "../../../repositories/rawData.repository";
-import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
+import { AnneeDispositif } from "../../getCfdRentrees/getCfdRentrees.usecase";
 
 const findAttractiviteCapacite = async ({
   mefstat,
@@ -29,11 +29,14 @@ export const [getIndicateursAffelnet] = inject(
   { findAttractiviteCapacite },
   (deps) =>
     async ({
-      dispositifRentrees,
+      //dispositifRentrees,
+      anneesDispositif,
+      uai,
       anneeDebut,
       rentreeScolaire,
     }: {
-      dispositifRentrees: CfdRentrees;
+      anneesDispositif: AnneeDispositif[];
+      uai: string;
       anneeDebut: number;
       rentreeScolaire: string;
     }): Promise<{
@@ -41,8 +44,8 @@ export const [getIndicateursAffelnet] = inject(
       premiersVoeux: (number | null)[];
     }> => {
       const lines = await deps.findAttractiviteCapacite({
-        mefstat: dispositifRentrees.annees[anneeDebut].mefstat,
-        uai: dispositifRentrees.uai,
+        mefstat: anneesDispositif[anneeDebut].mefstat,
+        uai,
         rentreeScolaire,
       });
       if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };

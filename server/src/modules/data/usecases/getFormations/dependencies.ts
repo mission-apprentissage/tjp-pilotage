@@ -134,7 +134,7 @@ const findFormationsInDb = async ({
     )
     .groupBy([
       "formation.id",
-      "indicateurEntree.rentreeScolaire",
+      "formation.codeFormationDiplome",
       "dispositif.libelleDispositif",
       "formationEtablissement.dispositifId",
       "familleMetier.libelleOfficielFamille",

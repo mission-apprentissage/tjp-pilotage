@@ -21,7 +21,12 @@ export const [getUais] = inject(
           cfd: codeFormationDiplome,
           year: "2022",
         });
-        uais = [...uais, ...cfdRentrees.map((item) => item.uai)];
+        uais = [
+          ...uais,
+          ...cfdRentrees.flatMap(({ enseignements }) =>
+            enseignements.map(({ uai }) => uai)
+          ),
+        ];
       }
     );
 

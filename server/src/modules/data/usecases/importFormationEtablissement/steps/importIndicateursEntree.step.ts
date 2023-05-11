@@ -1,7 +1,10 @@
 import { inject } from "injecti";
 
 import { IndicateurEntree } from "../../../entities/IndicateurEntree";
-import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
+import {
+  AnneeDispositif,
+  AnneeEnseignement,
+} from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
 import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "./getIndicateurAffelnet.step";
 
@@ -14,29 +17,36 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
   (deps) => {
     return async ({
       formationEtablissementId,
-      dispositifRentrees,
+      anneesEnseignement,
+      anneesDispositif,
+      cfd,
+      anneeDebutConstate,
       rentreeScolaire,
+      uai,
     }: {
       formationEtablissementId: string;
-      dispositifRentrees: CfdRentrees;
+      anneesEnseignement: AnneeEnseignement[];
+      anneesDispositif: AnneeDispositif[];
+      anneeDebutConstate: number;
+      cfd: string;
       rentreeScolaire: string;
+      uai: string;
     }) => {
       const isSpecialite = !!(await deps.findFamilleMetier({
-        cfdSpecialite: dispositifRentrees.cfd,
+        cfdSpecialite: cfd,
       }));
 
-      const anneeDebut = isSpecialite
-        ? 1
-        : dispositifRentrees.anneeDebutConstate;
+      const anneeDebut = isSpecialite ? 1 : anneeDebutConstate;
 
       const { capacites, premiersVoeux } = await deps.getIndicateursAffelnet({
-        dispositifRentrees,
+        anneesDispositif,
+        uai,
         anneeDebut,
         rentreeScolaire,
       });
 
       const indicateurEntree = toIndicateurEntree({
-        dispositifRentrees,
+        anneesEnseignement,
         formationEtablissementId,
         capacites,
         anneeDebut,
@@ -50,14 +60,14 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
 );
 
 const toIndicateurEntree = ({
-  dispositifRentrees,
+  anneesEnseignement,
   formationEtablissementId,
   capacites,
   anneeDebut,
   premiersVoeux,
   rentreeScolaire,
 }: {
-  dispositifRentrees: CfdRentrees;
+  anneesEnseignement: AnneeEnseignement[];
   formationEtablissementId: string;
   capacites?: (number | null)[];
   anneeDebut: number;
@@ -68,8 +78,8 @@ const toIndicateurEntree = ({
     formationEtablissementId,
     rentreeScolaire,
     anneeDebut: anneeDebut,
-    effectifs: dispositifRentrees.annees.map((annee) => annee.effectif ?? null),
-    capacites: dispositifRentrees.annees.map((_, i) => capacites?.[i] ?? null),
+    effectifs: anneesEnseignement.map((annee) => annee.effectif ?? null),
+    capacites: anneesEnseignement.map((_, i) => capacites?.[i] ?? null),
     premiersVoeux,
   };
 
