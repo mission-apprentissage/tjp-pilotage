@@ -45,7 +45,7 @@ const findFormationsInDb = async ({
     return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
   };
 
-  const res = await kdb
+  const query = kdb
     .selectFrom("formation")
     .leftJoin(
       "formationEtablissement",
@@ -168,7 +168,7 @@ const findFormationsInDb = async ({
     })
     .$call((q) => {
       if (!codeDiplome) return q;
-      return q.where("dispositif.codeNiveauDiplome", "in", codeDiplome);
+      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
     })
     .$call((q) => {
       if (!cfdFamille) return q;
@@ -187,8 +187,9 @@ const findFormationsInDb = async ({
     .orderBy("nbEtablissement", "asc")
     .orderBy("codeFormationDiplome", "asc")
     .offset(offset)
-    .limit(limit)
-    .execute();
+    .limit(limit);
+
+  const res = await query.execute();
 
   return {
     count: res[0]?.count ?? 0,
