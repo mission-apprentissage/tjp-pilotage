@@ -1,15 +1,13 @@
 const scale = [
-  [0.5, "#ffb6b3de"],
-  [0.7, "#ffb6b3ba"],
-  [0.9, "#ffd5d4"],
-  [1.2, "#e7f1e8"],
-  [1.4, "#bde7bd9e"],
-  [1.8, "#bde7bdc7"],
-  [100, "#bde7bd"],
-];
+  { max: 0.5, bg: "#ffb7a5", color: "inherited" },
+  { max: 0.7, bg: "#ffcc9f", color: "inherited" },
+  { max: 1.3, bg: "#f2f2ff", color: "inherited" },
+  { max: 1.6, bg: "#b1b1f9", color: "inherited" },
+  { max: 1000, bg: "#8585f6", color: "white" },
+] as const;
 
-export const getBg = (value: number | undefined) => {
+export const getTauxPressionStyle = (value: number | undefined) => {
   if (value === undefined) return "";
-  const color = scale.find((item) => value < item[0])?.[1];
-  return color;
+  const { bg, color } = scale.find((item) => value < item.max) ?? {};
+  return { background: bg, color };
 };

@@ -21,7 +21,7 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
-import { getBg } from "@/utils/getBgScale";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
@@ -339,7 +339,7 @@ export default function Etablissements() {
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
                   <Td
                     style={{
-                      background: getBg(
+                      ...getTauxPressionStyle(
                         line.tauxPression !== undefined
                           ? line.tauxPression / 100
                           : undefined

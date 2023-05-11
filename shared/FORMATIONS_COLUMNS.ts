@@ -1,4 +1,5 @@
 export const FORMATIONS_COLUMNS = {
+  rentreeScolaire: "RS",
   libelleNiveauDiplome: "Diplome",
   libelleDiplome: "Formation",
   nbEtablissement: "Nb Etab",
