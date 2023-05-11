@@ -16,6 +16,7 @@ const getFormationsFactory =
     codeDispositif?: string[];
     commune?: string[];
     cfd?: string[];
+    rentreeScolaire?: string[];
     cfdFamille?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {

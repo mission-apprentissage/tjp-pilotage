@@ -3,6 +3,7 @@
 import {
   Center,
   Flex,
+  Skeleton,
   Spinner,
   Table,
   TableContainer,
@@ -14,17 +15,16 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
+import { Fragment, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
+import { getBg } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
-import { getBg } from "../../../utils/getBgScale";
 
 type Query = Parameters<typeof api.getFormations>[0]["query"];
 
@@ -40,6 +40,15 @@ type Filters = Pick<
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
+
+type Line = Awaited<
+  ReturnType<ReturnType<typeof api.getFormations>["call"]>
+>["formations"][number];
+
+type LineId = {
+  codeDispositif?: string;
+  cfd: string;
+};
 
 const PAGE_SIZE = 30;
 
@@ -89,15 +98,35 @@ export default function Formations() {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    unstable_batchedUpdates(() => {
-      setPage(0);
-      setFilters({ ...filters, [type]: value });
-    });
+    setPage(0);
+    setFilters({ ...filters, [type]: value });
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
+
+  const [historiqueId, setHistoriqueId] = useState<LineId>();
+
+  const { data: historique, isFetching: isFetchingHistorique } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await fetchFormations({
+          cfd: [historiqueId?.cfd],
+          codeDispositif: historiqueId?.codeDispositif
+            ? [historiqueId?.codeDispositif]
+            : undefined,
+          limit: 1,
+          rentreeScolaire: ["2021"],
+        })
+      ).formations;
+    },
+  });
 
   return (
     <>
@@ -182,6 +211,7 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
+                <Th isNumeric>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -290,47 +320,49 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Tr key={`${line.codeFormationDiplome}_${line.dispositifId}`}>
-                  <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-                  <Td>{line.libelleDiplome ?? "-"}</Td>
-                  <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif1 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif2 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-                  <Td
-                    style={{
-                      background: getBg(
-                        line.tauxPression !== undefined
-                          ? line.tauxPression / 100
-                          : undefined
-                      ),
-                    }}
-                    isNumeric
+                <Fragment
+                  key={`${line.codeFormationDiplome}_${line.dispositifId}`}
+                >
+                  <Tr
+                    onClick={() =>
+                      historiqueId?.cfd === line.codeFormationDiplome &&
+                      historiqueId.codeDispositif === line.dispositifId
+                        ? setHistoriqueId(undefined)
+                        : setHistoriqueId({
+                            cfd: line.codeFormationDiplome,
+                            codeDispositif: line.dispositifId,
+                          })
+                    }
                   >
-                    {line.tauxPression !== undefined
-                      ? line.tauxPression / 100
-                      : "-"}
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxRemplissage} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxInsertion12mois} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaInsertion12mois} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxPoursuiteEtudes} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
-                  </Td>
-                  <Td>{line.libelleDispositif ?? "-"}</Td>
-                  <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-                  <Td>{line.codeFormationDiplome ?? "-"}</Td>
-                  <Td>-</Td>
-                </Tr>
+                    <Td isNumeric>2022</Td>
+                    <LineContent line={line} />
+                  </Tr>
+                  {historiqueId?.cfd === line.codeFormationDiplome &&
+                    historiqueId.codeDispositif === line.dispositifId && (
+                      <>
+                        {historique &&
+                          historique.map((historiqueLine) => (
+                            <Tr
+                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              bg={"#f5f5f5"}
+                            >
+                              <Td isNumeric>2021</Td>
+                              <LineContent line={historiqueLine} />
+                            </Tr>
+                          ))}
+
+                        {isFetchingHistorique && (
+                          <Tr bg={"#f5f5f5"}>
+                            {new Array(17).fill(0).map((_, i) => (
+                              <Td key={i}>
+                                <Skeleton opacity={0.3} height="16px" />
+                              </Td>
+                            ))}
+                          </Tr>
+                        )}
+                      </>
+                    )}
+                </Fragment>
               ))}
             </Tbody>
           </Table>
@@ -351,3 +383,47 @@ export default function Formations() {
     </>
   );
 }
+
+const LineContent = ({ line }: { line: Line }) => {
+  return (
+    <>
+      <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
+      <Td>{line.libelleDiplome ?? "-"}</Td>
+      <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
+      <Td isNumeric>{line.effectif1 ?? "-"}</Td>
+      <Td isNumeric>{line.effectif2 ?? "-"}</Td>
+      <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+      <Td
+        style={{
+          background: getBg(
+            line.tauxPression !== undefined
+              ? line.tauxPression / 100
+              : undefined
+          ),
+        }}
+        isNumeric
+      >
+        {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+      </Td>
+      <Td isNumeric>
+        <GraphWrapper value={line.tauxRemplissage} />
+      </Td>
+      <Td isNumeric>
+        <GraphWrapper value={line.tauxInsertion12mois} />
+      </Td>
+      <Td isNumeric>
+        <GraphWrapper centered value={line.deltaInsertion12mois} />
+      </Td>
+      <Td isNumeric>
+        <GraphWrapper value={line.tauxPoursuiteEtudes} />
+      </Td>
+      <Td isNumeric>
+        <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
+      </Td>
+      <Td>{line.libelleDispositif ?? "-"}</Td>
+      <Td>{line.libelleOfficielFamille ?? "-"}</Td>
+      <Td>{line.codeFormationDiplome ?? "-"}</Td>
+      <Td>-</Td>
+    </>
+  );
+};

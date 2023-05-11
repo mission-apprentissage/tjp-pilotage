@@ -34,7 +34,9 @@ const FiltersSchema = Type.Object({
   codeDepartement: Type.Optional(Type.Array(Type.String())),
   commune: Type.Optional(Type.Array(Type.String())),
   codeDiplome: Type.Optional(Type.Array(Type.String())),
+  codeDispositif: Type.Optional(Type.Array(Type.String())),
   cfdFamille: Type.Optional(Type.Array(Type.String())),
+  rentreeScolaire: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(
     Type.KeyOf(
