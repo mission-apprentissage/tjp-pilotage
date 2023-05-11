@@ -24,7 +24,7 @@ import { TableFooter } from "@/components/TableFooter";
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
-import { getBg } from "../../../utils/getBgScale";
+import { getTauxPressionStyle } from "../../../utils/getBgScale";
 
 type Query = Parameters<typeof api.getFormations>[0]["query"];
 
@@ -299,7 +299,7 @@ export default function Formations() {
                   <Td isNumeric>{line.effectif3 ?? "-"}</Td>
                   <Td
                     style={{
-                      background: getBg(
+                      ...getTauxPressionStyle(
                         line.tauxPression !== undefined
                           ? line.tauxPression / 100
                           : undefined
