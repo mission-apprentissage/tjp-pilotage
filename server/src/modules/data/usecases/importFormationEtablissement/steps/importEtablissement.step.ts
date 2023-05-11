@@ -1,3 +1,4 @@
+import { inject } from "injecti";
 import { DateTime } from "luxon";
 
 import { Departement } from "../../../entities/Departement";
@@ -5,28 +6,30 @@ import { Etablissement } from "../../../entities/Etablissement";
 import { LyceesACCELine } from "../../../files/LyceesACCELine";
 import { dependencies } from "../dependencies.di";
 
-export const importEtablissementFactory =
-  ({
-    createEtablissement = dependencies.createEtablissement,
-    findLyceeACCE = dependencies.findLyceeACCE,
-    findDepartement = dependencies.findDepartement,
-  } = {}) =>
-  async ({ uai }: { uai: string }) => {
-    const lyceeACCE = await findLyceeACCE({ uai });
+export const [importEtablissement] = inject(
+  {
+    createEtablissement: dependencies.createEtablissement,
+    findLyceeACCE: dependencies.findLyceeACCE,
+    findDepartement: dependencies.findDepartement,
+  },
+  (deps) =>
+    async ({ uai }: { uai: string }) => {
+      const lyceeACCE = await deps.findLyceeACCE({ uai });
 
-    const codeDepartement = formatCodeDepartement(
-      lyceeACCE?.departement_insee_3
-    );
-    const departement =
-      codeDepartement && (await findDepartement({ codeDepartement }));
+      const codeDepartement = formatCodeDepartement(
+        lyceeACCE?.departement_insee_3
+      );
+      const departement =
+        codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
-    const etablissement = toEtablissement({
-      uai,
-      lyceeACCE,
-      departement,
-    });
-    await createEtablissement(etablissement);
-  };
+      const etablissement = toEtablissement({
+        uai,
+        lyceeACCE,
+        departement,
+      });
+      await deps.createEtablissement(etablissement);
+    }
+);
 
 const formatCodeDepartement = (codeInsee: string | undefined) => {
   if (!codeInsee) return;
