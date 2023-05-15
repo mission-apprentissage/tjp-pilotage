@@ -9,7 +9,7 @@ import { Formation } from "../../entities/Formation";
 const findEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
-  rentreeScolaire = "2022",
+  rentreeScolaire = ["2022"],
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
@@ -25,7 +25,7 @@ const findEtablissementsInDb = async ({
 }: {
   offset?: number;
   limit?: number;
-  rentreeScolaire?: string;
+  rentreeScolaire?: string[];
   millesimeSortie?: string;
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -82,6 +82,7 @@ const findEtablissementsInDb = async ({
         "libelleDispositif",
         "dispositifId",
         "libelleNiveauDiplome",
+        "indicateurEntree"."rentreeScolaire",
         "indicateurEtablissement"."valeurAjoutee" as "valeurAjoutee",
         "indicateurEntree"."anneeDebut",
         (100 * ${effectifAnnee(db.sql`"anneeDebut"::text`)}
@@ -112,7 +113,8 @@ const findEtablissementsInDb = async ({
         ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
     INNER JOIN "indicateurEntree"
         ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
-        AND "indicateurEntree"."rentreeScolaire" = ${db.param(rentreeScolaire)}
+        AND "indicateurEntree"."rentreeScolaire" IN 
+        (${db.vals(rentreeScolaire)})
     LEFT JOIN "indicateurSortie"
         ON "indicateurSortie"."formationEtablissementId" = "formationEtablissement"."id" 
         AND "indicateurSortie"."millesimeSortie" = ${db.param(millesimeSortie)}

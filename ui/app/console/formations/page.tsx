@@ -216,6 +216,7 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
+                <Th></Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -328,21 +329,21 @@ export default function Formations() {
                 <Fragment
                   key={`${line.codeFormationDiplome}_${line.dispositifId}`}
                 >
-                  <Tr
-                    cursor="pointer"
-                    onClick={() =>
-                      historiqueId?.cfd === line.codeFormationDiplome &&
-                      historiqueId.codeDispositif === line.dispositifId
-                        ? setHistoriqueId(undefined)
-                        : setHistoriqueId({
-                            cfd: line.codeFormationDiplome,
-                            codeDispositif: line.dispositifId,
-                          })
-                    }
-                  >
+                  <Tr>
                     <FormationLineContent
                       defaultRentreeScolaire="2022"
                       line={line}
+                      expended={
+                        historiqueId?.cfd === line.codeFormationDiplome &&
+                        historiqueId.codeDispositif === line.dispositifId
+                      }
+                      onClickExpend={() =>
+                        setHistoriqueId({
+                          cfd: line.codeFormationDiplome,
+                          codeDispositif: line.dispositifId,
+                        })
+                      }
+                      onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
                   {historiqueId?.cfd === line.codeFormationDiplome &&

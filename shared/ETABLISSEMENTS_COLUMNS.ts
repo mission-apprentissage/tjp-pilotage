@@ -1,5 +1,6 @@
 export const ETABLISSEMENTS_COLUMNS = {
   libelleEtablissement: "Nom d'établissement",
+  rentreeScolaire: "RS",
   commune: "Commune",
   departement: "Département",
   libelleNiveauDiplome: "Diplome",

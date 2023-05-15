@@ -7,26 +7,32 @@ import {
   Table,
   TableContainer,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
+import { Fragment, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ETABLISSEMENTS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
-import { getBg } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
+import {
+  EtablissementLineContent,
+  EtablissementLineLoader,
+  EtablissementLinePlaceholder,
+} from "./components/LineContent";
 
 type Query = Parameters<typeof api.getEtablissements>[0]["query"];
+
+export type Line = Awaited<
+  ReturnType<ReturnType<typeof api.getEtablissements>["call"]>
+>["etablissements"][number];
 
 type Filters = Pick<
   Query,
@@ -42,6 +48,12 @@ type Filters = Pick<
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
+
+type LineId = {
+  codeDispositif?: string;
+  cfd: string;
+  UAI: string;
+};
 
 const PAGE_SIZE = 30;
 
@@ -101,6 +113,32 @@ export default function Etablissements() {
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
   };
+
+  const [historiqueId, setHistoriqueId] = useState<LineId>();
+
+  const { data: historique, isFetching: isFetchingHistorique } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await fetchEtablissements({
+          ...filters,
+          cfd: [historiqueId?.cfd],
+          codeDispositif: historiqueId?.codeDispositif
+            ? [historiqueId?.codeDispositif]
+            : undefined,
+          uai: [historiqueId.UAI],
+          limit: 2,
+          order: "desc",
+          orderBy: "rentreeScolaire",
+          rentreeScolaire: ["2021"],
+        })
+      ).etablissements;
+    },
+  });
 
   return (
     <>
@@ -210,6 +248,13 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="libelleEtablissement" />
                   {ETABLISSEMENTS_COLUMNS.libelleEtablissement}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("rentreeScolaire")}
+                >
+                  <OrderIcon {...order} column="rentreeScolaire" />
+                  {ETABLISSEMENTS_COLUMNS.rentreeScolaire}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("commune")}>
                   <OrderIcon {...order} column="commune" />
@@ -324,46 +369,50 @@ export default function Etablissements() {
             </Thead>
             <Tbody>
               {data?.etablissements.map((line) => (
-                <Tr
+                <Fragment
                   key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
-                  <Td>{line.libelleEtablissement ?? "-"}</Td>
-                  <Td>{line.commune ?? "-"}</Td>
-                  <Td>{line.departement ?? "-"}</Td>
-                  <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-                  <Td>{line.libelleDiplome ?? "-"}</Td>
+                  <Tr>
+                    <EtablissementLineContent
+                      line={line}
+                      defaultRentreeScolaire="2022"
+                      expended={
+                        historiqueId?.cfd === line.codeFormationDiplome &&
+                        historiqueId.codeDispositif === line.dispositifId &&
+                        historiqueId.UAI === line.UAI
+                      }
+                      onClickExpend={() =>
+                        setHistoriqueId({
+                          cfd: line.codeFormationDiplome,
+                          codeDispositif: line.dispositifId,
+                          UAI: line.UAI,
+                        })
+                      }
+                      onClickCollapse={() => setHistoriqueId(undefined)}
+                    />
+                  </Tr>
+                  {historiqueId?.cfd === line.codeFormationDiplome &&
+                    historiqueId.codeDispositif === line.dispositifId &&
+                    historiqueId.UAI === line.UAI && (
+                      <>
+                        {historique &&
+                          historique.map((historiqueLine) => (
+                            <Tr
+                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              bg={"#f5f5f5"}
+                            >
+                              <EtablissementLineContent line={historiqueLine} />
+                            </Tr>
+                          ))}
 
-                  <Td isNumeric>{line.effectif1 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif2 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-                  <Td isNumeric>{line.capacite ?? "-"}</Td>
-                  <Td
-                    style={{
-                      background: getBg(
-                        line.tauxPression !== undefined
-                          ? line.tauxPression / 100
-                          : undefined
-                      ),
-                    }}
-                    isNumeric
-                  >
-                    {line.tauxPression !== undefined
-                      ? line.tauxPression / 100
-                      : "-"}
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxRemplissage} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxPoursuiteEtudes} />
-                  </Td>
-                  <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
-                  <Td isNumeric>-</Td>
-                  <Td>{line.secteur ?? "-"} </Td>
-                  <Td>{line.UAI ?? "-"} </Td>
-                  <Td>{line.libelleDispositif ?? "-"}</Td>
-                  <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-                </Tr>
+                        {historique && !historique.length && (
+                          <EtablissementLinePlaceholder />
+                        )}
+
+                        {isFetchingHistorique && <EtablissementLineLoader />}
+                      </>
+                    )}
+                </Fragment>
               ))}
             </Tbody>
           </Table>
