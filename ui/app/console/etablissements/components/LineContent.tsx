@@ -7,7 +7,7 @@ import { getBg } from "@/utils/getBgScale";
 import { GraphWrapper } from "../../../../components/GraphWrapper";
 import { Line } from "../page";
 
-export const FormationLineContent = ({
+export const EtablissementLineContent = ({
   line,
   defaultRentreeScolaire,
   onClickExpend,
@@ -39,13 +39,17 @@ export const FormationLineContent = ({
           </Box>
         )}
       </Td>
+      <Td>{line.libelleEtablissement ?? "-"}</Td>
+      <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
+      <Td>{line.commune ?? "-"}</Td>
+      <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td>{line.libelleDiplome ?? "-"}</Td>
-      <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
-      <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
+
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
+      <Td isNumeric>{line.capacite ?? "-"}</Td>
       <Td
         style={{
           background: getBg(
@@ -62,26 +66,19 @@ export const FormationLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion12mois} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaInsertion12mois} />
-      </Td>
-      <Td isNumeric>
         <GraphWrapper value={line.tauxPoursuiteEtudes} />
       </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
-      </Td>
+      <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
+      <Td isNumeric>-</Td>
+      <Td>{line.secteur ?? "-"} </Td>
+      <Td>{line.UAI ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-      <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>-</Td>
     </>
   );
 };
 
-export const FormationLineLoader = () => (
+export const EtablissementLineLoader = () => (
   <Tr bg={"#f5f5f5"}>
     {new Array(17).fill(0).map((_, i) => (
       <Td key={i}>
@@ -91,8 +88,8 @@ export const FormationLineLoader = () => (
   </Tr>
 );
 
-export const FormationLinePlaceholder = () => (
+export const EtablissementLinePlaceholder = () => (
   <Tr bg={"#f5f5f5"}>
-    <FormationLineContent line={{}} />
+    <EtablissementLineContent line={{}} />
   </Tr>
 );
