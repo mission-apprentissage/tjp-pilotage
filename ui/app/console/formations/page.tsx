@@ -216,7 +216,7 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th></Th>
+                <Th />
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
