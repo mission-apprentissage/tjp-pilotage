@@ -19,6 +19,7 @@ const getFormationsFactory =
     rentreeScolaire?: string[];
     cfdFamille?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
+    withEmptyFormations?: boolean;
   }) => {
     const formationsPromise = findFormationsInDb(activeFilters);
     const filtersPromise = findFiltersInDb(activeFilters);

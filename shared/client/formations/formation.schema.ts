@@ -8,6 +8,7 @@ const OptionSchema = Type.Object({
 const FormationLineSchema = Type.Object({
   codeFormationDiplome: Type.String(),
   libelleDiplome: Type.String(),
+  rentreeScolaire: Type.Optional(Type.String()),
   codeNiveauDiplome: Type.String(),
   libelleOfficielFamille: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
@@ -46,6 +47,7 @@ const FiltersSchema = Type.Object({
       ])
     )
   ),
+  withEmptyFormations: Type.Optional(Type.Boolean()),
 });
 
 export const formationSchemas = {

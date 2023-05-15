@@ -18,6 +18,7 @@ const findFormationsInDb = async ({
   cfd,
   cfdFamille,
   orderBy,
+  withEmptyFormations = true,
 }: {
   offset?: number;
   limit?: number;
@@ -32,6 +33,7 @@ const findFormationsInDb = async ({
   cfd?: string[];
   cfdFamille?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
+  withEmptyFormations?: boolean;
 } = {}) => {
   const effectifAnnee = (annee: RawBuilder<unknown>) => {
     return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
@@ -44,6 +46,8 @@ const findFormationsInDb = async ({
   const premierVoeuxAnnee = (annee: RawBuilder<unknown>) => {
     return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
   };
+
+  console.log("withEmptyFormations", withEmptyFormations);
 
   const res = await kdb
     .selectFrom("formation")
@@ -97,9 +101,10 @@ const findFormationsInDb = async ({
       "dispositifId",
       "libelleDispositif",
       "libelleNiveauDiplome",
+      "indicateurEntree.rentreeScolaire",
       sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
       `.as("nbEtablissement"),
-      sql<number>`avg("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
+      sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       sql<number>`(100 * sum(
         case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
         then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
@@ -132,9 +137,36 @@ const findFormationsInDb = async ({
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
+    .where(({ or, cmpr, selectFrom, exists, not }) =>
+      or([
+        cmpr("indicateurEntree.rentreeScolaire", "is not", null),
+        withEmptyFormations
+          ? not(
+              exists(
+                selectFrom("formationEtablissement as fe")
+                  .select("cfd")
+                  .distinct()
+                  .innerJoin(
+                    "indicateurEntree",
+                    "id",
+                    "formationEtablissementId"
+                  )
+                  .where("rentreeScolaire", "in", rentreeScolaire)
+                  .whereRef(
+                    "fe.dispositifId",
+                    "=",
+                    "formationEtablissement.dispositifId"
+                  )
+                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
+              )
+            )
+          : sql`false`,
+      ])
+    )
     .groupBy([
       "formation.id",
       "formation.codeFormationDiplome",
+      "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "formationEtablissement.dispositifId",
       "familleMetier.libelleOfficielFamille",
