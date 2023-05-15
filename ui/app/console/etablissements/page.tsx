@@ -242,6 +242,7 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
+                <Th />
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
