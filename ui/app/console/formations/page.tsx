@@ -3,12 +3,10 @@
 import {
   Center,
   Flex,
-  Skeleton,
   Spinner,
   Table,
   TableContainer,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
@@ -20,11 +18,14 @@ import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
-import { getBg } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
+import {
+  FormationLineContent,
+  FormationLineLoader,
+  FormationLinePlaceholder,
+} from "./components/LineContent";
 
 type Query = Parameters<typeof api.getFormations>[0]["query"];
 
@@ -41,7 +42,7 @@ type Filters = Pick<
 
 type Order = Pick<Query, "order" | "orderBy">;
 
-type Line = Awaited<
+export type Line = Awaited<
   ReturnType<ReturnType<typeof api.getFormations>["call"]>
 >["formations"][number];
 
@@ -117,12 +118,16 @@ export default function Formations() {
       if (!historiqueId) return;
       return (
         await fetchFormations({
+          ...filters,
           cfd: [historiqueId?.cfd],
           codeDispositif: historiqueId?.codeDispositif
             ? [historiqueId?.codeDispositif]
             : undefined,
-          limit: 1,
+          limit: 2,
+          order: "desc",
+          orderBy: "rentreeScolaire",
           rentreeScolaire: ["2021"],
+          withEmptyFormations: false,
         })
       ).formations;
     },
@@ -211,7 +216,6 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th isNumeric>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -226,6 +230,7 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleDiplome" />
                   {FORMATIONS_COLUMNS.libelleDiplome}
                 </Th>
+                <Th>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -324,6 +329,7 @@ export default function Formations() {
                   key={`${line.codeFormationDiplome}_${line.dispositifId}`}
                 >
                   <Tr
+                    cursor="pointer"
                     onClick={() =>
                       historiqueId?.cfd === line.codeFormationDiplome &&
                       historiqueId.codeDispositif === line.dispositifId
@@ -334,8 +340,10 @@ export default function Formations() {
                           })
                     }
                   >
-                    <Td isNumeric>2022</Td>
-                    <LineContent line={line} />
+                    <FormationLineContent
+                      defaultRentreeScolaire="2022"
+                      line={line}
+                    />
                   </Tr>
                   {historiqueId?.cfd === line.codeFormationDiplome &&
                     historiqueId.codeDispositif === line.dispositifId && (
@@ -346,20 +354,15 @@ export default function Formations() {
                               key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
                               bg={"#f5f5f5"}
                             >
-                              <Td isNumeric>2021</Td>
-                              <LineContent line={historiqueLine} />
+                              <FormationLineContent line={historiqueLine} />
                             </Tr>
                           ))}
 
-                        {isFetchingHistorique && (
-                          <Tr bg={"#f5f5f5"}>
-                            {new Array(17).fill(0).map((_, i) => (
-                              <Td key={i}>
-                                <Skeleton opacity={0.3} height="16px" />
-                              </Td>
-                            ))}
-                          </Tr>
+                        {historique && !historique.length && (
+                          <FormationLinePlaceholder />
                         )}
+
+                        {isFetchingHistorique && <FormationLineLoader />}
                       </>
                     )}
                 </Fragment>
@@ -383,47 +386,3 @@ export default function Formations() {
     </>
   );
 }
-
-const LineContent = ({ line }: { line: Line }) => {
-  return (
-    <>
-      <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td>{line.libelleDiplome ?? "-"}</Td>
-      <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
-      <Td isNumeric>{line.effectif1 ?? "-"}</Td>
-      <Td isNumeric>{line.effectif2 ?? "-"}</Td>
-      <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-      <Td
-        style={{
-          background: getBg(
-            line.tauxPression !== undefined
-              ? line.tauxPression / 100
-              : undefined
-          ),
-        }}
-        isNumeric
-      >
-        {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper value={line.tauxRemplissage} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion12mois} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaInsertion12mois} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper value={line.tauxPoursuiteEtudes} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
-      </Td>
-      <Td>{line.libelleDispositif ?? "-"}</Td>
-      <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-      <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>-</Td>
-    </>
-  );
-};
