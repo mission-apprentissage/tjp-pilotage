@@ -9,7 +9,7 @@ import { Formation } from "../../entities/Formation";
 const findEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
-  rentreeScolaire = "2022",
+  rentreeScolaire = "2021",
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
@@ -60,7 +60,7 @@ const findEtablissementsInDb = async ({
     return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
   };
 
-  const query = await db.sql<
+  const query = db.sql<
     SQL,
     (schema.etablissement.Selectable &
       schema.formation.Selectable & {
@@ -162,7 +162,7 @@ const findEtablissementsInDb = async ({
         } 
         AND ${
           codeDiplome
-            ? db.sql`"niveauDiplome"."codeNiveauDiplome" IN (${db.vals(
+            ? db.sql`"dispositif"."codeNiveauDiplome" IN (${db.vals(
                 codeDiplome
               )})`
             : {}

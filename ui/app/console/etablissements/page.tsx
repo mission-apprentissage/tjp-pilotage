@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Center,
   Flex,
   Spinner,
@@ -21,10 +22,12 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
-import { getBg } from "@/utils/getBgScale";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 
 type Query = Parameters<typeof api.getEtablissements>[0]["query"];
 
@@ -204,6 +207,10 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
+                <Th>
+                  RS
+                  <TooltipIcon ml="1" label="Rentrée scolaire" />
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
@@ -240,6 +247,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {ETABLISSEMENTS_COLUMNS.effectif1}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -248,6 +256,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {ETABLISSEMENTS_COLUMNS.effectif2}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -256,6 +265,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {ETABLISSEMENTS_COLUMNS.effectif3}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -272,6 +282,18 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la l'offre de formation.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -280,6 +302,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -296,6 +322,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="valeurAjoutee" />
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
+                  <TooltipIcon
+                    ml="1"
+                    label="Capacité de l'établissement à insérer en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi comparativement à des établissements similaires."
+                  />
                 </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
@@ -327,6 +357,7 @@ export default function Etablissements() {
                 <Tr
                   key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
+                  <Td>2022</Td>
                   <Td>{line.libelleEtablissement ?? "-"}</Td>
                   <Td>{line.commune ?? "-"}</Td>
                   <Td>{line.departement ?? "-"}</Td>
@@ -339,7 +370,7 @@ export default function Etablissements() {
                   <Td isNumeric>{line.capacite ?? "-"}</Td>
                   <Td
                     style={{
-                      background: getBg(
+                      ...getTauxPressionStyle(
                         line.tauxPression !== undefined
                           ? line.tauxPression / 100
                           : undefined
