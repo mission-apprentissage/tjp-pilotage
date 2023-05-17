@@ -289,7 +289,7 @@ export default function Formations() {
                     label={
                       <>
                         Ecart par rapport à la moyenne régionale d’insertion du
-                        niveau de diplôme ( Cap, BAc pro, Bts... ) <br />
+                        niveau de diplôme (Cap, Bac pro, Bts...) <br />
                         Ex: en région AURA, le bac pro Boulanger-Patissier est
                         17 points plus insérant que la moyenne des autres bac
                         pro de la région.
@@ -305,17 +305,19 @@ export default function Formations() {
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
                   {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
-                <Th isNumeric>{FORMATIONS_COLUMNS.deltaPoursuiteEtudes}</Th>
+                <Th isNumeric>
+                  {FORMATIONS_COLUMNS.deltaPoursuiteEtudes}
+                  <TooltipIcon
+                    ml="1"
+                    label="Ecart par rapport à la moyenne régionale de poursuite d’étude du niveau de diplôme (Cap, Bac pro, Bts...)."
+                  />
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
                 >
                   <OrderIcon {...order} column="libelleDispositif" />
                   {FORMATIONS_COLUMNS.libelleDispositif}
-                  <TooltipIcon
-                    ml="1"
-                    label="Ecart par rapport à la moyenne régionale de poursuite d’étude du niveau de diplôme ( Cap, BAc pro, Bts... )."
-                  />
                 </Th>
                 <Th
                   cursor="pointer"
