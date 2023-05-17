@@ -1,13 +1,9 @@
 "use client";
 
 import {
-  Badge,
-  Box,
   Center,
-  chakra,
   Flex,
   Spinner,
-  Stack,
   Table,
   TableContainer,
   Tbody,
@@ -19,11 +15,12 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePlausible } from "next-plausible";
-import { ReactNode, useState } from "react";
+import { useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
+import { TauxPressionScale } from "@/app/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
@@ -247,30 +244,7 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  <Tooltip
-                    label={
-                      <>
-                        <Box mb="2">Voeux 1 / capacité</Box>
-                        <Stack mb="2">
-                          <Badge style={getTauxPressionStyle(0.2)}>
-                            Entre 0 et 0.5
-                          </Badge>
-                          <Badge style={getTauxPressionStyle(0.6)}>
-                            Entre 0.5 et 0.7
-                          </Badge>
-                          <Badge style={getTauxPressionStyle(1)}>
-                            Entre 0.7 et 1.3
-                          </Badge>
-                          <Badge style={getTauxPressionStyle(1.4)}>
-                            Entre 1.3 et 1.6
-                          </Badge>
-                          <Badge style={getTauxPressionStyle(2)}>
-                            Au dessus de 1.6
-                          </Badge>
-                        </Stack>
-                      </>
-                    }
-                  >
+                  <Tooltip label={<TauxPressionScale />}>
                     {FORMATIONS_COLUMNS.tauxPression}
                   </Tooltip>
                 </Th>
@@ -402,35 +376,3 @@ export default function Formations() {
     </>
   );
 }
-
-const CustomTh = chakra(function ({
-  handleOrder,
-  column,
-  order,
-  tpLabel,
-  children,
-  isNumeric,
-}: {
-  handleOrder?: (column: Query["orderBy"]) => void;
-  column: Exclude<Query["orderBy"], undefined>;
-  order?: {
-    orderBy?: Query["orderBy"];
-    order?: Query["order"];
-  };
-  tpLabel: string;
-  children: ReactNode;
-  isNumeric: boolean;
-}) {
-  return (
-    <Th
-      display="flex"
-      align="center"
-      isNumeric={isNumeric}
-      cursor={handleOrder ? "pointer" : "default"}
-      onClick={handleOrder ? () => handleOrder(column) : undefined}
-    >
-      <OrderIcon {...order} column={column} />
-      <Tooltip label={tpLabel}>{children}</Tooltip>
-    </Th>
-  );
-});

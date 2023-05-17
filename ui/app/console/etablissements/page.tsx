@@ -10,6 +10,7 @@ import {
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -25,6 +26,7 @@ import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 
 type Query = Parameters<typeof api.getEtablissements>[0]["query"];
 
@@ -239,7 +241,9 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  {ETABLISSEMENTS_COLUMNS.effectif1}
+                  <Tooltip label="Nb d'élèves">
+                    {ETABLISSEMENTS_COLUMNS.effectif1}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -247,7 +251,9 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  {ETABLISSEMENTS_COLUMNS.effectif2}
+                  <Tooltip label="Nb d'élèves">
+                    {ETABLISSEMENTS_COLUMNS.effectif2}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -255,7 +261,9 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  {ETABLISSEMENTS_COLUMNS.effectif3}
+                  <Tooltip label="Nb d'élèves">
+                    {ETABLISSEMENTS_COLUMNS.effectif3}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -271,7 +279,9 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  <Tooltip label={<TauxPressionScale />}>
+                    {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
