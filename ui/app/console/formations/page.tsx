@@ -312,6 +312,10 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="libelleDispositif" />
                   {FORMATIONS_COLUMNS.libelleDispositif}
+                  <TooltipIcon
+                    ml="1"
+                    label="Ecart par rapport à la moyenne régionale de poursuite d’étude du niveau de diplôme ( Cap, BAc pro, Bts... )."
+                  />
                 </Th>
                 <Th
                   cursor="pointer"
