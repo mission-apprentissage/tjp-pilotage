@@ -10,7 +10,6 @@ import {
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -22,6 +21,7 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { TooltipIcon } from "@/components/TooltipIcon";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
@@ -207,7 +207,8 @@ export default function Etablissements() {
             >
               <Tr>
                 <Th>
-                  <Tooltip label="Rentrée scolaire">RS</Tooltip>
+                  RS
+                  <TooltipIcon ml="1" label="Rentrée scolaire" />
                 </Th>
                 <Th
                   cursor="pointer"
@@ -244,9 +245,8 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  <Tooltip label="Nb d'élèves">
-                    {ETABLISSEMENTS_COLUMNS.effectif1}
-                  </Tooltip>
+                  {ETABLISSEMENTS_COLUMNS.effectif1}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -254,9 +254,8 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  <Tooltip label="Nb d'élèves">
-                    {ETABLISSEMENTS_COLUMNS.effectif2}
-                  </Tooltip>
+                  {ETABLISSEMENTS_COLUMNS.effectif2}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -264,9 +263,8 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  <Tooltip label="Nb d'élèves">
-                    {ETABLISSEMENTS_COLUMNS.effectif3}
-                  </Tooltip>
+                  {ETABLISSEMENTS_COLUMNS.effectif3}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -282,9 +280,8 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  <Tooltip label={<TauxPressionScale />}>
-                    {ETABLISSEMENTS_COLUMNS.tauxPression}
-                  </Tooltip>
+                  {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  <TooltipIcon ml="1" label={<TauxPressionScale />} />
                 </Th>
                 <Th
                   isNumeric
@@ -309,6 +306,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="valeurAjoutee" />
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
+                  <TooltipIcon
+                    ml="1"
+                    label="Capacité de l'établissement à insérer en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi comparativement à des établissements similaires."
+                  />
                 </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>

@@ -1,5 +1,6 @@
 "use client";
 
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Center,
   Flex,
@@ -22,6 +23,7 @@ import { FORMATIONS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { TauxPressionScale } from "@/app/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
@@ -184,7 +186,10 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Tooltip label="Rentrée scolaire">RS</Tooltip>
+                <Th>
+                  RS
+                  <TooltipIcon ml="1" label="Rentrée scolaire" />
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -208,16 +213,13 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.nbEtablissement}
                 </Th>
                 <Th
-                  display="flex"
-                  align="center"
                   isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  <Tooltip label="Nb d'élèves">
-                    {FORMATIONS_COLUMNS.effectif1}
-                  </Tooltip>
+                  {FORMATIONS_COLUMNS.effectif1}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -225,9 +227,8 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  <Tooltip label="Nb d'élèves">
-                    {FORMATIONS_COLUMNS.effectif2}
-                  </Tooltip>
+                  {FORMATIONS_COLUMNS.effectif2}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -235,9 +236,8 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  <Tooltip label="Nb d'élèves">
-                    {FORMATIONS_COLUMNS.effectif3}
-                  </Tooltip>
+                  {FORMATIONS_COLUMNS.effectif3}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -245,9 +245,8 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  <Tooltip label={<TauxPressionScale />}>
-                    {FORMATIONS_COLUMNS.tauxPression}
-                  </Tooltip>
+                  {FORMATIONS_COLUMNS.tauxPression}
+                  <TooltipIcon ml="1" label={<TauxPressionScale />} />
                 </Th>
                 <Th
                   isNumeric
@@ -263,11 +262,11 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxInsertion12mois")}
                 >
                   <OrderIcon {...order} column="tauxInsertion12mois" />
-                  <Tooltip label="Cohorte 2020_2021">
-                    {FORMATIONS_COLUMNS.tauxInsertion12mois}
-                  </Tooltip>
+                  {FORMATIONS_COLUMNS.tauxInsertion12mois}
+                  <TooltipIcon ml="1" label="Cohorte 2020_2021" />
                 </Th>
                 <Th cursor="pointer">
+                  {FORMATIONS_COLUMNS.deltaInsertion12mois}
                   <Tooltip
                     label={
                       <>
@@ -278,7 +277,7 @@ export default function Formations() {
                       </>
                     }
                   >
-                    {FORMATIONS_COLUMNS.deltaInsertion12mois}
+                    <QuestionOutlineIcon ml="1" />
                   </Tooltip>
                 </Th>
                 <Th
