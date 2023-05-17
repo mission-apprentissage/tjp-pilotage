@@ -274,7 +274,7 @@ export default function Formations() {
                         Ecart / la moyenne de la totalité des bac pro. <br />
                         Exemple: le delta permet de savoir comment se situe le
                         BAC PRO Cusine en terme de niveau d'insertion par
-                        rapport à la mouyenne des BAC PRO dans la région.
+                        rapport à la moyenne des BAC PRO dans la région.
                       </>
                     }
                   >
