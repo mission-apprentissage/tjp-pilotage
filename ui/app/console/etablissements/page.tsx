@@ -206,6 +206,7 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
+                <Th>RS</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
@@ -337,6 +338,7 @@ export default function Etablissements() {
                 <Tr
                   key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
+                  <Td>2022</Td>
                   <Td>{line.libelleEtablissement ?? "-"}</Td>
                   <Td>{line.commune ?? "-"}</Td>
                   <Td>{line.departement ?? "-"}</Td>

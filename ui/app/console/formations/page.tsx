@@ -184,6 +184,7 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
+                <Th>RS</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -316,6 +317,7 @@ export default function Formations() {
             <Tbody>
               {data?.formations.map((line) => (
                 <Tr key={`${line.codeFormationDiplome}_${line.dispositifId}`}>
+                  <Td>2022</Td>
                   <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
                   <Td>{line.libelleDiplome ?? "-"}</Td>
                   <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
