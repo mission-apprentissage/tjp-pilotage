@@ -184,7 +184,7 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th>RS</Th>
+                <Tooltip label="Rentrée scolaire">RS</Tooltip>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}

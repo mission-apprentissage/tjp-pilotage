@@ -206,7 +206,9 @@ export default function Etablissements() {
               zIndex={1}
             >
               <Tr>
-                <Th>RS</Th>
+                <Th>
+                  <Tooltip label="Rentrée scolaire">RS</Tooltip>
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
