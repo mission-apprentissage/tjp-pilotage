@@ -354,7 +354,8 @@ const findFiltersInDb = async ({
 
   const formations = await base
     .select([
-      "formation.libelleDiplome as label",
+      sql`CONCAT("formation"."libelleDiplome", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      `.as("label"),
       "formation.codeFormationDiplome as value",
     ])
     .where("formation.codeFormationDiplome", "is not", null)
