@@ -7,7 +7,7 @@ const scale = [
 ] as const;
 
 export const getTauxPressionStyle = (value: number | undefined) => {
-  if (value === undefined) return "";
+  if (value === undefined) return {};
   const { bg, color } = scale.find((item) => value < item.max) ?? {};
   return { background: bg, color };
 };

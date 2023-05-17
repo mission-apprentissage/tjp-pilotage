@@ -1,20 +1,25 @@
 "use client";
 
 import {
+  Badge,
+  Box,
   Center,
+  chakra,
   Flex,
   Spinner,
+  Stack,
   Table,
   TableContainer,
   Tbody,
   Td,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
+import { ReactNode, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { FORMATIONS_COLUMNS } from "shared";
 
@@ -212,7 +217,9 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  {FORMATIONS_COLUMNS.effectif1}
+                  <Tooltip label="Nb d'élèves">
+                    {FORMATIONS_COLUMNS.effectif1}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -220,7 +227,9 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  {FORMATIONS_COLUMNS.effectif2}
+                  <Tooltip label="Nb d'élèves">
+                    {FORMATIONS_COLUMNS.effectif2}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -228,7 +237,9 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  {FORMATIONS_COLUMNS.effectif3}
+                  <Tooltip label="Nb d'élèves">
+                    {FORMATIONS_COLUMNS.effectif3}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -236,7 +247,32 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  {FORMATIONS_COLUMNS.tauxPression}
+                  <Tooltip
+                    label={
+                      <>
+                        <Box mb="2">Voeux 1 / capacité</Box>
+                        <Stack mb="2">
+                          <Badge style={getTauxPressionStyle(0.2)}>
+                            Entre 0 et 0.5
+                          </Badge>
+                          <Badge style={getTauxPressionStyle(0.6)}>
+                            Entre 0.5 et 0.7
+                          </Badge>
+                          <Badge style={getTauxPressionStyle(1)}>
+                            Entre 0.7 et 1.3
+                          </Badge>
+                          <Badge style={getTauxPressionStyle(1.4)}>
+                            Entre 1.3 et 1.6
+                          </Badge>
+                          <Badge style={getTauxPressionStyle(2)}>
+                            Au dessus de 1.6
+                          </Badge>
+                        </Stack>
+                      </>
+                    }
+                  >
+                    {FORMATIONS_COLUMNS.tauxPression}
+                  </Tooltip>
                 </Th>
                 <Th
                   isNumeric
@@ -252,9 +288,24 @@ export default function Formations() {
                   onClick={() => handleOrder("tauxInsertion12mois")}
                 >
                   <OrderIcon {...order} column="tauxInsertion12mois" />
-                  {FORMATIONS_COLUMNS.tauxInsertion12mois}
+                  <Tooltip label="Cohorte 2020_2021">
+                    {FORMATIONS_COLUMNS.tauxInsertion12mois}
+                  </Tooltip>
                 </Th>
-                <Th cursor="pointer">Delta régional insertion</Th>
+                <Th cursor="pointer">
+                  <Tooltip
+                    label={
+                      <>
+                        Ecart / la moyenne de la totalité des bac pro. <br />
+                        Exemple: le delta permet de savoir comment se situe le
+                        BAC PRO Cusine en terme de niveau d'insertion par
+                        rapport à la mouyenne des BAC PRO dans la région.
+                      </>
+                    }
+                  >
+                    {FORMATIONS_COLUMNS.deltaInsertion12mois}
+                  </Tooltip>
+                </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -351,3 +402,35 @@ export default function Formations() {
     </>
   );
 }
+
+const CustomTh = chakra(function ({
+  handleOrder,
+  column,
+  order,
+  tpLabel,
+  children,
+  isNumeric,
+}: {
+  handleOrder?: (column: Query["orderBy"]) => void;
+  column: Exclude<Query["orderBy"], undefined>;
+  order?: {
+    orderBy?: Query["orderBy"];
+    order?: Query["order"];
+  };
+  tpLabel: string;
+  children: ReactNode;
+  isNumeric: boolean;
+}) {
+  return (
+    <Th
+      display="flex"
+      align="center"
+      isNumeric={isNumeric}
+      cursor={handleOrder ? "pointer" : "default"}
+      onClick={handleOrder ? () => handleOrder(column) : undefined}
+    >
+      <OrderIcon {...order} column={column} />
+      <Tooltip label={tpLabel}>{children}</Tooltip>
+    </Th>
+  );
+});

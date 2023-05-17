@@ -4,6 +4,7 @@ import chakraTheme from "@chakra-ui/theme";
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { tableTheme } from "@/theme/Table.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
+import { tooltipTheme } from "@/theme/Tooltip.theme";
 
 import { buttonTheme } from "./Button.theme";
 
@@ -51,6 +52,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       425: "#666666",
       "425_hover": "#919191",
       "425_active": "#a6a6a6",
+      525: "#7b7b7b",
+      "525_hover": "#a6a6a6",
+      "525_active": "#bababa",
     },
   },
   components: {
@@ -58,5 +62,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Tabs: tabsTheme,
     Breadcrumb: BreadcrumbTheme,
     Table: tableTheme,
+    Tooltip: tooltipTheme,
   },
 });
