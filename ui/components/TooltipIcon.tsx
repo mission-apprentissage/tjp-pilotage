@@ -5,7 +5,7 @@ import { ReactNode } from "react";
 export const TooltipIcon = chakra(
   ({ label, className }: { label: ReactNode; className?: string }) => {
     return (
-      <Tooltip label={label}>
+      <Tooltip maxWidth={180} label={label}>
         <QuestionOutlineIcon className={className} />
       </Tooltip>
     );

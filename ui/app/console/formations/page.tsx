@@ -1,7 +1,7 @@
 "use client";
 
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Center,
   Flex,
   Spinner,
@@ -11,7 +11,6 @@ import {
   Td,
   Th,
   Thead,
-  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
@@ -246,7 +245,18 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {FORMATIONS_COLUMNS.tauxPression}
-                  <TooltipIcon ml="1" label={<TauxPressionScale />} />
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la formation.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -255,6 +265,10 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {FORMATIONS_COLUMNS.tauxRemplissage}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -263,22 +277,25 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxInsertion12mois" />
                   {FORMATIONS_COLUMNS.tauxInsertion12mois}
-                  <TooltipIcon ml="1" label="Cohorte 2020_2021" />
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
+                  />
                 </Th>
                 <Th cursor="pointer">
                   {FORMATIONS_COLUMNS.deltaInsertion12mois}
-                  <Tooltip
+                  <TooltipIcon
+                    ml="1"
                     label={
                       <>
-                        Ecart / la moyenne de la totalité des bac pro. <br />
-                        Exemple: le delta permet de savoir comment se situe le
-                        BAC PRO Cusine en terme de niveau d'insertion par
-                        rapport à la moyenne des BAC PRO dans la région.
+                        Ecart par rapport à la moyenne régionale d’insertion du
+                        niveau de diplôme ( Cap, BAc pro, Bts... ) <br />
+                        Ex: en région AURA, le bac pro Boulanger-Patissier est
+                        17 points plus insérant que la moyenne des autres bac
+                        pro de la région.
                       </>
                     }
-                  >
-                    <QuestionOutlineIcon ml="1" />
-                  </Tooltip>
+                  />
                 </Th>
                 <Th
                   isNumeric

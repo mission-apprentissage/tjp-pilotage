@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Center,
   Flex,
   Spinner,
@@ -281,7 +282,18 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {ETABLISSEMENTS_COLUMNS.tauxPression}
-                  <TooltipIcon ml="1" label={<TauxPressionScale />} />
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la l'offre de formation.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -290,6 +302,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                  />
                 </Th>
                 <Th
                   isNumeric
