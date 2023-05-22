@@ -9,7 +9,7 @@ import { Formation } from "../../entities/Formation";
 const findEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
-  rentreeScolaire = "2021",
+  rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
