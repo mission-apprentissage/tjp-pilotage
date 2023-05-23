@@ -2,6 +2,7 @@ import { extendBaseTheme } from "@chakra-ui/react";
 import chakraTheme from "@chakra-ui/theme";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
+import { selectTheme } from "@/theme/Select.theme";
 import { tableTheme } from "@/theme/Table.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
 import { tooltipTheme } from "@/theme/Tooltip.theme";
@@ -63,5 +64,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Breadcrumb: BreadcrumbTheme,
     Table: tableTheme,
     Tooltip: tooltipTheme,
+    Select: selectTheme,
   },
 });

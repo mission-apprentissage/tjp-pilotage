@@ -38,11 +38,11 @@ export const Nav = () => {
       <NavLink href="/" segment={null}>
         Accueil
       </NavLink>
-      <NavLink href="/console/formations" segment="console">
-        Console
-      </NavLink>
       <NavLink href="/panorama" segment="panorama">
         Panorama
+      </NavLink>
+      <NavLink href="/console/formations" segment="console">
+        Console
       </NavLink>
     </HStack>
   );
