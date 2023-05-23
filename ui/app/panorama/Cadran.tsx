@@ -10,6 +10,8 @@ export const Cadran = chakra(({ className }: { className?: string }) => {
   const [option, setOption] = useState<
     Parameters<echarts.ECharts["setOption"]>[0]
   >({
+    width: 400,
+    height: 400,
     xAxis: [
       {
         type: "value",
@@ -93,21 +95,21 @@ export const Cadran = chakra(({ className }: { className?: string }) => {
             [
               {
                 coord: ["average", "average"],
-                itemStyle: { color: "rgba(212, 250, 250)" },
+                itemStyle: { color: "#E5F9DB" },
               },
               { coord: [100, 100] },
             ],
             [
               {
                 coord: [0, "average"],
-                itemStyle: { color: "rgba(0,0,0,0.06)" },
+                itemStyle: { color: "rgba(0,0,0,0.04)" },
               },
               { coord: ["average", 100] },
             ],
             [
               {
                 coord: ["average", 0],
-                itemStyle: { color: "rgba(0,0,0,0.06)" },
+                itemStyle: { color: "rgba(0,0,0,0.04)" },
               },
               { coord: [100, "average"] },
             ],

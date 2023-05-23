@@ -11,9 +11,23 @@ import {
   Stack,
 } from "@chakra-ui/react";
 
-const StatCard = ({ label, value }: { label: string; value: string }) => (
+const StatCard = ({
+  label,
+  value,
+  color = "inherit",
+}: {
+  label: string;
+  value: string;
+  color?: string;
+}) => (
   <Card>
-    <CardBody p={3} alignItems={"center"} display={"flex"}>
+    <CardBody
+      color={color}
+      py="2"
+      px="3"
+      alignItems={"center"}
+      display={"flex"}
+    >
       <Box mr="4" flex={1}>
         {label}
       </Box>
@@ -29,15 +43,17 @@ export const RegionSection = () => {
     <Container
       px="36"
       as="section"
-      py="8"
-      bg="grey.950"
+      py="12"
+      bg="#fbf6ed"
       maxWidth={"container.xl"}
     >
-      <Stack direction={["column", "row"]} spacing="24px">
+      <Stack direction={["column", "row"]} spacing="16">
         <Box flex={1}>
           <FormControl>
             <FormLabel>Sélectionner une région</FormLabel>
-            <Select />
+            <Select variant="input">
+              <option>Occitanie</option>
+            </Select>
           </FormControl>
         </Box>
         <Box flex={2}>
@@ -50,6 +66,7 @@ export const RegionSection = () => {
               value="45%"
             />
             <StatCard
+              color="#FF9575"
               label="Tx poursuite étude dans votre région"
               value="45%"
             />
@@ -58,6 +75,7 @@ export const RegionSection = () => {
               value="45%"
             />
             <StatCard
+              color="bluefrance.113"
               label="Tx poursuite étude dans votre région"
               value="45%"
             />
