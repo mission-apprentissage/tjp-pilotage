@@ -1,5 +1,6 @@
 import { SmallCloseIcon } from "@chakra-ui/icons";
 import {
+  AspectRatio,
   Box,
   Center,
   chakra,
@@ -248,13 +249,13 @@ export const CadranSection = ({
             Selon indicateurs de la DEPP
           </Text>
           {filteredFormations && (
-            <Cadran
-              meanPoursuite={meanPoursuite}
-              meanInsertion={meanInsertion}
-              data={filteredFormations}
-              width={600}
-              height={600}
-            />
+            <AspectRatio ratio={1}>
+              <Cadran
+                meanPoursuite={meanPoursuite}
+                meanInsertion={meanInsertion}
+                data={filteredFormations}
+              />
+            </AspectRatio>
           )}
         </Box>
       </Stack>

@@ -50,6 +50,8 @@ export const findFiltersInDb = async ({
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
+    .where("indicateurSortie.nbInsertion12mois", "is not", null)
+    .where("indicateurSortie.nbPoursuiteEtudes", "is not", null)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -64,6 +66,12 @@ export const findFiltersInDb = async ({
     .where("region.codeRegion", "is not", null)
     .execute();
 
+  const etablissements = await base
+    .select(["etablissement.UAI as label", "etablissement.UAI as value"])
+    .where("etablissement.UAI", "is not", null)
+    .where(inCodeRegion)
+    .execute();
+
   const diplomes = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
@@ -76,5 +84,6 @@ export const findFiltersInDb = async ({
   return await {
     regions: (await regions).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
+    etablissements: (await etablissements).map(cleanNull),
   };
 };

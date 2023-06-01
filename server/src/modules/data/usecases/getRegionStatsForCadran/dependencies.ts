@@ -36,6 +36,11 @@ const getBaseQuery = ({
       "niveauDiplome.codeNiveauDiplome",
       "formation.codeNiveauDiplome"
     )
+    .leftJoin(
+      "dispositif",
+      "formationEtablissement.dispositifId",
+      "dispositif.codeDispositif"
+    )
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef(
@@ -68,10 +73,12 @@ const getBaseQuery = ({
 
 export const queryFormations = async ({
   codeRegion,
+  UAI,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
+  UAI?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -96,7 +103,9 @@ export const queryFormations = async ({
       "codeFormationDiplome",
       "libelleDiplome",
       "formationEtablissement.dispositifId",
+      "libelleDispositif",
       "formation.codeNiveauDiplome",
+      sql<number>`COUNT(etablissement.*)`.as("nbEtablissement"),
       sql<number>`(100 * sum(
               case when ${capaciteAnnee(
                 sql`"indicateurEntree"."anneeDebut"::text`
@@ -136,10 +145,16 @@ export const queryFormations = async ({
     ])
     .where("indicateurSortie.nbInsertion12mois", "is not", null)
     .where("indicateurSortie.nbPoursuiteEtudes", "is not", null)
+    .having(
+      UAI
+        ? sql<boolean>`bool_or(etablissement."UAI" in (${sql.join(UAI)}))`
+        : sql<boolean>`true`
+    )
     .groupBy([
       "formation.id",
       "indicateurEntree.rentreeScolaire",
       "formationEtablissement.dispositifId",
+      "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .execute();

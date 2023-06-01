@@ -8264,10 +8264,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.24.2":
-  version: 0.24.2
-  resolution: "kysely@npm:0.24.2"
-  checksum: b45a820c098f60440d6d601aae227cdbb58503a94a71dda928095b0f2cf7205a0b173a0940a36c89b4ff99c95174f223c0ff018c3845c1575fa779a6e297ca93
+"kysely@npm:^0.25.0":
+  version: 0.25.0
+  resolution: "kysely@npm:0.25.0"
+  checksum: 78a9a9704d42ddc90dafba2f3f089b8796be725684af3aeefca95ccafa886010f9ba0323acc62d5b8913e52ad8c8f26fe023e927c332d59084bbbf5447942366
   languageName: node
   linkType: hard
 
@@ -12462,7 +12462,7 @@ __metadata:
     injecti: ^1.0.5
     jsonwebtoken: 8.5.1
     knex: ^2.4.2
-    kysely: ^0.24.2
+    kysely: ^0.25.0
     kysely-codegen: ^0.10.0
     lodash: ^4.17.21
     luxon: 2.3.0
