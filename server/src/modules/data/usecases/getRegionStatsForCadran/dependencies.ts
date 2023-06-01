@@ -1,8 +1,21 @@
 import { RawBuilder, sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
+import { cleanNull } from "../../../../utils/noNull";
 
-export const queryStatsForCadran = async ({
+const effectifAnnee = (annee: RawBuilder<unknown>) => {
+  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
+};
+
+const capaciteAnnee = (annee: RawBuilder<unknown>) => {
+  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
+};
+
+const premierVoeuxAnnee = (annee: RawBuilder<unknown>) => {
+  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
+};
+
+const getBaseQuery = ({
   codeRegion,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
@@ -10,26 +23,18 @@ export const queryStatsForCadran = async ({
   codeRegion: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
-}) => {
-  const effectifAnnee = (annee: RawBuilder<unknown>) => {
-    return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
-  };
-
-  const capaciteAnnee = (annee: RawBuilder<unknown>) => {
-    return sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
-  };
-
-  const data = await kdb
+}) =>
+  kdb
     .selectFrom("formation")
-    .innerJoin(
+    .leftJoin(
       "formationEtablissement",
-      "formation.codeFormationDiplome",
-      "formationEtablissement.cfd"
+      "formationEtablissement.cfd",
+      "formation.codeFormationDiplome"
     )
-    .innerJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "formation.codeNiveauDiplome"
     )
     .innerJoin("indicateurEntree", (join) =>
       join
@@ -49,6 +54,115 @@ export const queryStatsForCadran = async ({
         )
         .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
+    .leftJoin(
+      "etablissement",
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
+    )
+    .where(
+      "codeFormationDiplome",
+      "not in",
+      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    )
+    .where("etablissement.codeRegion", "=", codeRegion);
+
+export const queryFormations = async ({
+  codeRegion,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeRegion: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const baseQuery = getBaseQuery({
+    codeRegion,
+    rentreeScolaire,
+    millesimeSortie,
+  });
+
+  const formations = await baseQuery
+    .leftJoin(
+      "indicateurSortie as isp",
+      "isp.formationEtablissementId",
+      "formationEtablissement.id"
+    )
+    .leftJoin(
+      "indicateurEntree as iep",
+      "iep.formationEtablissementId",
+      "formationEtablissement.id"
+    )
+    .select([
+      "codeFormationDiplome",
+      "libelleDiplome",
+      "formationEtablissement.dispositifId",
+      "formation.codeNiveauDiplome",
+      sql<number>`(100 * sum(
+              case when ${capaciteAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )} is not null 
+              then ${effectifAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )} end)
+              / NULLIF(sum(${capaciteAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )}), 0))
+              `.as("tauxRemplissage"),
+      sql<number>`SUM(${effectifAnnee(
+        sql`"indicateurEntree"."anneeDebut"::text`
+      )})`.as("effectif"),
+      sql<number>`SUM(NULLIF((jsonb_extract_path("iep"."effectifs","iep"."anneeDebut"::text)), 'null')::INT)`.as(
+        "effectifPrecedent"
+      ),
+      sql<number>`(100 * sum(
+              case when ${capaciteAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )} is not null 
+              then ${premierVoeuxAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )} end)
+              / NULLIF(sum(${capaciteAnnee(
+                sql`"indicateurEntree"."anneeDebut"::text`
+              )}), 0))
+            `.as("tauxPression"),
+      sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
+            `.as("tauxPoursuiteEtudes"),
+      sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
+            `.as("tauxInsertion12mois"),
+      sql<number>`(100 * SUM("isp"."nbInsertion12mois") / SUM("isp"."nbSortants"))
+            `.as("tauxInsertion12moisPrecedent"),
+      sql<number>`(100 * SUM("isp"."nbPoursuiteEtudes") / SUM("isp"."effectifSortie"))
+            `.as("tauxPoursuiteEtudesPrecedent"),
+    ])
+    .where("indicateurSortie.nbInsertion12mois", "is not", null)
+    .where("indicateurSortie.nbPoursuiteEtudes", "is not", null)
+    .groupBy([
+      "formation.id",
+      "indicateurEntree.rentreeScolaire",
+      "formationEtablissement.dispositifId",
+      "niveauDiplome.libelleNiveauDiplome",
+    ])
+    .execute();
+
+  return formations.map(cleanNull);
+};
+
+export const queryStatsForCadran = async ({
+  codeRegion,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeRegion: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const baseQuery = getBaseQuery({
+    codeRegion,
+    rentreeScolaire,
+    millesimeSortie,
+  });
+
+  const stats = await baseQuery
     .select([
       sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
     `.as("tauxPoursuiteEtudes"),
@@ -60,9 +174,8 @@ export const queryStatsForCadran = async ({
         / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
       `.as("tauxRemplissage"),
     ])
-    .where("codeRegion", "=", codeRegion)
     .groupBy(["codeRegion"])
     .executeTakeFirstOrThrow();
 
-  return data;
+  return cleanNull(stats);
 };

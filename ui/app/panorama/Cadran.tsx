@@ -6,14 +6,26 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 
 import { api } from "@/api.client";
 
-type FormationsCadran = Awaited<
-  ReturnType<ReturnType<typeof api.getFormationsForCadran>["call"]>
+type CadranFormations = Awaited<
+  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
 >["formations"];
 
 export const Cadran = chakra(
-  ({ className, data }: { className?: string; data: FormationsCadran }) => {
+  ({
+    className,
+    data,
+    meanPoursuite,
+    meanInsertion,
+  }: {
+    className?: string;
+    data: CadranFormations;
+    meanPoursuite?: number;
+    meanInsertion?: number;
+  }) => {
     const chartRef = useRef<echarts.ECharts>();
     const containerRef = useRef<HTMLDivElement>(null);
+
+    console.log(data);
 
     const series = data.map((formation) => [
       formation.tauxPoursuiteEtudes,
@@ -77,11 +89,7 @@ export const Cadran = chakra(
         series: [
           {
             itemStyle: {
-              color: ({ value }) => {
-                const [txPoursuite, txEmploi] = value as number[];
-                if (txPoursuite + txEmploi < 100) return "red";
-                return "green";
-              },
+              color: "rgba(58, 85, 209, 0.4)",
             },
             data: series as any,
             type: "scatter",
@@ -105,45 +113,49 @@ export const Cadran = chakra(
               label: { show: false },
               lineStyle: {
                 type: "solid",
+                color: "grey",
               },
               symbol: ["none", "arrow"],
               animation: false,
               data: [
-                { type: "average", name: "Average", valueDim: "x" },
-                { type: "average", name: "Average", valueDim: "y" },
+                ...(meanPoursuite ? [{ xAxis: meanPoursuite }] : []),
+                ...(meanInsertion ? [{ yAxis: meanInsertion }] : []),
               ],
             },
-            markArea: {
-              silent: true,
-              animation: false,
-              data: [
-                [
-                  { coord: [0, 0], itemStyle: { color: "#ffe2e1" } },
-                  { coord: ["average", "average"] },
-                ],
-                [
-                  {
-                    coord: ["average", "average"],
-                    itemStyle: { color: "#E5F9DB" },
-                  },
-                  { coord: [100, 100] },
-                ],
-                [
-                  {
-                    coord: [0, "average"],
-                    itemStyle: { color: "rgba(0,0,0,0.04)" },
-                  },
-                  { coord: ["average", 100] },
-                ],
-                [
-                  {
-                    coord: ["average", 0],
-                    itemStyle: { color: "rgba(0,0,0,0.04)" },
-                  },
-                  { coord: [100, "average"] },
-                ],
-              ],
-            },
+            markArea:
+              meanPoursuite && meanInsertion
+                ? {
+                    silent: true,
+                    animation: false,
+                    data: [
+                      [
+                        { coord: [0, 0], itemStyle: { color: "#ffe2e1" } },
+                        { coord: [meanPoursuite, meanInsertion] },
+                      ],
+                      [
+                        {
+                          coord: [meanPoursuite, meanInsertion],
+                          itemStyle: { color: "#E5F9DB" },
+                        },
+                        { coord: [100, 100] },
+                      ],
+                      [
+                        {
+                          coord: [0, meanInsertion],
+                          itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        },
+                        { coord: [meanPoursuite, 100] },
+                      ],
+                      [
+                        {
+                          coord: [meanPoursuite, 0],
+                          itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        },
+                        { coord: [100, meanInsertion] },
+                      ],
+                    ],
+                  }
+                : undefined,
           },
         ],
       }),

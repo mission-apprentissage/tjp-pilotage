@@ -2,7 +2,10 @@ import { extendBaseTheme } from "@chakra-ui/react";
 import chakraTheme from "@chakra-ui/theme";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
+import { cardTheme } from "@/theme/Card.theme";
+import { radioTheme } from "@/theme/radio.theme";
 import { selectTheme } from "@/theme/Select.theme";
+import { sliderTheme } from "@/theme/slider.theme";
 import { tableTheme } from "@/theme/Table.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
 import { tooltipTheme } from "@/theme/Tooltip.theme";
@@ -21,6 +24,11 @@ export const theme = extendBaseTheme(chakraTheme, {
   },
   fonts: { heading: "Marianne, Arial", body: "Marianne, Arial" },
   colors: {
+    info: {
+      525: "#0078f3",
+      "525_hover": "#6196ff",
+      "525_active": "#85a9ff",
+    },
     bluefrance: {
       113: "#000091",
       "113_hover": "#1212ff",
@@ -41,6 +49,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       1000: "#ffffff",
       "1000_hover": "#f6f6f6",
       "1000_active": "#ededed",
+      975: "#f6f6f6",
+      "975_hover": "#dfdfdf",
+      "975_active": "#cfcfcf",
       950: "#eeeeee",
       "950_hover": "#d2d2d2",
       "950_active": "#c1c1c1",
@@ -65,5 +76,8 @@ export const theme = extendBaseTheme(chakraTheme, {
     Table: tableTheme,
     Tooltip: tooltipTheme,
     Select: selectTheme,
+    Card: cardTheme,
+    Radio: radioTheme,
+    Slider: sliderTheme,
   },
 });

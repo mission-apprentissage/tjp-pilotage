@@ -117,11 +117,29 @@ export const formationSchemas = {
     }),
     response: {
       200: Type.Object({
-        nbFormationsDefavorables: Type.Number(),
-        nbFormationsFavorables: Type.Number(),
-        tauxRemplissage: Type.Optional(Type.Number()),
-        tauxInsertion12mois: Type.Optional(Type.Number()),
-        tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+        stats: Type.Object({
+          tauxRemplissage: Type.Optional(Type.Number()),
+          tauxInsertion12mois: Type.Optional(Type.Number()),
+          tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+          medianePoursuite: Type.Optional(Type.Number()),
+          medianeInsertion: Type.Optional(Type.Number()),
+        }),
+        formations: Type.Array(
+          Type.Object({
+            codeFormationDiplome: Type.String(),
+            libelleDiplome: Type.String(),
+            codeNiveauDiplome: Type.String(),
+            dispositifId: Type.Optional(Type.String()),
+            effectif: Type.Optional(Type.Number()),
+            effectifPrecedent: Type.Optional(Type.Number()),
+            tauxRemplissage: Type.Optional(Type.Number()),
+            tauxPression: Type.Optional(Type.Number()),
+            tauxInsertion12mois: Type.Number(),
+            tauxInsertion12moisPrecedent: Type.Optional(Type.Number()),
+            tauxPoursuiteEtudes: Type.Number(),
+            tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
+          })
+        ),
       }),
     },
   },

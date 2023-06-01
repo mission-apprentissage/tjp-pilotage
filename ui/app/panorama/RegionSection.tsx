@@ -1,18 +1,22 @@
 import {
+  AspectRatio,
   Box,
   Card,
   CardBody,
   Center,
   Container,
+  Flex,
   FormControl,
   FormLabel,
+  Img,
   Select,
   SimpleGrid,
   Stack,
+  Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 
 import { api } from "../../api.client";
+import { Breadcrumb } from "../../components/Breadcrumb";
 
 const StatCard = ({
   label,
@@ -41,31 +45,42 @@ const StatCard = ({
   </Card>
 );
 
+type Stats = Awaited<
+  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
+>["stats"];
 export const RegionSection = ({
   codeRegion,
   onCodeRegionChanged,
   regionOptions,
+  stats,
 }: {
   codeRegion?: string;
   onCodeRegionChanged: (codeRegion: string) => void;
   regionOptions?: { label: string; value: string }[];
+  stats?: Stats;
 }) => {
-  const { data } = useQuery(["regionStatsForCadran", { codeRegion }], () => {
-    if (!codeRegion) return;
-    return api.getRegionStatsForCadran({ query: { codeRegion } }).call();
-  });
+  const labelRegion = regionOptions?.find(
+    (item) => item.value === codeRegion
+  )?.label;
 
   return (
     <Container
-      px="36"
+      px="8"
       as="section"
-      py="12"
-      bg="#fbf6ed"
+      pb="12"
+      pt="6"
+      bg="#F9F8F6"
       maxWidth={"container.xl"}
     >
-      <Stack direction={["column", "row"]} spacing="16">
-        <Box flex={1}>
-          <FormControl>
+      <Breadcrumb
+        pages={[
+          { title: "Accueil", to: "/" },
+          { title: "Panorama", to: "/panorama", active: true },
+        ]}
+      />
+      <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
+        <Flex direction="column" align="center" flex={1}>
+          <FormControl maxW="300px">
             <FormLabel>Sélectionner une région</FormLabel>
             <Select
               onChange={(e) => onCodeRegionChanged(e.target.value)}
@@ -79,47 +94,42 @@ export const RegionSection = ({
               ))}
             </Select>
           </FormControl>
-        </Box>
-        <Box flex={2}>
-          {
-            <SimpleGrid spacing={3} columns={[2]}>
-              <Center fontSize="2xl" fontWeight="bold">
-                Occitanie
-              </Center>
-              <StatCard
-                label="Tx poursuite étude dans votre région"
-                value={
-                  data?.tauxPoursuiteEtudes
-                    ? `${data.tauxPoursuiteEtudes}%`
-                    : undefined
-                }
-              />
-              <StatCard
-                color="#FF9575"
-                label="Formations à examiner dans votre région"
-                value={data?.nbFormationsDefavorables}
-              />
-              <StatCard
-                label="Taux d'insertion dans votre région"
-                value={
-                  data?.tauxInsertion12mois
-                    ? `${data.tauxInsertion12mois}%`
-                    : undefined
-                }
-              />
-              <StatCard
-                color="bluefrance.113"
-                label="Formations avec un devenir favorable"
-                value={data?.nbFormationsFavorables}
-              />
-              <StatCard
-                label="Taux de remplissage dans votre région"
-                value={
-                  data?.tauxRemplissage ? `${data.tauxRemplissage}%` : undefined
-                }
-              />
-            </SimpleGrid>
-          }
+          <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
+            <Img src="/graphs_statistics.png" objectFit="contain" />
+          </AspectRatio>
+        </Flex>
+        <Box flex={1}>
+          <Text>
+            Retrouvez ici les principaux indicateurs et enjeux sur votre
+            territoire.
+          </Text>
+          <SimpleGrid spacing={3} columns={[2]} mt="4">
+            <Center fontSize="2xl" fontWeight="bold">
+              {labelRegion ?? "-"}
+            </Center>
+            <StatCard
+              label="Tx poursuite étude dans votre région"
+              value={
+                stats?.tauxPoursuiteEtudes
+                  ? `${stats.tauxPoursuiteEtudes}%`
+                  : undefined
+              }
+            />
+            <StatCard
+              label="Taux de remplissage dans votre région"
+              value={
+                stats?.tauxRemplissage ? `${stats.tauxRemplissage}%` : undefined
+              }
+            />
+            <StatCard
+              label="Taux d'insertion dans votre région"
+              value={
+                stats?.tauxInsertion12mois
+                  ? `${stats.tauxInsertion12mois}%`
+                  : undefined
+              }
+            />
+          </SimpleGrid>
         </Box>
       </Stack>
     </Container>
