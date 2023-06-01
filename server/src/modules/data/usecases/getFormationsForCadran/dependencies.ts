@@ -4,16 +4,12 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 
 export const getFormationsQuery = async ({
-  offset = 0,
-  limit = 1000,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
   codeRegion,
   codeDiplome,
   effectifMin,
 }: {
-  offset?: number;
-  limit?: number;
   rentreeScolaire?: string;
   millesimeSortie?: string;
   codeRegion?: string[];
@@ -37,16 +33,6 @@ export const getFormationsQuery = async ({
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
-    )
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
-    )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
       "formation.codeFormationDiplome"
     )
     .leftJoin(
@@ -80,12 +66,9 @@ export const getFormationsQuery = async ({
     .selectAll("formation")
     .select([
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "libelleOfficielFamille",
-      "dispositifId",
-      "libelleDispositif",
-      "libelleNiveauDiplome",
-      sql<number>`COUNT(etablissement.*)`.as("nbEtablissement"),
-      sql<number>`avg("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
+      "codeFormationDiplome",
+      "libelleDiplome",
+      "formationEtablissement.dispositifId",
       sql<number>`(100 * sum(
             case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
             then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
@@ -93,18 +76,6 @@ export const getFormationsQuery = async ({
           `.as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})`.as(
         "effectif"
-      ),
-      sql<number>`SUM(${effectifAnnee(sql`'0'`)})`.as("effectif1"),
-      sql<number>`SUM(${effectifAnnee(sql`'1'`)})`.as("effectif2"),
-      sql<number>`SUM(${effectifAnnee(sql`'2'`)})`.as("effectif3"),
-      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})`.as(
-        "capacite"
-      ),
-      sql<number>`SUM(${capaciteAnnee(sql`'0'`)})`.as("capacite1"),
-      sql<number>`SUM(${capaciteAnnee(sql`'1'`)})`.as("capacite2"),
-      sql<number>`SUM(${capaciteAnnee(sql`'2'`)})`.as("capacite3"),
-      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})`.as(
-        "premiersVoeux"
       ),
       sql<number>`(100 * sum(
             case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
@@ -132,9 +103,7 @@ export const getFormationsQuery = async ({
     .groupBy([
       "formation.id",
       "indicateurEntree.rentreeScolaire",
-      "dispositif.libelleDispositif",
       "formationEtablissement.dispositifId",
-      "familleMetier.libelleOfficielFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .$call((q) => {
@@ -144,9 +113,7 @@ export const getFormationsQuery = async ({
     .$call((q) => {
       if (!codeDiplome) return q;
       return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
-    })
-    .offset(offset)
-    .limit(limit);
+    });
 
   const res = await query.execute();
 
