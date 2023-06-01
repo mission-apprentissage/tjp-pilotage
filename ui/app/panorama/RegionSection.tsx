@@ -17,6 +17,7 @@ import {
 
 import { api } from "../../api.client";
 import { Breadcrumb } from "../../components/Breadcrumb";
+import { Multiselect } from "../../components/Multiselect";
 
 const StatCard = ({
   label,
@@ -52,11 +53,17 @@ export const RegionSection = ({
   codeRegion,
   onCodeRegionChanged,
   regionOptions,
+  UAI,
+  onUAIChanged,
+  UAIOptions,
   stats,
 }: {
   codeRegion?: string;
   onCodeRegionChanged: (codeRegion: string) => void;
   regionOptions?: { label: string; value: string }[];
+  UAI?: string[];
+  onUAIChanged: (UAI: string[]) => void;
+  UAIOptions?: { label: string; value: string }[];
   stats?: Stats;
 }) => {
   const labelRegion = regionOptions?.find(
@@ -93,6 +100,14 @@ export const RegionSection = ({
                 </option>
               ))}
             </Select>
+            <FormLabel mt="4">Sélectionner un établissement</FormLabel>
+            <Multiselect
+              width="100%"
+              onChange={onUAIChanged}
+              options={UAIOptions}
+            >
+              Etablissement
+            </Multiselect>
           </FormControl>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />

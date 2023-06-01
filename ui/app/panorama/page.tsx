@@ -12,11 +12,12 @@ import { TopFlopSection } from "./TopFlopSection";
 
 export default function Panorama() {
   const [codeRegion, setCodeRegion] = useState("84");
+  const [UAI, setUAI] = useState<string[]>();
 
   const { data } = useQuery(
-    ["formationForCadran", { codeRegion }],
+    ["formationForCadran", { codeRegion, UAI }],
     api.getRegionStatsForCadran({
-      query: { codeRegion },
+      query: { codeRegion, UAI },
     }).call,
     { keepPreviousData: true, staleTime: 10000000 }
   );
@@ -33,6 +34,9 @@ export default function Panorama() {
         onCodeRegionChanged={setCodeRegion}
         codeRegion={codeRegion}
         regionOptions={filters?.filters.regions}
+        onUAIChanged={setUAI}
+        UAI={UAI}
+        UAIOptions={filters?.filters.etablissements}
         stats={data?.stats}
       />
       <CadranSection
@@ -41,10 +45,12 @@ export default function Panorama() {
         diplomeOptions={filters?.filters.diplomes}
         cadranFormations={data?.formations}
       />
-      <TopFlopSection
-        diplomeOptions={filters?.filters.diplomes}
-        cadranFormations={data?.formations}
-      />
+      {!UAI?.length && (
+        <TopFlopSection
+          diplomeOptions={filters?.filters.diplomes}
+          cadranFormations={data?.formations}
+        />
+      )}
       <InfoSection codeRegion={codeRegion} />
     </>
   );

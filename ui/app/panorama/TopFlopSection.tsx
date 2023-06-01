@@ -1,6 +1,7 @@
 import {
   Box,
   Container,
+  Divider,
   Flex,
   Heading,
   HStack,
@@ -104,7 +105,8 @@ const TopFlopChart = ({
           />
         ))}
       </VStack>
-      <VStack mt="4" alignItems="stretch" spacing="1">
+      <Divider py="4" />
+      <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.flop
           .slice()
           .reverse()

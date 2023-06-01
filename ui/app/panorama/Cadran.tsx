@@ -1,10 +1,20 @@
 "use client";
-import { Box, chakra } from "@chakra-ui/react";
+import {
+  Box,
+  Card,
+  CardBody,
+  chakra,
+  HStack,
+  useOutsideClick,
+  usePopper,
+} from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { forwardRef, useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { api } from "@/api.client";
+
+import { InfoBlock } from "../../components/InfoBlock";
 
 type CadranFormations = Awaited<
   ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
@@ -25,7 +35,39 @@ export const Cadran = chakra(
     const chartRef = useRef<echarts.ECharts>();
     const containerRef = useRef<HTMLDivElement>(null);
 
-    console.log(data);
+    const popperInstance = usePopper({
+      modifiers: [
+        {
+          name: "preventOverflow",
+          options: { padding: 10 },
+        },
+      ],
+    });
+
+    const [displayedDetail, setDisplayedDetail] = useState<{
+      x: number;
+      y: number;
+      formation: CadranFormations[number];
+    }>();
+
+    useLayoutEffect(() => {
+      if (!containerRef.current) return;
+      if (!displayedDetail) return;
+
+      popperInstance.referenceRef({
+        getBoundingClientRect: () => {
+          const containerRect = containerRef.current?.getBoundingClientRect();
+          if (!containerRect) return new DOMRect();
+          return new DOMRect(
+            displayedDetail.x + containerRect.x - 10,
+            displayedDetail.y + containerRect.y - 10,
+            20,
+            20
+          );
+        },
+        // contextElement: containerRef.current,
+      });
+    }, [containerRef.current, popperInstance, displayedDetail]);
 
     const series = data.map((formation) => [
       formation.tauxPoursuiteEtudes,
@@ -34,8 +76,7 @@ export const Cadran = chakra(
 
     const option = useMemo<EChartsOption>(
       () => ({
-        width: 540,
-        height: 480,
+        grid: { top: 10, right: 15, bottom: 50, left: 65 },
         xAxis: [
           {
             type: "value",
@@ -96,11 +137,11 @@ export const Cadran = chakra(
             symbolSize: (_, { dataIndex }) => {
               const formation = data[dataIndex];
               const effs = {
-                50: 5,
+                50: 6,
                 200: 10,
-                500: 15,
-                1000: 20,
-                500000: 30,
+                500: 14,
+                1000: 18,
+                500000: 22,
               };
               const size = Object.entries(effs).find(
                 ([eff]) =>
@@ -169,19 +210,94 @@ export const Cadran = chakra(
       }
       chartRef.current.setOption(option);
 
-      const handler = (a, b) => {
-        console.log(a, b);
+      const handler = (event: {
+        dataIndex: number;
+        data: [number, number];
+      }) => {
+        setDisplayedDetail({
+          x: chartRef.current?.convertToPixel("grid", event.data[0]) ?? 0,
+          y: chartRef.current?.convertToPixel("grid", event.data[1]) ?? 0,
+          formation: data[event.dataIndex],
+        });
+        return true;
       };
-      chartRef.current.on("click", handler);
+      //@ts-ignore
+      chartRef.current.on("click", "series", handler);
       return () => {
         chartRef.current?.off("click", handler);
       };
     }, [option, data]);
 
     return (
-      <div className={className}>
-        <Box ref={containerRef} style={{ width: "100%", height: "100%" }}></Box>
-      </div>
+      <Box position="relative" className={className}>
+        <Box
+          ref={containerRef}
+          position="absolute"
+          right="-15px"
+          top="0"
+          left="0"
+          bottom="0"
+        ></Box>
+        <Tooltip
+          ref={popperInstance.popperRef}
+          formation={displayedDetail?.formation}
+          clickOutside={() => setDisplayedDetail(undefined)}
+          {...popperInstance.getPopperProps()}
+        />
+      </Box>
     );
   }
 );
+
+const Tooltip = forwardRef<
+  HTMLDivElement,
+  { formation?: CadranFormations[number]; clickOutside: () => void }
+>(({ formation, clickOutside, ...props }, ref) => {
+  const cardRef = useRef<HTMLDivElement>(null);
+  useOutsideClick({
+    ref: cardRef,
+    handler: clickOutside,
+  });
+
+  return (
+    <div hidden={!formation} ref={ref} {...props}>
+      <Card ref={cardRef} width={"250px"} bg="white">
+        <CardBody fontSize="xs" p="4">
+          <InfoBlock
+            mb="2"
+            label="Formation concernée:"
+            value={formation?.libelleDiplome}
+          />
+          <InfoBlock
+            mb="2"
+            label="Dispositif concerné:"
+            value={formation?.libelleDispositif}
+          />
+          <HStack mb="2" spacing={4}>
+            <InfoBlock label="Effectif:" value={formation?.effectif} />
+            <InfoBlock
+              label="Nb Etablissements:"
+              value={formation?.nbEtablissement}
+            />
+          </HStack>
+          <InfoBlock
+            mb="2"
+            label="Tx de pression:"
+            value={
+              formation?.tauxPression ? formation?.tauxPression / 100 : "-"
+            }
+          />
+          <InfoBlock
+            mb="2"
+            label="Tx d'emploi:"
+            value={`${formation?.tauxInsertion12mois}%`}
+          />
+          <InfoBlock
+            label="Tx de pousuite d'études:"
+            value={`${formation?.tauxPoursuiteEtudes}%`}
+          />
+        </CardBody>
+      </Card>
+    </div>
+  );
+});
