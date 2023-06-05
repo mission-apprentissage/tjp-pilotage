@@ -2,11 +2,10 @@ import { inject } from "injecti";
 
 import { queryFormations, queryStatsForCadran } from "./dependencies";
 
-export const [getRegionStatsForCadran] = inject(
+export const [getDataForPanorama] = inject(
   { queryStatsForCadran, queryFormations },
   (deps) =>
     async ({ codeRegion, UAI }: { codeRegion: string; UAI?: string[] }) => {
-      console.log(UAI);
       const stats = await deps.queryStatsForCadran({ codeRegion });
       const formations = await deps.queryFormations({ codeRegion, UAI });
 

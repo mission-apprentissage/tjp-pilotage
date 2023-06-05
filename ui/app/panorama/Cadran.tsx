@@ -1,24 +1,23 @@
 "use client";
+import { InfoIcon, QuestionIcon } from "@chakra-ui/icons";
 import {
   Box,
-  Card,
-  CardBody,
+  Center,
   chakra,
-  HStack,
-  useOutsideClick,
+  Flex,
+  Popover,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
+  Text,
   usePopper,
 } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
-import { forwardRef, useLayoutEffect, useMemo, useRef, useState } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
-import { api } from "@/api.client";
-
-import { InfoBlock } from "../../components/InfoBlock";
-
-type CadranFormations = Awaited<
-  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
->["formations"];
+import { FormationTooltip } from "./FormationTooltip";
+import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const Cadran = chakra(
   ({
@@ -28,7 +27,7 @@ export const Cadran = chakra(
     meanInsertion,
   }: {
     className?: string;
-    data: CadranFormations;
+    data: PanoramaFormations;
     meanPoursuite?: number;
     meanInsertion?: number;
   }) => {
@@ -47,7 +46,7 @@ export const Cadran = chakra(
     const [displayedDetail, setDisplayedDetail] = useState<{
       x: number;
       y: number;
-      formation: CadranFormations[number];
+      formation: PanoramaFormation;
     }>();
 
     useLayoutEffect(() => {
@@ -214,9 +213,13 @@ export const Cadran = chakra(
         dataIndex: number;
         data: [number, number];
       }) => {
+        const [x, y] = chartRef.current?.convertToPixel("grid", event.data) ?? [
+          0, 0,
+        ];
+
         setDisplayedDetail({
-          x: chartRef.current?.convertToPixel("grid", event.data[0]) ?? 0,
-          y: chartRef.current?.convertToPixel("grid", event.data[1]) ?? 0,
+          x,
+          y,
           formation: data[event.dataIndex],
         });
         return true;
@@ -229,7 +232,11 @@ export const Cadran = chakra(
     }, [option, data]);
 
     return (
-      <Box position="relative" className={className}>
+      <Box
+        position="relative"
+        className={className}
+        overflow="visible !important"
+      >
         <Box
           ref={containerRef}
           position="absolute"
@@ -238,7 +245,10 @@ export const Cadran = chakra(
           left="0"
           bottom="0"
         ></Box>
-        <Tooltip
+
+        <InfoTooltip />
+
+        <FormationTooltip
           ref={popperInstance.popperRef}
           formation={displayedDetail?.formation}
           clickOutside={() => setDisplayedDetail(undefined)}
@@ -249,55 +259,94 @@ export const Cadran = chakra(
   }
 );
 
-const Tooltip = forwardRef<
-  HTMLDivElement,
-  { formation?: CadranFormations[number]; clickOutside: () => void }
->(({ formation, clickOutside, ...props }, ref) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  useOutsideClick({
-    ref: cardRef,
-    handler: clickOutside,
-  });
-
-  return (
-    <div hidden={!formation} ref={ref} {...props}>
-      <Card ref={cardRef} width={"250px"} bg="white">
-        <CardBody fontSize="xs" p="4">
-          <InfoBlock
-            mb="2"
-            label="Formation concernée:"
-            value={formation?.libelleDiplome}
-          />
-          <InfoBlock
-            mb="2"
-            label="Dispositif concerné:"
-            value={formation?.libelleDispositif}
-          />
-          <HStack mb="2" spacing={4}>
-            <InfoBlock label="Effectif:" value={formation?.effectif} />
-            <InfoBlock
-              label="Nb Etablissements:"
-              value={formation?.nbEtablissement}
-            />
-          </HStack>
-          <InfoBlock
-            mb="2"
-            label="Tx de pression:"
-            value={
-              formation?.tauxPression ? formation?.tauxPression / 100 : "-"
-            }
-          />
-          <InfoBlock
-            mb="2"
-            label="Tx d'emploi:"
-            value={`${formation?.tauxInsertion12mois}%`}
-          />
-          <InfoBlock
-            label="Tx de pousuite d'études:"
-            value={`${formation?.tauxPoursuiteEtudes}%`}
-          />
-        </CardBody>
-      </Card>
-    </div>
-  );
-});
+const InfoTooltip = () => (
+  <Popover>
+    <PopoverTrigger>
+      <QuestionIcon
+        color="info.525"
+        position="absolute"
+        right="20px"
+        top="25px"
+        fontSize="20px"
+        cursor="pointer"
+      />
+    </PopoverTrigger>
+    <PopoverContent _focusVisible={{ outline: "none" }} p="3">
+      <PopoverCloseButton />
+      <Text mb="2" fontSize="sm" fontWeight="bold">
+        Effectif:
+      </Text>
+      <Flex align="center">
+        <Center p="4">
+          <InfoIcon fontSize={30} />
+        </Center>
+        <Text flex={1} ml="4" fontSize="sm">
+          Les formations inférieures à 20 élèves ne sont pas représentées dans
+          ce quadrant.
+        </Text>
+      </Flex>
+      <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
+        Légende:
+      </Text>
+      <Flex align="center">
+        <Box
+          borderRadius={100}
+          width={"22px"}
+          height={"22px"}
+          border="1px solid black"
+        />
+        <Text flex={1} ml="4" fontSize="sm">
+          Seuil effectif 50000
+        </Text>
+      </Flex>
+      <Flex mt="2" align="center">
+        <Box
+          borderRadius={100}
+          width={"18px"}
+          height={"18px"}
+          mx="2px"
+          border="1px solid black"
+        />
+        <Text flex={1} ml="4" fontSize="sm">
+          Seuil effectif 500
+        </Text>
+      </Flex>
+      <Flex mt="2" align="center">
+        <Box
+          borderRadius={100}
+          width={"14px"}
+          height={"14px"}
+          mx="4px"
+          border="1px solid black"
+        />
+        <Text flex={1} ml="4" fontSize="sm">
+          Seuil effectif 200
+        </Text>
+      </Flex>
+      <Flex mt="2" align="center">
+        <Box
+          borderRadius={100}
+          width={"10px"}
+          height={"10px"}
+          mx="6px"
+          border="1px solid black"
+        />
+        <Text flex={1} ml="4" fontSize="sm">
+          Seuil effectif 2000
+        </Text>
+      </Flex>
+      <Flex mt="2" align="center">
+        <Box
+          borderRadius={100}
+          width={"6px"}
+          height={"6px"}
+          mx="8px"
+          border="1px solid black"
+        />
+        <Text flex={1} ml="4" fontSize="sm">
+          Seuil effectif 50
+        </Text>
+      </Flex>
+    </PopoverContent>
+  </Popover>
+);

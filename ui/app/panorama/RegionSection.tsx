@@ -15,9 +15,9 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { api } from "../../api.client";
 import { Breadcrumb } from "../../components/Breadcrumb";
 import { Multiselect } from "../../components/Multiselect";
+import { PanoramaStats } from "./type";
 
 const StatCard = ({
   label,
@@ -46,14 +46,10 @@ const StatCard = ({
   </Card>
 );
 
-type Stats = Awaited<
-  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
->["stats"];
 export const RegionSection = ({
   codeRegion,
   onCodeRegionChanged,
   regionOptions,
-  UAI,
   onUAIChanged,
   UAIOptions,
   stats,
@@ -61,10 +57,9 @@ export const RegionSection = ({
   codeRegion?: string;
   onCodeRegionChanged: (codeRegion: string) => void;
   regionOptions?: { label: string; value: string }[];
-  UAI?: string[];
   onUAIChanged: (UAI: string[]) => void;
   UAIOptions?: { label: string; value: string }[];
-  stats?: Stats;
+  stats?: PanoramaStats;
 }) => {
   const labelRegion = regionOptions?.find(
     (item) => item.value === codeRegion
