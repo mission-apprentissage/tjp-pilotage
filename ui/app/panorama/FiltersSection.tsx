@@ -29,7 +29,7 @@ export const FiltersSection = ({
           width={250}
           options={diplomeOptions}
         >
-          Niveau
+          Diplôme
         </Multiselect>
         <Multiselect
           display="none"
