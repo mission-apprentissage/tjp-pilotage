@@ -1,30 +1,52 @@
 import { inject } from "injecti";
 
 import { rawDataRepository } from "../../../repositories/rawData.repository";
-import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
+import { AnneeDispositif } from "../../getCfdRentrees/getCfdRentrees.usecase";
+
+const findAttractiviteCapacite = async ({
+  mefstat,
+  uai,
+  rentreeScolaire,
+}: {
+  mefstat: string;
+  uai: string;
+  rentreeScolaire: string;
+}) => {
+  return rawDataRepository.findRawDatas({
+    type: "attractivite_capacite",
+    year: rentreeScolaire,
+    filter: {
+      "MEF STAT 11": mefstat,
+      "Etablissement d'accueil": uai,
+      "Statut  Offre de formation": "ST",
+      "Voeu de recensement  O/N": "N",
+    },
+    limit: 2,
+  });
+};
 
 export const [getIndicateursAffelnet] = inject(
-  { findRawDatas: rawDataRepository.findRawDatas },
+  { findAttractiviteCapacite },
   (deps) =>
     async ({
-      dispositifRentrees,
+      //dispositifRentrees,
+      anneesDispositif,
+      uai,
       anneeDebut,
+      rentreeScolaire,
     }: {
-      dispositifRentrees: CfdRentrees;
+      anneesDispositif: AnneeDispositif[];
+      uai: string;
       anneeDebut: number;
+      rentreeScolaire: string;
     }): Promise<{
       capacites: (number | null)[];
       premiersVoeux: (number | null)[];
     }> => {
-      const lines = await deps.findRawDatas({
-        type: "attractivite_capacite",
-        filter: {
-          "MEF STAT 11": dispositifRentrees.annees[anneeDebut].mefstat,
-          "Etablissement d'accueil": dispositifRentrees.uai,
-          "Statut  Offre de formation": "ST",
-          "Voeu de recensement  O/N": "N",
-        },
-        limit: 2,
+      const lines = await deps.findAttractiviteCapacite({
+        mefstat: anneesDispositif[anneeDebut].mefstat,
+        uai,
+        rentreeScolaire,
       });
       if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };
 
