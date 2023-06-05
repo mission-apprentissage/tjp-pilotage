@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { api } from "../../api.client";
 import { CadranSection } from "./CadranSection";
+import { FiltersSection } from "./FiltersSection";
 import { InfoSection } from "./InfoSection";
 import { RegionSection } from "./RegionSection";
 import { TopFlopSection } from "./TopFlopSection";
@@ -12,6 +13,7 @@ import { TopFlopSection } from "./TopFlopSection";
 export default function Panorama() {
   const [codeRegion, setCodeRegion] = useState("84");
   const [UAI, setUAI] = useState<string[]>();
+  const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
   const { data } = useQuery(
     ["formationForPanorama", { codeRegion, UAI }],
@@ -37,15 +39,21 @@ export default function Panorama() {
         UAIOptions={filters?.filters.etablissements}
         stats={data?.stats}
       />
+      <FiltersSection
+        onDiplomeChanged={setCodeNiveauDiplome}
+        diplomeOptions={filters?.filters.diplomes}
+        onUAIChanged={setUAI}
+        UAIOptions={filters?.filters.etablissements}
+      />
       <CadranSection
+        codeNiveauDiplome={codeNiveauDiplome}
         meanInsertion={data?.stats.tauxInsertion12mois}
         meanPoursuite={data?.stats.tauxPoursuiteEtudes}
-        diplomeOptions={filters?.filters.diplomes}
         cadranFormations={data?.formations}
       />
       {!UAI?.length && (
         <TopFlopSection
-          diplomeOptions={filters?.filters.diplomes}
+          codeNiveauDiplome={codeNiveauDiplome}
           cadranFormations={data?.formations}
         />
       )}

@@ -95,8 +95,11 @@ export const RegionSection = ({
                 </option>
               ))}
             </Select>
-            <FormLabel mt="4">Sélectionner un établissement</FormLabel>
+            <FormLabel display="none" mt="4">
+              Sélectionner un établissement
+            </FormLabel>
             <Multiselect
+              display="none"
               width="100%"
               onChange={onUAIChanged}
               options={UAIOptions}
