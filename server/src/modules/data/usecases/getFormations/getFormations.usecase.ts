@@ -16,8 +16,10 @@ const getFormationsFactory =
     codeDispositif?: string[];
     commune?: string[];
     cfd?: string[];
+    rentreeScolaire?: string[];
     cfdFamille?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
+    withEmptyFormations?: boolean;
   }) => {
     const formationsPromise = findFormationsInDb(activeFilters);
     const filtersPromise = findFiltersInDb(activeFilters);

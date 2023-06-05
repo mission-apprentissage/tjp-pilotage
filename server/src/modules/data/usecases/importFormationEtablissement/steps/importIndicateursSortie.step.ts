@@ -1,26 +1,29 @@
+import { inject } from "injecti";
+
 import { IndicateurSortie } from "../../../entities/IndicateurSortie";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
-import { CfdRentrees } from "../../getCfdRentrees/getCfdRentrees.usecase";
+import { AnneeDispositif } from "../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../dependencies.di";
 import { logger } from "../importLogger";
 
 const toIndicateurSorties = ({
+  uai,
   ijData,
-  dispositifRentrees,
   formationEtablissementId,
   millesime,
+  anneesDispositif,
 }: {
+  uai: string;
   ijData: R | undefined;
-  dispositifRentrees: CfdRentrees;
+  anneesDispositif: AnneeDispositif[];
   formationEtablissementId: string;
   millesime: string;
 }): IndicateurSortie | undefined => {
-  const mefstatLastYear =
-    dispositifRentrees.annees[dispositifRentrees.annees.length - 1].mefstat;
+  const mefstatLastYear = anneesDispositif[anneesDispositif.length - 1].mefstat;
   const type = "depp_mefstat";
 
   const log = {
-    uai: dispositifRentrees.uai,
+    uai,
     millesime,
     mefstat: mefstatLastYear,
   };
@@ -51,27 +54,33 @@ const toIndicateurSorties = ({
   return indicateurSortie;
 };
 
-export const importIndicateurSortieFactory = ({
-  createIndicateurSortie = dependencies.createIndicateurSortie,
-  getUaiData = dependencies.getUaiData,
-} = {}) => {
-  return async ({
-    formationEtablissementId,
-    millesime,
-    dispositifRentrees,
-  }: {
-    formationEtablissementId: string;
-    millesime: string;
-    dispositifRentrees: CfdRentrees;
-  }) => {
-    const ijData = await getUaiData({ millesime, uai: dispositifRentrees.uai });
-    const indicateurSortie = toIndicateurSorties({
-      ijData,
-      millesime,
-      dispositifRentrees,
+export const [importIndicateurSortie] = inject(
+  {
+    createIndicateurSortie: dependencies.createIndicateurSortie,
+    getUaiData: dependencies.getUaiData,
+  },
+  (deps) => {
+    return async ({
+      uai,
       formationEtablissementId,
-    });
-    if (!indicateurSortie) return;
-    await createIndicateurSortie([indicateurSortie]);
-  };
-};
+      millesime,
+      anneesDispositif,
+    }: {
+      uai: string;
+      formationEtablissementId: string;
+      millesime: string;
+      anneesDispositif: AnneeDispositif[];
+    }) => {
+      const ijData = await deps.getUaiData({ millesime, uai });
+      const indicateurSortie = toIndicateurSorties({
+        ijData,
+        millesime,
+        anneesDispositif,
+        uai,
+        formationEtablissementId,
+      });
+      if (!indicateurSortie) return;
+      await deps.createIndicateurSortie([indicateurSortie]);
+    };
+  }
+);
