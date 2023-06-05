@@ -89,15 +89,16 @@ export const queryFormations = async ({
   });
 
   const formations = await baseQuery
-    .leftJoin(
-      "indicateurSortie as isp",
-      "isp.formationEtablissementId",
-      "formationEtablissement.id"
+
+    .leftJoin("indicateurSortie as isp", (join) =>
+      join
+        .onRef("formationEtablissement.id", "=", "isp.formationEtablissementId")
+        .on("isp.millesimeSortie", "=", "2019_2020")
     )
-    .leftJoin(
-      "indicateurEntree as iep",
-      "iep.formationEtablissementId",
-      "formationEtablissement.id"
+    .leftJoin("indicateurEntree as iep", (join) =>
+      join
+        .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
+        .on("iep.rentreeScolaire", "=", "2021")
     )
     .select([
       "codeFormationDiplome",
@@ -105,7 +106,7 @@ export const queryFormations = async ({
       "formationEtablissement.dispositifId",
       "libelleDispositif",
       "formation.codeNiveauDiplome",
-      sql<number>`COUNT(etablissement.*)`.as("nbEtablissement"),
+      sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
       sql<number>`(100 * sum(
               case when ${capaciteAnnee(
                 sql`"indicateurEntree"."anneeDebut"::text`

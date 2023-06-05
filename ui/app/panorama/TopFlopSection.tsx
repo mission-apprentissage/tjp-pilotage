@@ -4,7 +4,6 @@ import {
   Divider,
   Flex,
   Heading,
-  HStack,
   Popover,
   PopoverCloseButton,
   PopoverContent,
@@ -12,24 +11,21 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useMemo, useState } from "react";
+import { useMemo } from "react";
 
 import { FormationTooltipContent } from "@/app/panorama/FormationTooltip";
 
-import { Multiselect } from "../../components/Multiselect";
 import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({
-  diplomeOptions,
   cadranFormations,
+  codeNiveauDiplome,
 }: {
-  diplomeOptions?: { label: string; value: string }[];
   cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
+  codeNiveauDiplome?: string[];
 }) => {
-  const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
-
   const topFlopFormations = useMemo(() => {
     if (!cadranFormations) return;
     const filtered = cadranFormations.filter(
@@ -74,16 +70,6 @@ export const TopFlopSection = ({
           d’étude)
         </Text>
       </Box>
-      <HStack spacing={2} justifyContent="flex-end">
-        <Multiselect
-          flex={1}
-          maxW={250}
-          onChange={(value) => setCodeNiveauDiplome(value)}
-          options={diplomeOptions}
-        >
-          Niveau
-        </Multiselect>
-      </HStack>
       {topFlopFormations && (
         <TopFlopChart topFlopFormations={topFlopFormations} />
       )}

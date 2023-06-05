@@ -10,7 +10,6 @@ import {
   FormControl,
   FormLabel,
   Heading,
-  HStack,
   Radio,
   RadioGroup,
   SimpleGrid,
@@ -25,7 +24,6 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Multiselect } from "../../components/Multiselect";
 import { Cadran } from "./Cadran";
 import { PanoramaFormations } from "./type";
 
@@ -102,18 +100,17 @@ const filterFormations = ({
     });
 
 export const CadranSection = ({
-  diplomeOptions,
   cadranFormations,
   meanPoursuite,
   meanInsertion,
+  codeNiveauDiplome,
 }: {
-  diplomeOptions?: { label: string; value: string }[];
   cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
+  codeNiveauDiplome?: string[];
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
-  const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
   const [tendance, setTendance] = useState<string>();
 
   const filteredFormations = useMemo(
@@ -231,17 +228,6 @@ export const CadranSection = ({
           </FormControl>
         </Box>
         <Box flex={1}>
-          <HStack spacing={2}>
-            <Multiselect
-              maxW={250}
-              ml="auto"
-              onChange={(value) => setCodeNiveauDiplome(value)}
-              flex={1}
-              options={diplomeOptions}
-            >
-              Niveau
-            </Multiselect>
-          </HStack>
           <Text color="grey" textAlign="right" fontSize="xs">
             Selon indicateurs de la DEPP
           </Text>

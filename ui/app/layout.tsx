@@ -3,7 +3,7 @@ import "./globals.css";
 import "react-notion-x/src/styles.css";
 
 import { CacheProvider } from "@chakra-ui/next-js";
-import { Box, ChakraProvider, Flex } from "@chakra-ui/react";
+import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
@@ -57,14 +57,7 @@ export default function RootLayout({
             <ChakraProvider theme={theme}>
               <Flex direction="column" height="100vh" overflow="auto">
                 <Header />
-                <Box
-                  display="flex"
-                  flexDirection="column"
-                  flex={1}
-                  minHeight="0"
-                >
-                  {children}
-                </Box>
+                {children}
               </Flex>
             </ChakraProvider>
           </CacheProvider>
