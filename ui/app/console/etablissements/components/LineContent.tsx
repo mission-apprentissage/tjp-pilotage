@@ -2,9 +2,8 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, IconButton, Skeleton, Td, Tr } from "@chakra-ui/react";
 
-import { getBg } from "@/utils/getBgScale";
-
 import { GraphWrapper } from "../../../../components/GraphWrapper";
+import { getTauxPressionStyle } from "../../../../utils/getBgScale";
 import { Line } from "../page";
 
 export const EtablissementLineContent = ({
@@ -39,8 +38,8 @@ export const EtablissementLineContent = ({
           </Box>
         )}
       </Td>
-      <Td>{line.libelleEtablissement ?? "-"}</Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
+      <Td>{line.libelleEtablissement ?? "-"}</Td>
       <Td>{line.commune ?? "-"}</Td>
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
@@ -51,13 +50,9 @@ export const EtablissementLineContent = ({
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
       <Td isNumeric>{line.capacite ?? "-"}</Td>
       <Td
-        style={{
-          background: getBg(
-            line.tauxPression !== undefined
-              ? line.tauxPression / 100
-              : undefined
-          ),
-        }}
+        style={getTauxPressionStyle(
+          line.tauxPression !== undefined ? line.tauxPression / 100 : undefined
+        )}
         isNumeric
       >
         {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}

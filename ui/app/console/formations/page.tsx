@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Center,
   Flex,
   Spinner,
@@ -17,7 +18,9 @@ import { Fragment, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
+import { TauxPressionScale } from "@/app/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
@@ -217,6 +220,7 @@ export default function Formations() {
             >
               <Tr>
                 <Th />
+                <Th>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -231,7 +235,6 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleDiplome" />
                   {FORMATIONS_COLUMNS.libelleDiplome}
                 </Th>
-                <Th>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -241,14 +244,13 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.nbEtablissement}
                 </Th>
                 <Th
-                  display="flex"
-                  align="center"
                   isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {FORMATIONS_COLUMNS.effectif1}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -257,6 +259,7 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {FORMATIONS_COLUMNS.effectif2}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -265,6 +268,7 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {FORMATIONS_COLUMNS.effectif3}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -273,6 +277,18 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {FORMATIONS_COLUMNS.tauxPression}
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la formation.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -281,6 +297,10 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {FORMATIONS_COLUMNS.tauxRemplissage}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -289,8 +309,26 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxInsertion12mois" />
                   {FORMATIONS_COLUMNS.tauxInsertion12mois}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
+                  />
                 </Th>
-                <Th cursor="pointer">Delta régional insertion</Th>
+                <Th cursor="pointer">
+                  {FORMATIONS_COLUMNS.deltaInsertion12mois}
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        Ecart par rapport à la moyenne régionale d’insertion du
+                        niveau de diplôme (Cap, Bac pro, Bts...) <br />
+                        Ex: en région AURA, le bac pro Boulanger-Patissier est
+                        17 points plus insérant que la moyenne des autres bac
+                        pro de la région.
+                      </>
+                    }
+                  />
+                </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
@@ -299,7 +337,13 @@ export default function Formations() {
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
                   {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
-                <Th isNumeric>{FORMATIONS_COLUMNS.deltaPoursuiteEtudes}</Th>
+                <Th isNumeric>
+                  {FORMATIONS_COLUMNS.deltaPoursuiteEtudes}
+                  <TooltipIcon
+                    ml="1"
+                    label="Ecart par rapport à la moyenne régionale de poursuite d’étude du niveau de diplôme (Cap, Bac pro, Bts...)."
+                  />
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
