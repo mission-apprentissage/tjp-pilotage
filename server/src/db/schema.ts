@@ -139,6 +139,7 @@ export interface NiveauDiplome {
 export interface RawData {
   type: string;
   data: Json | null;
+  id: Generated<string | null>;
 }
 
 export interface Region {

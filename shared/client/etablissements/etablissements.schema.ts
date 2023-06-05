@@ -7,7 +7,8 @@ const OptionSchema = Type.Object({
 
 const EtablissementLineSchema = Type.Object({
   libelleEtablissement: Type.Optional(Type.String()),
-  UAI: Type.Optional(Type.String()),
+  UAI: Type.String(),
+  rentreeScolaire: Type.Optional(Type.String()),
   secteur: Type.Optional(Type.String()),
   commune: Type.Optional(Type.String()),
   departement: Type.Optional(Type.String()),
@@ -37,7 +38,9 @@ const FiltersSchema = Type.Object({
   codeDepartement: Type.Optional(Type.Array(Type.String())),
   commune: Type.Optional(Type.Array(Type.String())),
   codeDiplome: Type.Optional(Type.Array(Type.String())),
+  codeDispositif: Type.Optional(Type.Array(Type.String())),
   cfdFamille: Type.Optional(Type.Array(Type.String())),
+  rentreeScolaire: Type.Optional(Type.Array(Type.String())),
   secteur: Type.Optional(Type.Array(Type.String())),
   uai: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),

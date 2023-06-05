@@ -1,7 +1,8 @@
+import { inject } from "injecti";
+
 import { IndicateurEtablissement } from "../../../entities/IndicateurEtablissement";
 import { R } from "../../../services/inserJeunesApi/formatUaiData";
 import { dependencies } from "../dependencies.di";
-import { MILLESIMES } from "../domain/millesimes";
 
 const toIndicateurEtablissement = ({
   deppEtablissement,
@@ -20,20 +21,20 @@ const toIndicateurEtablissement = ({
   };
 };
 
-export const importIndicateurEtablissementFactory =
-  ({
-    getUaiData = dependencies.getUaiData,
-    upsertIndicateurEtablissement = dependencies.upsertIndicateurEtablissement,
-  }) =>
-  async ({ uai }: { uai: string }) => {
-    for (const millesime of MILLESIMES) {
-      const ijData = await getUaiData({ uai, millesime });
+export const [importIndicateurEtablissement] = inject(
+  {
+    getUaiData: dependencies.getUaiData,
+    upsertIndicateurEtablissement: dependencies.upsertIndicateurEtablissement,
+  },
+  (deps) =>
+    async ({ uai, millesime }: { uai: string; millesime: string }) => {
+      const ijData = await deps.getUaiData({ uai, millesime });
       const indicateur = toIndicateurEtablissement({
         deppEtablissement: ijData,
         millesime,
         uai,
       });
-      if (!indicateur) continue;
-      await upsertIndicateurEtablissement(indicateur);
+      if (!indicateur) return;
+      await deps.upsertIndicateurEtablissement(indicateur);
     }
-  };
+);

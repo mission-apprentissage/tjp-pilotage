@@ -14,7 +14,7 @@ const findNDispositifFormation = async ({
       .selectFrom("rawData")
       .selectAll("rawData")
       .where("type", "=", "nDispositifFormation_")
-      .orderBy("data", "asc")
+      .orderBy("id", "asc")
       .offset(offset)
       .limit(limit)
       .execute()

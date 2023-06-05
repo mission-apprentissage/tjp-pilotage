@@ -7,7 +7,7 @@ import { cleanNull } from "../../../../utils/noNull";
 const findFormationsInDb = async ({
   offset = 0,
   limit = 20,
-  rentreeScolaire = "2022",
+  rentreeScolaire = ["2022"],
   millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
@@ -18,10 +18,11 @@ const findFormationsInDb = async ({
   cfd,
   cfdFamille,
   orderBy,
+  withEmptyFormations = true,
 }: {
   offset?: number;
   limit?: number;
-  rentreeScolaire?: string;
+  rentreeScolaire?: string[];
   millesimeSortie?: string;
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -32,6 +33,7 @@ const findFormationsInDb = async ({
   cfd?: string[];
   cfdFamille?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
+  withEmptyFormations?: boolean;
 } = {}) => {
   const effectifAnnee = (annee: RawBuilder<unknown>) => {
     return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
@@ -74,7 +76,7 @@ const findFormationsInDb = async ({
           "=",
           "indicateurEntree.formationEtablissementId"
         )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
     .leftJoin("indicateurSortie", (join) =>
       join
@@ -97,28 +99,27 @@ const findFormationsInDb = async ({
       "dispositifId",
       "libelleDispositif",
       "libelleNiveauDiplome",
-      sql<number>`COUNT(etablissement.*)`.as("nbEtablissement"),
-      sql<number>`avg("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
+      "indicateurEntree.rentreeScolaire",
+      sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
+      `.as("nbEtablissement"),
+      sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       sql<number>`(100 * sum(
         case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
         then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
         / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
       `.as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})`.as(
-        "effectif"
-      ),
+      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})
+      `.as("effectif"),
       sql<number>`SUM(${effectifAnnee(sql`'0'`)})`.as("effectif1"),
       sql<number>`SUM(${effectifAnnee(sql`'1'`)})`.as("effectif2"),
       sql<number>`SUM(${effectifAnnee(sql`'2'`)})`.as("effectif3"),
-      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})`.as(
-        "capacite"
-      ),
+      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})
+      `.as("capacite"),
       sql<number>`SUM(${capaciteAnnee(sql`'0'`)})`.as("capacite1"),
       sql<number>`SUM(${capaciteAnnee(sql`'1'`)})`.as("capacite2"),
       sql<number>`SUM(${capaciteAnnee(sql`'2'`)})`.as("capacite3"),
-      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})`.as(
-        "premiersVoeux"
-      ),
+      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})
+      `.as("premiersVoeux"),
       sql<number>`(100 * sum(
         case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
         then ${premierVoeuxAnnee(sql`"anneeDebut"::text`)} end)
@@ -134,8 +135,35 @@ const findFormationsInDb = async ({
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
+    .where(({ or, cmpr, selectFrom, exists, not }) =>
+      or([
+        cmpr("indicateurEntree.rentreeScolaire", "is not", null),
+        withEmptyFormations
+          ? not(
+              exists(
+                selectFrom("formationEtablissement as fe")
+                  .select("cfd")
+                  .distinct()
+                  .innerJoin(
+                    "indicateurEntree",
+                    "id",
+                    "formationEtablissementId"
+                  )
+                  .where("rentreeScolaire", "in", rentreeScolaire)
+                  .whereRef(
+                    "fe.dispositifId",
+                    "=",
+                    "formationEtablissement.dispositifId"
+                  )
+                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
+              )
+            )
+          : sql`false`,
+      ])
+    )
     .groupBy([
       "formation.id",
+      "formation.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "formationEtablissement.dispositifId",
@@ -174,9 +202,9 @@ const findFormationsInDb = async ({
       if (!cfdFamille) return q;
       return q.where("familleMetier.cfdFamille", "in", cfdFamille);
     })
-    .$call((query) => {
-      if (!orderBy) return query;
-      return query.orderBy(
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
         sql.ref(orderBy.column),
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
