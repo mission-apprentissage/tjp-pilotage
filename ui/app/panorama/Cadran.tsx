@@ -129,7 +129,7 @@ export const Cadran = chakra(
         series: [
           {
             itemStyle: {
-              color: "rgba(58, 85, 209, 0.4)",
+              color: "rgba(58, 85, 209, 0.6)",
             },
             data: series as any,
             type: "scatter",

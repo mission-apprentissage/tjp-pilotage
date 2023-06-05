@@ -121,7 +121,7 @@ export const RegionSection = ({
               {labelRegion ?? "-"}
             </Center>
             <StatCard
-              label="Tx poursuite étude dans votre région"
+              label="Taux poursuite étude dans votre région"
               value={
                 stats?.tauxPoursuiteEtudes
                   ? `${stats.tauxPoursuiteEtudes}%`

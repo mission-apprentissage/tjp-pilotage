@@ -16,13 +16,13 @@ export const FormationTooltip = forwardRef<
   });
 
   return (
-    <div hidden={!formation} ref={ref} {...props}>
+    <Box zIndex={10} hidden={!formation} ref={ref} {...props}>
       <Card width={"250px"} ref={cardRef}>
         <CardBody p="4">
           <FormationTooltipContent formation={formation} />
         </CardBody>
       </Card>
-    </div>
+    </Box>
   );
 });
 
