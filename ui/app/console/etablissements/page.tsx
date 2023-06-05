@@ -1,6 +1,7 @@
 "use client";
 
 import {
+  Box,
   Center,
   Flex,
   Spinner,
@@ -22,6 +23,8 @@ import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 
 import { Multiselect } from "../../../components/Multiselect";
+import { TooltipIcon } from "../../../components/TooltipIcon";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 import {
   EtablissementLineContent,
   EtablissementLineLoader,
@@ -243,19 +246,13 @@ export default function Etablissements() {
             >
               <Tr>
                 <Th />
+                <Th>{ETABLISSEMENTS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
                 >
                   <OrderIcon {...order} column="libelleEtablissement" />
                   {ETABLISSEMENTS_COLUMNS.libelleEtablissement}
-                </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("rentreeScolaire")}
-                >
-                  <OrderIcon {...order} column="rentreeScolaire" />
-                  {ETABLISSEMENTS_COLUMNS.rentreeScolaire}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("commune")}>
                   <OrderIcon {...order} column="commune" />
@@ -286,6 +283,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {ETABLISSEMENTS_COLUMNS.effectif1}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -294,6 +292,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {ETABLISSEMENTS_COLUMNS.effectif2}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -302,6 +301,7 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {ETABLISSEMENTS_COLUMNS.effectif3}
+                  <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
                   isNumeric
@@ -318,6 +318,18 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la l'offre de formation.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -326,6 +338,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -342,6 +358,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="valeurAjoutee" />
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
+                  <TooltipIcon
+                    ml="1"
+                    label="Capacité de l'établissement à insérer en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi comparativement à des établissements similaires."
+                  />
                 </Th>
                 <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>

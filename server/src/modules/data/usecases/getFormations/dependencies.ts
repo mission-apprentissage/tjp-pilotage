@@ -47,9 +47,7 @@ const findFormationsInDb = async ({
     return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
   };
 
-  console.log("withEmptyFormations", withEmptyFormations);
-
-  const res = await kdb
+  const query = kdb
     .selectFrom("formation")
     .leftJoin(
       "formationEtablissement",
@@ -198,15 +196,15 @@ const findFormationsInDb = async ({
     })
     .$call((q) => {
       if (!codeDiplome) return q;
-      return q.where("dispositif.codeNiveauDiplome", "in", codeDiplome);
+      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
     })
     .$call((q) => {
       if (!cfdFamille) return q;
       return q.where("familleMetier.cfdFamille", "in", cfdFamille);
     })
-    .$call((query) => {
-      if (!orderBy) return query;
-      return query.orderBy(
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
         sql.ref(orderBy.column),
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
@@ -217,8 +215,9 @@ const findFormationsInDb = async ({
     .orderBy("nbEtablissement", "asc")
     .orderBy("codeFormationDiplome", "asc")
     .offset(offset)
-    .limit(limit)
-    .execute();
+    .limit(limit);
+
+  const res = await query.execute();
 
   return {
     count: res[0]?.count ?? 0,
@@ -383,7 +382,8 @@ const findFiltersInDb = async ({
 
   const formations = await base
     .select([
-      "formation.libelleDiplome as label",
+      sql`CONCAT("formation"."libelleDiplome", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      `.as("label"),
       "formation.codeFormationDiplome as value",
     ])
     .where("formation.codeFormationDiplome", "is not", null)
