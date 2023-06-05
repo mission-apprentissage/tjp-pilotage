@@ -14,6 +14,7 @@ import {
   Radio,
   RadioGroup,
   SimpleGrid,
+  Skeleton,
   Slider,
   SliderFilledTrack,
   SliderMark,
@@ -24,18 +25,14 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { api } from "../../api.client";
 import { Multiselect } from "../../components/Multiselect";
 import { Cadran } from "./Cadran";
+import { PanoramaFormations } from "./type";
 
 const labelStyles = {
   mt: "-8",
   fontSize: "sm",
 };
-
-type CadranFormations = Awaited<
-  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
->["formations"];
 
 const filterFormations = ({
   effectifMin,
@@ -45,7 +42,7 @@ const filterFormations = ({
 }: {
   effectifMin: number;
   codeNiveauDiplome?: string[];
-  cadranFormations?: CadranFormations;
+  cadranFormations?: PanoramaFormations;
   tendance?: string;
 }) =>
   cadranFormations
@@ -111,7 +108,7 @@ export const CadranSection = ({
   meanInsertion,
 }: {
   diplomeOptions?: { label: string; value: string }[];
-  cadranFormations?: CadranFormations;
+  cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
 }) => {
@@ -248,15 +245,18 @@ export const CadranSection = ({
           <Text color="grey" textAlign="right" fontSize="xs">
             Selon indicateurs de la DEPP
           </Text>
-          {filteredFormations && (
-            <AspectRatio ratio={1}>
-              <Cadran
-                meanPoursuite={meanPoursuite}
-                meanInsertion={meanInsertion}
-                data={filteredFormations}
-              />
-            </AspectRatio>
-          )}
+          <AspectRatio ratio={1}>
+            <>
+              {filteredFormations && (
+                <Cadran
+                  meanPoursuite={meanPoursuite}
+                  meanInsertion={meanInsertion}
+                  data={filteredFormations}
+                />
+              )}
+              {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
+            </>
+          </AspectRatio>
         </Box>
       </Stack>
     </Container>

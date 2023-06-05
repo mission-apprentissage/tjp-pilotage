@@ -14,25 +14,18 @@ export const createFormationClient = (instance: AxiosInstance) => ({
     url: "/formations/csv",
     instance,
   }),
-  getFormationsForCadran: createClientMethod<
-    typeof ROUTES_CONFIG.getFormationsForCadran
+  getDataForPanorama: createClientMethod<
+    typeof ROUTES_CONFIG.getDataForPanorama
   >({
     method: "GET",
-    url: "/cadran/formations",
+    url: "/panorama/stats",
     instance,
   }),
-  getRegionStatsForCadran: createClientMethod<
-    typeof ROUTES_CONFIG.getRegionStatsForCadran
-  >({
-    method: "GET",
-    url: "/cadran/stats",
-    instance,
-  }),
-  getFiltersForCadran: createClientMethod<
+  getFiltersForPanorama: createClientMethod<
     typeof ROUTES_CONFIG.getFiltersForCadran
   >({
     method: "GET",
-    url: "/cadran/filters",
+    url: "/panorama/filters",
     instance,
   }),
 });

@@ -78,40 +78,7 @@ export const formationSchemas = {
       200: Type.String(),
     },
   },
-  getFormationsForCadran: {
-    querystring: Type.Object({
-      codeRegion: Type.Array(Type.String()),
-      codeDiplome: Type.Optional(Type.Array(Type.String())),
-      effectifMin: Type.Optional(Type.Number()),
-    }),
-    response: {
-      200: Type.Object({
-        count: Type.Number(),
-        formations: Type.Array(
-          Type.Object({
-            codeFormationDiplome: Type.String(),
-            libelleDiplome: Type.String(),
-            codeNiveauDiplome: Type.String(),
-            libelleOfficielFamille: Type.Optional(Type.String()),
-            dispositifId: Type.Optional(Type.String()),
-            libelleDispositif: Type.Optional(Type.String()),
-            libelleNiveauDiplome: Type.Optional(Type.String()),
-            nbEtablissement: Type.Optional(Type.Number()),
-            anneeDebut: Type.Optional(Type.Number()),
-            effectif: Type.Optional(Type.Number()),
-            effectif1: Type.Optional(Type.Number()),
-            effectif2: Type.Optional(Type.Number()),
-            effectif3: Type.Optional(Type.Number()),
-            tauxRemplissage: Type.Optional(Type.Number()),
-            tauxPression: Type.Optional(Type.Number()),
-            tauxInsertion12mois: Type.Optional(Type.Number()),
-            tauxPoursuiteEtudes: Type.Optional(Type.Number()),
-          })
-        ),
-      }),
-    },
-  },
-  getRegionStatsForCadran: {
+  getDataForPanorama: {
     querystring: Type.Object({
       codeRegion: Type.String(),
       UAI: Type.Optional(Type.Array(Type.String())),

@@ -5,24 +5,26 @@ import {
   Flex,
   Heading,
   HStack,
+  Popover,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
-import { api } from "../../api.client";
-import { Multiselect } from "../../components/Multiselect";
+import { FormationTooltipContent } from "@/app/panorama/FormationTooltip";
 
-type CadranFormations = Awaited<
-  ReturnType<ReturnType<typeof api.getRegionStatsForCadran>["call"]>
->["formations"];
+import { Multiselect } from "../../components/Multiselect";
+import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({
   diplomeOptions,
   cadranFormations,
 }: {
   diplomeOptions?: { label: string; value: string }[];
-  cadranFormations?: CadranFormations;
+  cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
 }) => {
@@ -35,6 +37,7 @@ export const TopFlopSection = ({
         !codeNiveauDiplome?.length ||
         codeNiveauDiplome.includes(item.codeNiveauDiplome)
     );
+    const nbTopFlop = Math.min(filtered.length, 20) / 2;
     const top = filtered
       .slice()
       .sort((a, b) =>
@@ -43,7 +46,7 @@ export const TopFlopSection = ({
           ? 1
           : -1
       )
-      .slice(0, 10);
+      .slice(0, Math.ceil(nbTopFlop));
 
     const flop = filtered
       .slice()
@@ -53,7 +56,7 @@ export const TopFlopSection = ({
           ? 1
           : -1
       )
-      .slice(0, 10);
+      .slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
   }, [cadranFormations, codeNiveauDiplome]);
@@ -91,71 +94,87 @@ export const TopFlopSection = ({
 const TopFlopChart = ({
   topFlopFormations,
 }: {
-  topFlopFormations: { top: CadranFormations; flop: CadranFormations };
+  topFlopFormations: { top: PanoramaFormations; flop: PanoramaFormations };
 }) => {
-  console.log(topFlopFormations);
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
             key={item.codeFormationDiplome}
-            label={item.libelleDiplome}
+            formation={item}
             value={(item.tauxInsertion12mois + item.tauxPoursuiteEtudes) / 2}
           />
         ))}
       </VStack>
-      <Divider py="4" />
+      <Divider pt="4" mb="4" />
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.flop
           .slice()
           .reverse()
           .map((item) => (
             <TopItem
-              key={item.codeFormationDiplome}
-              label={item.libelleDiplome}
+              key={`${item.codeFormationDiplome}_${item.dispositifId}`}
+              formation={item}
               color={"#FD8E81"}
               value={(item.tauxInsertion12mois + item.tauxPoursuiteEtudes) / 2}
             />
           ))}
       </VStack>
+      <Text mt="4" color="grey" fontSize="sm" textAlign="right">
+        Légende: (Taux d'emploi / Taux de poursuite d'études)
+      </Text>
     </Box>
   );
 };
 
 const TopItem = ({
-  label,
+  formation,
   value,
   color = "#8585F6",
 }: {
-  label: string;
+  formation: PanoramaFormation;
   value: number;
   color?: string;
 }) => {
   return (
-    <Flex gap="8" align="center">
-      <Box
-        flex={1}
-        textAlign="right"
-        textOverflow="ellipsis"
-        overflow="hidden"
-        whiteSpace="nowrap"
-      >
-        {label}
-      </Box>
-      <Box flex={1}>
-        <Flex
-          align={"center"}
-          bg={color}
-          color={"white"}
-          px="4"
-          height={"24px"}
-          width={`${value}%`}
-          fontSize={13}
+    <Popover>
+      <Flex gap="8" align="center">
+        <Box
+          flex={1}
+          textAlign="right"
+          textOverflow="ellipsis"
+          overflow="hidden"
+          whiteSpace="nowrap"
         >
-          {`${value.toFixed(0)}%`}
-        </Flex>
-      </Box>
-    </Flex>
+          {formation.libelleDiplome}
+        </Box>
+        <Box flex={1}>
+          <PopoverTrigger>
+            <Flex
+              cursor="pointer"
+              transition="opacity 250ms"
+              _hover={{ opacity: 0.9 }}
+              align={"center"}
+              bg={color}
+              color={"white"}
+              px="4"
+              height={"24px"}
+              width={`${value}%`}
+              fontSize={13}
+            >
+              {`${formation.tauxInsertion12mois.toFixed(
+                0
+              )}% / ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
+            </Flex>
+          </PopoverTrigger>
+        </Box>
+      </Flex>
+
+      <PopoverContent _focusVisible={{ outline: "none" }} p="3" width="250px">
+        <PopoverCloseButton />
+        <FormationTooltipContent formation={formation} />
+      </PopoverContent>
+    </Popover>
   );
 };
