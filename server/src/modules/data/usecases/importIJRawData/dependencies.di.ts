@@ -30,7 +30,7 @@ const findNMefs = async ({ cfd }: { cfd: string }) =>
             FORMATION_DIPLOME: cfd,
           })}`,
         },
-        { order: { by: "data", direction: "ASC" } }
+        { order: { by: "id", direction: "ASC" } }
       )
       .run(pool)
   ).map((item) => item.data as NMefLine);

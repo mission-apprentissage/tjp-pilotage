@@ -8,15 +8,13 @@ import {
   Table,
   TableContainer,
   Tbody,
-  Td,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { usePlausible } from "next-plausible";
-import { useState } from "react";
-import { unstable_batchedUpdates } from "react-dom";
+import { Fragment, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
@@ -24,10 +22,13 @@ import { TauxPressionScale } from "@/app/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
-import { GraphWrapper } from "../../../components/GraphWrapper";
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
-import { getTauxPressionStyle } from "../../../utils/getBgScale";
+import {
+  FormationLineContent,
+  FormationLineLoader,
+  FormationLinePlaceholder,
+} from "./components/LineContent";
 
 type Query = Parameters<typeof api.getFormations>[0]["query"];
 
@@ -43,6 +44,15 @@ type Filters = Pick<
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
+
+export type Line = Awaited<
+  ReturnType<ReturnType<typeof api.getFormations>["call"]>
+>["formations"][number];
+
+type LineId = {
+  codeDispositif?: string;
+  cfd: string;
+};
 
 const PAGE_SIZE = 30;
 
@@ -92,15 +102,39 @@ export default function Formations() {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    unstable_batchedUpdates(() => {
-      setPage(0);
-      setFilters({ ...filters, [type]: value });
-    });
+    setPage(0);
+    setFilters({ ...filters, [type]: value });
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
+
+  const [historiqueId, setHistoriqueId] = useState<LineId>();
+
+  const { data: historique, isFetching: isFetchingHistorique } = useQuery({
+    keepPreviousData: false,
+    staleTime: 10000000,
+    queryKey: ["formations", historiqueId],
+    enabled: !!historiqueId,
+    queryFn: async () => {
+      if (!historiqueId) return;
+      return (
+        await fetchFormations({
+          ...filters,
+          cfd: [historiqueId?.cfd],
+          codeDispositif: historiqueId?.codeDispositif
+            ? [historiqueId?.codeDispositif]
+            : undefined,
+          limit: 2,
+          order: "desc",
+          orderBy: "rentreeScolaire",
+          rentreeScolaire: ["2021"],
+          withEmptyFormations: false,
+        })
+      ).formations;
+    },
+  });
 
   return (
     <>
@@ -185,10 +219,8 @@ export default function Formations() {
               zIndex={1}
             >
               <Tr>
-                <Th>
-                  RS
-                  <TooltipIcon ml="1" label="Rentrée scolaire" />
-                </Th>
+                <Th />
+                <Th>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
@@ -338,48 +370,47 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Tr key={`${line.codeFormationDiplome}_${line.dispositifId}`}>
-                  <Td>2022</Td>
-                  <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-                  <Td>{line.libelleDiplome ?? "-"}</Td>
-                  <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif1 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif2 ?? "-"}</Td>
-                  <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-                  <Td
-                    style={{
-                      ...getTauxPressionStyle(
-                        line.tauxPression !== undefined
-                          ? line.tauxPression / 100
-                          : undefined
-                      ),
-                    }}
-                    isNumeric
-                  >
-                    {line.tauxPression !== undefined
-                      ? line.tauxPression / 100
-                      : "-"}
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxRemplissage} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxInsertion12mois} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaInsertion12mois} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper value={line.tauxPoursuiteEtudes} />
-                  </Td>
-                  <Td isNumeric>
-                    <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
-                  </Td>
-                  <Td>{line.libelleDispositif ?? "-"}</Td>
-                  <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-                  <Td>{line.codeFormationDiplome ?? "-"}</Td>
-                  <Td>-</Td>
-                </Tr>
+                <Fragment
+                  key={`${line.codeFormationDiplome}_${line.dispositifId}`}
+                >
+                  <Tr>
+                    <FormationLineContent
+                      defaultRentreeScolaire="2022"
+                      line={line}
+                      expended={
+                        historiqueId?.cfd === line.codeFormationDiplome &&
+                        historiqueId.codeDispositif === line.dispositifId
+                      }
+                      onClickExpend={() =>
+                        setHistoriqueId({
+                          cfd: line.codeFormationDiplome,
+                          codeDispositif: line.dispositifId,
+                        })
+                      }
+                      onClickCollapse={() => setHistoriqueId(undefined)}
+                    />
+                  </Tr>
+                  {historiqueId?.cfd === line.codeFormationDiplome &&
+                    historiqueId.codeDispositif === line.dispositifId && (
+                      <>
+                        {historique &&
+                          historique.map((historiqueLine) => (
+                            <Tr
+                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              bg={"#f5f5f5"}
+                            >
+                              <FormationLineContent line={historiqueLine} />
+                            </Tr>
+                          ))}
+
+                        {historique && !historique.length && (
+                          <FormationLinePlaceholder />
+                        )}
+
+                        {isFetchingHistorique && <FormationLineLoader />}
+                      </>
+                    )}
+                </Fragment>
               ))}
             </Tbody>
           </Table>
