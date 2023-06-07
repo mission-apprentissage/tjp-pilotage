@@ -139,6 +139,7 @@ export const Cadran = chakra(
             itemStyle: {
               color: "rgba(58, 85, 209, 0.6)",
             },
+            //@ts-ignore
             data: series as any,
             type: "scatter",
             symbolSize: (_, { dataIndex }) => {
