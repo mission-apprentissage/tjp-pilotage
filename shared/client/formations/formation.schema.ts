@@ -126,7 +126,6 @@ export const formationSchemas = {
         filters: Type.Object({
           regions: Type.Array(OptionSchema),
           diplomes: Type.Array(OptionSchema),
-          etablissements: Type.Array(OptionSchema),
         }),
       }),
     },
