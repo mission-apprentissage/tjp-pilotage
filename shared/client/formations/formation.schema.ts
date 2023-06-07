@@ -102,7 +102,7 @@ export const formationSchemas = {
             libelleDiplome: Type.String(),
             codeNiveauDiplome: Type.String(),
             dispositifId: Type.Optional(Type.String()),
-            libelleDispositif: Type.String(),
+            libelleDispositif: Type.Optional(Type.String()),
             nbEtablissement: Type.Number(),
             effectif: Type.Optional(Type.Number()),
             effectifPrecedent: Type.Optional(Type.Number()),
