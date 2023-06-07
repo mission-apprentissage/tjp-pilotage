@@ -28,4 +28,9 @@ export const createFormationClient = (instance: AxiosInstance) => ({
     url: "/panorama/filters",
     instance,
   }),
+  getRegions: createClientMethod<typeof ROUTES_CONFIG.getRegions>({
+    method: "GET",
+    url: "/regions",
+    instance,
+  }),
 });

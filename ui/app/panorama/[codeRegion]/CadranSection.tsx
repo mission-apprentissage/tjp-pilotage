@@ -145,15 +145,15 @@ export const CadranSection = ({
               mt="6"
               onChange={setEffectifMin}
               min={0}
-              max={1000}
+              max={500}
               value={effectifMin}
               step={5}
             >
               <SliderMark value={0} {...labelStyles}>
                 0
               </SliderMark>
-              <SliderMark value={1000} {...labelStyles} ml="-30px">
-                1000
+              <SliderMark value={500} {...labelStyles} ml="-30px">
+                500
               </SliderMark>
               <SliderMark
                 value={effectifMin}
@@ -228,8 +228,15 @@ export const CadranSection = ({
           </FormControl>
         </Box>
         <Box flex={1}>
-          <Text color="grey" textAlign="right" fontSize="xs">
-            Selon indicateurs de la DEPP
+          <Text color="grey" fontSize="sm" textAlign="right">
+            {filteredFormations?.length} formations
+          </Text>
+          <Text color="grey" fontSize="sm" textAlign="right">
+            {filteredFormations?.reduce(
+              (acc, { effectif }) => acc + (effectif ?? 0),
+              0
+            )}{" "}
+            élèves
           </Text>
           <AspectRatio ratio={1}>
             <>
@@ -243,6 +250,10 @@ export const CadranSection = ({
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>
+          <Text color="grey" textAlign="left" mt="4" fontSize="xs">
+            Données Inser Jeunes produites par la DEPP, les formations
+            inférieures à 20 élèves ne sont pas représentées
+          </Text>
         </Box>
       </Stack>
     </Container>

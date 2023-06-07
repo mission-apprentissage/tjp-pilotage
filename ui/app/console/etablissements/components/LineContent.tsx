@@ -39,11 +39,15 @@ export const EtablissementLineContent = ({
         )}
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
-      <Td>{line.libelleEtablissement ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleEtablissement ?? "-"}
+      </Td>
       <Td>{line.commune ?? "-"}</Td>
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td>{line.libelleDiplome ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleDiplome ?? "-"}
+      </Td>
 
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>

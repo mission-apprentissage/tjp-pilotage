@@ -4,13 +4,9 @@ import { Multiselect } from "@/components/Multiselect";
 export const FiltersSection = ({
   diplomeOptions,
   onDiplomeChanged,
-  onUAIChanged,
-  UAIOptions,
 }: {
   diplomeOptions?: { label: string; value: string }[];
   onDiplomeChanged?: (diplome: string[]) => void;
-  onUAIChanged: (UAI: string[]) => void;
-  UAIOptions?: { label: string; value: string }[];
 }) => {
   return (
     <Container
@@ -30,15 +26,6 @@ export const FiltersSection = ({
           options={diplomeOptions}
         >
           Diplôme
-        </Multiselect>
-        <Multiselect
-          display="none"
-          ml="2"
-          width={250}
-          onChange={onUAIChanged}
-          options={UAIOptions}
-        >
-          Etablissement
         </Multiselect>
       </Flex>
     </Container>

@@ -100,3 +100,7 @@ export const createClientMethod =
       }),
     };
   };
+
+export type ApiType<T extends (...args: any) => any> = Awaited<
+  ReturnType<ReturnType<T>["call"]>
+>;

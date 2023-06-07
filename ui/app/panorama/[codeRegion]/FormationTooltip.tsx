@@ -2,7 +2,7 @@
 import { Box, Card, CardBody, HStack, useOutsideClick } from "@chakra-ui/react";
 import { forwardRef, useRef } from "react";
 
-import { InfoBlock } from "../../components/InfoBlock";
+import { InfoBlock } from "../../../components/InfoBlock";
 import { PanoramaFormation } from "./type";
 
 export const FormationTooltip = forwardRef<
