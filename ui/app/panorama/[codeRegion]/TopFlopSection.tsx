@@ -13,8 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import { FormationTooltipContent } from "@/app/panorama/FormationTooltip";
-
+import { FormationTooltipContent } from "./FormationTooltip";
 import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({
@@ -65,9 +64,7 @@ export const TopFlopSection = ({
         </Heading>
         <Text>
           Retrouvez les 10 formations avec un devenir favorable et les 10
-          formations à examiner <br />
-          (Sur la base du calcul Taux d’emploi à 12 mois + Taux de poursuite
-          d’étude)
+          formations à examiner
         </Text>
       </Box>
       {topFlopFormations && (
@@ -84,10 +81,13 @@ const TopFlopChart = ({
 }) => {
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
+      <Text mb="4" color="grey" fontSize="sm" textAlign="right">
+        Taux d'emploi / Taux de poursuite d'études
+      </Text>
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
-            key={item.codeFormationDiplome}
+            key={`${item.codeFormationDiplome}_${item.dispositifId}`}
             formation={item}
             value={(item.tauxInsertion12mois + item.tauxPoursuiteEtudes) / 2}
           />
@@ -107,9 +107,6 @@ const TopFlopChart = ({
             />
           ))}
       </VStack>
-      <Text mt="4" color="grey" fontSize="sm" textAlign="right">
-        Légende: (Taux d'emploi / Taux de poursuite d'études)
-      </Text>
     </Box>
   );
 };

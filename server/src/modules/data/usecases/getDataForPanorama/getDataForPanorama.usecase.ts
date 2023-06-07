@@ -7,6 +7,7 @@ export const [getDataForPanorama] = inject(
   (deps) =>
     async ({ codeRegion, UAI }: { codeRegion: string; UAI?: string[] }) => {
       const stats = await deps.queryStatsForCadran({ codeRegion });
+      if (!stats) return { stats: {}, formations: [] };
       const formations = await deps.queryFormations({ codeRegion, UAI });
 
       return {

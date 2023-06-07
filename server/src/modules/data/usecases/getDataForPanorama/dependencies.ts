@@ -4,7 +4,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 
 const effectifAnnee = (annee: RawBuilder<unknown>) => {
-  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
+  return sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
 };
 
 const capaciteAnnee = (annee: RawBuilder<unknown>) => {
@@ -50,7 +50,7 @@ const getBaseQuery = ({
         )
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
-    .innerJoin("indicateurSortie", (join) =>
+    .leftJoin("indicateurSortie", (join) =>
       join
         .onRef(
           "formationEtablissement.id",
@@ -189,9 +189,15 @@ export const queryStatsForCadran = async ({
         then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
         / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
       `.as("tauxRemplissage"),
+      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})`.as(
+        "effectif"
+      ),
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+        "nbFormations"
+      ),
     ])
     .groupBy(["codeRegion"])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
-  return cleanNull(stats);
+  return stats && cleanNull(stats);
 };

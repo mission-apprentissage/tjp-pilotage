@@ -11,6 +11,7 @@ import {
   PopoverTrigger,
   Text,
   usePopper,
+  VStack,
 } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
@@ -18,6 +19,14 @@ import { useLayoutEffect, useMemo, useRef, useState } from "react";
 
 import { FormationTooltip } from "./FormationTooltip";
 import { PanoramaFormation, PanoramaFormations } from "./type";
+
+const effectifSizes = [
+  { max: 50, size: 6 },
+  { max: 200, size: 10 },
+  { max: 500, size: 14 },
+  { max: 1000, size: 18 },
+  { max: 1000000, size: 22 },
+];
 
 export const Cadran = chakra(
   ({
@@ -64,7 +73,6 @@ export const Cadran = chakra(
             20
           );
         },
-        // contextElement: containerRef.current,
       });
     }, [containerRef.current, popperInstance, displayedDetail]);
 
@@ -135,17 +143,9 @@ export const Cadran = chakra(
             type: "scatter",
             symbolSize: (_, { dataIndex }) => {
               const formation = data[dataIndex];
-              const effs = {
-                50: 6,
-                200: 10,
-                500: 14,
-                1000: 18,
-                500000: 22,
-              };
-              const size = Object.entries(effs).find(
-                ([eff]) =>
-                  formation.effectif && formation.effectif < parseInt(eff)
-              )?.[1];
+              const size = effectifSizes.find(
+                ({ max }) => formation.effectif && formation.effectif < max
+              )?.size;
               return size ?? 0;
             },
             markLine: {
@@ -288,65 +288,31 @@ const InfoTooltip = () => (
       <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
         Légende:
       </Text>
-      <Flex align="center">
-        <Box
-          borderRadius={100}
-          width={"22px"}
-          height={"22px"}
-          border="1px solid black"
-        />
-        <Text flex={1} ml="4" fontSize="sm">
-          Seuil effectif 50000
-        </Text>
-      </Flex>
-      <Flex mt="2" align="center">
-        <Box
-          borderRadius={100}
-          width={"18px"}
-          height={"18px"}
-          mx="2px"
-          border="1px solid black"
-        />
-        <Text flex={1} ml="4" fontSize="sm">
-          Seuil effectif 500
-        </Text>
-      </Flex>
-      <Flex mt="2" align="center">
-        <Box
-          borderRadius={100}
-          width={"14px"}
-          height={"14px"}
-          mx="4px"
-          border="1px solid black"
-        />
-        <Text flex={1} ml="4" fontSize="sm">
-          Seuil effectif 200
-        </Text>
-      </Flex>
-      <Flex mt="2" align="center">
-        <Box
-          borderRadius={100}
-          width={"10px"}
-          height={"10px"}
-          mx="6px"
-          border="1px solid black"
-        />
-        <Text flex={1} ml="4" fontSize="sm">
-          Seuil effectif 2000
-        </Text>
-      </Flex>
-      <Flex mt="2" align="center">
-        <Box
-          borderRadius={100}
-          width={"6px"}
-          height={"6px"}
-          mx="8px"
-          border="1px solid black"
-        />
-        <Text flex={1} ml="4" fontSize="sm">
-          Seuil effectif 50
-        </Text>
-      </Flex>
+      <VStack align="flex-start" spacing={2}>
+        {effectifSizes.map(({ max, size }, i) => (
+          <Flex key={max} align="center">
+            <Box
+              borderRadius={100}
+              width={`${size}px`}
+              height={`${size}px`}
+              mx={22 - size / 2}
+              border="1px solid black"
+            />
+            <Text flex={1} ml="4" fontSize="sm">
+              {max !== 1000000 && (
+                <>
+                  Effectif {"<"} {max}
+                </>
+              )}
+              {max === 1000000 && (
+                <>
+                  Effectif {">"} {effectifSizes[i - 1].max}
+                </>
+              )}
+            </Text>
+          </Flex>
+        ))}
+      </VStack>
     </PopoverContent>
   </Popover>
 );

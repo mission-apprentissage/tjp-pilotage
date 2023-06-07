@@ -93,6 +93,8 @@ export const formationSchemas = {
           tauxRemplissage: Type.Optional(Type.Number()),
           tauxInsertion12mois: Type.Optional(Type.Number()),
           tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+          effectif: Type.Optional(Type.Number()),
+          nbFormations: Type.Optional(Type.Number()),
         }),
         formations: Type.Array(
           Type.Object({
@@ -127,6 +129,11 @@ export const formationSchemas = {
           etablissements: Type.Array(OptionSchema),
         }),
       }),
+    },
+  },
+  getRegions: {
+    response: {
+      200: Type.Array(OptionSchema),
     },
   },
 } as const;
