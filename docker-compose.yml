@@ -59,14 +59,12 @@ services:
       - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
 
   postgres:
-      image: postgres:14.2
-      container_name: pilotage_postgres
-      restart: unless-stopped
-      networks:
-        - pilotage_network
-      
+    image: postgres:14.2
+    container_name: pilotage_postgres
+    restart: unless-stopped
+    networks:
+      - pilotage_network
 
 networks:
   pilotage_network:
     name: pilotage_network
-
