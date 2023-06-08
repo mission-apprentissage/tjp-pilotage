@@ -127,7 +127,7 @@ export const RegionSection = ({
               }
             />
             <StatCard
-              label="Nombre de formation dans votre région"
+              label="Nombre de formations dans votre région"
               value={stats?.nbFormations ?? "-"}
             />
             <StatCard

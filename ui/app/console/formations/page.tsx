@@ -365,7 +365,6 @@ export default function Formations() {
                   <OrderIcon {...order} column="codeFormationDiplome" />
                   {FORMATIONS_COLUMNS.codeFormationDiplome}
                 </Th>
-                <Th>{FORMATIONS_COLUMNS.decrochage}</Th>
               </Tr>
             </Thead>
             <Tbody>

@@ -363,7 +363,6 @@ export default function Etablissements() {
                     label="Capacité de l'établissement à insérer en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi comparativement à des établissements similaires."
                   />
                 </Th>
-                <Th isNumeric>{ETABLISSEMENTS_COLUMNS.decrochage}</Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
                   <OrderIcon {...order} column="secteur" />
                   {ETABLISSEMENTS_COLUMNS.secteur}

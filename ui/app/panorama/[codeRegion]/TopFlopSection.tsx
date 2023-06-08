@@ -141,10 +141,12 @@ const TopItem = ({
               align={"center"}
               bg={color}
               color={"white"}
-              px="4"
+              px="2"
+              pr="1"
               height={"24px"}
               width={`${value}%`}
-              fontSize={13}
+              fontSize={11}
+              whiteSpace="nowrap"
             >
               {`${formation.tauxInsertion12mois.toFixed(
                 0

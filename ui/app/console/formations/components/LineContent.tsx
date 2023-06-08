@@ -74,7 +74,6 @@ export const FormationLineContent = ({
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
       <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>-</Td>
     </>
   );
 };
