@@ -62,10 +62,10 @@
   },
   "lint-staged": {
     "*.{ts,js,tsx}": [
-      "eslint .",
-      "prettier ./ui ./server"
+      "eslint",
+      "prettier --check"
     ],
-    "*.{md,json,html}": "prettier ./ui ./server ./shared"
+    "*.{md,json,html}": "prettier"
   },
   "packageManager": "yarn@3.3.1"
 }
