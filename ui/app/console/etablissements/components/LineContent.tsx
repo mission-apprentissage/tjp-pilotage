@@ -68,7 +68,6 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxPoursuiteEtudes} />
       </Td>
       <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
-      <Td isNumeric>-</Td>
       <Td>{line.secteur ?? "-"} </Td>
       <Td>{line.UAI ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
