@@ -83,17 +83,25 @@ const InfoCard = ({
   description,
   links,
   img,
+  sourceText,
 }: {
   title: string;
   description: string;
   links: { label?: string; href: string } | { label?: string; href: string }[];
   img: string;
+  sourceText?: string;
 }) => {
   return (
     <Card bg="grey.975">
       <CardBody>
-        <Flex align="center">
-          <Flex direction="column" align="flex-start" mr="4" flex={1}>
+        <Flex align="center" height="100%">
+          <Flex
+            direction="column"
+            align="flex-start"
+            mr="4"
+            flex={1}
+            height="100%"
+          >
             <Heading as="h4" fontSize={20}>
               {title}
             </Heading>
@@ -137,6 +145,11 @@ const InfoCard = ({
                 Accéder à l'information
               </Button>
             )}
+            {sourceText && (
+              <Text mt="2" fontSize="xs" color="grey">
+                {sourceText}
+              </Text>
+            )}
           </Flex>
           <Img width="160px" src={img} objectFit="contain" />
         </Flex>
@@ -169,6 +182,7 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
             description="Retrouvez le dernier rapport de votre région"
             links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
             img="/phone_man.png"
+            sourceText="* Source: DARES"
           />
           <InfoCard
             title="Métiers en tension 2021"
@@ -177,6 +191,7 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
               href: "https://dares.travail-emploi.gouv.fr/publication/les-tensions-sur-le-marche-du-travail-en-2021",
             }}
             img="/looking_man.png"
+            sourceText="* Source: DARES"
           />
           <InfoCard
             title="Data emploi"
@@ -185,6 +200,7 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
               href: `https://dataemploi.pole-emploi.fr/panorama/REG/${codeRegion}`,
             }}
             img="/dashboard_girl.png"
+            sourceText="* Source: Pole Emploi"
           />
           <InfoCard
             title="Documentation région voie professionelle"
@@ -193,6 +209,7 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
               (codeRegion && liensDocumentation[codeRegion]) || { href: "" }
             }
             img="/team.png"
+            sourceText="* Source: DEPP"
           />
         </SimpleGrid>
       </Container>
