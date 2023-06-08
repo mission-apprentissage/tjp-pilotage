@@ -17,16 +17,16 @@ export const [getUais] = inject(
     await streamIt(
       async (offset) => deps.findFormations({ offset, limit: 30 }),
       async ({ codeFormationDiplome }) => {
-        const cfdRentrees = await deps.getCfdRentrees({
-          cfd: codeFormationDiplome,
-          year: "2022",
-        });
-        uais = [
-          ...uais,
-          ...cfdRentrees.flatMap(({ enseignements }) =>
-            enseignements.map(({ uai }) => uai)
-          ),
-        ];
+        for (const year of ["2021", "2022"]) {
+          uais = [
+            ...uais,
+            ...(
+              await deps.getCfdRentrees({ cfd: codeFormationDiplome, year })
+            ).flatMap(({ enseignements }) =>
+              enseignements.map(({ uai }) => uai)
+            ),
+          ];
+        }
       }
     );
 
