@@ -230,13 +230,13 @@ export const CadranSection = ({
         <Box flex={1}>
           <Flex justify="flex-end">
             <Text color="grey" fontSize="sm" textAlign="left">
-              {filteredFormations?.length} formations
+              {filteredFormations?.length ?? "-"} formations
             </Text>
             <Text ml="2" color="grey" fontSize="sm" textAlign="right">
               {filteredFormations?.reduce(
                 (acc, { effectif }) => acc + (effectif ?? 0),
                 0
-              )}{" "}
+              ) ?? "-"}{" "}
               élèves
             </Text>
           </Flex>

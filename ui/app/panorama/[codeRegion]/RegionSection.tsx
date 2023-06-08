@@ -97,7 +97,7 @@ export const RegionSection = ({
         </Flex>
         <Box flex={1}>
           <Text>
-            Retrouvez ici les principaux indicateurs et enjeux sur votre
+            Retrouvez ici les principaux indicateurs (chiffres 2022) sur votre
             territoire.
           </Text>
           <SimpleGrid spacing={3} columns={[2]} mt="4">
