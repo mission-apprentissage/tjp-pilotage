@@ -228,16 +228,18 @@ export const CadranSection = ({
           </FormControl>
         </Box>
         <Box flex={1}>
-          <Text color="grey" fontSize="sm" textAlign="right">
-            {filteredFormations?.length} formations
-          </Text>
-          <Text color="grey" fontSize="sm" textAlign="right">
-            {filteredFormations?.reduce(
-              (acc, { effectif }) => acc + (effectif ?? 0),
-              0
-            )}{" "}
-            élèves
-          </Text>
+          <Flex justify="flex-end">
+            <Text color="grey" fontSize="sm" textAlign="left">
+              {filteredFormations?.length} formations
+            </Text>
+            <Text ml="2" color="grey" fontSize="sm" textAlign="right">
+              {filteredFormations?.reduce(
+                (acc, { effectif }) => acc + (effectif ?? 0),
+                0
+              )}{" "}
+              élèves
+            </Text>
+          </Flex>
           <AspectRatio ratio={1}>
             <>
               {filteredFormations && (
@@ -250,7 +252,7 @@ export const CadranSection = ({
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>
-          <Text color="grey" textAlign="left" mt="4" fontSize="xs">
+          <Text color="grey" textAlign="right" mt="4" fontSize="xs">
             Données Inser Jeunes produites par la DEPP, les formations
             inférieures à 20 élèves ne sont pas représentées
           </Text>
