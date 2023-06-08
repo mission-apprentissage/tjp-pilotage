@@ -124,7 +124,6 @@ export const formationSchemas = {
     response: {
       200: Type.Object({
         filters: Type.Object({
-          regions: Type.Array(OptionSchema),
           diplomes: Type.Array(OptionSchema),
         }),
       }),
