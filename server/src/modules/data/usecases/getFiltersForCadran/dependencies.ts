@@ -61,11 +61,6 @@ export const findFiltersInDb = async ({
     return eb.and([eb.cmpr("region.codeRegion", "=", codeRegion)]);
   };
 
-  const regions = await base
-    .select(["region.libelleRegion as label", "region.codeRegion as value"])
-    .where("region.codeRegion", "is not", null)
-    .execute();
-
   const diplomes = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
@@ -76,7 +71,6 @@ export const findFiltersInDb = async ({
     .execute();
 
   return await {
-    regions: (await regions).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
   };
 };
