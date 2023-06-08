@@ -42,7 +42,9 @@ export const EtablissementLineContent = ({
       <Td minW={300} maxW={300} whiteSpace="normal">
         {line.libelleEtablissement ?? "-"}
       </Td>
-      <Td>{line.commune ?? "-"}</Td>
+      <Td minW={150} maxW={150} whiteSpace="normal">
+        {line.commune ?? "-"}
+      </Td>
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
