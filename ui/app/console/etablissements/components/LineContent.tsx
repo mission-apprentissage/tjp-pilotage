@@ -21,7 +21,7 @@ export const EtablissementLineContent = ({
 }) => {
   return (
     <>
-      <Td py="1">
+      <Td pr="0" py="1">
         {onClickExpend && (
           <IconButton
             transform={expended ? "rotate(180deg)" : ""}

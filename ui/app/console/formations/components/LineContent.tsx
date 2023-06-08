@@ -22,7 +22,7 @@ export const FormationLineContent = ({
 }) => {
   return (
     <>
-      <Td py="1">
+      <Td pr="0" py="1">
         {onClickExpend && (
           <IconButton
             transform={expended ? "rotate(180deg)" : ""}
@@ -41,7 +41,9 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td>{line.libelleDiplome ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleDiplome ?? "-"}
+      </Td>
       <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
