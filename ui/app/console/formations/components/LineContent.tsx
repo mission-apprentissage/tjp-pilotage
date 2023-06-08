@@ -2,6 +2,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, IconButton, Skeleton, Td, Tr } from "@chakra-ui/react";
 
+import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../../components/GraphWrapper";
@@ -22,7 +23,7 @@ export const FormationLineContent = ({
 }) => {
   return (
     <>
-      <Td py="1">
+      <Td pr="0" py="1">
         {onClickExpend && (
           <IconButton
             transform={expended ? "rotate(180deg)" : ""}
@@ -41,18 +42,23 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td>{line.libelleDiplome ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleDiplome ?? "-"}
+      </Td>
       <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-      <Td
-        style={getTauxPressionStyle(
-          line.tauxPression !== undefined ? line.tauxPression / 100 : undefined
-        )}
-        isNumeric
-      >
-        {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+      <Td isNumeric>
+        <TableBadge
+          sx={getTauxPressionStyle(
+            line.tauxPression !== undefined
+              ? line.tauxPression / 100
+              : undefined
+          )}
+        >
+          {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+        </TableBadge>
       </Td>
       <Td isNumeric>
         <GraphWrapper value={line.tauxRemplissage} />
@@ -72,7 +78,6 @@ export const FormationLineContent = ({
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
       <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>-</Td>
     </>
   );
 };
