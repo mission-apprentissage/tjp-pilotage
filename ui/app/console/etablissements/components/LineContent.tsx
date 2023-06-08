@@ -2,6 +2,8 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, IconButton, Skeleton, Td, Tr } from "@chakra-ui/react";
 
+import { TableBadge } from "@/components/TableBadge";
+
 import { GraphWrapper } from "../../../../components/GraphWrapper";
 import { getTauxPressionStyle } from "../../../../utils/getBgScale";
 import { Line } from "../page";
@@ -21,7 +23,7 @@ export const EtablissementLineContent = ({
 }) => {
   return (
     <>
-      <Td py="1">
+      <Td pr="0" py="1">
         {onClickExpend && (
           <IconButton
             transform={expended ? "rotate(180deg)" : ""}
@@ -39,23 +41,32 @@ export const EtablissementLineContent = ({
         )}
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
-      <Td>{line.libelleEtablissement ?? "-"}</Td>
-      <Td>{line.commune ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleEtablissement ?? "-"}
+      </Td>
+      <Td minW={150} maxW={150} whiteSpace="normal">
+        {line.commune ?? "-"}
+      </Td>
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td>{line.libelleDiplome ?? "-"}</Td>
+      <Td minW={300} maxW={300} whiteSpace="normal">
+        {line.libelleDiplome ?? "-"}
+      </Td>
 
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
       <Td isNumeric>{line.capacite ?? "-"}</Td>
-      <Td
-        style={getTauxPressionStyle(
-          line.tauxPression !== undefined ? line.tauxPression / 100 : undefined
-        )}
-        isNumeric
-      >
-        {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+      <Td isNumeric>
+        <TableBadge
+          sx={getTauxPressionStyle(
+            line.tauxPression !== undefined
+              ? line.tauxPression / 100
+              : undefined
+          )}
+        >
+          {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+        </TableBadge>
       </Td>
       <Td isNumeric>
         <GraphWrapper value={line.tauxRemplissage} />
@@ -64,7 +75,6 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxPoursuiteEtudes} />
       </Td>
       <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
-      <Td isNumeric>-</Td>
       <Td>{line.secteur ?? "-"} </Td>
       <Td>{line.UAI ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>

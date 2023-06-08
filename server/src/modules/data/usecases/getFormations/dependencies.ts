@@ -288,38 +288,36 @@ const findFiltersInDb = async ({
 
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
-    return eb.and([eb.cmpr("academie.codeAcademie", "in", codeAcademie)]);
+    return eb.cmpr("academie.codeAcademie", "in", codeAcademie);
   };
   const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
     if (!codeDepartement) return sql<true>`true`;
-    return eb.and([
-      eb.cmpr("departement.codeDepartement", "in", codeDepartement),
-    ]);
+    return eb.cmpr("departement.codeDepartement", "in", codeDepartement);
   };
 
   const inCommune = (eb: ExpressionBuilder<DB, "etablissement">) => {
     if (!commune) return sql<true>`true`;
-    return eb.and([eb.cmpr("etablissement.commune", "in", commune)]);
+    return eb.cmpr("etablissement.commune", "in", commune);
   };
 
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<true>`true`;
-    return eb.and([eb.cmpr("region.codeRegion", "in", codeRegion)]);
+    return eb.cmpr("region.codeRegion", "in", codeRegion);
   };
 
   const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.and([eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)]);
+    return eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!cfd) return sql<true>`true`;
-    return eb.and([eb.cmpr("formation.codeFormationDiplome", "in", cfd)]);
+    return eb.cmpr("formation.codeFormationDiplome", "in", cfd);
   };
 
   const inCodeDiplome = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!codeDiplome) return sql<true>`true`;
-    return eb.and([eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome)]);
+    return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
   const regions = await base

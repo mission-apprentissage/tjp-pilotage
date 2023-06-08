@@ -45,6 +45,9 @@ jspm_packages/
 
 # TypeScript v1 declaration files
 typings/
+schema.d.ts
+.eslintrc.json
+
 
 # TypeScript cache
 *.tsbuildinfo

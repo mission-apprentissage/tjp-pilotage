@@ -82,4 +82,56 @@ export const formationSchemas = {
       200: Type.String(),
     },
   },
+  getDataForPanorama: {
+    querystring: Type.Object({
+      codeRegion: Type.String(),
+      UAI: Type.Optional(Type.Array(Type.String())),
+    }),
+    response: {
+      200: Type.Object({
+        stats: Type.Object({
+          tauxRemplissage: Type.Optional(Type.Number()),
+          tauxInsertion12mois: Type.Optional(Type.Number()),
+          tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+          effectif: Type.Optional(Type.Number()),
+          nbFormations: Type.Optional(Type.Number()),
+        }),
+        formations: Type.Array(
+          Type.Object({
+            codeFormationDiplome: Type.String(),
+            libelleDiplome: Type.String(),
+            codeNiveauDiplome: Type.String(),
+            dispositifId: Type.Optional(Type.String()),
+            libelleDispositif: Type.Optional(Type.String()),
+            nbEtablissement: Type.Number(),
+            effectif: Type.Optional(Type.Number()),
+            effectifPrecedent: Type.Optional(Type.Number()),
+            tauxRemplissage: Type.Optional(Type.Number()),
+            tauxPression: Type.Optional(Type.Number()),
+            tauxInsertion12mois: Type.Number(),
+            tauxInsertion12moisPrecedent: Type.Optional(Type.Number()),
+            tauxPoursuiteEtudes: Type.Number(),
+            tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
+          })
+        ),
+      }),
+    },
+  },
+  getFiltersForCadran: {
+    querystring: Type.Object({
+      codeRegion: Type.Optional(Type.String()),
+    }),
+    response: {
+      200: Type.Object({
+        filters: Type.Object({
+          diplomes: Type.Array(OptionSchema),
+        }),
+      }),
+    },
+  },
+  getRegions: {
+    response: {
+      200: Type.Array(OptionSchema),
+    },
+  },
 } as const;
