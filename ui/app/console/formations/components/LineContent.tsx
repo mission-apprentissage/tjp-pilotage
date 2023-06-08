@@ -2,6 +2,7 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import { Box, IconButton, Skeleton, Td, Tr } from "@chakra-ui/react";
 
+import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../../components/GraphWrapper";
@@ -48,13 +49,16 @@ export const FormationLineContent = ({
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
-      <Td
-        style={getTauxPressionStyle(
-          line.tauxPression !== undefined ? line.tauxPression / 100 : undefined
-        )}
-        isNumeric
-      >
-        {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+      <Td isNumeric>
+        <TableBadge
+          sx={getTauxPressionStyle(
+            line.tauxPression !== undefined
+              ? line.tauxPression / 100
+              : undefined
+          )}
+        >
+          {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+        </TableBadge>
       </Td>
       <Td isNumeric>
         <GraphWrapper value={line.tauxRemplissage} />
