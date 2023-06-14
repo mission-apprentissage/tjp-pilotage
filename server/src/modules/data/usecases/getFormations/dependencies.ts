@@ -3,6 +3,76 @@ import { ExpressionBuilder, RawBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { selectTauxInsertion12mois } from "../../queries/utils/tauxInsertion12mois";
+import { selectTauxPoursuite } from "../../queries/utils/tauxPoursuite";
+
+function withReg({
+  eb,
+  rentreeScolaire,
+  millesimeSortie,
+  codeRegion,
+}: {
+  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
+  rentreeScolaire: string;
+  millesimeSortie: string;
+  codeRegion?: string;
+}) {
+  return eb
+    .selectFrom("formationEtablissement as subFE")
+    .innerJoin("indicateurEntree as subIE", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
+        .on("subIE.rentreeScolaire", "=", rentreeScolaire)
+    )
+    .innerJoin("indicateurSortie as subIS", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIS.formationEtablissementId")
+        .on("subIS.millesimeSortie", "=", millesimeSortie)
+    )
+    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
+    .whereRef("subFE.dispositifId", "=", "formationEtablissement.dispositifId")
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("subEtab.codeRegion", "=", codeRegion);
+    })
+    .select([selectTauxPoursuite("subIS").as("sa")])
+    .groupBy(["cfd", "dispositifId"]);
+}
+
+function withInsertionReg({
+  eb,
+  rentreeScolaire,
+  millesimeSortie,
+  codeRegion,
+}: {
+  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
+  rentreeScolaire: string;
+  millesimeSortie: string;
+  codeRegion?: string;
+}) {
+  return eb
+    .selectFrom("formationEtablissement as subFE")
+    .innerJoin("indicateurEntree as subIE", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
+        .on("subIE.rentreeScolaire", "=", rentreeScolaire)
+    )
+    .innerJoin("indicateurSortie as subIS", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIS.formationEtablissementId")
+        .on("subIS.millesimeSortie", "=", millesimeSortie)
+    )
+    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
+    .whereRef("subFE.dispositifId", "=", "formationEtablissement.dispositifId")
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("subEtab.codeRegion", "=", codeRegion);
+    })
+    .select([selectTauxInsertion12mois("subIS").as("s")])
+    .groupBy(["cfd", "dispositifId"]);
+}
 
 const findFormationsInDb = async ({
   offset = 0,
@@ -126,9 +196,24 @@ const findFormationsInDb = async ({
         / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
       `.as("tauxPression"),
       sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
-      `.as("tauxPoursuiteEtudes"),
+      `.as("tauxPoursuiteEtuddes"),
       sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
-      `.as("tauxInsertion12mois"),
+      `.as("tauxInsertiodn12mois"),
+      // selectTauxPoursuite("indicateurSortie").as("tauxInsertion12mois"),
+    ])
+    .select((eb) => [
+      withReg({
+        eb,
+        rentreeScolaire: rentreeScolaire[0],
+        millesimeSortie,
+        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
+      }).as("tauxPoursuiteEtudes"),
+      withInsertionReg({
+        eb,
+        rentreeScolaire: rentreeScolaire[0],
+        millesimeSortie,
+        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
+      }).as("tauxInsertion12mois"),
     ])
     .where(
       "codeFormationDiplome",
@@ -162,6 +247,10 @@ const findFormationsInDb = async ({
       ])
     )
     .groupBy([
+      "formationEtablissement.cfd",
+      /*  ...(codeRegion?.length === 1
+        ? (["etablissement.codeRegion"] as const)
+        : []), */
       "formation.id",
       "formation.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",

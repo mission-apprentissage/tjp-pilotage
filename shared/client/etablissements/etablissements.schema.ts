@@ -80,4 +80,22 @@ export const etablissementSchemas = {
       200: Type.String(),
     },
   },
+  getEtablissementsList: {
+    response: {
+      200: Type.Array(OptionSchema),
+    },
+  },
+  getEtablissement: {
+    params: Type.Object({ uai: Type.String() }),
+    response: {
+      200: Type.Object({
+        uai: Type.String(),
+        libelleEtablissement: Type.Optional(Type.String()),
+        valeurAjoutee: Type.Optional(Type.Number()),
+        codeRegion: Type.Optional(Type.String()),
+        libelleRegion: Type.Optional(Type.String()),
+        formations: Type.Any(),
+      }),
+    },
+  },
 } as const;

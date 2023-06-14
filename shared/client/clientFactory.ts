@@ -78,22 +78,26 @@ export const createClientMethod =
     instance,
   }: {
     method: AxiosRequestConfig["method"];
-    url: string;
+    url: string | (({ params }: { params: Args<S>["params"] }) => string);
     instance: AxiosInstance;
   }) =>
   (args: Args<S>, config?: AxiosRequestConfig) => {
+    const processedUrl =
+      typeof url === "string"
+        ? url
+        : url({ params: args.params as Args<S>["params"] });
     return {
       call: () =>
         callApi<S>({
           method,
-          url,
+          url: processedUrl,
           config,
           instance,
           ...args,
         }),
       url: instance.getUri({
         method,
-        url,
+        url: processedUrl,
         params: args.query,
         data: args.body,
         ...config,

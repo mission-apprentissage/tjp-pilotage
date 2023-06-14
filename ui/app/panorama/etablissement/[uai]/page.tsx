@@ -4,73 +4,67 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api } from "../../../api.client";
-import { InfoSection } from "../../components/InfoSection";
+import { api } from "../../../../api.client";
+import { InfoSection } from "../../../components/InfoSection";
 import { CadranSection } from "./CadranSection";
+import { EtablissementSection } from "./EtablissementSection";
 import { FiltersSection } from "./FiltersSection";
 import { RegionSection } from "./RegionSection";
-import { TopFlopSection } from "./TopFlopSection";
 
 export default function Panorama({
-  params: { codeRegion },
+  params: { uai },
 }: {
   params: {
-    codeRegion: string;
+    uai: string;
   };
 }) {
   const router = useRouter();
 
-  const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/${codeRegion}`);
+  const onUaiChanged = (uai: string) => {
+    router.push(`/etablissement/${uai}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
-  const { data: regionOptions } = useQuery(
-    ["regions"],
-    api.getRegions({}).call,
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
-
-  const { data } = useQuery(
-    ["formationForPanorama", { codeRegion }],
-    api.getDataForPanorama({
-      query: { codeRegion },
+  const { data: etablissement } = useQuery(
+    ["getEtablissement", { uai }],
+    api.getEtablissement({
+      params: { uai },
     }).call,
     { keepPreviousData: true, staleTime: 10000000 }
   );
 
+  const { data } = useQuery(
+    ["getDataForPanorama", { uai }],
+    api.getDataForPanorama({
+      query: { codeRegion: etablissement?.codeRegion as string, UAI: [uai] },
+    }).call,
+    { keepPreviousData: true, staleTime: 10000000, enabled: !!etablissement }
+  );
+
   const { data: filters } = useQuery(
-    ["filtersForPanorama", { codeRegion }],
-    api.getFiltersForPanorama({ query: { codeRegion } }).call,
+    ["filtersForPanorama", { uai }],
+    api.getFiltersForPanorama({ query: { codeRegion: "84" } }).call,
     { keepPreviousData: true, staleTime: 1000000000 }
   );
 
   return (
     <>
-      <RegionSection
-        onCodeRegionChanged={onCodeRegionChanged}
-        codeRegion={codeRegion}
-        regionOptions={regionOptions}
-        stats={data?.stats}
+      <EtablissementSection
+        etablissement={etablissement}
+        onUaiChanged={onUaiChanged}
       />
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
         diplomeOptions={filters?.filters.diplomes}
       />
+      <RegionSection regionsStats={data?.stats} />
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}
         meanInsertion={data?.stats.tauxInsertion12mois}
         meanPoursuite={data?.stats.tauxPoursuiteEtudes}
         cadranFormations={data?.formations}
       />
-      <TopFlopSection
-        codeNiveauDiplome={codeNiveauDiplome}
-        cadranFormations={data?.formations}
-      />
-      <InfoSection codeRegion={codeRegion} />
+      <InfoSection codeRegion={"84"} />
     </>
   );
 }

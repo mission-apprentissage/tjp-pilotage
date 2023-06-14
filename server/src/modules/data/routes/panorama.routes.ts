@@ -9,6 +9,10 @@ export const cadranRoutes = ({ server }: { server: Server }) => {
     "/panorama/stats",
     { schema: ROUTES_CONFIG.getDataForPanorama },
     async (request, response) => {
+      const q = request.query;
+      if (!("codeRegion" in q)) {
+        q;
+      }
       const stats = await getDataForPanorama({
         ...request.query,
       });
