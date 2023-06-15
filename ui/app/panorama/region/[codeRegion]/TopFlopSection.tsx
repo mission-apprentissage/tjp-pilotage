@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import { FormationTooltipContent } from "./FormationTooltip";
+import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({

@@ -18,7 +18,7 @@ const EtablissementLineSchema = Type.Object({
   libelleOfficielFamille: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
-  libelleNiveauDiplome: Type.String(),
+  libelleNiveauDiplome: Type.Optional(Type.String()),
   anneeDebut: Type.Optional(Type.Number()),
   capacite: Type.Optional(Type.Number()),
   effectif: Type.Optional(Type.Number()),
@@ -80,11 +80,6 @@ export const etablissementSchemas = {
       200: Type.String(),
     },
   },
-  getEtablissementsList: {
-    response: {
-      200: Type.Array(OptionSchema),
-    },
-  },
   getEtablissement: {
     params: Type.Object({ uai: Type.String() }),
     response: {
@@ -94,7 +89,33 @@ export const etablissementSchemas = {
         valeurAjoutee: Type.Optional(Type.Number()),
         codeRegion: Type.Optional(Type.String()),
         libelleRegion: Type.Optional(Type.String()),
-        formations: Type.Any(),
+        formations: Type.Array(
+          Type.Object({
+            cfd: Type.String(),
+            codeNiveauDiplome: Type.String(),
+            libelleDiplome: Type.String(),
+            dispositifId: Type.Optional(Type.String()),
+            libelleDispositif: Type.Optional(Type.String()),
+            libelleNiveauDiplome: Type.Optional(Type.String()),
+            effectif: Type.Optional(Type.Number()),
+            tauxPression: Type.Optional(Type.Number()),
+            tauxInsertion12mois: Type.Optional(Type.Number()),
+            tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+          })
+        ),
+      }),
+    },
+  },
+  getRegionStats: {
+    params: Type.Object({ codeRegion: Type.String() }),
+    response: {
+      200: Type.Object({
+        effectif: Type.Number(),
+        nbFormations: Type.Number(),
+        tauxPression: Type.Optional(Type.Number()),
+        tauxRemplissage: Type.Optional(Type.Number()),
+        tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+        tauxInsertion12mois: Type.Optional(Type.Number()),
       }),
     },
   },

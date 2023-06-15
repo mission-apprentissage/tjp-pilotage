@@ -1,35 +1,12 @@
-"use client";
-import { Box, Card, CardBody, HStack, useOutsideClick } from "@chakra-ui/react";
-import { forwardRef, useRef } from "react";
+import { Box, HStack } from "@chakra-ui/react";
 
-import { InfoBlock } from "../../components/InfoBlock";
-import { PanoramaFormation } from "../etablissement/[uai]/type";
-
-export const FormationTooltip = forwardRef<
-  HTMLDivElement,
-  { formation?: PanoramaFormation; clickOutside: () => void }
->(({ formation, clickOutside, ...props }, ref) => {
-  const cardRef = useRef<HTMLDivElement>(null);
-  useOutsideClick({
-    ref: cardRef,
-    handler: clickOutside,
-  });
-
-  return (
-    <Box zIndex={10} hidden={!formation} ref={ref} {...props}>
-      <Card width={"250px"} ref={cardRef}>
-        <CardBody p="4">
-          <FormationTooltipContent formation={formation} />
-        </CardBody>
-      </Card>
-    </Box>
-  );
-});
+import { InfoBlock } from "../../../../components/InfoBlock";
+import { PanoramaFormations } from "./type";
 
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation?: PanoramaFormation;
+  formation: PanoramaFormations[number];
 }) => {
   return (
     <Box bg="white" fontSize="xs">

@@ -8,7 +8,7 @@ import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../queries/utils/tauxPression";
+import { selectTauxPression } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissage } from "../../queries/utils/tauxRemplissage";
 
 const findEtablissementsInDb = async ({
@@ -46,7 +46,7 @@ const findEtablissementsInDb = async ({
 } = {}) => {
   const result = await kdb
     .selectFrom("formation")
-    .leftJoin(
+    .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
       "formation.codeFormationDiplome"
@@ -84,7 +84,7 @@ const findEtablissementsInDb = async ({
         )
         .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
-    .leftJoin(
+    .innerJoin(
       "etablissement",
       "etablissement.UAI",
       "formationEtablissement.UAI"
@@ -104,6 +104,7 @@ const findEtablissementsInDb = async ({
     .select([
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelle as departement",
+      "etablissement.UAI",
       "libelleOfficielFamille",
       "libelleDispositif",
       "dispositifId",
@@ -132,13 +133,8 @@ const findEtablissementsInDb = async ({
       capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
         "capacite3"
       ),
+      selectTauxPression("indicateurEntree").as("tauxPression"),
     ])
-    .select((eb) =>
-      withTauxPressionReg({
-        eb,
-        codeRegion: "ref",
-      }).as("tauxPression")
-    )
     .select((eb) =>
       withInsertionReg({
         eb,

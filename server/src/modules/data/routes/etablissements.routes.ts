@@ -5,7 +5,6 @@ import { ETABLISSEMENTS_COLUMNS, ROUTES_CONFIG } from "shared";
 import { Server } from "../../../server";
 import { getEtablissement } from "../queries/getEtablissement/getEtablissement.query";
 import { getEtablissements } from "../usecases/getEtablissements/getEtablissements.usecase";
-import { getEtablissementsList } from "../usecases/getEtablissementsList/getEtablissementsList.usecase";
 export const etablissementsRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/etablissements",
@@ -48,15 +47,6 @@ export const etablissementsRoutes = ({ server }: { server: Server }) => {
           `attachment; filename=${"etablissements_export"}.csv`
         )
         .send(csv);
-    }
-  );
-
-  server.get(
-    "/etablissements/list",
-    { schema: ROUTES_CONFIG.getEtablissementsList },
-    async (_, response) => {
-      const etablissements = await getEtablissementsList();
-      response.status(200).send(etablissements);
     }
   );
 

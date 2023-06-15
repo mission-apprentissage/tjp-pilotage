@@ -5,10 +5,11 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { api } from "../../../../api.client";
-import { InfoSection } from "../../../components/InfoSection";
+import { InfoSection } from "../../components/InfoSection";
 import { CadranSection } from "./CadranSection";
 import { EtablissementSection } from "./EtablissementSection";
 import { FiltersSection } from "./FiltersSection";
+import { FormationsSection } from "./FormationsSection";
 import { RegionSection } from "./RegionSection";
 
 export default function Panorama({
@@ -21,7 +22,7 @@ export default function Panorama({
   const router = useRouter();
 
   const onUaiChanged = (uai: string) => {
-    router.push(`/etablissement/${uai}`);
+    router.push(`/panorama/etablissement/${uai}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
@@ -33,38 +34,47 @@ export default function Panorama({
     { keepPreviousData: true, staleTime: 10000000 }
   );
 
-  const { data } = useQuery(
-    ["getDataForPanorama", { uai }],
-    api.getDataForPanorama({
-      query: { codeRegion: etablissement?.codeRegion as string, UAI: [uai] },
+  const { data: regionStats } = useQuery(
+    ["getRegionStats", { codeRegion: etablissement?.codeRegion }],
+    api.getRegionStats({
+      params: { codeRegion: etablissement?.codeRegion as string },
     }).call,
     { keepPreviousData: true, staleTime: 10000000, enabled: !!etablissement }
   );
 
-  const { data: filters } = useQuery(
-    ["filtersForPanorama", { uai }],
-    api.getFiltersForPanorama({ query: { codeRegion: "84" } }).call,
-    { keepPreviousData: true, staleTime: 1000000000 }
+  const diplomeOptions = Object.values(
+    etablissement?.formations.reduce((acc, cur) => {
+      if (!cur.libelleNiveauDiplome) return acc;
+      return {
+        ...acc,
+        [cur.codeNiveauDiplome]: {
+          value: cur.codeNiveauDiplome,
+          label: cur.libelleNiveauDiplome,
+        },
+      };
+    }, {} as Record<string, { value: string; label: string }>) ?? {}
   );
 
   return (
     <>
       <EtablissementSection
+        uai={uai}
         etablissement={etablissement}
         onUaiChanged={onUaiChanged}
       />
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
-        diplomeOptions={filters?.filters.diplomes}
+        diplomeOptions={diplomeOptions}
       />
-      <RegionSection regionsStats={data?.stats} />
+      <RegionSection regionsStats={regionStats} />
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}
-        meanInsertion={data?.stats.tauxInsertion12mois}
-        meanPoursuite={data?.stats.tauxPoursuiteEtudes}
-        cadranFormations={data?.formations}
+        meanInsertion={regionStats?.tauxInsertion12mois}
+        meanPoursuite={regionStats?.tauxPoursuiteEtudes}
+        cadranFormations={etablissement?.formations}
       />
-      <InfoSection codeRegion={"84"} />
+      <FormationsSection formations={etablissement?.formations} />
+      <InfoSection codeRegion={etablissement?.codeRegion} />
     </>
   );
 }

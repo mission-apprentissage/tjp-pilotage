@@ -97,6 +97,7 @@ export const queryFormations = async ({
       "libelleDiplome",
       "formationEtablissement.dispositifId",
       "libelleDispositif",
+      "libelleNiveauDiplome",
       "formation.codeNiveauDiplome",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),

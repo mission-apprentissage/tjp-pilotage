@@ -15,7 +15,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { Breadcrumb } from "../../../components/Breadcrumb";
+import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { PanoramaStats } from "./type";
 
 const StatCard = ({

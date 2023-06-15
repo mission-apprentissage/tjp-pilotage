@@ -88,7 +88,6 @@ export const withTauxPressionReg = ({
 }) => {
   return eb
     .selectFrom("formationEtablissement as subFE")
-
     .innerJoin("indicateurEntree as subIE", (join) =>
       join
         .onRef("subFE.id", "=", "subIE.formationEtablissementId")

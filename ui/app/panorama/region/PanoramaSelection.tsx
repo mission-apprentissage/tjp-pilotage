@@ -14,7 +14,7 @@ import { ApiType } from "shared";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 
-import { api } from "../../api.client";
+import { api } from "../../../api.client";
 
 export function PanoramaSelection({
   regionOptions,
@@ -24,7 +24,7 @@ export function PanoramaSelection({
   const router = useRouter();
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}`);
   };
 
   return (
@@ -39,7 +39,7 @@ export function PanoramaSelection({
       <Breadcrumb
         pages={[
           { title: "Accueil", to: "/" },
-          { title: "Panorama", to: "/panorama", active: true },
+          { title: "Panorama", to: "/panorama/region", active: true },
         ]}
       />
       <Flex align="center" direction="column">

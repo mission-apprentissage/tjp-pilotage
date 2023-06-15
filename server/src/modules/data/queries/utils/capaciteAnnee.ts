@@ -10,7 +10,7 @@ export const capaciteAnnee = ({
   const processedAnnee =
     annee ?? sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`;
 
-  return sql`
+  return sql<number | null>`
 NULLIF(
 jsonb_extract_path(
   ${sql.table(indicateurEntreeAlias)}."capacites",${processedAnnee}

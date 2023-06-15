@@ -6,17 +6,20 @@ import { api } from "../../../../api.client";
 export const RegionSection = ({
   regionsStats,
 }: {
-  regionsStats?: ApiType<typeof api.getDataForPanorama>["stats"];
+  regionsStats?: ApiType<typeof api.getRegionStats>;
 }) => {
   return (
     <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
-      <Heading fontWeight={"hairline"} maxWidth={300} as="h2" ml="6" mb={12}>
-        Chiffres clefs de votre région
-      </Heading>
-      <HStack justify="flex-end">
-        <Box mr="auto">
-          Retrouver les indicateurs clefs sur votre territoire.
-        </Box>
+      <HStack justify="flex-end" align="center">
+        <Heading
+          fontWeight={"hairline"}
+          maxWidth={300}
+          as="h2"
+          ml="6"
+          mr="auto"
+        >
+          Chiffres clefs de votre région
+        </Heading>
         <StatCard
           value={regionsStats?.tauxPoursuiteEtudes}
           label="Taux de remplissage dans la région"

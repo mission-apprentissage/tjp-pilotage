@@ -6,10 +6,7 @@ import {
   Center,
   Container,
   Flex,
-  FormControl,
-  FormLabel,
   Img,
-  Input,
   SimpleGrid,
   Stack,
   Text,
@@ -18,6 +15,7 @@ import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 import { Breadcrumb } from "../../../../components/Breadcrumb";
+import { UaiForm } from "../UaiForm";
 
 const StatCard = ({
   label,
@@ -51,9 +49,11 @@ const getSign = (value: number) => {
 };
 
 export const EtablissementSection = ({
+  uai,
   etablissement,
   onUaiChanged,
 }: {
+  uai: string;
   etablissement?: ApiType<typeof api.getEtablissement>;
   onUaiChanged: (codeRegion: string) => void;
 }) => {
@@ -74,14 +74,9 @@ export const EtablissementSection = ({
       />
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
-          <FormControl maxW="300px">
-            <FormLabel>Choisissez un établissement</FormLabel>
-            <Input
-              placeholder="Code UAI"
-              onChange={(e) => onUaiChanged(e.target.value)}
-              variant="input"
-            />
-          </FormControl>
+          <Box maxW="300px">
+            <UaiForm defaultUai={uai} onUaiChanged={onUaiChanged} />
+          </Box>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />
           </AspectRatio>
@@ -107,11 +102,16 @@ export const EtablissementSection = ({
             />
             <StatCard
               label="Nombre de formations"
-              value={etablissement?.nbFormations ?? "-"}
+              value={etablissement?.formations.length ?? "-"}
             />
             <StatCard
               label="Effectif d'entrée"
-              value={etablissement?.effectifEntree ?? "-"}
+              value={
+                etablissement?.formations.reduce(
+                  (acc, cur) => acc + (cur.effectif ?? 0),
+                  0
+                ) ?? "-"
+              }
             />
           </SimpleGrid>
         </Box>

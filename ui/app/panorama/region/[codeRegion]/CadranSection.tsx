@@ -1,4 +1,4 @@
-import { SmallCloseIcon } from "@chakra-ui/icons";
+import { InfoIcon, SmallCloseIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -21,11 +21,21 @@ import {
   SliderTrack,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "./Cadran";
+import { Cadran } from "../../components/Cadran";
+import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormations } from "./type";
+
+const effectifSizes = [
+  { max: 50, size: 6 },
+  { max: 200, size: 10 },
+  { max: 500, size: 14 },
+  { max: 1000, size: 18 },
+  { max: 1000000, size: 22 },
+];
 
 const labelStyles = {
   mt: "-8",
@@ -247,6 +257,9 @@ export const CadranSection = ({
                   meanPoursuite={meanPoursuite}
                   meanInsertion={meanInsertion}
                   data={filteredFormations}
+                  TooltipContent={FormationTooltipContent}
+                  InfoTootipContent={InfoTooltipContent}
+                  effectifSizes={effectifSizes}
                 />
               )}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
@@ -306,3 +319,48 @@ const TendanceBaisseIcon = createIcon({
     />
   ),
 });
+
+const InfoTooltipContent = () => (
+  <>
+    <Text mb="2" fontSize="sm" fontWeight="bold">
+      Effectif:
+    </Text>
+    <Flex align="center">
+      <Center p="4">
+        <InfoIcon fontSize={30} />
+      </Center>
+      <Text flex={1} ml="4" fontSize="sm">
+        Les formations inférieures à 20 élèves ne sont pas représentées dans ce
+        quadrant.
+      </Text>
+    </Flex>
+    <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
+      Légende:
+    </Text>
+    <VStack align="flex-start" spacing={2}>
+      {effectifSizes.map(({ max, size }, i) => (
+        <Flex key={max} align="center">
+          <Box
+            borderRadius={100}
+            width={`${size}px`}
+            height={`${size}px`}
+            mx={22 - size / 2}
+            border="1px solid black"
+          />
+          <Text flex={1} ml="4" fontSize="sm">
+            {max !== 1000000 && (
+              <>
+                Effectif {"<"} {max}
+              </>
+            )}
+            {max === 1000000 && (
+              <>
+                Effectif {">"} {effectifSizes[i - 1].max}
+              </>
+            )}
+          </Text>
+        </Flex>
+      ))}
+    </VStack>
+  </>
+);

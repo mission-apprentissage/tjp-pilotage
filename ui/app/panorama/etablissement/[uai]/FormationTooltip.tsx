@@ -1,13 +1,17 @@
 "use client";
-import { Box, Card, CardBody, HStack, useOutsideClick } from "@chakra-ui/react";
+import { Box, Card, CardBody, useOutsideClick } from "@chakra-ui/react";
 import { forwardRef, useRef } from "react";
+import { ApiType } from "shared";
 
-import { InfoBlock } from "../../../components/InfoBlock";
-import { PanoramaFormation } from "./type";
+import { api } from "../../../../api.client";
+import { InfoBlock } from "../../../../components/InfoBlock";
 
 export const FormationTooltip = forwardRef<
   HTMLDivElement,
-  { formation?: PanoramaFormation; clickOutside: () => void }
+  {
+    formation?: ApiType<typeof api.getEtablissement>["formations"][number];
+    clickOutside: () => void;
+  }
 >(({ formation, clickOutside, ...props }, ref) => {
   const cardRef = useRef<HTMLDivElement>(null);
   useOutsideClick({
@@ -29,7 +33,7 @@ export const FormationTooltip = forwardRef<
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation?: PanoramaFormation;
+  formation?: ApiType<typeof api.getEtablissement>["formations"][number];
 }) => {
   return (
     <Box bg="white" fontSize="xs">
@@ -43,14 +47,6 @@ export const FormationTooltipContent = ({
         label="Dispositif concerné:"
         value={formation?.libelleDispositif}
       />
-      <HStack mb="2" spacing={4}>
-        <InfoBlock flex={1} label="Effectif:" value={formation?.effectif} />
-        <InfoBlock
-          flex={2}
-          label="Nb Etablissements:"
-          value={formation?.nbEtablissement}
-        />
-      </HStack>
       <InfoBlock
         mb="2"
         label="Tx de pression:"

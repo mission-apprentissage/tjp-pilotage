@@ -1,51 +1,12 @@
-import { ExpressionBuilder, sql } from "kysely";
-import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
+import { sql } from "kysely";
+import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { selectTauxInsertion12moisAgg } from "../utils/tauxInsertion12mois";
-import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
+import { withInsertionReg } from "../utils/tauxInsertion12mois";
+import { withPoursuiteReg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
 
-function withReg({
-  eb,
-  rentreeScolaire,
-  millesimeSortie,
-}: {
-  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
-  rentreeScolaire: string;
-  millesimeSortie: string;
-}) {
-  return jsonObjectFrom(
-    eb
-      .selectFrom("formationEtablissement as subFE")
-      .innerJoin("indicateurEntree as subIE", (join) =>
-        join
-          .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-          .on("subIE.rentreeScolaire", "=", rentreeScolaire)
-      )
-      .innerJoin("indicateurSortie as subIS", (join) =>
-        join
-          .onRef("subFE.id", "=", "subIS.formationEtablissementId")
-          .on("subIS.millesimeSortie", "=", millesimeSortie)
-      )
-      .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
-      .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
-      .whereRef(
-        "subFE.dispositifId",
-        "=",
-        "formationEtablissement.dispositifId"
-      )
-      .whereRef("subEtab.codeRegion", "=", "etablissement.codeRegion")
-      .select([
-        selectTauxPressionAgg("subIE").as("tauxPression"),
-        selectTauxInsertion12moisAgg("subIS").as("tauxInsertion12mois"),
-        selectTauxPoursuiteAgg("subIS").as("tauxPoursuiteEtudes"),
-      ])
-      .groupBy(["cfd", "dispositifId"])
-  ).as("indicateursRegionaux");
-}
 export const getEtablissement = async ({
   uai,
   millesimeSortie = "2020_2021",
@@ -94,14 +55,35 @@ export const getEtablissement = async ({
             "e.UAI",
             "formationEtablissement.UAI"
           )
+          .leftJoin(
+            "niveauDiplome",
+            "niveauDiplome.codeNiveauDiplome",
+            "formation.codeNiveauDiplome"
+          )
+          .leftJoin(
+            "dispositif",
+            "dispositif.codeDispositif",
+            "formationEtablissement.dispositifId"
+          )
           .select([
             "formation.libelleDiplome",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
+            "libelleDispositif",
+            "formation.codeNiveauDiplome",
+            "libelleNiveauDiplome",
             sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs","indicateurEntree"."anneeDebut"::text)), 'null')::INT
             `.as("effectif"),
+            selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
           ])
-          .select((eb) => withReg({ eb, rentreeScolaire, millesimeSortie }))
+          .select((eb) => [
+            withInsertionReg({ eb, codeRegion: "ref", millesimeSortie }).as(
+              "tauxInsertion12mois"
+            ),
+            withPoursuiteReg({ eb, codeRegion: "ref", millesimeSortie }).as(
+              "tauxPoursuiteEtudes"
+            ),
+          ])
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
             "formation.libelleDiplome",
@@ -109,6 +91,10 @@ export const getEtablissement = async ({
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
             "indicateurEntree.anneeDebut",
+            "indicateurEntree.rentreeScolaire",
+            "formation.codeNiveauDiplome",
+            "libelleNiveauDiplome",
+            "libelleDispositif",
           ])
       ).as("formations")
     )

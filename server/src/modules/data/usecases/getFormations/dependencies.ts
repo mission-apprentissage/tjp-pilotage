@@ -7,7 +7,7 @@ import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../queries/utils/tauxPression";
+import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
 const findFormationsInDb = async ({
@@ -126,12 +126,9 @@ const findFormationsInDb = async ({
         alias: "indicateurEntree",
         annee: sql`'2'`,
       })})`.as("capacite3"),
+      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
     ])
     .select((eb) => [
-      withTauxPressionReg({
-        eb,
-        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
-      }).as("tauxPression"),
       withPoursuiteReg({
         eb,
         millesimeSortie,

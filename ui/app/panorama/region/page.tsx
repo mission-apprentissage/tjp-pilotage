@@ -1,5 +1,5 @@
 import { serverApi } from "@/api.client";
-import { PanoramaSelection } from "@/app/panorama/PanoramaSelection";
+import { PanoramaSelection } from "@/app/panorama/region/PanoramaSelection";
 
 export const revalidate = 0;
 
