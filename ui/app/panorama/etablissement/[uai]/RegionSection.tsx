@@ -21,15 +21,15 @@ export const RegionSection = ({
           Chiffres clefs de votre région
         </Heading>
         <StatCard
-          value={regionsStats?.tauxPoursuiteEtudes}
+          value={regionsStats?.tauxRemplissage}
           label="Taux de remplissage dans la région"
         />
         <StatCard
-          value={regionsStats?.tauxInsertion12mois}
+          value={regionsStats?.tauxPoursuiteEtudes}
           label="Taux de poursuite d’étude dans la région"
         />
         <StatCard
-          value={regionsStats?.tauxRemplissage}
+          value={regionsStats?.tauxInsertion12mois}
           label="Taux d’emploi à 12 mois dans la région"
         />
       </HStack>
