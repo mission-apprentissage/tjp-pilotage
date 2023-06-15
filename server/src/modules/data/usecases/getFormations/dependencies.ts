@@ -1,78 +1,14 @@
-import { ExpressionBuilder, RawBuilder, sql } from "kysely";
+import { ExpressionBuilder, sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { selectTauxInsertion12mois } from "../../queries/utils/tauxInsertion12mois";
-import { selectTauxPoursuite } from "../../queries/utils/tauxPoursuite";
-
-function withReg({
-  eb,
-  rentreeScolaire,
-  millesimeSortie,
-  codeRegion,
-}: {
-  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
-  rentreeScolaire: string;
-  millesimeSortie: string;
-  codeRegion?: string;
-}) {
-  return eb
-    .selectFrom("formationEtablissement as subFE")
-    .innerJoin("indicateurEntree as subIE", (join) =>
-      join
-        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-        .on("subIE.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .innerJoin("indicateurSortie as subIS", (join) =>
-      join
-        .onRef("subFE.id", "=", "subIS.formationEtablissementId")
-        .on("subIS.millesimeSortie", "=", millesimeSortie)
-    )
-    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
-    .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
-    .whereRef("subFE.dispositifId", "=", "formationEtablissement.dispositifId")
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("subEtab.codeRegion", "=", codeRegion);
-    })
-    .select([selectTauxPoursuite("subIS").as("sa")])
-    .groupBy(["cfd", "dispositifId"]);
-}
-
-function withInsertionReg({
-  eb,
-  rentreeScolaire,
-  millesimeSortie,
-  codeRegion,
-}: {
-  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
-  rentreeScolaire: string;
-  millesimeSortie: string;
-  codeRegion?: string;
-}) {
-  return eb
-    .selectFrom("formationEtablissement as subFE")
-    .innerJoin("indicateurEntree as subIE", (join) =>
-      join
-        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-        .on("subIE.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .innerJoin("indicateurSortie as subIS", (join) =>
-      join
-        .onRef("subFE.id", "=", "subIS.formationEtablissementId")
-        .on("subIS.millesimeSortie", "=", millesimeSortie)
-    )
-    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
-    .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
-    .whereRef("subFE.dispositifId", "=", "formationEtablissement.dispositifId")
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("subEtab.codeRegion", "=", codeRegion);
-    })
-    .select([selectTauxInsertion12mois("subIS").as("s")])
-    .groupBy(["cfd", "dispositifId"]);
-}
+import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
+import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
+import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
+import { withTauxPressionReg } from "../../queries/utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
 const findFormationsInDb = async ({
   offset = 0,
@@ -105,18 +41,6 @@ const findFormationsInDb = async ({
   orderBy?: { column: string; order: "asc" | "desc" };
   withEmptyFormations?: boolean;
 } = {}) => {
-  const effectifAnnee = (annee: RawBuilder<unknown>) => {
-    return sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
-  };
-
-  const capaciteAnnee = (annee: RawBuilder<unknown>) => {
-    return sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
-  };
-
-  const premierVoeuxAnnee = (annee: RawBuilder<unknown>) => {
-    return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
-  };
-
   const query = kdb
     .selectFrom("formation")
     .leftJoin(
@@ -173,44 +97,48 @@ const findFormationsInDb = async ({
       sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
       `.as("nbEtablissement"),
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
-      sql<number>`(100 * sum(
-        case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
-        then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
-        / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
-      `.as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})
+      selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
-      sql<number>`SUM(${effectifAnnee(sql`'0'`)})`.as("effectif1"),
-      sql<number>`SUM(${effectifAnnee(sql`'1'`)})`.as("effectif2"),
-      sql<number>`SUM(${effectifAnnee(sql`'2'`)})`.as("effectif3"),
-      sql<number>`SUM(${capaciteAnnee(sql`"anneeDebut"::text`)})
+      sql<number>`SUM(${effectifAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'0'`,
+      })})`.as("effectif1"),
+      sql<number>`SUM(${effectifAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'1'`,
+      })})`.as("effectif2"),
+      sql<number>`SUM(${effectifAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'2'`,
+      })})`.as("effectif3"),
+      sql<number>`SUM(${capaciteAnnee({ alias: "indicateurEntree" })})
       `.as("capacite"),
-      sql<number>`SUM(${capaciteAnnee(sql`'0'`)})`.as("capacite1"),
-      sql<number>`SUM(${capaciteAnnee(sql`'1'`)})`.as("capacite2"),
-      sql<number>`SUM(${capaciteAnnee(sql`'2'`)})`.as("capacite3"),
-      sql<number>`SUM(${premierVoeuxAnnee(sql`"anneeDebut"::text`)})
-      `.as("premiersVoeux"),
-      sql<number>`(100 * sum(
-        case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
-        then ${premierVoeuxAnnee(sql`"anneeDebut"::text`)} end)
-        / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
-      `.as("tauxPression"),
-      sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
-      `.as("tauxPoursuiteEtuddes"),
-      sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
-      `.as("tauxInsertiodn12mois"),
-      // selectTauxPoursuite("indicateurSortie").as("tauxInsertion12mois"),
+      sql<number>`SUM(${capaciteAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'0'`,
+      })})`.as("capacite1"),
+      sql<number>`SUM(${capaciteAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'1'`,
+      })})`.as("capacite2"),
+      sql<number>`SUM(${capaciteAnnee({
+        alias: "indicateurEntree",
+        annee: sql`'2'`,
+      })})`.as("capacite3"),
     ])
     .select((eb) => [
-      withReg({
+      withTauxPressionReg({
         eb,
-        rentreeScolaire: rentreeScolaire[0],
+        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
+      }).as("tauxPression"),
+      withPoursuiteReg({
+        eb,
         millesimeSortie,
         codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
       }).as("tauxPoursuiteEtudes"),
       withInsertionReg({
         eb,
-        rentreeScolaire: rentreeScolaire[0],
         millesimeSortie,
         codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
       }).as("tauxInsertion12mois"),
@@ -248,9 +176,6 @@ const findFormationsInDb = async ({
     )
     .groupBy([
       "formationEtablissement.cfd",
-      /*  ...(codeRegion?.length === 1
-        ? (["etablissement.codeRegion"] as const)
-        : []), */
       "formation.id",
       "formation.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",

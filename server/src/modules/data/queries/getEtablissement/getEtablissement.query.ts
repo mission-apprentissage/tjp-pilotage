@@ -4,9 +4,9 @@ import { jsonArrayFrom, jsonObjectFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { selectTauxInsertion12mois } from "../utils/tauxInsertion12mois";
-import { selectTauxPoursuite } from "../utils/tauxPoursuite";
-import { selectTauxPression } from "../utils/tauxPression";
+import { selectTauxInsertion12moisAgg } from "../utils/tauxInsertion12mois";
+import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../utils/tauxPression";
 
 function withReg({
   eb,
@@ -39,9 +39,9 @@ function withReg({
       )
       .whereRef("subEtab.codeRegion", "=", "etablissement.codeRegion")
       .select([
-        selectTauxPression("subIE").as("tauxPression"),
-        selectTauxInsertion12mois("subIS").as("tauxInsertion12mois"),
-        selectTauxPoursuite("subIS").as("tauxPoursuiteEtudes"),
+        selectTauxPressionAgg("subIE").as("tauxPression"),
+        selectTauxInsertion12moisAgg("subIS").as("tauxInsertion12mois"),
+        selectTauxPoursuiteAgg("subIS").as("tauxPoursuiteEtudes"),
       ])
       .groupBy(["cfd", "dispositifId"])
   ).as("indicateursRegionaux");
