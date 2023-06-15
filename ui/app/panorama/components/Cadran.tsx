@@ -250,9 +250,11 @@ export const Cadran = function <
         bottom="0"
       ></Box>
 
-      <InfoTooltip>
-        <InfoTootipContent />
-      </InfoTooltip>
+      {InfoTootipContent && (
+        <InfoTooltip>
+          <InfoTootipContent />
+        </InfoTooltip>
+      )}
 
       {displayedDetail && (
         <FormationTooltipWrapper
