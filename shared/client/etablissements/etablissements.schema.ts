@@ -85,6 +85,7 @@ export const etablissementSchemas = {
     response: {
       200: Type.Object({
         uai: Type.String(),
+        rentreeScolaire: Type.String(),
         libelleEtablissement: Type.Optional(Type.String()),
         valeurAjoutee: Type.Optional(Type.Number()),
         codeRegion: Type.Optional(Type.String()),

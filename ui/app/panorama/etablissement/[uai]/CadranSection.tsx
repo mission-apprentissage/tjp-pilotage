@@ -5,6 +5,7 @@ import {
   Center,
   Container,
   Flex,
+  Heading,
   Skeleton,
   Text,
   VStack,
@@ -30,11 +31,13 @@ export const CadranSection = ({
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
+  rentreeScolaire,
 }: {
   cadranFormations?: ApiType<typeof api.getEtablissement>["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
+  rentreeScolaire?: string;
 }) => {
   const filteredFormations = useMemo(
     () =>
@@ -54,8 +57,16 @@ export const CadranSection = ({
   );
 
   return (
-    <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
-      <Box px="8">
+    <Container as="section" py="6" mt="8" maxWidth={"container.xl"}>
+      <Box pl="8" maxW={500} mb="6">
+        <Heading fontWeight={"hairline"} as="h2">
+          Indicateurs régionaux de vos formations
+        </Heading>
+        <Text fontSize="sm" color="grey" mt="2">
+          Rentrée scolaire {rentreeScolaire ?? "-"}
+        </Text>
+      </Box>
+      <Box px="16" maxW={800} m="auto">
         <Flex justify="flex-end">
           <Text color="grey" fontSize="sm" textAlign="left">
             {filteredFormations?.length ?? "-"} formations

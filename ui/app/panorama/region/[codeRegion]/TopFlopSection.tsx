@@ -33,25 +33,17 @@ export const TopFlopSection = ({
         codeNiveauDiplome.includes(item.codeNiveauDiplome)
     );
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
-    const top = filtered
+    const sorted = filtered
       .slice()
       .sort((a, b) =>
         a.tauxInsertion12mois + a.tauxPoursuiteEtudes <
         b.tauxInsertion12mois + b.tauxPoursuiteEtudes
           ? 1
           : -1
-      )
-      .slice(0, Math.ceil(nbTopFlop));
+      );
 
-    const flop = filtered
-      .slice()
-      .sort((a, b) =>
-        a.tauxInsertion12mois + a.tauxPoursuiteEtudes >
-        b.tauxInsertion12mois + b.tauxPoursuiteEtudes
-          ? 1
-          : -1
-      )
-      .slice(0, Math.floor(nbTopFlop));
+    const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
+    const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
   }, [cadranFormations, codeNiveauDiplome]);

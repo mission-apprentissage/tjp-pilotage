@@ -6,6 +6,7 @@ import { useState } from "react";
 
 import { api } from "../../../../api.client";
 import { InfoSection } from "../../components/InfoSection";
+import { PanoramaSelection } from "../PanoramaSelection";
 import { CadranSection } from "./CadranSection";
 import { EtablissementSection } from "./EtablissementSection";
 import { FiltersSection } from "./FiltersSection";
@@ -26,12 +27,12 @@ export default function Panorama({
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
-  const { data: etablissement } = useQuery(
+  const { data: etablissement, isError } = useQuery(
     ["getEtablissement", { uai }],
     api.getEtablissement({
       params: { uai },
     }).call,
-    { keepPreviousData: true, staleTime: 10000000 }
+    { keepPreviousData: true, staleTime: 10000000, retry: false }
   );
 
   const { data: regionStats } = useQuery(
@@ -55,6 +56,14 @@ export default function Panorama({
     }, {} as Record<string, { value: string; label: string }>) ?? {}
   );
 
+  if (isError) {
+    return (
+      <>
+        <PanoramaSelection wrongUai={uai} />
+      </>
+    );
+  }
+
   return (
     <>
       <EtablissementSection
@@ -68,12 +77,16 @@ export default function Panorama({
       />
       <RegionSection regionsStats={regionStats} />
       <CadranSection
+        rentreeScolaire={etablissement?.rentreeScolaire}
         codeNiveauDiplome={codeNiveauDiplome}
         meanInsertion={regionStats?.tauxInsertion12mois}
         meanPoursuite={regionStats?.tauxPoursuiteEtudes}
         cadranFormations={etablissement?.formations}
       />
-      <FormationsSection formations={etablissement?.formations} />
+      <FormationsSection
+        rentreeScolaire={etablissement?.rentreeScolaire}
+        formations={etablissement?.formations}
+      />
       <InfoSection codeRegion={etablissement?.codeRegion} />
     </>
   );

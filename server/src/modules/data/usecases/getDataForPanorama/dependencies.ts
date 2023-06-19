@@ -66,12 +66,10 @@ const getBaseQuery = ({
 
 export const queryFormations = async ({
   codeRegion,
-  UAI,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
-  UAI?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -115,15 +113,8 @@ export const queryFormations = async ({
       ),
       selectTauxInsertion12moisAgg("isp").as("tauxInsertion12moisPrecedent"),
     ])
-    .where("indicateurSortie.nbInsertion12mois", "is not", null)
-    .where("indicateurSortie.nbPoursuiteEtudes", "is not", null)
     .having(selectTauxInsertion12moisAgg("indicateurSortie"), "is not", null)
     .having(selectTauxPoursuiteAgg("indicateurSortie"), "is not", null)
-    .having(
-      UAI
-        ? sql<boolean>`bool_or(etablissement."UAI" in (${sql.join(UAI)}))`
-        : sql<boolean>`true`
-    )
     .groupBy([
       "formation.id",
       "indicateurEntree.rentreeScolaire",

@@ -65,7 +65,7 @@ const filterFormations = ({
       if (tendance === "insertion_hausse") {
         return (
           item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxInsertion12mois >= item.tauxInsertion12moisPrecedent
+          item.tauxInsertion12mois > item.tauxInsertion12moisPrecedent
         );
       }
       if (tendance === "insertion_baisse") {
@@ -77,7 +77,7 @@ const filterFormations = ({
       if (tendance === "poursuite_hausse") {
         return (
           item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes >= item.tauxInsertion12moisPrecedent
+          item.tauxPoursuiteEtudes > item.tauxInsertion12moisPrecedent
         );
       }
       if (tendance === "poursuite_baisse") {
@@ -90,7 +90,7 @@ const filterFormations = ({
         return (
           item.effectifPrecedent !== undefined &&
           item.effectif !== undefined &&
-          item.effectif >= item.effectifPrecedent
+          item.effectif > item.effectifPrecedent
         );
       }
       if (tendance === "effectif_baisse") {

@@ -1,13 +1,21 @@
 "use client";
 
-import { AspectRatio, Container, Flex, Img } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AspectRatio,
+  Container,
+  Flex,
+  Img,
+} from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { UaiForm } from "./UaiForm";
 
-export function PanoramaSelection() {
+export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
   const router = useRouter();
 
   const handleSubmit = (uai: string) => {
@@ -34,6 +42,14 @@ export function PanoramaSelection() {
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
           <Img src="/graphs_statistics.png" objectFit="contain" />
         </AspectRatio>
+        {wrongUai && (
+          <Alert maxW="300px" status="error" mt="6">
+            <AlertIcon />
+            <AlertDescription>
+              Le code UAI {wrongUai} est incorrecte.
+            </AlertDescription>
+          </Alert>
+        )}
       </Flex>
     </Container>
   );

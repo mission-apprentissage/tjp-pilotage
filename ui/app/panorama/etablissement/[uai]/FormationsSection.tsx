@@ -6,6 +6,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -16,15 +17,23 @@ import { api } from "../../../../api.client";
 
 export const FormationsSection = ({
   formations,
+  rentreeScolaire,
 }: {
   formations?: ApiType<typeof api.getEtablissement>["formations"];
+  rentreeScolaire?: string;
 }) => {
   return (
-    <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
+    <Container as="section" py="6" mt="6" mb="4" maxWidth={"container.xl"}>
       <Box>
-        <Heading pl="8" maxW={400} fontWeight={"hairline"} as="h2" mb="8">
-          Toutes les formations de votre établissement
-        </Heading>
+        <Box pl="8" maxW={400} mb="8">
+          <Heading fontWeight={"hairline"} as="h2">
+            Toutes les formations de votre établissement
+          </Heading>
+          <Text fontSize="sm" color="grey" mt="2">
+            Rentrée scolaire {rentreeScolaire ?? "-"}
+          </Text>
+        </Box>
+
         <TableContainer px="8">
           <Table variant="striped" size="sm">
             <Thead>

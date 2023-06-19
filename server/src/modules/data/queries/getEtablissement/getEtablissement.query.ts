@@ -3,6 +3,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { notHistorique } from "../utils/notHistorique";
 import { withInsertionReg } from "../utils/tauxInsertion12mois";
 import { withPoursuiteReg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
@@ -27,6 +28,7 @@ export const getEtablissement = async ({
     .select("etablissement.UAI as uai")
     .$narrowType<{ uai: string }>()
     .select([
+      sql<string>`${rentreeScolaire}`.as("rentreeScolaire"),
       "libelleEtablissement",
       "valeurAjoutee",
       "region.libelleRegion",
@@ -84,6 +86,7 @@ export const getEtablissement = async ({
               "tauxPoursuiteEtudes"
             ),
           ])
+          .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
             "formation.libelleDiplome",

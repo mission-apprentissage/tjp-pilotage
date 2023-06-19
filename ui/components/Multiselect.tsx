@@ -245,7 +245,7 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0">
+          <MenuList zIndex={3} maxWidth={450} pt="0">
             <Box borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}

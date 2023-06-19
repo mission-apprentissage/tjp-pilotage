@@ -9,7 +9,7 @@ export const RegionSection = ({
   regionsStats?: ApiType<typeof api.getRegionStats>;
 }) => {
   return (
-    <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
+    <Container as="section" py="6" mt="12" maxWidth={"container.xl"}>
       <HStack justify="flex-end" align="center">
         <Heading
           fontWeight={"hairline"}

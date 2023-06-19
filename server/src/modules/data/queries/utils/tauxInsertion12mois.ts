@@ -45,7 +45,10 @@ export function withInsertionReg({
   millesimeSortie,
   codeRegion,
 }: {
-  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
+  eb: ExpressionBuilder<
+    DB,
+    "formationEtablissement" | "etablissement" | "indicateurEntree"
+  >;
   millesimeSortie: string;
   codeRegion?: string | "ref";
 }) {
@@ -56,6 +59,11 @@ export function withInsertionReg({
       join
         .onRef("subFE.id", "=", "subIS.formationEtablissementId")
         .on("subIS.millesimeSortie", "=", millesimeSortie)
+    )
+    .innerJoin("indicateurEntree as subIE", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
+        .onRef("subIE.rentreeScolaire", "=", "indicateurEntree.rentreeScolaire")
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
     .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
