@@ -11,8 +11,6 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 
-import { Breadcrumb } from "@/components/Breadcrumb";
-
 import { UaiForm } from "./UaiForm";
 
 export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
@@ -31,12 +29,6 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
       bg="#F9F8F6"
       maxWidth={"container.xl"}
     >
-      <Breadcrumb
-        pages={[
-          { title: "Accueil", to: "/" },
-          { title: "Panorama", to: "/panorama", active: true },
-        ]}
-      />
       <Flex align="center" direction="column">
         <UaiForm onUaiChanged={handleSubmit} />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">

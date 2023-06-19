@@ -14,7 +14,6 @@ import {
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
-import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { UaiForm } from "../UaiForm";
 
 const StatCard = ({
@@ -66,12 +65,6 @@ export const EtablissementSection = ({
       bg="#F9F8F6"
       maxWidth={"container.xl"}
     >
-      <Breadcrumb
-        pages={[
-          { title: "Accueil", to: "/" },
-          { title: "Panorama", to: "/panorama" },
-        ]}
-      />
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
           <Box maxW="300px">
@@ -88,7 +81,9 @@ export const EtablissementSection = ({
           </Text>
           <SimpleGrid spacing={3} columns={[2]} mt="4">
             <Center fontSize="lg" fontWeight="bold">
-              {etablissement?.libelleEtablissement ?? "-"}
+              <Text _firstLetter={{ textTransform: "capitalize" }}>
+                {etablissement?.libelleEtablissement ?? "-"}
+              </Text>
             </Center>
             <StatCard
               label="Valeur ajoutée"

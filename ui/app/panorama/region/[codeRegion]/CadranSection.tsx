@@ -148,9 +148,7 @@ export const CadranSection = ({
             Analyse des formations
           </Heading>
           <FormControl>
-            <FormLabel>
-              Sélectionner le curseur du seuil minimal en effectif
-            </FormLabel>
+            <FormLabel>Effectif minimum (en entrée)</FormLabel>
             <Slider
               mt="6"
               onChange={setEffectifMin}
@@ -265,9 +263,10 @@ export const CadranSection = ({
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>
-          <Text color="grey" textAlign="right" mt="4" fontSize="xs">
+          <Text color="grey" mt="4" fontSize="xs">
             Données Inser Jeunes produites par la DEPP, les formations
-            inférieures à 20 élèves ne sont pas représentées
+            inférieures à 20 sortants sur deux ans, ne sont pas représentées
+            dans ce quadrant pour des raisons statistiques
           </Text>
         </Box>
       </Stack>

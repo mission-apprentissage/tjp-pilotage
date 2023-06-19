@@ -4,6 +4,7 @@ import {
   Box,
   Center,
   Flex,
+  Select,
   Spinner,
   Table,
   TableContainer,
@@ -139,38 +140,57 @@ export default function Formations() {
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
-        <Multiselect
-          onClose={filterTracker("codeRegion")}
+        <Select
+          placeholder="Toutes les régions"
+          // mr="auto"
           width="52"
-          onChange={(selected) => handleFilters("codeRegion", selected)}
-          options={data?.filters.regions}
+          variant="input"
+          size="sm"
+          onChange={(e) => {
+            if (e.target.value === "") {
+              setPage(0);
+              setFilters({});
+            } else {
+              handleFilters("codeRegion", [e.target.value]);
+            }
+          }}
         >
-          Région
-        </Multiselect>
-        <Multiselect
-          onClose={filterTracker("codeAcademie")}
-          width="52"
-          onChange={(selected) => handleFilters("codeAcademie", selected)}
-          options={data?.filters.academies}
-        >
-          Académie
-        </Multiselect>
-        <Multiselect
-          onClose={filterTracker("codeDepartement")}
-          width="52"
-          onChange={(selected) => handleFilters("codeDepartement", selected)}
-          options={data?.filters.departements}
-        >
-          Département
-        </Multiselect>
-        <Multiselect
-          onClose={filterTracker("commune")}
-          width="52"
-          onChange={(selected) => handleFilters("commune", selected)}
-          options={data?.filters.communes}
-        >
-          Commune
-        </Multiselect>
+          {data?.filters.regions.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
+        {filters.codeRegion !== undefined && (
+          <>
+            <Multiselect
+              onClose={filterTracker("codeAcademie")}
+              width="52"
+              onChange={(selected) => handleFilters("codeAcademie", selected)}
+              options={data?.filters.academies}
+            >
+              Académie
+            </Multiselect>
+            <Multiselect
+              onClose={filterTracker("codeDepartement")}
+              width="52"
+              onChange={(selected) =>
+                handleFilters("codeDepartement", selected)
+              }
+              options={data?.filters.departements}
+            >
+              Département
+            </Multiselect>
+            <Multiselect
+              onClose={filterTracker("commune")}
+              width="52"
+              onChange={(selected) => handleFilters("commune", selected)}
+              options={data?.filters.communes}
+            >
+              Commune
+            </Multiselect>
+          </>
+        )}
         <Multiselect
           onClose={filterTracker("codeDiplome")}
           width="52"
@@ -186,7 +206,7 @@ export default function Formations() {
           options={data?.filters.familles}
         >
           Famille
-        </Multiselect>{" "}
+        </Multiselect>
         <Multiselect
           onClose={filterTracker("cfd")}
           width="52"

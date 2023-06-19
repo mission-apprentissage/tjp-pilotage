@@ -29,8 +29,10 @@ export const TopFlopSection = ({
     if (!cadranFormations) return;
     const filtered = cadranFormations.filter(
       (item) =>
-        !codeNiveauDiplome?.length ||
-        codeNiveauDiplome.includes(item.codeNiveauDiplome)
+        item.dispositifId &&
+        !["253", "240"].includes(item.dispositifId) &&
+        (!codeNiveauDiplome?.length ||
+          codeNiveauDiplome.includes(item.codeNiveauDiplome))
     );
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
     const sorted = filtered
@@ -74,7 +76,7 @@ const TopFlopChart = ({
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
       <Text mb="4" color="grey" fontSize="sm" textAlign="right">
-        Taux d'emploi / Taux de poursuite d'études
+        Taux d'emploi + Taux de poursuite d'études
       </Text>
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
@@ -142,7 +144,7 @@ const TopItem = ({
             >
               {`${formation.tauxInsertion12mois.toFixed(
                 0
-              )}% / ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
+              )}% + ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
             </Flex>
           </PopoverTrigger>
         </Box>

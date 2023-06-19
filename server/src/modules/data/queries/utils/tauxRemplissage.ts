@@ -25,7 +25,7 @@ export const selectTauxRemplissageAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     case when 
-    ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)} >= 20
+    ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)} >= 0
     then (100 * SUM(${selectNumerateurRemplissage(indicateurEntreeAlias)}) 
     / ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)})
     end
@@ -43,7 +43,7 @@ export const selectTauxRemplissage = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     case when 
-    ${selectDenominateurRemplissage(indicateurEntreeAlias)} >= 20
+    ${selectDenominateurRemplissage(indicateurEntreeAlias)} >= 0
     then (100 * ${effectifAnnee({ alias: indicateurEntreeAlias })}
     / ${selectDenominateurRemplissage(indicateurEntreeAlias)})
     end

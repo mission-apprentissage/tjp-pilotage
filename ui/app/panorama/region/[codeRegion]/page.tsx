@@ -21,7 +21,7 @@ export default function Panorama({
   const router = useRouter();
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 

@@ -40,7 +40,7 @@ export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     case when 
-    ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 20
+    ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
     then (100 * SUM(${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
@@ -67,7 +67,7 @@ export const selectTauxPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     case when 
-    ${selectDenominateurPression(indicateurEntreeAlias)} >= 20
+    ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
     then (100 * ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias

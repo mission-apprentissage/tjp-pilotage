@@ -12,6 +12,8 @@ import Link from "next/link";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { ReactNode } from "react";
 
+import { Breadcrumb } from "../../components/Breadcrumb";
+
 const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
   if (segment === "etablissement") return 1;
@@ -21,9 +23,29 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
 
+  console.log(segment);
+
   return (
     <>
       <Container maxWidth={"container.xl"} py="4">
+        <Breadcrumb
+          mb={4}
+          ml={4}
+          pages={[
+            { title: "Accueil", to: "/" },
+            segment === "region"
+              ? {
+                  title: "Panorama régional",
+                  to: "/panorama/region",
+                  active: true,
+                }
+              : {
+                  title: "Panorama établissement",
+                  to: "/panorama/etablissement",
+                  active: true,
+                },
+          ]}
+        />
         <Tabs
           isLazy={true}
           index={tabIndex}
