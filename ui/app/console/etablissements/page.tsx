@@ -350,6 +350,10 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxInsertion12mois" />
                   {ETABLISSEMENTS_COLUMNS.tauxInsertion12mois}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
+                  />
                 </Th>
                 <Th
                   isNumeric
