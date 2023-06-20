@@ -196,12 +196,12 @@ export const CadranSection = ({
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Tx d'emploi 12 mois en hausse"
+                  label="Tx d'emploi en hausse"
                   value="insertion_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Tx d'emploi 12 mois en baisse"
+                  label="Tx d'emploi en baisse"
                   value="insertion_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
