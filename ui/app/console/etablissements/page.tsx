@@ -152,7 +152,7 @@ export default function Etablissements() {
           onChange={(selected) => handleFilters("codeRegion", selected)}
           options={data?.filters.regions}
         >
-          Région
+          Toutes les régions
         </Multiselect>
         <Multiselect
           onClose={filterTracker("codeAcademie")}
@@ -346,10 +346,26 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
+                  onClick={() => handleOrder("tauxInsertion12mois")}
+                >
+                  <OrderIcon {...order} column="tauxInsertion12mois" />
+                  {ETABLISSEMENTS_COLUMNS.tauxInsertion12mois}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
+                  />
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
                   onClick={() => handleOrder("tauxPoursuiteEtudes")}
                 >
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
                   {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtudes}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -384,6 +400,13 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="libelleOfficielFamille" />
                   {ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("codeFormationDiplome")}
+                >
+                  <OrderIcon {...order} column="codeFormationDiplome" />
+                  {ETABLISSEMENTS_COLUMNS.codeFormationDiplome}
                 </Th>
               </Tr>
             </Thead>

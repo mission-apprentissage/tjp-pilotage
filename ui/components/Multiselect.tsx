@@ -31,7 +31,7 @@ const ButtonContent = ({
 }) => {
   if (!selected.length) return <>{children}</>;
   if (selected.length === 1) return <>{selected[0]}</>;
-  return <>{selected.length} séléctionné</>;
+  return <>{selected.length} séléctionnés</>;
 };
 
 const Checkbox = ({
@@ -245,7 +245,7 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0">
+          <MenuList zIndex={3} maxWidth={450} pt="0">
             <Box borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}

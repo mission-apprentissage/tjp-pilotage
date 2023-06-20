@@ -15,7 +15,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { Breadcrumb } from "../../../components/Breadcrumb";
 import { PanoramaStats } from "./type";
 
 const StatCard = ({
@@ -69,12 +68,6 @@ export const RegionSection = ({
       bg="#F9F8F6"
       maxWidth={"container.xl"}
     >
-      <Breadcrumb
-        pages={[
-          { title: "Accueil", to: "/" },
-          { title: "Panorama", to: "/panorama" },
-        ]}
-      />
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
           <FormControl maxW="300px">
@@ -119,7 +112,7 @@ export const RegionSection = ({
               }
             />
             <StatCard
-              label="Taux d'insertion dans votre région"
+              label="Taux d'emploi à 12 mois dans votre région"
               value={
                 stats?.tauxInsertion12mois
                   ? `${stats.tauxInsertion12mois}%`

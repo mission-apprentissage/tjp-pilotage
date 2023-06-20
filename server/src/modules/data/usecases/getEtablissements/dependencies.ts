@@ -1,10 +1,15 @@
+import { sql } from "kysely";
 import { SQL } from "zapatos/db";
 
+import { kdb } from "../../../../db/db";
 import { db, pool } from "../../../../db/zapatos";
-import { schema } from "../../../../db/zapatos.schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { Etablissement } from "../../entities/Etablissement";
-import { Formation } from "../../entities/Formation";
+import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
+import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
+import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
+import { selectTauxPression } from "../../queries/utils/tauxPression";
+import { selectTauxRemplissage } from "../../queries/utils/tauxRemplissage";
 
 const findEtablissementsInDb = async ({
   offset = 0,
@@ -38,187 +43,191 @@ const findEtablissementsInDb = async ({
   uai?: string[];
   secteur?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
-} = {}): Promise<{
-  count: number;
-  etablissements: (Etablissement &
-    Formation & {
-      libelleDispositif: string;
-      libelleNiveauDiplome: string;
-      nbEtablissement: number;
-      effectif: number;
-    })[];
-}> => {
-  const effectifAnnee = (annee: db.SQLFragment) => {
-    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
-  };
-
-  const capaciteAnnee = (annee: db.SQLFragment) => {
-    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
-  };
-
-  const premierVoeuxAnnee = (annee: db.SQLFragment) => {
-    return db.sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
-  };
-
-  const query = db.sql<
-    SQL,
-    (schema.etablissement.Selectable &
-      schema.formation.Selectable & {
-        count: number;
-        libelleOfficielFamille?: string;
-        libelleDispositif: string;
-        libelleNiveauDiplome: string;
-        nbEtablissement: number;
-        effectif: number;
-        valeurAjoutee: number;
-      })[]
-  >`
-    SELECT
-        COUNT(*) OVER() as count,
-        "etablissement".*, 
-        "formation".*,
-        "departement"."libelle" as "departement",
-        "libelleOfficielFamille",
-        "libelleDispositif",
-        "dispositifId",
-        "libelleNiveauDiplome",
-        "indicateurEntree"."rentreeScolaire",
-        "indicateurEtablissement"."valeurAjoutee" as "valeurAjoutee",
-        "indicateurEntree"."anneeDebut",
-        (100 * ${effectifAnnee(db.sql`"anneeDebut"::text`)}
-          / ${capaciteAnnee(db.sql`"anneeDebut"::text`)})
-        as "tauxRemplissage",
-        ${effectifAnnee(db.sql`"anneeDebut"::text`)} as "effectif",
-        ${effectifAnnee(db.sql`'0'`)} as "effectif1",
-        ${effectifAnnee(db.sql`'1'`)} as "effectif2",
-        ${effectifAnnee(db.sql`'2'`)} as "effectif3",
-        ${capaciteAnnee(db.sql`"anneeDebut"::text`)} as "capacite",
-        ${capaciteAnnee(db.sql`'0'`)} as "capacite1",
-        ${capaciteAnnee(db.sql`'1'`)} as "capacite2",
-        ${capaciteAnnee(db.sql`'2'`)} as "capacite3",
-        ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} as "premiersVoeux",
-        (100 * ${premierVoeuxAnnee(db.sql`"anneeDebut"::text`)} 
-          / NULLIF(${capaciteAnnee(db.sql`"anneeDebut"::text`)}, 0))
-        as "tauxPression",
-        SUM("indicateurSortie"."nbSortants") as "nbSortants",
-        (100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie")) as "tauxPoursuiteEtudes"
-    FROM "formation"
-    LEFT JOIN "formationEtablissement"
-        ON "formationEtablissement"."cfd" = "formation"."codeFormationDiplome"
-    LEFT JOIN dispositif
-        ON "dispositif"."codeDispositif" = "formationEtablissement"."dispositifId"
-    LEFT JOIN "familleMetier" 
-        ON "formation"."codeFormationDiplome" = "familleMetier"."cfdSpecialite"
-    LEFT JOIN "niveauDiplome"
-        ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
-    INNER JOIN "indicateurEntree"
-        ON "indicateurEntree"."formationEtablissementId" = "formationEtablissement"."id" 
-        AND "indicateurEntree"."rentreeScolaire" IN 
-        (${db.vals(rentreeScolaire)})
-    LEFT JOIN "indicateurSortie"
-        ON "indicateurSortie"."formationEtablissementId" = "formationEtablissement"."id" 
-        AND "indicateurSortie"."millesimeSortie" = ${db.param(millesimeSortie)}
-    LEFT JOIN "etablissement"
-        ON "etablissement"."UAI" = "formationEtablissement"."UAI"
-    LEFT JOIN "indicateurEtablissement"
-        ON "indicateurEtablissement"."UAI" = "etablissement"."UAI" 
-        AND "indicateurEtablissement"."millesime" = ${db.param(millesimeSortie)}
-    LEFT JOIN "departement"
-        ON "departement"."codeDepartement" = "etablissement"."codeDepartement" 
-    WHERE 
-        ${
-          codeRegion
-            ? db.sql`"etablissement"."codeRegion" IN (${db.vals(codeRegion)})`
-            : {}
-        } 
-        AND ${
-          codeAcademie
-            ? db.sql`"etablissement"."codeAcademie" IN (${db.vals(
-                codeAcademie
-              )})`
-            : {}
-        } 
-        AND ${
-          codeDepartement
-            ? db.sql`"etablissement"."codeDepartement" IN (${db.vals(
-                codeDepartement
-              )})`
-            : {}
-        } 
-        AND ${
-          cfd
-            ? db.sql`"formation"."codeFormationDiplome" IN (${db.vals(cfd)})`
-            : {}
-        } 
-        AND ${
-          commune
-            ? db.sql`"etablissement"."commune" IN (${db.vals(commune)})`
-            : {}
-        } 
-        AND ${
-          codeDispositif
-            ? db.sql`"dispositif"."codeDispositif" IN (${db.vals(
-                codeDispositif
-              )})`
-            : {}
-        } 
-        AND ${
-          codeDiplome
-            ? db.sql`"dispositif"."codeNiveauDiplome" IN (${db.vals(
-                codeDiplome
-              )})`
-            : {}
-        } 
-        AND ${
-          cfdFamille
-            ? db.sql`"familleMetier"."cfdFamille" IN (${db.vals(cfdFamille)})`
-            : {}
-        }
-        AND ${uai ? db.sql`"etablissement"."UAI" IN (${db.vals(uai)})` : {}}
-        AND ${
-          secteur
-            ? db.sql`"etablissement"."secteur" IN (${db.vals(secteur)})`
-            : {}
-        }
-        AND "codeFormationDiplome" NOT IN (SELECT DISTINCT "ancienCFD" FROM "formationHistorique")
-    GROUP BY
-        "formation"."id",
-        "etablissement"."id",
-        "departement"."codeDepartement",
-        "libelleOfficielFamille",
-        "indicateurEntree"."rentreeScolaire",
-        "indicateurEntree"."formationEtablissementId",
-        "indicateurSortie"."millesimeSortie",
-        "dispositifId",
-        "libelleDispositif",
-        "libelleOfficielFamille",
-        "libelleNiveauDiplome",
-        "indicateurEtablissement"."UAI",
-        "indicateurEtablissement"."millesime"
-    ${
-      orderBy
-        ? db.sql`ORDER BY ${db.cols({ [orderBy.column]: true })} ${
-            orderBy.order === "asc"
-              ? db.sql`ASC NULLS LAST,`
-              : db.sql`DESC NULLS LAST,`
-          }`
-        : db.sql`ORDER BY`
-    }
-    "etablissement"."libelleEtablissement" ASC,
-    "formation"."libelleDiplome" ASC,
-    "libelleNiveauDiplome" asc,
-    "effectif" DESC,
-    "nbSortants" DESC
-
-    OFFSET ${db.param(offset)}
-    LIMIT ${db.param(limit)};
-`;
-
-  const data = await query.run(pool);
+} = {}) => {
+  const result = await kdb
+    .selectFrom("formation")
+    .innerJoin(
+      "formationEtablissement",
+      "formationEtablissement.cfd",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "formationEtablissement.dispositifId"
+    )
+    .leftJoin(
+      "familleMetier",
+      "familleMetier.cfdSpecialite",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "formation.codeNiveauDiplome"
+    )
+    .innerJoin("indicateurEntree", (join) =>
+      join
+        .onRef(
+          "formationEtablissement.id",
+          "=",
+          "indicateurEntree.formationEtablissementId"
+        )
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
+    )
+    .leftJoin("indicateurSortie", (join) =>
+      join
+        .onRef(
+          "formationEtablissement.id",
+          "=",
+          "indicateurSortie.formationEtablissementId"
+        )
+        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
+    )
+    .innerJoin(
+      "etablissement",
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
+    )
+    .leftJoin("indicateurEtablissement", (join) =>
+      join
+        .onRef("etablissement.UAI", "=", "indicateurEtablissement.UAI")
+        .on("indicateurEtablissement.millesime", "=", millesimeSortie)
+    )
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "etablissement.codeDepartement"
+    )
+    .selectAll("etablissement")
+    .selectAll("formation")
+    .select([
+      sql<number>`COUNT(*) OVER()`.as("count"),
+      "departement.libelle as departement",
+      "etablissement.UAI",
+      "libelleOfficielFamille",
+      "libelleDispositif",
+      "dispositifId",
+      "libelleNiveauDiplome",
+      "indicateurEntree.rentreeScolaire",
+      "indicateurEtablissement.valeurAjoutee",
+      "anneeDebut",
+      selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
+      effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
+        "effectif1"
+      ),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as(
+        "effectif2"
+      ),
+      effectifAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
+        "effectif3"
+      ),
+      capaciteAnnee({ alias: "indicateurEntree" }).as("capacite"),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
+        "capacite1"
+      ),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'1'` }).as(
+        "capacite2"
+      ),
+      capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
+        "capacite3"
+      ),
+      selectTauxPression("indicateurEntree").as("tauxPression"),
+    ])
+    .select((eb) =>
+      withInsertionReg({
+        eb,
+        millesimeSortie,
+        codeRegion: "ref",
+      }).as("tauxInsertion12mois")
+    )
+    .select((eb) =>
+      withPoursuiteReg({
+        eb,
+        millesimeSortie,
+        codeRegion: "ref",
+      }).as("tauxPoursuiteEtudes")
+    )
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("etablissement.codeRegion", "in", codeRegion);
+    })
+    .$call((q) => {
+      if (!codeAcademie) return q;
+      return q.where("etablissement.codeAcademie", "in", codeAcademie);
+    })
+    .$call((q) => {
+      if (!codeDepartement) return q;
+      return q.where("etablissement.codeDepartement", "in", codeDepartement);
+    })
+    .$call((q) => {
+      if (!cfd) return q;
+      return q.where("formation.codeFormationDiplome", "in", cfd);
+    })
+    .$call((q) => {
+      if (!commune) return q;
+      return q.where("etablissement.commune", "in", commune);
+    })
+    .$call((q) => {
+      if (!codeDispositif) return q;
+      return q.where("dispositif.codeDispositif", "in", codeDispositif);
+    })
+    .$call((q) => {
+      if (!codeDiplome) return q;
+      return q.where("dispositif.codeNiveauDiplome", "in", codeDiplome);
+    })
+    .$call((q) => {
+      if (!cfdFamille) return q;
+      return q.where("familleMetier.cfdFamille", "in", cfdFamille);
+    })
+    .$call((q) => {
+      if (!uai) return q;
+      return q.where("etablissement.UAI", "in", uai);
+    })
+    .$call((q) => {
+      if (!secteur) return q;
+      return q.where("etablissement.secteur", "in", secteur);
+    })
+    .where(
+      "codeFormationDiplome",
+      "not in",
+      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    )
+    .groupBy([
+      "formation.id",
+      "etablissement.id",
+      "departement.codeDepartement",
+      "libelleOfficielFamille",
+      "indicateurEntree.rentreeScolaire",
+      "indicateurEntree.formationEtablissementId",
+      "indicateurSortie.formationEtablissementId",
+      "formationEtablissement.id",
+      "indicateurSortie.millesimeSortie",
+      "dispositifId",
+      "libelleDispositif",
+      "libelleOfficielFamille",
+      "libelleNiveauDiplome",
+      "indicateurEtablissement.UAI",
+      "indicateurEtablissement.millesime",
+    ])
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
+        sql.ref(orderBy.column),
+        sql`${sql.raw(orderBy.order)} NULLS LAST`
+      );
+    })
+    .orderBy("etablissement.libelleEtablissement", "asc")
+    .orderBy("formation.libelleDiplome", "asc")
+    .orderBy("libelleNiveauDiplome", "asc")
+    .offset(offset)
+    .limit(limit)
+    .execute();
 
   return {
-    count: data[0]?.count ?? 0,
-    etablissements: data.map(cleanNull),
+    count: result[0]?.count ?? 0,
+    etablissements: result.map(cleanNull),
   };
 };
 

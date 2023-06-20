@@ -1,19 +1,12 @@
-import { RawBuilder, sql } from "kysely";
+import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-
-const effectifAnnee = (annee: RawBuilder<unknown>) => {
-  return sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs",${annee})), 'null')::INT`;
-};
-
-const capaciteAnnee = (annee: RawBuilder<unknown>) => {
-  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."capacites",${annee})), 'null')::INT`;
-};
-
-const premierVoeuxAnnee = (annee: RawBuilder<unknown>) => {
-  return sql`NULLIF((jsonb_extract_path("indicateurEntree"."premiersVoeux",${annee})), 'null')::INT`;
-};
+import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { selectTauxInsertion12moisAgg } from "../../queries/utils/tauxInsertion12mois";
+import { selectTauxPoursuiteAgg } from "../../queries/utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
 const getBaseQuery = ({
   codeRegion,
@@ -73,12 +66,10 @@ const getBaseQuery = ({
 
 export const queryFormations = async ({
   codeRegion,
-  UAI,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
-  UAI?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -89,7 +80,6 @@ export const queryFormations = async ({
   });
 
   const formations = await baseQuery
-
     .leftJoin("indicateurSortie as isp", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "isp.formationEtablissementId")
@@ -105,52 +95,26 @@ export const queryFormations = async ({
       "libelleDiplome",
       "formationEtablissement.dispositifId",
       "libelleDispositif",
+      "libelleNiveauDiplome",
       "formation.codeNiveauDiplome",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
-      sql<number>`(100 * sum(
-              case when ${capaciteAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )} is not null 
-              then ${effectifAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )} end)
-              / NULLIF(sum(${capaciteAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )}), 0))
-              `.as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee(
-        sql`"indicateurEntree"."anneeDebut"::text`
-      )})`.as("effectif"),
-      sql<number>`SUM(NULLIF((jsonb_extract_path("iep"."effectifs","iep"."anneeDebut"::text)), 'null')::INT)`.as(
+      selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
+        "effectif"
+      ),
+      sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
         "effectifPrecedent"
       ),
-      sql<number>`(100 * sum(
-              case when ${capaciteAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )} is not null 
-              then ${premierVoeuxAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )} end)
-              / NULLIF(sum(${capaciteAnnee(
-                sql`"indicateurEntree"."anneeDebut"::text`
-              )}), 0))
-            `.as("tauxPression"),
-      sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
-            `.as("tauxPoursuiteEtudes"),
-      sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
-            `.as("tauxInsertion12mois"),
-      sql<number>`(100 * SUM("isp"."nbInsertion12mois") / SUM("isp"."nbSortants"))
-            `.as("tauxInsertion12moisPrecedent"),
-      sql<number>`(100 * SUM("isp"."nbPoursuiteEtudes") / SUM("isp"."effectifSortie"))
-            `.as("tauxPoursuiteEtudesPrecedent"),
+      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+      selectTauxPoursuiteAgg("indicateurSortie").as("tauxPoursuiteEtudes"),
+      selectTauxPoursuiteAgg("isp").as("tauxPoursuiteEtudesPrecedent"),
+      selectTauxInsertion12moisAgg("indicateurSortie").as(
+        "tauxInsertion12mois"
+      ),
+      selectTauxInsertion12moisAgg("isp").as("tauxInsertion12moisPrecedent"),
     ])
-    .where("indicateurSortie.nbInsertion12mois", "is not", null)
-    .where("indicateurSortie.nbPoursuiteEtudes", "is not", null)
-    .having(
-      UAI
-        ? sql<boolean>`bool_or(etablissement."UAI" in (${sql.join(UAI)}))`
-        : sql<boolean>`true`
-    )
+    .having(selectTauxInsertion12moisAgg("indicateurSortie"), "is not", null)
+    .having(selectTauxPoursuiteAgg("indicateurSortie"), "is not", null)
     .groupBy([
       "formation.id",
       "indicateurEntree.rentreeScolaire",
@@ -180,21 +144,15 @@ export const queryStatsForCadran = async ({
 
   const stats = await baseQuery
     .select([
-      sql<number>`(100* SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
-    `.as("tauxPoursuiteEtudes"),
-      sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
-    `.as("tauxInsertion12mois"),
-      sql<number>`(100 * sum(
-        case when ${capaciteAnnee(sql`"anneeDebut"::text`)} is not null 
-        then ${effectifAnnee(sql`"anneeDebut"::text`)} end)
-        / NULLIF(sum(${capaciteAnnee(sql`"anneeDebut"::text`)}), 0))
-      `.as("tauxRemplissage"),
-      sql<number>`SUM(${effectifAnnee(sql`"anneeDebut"::text`)})`.as(
-        "effectif"
+      selectTauxPoursuiteAgg("indicateurSortie").as("tauxPoursuiteEtudes"),
+      selectTauxInsertion12moisAgg("indicateurSortie").as(
+        "tauxInsertion12mois"
       ),
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
-        "nbFormations"
-      ),
+      selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
+      `.as("effectif"),
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))
+      `.as("nbFormations"),
     ])
     .groupBy(["codeRegion"])
     .executeTakeFirst();

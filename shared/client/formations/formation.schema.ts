@@ -85,7 +85,6 @@ export const formationSchemas = {
   getDataForPanorama: {
     querystring: Type.Object({
       codeRegion: Type.String(),
-      UAI: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({
@@ -101,6 +100,7 @@ export const formationSchemas = {
             codeFormationDiplome: Type.String(),
             libelleDiplome: Type.String(),
             codeNiveauDiplome: Type.String(),
+            libelleNiveauDiplome: Type.Optional(Type.String()),
             dispositifId: Type.Optional(Type.String()),
             libelleDispositif: Type.Optional(Type.String()),
             nbEtablissement: Type.Number(),
@@ -114,18 +114,6 @@ export const formationSchemas = {
             tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
           })
         ),
-      }),
-    },
-  },
-  getFiltersForCadran: {
-    querystring: Type.Object({
-      codeRegion: Type.Optional(Type.String()),
-    }),
-    response: {
-      200: Type.Object({
-        filters: Type.Object({
-          diplomes: Type.Array(OptionSchema),
-        }),
       }),
     },
   },

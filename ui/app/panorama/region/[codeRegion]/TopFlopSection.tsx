@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import { FormationTooltipContent } from "./FormationTooltip";
+import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({
@@ -29,29 +29,23 @@ export const TopFlopSection = ({
     if (!cadranFormations) return;
     const filtered = cadranFormations.filter(
       (item) =>
-        !codeNiveauDiplome?.length ||
-        codeNiveauDiplome.includes(item.codeNiveauDiplome)
+        item.dispositifId &&
+        !["253", "240"].includes(item.dispositifId) &&
+        (!codeNiveauDiplome?.length ||
+          codeNiveauDiplome.includes(item.codeNiveauDiplome))
     );
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
-    const top = filtered
+    const sorted = filtered
       .slice()
       .sort((a, b) =>
         a.tauxInsertion12mois + a.tauxPoursuiteEtudes <
         b.tauxInsertion12mois + b.tauxPoursuiteEtudes
           ? 1
           : -1
-      )
-      .slice(0, Math.ceil(nbTopFlop));
+      );
 
-    const flop = filtered
-      .slice()
-      .sort((a, b) =>
-        a.tauxInsertion12mois + a.tauxPoursuiteEtudes >
-        b.tauxInsertion12mois + b.tauxPoursuiteEtudes
-          ? 1
-          : -1
-      )
-      .slice(0, Math.floor(nbTopFlop));
+    const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
+    const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
   }, [cadranFormations, codeNiveauDiplome]);
@@ -82,7 +76,7 @@ const TopFlopChart = ({
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
       <Text mb="4" color="grey" fontSize="sm" textAlign="right">
-        Taux d'emploi / Taux de poursuite d'études
+        Taux d'emploi + Taux de poursuite d'études
       </Text>
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
@@ -150,7 +144,7 @@ const TopItem = ({
             >
               {`${formation.tauxInsertion12mois.toFixed(
                 0
-              )}% / ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
+              )}% + ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
             </Flex>
           </PopoverTrigger>
         </Box>
