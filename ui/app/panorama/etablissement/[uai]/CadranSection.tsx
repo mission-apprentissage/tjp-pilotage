@@ -1,8 +1,6 @@
-import { InfoIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
-  Center,
   Container,
   Flex,
   Heading,
@@ -146,18 +144,6 @@ const FormationTooltipContent = ({
 
 const InfoTooltipContent = () => (
   <>
-    <Text mb="2" fontSize="sm" fontWeight="bold">
-      Effectif:
-    </Text>
-    <Flex align="center">
-      <Center p="4">
-        <InfoIcon fontSize={30} />
-      </Center>
-      <Text flex={1} ml="4" fontSize="sm">
-        Les formations inférieures à 20 élèves ne sont pas représentées dans ce
-        quadrant.
-      </Text>
-    </Flex>
     <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
       Légende:
     </Text>
