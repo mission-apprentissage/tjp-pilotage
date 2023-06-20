@@ -28,6 +28,7 @@ const EtablissementLineSchema = Type.Object({
   tauxPression: Type.Optional(Type.Number()),
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+  tauxInsertion12mois: Type.Optional(Type.Number()),
   valeurAjoutee: Type.Optional(Type.Number()),
 });
 

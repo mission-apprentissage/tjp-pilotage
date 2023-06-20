@@ -356,6 +356,10 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="tauxPoursuiteEtudes" />
                   {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
                 </Th>
                 <Th isNumeric>
                   {FORMATIONS_COLUMNS.deltaPoursuiteEtudes}

@@ -31,7 +31,7 @@ const ButtonContent = ({
 }) => {
   if (!selected.length) return <>{children}</>;
   if (selected.length === 1) return <>{selected[0]}</>;
-  return <>{selected.length} séléctionné</>;
+  return <>{selected.length} séléctionnés</>;
 };
 
 const Checkbox = ({
