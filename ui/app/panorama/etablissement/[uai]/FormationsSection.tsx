@@ -40,7 +40,7 @@ export const FormationsSection = ({
               <Tr>
                 <Th>Formation</Th>
                 <Th>Diplôme</Th>
-                <Th isNumeric>Effectifs</Th>
+                <Th isNumeric>Effectif</Th>
               </Tr>
             </Thead>
             <Tbody>

@@ -121,7 +121,7 @@ const FormationTooltipContent = ({
       />
       <InfoBlock
         mb="2"
-        label="Effectifs de l'établissement:"
+        label="Effectif de l'établissement:"
         value={formation.effectif ?? "-"}
       />
       <InfoBlock

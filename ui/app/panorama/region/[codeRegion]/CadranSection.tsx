@@ -186,22 +186,22 @@ export const CadranSection = ({
             >
               <SimpleGrid mt="12" columns={2} gap={4}>
                 <RadioCard
-                  label="Effectifs en hausse"
+                  label="Effectif en hausse"
                   value="effectif_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Effectifs en baisse"
+                  label="Effectif en baisse"
                   value="effectif_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Insertion en hausse"
+                  label="Tx d'emploi 12 mois en hausse"
                   value="insertion_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Insertion en baisse"
+                  label="Tx d'emploi 12 mois en baisse"
                   value="insertion_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
