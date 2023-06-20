@@ -85,7 +85,6 @@ export const formationSchemas = {
   getDataForPanorama: {
     querystring: Type.Object({
       codeRegion: Type.String(),
-      UAI: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({
