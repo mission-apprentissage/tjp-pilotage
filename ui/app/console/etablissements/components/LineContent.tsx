@@ -72,6 +72,9 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
+        <GraphWrapper value={line.tauxInsertion12mois} />
+      </Td>
+      <Td isNumeric>
         <GraphWrapper value={line.tauxPoursuiteEtudes} />
       </Td>
       <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
@@ -79,6 +82,7 @@ export const EtablissementLineContent = ({
       <Td>{line.UAI ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
+      <Td>{line.codeFormationDiplome ?? "-"}</Td>
     </>
   );
 };

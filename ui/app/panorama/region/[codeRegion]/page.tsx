@@ -4,10 +4,10 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api } from "../../../api.client";
+import { api } from "../../../../api.client";
+import { InfoSection } from "../../components/InfoSection";
 import { CadranSection } from "./CadranSection";
 import { FiltersSection } from "./FiltersSection";
-import { InfoSection } from "./InfoSection";
 import { RegionSection } from "./RegionSection";
 import { TopFlopSection } from "./TopFlopSection";
 
@@ -21,7 +21,7 @@ export default function Panorama({
   const router = useRouter();
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
@@ -42,10 +42,16 @@ export default function Panorama({
     { keepPreviousData: true, staleTime: 10000000 }
   );
 
-  const { data: filters } = useQuery(
-    ["filtersForPanorama", { codeRegion }],
-    api.getFiltersForPanorama({ query: { codeRegion } }).call,
-    { keepPreviousData: true, staleTime: 1000000000 }
+  const diplomeOptions = Object.values(
+    data?.formations.reduce((acc, cur) => {
+      return {
+        ...acc,
+        [cur.codeNiveauDiplome]: {
+          value: cur.codeNiveauDiplome,
+          label: cur.libelleNiveauDiplome as string,
+        },
+      };
+    }, {} as Record<string, { value: string; label: string }>) ?? {}
   );
 
   return (
@@ -58,7 +64,7 @@ export default function Panorama({
       />
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
-        diplomeOptions={filters?.filters.diplomes}
+        diplomeOptions={diplomeOptions}
       />
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}

@@ -18,4 +18,14 @@ export const createEtablissementClient = (instance: AxiosInstance) => ({
     url: "/etablissements/csv",
     instance,
   }),
+  getEtablissement: createClientMethod<typeof ROUTES_CONFIG.getEtablissement>({
+    method: "GET",
+    url: ({ params }) => `/etablissement/${params.uai}`,
+    instance,
+  }),
+  getRegionStats: createClientMethod<typeof ROUTES_CONFIG.getRegionStats>({
+    method: "GET",
+    url: ({ params }) => `/region/${params.codeRegion}`,
+    instance,
+  }),
 });

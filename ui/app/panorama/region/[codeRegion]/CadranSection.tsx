@@ -21,11 +21,21 @@ import {
   SliderTrack,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "./Cadran";
+import { Cadran } from "../../components/Cadran";
+import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormations } from "./type";
+
+const effectifSizes = [
+  { max: 50, size: 6 },
+  { max: 200, size: 10 },
+  { max: 500, size: 14 },
+  { max: 1000, size: 18 },
+  { max: 1000000, size: 22 },
+];
 
 const labelStyles = {
   mt: "-8",
@@ -55,7 +65,7 @@ const filterFormations = ({
       if (tendance === "insertion_hausse") {
         return (
           item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxInsertion12mois >= item.tauxInsertion12moisPrecedent
+          item.tauxInsertion12mois > item.tauxInsertion12moisPrecedent
         );
       }
       if (tendance === "insertion_baisse") {
@@ -67,7 +77,7 @@ const filterFormations = ({
       if (tendance === "poursuite_hausse") {
         return (
           item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes >= item.tauxInsertion12moisPrecedent
+          item.tauxPoursuiteEtudes > item.tauxInsertion12moisPrecedent
         );
       }
       if (tendance === "poursuite_baisse") {
@@ -80,7 +90,7 @@ const filterFormations = ({
         return (
           item.effectifPrecedent !== undefined &&
           item.effectif !== undefined &&
-          item.effectif >= item.effectifPrecedent
+          item.effectif > item.effectifPrecedent
         );
       }
       if (tendance === "effectif_baisse") {
@@ -138,9 +148,7 @@ export const CadranSection = ({
             Analyse des formations
           </Heading>
           <FormControl>
-            <FormLabel>
-              Sélectionner le curseur du seuil minimal en effectif
-            </FormLabel>
+            <FormLabel>Effectif minimum (en entrée)</FormLabel>
             <Slider
               mt="6"
               onChange={setEffectifMin}
@@ -178,22 +186,22 @@ export const CadranSection = ({
             >
               <SimpleGrid mt="12" columns={2} gap={4}>
                 <RadioCard
-                  label="Effectifs en hausse"
+                  label="Effectif en hausse"
                   value="effectif_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Effectifs en baisse"
+                  label="Effectif en baisse"
                   value="effectif_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Insertion en hausse"
+                  label="Tx d'emploi à 12 mois en hausse"
                   value="insertion_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Insertion en baisse"
+                  label="Tx d'emploi à 12 mois en baisse"
                   value="insertion_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
@@ -247,14 +255,18 @@ export const CadranSection = ({
                   meanPoursuite={meanPoursuite}
                   meanInsertion={meanInsertion}
                   data={filteredFormations}
+                  TooltipContent={FormationTooltipContent}
+                  InfoTootipContent={InfoTooltipContent}
+                  effectifSizes={effectifSizes}
                 />
               )}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>
-          <Text color="grey" textAlign="right" mt="4" fontSize="xs">
+          <Text color="grey" mt="4" fontSize="xs">
             Données Inser Jeunes produites par la DEPP, les formations
-            inférieures à 20 élèves ne sont pas représentées
+            inférieures à 20 sortants sur deux ans, ne sont pas représentées
+            dans ce quadrant pour des raisons statistiques
           </Text>
         </Box>
       </Stack>
@@ -306,3 +318,36 @@ const TendanceBaisseIcon = createIcon({
     />
   ),
 });
+
+const InfoTooltipContent = () => (
+  <>
+    <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
+      Légende:
+    </Text>
+    <VStack align="flex-start" spacing={2}>
+      {effectifSizes.map(({ max, size }, i) => (
+        <Flex key={max} align="center">
+          <Box
+            borderRadius={100}
+            width={`${size}px`}
+            height={`${size}px`}
+            mx={22 - size / 2}
+            border="1px solid black"
+          />
+          <Text flex={1} ml="4" fontSize="sm">
+            {max !== 1000000 && (
+              <>
+                Effectif {"<"} {max}
+              </>
+            )}
+            {max === 1000000 && (
+              <>
+                Effectif {">"} {effectifSizes[i - 1].max}
+              </>
+            )}
+          </Text>
+        </Flex>
+      ))}
+    </VStack>
+  </>
+);

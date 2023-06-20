@@ -12,9 +12,7 @@ import {
 import { useRouter } from "next/navigation";
 import { ApiType } from "shared";
 
-import { Breadcrumb } from "@/components/Breadcrumb";
-
-import { api } from "../../api.client";
+import { api } from "../../../api.client";
 
 export function PanoramaSelection({
   regionOptions,
@@ -24,7 +22,7 @@ export function PanoramaSelection({
   const router = useRouter();
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}`);
   };
 
   return (
@@ -36,12 +34,6 @@ export function PanoramaSelection({
       bg="#F9F8F6"
       maxWidth={"container.xl"}
     >
-      <Breadcrumb
-        pages={[
-          { title: "Accueil", to: "/" },
-          { title: "Panorama", to: "/panorama", active: true },
-        ]}
-      />
       <Flex align="center" direction="column">
         <FormControl margin="auto" maxW="300px">
           <FormLabel>Choisissez une région pour commencer</FormLabel>
