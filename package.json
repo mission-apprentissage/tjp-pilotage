@@ -8,8 +8,7 @@
   "private": true,
   "dependencies": {
     "eslint-plugin-react": "^7.32.2",
-    "global": "4.4.0",
-    "qs": "^6.11.1"
+    "global": "4.4.0"
   },
   "scripts": {
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",

@@ -24,6 +24,7 @@
     "next": "13.2.4",
     "next-plausible": "^3.7.2",
     "notion-client": "^6.16.0",
+    "qs": "^6.11.1",
     "react": "18.2.0",
     "react-dom": "18.2.0",
     "react-notion-x": "^6.16.0",
