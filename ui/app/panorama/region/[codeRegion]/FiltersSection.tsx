@@ -4,9 +4,11 @@ import { Multiselect } from "@/components/Multiselect";
 export const FiltersSection = ({
   diplomeOptions,
   onDiplomeChanged,
+  codeDiplome,
 }: {
   diplomeOptions?: { label: string; value: string }[];
   onDiplomeChanged?: (diplome: string[]) => void;
+  codeDiplome?: string[];
 }) => {
   return (
     <Container
@@ -24,6 +26,7 @@ export const FiltersSection = ({
           onChange={onDiplomeChanged}
           width={250}
           options={diplomeOptions}
+          value={codeDiplome ?? []}
         >
           Diplôme
         </Multiselect>

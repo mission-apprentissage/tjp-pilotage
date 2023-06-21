@@ -74,6 +74,7 @@ export default function Panorama({
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
         diplomeOptions={diplomeOptions}
+        codeDiplome={codeNiveauDiplome}
       />
       <RegionSection regionsStats={regionStats} />
       <CadranSection
