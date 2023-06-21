@@ -334,17 +334,19 @@ const findFiltersInDb = async ({
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
-    .where(inCodeAcademie)
-    .where(inCodeDepartement)
-    .where(inCommune)
     .execute();
 
   const academies = await base
     .select(["academie.libelle as label", "academie.codeAcademie as value"])
     .where("academie.codeAcademie", "is not", null)
-    .where(inCodeRegion)
-    .where(inCodeDepartement)
-    .where(inCommune)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
+        codeAcademie
+          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
+          : sql`true`,
+      ]);
+    })
     .execute();
 
   const departements = await base
@@ -353,9 +355,14 @@ const findFiltersInDb = async ({
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where(inCodeRegion)
-    .where(inCodeAcademie)
-    .where(inCommune)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
+        codeDepartement
+          ? eb.cmpr("departement.codeDepartement", "in", codeDepartement)
+          : sql`true`,
+      ]);
+    })
     .execute();
 
   const communes = await base
@@ -364,9 +371,12 @@ const findFiltersInDb = async ({
       "etablissement.commune as value",
     ])
     .where("etablissement.commune", "is not", null)
-    .where(inCodeRegion)
-    .where(inCodeAcademie)
-    .where(inCodeDepartement)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
+        commune ? eb.cmpr("etablissement.commune", "in", commune) : sql`true`,
+      ]);
+    })
     .execute();
 
   const diplomes = await base
@@ -375,8 +385,14 @@ const findFiltersInDb = async ({
       "niveauDiplome.codeNiveauDiplome as value",
     ])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where(inCfdFamille)
-    .where(inCfd)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCfd(eb)]),
+        codeDiplome
+          ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+          : sql`true`,
+      ]);
+    })
     .execute();
 
   const familles = await base
@@ -385,8 +401,14 @@ const findFiltersInDb = async ({
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
-    .where(inCfd)
-    .where(inCodeDiplome)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfd(eb), inCodeDiplome(eb)]),
+        cfdFamille
+          ? eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)
+          : sql`true`,
+      ]);
+    })
     .execute();
 
   const formations = await base
@@ -396,8 +418,12 @@ const findFiltersInDb = async ({
       "formation.codeFormationDiplome as value",
     ])
     .where("formation.codeFormationDiplome", "is not", null)
-    .where(inCfdFamille)
-    .where(inCodeDiplome)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`true`,
+      ]);
+    })
     .execute();
 
   return await {
