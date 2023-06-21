@@ -14,7 +14,9 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+import qs from "qs";
 import { Fragment, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
@@ -61,27 +63,39 @@ const fetchFormations = async (query: Query) =>
   api.getFormations({ query }).call();
 
 export default function Formations() {
-  const [page, setPage] = useState(0);
+  const router = useRouter();
+  const queryParams = useSearchParams();
+  const searchParams: {
+    filters?: Partial<Filters>;
+    order?: Partial<Order>;
+    page?: string;
+  } = qs.parse(queryParams.toString());
+  const setSearchParams = (params: {
+    filters?: typeof filters;
+    order?: typeof order;
+    page?: typeof page;
+  }) => {
+    router.replace(
+      location.pathname +
+        "?" +
+        qs.stringify({ ...searchParams, ...params }, { encode: false })
+    );
+  };
 
-  const [order, setOrder] = useState<{
-    orderBy?: Query["orderBy"];
-    order?: Query["order"];
-  }>({
-    order: "asc",
-  });
-
-  const [filters, setFilters] = useState<Filters>({});
+  const filters = searchParams.filters ?? {};
+  const order = searchParams.order ?? { order: "asc" };
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["formations", page, order, filters],
+    queryKey: ["formations", filters, order, page],
     queryFn: () =>
       fetchFormations({
-        ...filters,
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
+        ...filters,
       }),
   });
 
@@ -90,12 +104,14 @@ export default function Formations() {
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("formations:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
-      setOrder({ order: "desc", orderBy: column });
+      setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
     }
-    setOrder({
-      order: order?.order === "asc" ? "desc" : "asc",
-      orderBy: column,
+    setSearchParams({
+      order: {
+        order: order?.order === "asc" ? "desc" : "asc",
+        orderBy: column,
+      },
     });
   };
 
@@ -103,8 +119,11 @@ export default function Formations() {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    setPage(0);
-    setFilters({ ...filters, [type]: value });
+    console.log(type, value);
+    setSearchParams({
+      page: 0,
+      filters: { ...filters, [type]: value },
+    });
   };
 
   const filterTracker = (filterName: keyof Filters) => () => {
@@ -122,7 +141,7 @@ export default function Formations() {
       if (!historiqueId) return;
       return (
         await fetchFormations({
-          ...filters,
+          ...searchParams,
           cfd: [historiqueId?.cfd],
           codeDispositif: historiqueId?.codeDispositif
             ? [historiqueId?.codeDispositif]
@@ -142,18 +161,23 @@ export default function Formations() {
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Select
           placeholder="Toutes les régions"
-          // mr="auto"
           width="52"
           variant="input"
           size="sm"
           onChange={(e) => {
-            if (e.target.value === "") {
-              setPage(0);
-              setFilters({});
-            } else {
-              handleFilters("codeRegion", [e.target.value]);
-            }
+            setSearchParams({
+              page: 0,
+              filters: {
+                ...filters,
+                codeAcademie: undefined,
+                codeDepartement: undefined,
+                commune: undefined,
+                codeRegion:
+                  e.target.value === "" ? undefined : [e.target.value],
+              },
+            });
           }}
+          value={filters.codeRegion?.[0] ?? ""}
         >
           {data?.filters.regions.map((item) => (
             <option key={item.value} value={item.value}>
@@ -161,41 +185,42 @@ export default function Formations() {
             </option>
           ))}
         </Select>
-        {filters.codeRegion !== undefined && (
-          <>
-            <Multiselect
-              onClose={filterTracker("codeAcademie")}
-              width="52"
-              onChange={(selected) => handleFilters("codeAcademie", selected)}
-              options={data?.filters.academies}
-            >
-              Académie
-            </Multiselect>
-            <Multiselect
-              onClose={filterTracker("codeDepartement")}
-              width="52"
-              onChange={(selected) =>
-                handleFilters("codeDepartement", selected)
-              }
-              options={data?.filters.departements}
-            >
-              Département
-            </Multiselect>
-            <Multiselect
-              onClose={filterTracker("commune")}
-              width="52"
-              onChange={(selected) => handleFilters("commune", selected)}
-              options={data?.filters.communes}
-            >
-              Commune
-            </Multiselect>
-          </>
-        )}
+        <Multiselect
+          disabled={!filters.codeRegion}
+          onClose={filterTracker("codeAcademie")}
+          width="52"
+          onChange={(selected) => handleFilters("codeAcademie", selected)}
+          options={data?.filters.academies}
+          value={filters.codeAcademie ?? []}
+        >
+          Académie
+        </Multiselect>
+        <Multiselect
+          disabled={!filters.codeRegion}
+          onClose={filterTracker("codeDepartement")}
+          width="52"
+          onChange={(selected) => handleFilters("codeDepartement", selected)}
+          options={data?.filters.departements}
+          value={filters.codeDepartement ?? []}
+        >
+          Département
+        </Multiselect>
+        <Multiselect
+          disabled={!filters.codeRegion}
+          onClose={filterTracker("commune")}
+          width="52"
+          onChange={(selected) => handleFilters("commune", selected)}
+          options={data?.filters.communes}
+          value={filters.commune ?? []}
+        >
+          Commune
+        </Multiselect>
         <Multiselect
           onClose={filterTracker("codeDiplome")}
           width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
+          value={filters.codeDiplome ?? []}
         >
           Diplôme
         </Multiselect>
@@ -204,6 +229,7 @@ export default function Formations() {
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
+          value={filters.cfdFamille ?? []}
         >
           Famille
         </Multiselect>
@@ -212,6 +238,7 @@ export default function Formations() {
           width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
+          value={filters.cfd ?? []}
         >
           Formation
         </Multiselect>
@@ -449,7 +476,7 @@ export default function Formations() {
         page={page}
         pageSize={PAGE_SIZE}
         count={data?.count}
-        onPageChange={setPage}
+        onPageChange={(newPage) => setSearchParams({ page: newPage })}
       />
     </>
   );

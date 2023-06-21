@@ -7,7 +7,7 @@ import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 
 import { theme } from "../theme/theme";
 import { Header } from "./components/Header";
@@ -40,7 +40,7 @@ export default function RootLayoutClient({
   children: React.ReactNode;
 }) {
   const tracking = useTracking();
-  const queryClient = new QueryClient();
+  const [queryClient] = useState(() => new QueryClient());
 
   return (
     <html lang="fr">

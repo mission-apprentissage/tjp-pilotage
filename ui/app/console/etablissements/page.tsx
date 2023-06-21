@@ -13,7 +13,9 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+import qs from "qs";
 import { Fragment, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ETABLISSEMENTS_COLUMNS } from "shared";
@@ -64,16 +66,28 @@ const fetchEtablissements = async (query: Query) =>
   api.getEtablissements({ query }).call();
 
 export default function Etablissements() {
-  const [page, setPage] = useState(0);
+  const router = useRouter();
+  const queryParams = useSearchParams();
+  const searchParams: {
+    filters?: Partial<Filters>;
+    order?: Partial<Order>;
+    page?: string;
+  } = qs.parse(queryParams.toString());
+  const setSearchParams = (params: {
+    filters?: typeof filters;
+    order?: typeof order;
+    page?: typeof page;
+  }) => {
+    router.replace(
+      location.pathname +
+        "?" +
+        qs.stringify({ ...searchParams, ...params }, { encode: false })
+    );
+  };
 
-  const [order, setOrder] = useState<{
-    orderBy?: Query["orderBy"];
-    order?: Query["order"];
-  }>({
-    order: "asc",
-  });
-
-  const [filters, setFilters] = useState<Filters>({});
+  const filters = searchParams.filters ?? {};
+  const order = searchParams.order ?? { order: "asc" };
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
@@ -94,12 +108,14 @@ export default function Etablissements() {
     trackEvent("etablissements:ordre", { props: { colonne: column } });
 
     if (order?.orderBy !== column) {
-      setOrder({ order: "desc", orderBy: column });
+      setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
     }
-    setOrder({
-      order: order?.order === "asc" ? "desc" : "asc",
-      orderBy: column,
+    setSearchParams({
+      order: {
+        order: order?.order === "asc" ? "desc" : "asc",
+        orderBy: column,
+      },
     });
   };
 
@@ -108,8 +124,10 @@ export default function Etablissements() {
     value: Filters[keyof Filters]
   ) => {
     unstable_batchedUpdates(() => {
-      setPage(0);
-      setFilters({ ...filters, [type]: value });
+      setSearchParams({
+        page: 0,
+        filters: { ...filters, [type]: value },
+      });
     });
   };
 
@@ -151,6 +169,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("codeRegion", selected)}
           options={data?.filters.regions}
+          value={filters.codeRegion ?? []}
         >
           Toutes les régions
         </Multiselect>
@@ -159,6 +178,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
+          value={filters.codeAcademie ?? []}
         >
           Académie
         </Multiselect>
@@ -167,6 +187,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
+          value={filters.codeDepartement ?? []}
         >
           Département
         </Multiselect>
@@ -175,6 +196,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
+          value={filters.commune ?? []}
         >
           Commune
         </Multiselect>
@@ -183,6 +205,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
+          value={filters.uai ?? []}
         >
           Etablissement
         </Multiselect>
@@ -194,6 +217,7 @@ export default function Etablissements() {
             { label: "PR", value: "PR" },
             { label: "PU", value: "PU" },
           ]}
+          value={filters.secteur ?? []}
         >
           Secteur
         </Multiselect>
@@ -202,6 +226,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
+          value={filters.codeDiplome ?? []}
         >
           Diplôme
         </Multiselect>
@@ -210,6 +235,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
+          value={filters.cfdFamille ?? []}
         >
           Famille
         </Multiselect>
@@ -218,6 +244,7 @@ export default function Etablissements() {
           width="52"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
+          value={filters.cfd ?? []}
         >
           Formation
         </Multiselect>
@@ -471,7 +498,7 @@ export default function Etablissements() {
         page={page}
         pageSize={PAGE_SIZE}
         count={data?.count}
-        onPageChange={setPage}
+        onPageChange={(newPage) => setSearchParams({ page: newPage })}
       />
     </>
   );

@@ -16,7 +16,6 @@ import {
   memo,
   ReactNode,
   useMemo,
-  useReducer,
   useRef,
   useState,
 } from "react";
@@ -121,30 +120,6 @@ const CheckboxIcon = ({ checked }: { checked: boolean }) => {
   );
 };
 
-function useController<A, I>(
-  reducer: (s: I, _: A) => I,
-  initial: I,
-  effect?: (v: I) => void
-) {
-  const [state, dispatch] = useReducer(reducer, initial);
-
-  const stateRef = useRef(initial);
-  stateRef.current = state;
-
-  const effectRef = useRef(effect);
-  effectRef.current = effect;
-
-  const controller = useRef([
-    state,
-    (v: A) => {
-      const val = reducer(stateRef.current, v);
-      dispatch(v);
-      effectRef.current?.(val);
-    },
-  ] as const);
-  return [state, controller.current[1]] as const;
-}
-
 export const Multiselect = chakra(
   ({
     children,
@@ -152,33 +127,31 @@ export const Multiselect = chakra(
     onChange,
     onClose,
     className,
+    disabled,
+    value,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
     onClose?: () => void;
     className?: string;
+    disabled?: boolean;
+    value: string[];
   }) => {
-    const [selected, dispatch] = useController(
-      (
-        state,
-        {
-          checked,
-          value,
-          label,
-        }: { checked: boolean; value: string; label: string }
-      ) => {
-        const newSelected = new Map(state);
-        if (checked) {
-          newSelected.set(value, label);
-          return newSelected;
-        }
-        newSelected.delete(value);
-        return newSelected;
-      },
-      new Map(),
-      (value) => onChange?.(Array.from(value.keys()))
-    );
+    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
+
+    const map = useMemo(() => {
+      return new Map(
+        value.map((val) => {
+          return [
+            val,
+            (stateValue.current?.get?.(val) ||
+              options.find(({ value }) => val === value)?.label) ??
+              val,
+          ];
+        })
+      );
+    }, [value, options, stateValue.current]);
 
     const [search, setSearch] = useState("");
 
@@ -190,12 +163,10 @@ export const Multiselect = chakra(
     const [preparedOptions, setPreparedOptions] = useState<typeof options>([]);
 
     const prepareOptions = () => {
-      const selectedOptions = Array.from(selected.entries()).map(
+      const selectedOptions = Array.from(map.entries()).map(
         ([value, label]) => ({ label, value })
       );
-      const restOptions = options.filter(
-        (option) => !selected.get(option.value)
-      );
+      const restOptions = options.filter((option) => !map.get(option.value));
       setPreparedOptions(selectedOptions.concat(restOptions));
     };
 
@@ -210,7 +181,7 @@ export const Multiselect = chakra(
     const filteredOptions = useMemo(filterOptions, [
       preparedOptions,
       search,
-      selected,
+      map,
     ]);
     const ref = useRef<HTMLDivElement>(null);
     const inputRef = useRef<HTMLInputElement>(null);
@@ -234,13 +205,15 @@ export const Multiselect = chakra(
         closeOnSelect={false}
       >
         <MenuButton
+          as={Button}
           size="sm"
+          isDisabled={disabled}
+          pointerEvents={disabled ? "none" : "unset"}
           className={className}
           variant="input"
-          as={Button}
           rightIcon={<ChevronDownIcon />}
         >
-          <ButtonContent selected={Array.from(selected.values())}>
+          <ButtonContent selected={Array.from(map.values())}>
             {children}
           </ButtonContent>
         </MenuButton>
@@ -269,8 +242,17 @@ export const Multiselect = chakra(
               {filteredOptions.slice(0, limit).map(({ value, label }) => (
                 <InputWapper
                   key={value}
-                  checked={!!selected.get(value)}
-                  onChange={dispatch}
+                  checked={!!map.get(value)}
+                  onChange={({ checked, label, value }) => {
+                    const newMap = new Map(map);
+                    if (checked) {
+                      newMap.set(value, label);
+                    } else {
+                      newMap.delete(value);
+                    }
+                    stateValue.current = newMap;
+                    onChange?.(Array.from(newMap.keys()));
+                  }}
                   value={value}
                 >
                   {label}
