@@ -344,7 +344,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
         codeAcademie
           ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
-          : sql`true`,
+          : sql`false`,
       ]);
     })
     .execute();
@@ -360,7 +360,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
         codeDepartement
           ? eb.cmpr("departement.codeDepartement", "in", codeDepartement)
-          : sql`true`,
+          : sql`false`,
       ]);
     })
     .execute();
@@ -374,7 +374,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
-        commune ? eb.cmpr("etablissement.commune", "in", commune) : sql`true`,
+        commune ? eb.cmpr("etablissement.commune", "in", commune) : sql`false`,
       ]);
     })
     .execute();
@@ -390,7 +390,7 @@ const findFiltersInDb = async ({
         eb.and([inCfdFamille(eb), inCfd(eb)]),
         codeDiplome
           ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
-          : sql`true`,
+          : sql`false`,
       ]);
     })
     .execute();
@@ -406,7 +406,7 @@ const findFiltersInDb = async ({
         eb.and([inCfd(eb), inCodeDiplome(eb)]),
         cfdFamille
           ? eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)
-          : sql`true`,
+          : sql`false`,
       ]);
     })
     .execute();
@@ -421,7 +421,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
-        cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`true`,
+        cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`false`,
       ]);
     })
     .execute();

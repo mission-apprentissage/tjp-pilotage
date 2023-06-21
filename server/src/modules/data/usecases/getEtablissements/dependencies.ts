@@ -1,8 +1,7 @@
-import { sql } from "kysely";
-import { SQL } from "zapatos/db";
+import { ExpressionBuilder, sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
-import { db, pool } from "../../../../db/zapatos";
+import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
@@ -239,6 +238,7 @@ const findFiltersInDb = async ({
   cfdFamille,
   codeDiplome,
   cfd,
+  uai,
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -248,208 +248,216 @@ const findFiltersInDb = async ({
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
+  uai?: string[];
 }) => {
-  const from = db.sql`
-    FROM "formation"
-    LEFT JOIN "formationEtablissement"
-        ON "formationEtablissement"."cfd" = "formation"."codeFormationDiplome"
-    LEFT JOIN dispositif
-        ON "dispositif"."codeDispositif" = "formationEtablissement"."dispositifId"
-    LEFT JOIN "familleMetier" 
-        ON "formation"."codeFormationDiplome" = "familleMetier"."cfdSpecialite"
-    LEFT JOIN "niveauDiplome"
-        ON "niveauDiplome"."codeNiveauDiplome" = formation."codeNiveauDiplome"
-    LEFT JOIN "etablissement"
-        ON "etablissement"."UAI" = "formationEtablissement"."UAI"
-    LEFT JOIN "region"
-        ON "etablissement"."codeRegion" = "region"."codeRegion"
-    LEFT JOIN "departement"
-        ON "etablissement"."codeDepartement" = "departement"."codeDepartement"
-    LEFT JOIN "academie"
-        ON "etablissement"."codeAcademie" = "academie"."codeAcademie"
-    WHERE "codeFormationDiplome" NOT IN (SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`;
+  const base = kdb
+    .selectFrom("formation")
+    .leftJoin(
+      "formationEtablissement",
+      "formationEtablissement.cfd",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "formationEtablissement.dispositifId"
+    )
+    .leftJoin(
+      "familleMetier",
+      "familleMetier.cfdSpecialite",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "formation.codeNiveauDiplome"
+    )
+    .leftJoin(
+      "etablissement",
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
+    )
+    .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "etablissement.codeDepartement"
+    )
+    .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
+    .where(
+      "codeFormationDiplome",
+      "not in",
+      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    )
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc");
 
-  const cfdFamilleCondition = cfdFamille && {
-    cfdFamille: db.sql`"familleMetier"."cfdFamille" IN (${db.vals(
-      cfdFamille
-    )})`,
+  const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
+    if (!codeAcademie) return sql<true>`true`;
+    return eb.cmpr("academie.codeAcademie", "in", codeAcademie);
+  };
+  const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
+    if (!codeDepartement) return sql<true>`true`;
+    return eb.cmpr("departement.codeDepartement", "in", codeDepartement);
   };
 
-  const codeAcademieConditon = codeAcademie && {
-    codeAcademie: db.sql`"academie"."codeAcademie" IN (${db.vals(
-      codeAcademie
-    )})`,
+  const inCommune = (eb: ExpressionBuilder<DB, "etablissement">) => {
+    if (!commune) return sql<true>`true`;
+    return eb.cmpr("etablissement.commune", "in", commune);
   };
 
-  const codeDepartementCondition = codeDepartement && {
-    codeDepartement: db.sql`"departement"."codeDepartement" IN (${db.vals(
-      codeDepartement
-    )})`,
+  const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
+    if (!codeRegion) return sql<true>`true`;
+    return eb.cmpr("region.codeRegion", "in", codeRegion);
   };
 
-  const communeConditon = commune && {
-    commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
+  const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
+    if (!cfdFamille) return sql<true>`true`;
+    return eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille);
   };
 
-  const codeRegionConditon = codeRegion && {
-    codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
+  const inCfd = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!cfd) return sql<true>`true`;
+    return eb.cmpr("formation.codeFormationDiplome", "in", cfd);
   };
 
-  const cfdConditon = cfd && {
-    cfd: db.sql`"formation"."codeFormationDiplome" IN (${db.vals(cfd)})`,
+  const inCodeDiplome = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!codeDiplome) return sql<true>`true`;
+    return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
-  const codeDiplomeConditon = codeDiplome && {
-    codeNiveauDiplome: db.sql`"formation"."codeNiveauDiplome" IN (${db.vals(
-      codeDiplome
-    )})`,
-  };
+  const regions = await base
+    .select(["region.libelleRegion as label", "region.codeRegion as value"])
+    .where("region.codeRegion", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeAcademie(eb), inCodeDepartement(eb), inCommune(eb)]),
+        codeAcademie
+          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
+          : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const regions = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "region"."libelleRegion" as label, "region"."codeRegion" as value
-    ${from}
-    AND ${{
-      codeRegion: db.sql`"region"."codeRegion" IS NOT NULL`,
-      ...codeAcademieConditon,
-      ...codeDepartementCondition,
-      ...communeConditon,
-    }}
-    ORDER BY "region"."libelleRegion" ASC`.run(pool);
+  const academies = await base
+    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .where("academie.codeAcademie", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
+        codeAcademie
+          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
+          : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const academies = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "academie"."libelle" as label, "academie"."codeAcademie" as value
-    ${from}
-    AND ${{
-      codeAcademie: db.sql`"academie"."codeAcademie" IS NOT NULL`,
-      ...codeRegionConditon,
-      ...codeDepartementCondition,
-      ...(commune && {
-        commune: db.sql`"etablissement"."commune" IN (${db.vals(commune)})`,
-      }),
-    }}
-    ORDER BY "academie"."libelle" ASC`.run(pool);
+  const departements = await base
+    .select([
+      "departement.libelle as label",
+      "departement.codeDepartement as value",
+    ])
+    .where("departement.codeDepartement", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
+        codeDepartement
+          ? eb.cmpr("departement.codeDepartement", "in", codeDepartement)
+          : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const departements = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "departement"."libelle" as label, "departement"."codeDepartement" as value
-    ${from}
-    AND ${{
-      codeDepartement: db.sql`"departement"."codeDepartement" IS NOT NULL`,
-      ...(codeRegion && {
-        codeRegion: db.sql`"region"."codeRegion" IN (${db.vals(codeRegion)})`,
-      }),
-      ...codeAcademieConditon,
-      ...communeConditon,
-    }}
-    ORDER BY "departement"."libelle" ASC`.run(pool);
+  const communes = await base
+    .select([
+      "etablissement.commune as label",
+      "etablissement.commune as value",
+    ])
+    .where("etablissement.commune", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
+        commune ? eb.cmpr("etablissement.commune", "in", commune) : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const communes = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "etablissement"."commune" as label, "etablissement"."commune" as value
-    ${from}
-    AND ${{
-      commune: db.sql`"etablissement"."commune" IS NOT NULL`,
-      ...codeRegionConditon,
-      ...codeAcademieConditon,
-      ...codeDepartementCondition,
-    }}
-    ORDER BY "etablissement"."commune" ASC`.run(pool);
+  const etablissements = await base
+    .select([
+      "etablissement.libelleEtablissement as label",
+      "etablissement.UAI as value",
+    ])
+    .where("etablissement.UAI", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeAcademie(eb),
+          inCodeDepartement(eb),
+          inCommune(eb),
+        ]),
+        uai ? eb.cmpr("etablissement.UAI", "in", uai) : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const etablissements = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "etablissement"."libelleEtablissement" as label, "etablissement"."UAI" as value
-  ${from}
-  AND ${{
-    UAI: db.sql`"etablissement"."UAI" IS NOT NULL`,
-    ...(cfdFamille && {
-      cfdFamille: db.sql`"familleMetier"."cfdFamille" IN (${db.vals(
+  const diplomes = await base
+    .select([
+      "niveauDiplome.libelleNiveauDiplome as label",
+      "niveauDiplome.codeNiveauDiplome as value",
+    ])
+    .where("niveauDiplome.codeNiveauDiplome", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCfd(eb)]),
+        codeDiplome
+          ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+          : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const familles = await base
+    .select([
+      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.cfdFamille as value",
+    ])
+    .where("familleMetier.cfdFamille", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfd(eb), inCodeDiplome(eb)]),
         cfdFamille
-      )})`,
-    }),
-    ...codeRegionConditon,
-    ...codeAcademieConditon,
-    ...codeDepartementCondition,
-    ...communeConditon,
-  }}
-  AND ${{ UAI: db.sql`"etablissement"."UAI" IS NOT NULL` }}
-  ORDER BY "etablissement"."libelleEtablissement" ASC`.run(pool);
+          ? eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)
+          : sql`false`,
+      ]);
+    })
+    .execute();
 
-  const diplomes = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "niveauDiplome"."libelleNiveauDiplome" as label, "niveauDiplome"."codeNiveauDiplome" as value
-    ${from}
-    AND ${{
-      codeNiveauDiplome: db.sql`"niveauDiplome"."codeNiveauDiplome" IS NOT NULL`,
-      ...cfdFamilleCondition,
-      ...cfdConditon,
-    }}
-    ORDER BY "niveauDiplome"."libelleNiveauDiplome" ASC`.run(pool);
-
-  const familles = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT "familleMetier"."libelleOfficielFamille" as label, "familleMetier"."cfdFamille" as "value"
-    ${from}
-    AND ${{
-      cfdFamille: db.sql`"familleMetier"."cfdFamille" IS NOT NULL`,
-      ...cfdConditon,
-      ...codeDiplomeConditon,
-    }}
-    ORDER BY "familleMetier"."libelleOfficielFamille" ASC`.run(pool);
-
-  const formations = db.sql<
-    SQL,
-    {
-      label: string;
-      value: string;
-    }[]
-  >`SELECT DISTINCT ("formation"."libelleDiplome" || ' (' || "niveauDiplome"."libelleNiveauDiplome" || ')') as label, "formation"."codeFormationDiplome" as value
-  ${from}
-  AND ${{
-    codeFormationDiplome: db.sql`"formation"."codeFormationDiplome" IS NOT NULL`,
-    ...cfdFamilleCondition,
-    ...codeDiplomeConditon,
-  }}
-  ORDER BY label ASC`.run(pool);
+  const formations = await base
+    .select([
+      sql`CONCAT("formation"."libelleDiplome", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      `.as("label"),
+      "formation.codeFormationDiplome as value",
+    ])
+    .where("formation.codeFormationDiplome", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`false`,
+      ]);
+    })
+    .execute();
 
   return await {
     regions: (await regions).map(cleanNull),
     departements: (await departements).map(cleanNull),
     academies: (await academies).map(cleanNull),
     communes: (await communes).map(cleanNull),
+    etablissements: (await etablissements).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
-    etablissements: (await etablissements).map(cleanNull),
   };
 };
 
