@@ -74,6 +74,10 @@ export interface Formation {
   codeNiveauDiplome: string;
   dateOuverture: Timestamp;
   dateFermeture: Timestamp | null;
+  CPC: string | null;
+  CPCSecteur: string | null;
+  CPCSousSecteur: string | null;
+  libelleFiliere: string | null;
 }
 
 export interface FormationEtablissement {

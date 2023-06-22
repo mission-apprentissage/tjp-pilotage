@@ -1,10 +1,10 @@
 import { inject } from "injecti";
 import { DateTime } from "luxon";
 
-import { Departement } from "../../../entities/Departement";
-import { Etablissement } from "../../../entities/Etablissement";
-import { LyceesACCELine } from "../../../files/LyceesACCELine";
-import { dependencies } from "../dependencies.di";
+import { Departement } from "../../../../entities/Departement";
+import { Etablissement } from "../../../../entities/Etablissement";
+import { LyceesACCELine } from "../../../../files/LyceesACCELine";
+import { dependencies } from "../../dependencies.di";
 
 export const [importEtablissement] = inject(
   {
