@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 
 import { getUaiData } from "../../../../services/inserJeunesApi/inserJeunes.api";
-import { cacheIj } from "./cacheIj.dep";
+import { cacheIj } from "./cacheIJ.dep";
 
 export const [fetchIJ] = inject(
   { getUaiData, cacheIj },
