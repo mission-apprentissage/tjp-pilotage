@@ -6,7 +6,6 @@ import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
-import { importIJRawData } from "./usecases/importIJRawData/importIJRawData.usecase";
 import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
@@ -28,7 +27,7 @@ cli.command("importDepp").action(async () => {
 
 cli
   .command("importFiles")
-  .argument("[filename]>")
+  .argument("[filename]")
   .action(async (filename: string) => {
     const getImport = (type: string, year?: string) =>
       importRawFile({
@@ -41,7 +40,6 @@ cli
         ),
       });
     const actions = {
-      ij: importIJRawData,
       regroupements: () => getImport("regroupements"),
       attractivite_capacite_2022: () =>
         getImport("attractivite_capacite", "2022"),
@@ -86,6 +84,13 @@ cli.command("truncateImports").action(async () => {
     )
     .run(pool);
 });
+
+cli
+  .command("importFormations")
+  .argument("[clearIjCache]", "if true, refetch the ij data", false)
+  .action(async (clearIjCache: boolean) => {
+    await importFormationEtablissements({ clearIjCache });
+  });
 
 cli
   .command("import")
