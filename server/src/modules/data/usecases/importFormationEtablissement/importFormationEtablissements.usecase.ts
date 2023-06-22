@@ -1,5 +1,6 @@
 import { inject } from "injecti";
 
+import { kdb } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import {
@@ -10,6 +11,7 @@ import {
 import { dependencies } from "./dependencies.di";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { logger } from "./importLogger";
+import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
 import { importIndicateurEtablissement } from "./steps/importIndicateurEtablissement/importIndicateurEtablissement.step";
@@ -30,6 +32,9 @@ const findDiplomesProfessionnels = ({
   });
 };
 
+const clearIjCache = () =>
+  kdb.deleteFrom("rawData").where("type", "=", "ij").execute();
+
 export const [importFormationEtablissements] = inject(
   {
     findFormations: dependencies.findFormations,
@@ -42,10 +47,14 @@ export const [importFormationEtablissements] = inject(
     getCfdDispositifs,
     importFormation,
     findDiplomesProfessionnels,
+    fetchIJ,
+    clearIjCache,
   },
   (deps) => {
     logger.reset();
-    return async () => {
+    return async ({ clearIjCache = true }: { clearIjCache?: boolean } = {}) => {
+      if (clearIjCache) deps.clearIjCache();
+
       await streamIt(
         async (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
@@ -78,6 +87,10 @@ export const [importFormationEtablissements] = inject(
               for (const enseignement of enseignements) {
                 const { uai, anneesEnseignement, voie } = enseignement;
                 if (!processedUais.includes(uai)) {
+                  if (clearIjCache) {
+                    await deps.fetchIJ({ uai });
+                  }
+
                   await deps.importEtablissement({ uai });
                   for (const millesime of MILLESIMES_IJ) {
                     await deps.importIndicateurEtablissement({
