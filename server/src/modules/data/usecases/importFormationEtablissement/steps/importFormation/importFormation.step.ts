@@ -1,12 +1,15 @@
+import { inject } from "injecti";
 import { DateTime } from "luxon";
 
-import { Formation } from "../../entities/Formation";
-import { DiplomeProfessionnelLine } from "../../files/DiplomesProfessionnels";
-import { NFormationDiplomeLine } from "../../files/NFormationDiplome";
-import { streamIt } from "../../utils/streamIt";
-import { importFormationsDeps } from "./importFormations.deps";
+import { Formation } from "../../../../entities/Formation";
+import { DiplomeProfessionnelLine } from "../../../../files/DiplomesProfessionnels";
+import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
+import { getCfdDispositifs } from "../../../getCfdRentrees/getCfdRentrees.usecase";
+import { importFormationHistorique } from "../importFormationsHistoriques/importFormationsHistoriques.step";
+import { createFormation } from "./createFormation";
+import { findNFormationDiplome } from "./findNFormationDiplome";
+import { findRegroupements } from "./findRegroupements.dep";
 import { overrides } from "./overrides";
-import { importFormationHistoriqueFactory } from "./steps/importFormationsHistoriques.step";
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
   const cfdOverride =
@@ -55,48 +58,56 @@ const formatDiplomeProfessionel = (
   return formattedLine;
 };
 
-export const importFormationsFactory =
-  ({
-    createFormation = importFormationsDeps.createFormation,
-    findDiplomesProfessionnels = importFormationsDeps.findDiplomesProfessionnels,
-    findNFormationDiplome = importFormationsDeps.findNFormationDiplome,
-    importFormationHistorique = importFormationHistoriqueFactory({}),
-  } = {}) =>
-  async () => {
-    console.log(`Import des formations`);
-    let count = 0;
+export const [importFormation] = inject(
+  {
+    findNFormationDiplome,
+    createFormation,
+    importFormationHistorique,
+    getCfdDispositifs,
+    findRegroupements,
+  },
+  (deps) =>
+    async ({
+      diplomeProfessionnelLine,
+    }: {
+      diplomeProfessionnelLine: DiplomeProfessionnelLine;
+    }) => {
+      const diplomeProfessionel = formatDiplomeProfessionel(
+        diplomeProfessionnelLine
+      );
+      const cfd = diplomeProfessionel?.["Code diplôme"];
+      if (!cfd) return;
 
-    await streamIt(
-      (offset) => findDiplomesProfessionnels({ offset, limit: 20 }),
-      async (item) => {
-        const diplomeProfessionel = formatDiplomeProfessionel(item);
-        if (!diplomeProfessionel) return;
-        const cfd = diplomeProfessionel["Code diplôme"];
+      const nFormationDiplome = await deps.findNFormationDiplome({ cfd });
+      if (!nFormationDiplome) return;
 
-        const nFormationDiplome = await findNFormationDiplome({ cfd });
-        if (!nFormationDiplome) return;
+      const dispositifs = await deps.getCfdDispositifs({ cfd });
+      const mefstats = dispositifs.flatMap((dispositif) =>
+        dispositif.anneesDispositif.map((item) => item.mefstat)
+      );
+      const regroupement = await deps.findRegroupements({ mefstats });
 
-        const formation = createFormationFromDiplomeProfessionel({
-          nFormationDiplome,
-          diplomeProfessionel,
-        });
-        if (!formation) return;
-        count++;
-        process.stdout.write(`\r${count}`);
-        await createFormation(formation);
-        await importFormationHistorique({ cfd });
-      }
-    );
+      const formation = createFormationFromDiplomeProfessionel({
+        nFormationDiplome,
+        diplomeProfessionel,
+        regroupement,
+      });
+      if (!formation) return;
 
-    process.stdout.write(`\r${count} formations ajoutées ou mises à jour\n`);
-  };
+      await deps.createFormation(formation);
+      await deps.importFormationHistorique({ cfd });
+      return formation;
+    }
+);
 
 const createFormationFromDiplomeProfessionel = ({
   diplomeProfessionel,
   nFormationDiplome,
+  regroupement,
 }: {
   diplomeProfessionel: CompleteDiplomePorfessionelLine;
   nFormationDiplome: NFormationDiplomeLine;
+  regroupement?: string;
 }): Omit<Formation, "id"> | undefined => {
   return {
     codeFormationDiplome: diplomeProfessionel["Code diplôme"],
@@ -116,7 +127,13 @@ const createFormationFromDiplomeProfessionel = ({
           "dd/LL/yyyy"
         ).toJSDate()
       : undefined,
+    libelleFiliere: regroupement,
+    CPC: diplomeProfessionel["Commission professionnelle consultative"]
+      ?.replace("CPC", "")
+      .trim(),
+    CPCSecteur: diplomeProfessionel["Secteur"]?.replace("CPC", "").trim(),
+    CPCSousSecteur: diplomeProfessionel["Sous-secteur"]
+      ?.replace("CPC", "")
+      .trim(),
   };
 };
-
-export const importFormations = importFormationsFactory({});

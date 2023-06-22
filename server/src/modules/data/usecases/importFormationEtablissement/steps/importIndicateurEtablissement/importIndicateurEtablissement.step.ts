@@ -1,8 +1,8 @@
 import { inject } from "injecti";
 
-import { IndicateurEtablissement } from "../../../entities/IndicateurEtablissement";
-import { R } from "../../../services/inserJeunesApi/formatUaiData";
-import { dependencies } from "../dependencies.di";
+import { IndicateurEtablissement } from "../../../../entities/IndicateurEtablissement";
+import { R } from "../../../../services/inserJeunesApi/formatUaiData";
+import { dependencies } from "../../dependencies.di";
 
 const toIndicateurEtablissement = ({
   deppEtablissement,

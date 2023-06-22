@@ -1,12 +1,12 @@
 import { inject } from "injecti";
 
-import { IndicateurEntree } from "../../../entities/IndicateurEntree";
+import { IndicateurEntree } from "../../../../entities/IndicateurEntree";
 import {
   AnneeDispositif,
   AnneeEnseignement,
-} from "../../getCfdRentrees/getCfdRentrees.usecase";
-import { dependencies } from "../dependencies.di";
-import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "./getIndicateurAffelnet.step";
+} from "../../../getCfdRentrees/getCfdRentrees.usecase";
+import { dependencies } from "../../dependencies.di";
+import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
 
 export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
   {
