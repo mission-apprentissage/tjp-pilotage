@@ -38,6 +38,10 @@ const FiltersSchema = Type.Object({
   codeDispositif: Type.Optional(Type.Array(Type.String())),
   cfdFamille: Type.Optional(Type.Array(Type.String())),
   rentreeScolaire: Type.Optional(Type.Array(Type.String())),
+  CPC: Type.Optional(Type.Array(Type.String())),
+  CPCSecteur: Type.Optional(Type.Array(Type.String())),
+  CPCSousSecteur: Type.Optional(Type.Array(Type.String())),
+  libelleFiliere: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(
     Type.KeyOf(
@@ -70,6 +74,10 @@ export const formationSchemas = {
           diplomes: Type.Array(OptionSchema),
           familles: Type.Array(OptionSchema),
           formations: Type.Array(OptionSchema),
+          CPCs: Type.Array(OptionSchema),
+          CPCSecteurs: Type.Array(OptionSchema),
+          CPCSousSecteurs: Type.Array(OptionSchema),
+          libelleFilieres: Type.Array(OptionSchema),
         }),
         formations: Type.Array(FormationLineSchema),
       }),
