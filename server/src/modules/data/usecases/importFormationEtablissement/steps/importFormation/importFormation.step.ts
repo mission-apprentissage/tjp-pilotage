@@ -114,8 +114,9 @@ const createFormationFromDiplomeProfessionel = ({
     rncp: diplomeProfessionel["Code RNCP"]
       ? parseInt(diplomeProfessionel["Code RNCP"])
       : undefined,
-    libelleDiplome:
-      diplomeProfessionel["Intitulé de la spécialité (et options)"],
+    libelleDiplome: diplomeProfessionel[
+      "Intitulé de la spécialité (et options)"
+    ].replace(/"/g, ""),
     codeNiveauDiplome: diplomeProfessionel["Code diplôme"].slice(0, 3),
     dateOuverture: DateTime.fromFormat(
       nFormationDiplome.DATE_OUVERTURE,
@@ -128,12 +129,15 @@ const createFormationFromDiplomeProfessionel = ({
         ).toJSDate()
       : undefined,
     libelleFiliere: regroupement,
-    CPC: diplomeProfessionel["Commission professionnelle consultative"]
-      ?.replace("CPC", "")
-      .trim(),
-    CPCSecteur: diplomeProfessionel["Secteur"]?.replace("CPC", "").trim(),
-    CPCSousSecteur: diplomeProfessionel["Sous-secteur"]
-      ?.replace("CPC", "")
-      .trim(),
+    CPC:
+      diplomeProfessionel["Commission professionnelle consultative"]
+        ?.replace("CPC", "")
+        .trim() || undefined,
+    CPCSecteur:
+      diplomeProfessionel["Secteur"]?.replace("Secteur", "").trim() ||
+      undefined,
+    CPCSousSecteur:
+      diplomeProfessionel["Sous-secteur"]?.replace("Sous-secteur", "").trim() ||
+      undefined,
   };
 };
