@@ -55,7 +55,7 @@ const toAncienneFormation = ({
   return {
     nouveauCFD: cfd,
     codeFormationDiplome: ancienCfd,
-    libelleDiplome: ancienneFormationData.LIBELLE_LONG_200,
+    libelleDiplome: ancienneFormationData.LIBELLE_LONG_200.replace(/"/g, ""),
     codeNiveauDiplome: ancienCfd.slice(0, 3),
     dateOuverture: DateTime.fromFormat(
       ancienneFormationData.DATE_OUVERTURE,
