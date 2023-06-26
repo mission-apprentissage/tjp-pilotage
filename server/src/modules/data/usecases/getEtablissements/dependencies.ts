@@ -497,7 +497,7 @@ const findFiltersInDb = async ({
     .where("formation.CPCSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([inCfdFamille, inCodeDiplome].map((item) => item(eb))),
         CPCSecteur
           ? eb.cmpr("formation.CPCSecteur", "in", CPCSecteur)
           : sql`false`,
@@ -511,30 +511,30 @@ const findFiltersInDb = async ({
       "formation.CPCSousSecteur as value",
     ])
     .where("formation.CPCSousSecteur", "is not", null)
-    .where((eb) => {
-      return eb.or([
+    .where((eb) =>
+      eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
         CPCSousSecteur
           ? eb.cmpr("formation.CPCSousSecteur", "in", CPCSousSecteur)
           : sql`false`,
-      ]);
-    })
+      ])
+    )
     .execute();
 
-  const libelleFilieres = await base
+  const libelleFilieres = base
     .select([
       "formation.libelleFiliere as label",
       "formation.libelleFiliere as value",
     ])
     .where("formation.libelleFiliere", "is not", null)
-    .where((eb) => {
-      return eb.or([
+    .where((eb) =>
+      eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
         libelleFiliere
           ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
           : sql`false`,
-      ]);
-    })
+      ])
+    )
     .execute();
 
   return await {

@@ -286,7 +286,7 @@ export default function Etablissements() {
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
-          Libellé filière
+          Filière
         </Multiselect>
       </Flex>
 
@@ -474,6 +474,28 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="codeFormationDiplome" />
                   {ETABLISSEMENTS_COLUMNS.codeFormationDiplome}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
+                  <OrderIcon {...order} column="CPC" />
+                  {ETABLISSEMENTS_COLUMNS.CPC}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
+                  <OrderIcon {...order} column="CPCSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.CPCSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("CPCSousSecteur")}
+                >
+                  <OrderIcon {...order} column="CPCSousSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.CPCSousSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleFiliere")}
+                >
+                  <OrderIcon {...order} column="libelleFiliere" />
+                  {ETABLISSEMENTS_COLUMNS.libelleFiliere}
                 </Th>
               </Tr>
             </Thead>
