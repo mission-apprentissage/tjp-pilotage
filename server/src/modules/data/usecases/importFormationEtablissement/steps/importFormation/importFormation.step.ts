@@ -1,4 +1,5 @@
 import { inject } from "injecti";
+import _ from "lodash";
 import { DateTime } from "luxon";
 
 import { Formation } from "../../../../entities/Formation";
@@ -6,16 +7,19 @@ import { DiplomeProfessionnelLine } from "../../../../files/DiplomesProfessionne
 import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
 import { getCfdDispositifs } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 import { importFormationHistorique } from "../importFormationsHistoriques/importFormationsHistoriques.step";
-import { createFormation } from "./createFormation";
-import { findNFormationDiplome } from "./findNFormationDiplome";
+import { createFormation } from "./createFormation.dep";
+import { findNFormationDiplome } from "./findNFormationDiplome.dep";
 import { findRegroupements } from "./findRegroupements.dep";
 import { overrides } from "./overrides";
 
+const getLineOverride = (line: DiplomeProfessionnelLine) => {
+  return overrides[
+    `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
+  ];
+};
+
 const formatCFD = (line: DiplomeProfessionnelLine) => {
-  const cfdOverride =
-    overrides[
-      `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
-    ]?.cfd;
+  const cfdOverride = getLineOverride(line)?.["Code diplôme"];
   if (cfdOverride) return cfdOverride;
 
   if (!line["Code diplôme"]) return;
@@ -26,10 +30,7 @@ const formatCFD = (line: DiplomeProfessionnelLine) => {
 };
 
 const formatRNCP = (line: DiplomeProfessionnelLine) => {
-  const rncpOverride =
-    overrides[
-      `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
-    ]?.rncp;
+  const rncpOverride = getLineOverride(line)?.["Code RNCP"];
   if (rncpOverride) return rncpOverride;
 
   if (!line["Code RNCP"]) return;
@@ -54,8 +55,15 @@ const formatDiplomeProfessionel = (
     "Code diplôme": formatCFD(line),
     "Code RNCP": formatRNCP(line),
   };
-  if (!isCompleteDiplomePorfessionelLine(formattedLine)) return;
-  return formattedLine;
+  const overridedLine = {
+    ...formattedLine,
+    ..._.pickBy(
+      getLineOverride(line),
+      (val) => _.isString(val) && val.trim() !== ""
+    ),
+  };
+  if (!isCompleteDiplomePorfessionelLine(overridedLine)) return;
+  return overridedLine;
 };
 
 export const [importFormation] = inject(
