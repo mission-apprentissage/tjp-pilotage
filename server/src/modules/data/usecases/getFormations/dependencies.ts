@@ -363,6 +363,16 @@ const findFiltersInDb = async ({
     return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
+  const inCPC = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!CPC) return sql<true>`true`;
+    return eb.cmpr("formation.CPC", "in", CPC);
+  };
+
+  const inCPCSecteur = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!CPCSecteur) return sql<true>`true`;
+    return eb.cmpr("formation.CPCSecteur", "in", CPCSecteur);
+  };
+
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
@@ -463,7 +473,7 @@ const findFiltersInDb = async ({
     .where("formation.CPC", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([]),
         CPC ? eb.cmpr("formation.CPC", "in", CPC) : sql`false`,
       ]);
     })
@@ -474,7 +484,7 @@ const findFiltersInDb = async ({
     .where("formation.CPCSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([inCPC(eb)]),
         CPCSecteur
           ? eb.cmpr("formation.CPCSecteur", "in", CPCSecteur)
           : sql`false`,
@@ -490,7 +500,7 @@ const findFiltersInDb = async ({
     .where("formation.CPCSousSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([inCPC(eb), inCPCSecteur(eb)]),
         CPCSousSecteur
           ? eb.cmpr("formation.CPCSousSecteur", "in", CPCSousSecteur)
           : sql`false`,
@@ -506,7 +516,7 @@ const findFiltersInDb = async ({
     .where("formation.libelleFiliere", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([]),
         libelleFiliere
           ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
           : sql`false`,
