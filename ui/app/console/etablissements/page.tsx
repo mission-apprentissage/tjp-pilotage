@@ -4,6 +4,7 @@ import {
   Box,
   Center,
   Flex,
+  Select,
   Spinner,
   Table,
   TableContainer,
@@ -168,16 +169,34 @@ export default function Etablissements() {
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
-        <Multiselect
-          onClose={filterTracker("codeRegion")}
+        <Select
+          placeholder="Toutes les régions"
           width="52"
-          onChange={(selected) => handleFilters("codeRegion", selected)}
-          options={data?.filters.regions}
-          value={filters.codeRegion ?? []}
+          variant="input"
+          size="sm"
+          onChange={(e) => {
+            setSearchParams({
+              page: 0,
+              filters: {
+                ...filters,
+                codeAcademie: undefined,
+                codeDepartement: undefined,
+                commune: undefined,
+                codeRegion:
+                  e.target.value === "" ? undefined : [e.target.value],
+              },
+            });
+          }}
+          value={filters.codeRegion?.[0] ?? ""}
         >
-          Toutes les régions
-        </Multiselect>
+          {data?.filters.regions.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("codeAcademie")}
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
@@ -187,6 +206,7 @@ export default function Etablissements() {
           Académie
         </Multiselect>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("codeDepartement")}
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
@@ -196,6 +216,7 @@ export default function Etablissements() {
           Département
         </Multiselect>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("commune")}
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
