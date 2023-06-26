@@ -30,6 +30,10 @@ const EtablissementLineSchema = Type.Object({
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion12mois: Type.Optional(Type.Number()),
   valeurAjoutee: Type.Optional(Type.Number()),
+  CPC: Type.Optional(Type.String()),
+  CPCSecteur: Type.Optional(Type.String()),
+  CPCSousSecteur: Type.Optional(Type.String()),
+  libelleFiliere: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({
@@ -44,6 +48,10 @@ const FiltersSchema = Type.Object({
   rentreeScolaire: Type.Optional(Type.Array(Type.String())),
   secteur: Type.Optional(Type.Array(Type.String())),
   uai: Type.Optional(Type.Array(Type.String())),
+  CPC: Type.Optional(Type.Array(Type.String())),
+  CPCSecteur: Type.Optional(Type.Array(Type.String())),
+  CPCSousSecteur: Type.Optional(Type.Array(Type.String())),
+  libelleFiliere: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(Type.Omit(EtablissementLineSchema, []))),
 });
@@ -69,6 +77,10 @@ export const etablissementSchemas = {
           familles: Type.Array(OptionSchema),
           formations: Type.Array(OptionSchema),
           etablissements: Type.Array(OptionSchema),
+          CPCs: Type.Array(OptionSchema),
+          CPCSecteurs: Type.Array(OptionSchema),
+          CPCSousSecteurs: Type.Array(OptionSchema),
+          libelleFilieres: Type.Array(OptionSchema),
         }),
         etablissements: Type.Array(EtablissementLineSchema),
       }),

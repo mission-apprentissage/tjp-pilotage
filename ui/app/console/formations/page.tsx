@@ -44,6 +44,10 @@ type Filters = Pick<
   | "codeDiplome"
   | "codeRegion"
   | "commune"
+  | "CPC"
+  | "CPCSecteur"
+  | "CPCSousSecteur"
+  | "libelleFiliere"
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
@@ -242,6 +246,42 @@ export default function Formations() {
         >
           Formation
         </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPC")}
+          width="52"
+          onChange={(selected) => handleFilters("CPC", selected)}
+          options={data?.filters.CPCs}
+          value={filters.CPC ?? []}
+        >
+          CPC
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPCSecteur")}
+          width="52"
+          onChange={(selected) => handleFilters("CPCSecteur", selected)}
+          options={data?.filters.CPCSecteurs}
+          value={filters.CPCSecteur ?? []}
+        >
+          CPC Secteur
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPCSousSecteur")}
+          width="52"
+          onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
+          options={data?.filters.CPCSousSecteurs}
+          value={filters.CPCSousSecteur ?? []}
+        >
+          CPC Sous Secteur
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("libelleFiliere")}
+          width="52"
+          onChange={(selected) => handleFilters("libelleFiliere", selected)}
+          options={data?.filters.libelleFilieres}
+          value={filters.libelleFiliere ?? []}
+        >
+          Filière
+        </Multiselect>
       </Flex>
 
       <Flex direction="column" flex={1} position="relative" minH="0">
@@ -415,6 +455,28 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="codeFormationDiplome" />
                   {FORMATIONS_COLUMNS.codeFormationDiplome}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
+                  <OrderIcon {...order} column="CPC" />
+                  {FORMATIONS_COLUMNS.CPC}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
+                  <OrderIcon {...order} column="CPCSecteur" />
+                  {FORMATIONS_COLUMNS.CPCSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("CPCSousSecteur")}
+                >
+                  <OrderIcon {...order} column="CPCSousSecteur" />
+                  {FORMATIONS_COLUMNS.CPCSousSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleFiliere")}
+                >
+                  <OrderIcon {...order} column="libelleFiliere" />
+                  {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
               </Tr>
             </Thead>
