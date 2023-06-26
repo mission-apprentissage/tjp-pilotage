@@ -26,6 +26,10 @@ const findEtablissementsInDb = async ({
   orderBy,
   uai,
   secteur,
+  CPC,
+  CPCSecteur,
+  CPCSousSecteur,
+  libelleFiliere,
 }: {
   offset?: number;
   limit?: number;
@@ -41,6 +45,10 @@ const findEtablissementsInDb = async ({
   cfdFamille?: string[];
   uai?: string[];
   secteur?: string[];
+  CPC?: string[];
+  CPCSecteur?: string[];
+  CPCSousSecteur?: string[];
+  libelleFiliere?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
@@ -188,6 +196,22 @@ const findEtablissementsInDb = async ({
       if (!secteur) return q;
       return q.where("etablissement.secteur", "in", secteur);
     })
+    .$call((q) => {
+      if (!CPC) return q;
+      return q.where("formation.CPC", "in", CPC);
+    })
+    .$call((q) => {
+      if (!CPCSecteur) return q;
+      return q.where("formation.CPCSecteur", "in", CPCSecteur);
+    })
+    .$call((q) => {
+      if (!CPCSousSecteur) return q;
+      return q.where("formation.CPCSousSecteur", "in", CPCSousSecteur);
+    })
+    .$call((q) => {
+      if (!libelleFiliere) return q;
+      return q.where("formation.libelleFiliere", "in", libelleFiliere);
+    })
     .where(
       "codeFormationDiplome",
       "not in",
@@ -239,6 +263,10 @@ const findFiltersInDb = async ({
   codeDiplome,
   cfd,
   uai,
+  CPC,
+  CPCSecteur,
+  CPCSousSecteur,
+  libelleFiliere,
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -249,6 +277,10 @@ const findFiltersInDb = async ({
   cfd?: string[];
   cfdFamille?: string[];
   uai?: string[];
+  CPC?: string[];
+  CPCSecteur?: string[];
+  CPCSousSecteur?: string[];
+  libelleFiliere?: string[];
 }) => {
   const base = kdb
     .selectFrom("formation")
@@ -327,17 +359,19 @@ const findFiltersInDb = async ({
     return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
+  const inCPC = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!CPC) return sql<true>`true`;
+    return eb.cmpr("formation.CPC", "in", CPC);
+  };
+
+  const inCPCSecteur = (eb: ExpressionBuilder<DB, "formation">) => {
+    if (!CPCSecteur) return sql<true>`true`;
+    return eb.cmpr("formation.CPCSecteur", "in", CPCSecteur);
+  };
+
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([inCodeAcademie(eb), inCodeDepartement(eb), inCommune(eb)]),
-        codeAcademie
-          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
-          : sql`false`,
-      ]);
-    })
     .execute();
 
   const academies = await base
@@ -449,6 +483,62 @@ const findFiltersInDb = async ({
     })
     .execute();
 
+  const CPCs = await base
+    .select(["formation.CPC as label", "formation.CPC as value"])
+    .where("formation.CPC", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        CPC ? eb.cmpr("formation.CPC", "in", CPC) : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const CPCSecteurs = await base
+    .select(["formation.CPCSecteur as label", "formation.CPCSecteur as value"])
+    .where("formation.CPCSecteur", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCPC(eb)]),
+        CPCSecteur
+          ? eb.cmpr("formation.CPCSecteur", "in", CPCSecteur)
+          : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const CPCSousSecteurs = await base
+    .select([
+      "formation.CPCSousSecteur as label",
+      "formation.CPCSousSecteur as value",
+    ])
+    .where("formation.CPCSousSecteur", "is not", null)
+    .where((eb) =>
+      eb.or([
+        eb.and([inCPC(eb), inCPCSecteur(eb)]),
+        CPCSousSecteur
+          ? eb.cmpr("formation.CPCSousSecteur", "in", CPCSousSecteur)
+          : sql`false`,
+      ])
+    )
+    .execute();
+
+  const libelleFilieres = base
+    .select([
+      "formation.libelleFiliere as label",
+      "formation.libelleFiliere as value",
+    ])
+    .where("formation.libelleFiliere", "is not", null)
+    .where((eb) =>
+      eb.or([
+        eb.and([]),
+        libelleFiliere
+          ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
+          : sql`false`,
+      ])
+    )
+    .execute();
+
   return await {
     regions: (await regions).map(cleanNull),
     departements: (await departements).map(cleanNull),
@@ -458,6 +548,10 @@ const findFiltersInDb = async ({
     diplomes: (await diplomes).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
+    CPCs: (await CPCs).map(cleanNull),
+    CPCSecteurs: (await CPCSecteurs).map(cleanNull),
+    CPCSousSecteurs: (await CPCSousSecteurs).map(cleanNull),
+    libelleFilieres: (await libelleFilieres).map(cleanNull),
   };
 };
 

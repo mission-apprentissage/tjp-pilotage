@@ -15,5 +15,8 @@ export const FORMATIONS_COLUMNS = {
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
   codeFormationDiplome: "CodeDiplome",
-  decrochage: "Décrochage",
+  CPC: "CPC",
+  CPCSecteur: "CPCSecteur",
+  CPCSousSecteur: "CPCSousSecteur",
+  libelleFiliere: "Filière",
 } as const;

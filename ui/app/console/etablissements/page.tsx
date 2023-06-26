@@ -4,6 +4,7 @@ import {
   Box,
   Center,
   Flex,
+  Select,
   Spinner,
   Table,
   TableContainer,
@@ -50,6 +51,10 @@ type Filters = Pick<
   | "commune"
   | "uai"
   | "secteur"
+  | "CPC"
+  | "CPCSecteur"
+  | "CPCSousSecteur"
+  | "libelleFiliere"
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
@@ -164,16 +169,34 @@ export default function Etablissements() {
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
-        <Multiselect
-          onClose={filterTracker("codeRegion")}
+        <Select
+          placeholder="Toutes les régions"
           width="52"
-          onChange={(selected) => handleFilters("codeRegion", selected)}
-          options={data?.filters.regions}
-          value={filters.codeRegion ?? []}
+          variant="input"
+          size="sm"
+          onChange={(e) => {
+            setSearchParams({
+              page: 0,
+              filters: {
+                ...filters,
+                codeAcademie: undefined,
+                codeDepartement: undefined,
+                commune: undefined,
+                codeRegion:
+                  e.target.value === "" ? undefined : [e.target.value],
+              },
+            });
+          }}
+          value={filters.codeRegion?.[0] ?? ""}
         >
-          Toutes les régions
-        </Multiselect>
+          {data?.filters.regions.map((item) => (
+            <option key={item.value} value={item.value}>
+              {item.label}
+            </option>
+          ))}
+        </Select>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("codeAcademie")}
           width="52"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
@@ -183,6 +206,7 @@ export default function Etablissements() {
           Académie
         </Multiselect>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("codeDepartement")}
           width="52"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
@@ -192,6 +216,7 @@ export default function Etablissements() {
           Département
         </Multiselect>
         <Multiselect
+          disabled={!filters.codeRegion}
           onClose={filterTracker("commune")}
           width="52"
           onChange={(selected) => handleFilters("commune", selected)}
@@ -247,6 +272,42 @@ export default function Etablissements() {
           value={filters.cfd ?? []}
         >
           Formation
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPC")}
+          width="52"
+          onChange={(selected) => handleFilters("CPC", selected)}
+          options={data?.filters.CPCs}
+          value={filters.CPC ?? []}
+        >
+          CPC
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPCSecteur")}
+          width="52"
+          onChange={(selected) => handleFilters("CPCSecteur", selected)}
+          options={data?.filters.CPCSecteurs}
+          value={filters.CPCSecteur ?? []}
+        >
+          CPC Secteur
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("CPCSousSecteur")}
+          width="52"
+          onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
+          options={data?.filters.CPCSousSecteurs}
+          value={filters.CPCSousSecteur ?? []}
+        >
+          CPC Sous Secteur
+        </Multiselect>
+        <Multiselect
+          onClose={filterTracker("libelleFiliere")}
+          width="52"
+          onChange={(selected) => handleFilters("libelleFiliere", selected)}
+          options={data?.filters.libelleFilieres}
+          value={filters.libelleFiliere ?? []}
+        >
+          Filière
         </Multiselect>
       </Flex>
 
@@ -434,6 +495,28 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="codeFormationDiplome" />
                   {ETABLISSEMENTS_COLUMNS.codeFormationDiplome}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
+                  <OrderIcon {...order} column="CPC" />
+                  {ETABLISSEMENTS_COLUMNS.CPC}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
+                  <OrderIcon {...order} column="CPCSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.CPCSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("CPCSousSecteur")}
+                >
+                  <OrderIcon {...order} column="CPCSousSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.CPCSousSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleFiliere")}
+                >
+                  <OrderIcon {...order} column="libelleFiliere" />
+                  {ETABLISSEMENTS_COLUMNS.libelleFiliere}
                 </Th>
               </Tr>
             </Thead>

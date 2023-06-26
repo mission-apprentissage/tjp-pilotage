@@ -5,4 +5,7 @@ export type DiplomeProfessionnelLine = {
   "Première session": string;
   "Dernière session"?: string;
   Diplôme: string;
+  "Commission professionnelle consultative"?: string;
+  Secteur?: string;
+  "Sous-secteur"?: string;
 };

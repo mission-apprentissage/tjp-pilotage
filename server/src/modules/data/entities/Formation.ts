@@ -6,6 +6,10 @@ export type Formation = {
   codeNiveauDiplome: string;
   dateOuverture: Date;
   dateFermeture?: Date;
+  CPC?: string;
+  CPCSecteur?: string;
+  CPCSousSecteur?: string;
+  libelleFiliere?: string;
 };
 
 export type AncienneFormation = Formation & { nouveauCFD: string };

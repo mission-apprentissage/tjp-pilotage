@@ -78,6 +78,10 @@ export const FormationLineContent = ({
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
       <Td>{line.codeFormationDiplome ?? "-"}</Td>
+      <Td>{line.CPC ?? "-"}</Td>
+      <Td>{line.CPCSecteur ?? "-"}</Td>
+      <Td>{line.CPCSousSecteur ?? "-"}</Td>
+      <Td>{line.libelleFiliere ?? "-"}</Td>
     </>
   );
 };
