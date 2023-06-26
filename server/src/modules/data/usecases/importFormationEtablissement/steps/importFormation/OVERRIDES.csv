@@ -1,38 +1,38 @@
-diplome;libelle;cfd;rncp
-Baccalauréat professionnel;Transport par câbles et remontées mécaniques;;
-Brevet de technicien supérieur;Communication;32032002;7481
-Brevet professionnel;Tailleur de pierres monuments historiques;45023201;36849
-Certificat d'aptitude professionnelle;Transport par câbles et remontées mécaniques;50025134;681
-Mention complémentaire de niveau 3;Bijoux de mode;;
-Mention complémentaire de niveau 3;Vendeur-Conseil en alimentation;1022106;37105
-Mention complémentaire de niveau 4;Sommellerie;1033410;6985
-Baccalauréat professionnel;Métiers de l'entretien des textiles, option A : blanchisserie;40024005;35807
-Baccalauréat professionnel;Métiers de l'entretien des textiles, option B : pressing;40024006;35807
-Baccalauréat professionnel;Technicien en réalisation de produits mécaniques, option Réalisation et maintenance des outillages;40025013;35697
-Baccalauréat professionnel;Technicien en réalisation de produits mécaniques, option Réalisation et suivi de productions;40025014;35697
-Brevet de technicien supérieur;Commerce international;32031215;35800
-Brevet de technicien supérieur;Conseil et commercialisation de solutions techniques;32031216;35801
-Brevet de technicien supérieur;Collaborateur juriste notarial;32034502;36685
-Diplôme;Traceur en construction navale;42025404;
-Brevet professionnel;Blanchisseur;45024004;24746
-certificat (autre que diplôme);Certificat de préposé au tir;50023114;
-Certificat d'aptitude professionnelle;Peintre applicateur de revêtements;50023327;35196
-Certificat d'aptitude professionnelle;Menuisier fabricant;50023447;36112
-Certificat d'aptitude professionnelle;Métiers de l’entretien des textiles, option B : pressing;50024008;35808
-Certificat d'aptitude professionnelle;Conducteur d'engins : travaux publics et carrières;50023118;4463
-Certificat d'aptitude professionnelle;Etancheur du bâtiment et des travaux publics;50023321;1141
-Certificat d'aptitude professionnelle;Menuisier aluminium-verre;50023322;814
-Mention complémentaire de niveau 3;Maintenance des équipements thermiques individuels;1022701;730
-Mention complémentaire de niveau 3;Plâtrier;1023302;740
-Mention complémentaire de niveau 3;Zingueur;1023202;744
-Mention complémentaire de niveau 4;Encadrement secteur sportif option activités physiques pour tous;1033502;36328
-Mention complémentaire de niveau 4;Encadrement secteur sportif option activités aquatiques et de la natation;1033503;36328
-Mention complémentaire de niveau 4;Encadrement secteur sportif option activités de la forme - cours collectifs;1033504;36328
-Mention complémentaire de niveau 4;Encadrement secteur sportif option activités de la forme - haltérophilie, musculation;1033505;36328
-Brevet de technicien supérieur;Motorisation toutes énergies;32025219;36966
-Brevet de technicien supérieur;Services et prestations des secteurs sanitaire et social;32033002;5297
-Brevet de technicien supérieur;Economie sociale familiale;32033206;7570
-Brevet des métiers d'arts;Orfèvrerie option monture - tournure;40122319;
-Brevet des métiers d'arts;Verrier décorateur;40122409;799
-Brevet des métiers d'arts;Souffleur de verre;40122410;799
-Brevet des métiers d'arts;Orfèvrerie option gravures - ciselure;40132207;807
+Diplôme;Libellé;Code RNCP;Code diplôme;Commission professionnelle consultative;Secteur;Sous-secteur
+Baccalauréat professionnel;Transport par câbles et remontées mécaniques;;;;;
+Brevet de technicien supérieur;Communication;7481;32032002;CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur
+Brevet professionnel;Tailleur de pierres monuments historiques;36849;45023201;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics
+Certificat d'aptitude professionnelle;Transport par câbles et remontées mécaniques;681;50025134;CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique
+Mention complémentaire de niveau 3;Bijoux de mode;37381;1022307;CPC;Secteur;Sous-secteur
+Mention complémentaire de niveau 3;Vendeur-Conseil en alimentation;37105;1022106;CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur
+Mention complémentaire de niveau 4;Sommellerie;6985;1033410;CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur
+Baccalauréat professionnel;Métiers de l'entretien des textiles, option A : blanchisserie;35807;40024005;CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur
+Baccalauréat professionnel;Métiers de l'entretien des textiles, option B : pressing;35807;40024006;CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur
+Baccalauréat professionnel;Technicien en réalisation de produits mécaniques, option Réalisation et maintenance des outillages;35697;40025013;CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux
+Baccalauréat professionnel;Technicien en réalisation de produits mécaniques, option Réalisation et suivi de productions;35697;40025014;CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux
+Brevet de technicien supérieur;Commerce international;35800;32031215;CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur
+Brevet de technicien supérieur;Conseil et commercialisation de solutions techniques;35801;32031216;CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur
+Brevet de technicien supérieur;Collaborateur juriste notarial;36685;32034502;CPC Services aux entreprises;Secteur;Sous-secteur
+Diplôme;Traceur en construction navale;;42025404;CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Travail des métaux
+Brevet professionnel;Blanchisseur;24746;45024004;CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur
+certificat (autre que diplôme);Certificat de préposé au tir;;50023114;CPC Industrie;Secteur Métallurgie;Sous-secteur
+Certificat d'aptitude professionnelle;Peintre applicateur de revêtements;35196;50023327;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur
+Certificat d'aptitude professionnelle;Menuisier fabricant;36112;50023447;CPC Industrie;Secteur Bois et dérivés;Sous-secteur
+Certificat d'aptitude professionnelle;Métiers de l’entretien des textiles, option B : pressing;35808;50024008;CPC Industrie;Secteur Métiers de la mode et industries connexes;Sous-secteur
+Certificat d'aptitude professionnelle;Conducteur d'engins : travaux publics et carrières;4463;50023118;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics
+Certificat d'aptitude professionnelle;Etancheur du bâtiment et des travaux publics;1141;50023321;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics
+Certificat d'aptitude professionnelle;Menuisier aluminium-verre;814;50023322;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur
+Mention complémentaire de niveau 3;Maintenance des équipements thermiques individuels;730;1022701;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur
+Mention complémentaire de niveau 3;Plâtrier;740;1023302;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur
+Mention complémentaire de niveau 3;Zingueur;744;1023202;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur
+Mention complémentaire de niveau 4;Encadrement secteur sportif option activités physiques pour tous;36328;1033502;CPC;Secteur;Sous-secteur
+Mention complémentaire de niveau 4;Encadrement secteur sportif option activités aquatiques et de la natation;36328;1033503;CPC;Secteur;Sous-secteur
+Mention complémentaire de niveau 4;Encadrement secteur sportif option activités de la forme - cours collectifs;36328;1033504;CPC;Secteur;Sous-secteur
+Mention complémentaire de niveau 4;Encadrement secteur sportif option activités de la forme - haltérophilie, musculation;36328;1033505;CPC;Secteur;Sous-secteur
+Brevet de technicien supérieur;Motorisation toutes énergies;36966;32025219;CPC;Secteur;Sous-secteur
+Brevet de technicien supérieur;Services et prestations des secteurs sanitaire et social;5297;32033002;CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur
+Brevet de technicien supérieur;Economie sociale familiale;7570;32033206;CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur
+Brevet des métiers d'arts;Orfèvrerie option monture - tournure;;40122319;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du métal et métiers connexes
+Brevet des métiers d'arts;Verrier décorateur;799;40122409;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu
+Brevet des métiers d'arts;Souffleur de verre;799;40122410;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu
+Brevet des métiers d'arts;Orfèvrerie option gravures - ciselure;807;40132207;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Gravure
