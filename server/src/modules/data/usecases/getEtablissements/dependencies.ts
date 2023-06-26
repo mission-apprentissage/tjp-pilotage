@@ -372,14 +372,6 @@ const findFiltersInDb = async ({
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([inCodeAcademie(eb), inCodeDepartement(eb), inCommune(eb)]),
-        codeAcademie
-          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
-          : sql`false`,
-      ]);
-    })
     .execute();
 
   const academies = await base
