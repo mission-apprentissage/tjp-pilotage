@@ -280,7 +280,7 @@ export default function Formations() {
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
-          Libellé filière
+          Filière
         </Multiselect>
       </Flex>
 
@@ -455,6 +455,28 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="codeFormationDiplome" />
                   {FORMATIONS_COLUMNS.codeFormationDiplome}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
+                  <OrderIcon {...order} column="CPC" />
+                  {FORMATIONS_COLUMNS.CPC}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
+                  <OrderIcon {...order} column="CPCSecteur" />
+                  {FORMATIONS_COLUMNS.CPCSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("CPCSousSecteur")}
+                >
+                  <OrderIcon {...order} column="CPCSousSecteur" />
+                  {FORMATIONS_COLUMNS.CPCSousSecteur}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleFiliere")}
+                >
+                  <OrderIcon {...order} column="libelleFiliere" />
+                  {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
               </Tr>
             </Thead>

@@ -26,6 +26,10 @@ const FormationLineSchema = Type.Object({
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   deltaPoursuiteEtudes: Type.Optional(Type.Number()),
   deltaInsertion12mois: Type.Optional(Type.Number()),
+  CPC: Type.Optional(Type.String()),
+  CPCSecteur: Type.Optional(Type.String()),
+  CPCSousSecteur: Type.Optional(Type.String()),
+  libelleFiliere: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({
