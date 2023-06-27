@@ -74,6 +74,10 @@ export const getEtablissement = async ({
             "libelleDispositif",
             "formation.codeNiveauDiplome",
             "libelleNiveauDiplome",
+            "formation.libelleFiliere",
+            "formation.CPC",
+            "formation.CPCSecteur",
+            "formation.CPCSousSecteur",
             sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs","indicateurEntree"."anneeDebut"::text)), 'null')::INT
             `.as("effectif"),
             selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
@@ -89,7 +93,9 @@ export const getEtablissement = async ({
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
+            "formation.id",
             "formation.libelleDiplome",
+            "formation.libelleFiliere",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
