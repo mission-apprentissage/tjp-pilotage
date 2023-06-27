@@ -8,7 +8,8 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
-    "@sinclair/typebox": "^0.25.21"
+    "@sinclair/typebox": "^0.25.21",
+    "typebox-client": "^1.0.14"
   },
   "devDependencies": {
     "axios": "1.3.5"

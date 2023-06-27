@@ -19,21 +19,29 @@ import { PanoramaFormation, PanoramaFormations } from "./type";
 export const TopFlopSection = ({
   cadranFormations,
   codeNiveauDiplome,
+  libelleFiliere,
 }: {
   cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
 }) => {
   const topFlopFormations = useMemo(() => {
     if (!cadranFormations) return;
-    const filtered = cadranFormations.filter(
-      (item) =>
-        item.dispositifId &&
-        !["253", "240"].includes(item.dispositifId) &&
-        (!codeNiveauDiplome?.length ||
-          codeNiveauDiplome.includes(item.codeNiveauDiplome))
-    );
+    const filtered = cadranFormations.filter((item) => {
+      if (
+        libelleFiliere?.length &&
+        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
+      )
+        return false;
+      if (
+        codeNiveauDiplome?.length &&
+        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
+      )
+        return false;
+      return item.dispositifId && !["253", "240"].includes(item.dispositifId);
+    });
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
     const sorted = filtered
       .slice()
@@ -48,7 +56,7 @@ export const TopFlopSection = ({
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
-  }, [cadranFormations, codeNiveauDiplome]);
+  }, [cadranFormations, codeNiveauDiplome, libelleFiliere]);
 
   return (
     <Container as="section" py="6" maxWidth={"container.xl"}>

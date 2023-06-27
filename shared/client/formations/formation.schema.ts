@@ -124,6 +124,10 @@ export const formationSchemas = {
             tauxInsertion12moisPrecedent: Type.Optional(Type.Number()),
             tauxPoursuiteEtudes: Type.Number(),
             tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
+            CPC: Type.Optional(Type.String()),
+            CPCSecteur: Type.Optional(Type.String()),
+            CPCSousSecteur: Type.Optional(Type.String()),
+            libelleFiliere: Type.Optional(Type.String()),
           })
         ),
       }),

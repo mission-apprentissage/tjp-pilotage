@@ -2602,6 +2602,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@sinclair/typebox@npm:^0.28.14":
+  version: 0.28.20
+  resolution: "@sinclair/typebox@npm:0.28.20"
+  checksum: 97d866c3fb3bd5ac7f8519f4a1891dfb9e05c32891f77db89d8d34c7c69696ba4599f7c3ac38a83ebdaf287dc1fd1051699929628deed9db437ba64b372bf538
+  languageName: node
+  linkType: hard
+
 "@sindresorhus/is@npm:^4.0.0":
   version: 4.6.0
   resolution: "@sindresorhus/is@npm:4.6.0"
@@ -3575,6 +3582,17 @@ __metadata:
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
   checksum: 4d6bcf933b1cdff86d4993752aaeeeedc4a7f7a4b1c942847f6884bb13fc6106610ff826b076acf0b08d8ced55dee9344bb9a11f3624c3e70ab1da1a40bb5506
+  languageName: node
+  linkType: hard
+
+"axios@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "axios@npm:1.4.0"
+  dependencies:
+    follow-redirects: ^1.15.0
+    form-data: ^4.0.0
+    proxy-from-env: ^1.1.0
+  checksum: 7fb6a4313bae7f45e89d62c70a800913c303df653f19eafec88e56cea2e3821066b8409bc68be1930ecca80e861c52aa787659df0ffec6ad4d451c7816b9386b
   languageName: node
   linkType: hard
 
@@ -11533,6 +11551,7 @@ __metadata:
   dependencies:
     "@sinclair/typebox": ^0.25.21
     axios: 1.3.5
+    typebox-client: ^1.0.14
   languageName: unknown
   linkType: soft
 
@@ -12621,6 +12640,16 @@ __metadata:
   version: 1.4.0
   resolution: "type-fest@npm:1.4.0"
   checksum: b011c3388665b097ae6a109a437a04d6f61d81b7357f74cbcb02246f2f5bd72b888ae33631b99871388122ba0a87f4ff1c94078e7119ff22c70e52c0ff828201
+  languageName: node
+  linkType: hard
+
+"typebox-client@npm:^1.0.14":
+  version: 1.0.14
+  resolution: "typebox-client@npm:1.0.14"
+  dependencies:
+    "@sinclair/typebox": ^0.28.14
+    axios: ^1.4.0
+  checksum: bac68fda9d25e70dc4f66da6a2a19112ab25fc6a7ae8a7e1ac1d64082db33e5cfb7eda973d1c861d9bed31e379b1465b27045c9908588ee2d84e0be20aa4da46
   languageName: node
   linkType: hard
 

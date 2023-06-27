@@ -18,5 +18,5 @@ export const FORMATIONS_COLUMNS = {
   CPC: "CPC",
   CPCSecteur: "CPCSecteur",
   CPCSousSecteur: "CPCSousSecteur",
-  libelleFiliere: "Filière",
+  libelleFiliere: "Secteur d’activité",
 } as const;
