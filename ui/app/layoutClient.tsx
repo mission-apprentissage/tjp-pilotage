@@ -31,7 +31,7 @@ const useTracking = () => {
     }
   }, [param]);
   if (process.env.NEXT_PUBLIC_ENV !== "production") return false;
-  return !!noTracking.current;
+  return !noTracking.current;
 };
 
 export default function RootLayoutClient({
@@ -40,6 +40,7 @@ export default function RootLayoutClient({
   children: React.ReactNode;
 }) {
   const tracking = useTracking();
+  console.log("tr", tracking);
   const [queryClient] = useState(() => new QueryClient());
 
   return (
