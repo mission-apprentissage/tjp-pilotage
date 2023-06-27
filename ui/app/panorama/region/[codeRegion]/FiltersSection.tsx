@@ -68,7 +68,7 @@ export const FiltersSection = ({
           value={libelleFiliere ?? []}
           ml="2"
         >
-          DFIP14
+          Secteur d’activité
         </Multiselect>
       </Flex>
     </Container>

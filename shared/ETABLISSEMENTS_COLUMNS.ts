@@ -23,5 +23,5 @@ export const ETABLISSEMENTS_COLUMNS = {
   CPC: "CPC",
   CPCSecteur: "CPCSecteur",
   CPCSousSecteur: "CPCSousSecteur",
-  libelleFiliere: "DFIP14",
+  libelleFiliere: "Secteur d’activité",
 } as const;

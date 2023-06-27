@@ -307,7 +307,7 @@ export default function Etablissements() {
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
-          DFIP14
+          Secteur d’activité
         </Multiselect>
       </Flex>
 
