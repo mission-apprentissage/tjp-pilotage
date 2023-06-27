@@ -93,7 +93,9 @@ export const getEtablissement = async ({
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
+            "formation.id",
             "formation.libelleDiplome",
+            "formation.libelleFiliere",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
