@@ -307,7 +307,7 @@ export default function Etablissements() {
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
-          Filière
+          DFIP14
         </Multiselect>
       </Flex>
 

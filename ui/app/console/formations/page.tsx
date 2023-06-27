@@ -280,7 +280,7 @@ export default function Formations() {
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
-          Filière
+          DFIP14
         </Multiselect>
       </Flex>
 

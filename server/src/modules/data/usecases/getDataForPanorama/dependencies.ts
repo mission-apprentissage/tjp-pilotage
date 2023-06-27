@@ -97,6 +97,10 @@ export const queryFormations = async ({
       "libelleDispositif",
       "libelleNiveauDiplome",
       "formation.codeNiveauDiplome",
+      "formation.libelleFiliere",
+      "formation.CPC",
+      "formation.CPCSecteur",
+      "formation.CPCSousSecteur",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(

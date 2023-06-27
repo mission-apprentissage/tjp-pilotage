@@ -24,6 +24,7 @@ export default function Panorama({
     router.push(`/panorama/region/${codeRegion}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
+  const [libelleFiliere, setLibelleFiliere] = useState<string[]>();
 
   const { data: regionOptions } = useQuery(
     ["regions"],
@@ -42,18 +43,6 @@ export default function Panorama({
     { keepPreviousData: true, staleTime: 10000000 }
   );
 
-  const diplomeOptions = Object.values(
-    data?.formations.reduce((acc, cur) => {
-      return {
-        ...acc,
-        [cur.codeNiveauDiplome]: {
-          value: cur.codeNiveauDiplome,
-          label: cur.libelleNiveauDiplome as string,
-        },
-      };
-    }, {} as Record<string, { value: string; label: string }>) ?? {}
-  );
-
   return (
     <>
       <RegionSection
@@ -64,16 +53,20 @@ export default function Panorama({
       />
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
-        diplomeOptions={diplomeOptions}
+        formations={data?.formations}
         codeDiplome={codeNiveauDiplome}
+        libelleFiliere={libelleFiliere}
+        onLibelleFiliereChanged={setLibelleFiliere}
       />
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}
+        libelleFiliere={libelleFiliere}
         meanInsertion={data?.stats.tauxInsertion12mois}
         meanPoursuite={data?.stats.tauxPoursuiteEtudes}
         cadranFormations={data?.formations}
       />
       <TopFlopSection
+        libelleFiliere={libelleFiliere}
         codeNiveauDiplome={codeNiveauDiplome}
         cadranFormations={data?.formations}
       />

@@ -45,22 +45,30 @@ const labelStyles = {
 const filterFormations = ({
   effectifMin,
   codeNiveauDiplome,
+  libelleFiliere,
   cadranFormations,
   tendance,
 }: {
   effectifMin: number;
   codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
   cadranFormations?: PanoramaFormations;
   tendance?: string;
 }) =>
   cadranFormations
-    ?.filter(
-      (item) =>
-        item.effectif &&
-        item.effectif >= effectifMin &&
-        (!codeNiveauDiplome?.length ||
-          codeNiveauDiplome.includes(item.codeNiveauDiplome))
-    )
+    ?.filter((item) => {
+      if (
+        libelleFiliere?.length &&
+        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
+      )
+        return false;
+      if (
+        codeNiveauDiplome?.length &&
+        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
+      )
+        return false;
+      return item.effectif && item.effectif >= effectifMin;
+    })
     .filter((item) => {
       if (tendance === "insertion_hausse") {
         return (
@@ -114,11 +122,13 @@ export const CadranSection = ({
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
+  libelleFiliere,
 }: {
   cadranFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
   const [tendance, setTendance] = useState<string>();
@@ -130,8 +140,9 @@ export const CadranSection = ({
         codeNiveauDiplome,
         cadranFormations,
         tendance,
+        libelleFiliere,
       }),
-    [effectifMin, codeNiveauDiplome, cadranFormations, tendance]
+    [effectifMin, codeNiveauDiplome, cadranFormations, tendance, libelleFiliere]
   );
 
   return (

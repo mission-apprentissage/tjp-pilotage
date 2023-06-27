@@ -74,6 +74,10 @@ export const getEtablissement = async ({
             "libelleDispositif",
             "formation.codeNiveauDiplome",
             "libelleNiveauDiplome",
+            "formation.libelleFiliere",
+            "formation.CPC",
+            "formation.CPCSecteur",
+            "formation.CPCSousSecteur",
             sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs","indicateurEntree"."anneeDebut"::text)), 'null')::INT
             `.as("effectif"),
             selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
