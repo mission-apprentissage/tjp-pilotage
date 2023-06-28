@@ -1,6 +1,7 @@
 import { inject } from "injecti";
+import { Insertable } from "kysely";
 
-import { IndicateurSortie } from "../../../../entities/IndicateurSortie";
+import { DB } from "../../../../../../db/schema";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
 import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 import { dependencies } from "../../dependencies.di";
@@ -18,7 +19,7 @@ const toIndicateurSorties = ({
   anneesDispositif: AnneeDispositif[];
   formationEtablissementId: string;
   millesime: string;
-}): IndicateurSortie | undefined => {
+}): Insertable<DB["indicateurSortie"]> | undefined => {
   const mefstatLastYear = anneesDispositif[anneesDispositif.length - 1].mefstat;
   const type = "depp_mefstat";
 
@@ -80,7 +81,7 @@ export const [importIndicateurSortie] = inject(
         formationEtablissementId,
       });
       if (!indicateurSortie) return;
-      await deps.createIndicateurSortie([indicateurSortie]);
+      await deps.createIndicateurSortie(indicateurSortie);
     };
   }
 );

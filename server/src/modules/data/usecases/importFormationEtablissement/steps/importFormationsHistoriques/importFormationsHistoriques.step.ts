@@ -1,14 +1,17 @@
 import { inject } from "injecti";
+import { Insertable } from "kysely";
 import _ from "lodash";
 import { DateTime } from "luxon";
 
 import { kdb } from "../../../../../../db/db";
-import { AncienneFormation } from "../../../../entities/Formation";
+import { DB } from "../../../../../../db/schema";
 import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 
 export const createFormationHistorique = async (
-  ancienneFormation: Omit<AncienneFormation, "id">
+  ancienneFormation: Insertable<DB["formation"]> & {
+    nouveauCFD: string;
+  }
 ) => {
   const formationHistorique = {
     codeFormationDiplome: ancienneFormation.nouveauCFD,
@@ -49,7 +52,11 @@ const toAncienneFormation = ({
   cfd: string;
   ancienCfd: string;
   ancienneFormationData?: NFormationDiplomeLine;
-}): Omit<AncienneFormation, "id"> | undefined => {
+}):
+  | (Insertable<DB["formation"]> & {
+      nouveauCFD: string;
+    })
+  | undefined => {
   if (!ancienneFormationData) return;
   if (!ancienneFormationData.DATE_OUVERTURE) return;
   return {
@@ -111,7 +118,13 @@ export const [importFormationHistorique] = inject(
           ancienneFormationData,
         });
         if (!ancienneFormation) continue;
-        if (isOldFormation(ancienneFormation.dateFermeture)) {
+        if (
+          isOldFormation(
+            ancienneFormation.dateFermeture
+              ? new Date(ancienneFormation.dateFermeture)
+              : undefined
+          )
+        ) {
           continue;
         }
 

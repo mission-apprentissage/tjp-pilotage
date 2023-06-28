@@ -1,8 +1,9 @@
 import { inject } from "injecti";
+import { Insertable } from "kysely";
 import _ from "lodash";
 import { DateTime } from "luxon";
 
-import { Formation } from "../../../../entities/Formation";
+import { DB } from "../../../../../../db/schema";
 import { DiplomeProfessionnelLine } from "../../../../files/DiplomesProfessionnels";
 import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
 import { getCfdDispositifs } from "../../../getCfdRentrees/getCfdRentrees.usecase";
@@ -116,12 +117,12 @@ const createFormationFromDiplomeProfessionel = ({
   diplomeProfessionel: CompleteDiplomePorfessionelLine;
   nFormationDiplome: NFormationDiplomeLine;
   regroupement?: string;
-}): Omit<Formation, "id"> | undefined => {
+}): Insertable<DB["formation"]> | undefined => {
   return {
     codeFormationDiplome: diplomeProfessionel["Code diplôme"],
     rncp: diplomeProfessionel["Code RNCP"]
       ? parseInt(diplomeProfessionel["Code RNCP"])
-      : undefined,
+      : null,
     libelleDiplome: diplomeProfessionel[
       "Intitulé de la spécialité (et options)"
     ].replace(/"/g, ""),
@@ -135,17 +136,16 @@ const createFormationFromDiplomeProfessionel = ({
           nFormationDiplome.DATE_FERMETURE,
           "dd/LL/yyyy"
         ).toJSDate()
-      : undefined,
+      : null,
     libelleFiliere: regroupement,
     CPC:
       diplomeProfessionel["Commission professionnelle consultative"]
         ?.replace("CPC", "")
-        .trim() || undefined,
+        .trim() || null,
     CPCSecteur:
-      diplomeProfessionel["Secteur"]?.replace("Secteur", "").trim() ||
-      undefined,
+      diplomeProfessionel["Secteur"]?.replace("Secteur", "").trim() || null,
     CPCSousSecteur:
       diplomeProfessionel["Sous-secteur"]?.replace("Sous-secteur", "").trim() ||
-      undefined,
+      null,
   };
 };

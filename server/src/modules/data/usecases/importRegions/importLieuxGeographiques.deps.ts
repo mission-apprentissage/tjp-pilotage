@@ -1,20 +1,33 @@
-import { db, pool } from "../../../../db/zapatos";
-import { Academie } from "../../entities/Academie";
-import { Departement } from "../../entities/Departement";
-import { Region } from "../../entities/Region";
-import { Departements_academies_regions } from "../../files/Departements_academies_regions";
+import { Insertable } from "kysely";
+
+import { kdb } from "../../../../db/db";
+import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 
-const createRegions = async (regions: Region[]) => {
-  await db.upsert("region", regions, "codeRegion").run(pool);
+const createRegion = async (region: Insertable<DB["region"]>) => {
+  await kdb
+    .insertInto("region")
+    .values(region)
+    .onConflict((oc) => oc.column("codeRegion").doUpdateSet(region))
+    .execute();
 };
 
-const createAcademie = async (academie: Academie) => {
-  await db.upsert("academie", academie, "codeAcademie").run(pool);
+const createAcademie = async (academie: Insertable<DB["academie"]>) => {
+  await kdb
+    .insertInto("academie")
+    .values(academie)
+    .onConflict((oc) => oc.column("codeAcademie").doUpdateSet(academie))
+    .execute();
 };
 
-const createDepartement = async (departement: Departement) => {
-  await db.upsert("departement", departement, "codeDepartement").run(pool);
+const createDepartement = async (
+  departement: Insertable<DB["departement"]>
+) => {
+  await kdb
+    .insertInto("departement")
+    .values(departement)
+    .onConflict((oc) => oc.column("codeDepartement").doUpdateSet(departement))
+    .execute();
 };
 
 const findDepartementAcademieRegions = async ({
@@ -23,7 +36,7 @@ const findDepartementAcademieRegions = async ({
 }: {
   offset?: number;
   limit?: number;
-}): Promise<Departements_academies_regions[]> =>
+}) =>
   rawDataRepository.findRawDatas({
     type: "departements_academies_regions",
     offset,
@@ -31,7 +44,7 @@ const findDepartementAcademieRegions = async ({
   });
 
 export const importRegionsDeps = {
-  createRegions,
+  createRegion,
   createAcademie,
   createDepartement,
   findDepartementAcademieRegions,

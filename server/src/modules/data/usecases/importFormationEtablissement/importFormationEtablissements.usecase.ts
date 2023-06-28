@@ -1,6 +1,5 @@
 import { inject } from "injecti";
 
-import { kdb } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import {
@@ -32,9 +31,6 @@ const findDiplomesProfessionnels = ({
   });
 };
 
-const clearIjCache = () =>
-  kdb.deleteFrom("rawData").where("type", "=", "ij").execute();
-
 export const [importFormationEtablissements] = inject(
   {
     findFormations: dependencies.findFormations,
@@ -48,13 +44,10 @@ export const [importFormationEtablissements] = inject(
     importFormation,
     findDiplomesProfessionnels,
     fetchIJ,
-    clearIjCache,
   },
   (deps) => {
     logger.reset();
-    return async ({ clearIjCache = true }: { clearIjCache?: boolean } = {}) => {
-      if (clearIjCache) deps.clearIjCache();
-
+    return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
       await streamIt(
         async (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
@@ -87,7 +80,7 @@ export const [importFormationEtablissements] = inject(
               for (const enseignement of enseignements) {
                 const { uai, anneesEnseignement, voie } = enseignement;
                 if (!processedUais.includes(uai)) {
-                  if (clearIjCache) {
+                  if (fetchIj) {
                     await deps.fetchIJ({ uai });
                   }
 

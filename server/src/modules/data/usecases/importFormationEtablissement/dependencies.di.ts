@@ -1,116 +1,124 @@
-import { db, pool } from "../../../../db/zapatos";
+import { Insertable } from "kysely";
+
+import { kdb } from "../../../../db/db";
+import { DB, JsonValue } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { formatEtablissement } from "../../adapters/formatEtablissement";
-import { formatFormation } from "../../adapters/formatFormation";
-import { Departement } from "../../entities/Departement";
-import { Etablissement } from "../../entities/Etablissement";
-import { FamilleMetier } from "../../entities/FamilleMetier";
-import { Formation } from "../../entities/Formation";
-import { FormationEtablissement } from "../../entities/FormationEtablissement";
-import { IndicateurEntree } from "../../entities/IndicateurEntree";
-import { IndicateurEtablissement } from "../../entities/IndicateurEtablissement";
-import { IndicateurSortie } from "../../entities/IndicateurSortie";
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
-import { LyceesACCELine } from "../../files/LyceesACCELine";
-import { NMefLine } from "../../files/NMef";
-import { R } from "../../services/inserJeunesApi/formatUaiData";
+import { rawDataRepository } from "../../repositories/rawData.repository";
 
 const createFormationEtablissement = async (
-  formationEtablissement: Omit<FormationEtablissement, "id">
-): Promise<FormationEtablissement> => {
-  return db
-    .upsert("formationEtablissement", formationEtablissement, [
-      "UAI",
-      "cfd",
-      "dispositifId",
-      "voie",
-    ])
-    .run(pool);
+  formationEtablissement: Insertable<DB["formationEtablissement"]>
+) => {
+  return await kdb
+    .insertInto("formationEtablissement")
+    .values(formationEtablissement)
+    .onConflict((oc) =>
+      oc
+        .column("UAI")
+        .column("cfd")
+        .column("dispositifId")
+        .column("voie")
+        .doUpdateSet(formationEtablissement)
+    )
+    .returningAll()
+    .executeTakeFirstOrThrow();
 };
 
-const createIndicateurSortie = async (indicateurSortie: IndicateurSortie[]) => {
-  db.upsert("indicateurSortie", indicateurSortie, [
-    "formationEtablissementId",
-    "millesimeSortie",
-  ]).run(pool);
+const createIndicateurSortie = async (
+  indicateurSortie: Insertable<DB["indicateurSortie"]>
+) => {
+  await kdb
+    .insertInto("indicateurSortie")
+    .values(indicateurSortie)
+    .onConflict((oc) =>
+      oc
+        .column("formationEtablissementId")
+        .column("millesimeSortie")
+        .doUpdateSet(indicateurSortie)
+    )
+    .execute();
 };
 
-const createIndicateurEntree = async (indicateurEntree: IndicateurEntree[]) => {
-  db.upsert("indicateurEntree", indicateurEntree, [
-    "formationEtablissementId",
-    "rentreeScolaire",
-  ]).run(pool);
+const createIndicateurEntree = async (
+  indicateurEntree: Omit<
+    Insertable<DB["indicateurEntree"]>,
+    "effectifs" | "capacites" | "premiersVoeux"
+  > & {
+    effectifs: JsonValue;
+    capacites: JsonValue;
+    premiersVoeux: JsonValue;
+  }
+) => {
+  const formatted = {
+    ...indicateurEntree,
+    effectifs: JSON.stringify(indicateurEntree.effectifs),
+    capacites: JSON.stringify(indicateurEntree.capacites),
+    premiersVoeux: JSON.stringify(indicateurEntree.premiersVoeux),
+  } as const;
+  await kdb
+    .insertInto("indicateurEntree")
+    .values(formatted)
+    .onConflict((oc) =>
+      oc
+        .column("formationEtablissementId")
+        .column("rentreeScolaire")
+        .doUpdateSet(formatted)
+    )
+    .execute();
 };
 
 const createEtablissement = async (
-  etablissement: Omit<Etablissement, "id">
-): Promise<Etablissement> => {
-  const dbEtablissement = await db
-    .upsert("etablissement", etablissement, "UAI")
-    .run(pool);
-  return formatEtablissement(dbEtablissement);
+  etablissement: Insertable<DB["etablissement"]>
+) => {
+  const retu = await kdb
+    .insertInto("etablissement")
+    .values(etablissement)
+    .onConflict((oc) => oc.column("UAI").doUpdateSet(etablissement))
+    .returningAll()
+    .executeTakeFirstOrThrow();
+  return cleanNull(retu);
 };
 
-const findEtablissement = async ({
-  UAI,
-}: {
-  UAI: string;
-}): Promise<Etablissement | undefined> => {
-  const etablissement = await db.selectOne("etablissement", { UAI }).run(pool);
-  return etablissement && formatEtablissement(etablissement);
+const findEtablissement = async ({ UAI }: { UAI: string }) => {
+  const etablissement = await kdb
+    .selectFrom("etablissement")
+    .selectAll()
+    .where("UAI", "=", UAI)
+    .executeTakeFirst();
+  return etablissement && cleanNull(etablissement);
 };
 
 const findContratRentrees = async ({ mefStat11 }: { mefStat11: string }) => {
-  return (
-    await db
-      .select(
-        "rawData",
-        {
-          type: "Cab-nbre_division_effectifs_par_etab_mefst11",
-          data: db.sql`${db.self}@>${db.param({
-            "Mef Bcp 11": mefStat11,
-          })}`,
-        },
-        { order: { by: "id", direction: "ASC" } }
-      )
-      .run(pool)
-  ).map((item) => item.data as Cab_bre_division_effectifs_par_etab_mefst11);
+  return rawDataRepository.findRawDatas({
+    type: "Cab-nbre_division_effectifs_par_etab_mefst11",
+    filter: { "Mef Bcp 11": mefStat11 },
+  });
 };
 
-const findLyceeACCE = async ({ uai }: { uai: string }) =>
-  (
-    await db
-      .selectOne("rawData", {
-        type: "lyceesACCE",
-        data: db.sql`${db.self}@>${db.param({
-          numero_uai: uai,
-        })}`,
-      })
-      .run(pool)
-  )?.data as LyceesACCELine | undefined;
+const findLyceeACCE = async ({ uai }: { uai: string }) => {
+  return rawDataRepository.findRawData({
+    type: "lyceesACCE",
+    filter: { numero_uai: uai },
+  });
+};
 
 const findDepartement = async ({
   codeDepartement,
 }: {
   codeDepartement: string;
-}): Promise<Departement | undefined> =>
-  await db.selectOne("departement", { codeDepartement }).run(pool);
+}) => {
+  return kdb
+    .selectFrom("departement")
+    .selectAll("departement")
+    .where("codeDepartement", "=", codeDepartement)
+    .executeTakeFirst();
+};
 
-const findNMefs = async ({ cfd }: { cfd: string }) =>
-  (
-    await db
-      .select(
-        "rawData",
-        {
-          type: "nMef",
-          data: db.sql`${db.self}@>${db.param({
-            FORMATION_DIPLOME: cfd,
-          })}`,
-        },
-        { order: { by: "id", direction: "ASC" } }
-      )
-      .run(pool)
-  ).map((item) => item.data as NMefLine);
+const findNMefs = async ({ cfd }: { cfd: string }) => {
+  return rawDataRepository.findRawDatas({
+    type: "nMef",
+    filter: { FORMATION_DIPLOME: cfd },
+  });
+};
 
 const findFormations = async ({
   offset,
@@ -118,32 +126,40 @@ const findFormations = async ({
 }: {
   offset?: number;
   limit?: number;
-}): Promise<Formation[]> =>
-  (await db.select("formation", {}, { offset, limit }).run(pool)).map(
-    formatFormation
-  );
+}) => {
+  return (
+    await kdb
+      .selectFrom("formation")
+      .selectAll("formation")
+      .offset(offset ?? 0)
+      .limit(limit ?? 100000000)
+      .execute()
+  ).map(cleanNull);
+};
 
 const upsertIndicateurEtablissement = async (
-  indicateurEtablissement: IndicateurEtablissement
+  indicateurEtablissement: Insertable<DB["indicateurEtablissement"]>
 ) => {
-  await db
-    .upsert("indicateurEtablissement", indicateurEtablissement, [
-      "UAI",
-      "millesime",
-    ])
-    .run(pool);
+  await kdb
+    .insertInto("indicateurEtablissement")
+    .values(indicateurEtablissement)
+    .onConflict((oc) =>
+      oc.column("UAI").column("millesime").doUpdateSet(indicateurEtablissement)
+    )
+    .execute();
 };
 
 const findFamilleMetier = async ({
   cfdSpecialite,
 }: {
   cfdSpecialite: string;
-}): Promise<FamilleMetier | undefined> => {
-  const result = await db
-    .selectOne("familleMetier", { cfdSpecialite })
-    .run(pool);
-
-  return result ? cleanNull(result) : undefined;
+}) => {
+  const result = await kdb
+    .selectFrom("familleMetier")
+    .selectAll("familleMetier")
+    .where("cfdSpecialite", "=", cfdSpecialite)
+    .executeTakeFirst();
+  return result && cleanNull(result);
 };
 
 const getUaiData = async ({
@@ -153,17 +169,11 @@ const getUaiData = async ({
   uai: string;
   millesime: string;
 }) => {
-  return (
-    await db
-      .selectOne("rawData", {
-        type: "ij",
-        data: db.sql`${db.self}@>${db.param({
-          uai,
-          millesime,
-        })}`,
-      })
-      .run(pool)
-  )?.data as R;
+  return rawDataRepository.findRawData({
+    type: "ij",
+    //@ts-ignore
+    filter: { uai, millesime },
+  });
 };
 
 export const dependencies = {

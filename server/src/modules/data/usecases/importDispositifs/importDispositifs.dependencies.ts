@@ -1,5 +1,7 @@
+import { Insertable } from "kysely";
+
 import { kdb } from "../../../../db/db";
-import { Dispositif } from "../../entities/Dispositif";
+import { DB } from "../../../../db/schema";
 import { NDispositifFormation } from "../../files/NDispositifFormation";
 
 const findNDispositifFormation = async ({
@@ -21,7 +23,7 @@ const findNDispositifFormation = async ({
   ).map((item) => item.data as NDispositifFormation);
 };
 
-const createDispositif = async (dispositif: Dispositif) => {
+const createDispositif = async (dispositif: Insertable<DB["dispositif"]>) => {
   await kdb
     .insertInto("dispositif")
     .values(dispositif)

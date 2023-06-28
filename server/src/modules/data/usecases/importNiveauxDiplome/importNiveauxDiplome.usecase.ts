@@ -1,4 +1,3 @@
-import { NiveauDiplome } from "../../entities/NiveauDiplome";
 import { NNiveauFormationDiplome } from "../../files/NNiveauFormationDiplome";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies";
@@ -7,7 +6,7 @@ const toNiveauDiplome = ({
   nNiveauDiplome,
 }: {
   nNiveauDiplome: NNiveauFormationDiplome;
-}): NiveauDiplome => {
+}) => {
   return {
     codeNiveauDiplome: nNiveauDiplome.NIVEAU_FORMATION_DIPLOME,
     libelleNiveauDiplome: nNiveauDiplome.LIBELLE_COURT,

@@ -1,9 +1,10 @@
-import { Dispositif } from "../../entities/Dispositif";
+import { inject } from "injecti";
+
 import { NDispositifFormation } from "../../files/NDispositifFormation";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./importDispositifs.dependencies";
 
-const toDispositif = (data: NDispositifFormation): Dispositif => {
+const toDispositif = (data: NDispositifFormation) => {
   return {
     codeDispositif: data.DISPOSITIF_FORMATION,
     codeNiveauDiplome: data.NIVEAU_FORMATION_DIPLOME,
@@ -11,19 +12,12 @@ const toDispositif = (data: NDispositifFormation): Dispositif => {
   };
 };
 
-const importDispositifsFactory =
-  ({
-    findNDispositifFormation = dependencies.findNDispositifFormation,
-    createDispositif = dependencies.createDispositif,
-  }) =>
-  async () => {
-    await streamIt(
-      (count) => findNDispositifFormation({ offset: count, limit: 30 }),
-      async (item) => {
-        const dispositif = toDispositif(item);
-        await createDispositif(dispositif);
-      }
-    );
-  };
-
-export const importDispositifs = importDispositifsFactory({});
+export const [importDispositifs] = inject(dependencies, (deps) => async () => {
+  await streamIt(
+    (count) => deps.findNDispositifFormation({ offset: count, limit: 30 }),
+    async (item) => {
+      const dispositif = toDispositif(item);
+      await deps.createDispositif(dispositif);
+    }
+  );
+});
