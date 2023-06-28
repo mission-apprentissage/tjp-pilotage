@@ -9,4 +9,6 @@ type Migration = {
 
 type Migrations = Record<string, Migration>;
 
-export const migrations: Migrations = { migration1 };
+export const migrations: Migrations = {
+  migration1,
+};

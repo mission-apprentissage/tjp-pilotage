@@ -123,18 +123,6 @@ export interface IndicateurSortie {
   nbInsertion24mois: number | null;
 }
 
-export interface KnexMigrations {
-  id: Generated<number>;
-  name: string | null;
-  batch: number | null;
-  migration_time: Timestamp | null;
-}
-
-export interface KnexMigrationsLock {
-  index: Generated<number>;
-  is_locked: number | null;
-}
-
 export interface NiveauDiplome {
   codeNiveauDiplome: string;
   libelleNiveauDiplome: string | null;
@@ -163,8 +151,6 @@ export interface DB {
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurSortie: IndicateurSortie;
-  knex_migrations: KnexMigrations;
-  knex_migrations_lock: KnexMigrationsLock;
   niveauDiplome: NiveauDiplome;
   rawData: RawData;
   region: Region;

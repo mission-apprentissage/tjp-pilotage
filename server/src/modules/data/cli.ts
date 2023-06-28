@@ -1,9 +1,7 @@
 import { program as cli } from "commander";
 import fs from "fs";
 
-import { kdb } from "../../db/db";
 import { migrateToLatest } from "../../migrations/migrate";
-import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -13,21 +11,6 @@ import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGe
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
-});
-
-cli.command("truncateRawData").action(async () => {
-  await kdb.deleteFrom("rawData").execute();
-});
-
-cli.command("importDepp").action(async () => {
-  const uai = "0750783U";
-  const millesime = "2020_2021";
-  const data = await inserJeunesApi.getUaiData({ uai, millesime });
-
-  fs.writeFileSync(
-    `logs/${uai}_${millesime}.json`,
-    JSON.stringify(data, undefined, " ")
-  );
 });
 
 cli
@@ -75,14 +58,7 @@ cli
   });
 
 cli
-  .command("importFormations")
-  .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async (fetchIj: boolean) => {
-    await importFormationEtablissements({ fetchIj });
-  });
-
-cli
-  .command("import")
+  .command("importTables")
   .argument("[usecase]")
   .action(async (usecaseName: string) => {
     const usecases = {
@@ -99,6 +75,13 @@ cli
         await usecase();
       }
     }
+  });
+
+cli
+  .command("importFormations")
+  .argument("[fetchIj]", "if true, refetch the ij data", true)
+  .action(async (fetchIj: boolean) => {
+    await importFormationEtablissements({ fetchIj });
   });
 
 cli.parse(process.argv);

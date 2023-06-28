@@ -1,9 +1,8 @@
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
-import { config } from "config/config";
-import knex from "knex";
 
+import { migrateToLatest } from "./migrations/migrate";
 import { registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
@@ -38,30 +37,14 @@ server.register(
 );
 
 if (process.env.PILOTAGE_ENV !== "dev") {
-  const knexClient = knex({
-    client: "pg",
-    connection: {
-      connectionString: config.PILOTAGE_POSTGRES_URI,
-      ssl: config.PILOTAGE_POSTGRES_CA
-        ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
-        : undefined,
-    },
-  });
-
-  knexClient.migrate
-    .latest({
-      extension: ".js",
-      directory: "dist/migrations",
-      loadExtensions: [".js"],
-    })
-    .then(function () {
-      server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
-        if (err) {
-          console.log(err);
-          process.exit(1);
-        }
-      });
+  migrateToLatest().then(() => {
+    server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
+      if (err) {
+        console.log(err);
+        process.exit(1);
+      }
     });
+  });
 } else {
   server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
     if (err) {

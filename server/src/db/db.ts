@@ -3,21 +3,13 @@ import { Pool } from "pg";
 
 import { config } from "../../config/config";
 import { DB } from "./schema";
-export const kdbO = new Kysely<DB>({
+export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({
     pool: new Pool({
       connectionString: config.PILOTAGE_POSTGRES_URI,
       ssl: config.PILOTAGE_POSTGRES_CA
         ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
         : undefined,
-    }),
-  }),
-});
-
-export const kdb = new Kysely<DB>({
-  dialect: new PostgresDialect({
-    pool: new Pool({
-      connectionString: "postgresql://postgres:password@postgres:5432/po",
     }),
   }),
 });
