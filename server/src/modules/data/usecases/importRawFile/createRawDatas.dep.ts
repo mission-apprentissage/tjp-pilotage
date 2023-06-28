@@ -1,11 +1,9 @@
-import { JSONValue } from "zapatos/db";
-
 import { kdb } from "../../../../db/db";
 
 export const createRawDatas = async ({
   data,
 }: {
-  data: { type: string; data: JSONValue }[];
+  data: { type: string; data: JSON }[];
 }) => {
   return await kdb
     .insertInto("rawData")

@@ -1,6 +1,7 @@
 import { inject } from "injecti";
+import { Insertable } from "kysely";
 
-import { IndicateurEtablissement } from "../../../../entities/IndicateurEtablissement";
+import { DB } from "../../../../../../db/schema";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
 import { dependencies } from "../../dependencies.di";
 
@@ -9,10 +10,10 @@ const toIndicateurEtablissement = ({
   uai,
   millesime,
 }: {
-  deppEtablissement: R;
+  deppEtablissement?: R;
   millesime: string;
   uai: string;
-}): IndicateurEtablissement | undefined => {
+}): Insertable<DB["indicateurEtablissement"]> | undefined => {
   if (!deppEtablissement) return;
   return {
     UAI: uai,

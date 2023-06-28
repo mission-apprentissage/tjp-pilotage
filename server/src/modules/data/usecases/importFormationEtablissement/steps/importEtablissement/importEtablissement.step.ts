@@ -1,8 +1,8 @@
 import { inject } from "injecti";
+import { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
-import { Departement } from "../../../../entities/Departement";
-import { Etablissement } from "../../../../entities/Etablissement";
+import { DB } from "../../../../../../db/schema";
 import { LyceesACCELine } from "../../../../files/LyceesACCELine";
 import { dependencies } from "../../dependencies.di";
 
@@ -45,8 +45,8 @@ const toEtablissement = ({
 }: {
   uai: string;
   lyceeACCE?: LyceesACCELine;
-  departement?: Departement;
-}): Omit<Etablissement, "id"> => {
+  departement?: Selectable<DB["departement"]>;
+}): Insertable<DB["etablissement"]> => {
   return {
     UAI: uai,
     siret: lyceeACCE?.numero_siren_siret_uai,
@@ -64,7 +64,7 @@ const toEtablissement = ({
       DateTime.fromFormat(lyceeACCE.date_ouverture, "dd/LL/yyyy").toJSDate(),
     dateFermeture: lyceeACCE?.date_fermeture
       ? DateTime.fromFormat(lyceeACCE.date_fermeture, "dd/LL/yyyy").toJSDate()
-      : undefined,
+      : null,
     codeMinistereTutuelle: lyceeACCE?.ministere_tutelle,
   };
 };

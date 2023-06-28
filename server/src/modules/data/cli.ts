@@ -1,8 +1,7 @@
 import { program as cli } from "commander";
 import fs from "fs";
 
-import { db, pool } from "../../db/zapatos";
-import { inserJeunesApi } from "./services/inserJeunesApi/inserJeunes.api";
+import { migrateToLatest } from "../../migrations/migrate";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -10,19 +9,8 @@ import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNive
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
 
-cli.command("truncateRawData").action(async () => {
-  await db.truncate(["rawData"]).run(pool);
-});
-
-cli.command("importDepp").action(async () => {
-  const uai = "0750783U";
-  const millesime = "2020_2021";
-  const data = await inserJeunesApi.getUaiData({ uai, millesime });
-
-  fs.writeFileSync(
-    `logs/${uai}_${millesime}.json`,
-    JSON.stringify(data, undefined, " ")
-  );
+cli.command("migrateDB").action(async () => {
+  await migrateToLatest();
 });
 
 cli
@@ -69,31 +57,8 @@ cli
     }
   });
 
-cli.command("truncateImports").action(async () => {
-  await db
-    .truncate(
-      [
-        "region",
-        "familleMetier",
-        "formation",
-        "formationHistorique",
-        "etablissement",
-        "formationEtablissement",
-      ],
-      "CASCADE"
-    )
-    .run(pool);
-});
-
 cli
-  .command("importFormations")
-  .argument("[clearIjCache]", "if true, refetch the ij data", false)
-  .action(async (clearIjCache: boolean) => {
-    await importFormationEtablissements({ clearIjCache });
-  });
-
-cli
-  .command("import")
+  .command("importTables")
   .argument("[usecase]")
   .action(async (usecaseName: string) => {
     const usecases = {
@@ -101,7 +66,6 @@ cli
       importNiveauxDiplome,
       importDispositifs,
       importFamillesMetiers,
-      importFormationEtablissements,
     };
 
     if (usecaseName) {
@@ -111,6 +75,13 @@ cli
         await usecase();
       }
     }
+  });
+
+cli
+  .command("importFormations")
+  .argument("[fetchIj]", "if true, refetch the ij data", true)
+  .action(async (fetchIj: boolean) => {
+    await importFormationEtablissements({ fetchIj });
   });
 
 cli.parse(process.argv);

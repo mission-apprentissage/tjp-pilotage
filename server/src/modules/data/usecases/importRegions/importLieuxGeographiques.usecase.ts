@@ -1,13 +1,13 @@
-import { Academie } from "../../entities/Academie";
-import { Departement } from "../../entities/Departement";
-import { Region } from "../../entities/Region";
+import { Insertable } from "kysely";
+
+import { DB } from "../../../../db/schema";
 import { Departements_academies_regions } from "../../files/Departements_academies_regions";
 import { streamIt } from "../../utils/streamIt";
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 
 export const importLieuxGeographiquesFactory =
   ({
-    createRegions = importRegionsDeps.createRegions,
+    createRegion = importRegionsDeps.createRegion,
     createAcademie = importRegionsDeps.createAcademie,
     createDepartement = importRegionsDeps.createDepartement,
     findDepartementAcademieRegions = importRegionsDeps.findDepartementAcademieRegions,
@@ -19,7 +19,7 @@ export const importLieuxGeographiquesFactory =
       (count) => findDepartementAcademieRegions({ offset: count, limit: 20 }),
       async (item) => {
         const region = createRegionFromLine(item);
-        await createRegions([region]);
+        await createRegion(region);
 
         const academie = createAcademieFromLine(item);
         if (!academie) return;
@@ -36,7 +36,9 @@ export const importLieuxGeographiquesFactory =
 
 export const importLieuxGeographiques = importLieuxGeographiquesFactory({});
 
-const createRegionFromLine = (data: Departements_academies_regions): Region => {
+const createRegionFromLine = (
+  data: Departements_academies_regions
+): Insertable<DB["region"]> => {
   return {
     codeRegion: data.codeRegion,
     libelleRegion: data.libelleRegion,
@@ -45,7 +47,7 @@ const createRegionFromLine = (data: Departements_academies_regions): Region => {
 
 const createAcademieFromLine = (
   data: Departements_academies_regions
-): Academie | undefined => {
+): Insertable<DB["academie"]> | undefined => {
   if (data.codeAcademie.length !== 2) return;
   return {
     codeAcademie: data.codeAcademie,
@@ -56,7 +58,7 @@ const createAcademieFromLine = (
 
 const createDepartementFromLine = (
   data: Departements_academies_regions
-): Departement | undefined => {
+): Insertable<DB["departement"]> | undefined => {
   if (!data.codeDepartement || !data.libelleDepartement) return;
   return {
     codeRegion: data.codeRegion,
