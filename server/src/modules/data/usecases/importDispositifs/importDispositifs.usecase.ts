@@ -1,9 +1,8 @@
-import { Dispositif } from "../../entities/Dispositif";
 import { NDispositifFormation } from "../../files/NDispositifFormation";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./importDispositifs.dependencies";
 
-const toDispositif = (data: NDispositifFormation): Dispositif => {
+const toDispositif = (data: NDispositifFormation) => {
   return {
     codeDispositif: data.DISPOSITIF_FORMATION,
     codeNiveauDiplome: data.NIVEAU_FORMATION_DIPLOME,

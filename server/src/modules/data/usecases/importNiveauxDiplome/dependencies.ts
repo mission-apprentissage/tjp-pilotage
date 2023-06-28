@@ -1,5 +1,7 @@
-import { db, pool } from "../../../../db/zapatos";
-import { NiveauDiplome } from "../../entities/NiveauDiplome";
+import { Insertable } from "kysely";
+
+import { kdb } from "../../../../db/db";
+import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 
 const findNNiveauDiplomes = async ({
@@ -16,10 +18,16 @@ const findNNiveauDiplomes = async ({
   });
 };
 
-const createNiveauDiplome = async (niveauDiplome: NiveauDiplome) => {
-  await db
-    .upsert("niveauDiplome", niveauDiplome, "codeNiveauDiplome")
-    .run(pool);
+const createNiveauDiplome = async (
+  niveauDiplome: Insertable<DB["niveauDiplome"]>
+) => {
+  await kdb
+    .insertInto("niveauDiplome")
+    .values(niveauDiplome)
+    .onConflict((oc) =>
+      oc.column("codeNiveauDiplome").doUpdateSet(niveauDiplome)
+    )
+    .execute();
 };
 
 export const dependencies = {

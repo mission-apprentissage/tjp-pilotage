@@ -1,7 +1,11 @@
-import { kdb } from "../../../../../../db/db";
-import { Formation } from "../../../../entities/Formation";
+import { Insertable } from "kysely";
 
-export const createFormation = async (formation: Omit<Formation, "id">) => {
+import { kdb } from "../../../../../../db/db";
+import { DB } from "../../../../../../db/schema";
+
+export const createFormation = async (
+  formation: Insertable<DB["formation"]>
+) => {
   await kdb
     .insertInto("formation")
     .values(formation)

@@ -1,8 +1,12 @@
+import { Insertable } from "kysely";
+
 import { kdb } from "../../../../db/db";
-import { FamilleMetier } from "../../entities/FamilleMetier";
+import { DB } from "../../../../db/schema";
 import { NMefLine } from "../../files/NMef";
 
-export const createFamillesMetiers = async (famillesMetier: FamilleMetier) =>
+export const createFamillesMetiers = async (
+  famillesMetier: Insertable<DB["familleMetier"]>
+) =>
   kdb
     .insertInto("familleMetier")
     .values(famillesMetier)

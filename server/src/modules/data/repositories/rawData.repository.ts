@@ -9,6 +9,7 @@ import { NDispositifFormation } from "../files/NDispositifFormation";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
 import { NMefLine } from "../files/NMef";
 import { NNiveauFormationDiplome } from "../files/NNiveauFormationDiplome";
+import { R } from "../services/inserJeunesApi/formatUaiData";
 
 type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
@@ -21,6 +22,7 @@ type LineTypes = {
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
+  ij: R & { uai: string; millesime: string };
 };
 
 const findRawData = async <T extends keyof LineTypes>({

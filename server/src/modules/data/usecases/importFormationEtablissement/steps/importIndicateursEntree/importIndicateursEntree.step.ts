@@ -1,6 +1,5 @@
 import { inject } from "injecti";
 
-import { IndicateurEntree } from "../../../../entities/IndicateurEntree";
 import {
   AnneeDispositif,
   AnneeEnseignement,
@@ -32,9 +31,9 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       rentreeScolaire: string;
       uai: string;
     }) => {
-      const isSpecialite = !!(await deps.findFamilleMetier({
+      const isSpecialite = await deps.findFamilleMetier({
         cfdSpecialite: cfd,
-      }));
+      });
 
       const anneeDebut = isSpecialite ? 1 : anneeDebutConstate;
 
@@ -54,7 +53,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
         rentreeScolaire,
       });
       if (!indicateurEntree) return;
-      await deps.createIndicateurEntree([indicateurEntree]);
+      await deps.createIndicateurEntree(indicateurEntree);
     };
   }
 );
@@ -74,7 +73,7 @@ const toIndicateurEntree = ({
   premiersVoeux: (number | null)[];
   rentreeScolaire: string;
 }) => {
-  const indicateurEntree: IndicateurEntree = {
+  const indicateurEntree = {
     formationEtablissementId,
     rentreeScolaire,
     anneeDebut: anneeDebut,
