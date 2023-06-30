@@ -100,13 +100,6 @@ export const formationSchemas = {
     }),
     response: {
       200: Type.Object({
-        stats: Type.Object({
-          tauxRemplissage: Type.Optional(Type.Number()),
-          tauxInsertion12mois: Type.Optional(Type.Number()),
-          tauxPoursuiteEtudes: Type.Optional(Type.Number()),
-          effectif: Type.Optional(Type.Number()),
-          nbFormations: Type.Optional(Type.Number()),
-        }),
         formations: Type.Array(
           Type.Object({
             codeFormationDiplome: Type.String(),
