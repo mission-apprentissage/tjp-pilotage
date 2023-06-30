@@ -29,7 +29,7 @@ export const getRegionStats = async ({
         "tauxPoursuiteEtudes"
       ),
     ])
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
@@ -59,7 +59,7 @@ export const getRegionStats = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   return { ...stats, ...statsSortie };
 };
