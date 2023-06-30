@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { config } from "../../../../../config/config";
+import { formatRegionData } from "./formatRegionData";
 import { formatUaiData } from "./formatUaiData";
 
 const instance = axios.create({
@@ -57,4 +58,22 @@ export const getUaiData = async ({
   }
 };
 
-export const inserJeunesApi = { getUaiData };
+export const getRegionData = async ({
+  codeRegionIj,
+  millesime,
+}: {
+  codeRegionIj: string;
+  millesime: string;
+}) => {
+  try {
+    const response = await instance.get(
+      `/region/${codeRegionIj}/millesime/${millesime}`
+    );
+    return formatRegionData(response.data);
+  } catch (e) {
+    if (axios.isAxiosError(e)) return undefined;
+    throw e;
+  }
+};
+
+export const inserJeunesApi = { getUaiData, getRegionData };

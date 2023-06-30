@@ -2,6 +2,8 @@ import { ExpressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../../db/schema";
 
+const seuil = 20;
+
 export const selectDenominateurInsertion12mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
@@ -14,7 +16,7 @@ export const selectTauxInsertion12mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
     case when 
-    ${selectDenominateurInsertion12mois(indicateurSortieAlias)} >= 20
+    ${selectDenominateurInsertion12mois(indicateurSortieAlias)} >= ${seuil}
     then (100 * ${sql.table(indicateurSortieAlias)}."nbInsertion12mois" 
     / ${selectDenominateurInsertion12mois(indicateurSortieAlias)})
     end
@@ -34,13 +36,13 @@ export const selectTauxInsertion12moisAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
       case when 
-      ${selectDenominateurInsertion12moisAgg(indicateurSortieAlias)} >= 20
+      ${selectDenominateurInsertion12moisAgg(indicateurSortieAlias)} >= ${seuil}
       then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbInsertion12mois") 
       / ${selectDenominateurInsertion12moisAgg(indicateurSortieAlias)})
       end
     `;
 
-export function withInsertionReg({
+export function withInsertionRedg({
   eb,
   millesimeSortie,
   codeRegion,
@@ -81,4 +83,29 @@ export function withInsertionReg({
     })
     .select([selectTauxInsertion12moisAgg("subIS").as("s")])
     .groupBy(["cfd", "dispositifId"]);
+}
+
+export function withInsertionReg({
+  eb,
+  millesimeSortie,
+  codeRegion,
+}: {
+  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
+  millesimeSortie: string;
+  codeRegion?: string | "ref";
+}) {
+  return eb
+    .selectFrom("indicateurRegionSortie as subIRS")
+    .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
+    .whereRef("subIRS.dispositifId", "=", "formationEtablissement.dispositifId")
+    .where("subIRS.millesimeSortie", "=", millesimeSortie)
+    .$call((q) => {
+      if (!codeRegion) return q;
+      if (codeRegion === "ref") {
+        return q.whereRef("subIRS.codeRegion", "=", "etablissement.codeRegion");
+      }
+      return q.where("subIRS.codeRegion", "=", codeRegion);
+    })
+    .select([selectTauxInsertion12moisAgg("subIRS").as("sa")])
+    .groupBy(["subIRS.cfd", "subIRS.dispositifId"]);
 }

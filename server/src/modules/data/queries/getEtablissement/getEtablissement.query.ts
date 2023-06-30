@@ -6,7 +6,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { notHistorique } from "../utils/notHistorique";
 import { withInsertionReg } from "../utils/tauxInsertion12mois";
 import { withPoursuiteReg } from "../utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../utils/tauxPression";
+import { selectTauxPression } from "../utils/tauxPression";
 
 export const getEtablissement = async ({
   uai,
@@ -80,7 +80,7 @@ export const getEtablissement = async ({
             "formation.CPCSousSecteur",
             sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs","indicateurEntree"."anneeDebut"::text)), 'null')::INT
             `.as("effectif"),
-            selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+            selectTauxPression("indicateurEntree").as("tauxPression"),
           ])
           .select((eb) => [
             withInsertionReg({ eb, codeRegion: "ref", millesimeSortie }).as(
@@ -99,6 +99,8 @@ export const getEtablissement = async ({
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
+            "indicateurEntree.capacites",
+            "indicateurEntree.premiersVoeux",
             "indicateurEntree.anneeDebut",
             "indicateurEntree.rentreeScolaire",
             "formation.codeNiveauDiplome",

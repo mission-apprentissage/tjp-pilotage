@@ -17,6 +17,20 @@ export const getRegionStats = async ({
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
+  const statsSortie = await kdb
+    .selectFrom("indicateurRegionSortie")
+    .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
+    .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .select([
+      selectTauxInsertion12moisAgg("indicateurRegionSortie").as(
+        "tauxInsertion12mois"
+      ),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
+        "tauxPoursuiteEtudes"
+      ),
+    ])
+    .executeTakeFirst();
+
   const stats = await kdb
     .selectFrom("formationEtablissement")
     .innerJoin("indicateurEntree", (join) =>
@@ -27,15 +41,6 @@ export const getRegionStats = async ({
           "indicateurEntree.formationEtablissementId"
         )
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .leftJoin("indicateurSortie", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurSortie.formationEtablissementId"
-        )
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
     .innerJoin(
       "etablissement",
@@ -50,14 +55,11 @@ export const getRegionStats = async ({
       ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
-      selectTauxInsertion12moisAgg("indicateurSortie").as(
-        "tauxInsertion12mois"
-      ),
-      selectTauxPoursuiteAgg("indicateurSortie").as("tauxPoursuiteEtudes"),
+
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
     .executeTakeFirst();
 
-  return stats;
+  return { ...stats, ...statsSortie };
 };

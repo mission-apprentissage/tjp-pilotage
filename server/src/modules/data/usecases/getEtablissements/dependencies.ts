@@ -82,15 +82,6 @@ const findEtablissementsInDb = async ({
         )
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
-    .leftJoin("indicateurSortie", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurSortie.formationEtablissementId"
-        )
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
-    )
     .innerJoin(
       "etablissement",
       "etablissement.UAI",
@@ -224,9 +215,7 @@ const findEtablissementsInDb = async ({
       "libelleOfficielFamille",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
-      "indicateurSortie.formationEtablissementId",
       "formationEtablissement.id",
-      "indicateurSortie.millesimeSortie",
       "dispositifId",
       "libelleDispositif",
       "libelleOfficielFamille",
