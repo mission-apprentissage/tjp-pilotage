@@ -27,39 +27,13 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { Multiselect } from "../../../components/Multiselect";
 import { OrderIcon } from "../../../components/OrderIcon";
+import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import {
   FormationLineContent,
   FormationLineLoader,
   FormationLinePlaceholder,
 } from "./components/LineContent";
-
-type Query = Parameters<typeof api.getFormations>[0]["query"];
-
-type Filters = Pick<
-  Query,
-  | "cfd"
-  | "cfdFamille"
-  | "codeAcademie"
-  | "codeDepartement"
-  | "codeDiplome"
-  | "codeRegion"
-  | "commune"
-  | "CPC"
-  | "CPCSecteur"
-  | "CPCSousSecteur"
-  | "libelleFiliere"
->;
-
-type Order = Pick<Query, "order" | "orderBy">;
-
-export type Line = Awaited<
-  ReturnType<ReturnType<typeof api.getFormations>["call"]>
->["formations"][number];
-
-type LineId = {
-  codeDispositif?: string;
-  cfd: string;
-};
+import { Filters, LineId, Order, Query } from "./types";
 
 const PAGE_SIZE = 30;
 
@@ -74,15 +48,14 @@ export default function Formations() {
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString());
+
   const setSearchParams = (params: {
     filters?: typeof filters;
     order?: typeof order;
     page?: typeof page;
   }) => {
     router.replace(
-      location.pathname +
-        "?" +
-        qs.stringify({ ...searchParams, ...params }, { encode: false })
+      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
   };
 
@@ -123,7 +96,6 @@ export default function Formations() {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    console.log(type, value);
     setSearchParams({
       page: 0,
       filters: { ...filters, [type]: value },
@@ -487,6 +459,7 @@ export default function Formations() {
                 >
                   <Tr>
                     <FormationLineContent
+                      filters={filters}
                       defaultRentreeScolaire="2022"
                       line={line}
                       expended={

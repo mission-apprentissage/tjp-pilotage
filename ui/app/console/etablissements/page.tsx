@@ -24,6 +24,7 @@ import { ETABLISSEMENTS_COLUMNS } from "shared";
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Multiselect } from "../../../components/Multiselect";
 import { TooltipIcon } from "../../../components/TooltipIcon";
@@ -55,6 +56,7 @@ type Filters = Pick<
   | "CPCSecteur"
   | "CPCSousSecteur"
   | "libelleFiliere"
+  | "codeDispositif"
 >;
 
 type Order = Pick<Query, "order" | "orderBy">;
@@ -84,9 +86,7 @@ export default function Etablissements() {
     page?: typeof page;
   }) => {
     router.replace(
-      location.pathname +
-        "?" +
-        qs.stringify({ ...searchParams, ...params }, { encode: false })
+      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
   };
 
