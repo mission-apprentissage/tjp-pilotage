@@ -145,7 +145,7 @@ export default function Etablissements() {
   const { data: historique, isFetching: isFetchingHistorique } = useQuery({
     keepPreviousData: false,
     staleTime: 10000000,
-    queryKey: ["formations", historiqueId],
+    queryKey: ["formations", historiqueId, filters],
     enabled: !!historiqueId,
     queryFn: async () => {
       if (!historiqueId) return;
