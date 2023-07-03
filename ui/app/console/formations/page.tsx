@@ -145,7 +145,7 @@ export default function Formations() {
       if (!historiqueId) return;
       return (
         await fetchFormations({
-          ...searchParams,
+          ...filters,
           cfd: [historiqueId?.cfd],
           codeDispositif: historiqueId?.codeDispositif
             ? [historiqueId?.codeDispositif]
