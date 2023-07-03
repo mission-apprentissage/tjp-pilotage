@@ -74,6 +74,7 @@ export const etablissementSchemas = {
           departements: Type.Array(OptionSchema),
           communes: Type.Array(OptionSchema),
           diplomes: Type.Array(OptionSchema),
+          dispositifs: Type.Array(OptionSchema),
           familles: Type.Array(OptionSchema),
           formations: Type.Array(OptionSchema),
           etablissements: Type.Array(OptionSchema),

@@ -256,6 +256,15 @@ export default function Etablissements() {
           Diplôme
         </Multiselect>
         <Multiselect
+          onClose={filterTracker("codeDispositif")}
+          width="52"
+          onChange={(selected) => handleFilters("codeDispositif", selected)}
+          options={data?.filters.dispositifs}
+          value={filters.codeDispositif ?? []}
+        >
+          Dispositif
+        </Multiselect>
+        <Multiselect
           onClose={filterTracker("cfdFamille")}
           width="52"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
