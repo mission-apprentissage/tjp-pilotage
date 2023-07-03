@@ -9,9 +9,11 @@ import {
   Tabs,
 } from "@chakra-ui/react";
 import Link from "next/link";
-import { useSelectedLayoutSegment } from "next/navigation";
+import { useSearchParams, useSelectedLayoutSegment } from "next/navigation";
+import qs from "qs";
 
 import { Breadcrumb } from "../../components/Breadcrumb";
+import { createParametrizedUrl } from "../../utils/createParametrizedUrl";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "formations") return 0;
@@ -21,6 +23,13 @@ const getTabIndex = (segment: string | null) => {
 export default function Layout({ children }: { children: React.ReactNode }) {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
+  const queryParams = useSearchParams();
+  const filters = qs.parse(queryParams.toString())?.["filters"];
+  const keepedFilters = Object.fromEntries(
+    Object.entries(filters ?? {}).filter(([filter]) =>
+      ["codeRegion"].includes(filter)
+    )
+  );
   return (
     <>
       <Container maxWidth={"container.xl"} py="4">
@@ -49,10 +58,20 @@ export default function Layout({ children }: { children: React.ReactNode }) {
         minHeight="0"
       >
         <TabList px={5}>
-          <Tab as={Link} href="/console/formations">
+          <Tab
+            as={Link}
+            href={createParametrizedUrl("/console/formations", {
+              filters: keepedFilters,
+            })}
+          >
             Par formations
           </Tab>
-          <Tab as={Link} href="/console/etablissements">
+          <Tab
+            as={Link}
+            href={createParametrizedUrl("/console/etablissements", {
+              filters: keepedFilters,
+            })}
+          >
             Par établissements
           </Tab>
         </TabList>
