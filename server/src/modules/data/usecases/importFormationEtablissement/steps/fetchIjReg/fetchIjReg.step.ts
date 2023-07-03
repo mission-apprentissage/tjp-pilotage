@@ -1,4 +1,3 @@
-import { writeFileSync } from "fs";
 import { inject } from "injecti";
 
 import { kdb } from "../../../../../../db/db";
@@ -35,10 +34,6 @@ export const [fetchIjReg] = inject(
         await clearIjCache({ codeRegion, millesime });
 
         if (!data) return;
-        writeFileSync(
-          `ll/${codeRegion}_${millesime}.json`,
-          JSON.stringify(data, undefined, "  ")
-        );
         await deps.cacheIjReg({ data, codeRegion, millesime });
       });
       await Promise.all(promises);
