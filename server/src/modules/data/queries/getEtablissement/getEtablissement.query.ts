@@ -4,7 +4,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { notHistorique } from "../utils/notHistorique";
-import { withInsertionReg } from "../utils/tauxInsertion12mois";
+import { withInsertionReg } from "../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../utils/tauxPoursuite";
 import { selectTauxPression } from "../utils/tauxPression";
 
@@ -84,7 +84,7 @@ export const getEtablissement = async ({
           ])
           .select((eb) => [
             withInsertionReg({ eb, codeRegion: "ref", millesimeSortie }).as(
-              "tauxInsertion12mois"
+              "tauxInsertion6mois"
             ),
             withPoursuiteReg({ eb, codeRegion: "ref", millesimeSortie }).as(
               "tauxPoursuiteEtudes"

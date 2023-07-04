@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../utils/effectifAnnee";
 import { notHistorique } from "../utils/notHistorique";
-import { selectTauxInsertion12moisAgg } from "../utils/tauxInsertion12mois";
+import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
@@ -22,8 +22,8 @@ export const getRegionStats = async ({
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .select([
-      selectTauxInsertion12moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion12mois"
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
+        "tauxInsertion6mois"
       ),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as(
         "tauxPoursuiteEtudes"

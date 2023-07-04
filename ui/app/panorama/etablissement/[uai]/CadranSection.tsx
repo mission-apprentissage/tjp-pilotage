@@ -44,9 +44,9 @@ export const CadranSection = ({
           item
         ): item is RequiredFields<
           ApiType<typeof api.getEtablissement>["formations"][number],
-          "tauxInsertion12mois" | "tauxPoursuiteEtudes"
+          "tauxInsertion6mois" | "tauxPoursuiteEtudes"
         > =>
-          item.tauxInsertion12mois !== undefined &&
+          item.tauxInsertion6mois !== undefined &&
           item.tauxPoursuiteEtudes !== undefined &&
           (!codeNiveauDiplome?.length ||
             codeNiveauDiplome.includes(item.codeNiveauDiplome))
@@ -132,7 +132,7 @@ const FormationTooltipContent = ({
       <InfoBlock
         mb="2"
         label="Taux d'emploi régional:"
-        value={`${formation.tauxInsertion12mois}%`}
+        value={`${formation.tauxInsertion6mois}%`}
       />
       <InfoBlock
         label="Taux de pousuite d'études régional:"

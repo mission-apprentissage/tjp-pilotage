@@ -22,10 +22,8 @@ const FormationLineSchema = Type.Object({
   effectif3: Type.Optional(Type.Number()),
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPression: Type.Optional(Type.Number()),
-  tauxInsertion12mois: Type.Optional(Type.Number()),
+  tauxInsertion6mois: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
-  deltaPoursuiteEtudes: Type.Optional(Type.Number()),
-  deltaInsertion12mois: Type.Optional(Type.Number()),
   CPC: Type.Optional(Type.String()),
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),
@@ -47,14 +45,7 @@ const FiltersSchema = Type.Object({
   CPCSousSecteur: Type.Optional(Type.Array(Type.String())),
   libelleFiliere: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
-  orderBy: Type.Optional(
-    Type.KeyOf(
-      Type.Omit(FormationLineSchema, [
-        "deltaPoursuiteEtudes",
-        "deltaInsertion12mois",
-      ])
-    )
-  ),
+  orderBy: Type.Optional(Type.KeyOf(FormationLineSchema)),
   withEmptyFormations: Type.Optional(Type.Boolean()),
 });
 
@@ -113,8 +104,8 @@ export const formationSchemas = {
             effectifPrecedent: Type.Optional(Type.Number()),
             tauxRemplissage: Type.Optional(Type.Number()),
             tauxPression: Type.Optional(Type.Number()),
-            tauxInsertion12mois: Type.Number(),
-            tauxInsertion12moisPrecedent: Type.Optional(Type.Number()),
+            tauxInsertion6mois: Type.Number(),
+            tauxInsertion6moisPrecedent: Type.Optional(Type.Number()),
             tauxPoursuiteEtudes: Type.Number(),
             tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
             CPC: Type.Optional(Type.String()),

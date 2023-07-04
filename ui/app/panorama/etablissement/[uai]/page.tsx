@@ -80,7 +80,7 @@ export default function Panorama({
       <CadranSection
         rentreeScolaire={etablissement?.rentreeScolaire}
         codeNiveauDiplome={codeNiveauDiplome}
-        meanInsertion={regionStats?.tauxInsertion12mois}
+        meanInsertion={regionStats?.tauxInsertion6mois}
         meanPoursuite={regionStats?.tauxPoursuiteEtudes}
         cadranFormations={etablissement?.formations}
       />

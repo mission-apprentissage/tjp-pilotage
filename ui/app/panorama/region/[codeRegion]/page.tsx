@@ -70,7 +70,7 @@ export default function Panorama({
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}
         libelleFiliere={libelleFiliere}
-        meanInsertion={stats?.tauxInsertion12mois}
+        meanInsertion={stats?.tauxInsertion6mois}
         meanPoursuite={stats?.tauxPoursuiteEtudes}
         cadranFormations={data?.formations}
       />

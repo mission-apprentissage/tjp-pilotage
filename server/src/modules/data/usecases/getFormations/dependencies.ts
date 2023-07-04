@@ -5,7 +5,7 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
@@ -146,7 +146,7 @@ const findFormationsInDb = async ({
         eb,
         millesimeSortie,
         codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
-      }).as("tauxInsertion12mois"),
+      }).as("tauxInsertion6mois"),
     ])
     .where(
       "codeFormationDiplome",
@@ -539,47 +539,7 @@ const findFiltersInDb = async ({
   };
 };
 
-const findReferencesInDb = async ({ codeRegion }: { codeRegion: string[] }) => {
-  return await kdb
-    .selectFrom("formation")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
-    )
-    .innerJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
-    )
-    .leftJoin("indicateurSortie", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurSortie.formationEtablissementId"
-        )
-        .on("indicateurSortie.millesimeSortie", "=", "2020_2021")
-    )
-    .select([
-      "niveauDiplome.codeNiveauDiplome",
-      sql<number>`(100 * SUM("indicateurSortie"."nbPoursuiteEtudes") / SUM("indicateurSortie"."effectifSortie"))
-      `.as("tauxPoursuiteEtudes"),
-      sql<number>`(100 * SUM("indicateurSortie"."nbInsertion12mois") / SUM("indicateurSortie"."nbSortants"))
-      `.as("tauxInsertion12mois"),
-    ])
-    .where("etablissement.codeRegion", "=", codeRegion)
-    .groupBy("niveauDiplome.codeNiveauDiplome")
-    .execute();
-};
-
 export const dependencies = {
   findFormationsInDb,
   findFiltersInDb,
-  findReferencesInDb,
 };

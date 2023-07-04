@@ -113,10 +113,10 @@ export const RegionSection = ({
               }
             />
             <StatCard
-              label="Taux d'emploi à 12 mois dans votre région"
+              label="Taux d'emploi à 6 mois dans votre région"
               value={
-                stats?.tauxInsertion12mois
-                  ? `${stats.tauxInsertion12mois}%`
+                stats?.tauxInsertion6mois
+                  ? `${stats.tauxInsertion6mois}%`
                   : undefined
               }
             />

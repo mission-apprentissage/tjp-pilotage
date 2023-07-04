@@ -5,7 +5,7 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion12mois";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPression } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissage } from "../../queries/utils/tauxRemplissage";
@@ -138,7 +138,7 @@ const findEtablissementsInDb = async ({
         eb,
         millesimeSortie,
         codeRegion: "ref",
-      }).as("tauxInsertion12mois")
+      }).as("tauxInsertion6mois")
     )
     .select((eb) =>
       withPoursuiteReg({

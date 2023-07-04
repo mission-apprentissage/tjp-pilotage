@@ -392,28 +392,13 @@ export default function Formations() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion12mois")}
+                  onClick={() => handleOrder("tauxInsertion6mois")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion12mois" />
-                  {FORMATIONS_COLUMNS.tauxInsertion12mois}
+                  <OrderIcon {...order} column="tauxInsertion6mois" />
+                  {FORMATIONS_COLUMNS.tauxInsertion6mois}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
-                  />
-                </Th>
-                <Th cursor="pointer">
-                  {FORMATIONS_COLUMNS.deltaInsertion12mois}
-                  <TooltipIcon
-                    ml="1"
-                    label={
-                      <>
-                        Ecart par rapport à la moyenne régionale d’insertion du
-                        niveau de diplôme (Cap, Bac pro, Bts...) <br />
-                        Ex: en région AURA, le bac pro Boulanger-Patissier est
-                        17 points plus insérant que la moyenne des autres bac
-                        pro de la région.
-                      </>
-                    }
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
                   />
                 </Th>
                 <Th
@@ -426,13 +411,6 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
-                  />
-                </Th>
-                <Th isNumeric>
-                  {FORMATIONS_COLUMNS.deltaPoursuiteEtudes}
-                  <TooltipIcon
-                    ml="1"
-                    label="Ecart par rapport à la moyenne régionale de poursuite d’étude du niveau de diplôme (Cap, Bac pro, Bts...)."
                   />
                 </Th>
                 <Th

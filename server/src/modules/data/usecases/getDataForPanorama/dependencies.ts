@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { selectTauxInsertion12mois } from "../../queries/utils/tauxInsertion12mois";
+import { selectTauxInsertion6mois } from "../../queries/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
@@ -97,14 +97,14 @@ export const queryFormations = async ({
         "effectifPrecedent"
       ),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
-      selectTauxInsertion12mois("IRSP").as("tauxInsertion12moisPrecedent"),
+      selectTauxInsertion6mois("IRSP").as("tauxInsertion6moisPrecedent"),
       selectTauxPoursuite("IRSP").as("tauxPoursuiteEtudesPrecedent"),
-      selectTauxInsertion12mois("indicateurRegionSortie").as(
-        "tauxInsertion12mois"
+      selectTauxInsertion6mois("indicateurRegionSortie").as(
+        "tauxInsertion6mois"
       ),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteEtudes"),
     ])
-    .where(selectTauxInsertion12mois("indicateurRegionSortie"), "is not", null)
+    .where(selectTauxInsertion6mois("indicateurRegionSortie"), "is not", null)
     .where(selectTauxPoursuite("indicateurRegionSortie"), "is not", null)
     .groupBy([
       "formationEtablissement.cfd",
@@ -113,11 +113,11 @@ export const queryFormations = async ({
       "formationEtablissement.dispositifId",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      "indicateurRegionSortie.nbInsertion12mois",
+      "indicateurRegionSortie.nbInsertion6mois",
       "indicateurRegionSortie.nbPoursuiteEtudes",
       "indicateurRegionSortie.effectifSortie",
       "indicateurRegionSortie.nbSortants",
-      "IRSP.nbInsertion12mois",
+      "IRSP.nbInsertion6mois",
       "IRSP.nbPoursuiteEtudes",
       "IRSP.effectifSortie",
       "IRSP.nbSortants",

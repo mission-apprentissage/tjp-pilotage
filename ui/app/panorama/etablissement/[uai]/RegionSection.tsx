@@ -29,8 +29,8 @@ export const RegionSection = ({
           label="Taux de poursuite d’étude dans la région"
         />
         <StatCard
-          value={regionsStats?.tauxInsertion12mois}
-          label="Taux d’emploi à 12 mois dans la région"
+          value={regionsStats?.tauxInsertion6mois}
+          label="Taux d’emploi à 6 mois dans la région"
         />
       </HStack>
     </Container>
