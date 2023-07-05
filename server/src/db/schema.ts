@@ -111,6 +111,20 @@ export interface IndicateurEtablissement {
   valeurAjoutee: number | null;
 }
 
+export interface IndicateurRegionSortie {
+  cfd: string | null;
+  dispositifId: string | null;
+  codeRegion: string | null;
+  voie: string | null;
+  millesimeSortie: string | null;
+  effectifSortie: number | null;
+  nbSortants: number | null;
+  nbPoursuiteEtudes: number | null;
+  nbInsertion6mois: number | null;
+  nbInsertion12mois: number | null;
+  nbInsertion24mois: number | null;
+}
+
 export interface IndicateurSortie {
   formationEtablissementId: string;
   millesimeSortie: string;
@@ -150,6 +164,7 @@ export interface DB {
   formationHistorique: FormationHistorique;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
+  indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   niveauDiplome: NiveauDiplome;
   rawData: RawData;

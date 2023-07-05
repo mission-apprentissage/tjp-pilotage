@@ -35,7 +35,6 @@
     "env-var": "7.1.1",
     "fastify": "^4.12.0",
     "fastify-qs": "^4.0.1",
-    "injecti": "^1.0.5",
     "jsonwebtoken": "8.5.1",
     "kysely": "^0.25.0",
     "lodash": "^4.17.21",

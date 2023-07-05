@@ -80,8 +80,8 @@ cli
 cli
   .command("importFormations")
   .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async (fetchIj: boolean) => {
-    await importFormationEtablissements({ fetchIj });
+  .action(async (fetchIj: boolean | string) => {
+    await importFormationEtablissements({ fetchIj: fetchIj !== "false" });
   });
 
 cli.parse(process.argv);

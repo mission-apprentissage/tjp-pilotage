@@ -27,7 +27,7 @@ export const Cadran = function <
   F extends {
     effectif?: number;
     tauxPoursuiteEtudes: number;
-    tauxInsertion12mois: number;
+    tauxInsertion6mois: number;
   }
 >({
   className,
@@ -84,7 +84,7 @@ export const Cadran = function <
 
   const series = data.map((formation) => [
     formation.tauxPoursuiteEtudes,
-    formation.tauxInsertion12mois,
+    formation.tauxInsertion6mois,
   ]);
 
   const option = useMemo<EChartsOption>(
@@ -118,7 +118,7 @@ export const Cadran = function <
       yAxis: [
         {
           type: "value",
-          name: "Taux d'emploi 12 mois",
+          name: "Taux d'emploi 6 mois",
           min: 0,
           max: 100,
           position: "left",

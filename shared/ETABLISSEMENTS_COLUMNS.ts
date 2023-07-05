@@ -11,7 +11,7 @@ export const ETABLISSEMENTS_COLUMNS = {
   capacite: "Capacité",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion12mois: "Tx d'emploi 12 mois régional",
+  tauxInsertion6mois: "Tx d'emploi 6 mois régional",
   tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
   valeurAjoutee: "Valeur ajoutée",
   decrochage: "Décrochage",

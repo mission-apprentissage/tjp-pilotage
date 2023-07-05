@@ -37,7 +37,7 @@ server.register(
 );
 
 if (process.env.PILOTAGE_ENV !== "dev") {
-  migrateToLatest().then(() => {
+  migrateToLatest(true).then(() => {
     server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
       if (err) {
         console.log(err);

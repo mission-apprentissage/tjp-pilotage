@@ -55,7 +55,7 @@ export const FormationTooltipContent = ({
       <InfoBlock
         mb="2"
         label="Tx d'emploi:"
-        value={`${formation?.tauxInsertion12mois}%`}
+        value={`${formation?.tauxInsertion6mois}%`}
       />
       <InfoBlock
         label="Tx de pousuite d'études:"

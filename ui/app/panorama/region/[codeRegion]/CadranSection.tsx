@@ -72,26 +72,26 @@ const filterFormations = ({
     .filter((item) => {
       if (tendance === "insertion_hausse") {
         return (
-          item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxInsertion12mois > item.tauxInsertion12moisPrecedent
+          item.tauxInsertion6moisPrecedent !== undefined &&
+          item.tauxInsertion6mois > item.tauxInsertion6moisPrecedent
         );
       }
       if (tendance === "insertion_baisse") {
         return (
-          item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxInsertion12mois < item.tauxInsertion12moisPrecedent
+          item.tauxInsertion6moisPrecedent !== undefined &&
+          item.tauxInsertion6mois < item.tauxInsertion6moisPrecedent
         );
       }
       if (tendance === "poursuite_hausse") {
         return (
-          item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes > item.tauxInsertion12moisPrecedent
+          item.tauxPoursuiteEtudesPrecedent !== undefined &&
+          item.tauxPoursuiteEtudes > item.tauxPoursuiteEtudesPrecedent
         );
       }
       if (tendance === "poursuite_baisse") {
         return (
-          item.tauxInsertion12moisPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes < item.tauxInsertion12moisPrecedent
+          item.tauxPoursuiteEtudesPrecedent !== undefined &&
+          item.tauxPoursuiteEtudes < item.tauxPoursuiteEtudesPrecedent
         );
       }
       if (tendance === "effectif_hausse") {
@@ -207,12 +207,12 @@ export const CadranSection = ({
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Tx d'emploi à 12 mois en hausse"
+                  label="Tx d'emploi à 6 mois en hausse"
                   value="insertion_hausse"
                   icon={<TendanceHausseIcon color="info.525" />}
                 />
                 <RadioCard
-                  label="Tx d'emploi à 12 mois en baisse"
+                  label="Tx d'emploi à 6 mois en baisse"
                   value="insertion_baisse"
                   icon={<TendanceBaisseIcon color="info.525" />}
                 />

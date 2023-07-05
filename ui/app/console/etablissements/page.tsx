@@ -145,7 +145,7 @@ export default function Etablissements() {
   const { data: historique, isFetching: isFetchingHistorique } = useQuery({
     keepPreviousData: false,
     staleTime: 10000000,
-    queryKey: ["formations", historiqueId],
+    queryKey: ["formations", historiqueId, filters],
     enabled: !!historiqueId,
     queryFn: async () => {
       if (!historiqueId) return;
@@ -434,13 +434,13 @@ export default function Etablissements() {
                 <Th
                   isNumeric
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion12mois")}
+                  onClick={() => handleOrder("tauxInsertion6mois")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion12mois" />
-                  {ETABLISSEMENTS_COLUMNS.tauxInsertion12mois}
+                  <OrderIcon {...order} column="tauxInsertion6mois" />
+                  {ETABLISSEMENTS_COLUMNS.tauxInsertion6mois}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 12 mois après leur sortie d’étude."
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
                   />
                 </Th>
                 <Th
