@@ -39,6 +39,7 @@ export default function Panorama({
     ["getRegionStats", { codeRegion: etablissement?.codeRegion }],
     api.getRegionStats({
       params: { codeRegion: etablissement?.codeRegion as string },
+      query: {},
     }).call,
     { keepPreviousData: true, staleTime: 10000000, enabled: !!etablissement }
   );

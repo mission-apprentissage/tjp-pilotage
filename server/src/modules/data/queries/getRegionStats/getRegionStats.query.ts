@@ -10,16 +10,27 @@ import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
 
 export const getRegionStats = async ({
   codeRegion,
+  codeDiplome,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
+  codeDiplome?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
+    .leftJoin(
+      "formation",
+      "formation.codeFormationDiplome",
+      "indicateurRegionSortie.cfd"
+    )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
+    .$call((q) => {
+      if (!codeDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+    })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
       eb.cmpr(
@@ -40,6 +51,11 @@ export const getRegionStats = async ({
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
+    .leftJoin(
+      "formation",
+      "formation.codeFormationDiplome",
+      "formationEtablissement.cfd"
+    )
     .innerJoin("indicateurEntree", (join) =>
       join
         .onRef(
@@ -55,6 +71,10 @@ export const getRegionStats = async ({
       "etablissement.UAI"
     )
     .where("etablissement.codeRegion", "=", codeRegion)
+    .$call((q) => {
+      if (!codeDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+    })
     .where(notHistorique)
     .select([
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
