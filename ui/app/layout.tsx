@@ -1,5 +1,4 @@
 import "./globals.css";
-import "react-notion-x/src/styles.css";
 
 import { Metadata } from "next";
 
@@ -11,10 +10,6 @@ export const metadata: Metadata = {
   description: "Pilotage de la carte des formations",
 };
 
-export default function RootLayout({
-  children,
-}: {
-  children: React.ReactNode;
-}) {
+export default ({ children }: { children: React.ReactNode }) => {
   return <RootLayoutClient>{children}</RootLayoutClient>;
-}
+};
