@@ -64,16 +64,10 @@ export const FormationLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion12mois} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaInsertion12mois} />
+        <GraphWrapper value={line.tauxInsertion6mois} />
       </Td>
       <Td isNumeric>
         <GraphWrapper value={line.tauxPoursuiteEtudes} />
-      </Td>
-      <Td isNumeric>
-        <GraphWrapper centered value={line.deltaPoursuiteEtudes} />
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>

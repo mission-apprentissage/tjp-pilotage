@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../utils/effectifAnnee";
 import { notHistorique } from "../utils/notHistorique";
-import { selectTauxInsertion12moisAgg } from "../utils/tauxInsertion12mois";
+import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
@@ -17,6 +17,27 @@ export const getRegionStats = async ({
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
+  const statsSortie = await kdb
+    .selectFrom("indicateurRegionSortie")
+    .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
+    .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where((eb) =>
+      eb.cmpr(
+        "indicateurRegionSortie.cfd",
+        "not in",
+        sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+      )
+    )
+    .select([
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
+        "tauxInsertion6mois"
+      ),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
+        "tauxPoursuiteEtudes"
+      ),
+    ])
+    .executeTakeFirstOrThrow();
+
   const stats = await kdb
     .selectFrom("formationEtablissement")
     .innerJoin("indicateurEntree", (join) =>
@@ -27,15 +48,6 @@ export const getRegionStats = async ({
           "indicateurEntree.formationEtablissementId"
         )
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .leftJoin("indicateurSortie", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurSortie.formationEtablissementId"
-        )
-        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
     .innerJoin(
       "etablissement",
@@ -50,14 +62,11 @@ export const getRegionStats = async ({
       ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
-      selectTauxInsertion12moisAgg("indicateurSortie").as(
-        "tauxInsertion12mois"
-      ),
-      selectTauxPoursuiteAgg("indicateurSortie").as("tauxPoursuiteEtudes"),
+
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
-  return stats;
+  return { ...stats, ...statsSortie };
 };

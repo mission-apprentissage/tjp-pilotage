@@ -72,7 +72,7 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion12mois} />
+        <GraphWrapper value={line.tauxInsertion6mois} />
       </Td>
       <Td isNumeric>
         <GraphWrapper value={line.tauxPoursuiteEtudes} />

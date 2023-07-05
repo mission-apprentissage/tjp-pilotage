@@ -172,8 +172,10 @@ export const Multiselect = chakra(
 
     const filterOptions = () => {
       return search
-        ? preparedOptions.filter((item) =>
-            item.label?.toLowerCase().includes(search.toLowerCase())
+        ? preparedOptions.filter(
+            (item) =>
+              item.label?.toLowerCase().includes(search.toLowerCase()) ||
+              item.value?.toLowerCase().includes(search.toLowerCase())
           )
         : preparedOptions;
     };

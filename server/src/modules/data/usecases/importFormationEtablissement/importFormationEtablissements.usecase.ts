@@ -11,11 +11,13 @@ import { dependencies } from "./dependencies.di";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { logger } from "./importLogger";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
+import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
 import { importIndicateurEtablissement } from "./steps/importIndicateurEtablissement/importIndicateurEtablissement.step";
 import { importIndicateurEntree } from "./steps/importIndicateursEntree/importIndicateursEntree.step";
 import { importIndicateurSortie } from "./steps/importIndicateursSortie/importIndicateursSortie.step";
+import { importIndicateursRegionSortie } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
 
 const findDiplomesProfessionnels = ({
   offset,
@@ -44,10 +46,15 @@ export const [importFormationEtablissements] = inject(
     importFormation,
     findDiplomesProfessionnels,
     fetchIJ,
+    fetchIjReg,
+    importIndicateursRegionSortie,
   },
   (deps) => {
     logger.reset();
     return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
+      if (fetchIj) {
+        await deps.fetchIjReg();
+      }
       await streamIt(
         async (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
@@ -66,6 +73,13 @@ export const [importFormationEtablissements] = inject(
 
           for (const cfdDispositif of cfdDispositifs) {
             const { dispositifId, anneesDispositif } = cfdDispositif;
+
+            await deps.importIndicateursRegionSortie({
+              cfd,
+              dispositifId,
+
+              mefstat: anneesDispositif[anneesDispositif.length - 1].mefstat,
+            });
 
             for (const rentreeScolaire of RENTREES_SCOLAIRES) {
               const { enseignements, anneeDebutConstate } =

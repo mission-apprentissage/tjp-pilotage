@@ -1,6 +1,7 @@
 import { Kysely } from "kysely";
 
 import * as migration1 from "./1";
+import * as migration2 from "./2";
 
 type Migration = {
   up: (db: Kysely<unknown>) => Promise<void>;
@@ -11,4 +12,5 @@ type Migrations = Record<string, Migration>;
 
 export const migrations: Migrations = {
   migration1,
+  migration2,
 };

@@ -46,8 +46,8 @@ export const TopFlopSection = ({
     const sorted = filtered
       .slice()
       .sort((a, b) =>
-        a.tauxInsertion12mois + a.tauxPoursuiteEtudes <
-        b.tauxInsertion12mois + b.tauxPoursuiteEtudes
+        a.tauxInsertion6mois + a.tauxPoursuiteEtudes <
+        b.tauxInsertion6mois + b.tauxPoursuiteEtudes
           ? 1
           : -1
       );
@@ -91,7 +91,7 @@ const TopFlopChart = ({
           <TopItem
             key={`${item.codeFormationDiplome}_${item.dispositifId}`}
             formation={item}
-            value={(item.tauxInsertion12mois + item.tauxPoursuiteEtudes) / 2}
+            value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
           />
         ))}
       </VStack>
@@ -105,7 +105,7 @@ const TopFlopChart = ({
               key={`${item.codeFormationDiplome}_${item.dispositifId}`}
               formation={item}
               color={"#FD8E81"}
-              value={(item.tauxInsertion12mois + item.tauxPoursuiteEtudes) / 2}
+              value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
             />
           ))}
       </VStack>
@@ -150,7 +150,7 @@ const TopItem = ({
               fontSize={11}
               whiteSpace="nowrap"
             >
-              {`${formation.tauxInsertion12mois.toFixed(
+              {`${formation.tauxInsertion6mois.toFixed(
                 0
               )}% + ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
             </Flex>

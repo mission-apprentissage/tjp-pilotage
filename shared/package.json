@@ -9,7 +9,8 @@
   "private": true,
   "dependencies": {
     "@sinclair/typebox": "^0.25.21",
-    "typebox-client": "^1.0.14"
+    "injecti": "^1.0.5",
+    "typebox-client": "^1.0.20"
   },
   "devDependencies": {
     "axios": "1.3.5"

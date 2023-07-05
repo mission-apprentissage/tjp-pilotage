@@ -9,6 +9,7 @@ import { NDispositifFormation } from "../files/NDispositifFormation";
 import { NFormationDiplomeLine } from "../files/NFormationDiplome";
 import { NMefLine } from "../files/NMef";
 import { NNiveauFormationDiplome } from "../files/NNiveauFormationDiplome";
+import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
 import { R } from "../services/inserJeunesApi/formatUaiData";
 
 type LineTypes = {
@@ -23,6 +24,7 @@ type LineTypes = {
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
+  ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

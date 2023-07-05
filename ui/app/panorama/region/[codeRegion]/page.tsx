@@ -35,6 +35,15 @@ export default function Panorama({
     }
   );
 
+  const { data: stats } = useQuery(
+    ["region", codeRegion],
+    api.getRegionStats({ params: { codeRegion } }).call,
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
+
   const { data } = useQuery(
     ["formationForPanorama", { codeRegion }],
     api.getDataForPanorama({
@@ -49,7 +58,7 @@ export default function Panorama({
         onCodeRegionChanged={onCodeRegionChanged}
         codeRegion={codeRegion}
         regionOptions={regionOptions}
-        stats={data?.stats}
+        stats={stats}
       />
       <FiltersSection
         onDiplomeChanged={setCodeNiveauDiplome}
@@ -61,8 +70,8 @@ export default function Panorama({
       <CadranSection
         codeNiveauDiplome={codeNiveauDiplome}
         libelleFiliere={libelleFiliere}
-        meanInsertion={data?.stats.tauxInsertion12mois}
-        meanPoursuite={data?.stats.tauxPoursuiteEtudes}
+        meanInsertion={stats?.tauxInsertion6mois}
+        meanPoursuite={stats?.tauxPoursuiteEtudes}
         cadranFormations={data?.formations}
       />
       <TopFlopSection
