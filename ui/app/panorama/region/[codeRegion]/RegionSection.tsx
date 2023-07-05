@@ -17,6 +17,8 @@ import {
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
+import { Multiselect } from "../../../../components/Multiselect";
+import { PanoramaFormation } from "./type";
 
 const StatCard = ({
   label,
@@ -50,15 +52,33 @@ export const RegionSection = ({
   onCodeRegionChanged,
   regionOptions,
   stats,
+  codeDiplome,
+  onDiplomeChanged,
+  formations,
 }: {
+  onDiplomeChanged?: (diplome: string[]) => void;
+  codeDiplome?: string[];
   codeRegion?: string;
   onCodeRegionChanged: (codeRegion: string) => void;
   regionOptions?: { label: string; value: string }[];
   stats?: ApiType<typeof api.getRegionStats>;
+  formations?: PanoramaFormation[];
 }) => {
   const labelRegion = regionOptions?.find(
     (item) => item.value === codeRegion
   )?.label;
+
+  const diplomeOptions = Object.values(
+    formations?.reduce((acc, cur) => {
+      return {
+        ...acc,
+        [cur.codeNiveauDiplome]: {
+          value: cur.codeNiveauDiplome,
+          label: cur.libelleNiveauDiplome as string,
+        },
+      };
+    }, {} as Record<string, { value: string; label: string }>) ?? {}
+  );
 
   return (
     <Container
@@ -84,6 +104,16 @@ export const RegionSection = ({
                 </option>
               ))}
             </Select>
+            <FormLabel mt="4">Diplôme</FormLabel>
+            <Multiselect
+              onChange={onDiplomeChanged}
+              width="100%"
+              options={diplomeOptions}
+              value={codeDiplome ?? []}
+              size="md"
+            >
+              Diplôme
+            </Multiselect>
           </FormControl>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />

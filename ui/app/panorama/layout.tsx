@@ -23,8 +23,6 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
 
-  console.log(segment);
-
   return (
     <>
       <Container maxWidth={"container.xl"} py="4">
