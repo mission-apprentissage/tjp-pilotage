@@ -21,6 +21,13 @@ export const getRegionStats = async ({
     .selectFrom("indicateurRegionSortie")
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where((eb) =>
+      eb.cmpr(
+        "indicateurRegionSortie.cfd",
+        "not in",
+        sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+      )
+    )
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
         "tauxInsertion6mois"
