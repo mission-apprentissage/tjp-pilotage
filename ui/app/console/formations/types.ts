@@ -16,6 +16,7 @@ export type Filters = Pick<
   | "CPCSecteur"
   | "CPCSousSecteur"
   | "libelleFiliere"
+  | "codeDispositif"
 >;
 
 export type Order = Pick<Query, "order" | "orderBy">;

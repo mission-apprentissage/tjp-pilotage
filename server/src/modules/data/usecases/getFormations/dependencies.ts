@@ -268,6 +268,7 @@ const findFiltersInDb = async ({
   cfdFamille,
   cfd,
   codeDiplome,
+  codeDispositif,
   CPC,
   CPCSecteur,
   CPCSousSecteur,
@@ -363,6 +364,13 @@ const findFiltersInDb = async ({
     return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
+  const inCodeDispositif = (
+    eb: ExpressionBuilder<DB, "formationEtablissement">
+  ) => {
+    if (!codeDispositif) return sql<true>`true`;
+    return eb.cmpr("formationEtablissement.dispositifId", "in", codeDispositif);
+  };
+
   const inCPC = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!CPC) return sql<true>`true`;
     return eb.cmpr("formation.CPC", "in", CPC);
@@ -429,7 +437,23 @@ const findFiltersInDb = async ({
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCfd(eb)]),
+        eb.and([inCfdFamille(eb), inCfd(eb), inCodeDispositif(eb)]),
+        codeDiplome
+          ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+          : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const dispositifs = await base
+    .select([
+      "dispositif.libelleDispositif as label",
+      "dispositif.codeDispositif as value",
+    ])
+    .where("dispositif.codeDispositif", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([inCfdFamille(eb), inCfd(eb), inCodeDiplome(eb)]),
         codeDiplome
           ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
           : sql`false`,
@@ -445,7 +469,7 @@ const findFiltersInDb = async ({
     .where("familleMetier.cfdFamille", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfd(eb), inCodeDiplome(eb)]),
+        eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
         cfdFamille
           ? eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)
           : sql`false`,
@@ -462,7 +486,7 @@ const findFiltersInDb = async ({
     .where("formation.codeFormationDiplome", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
+        eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
         cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`false`,
       ]);
     })
@@ -530,6 +554,7 @@ const findFiltersInDb = async ({
     academies: (await academies).map(cleanNull),
     communes: (await communes).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
+    dispositifs: (await dispositifs).map(cleanNull),
     familles: (await familles).map(cleanNull),
     formations: (await formations).map(cleanNull),
     CPCs: (await CPCs).map(cleanNull),
