@@ -1,25 +1,28 @@
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, IconButton, Skeleton, Td, Tr } from "@chakra-ui/react";
+import { Box, IconButton, Link, Skeleton, Td, Tr } from "@chakra-ui/react";
+import NextLink from "next/link";
 
 import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../../components/GraphWrapper";
-import { Line } from "../page";
-
+import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
+import { Filters, Line } from "../types";
 export const FormationLineContent = ({
   line,
   defaultRentreeScolaire,
   onClickExpend,
   onClickCollapse,
   expended = false,
+  filters,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
+  filters?: Filters;
 }) => {
   return (
     <>
@@ -45,7 +48,22 @@ export const FormationLineContent = ({
       <Td minW={300} maxW={300} whiteSpace="normal">
         {line.libelleDiplome ?? "-"}
       </Td>
-      <Td isNumeric>{line.nbEtablissement ?? "-"}</Td>
+      <Td isNumeric>
+        <Link
+          as={NextLink}
+          href={createParametrizedUrl("/console/etablissements", {
+            filters: {
+              ...filters,
+              cfd: [line.codeFormationDiplome],
+              codeDispositif: line.dispositifId
+                ? [line.dispositifId]
+                : undefined,
+            },
+          })}
+        >
+          {line.nbEtablissement ?? "-"}
+        </Link>
+      </Td>
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
