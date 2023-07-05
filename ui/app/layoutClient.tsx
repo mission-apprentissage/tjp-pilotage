@@ -1,5 +1,4 @@
 "use client";
-import "./globals.css";
 import "react-notion-x/src/styles.css";
 
 import { CacheProvider } from "@chakra-ui/next-js";
@@ -10,7 +9,6 @@ import PlausibleProvider from "next-plausible";
 import { useEffect, useRef, useState } from "react";
 
 import { theme } from "../theme/theme";
-import { Header } from "./components/Header";
 
 const useTracking = () => {
   const searchParams = useSearchParams();
@@ -21,6 +19,7 @@ const useTracking = () => {
         (typeof localStorage !== "undefined" &&
           localStorage.getItem("notracking") === "true"))
   );
+
   useEffect(() => {
     if (param === "reset") {
       localStorage.removeItem("notracking");
@@ -57,7 +56,6 @@ export default function RootLayoutClient({
           <CacheProvider>
             <ChakraProvider theme={theme}>
               <Flex direction="column" height="100vh" overflow="auto">
-                <Header />
                 {children}
               </Flex>
             </ChakraProvider>
