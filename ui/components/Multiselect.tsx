@@ -129,6 +129,7 @@ export const Multiselect = chakra(
     className,
     disabled,
     value,
+    size,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -137,6 +138,7 @@ export const Multiselect = chakra(
     className?: string;
     disabled?: boolean;
     value: string[];
+    size?: "sm" | "md";
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -208,7 +210,7 @@ export const Multiselect = chakra(
       >
         <MenuButton
           as={Button}
-          size="sm"
+          size={size ?? "sm"}
           isDisabled={disabled}
           pointerEvents={disabled ? "none" : "unset"}
           className={className}

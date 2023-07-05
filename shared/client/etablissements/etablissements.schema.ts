@@ -126,7 +126,12 @@ export const etablissementSchemas = {
     },
   },
   getRegionStats: {
-    params: Type.Object({ codeRegion: Type.String() }),
+    params: Type.Object({
+      codeRegion: Type.String(),
+    }),
+    querystring: Type.Object({
+      codeDiplome: Type.Optional(Type.Array(Type.String())),
+    }),
     response: {
       200: Type.Object({
         effectif: Type.Number(),
