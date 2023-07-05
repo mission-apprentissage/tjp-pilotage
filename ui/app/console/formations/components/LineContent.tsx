@@ -50,6 +50,7 @@ export const FormationLineContent = ({
       </Td>
       <Td isNumeric>
         <Link
+          variant="text"
           as={NextLink}
           href={createParametrizedUrl("/console/etablissements", {
             filters: {
