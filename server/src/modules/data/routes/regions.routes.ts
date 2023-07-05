@@ -18,8 +18,10 @@ export const regionsRoutes = ({ server }: { server: Server }) => {
     "/region/:codeRegion",
     { schema: ROUTES_CONFIG.getRegionStats },
     async (request, response) => {
-      const { codeRegion } = request.params;
-      const regionStats = await getRegionStats({ codeRegion });
+      const regionStats = await getRegionStats({
+        ...request.params,
+        ...request.query,
+      });
       if (!regionStats) return response.status(404).send();
       response.status(200).send(regionStats);
     }
