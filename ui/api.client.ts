@@ -6,5 +6,5 @@ export const api = createClient(
 );
 
 export const serverApi = createClient(
-  axios.create({ baseURL: `http://server:5000/api` })
+  axios.create({ baseURL: `http://localhost/api` })
 );

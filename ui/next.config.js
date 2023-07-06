@@ -9,7 +9,7 @@ const nextConfig = {
     appDir: true,
     outputFileTracingRoot: path.join(__dirname, '../'),
   },
-  output: 'standalone'
+  // output: 'standalone'
 }
 
 module.exports = nextConfig

@@ -53,6 +53,8 @@ COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
 RUN chmod 644 /etc/logrotate.conf
 
 #Nginx
-COPY app/nginx /etc/nginx
+# COPY app/nginx /etc/nginx
+ARG DIR=dev
+COPY ${DIR} /etc/nginx
 
 VOLUME /data

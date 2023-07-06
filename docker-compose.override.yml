@@ -10,9 +10,12 @@ services:
       - ./:/app/:z
 
   reverse_proxy:
+    build:
+      args:
+        - DIR=dev
     volumes:
       - pilotage_nginx_data:/data:z
-      - ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
+      #- ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
 
   ui:
     mem_limit: 3g
@@ -31,10 +34,12 @@ services:
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_SERVER_URI=http://server:5000/api
         - NEXT_PUBLIC_SERVER_URL=http://localhost/api
-      
+
     depends_on:
       - server
   server:
+    deploy:
+      replicas: 0
     restart: "no"
     ports:
       - "127.0.0.1:9229:9229" # Allows remote debugging
@@ -54,15 +59,15 @@ services:
       - postgres
 
   postgres:
-      environment:
-          - POSTGRES_PASSWORD=password
-      ports:
-          - "5432:5432"
-      volumes:
-          - pilotage_postgres_data:/var/lib/postgresql/data:z
-      depends_on:
-          repo_modules:
-              condition: service_completed_successfully
+    environment:
+      - POSTGRES_PASSWORD=password
+    ports:
+      - "5432:5432"
+    volumes:
+      - pilotage_postgres_data:/var/lib/postgresql/data:z
+    depends_on:
+      repo_modules:
+        condition: service_completed_successfully
 
 volumes:
   pilotage_postgres_data:
