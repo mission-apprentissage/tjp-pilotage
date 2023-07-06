@@ -32,8 +32,8 @@ services:
         - NEXT_PUBLIC_METABASE_URL=https://orion.inserjeunes.beta.gouv.fr/
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
-        - NEXT_SERVER_URI=http://server:5000/api
         - NEXT_PUBLIC_SERVER_URL=http://localhost/api
+        - APP_CONTAINER_URL=http://localhost/api
 
     depends_on:
       - server

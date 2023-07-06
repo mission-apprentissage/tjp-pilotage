@@ -6,5 +6,5 @@ export const api = createClient(
 );
 
 export const serverApi = createClient(
-  axios.create({ baseURL: `http://localhost/api` })
+  axios.create({ baseURL: process.env.APP_CONTAINER_URL })
 );
