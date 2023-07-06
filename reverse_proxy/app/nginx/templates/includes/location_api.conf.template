@@ -1,4 +1,4 @@
 location /api {
-    set $upstream http://server:5000;
+    set $upstream http://localhost:5000;
     include includes/proxy.conf;
 }

@@ -4,7 +4,7 @@ services:
   reverse_proxy:
     build:
       args:
-        - DIR=dev
+        - DIR=app
     environment:
       - SERVER_NAME={{dns_name}}
       - NGINX_ALWAYS_TLS_REDIRECT=true
