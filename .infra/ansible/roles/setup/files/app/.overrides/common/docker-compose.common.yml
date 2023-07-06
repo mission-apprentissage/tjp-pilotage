@@ -13,7 +13,6 @@ services:
     volumes:
       - /opt/pilotage/data/nginx:/data
       - /opt/pilotage/data/ssl:/ssl:ro
-      - /opt/pilotage/.overrides/reverse_proxy/includes:/etc/nginx/templates/includes/env
 
   metabase:
     image: metabase/metabase:v0.42.0
