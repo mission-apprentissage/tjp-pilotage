@@ -33,7 +33,7 @@ services:
         - NEXT_PUBLIC_METABASE_SECRET_KEY=
         - SKIP_PREFLIGHT_CHECK=true
         - NEXT_PUBLIC_SERVER_URL=http://localhost/api
-        - APP_CONTAINER_URL=http://localhost/api
+        - NEXT_PUBLIC_APP_CONTAINER_URL=http://localhost:5000/api
 
     depends_on:
       - server
