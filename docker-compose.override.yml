@@ -1,62 +1,12 @@
 # Override containers for local / dev environnement
 version: "2.4"
 services:
-  repo_modules:
-    restart: "no"
-    build:
-      context: .
-      dockerfile: Dockerfile.dev
-    volumes:
-      - ./:/app/:z
-
   reverse_proxy:
     build:
       args:
         - DIR=dev
     volumes:
       - pilotage_nginx_data:/data:z
-      #- ./reverse_proxy/dev/includes:/etc/nginx/templates/includes/env
-
-  ui:
-    mem_limit: 3g
-    stdin_open: true
-    volumes:
-      - ./:/app/:z
-    build:
-      context: .
-      dockerfile: ui/Dockerfile.dev
-      args:
-        - NEXT_PUBLIC_ENV=dev
-        - NEXT_PUBLIC_BASE_URL=http://localhost
-        - NEXT_PUBLIC_BASE_HOST=localhost
-        - NEXT_PUBLIC_METABASE_URL=https://orion.inserjeunes.beta.gouv.fr/
-        - NEXT_PUBLIC_METABASE_SECRET_KEY=
-        - SKIP_PREFLIGHT_CHECK=true
-        - NEXT_PUBLIC_SERVER_URL=http://localhost/api
-        - NEXT_PUBLIC_APP_CONTAINER_URL=http://localhost:5000/api
-
-    depends_on:
-      - server
-  server:
-    deploy:
-      replicas: 0
-    restart: "no"
-    ports:
-      - "127.0.0.1:9229:9229" # Allows remote debugging
-      - "127.0.0.1:5000:5000"
-    volumes:
-      - ./:/app/:z
-      - pilotage_server_data:/data:z
-    build:
-      context: .
-      dockerfile: server/Dockerfile.dev
-    environment:
-      - PILOTAGE_POSTGRES_URI=postgresql://postgres:password@postgres:5432/postgres
-      - PILOTAGE_ENV=dev
-      - PILOTAGE_LOG_LEVEL=debug
-      - PILOTAGE_LOG_DESTINATIONS=stdout,mongodb
-    depends_on:
-      - postgres
 
   postgres:
     environment:
@@ -65,9 +15,6 @@ services:
       - "5432:5432"
     volumes:
       - pilotage_postgres_data:/var/lib/postgresql/data:z
-    depends_on:
-      repo_modules:
-        condition: service_completed_successfully
 
 volumes:
   pilotage_postgres_data:
