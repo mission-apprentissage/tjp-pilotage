@@ -2,6 +2,9 @@
 version: "2.4"
 services:
   reverse_proxy:
+    build:
+      args:
+        - DIR=app
     environment:
       - SERVER_NAME={{dns_name}}
       - NGINX_ALWAYS_TLS_REDIRECT=true
@@ -10,11 +13,6 @@ services:
     volumes:
       - /opt/pilotage/data/nginx:/data
       - /opt/pilotage/data/ssl:/ssl:ro
-      - /opt/pilotage/.overrides/reverse_proxy/includes:/etc/nginx/templates/includes/env
-
-  server:
-    volumes:
-      - /opt/pilotage/data/server:/data
 
   metabase:
     image: metabase/metabase:v0.42.0
