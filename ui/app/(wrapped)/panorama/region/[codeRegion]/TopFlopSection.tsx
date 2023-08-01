@@ -46,10 +46,7 @@ export const TopFlopSection = ({
     const sorted = filtered
       .slice()
       .sort((a, b) =>
-        a.tauxInsertion6mois + a.tauxPoursuiteEtudes <
-        b.tauxInsertion6mois + b.tauxPoursuiteEtudes
-          ? 1
-          : -1
+        a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
       );
 
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
@@ -84,14 +81,14 @@ const TopFlopChart = ({
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
       <Text mb="4" color="grey" fontSize="sm" textAlign="right">
-        Taux d'emploi + Taux de poursuite d'études
+        Taux de devenir favorable
       </Text>
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
             key={`${item.codeFormationDiplome}_${item.dispositifId}`}
             formation={item}
-            value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
+            value={item.tauxDevenirFavorable}
           />
         ))}
       </VStack>
@@ -105,7 +102,7 @@ const TopFlopChart = ({
               key={`${item.codeFormationDiplome}_${item.dispositifId}`}
               formation={item}
               color={"#FD8E81"}
-              value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
+              value={item.tauxDevenirFavorable}
             />
           ))}
       </VStack>
@@ -150,9 +147,7 @@ const TopItem = ({
               fontSize={11}
               whiteSpace="nowrap"
             >
-              {`${formation.tauxInsertion6mois.toFixed(
-                0
-              )}% + ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
+              {`${formation.tauxDevenirFavorable.toFixed(0)}%`}
             </Flex>
           </PopoverTrigger>
         </Box>

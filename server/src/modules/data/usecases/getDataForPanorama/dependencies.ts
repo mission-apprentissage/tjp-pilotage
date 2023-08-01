@@ -3,6 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { selectTauxDevenirFavorable } from "../../queries/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../queries/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
@@ -103,6 +104,9 @@ export const queryFormations = async ({
         "tauxInsertion6mois"
       ),
       selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteEtudes"),
+      selectTauxDevenirFavorable("indicateurRegionSortie").as(
+        "tauxDevenirFavorable"
+      ),
     ])
     .where(selectTauxInsertion6mois("indicateurRegionSortie"), "is not", null)
     .where(selectTauxPoursuite("indicateurRegionSortie"), "is not", null)
