@@ -1,8 +1,11 @@
+- name: update apt list
+  apt:
+    update_cache: yes
+
 - name: Mise à jour des packages
   apt:
     name: "*"
     state: latest
-    update_cache: yes
 
 - name: Remove unused package
   apt:

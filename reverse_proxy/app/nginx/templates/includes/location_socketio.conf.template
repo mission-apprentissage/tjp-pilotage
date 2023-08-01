@@ -3,7 +3,7 @@ location /socket.io {
     proxy_set_header    Upgrade $http_upgrade;
     proxy_set_header    Connection "upgrade";
 
-    proxy_pass              http://server:5000;
+    proxy_pass              http://app:5000;
     proxy_redirect          off;
     proxy_cache             off;
     proxy_set_header        Host $host;

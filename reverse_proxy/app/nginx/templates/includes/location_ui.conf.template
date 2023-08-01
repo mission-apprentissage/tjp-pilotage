@@ -1,5 +1,5 @@
 location / {
-    set $upstream http://ui:3000;
+    set $upstream http://app:3000;
     include includes/proxy.conf;
 
     # expires $ui_expires;

@@ -16,4 +16,7 @@ clean:
 typecheck:
 	yarn --cwd server typecheck && yarn --cwd ui typecheck
 
-ci: install lint typecheck
+test:
+	yarn --cwd server test
+
+ci: install lint typecheck test
