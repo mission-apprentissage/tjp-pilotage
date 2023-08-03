@@ -17,8 +17,7 @@ export const selectTauxDevenirFavorable = (
     case when
     ${selectDenominateurDevenirFavorable(indicateurSortieAlias)} >= ${seuil}
     then (100 *
-      (${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" + ${sql.table(
-  indicateurSortieAlias
-)}."nbInsertion6mois")
+      (${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
+      + ${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
     / ${selectDenominateurDevenirFavorable(indicateurSortieAlias)})
     end`;
