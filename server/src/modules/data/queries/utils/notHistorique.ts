@@ -11,3 +11,13 @@ export const notHistorique = (
     sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
   );
 };
+
+export const notHistoriqueIndicateurRegionSortie = (
+  eb: ExpressionBuilder<DB, "indicateurRegionSortie">
+) => {
+  return eb.cmpr(
+    "indicateurRegionSortie.cfd",
+    "not in",
+    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+  );
+};
