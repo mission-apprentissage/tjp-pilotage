@@ -11,6 +11,7 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
@@ -30,13 +31,17 @@ export const ActivateAccountForm = ({
     mode: "onTouched",
   });
 
-  const onSubmit = handleSubmit(async (values) => {
-    await api.setUserPassword({ body: { ...values, activationToken } }).call();
+  const { mutate: activateAccount, isError } = useMutation({
+    mutationFn: handleSubmit(async (values) => {
+      await api
+        .setUserPassword({ body: { ...values, activationToken } })
+        .call();
+    }),
   });
 
   return (
     <Card maxW="360px" mt="32" mx="auto">
-      <CardBody as="form" onSubmit={onSubmit}>
+      <CardBody as="form" onSubmit={activateAccount}>
         <Heading mb="4" textAlign="center" fontSize="2xl">
           Activation du compte
         </Heading>
@@ -77,6 +82,11 @@ export const ActivateAccountForm = ({
             <FormErrorMessage>{errors.repeatPassword.message}</FormErrorMessage>
           )}
         </FormControl>
+        {isError && (
+          <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+            Erreur lors de l'activation du compte
+          </Text>
+        )}
         <Flex>
           <Button type="submit" mt="4" ml="auto" variant="primary">
             Envoyer

@@ -5,9 +5,11 @@ import {
   CardBody,
   Flex,
   FormControl,
+  FormErrorMessage,
   FormLabel,
   Heading,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -27,18 +29,21 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
-  const { mutateAsync: login, isLoading } = useMutation({
-    mutationFn: ({ email, password }: { email: string; password: string }) =>
-      api.login({ body: { email, password } }).call(),
+  const {
+    mutateAsync: login,
+    isLoading,
+    isError,
+  } = useMutation({
+    mutationFn: handleSubmit(
+      async ({ email, password }: { email: string; password: string }) => {
+        api.login({ body: { email, password } }).call();
+        const { user } = await api.whoAmI({}).call();
+        setAuth({ user });
+      }
+    ),
   });
 
   const { setAuth, auth } = useContext(AuthContext);
-
-  const onSubmit = handleSubmit(async (values) => {
-    await login(values);
-    const { user } = await api.whoAmI({}).call();
-    setAuth({ user });
-  });
 
   const router = useRouter();
 
@@ -48,21 +53,36 @@ export const LoginForm = () => {
 
   return (
     <Card maxW="360px" mt="32" width="100%" mx="auto">
-      <CardBody as="form" onSubmit={onSubmit}>
+      <CardBody as="form" onSubmit={login}>
         <Heading mb="4" textAlign="center" fontSize="2xl">
           Connexion
         </Heading>
         <FormControl mb="4" isInvalid={!!errors.email}>
           <FormLabel>Email</FormLabel>
-          <Input {...register("email", { required: true })} />
+          <Input
+            {...register("email", { required: "Veuillez saisir votre email" })}
+          />
+          {!!errors.email && (
+            <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+          )}
         </FormControl>
         <FormControl isInvalid={!!errors.password}>
           <FormLabel>Mot de passe</FormLabel>
           <Input
             type="password"
-            {...register("password", { required: true })}
+            {...register("password", {
+              required: "Veuillez saisir votre mot de passe",
+            })}
           />
+          {!!errors.password && (
+            <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+          )}
         </FormControl>
+        {isError && (
+          <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+            Identifiants incorrects
+          </Text>
+        )}
         <Flex>
           <Button
             isLoading={isLoading}
