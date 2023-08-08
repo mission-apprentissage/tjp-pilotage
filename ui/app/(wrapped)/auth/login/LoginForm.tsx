@@ -36,7 +36,7 @@ export const LoginForm = () => {
   } = useMutation({
     mutationFn: handleSubmit(
       async ({ email, password }: { email: string; password: string }) => {
-        api.login({ body: { email, password } }).call();
+        await api.login({ body: { email, password } }).call();
         const { user } = await api.whoAmI({}).call();
         setAuth({ user });
       }

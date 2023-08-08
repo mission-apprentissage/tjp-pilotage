@@ -1,6 +1,7 @@
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import Boom from "@hapi/boom";
 
 import { migrateToLatest } from "./migrations/migrate";
 import { registerAuthModule } from "./modules/auth";
@@ -27,6 +28,15 @@ server.register(fastifySwaggerUi, {
     docExpansion: "list",
     deepLinking: false,
   },
+});
+
+server.setErrorHandler((error, request, reply) => {
+  if (Boom.isBoom(error)) {
+    error.output.statusCode;
+    reply.status(error.output.statusCode).send(error.output.payload);
+    return;
+  }
+  reply.status(500).send({ error: "internal error", statusCode: 500 });
 });
 
 server.register(
