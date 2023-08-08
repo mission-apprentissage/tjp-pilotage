@@ -113,13 +113,9 @@ export const Nav = () => {
       )}
       {!!auth && (
         <Menu autoSelect={false} placement="bottom-end">
-          <MenuButton
-            ml="auto"
-            as={NavButton}
-            variant="ghost"
-            rightIcon={<ChevronDownIcon />}
-          >
+          <MenuButton ml="auto" as={NavButton}>
             Bienvenue, {auth.user.email}
+            <ChevronDownIcon ml="2" />
           </MenuButton>
           <MenuList>
             <MenuItem onClick={logout}>Se déconnecter</MenuItem>
