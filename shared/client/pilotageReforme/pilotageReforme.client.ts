@@ -11,4 +11,11 @@ export const createPilotageReformeClient = (instance: AxiosInstance) => ({
     url: "/pilotage-reforme/stats",
     instance,
   }),
+  getPilotageReformeStatsRegions: createClientMethod<
+    typeof ROUTES_CONFIG.getPilotageReformeStatsRegions
+  >({
+    method: "GET",
+    url: "/pilotage-reforme/stats/regions",
+    instance,
+  }),
 });
