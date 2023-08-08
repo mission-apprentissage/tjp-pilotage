@@ -2,6 +2,7 @@ import { program as cli } from "commander";
 import fs from "fs";
 
 import { migrateToLatest } from "../../migrations/migrate";
+import { createUser } from "../auth/usecases/createUser/createUser.usecase";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -11,6 +12,12 @@ import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGe
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
+});
+
+cli.command("create-user").action(async () => {
+  await createUser({
+    email: "flo@gmaiddfdl.cdddfdodmddds" + Math.random().toFixed(5),
+  });
 });
 
 cli

@@ -2,10 +2,14 @@
 
 import { Link } from "@chakra-ui/next-js";
 import { Box, Container, Heading, HStack, Img, VStack } from "@chakra-ui/react";
+import { useContext } from "react";
 
+import { AuthContext } from "../auth/authContext";
 import { Nav } from "./Nav";
 
 export const Header = () => {
+  const { auth } = useContext(AuthContext);
+
   return (
     <VStack
       zIndex={1}
