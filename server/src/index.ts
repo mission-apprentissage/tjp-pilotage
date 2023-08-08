@@ -3,6 +3,7 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 
 import { migrateToLatest } from "./migrations/migrate";
+import { registerAuthModule } from "./modules/auth";
 import { registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
@@ -31,6 +32,7 @@ server.register(fastifySwaggerUi, {
 server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
+    registerAuthModule({ server: instance });
     registerFormationModule({ server: instance });
   },
   { prefix: "/api" }

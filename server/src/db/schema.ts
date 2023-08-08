@@ -153,6 +153,13 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface User {
+  id: Generated<string>;
+  email: string;
+  password: string | null;
+  createdAt: Generated<Timestamp | null>;
+}
+
 export interface DB {
   academie: Academie;
   departement: Departement;
@@ -169,4 +176,5 @@ export interface DB {
   niveauDiplome: NiveauDiplome;
   rawData: RawData;
   region: Region;
+  user: User;
 }
