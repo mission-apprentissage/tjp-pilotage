@@ -94,7 +94,7 @@ export const Nav = () => {
     await api.logout({}).call();
     setAuth(undefined);
   };
-  console.log(auth);
+
   return (
     <Flex align="center">
       <NavLink mr="4" href="/" segment={null}>
@@ -108,7 +108,7 @@ export const Nav = () => {
       </NavLink>
       {!auth && (
         <NavLink ml="auto" href="/auth/login" segment="auth/login">
-          Login
+          Se connecter
         </NavLink>
       )}
       {!!auth && (
@@ -122,7 +122,7 @@ export const Nav = () => {
             Bienvenue, {auth.user.email}
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={logout}>Logout</MenuItem>
+            <MenuItem onClick={logout}>Se déconnecter</MenuItem>
           </MenuList>
         </Menu>
       )}
