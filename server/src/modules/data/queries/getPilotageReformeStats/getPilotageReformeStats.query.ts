@@ -7,6 +7,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import {
   getMillesimeFromRentreeScolaire,
   getPreviousMillesime,
+  getPreviousRentreeScolaire,
 } from "../../services/inserJeunesApi/formatMillesime";
 import { effectifAnnee } from "../utils/effectifAnnee";
 import {
@@ -27,14 +28,75 @@ export const getPilotageReformeStats = async ({
   rentreeScolaire?: string;
   libelleFiliere?: string[];
 }) => {
-  const selectStatsSortie = ({
+  const selectStatsEffectif = ({
     eb,
     isFiltered = false,
-    isPreviousMillesime = false,
+    isAnneePrecedente = false,
   }: {
     eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
     isFiltered: boolean;
-    isPreviousMillesime: boolean;
+    isAnneePrecedente: boolean;
+  }) =>
+    eb
+      .selectFrom("formationEtablissement")
+      .leftJoin(
+        "formation",
+        "formation.codeFormationDiplome",
+        "formationEtablissement.cfd"
+      )
+      .innerJoin("indicateurEntree", (join) =>
+        join
+          .onRef(
+            "formationEtablissement.id",
+            "=",
+            "indicateurEntree.formationEtablissementId"
+          )
+          .on(
+            "indicateurEntree.rentreeScolaire",
+            "=",
+            isAnneePrecedente
+              ? getPreviousRentreeScolaire(rentreeScolaire)
+              : rentreeScolaire
+          )
+      )
+      .leftJoin(
+        "etablissement",
+        "etablissement.UAI",
+        "formationEtablissement.UAI"
+      )
+      .$call((q) => {
+        if (!isFiltered || !codeRegion) return q;
+        return q.where("etablissement.codeRegion", "=", codeRegion);
+      })
+      .$call((q) => {
+        if (!codeNiveauDiplome?.length) return q;
+        return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      })
+      .$call((q) => {
+        if (!libelleFiliere?.length) return q;
+        return q.where("formation.libelleFiliere", "in", libelleFiliere);
+      })
+      .where(notHistorique)
+      .select([
+        sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+          "nbFormations"
+        ),
+        sql<number>`COUNT(distinct "formationEtablissement"."UAI")`.as(
+          "nbEtablissements"
+        ),
+        sql<number>`COALESCE(SUM(${effectifAnnee({
+          alias: "indicateurEntree",
+        })}),0)`.as("effectif"),
+      ]);
+
+  const selectStatsSortie = ({
+    eb,
+    isFiltered = false,
+    isAnneePrecedente = false,
+  }: {
+    eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
+    isFiltered: boolean;
+    isAnneePrecedente: boolean;
   }) =>
     eb
       .selectFrom("indicateurRegionSortie")
@@ -49,7 +111,7 @@ export const getPilotageReformeStats = async ({
         "indicateurRegionSortie.codeRegion"
       )
       .$call((q) => {
-        if (!isFiltered || !codeRegion?.length) return q;
+        if (!isFiltered || !codeRegion) return q;
         return q.where("indicateurRegionSortie.codeRegion", "=", codeRegion);
       })
       .$call((q) => {
@@ -60,21 +122,17 @@ export const getPilotageReformeStats = async ({
         if (!libelleFiliere?.length) return q;
         return q.where("formation.libelleFiliere", "in", libelleFiliere);
       })
-      .$call((q) => {
-        if (isPreviousMillesime)
-          return q.where(
-            "indicateurRegionSortie.millesimeSortie",
-            "=",
-            getPreviousMillesime(
-              getMillesimeFromRentreeScolaire(rentreeScolaire)
-            )
-          );
-        return q.where(
+      .$call((q) =>
+        q.where(
           "indicateurRegionSortie.millesimeSortie",
           "=",
-          getMillesimeFromRentreeScolaire(rentreeScolaire)
-        );
-      })
+          isAnneePrecedente
+            ? getPreviousMillesime(
+                getMillesimeFromRentreeScolaire(rentreeScolaire)
+              )
+            : getMillesimeFromRentreeScolaire(rentreeScolaire)
+        )
+      )
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
@@ -84,118 +142,79 @@ export const getPilotageReformeStats = async ({
           "tauxPoursuiteEtudes"
         ),
       ]);
-  const statsFiltered = await kdb
+
+  const statsAnneeEnCours = await kdb
     .selectFrom("formationEtablissement")
-    .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
-      "formationEtablissement.cfd"
-    )
-    .innerJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
-    )
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("etablissement.codeRegion", "=", codeRegion);
-    })
-    .$call((q) => {
-      if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
-    })
-    .$call((q) => {
-      if (!libelleFiliere?.length) return q;
-      return q.where("formation.libelleFiliere", "in", libelleFiliere);
-    })
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    .where(notHistorique)
-    .select([
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
-        "nbFormations"
-      ),
-      sql<number>`COUNT(distinct "formationEtablissement"."UAI")`.as(
-        "nbEtablissements"
-      ),
-      sql<number>`COALESCE(SUM(${effectifAnnee({
-        alias: "indicateurEntree",
-      })}),0)`.as("effectif"),
-    ])
     .select((eb) => [
       jsonObjectFrom(
         eb
           .selectFrom("indicateurRegionSortie")
           .select((eb) => [
             jsonObjectFrom(
+              selectStatsEffectif({
+                eb,
+                isFiltered: false,
+                isAnneePrecedente: false,
+              })
+            ).as("statsEffectif"),
+            jsonObjectFrom(
               selectStatsSortie({
                 eb,
-                isFiltered: true,
-                isPreviousMillesime: true,
+                isFiltered: false,
+                isAnneePrecedente: false,
               })
-            ).as("anneePrecedente"),
+            ).as("statsSortie"),
+          ])
+          .limit(1)
+      ).as("nationale"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("indicateurRegionSortie")
+          .select((eb) => [
+            jsonObjectFrom(
+              selectStatsEffectif({
+                eb,
+                isFiltered: true,
+                isAnneePrecedente: false,
+              })
+            ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
                 isFiltered: true,
-                isPreviousMillesime: false,
+                isAnneePrecedente: false,
               })
-            ).as("anneeEnCours"),
+            ).as("statsSortie"),
           ])
           .limit(1)
-      ).as("statsSortie"),
+      ).as("filtered"),
     ])
     .executeTakeFirstOrThrow();
 
-  const statsNationale = await kdb
+  const statsAnneePrecedente = await kdb
     .selectFrom("formationEtablissement")
-    .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
-      "formationEtablissement.cfd"
-    )
-    .innerJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
-    )
-    .$call((q) => {
-      if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
-    })
-    .$call((q) => {
-      if (!libelleFiliere?.length) return q;
-      return q.where("formation.libelleFiliere", "in", libelleFiliere);
-    })
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    .where(notHistorique)
-    .select([
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
-        "nbFormations"
-      ),
-      sql<number>`COUNT(distinct "formationEtablissement"."UAI")`.as(
-        "nbEtablissements"
-      ),
-      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
-        "effectif"
-      ),
+    .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom("indicateurRegionSortie")
+          .select((eb) => [
+            jsonObjectFrom(
+              selectStatsEffectif({
+                eb,
+                isFiltered: false,
+                isAnneePrecedente: true,
+              })
+            ).as("statsEffectif"),
+            jsonObjectFrom(
+              selectStatsSortie({
+                eb,
+                isFiltered: false,
+                isAnneePrecedente: true,
+              })
+            ).as("statsSortie"),
+          ])
+          .limit(1)
+      ).as("nationale"),
     ])
     .select((eb) => [
       jsonObjectFrom(
@@ -203,22 +222,22 @@ export const getPilotageReformeStats = async ({
           .selectFrom("indicateurRegionSortie")
           .select((eb) => [
             jsonObjectFrom(
-              selectStatsSortie({
+              selectStatsEffectif({
                 eb,
-                isFiltered: false,
-                isPreviousMillesime: true,
+                isFiltered: true,
+                isAnneePrecedente: true,
               })
-            ).as("anneePrecedente"),
+            ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
-                isFiltered: false,
-                isPreviousMillesime: false,
+                isFiltered: true,
+                isAnneePrecedente: true,
               })
-            ).as("anneeEnCours"),
+            ).as("statsSortie"),
           ])
           .limit(1)
-      ).as("statsSortie"),
+      ).as("filtered"),
     ])
     .executeTakeFirstOrThrow();
 
@@ -300,7 +319,7 @@ export const getPilotageReformeStats = async ({
 
   return {
     filters: filters,
-    nationale: statsNationale,
-    filtered: statsFiltered,
+    anneeEnCours: statsAnneeEnCours,
+    anneePrecedente: statsAnneePrecedente,
   };
 };
