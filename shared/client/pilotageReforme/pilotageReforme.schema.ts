@@ -10,13 +10,20 @@ const StatsSortieSchema = Type.Object({
   tauxInsertion6mois: Type.Optional(Type.Number()),
 });
 
-const StatsSchema = Type.Object({
+const StatsEffectifSchema = Type.Object({
   effectif: Type.Optional(Type.Number()),
   nbFormations: Type.Optional(Type.Number()),
   nbEtablissements: Type.Optional(Type.Number()),
-  statsSortie: Type.Object({
-    anneeEnCours: StatsSortieSchema,
-    anneePrecedente: StatsSortieSchema,
+});
+
+const StatsAnnee = Type.Object({
+  nationale: Type.Object({
+    statsSortie: StatsSortieSchema,
+    statsEffectif: StatsEffectifSchema,
+  }),
+  filtered: Type.Object({
+    statsSortie: StatsSortieSchema,
+    statsEffectif: StatsEffectifSchema,
   }),
 });
 
@@ -53,8 +60,8 @@ export const pilotageReformeSchemas = {
           rentreesScolaires: Type.Array(OptionSchema),
           libelleFilieres: Type.Array(OptionSchema),
         }),
-        nationale: StatsSchema,
-        filtered: StatsSchema,
+        anneeEnCours: StatsAnnee,
+        anneePrecedente: StatsAnnee,
       }),
     },
   },
