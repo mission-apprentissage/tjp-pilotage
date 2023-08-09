@@ -30,3 +30,6 @@ export const getNextMillesime = (millesime: string): string | null => {
 export const getMillesimeFromRentreeScolaire = (
   rentreeScolaire: string
 ): string => `${+rentreeScolaire - 2}_${+rentreeScolaire - 1}`;
+
+export const getPreviousRentreeScolaire = (rentreeScolaire: string): string =>
+  `${+rentreeScolaire - 1}`;
