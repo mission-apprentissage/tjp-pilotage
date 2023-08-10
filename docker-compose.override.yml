@@ -11,6 +11,11 @@ services:
       - "host.docker.internal:host-gateway"
 
   postgres:
+    image: postgres:14.2
+    container_name: pilotage_postgres
+    restart: unless-stopped
+    networks:
+      - pilotage_network
     environment:
       - POSTGRES_PASSWORD=password
     ports:
@@ -49,6 +54,3 @@ volumes:
   pilotage_nginx_data:
     driver: local
     name: pilotage_nginx_data
-  pilotage_server_data:
-    driver: local
-    name: pilotage_server_data
