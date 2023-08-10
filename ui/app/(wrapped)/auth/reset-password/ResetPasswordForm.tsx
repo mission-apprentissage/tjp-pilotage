@@ -18,10 +18,10 @@ import { useForm } from "react-hook-form";
 import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
 import { api } from "../../../../api.client";
 
-export const ActivateAccountForm = ({
-  activationToken,
+export const ResetPasswordForm = ({
+  resetPasswordToken,
 }: {
-  activationToken: string;
+  resetPasswordToken: string;
 }) => {
   const {
     register,
@@ -40,7 +40,9 @@ export const ActivateAccountForm = ({
     isLoading,
   } = useMutation({
     mutationFn: handleSubmit(async (values) => {
-      await api.activateUser({ body: { ...values, activationToken } }).call();
+      await api
+        .resetPassword({ body: { ...values, resetPasswordToken } })
+        .call();
       router.replace("/auth/login");
     }),
   });
@@ -49,11 +51,8 @@ export const ActivateAccountForm = ({
     <Card boxShadow="md" maxW="360px" mt="20" mx="auto">
       <CardBody p="6" as="form" onSubmit={activateAccount}>
         <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
-          Activation du compte
+          Réinitialisation du mot de passe
         </Heading>
-        <Text mb="6">
-          Pour activer votre compte, veuillez choisir un mot de passe.
-        </Text>
         <FormControl mb="4" isInvalid={!!errors.password}>
           <FormLabel>Mot de passe</FormLabel>
           <Input
@@ -90,7 +89,7 @@ export const ActivateAccountForm = ({
         </FormControl>
         {isError && (
           <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-            Erreur lors de l'activation du compte
+            Erreur lors de la réinitialisation du mot de passe
           </Text>
         )}
         <Flex>

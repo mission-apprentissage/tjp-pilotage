@@ -10,11 +10,8 @@ import {
   FormLabel,
   Heading,
   Input,
-  Link,
-  Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
@@ -22,7 +19,7 @@ import { useForm } from "react-hook-form";
 import { api } from "../../../../api.client";
 import { AuthContext } from "../authContext";
 
-export const LoginForm = () => {
+export const ForgottenPasswordForm = () => {
   const {
     register,
     handleSubmit,
@@ -32,21 +29,13 @@ export const LoginForm = () => {
     mode: "onBlur",
   });
 
-  const {
-    mutateAsync: login,
-    isLoading,
-    isError,
-  } = useMutation({
-    mutationFn: handleSubmit(
-      async ({ email, password }: { email: string; password: string }) => {
-        await api.login({ body: { email, password } }).call();
-        const { user } = await api.whoAmI({}).call();
-        setAuth({ user });
-      }
-    ),
+  const { mutateAsync: login, isLoading } = useMutation({
+    mutationFn: handleSubmit(async ({ email }: { email: string }) => {
+      await api.sendResetPassword({ body: { email } }).call();
+    }),
   });
 
-  const { setAuth, auth } = useContext(AuthContext);
+  const { auth } = useContext(AuthContext);
 
   const router = useRouter();
 
@@ -55,13 +44,13 @@ export const LoginForm = () => {
   }, [auth]);
 
   return (
-    <Box maxW="360px" mt="20" width="100%" mx="auto">
-      <Card boxShadow="md">
+    <Box flex="1">
+      <Card boxShadow="md" maxW="360px" mt="20" width="100%" mx="auto">
         <CardBody p="6" as="form" onSubmit={login}>
           <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
-            Connexion
+            Mot de passe oublié
           </Heading>
-          <FormControl mb="4" isInvalid={!!errors.email}>
+          <FormControl isInvalid={!!errors.email}>
             <FormLabel>Email</FormLabel>
             <Input
               {...register("email", {
@@ -72,23 +61,6 @@ export const LoginForm = () => {
               <FormErrorMessage>{errors.email.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl isInvalid={!!errors.password}>
-            <FormLabel>Mot de passe</FormLabel>
-            <Input
-              type="password"
-              {...register("password", {
-                required: "Veuillez saisir votre mot de passe",
-              })}
-            />
-            {!!errors.password && (
-              <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-            )}
-          </FormControl>
-          {isError && (
-            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-              Identifiants incorrects
-            </Text>
-          )}
           <Flex>
             <Button
               isLoading={isLoading}
@@ -102,11 +74,6 @@ export const LoginForm = () => {
           </Flex>
         </CardBody>
       </Card>
-      <Text mt="4" textAlign="center">
-        <Link as={NextLink} href="/auth/mot-de-passe-oublie">
-          Mot de passe oublié
-        </Link>
-      </Text>
     </Box>
   );
 };
