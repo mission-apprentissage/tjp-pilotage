@@ -27,7 +27,6 @@ export const config = {
       user: env.get("SMTP_AUTH_USER").asString(),
       pass: env.get("SMTP_AUTH_PASS").asString(),
     },
+    email_from: env.get("EMAIL_FROM").required().asString(),
   },
-  email: env.get("EMAIL").required().asString(),
-  email_from: env.get("EMAIL_FROM").required().asString(),
 };

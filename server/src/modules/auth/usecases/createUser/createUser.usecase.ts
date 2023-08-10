@@ -30,7 +30,7 @@ export const [createUser, createUserFactory] = inject(
 
       deps.shootTemplate({
         to: email,
-        subject: "Activez votre compte personnel Orion",
+        subject: "Orion : activez votre compte personnel",
         template: "activate_account",
         data: {
           activationToken,
