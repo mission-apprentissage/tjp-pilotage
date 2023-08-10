@@ -156,6 +156,8 @@ export interface Region {
 export interface User {
   id: Generated<string>;
   email: string;
+  firstname: string | null;
+  lastname: string | null;
   password: string | null;
   createdAt: Generated<Timestamp | null>;
   role: string | null;

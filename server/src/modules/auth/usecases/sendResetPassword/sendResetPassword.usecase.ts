@@ -5,7 +5,7 @@ import jwt from "jsonwebtoken";
 import { config } from "../../../../../config/config";
 import { shootTemplate } from "../../../core/services/mailer/mailer";
 import { findUserQuery } from "./findUserQuery.dep";
-export const [sendResetPassword] = inject(
+export const [sendResetPassword, sendResetPasswordFactory] = inject(
   { findUserQuery, shootTemplate, jwtSecret: config.auth.jwtSecret },
   (deps) =>
     async ({ email }: { email: string }) => {
@@ -20,7 +20,14 @@ export const [sendResetPassword] = inject(
         template: "reset_password",
         subject: "Réinitialisation du mot de passe",
         to: email,
-        data: { resetPasswordToken, recipient: { email } },
+        data: {
+          resetPasswordToken,
+          recipient: {
+            email,
+            firstname: user.firstname,
+            lastname: user.lastname,
+          },
+        },
       });
     }
 );
