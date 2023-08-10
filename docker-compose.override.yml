@@ -9,6 +9,8 @@ services:
       - pilotage_nginx_data:/data:z
     extra_hosts:
       - "host.docker.internal:host-gateway"
+    depends_on:
+      - smtp
 
   postgres:
     image: postgres:14.2
@@ -33,6 +35,8 @@ services:
         failure_action: rollback
       rollback_config:
         parallelism: 0
+    networks:
+      - pilotage_network
     ports:
       - 1025:1025
       - 8025:8025

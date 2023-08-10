@@ -24,7 +24,7 @@ server {
     server_name localhost;
 
     location /api {
-        proxy_pass http://host.docker.internal:5000;
+        proxy_pass http://smtp:5000;
         
         proxy_set_header Host $host;
         proxy_set_header Proxy "";
