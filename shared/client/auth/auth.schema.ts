@@ -101,4 +101,12 @@ export const authSchemas = {
       }),
     },
   },
+  "send-reset-password": {
+    body: Type.Object({
+      email: Type.String(),
+    }),
+    response: {
+      200: Type.Undefined(),
+    },
+  },
 } as const;
