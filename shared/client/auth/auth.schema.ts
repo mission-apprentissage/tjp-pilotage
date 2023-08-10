@@ -78,12 +78,16 @@ export const authSchemas = {
   whoAmI: {
     response: {
       200: Type.Object({
-        user: Type.Object({ id: Type.String(), email: Type.String() }),
+        user: Type.Object({
+          id: Type.String(),
+          email: Type.String(),
+          role: Type.Optional(Type.Union([Type.Literal("admin")])),
+        }),
       }),
       401: Type.Void(),
     },
   },
-  setUserPassword: {
+  activateUser: {
     body: Type.Object({
       password: Type.String({
         pattern: passwordRegex,

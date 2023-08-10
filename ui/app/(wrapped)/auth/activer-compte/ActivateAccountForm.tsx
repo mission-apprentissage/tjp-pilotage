@@ -12,6 +12,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
@@ -31,21 +32,24 @@ export const ActivateAccountForm = ({
     mode: "onTouched",
   });
 
+  const router = useRouter();
+
   const { mutate: activateAccount, isError } = useMutation({
     mutationFn: handleSubmit(async (values) => {
       await api
         .setUserPassword({ body: { ...values, activationToken } })
         .call();
+      router.replace("/auth/login");
     }),
   });
 
   return (
-    <Card maxW="360px" mt="32" mx="auto">
-      <CardBody as="form" onSubmit={activateAccount}>
-        <Heading mb="4" textAlign="center" fontSize="2xl">
+    <Card boxShadow="md" maxW="360px" mt="20" mx="auto">
+      <CardBody p="6" as="form" onSubmit={activateAccount}>
+        <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
           Activation du compte
         </Heading>
-        <Text mb="4">
+        <Text mb="6">
           Pour activer votre compte, veuillez choisir un mot de passe.
         </Text>
         <FormControl mb="4" isInvalid={!!errors.password}>

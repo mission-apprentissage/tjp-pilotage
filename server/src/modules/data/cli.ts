@@ -16,7 +16,7 @@ cli.command("migrateDB").action(async () => {
 
 cli.command("create-user").action(async () => {
   await createUser({
-    email: "flo@gmaiddfdl.cdddfdodmddds" + Math.random().toFixed(5),
+    email: "test@test.fr",
   });
 });
 

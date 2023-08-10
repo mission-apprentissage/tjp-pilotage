@@ -1,3 +1,6 @@
+export * from "./security/securityUtils";
+export * from "./security/permissions";
+
 export { FORMATIONS_COLUMNS } from "./FORMATIONS_COLUMNS";
 export { ETABLISSEMENTS_COLUMNS } from "./ETABLISSEMENTS_COLUMNS";
 export { ROUTES_CONFIG } from "./client/ROUTES_CONFIG";

@@ -19,9 +19,9 @@ export const createAuthClient = (instance: AxiosInstance) => ({
     url: "/auth/whoAmI",
     instance,
   }),
-  setUserPassword: createClientMethod<typeof ROUTES_CONFIG.setUserPassword>({
+  activateUser: createClientMethod<typeof ROUTES_CONFIG.activateUser>({
     method: "POST",
-    url: "/auth/set-password",
+    url: "/auth/activate",
     instance,
   }),
 });

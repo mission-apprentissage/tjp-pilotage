@@ -3,9 +3,8 @@ import cookie from "cookie";
 import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
+import { activateUser } from "../usecases/activateUser/activateUser.usecase";
 import { login } from "../usecases/login/login.usecase";
-import { setUserPassword } from "../usecases/setUserPassword/setUserPassword.usecase";
-import { whoAmI } from "../usecases/whoAmI/whoAmI.usecase";
 
 export const authRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -45,21 +44,19 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/whoAmI",
     { schema: ROUTES_CONFIG.whoAmI },
     async (request, response) => {
-      const token = cookie.parse(request.headers.cookie ?? "").Authorization;
-      if (!token) throw Boom.unauthorized();
-
-      const user = await whoAmI({ token });
+      const user = request.user;
+      if (!user) throw Boom.unauthorized();
       response.status(200).send({ user });
     }
   );
 
   server.post(
-    "/auth/set-password",
-    { schema: ROUTES_CONFIG.setUserPassword },
+    "/auth/activate",
+    { schema: ROUTES_CONFIG.activateUser },
     async (request, response) => {
       const { password, repeatPassword, activationToken } = request.body;
 
-      await setUserPassword({
+      await activateUser({
         password,
         repeatPassword,
         activationToken,

@@ -1,5 +1,6 @@
 "use client";
 import {
+  Box,
   Button,
   Card,
   CardBody,
@@ -52,49 +53,53 @@ export const LoginForm = () => {
   }, [auth]);
 
   return (
-    <Card maxW="360px" mt="32" width="100%" mx="auto">
-      <CardBody as="form" onSubmit={login}>
-        <Heading mb="4" textAlign="center" fontSize="2xl">
-          Connexion
-        </Heading>
-        <FormControl mb="4" isInvalid={!!errors.email}>
-          <FormLabel>Email</FormLabel>
-          <Input
-            {...register("email", { required: "Veuillez saisir votre email" })}
-          />
-          {!!errors.email && (
-            <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+    <Box flex="1">
+      <Card boxShadow="md" maxW="360px" mt="20" width="100%" mx="auto">
+        <CardBody p="6" as="form" onSubmit={login}>
+          <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
+            Connexion
+          </Heading>
+          <FormControl mb="4" isInvalid={!!errors.email}>
+            <FormLabel>Email</FormLabel>
+            <Input
+              {...register("email", {
+                required: "Veuillez saisir votre email",
+              })}
+            />
+            {!!errors.email && (
+              <FormErrorMessage>{errors.email.message}</FormErrorMessage>
+            )}
+          </FormControl>
+          <FormControl isInvalid={!!errors.password}>
+            <FormLabel>Mot de passe</FormLabel>
+            <Input
+              type="password"
+              {...register("password", {
+                required: "Veuillez saisir votre mot de passe",
+              })}
+            />
+            {!!errors.password && (
+              <FormErrorMessage>{errors.password.message}</FormErrorMessage>
+            )}
+          </FormControl>
+          {isError && (
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              Identifiants incorrects
+            </Text>
           )}
-        </FormControl>
-        <FormControl isInvalid={!!errors.password}>
-          <FormLabel>Mot de passe</FormLabel>
-          <Input
-            type="password"
-            {...register("password", {
-              required: "Veuillez saisir votre mot de passe",
-            })}
-          />
-          {!!errors.password && (
-            <FormErrorMessage>{errors.password.message}</FormErrorMessage>
-          )}
-        </FormControl>
-        {isError && (
-          <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
-            Identifiants incorrects
-          </Text>
-        )}
-        <Flex>
-          <Button
-            isLoading={isLoading}
-            type="submit"
-            mt="4"
-            ml="auto"
-            variant="primary"
-          >
-            Envoyer
-          </Button>
-        </Flex>
-      </CardBody>
-    </Card>
+          <Flex>
+            <Button
+              isLoading={isLoading}
+              type="submit"
+              mt="4"
+              ml="auto"
+              variant="primary"
+            >
+              Envoyer
+            </Button>
+          </Flex>
+        </CardBody>
+      </Card>
+    </Box>
   );
 };
