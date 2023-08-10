@@ -61,7 +61,6 @@ export const [shootEmail] = inject(
       subject: string;
       html: string;
     }) => {
-      console.log("shoot");
       const { messageId } = await deps.transporter.sendMail({
         from: `free <ok@free.fr>`,
         to,
@@ -93,8 +92,6 @@ export const [shootTemplate] = inject(
         subject,
         templateFile: path.join(basepath, `/mails/${template}.mjml.ejs`),
       });
-
-      console.log("ouiii");
 
       return await deps.shootEmail({ html, subject, to });
     }

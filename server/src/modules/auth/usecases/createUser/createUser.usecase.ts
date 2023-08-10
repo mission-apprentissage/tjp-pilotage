@@ -9,6 +9,7 @@ export const [createUser] = inject(
   {
     insertUserQuery: ({ email }: { email: string }) =>
       kdb.insertInto("user").values({ email }).execute(),
+    shootTemplate,
   },
   (deps) =>
     async ({ email }: { email: string }) => {
@@ -18,7 +19,7 @@ export const [createUser] = inject(
         expiresIn: "1h",
       });
 
-      shootTemplate({
+      deps.shootTemplate({
         to: email,
         subject: "Activez votre compte personnel Orion",
         template: "activate_account",

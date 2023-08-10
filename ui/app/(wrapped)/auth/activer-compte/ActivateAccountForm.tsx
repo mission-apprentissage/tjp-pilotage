@@ -36,9 +36,7 @@ export const ActivateAccountForm = ({
 
   const { mutate: activateAccount, isError } = useMutation({
     mutationFn: handleSubmit(async (values) => {
-      await api
-        .setUserPassword({ body: { ...values, activationToken } })
-        .call();
+      await api.activateUser({ body: { ...values, activationToken } }).call();
       router.replace("/auth/login");
     }),
   });

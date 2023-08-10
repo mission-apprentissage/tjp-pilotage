@@ -5,6 +5,7 @@ import { ROUTES_CONFIG } from "shared";
 import { Server } from "../../../server";
 import { activateUser } from "../usecases/activateUser/activateUser.usecase";
 import { login } from "../usecases/login/login.usecase";
+import { sendResetPassword } from "../usecases/sendResetPassword/sendResetPassword.usecase";
 
 export const authRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -61,6 +62,16 @@ export const authRoutes = ({ server }: { server: Server }) => {
         repeatPassword,
         activationToken,
       });
+      response.status(200).send();
+    }
+  );
+
+  server.post(
+    "/auth/send-reset-password",
+    { schema: ROUTES_CONFIG["send-reset-password"] },
+    async (request, response) => {
+      const { email } = request.body;
+      await sendResetPassword({ email });
       response.status(200).send();
     }
   );
