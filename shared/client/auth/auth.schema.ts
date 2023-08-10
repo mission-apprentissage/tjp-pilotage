@@ -39,11 +39,6 @@ export const authSchemas = {
       repeatPassword: Type.String(),
       activationToken: Type.String(),
     }),
-    response: {
-      200: Type.Object({
-        token: Type.String(),
-      }),
-    },
   },
   resetPassword: {
     body: Type.Object({
@@ -53,14 +48,10 @@ export const authSchemas = {
       repeatPassword: Type.String(),
       resetPasswordToken: Type.String(),
     }),
-    response: { 200: Type.Undefined() },
   },
   sendResetPassword: {
     body: Type.Object({
       email: Type.String(),
     }),
-    response: {
-      200: Type.Undefined(),
-    },
   },
 } as const;
