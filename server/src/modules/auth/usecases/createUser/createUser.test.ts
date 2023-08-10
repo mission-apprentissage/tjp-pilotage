@@ -1,12 +1,11 @@
 import { createUserFactory } from "./createUser.usecase";
 
-const jwtSecret = "jwtSecret";
-
 const user = {
   email: "test@test.fr",
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
+  role: "role",
 };
 
 describe("createUser usecase", () => {
@@ -16,12 +15,7 @@ describe("createUser usecase", () => {
       shootTemplate: jest.fn(async () => {}),
     };
     const createUser = createUserFactory(deps);
-    await createUser({
-      email: "test@test.fr",
-      role: "role",
-      firstname: "firstname",
-      lastname: "lastname",
-    });
+    await createUser(user);
 
     await expect(deps.insertUserQuery).toBeCalled();
     await expect(deps.shootTemplate).toBeCalledWith(
