@@ -27,7 +27,3 @@ services:
     restart: always
     networks:
       - pilotage_network
-
-  postgres:
-    volumes:
-      - /opt/pilotage/data/postgres/db:/var/lib/postgresql/data:z
