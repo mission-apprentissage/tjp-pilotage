@@ -1,43 +1,11 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  chakra,
-  createIcon,
-  Flex,
-  Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-} from "@chakra-ui/react";
+import { chakra, Flex, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { forwardRef, ReactNode, useContext } from "react";
+import { ReactNode, useContext } from "react";
 import { hasPermission } from "shared";
 
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
-
-import { api } from "../../../api.client";
-
-const LoginIcon = createIcon({
-  displayName: "loginIcon",
-  viewBox: "0 0 24 24",
-  defaultProps: {
-    stroke: "currentcolor",
-    fill: "none",
-    strokeWidth: 2,
-    strokeLinecap: "round",
-    strokeLinejoin: "round",
-  },
-  path: (
-    <>
-      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
-      <polyline points="10 17 15 12 10 7"></polyline>
-      <line x1="15" x2="3" y1="12" y2="12"></line>
-    </>
-  ),
-});
 
 const NavLink = chakra(
   ({
@@ -74,46 +42,8 @@ const NavLink = chakra(
   }
 );
 
-const NavButton = chakra(
-  forwardRef(
-    (
-      {
-        children,
-        className,
-        ...rest
-      }: {
-        children: ReactNode;
-        className?: string;
-      },
-      ref
-    ) => {
-      return (
-        <Box
-          //@ts-ignore
-          ref={ref}
-          {...rest}
-          position="relative"
-          as="button"
-          className={className}
-          fontSize={14}
-          p={4}
-          color="bluefrance.113"
-          _hover={{ bg: "grey.1000_hover" }}
-        >
-          {children}
-        </Box>
-      );
-    }
-  )
-);
-
 export const Nav = () => {
-  const { auth, setAuth } = useContext(AuthContext);
-
-  const logout = async () => {
-    await api.logout({}).call();
-    setAuth(undefined);
-  };
+  const { auth } = useContext(AuthContext);
 
   return (
     <Flex align="center">
@@ -128,24 +58,6 @@ export const Nav = () => {
       <NavLink mr="4" href="/console/formations" segment="console">
         Console
       </NavLink>
-      {!auth && (
-        <NavLink ml="auto" href="/auth/login" segment="auth/login">
-          <LoginIcon mr="1" /> Se connecter
-        </NavLink>
-      )}
-      {!!auth && (
-        <Menu autoSelect={false} placement="bottom-end">
-          <MenuButton ml="auto" as={NavButton}>
-            Bienvenue, {auth.user.email}
-            <ChevronDownIcon ml="2" />
-          </MenuButton>
-          <MenuList>
-            <MenuItem onClick={logout} icon={<LoginIcon />}>
-              Se déconnecter
-            </MenuItem>
-          </MenuList>
-        </Menu>
-      )}
     </Flex>
   );
 };
