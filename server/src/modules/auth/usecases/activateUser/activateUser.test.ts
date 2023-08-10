@@ -25,7 +25,7 @@ describe("activateUser usecase", () => {
     ).rejects.toThrow("missing token");
   });
 
-  it("should throw an exception if the token invalid", async () => {
+  it("should throw an exception if the token is invalid", async () => {
     const activateUser = activateUserFactory({
       setPasswordQuery: async () => {},
       jwtSecret,
