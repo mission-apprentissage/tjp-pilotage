@@ -3,6 +3,7 @@ import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
   chakra,
+  createIcon,
   Flex,
   Link,
   Menu,
@@ -13,10 +14,30 @@ import {
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { forwardRef, ReactNode, useContext } from "react";
+import { hasPermission } from "shared";
 
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
 import { api } from "../../../api.client";
+
+const LoginIcon = createIcon({
+  displayName: "loginIcon",
+  viewBox: "0 0 24 24",
+  defaultProps: {
+    stroke: "currentcolor",
+    fill: "none",
+    strokeWidth: 2,
+    strokeLinecap: "round",
+    strokeLinejoin: "round",
+  },
+  path: (
+    <>
+      <path d="M15 3h4a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2h-4"></path>
+      <polyline points="10 17 15 12 10 7"></polyline>
+      <line x1="15" x2="3" y1="12" y2="12"></line>
+    </>
+  ),
+});
 
 const NavLink = chakra(
   ({
@@ -66,10 +87,9 @@ const NavButton = chakra(
       },
       ref
     ) => {
-      const segments = useSelectedLayoutSegments();
-
       return (
         <Box
+          //@ts-ignore
           ref={ref}
           {...rest}
           position="relative"
@@ -100,15 +120,17 @@ export const Nav = () => {
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
-      <NavLink mr="4" href="/panorama" segment="panorama">
-        Panorama
-      </NavLink>
+      {hasPermission(auth?.user.role, "panorama/region") && (
+        <NavLink mr="4" href="/panorama" segment="panorama">
+          Panorama
+        </NavLink>
+      )}
       <NavLink mr="4" href="/console/formations" segment="console">
         Console
       </NavLink>
       {!auth && (
         <NavLink ml="auto" href="/auth/login" segment="auth/login">
-          Se connecter
+          <LoginIcon mr="1" /> Se connecter
         </NavLink>
       )}
       {!!auth && (
@@ -118,7 +140,9 @@ export const Nav = () => {
             <ChevronDownIcon ml="2" />
           </MenuButton>
           <MenuList>
-            <MenuItem onClick={logout}>Se déconnecter</MenuItem>
+            <MenuItem onClick={logout} icon={<LoginIcon />}>
+              Se déconnecter
+            </MenuItem>
           </MenuList>
         </Menu>
       )}

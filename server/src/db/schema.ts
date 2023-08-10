@@ -158,6 +158,7 @@ export interface User {
   email: string;
   password: string | null;
   createdAt: Generated<Timestamp | null>;
+  role: string | null;
 }
 
 export interface DB {

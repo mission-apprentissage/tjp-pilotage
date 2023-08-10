@@ -3,17 +3,13 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
 import { config } from "../../../../../config/config";
-import { kdb } from "../../../../db/db";
 import { verifyPassword } from "../../utils/passwordUtils";
+import { findUserQuery } from "./findUserQuery.dep";
 
-export const [login] = inject(
+export const [login, loginFactory] = inject(
   {
-    findUserQuery: ({ email }: { email: string }) =>
-      kdb
-        .selectFrom("user")
-        .where("user.email", "=", email)
-        .select(["email", "password"])
-        .executeTakeFirst(),
+    findUserQuery,
+    jwtSecret: config.auth.jwtSecret,
   },
   (deps) =>
     async ({ email, password }: { email: string; password: string }) => {
@@ -24,7 +20,7 @@ export const [login] = inject(
       const correctPassword = verifyPassword(password, user.password);
       if (!correctPassword) throw Boom.unauthorized("wrong credentials");
 
-      return jwt.sign({ email }, config.auth.jwtSecret, {
+      return jwt.sign({ email }, deps.jwtSecret, {
         issuer: "orion",
         expiresIn: "7d",
       });

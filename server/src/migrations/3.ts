@@ -9,6 +9,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("email", "varchar", (c) => c.notNull().unique())
     .addColumn("password", "varchar")
     .addColumn("createdAt", "timestamptz", (c) => c.defaultTo(sql`NOW()`))
+    .addColumn("role", "varchar(30)")
     .execute();
 };
 export const down = async () => {};

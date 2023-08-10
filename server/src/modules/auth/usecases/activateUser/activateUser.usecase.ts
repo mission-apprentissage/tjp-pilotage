@@ -1,14 +1,16 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { verify } from "jsonwebtoken";
+import { passwordRegex } from "shared/utils/passwordRegex";
 
 import { config } from "../../../../../config/config";
 import { hashPassword } from "../../utils/passwordUtils";
 import { setPasswordQuery } from "./setPasswordQuery.dep";
 
-export const [setUserPassword] = inject(
+export const [activateUser, activateUserFactory] = inject(
   {
     setPasswordQuery,
+    jwtSecret: config.auth.jwtSecret,
   },
   (deps) =>
     async ({
@@ -24,7 +26,7 @@ export const [setUserPassword] = inject(
 
       let decryptedToken: { email: string };
       try {
-        decryptedToken = verify(activationToken, config.auth.jwtSecret) as {
+        decryptedToken = verify(activationToken, deps.jwtSecret) as {
           email: string;
         };
       } catch {
@@ -35,6 +37,10 @@ export const [setUserPassword] = inject(
 
       if (password !== repeatPassword) {
         throw Boom.badRequest("different passwords");
+      }
+
+      if (!password.match(passwordRegex)) {
+        throw Boom.badRequest("password unsafe");
       }
 
       const hashedPassword = hashPassword(password);

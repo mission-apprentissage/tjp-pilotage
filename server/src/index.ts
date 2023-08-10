@@ -5,6 +5,7 @@ import Boom from "@hapi/boom";
 
 import { migrateToLatest } from "./migrations/migrate";
 import { registerAuthModule } from "./modules/auth";
+import { authPlugin } from "./modules/auth/handlers/authPlugin/authPlugin";
 import { registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
@@ -36,8 +37,18 @@ server.setErrorHandler((error, request, reply) => {
     reply.status(error.output.statusCode).send(error.output.payload);
     return;
   }
+  if (process.env.PILOTAGE_ENV === "dev") {
+    reply.status(500).send({
+      error: error.name,
+      statusCode: 500,
+      message: error.message,
+    });
+    return;
+  }
   reply.status(500).send({ error: "internal error", statusCode: 500 });
 });
+
+server.register(authPlugin);
 
 server.register(
   async (instance) => {
