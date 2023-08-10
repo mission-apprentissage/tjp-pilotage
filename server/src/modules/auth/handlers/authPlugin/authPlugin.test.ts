@@ -7,7 +7,7 @@ import { extractUserInRequestFactory } from "./authPlugin";
 const jwtSecret = "jwtSecret";
 const jwtToken = sign({ email: "test@test.fr" }, jwtSecret);
 
-describe("setUserPassword usecase", () => {
+describe("extractUserInRequest usecase", () => {
   it("should not set user in request if the is no token in the header", async () => {
     const extractUserInRequest = extractUserInRequestFactory({
       jwtSecret,
@@ -29,6 +29,8 @@ describe("setUserPassword usecase", () => {
         createdAt: new Date(),
         password: "",
         role: "",
+        firstname: "firstname",
+        lastname: "lastname",
       }),
     });
 

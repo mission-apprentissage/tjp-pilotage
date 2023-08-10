@@ -5,7 +5,7 @@ export const findUserQuery = async ({ email }: { email: string }) => {
   const user = await kdb
     .selectFrom("user")
     .where("user.email", "=", email)
-    .select(["email", "password"])
+    .select(["email", "password", "firstname", "lastname"])
     .executeTakeFirst();
 
   return user && cleanNull(user);

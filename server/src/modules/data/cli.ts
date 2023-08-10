@@ -14,11 +14,22 @@ cli.command("migrateDB").action(async () => {
   await migrateToLatest();
 });
 
-cli.command("create-user").action(async () => {
-  await createUser({
-    email: "test@test.fr",
-  });
-});
+cli
+  .command("create-user")
+  .requiredOption("--email <string>")
+  .requiredOption("--firstname <string>")
+  .requiredOption("--lastname <string>")
+  .requiredOption("--role <string>")
+  .action(
+    async (options: {
+      email: string;
+      firstname: string;
+      lastname: string;
+      role: string;
+    }) => {
+      await createUser(options);
+    }
+  );
 
 cli
   .command("importFiles")

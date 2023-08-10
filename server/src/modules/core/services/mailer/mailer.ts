@@ -24,6 +24,7 @@ export type TemplatePayloads = {
       lastname?: string | undefined;
       firstname?: string | undefined;
       email: string;
+      role: string;
     };
     activationToken: string;
   };
@@ -41,7 +42,6 @@ export type TemplateTitleFuncs = {
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
   const needsAuthentication = !!smtp.auth?.user;
-  console.log("needsAuthentication", needsAuthentication);
   const transporter = nodemailer.createTransport(
     needsAuthentication ? smtp : _.omit(smtp, ["auth"])
   );
@@ -72,30 +72,26 @@ export const [shootEmail] = inject(
     }
 );
 
-export const [shootTemplate] = inject(
-  { shootEmail },
-  (deps) =>
-    async <T extends keyof TemplatePayloads>({
-      to,
-      subject,
-      template,
-      data,
-    }: {
-      to: string;
-      subject: string;
-      template: T;
-      data: TemplatePayloads[T];
-    }) => {
-      const html = await generateHtml({
-        to,
-        data,
-        subject,
-        templateFile: path.join(basepath, `/mails/${template}.mjml.ejs`),
-      });
+export const shootTemplate = async <T extends keyof TemplatePayloads>({
+  to,
+  subject,
+  template,
+  data,
+}: {
+  to: string;
+  subject: string;
+  template: T;
+  data: TemplatePayloads[T];
+}) => {
+  const html = await generateHtml({
+    to,
+    data,
+    subject,
+    templateFile: path.join(basepath, `/mails/${template}.mjml.ejs`),
+  });
 
-      return await deps.shootEmail({ html, subject, to });
-    }
-);
+  await shootEmail({ html, subject, to });
+};
 
 export function getPublicUrl(filepath: string) {
   return `${config.frontUrl}${filepath}`;

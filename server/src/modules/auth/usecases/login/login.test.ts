@@ -5,7 +5,7 @@ const correctPassword = "Azerty123!";
 const jwtSecret = "jwtSecret";
 const hashedPassword = hashPassword(correctPassword);
 
-describe("setUserPassword usecase", () => {
+describe("login usecase", () => {
   it("should throw an exception if the user does not exist", async () => {
     const login = loginFactory({
       jwtSecret,

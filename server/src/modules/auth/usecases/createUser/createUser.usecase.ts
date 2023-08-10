@@ -2,18 +2,27 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
 import { config } from "../../../../../config/config";
-import { kdb } from "../../../../db/db";
 import { shootTemplate } from "../../../core/services/mailer/mailer";
+import { insertUserQuery } from "./insertUserQuery.dep";
 
-export const [createUser] = inject(
+export const [createUser, createUserFactory] = inject(
   {
-    insertUserQuery: ({ email }: { email: string }) =>
-      kdb.insertInto("user").values({ email }).execute(),
+    insertUserQuery,
     shootTemplate,
   },
   (deps) =>
-    async ({ email }: { email: string }) => {
-      await deps.insertUserQuery({ email });
+    async ({
+      email,
+      firstname,
+      lastname,
+      role,
+    }: {
+      email: string;
+      firstname?: string;
+      lastname?: string;
+      role: string;
+    }) => {
+      await deps.insertUserQuery({ email, firstname, lastname });
       const activationToken = jwt.sign({ email }, config.auth.jwtSecret, {
         issuer: "orion",
         expiresIn: "1h",
@@ -25,7 +34,7 @@ export const [createUser] = inject(
         template: "activate_account",
         data: {
           activationToken,
-          recipient: { email, firstname: "Jean", lastname: "Dupont" },
+          recipient: { email, firstname, lastname, role },
         },
       });
     }
