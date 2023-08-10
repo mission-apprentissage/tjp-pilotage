@@ -18,7 +18,7 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
 
       await deps.shootTemplate({
         template: "reset_password",
-        subject: "Réinitialisation du mot de passe",
+        subject: "Orion : réinitialisation du mot de passe",
         to: email,
         data: {
           resetPasswordToken,

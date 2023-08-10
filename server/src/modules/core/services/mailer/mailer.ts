@@ -50,6 +50,7 @@ function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
 }
 
 export const [shootEmail] = inject(
+  //@ts-ignore
   { transporter: createTransporter({ ...config.smtp, secure: false }) },
   (deps) =>
     async ({
@@ -62,7 +63,7 @@ export const [shootEmail] = inject(
       html: string;
     }) => {
       const { messageId } = await deps.transporter.sendMail({
-        from: `free <ok@free.fr>`,
+        from: config.smtp.email_from,
         to,
         subject,
         html,
