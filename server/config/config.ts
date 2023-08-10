@@ -15,7 +15,7 @@ export const config = {
     .get("PILOTAGE_POSTGRES_URI")
     .default("local")
     .asString(),
-  frontUrl: env.get("FRONT_URL").required().asString(),
+  frontUrl: env.get("PILOTAGE_PUBLIC_URL").required().asString(),
   PILOTAGE_POSTGRES_CA: env.get("PILOTAGE_POSTGRES_CA").asString(),
   PILOTAGE_INSERJEUNES_USERNAME: env
     .get("PILOTAGE_INSERJEUNES_USERNAME")
@@ -26,16 +26,16 @@ export const config = {
     .required()
     .asString(),
   auth: {
-    jwtSecret: env.get("AUTH_JWT_SECRET").required().asString(),
+    jwtSecret: env.get("PILOTAGE_AUTH_JWT_SECRET").required().asString(),
   },
   smtp: {
-    host: env.get("SMTP_HOST").required().asString(),
-    port: env.get("SMTP_PORT").required().asString(),
-    secure: env.get("SMTP_SECURE").asBool(),
+    host: env.get("PILOTAGE_SMTP_HOST").required().asString(),
+    port: env.get("PILOTAGE_SMTP_PORT").required().asString(),
+    secure: env.get("PILOTAGE_SMTP_SECURE").asBool(),
     auth: {
-      user: env.get("SMTP_AUTH_USER").asString(),
-      pass: env.get("SMTP_AUTH_PASS").asString(),
+      user: env.get("PILOTAGE_SMTP_AUTH_USER").asString(),
+      pass: env.get("PILOTAGE_SMTP_AUTH_PASS").asString(),
     },
-    email_from: env.get("EMAIL_FROM").required().asString(),
+    email_from: env.get("PILOTAGE_EMAIL_FROM").required().asString(),
   },
 };
