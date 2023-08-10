@@ -1,6 +1,15 @@
-import "dotenv/config";
-
+import dotenv from "dotenv";
 import env from "env-var";
+import path from "path";
+
+if (process.env.NODE_ENV === "test") {
+  dotenv.config({
+    path: path.resolve(process.cwd(), `.env.test`),
+  });
+} else {
+  dotenv.config();
+}
+
 export const config = {
   PILOTAGE_POSTGRES_URI: env
     .get("PILOTAGE_POSTGRES_URI")
