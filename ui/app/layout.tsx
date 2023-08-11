@@ -24,6 +24,5 @@ const fetchAuth = async () => {
 export default async ({ children }: { children: React.ReactNode }) => {
   const auth = await fetchAuth();
 
-  console.log(auth);
   return <RootLayoutClient auth={auth}>{children}</RootLayoutClient>;
 };

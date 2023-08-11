@@ -30,15 +30,16 @@ export const ForgottenPasswordForm = () => {
     mode: "onBlur",
   });
 
+  const router = useRouter();
+
   const { mutateAsync: login, isLoading } = useMutation({
     mutationFn: handleSubmit(async ({ email }: { email: string }) => {
       await api.sendResetPassword({ body: { email } }).call();
+      router.replace("/auth/mot-de-passe-oublie/confirmation");
     }),
   });
 
   const { auth } = useContext(AuthContext);
-
-  const router = useRouter();
 
   useEffect(() => {
     if (auth) router.replace("/");

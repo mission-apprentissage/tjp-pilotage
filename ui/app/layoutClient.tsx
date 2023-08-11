@@ -48,7 +48,7 @@ export default function RootLayoutClient({
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
 
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme="light">
       <head>
         <PlausibleProvider
           trackLocalhost={false}

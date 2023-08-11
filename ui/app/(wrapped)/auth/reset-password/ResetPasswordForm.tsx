@@ -43,7 +43,7 @@ export const ResetPasswordForm = ({
       await api
         .resetPassword({ body: { ...values, resetPasswordToken } })
         .call();
-      router.replace("/auth/login");
+      router.replace("/auth/reset-password/confirmation");
     }),
   });
 
