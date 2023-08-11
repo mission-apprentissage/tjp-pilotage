@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormation, PanoramaFormations } from "./type";
 
@@ -46,10 +47,7 @@ export const TopFlopSection = ({
     const sorted = filtered
       .slice()
       .sort((a, b) =>
-        a.tauxInsertion6mois + a.tauxPoursuiteEtudes <
-        b.tauxInsertion6mois + b.tauxPoursuiteEtudes
-          ? 1
-          : -1
+        a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
       );
 
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
@@ -83,15 +81,21 @@ const TopFlopChart = ({
 }) => {
   return (
     <Box bg="#F9F8F6" p="8" mt="4">
-      <Text mb="4" color="grey" fontSize="sm" textAlign="right">
-        Taux d'emploi + Taux de poursuite d'études
-      </Text>
+      <Flex justify={"flex-end"}>
+        <Text mb="4" color="grey" fontSize="sm">
+          Taux de devenir favorable
+        </Text>
+        <TooltipIcon
+          ml="2"
+          label="Part des jeunes en emploi ou en poursuite d’étude"
+        />
+      </Flex>
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
             key={`${item.codeFormationDiplome}_${item.dispositifId}`}
             formation={item}
-            value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
+            value={item.tauxDevenirFavorable}
           />
         ))}
       </VStack>
@@ -104,8 +108,8 @@ const TopFlopChart = ({
             <TopItem
               key={`${item.codeFormationDiplome}_${item.dispositifId}`}
               formation={item}
-              color={"#FD8E81"}
-              value={(item.tauxInsertion6mois + item.tauxPoursuiteEtudes) / 2}
+              color={"#666666"}
+              value={item.tauxDevenirFavorable}
             />
           ))}
       </VStack>
@@ -150,9 +154,7 @@ const TopItem = ({
               fontSize={11}
               whiteSpace="nowrap"
             >
-              {`${formation.tauxInsertion6mois.toFixed(
-                0
-              )}% + ${formation.tauxPoursuiteEtudes.toFixed(0)}%`}
+              {`${formation.tauxDevenirFavorable.toFixed(0)}%`}
             </Flex>
           </PopoverTrigger>
         </Box>
