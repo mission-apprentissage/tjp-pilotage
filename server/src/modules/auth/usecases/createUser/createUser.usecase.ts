@@ -1,13 +1,17 @@
+import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
+import { emailRegex } from "shared";
 
 import { config } from "../../../../../config/config";
 import { shootTemplate } from "../../../core/services/mailer/mailer";
+import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 
 export const [createUser, createUserFactory] = inject(
   {
     insertUserQuery,
+    findUserQuery,
     shootTemplate,
   },
   (deps) =>
@@ -22,7 +26,16 @@ export const [createUser, createUserFactory] = inject(
       lastname?: string;
       role: string;
     }) => {
-      await deps.insertUserQuery({ email, firstname, lastname });
+      if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
+
+      const existingUser = await deps.findUserQuery({ email });
+      if (existingUser) throw Boom.badRequest("email already exist");
+
+      await deps.insertUserQuery({
+        email,
+        firstname,
+        lastname,
+      });
       const activationToken = jwt.sign({ email }, config.auth.jwtSecret, {
         issuer: "orion",
         expiresIn: "1h",
