@@ -35,10 +35,10 @@ export const [createUser, createUserFactory] = inject(
         email,
         firstname,
         lastname,
+        role,
       });
       const activationToken = jwt.sign({ email }, config.auth.jwtSecret, {
         issuer: "orion",
-        expiresIn: "1h",
       });
 
       deps.shootTemplate({
