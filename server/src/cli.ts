@@ -1,14 +1,14 @@
 import { program as cli } from "commander";
 import fs from "fs";
 
-import { migrateToLatest } from "../../migrations/migrate";
-import { createUser } from "../auth/usecases/createUser/createUser.usecase";
-import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
-import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
-import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
-import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
-import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
+import { migrateToLatest } from "./migrations/migrate";
+import { createUser } from "./modules/auth/usecases/createUser/createUser.usecase";
+import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
+import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
+import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importNiveauxDiplome } from "./modules/data/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
+import { importRawFile } from "./modules/data/usecases/importRawFile/importRawFile.usecase";
+import { importLieuxGeographiques } from "./modules/data/usecases/importRegions/importLieuxGeographiques.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
