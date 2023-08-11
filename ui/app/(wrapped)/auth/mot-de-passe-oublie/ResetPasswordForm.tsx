@@ -15,6 +15,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
+import { emailRegex } from "shared";
 
 import { api } from "../../../../api.client";
 import { AuthContext } from "../authContext";
@@ -55,6 +56,10 @@ export const ForgottenPasswordForm = () => {
             <Input
               {...register("email", {
                 required: "Veuillez saisir votre email",
+                pattern: {
+                  value: new RegExp(emailRegex),
+                  message: "L'adresse email doit être valide",
+                },
               })}
             />
             {!!errors.email && (
