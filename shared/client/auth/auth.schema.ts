@@ -1,12 +1,11 @@
 import { Type } from "@sinclair/typebox";
 
-import { emailRegex } from "../../utils/emailRegex";
 import { passwordRegex } from "../../utils/passwordRegex";
 
 export const authSchemas = {
   login: {
     body: Type.Object({
-      email: Type.String({ pattern: emailRegex }),
+      email: Type.String({ format: "email" }),
       password: Type.String(),
     }),
     response: {
@@ -52,7 +51,7 @@ export const authSchemas = {
   },
   sendResetPassword: {
     body: Type.Object({
-      email: Type.String({ pattern: emailRegex }),
+      email: Type.String({ format: "email" }),
     }),
   },
 } as const;

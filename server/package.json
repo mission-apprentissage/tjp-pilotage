@@ -13,7 +13,7 @@
     "copyPublic": "cp -a public/. dist",
     "build": "tsup src/index.ts",
     "typecheck": "tsc",
-    "cli": "ts-node -T src/modules/data/cli.ts ",
+    "cli": "ts-node -T src/cli.ts ",
     "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres",
     "test": "jest"
   },
