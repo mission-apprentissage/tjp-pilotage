@@ -4,8 +4,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 
 import { migrateToLatest } from "./migrations/migrate";
-import { extractUserInRequest, registerAuthModule } from "./modules/auth";
-import { registerCoreModule } from "./modules/core";
+import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
 
@@ -52,7 +51,6 @@ server.addHook("onRequest", extractUserInRequest);
 server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
-    registerAuthModule({ server: instance });
     registerFormationModule({ server: instance });
   },
   { prefix: "/api" }

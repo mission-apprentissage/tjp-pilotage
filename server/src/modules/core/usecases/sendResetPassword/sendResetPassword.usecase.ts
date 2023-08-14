@@ -3,7 +3,7 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
 import { config } from "../../../../../config/config";
-import { shootTemplate } from "../../../core";
+import { shootTemplate } from "../../services/mailer/mailer";
 import { findUserQuery } from "./findUserQuery.dep";
 export const [sendResetPassword, sendResetPasswordFactory] = inject(
   {

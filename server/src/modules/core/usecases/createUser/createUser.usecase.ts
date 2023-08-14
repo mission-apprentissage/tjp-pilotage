@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { emailRegex } from "shared";
 
 import { config } from "../../../../../config/config";
-import { shootTemplate } from "../../../core";
+import { shootTemplate } from "../../services/mailer/mailer";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 
