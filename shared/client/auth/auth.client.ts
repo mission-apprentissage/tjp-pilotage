@@ -24,6 +24,13 @@ export const createAuthClient = (instance: AxiosInstance) => ({
     url: "/auth/activate",
     instance,
   }),
+  checkActivationToken: createClientMethod<
+    typeof ROUTES_CONFIG.checkActivationToken
+  >({
+    method: "GET",
+    url: "/auth/check-activation-token",
+    instance,
+  }),
   sendResetPassword: createClientMethod<typeof ROUTES_CONFIG.sendResetPassword>(
     {
       method: "POST",
