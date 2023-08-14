@@ -2,7 +2,7 @@ import { program as cli } from "commander";
 import fs from "fs";
 
 import { migrateToLatest } from "./migrations/migrate";
-import { createUser } from "./modules/auth/usecases/createUser/createUser.usecase";
+import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
