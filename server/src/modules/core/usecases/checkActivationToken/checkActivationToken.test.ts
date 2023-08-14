@@ -1,92 +1,53 @@
 import jwt from "jsonwebtoken";
 
-import { activateUserFactory } from "./checkActivationToken.usecase";
+import { checkActivationTokenFactory } from "./checkActivationToken.usecase";
 
-const correctPassword = "Azerty123!";
 const jwtSecret = "jwtSecret";
 const activationToken = jwt.sign({ email: "test@test.fr" }, jwtSecret, {
   issuer: "issuer",
-  expiresIn: "1h",
+  expiresIn: "7d",
 });
 
 describe("activateUser usecase", () => {
-  it("should throw an exception if the token is missing", async () => {
-    const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
+  it("should throw an exception if the token is wrong", async () => {
+    const activateUser = checkActivationTokenFactory({
+      findUserQuery: async () => ({
+        email: "test@test.fr",
+        password: undefined,
+      }),
       jwtSecret,
     });
 
     await expect(() =>
-      activateUser({
-        password: correctPassword,
-        repeatPassword: correctPassword,
-        activationToken: undefined as unknown as string,
-      })
-    ).rejects.toThrow("missing token");
-  });
-
-  it("should throw an exception if the token is invalid", async () => {
-    const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
-      jwtSecret,
-    });
-
-    await expect(() =>
-      activateUser({
-        password: correctPassword,
-        repeatPassword: correctPassword,
-        activationToken: "fakeToken",
-      })
+      activateUser({ activationToken: "fake" })
     ).rejects.toThrow("wrong token");
   });
 
-  it("should throw an exception if passwords are different", async () => {
-    const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
-      jwtSecret,
-    });
-
-    await expect(() =>
-      activateUser({
-        password: "aaa",
-        repeatPassword: "bbb",
-        activationToken,
-      })
-    ).rejects.toThrow("different passwords");
-  });
-
-  it("should throw an exception if password is unsafe", async () => {
-    const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
-      jwtSecret,
-    });
-
-    await expect(() =>
-      activateUser({
-        password: "azerty",
-        repeatPassword: "azerty",
-        activationToken,
-      })
-    ).rejects.toThrow("password unsafe");
-  });
-
-  it("should set password", async () => {
-    const deps = {
-      setPasswordQuery: jest.fn(async () => {}),
-      jwtSecret,
-    };
-
-    const activateUser = activateUserFactory(deps);
-
-    await activateUser({
-      password: correctPassword,
-      repeatPassword: correctPassword,
-      activationToken,
-    });
-    await expect(deps.setPasswordQuery).toBeCalledWith(
-      expect.objectContaining({
+  it("should throw an exception if password is defined", async () => {
+    const activateUser = checkActivationTokenFactory({
+      findUserQuery: async () => ({
         email: "test@test.fr",
-      })
+        password: "password",
+      }),
+      jwtSecret,
+    });
+
+    await expect(() => activateUser({ activationToken })).rejects.toThrow(
+      "user active"
     );
+  });
+
+  it("should return ok if the user exist without password", async () => {
+    const activateUser = checkActivationTokenFactory({
+      findUserQuery: async () => ({
+        email: "test@test.fr",
+        password: undefined,
+      }),
+      jwtSecret,
+    });
+
+    const response = await activateUser({ activationToken });
+
+    await expect(response).toBe(true);
   });
 });
