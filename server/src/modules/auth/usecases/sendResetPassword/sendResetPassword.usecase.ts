@@ -3,10 +3,14 @@ import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
 import { config } from "../../../../../config/config";
-import { shootTemplate } from "../../../core/services/mailer/mailer";
+import { shootTemplate } from "../../../core";
 import { findUserQuery } from "./findUserQuery.dep";
 export const [sendResetPassword, sendResetPasswordFactory] = inject(
-  { findUserQuery, shootTemplate, jwtSecret: config.auth.jwtSecret },
+  {
+    findUserQuery,
+    shootTemplate,
+    jwtSecret: config.auth.resetPasswordJwtSecret,
+  },
   (deps) =>
     async ({ email }: { email: string }) => {
       const user = await deps.findUserQuery({ email });

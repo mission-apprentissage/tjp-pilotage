@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 import { emailRegex } from "shared";
 
 import { config } from "../../../../../config/config";
-import { shootTemplate } from "../../../core/services/mailer/mailer";
+import { shootTemplate } from "../../../core";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 
@@ -37,9 +37,13 @@ export const [createUser, createUserFactory] = inject(
         lastname,
         role,
       });
-      const activationToken = jwt.sign({ email }, config.auth.jwtSecret, {
-        issuer: "orion",
-      });
+      const activationToken = jwt.sign(
+        { email },
+        config.auth.activationJwtSecret,
+        {
+          issuer: "orion",
+        }
+      );
 
       deps.shootTemplate({
         to: email,

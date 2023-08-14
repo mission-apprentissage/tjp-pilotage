@@ -29,16 +29,6 @@ export type TemplatePayloads = {
     activationToken: string;
   };
 };
-export type TemplateName = keyof TemplatePayloads;
-
-type TemplateSubjectFunc<
-  T extends TemplateName,
-  Payload = TemplatePayloads[T]
-> = (payload: Payload) => string;
-
-export type TemplateTitleFuncs = {
-  [types in TemplateName]: TemplateSubjectFunc<types>;
-};
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
   const needsAuthentication = !!smtp.auth?.user;
@@ -94,11 +84,11 @@ export const shootTemplate = async <T extends keyof TemplatePayloads>({
   await shootEmail({ html, subject, to });
 };
 
-export function getPublicUrl(filepath: string) {
+function getPublicUrl(filepath: string) {
   return `${config.frontUrl}${filepath}`;
 }
 
-export async function generateHtml({
+async function generateHtml({
   to,
   subject,
   templateFile,

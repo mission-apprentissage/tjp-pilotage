@@ -2,7 +2,7 @@ import cookie from "cookie";
 import { FastifyRequest } from "fastify";
 import { sign } from "jsonwebtoken";
 
-import { extractUserInRequestFactory } from "./authPlugin";
+import { extractUserInRequestFactory } from "./extractUserInRequest";
 
 const jwtSecret = "jwtSecret";
 const jwtToken = sign({ email: "test@test.fr" }, jwtSecret);

@@ -4,8 +4,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 
 import { migrateToLatest } from "./migrations/migrate";
-import { registerAuthModule } from "./modules/auth";
-import { authPlugin } from "./modules/auth/handlers/authPlugin/authPlugin";
+import { extractUserInRequest, registerAuthModule } from "./modules/auth";
 import { registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
@@ -48,7 +47,7 @@ server.setErrorHandler((error, request, reply) => {
   reply.status(500).send({ error: "internal error", statusCode: 500 });
 });
 
-server.register(authPlugin);
+server.addHook("onRequest", extractUserInRequest);
 
 server.register(
   async (instance) => {
