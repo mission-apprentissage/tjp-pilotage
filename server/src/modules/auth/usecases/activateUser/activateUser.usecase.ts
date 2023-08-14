@@ -10,7 +10,7 @@ import { setPasswordQuery } from "./setPasswordQuery.dep";
 export const [activateUser, activateUserFactory] = inject(
   {
     setPasswordQuery,
-    jwtSecret: config.auth.jwtSecret,
+    jwtSecret: config.auth.activationJwtSecret,
   },
   (deps) =>
     async ({

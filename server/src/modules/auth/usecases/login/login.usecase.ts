@@ -9,7 +9,7 @@ import { findUserQuery } from "./findUserQuery.dep";
 export const [login, loginFactory] = inject(
   {
     findUserQuery,
-    jwtSecret: config.auth.jwtSecret,
+    jwtSecret: config.auth.authJwtSecret,
   },
   (deps) =>
     async ({ email, password }: { email: string; password: string }) => {

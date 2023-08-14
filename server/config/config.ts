@@ -26,7 +26,15 @@ export const config = {
     .required()
     .asString(),
   auth: {
-    jwtSecret: env.get("PILOTAGE_AUTH_JWT_SECRET").required().asString(),
+    authJwtSecret: env.get("PILOTAGE_AUTH_JWT_SECRET").required().asString(),
+    activationJwtSecret: env
+      .get("PILOTAGE_ACTIVATION_JWT_SECRET")
+      .required()
+      .asString(),
+    resetPasswordJwtSecret: env
+      .get("PILOTAGE_RESET_PASSWORD_JWT_SECRET")
+      .required()
+      .asString(),
   },
   smtp: {
     host: env.get("PILOTAGE_SMTP_HOST").required().asString(),

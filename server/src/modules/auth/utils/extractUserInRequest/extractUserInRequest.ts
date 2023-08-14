@@ -1,6 +1,5 @@
 import cookie from "cookie";
 import { FastifyRequest } from "fastify";
-import plugin from "fastify-plugin";
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
 
@@ -10,12 +9,8 @@ import { findUserQuery } from "./findUserQuery.dep";
 
 type RequestUser = { email: string; id: string; role?: "admin" };
 
-export const authPlugin = plugin(async (instance) => {
-  instance.addHook("onRequest", extractUserInRequest);
-});
-
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
-  { jwtSecret: config.auth.jwtSecret, findUserQuery },
+  { jwtSecret: config.auth.authJwtSecret, findUserQuery },
   (deps) => async (request: FastifyRequest) => {
     const token = cookie.parse(request.headers.cookie ?? "").Authorization;
     if (!token) return;

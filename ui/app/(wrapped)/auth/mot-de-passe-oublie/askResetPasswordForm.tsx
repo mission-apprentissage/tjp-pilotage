@@ -10,6 +10,7 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
@@ -32,13 +33,16 @@ export const ForgottenPasswordForm = () => {
 
   const router = useRouter();
 
-  const { mutateAsync: login, isLoading } = useMutation({
+  const {
+    mutateAsync: login,
+    isLoading,
+    isError,
+  } = useMutation({
     mutationFn: handleSubmit(async ({ email }: { email: string }) => {
       await api.sendResetPassword({ body: { email } }).call();
       router.replace("/auth/mot-de-passe-oublie/confirmation");
     }),
   });
-
   const { auth } = useContext(AuthContext);
 
   useEffect(() => {
@@ -67,6 +71,11 @@ export const ForgottenPasswordForm = () => {
               <FormErrorMessage>{errors.email.message}</FormErrorMessage>
             )}
           </FormControl>
+          {isError && (
+            <Text fontSize="sm" mt="4" textAlign="center" color="red.500">
+              Erreur lors de la demande
+            </Text>
+          )}
           <Flex>
             <Button
               isLoading={isLoading}

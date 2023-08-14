@@ -43,7 +43,12 @@ export default function RootLayoutClient({
   auth?: Auth;
 }) {
   const tracking = useTracking();
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { mutations: { useErrorBoundary: false } },
+      })
+  );
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
 
