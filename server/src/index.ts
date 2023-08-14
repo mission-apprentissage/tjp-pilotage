@@ -30,11 +30,22 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, request, reply) => {
+  console.error(error);
   if (Boom.isBoom(error)) {
     error.output.statusCode;
     reply.status(error.output.statusCode).send(error.output.payload);
     return;
   }
+
+  if (error.statusCode && error.statusCode < 500) {
+    reply.status(error.statusCode).send({
+      statusCode: error.statusCode,
+      message: error.message,
+      error: error.name,
+    });
+    return;
+  }
+
   if (process.env.PILOTAGE_ENV === "dev") {
     reply.status(500).send({
       error: error.name,

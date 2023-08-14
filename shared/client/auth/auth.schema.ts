@@ -40,6 +40,16 @@ export const authSchemas = {
       activationToken: Type.String(),
     }),
   },
+  checkActivationToken: {
+    querystring: Type.Object({
+      activationToken: Type.String(),
+    }),
+    response: {
+      200: Type.Object({
+        valid: Type.Literal(true),
+      }),
+    },
+  },
   resetPassword: {
     body: Type.Object({
       password: Type.String({

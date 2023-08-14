@@ -4,6 +4,7 @@ import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { activateUser } from "../usecases/activateUser/activateUser.usecase";
+import { checkActivationToken } from "../usecases/checkActivationToken/checkActivationToken.usecase";
 import { login } from "../usecases/login/login.usecase";
 import { resetPassword } from "../usecases/resetPassword/resetPassword.usecase";
 import { sendResetPassword } from "../usecases/sendResetPassword/sendResetPassword.usecase";
@@ -64,6 +65,20 @@ export const authRoutes = ({ server }: { server: Server }) => {
         activationToken,
       });
       response.status(200).send();
+    }
+  );
+
+  server.get(
+    "/auth/check-activation-token",
+    { schema: ROUTES_CONFIG.checkActivationToken },
+    async (request, response) => {
+      console.log("herrre");
+      const { activationToken } = request.query;
+
+      const valid = await checkActivationToken({
+        activationToken,
+      });
+      response.status(200).send({ valid });
     }
   );
 
