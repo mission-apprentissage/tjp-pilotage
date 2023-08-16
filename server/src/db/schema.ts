@@ -111,6 +111,13 @@ export interface IndicateurEtablissement {
   valeurAjoutee: number | null;
 }
 
+export interface IndicateurRegion {
+  codeRegion: string;
+  rentreeScolaire: string;
+  nbDecrocheurs: number | null;
+  effectifDecrochage: number | null;
+}
+
 export interface IndicateurRegionSortie {
   cfd: string | null;
   dispositifId: string | null;
@@ -153,6 +160,16 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface User {
+  id: Generated<string>;
+  email: string;
+  firstname: string | null;
+  lastname: string | null;
+  password: string | null;
+  createdAt: Generated<Timestamp | null>;
+  role: string | null;
+}
+
 export interface DB {
   academie: Academie;
   departement: Departement;
@@ -164,9 +181,11 @@ export interface DB {
   formationHistorique: FormationHistorique;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
+  indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   niveauDiplome: NiveauDiplome;
   rawData: RawData;
   region: Region;
+  user: User;
 }

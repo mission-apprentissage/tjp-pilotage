@@ -5,6 +5,7 @@ import { migrateToLatest } from "../../migrations/migrate";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importIndicateursRegion } from "./usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
@@ -35,8 +36,11 @@ cli
         getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2022"),
       attractivite_capacite_2021: () =>
         getImport("attractivite_capacite", "2021"),
+      decrochage_regional_2020: () => getImport("decrochage_regional", "2020"),
       "Cab-nbre_division_effectifs_par_etab_mefst11_2021": () =>
         getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2021"),
+      "Cab-nbre_division_effectifs_par_etab_mefst11_2020": () =>
+        getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2020"),
       nMef: () => getImport("nMef"),
       nNiveauFormationDiplome_: () => getImport("nNiveauFormationDiplome_"),
       nDispositifFormation_: () => getImport("nDispositifFormation_"),
@@ -80,8 +84,10 @@ cli
 cli
   .command("importFormations")
   .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async (fetchIj: boolean | string) => {
-    await importFormationEtablissements({ fetchIj: fetchIj !== "false" });
+  .action(async (fetchIjOption: boolean | string) => {
+    const fetchIj = fetchIjOption !== "false";
+    await importIndicateursRegion();
+    await importFormationEtablissements({ fetchIj });
   });
 
 cli.parse(process.argv);
