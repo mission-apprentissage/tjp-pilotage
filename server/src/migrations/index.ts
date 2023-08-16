@@ -14,6 +14,5 @@ type Migrations = Record<string, Migration>;
 export const migrations: Migrations = {
   migration1,
   migration2,
-  migration3,
   migration4,
 };
