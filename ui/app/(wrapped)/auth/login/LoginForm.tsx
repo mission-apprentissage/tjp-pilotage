@@ -102,7 +102,7 @@ export const LoginForm = () => {
               ml="auto"
               variant="primary"
             >
-              Envoyer
+              Se connecter
             </Button>
           </Flex>
         </CardBody>
