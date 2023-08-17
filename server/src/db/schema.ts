@@ -128,11 +128,11 @@ export interface IndicateurRegion {
 }
 
 export interface IndicateurRegionSortie {
-  cfd: string | null;
-  dispositifId: string | null;
-  codeRegion: string | null;
-  voie: string | null;
-  millesimeSortie: string | null;
+  cfd: string;
+  dispositifId: string;
+  codeRegion: string;
+  voie: string;
+  millesimeSortie: string;
   effectifSortie: number | null;
   nbSortants: number | null;
   nbPoursuiteEtudes: number | null;
