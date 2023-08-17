@@ -44,6 +44,9 @@ export const Nav = () => {
       <NavLink href="/console/formations" segment="console">
         Console
       </NavLink>
+      <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
+        Pilotage de la réforme
+      </NavLink>
     </HStack>
   );
 };

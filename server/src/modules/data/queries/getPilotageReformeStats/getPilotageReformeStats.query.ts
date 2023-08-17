@@ -319,7 +319,25 @@ export const getPilotageReformeStats = async ({
 
   return {
     filters: filters,
-    anneeEnCours: statsAnneeEnCours,
-    anneePrecedente: statsAnneePrecedente,
+    anneeEnCours: {
+      filtered: {
+        ...statsAnneeEnCours.filtered?.statsEffectif,
+        ...statsAnneeEnCours.filtered?.statsSortie,
+      },
+      nationale: {
+        ...statsAnneeEnCours.nationale?.statsEffectif,
+        ...statsAnneeEnCours.nationale?.statsSortie,
+      },
+    },
+    anneePrecedente: {
+      filtered: {
+        ...statsAnneePrecedente.filtered?.statsEffectif,
+        ...statsAnneePrecedente.filtered?.statsSortie,
+      },
+      nationale: {
+        ...statsAnneePrecedente.nationale?.statsEffectif,
+        ...statsAnneePrecedente.nationale?.statsSortie,
+      },
+    },
   };
 };
