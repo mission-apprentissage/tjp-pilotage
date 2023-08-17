@@ -1,22 +1,22 @@
 import { inject } from "injecti";
 
 import { rawDataRepository } from "../../repositories/rawData.repository";
-import { findRegionsQuery } from "./findRegionsQuery.dep";
-import { upsertRegionQuery } from "./upsertIndicateurRegionQuery.dep";
+import { findAcademiesQuery } from "./findAcademiesQuery.dep";
+import { upsertIndicateurAcaemieQuery } from "./upsertIndicateurAcademieQuery.dep";
 
-export const [importIndicateursRegion] = inject(
+export const [importIndicateursAcademie] = inject(
   {
-    findRegionsQuery,
-    upsertRegionQuery,
+    findAcademiesQuery,
+    upsertIndicateurAcaemieQuery,
     findRawData: rawDataRepository.findRawData,
   },
   (deps) => async () => {
-    const regions = await deps.findRegionsQuery();
-    for (const { codeRegion } of regions) {
+    const academies = await deps.findAcademiesQuery();
+    for (const { codeAcademie } of academies) {
       for (const rentreeScolaire of ["2020"]) {
         const line = await deps.findRawData({
-          type: `decrochage_regional`,
-          filter: { codeRegion },
+          type: `decrochage_academique`,
+          filter: { codeAcademie },
           year: rentreeScolaire,
         });
 
@@ -40,8 +40,8 @@ export const [importIndicateursRegion] = inject(
             ? { effectifDecrochage, nbDecrocheurs, tauxDecrochage }
             : undefined;
 
-        await deps.upsertRegionQuery({
-          codeRegion,
+        await deps.upsertIndicateurAcaemieQuery({
+          codeAcademie,
           rentreeScolaire,
           ...decrochage,
         });
