@@ -5,6 +5,8 @@ import { migrateToLatest } from "../../migrations/migrate";
 import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importIndicateursAcademie } from "./usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
+import { importIndicateursRegion } from "./usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
@@ -27,25 +29,36 @@ cli
           "utf8"
         ),
       });
+
+    const getImports = (type: string, years?: string[]) => {
+      if (!years) {
+        return { [type]: () => getImport(type) };
+      }
+      return years.reduce(
+        (acc, year) => ({
+          ...acc,
+          [`${type}_${year}`]: () => getImport(type, year),
+        }),
+        {} as Record<string, () => Promise<void>>
+      );
+    };
+
     const actions = {
       regroupements: () => getImport("regroupements"),
-      attractivite_capacite_2022: () =>
-        getImport("attractivite_capacite", "2022"),
-      "Cab-nbre_division_effectifs_par_etab_mefst11_2022": () =>
-        getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2022"),
-      attractivite_capacite_2021: () =>
-        getImport("attractivite_capacite", "2021"),
-      "Cab-nbre_division_effectifs_par_etab_mefst11_2021": () =>
-        getImport("Cab-nbre_division_effectifs_par_etab_mefst11", "2021"),
-      nMef: () => getImport("nMef"),
-      nNiveauFormationDiplome_: () => getImport("nNiveauFormationDiplome_"),
-      nDispositifFormation_: () => getImport("nDispositifFormation_"),
-      familleMetiers: () => getImport("familleMetiers"),
-      departements_academies_regions: () =>
-        getImport("departements_academies_regions"),
-      diplomesProfessionnels: () => getImport("diplomesProfessionnels"),
-      nFormationDiplome_: () => getImport("nFormationDiplome_"),
-      lyceesACCE: () => getImport("lyceesACCE"),
+      ...getImports("attractivite_capacite", ["2020", "2021"]),
+      ...getImports("decrochage_regional", ["2020"]),
+      ...getImports("decrochage_academique", ["2020"]),
+      ...getImports("Cab-nbre_division_effectifs_par_etab_mefst11", [
+        "2021",
+        "2020",
+      ]),
+      ...getImports("nMef"),
+      ...getImports("nNiveauFormationDiplome_"),
+      ...getImports("nDispositifFormation_"),
+      ...getImports("familleMetiers"),
+      ...getImports("diplomesProfessionnels"),
+      ...getImports("nFormationDiplome_"),
+      ...getImports("lyceesACCE"),
     };
 
     if (filename) {
@@ -80,8 +93,11 @@ cli
 cli
   .command("importFormations")
   .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async (fetchIj: boolean | string) => {
-    await importFormationEtablissements({ fetchIj: fetchIj !== "false" });
+  .action(async (fetchIjOption: boolean | string) => {
+    const fetchIj = fetchIjOption !== "false";
+    await importIndicateursAcademie();
+    await importIndicateursRegion();
+    await importFormationEtablissements({ fetchIj });
   });
 
 cli.parse(process.argv);
