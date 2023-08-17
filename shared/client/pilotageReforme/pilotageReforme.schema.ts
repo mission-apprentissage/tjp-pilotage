@@ -5,31 +5,22 @@ const OptionSchema = Type.Object({
   value: Type.String(),
 });
 
-const StatsSortieSchema = Type.Object({
+const StatsSchema = Type.Object({
+  effectif: Type.Optional(Type.Number()),
+  nbFormations: Type.Optional(Type.Number()),
+  nbEtablissements: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
 });
 
-const StatsEffectifSchema = Type.Object({
-  effectif: Type.Optional(Type.Number()),
-  nbFormations: Type.Optional(Type.Number()),
-  nbEtablissements: Type.Optional(Type.Number()),
-});
-
-const StatsAnnee = Type.Object({
-  nationale: Type.Object({
-    statsSortie: StatsSortieSchema,
-    statsEffectif: StatsEffectifSchema,
-  }),
-  filtered: Type.Object({
-    statsSortie: StatsSortieSchema,
-    statsEffectif: StatsEffectifSchema,
-  }),
+const StatsAnneeSchema = Type.Object({
+  nationale: StatsSchema,
+  filtered: StatsSchema,
 });
 
 const StatsRegionLineSchema = Type.Object({
   codeRegion: Type.String(),
-  libelleRegion: Type.String(),
+  libelleRegion: Type.Optional(Type.String()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
 });
@@ -60,8 +51,8 @@ export const pilotageReformeSchemas = {
           rentreesScolaires: Type.Array(OptionSchema),
           libelleFilieres: Type.Array(OptionSchema),
         }),
-        anneeEnCours: StatsAnnee,
-        anneePrecedente: StatsAnnee,
+        anneeEnCours: StatsAnneeSchema,
+        anneePrecedente: StatsAnneeSchema,
       }),
     },
   },
