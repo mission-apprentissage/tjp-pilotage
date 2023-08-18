@@ -93,6 +93,14 @@ export interface FormationHistorique {
   ancienCFD: string;
 }
 
+export interface IndicateurAcademie {
+  codeAcademie: string;
+  rentreeScolaire: string;
+  nbDecrocheurs: number | null;
+  effectifDecrochage: number | null;
+  tauxDecrochage: number | null;
+}
+
 export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
@@ -109,6 +117,14 @@ export interface IndicateurEtablissement {
   UAI: string;
   millesime: string;
   valeurAjoutee: number | null;
+}
+
+export interface IndicateurRegion {
+  codeRegion: string;
+  rentreeScolaire: string;
+  nbDecrocheurs: number | null;
+  effectifDecrochage: number | null;
+  tauxDecrochage: number | null;
 }
 
 export interface IndicateurRegionSortie {
@@ -172,8 +188,10 @@ export interface DB {
   formation: Formation;
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
+  indicateurAcademie: IndicateurAcademie;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
+  indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   niveauDiplome: NiveauDiplome;
