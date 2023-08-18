@@ -1,6 +1,8 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../files/Attractivite_capacite";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../files/Cab-nbre_division_effectifs_par_etab_mefst11";
+import { Decrochage_academique } from "../files/Decrochage_academique";
+import { Decrochage_regional } from "../files/Decrochage_regional";
 import { Departements_academies_regions } from "../files/Departements_academies_regions";
 import { DiplomeProfessionnelLine } from "../files/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../files/FamilleMetiers";
@@ -25,6 +27,8 @@ type LineTypes = {
   attractivite_capacite: Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
+  decrochage_regional: Decrochage_regional;
+  decrochage_academique: Decrochage_academique;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

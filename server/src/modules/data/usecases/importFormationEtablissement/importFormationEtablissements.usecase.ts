@@ -51,16 +51,16 @@ export const [importFormationEtablissements] = inject(
   },
   (deps) => {
     logger.reset();
+
     return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
       if (fetchIj) {
         await deps.fetchIjReg();
       }
+      const processedUais: string[] = [];
       await streamIt(
         async (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
         async (item, count) => {
-          const processedUais: string[] = [];
-
           const formation = await deps.importFormation({
             diplomeProfessionnelLine: item,
           });
@@ -77,7 +77,6 @@ export const [importFormationEtablissements] = inject(
             await deps.importIndicateursRegionSortie({
               cfd,
               dispositifId,
-
               mefstat: anneesDispositif[anneesDispositif.length - 1].mefstat,
             });
 
