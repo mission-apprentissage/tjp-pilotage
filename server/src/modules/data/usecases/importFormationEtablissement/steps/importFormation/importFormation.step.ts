@@ -4,8 +4,8 @@ import _ from "lodash";
 import { DateTime } from "luxon";
 
 import { DB } from "../../../../../../db/schema";
-import { DiplomeProfessionnelLine } from "../../../../files/DiplomesProfessionnels";
-import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
+import { DiplomeProfessionnelLine } from "../../../../../../../public/files/DiplomesProfessionnels";
+import { NFormationDiplomeLine } from "../../../../../../../public/files/NFormationDiplome";
 import { getCfdDispositifs } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 import { importFormationHistorique } from "../importFormationsHistoriques/importFormationsHistoriques.step";
 import { createFormation } from "./createFormation.dep";

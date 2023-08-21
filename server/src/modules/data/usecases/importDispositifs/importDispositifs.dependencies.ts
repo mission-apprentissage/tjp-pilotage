@@ -2,7 +2,7 @@ import { Insertable } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
-import { NDispositifFormation } from "../../files/NDispositifFormation";
+import { NDispositifFormation } from "../../../../../public/files/NDispositifFormation";
 
 const findNDispositifFormation = async ({
   offset,

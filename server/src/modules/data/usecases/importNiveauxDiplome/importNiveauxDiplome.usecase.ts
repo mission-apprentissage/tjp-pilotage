@@ -1,4 +1,4 @@
-import { NNiveauFormationDiplome } from "../../files/NNiveauFormationDiplome";
+import { NNiveauFormationDiplome } from "../../../../../public/files/NNiveauFormationDiplome";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies";
 

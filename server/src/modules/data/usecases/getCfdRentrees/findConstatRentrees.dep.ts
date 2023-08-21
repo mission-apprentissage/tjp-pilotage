@@ -1,5 +1,5 @@
 import { kdb } from "../../../../db/db";
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../files/Cab-nbre_division_effectifs_par_etab_mefst11";
+import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../../../../../public/files/Cab-nbre_division_effectifs_par_etab_mefst11";
 export const findConstatRentrees = async ({
   mefStat11,
   year,

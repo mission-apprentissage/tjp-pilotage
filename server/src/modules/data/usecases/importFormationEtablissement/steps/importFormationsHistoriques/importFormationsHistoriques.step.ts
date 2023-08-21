@@ -5,7 +5,7 @@ import { DateTime } from "luxon";
 
 import { kdb } from "../../../../../../db/db";
 import { DB } from "../../../../../../db/schema";
-import { NFormationDiplomeLine } from "../../../../files/NFormationDiplome";
+import { NFormationDiplomeLine } from "../../../../../../../public/files/NFormationDiplome";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 
 export const createFormationHistorique = async (
