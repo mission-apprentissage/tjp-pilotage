@@ -63,16 +63,18 @@ cli
 
     const actions = {
       regroupements: () => getImport("regroupements"),
-      ...getImports("attractivite_capacite", ["2020", "2021"]),
+      ...getImports("attractivite_capacite", ["2021", "2022"]),
       ...getImports("decrochage_regional", ["2020"]),
       ...getImports("decrochage_academique", ["2020"]),
       ...getImports("Cab-nbre_division_effectifs_par_etab_mefst11", [
-        "2021",
         "2020",
+        "2021",
+        "2022",
       ]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
       ...getImports("nDispositifFormation_"),
+      ...getImports("departements_academies_regions"),
       ...getImports("familleMetiers"),
       ...getImports("diplomesProfessionnels"),
       ...getImports("nFormationDiplome_"),
