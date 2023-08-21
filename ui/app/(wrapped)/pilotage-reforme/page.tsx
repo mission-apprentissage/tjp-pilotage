@@ -5,9 +5,11 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
+import { useState } from "react";
 
 import { api } from "../../../api.client";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { CartoSection } from "./stats/CartoSection";
 import { EvolutionIndicateursClesSection } from "./stats/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./stats/FiltersSection";
 import { IndicateursClesSection } from "./stats/IndicateursClesSection";
@@ -103,6 +105,37 @@ export default function PilotageReforme() {
 
   const isFiltered = filters.codeRegion;
 
+  const indicateurOptions = [
+    {
+      label: "Taux d'insertion",
+      value: "tauxInsertion6mois",
+      isDefault: true,
+    },
+    {
+      label: "Taux de poursuite d'études",
+      value: "tauxPoursuiteEtudes",
+      isDefault: false,
+    },
+    {
+      label: "Taux de décrochage",
+      value: "tauxDecrochage",
+      isDefault: false,
+    },
+  ];
+
+  const [indicateur, setIndicateur] = useState<
+    "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage"
+  >("tauxInsertion6mois");
+
+  const handleIndicateurChange = (indicateur: string): void => {
+    if (
+      indicateur === "tauxInsertion6mois" ||
+      indicateur === "tauxPoursuiteEtudes" ||
+      indicateur === "tauxDecrochage"
+    )
+      setIndicateur(indicateur);
+  };
+
   return (
     <>
       <Container maxWidth={"container.xl"} py="4">
@@ -115,16 +148,28 @@ export default function PilotageReforme() {
         ></FiltersSection>
         <Box>
           <SimpleGrid spacing={8} columns={[2]} mt={8}>
-            <IndicateursClesSection
-              data={data}
-              isLoading={isLoading}
-            ></IndicateursClesSection>
-            <EvolutionIndicateursClesSection
-              data={data}
-              isLoading={isLoading}
-              isFiltered={isFiltered}
-              codeRegion={filters.codeRegion}
-            ></EvolutionIndicateursClesSection>
+            <Box>
+              <IndicateursClesSection
+                data={data}
+                isLoading={isLoading}
+              ></IndicateursClesSection>
+              <EvolutionIndicateursClesSection
+                data={data}
+                isLoading={isLoading}
+                isFiltered={isFiltered}
+                codeRegion={filters.codeRegion}
+                indicateur={indicateur}
+                handleIndicateurChange={handleIndicateurChange}
+                indicateurOptions={indicateurOptions}
+              ></EvolutionIndicateursClesSection>
+            </Box>
+            <CartoSection
+              data={dataRegions}
+              isLoading={isLoadingRegions}
+              indicateur={indicateur}
+              handleIndicateurChange={handleIndicateurChange}
+              indicateurOptions={indicateurOptions}
+            ></CartoSection>
           </SimpleGrid>
           <SimpleGrid spacing={5} columns={[1]} mt={14}>
             <VueRegionAcademieSection

@@ -6,38 +6,36 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import {
   getMillesimeFromRentreeScolaire,
-  getPreviousMillesime,
-  getPreviousRentreeScolaire,
+  getRentreeScolaire,
 } from "../../services/inserJeunesApi/formatMillesime";
 import { effectifAnnee } from "../utils/effectifAnnee";
 import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../utils/notHistorique";
+import { selectTauxDecrochageNatAgg } from "../utils/tauxDecrochage";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
 export const getPilotageReformeStats = async ({
   codeRegion,
   codeNiveauDiplome,
-  rentreeScolaire = "2022",
-  libelleFiliere,
 }: {
   codeRegion?: string;
   codeNiveauDiplome?: string[];
-  rentreeScolaire?: string;
-  libelleFiliere?: string[];
 }) => {
+  const rentreeScolaire = "2022";
+
   const selectStatsEffectif = ({
     eb,
     isFiltered = false,
-    isAnneePrecedente = false,
+    annee = 0,
   }: {
     eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
     isFiltered: boolean;
-    isAnneePrecedente: boolean;
-  }) =>
-    eb
+    annee: number;
+  }) => {
+    return eb
       .selectFrom("formationEtablissement")
       .leftJoin(
         "formation",
@@ -54,9 +52,7 @@ export const getPilotageReformeStats = async ({
           .on(
             "indicateurEntree.rentreeScolaire",
             "=",
-            isAnneePrecedente
-              ? getPreviousRentreeScolaire(rentreeScolaire)
-              : rentreeScolaire
+            getRentreeScolaire({ rentreeScolaire, offset: annee })
           )
       )
       .leftJoin(
@@ -72,10 +68,6 @@ export const getPilotageReformeStats = async ({
         if (!codeNiveauDiplome?.length) return q;
         return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
       })
-      .$call((q) => {
-        if (!libelleFiliere?.length) return q;
-        return q.where("formation.libelleFiliere", "in", libelleFiliere);
-      })
       .where(notHistorique)
       .select([
         sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
@@ -88,15 +80,16 @@ export const getPilotageReformeStats = async ({
           alias: "indicateurEntree",
         })}),0)`.as("effectif"),
       ]);
+  };
 
   const selectStatsSortie = ({
     eb,
     isFiltered = false,
-    isAnneePrecedente = false,
+    annee = 0,
   }: {
     eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
     isFiltered: boolean;
-    isAnneePrecedente: boolean;
+    annee: number;
   }) =>
     eb
       .selectFrom("indicateurRegionSortie")
@@ -110,6 +103,11 @@ export const getPilotageReformeStats = async ({
         "etablissement.codeRegion",
         "indicateurRegionSortie.codeRegion"
       )
+      .leftJoin(
+        "indicateurRegion",
+        "indicateurRegion.codeRegion",
+        "indicateurRegionSortie.codeRegion"
+      )
       .$call((q) => {
         if (!isFiltered || !codeRegion) return q;
         return q.where("indicateurRegionSortie.codeRegion", "=", codeRegion);
@@ -118,19 +116,11 @@ export const getPilotageReformeStats = async ({
         if (!codeNiveauDiplome?.length) return q;
         return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
       })
-      .$call((q) => {
-        if (!libelleFiliere?.length) return q;
-        return q.where("formation.libelleFiliere", "in", libelleFiliere);
-      })
       .$call((q) =>
         q.where(
           "indicateurRegionSortie.millesimeSortie",
           "=",
-          isAnneePrecedente
-            ? getPreviousMillesime(
-                getMillesimeFromRentreeScolaire(rentreeScolaire)
-              )
-            : getMillesimeFromRentreeScolaire(rentreeScolaire)
+          getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee })
         )
       )
       .where(notHistoriqueIndicateurRegionSortie)
@@ -141,9 +131,10 @@ export const getPilotageReformeStats = async ({
         selectTauxPoursuiteAgg("indicateurRegionSortie").as(
           "tauxPoursuiteEtudes"
         ),
+        selectTauxDecrochageNatAgg("indicateurRegion").as("tauxDecrochage"),
       ]);
 
-  const statsAnneeEnCours = await kdb
+  const statsAnneeN = await kdb
     .selectFrom("formationEtablissement")
     .select((eb) => [
       jsonObjectFrom(
@@ -154,14 +145,14 @@ export const getPilotageReformeStats = async ({
               selectStatsEffectif({
                 eb,
                 isFiltered: false,
-                isAnneePrecedente: false,
+                annee: 0,
               })
             ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
                 isFiltered: false,
-                isAnneePrecedente: false,
+                annee: 0,
               })
             ).as("statsSortie"),
           ])
@@ -175,14 +166,14 @@ export const getPilotageReformeStats = async ({
               selectStatsEffectif({
                 eb,
                 isFiltered: true,
-                isAnneePrecedente: false,
+                annee: 0,
               })
             ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
                 isFiltered: true,
-                isAnneePrecedente: false,
+                annee: 0,
               })
             ).as("statsSortie"),
           ])
@@ -191,7 +182,7 @@ export const getPilotageReformeStats = async ({
     ])
     .executeTakeFirstOrThrow();
 
-  const statsAnneePrecedente = await kdb
+  const statsAnneeNMoins1 = await kdb
     .selectFrom("formationEtablissement")
     .select((eb) => [
       jsonObjectFrom(
@@ -202,14 +193,14 @@ export const getPilotageReformeStats = async ({
               selectStatsEffectif({
                 eb,
                 isFiltered: false,
-                isAnneePrecedente: true,
+                annee: -1,
               })
             ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
                 isFiltered: false,
-                isAnneePrecedente: true,
+                annee: -1,
               })
             ).as("statsSortie"),
           ])
@@ -225,14 +216,14 @@ export const getPilotageReformeStats = async ({
               selectStatsEffectif({
                 eb,
                 isFiltered: true,
-                isAnneePrecedente: true,
+                annee: -1,
               })
             ).as("statsEffectif"),
             jsonObjectFrom(
               selectStatsSortie({
                 eb,
                 isFiltered: true,
-                isAnneePrecedente: true,
+                annee: -1,
               })
             ).as("statsSortie"),
           ])
@@ -286,57 +277,31 @@ export const getPilotageReformeStats = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const rentreesScolaires = await filtersBase
-    .select([
-      "indicateurEntree.rentreeScolaire as label",
-      "indicateurEntree.rentreeScolaire as value",
-    ])
-    .where("indicateurEntree.rentreeScolaire", "is not", null)
-    .execute();
-
-  const libelleFilieres = filtersBase
-    .select([
-      "formation.libelleFiliere as label",
-      "formation.libelleFiliere as value",
-    ])
-    .where("formation.libelleFiliere", "is not", null)
-    .where((eb) =>
-      eb.or([
-        eb.and([]),
-        libelleFiliere
-          ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
-          : sql`false`,
-      ])
-    )
-    .execute();
-
   const filters = await {
     regions: (await regions).map(cleanNull),
-    libelleFilieres: (await libelleFilieres).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
-    rentreesScolaires: (await rentreesScolaires).map(cleanNull),
   };
 
   return {
     filters: filters,
-    anneeEnCours: {
+    anneeN: {
       filtered: {
-        ...statsAnneeEnCours.filtered?.statsEffectif,
-        ...statsAnneeEnCours.filtered?.statsSortie,
+        ...statsAnneeN.filtered?.statsEffectif,
+        ...statsAnneeN.filtered?.statsSortie,
       },
       nationale: {
-        ...statsAnneeEnCours.nationale?.statsEffectif,
-        ...statsAnneeEnCours.nationale?.statsSortie,
+        ...statsAnneeN.nationale?.statsEffectif,
+        ...statsAnneeN.nationale?.statsSortie,
       },
     },
-    anneePrecedente: {
+    anneeNMoins1: {
       filtered: {
-        ...statsAnneePrecedente.filtered?.statsEffectif,
-        ...statsAnneePrecedente.filtered?.statsSortie,
+        ...statsAnneeNMoins1.filtered?.statsEffectif,
+        ...statsAnneeNMoins1.filtered?.statsSortie,
       },
       nationale: {
-        ...statsAnneePrecedente.nationale?.statsEffectif,
-        ...statsAnneePrecedente.nationale?.statsSortie,
+        ...statsAnneeNMoins1.nationale?.statsEffectif,
+        ...statsAnneeNMoins1.nationale?.statsSortie,
       },
     },
   };

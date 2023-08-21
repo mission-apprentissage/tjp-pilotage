@@ -12,18 +12,24 @@ import {
 
 import { PilotageReformeStats } from "../types";
 
+type indicateur_type = "insertion" | "poursuite" | "décrochage";
+
+const EFFECTIF_FEATURE_FLAG = false;
+
 const Loader = () => {
   return (
     <>
       <Box>
-        <Box height={"124px"}>
-          <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-          <Divider borderBottom={"2px solid"} opacity={"15%"} />
-          <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-          <Divider borderBottom={"2px solid"} opacity={"15%"} />
-          <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-        </Box>
-        <Flex mt={24} height={"220px"}>
+        {EFFECTIF_FEATURE_FLAG && (
+          <Box height={"124px"} mb={24}>
+            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
+            <Divider borderBottom={"2px solid"} opacity={"15%"} />
+            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
+            <Divider borderBottom={"2px solid"} opacity={"15%"} />
+            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
+          </Box>
+        )}
+        <Flex mt={16} height={"220px"}>
           <SimpleGrid spacing={3} columns={[3]} width={"100%"}>
             <Card height={40}>
               <CardBody py="2" px="3">
@@ -84,11 +90,11 @@ const DeltaIcon = ({
 };
 
 const IndicateurCompare = ({
-  indicateurAnneeEnCours,
-  indicateurAnneePrecedente,
+  indicateuranneeN,
+  indicateuranneeNMoins1,
 }: {
-  indicateurAnneeEnCours?: number;
-  indicateurAnneePrecedente?: number;
+  indicateuranneeN?: number;
+  indicateuranneeNMoins1?: number;
 }) => {
   return (
     <>
@@ -99,15 +105,13 @@ const IndicateurCompare = ({
         textAlign="end"
         whiteSpace={"nowrap"}
       >
-        {indicateurAnneeEnCours ?? "-"}
+        {indicateuranneeN ?? "-"}
       </Text>
       <DeltaIcon
-        delta={(indicateurAnneeEnCours || 0) - (indicateurAnneePrecedente || 0)}
+        delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}
       >
         <Text color={"#96A6D8"} whiteSpace={"nowrap"}>
-          {indicateurAnneePrecedente
-            ? `${indicateurAnneePrecedente} / N-1`
-            : "-"}
+          {indicateuranneeNMoins1 ? `${indicateuranneeNMoins1} / N-1` : "-"}
         </Text>
       </DeltaIcon>
     </>
@@ -116,13 +120,13 @@ const IndicateurCompare = ({
 
 const IndicateurEffectifLine = ({
   label,
-  indicateurAnneeEnCours,
-  indicateurAnneePrecedente,
+  indicateuranneeN,
+  indicateuranneeNMoins1,
   isLastLine = false,
 }: {
   label: string;
-  indicateurAnneeEnCours?: number;
-  indicateurAnneePrecedente?: number;
+  indicateuranneeN?: number;
+  indicateuranneeNMoins1?: number;
   isLastLine?: boolean;
 }) => (
   <>
@@ -132,8 +136,8 @@ const IndicateurEffectifLine = ({
       </Text>
       <Flex justifyContent={"end"}>
         <IndicateurCompare
-          indicateurAnneeEnCours={indicateurAnneeEnCours}
-          indicateurAnneePrecedente={indicateurAnneePrecedente}
+          indicateuranneeN={indicateuranneeN}
+          indicateuranneeNMoins1={indicateuranneeNMoins1}
         ></IndicateurCompare>
       </Flex>
     </SimpleGrid>
@@ -145,20 +149,18 @@ const IndicateursEffectif = ({ data }: { data?: PilotageReformeStats }) => (
   <Box flex={1}>
     <IndicateurEffectifLine
       label="effectif"
-      indicateurAnneeEnCours={data?.anneeEnCours.filtered.effectif}
-      indicateurAnneePrecedente={data?.anneePrecedente.filtered.effectif}
+      indicateuranneeN={data?.anneeN.filtered.effectif}
+      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.effectif}
     />
     <IndicateurEffectifLine
       label="nombre d'établissements"
-      indicateurAnneeEnCours={data?.anneeEnCours.filtered.nbEtablissements}
-      indicateurAnneePrecedente={
-        data?.anneePrecedente.filtered.nbEtablissements
-      }
+      indicateuranneeN={data?.anneeN.filtered.nbEtablissements}
+      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbEtablissements}
     />
     <IndicateurEffectifLine
       label="nombre de formations"
-      indicateurAnneeEnCours={data?.anneeEnCours.filtered.nbFormations}
-      indicateurAnneePrecedente={data?.anneePrecedente.filtered.nbFormations}
+      indicateuranneeN={data?.anneeN.filtered.nbFormations}
+      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbFormations}
       isLastLine={true}
     />
   </Box>
@@ -206,7 +208,7 @@ const Delta = ({
 }) => {
   let deltaIcon;
 
-  if (delta) {
+  if (delta != null) {
     if (delta < 0)
       deltaIcon = (
         <Flex>
@@ -250,72 +252,90 @@ const StatCard = ({
 }: {
   label: string;
   data?: PilotageReformeStats;
-  type?: "insertion" | "poursuite" | "décrochage";
+  type?: indicateur_type;
   color?: string;
 }) => {
-  const getDeltaAnneePrecedente = (
-    type: "insertion" | "poursuite" | "décrochage",
-    data?: PilotageReformeStats
-  ): number | null => {
-    if (type === "insertion") {
-      if (
-        data?.anneeEnCours.filtered.tauxInsertion6mois &&
-        data?.anneePrecedente.filtered.tauxInsertion6mois
-      )
-        return (
-          data?.anneeEnCours.filtered.tauxInsertion6mois -
-          data?.anneePrecedente.filtered.tauxInsertion6mois
-        );
-      return null;
-    } else {
-      if (
-        data?.anneeEnCours.filtered.tauxPoursuiteEtudes &&
-        data?.anneePrecedente.filtered.tauxPoursuiteEtudes
-      )
-        return (
-          data?.anneeEnCours.filtered.tauxPoursuiteEtudes -
-          data?.anneePrecedente.filtered.tauxPoursuiteEtudes
-        );
-      return null;
+  const getDeltaAnneeNMoins1 = (type: indicateur_type): number | null => {
+    switch (type) {
+      case "insertion":
+        if (
+          data?.anneeN.filtered.tauxInsertion6mois &&
+          data?.anneeNMoins1.filtered.tauxInsertion6mois
+        )
+          return (
+            data?.anneeN.filtered.tauxInsertion6mois -
+            data?.anneeNMoins1.filtered.tauxInsertion6mois
+          );
+        return null;
+      case "poursuite":
+        if (
+          data?.anneeN.filtered.tauxPoursuiteEtudes &&
+          data?.anneeNMoins1.filtered.tauxPoursuiteEtudes
+        )
+          return (
+            data?.anneeN.filtered.tauxPoursuiteEtudes -
+            data?.anneeNMoins1.filtered.tauxPoursuiteEtudes
+          );
+        return null;
+      default:
+        if (
+          data?.anneeN.filtered.tauxDecrochage &&
+          data?.anneeNMoins1.filtered.tauxDecrochage
+        ) {
+          return (
+            data?.anneeN.filtered.tauxDecrochage -
+            data?.anneeNMoins1.filtered.tauxDecrochage
+          );
+        }
+        return null;
     }
   };
 
-  const getDeltaAnneePrecedenteNationale = (
-    type: "insertion" | "poursuite" | "décrochage",
-    data?: PilotageReformeStats
+  const getDeltaAnneeNMoins1Nationale = (
+    type: indicateur_type
   ): number | null => {
-    if (type === "insertion") {
-      if (
-        data?.anneeEnCours.filtered.tauxInsertion6mois &&
-        data?.anneePrecedente.nationale.tauxInsertion6mois
-      )
-        return (
-          data?.anneeEnCours.filtered.tauxInsertion6mois -
-          data?.anneePrecedente.nationale.tauxInsertion6mois
-        );
-      return null;
-    } else if (type === "poursuite") {
-      if (
-        data?.anneeEnCours.filtered.tauxPoursuiteEtudes &&
-        data?.anneePrecedente.nationale.tauxPoursuiteEtudes
-      )
-        return (
-          data?.anneeEnCours.filtered.tauxPoursuiteEtudes -
-          data?.anneePrecedente.nationale.tauxPoursuiteEtudes
-        );
-      return null;
+    switch (type) {
+      case "insertion":
+        if (
+          data?.anneeN.filtered.tauxInsertion6mois &&
+          data?.anneeNMoins1.nationale.tauxInsertion6mois
+        )
+          return (
+            data?.anneeN.filtered.tauxInsertion6mois -
+            data?.anneeNMoins1.nationale.tauxInsertion6mois
+          );
+        return null;
+      case "poursuite":
+        if (
+          data?.anneeN.filtered.tauxPoursuiteEtudes &&
+          data?.anneeNMoins1.nationale.tauxPoursuiteEtudes
+        )
+          return (
+            data?.anneeN.filtered.tauxPoursuiteEtudes -
+            data?.anneeNMoins1.nationale.tauxPoursuiteEtudes
+          );
+        return null;
+      default:
+        if (
+          data?.anneeN.filtered.tauxDecrochage &&
+          data?.anneeNMoins1.nationale.tauxDecrochage
+        )
+          return (
+            data?.anneeN.filtered.tauxDecrochage -
+            data?.anneeNMoins1.nationale.tauxDecrochage
+          );
+        return null;
     }
-    // TODO: intégration données décrochage
-    else {
-      if (
-        data?.anneeEnCours.filtered.tauxPoursuiteEtudes &&
-        data?.anneePrecedente.nationale.tauxPoursuiteEtudes
-      )
-        return (
-          data?.anneeEnCours.filtered.tauxPoursuiteEtudes -
-          data?.anneePrecedente.nationale.tauxPoursuiteEtudes
-        );
-      return null;
+  };
+
+  const getValue = (type: "insertion" | "poursuite" | "décrochage") => {
+    switch (type) {
+      case "insertion":
+        return data?.anneeN.filtered.tauxInsertion6mois;
+      case "poursuite":
+        return data?.anneeN.filtered.tauxPoursuiteEtudes;
+      default:
+        return data?.anneeN.filtered.tauxDecrochage;
     }
   };
 
@@ -338,31 +358,29 @@ const StatCard = ({
           {label}
         </Box>
         <Box fontWeight="bold" fontSize="40" color={"#000091"}>
-          {type === "insertion" ? (
-            data?.anneeEnCours.filtered.tauxInsertion6mois ? (
-              `${data?.anneeEnCours.filtered.tauxInsertion6mois} %`
-            ) : (
-              <Text textAlign={"center"}>-</Text>
-            )
-          ) : data?.anneeEnCours.filtered.tauxPoursuiteEtudes ? (
-            `${data?.anneeEnCours.filtered.tauxPoursuiteEtudes} %`
+          {getValue(type) ? (
+            `${getValue(type)} %`
           ) : (
             <Text textAlign={"center"}>-</Text>
           )}
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
-          {getDeltaAnneePrecedente(type, data) ? (
-            <Delta delta={getDeltaAnneePrecedente(type, data)} />
+          {getDeltaAnneeNMoins1(type) != null ? (
+            <Delta delta={getDeltaAnneeNMoins1(type)} />
           ) : (
             <></>
           )}
         </Box>
-        {getDeltaAnneePrecedente(type, data) &&
-          getDeltaAnneePrecedenteNationale(type, data) && <Divider />}
+        {getDeltaAnneeNMoins1(type) != null &&
+        getDeltaAnneeNMoins1Nationale(type) != null ? (
+          <Divider />
+        ) : (
+          <></>
+        )}
         <Box fontWeight="bold" fontSize="2xl">
-          {getDeltaAnneePrecedenteNationale(type, data) ? (
+          {getDeltaAnneeNMoins1Nationale(type) != null ? (
             <Delta
-              delta={getDeltaAnneePrecedenteNationale(type, data)}
+              delta={getDeltaAnneeNMoins1Nationale(type)}
               isNational={true}
             />
           ) : (
@@ -375,7 +393,7 @@ const StatCard = ({
 };
 
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
-  <Flex mt={14} direction={"column"}>
+  <Flex direction={"column"}>
     <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
       INDICATEURS CLÉS DE LA RÉFORME
     </Text>
@@ -408,8 +426,14 @@ export const IndicateursClesSection = ({
         <Loader></Loader>
       ) : (
         <Box>
-          <IndicateursEffectif data={data}></IndicateursEffectif>
-          <IndicateursSortie data={data}></IndicateursSortie>
+          {EFFECTIF_FEATURE_FLAG && (
+            <Flex>
+              <IndicateursEffectif data={data}></IndicateursEffectif>
+            </Flex>
+          )}
+          <Flex mt={EFFECTIF_FEATURE_FLAG ? 14 : 0}>
+            <IndicateursSortie data={data}></IndicateursSortie>
+          </Flex>
         </Box>
       )}
     </>

@@ -10,12 +10,12 @@ export type PilotageReformeStatsRegionsQuery = Parameters<
 
 export type Filters = Pick<
   PilotageReformeStatsQuery,
-  "codeNiveauDiplome" | "rentreeScolaire" | "codeRegion" | "libelleFiliere"
+  "codeNiveauDiplome" | "codeRegion"
 >;
 
 export type FiltersRegions = Pick<
   PilotageReformeStatsRegionsQuery,
-  "codeNiveauDiplome" | "rentreeScolaire" | "libelleFiliere"
+  "codeNiveauDiplome"
 >;
 
 export type Order = Pick<PilotageReformeStatsRegionsQuery, "order" | "orderBy">;

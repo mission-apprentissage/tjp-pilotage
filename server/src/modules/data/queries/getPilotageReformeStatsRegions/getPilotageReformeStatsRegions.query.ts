@@ -4,20 +4,19 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/inserJeunesApi/formatMillesime";
 import { notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
+import { selectTauxDecrochageAgg } from "../utils/tauxDecrochage";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
 export const getPilotageReformeStatsRegions = async ({
   codeNiveauDiplome,
-  rentreeScolaire = "2022",
-  libelleFiliere,
   orderBy,
 }: {
   codeNiveauDiplome?: string[];
-  rentreeScolaire?: string;
-  libelleFiliere?: string[];
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
+  const rentreeScolaire = "2022";
+
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
@@ -30,20 +29,21 @@ export const getPilotageReformeStatsRegions = async ({
       "region.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
+    .innerJoin(
+      "indicateurRegion",
+      "indicateurRegion.codeRegion",
+      "indicateurRegionSortie.codeRegion"
+    )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
-    })
-    .$call((q) => {
-      if (!libelleFiliere?.length) return q;
-      return q.where("formation.libelleFiliere", "in", libelleFiliere);
     })
     .$call((q) => {
       if (!rentreeScolaire?.length) return q;
       return q.where(
         "indicateurRegionSortie.millesimeSortie",
         "=",
-        getMillesimeFromRentreeScolaire(rentreeScolaire)
+        getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: 0 })
       );
     })
     .where(notHistoriqueIndicateurRegionSortie)
@@ -56,6 +56,7 @@ export const getPilotageReformeStatsRegions = async ({
       selectTauxPoursuiteAgg("indicateurRegionSortie").as(
         "tauxPoursuiteEtudes"
       ),
+      selectTauxDecrochageAgg("indicateurRegion").as("tauxDecrochage"),
     ])
     .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion"])
     .$call((q) => {
@@ -70,24 +71,9 @@ export const getPilotageReformeStatsRegions = async ({
   const filtersBase = kdb
     .selectFrom("formation")
     .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
-    )
-    .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
       "formation.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
-    )
-    .leftJoin(
-      "indicateurEntree",
-      "indicateurEntree.formationEtablissementId",
-      "formationEtablissement.id"
     )
     .where(
       "codeFormationDiplome",
@@ -106,34 +92,8 @@ export const getPilotageReformeStatsRegions = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const rentreesScolaires = await filtersBase
-    .select([
-      "indicateurEntree.rentreeScolaire as label",
-      "indicateurEntree.rentreeScolaire as value",
-    ])
-    .where("indicateurEntree.rentreeScolaire", "is not", null)
-    .execute();
-
-  const libelleFilieres = filtersBase
-    .select([
-      "formation.libelleFiliere as label",
-      "formation.libelleFiliere as value",
-    ])
-    .where("formation.libelleFiliere", "is not", null)
-    .where((eb) =>
-      eb.or([
-        eb.and([]),
-        libelleFiliere
-          ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
-          : sql`false`,
-      ])
-    )
-    .execute();
-
   const filters = await {
-    libelleFilieres: (await libelleFilieres).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
-    rentreesScolaires: (await rentreesScolaires).map(cleanNull),
   };
 
   return {
