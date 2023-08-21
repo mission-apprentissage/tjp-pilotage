@@ -47,24 +47,6 @@ export const FiltersSection = ({
               </Multiselect>
             </Box>
             <Box justifyContent={"start"}>
-              <FormLabel>Rentrée</FormLabel>
-              <Select
-                width="52"
-                size="md"
-                variant="input"
-                value={activeFilters.rentreeScolaire ?? ""}
-                onChange={(e) =>
-                  handleFilters("rentreeScolaire", e.target.value)
-                }
-              >
-                {data?.filters.rentreesScolaires?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-            <Box justifyContent={"start"}>
               <FormLabel>Régions</FormLabel>
               <Select
                 width={"72"}
@@ -82,21 +64,6 @@ export const FiltersSection = ({
                   </option>
                 ))}
               </Select>
-            </Box>
-            <Box justifyContent={"start"}>
-              <FormLabel>Filières</FormLabel>
-              <Multiselect
-                onClose={filterTracker("libelleFiliere")}
-                width={96}
-                size="md"
-                onChange={(selected) =>
-                  handleFilters("libelleFiliere", selected)
-                }
-                options={data?.filters.libelleFilieres}
-                value={activeFilters.libelleFiliere ?? []}
-              >
-                TOUTES
-              </Multiselect>
             </Box>
           </Flex>
         </Box>

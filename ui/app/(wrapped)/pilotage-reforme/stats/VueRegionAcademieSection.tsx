@@ -20,6 +20,7 @@ const Loader = () => (
     <Table variant="striped" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
+          //@ts-ignore
           <Tr key={i} bg={"#f5f5f5"}>
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
@@ -94,9 +95,9 @@ export const VueRegionAcademieSection = ({
                   isNumeric
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  onClick={() => handleOrder("tauxDecrochage")}
                 >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
+                  <OrderIcon {...order} column="tauxDecrochage" />
                   {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
                 {/* TODO: ajout décrochage } */}
@@ -149,7 +150,7 @@ export const VueRegionAcademieSection = ({
                           {region.tauxPoursuiteEtudes}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {region.tauxPoursuiteEtudes}
+                          {region.tauxDecrochage}
                         </Td>
                       </Tr>
                     </Fragment>
