@@ -20,9 +20,6 @@ const getLineOverride = (line: DiplomeProfessionnelLine) => {
 };
 
 const formatCFD = (line: DiplomeProfessionnelLine) => {
-  const cfdOverride = getLineOverride(line)?.["Code diplôme"];
-  if (cfdOverride) return cfdOverride;
-
   if (!line["Code diplôme"]) return;
   const cfd = line["Code diplôme"].replace("-", "").slice(0, 8);
 
@@ -31,9 +28,6 @@ const formatCFD = (line: DiplomeProfessionnelLine) => {
 };
 
 const formatRNCP = (line: DiplomeProfessionnelLine) => {
-  const rncpOverride = getLineOverride(line)?.["Code RNCP"];
-  if (rncpOverride) return rncpOverride;
-
   if (!line["Code RNCP"]) return;
   if (isNaN(parseInt(line["Code RNCP"]))) return;
   return line["Code RNCP"];
@@ -56,6 +50,7 @@ const formatDiplomeProfessionel = (
     "Code diplôme": formatCFD(line),
     "Code RNCP": formatRNCP(line),
   };
+
   const overridedLine = {
     ...formattedLine,
     ..._.pickBy(
