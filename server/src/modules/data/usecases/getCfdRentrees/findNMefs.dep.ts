@@ -1,5 +1,5 @@
 import { kdb } from "../../../../db/db";
-import { NMefLine } from "../../files/NMef";
+import { NMefLine } from "../../../../../public/files/NMef";
 
 export const findNMefs = async ({ cfd }: { cfd: string }) =>
   (
