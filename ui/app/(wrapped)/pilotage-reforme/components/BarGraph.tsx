@@ -5,12 +5,12 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 
 export const BarGraph = function <
   F extends {
-    anneePrecedente: {
+    anneeN: {
       libelleAnnee: string;
       filtered?: number;
       nationale?: number;
     };
-    anneeEnCours: {
+    anneeNMoins1: {
       libelleAnnee: string;
       filtered?: number;
       nationale?: number;
@@ -53,8 +53,8 @@ export const BarGraph = function <
       xAxis: {
         type: "category",
         data: [
-          graphData?.anneePrecedente.libelleAnnee,
-          graphData?.anneeEnCours.libelleAnnee,
+          graphData?.anneeNMoins1.libelleAnnee,
+          graphData?.anneeN.libelleAnnee,
         ],
         axisLabel: {
           color: "#000091",
@@ -74,8 +74,8 @@ export const BarGraph = function <
         {
           name: "NATIONAL",
           data: [
-            graphData?.anneePrecedente.nationale ?? 0,
-            graphData?.anneeEnCours.nationale ?? 0,
+            graphData?.anneeNMoins1.nationale ?? 0,
+            graphData?.anneeN.nationale ?? 0,
           ],
           type: "bar",
           color: "#000091",
@@ -84,21 +84,21 @@ export const BarGraph = function <
             borderRadius: [15, 15, 0, 0],
           },
         },
-        isFiltered
-          ? {
-              name: libelleRegion?.toUpperCase(),
-              data: [
-                graphData?.anneePrecedente.filtered ?? 0,
-                graphData?.anneeEnCours.filtered ?? 0,
-              ],
-              type: "bar",
-              color: "#0974F6",
-              barMaxWidth: 50,
-              itemStyle: {
-                borderRadius: [15, 15, 0, 0],
-              },
-            }
-          : {},
+        {
+          name: libelleRegion?.toUpperCase(),
+          data: isFiltered
+            ? [
+                graphData?.anneeNMoins1.filtered ?? 0,
+                graphData?.anneeN.filtered ?? 0,
+              ]
+            : [],
+          type: "bar",
+          color: "#0974F6",
+          barMaxWidth: 50,
+          itemStyle: {
+            borderRadius: [15, 15, 0, 0],
+          },
+        },
       ],
     }),
     [graphData]

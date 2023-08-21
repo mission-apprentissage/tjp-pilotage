@@ -27,9 +27,19 @@ export const getNextMillesime = (millesime: string): string | null => {
   return null;
 };
 
-export const getMillesimeFromRentreeScolaire = (
-  rentreeScolaire: string
-): string => `${+rentreeScolaire - 2}_${+rentreeScolaire - 1}`;
+export const getMillesimeFromRentreeScolaire = ({
+  rentreeScolaire,
+  offset,
+}: {
+  rentreeScolaire: string;
+  offset: number;
+}): string =>
+  `${+rentreeScolaire + (offset - 2)}_${+rentreeScolaire + (offset - 1)}`;
 
-export const getPreviousRentreeScolaire = (rentreeScolaire: string): string =>
-  `${+rentreeScolaire - 1}`;
+export const getRentreeScolaire = ({
+  rentreeScolaire,
+  offset,
+}: {
+  rentreeScolaire: string;
+  offset: number;
+}): string => `${+rentreeScolaire - offset}`;
