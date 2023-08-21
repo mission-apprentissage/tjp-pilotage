@@ -1,5 +1,4 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
-import { useState } from "react";
 
 import { BarGraph } from "../components/BarGraph";
 import { PilotageReformeStats } from "../types";
@@ -9,47 +8,28 @@ export const EvolutionIndicateursClesSection = ({
   isLoading,
   isFiltered = false,
   codeRegion,
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
 }: {
   data?: PilotageReformeStats;
   isLoading: boolean;
   isFiltered?: boolean | string;
   codeRegion?: string;
+  indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage";
+  handleIndicateurChange: (indicateur: string) => void;
+  indicateurOptions: { label: string; value: string; isDefault: boolean }[];
 }) => {
-  const indicateurOptions = [
-    {
-      label: "Taux d'insertion",
-      value: "tauxInsertion6mois",
-      isDefault: true,
-    },
-    {
-      label: "Taux de poursuite d'études",
-      value: "tauxPoursuiteEtudes",
-      isDefault: false,
-    },
-  ];
-
-  const [indicateur, setIndicateur] = useState<
-    "tauxInsertion6mois" | "tauxPoursuiteEtudes"
-  >("tauxInsertion6mois");
-
-  const onSelectIndicateurChange = (indicateur: string): void => {
-    if (
-      indicateur === "tauxInsertion6mois" ||
-      indicateur === "tauxPoursuiteEtudes"
-    )
-      setIndicateur(indicateur);
-  };
-
   const graphData = {
-    anneePrecedente: {
+    anneeN: {
       libelleAnnee: "2021",
-      filtered: data?.anneePrecedente.filtered[indicateur],
-      nationale: data?.anneePrecedente.nationale[indicateur],
+      filtered: data?.anneeN.filtered[indicateur],
+      nationale: data?.anneeN.nationale[indicateur],
     },
-    anneeEnCours: {
-      libelleAnnee: "2022",
-      filtered: data?.anneeEnCours.filtered[indicateur],
-      nationale: data?.anneeEnCours.nationale[indicateur],
+    anneeNMoins1: {
+      libelleAnnee: "2020",
+      filtered: data?.anneeNMoins1.filtered[indicateur],
+      nationale: data?.anneeNMoins1.nationale[indicateur],
     },
   };
 
@@ -71,6 +51,7 @@ export const EvolutionIndicateursClesSection = ({
       borderColor="grey.900"
       p={4}
       height={"400"}
+      mt={8}
     >
       {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
@@ -84,7 +65,8 @@ export const EvolutionIndicateursClesSection = ({
               width="52"
               size="sm"
               variant="input"
-              onChange={(e) => onSelectIndicateurChange(e.target.value)}
+              onChange={(e) => handleIndicateurChange(e.target.value)}
+              value={indicateur}
             >
               {indicateurOptions.map((option) => (
                 <option key={option.value} value={option.value}>

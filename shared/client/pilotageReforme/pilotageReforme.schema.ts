@@ -11,6 +11,7 @@ const StatsSchema = Type.Object({
   nbEtablissements: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
+  tauxDecrochage: Type.Optional(Type.Number()),
 });
 
 const StatsAnneeSchema = Type.Object({
@@ -23,19 +24,16 @@ const StatsRegionLineSchema = Type.Object({
   libelleRegion: Type.Optional(Type.String()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
+  tauxDecrochage: Type.Optional(Type.Number()),
 });
 
 const FiltersSchema = Type.Object({
   codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
-  rentreeScolaire: Type.Optional(Type.String()),
   codeRegion: Type.Optional(Type.String()),
-  libelleFiliere: Type.Optional(Type.Array(Type.String())),
 });
 
 const FiltersRegionsSchema = Type.Object({
   codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
-  rentreeScolaire: Type.Optional(Type.String()),
-  libelleFiliere: Type.Optional(Type.Array(Type.String())),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(Type.Omit(StatsRegionLineSchema, []))),
 });
@@ -48,11 +46,9 @@ export const pilotageReformeSchemas = {
         filters: Type.Object({
           regions: Type.Array(OptionSchema),
           diplomes: Type.Array(OptionSchema),
-          rentreesScolaires: Type.Array(OptionSchema),
-          libelleFilieres: Type.Array(OptionSchema),
         }),
-        anneeEnCours: StatsAnneeSchema,
-        anneePrecedente: StatsAnneeSchema,
+        anneeN: StatsAnneeSchema,
+        anneeNMoins1: StatsAnneeSchema,
       }),
     },
   },
@@ -62,8 +58,6 @@ export const pilotageReformeSchemas = {
       200: Type.Object({
         filters: Type.Object({
           diplomes: Type.Array(OptionSchema),
-          rentreesScolaires: Type.Array(OptionSchema),
-          libelleFilieres: Type.Array(OptionSchema),
         }),
         statsRegions: Type.Array(StatsRegionLineSchema),
       }),
