@@ -7,8 +7,8 @@ const overridesData = parse(overridesRef, {
   skip_empty_lines: true,
   delimiter: ";",
 }) as {
-  diplome: string;
-  libelle: string;
+  Diplôme: string;
+  Libellé: string;
   "Code RNCP"?: string;
   "Code diplôme"?: string;
   "Commission professionnelle consultative"?: string;
@@ -19,7 +19,7 @@ const overridesData = parse(overridesRef, {
 export const overrides = overridesData.reduce(
   (acc, cur) => ({
     ...acc,
-    [`${cur.diplome}_${cur.libelle}`]: cur,
+    [`${cur.Diplôme}_${cur.Libellé}`]: cur,
   }),
   {} as Record<string, typeof overridesData[number]>
 );
