@@ -51,6 +51,7 @@ export const CartoSection = ({
               size="sm"
               variant="input"
               onChange={(e) => handleIndicateurChange(e.target.value)}
+              value={indicateur}
             >
               {indicateurOptions.map((option) => (
                 <option key={option.value} value={option.value}>

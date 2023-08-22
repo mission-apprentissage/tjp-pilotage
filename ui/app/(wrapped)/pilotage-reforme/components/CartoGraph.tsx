@@ -27,15 +27,16 @@ export const CartoGraph = function <
 
   echarts.registerMap("regions", geoMapRegions);
 
+  // TODO : auto-adaptation des seuils
   const getPieces = (
     indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage"
   ) => {
     if (indicateur === "tauxDecrochage") {
       return [
-        { min: 0, max: 10, label: "< 10%", color: "#D5DBEF" },
-        { min: 11, max: 12, label: "< 12%", color: "#ABB8DE" },
-        { min: 13, max: 14, label: "< 14%", color: "#5770BE" },
-        { min: 15, max: 100, label: "> 15%", color: "#000091" },
+        { min: 0, max: 10, label: "< 10%", color: "#FEE9E6" },
+        { min: 11, max: 12, label: "< 12%", color: "#FDDFDA" },
+        { min: 13, max: 14, label: "< 14%", color: "#FCC0B4" },
+        { min: 15, max: 100, label: "> 15%", color: "#E18B76" },
       ];
     } else {
       return [
@@ -93,7 +94,8 @@ export const CartoGraph = function <
             },
             itemStyle: {
               areaColor: "white",
-              borderColor: "#000091",
+              borderColor:
+                indicateur === "tauxDecrochage" ? "#E18B76" : "#000091",
             },
             focus: "self",
           },
