@@ -1,6 +1,5 @@
 import { Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
-import { EChartsOption } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 export const BarGraph = function <
@@ -28,8 +27,9 @@ export const BarGraph = function <
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  const option = useMemo<EChartsOption>(
+  const option = useMemo<echarts.EChartsOption>(
     () => ({
+      animationDelay: 1,
       responsive: true,
       maintainAspectRatio: true,
       tooltip: {
@@ -68,38 +68,57 @@ export const BarGraph = function <
           color: "#000091",
           fontWeight: 700,
         },
-        splitNumber: 2,
+        splitNumber: 3,
+        min: function (value) {
+          return value.min - 5;
+        },
       },
-      series: [
-        {
-          name: "NATIONAL",
-          data: [
-            graphData?.anneeNMoins1.nationale ?? 0,
-            graphData?.anneeN.nationale ?? 0,
+      series: isFiltered
+        ? [
+            {
+              name: "NATIONAL",
+              data: [
+                graphData?.anneeNMoins1.nationale ?? 0,
+                graphData?.anneeN.nationale ?? 0,
+              ],
+              type: "bar",
+              color: "#000091",
+              barMaxWidth: 50,
+              itemStyle: {
+                borderRadius: [15, 15, 0, 0],
+              },
+            },
+            {
+              name: libelleRegion?.toUpperCase() ?? "",
+              data: isFiltered
+                ? [
+                    graphData?.anneeNMoins1.filtered ?? 0,
+                    graphData?.anneeN.filtered ?? 0,
+                  ]
+                : [],
+              type: "bar",
+              color: "#0974F6",
+              barMaxWidth: 50,
+              itemStyle: {
+                borderRadius: [15, 15, 0, 0],
+              },
+            },
+          ]
+        : [
+            {
+              name: "NATIONAL",
+              data: [
+                graphData?.anneeNMoins1.nationale ?? 0,
+                graphData?.anneeN.nationale ?? 0,
+              ],
+              type: "bar",
+              color: "#000091",
+              barMaxWidth: 50,
+              itemStyle: {
+                borderRadius: [15, 15, 0, 0],
+              },
+            },
           ],
-          type: "bar",
-          color: "#000091",
-          barMaxWidth: 50,
-          itemStyle: {
-            borderRadius: [15, 15, 0, 0],
-          },
-        },
-        {
-          name: libelleRegion?.toUpperCase(),
-          data: isFiltered
-            ? [
-                graphData?.anneeNMoins1.filtered ?? 0,
-                graphData?.anneeN.filtered ?? 0,
-              ]
-            : [],
-          type: "bar",
-          color: "#0974F6",
-          barMaxWidth: 50,
-          itemStyle: {
-            borderRadius: [15, 15, 0, 0],
-          },
-        },
-      ],
     }),
     [graphData]
   );
@@ -109,8 +128,8 @@ export const BarGraph = function <
     if (!chartRef.current) {
       chartRef.current = echarts.init(containerRef.current);
     }
-    chartRef.current.setOption(option);
-  }, [option, graphData]);
+    chartRef.current.setOption(option, true);
+  }, [graphData]);
 
   return (
     <Box position="relative" overflow="visible !important">
