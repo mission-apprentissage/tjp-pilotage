@@ -86,6 +86,7 @@ export const VueRegionAcademieSection = ({
                   isNumeric
                   cursor="pointer"
                   pb="4"
+                  width="20%"
                   onClick={() => handleOrder("tauxInsertion6mois")}
                 >
                   <OrderIcon {...order} column="tauxInsertion6mois" />
@@ -95,19 +96,20 @@ export const VueRegionAcademieSection = ({
                   isNumeric
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("tauxDecrochage")}
+                  width="20%"
+                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
                 >
-                  <OrderIcon {...order} column="tauxDecrochage" />
+                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
                   {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
                 </Th>
-                {/* TODO: ajout décrochage } */}
                 <Th
                   isNumeric
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  width="20%"
+                  onClick={() => handleOrder("tauxDecrochage")}
                 >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
+                  <OrderIcon {...order} column="tauxDecrochage" />
                   {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxDecrochage}
                 </Th>
               </Tr>
