@@ -29,7 +29,7 @@ const Loader = () => {
             <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
           </Box>
         )}
-        <Flex mt={16} height={"220px"}>
+        <Flex mt={8} height={"185px"}>
           <SimpleGrid spacing={3} columns={[3]} width={"100%"}>
             <Card height={40}>
               <CardBody py="2" px="3">

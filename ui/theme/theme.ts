@@ -52,6 +52,12 @@ export const theme = extendBaseTheme(chakraTheme, {
       "625_hover": "#fa9293",
       "625_active": "#fbabac",
     },
+    pinkmacaron: {
+      689: "#E18B76",
+      850: "#FCC0B4",
+      925: "#FDDFDA",
+      950: "#FEE9E6",
+    },
     grey: {
       1000: "#ffffff",
       "1000_hover": "#f6f6f6",
