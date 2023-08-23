@@ -29,7 +29,8 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "utils/security/withAuth.tsx"
+    "utils/security/withAuth.tsx",
+    "app/(wrapped)/intentions/[intentionId]"
   ],
   "exclude": ["node_modules"]
 }
