@@ -6,7 +6,7 @@
 const nextConfig = {
   transpilePackages: ['shared'],
   experimental: {
-    appDir: true,
+    // appDir: true,
     // outputFileTracingRoot: path.join(__dirname, '../'),
   },
   // output: 'standalone'

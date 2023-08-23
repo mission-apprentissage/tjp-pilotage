@@ -16,7 +16,10 @@ const primary = defineStyle({
   ...commonButtonStyle,
   bg: "bluefrance.113",
   color: "white",
-  _hover: { bg: "bluefrance.113_hover" },
+  _hover: {
+    bg: "bluefrance.113_hover",
+    _disabled: { bg: "bluefrance.113" },
+  },
 });
 
 const input = defineStyle({

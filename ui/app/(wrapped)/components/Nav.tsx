@@ -51,6 +51,9 @@ export const Nav = () => {
       <NavLink mr="4" href="/console/formations" segment="console">
         Console
       </NavLink>
+      <NavLink mr="4" href="/intentions/new" segment="intentions/new">
+        Intention
+      </NavLink>
     </Flex>
   );
 };
