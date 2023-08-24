@@ -137,7 +137,6 @@ export const CartoGraph = function <
               borderColor:
                 indicateur === "tauxDecrochage" ? "#E18B76" : "#000091",
             },
-            focus: "self",
           },
           select: {
             disabled: true,
@@ -195,7 +194,7 @@ export const CartoGraph = function <
         top="0"
         left="0"
         bottom="0"
-        height={"550"}
+        height={"540"}
       ></Box>
     </Box>
   );
