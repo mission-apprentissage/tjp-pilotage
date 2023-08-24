@@ -36,7 +36,8 @@ export const CartoSection = ({
       border={"1px solid"}
       borderColor="grey.900"
       p={4}
-      height={"650"}
+      height={"601"}
+      mt={12}
     >
       {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
