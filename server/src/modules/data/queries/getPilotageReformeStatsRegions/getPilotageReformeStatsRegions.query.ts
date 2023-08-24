@@ -83,7 +83,7 @@ export const getPilotageReformeStatsRegions = async ({
     .distinct()
     .$castTo<{ label: string; value: string }>();
 
-  const diplomes = await filtersBase
+  const diplomes = filtersBase
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
@@ -92,7 +92,7 @@ export const getPilotageReformeStatsRegions = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const filters = await {
+  const filters = {
     diplomes: (await diplomes).map(cleanNull),
   };
 
