@@ -19,7 +19,7 @@ const EFFECTIF_FEATURE_FLAG = false;
 const Loader = () => {
   return (
     <>
-      <Box>
+      <Box mt={12}>
         {EFFECTIF_FEATURE_FLAG && (
           <Box height={"124px"} mb={24}>
             <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
@@ -29,7 +29,7 @@ const Loader = () => {
             <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
           </Box>
         )}
-        <Flex mt={8} height={"185px"}>
+        <Flex mt={8} height={"168px"}>
           <SimpleGrid spacing={3} columns={[3]} width={"100%"}>
             <Card height={40}>
               <CardBody py="2" px="3">
@@ -405,10 +405,10 @@ const StatCard = ({
 
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
   <Flex direction={"column"}>
-    <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
+    <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
       INDICATEURS CLÉS DE LA RÉFORME
     </Text>
-    <SimpleGrid spacing={3} columns={[3]} mt="4">
+    <SimpleGrid spacing={3} columns={[3]} mt={4}>
       <StatCard label="taux insertion à 6 mois" data={data}></StatCard>
       <StatCard
         label="taux poursuite d'études"

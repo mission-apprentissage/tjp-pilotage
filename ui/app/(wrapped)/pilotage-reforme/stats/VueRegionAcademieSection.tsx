@@ -64,12 +64,7 @@ export const VueRegionAcademieSection = ({
         {isLoading ? (
           <Loader />
         ) : (
-          <TableContainer
-            overflowY={"auto"}
-            flex={1}
-            position="relative"
-            height={"sm"}
-          >
+          <TableContainer flex={1} position="relative">
             <Table variant="striped" size={"sm"}>
               <Thead
                 position="sticky"

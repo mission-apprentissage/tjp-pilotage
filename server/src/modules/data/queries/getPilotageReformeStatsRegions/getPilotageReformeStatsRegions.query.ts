@@ -25,13 +25,13 @@ export const getPilotageReformeStatsRegions = async ({
       "indicateurRegionSortie.cfd"
     )
     .leftJoin(
-      "region",
-      "region.codeRegion",
-      "indicateurRegionSortie.codeRegion"
-    )
-    .innerJoin(
       "indicateurRegion",
       "indicateurRegion.codeRegion",
+      "indicateurRegionSortie.codeRegion"
+    )
+    .leftJoin(
+      "region",
+      "region.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
     .$call((q) => {
