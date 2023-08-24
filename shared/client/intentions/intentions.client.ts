@@ -9,4 +9,10 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: ({ params }) => `/uai/${params.uai}/check`,
     instance,
   }),
+
+  checkCfd: createClientMethod<typeof ROUTES_CONFIG.checkCfd>({
+    method: "GET",
+    url: ({ params }) => `/cfd/${params.cfd}/check`,
+    instance,
+  }),
 });
