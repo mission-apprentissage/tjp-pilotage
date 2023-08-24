@@ -27,25 +27,65 @@ export const CartoGraph = function <
 
   echarts.registerMap("regions", geoMapRegions);
 
-  // TODO : auto-adaptation des seuils
+  // Utilisée pour supprimer les valeurs extrèmes
+  const removeMin = (array: number[]): number[] => {
+    const min = Math.min(...array);
+    return array.filter((value) => value != min);
+  };
+
+  const removeMax = (array: number[]): number[] => {
+    const max = Math.max(...array);
+    return array.filter((value) => value != max);
+  };
+
+  //TODO : améliorer la gestion de la graduation dynamique
   const getPieces = (
     indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage"
-  ) => {
-    if (indicateur === "tauxDecrochage") {
-      return [
-        { min: 0, max: 10, label: "< 10%", color: "#FEE9E6" },
-        { min: 11, max: 12, label: "< 12%", color: "#FDDFDA" },
-        { min: 13, max: 14, label: "< 14%", color: "#FCC0B4" },
-        { min: 15, max: 100, label: "> 15%", color: "#E18B76" },
-      ];
-    } else {
-      return [
-        { min: 0, max: 39, label: "< 40%", color: "#D5DBEF" },
-        { min: 40, max: 44, label: "< 45%", color: "#ABB8DE" },
-        { min: 45, max: 49, label: "< 50%", color: "#5770BE" },
-        { min: 50, max: 100, label: "> 50%", color: "#000091" },
-      ];
-    }
+  ): { min: number; max: number; label: string; color: string }[] => {
+    const data = Array.from(
+      graphData?.map((it) => it[indicateur] ?? -1) ?? []
+    ).filter((value) => value != -1);
+    const min = Math.min(...removeMin(data));
+    const max = Math.max(...removeMax(data));
+    const diff = max - min;
+    const steps = [
+      min,
+      Math.ceil(min + diff / 4),
+      Math.ceil(max - diff / 4),
+      max,
+    ];
+
+    const colorRange =
+      indicateur === "tauxDecrochage"
+        ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
+        : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
+
+    return [
+      {
+        min: 0,
+        max: steps[1] - 1,
+        label: `< ${steps[1] - 1}%`,
+        color: colorRange[0],
+      },
+      {
+        min: steps[1],
+        max: steps[2] - 1,
+        label: `< ${steps[2] - 1}%`,
+        color: colorRange[1],
+      },
+      {
+        min: steps[2],
+        max: steps[3],
+        label: `< ${steps[3]}%`,
+        color: colorRange[2],
+      },
+      {
+        min: steps[3],
+        max: 100,
+        label: `> ${steps[3]}%`,
+        color: colorRange[3],
+      },
+    ];
   };
 
   const option = useMemo<EChartsOption>(
@@ -98,6 +138,9 @@ export const CartoGraph = function <
                 indicateur === "tauxDecrochage" ? "#E18B76" : "#000091",
             },
             focus: "self",
+          },
+          select: {
+            disabled: true,
           },
           nameProperty: "reg",
           nameMap: {
