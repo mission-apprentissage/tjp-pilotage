@@ -11,7 +11,10 @@ import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../utils/notHistorique";
-import { selectTauxDecrochageNatAgg } from "../utils/tauxDecrochage";
+import {
+  selectTauxDecrochageAgg,
+  selectTauxDecrochageNatAgg,
+} from "../utils/tauxDecrochage";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
@@ -94,11 +97,6 @@ export const getPilotageReformeStats = async ({
         "indicateurRegionSortie.cfd"
       )
       .leftJoin(
-        "etablissement",
-        "etablissement.codeRegion",
-        "indicateurRegionSortie.codeRegion"
-      )
-      .leftJoin(
         "indicateurRegion",
         "indicateurRegion.codeRegion",
         "indicateurRegionSortie.codeRegion"
@@ -126,8 +124,16 @@ export const getPilotageReformeStats = async ({
         selectTauxPoursuiteAgg("indicateurRegionSortie").as(
           "tauxPoursuiteEtudes"
         ),
-        selectTauxDecrochageNatAgg("indicateurRegion").as("tauxDecrochage"),
       ])
+      .$call((q) => {
+        if (isFiltered)
+          return q.select([
+            selectTauxDecrochageAgg("indicateurRegion").as("tauxDecrochage"),
+          ]);
+        return q.select([
+          selectTauxDecrochageNatAgg("indicateurRegion").as("tauxDecrochage"),
+        ]);
+      })
       .executeTakeFirstOrThrow();
 
   const filtersBase = kdb
@@ -147,11 +153,6 @@ export const getPilotageReformeStats = async ({
       "etablissement.UAI",
       "formationEtablissement.UAI"
     )
-    .leftJoin(
-      "indicateurEntree",
-      "indicateurEntree.formationEtablissementId",
-      "formationEtablissement.id"
-    )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(
       "codeFormationDiplome",
@@ -159,7 +160,8 @@ export const getPilotageReformeStats = async ({
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
     .distinct()
-    .$castTo<{ label: string; value: string }>();
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc");
 
   const regions = filtersBase
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
