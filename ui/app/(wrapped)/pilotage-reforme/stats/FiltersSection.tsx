@@ -54,10 +54,8 @@ export const FiltersSection = ({
                 variant="input"
                 value={activeFilters.codeRegion ?? ""}
                 onChange={(e) => handleFilters("codeRegion", e.target.value)}
+                placeholder="TOUTES"
               >
-                <option key="TOUTES" value="">
-                  TOUTES
-                </option>
                 {data?.filters.regions?.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
