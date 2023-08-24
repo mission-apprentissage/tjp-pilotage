@@ -1,8 +1,6 @@
-import { ExpressionBuilder, sql } from "kysely";
-import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import {
   getMillesimeFromRentreeScolaire,
@@ -27,15 +25,13 @@ export const getPilotageReformeStats = async ({
   const rentreeScolaire = "2022";
 
   const selectStatsEffectif = ({
-    eb,
     isFiltered = false,
     annee = 0,
   }: {
-    eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
     isFiltered: boolean;
     annee: number;
   }) => {
-    return eb
+    return kdb
       .selectFrom("formationEtablissement")
       .leftJoin(
         "formation",
@@ -79,19 +75,18 @@ export const getPilotageReformeStats = async ({
         sql<number>`COALESCE(SUM(${effectifAnnee({
           alias: "indicateurEntree",
         })}),0)`.as("effectif"),
-      ]);
+      ])
+      .executeTakeFirstOrThrow();
   };
 
   const selectStatsSortie = ({
-    eb,
     isFiltered = false,
     annee = 0,
   }: {
-    eb: ExpressionBuilder<DB, "indicateurRegionSortie">;
     isFiltered: boolean;
     annee: number;
   }) =>
-    eb
+    kdb
       .selectFrom("indicateurRegionSortie")
       .leftJoin(
         "formation",
@@ -132,105 +127,8 @@ export const getPilotageReformeStats = async ({
           "tauxPoursuiteEtudes"
         ),
         selectTauxDecrochageNatAgg("indicateurRegion").as("tauxDecrochage"),
-      ]);
-
-  const statsAnneeN = await kdb
-    .selectFrom("formationEtablissement")
-    .select((eb) => [
-      jsonObjectFrom(
-        eb
-          .selectFrom("indicateurRegionSortie")
-          .select((eb) => [
-            jsonObjectFrom(
-              selectStatsEffectif({
-                eb,
-                isFiltered: false,
-                annee: 0,
-              })
-            ).as("statsEffectif"),
-            jsonObjectFrom(
-              selectStatsSortie({
-                eb,
-                isFiltered: false,
-                annee: 0,
-              })
-            ).as("statsSortie"),
-          ])
-          .limit(1)
-      ).as("nationale"),
-      jsonObjectFrom(
-        eb
-          .selectFrom("indicateurRegionSortie")
-          .select((eb) => [
-            jsonObjectFrom(
-              selectStatsEffectif({
-                eb,
-                isFiltered: true,
-                annee: 0,
-              })
-            ).as("statsEffectif"),
-            jsonObjectFrom(
-              selectStatsSortie({
-                eb,
-                isFiltered: true,
-                annee: 0,
-              })
-            ).as("statsSortie"),
-          ])
-          .limit(1)
-      ).as("filtered"),
-    ])
-    .executeTakeFirstOrThrow();
-
-  const statsAnneeNMoins1 = await kdb
-    .selectFrom("formationEtablissement")
-    .select((eb) => [
-      jsonObjectFrom(
-        eb
-          .selectFrom("indicateurRegionSortie")
-          .select((eb) => [
-            jsonObjectFrom(
-              selectStatsEffectif({
-                eb,
-                isFiltered: false,
-                annee: -1,
-              })
-            ).as("statsEffectif"),
-            jsonObjectFrom(
-              selectStatsSortie({
-                eb,
-                isFiltered: false,
-                annee: -1,
-              })
-            ).as("statsSortie"),
-          ])
-          .limit(1)
-      ).as("nationale"),
-    ])
-    .select((eb) => [
-      jsonObjectFrom(
-        eb
-          .selectFrom("indicateurRegionSortie")
-          .select((eb) => [
-            jsonObjectFrom(
-              selectStatsEffectif({
-                eb,
-                isFiltered: true,
-                annee: -1,
-              })
-            ).as("statsEffectif"),
-            jsonObjectFrom(
-              selectStatsSortie({
-                eb,
-                isFiltered: true,
-                annee: -1,
-              })
-            ).as("statsSortie"),
-          ])
-          .limit(1)
-      ).as("filtered"),
-    ])
-    .executeTakeFirstOrThrow();
+      ])
+      .executeTakeFirstOrThrow();
 
   const filtersBase = kdb
     .selectFrom("formation")
@@ -263,12 +161,12 @@ export const getPilotageReformeStats = async ({
     .distinct()
     .$castTo<{ label: string; value: string }>();
 
-  const regions = await filtersBase
+  const regions = filtersBase
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .execute();
 
-  const diplomes = await filtersBase
+  const diplomes = filtersBase
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
@@ -277,7 +175,7 @@ export const getPilotageReformeStats = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const filters = await {
+  const filters = {
     regions: (await regions).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
   };
@@ -286,22 +184,22 @@ export const getPilotageReformeStats = async ({
     filters: filters,
     anneeN: {
       filtered: {
-        ...statsAnneeN.filtered?.statsEffectif,
-        ...statsAnneeN.filtered?.statsSortie,
+        ...(await selectStatsEffectif({ isFiltered: true, annee: 0 })),
+        ...(await selectStatsSortie({ isFiltered: true, annee: 0 })),
       },
       nationale: {
-        ...statsAnneeN.nationale?.statsEffectif,
-        ...statsAnneeN.nationale?.statsSortie,
+        ...(await selectStatsEffectif({ isFiltered: false, annee: 0 })),
+        ...(await selectStatsSortie({ isFiltered: false, annee: 0 })),
       },
     },
     anneeNMoins1: {
       filtered: {
-        ...statsAnneeNMoins1.filtered?.statsEffectif,
-        ...statsAnneeNMoins1.filtered?.statsSortie,
+        ...(await selectStatsEffectif({ isFiltered: true, annee: -1 })),
+        ...(await selectStatsSortie({ isFiltered: true, annee: -1 })),
       },
       nationale: {
-        ...statsAnneeNMoins1.nationale?.statsEffectif,
-        ...statsAnneeNMoins1.nationale?.statsSortie,
+        ...(await selectStatsEffectif({ isFiltered: false, annee: -1 })),
+        ...(await selectStatsSortie({ isFiltered: false, annee: -1 })),
       },
     },
   };
