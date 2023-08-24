@@ -5,6 +5,7 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -55,114 +56,119 @@ export const VueRegionAcademieSection = ({
   handleOrder: (column: Order["orderBy"]) => void;
 }) => {
   return (
-    <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" p={4}>
-      {isLoading ? (
-        <Loader />
-      ) : (
-        <TableContainer
-          overflowY={"auto"}
-          flex={1}
-          position="relative"
-          height={"sm"}
-        >
-          <Table variant="striped" size={"sm"}>
-            <Thead
-              position="sticky"
-              top="0"
-              bg="white"
-              boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-              zIndex={1}
-            >
-              <Tr>
-                <Th
-                  cursor="pointer"
-                  pb="4"
-                  onClick={() => handleOrder("libelleRegion")}
-                >
-                  <OrderIcon {...order} column="libelleRegion" />
-                  {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  pb="4"
-                  width="20%"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
-                >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion6mois}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  pb="4"
-                  width="20%"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
-                >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
-                </Th>
-                <Th
-                  isNumeric
-                  cursor="pointer"
-                  pb="4"
-                  width="20%"
-                  onClick={() => handleOrder("tauxDecrochage")}
-                >
-                  <OrderIcon {...order} column="tauxDecrochage" />
-                  {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxDecrochage}
-                </Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              <Fragment>
-                {data?.statsRegions.map((region) => {
-                  const trBgColor =
-                    region.codeRegion === codeRegion
-                      ? "#5770BE !important"
-                      : "";
+    <>
+      <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
+        VUE DÉTAILLÉE DES INDICATEURS PAR RÉGIONS & ACADÉMIES
+      </Text>
+      <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" p={4}>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <TableContainer
+            overflowY={"auto"}
+            flex={1}
+            position="relative"
+            height={"sm"}
+          >
+            <Table variant="striped" size={"sm"}>
+              <Thead
+                position="sticky"
+                top="0"
+                bg="white"
+                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                zIndex={1}
+              >
+                <Tr>
+                  <Th
+                    cursor="pointer"
+                    pb="4"
+                    onClick={() => handleOrder("libelleRegion")}
+                  >
+                    <OrderIcon {...order} column="libelleRegion" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.libelleRegion}
+                  </Th>
+                  <Th
+                    isNumeric
+                    cursor="pointer"
+                    pb="4"
+                    width="20%"
+                    onClick={() => handleOrder("tauxInsertion6mois")}
+                  >
+                    <OrderIcon {...order} column="tauxInsertion6mois" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion6mois}
+                  </Th>
+                  <Th
+                    isNumeric
+                    cursor="pointer"
+                    pb="4"
+                    width="20%"
+                    onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  >
+                    <OrderIcon {...order} column="tauxPoursuiteEtudes" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
+                  </Th>
+                  <Th
+                    isNumeric
+                    cursor="pointer"
+                    pb="4"
+                    width="20%"
+                    onClick={() => handleOrder("tauxDecrochage")}
+                  >
+                    <OrderIcon {...order} column="tauxDecrochage" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxDecrochage}
+                  </Th>
+                </Tr>
+              </Thead>
+              <Tbody>
+                <Fragment>
+                  {data?.statsRegions.map((region) => {
+                    const trBgColor =
+                      region.codeRegion === codeRegion
+                        ? "#5770BE !important"
+                        : "";
 
-                  const tdBgColor =
-                    region.codeRegion === codeRegion
-                      ? "inherit !important"
-                      : "";
+                    const tdBgColor =
+                      region.codeRegion === codeRegion
+                        ? "inherit !important"
+                        : "";
 
-                  const trColor =
-                    region.codeRegion === codeRegion ? "white" : "inherit";
+                    const trColor =
+                      region.codeRegion === codeRegion ? "white" : "inherit";
 
-                  const color =
-                    region.codeRegion === codeRegion ? "inherit" : "#000091";
+                    const color =
+                      region.codeRegion === codeRegion ? "inherit" : "#000091";
 
-                  return (
-                    <Fragment
-                      key={`${region.codeRegion}_${region.libelleRegion}`}
-                    >
-                      <Tr
-                        backgroundColor={trBgColor}
-                        color={trColor}
-                        fontWeight="700"
+                    return (
+                      <Fragment
+                        key={`${region.codeRegion}_${region.libelleRegion}`}
                       >
-                        <Td backgroundColor={tdBgColor} color={color}>
-                          {region.libelleRegion}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor}>
-                          {region.tauxInsertion6mois}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor}>
-                          {region.tauxPoursuiteEtudes}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor}>
-                          {region.tauxDecrochage}
-                        </Td>
-                      </Tr>
-                    </Fragment>
-                  );
-                })}
-              </Fragment>
-            </Tbody>
-          </Table>
-        </TableContainer>
-      )}
-    </Box>
+                        <Tr
+                          backgroundColor={trBgColor}
+                          color={trColor}
+                          fontWeight="700"
+                        >
+                          <Td backgroundColor={tdBgColor} color={color}>
+                            {region.libelleRegion}
+                          </Td>
+                          <Td isNumeric backgroundColor={tdBgColor}>
+                            {region.tauxInsertion6mois}
+                          </Td>
+                          <Td isNumeric backgroundColor={tdBgColor}>
+                            {region.tauxPoursuiteEtudes}
+                          </Td>
+                          <Td isNumeric backgroundColor={tdBgColor}>
+                            {region.tauxDecrochage}
+                          </Td>
+                        </Tr>
+                      </Fragment>
+                    );
+                  })}
+                </Fragment>
+              </Tbody>
+            </Table>
+          </TableContainer>
+        )}
+      </Box>
+    </>
   );
 };

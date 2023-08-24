@@ -33,7 +33,7 @@ export const selectTauxDecrochageAgg = (
 ) => sql<number>`
     case when
     ${selectDenominateurDecrochageAgg(indicateurRegionAlias)} >= ${seuil}
-    then MAX(${sql.table(indicateurRegionAlias)}."tauxDecrochage")
+    then ROUND(AVG(${sql.table(indicateurRegionAlias)}."tauxDecrochage"))
     end`;
 
 export const selectTauxDecrochageNatAgg = (
