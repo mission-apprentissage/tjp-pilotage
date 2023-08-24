@@ -12,7 +12,7 @@ import {
 
 import { PilotageReformeStats } from "../types";
 
-type indicateur_type = "insertion" | "poursuite" | "décrochage";
+type IndicateurType = "insertion" | "poursuite" | "decrochage";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
@@ -202,9 +202,11 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
 const Delta = ({
   delta,
   isNational = false,
+  type = "insertion",
 }: {
   delta: number | null;
   isNational?: boolean;
+  type?: IndicateurType;
 }) => {
   let deltaIcon;
 
@@ -212,7 +214,11 @@ const Delta = ({
     if (delta < 0)
       deltaIcon = (
         <Flex>
-          <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
+          {type === "decrochage" ? (
+            <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
+          ) : (
+            <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
+          )}
           <Text>{`${delta} pts`}</Text>
         </Flex>
       );
@@ -225,7 +231,11 @@ const Delta = ({
     else
       deltaIcon = (
         <Flex>
-          <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
+          {type === "decrochage" ? (
+            <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
+          ) : (
+            <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
+          )}
           <Text>{`+${delta} pts`}</Text>
         </Flex>
       );
@@ -252,10 +262,10 @@ const StatCard = ({
 }: {
   label: string;
   data?: PilotageReformeStats;
-  type?: indicateur_type;
+  type?: IndicateurType;
   color?: string;
 }) => {
-  const getDeltaAnneeNMoins1 = (type: indicateur_type): number | null => {
+  const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
     switch (type) {
       case "insertion":
         if (
@@ -292,7 +302,7 @@ const StatCard = ({
   };
 
   const getDeltaAnneeNMoins1Nationale = (
-    type: indicateur_type
+    type: IndicateurType
   ): number | null => {
     switch (type) {
       case "insertion":
@@ -328,7 +338,7 @@ const StatCard = ({
     }
   };
 
-  const getValue = (type: "insertion" | "poursuite" | "décrochage") => {
+  const getValue = (type: "insertion" | "poursuite" | "decrochage") => {
     switch (type) {
       case "insertion":
         return data?.anneeN.filtered.tauxInsertion6mois;
@@ -366,7 +376,7 @@ const StatCard = ({
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1(type) != null ? (
-            <Delta delta={getDeltaAnneeNMoins1(type)} />
+            <Delta delta={getDeltaAnneeNMoins1(type)} type={type} />
           ) : (
             <></>
           )}
@@ -382,6 +392,7 @@ const StatCard = ({
             <Delta
               delta={getDeltaAnneeNMoins1Nationale(type)}
               isNational={true}
+              type={type}
             />
           ) : (
             <></>
@@ -405,9 +416,9 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
         type="poursuite"
       ></StatCard>
       <StatCard
-        label="taux de décrochage"
+        label="taux de decrochage"
         data={data}
-        type="décrochage"
+        type="decrochage"
       ></StatCard>
     </SimpleGrid>
   </Flex>
