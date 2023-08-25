@@ -1,6 +1,6 @@
 "use client";
 
-import { EditIcon } from "@chakra-ui/icons";
+import { CheckIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -17,6 +17,8 @@ import {
   Heading,
   IconButton,
   Input,
+  InputGroup,
+  InputRightElement,
   Radio,
   RadioGroup,
   Select,
@@ -25,8 +27,14 @@ import {
   Textarea,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { useEffect, useState } from "react";
+import {
+  Controller,
+  FormProvider,
+  useForm,
+  useFormContext,
+} from "react-hook-form";
+import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 
@@ -34,7 +42,7 @@ const UaiRegex = /^[A-Z0-9]{8}$/;
 const cfdRegex = /^[A-Z0-9]{8}$/;
 
 const forms = {
-  1: { uai: "" },
+  1: { uai: "0010001W" },
   2: {
     cfd: "",
     type: "",
@@ -88,211 +96,297 @@ const InformationsBlock = ({
   defaultValues: typeof forms["2"];
   onSubmit: (values: typeof forms[2]) => void;
 }) => {
+  const form = useForm({
+    defaultValues,
+    mode: "onBlur",
+  });
   const {
     register,
     handleSubmit,
     formState: { errors },
     watch,
     control,
-  } = useForm({
-    defaultValues,
-    mode: "onBlur",
-  });
+  } = form;
 
   const motif = watch("motif");
   console.log(motif, errors);
 
   return (
-    <Box
-      onSubmit={handleSubmit(onSubmit)}
-      bg="white"
-      as="form"
-      p="6"
-      mt="6"
-      borderRadius={6}
-    >
-      <Heading as="h2" fontSize="xl">
-        Type de demande
-      </Heading>
-      <Divider pt="4" mb="4" />
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.type}>
-        <FormLabel>Ma demande concerne</FormLabel>
-        <Select
-          bg="white"
-          {...register("type", {
-            required: "Le type de demande est obligatoire",
-          })}
-          placeholder="Séléctionner une option"
-        >
-          <option value="ouverture">Ouverture</option>
-          <option value="fermeture">Fermeture</option>
-          <option value="augmentation">Augmentation</option>
-          <option value="diminution">Diminution</option>
-        </Select>
-        {errors.type && (
-          <FormErrorMessage>{errors.type.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <FormControl mb="4" isInvalid={!!errors.motif}>
-        <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
-        <Controller
-          name="motif"
-          control={control}
-          rules={{ required: "Le motif est obligatoire" }}
-          render={({ field: { onChange, value } }) => (
-            <CheckboxGroup
-              onChange={(val) => {
-                onChange(val);
-              }}
-              defaultValue={value}
-            >
-              <Stack spacing={[3]}>
-                <Checkbox value="1">Taux d’emploi favorable</Checkbox>
-                <Checkbox value="2">Taux de poursuite favorable</Checkbox>
-                <Checkbox value="3">
-                  Besoins recrutements avérés localement
-                </Checkbox>
-                <Checkbox value="4">
-                  Métiers 2030 Texte de description additionnel
-                </Checkbox>
-                <Checkbox value="5">Parcours pédagogique</Checkbox>
-                <Checkbox value="6">Maintien pour public spécifique</Checkbox>
-                <Checkbox value="7">Nouvel établissement</Checkbox>
-                <Checkbox value="8">Établissement privé sous contrat</Checkbox>
-                <Checkbox value="9">
-                  Fermeture / diminution en compensation
-                </Checkbox>
-                <Checkbox value="10">Autre motif (veuillez préciser)</Checkbox>
-              </Stack>
-            </CheckboxGroup>
-          )}
-        />
-        {errors.motif && (
-          <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
-        )}
-      </FormControl>
-
-      <Collapse in={(motif as any).includes("10")} unmountOnExit>
-        <FormControl mb="4" maxW="500px" isInvalid={!!errors.autreMotif}>
-          <FormLabel>Autre motif</FormLabel>
-          {(motif as any).includes("10") && (
-            <Textarea
-              {...register("autreMotif", {
-                shouldUnregister: true,
-                required: "Veuillez préciser votre motif",
-              })}
-            />
-          )}
-          {errors.autreMotif && (
-            <FormErrorMessage>{errors.autreMotif.message}</FormErrorMessage>
+    <FormProvider {...form}>
+      <Box
+        onSubmit={handleSubmit(onSubmit)}
+        bg="white"
+        as="form"
+        p="6"
+        mt="6"
+        borderRadius={6}
+      >
+        <CfdInput />
+        <Heading as="h2" fontSize="xl">
+          Type de demande
+        </Heading>
+        <Divider pt="4" mb="4" />
+        <FormControl mb="4" maxW="500px" isInvalid={!!errors.type}>
+          <FormLabel>Ma demande concerne</FormLabel>
+          <Select
+            bg="white"
+            {...register("type", {
+              required: "Le type de demande est obligatoire",
+            })}
+            placeholder="Séléctionner une option"
+          >
+            <option value="ouverture">Ouverture</option>
+            <option value="fermeture">Fermeture</option>
+            <option value="augmentation">Augmentation</option>
+            <option value="diminution">Diminution</option>
+          </Select>
+          {errors.type && (
+            <FormErrorMessage>{errors.type.message}</FormErrorMessage>
           )}
         </FormControl>
-      </Collapse>
+        <FormControl mb="4" isInvalid={!!errors.motif}>
+          <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
+          <Controller
+            name="motif"
+            control={control}
+            rules={{ required: "Le motif est obligatoire" }}
+            render={({ field: { onChange, value } }) => (
+              <CheckboxGroup
+                onChange={(val) => {
+                  onChange(val);
+                }}
+                defaultValue={value}
+              >
+                <Stack spacing={[3]}>
+                  <Checkbox value="1">Taux d’emploi favorable</Checkbox>
+                  <Checkbox value="2">Taux de poursuite favorable</Checkbox>
+                  <Checkbox value="3">
+                    Besoins recrutements avérés localement
+                  </Checkbox>
+                  <Checkbox value="4">
+                    Métiers 2030 Texte de description additionnel
+                  </Checkbox>
+                  <Checkbox value="5">Parcours pédagogique</Checkbox>
+                  <Checkbox value="6">Maintien pour public spécifique</Checkbox>
+                  <Checkbox value="7">Nouvel établissement</Checkbox>
+                  <Checkbox value="8">
+                    Établissement privé sous contrat
+                  </Checkbox>
+                  <Checkbox value="9">
+                    Fermeture / diminution en compensation
+                  </Checkbox>
+                  <Checkbox value="10">
+                    Autre motif (veuillez préciser)
+                  </Checkbox>
+                </Stack>
+              </CheckboxGroup>
+            )}
+          />
+          {errors.motif && (
+            <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
+          )}
+        </FormControl>
 
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.observation}>
-        <FormLabel>Observation</FormLabel>
-        <Textarea {...register("observation", {})} />
-        {errors.observation && (
-          <FormErrorMessage>{errors.observation.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <Heading as="h2" fontSize="xl" mt="8">
-        Diplôme concerné
-      </Heading>
-      <Divider pt="4" mb="4" />
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.cfd}>
+        <Collapse in={(motif as any).includes("10")} unmountOnExit>
+          <FormControl mb="4" maxW="500px" isInvalid={!!errors.autreMotif}>
+            <FormLabel>Autre motif</FormLabel>
+            {(motif as any).includes("10") && (
+              <Textarea
+                {...register("autreMotif", {
+                  shouldUnregister: true,
+                  required: "Veuillez préciser votre motif",
+                })}
+              />
+            )}
+            {errors.autreMotif && (
+              <FormErrorMessage>{errors.autreMotif.message}</FormErrorMessage>
+            )}
+          </FormControl>
+        </Collapse>
+
+        <FormControl mb="4" maxW="500px" isInvalid={!!errors.observation}>
+          <FormLabel>Observation</FormLabel>
+          <Textarea {...register("observation", {})} />
+          {errors.observation && (
+            <FormErrorMessage>{errors.observation.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <Heading as="h2" fontSize="xl" mt="8">
+          Diplôme concerné
+        </Heading>
+        <Divider pt="4" mb="4" />
+
+        <FormControl mb="4" maxW="500px" isInvalid={!!errors.libelleDiplome}>
+          <FormLabel>Intitulé du diplôme correspondant</FormLabel>
+          <Input
+            {...register("libelleDiplome", {
+              required: "Le code diplôme est obligatoire",
+              disabled: true,
+            })}
+          />
+          {errors.cfd && (
+            <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl mb="4" maxW="500px" isInvalid={!!errors.codeDispositif}>
+          <FormLabel>Dispositif</FormLabel>
+          <Select
+            placeholder="Séléctionner une option"
+            {...register("codeDispositif", {
+              required: "Le dispositif est obligatoire",
+            })}
+          >
+            <option value="222">CAP en 1 an</option>
+            <option value="333">CAP en 2 ans</option>
+          </Select>
+          {errors.codeDispositif && (
+            <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <Heading as="h2" fontSize="xl" mt="8">
+          Renseignements complémentaires
+        </Heading>
+        <Divider pt="4" mb="4" />
+        <FormControl mb="4" isInvalid={!!errors.coloration}>
+          <FormLabel>Coloration</FormLabel>
+          <Controller
+            name="coloration"
+            control={control}
+            rules={{ required: "Ce champ est obligatoire" }}
+            render={({ field: { onChange, value, ref, name, onBlur } }) => (
+              <RadioGroup
+                as={Stack}
+                onChange={onChange}
+                value={value}
+                ref={ref}
+                name={name}
+                onBlur={onBlur}
+              >
+                <Radio value="true">Oui</Radio>
+                <Radio value="false">Non</Radio>
+              </RadioGroup>
+            )}
+          />
+          {errors.coloration && (
+            <FormErrorMessage>{errors.coloration?.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <FormControl mb="4" isInvalid={!!errors.amiCma}>
+          <FormLabel>AMI / CMA</FormLabel>
+          <Controller
+            name="amiCma"
+            control={control}
+            rules={{ required: "Ce champ est obligatoire" }}
+            render={({ field: { onChange, value } }) => (
+              <RadioGroup as={Stack} onChange={onChange} value={value}>
+                <Radio value="true">Oui</Radio>
+                <Radio value="false">Non</Radio>
+              </RadioGroup>
+            )}
+          />
+          {errors.amiCma && (
+            <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
+          )}
+        </FormControl>
+        <Flex mt="10" mb="4">
+          <Button variant="primary" type="submit">
+            Envoyer
+          </Button>
+        </Flex>
+      </Box>
+    </FormProvider>
+  );
+};
+
+const CfdInput = () => {
+  const {
+    formState: { errors, isSubmitting },
+    register,
+    watch,
+    trigger,
+    getValues,
+  } = useFormContext<typeof forms[2]>();
+
+  const cfd = watch("cfd");
+  const isValidCfd = cfdRegex.test(cfd);
+
+  const [status, setStatus] = useState<ApiType<typeof api.checkCfd>>();
+  useEffect(() => {
+    if (!status) return;
+    trigger("cfd");
+  }, [status]);
+
+  const fetchStatus = async () => {
+    const res = await api
+      .checkCfd({ params: { cfd: getValues("cfd") } })
+      .call();
+    setStatus(res);
+  };
+
+  return (
+    <>
+      <FormControl mb="4" maxW="500px" isInvalid={!!errors.cfd?.message}>
         <FormLabel>Saisie du code diplôme</FormLabel>
-        <Input
-          bg="white"
-          {...register("cfd", {
-            required: "Le code diplôme est obligatoire",
-            pattern: {
-              value: cfdRegex,
-              message: "Le code diplôme n'est pas au bon format",
-            },
-            validate: {
-              db: () => (errors.cfd?.type === "db" ? errors.cfd.message : true),
-            },
-          })}
-        />
-        {errors.cfd && (
+        <Flex>
+          <InputGroup>
+            <Input
+              {...register("cfd", {
+                required: "Le code diplôme est obligatoire",
+                pattern: {
+                  value: cfdRegex,
+                  message: "Le code diplôme n'est pas au bon format",
+                },
+                onChange: () => {
+                  if (status) setStatus(undefined);
+                  if (errors.cfd) trigger("cfd");
+                },
+                validate: {
+                  as: async () => {
+                    if (!status)
+                      return isSubmitting
+                        ? "Veuillez valider le code diplôme"
+                        : true;
+
+                    if (status.status !== "valid")
+                      return "Le code diplôme est introuvable";
+
+                    return true;
+                  },
+                },
+              })}
+            />
+            {status?.status === "valid" && (
+              <InputRightElement bg="transparent">
+                {<CheckIcon color="green" />}
+              </InputRightElement>
+            )}
+          </InputGroup>
+          <Button
+            isDisabled={!isValidCfd || !!status}
+            onClick={fetchStatus}
+            ml="2"
+            variant="primary"
+          >
+            Valider
+          </Button>
+        </Flex>
+
+        {errors.cfd?.message && (
           <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
         )}
+        {isValidCfd && !status && !errors.cfd && (
+          <Text color="orange.400" mt="2" fontSize="sm">
+            Veuillez valider le code diplôme
+          </Text>
+        )}
       </FormControl>
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.libelleDiplome}>
-        <FormLabel>Intitulé du diplôme correspondant</FormLabel>
+      <FormControl mb="4" maxW="500px">
         <Input
-          {...register("libelleDiplome", {
-            required: "Le code diplôme est obligatoire",
-            disabled: true,
-          })}
+          disabled
+          value={(status?.status === "valid" && status.data.libelle) || ""}
         />
-        {errors.cfd && (
-          <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
-        )}
       </FormControl>
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.codeDispositif}>
-        <FormLabel>Dispositif</FormLabel>
-        <Select
-          placeholder="Séléctionner une option"
-          {...register("codeDispositif", {
-            required: "Le dispositif est obligatoire",
-          })}
-        >
-          <option value="222">CAP en 1 an</option>
-          <option value="333">CAP en 2 ans</option>
-        </Select>
-        {errors.codeDispositif && (
-          <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <Heading as="h2" fontSize="xl" mt="8">
-        Renseignements complémentaires
-      </Heading>
-      <Divider pt="4" mb="4" />
-      <FormControl mb="4" isInvalid={!!errors.coloration}>
-        <FormLabel>Coloration</FormLabel>
-        <Controller
-          name="coloration"
-          control={control}
-          rules={{ required: "Ce champ est obligatoire" }}
-          render={({ field: { onChange, value } }) => (
-            <RadioGroup as={Stack} onChange={onChange} value={value}>
-              <Radio value="true">Oui</Radio>
-              <Radio value="false">Non</Radio>
-            </RadioGroup>
-          )}
-        />
-        {errors.coloration && (
-          <FormErrorMessage>{errors.coloration?.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <FormControl mb="4" isInvalid={!!errors.amiCma}>
-        <FormLabel>AMI / CMA</FormLabel>
-        <Controller
-          name="amiCma"
-          control={control}
-          rules={{ required: "Ce champ est obligatoire" }}
-          render={({ field: { onChange, value } }) => (
-            <RadioGroup as={Stack} onChange={onChange} value={value}>
-              <Radio value="true">Oui</Radio>
-              <Radio value="false">Non</Radio>
-            </RadioGroup>
-          )}
-        />
-        {errors.amiCma && (
-          <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <Flex mt="10" mb="4">
-        <Button mr="3" variant="outline" type="submit">
-          Enregistrer le brouillon
-        </Button>
-        <Button variant="primary" type="submit">
-          Envoyer
-        </Button>
-      </Flex>
-    </Box>
+    </>
   );
 };
 

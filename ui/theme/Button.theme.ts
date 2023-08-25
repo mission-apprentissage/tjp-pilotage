@@ -42,5 +42,5 @@ const input = defineStyle({
 
 export const buttonTheme = defineStyleConfig({
   variants: { primary, input },
-  baseStyle: { borderRadius: 40 },
+  baseStyle: {},
 });
