@@ -17,6 +17,8 @@ import {
   useState,
 } from "react";
 
+import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
+
 import { theme } from "../theme/theme";
 
 const useTracking = () => {
@@ -60,12 +62,21 @@ export const UaiFilterContext = createContext<{
 
 export default function RootLayoutClient({
   children,
+  auth: initialAuth,
 }: {
   children: React.ReactNode;
+  auth?: Auth;
 }) {
   const tracking = useTracking();
   console.log("tr", tracking);
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { mutations: { useErrorBoundary: false } },
+      })
+  );
+
+  const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
   const [codeRegionFilter, setCodeRegionFilter] = useState<string>("");
   const [uaiFilter, setUaiFilter] = useState("");
 
@@ -92,7 +103,7 @@ export default function RootLayoutClient({
   });
 
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme="light">
       <head>
         <PlausibleProvider
           trackLocalhost={false}
@@ -104,19 +115,23 @@ export default function RootLayoutClient({
         <QueryClientProvider client={queryClient}>
           <CacheProvider>
             <ChakraProvider theme={theme}>
-              <UaiFilterContext.Provider value={uaiFilterValue}>
-                <CodeRegionFilterContext.Provider value={codeRegionFilterValue}>
-                  <Flex
-                    direction="column"
-                    height="100vh"
-                    overflow="auto"
-                    ref={containerRef}
-                    onScroll={handleScrolling}
+              <AuthContext.Provider value={{ auth, setAuth }}>
+                <UaiFilterContext.Provider value={uaiFilterValue}>
+                  <CodeRegionFilterContext.Provider
+                    value={codeRegionFilterValue}
                   >
-                    {children}
-                  </Flex>
-                </CodeRegionFilterContext.Provider>
-              </UaiFilterContext.Provider>
+                    <Flex
+                      direction="column"
+                      height="100vh"
+                      overflow="auto"
+                      ref={containerRef}
+                      onScroll={handleScrolling}
+                    >
+                      {children}
+                    </Flex>
+                  </CodeRegionFilterContext.Provider>
+                </UaiFilterContext.Provider>
+              </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>
         </QueryClientProvider>

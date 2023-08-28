@@ -56,7 +56,23 @@ server {
         proxy_pass_header Authorization;
     }
 
+    location /smtp {
+        proxy_pass          http://smtp:8025;
+        proxy_http_version  1.1;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    Connection "Upgrade";
+        proxy_set_header    Host $host;
+    }
+
     location /_next {
+        proxy_pass          http://host.docker.internal:3000;
+        proxy_http_version  1.1;
+        proxy_set_header    Upgrade $http_upgrade;
+        proxy_set_header    Connection "Upgrade";
+        proxy_set_header    Host $host;
+    }
+
+    location /turbopack-hmr {
         proxy_pass          http://host.docker.internal:3000;
         proxy_http_version  1.1;
         proxy_set_header    Upgrade $http_upgrade;
