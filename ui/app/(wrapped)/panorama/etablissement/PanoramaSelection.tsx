@@ -10,13 +10,23 @@ import {
   Img,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
 
+import { UaiFilterContext } from "../../../layoutClient";
 import { UaiForm } from "./UaiForm";
 
 export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
   const router = useRouter();
+  const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
+
+  useEffect(() => {
+    if (uaiFilter != "") {
+      router.push(`/panorama/etablissement/${uaiFilter}`);
+    }
+  }, []);
 
   const handleSubmit = (uai: string) => {
+    setUaiFilter(uai);
     router.push(`/panorama/etablissement/${uai}`);
   };
 
@@ -30,7 +40,7 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
       maxWidth={"container.xl"}
     >
       <Flex align="center" direction="column">
-        <UaiForm onUaiChanged={handleSubmit} />
+        <UaiForm defaultUai={uaiFilter} onUaiChanged={handleSubmit} />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
           <Img src="/graphs_statistics.png" objectFit="contain" />
         </AspectRatio>

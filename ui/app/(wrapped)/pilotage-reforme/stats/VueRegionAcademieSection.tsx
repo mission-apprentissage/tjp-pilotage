@@ -58,7 +58,7 @@ export const VueRegionAcademieSection = ({
   return (
     <>
       <Text fontSize={20} fontWeight={700} lineHeight={"34px"}>
-        VUE DÉTAILLÉE DES INDICATEURS PAR RÉGIONS & ACADÉMIES
+        VUE DÉTAILLÉE DES INDICATEURS PAR RÉGIONS
       </Text>
       <Box borderRadius={4} border={"1px solid"} borderColor="grey.900" p={4}>
         {isLoading ? (
