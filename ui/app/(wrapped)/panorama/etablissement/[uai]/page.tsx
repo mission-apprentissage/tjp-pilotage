@@ -2,9 +2,10 @@
 
 import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useContext, useState } from "react";
 
 import { api } from "../../../../../api.client";
+import { UaiFilterContext } from "../../../../layoutClient";
 import { InfoSection } from "../../components/InfoSection";
 import { PanoramaSelection } from "../PanoramaSelection";
 import { CadranSection } from "./CadranSection";
@@ -21,8 +22,10 @@ export default function Panorama({
   };
 }) {
   const router = useRouter();
+  const { setUaiFilter } = useContext(UaiFilterContext);
 
   const onUaiChanged = (uai: string) => {
+    setUaiFilter(uai);
     router.push(`/panorama/etablissement/${uai}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();

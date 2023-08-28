@@ -107,7 +107,7 @@ export default function PilotageReforme() {
 
   const indicateurOptions = [
     {
-      label: "Taux d'insertion",
+      label: "Taux d'emploi à 6 mois'",
       value: "tauxInsertion6mois",
       isDefault: true,
     },
