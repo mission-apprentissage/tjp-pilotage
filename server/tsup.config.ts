@@ -10,4 +10,5 @@ export default defineConfig({
   sourcemap: true,
   noExternal: ["shared"],
   clean: true,
+  publicDir: false,
 });

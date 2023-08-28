@@ -1,0 +1,39 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour <%= data.recipient.firstname %> <%= data.recipient.lastname
+            %>,<br />
+            <br />
+            Orion, plateforme développée par la Mission Interministérielle
+            InserJeunes, vous permet d’accéder en accès sécurisé aux indicateurs
+            de pilotage de la carte des formations.<br />
+            <br />
+            Pour y accéder, activez votre compte en cliquant sur le lien
+            ci-dessous :<br />
+          </mj-text>
+          <mj-button
+            href="<%= utils.getPublicUrl(`/auth/activer-compte?activationToken=${data.activationToken}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Lien d'activation
+          </mj-button>
+          <mj-text>
+            Pour toute question, consultez la
+            <a href="<%= utils.getPublicUrl(`/documentation`) %>">
+              documentation dans Orion</a
+            >
+            ou contactez-nous à l'adresse suivante:
+            orion@inserjeunes.beta.gouv.fr<br />
+          </mj-text>
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

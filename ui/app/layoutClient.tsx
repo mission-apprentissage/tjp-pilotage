@@ -8,6 +8,8 @@ import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import { useEffect, useRef, useState } from "react";
 
+import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
+
 import { theme } from "../theme/theme";
 
 const useTracking = () => {
@@ -35,15 +37,23 @@ const useTracking = () => {
 
 export default function RootLayoutClient({
   children,
+  auth: initialAuth,
 }: {
   children: React.ReactNode;
+  auth?: Auth;
 }) {
   const tracking = useTracking();
-  console.log("tr", tracking);
-  const [queryClient] = useState(() => new QueryClient());
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: { mutations: { useErrorBoundary: false } },
+      })
+  );
+
+  const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
 
   return (
-    <html lang="fr">
+    <html lang="fr" data-theme="light">
       <head>
         <PlausibleProvider
           trackLocalhost={false}
@@ -55,9 +65,11 @@ export default function RootLayoutClient({
         <QueryClientProvider client={queryClient}>
           <CacheProvider>
             <ChakraProvider theme={theme}>
-              <Flex direction="column" height="100vh" overflow="auto">
-                {children}
-              </Flex>
+              <AuthContext.Provider value={{ auth, setAuth }}>
+                <Flex direction="column" height="100vh" overflow="auto">
+                  {children}
+                </Flex>
+              </AuthContext.Provider>
             </ChakraProvider>
           </CacheProvider>
         </QueryClientProvider>

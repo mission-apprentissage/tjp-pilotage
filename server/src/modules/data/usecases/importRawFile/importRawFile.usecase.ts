@@ -6,7 +6,7 @@ import { getStreamParser } from "../../utils/parse";
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
 
-export const [importRawFile] = inject(
+export const [importRawFile, importRawFileFactory] = inject(
   { createRawDatas, deleteRawData },
   (deps) =>
     async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
