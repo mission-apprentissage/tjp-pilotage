@@ -1,14 +1,14 @@
-export const roles = ["admin", "recteur"] as const;
+export const roles = ["admin", "pilote"] as const;
 
-export const permissions = ["console/formation", "panorama/region"] as const;
+export const permissions = ["pilotage_reforme/lecture"] as const;
 
 export const PERMISSIONS: {
   [R in typeof roles[number]]: { permissions: typeof permissions[number][] };
 } = {
   admin: {
-    permissions: ["panorama/region"],
+    permissions: ["pilotage_reforme/lecture"],
   },
-  recteur: {
-    permissions: ["panorama/region"],
+  pilote: {
+    permissions: ["pilotage_reforme/lecture"],
   },
 };
