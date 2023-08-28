@@ -47,6 +47,12 @@ export const intentionsSchemas = {
           data: Type.Object({
             cfd: Type.String(),
             libelle: Type.Optional(Type.String()),
+            dispositifs: Type.Array(
+              Type.Object({
+                codeDispositif: Type.String(),
+                libelleDispositif: Type.String(),
+              })
+            ),
           }),
         }),
         Type.Object({

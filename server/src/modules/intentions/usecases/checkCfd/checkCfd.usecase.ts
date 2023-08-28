@@ -16,6 +16,7 @@ export const [checkCfd] = inject(
           data: {
             cfd: formation.codeFormationDiplome,
             libelle: formation.libelleDiplome,
+            dispositifs: formation.dispositifs,
           },
         };
       }
