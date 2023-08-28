@@ -10,7 +10,7 @@ import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
 export const getPilotageReformeStatsRegions = async ({
   codeNiveauDiplome,
-  orderBy,
+  orderBy = { order: "asc", column: "libelleRegion" },
 }: {
   codeNiveauDiplome?: string[];
   orderBy?: { order: "asc" | "desc"; column: string };

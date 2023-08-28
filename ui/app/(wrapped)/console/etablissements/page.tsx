@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ETABLISSEMENTS_COLUMNS } from "shared";
 
@@ -29,6 +29,10 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../_components/TauxPressionScale";
+import {
+  CodeRegionFilterContext,
+  UaiFilterContext,
+} from "../../../layoutClient";
 import {
   EtablissementLineContent,
   EtablissementLineLoader,
@@ -94,6 +98,23 @@ export default function Etablissements() {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
+
+  useEffect(() => {
+    if (codeRegionFilter != "") {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters });
+    }
+    if (uaiFilter != "") {
+      filters.uai = [uaiFilter];
+      setSearchParams({ filters: filters });
+    }
+  }, []);
+
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
@@ -124,10 +145,20 @@ export default function Etablissements() {
     });
   };
 
+  const handleFiltersContext = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "uai" && value != null) setUaiFilter(value[0] ?? "");
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter(value[0] ?? "");
+  };
+
   const handleFilters = (
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
+    handleFiltersContext(type, value);
     unstable_batchedUpdates(() => {
       setSearchParams({
         page: 0,
@@ -175,6 +206,7 @@ export default function Etablissements() {
           variant="input"
           size="sm"
           onChange={(e) => {
+            handleFiltersContext("codeRegion", [e.target.value]);
             setSearchParams({
               page: 0,
               filters: {

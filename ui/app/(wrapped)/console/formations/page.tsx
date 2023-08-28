@@ -17,7 +17,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useState } from "react";
+import { Fragment, useContext, useEffect, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
@@ -28,6 +28,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { Multiselect } from "../../../../components/Multiselect";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
+import { CodeRegionFilterContext } from "../../../layoutClient";
 import {
   FormationLineContent,
   FormationLineLoader,
@@ -63,6 +64,17 @@ export default function Formations() {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  useEffect(() => {
+    if (codeRegionFilter != "") {
+      filters.codeRegion = [codeRegionFilter];
+      setSearchParams({ filters: filters });
+    }
+  }, []);
+
   const { data, isFetching } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
@@ -92,10 +104,19 @@ export default function Formations() {
     });
   };
 
+  const handleFiltersContext = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter(value[0] ?? "");
+  };
+
   const handleFilters = (
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
+    handleFiltersContext(type, value);
     setSearchParams({
       page: 0,
       filters: { ...filters, [type]: value },
@@ -141,6 +162,7 @@ export default function Formations() {
           variant="input"
           size="sm"
           onChange={(e) => {
+            handleFiltersContext("codeRegion", [e.target.value]);
             setSearchParams({
               page: 0,
               filters: {

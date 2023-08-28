@@ -8,6 +8,13 @@ export const RegionSection = ({
 }: {
   regionsStats?: ApiType<typeof api.getRegionStats>;
 }) => {
+  const formatedLibelleRegion = (libelleRegion: string): string => {
+    const voyelles = "aeiiîouAEIÎOU";
+    return voyelles.indexOf(libelleRegion[0]) !== -1
+      ? `d'${libelleRegion}`
+      : `de ${libelleRegion}`;
+  };
+
   return (
     <Container as="section" py="6" mt="12" maxWidth={"container.xl"}>
       <HStack justify="flex-end" align="center">
@@ -18,7 +25,8 @@ export const RegionSection = ({
           ml="6"
           mr="auto"
         >
-          Chiffres clefs de votre région
+          Chiffres clefs{" "}
+          {formatedLibelleRegion(regionsStats?.libelleRegion ?? "votre région")}
         </Heading>
         <StatCard
           value={regionsStats?.tauxRemplissage}
