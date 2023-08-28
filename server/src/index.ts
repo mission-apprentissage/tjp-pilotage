@@ -1,9 +1,10 @@
 import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
+import Boom from "@hapi/boom";
 
 import { migrateToLatest } from "./migrations/migrate";
-import { registerCoreModule } from "./modules/core";
+import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { server } from "./server";
 
@@ -27,6 +28,36 @@ server.register(fastifySwaggerUi, {
     deepLinking: false,
   },
 });
+
+server.setErrorHandler((error, request, reply) => {
+  console.error(error);
+  if (Boom.isBoom(error)) {
+    error.output.statusCode;
+    reply.status(error.output.statusCode).send(error.output.payload);
+    return;
+  }
+
+  if (error.statusCode && error.statusCode < 500) {
+    reply.status(error.statusCode).send({
+      statusCode: error.statusCode,
+      message: error.message,
+      error: error.name,
+    });
+    return;
+  }
+
+  if (process.env.PILOTAGE_ENV === "dev") {
+    reply.status(500).send({
+      error: error.name,
+      statusCode: 500,
+      message: error.message,
+    });
+    return;
+  }
+  reply.status(500).send({ error: "internal error", statusCode: 500 });
+});
+
+server.addHook("onRequest", extractUserInRequest);
 
 server.register(
   async (instance) => {

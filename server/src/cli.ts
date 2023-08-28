@@ -1,19 +1,37 @@
 import { program as cli } from "commander";
 import fs from "fs";
 
-import { migrateToLatest } from "../../migrations/migrate";
-import { importDispositifs } from "./usecases/importDispositifs/importDispositifs.usecase";
-import { importFamillesMetiers } from "./usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissements } from "./usecases/importFormationEtablissement/importFormationEtablissements.usecase";
-import { importIndicateursAcademie } from "./usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
-import { importIndicateursRegion } from "./usecases/importIndicateursRegion/importIndicateursRegion.usecase";
-import { importNiveauxDiplome } from "./usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
-import { importRawFile } from "./usecases/importRawFile/importRawFile.usecase";
-import { importLieuxGeographiques } from "./usecases/importRegions/importLieuxGeographiques.usecase";
+import { migrateToLatest } from "./migrations/migrate";
+import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
+import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
+import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
+import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importIndicateursAcademie } from "./modules/data/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
+import { importIndicateursRegion } from "./modules/data/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
+import { importNiveauxDiplome } from "./modules/data/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
+import { importRawFile } from "./modules/data/usecases/importRawFile/importRawFile.usecase";
+import { importLieuxGeographiques } from "./modules/data/usecases/importRegions/importLieuxGeographiques.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
 });
+
+cli
+  .command("create-user")
+  .requiredOption("--email <string>")
+  .requiredOption("--firstname <string>")
+  .requiredOption("--lastname <string>")
+  .requiredOption("--role <string>")
+  .action(
+    async (options: {
+      email: string;
+      firstname: string;
+      lastname: string;
+      role: string;
+    }) => {
+      await createUser(options);
+    }
+  );
 
 cli
   .command("importFiles")

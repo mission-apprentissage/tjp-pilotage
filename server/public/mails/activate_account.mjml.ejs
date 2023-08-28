@@ -1,0 +1,49 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour <%= data.recipient.firstname %> <%= data.recipient.lastname
+            %>,<br />
+            <br />
+            La Mission Interministérielle InserJeunes a été mandatée par la
+            DGESCO pour créer la plateforme Orion, outil d’aide à la décision et
+            de pilotage de la transformation de la carte des formations
+            professionnelles en voie scolaire.<br />
+            <br />
+            Pour y accéder, activez votre compte en cliquant sur le lien
+            ci-dessous :<br />
+          </mj-text>
+          <mj-button
+            href="<%= utils.getPublicUrl(`/auth/activer-compte?activationToken=${data.activationToken}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Lien d'activation
+          </mj-button>
+          <mj-text>
+            Concernant la saisie des demandes d’ouverture, fermeture… :<br />
+            - vous devez enregistrer la liste des demandes qui seront soumises
+            au vote du Conseil Régional et non pas toutes les demandes que vous
+            avez examinées.<br />
+            - vous pouvez enregistrer les demandes en mode brouillon ou
+            soumettre à la validation<br />
+            - lorsque la saisie de toutes les demandes pour la Région Académique
+            sera terminée, l’utilisateur “Pilote” (Recteur ou SGA) devra valider
+            la liste<br />
+            <br />
+            Pour toute question, consultez la
+            <a href="<%= utils.getPublicUrl(`/documentation`) %>">
+              documentation dans Orion</a
+            >
+            ou contactez-nous.<br />
+          </mj-text>
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>

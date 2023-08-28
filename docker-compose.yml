@@ -7,6 +7,8 @@ services:
       context: reverse_proxy
     mem_limit: 256m
     restart: unless-stopped
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     ports:
       - 80:80
       - 443:443
@@ -25,13 +27,6 @@ services:
       - LOGLEVEL=warn
       - NGINX_ALWAYS_TLS_REDIRECT=false
       - ALLOWED_METHODS=GET HEAD POST OPTIONS PUT DELETE
-
-  postgres:
-    image: postgres:14.2
-    container_name: pilotage_postgres
-    restart: unless-stopped
-    networks:
-      - pilotage_network
 
 networks:
   pilotage_network:
