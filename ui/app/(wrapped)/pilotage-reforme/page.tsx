@@ -9,6 +9,7 @@ import { useState } from "react";
 
 import { api } from "../../../api.client";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { withAuth } from "../../../utils/security/withAuth";
 import { CartoSection } from "./stats/CartoSection";
 import { EvolutionIndicateursClesSection } from "./stats/EvolutionIndicateursClesSection";
 import { FiltersSection } from "./stats/FiltersSection";
@@ -22,7 +23,7 @@ import {
   PilotageReformeStatsRegionsQuery,
 } from "./types";
 
-export default function PilotageReforme() {
+export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const fetchPilotageReformeStats = async (query: PilotageReformeStatsQuery) =>
     api.getPilotageReformeStats({ query }).call();
 
@@ -184,4 +185,4 @@ export default function PilotageReforme() {
       </Container>
     </>
   );
-}
+});
