@@ -21,7 +21,6 @@ const Loader = () => (
     <Table variant="striped" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          //@ts-ignore
           <Tr key={i} bg={"#f5f5f5"}>
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
