@@ -1,3 +1,5 @@
+import { ApiType } from "shared";
+
 import { api } from "../../../api.client";
 
 export type PilotageReformeStatsQuery = Parameters<
@@ -20,10 +22,8 @@ export type FiltersRegions = Pick<
 
 export type Order = Pick<PilotageReformeStatsRegionsQuery, "order" | "orderBy">;
 
-export type PilotageReformeStats = Awaited<
-  ReturnType<ReturnType<typeof api.getPilotageReformeStats>["call"]>
->;
+export type PilotageReformeStats = ApiType<typeof api.getPilotageReformeStats>;
 
-export type PilotageReformeStatsRegion = Awaited<
-  ReturnType<ReturnType<typeof api.getPilotageReformeStatsRegions>["call"]>
+export type PilotageReformeStatsRegion = ApiType<
+  typeof api.getPilotageReformeStatsRegions
 >;
