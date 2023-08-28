@@ -7,7 +7,9 @@ import { getFormations } from "../usecases/getFormations/getFormations.usecase";
 export const formationsRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/formations",
-    { schema: ROUTES_CONFIG.getFormations },
+    {
+      schema: ROUTES_CONFIG.getFormations,
+    },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
       const formations = await getFormations({

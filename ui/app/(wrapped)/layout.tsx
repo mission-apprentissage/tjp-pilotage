@@ -1,6 +1,6 @@
 import "react-notion-x/src/styles.css";
 
-import { Header } from "@/app/_components/Header";
+import { Header } from "@/app/(wrapped)/components/Header";
 
 export default function RootLayout({
   children,
