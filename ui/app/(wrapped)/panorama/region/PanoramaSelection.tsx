@@ -10,9 +10,11 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import { useContext, useEffect } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
+import { CodeRegionFilterContext } from "../../../layoutClient";
 
 export function PanoramaSelection({
   regionOptions,
@@ -20,8 +22,18 @@ export function PanoramaSelection({
   regionOptions: ApiType<typeof api.getRegions>;
 }) {
   const router = useRouter();
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  useEffect(() => {
+    if (codeRegionFilter != "") {
+      router.push(`/panorama/region/${codeRegionFilter}`);
+    }
+  }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {
+    setCodeRegionFilter(codeRegion);
     router.push(`/panorama/region/${codeRegion}`);
   };
 

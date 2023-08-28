@@ -134,6 +134,7 @@ export const etablissementSchemas = {
     }),
     response: {
       200: Type.Object({
+        libelleRegion: Type.String(),
         effectif: Type.Number(),
         nbFormations: Type.Number(),
         tauxPression: Type.Optional(Type.Number()),

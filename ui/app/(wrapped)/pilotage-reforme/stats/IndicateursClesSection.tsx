@@ -409,7 +409,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
       INDICATEURS CLÉS DE LA RÉFORME
     </Text>
     <SimpleGrid spacing={3} columns={[3]} mt={4}>
-      <StatCard label="taux insertion à 6 mois" data={data}></StatCard>
+      <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
       <StatCard
         label="taux poursuite d'études"
         data={data}
