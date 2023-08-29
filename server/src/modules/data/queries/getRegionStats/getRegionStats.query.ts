@@ -71,12 +71,15 @@ export const getRegionStats = async ({
       "etablissement.UAI"
     )
     .where("etablissement.codeRegion", "=", codeRegion)
+    .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
       if (!codeDiplome?.length) return q;
       return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
     })
     .where(notHistorique)
     .select([
+      // sql<string>`MAX("region"."libelleRegion")`.as("libelleRegion"),
+      "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
       ),
@@ -86,6 +89,7 @@ export const getRegionStats = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
+    .groupBy("region.libelleRegion")
     .executeTakeFirstOrThrow();
 
   return { ...stats, ...statsSortie };
