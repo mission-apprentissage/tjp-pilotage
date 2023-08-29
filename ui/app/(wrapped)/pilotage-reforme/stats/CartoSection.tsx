@@ -35,14 +35,14 @@ export const CartoSection = ({
       borderRadius={4}
       border={"1px solid"}
       borderColor="grey.900"
-      p={4}
+      p={3}
       height={"601"}
       mt={12}
     >
       {isLoading ? (
         <Skeleton opacity="0.3" height="100%" />
       ) : (
-        <Box mx={5} border={""}>
+        <Box>
           <Flex marginStart={"auto"} justifyContent="space-between">
             <Text color={"bluefrance.113"} fontWeight={700}>
               VISUALISATION TERRITORIALE

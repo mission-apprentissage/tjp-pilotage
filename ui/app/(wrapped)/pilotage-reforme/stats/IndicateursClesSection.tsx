@@ -406,7 +406,7 @@ const StatCard = ({
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
   <Flex direction={"column"}>
     <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-      INDICATEURS CLÉS DE LA RÉFORME
+      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2021
     </Text>
     <SimpleGrid spacing={3} columns={[3]} mt={4}>
       <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
@@ -416,7 +416,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
         type="poursuite"
       ></StatCard>
       <StatCard
-        label="taux de decrochage"
+        label="taux de décrochage"
         data={data}
         type="decrochage"
       ></StatCard>
