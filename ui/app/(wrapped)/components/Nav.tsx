@@ -2,7 +2,10 @@
 import { chakra, Flex, Link } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
+import { hasPermission } from "shared";
+
+import { AuthContext } from "../auth/authContext";
 
 const NavLink = chakra(
   ({
@@ -40,6 +43,8 @@ const NavLink = chakra(
 );
 
 export const Nav = () => {
+  const { auth } = useContext(AuthContext);
+
   return (
     <Flex align="center">
       <NavLink mr="4" href="/" segment={null}>
@@ -51,6 +56,11 @@ export const Nav = () => {
       <NavLink mr="4" href="/console/formations" segment="console">
         Console
       </NavLink>
+      {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (
+        <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
+          Pilotage de la réforme
+        </NavLink>
+      )}
     </Flex>
   );
 };
