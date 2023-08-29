@@ -1,6 +1,7 @@
 import { program as cli } from "commander";
 import fs from "fs";
 
+import { basepath } from "./basepath";
 import { migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
@@ -42,8 +43,8 @@ cli
         type: year ? `${type}_${year}` : type,
         fileStream: fs.createReadStream(
           year
-            ? `${__dirname}/files/${year}/${type}.csv`
-            : `${__dirname}/files/${type}.csv`,
+            ? `${basepath}/files/${year}/${type}.csv`
+            : `${basepath}/files/${type}.csv`,
           "utf8"
         ),
       });
