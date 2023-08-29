@@ -9,6 +9,7 @@ export const forms = {
     autreMotif: "",
     observation: "",
     coloration: undefined,
+    libelleColoration: undefined,
     poursuitePedagogique: undefined,
     amiCma: undefined,
   },
