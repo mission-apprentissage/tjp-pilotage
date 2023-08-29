@@ -17,7 +17,7 @@ import { useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { forms } from "../defaultFormValues";
+import { Form } from "../defaultFormValues";
 
 export const cfdRegex = /^[0-9]{8}$/;
 
@@ -36,10 +36,10 @@ export const CfdInput = ({
     getValues,
     setValue,
     resetField,
-  } = useFormContext<typeof forms[2]>();
+  } = useFormContext<Form["2"]>();
 
   const cfd = watch("cfd");
-  const isValidCfd = cfdRegex.test(cfd);
+  const isValidCfd = !!cfd && cfdRegex.test(cfd);
 
   useEffect(() => {
     if (!cfdInfo) return;
@@ -47,9 +47,9 @@ export const CfdInput = ({
   }, [cfdInfo]);
 
   const fetchStatus = async () => {
-    const res = await api
-      .checkCfd({ params: { cfd: getValues("cfd") } })
-      .call();
+    const currentCfd = getValues("cfd");
+    if (!currentCfd) return;
+    const res = await api.checkCfd({ params: { cfd: currentCfd } }).call();
     if (res.status === "valid") {
       setValue("libelleDiplome", res.data.libelle ?? "");
     }

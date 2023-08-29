@@ -4,26 +4,26 @@ import {
   FormErrorMessage,
   FormLabel,
   Heading,
+  Input,
   Radio,
   RadioGroup,
   Stack,
-  Textarea,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { forms } from "../defaultFormValues";
+import { Form } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
 
 export const ComplementaireSection = ({
   defaultValues,
 }: {
-  defaultValues: typeof forms["2"];
+  defaultValues: Form["2"];
 }) => {
   const {
     formState: { errors },
     control,
     register,
     watch,
-  } = useFormContext<typeof forms[2]>();
+  } = useFormContext<Form[2]>();
 
   const [type, coloration] = watch(["type", "coloration"]);
 
@@ -46,14 +46,15 @@ export const ComplementaireSection = ({
             control={control}
             shouldUnregister={true}
             rules={{ required: "Ce champ est obligatoire" }}
-            render={({ field: { onChange, value, ref, name, onBlur } }) => (
+            defaultValue={defaultValues.coloration}
+            render={({ field: { onChange, ref, name, onBlur, value } }) => (
               <RadioGroup
                 as={Stack}
                 onChange={onChange}
-                value={value}
                 ref={ref}
                 name={name}
                 onBlur={onBlur}
+                value={value}
               >
                 <Radio value="true">Oui</Radio>
                 <Radio value="false">Non</Radio>
@@ -71,9 +72,10 @@ export const ComplementaireSection = ({
           mb="4"
           isInvalid={!!errors.libelleColoration}
           isRequired
+          defaultValue={defaultValues.libelleColoration}
         >
           <FormLabel>Libellé coloration</FormLabel>
-          <Textarea
+          <Input
             {...register("libelleColoration", {
               shouldUnregister: true,
               required: "Ce champ est obligatoire",
@@ -90,6 +92,7 @@ export const ComplementaireSection = ({
           name="poursuitePedagogique"
           control={control}
           rules={{ required: "Ce champ est obligatoire" }}
+          defaultValue={defaultValues.poursuitePedagogique}
           render={({ field: { onChange, value, ref, name, onBlur } }) => (
             <RadioGroup
               as={Stack}

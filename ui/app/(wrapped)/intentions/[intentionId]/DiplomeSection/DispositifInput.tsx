@@ -9,7 +9,7 @@ import { useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { forms } from "../defaultFormValues";
+import { Form } from "../defaultFormValues";
 
 export const DispositifInput = ({
   cfdInfo,
@@ -19,7 +19,7 @@ export const DispositifInput = ({
   const {
     formState: { errors },
     register,
-  } = useFormContext<typeof forms[2]>();
+  } = useFormContext<Form[2]>();
 
   const data = cfdInfo?.status === "valid" ? cfdInfo.data : undefined;
 

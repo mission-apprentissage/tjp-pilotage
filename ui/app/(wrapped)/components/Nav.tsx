@@ -56,7 +56,7 @@ export const Nav = () => {
       <NavLink mr="4" href="/console/formations" segment="console">
         Console
       </NavLink>
-      {hasPermission(auth?.user.role, "intentions/envoie") && (
+      {hasPermission(auth?.user.role, "intentions/envoi") && (
         <NavLink mr="4" href="/intentions/new" segment="intentions/new">
           Intention
         </NavLink>

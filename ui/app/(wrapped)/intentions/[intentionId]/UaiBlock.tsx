@@ -19,7 +19,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import { api } from "../../../../api.client";
-import { forms } from "./defaultFormValues";
+import { Form } from "./defaultFormValues";
 
 export const UaiRegex = /^[A-Z0-9]{8}$/;
 
@@ -30,9 +30,9 @@ export const UaiBlock = ({
   defaultValues,
 }: {
   active: boolean;
-  onSubmit: (values: typeof forms[1]) => void;
+  onSubmit: (values: Form[1]) => void;
   onOpen: () => void;
-  defaultValues: typeof forms[1];
+  defaultValues: Form[1];
 }) => {
   const {
     register,
@@ -127,6 +127,7 @@ export const UaiBlock = ({
               {...register("uai", {
                 disabled: !active,
                 validate: async (uai) => {
+                  if (!uai) return false;
                   const validation = await checkUai(uai);
                   if (validation.status === "valid") {
                     return true;

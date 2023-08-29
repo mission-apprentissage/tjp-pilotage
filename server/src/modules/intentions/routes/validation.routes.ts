@@ -10,7 +10,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     "/uai/:uai/check",
     {
       schema: ROUTES_CONFIG.checkUai,
-      preHandler: hasPermissionHandler("intentions/envoie"),
+      preHandler: hasPermissionHandler("intentions/envoi"),
     },
     async (request, response) => {
       const { uai } = request.params;
@@ -23,7 +23,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     "/cfd/:cfd/check",
     {
       schema: ROUTES_CONFIG.checkCfd,
-      preHandler: hasPermissionHandler("intentions/envoie"),
+      preHandler: hasPermissionHandler("intentions/envoi"),
     },
     async (request, response) => {
       const { cfd } = request.params;

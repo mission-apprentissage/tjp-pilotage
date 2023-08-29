@@ -1,19 +1,16 @@
 import { Divider, Heading } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { forms } from "../defaultFormValues";
+import { Form } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
 
 export const CapaciteSection = ({
   defaultValues,
 }: {
-  defaultValues: typeof forms["2"];
+  defaultValues: Form["2"];
 }) => {
   const {
     formState: { errors },
-    control,
-    register,
-    watch,
-  } = useFormContext<typeof forms[2]>();
+  } = useFormContext<Form[2]>();
 
   return (
     <>

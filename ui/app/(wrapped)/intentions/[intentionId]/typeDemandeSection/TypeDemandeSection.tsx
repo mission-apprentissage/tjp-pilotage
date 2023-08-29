@@ -13,19 +13,19 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { forms } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
+import { Form } from "../defaultFormValues";
 
 export const TypeDemandeSection = ({
   defaultValues,
 }: {
-  defaultValues: typeof forms["2"];
+  defaultValues: Form["2"];
 }) => {
   const {
     formState: { errors },
     control,
     register,
     watch,
-  } = useFormContext<typeof forms[2]>();
+  } = useFormContext<Form[2]>();
 
   const [motif] = watch(["motif"]);
 
@@ -103,7 +103,7 @@ export const TypeDemandeSection = ({
         )}
       </FormControl>
 
-      <Collapse in={(motif as string[]).includes("10")} unmountOnExit>
+      <Collapse in={(motif as string[])?.includes("10")} unmountOnExit>
         <FormControl
           mb="4"
           maxW="500px"
@@ -111,7 +111,7 @@ export const TypeDemandeSection = ({
           isRequired
         >
           <FormLabel>Autre motif</FormLabel>
-          {(motif as string[]).includes("10") && (
+          {(motif as string[])?.includes("10") && (
             <Textarea
               {...register("autreMotif", {
                 shouldUnregister: true,

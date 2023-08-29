@@ -1,35 +1,28 @@
 "use client";
+
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { CapaciteSection } from "@/app/(wrapped)/intentions/[intentionId]/capaciteSection/CapaciteSection";
+import { Form } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
 import { DiplomeSection } from "@/app/(wrapped)/intentions/[intentionId]/DiplomeSection/DiplomeSection";
 import { TypeDemandeSection } from "@/app/(wrapped)/intentions/[intentionId]/typeDemandeSection/TypeDemandeSection";
 
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
-import { forms } from "./defaultFormValues";
 
 export const InformationsBlock = ({
   defaultValues,
   onSubmit,
 }: {
-  defaultValues: typeof forms["2"];
-  onSubmit: (values: typeof forms[2]) => void;
+  defaultValues: Form["2"];
+  onSubmit: (values: Form[2]) => void;
 }) => {
   const form = useForm({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
   });
-  const {
-    register,
-    handleSubmit,
-    formState: { errors },
-    watch,
-    control,
-  } = form;
-
-  const [type, coloration] = watch(["motif", "type", "coloration"]);
+  const { handleSubmit } = form;
 
   return (
     <FormProvider {...form}>
