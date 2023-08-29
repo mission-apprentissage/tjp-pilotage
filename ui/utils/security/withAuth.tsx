@@ -5,7 +5,7 @@ import { AuthContext } from "../../app/(wrapped)/auth/authContext";
 import { usePermission } from "./usePermission";
 
 export const withAuth =
-  (Page: FC, permission: typeof permissions[number]) =>
+  (permission: typeof permissions[number], Page: FC) =>
   (props: Parameters<FC>[0]) => {
     const { auth } = useContext(AuthContext);
     usePermission(permission);

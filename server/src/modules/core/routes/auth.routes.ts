@@ -72,7 +72,6 @@ export const authRoutes = ({ server }: { server: Server }) => {
     "/auth/check-activation-token",
     { schema: ROUTES_CONFIG.checkActivationToken },
     async (request, response) => {
-      console.log("herrre");
       const { activationToken } = request.query;
 
       const valid = await checkActivationToken({

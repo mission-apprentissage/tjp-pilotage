@@ -25,7 +25,9 @@ export const authSchemas = {
         user: Type.Object({
           id: Type.String(),
           email: Type.String(),
-          role: Type.Optional(Type.Union([Type.Literal("admin")])),
+          role: Type.Optional(
+            Type.Union([Type.Literal("admin"), Type.Literal("pilote")])
+          ),
         }),
       }),
       401: Type.Void(),

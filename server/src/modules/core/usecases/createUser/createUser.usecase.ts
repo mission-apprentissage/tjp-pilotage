@@ -45,10 +45,14 @@ export const [createUser, createUserFactory] = inject(
         }
       );
 
+      const template =
+        ({ pilote: "activate_account_pilote" } as const)[role] ??
+        ("activate_account" as const);
+
       deps.shootTemplate({
         to: email,
         subject: "Orion : activez votre compte personnel",
-        template: "activate_account",
+        template,
         data: {
           activationToken,
           recipient: { email, firstname, lastname, role },

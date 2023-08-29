@@ -28,6 +28,15 @@ export type TemplatePayloads = {
     };
     activationToken: string;
   };
+  activate_account_pilote: {
+    recipient: {
+      lastname?: string | undefined;
+      firstname?: string | undefined;
+      email: string;
+      role: string;
+    };
+    activationToken: string;
+  };
 };
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {

@@ -39,7 +39,7 @@
     "fastify": "^4.12.0",
     "fastify-qs": "^4.0.1",
     "jsonwebtoken": "8.5.1",
-    "kysely": "^0.25.0",
+    "kysely": "^0.26.0",
     "lodash": "^4.17.21",
     "luxon": "2.3.0",
     "mjml": "^4.14.1",

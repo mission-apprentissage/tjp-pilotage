@@ -10655,10 +10655,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:^0.25.0":
-  version: 0.25.0
-  resolution: "kysely@npm:0.25.0"
-  checksum: 78a9a9704d42ddc90dafba2f3f089b8796be725684af3aeefca95ccafa886010f9ba0323acc62d5b8913e52ad8c8f26fe023e927c332d59084bbbf5447942366
+"kysely@npm:^0.26.0":
+  version: 0.26.1
+  resolution: "kysely@npm:0.26.1"
+  checksum: 4803313e58dd3a572de6bba88fdf8e0b7ed27ec180948104818ab4dca509ef6aa9f740383656ebc72b94d5605340219e1733c8939f29475a17e7d6050b247d78
   languageName: node
   linkType: hard
 
@@ -14089,12 +14089,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.45.0":
-  version: 7.45.4
-  resolution: "react-hook-form@npm:7.45.4"
+"react-hook-form@npm:^7.45.2":
+  version: 7.45.2
+  resolution: "react-hook-form@npm:7.45.2"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 1d84c78dadf561bc9e360272c5c856c724426162e13a74929c0517c3eb8004a7f057561fff3bfd4c1121b36d6cf1437399df1dbfd01d0817b9f922503f407d8f
+  checksum: 023ca091f2bb1f3117d8a694871874c4a344f02c795c6a08b8f78b09b78444451375fbe921d7db4ba7cd78909b1fa5e92d19efd2bfedc43124fdc44540ac036c
   languageName: node
   linkType: hard
 
@@ -15182,7 +15182,7 @@ __metadata:
     fastify-qs: ^4.0.1
     jest: ^29.5.0
     jsonwebtoken: 8.5.1
-    kysely: ^0.25.0
+    kysely: ^0.26.0
     kysely-codegen: ^0.10.0
     lodash: ^4.17.21
     luxon: 2.3.0
@@ -16661,7 +16661,7 @@ __metadata:
     qs: ^6.11.1
     react: 18.2.0
     react-dom: 18.2.0
-    react-hook-form: ^7.45.0
+    react-hook-form: ^7.45.2
     react-notion-x: ^6.16.0
     shared: "*"
     typescript: 4.9.4
