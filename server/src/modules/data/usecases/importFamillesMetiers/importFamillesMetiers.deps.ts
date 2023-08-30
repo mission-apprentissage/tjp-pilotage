@@ -2,7 +2,7 @@ import { Insertable } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
-import { NMefLine } from "../../files/NMef";
+import { NMefLine } from "../../fileTypes/NMef";
 
 export const createFamillesMetiers = async (
   famillesMetier: Insertable<DB["familleMetier"]>
