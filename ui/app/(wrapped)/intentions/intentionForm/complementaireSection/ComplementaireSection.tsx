@@ -8,10 +8,11 @@ import {
   Radio,
   RadioGroup,
   Stack,
+  Textarea,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { Form } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
+import { Form } from "../defaultFormValues";
 
 export const ComplementaireSection = ({
   defaultValues,
@@ -62,7 +63,7 @@ export const ComplementaireSection = ({
             )}
           />
           {errors.coloration && (
-            <FormErrorMessage>{errors.coloration?.message}</FormErrorMessage>
+            <FormErrorMessage>{errors.coloration.message}</FormErrorMessage>
           )}
         </FormControl>
       )}
@@ -81,8 +82,10 @@ export const ComplementaireSection = ({
               required: "Ce champ est obligatoire",
             })}
           />
-          {errors.coloration && (
-            <FormErrorMessage>{errors.coloration?.message}</FormErrorMessage>
+          {errors.libelleColoration && (
+            <FormErrorMessage>
+              {errors.libelleColoration?.message}
+            </FormErrorMessage>
           )}
         </FormControl>
       )}
@@ -128,6 +131,13 @@ export const ComplementaireSection = ({
         />
         {errors.amiCma && (
           <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
+        )}
+      </FormControl>
+      <FormControl mb="4" maxW="500px" isInvalid={!!errors.observation}>
+        <FormLabel>Observation</FormLabel>
+        <Textarea {...register("observation", {})} />
+        {errors.observation && (
+          <FormErrorMessage>{errors.observation.message}</FormErrorMessage>
         )}
       </FormControl>
     </>

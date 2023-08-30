@@ -1,4 +1,4 @@
-import { IntentionForm } from "./IntentionForm";
+import { IntentionForm } from "../intentionForm/IntentionForm";
 
 export default ({
   params: { intentionId },

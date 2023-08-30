@@ -3,12 +3,11 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { CapaciteSection } from "@/app/(wrapped)/intentions/[intentionId]/capaciteSection/CapaciteSection";
-import { Form } from "@/app/(wrapped)/intentions/[intentionId]/defaultFormValues";
-import { DiplomeSection } from "@/app/(wrapped)/intentions/[intentionId]/DiplomeSection/DiplomeSection";
-import { TypeDemandeSection } from "@/app/(wrapped)/intentions/[intentionId]/typeDemandeSection/TypeDemandeSection";
-
+import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
+import { Form } from "./defaultFormValues";
+import { DiplomeSection } from "./DiplomeSection/DiplomeSection";
+import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
   defaultValues,

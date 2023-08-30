@@ -136,6 +136,7 @@ export const UaiBlock = ({
                   }
                 },
               })}
+              placeholder={"0010001W"}
             />
           </FormControl>
           <Button

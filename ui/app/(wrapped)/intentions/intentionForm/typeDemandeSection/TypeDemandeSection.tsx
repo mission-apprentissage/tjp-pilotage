@@ -124,14 +124,6 @@ export const TypeDemandeSection = ({
           )}
         </FormControl>
       </Collapse>
-
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.observation}>
-        <FormLabel>Observation</FormLabel>
-        <Textarea {...register("observation", {})} />
-        {errors.observation && (
-          <FormErrorMessage>{errors.observation.message}</FormErrorMessage>
-        )}
-      </FormControl>
     </>
   );
 };
