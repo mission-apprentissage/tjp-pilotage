@@ -505,7 +505,7 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
                   <TooltipIcon
                     ml="1"
-                    label="Capacité de l'établissement à insérer en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi comparativement à des établissements similaires."
+                    label="Capacité de l’établissement à insérer, en prenant en compte le profil social des élèves et le taux de chômage de la zone d’emploi, comparativement au taux de référence d’établissements similaires."
                   />
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
