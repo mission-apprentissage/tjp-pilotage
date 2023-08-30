@@ -1,5 +1,5 @@
 {
-  "include": ["src"],
+  "include": ["src", "public/files"],
   "exclude": ["**/node_modules"],
   "compilerOptions": {
     "strictPropertyInitialization": false,
