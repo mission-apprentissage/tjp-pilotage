@@ -151,13 +151,13 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxInsertion6mois}
+                            {region.tauxInsertion6mois} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxPoursuiteEtudes}
+                            {region.tauxPoursuiteEtudes} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxDecrochage}
+                            {region.tauxDecrochage} %
                           </Td>
                         </Tr>
                       </Fragment>

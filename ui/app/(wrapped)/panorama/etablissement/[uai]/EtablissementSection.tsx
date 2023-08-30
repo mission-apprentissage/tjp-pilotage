@@ -14,15 +14,18 @@ import {
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { UaiForm } from "../UaiForm";
 
 const StatCard = ({
   label,
   value,
+  isValeurAjoutee = false,
   color = "inherit",
 }: {
   label: string;
   value?: string | number;
+  isValeurAjoutee?: boolean;
   color?: string;
 }) => (
   <Card>
@@ -35,6 +38,12 @@ const StatCard = ({
     >
       <Box mr="4" flex={1}>
         {label}
+        {isValeurAjoutee && (
+          <TooltipIcon
+            ml="3"
+            label="Capacité de l’établissement à insérer, en prenant en compte le profil social des élèves et le taux de chômage de la zone d’emploi, comparativement au taux de référence d’établissements similaires."
+          />
+        )}
       </Box>
       <Box fontWeight="bold" fontSize="2xl">
         {value ?? "-"}
@@ -94,6 +103,7 @@ export const EtablissementSection = ({
                     }`
                   : undefined
               }
+              isValeurAjoutee
             />
             <StatCard
               label="Nombre de formations"
