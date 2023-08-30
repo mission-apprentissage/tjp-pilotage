@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { NDispositifFormation } from "../../files/NDispositifFormation";
+import { NDispositifFormation } from "../../fileTypes/NDispositifFormation";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./importDispositifs.dependencies";
 
