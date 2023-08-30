@@ -7,8 +7,8 @@ import { AuthContext } from "../../app/(wrapped)/auth/authContext";
 export const usePermission = (permission: typeof permissions[number]) => {
   const { auth } = useContext(AuthContext);
   const router = useRouter();
-  if (typeof document === "undefined") return;
   if (!auth || !hasPermission(auth?.user.role, permission)) {
+    if (typeof document === "undefined") return false;
     router.replace("/");
     return false;
   }

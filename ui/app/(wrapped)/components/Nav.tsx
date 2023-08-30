@@ -58,7 +58,12 @@ export const Nav = () => {
       </NavLink>
       {hasPermission(auth?.user.role, "intentions/envoi") && (
         <NavLink mr="4" href="/intentions" segment="intentions">
-          Intention
+          Intentions
+        </NavLink>
+      )}
+      {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (
+        <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
+          Pilotage de la réforme
         </NavLink>
       )}
     </Flex>

@@ -2,8 +2,8 @@ import { inject } from "injecti";
 import { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
-import { LyceesACCELine } from "../../../../../../../public/files/LyceesACCELine";
 import { DB } from "../../../../../../db/schema";
+import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
 import { dependencies } from "../../dependencies.di";
 
 export const [importEtablissement] = inject(

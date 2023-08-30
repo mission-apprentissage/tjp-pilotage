@@ -68,7 +68,7 @@ export const Header = () => {
             </Button>
           )}
           {!!auth && (
-            <Menu autoSelect={false} placement="bottom-end">
+            <Menu isLazy autoSelect={false} placement="bottom-end" id={"1"}>
               <MenuButton
                 ml="auto"
                 as={Button}

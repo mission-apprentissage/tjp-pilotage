@@ -1,5 +1,5 @@
-import { LyceesACCELine } from "../../../../../public/files/LyceesACCELine";
 import { kdb } from "../../../../db/db";
+import { LyceesACCELine } from "../../../data/fileTypes/LyceesACCELine";
 
 export const findInLyccesACCE = async ({ uai }: { uai: string }) => {
   const line = await kdb

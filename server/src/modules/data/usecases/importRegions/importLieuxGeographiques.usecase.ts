@@ -1,7 +1,7 @@
 import { Insertable } from "kysely";
 
 import { DB } from "../../../../db/schema";
-import { Departements_academies_regions } from "../../../../../public/files/Departements_academies_regions";
+import { Departements_academies_regions } from "../../fileTypes/Departements_academies_regions";
 import { streamIt } from "../../utils/streamIt";
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 

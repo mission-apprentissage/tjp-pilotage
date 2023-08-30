@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
-import { LyceesACCELine } from "../../../../../public/files/LyceesACCELine";
 import { kdb } from "../../../../db/db";
+import { LyceesACCELine } from "../../../data/fileTypes/LyceesACCELine";
 
 export const findManyInLyccesACCE = async ({ uai }: { uai: string }) => {
   const lines = await kdb
