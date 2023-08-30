@@ -3,7 +3,7 @@ import { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
 import { DB } from "../../../../../../db/schema";
-import { LyceesACCELine } from "../../../../files/LyceesACCELine";
+import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
 import { dependencies } from "../../dependencies.di";
 
 export const [importEtablissement] = inject(
