@@ -31,7 +31,7 @@ export const DispositifInput = ({
     >
       <FormLabel>Dispositif</FormLabel>
       <Select
-        placeholder="Séléctionner une option"
+        placeholder="Sélectionner une option"
         {...register("codeDispositif", {
           required: "Le dispositif est obligatoire",
         })}

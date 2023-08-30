@@ -42,7 +42,7 @@ export const TypeDemandeSection = ({
           {...register("type", {
             required: "Le type de demande est obligatoire",
           })}
-          placeholder="Séléctionner une option"
+          placeholder="Sélectionner une option"
         >
           <option value="ouverture">Ouverture</option>
           <option value="fermeture">Fermeture</option>

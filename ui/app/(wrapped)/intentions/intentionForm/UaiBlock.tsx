@@ -97,7 +97,7 @@ export const UaiBlock = ({
             {data?.status === "wrong_format" && (
               <>
                 <Badge mb="2" colorScheme="red">
-                  Format incorrecte
+                  Format incorrect
                 </Badge>
                 <Text>Le numéro d'établissment n'est pas au bon format.</Text>
               </>
