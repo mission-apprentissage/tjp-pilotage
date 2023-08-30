@@ -1,5 +1,3 @@
-"use client";
-
 import { CheckIcon } from "@chakra-ui/icons";
 import {
   Button,
@@ -17,7 +15,7 @@ import { useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { Form } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const cfdRegex = /^[0-9]{8}$/;
 
@@ -36,7 +34,7 @@ export const CfdInput = ({
     getValues,
     setValue,
     resetField,
-  } = useFormContext<Form["2"]>();
+  } = useFormContext<IntentionForms["2"]>();
 
   const cfd = watch("cfd");
   const isValidCfd = !!cfd && cfdRegex.test(cfd);

@@ -1,12 +1,8 @@
 import { Divider, Heading } from "@chakra-ui/react";
 
-import { Form } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
-export const CapaciteSection = ({
-  defaultValues,
-}: {
-  defaultValues: Form["2"];
-}) => {
+export const CapaciteSection = (_: { defaultValues: IntentionForms["2"] }) => {
   return (
     <>
       <Heading as="h2" fontSize="xl" mt="8">

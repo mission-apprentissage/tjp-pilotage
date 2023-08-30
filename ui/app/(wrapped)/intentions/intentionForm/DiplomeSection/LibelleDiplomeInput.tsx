@@ -1,4 +1,3 @@
-"use client";
 import { LockIcon } from "@chakra-ui/icons";
 import {
   FormControl,
@@ -13,7 +12,7 @@ import { useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { Form } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const LibelleDiplomeInput = ({
   cfdInfo,
@@ -24,7 +23,7 @@ export const LibelleDiplomeInput = ({
     formState: { errors },
     register,
     setValue,
-  } = useFormContext<Form[2]>();
+  } = useFormContext<IntentionForms[2]>();
 
   const data = cfdInfo?.status === "valid" ? cfdInfo.data : undefined;
 

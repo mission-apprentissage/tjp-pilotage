@@ -13,19 +13,19 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { Form } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const TypeDemandeSection = ({
   defaultValues,
 }: {
-  defaultValues: Form["2"];
+  defaultValues: IntentionForms["2"];
 }) => {
   const {
     formState: { errors },
     control,
     register,
     watch,
-  } = useFormContext<Form[2]>();
+  } = useFormContext<IntentionForms[2]>();
 
   const [motif] = watch(["motif"]);
 

@@ -1,4 +1,4 @@
-export const formsFilled: Form = {
+export const prefilledIntentionForms: IntentionForms = {
   1: { uai: "0010001W" },
   2: {
     cfd: "50032307",
@@ -15,12 +15,12 @@ export const formsFilled: Form = {
   },
 };
 
-export const forms: Form = {
+export const defaultIntentionForms: IntentionForms = {
   1: {},
   2: {},
 };
 
-export type Form = {
+export type IntentionForms = {
   1: { uai?: string };
   2: {
     cfd?: string;

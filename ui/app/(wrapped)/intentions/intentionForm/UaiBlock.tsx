@@ -1,5 +1,3 @@
-"use client";
-
 import { EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
@@ -19,7 +17,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useForm } from "react-hook-form";
 
 import { api } from "../../../../api.client";
-import { Form } from "./defaultFormValues";
+import { IntentionForms } from "./defaultFormValues";
 
 export const UaiRegex = /^[A-Z0-9]{8}$/;
 
@@ -30,9 +28,9 @@ export const UaiBlock = ({
   defaultValues,
 }: {
   active: boolean;
-  onSubmit: (values: Form[1]) => void;
+  onSubmit: (values: IntentionForms[1]) => void;
   onOpen: () => void;
-  defaultValues: Form[1];
+  defaultValues: IntentionForms[1];
 }) => {
   const {
     register,

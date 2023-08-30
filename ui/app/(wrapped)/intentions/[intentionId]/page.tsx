@@ -1,15 +1,18 @@
+import { GuardPermission } from "@/utils/security/GuardPermission";
+
+import { prefilledIntentionForms } from "../intentionForm/defaultFormValues";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 
-export default ({
-  params: { intentionId },
-}: {
+export default (_: {
   params: {
     intentionId: string;
   };
 }) => {
   return (
     <>
-      <IntentionForm />
+      <GuardPermission permission="intentions/envoi">
+        <IntentionForm defaultValues={prefilledIntentionForms} />
+      </GuardPermission>
     </>
   );
 };

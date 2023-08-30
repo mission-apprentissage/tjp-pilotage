@@ -1,3 +1,5 @@
+import { PageClient } from "./page.client";
+
 export default () => {
-  return <>Les intentions</>;
+  return <PageClient />;
 };

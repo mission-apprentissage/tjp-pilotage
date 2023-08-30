@@ -3,14 +3,18 @@
 import { Box, Collapse } from "@chakra-ui/react";
 import { useState } from "react";
 
-import { forms } from "./defaultFormValues";
+import { IntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
 import { UaiBlock } from "./UaiBlock";
 
-export const IntentionForm = () => {
+export const IntentionForm = ({
+  defaultValues,
+}: {
+  defaultValues: IntentionForms;
+}) => {
   const [step, setStep] = useState(1);
 
-  const [intention, setIntention] = useState(forms);
+  const [intention, setIntention] = useState(defaultValues);
 
   return (
     <Box flex={1} bg="#E2E7F8">
@@ -29,7 +33,7 @@ export const IntentionForm = () => {
             onSubmit={(values) => {
               const newIntention = { ...intention, 2: values };
               setIntention(newIntention);
-              console.log(newIntention);
+              console.log("submit", newIntention);
             }}
             defaultValues={intention[2]}
           />

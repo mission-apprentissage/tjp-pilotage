@@ -1,11 +1,9 @@
-"use client";
-
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
-import { Form } from "./defaultFormValues";
+import { IntentionForms } from "./defaultFormValues";
 import { DiplomeSection } from "./DiplomeSection/DiplomeSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -13,8 +11,8 @@ export const InformationsBlock = ({
   defaultValues,
   onSubmit,
 }: {
-  defaultValues: Form["2"];
-  onSubmit: (values: Form[2]) => void;
+  defaultValues: IntentionForms["2"];
+  onSubmit: (values: IntentionForms[2]) => void;
 }) => {
   const form = useForm({
     defaultValues,
