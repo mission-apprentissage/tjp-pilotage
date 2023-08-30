@@ -6,6 +6,7 @@ import Boom from "@hapi/boom";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
+import { registerIntentionsModule } from "./modules/intentions/index";
 import { server } from "./server";
 
 server.register(fastifyCors, {});
@@ -63,6 +64,7 @@ server.register(
   async (instance) => {
     registerCoreModule({ server: instance });
     registerFormationModule({ server: instance });
+    registerIntentionsModule({ server: instance });
   },
   { prefix: "/api" }
 );

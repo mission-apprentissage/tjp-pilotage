@@ -3,6 +3,7 @@ import chakraTheme from "@chakra-ui/theme";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
+import { formStyle } from "@/theme/Label.theme";
 import { linkTheme } from "@/theme/Link.theme";
 import { radioTheme } from "@/theme/radio.theme";
 import { selectTheme } from "@/theme/Select.theme";
@@ -96,5 +97,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Radio: radioTheme,
     Slider: sliderTheme,
     Link: linkTheme,
+    Form: formStyle,
   },
 });

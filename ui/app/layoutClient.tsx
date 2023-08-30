@@ -111,7 +111,7 @@ export default function RootLayoutClient({
           domain="orion.inserjeunes.beta.gouv.fr"
         />
       </head>
-      <body>
+      <body suppressHydrationWarning={true}>
         <QueryClientProvider client={queryClient}>
           <CacheProvider>
             <ChakraProvider theme={theme}>
