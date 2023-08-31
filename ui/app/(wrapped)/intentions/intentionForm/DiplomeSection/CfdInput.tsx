@@ -75,7 +75,7 @@ export const CfdInput = ({
                 onChange: () => {
                   if (cfdInfo) onCfdInfoChange(undefined);
                   resetField("libelleDiplome");
-                  resetField("codeDispositif");
+                  resetField("dispositifId");
                   if (errors.cfd) trigger("cfd");
                 },
                 validate: {

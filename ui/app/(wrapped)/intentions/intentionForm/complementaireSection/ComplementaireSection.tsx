@@ -14,11 +14,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
 
-export const ComplementaireSection = ({
-  defaultValues,
-}: {
-  defaultValues: IntentionForms["2"];
-}) => {
+export const ComplementaireSection = () => {
   const {
     formState: { errors },
     control,
@@ -26,7 +22,7 @@ export const ComplementaireSection = ({
     watch,
   } = useFormContext<IntentionForms[2]>();
 
-  const [type, coloration] = watch(["type", "coloration"]);
+  const [type, coloration] = watch(["typeDemande", "coloration"]);
 
   return (
     <>
@@ -47,7 +43,6 @@ export const ComplementaireSection = ({
             control={control}
             shouldUnregister={true}
             rules={{ required: "Ce champ est obligatoire" }}
-            defaultValue={defaultValues.coloration}
             render={({ field: { onChange, ref, name, onBlur, value } }) => (
               <RadioGroup
                 as={Stack}
@@ -73,7 +68,6 @@ export const ComplementaireSection = ({
           mb="4"
           isInvalid={!!errors.libelleColoration}
           isRequired
-          defaultValue={defaultValues.libelleColoration}
         >
           <FormLabel>Libellé coloration</FormLabel>
           <Input
@@ -95,7 +89,6 @@ export const ComplementaireSection = ({
           name="poursuitePedagogique"
           control={control}
           rules={{ required: "Ce champ est obligatoire" }}
-          defaultValue={defaultValues.poursuitePedagogique}
           render={({ field: { onChange, value, ref, name, onBlur } }) => (
             <RadioGroup
               as={Stack}
@@ -133,11 +126,11 @@ export const ComplementaireSection = ({
           <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
         )}
       </FormControl>
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.observation}>
+      <FormControl mb="4" maxW="500px" isInvalid={!!errors.commentaire}>
         <FormLabel>Observation</FormLabel>
-        <Textarea {...register("observation", {})} />
-        {errors.observation && (
-          <FormErrorMessage>{errors.observation.message}</FormErrorMessage>
+        <Textarea {...register("commentaire", {})} />
+        {errors.commentaire && (
+          <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>
         )}
       </FormControl>
     </>

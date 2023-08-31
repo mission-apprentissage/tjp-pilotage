@@ -24,7 +24,7 @@ export const [checkUai] = inject(
         data: {
           uai,
           commune: lyceeAcceLine.commune_libe,
-          codeRegion: "dsfd",
+          codeRegion: "75",
           adresse: lyceeAcceLine.adresse_uai,
           libelle: lyceeAcceLine.appellation_officielle,
           codeDepartement: lyceeAcceLine.departement_insee_3,

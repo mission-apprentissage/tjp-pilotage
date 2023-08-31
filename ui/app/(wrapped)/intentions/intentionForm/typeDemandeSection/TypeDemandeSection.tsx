@@ -15,11 +15,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
 
-export const TypeDemandeSection = ({
-  defaultValues,
-}: {
-  defaultValues: IntentionForms["2"];
-}) => {
+export const TypeDemandeSection = () => {
   const {
     formState: { errors },
     control,
@@ -35,11 +31,16 @@ export const TypeDemandeSection = ({
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <FormControl mb="4" maxW="500px" isInvalid={!!errors.type} isRequired>
+      <FormControl
+        mb="4"
+        maxW="500px"
+        isInvalid={!!errors.typeDemande}
+        isRequired
+      >
         <FormLabel>Ma demande concerne</FormLabel>
         <Select
           bg="white"
-          {...register("type", {
+          {...register("typeDemande", {
             required: "Le type de demande est obligatoire",
           })}
           placeholder="Sélectionner une option"
@@ -50,8 +51,8 @@ export const TypeDemandeSection = ({
           <option value="diminution">Diminution</option>
           <option value="fcil">FCIL</option>
         </Select>
-        {errors.type && (
-          <FormErrorMessage>{errors.type.message}</FormErrorMessage>
+        {errors.typeDemande && (
+          <FormErrorMessage>{errors.typeDemande.message}</FormErrorMessage>
         )}
       </FormControl>
       <FormControl mb="4" isInvalid={!!errors.motif} isRequired maxW="500px">
@@ -59,7 +60,6 @@ export const TypeDemandeSection = ({
         <Controller
           name="motif"
           control={control}
-          defaultValue={defaultValues.motif}
           rules={{ required: "Le motif est obligatoire" }}
           render={({ field: { onChange, value, onBlur } }) => (
             <CheckboxGroup onChange={onChange} value={value}>

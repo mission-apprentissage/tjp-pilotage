@@ -3,18 +3,20 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
-import { IntentionForms } from "./defaultFormValues";
+import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { DiplomeSection } from "./DiplomeSection/DiplomeSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
   defaultValues,
   onSubmit,
+  isSubmitting,
 }: {
-  defaultValues: IntentionForms["2"];
+  defaultValues: PartialIntentionForms["2"];
   onSubmit: (values: IntentionForms[2]) => void;
+  isSubmitting?: boolean;
 }) => {
-  const form = useForm({
+  const form = useForm<IntentionForms[2]>({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
@@ -32,13 +34,13 @@ export const InformationsBlock = ({
         mt="6"
         borderRadius={6}
       >
-        <TypeDemandeSection defaultValues={defaultValues} />
+        <TypeDemandeSection />
         <DiplomeSection />
-        <CapaciteSection defaultValues={defaultValues} />
-        <ComplementaireSection defaultValues={defaultValues} />
+        <CapaciteSection />
+        <ComplementaireSection />
 
         <Flex mt="10" mb="4">
-          <Button variant="primary" type="submit">
+          <Button isLoading={isSubmitting} variant="primary" type="submit">
             Envoyer
           </Button>
         </Flex>
