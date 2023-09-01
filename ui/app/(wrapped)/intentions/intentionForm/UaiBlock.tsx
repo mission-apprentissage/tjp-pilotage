@@ -2,7 +2,6 @@ import { EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
-  Button,
   DarkMode,
   Divider,
   Flex,
@@ -10,48 +9,75 @@ import {
   FormLabel,
   Heading,
   IconButton,
-  Input,
   Text,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { CSSObjectWithLabel, SingleValue } from "react-select";
+import AsyncSelect from "react-select/async";
+import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 import { IntentionForms } from "./defaultFormValues";
-
-export const UaiRegex = /^[A-Z0-9]{8}$/;
 
 export const UaiBlock = ({
   active,
   onSubmit,
   onOpen,
   defaultValues,
+  checkUaiData,
 }: {
   active: boolean;
   onSubmit: (values: IntentionForms[1]) => void;
   onOpen: () => void;
   defaultValues: IntentionForms[1];
+  checkUaiData?: ApiType<typeof api.checkUai> | { status: "wrong_format" };
 }) => {
   const {
-    register,
     formState: { errors },
     handleSubmit,
+    control,
   } = useForm({
     defaultValues,
     reValidateMode: "onSubmit",
   });
 
-  const {
-    data,
-    mutateAsync: checkUai,
-    reset,
-    isLoading,
-  } = useMutation({
-    mutationFn: async (uai: string) => {
-      if (!UaiRegex.test(uai)) return await { status: "wrong_format" as const };
-      return await api.checkUai({ params: { uai } }).call();
-    },
+  const [searchEtabInput, setSearchEtabInput] = useState<string>("");
+
+  type Option = { readonly value: string; readonly label: string };
+  type Options = readonly Option[];
+
+  const { data: etabOptions, isLoading: isEtabOptionsLoading } = useQuery({
+    keepPreviousData: false,
+    staleTime: 1000,
+    queryKey: ["searchEtab", searchEtabInput],
+    enabled: searchEtabInput.length >= 3,
+    queryFn: api.searchEtab({ params: { search: searchEtabInput } }).call,
   });
+
+  const loadOptions = (
+    inputValue: string,
+    callback: (options: Options) => void
+  ) => {
+    setSearchEtabInput(inputValue);
+    setTimeout(() => {
+      if (etabOptions) callback(etabOptions);
+    }, 1000);
+  };
+
+  const colourStyles = {
+    control: (styles: CSSObjectWithLabel) => ({
+      ...styles,
+      backgroundColor: "white",
+    }),
+    option: (styles: CSSObjectWithLabel) => {
+      return {
+        ...styles,
+        color: "#000",
+      };
+    },
+  };
 
   return (
     <DarkMode>
@@ -72,7 +98,7 @@ export const UaiBlock = ({
             aria-label="Editer"
             onClick={() => {
               onOpen();
-              reset();
+              setSearchEtabInput("");
             }}
           >
             <EditIcon />
@@ -88,13 +114,13 @@ export const UaiBlock = ({
             maxW="400"
             minH={150}
           >
-            {!data && !defaultValues.uai && (
+            {!checkUaiData && !defaultValues.searchEtab && (
               <Text>Veuillez saisir le numéro établissement.</Text>
             )}
-            {!data && defaultValues.uai && (
+            {!checkUaiData && defaultValues.searchEtab && (
               <Text>Veuillez valider le numéro établissement.</Text>
             )}
-            {data?.status === "wrong_format" && (
+            {checkUaiData?.status === "wrong_format" && (
               <>
                 <Badge mb="2" colorScheme="red">
                   Format incorrect
@@ -102,49 +128,58 @@ export const UaiBlock = ({
                 <Text>Le numéro d'établissment n'est pas au bon format.</Text>
               </>
             )}
-            {data?.status === "not_found" && (
+            {checkUaiData?.status === "not_found" && (
               <>
                 <Badge colorScheme="red">Établissement non trouvé</Badge>
               </>
             )}
-            {data?.status === "valid" && (
+            {checkUaiData?.status === "valid" && (
               <>
                 <Badge mb="2" colorScheme="green">
                   Établissement validé
                 </Badge>
-                <Text fontSize="sm">{data.data.libelle}</Text>
+                <Text fontSize="sm">{checkUaiData.data.libelle}</Text>
                 <Text fontSize="sm" mt="1">
-                  {data.data.commune}
+                  {checkUaiData.data.commune}
                 </Text>
               </>
             )}
           </Box>
-          <FormControl mr="8" flex="1" maxW="280px" isInvalid={!!errors.uai}>
-            <FormLabel>Numéro UAI de l'établissement</FormLabel>
-            <Input
-              {...register("uai", {
-                disabled: !active,
-                validate: async (uai) => {
-                  if (!uai) return false;
-                  const validation = await checkUai(uai);
-                  if (validation.status === "valid") {
-                    return true;
-                  } else {
-                    return "Le code UAI est introuvable";
-                  }
-                },
-              })}
-              placeholder={"0010001W"}
+          <FormControl
+            mr="8"
+            flex="1"
+            maxW="480px"
+            isInvalid={!!errors.searchEtab}
+          >
+            <FormLabel>Recherche d'un établissement</FormLabel>
+            <Controller
+              name="searchEtab"
+              control={control}
+              render={({ field: { onChange, value, name } }) => (
+                <AsyncSelect
+                  name={name}
+                  styles={colourStyles}
+                  onChange={(
+                    selectedUai: SingleValue<{ label: string; value: string }>
+                  ) => {
+                    if (selectedUai) {
+                      onChange(selectedUai.value);
+                      onSubmit({ searchEtab: selectedUai.value });
+                    }
+                  }}
+                  value={etabOptions?.find((uai) => uai.value === value)}
+                  loadOptions={loadOptions}
+                  isLoading={isEtabOptionsLoading}
+                  loadingMessage={() => "Recherche..."}
+                  isClearable={true}
+                  noOptionsMessage={() => "Pas d'établissement correspondant"}
+                  placeholder="UAI, nom, commune"
+                  isDisabled={!active}
+                  blurInputOnSelect
+                />
+              )}
             />
           </FormControl>
-          <Button
-            isDisabled={!active}
-            type="submit"
-            isLoading={isLoading}
-            variant="primary"
-          >
-            Valider l'établissement
-          </Button>
         </Flex>
       </Box>
     </DarkMode>
