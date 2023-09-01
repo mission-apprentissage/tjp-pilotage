@@ -1,7 +1,7 @@
 export const prefilledIntentionForms: IntentionForms = {
-  1: { uai: "0010001W" },
+  1: { searchEtab: "0010001W" },
   2: {
-    cfd: "50032307",
+    searchDiplome: "50032307",
     type: "ouverture",
     libelleDiplome: "Accessoiriste réalisateur",
     codeDispositif: "240",
@@ -21,9 +21,9 @@ export const defaultIntentionForms: IntentionForms = {
 };
 
 export type IntentionForms = {
-  1: { uai?: string };
+  1: { searchEtab?: string };
   2: {
-    cfd?: string;
+    searchDiplome?: string;
     type?: string;
     libelleDiplome?: string;
     codeDispositif?: string;

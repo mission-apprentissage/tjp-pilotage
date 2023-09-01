@@ -1,41 +1,37 @@
+import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
 
-export const findFormationQuery = async ({ cfd }: { cfd: string }) => {
+export const findFormationFromRawDataQuery = async ({
+  cfd,
+}: {
+  cfd: string;
+}) => {
   const formation = await kdb
     .selectFrom("formation")
-
     .selectAll("formation")
     .select((eb) =>
       jsonArrayFrom(
         eb
-          .selectFrom("formationEtablissement")
-          .innerJoin(
-            "dispositif",
-            "formationEtablissement.dispositifId",
-            "dispositif.codeDispositif"
+          .selectFrom("dispositif")
+          .select(["libelleDispositif", "codeDispositif"])
+          .leftJoin("rawData", (join) =>
+            join
+              .onRef(
+                sql`"data"->>'DISPOSITIF_FORMATION'`,
+                "=",
+                "dispositif.codeDispositif"
+              )
+              .on("rawData.type", "=", "nMef")
           )
-          .select(["codeDispositif", "libelleDispositif"])
-          .whereRef(
-            "formation.codeFormationDiplome",
-            "=",
-            "formationEtablissement.cfd"
-          )
-          .distinctOn(["dispositif.codeDispositif"])
+          .where(sql`"data"->>'FORMATION_DIPLOME'`, "=", `${cfd}`)
+          .distinctOn("codeDispositif")
       ).as("dispositifs")
     )
-
     .where("codeFormationDiplome", "=", cfd)
-
     .limit(1)
     .executeTakeFirst();
-  return (
-    formation &&
-    cleanNull({
-      ...formation,
-      dispositifs: formation.dispositifs.map(cleanNull),
-    })
-  );
+
+  return formation;
 };

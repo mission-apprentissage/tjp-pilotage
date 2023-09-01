@@ -36,6 +36,19 @@ export const intentionsSchemas = {
       ]),
     },
   },
+  searchEtab: {
+    params: Type.Object({
+      search: Type.String(),
+    }),
+    response: {
+      200: Type.Array(
+        Type.Object({
+          value: Type.String(),
+          label: Type.String(),
+        })
+      ),
+    },
+  },
   checkCfd: {
     params: Type.Object({
       cfd: Type.String(),
@@ -62,6 +75,19 @@ export const intentionsSchemas = {
           status: Type.Union([Type.Literal("not_found")]),
         }),
       ]),
+    },
+  },
+  searchDiplome: {
+    params: Type.Object({
+      search: Type.String(),
+    }),
+    response: {
+      200: Type.Array(
+        Type.Object({
+          value: Type.String(),
+          label: Type.String(),
+        })
+      ),
     },
   },
 } as const;

@@ -4,9 +4,8 @@ import { ApiType } from "shared";
 
 import { api } from "@/api.client";
 
-import { CfdInput } from "./CfdInput";
 import { DispositifInput } from "./DispositifInput";
-import { LibelleDiplomeInput } from "./LibelleDiplomeInput";
+import { SearchDiplomeInput } from "./SearchDiplomeInput";
 
 export const DiplomeSection = () => {
   const [cfdInfo, setCfdInfo] = useState<ApiType<typeof api.checkCfd>>();
@@ -16,8 +15,7 @@ export const DiplomeSection = () => {
         Diplôme concerné
       </Heading>
       <Divider pt="4" mb="4" />
-      <CfdInput onCfdInfoChange={setCfdInfo} cfdInfo={cfdInfo} />
-      <LibelleDiplomeInput cfdInfo={cfdInfo} />
+      <SearchDiplomeInput onCfdInfoChange={setCfdInfo} cfdInfo={cfdInfo} />
       <DispositifInput cfdInfo={cfdInfo} />
     </>
   );
