@@ -3,18 +3,24 @@ import { FormProvider, useForm } from "react-hook-form";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
-import { IntentionForms } from "./defaultFormValues";
+import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { DiplomeSection } from "./DiplomeSection/DiplomeSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
   defaultValues,
   onSubmit,
+  isSubmitting,
+  onDraftSubmit,
+  isDraftSubmitting,
 }: {
-  defaultValues: IntentionForms["2"];
+  defaultValues: PartialIntentionForms["2"];
   onSubmit: (values: IntentionForms[2]) => void;
+  isSubmitting?: boolean;
+  onDraftSubmit: (values: IntentionForms[2]) => void;
+  isDraftSubmitting?: boolean;
 }) => {
-  const form = useForm({
+  const form = useForm<IntentionForms[2]>({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
@@ -32,13 +38,21 @@ export const InformationsBlock = ({
         mt="6"
         borderRadius={6}
       >
-        <TypeDemandeSection defaultValues={defaultValues} />
+        <TypeDemandeSection />
         <DiplomeSection />
-        <CapaciteSection defaultValues={defaultValues} />
-        <ComplementaireSection defaultValues={defaultValues} />
+        <CapaciteSection />
+        <ComplementaireSection />
 
-        <Flex mt="10" mb="4">
-          <Button variant="primary" type="submit">
+        <Flex justify="flex-end" mt="10" mb="4">
+          <Button
+            isLoading={isDraftSubmitting}
+            variant="primary"
+            mr="4"
+            onClick={() => onDraftSubmit(form.getValues())}
+          >
+            Brouillon
+          </Button>
+          <Button isLoading={isSubmitting} variant="primary" type="submit">
             Envoyer
           </Button>
         </Flex>

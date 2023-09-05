@@ -1,5 +1,5 @@
 import { program as cli } from "commander";
-import fs from "fs";
+import fs, { writeFileSync } from "fs";
 
 import { basepath } from "./basepath";
 import { migrateToLatest } from "./migrations/migrate";
@@ -16,6 +16,18 @@ import { importLieuxGeographiques } from "./modules/data/usecases/importRegions/
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
 });
+
+cli.command("create-migration").action(() =>
+  writeFileSync(
+    `${__dirname}/migrations/migration-${new Date().getTime()}.ts`,
+    `import { Kysely } from "kysely";
+
+export const up = async (db: Kysely<unknown>) => {};
+    
+export const down = async () => {};
+    `
+  )
+);
 
 cli
   .command("create-user")

@@ -24,4 +24,26 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: ({ params }) => `/diplome/search/${params.search}`,
     instance,
   }),
+  submitDemande: createClientMethod<typeof ROUTES_CONFIG.submitDemande>({
+    method: "POST",
+    url: "/demande/submit",
+    instance,
+  }),
+  submitDraftDemande: createClientMethod<
+    typeof ROUTES_CONFIG.submitDraftDemande
+  >({
+    method: "POST",
+    url: "/demande/draft",
+    instance,
+  }),
+  getDemande: createClientMethod<typeof ROUTES_CONFIG.getDemande>({
+    method: "GET",
+    url: ({ params: { id } }) => `/demande/${id}`,
+    instance,
+  }),
+  getDemandes: createClientMethod<typeof ROUTES_CONFIG.getDemandes>({
+    method: "GET",
+    url: "/demandes",
+    instance,
+  }),
 });

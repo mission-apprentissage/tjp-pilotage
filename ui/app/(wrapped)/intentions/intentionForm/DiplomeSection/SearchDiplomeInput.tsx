@@ -43,12 +43,12 @@ export const SearchDiplomeInput = ({
 
   useEffect(() => {
     if (!cfdInfo) return;
-    trigger("searchDiplome");
+    trigger("cfd");
   }, [cfdInfo]);
 
   useEffect(() => {
-    if (!getValues("searchDiplome")) return;
-    setSearchDiplomeInput(getValues("searchDiplome") ?? "");
+    if (!getValues("cfd")) return;
+    setSearchDiplomeInput(getValues("cfd") ?? "");
     fetchStatus();
   }, []);
 
@@ -59,7 +59,7 @@ export const SearchDiplomeInput = ({
   };
 
   const fetchStatus = async () => {
-    const currentCfd = getValues("searchDiplome");
+    const currentCfd = getValues("cfd");
     console.log(currentCfd);
     if (!currentCfd) return;
     const res = await api.checkCfd({ params: { cfd: currentCfd } }).call();
@@ -87,13 +87,13 @@ export const SearchDiplomeInput = ({
       <FormControl
         mb="4"
         maxW="500px"
-        isInvalid={!!errors.searchDiplome?.message}
+        isInvalid={!!errors.cfd?.message}
         isRequired
         flex="1"
       >
         <FormLabel>Recherche d'un diplôme</FormLabel>
         <Controller
-          name="searchDiplome"
+          name="cfd"
           control={control}
           render={({ field: { onChange, value, name } }) => (
             <Select
