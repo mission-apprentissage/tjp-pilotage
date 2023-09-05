@@ -1,5 +1,79 @@
 import { Type } from "@sinclair/typebox";
 
+import { Partial } from "../utils";
+
+const DemandeSchema = Type.Object({
+  id: Type.String(),
+  createdAt: Type.String(),
+  uai: Type.String(),
+  cfd: Type.String(),
+  libelleDiplome: Type.String(),
+  dispositifId: Type.String(),
+  rentreeScolaire: Type.Number(),
+  typeDemande: Type.String(),
+  motif: Type.Array(Type.String()),
+  autreMotif: Type.Optional(Type.String()),
+  libelleColoration: Type.Optional(Type.String()),
+  amiCma: Type.Boolean(),
+  poursuitePedagogique: Type.Boolean(),
+  commentaire: Type.Optional(Type.String()),
+  status: Type.String(),
+});
+
+const DraftSchema = Type.Object({
+  id: Type.String(),
+  createdAt: Type.String(),
+  uai: Type.Optional(Type.String()),
+  cfd: Type.Optional(Type.String()),
+  libelleDiplome: Type.Optional(Type.String()),
+  dispositifId: Type.Optional(Type.String()),
+  rentreeScolaire: Type.Optional(Type.Number()),
+  typeDemande: Type.Optional(Type.String()),
+  motif: Type.Optional(Type.Array(Type.String())),
+  autreMotif: Type.Optional(Type.String()),
+  libelleColoration: Type.Optional(Type.String()),
+  amiCma: Type.Optional(Type.Boolean()),
+  poursuitePedagogique: Type.Optional(Type.Boolean()),
+  commentaire: Type.Optional(Type.String()),
+  status: Type.String(),
+});
+
+const SubmitSchemaPost = Type.Omit(
+  Partial(DemandeSchema, ["id", "autreMotif", "commentaire"]),
+  ["status", "createdAt"]
+);
+
+const MetadataSchema = Type.Object({
+  dispositifs: Type.Array(
+    Type.Object({
+      codeDispositif: Type.String(),
+      libelleDispositif: Type.String(),
+    })
+  ),
+  etablissement: Type.Optional(
+    Type.Object({
+      libelleEtablissement: Type.Optional(Type.String()),
+      commune: Type.Optional(Type.String()),
+    })
+  ),
+});
+
+const DraftSchemaPost = Partial(SubmitSchemaPost, [
+  "id",
+  "uai",
+  "cfd",
+  "libelleDiplome",
+  "rentreeScolaire",
+  "typeDemande",
+  "motif",
+  "autreMotif",
+  "libelleColoration",
+  "amiCma",
+  "poursuitePedagogique",
+  "commentaire",
+  "dispositifId",
+]);
+
 export const intentionsSchemas = {
   checkUai: {
     params: Type.Object({
@@ -62,6 +136,49 @@ export const intentionsSchemas = {
           status: Type.Union([Type.Literal("not_found")]),
         }),
       ]),
+    },
+  },
+  submitDemande: {
+    body: Type.Object({
+      demande: SubmitSchemaPost,
+    }),
+    response: {
+      200: Type.Undefined(),
+    },
+  },
+  submitDraftDemande: {
+    body: Type.Object({
+      demande: DraftSchemaPost,
+    }),
+    response: {
+      200: Type.Undefined(),
+    },
+  },
+  getDemande: {
+    params: Type.Object({ id: Type.String() }),
+    response: {
+      200: Type.Union([
+        Type.Intersect([
+          DemandeSchema,
+          Type.Object({ metadata: MetadataSchema }),
+        ]),
+        Type.Intersect([
+          DraftSchema,
+          Type.Object({ metadata: MetadataSchema }),
+        ]),
+      ]),
+    },
+  },
+  getDemandes: {
+    response: {
+      200: Type.Array(
+        Type.Object({
+          id: Type.String(),
+          createdAt: Type.String(),
+          createurId: Type.String(),
+          status: Type.String(),
+        })
+      ),
     },
   },
 } as const;

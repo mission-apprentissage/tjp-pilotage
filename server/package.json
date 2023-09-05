@@ -8,7 +8,7 @@
   "license": "MIT",
   "main": "src/index.js",
   "scripts": {
-    "start": "node dist/index.js",
+    "start": "node --enable-source-maps dist/index.js",
     "dev": "tsup src/index.ts --watch . --watch ../shared --onSuccess 'yarn run copyPublic && yarn run start'",
     "copyPublic": "cp -a public/. dist",
     "build": "tsup src/index.ts",

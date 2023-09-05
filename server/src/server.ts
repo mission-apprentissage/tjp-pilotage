@@ -8,6 +8,7 @@ export const server = fastify({
   ajv: {
     customOptions: {
       strict: "log",
+      removeAdditional: "all",
       keywords: ["kind", "modifier"],
     },
   },

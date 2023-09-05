@@ -1,9 +1,10 @@
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { prefilledIntentionForms } from "../intentionForm/defaultFormValues";
-import { IntentionForm } from "../intentionForm/IntentionForm";
+import PageClient from "./page.client";
 
-export default (_: {
+export default ({
+  params,
+}: {
   params: {
     intentionId: string;
   };
@@ -11,7 +12,7 @@ export default (_: {
   return (
     <>
       <GuardPermission permission="intentions/envoi">
-        <IntentionForm defaultValues={prefilledIntentionForms} />
+        <PageClient params={params}></PageClient>
       </GuardPermission>
     </>
   );

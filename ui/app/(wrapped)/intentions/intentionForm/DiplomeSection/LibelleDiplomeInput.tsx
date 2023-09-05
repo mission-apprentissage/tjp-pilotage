@@ -48,7 +48,6 @@ export const LibelleDiplomeInput = ({
           <Input
             {...register("libelleDiplome", {
               required: "L'intitulé du diplôme est obligatoire",
-              disabled: true,
             })}
             disabled={false}
             isReadOnly={true}

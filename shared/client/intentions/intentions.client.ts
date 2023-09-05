@@ -9,10 +9,31 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: ({ params }) => `/uai/${params.uai}/check`,
     instance,
   }),
-
   checkCfd: createClientMethod<typeof ROUTES_CONFIG.checkCfd>({
     method: "GET",
     url: ({ params }) => `/cfd/${params.cfd}/check`,
+    instance,
+  }),
+  submitDemande: createClientMethod<typeof ROUTES_CONFIG.submitDemande>({
+    method: "POST",
+    url: "/demande/submit",
+    instance,
+  }),
+  submitDraftDemande: createClientMethod<
+    typeof ROUTES_CONFIG.submitDraftDemande
+  >({
+    method: "POST",
+    url: "/demande/draft",
+    instance,
+  }),
+  getDemande: createClientMethod<typeof ROUTES_CONFIG.getDemande>({
+    method: "GET",
+    url: ({ params: { id } }) => `/demande/${id}`,
+    instance,
+  }),
+  getDemandes: createClientMethod<typeof ROUTES_CONFIG.getDemandes>({
+    method: "GET",
+    url: "/demandes",
     instance,
   }),
 });
