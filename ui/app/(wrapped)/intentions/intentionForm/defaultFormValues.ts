@@ -1,20 +1,3 @@
-export const prefilledIntentionForms: IntentionForms = {
-  1: { uai: "0010001W" },
-  2: {
-    cfd: "50032307",
-    typeDemande: "ouverture",
-    libelleDiplome: "Accessoiriste réalisateur",
-    dispositifId: "240",
-    motif: ["1", "10"],
-    autreMotif: "AUTRE",
-    commentaire: "observation",
-    coloration: "false",
-    poursuitePedagogique: "false",
-    amiCma: "false",
-    rentreeScolaire: 2023,
-  },
-};
-
 export const defaultIntentionForms: {
   1: Partial<IntentionForms[1]>;
   2: Partial<IntentionForms[2]>;
@@ -42,6 +25,6 @@ export type IntentionForms = {
     libelleColoration?: string;
     poursuitePedagogique: string;
     amiCma: string;
-    rentreeScolaire: number;
+    rentreeScolaire: string;
   };
 };

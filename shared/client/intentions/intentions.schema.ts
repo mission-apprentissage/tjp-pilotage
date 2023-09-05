@@ -43,6 +43,21 @@ const SubmitSchemaPost = Type.Omit(
   ["status", "createdAt"]
 );
 
+const MetadataSchema = Type.Object({
+  dispositifs: Type.Array(
+    Type.Object({
+      codeDispositif: Type.String(),
+      libelleDispositif: Type.String(),
+    })
+  ),
+  etablissement: Type.Optional(
+    Type.Object({
+      libelleEtablissement: Type.Optional(Type.String()),
+      commune: Type.Optional(Type.String()),
+    })
+  ),
+});
+
 const DraftSchemaPost = Partial(SubmitSchemaPost, [
   "id",
   "uai",
@@ -56,7 +71,6 @@ const DraftSchemaPost = Partial(SubmitSchemaPost, [
   "amiCma",
   "poursuitePedagogique",
   "commentaire",
-  "rentreeScolaire",
   "dispositifId",
 ]);
 
@@ -146,25 +160,11 @@ export const intentionsSchemas = {
       200: Type.Union([
         Type.Intersect([
           DemandeSchema,
-          Type.Object({
-            dispositifs: Type.Array(
-              Type.Object({
-                codeDispositif: Type.String(),
-                libelleDispositif: Type.String(),
-              })
-            ),
-          }),
+          Type.Object({ metadata: MetadataSchema }),
         ]),
         Type.Intersect([
           DraftSchema,
-          Type.Object({
-            dispositifs: Type.Array(
-              Type.Object({
-                codeDispositif: Type.String(),
-                libelleDispositif: Type.String(),
-              })
-            ),
-          }),
+          Type.Object({ metadata: MetadataSchema }),
         ]),
       ]),
     },

@@ -1,4 +1,8 @@
-import { jsonArrayFrom } from "kysely/helpers/postgres";
+import {
+  jsonArrayFrom,
+  jsonBuildObject,
+  jsonObjectFrom,
+} from "kysely/helpers/postgres";
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
@@ -7,20 +11,31 @@ export const findDemande = async ({ id }: { id: string }) => {
   const demande = await kdb
     .selectFrom("demande")
     .selectAll()
-    .select((eb) =>
-      jsonArrayFrom(
-        eb
-          .selectFrom("formationEtablissement")
-          .innerJoin(
-            "dispositif",
-            "formationEtablissement.dispositifId",
-            "dispositif.codeDispositif"
-          )
-          .select(["codeDispositif", "libelleDispositif"])
-          .whereRef("demande.cfd", "=", "formationEtablissement.cfd")
-          .distinctOn(["dispositif.codeDispositif"])
-      ).as("dispositifs")
-    )
+    .select((eb) => [
+      jsonBuildObject({
+        dispositifs: jsonArrayFrom(
+          eb
+            .selectFrom("formationEtablissement")
+            .innerJoin(
+              "dispositif",
+              "formationEtablissement.dispositifId",
+              "dispositif.codeDispositif"
+            )
+            .select(["codeDispositif", "libelleDispositif"])
+            .whereRef("demande.cfd", "=", "formationEtablissement.cfd")
+            .distinctOn(["dispositif.codeDispositif"])
+        ),
+        etablissement: jsonObjectFrom(
+          eb
+            .selectFrom("etablissement")
+            .select([
+              "etablissement.libelleEtablissement",
+              "etablissement.commune",
+            ])
+            .whereRef("etablissement.UAI", "=", "demande.uai")
+        ),
+      }).as("metadata"),
+    ])
     .where("id", "=", id)
     .orderBy("createdAt", "asc")
     .limit(1)
@@ -28,7 +43,7 @@ export const findDemande = async ({ id }: { id: string }) => {
 
   const dispositifId =
     demande?.dispositifId &&
-    demande.dispositifs.find(
+    demande.metadata.dispositifs.find(
       (item) => item.codeDispositif === demande?.dispositifId
     )?.codeDispositif;
 
@@ -36,6 +51,10 @@ export const findDemande = async ({ id }: { id: string }) => {
     demande &&
     cleanNull({
       ...demande,
+      metadata: cleanNull({
+        ...demande.metadata,
+        etablissement: cleanNull(demande.metadata.etablissement),
+      }),
       createdAt: demande.createdAt?.toISOString(),
       dispositifId,
     })

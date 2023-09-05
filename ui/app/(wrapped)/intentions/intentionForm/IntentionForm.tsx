@@ -34,6 +34,7 @@ export const IntentionForm = ({
               ...forms[2],
               amiCma: toBoolean(forms[2].amiCma),
               poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
+              rentreeScolaire: parseInt(forms[2].rentreeScolaire),
             },
           },
         })
@@ -51,6 +52,8 @@ export const IntentionForm = ({
                 ...forms[2],
                 amiCma: toBoolean(forms[2].amiCma),
                 poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
+                rentreeScolaire:
+                  parseInt(forms[2].rentreeScolaire ?? "") || undefined,
               },
             },
           })

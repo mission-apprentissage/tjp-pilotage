@@ -33,6 +33,7 @@ export default ({
               ...data,
               amiCma: JSON.stringify(data.amiCma),
               poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
+              rentreeScolaire: JSON.stringify(data.rentreeScolaire),
               coloration:
                 data.libelleColoration === undefined
                   ? undefined
