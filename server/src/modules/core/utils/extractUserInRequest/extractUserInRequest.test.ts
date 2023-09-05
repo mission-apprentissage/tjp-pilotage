@@ -20,6 +20,20 @@ describe("extractUserInRequest usecase", () => {
     await expect(request.user).toBeUndefined();
   });
 
+  it("should not set user in request if wrong token in the header", async () => {
+    const extractUserInRequest = extractUserInRequestFactory({
+      jwtSecret,
+      findUserQuery: async () => undefined,
+    });
+
+    const request = {
+      headers: { cookie: cookie.serialize("Authorization", "wrongToken") },
+    } as FastifyRequest;
+
+    await extractUserInRequest(request);
+    await expect(request.user).toBeUndefined();
+  });
+
   it("should set user in request if there is a correct token in the header", async () => {
     const extractUserInRequest = extractUserInRequestFactory({
       jwtSecret,

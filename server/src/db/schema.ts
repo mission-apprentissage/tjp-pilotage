@@ -24,6 +24,27 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface Demande {
+  id: string;
+  cfd: string | null;
+  libelleDiplome: string | null;
+  dispositifId: string | null;
+  uai: string | null;
+  rentreeScolaire: number | null;
+  typeDemande: string | null;
+  motif: string[] | null;
+  autreMotif: string | null;
+  libelleColoration: string | null;
+  amiCma: boolean | null;
+  poursuitePedagogique: boolean | null;
+  commentaire: string | null;
+  status: "draft" | "submitted";
+  codeRegion: string | null;
+  codeAcademie: string | null;
+  createurId: string;
+  createdAt: Generated<Timestamp>;
+}
+
 export interface Departement {
   codeDepartement: string;
   libelle: string;
@@ -181,6 +202,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  demande: Demande;
   departement: Departement;
   dispositif: Dispositif;
   etablissement: Etablissement;

@@ -22,7 +22,7 @@ import Select, {
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
-import { IntentionForms } from "./defaultFormValues";
+import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 
 export const UaiBlock = ({
   active,
@@ -34,14 +34,14 @@ export const UaiBlock = ({
   active: boolean;
   onSubmit: (values: IntentionForms[1]) => void;
   onOpen: () => void;
-  defaultValues: IntentionForms[1];
   checkUaiData?: ApiType<typeof api.checkUai> | { status: "wrong_format" };
+  defaultValues: PartialIntentionForms[1];
 }) => {
   const {
     formState: { errors },
     handleSubmit,
     control,
-  } = useForm({
+  } = useForm<IntentionForms[1]>({
     defaultValues,
     reValidateMode: "onSubmit",
   });
@@ -49,9 +49,9 @@ export const UaiBlock = ({
   const [searchEtabInput, setSearchEtabInput] = useState<string>("");
 
   useEffect(() => {
-    if (defaultValues.searchEtab) {
-      setSearchEtabInput(defaultValues.searchEtab);
-      onSubmit({ searchEtab: defaultValues.searchEtab });
+    if (defaultValues.uai) {
+      setSearchEtabInput(defaultValues.uai);
+      onSubmit({ uai: defaultValues.uai });
     }
   }, []);
 
@@ -117,10 +117,10 @@ export const UaiBlock = ({
             maxW="400"
             minH={150}
           >
-            {!checkUaiData && !defaultValues.searchEtab && (
+            {!checkUaiData && !defaultValues.uai && (
               <Text>Veuillez saisir le numéro établissement.</Text>
             )}
-            {!checkUaiData && defaultValues.searchEtab && (
+            {!checkUaiData && defaultValues.uai && (
               <Text>Veuillez valider le numéro établissement.</Text>
             )}
             {checkUaiData?.status === "wrong_format" && (
@@ -148,15 +148,10 @@ export const UaiBlock = ({
               </>
             )}
           </Box>
-          <FormControl
-            mr="8"
-            flex="1"
-            maxW="480px"
-            isInvalid={!!errors.searchEtab}
-          >
+          <FormControl mr="8" flex="1" maxW="480px" isInvalid={!!errors.uai}>
             <FormLabel>Recherche d'un établissement</FormLabel>
             <Controller
-              name="searchEtab"
+              name="uai"
               control={control}
               render={({ field: { onChange, onBlur, value, name } }) => (
                 <Select
@@ -167,7 +162,7 @@ export const UaiBlock = ({
                   ) => {
                     if (selectedUai) {
                       onChange(selectedUai.value);
-                      onSubmit({ searchEtab: selectedUai.value });
+                      onSubmit({ uai: selectedUai.value });
                     }
                   }}
                   onBlur={onBlur}
