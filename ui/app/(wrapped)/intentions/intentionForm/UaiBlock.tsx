@@ -12,10 +12,13 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import { CSSObjectWithLabel, SingleValue } from "react-select";
-import AsyncSelect from "react-select/async";
+import Select, {
+  CSSObjectWithLabel,
+  InputActionMeta,
+  SingleValue,
+} from "react-select";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
@@ -45,8 +48,12 @@ export const UaiBlock = ({
 
   const [searchEtabInput, setSearchEtabInput] = useState<string>("");
 
-  type Option = { readonly value: string; readonly label: string };
-  type Options = readonly Option[];
+  useEffect(() => {
+    if (defaultValues.searchEtab) {
+      setSearchEtabInput(defaultValues.searchEtab);
+      onSubmit({ searchEtab: defaultValues.searchEtab });
+    }
+  }, []);
 
   const { data: etabOptions, isLoading: isEtabOptionsLoading } = useQuery({
     keepPreviousData: false,
@@ -56,14 +63,10 @@ export const UaiBlock = ({
     queryFn: api.searchEtab({ params: { search: searchEtabInput } }).call,
   });
 
-  const loadOptions = (
-    inputValue: string,
-    callback: (options: Options) => void
-  ) => {
-    setSearchEtabInput(inputValue);
-    setTimeout(() => {
-      if (etabOptions) callback(etabOptions);
-    }, 1000);
+  const handleInputChange = (inputText: string, meta: InputActionMeta) => {
+    if (meta.action !== "input-blur" && meta.action !== "menu-close") {
+      setSearchEtabInput(inputText);
+    }
   };
 
   const colourStyles = {
@@ -155,8 +158,8 @@ export const UaiBlock = ({
             <Controller
               name="searchEtab"
               control={control}
-              render={({ field: { onChange, value, name } }) => (
-                <AsyncSelect
+              render={({ field: { onChange, onBlur, value, name } }) => (
+                <Select
                   name={name}
                   styles={colourStyles}
                   onChange={(
@@ -167,8 +170,11 @@ export const UaiBlock = ({
                       onSubmit({ searchEtab: selectedUai.value });
                     }
                   }}
+                  onBlur={onBlur}
                   value={etabOptions?.find((uai) => uai.value === value)}
-                  loadOptions={loadOptions}
+                  options={etabOptions}
+                  filterOption={null}
+                  onInputChange={handleInputChange}
                   isLoading={isEtabOptionsLoading}
                   loadingMessage={() => "Recherche..."}
                   isClearable={true}
@@ -176,6 +182,8 @@ export const UaiBlock = ({
                   placeholder="UAI, nom, commune"
                   isDisabled={!active}
                   blurInputOnSelect
+                  autoFocus
+                  closeMenuOnSelect={false}
                 />
               )}
             />

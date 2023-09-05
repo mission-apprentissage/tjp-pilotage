@@ -2,8 +2,11 @@ import { FormControl, FormLabel } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { CSSObjectWithLabel, SingleValue } from "react-select";
-import AsyncSelect from "react-select/async";
+import Select, {
+  CSSObjectWithLabel,
+  InputActionMeta,
+  SingleValue,
+} from "react-select";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
@@ -18,6 +21,7 @@ export const SearchDiplomeInput = ({
   onCfdInfoChange: (info?: ApiType<typeof api.checkCfd>) => void;
   cfdInfo?: ApiType<typeof api.checkCfd>;
 }) => {
+  const [searchDiplomeInput, setSearchDiplomeInput] = useState<string>("");
   const {
     formState: { errors },
     trigger,
@@ -25,27 +29,6 @@ export const SearchDiplomeInput = ({
     setValue,
     control,
   } = useFormContext<IntentionForms["2"]>();
-
-  useEffect(() => {
-    if (!cfdInfo) return;
-    trigger("searchDiplome");
-  }, [cfdInfo]);
-
-  const fetchStatus = async () => {
-    const currentCfd = getValues("searchDiplome");
-    console.log(currentCfd);
-    if (!currentCfd) return;
-    const res = await api.checkCfd({ params: { cfd: currentCfd } }).call();
-    if (res.status === "valid") {
-      setValue("libelleDiplome", res.data.libelle ?? "");
-    }
-    onCfdInfoChange(res);
-  };
-
-  const [searchDiplomeInput, setSearchDiplomeInput] = useState<string>("");
-
-  type Option = { readonly value: string; readonly label: string };
-  type Options = readonly Option[];
 
   const { data: diplomeOptions, isLoading: isDiplomeOptionsLoading } = useQuery(
     {
@@ -58,14 +41,32 @@ export const SearchDiplomeInput = ({
     }
   );
 
-  const loadOptions = (
-    inputValue: string,
-    callback: (options: Options) => void
-  ) => {
-    setSearchDiplomeInput(inputValue);
-    setTimeout(() => {
-      if (diplomeOptions) callback(diplomeOptions);
-    }, 1000);
+  useEffect(() => {
+    if (!cfdInfo) return;
+    trigger("searchDiplome");
+  }, [cfdInfo]);
+
+  useEffect(() => {
+    if (!getValues("searchDiplome")) return;
+    setSearchDiplomeInput(getValues("searchDiplome") ?? "");
+    fetchStatus();
+  }, []);
+
+  const handleInputChange = (inputText: string, meta: InputActionMeta) => {
+    if (meta.action !== "input-blur" && meta.action !== "menu-close") {
+      setSearchDiplomeInput(inputText);
+    }
+  };
+
+  const fetchStatus = async () => {
+    const currentCfd = getValues("searchDiplome");
+    console.log(currentCfd);
+    if (!currentCfd) return;
+    const res = await api.checkCfd({ params: { cfd: currentCfd } }).call();
+    if (res.status === "valid") {
+      setValue("libelleDiplome", res.data.libelle ?? "");
+    }
+    onCfdInfoChange(res);
   };
 
   const colourStyles = {
@@ -95,7 +96,7 @@ export const SearchDiplomeInput = ({
           name="searchDiplome"
           control={control}
           render={({ field: { onChange, value, name } }) => (
-            <AsyncSelect
+            <Select
               name={name}
               styles={colourStyles}
               onChange={(
@@ -107,12 +108,15 @@ export const SearchDiplomeInput = ({
                 }
               }}
               value={diplomeOptions?.find((uai) => uai.value === value)}
-              loadOptions={loadOptions}
+              options={diplomeOptions}
+              filterOption={null}
+              onInputChange={handleInputChange}
               isLoading={isDiplomeOptionsLoading}
               loadingMessage={() => "Recherche..."}
               isClearable={false}
               noOptionsMessage={() => "Pas de diplôme correspondant"}
               placeholder="Code diplôme, libellé"
+              autoFocus={false}
             />
           )}
         />
