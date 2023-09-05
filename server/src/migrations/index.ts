@@ -5,6 +5,7 @@ import * as migration2 from "./2";
 import * as migration3 from "./3";
 import * as migration4 from "./4";
 import * as migration5 from "./5";
+import * as migration_1693472638434 from "./migration_1693472638434";
 
 type Migration = {
   up: (db: Kysely<unknown>) => Promise<void>;
@@ -19,4 +20,5 @@ export const migrations: Migrations = {
   migration3,
   migration4,
   migration5,
+  migration_1693472638434,
 };

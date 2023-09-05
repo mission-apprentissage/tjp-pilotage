@@ -26,13 +26,13 @@ export const DispositifInput = ({
     <FormControl
       mb="4"
       maxW="500px"
-      isInvalid={!!errors.codeDispositif}
+      isInvalid={!!errors.dispositifId}
       isRequired
     >
       <FormLabel>Dispositif</FormLabel>
       <Select
         placeholder="Sélectionner une option"
-        {...register("codeDispositif", {
+        {...register("dispositifId", {
           required: "Le dispositif est obligatoire",
         })}
       >
@@ -42,8 +42,8 @@ export const DispositifInput = ({
           </option>
         ))}
       </Select>
-      {errors.codeDispositif && (
-        <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>
+      {errors.dispositifId && (
+        <FormErrorMessage>{errors.dispositifId.message}</FormErrorMessage>
       )}
     </FormControl>
   );

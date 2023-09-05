@@ -1,10 +1,17 @@
-type NoNull<T extends object> = {
-  [k in keyof T]: T[k] extends Exclude<T[k], null>
-    ? T[k]
-    : Exclude<T[k], null> | undefined;
-};
+type NoNull<T extends object | undefined | null> = T extends null | undefined
+  ? undefined
+  : {
+      [k in keyof T]: T[k] extends Exclude<T[k], null>
+        ? T[k]
+        : Exclude<T[k], null> | undefined;
+    };
 
-export const cleanNull = <T extends object>(value: T): NoNull<T> => {
+export const cleanNull = <T extends object | undefined | null>(
+  value: T
+): NoNull<T> => {
+  if (value === undefined || value === null) {
+    return undefined as NoNull<T>;
+  }
   return Object.fromEntries(
     Object.entries(value).map(([key, val]) => [
       key,
