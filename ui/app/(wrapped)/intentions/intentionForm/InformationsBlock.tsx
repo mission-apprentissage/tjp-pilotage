@@ -11,10 +11,14 @@ export const InformationsBlock = ({
   defaultValues,
   onSubmit,
   isSubmitting,
+  onDraftSubmit,
+  isDraftSubmitting,
 }: {
   defaultValues: PartialIntentionForms["2"];
   onSubmit: (values: IntentionForms[2]) => void;
   isSubmitting?: boolean;
+  onDraftSubmit: (values: IntentionForms[2]) => void;
+  isDraftSubmitting?: boolean;
 }) => {
   const form = useForm<IntentionForms[2]>({
     defaultValues,
@@ -39,7 +43,15 @@ export const InformationsBlock = ({
         <CapaciteSection />
         <ComplementaireSection />
 
-        <Flex mt="10" mb="4">
+        <Flex justify="flex-end" mt="10" mb="4">
+          <Button
+            isLoading={isDraftSubmitting}
+            variant="primary"
+            mr="4"
+            onClick={() => onDraftSubmit(form.getValues())}
+          >
+            Brouillon
+          </Button>
           <Button isLoading={isSubmitting} variant="primary" type="submit">
             Envoyer
           </Button>

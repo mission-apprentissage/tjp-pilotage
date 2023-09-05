@@ -3,10 +3,12 @@
 import {
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   Link,
+  Spinner,
   Table,
   TableContainer,
   Tbody,
@@ -25,6 +27,14 @@ export const PageClient = () => {
     queryKey: [],
     queryFn: api.getDemandes({}).call,
   });
+  if (isLoading) {
+    return (
+      <Center mt="6">
+        <Spinner />
+      </Center>
+    );
+  }
+
   return (
     <Box flex={1} overflow="auto">
       <Container pt="4" maxW="container.xl">
@@ -57,7 +67,7 @@ export const PageClient = () => {
                       {demande.id}
                     </Link>
                   </Td>
-                  <Td>{demande.createdAt}</Td>
+                  <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
                   <Td isNumeric>{demande.status}</Td>
                 </Tr>
               ))}

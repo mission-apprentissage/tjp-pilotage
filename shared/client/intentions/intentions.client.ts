@@ -19,6 +19,13 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: "/demande/submit",
     instance,
   }),
+  submitDraftDemande: createClientMethod<
+    typeof ROUTES_CONFIG.submitDraftDemande
+  >({
+    method: "POST",
+    url: "/demande/draft",
+    instance,
+  }),
   getDemande: createClientMethod<typeof ROUTES_CONFIG.getDemande>({
     method: "GET",
     url: ({ params: { id } }) => `/demande/${id}`,

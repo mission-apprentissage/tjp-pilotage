@@ -6,6 +6,7 @@ import { hasPermissionHandler } from "../../core";
 import { findDemande } from "../queries/findDemande.query";
 import { findDemandes } from "../queries/findDemandes.query";
 import { submitDemande } from "../usecases/submitDemande/submitDemande.usecase";
+import { submitDraftDemande } from "../usecases/submitDraftDemande/submitDraftDemande.usecase";
 
 export const demandeRoutes = ({ server }: { server: Server }) => {
   server.post(
@@ -18,6 +19,23 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       const { demande } = request.body;
       if (!request.user) throw Boom.unauthorized();
       const result = await submitDemande({
+        demande,
+        userId: request.user.id,
+      });
+      response.status(200).send(result);
+    }
+  );
+
+  server.post(
+    "/demande/draft",
+    {
+      schema: ROUTES_CONFIG.submitDraftDemande,
+      preHandler: hasPermissionHandler("intentions/envoi"),
+    },
+    async (request, response) => {
+      const { demande } = request.body;
+      if (!request.user) throw Boom.unauthorized();
+      const result = await submitDraftDemande({
         demande,
         userId: request.user.id,
       });

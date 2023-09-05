@@ -11,26 +11,51 @@ import { IntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
 import { UaiBlock } from "./UaiBlock";
 
+function toBoolean<
+  V extends string | undefined,
+  R = V extends undefined ? boolean | undefined : boolean
+>(value: V): R {
+  if (typeof value === "undefined") return undefined as R;
+  return (value === "true") as R;
+}
+
 export const IntentionForm = ({
   defaultValues,
 }: {
   defaultValues: PartialIntentionForms;
 }) => {
-  const { isLoading: isSubmitting, mutateAsync } = useMutation({
-    mutationFn: ({ demande }: { demande: IntentionForms }) =>
+  const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
+    mutationFn: ({ forms }: { forms: IntentionForms }) =>
       api
         .submitDemande({
           body: {
             demande: {
-              ...demande[1],
-              ...demande[2],
-              amiCma: demande[2].amiCma === "true",
-              poursuitePedagogique: demande[2].poursuitePedagogique === "true",
+              ...forms[1],
+              ...forms[2],
+              amiCma: toBoolean(forms[2].amiCma),
+              poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
             },
           },
         })
         .call(),
   });
+
+  const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
+    useMutation({
+      mutationFn: ({ forms }: { forms: PartialIntentionForms }) =>
+        api
+          .submitDraftDemande({
+            body: {
+              demande: {
+                ...forms[1],
+                ...forms[2],
+                amiCma: toBoolean(forms[2].amiCma),
+                poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
+              },
+            },
+          })
+          .call(),
+    });
 
   const [step, setStep] = useState(1);
 
@@ -58,8 +83,12 @@ export const IntentionForm = ({
               } as IntentionForms;
               setIntention(newIntention);
               console.log("submit", newIntention);
-              mutateAsync({ demande: newIntention });
+              submit({ forms: newIntention });
             }}
+            isDraftSubmitting={isDraftSubmitting}
+            onDraftSubmit={(values) =>
+              submitDraft({ forms: { ...intention, 2: values } })
+            }
             defaultValues={intention[2]}
           />
         </Collapse>

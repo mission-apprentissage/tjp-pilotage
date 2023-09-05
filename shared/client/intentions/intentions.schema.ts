@@ -1,5 +1,7 @@
 import { Type } from "@sinclair/typebox";
 
+import { Partial } from "../utils";
+
 const DemandeSchema = Type.Object({
   id: Type.String(),
   createdAt: Type.String(),
@@ -35,6 +37,28 @@ const DraftSchema = Type.Object({
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
 });
+
+const SubmitSchemaPost = Type.Omit(
+  Partial(DemandeSchema, ["id", "autreMotif", "commentaire"]),
+  ["status", "createdAt"]
+);
+
+const DraftSchemaPost = Partial(SubmitSchemaPost, [
+  "id",
+  "uai",
+  "cfd",
+  "libelleDiplome",
+  "rentreeScolaire",
+  "typeDemande",
+  "motif",
+  "autreMotif",
+  "libelleColoration",
+  "amiCma",
+  "poursuitePedagogique",
+  "commentaire",
+  "rentreeScolaire",
+  "dispositifId",
+]);
 
 export const intentionsSchemas = {
   checkUai: {
@@ -102,7 +126,15 @@ export const intentionsSchemas = {
   },
   submitDemande: {
     body: Type.Object({
-      demande: Type.Omit(DemandeSchema, ["id", "createdAt", "status"]),
+      demande: SubmitSchemaPost,
+    }),
+    response: {
+      200: Type.Undefined(),
+    },
+  },
+  submitDraftDemande: {
+    body: Type.Object({
+      demande: DraftSchemaPost,
     }),
     response: {
       200: Type.Undefined(),
@@ -111,7 +143,30 @@ export const intentionsSchemas = {
   getDemande: {
     params: Type.Object({ id: Type.String() }),
     response: {
-      200: Type.Union([DemandeSchema, DraftSchema]),
+      200: Type.Union([
+        Type.Intersect([
+          DemandeSchema,
+          Type.Object({
+            dispositifs: Type.Array(
+              Type.Object({
+                codeDispositif: Type.String(),
+                libelleDispositif: Type.String(),
+              })
+            ),
+          }),
+        ]),
+        Type.Intersect([
+          DraftSchema,
+          Type.Object({
+            dispositifs: Type.Array(
+              Type.Object({
+                codeDispositif: Type.String(),
+                libelleDispositif: Type.String(),
+              })
+            ),
+          }),
+        ]),
+      ]),
     },
   },
   getDemandes: {

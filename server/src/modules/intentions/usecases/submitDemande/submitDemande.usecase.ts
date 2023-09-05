@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom";
+import { randomUUID } from "crypto";
 import { inject } from "injecti";
 
 import { checkUai } from "../checkUai/checkUai.usecase";
@@ -12,6 +13,7 @@ export const [submitDemande] = inject(
     }: {
       userId: string;
       demande: {
+        id?: string;
         uai: string;
         typeDemande: string;
         cfd: string;
@@ -26,9 +28,8 @@ export const [submitDemande] = inject(
         commentaire?: string;
       };
     }) => {
-      const id = `${new Date().getFullYear().toString()}-${Math.random()
-        .toFixed(20)
-        .slice(2)}`;
+      const id =
+        demande.id ?? `${new Date().getFullYear().toString()}-${randomUUID()}`;
 
       const uaiStatus = await deps.checkUai({ uai: demande.uai });
       if (uaiStatus.status !== "valid") {

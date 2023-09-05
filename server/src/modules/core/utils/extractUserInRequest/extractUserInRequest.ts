@@ -15,14 +15,18 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
     const token = cookie.parse(request.headers.cookie ?? "").Authorization;
     if (!token) return;
 
-    const decoded = jwt.verify(token, deps.jwtSecret) as
-      | { email: string }
-      | undefined;
-    if (!decoded) return;
+    try {
+      const decoded = jwt.verify(token, deps.jwtSecret) as
+        | { email: string }
+        | undefined;
+      if (!decoded) return;
 
-    const user = await deps.findUserQuery({ email: decoded.email });
-    if (!user) return;
-    request.user = cleanNull(user) as RequestUser;
+      const user = await deps.findUserQuery({ email: decoded.email });
+      if (!user) return;
+      request.user = cleanNull(user) as RequestUser;
+    } catch (e) {
+      return;
+    }
   }
 );
 

@@ -33,7 +33,12 @@ export default ({
               ...data,
               amiCma: JSON.stringify(data.amiCma),
               poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
-              coloration: data.libelleColoration ? "true" : "false",
+              coloration:
+                data.libelleColoration === undefined
+                  ? undefined
+                  : data.libelleColoration
+                  ? "true"
+                  : "false",
             },
           }}
         />
