@@ -11,16 +11,14 @@ import { api } from "../../../../../api.client";
 import { IntentionForms } from "../defaultFormValues";
 
 export const DispositifInput = ({
-  cfdInfo,
+  options,
 }: {
-  cfdInfo?: ApiType<typeof api.checkCfd>;
+  options?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
 }) => {
   const {
     formState: { errors },
     register,
   } = useFormContext<IntentionForms[2]>();
-
-  const data = cfdInfo?.status === "valid" ? cfdInfo.data : undefined;
 
   return (
     <FormControl
@@ -36,7 +34,7 @@ export const DispositifInput = ({
           required: "Le dispositif est obligatoire",
         })}
       >
-        {data?.dispositifs.map(({ codeDispositif, libelleDispositif }) => (
+        {options?.map(({ codeDispositif, libelleDispositif }) => (
           <option key={codeDispositif} value={codeDispositif}>
             {libelleDispositif}
           </option>

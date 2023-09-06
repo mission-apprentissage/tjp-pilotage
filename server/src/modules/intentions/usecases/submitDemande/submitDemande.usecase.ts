@@ -26,6 +26,7 @@ export const [submitDemande] = inject(
         libelleColoration?: string;
         poursuitePedagogique: boolean;
         commentaire?: string;
+        coloration?: boolean;
       };
     }) => {
       const id =

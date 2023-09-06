@@ -3,6 +3,7 @@
 import { Box, Collapse } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
+import { ApiType } from "shared";
 
 import {
   IntentionForms,
@@ -25,8 +26,10 @@ function toBoolean<
 
 export const IntentionForm = ({
   defaultValues,
+  formMetadata,
 }: {
   defaultValues: PartialIntentionForms;
+  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
@@ -39,6 +42,8 @@ export const IntentionForm = ({
               amiCma: toBoolean(forms[2].amiCma),
               poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
               rentreeScolaire: parseInt(forms[2].rentreeScolaire),
+              libelleColoration: forms[2].libelleColoration,
+              coloration: toBoolean(forms[2].coloration),
             },
           },
         })
@@ -58,43 +63,31 @@ export const IntentionForm = ({
                 poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
                 rentreeScolaire:
                   parseInt(forms[2].rentreeScolaire ?? "") || undefined,
+                coloration: toBoolean(forms[2].coloration),
               },
             },
           })
           .call(),
     });
 
-  const [step, setStep] = useState(1);
+  const [step, setStep] = useState(defaultValues[1].uai ? 2 : 1);
 
   const [intention, setIntention] = useState(defaultValues);
 
-  const { data, mutateAsync: checkUai } = useMutation({
-    mutationFn: async (uai: string) => {
-      if (!UaiRegex.test(uai)) return await { status: "wrong_format" as const };
-      return await api.checkUai({ params: { uai } }).call();
-    },
-  });
-
   const submitUai = async (values: { uai?: string }) => {
-    if (!values.uai) return false;
-    const validation = await checkUai(values.uai);
-    if (validation.status === "valid") {
-      setIntention({ ...intention, 1: values });
-      setStep(2);
-      return true;
-    } else {
-      return "Le code UAI est introuvable";
-    }
+    setIntention({ ...intention, 1: values });
+    setStep(2);
+    return true;
   };
 
   return (
     <Box flex={1} bg="#E2E7F8">
       <Box maxW="900px" mx="auto" width="100%" mt="10" mb="20">
         <UaiBlock
+          defaultEtablissement={formMetadata?.etablissement}
           onOpen={() => setStep(1)}
           active={step === 1}
           defaultValues={intention[1]}
-          checkUaiData={data}
           onSubmit={(values) => {
             if (values.uai) {
               submitUai(values);
@@ -103,6 +96,7 @@ export const IntentionForm = ({
         />
         <Collapse in={step === 2} animateOpacity>
           <InformationsBlock
+            formMetadata={formMetadata}
             isSubmitting={isSubmitting}
             onSubmit={(values) => {
               const newIntention = {

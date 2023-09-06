@@ -14,6 +14,7 @@ export const findManyInLyceesACCE = async ({ search }: { search: string }) => {
         eb(sql`"data"->>'commune_libe'`, "ilike", `%${search}%`),
       ])
     )
+    .where("type", "=", "lyceesACCE")
     .limit(10)
     .execute();
   return lines.map((line) => line?.data) as LyceesACCELine[];

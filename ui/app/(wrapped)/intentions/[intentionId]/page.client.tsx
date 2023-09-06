@@ -34,14 +34,10 @@ export default ({
               amiCma: JSON.stringify(data.amiCma),
               poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
               rentreeScolaire: JSON.stringify(data.rentreeScolaire),
-              coloration:
-                data.libelleColoration === undefined
-                  ? undefined
-                  : data.libelleColoration
-                  ? "true"
-                  : "false",
+              coloration: JSON.stringify(data.coloration),
             },
           }}
+          formMetadata={data.metadata}
         />
       )}
     </>

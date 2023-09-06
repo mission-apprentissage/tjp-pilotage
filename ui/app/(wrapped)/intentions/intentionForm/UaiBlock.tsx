@@ -11,14 +11,10 @@ import {
   IconButton,
   Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
-import Select, {
-  CSSObjectWithLabel,
-  InputActionMeta,
-  SingleValue,
-} from "react-select";
+import { CSSObjectWithLabel } from "react-select";
+import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
@@ -29,13 +25,15 @@ export const UaiBlock = ({
   onSubmit,
   onOpen,
   defaultValues,
-  checkUaiData,
+  defaultEtablissement,
 }: {
   active: boolean;
   onSubmit: (values: IntentionForms[1]) => void;
   onOpen: () => void;
-  checkUaiData?: ApiType<typeof api.checkUai> | { status: "wrong_format" };
   defaultValues: PartialIntentionForms[1];
+  defaultEtablissement: ApiType<
+    typeof api.getDemande
+  >["metadata"]["etablissement"];
 }) => {
   const {
     formState: { errors },
@@ -45,29 +43,6 @@ export const UaiBlock = ({
     defaultValues,
     reValidateMode: "onSubmit",
   });
-
-  const [searchEtabInput, setSearchEtabInput] = useState<string>("");
-
-  useEffect(() => {
-    if (defaultValues.uai) {
-      setSearchEtabInput(defaultValues.uai);
-      onSubmit({ uai: defaultValues.uai });
-    }
-  }, []);
-
-  const { data: etabOptions, isLoading: isEtabOptionsLoading } = useQuery({
-    keepPreviousData: false,
-    staleTime: 1000,
-    queryKey: ["searchEtab", searchEtabInput],
-    enabled: searchEtabInput.length >= 3,
-    queryFn: api.searchEtab({ params: { search: searchEtabInput } }).call,
-  });
-
-  const handleInputChange = (inputText: string, meta: InputActionMeta) => {
-    if (meta.action !== "input-blur" && meta.action !== "menu-close") {
-      setSearchEtabInput(inputText);
-    }
-  };
 
   const colourStyles = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -81,6 +56,18 @@ export const UaiBlock = ({
       };
     },
   };
+
+  const [uaiInfo, setUaiInfo] = useState<
+    ApiType<typeof api.searchEtab>[number] | undefined
+  >(
+    defaultValues.uai && defaultEtablissement
+      ? {
+          label: defaultEtablissement.libelleEtablissement,
+          value: defaultValues.uai,
+          commune: defaultEtablissement.commune,
+        }
+      : undefined
+  );
 
   return (
     <DarkMode>
@@ -99,10 +86,7 @@ export const UaiBlock = ({
             variant="ghost"
             ml="auto"
             aria-label="Editer"
-            onClick={() => {
-              onOpen();
-              setSearchEtabInput("");
-            }}
+            onClick={onOpen}
           >
             <EditIcon />
           </IconButton>
@@ -117,33 +101,18 @@ export const UaiBlock = ({
             maxW="400"
             minH={150}
           >
-            {!checkUaiData && !defaultValues.uai && (
+            {!uaiInfo && !defaultValues.uai && (
               <Text>Veuillez saisir le numéro établissement.</Text>
             )}
-            {!checkUaiData && defaultValues.uai && (
-              <Text>Veuillez valider le numéro établissement.</Text>
-            )}
-            {checkUaiData?.status === "wrong_format" && (
-              <>
-                <Badge mb="2" colorScheme="red">
-                  Format incorrect
-                </Badge>
-                <Text>Le numéro d'établissment n'est pas au bon format.</Text>
-              </>
-            )}
-            {checkUaiData?.status === "not_found" && (
-              <>
-                <Badge colorScheme="red">Établissement non trouvé</Badge>
-              </>
-            )}
-            {checkUaiData?.status === "valid" && (
+
+            {uaiInfo && (
               <>
                 <Badge mb="2" colorScheme="green">
                   Établissement validé
                 </Badge>
-                <Text fontSize="sm">{checkUaiData.data.libelle}</Text>
+                <Text fontSize="sm">{uaiInfo.label}</Text>
                 <Text fontSize="sm" mt="1">
-                  {checkUaiData.data.commune}
+                  {uaiInfo.commune}
                 </Text>
               </>
             )}
@@ -154,31 +123,36 @@ export const UaiBlock = ({
               name="uai"
               control={control}
               render={({ field: { onChange, onBlur, value, name } }) => (
-                <Select
+                <AsyncSelect
+                  onBlur={onBlur}
                   name={name}
                   styles={colourStyles}
-                  onChange={(
-                    selectedUai: SingleValue<{ label: string; value: string }>
-                  ) => {
-                    if (selectedUai) {
-                      onChange(selectedUai.value);
-                      onSubmit({ uai: selectedUai.value });
+                  onChange={(selected) => {
+                    onChange(selected?.value);
+                    setUaiInfo(selected ?? undefined);
+                    if (selected) {
+                      onSubmit({ uai: selected.value });
                     }
                   }}
-                  onBlur={onBlur}
-                  value={etabOptions?.find((uai) => uai.value === value)}
-                  options={etabOptions}
-                  filterOption={null}
-                  onInputChange={handleInputChange}
-                  isLoading={isEtabOptionsLoading}
+                  defaultValue={
+                    defaultEtablissement && {
+                      value,
+                      label: defaultEtablissement.libelleEtablissement,
+                      commune: defaultEtablissement.commune,
+                    }
+                  }
+                  loadOptions={(inputValue: string) =>
+                    api.searchEtab({ params: { search: inputValue } }).call()
+                  }
                   loadingMessage={() => "Recherche..."}
                   isClearable={true}
-                  noOptionsMessage={() => "Pas d'établissement correspondant"}
+                  noOptionsMessage={({ inputValue }) =>
+                    inputValue
+                      ? "Pas d'établissement correspondant"
+                      : "Commencez à écrire..."
+                  }
                   placeholder="UAI, nom, commune"
                   isDisabled={!active}
-                  blurInputOnSelect
-                  autoFocus
-                  closeMenuOnSelect={false}
                 />
               )}
             />
