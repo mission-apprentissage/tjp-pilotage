@@ -44,17 +44,11 @@ export const UaiBlock = ({
     reValidateMode: "onSubmit",
   });
 
-  const colourStyles = {
+  const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
-      backgroundColor: "white",
+      borderColor: errors.uai ? "red" : undefined,
     }),
-    option: (styles: CSSObjectWithLabel) => {
-      return {
-        ...styles,
-        color: "#000",
-      };
-    },
   };
 
   const [uaiInfo, setUaiInfo] = useState<
@@ -126,7 +120,7 @@ export const UaiBlock = ({
                 <AsyncSelect
                   onBlur={onBlur}
                   name={name}
-                  styles={colourStyles}
+                  styles={selectStyle}
                   onChange={(selected) => {
                     onChange(selected?.value);
                     setUaiInfo(selected ?? undefined);
