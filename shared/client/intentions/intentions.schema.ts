@@ -14,6 +14,7 @@ const DemandeSchema = Type.Object({
   motif: Type.Array(Type.String()),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
+  coloration: Type.Boolean(),
   amiCma: Type.Boolean(),
   poursuitePedagogique: Type.Boolean(),
   commentaire: Type.Optional(Type.String()),
@@ -32,6 +33,7 @@ const DraftSchema = Type.Object({
   motif: Type.Optional(Type.Array(Type.String())),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
+  coloration: Type.Optional(Type.Boolean()),
   amiCma: Type.Optional(Type.Boolean()),
   poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
@@ -52,10 +54,11 @@ const MetadataSchema = Type.Object({
   ),
   etablissement: Type.Optional(
     Type.Object({
-      libelleEtablissement: Type.Optional(Type.String()),
-      commune: Type.Optional(Type.String()),
+      libelleEtablissement: Type.String(),
+      commune: Type.String(),
     })
   ),
+  libelleDiplome: Type.Optional(Type.String()),
 });
 
 const DraftSchemaPost = Partial(SubmitSchemaPost, [
@@ -110,6 +113,20 @@ export const intentionsSchemas = {
       ]),
     },
   },
+  searchEtab: {
+    params: Type.Object({
+      search: Type.String(),
+    }),
+    response: {
+      200: Type.Array(
+        Type.Object({
+          value: Type.String(),
+          label: Type.String(),
+          commune: Type.String(),
+        })
+      ),
+    },
+  },
   checkCfd: {
     params: Type.Object({
       cfd: Type.String(),
@@ -136,6 +153,25 @@ export const intentionsSchemas = {
           status: Type.Union([Type.Literal("not_found")]),
         }),
       ]),
+    },
+  },
+  searchDiplome: {
+    params: Type.Object({
+      search: Type.String(),
+    }),
+    response: {
+      200: Type.Array(
+        Type.Object({
+          value: Type.String(),
+          label: Type.String(),
+          dispositifs: Type.Array(
+            Type.Object({
+              libelleDispositif: Type.String(),
+              codeDispositif: Type.String(),
+            })
+          ),
+        })
+      ),
     },
   },
   submitDemande: {

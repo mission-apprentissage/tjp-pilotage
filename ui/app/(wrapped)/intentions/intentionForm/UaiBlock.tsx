@@ -2,7 +2,6 @@ import { EditIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
-  Button,
   DarkMode,
   Divider,
   Flex,
@@ -10,48 +9,59 @@ import {
   FormLabel,
   Heading,
   IconButton,
-  Input,
   Text,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
-import { useForm } from "react-hook-form";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import { CSSObjectWithLabel } from "react-select";
+import AsyncSelect from "react-select/async";
+import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
-
-export const UaiRegex = /^[A-Z0-9]{8}$/;
 
 export const UaiBlock = ({
   active,
   onSubmit,
   onOpen,
   defaultValues,
+  defaultEtablissement,
 }: {
   active: boolean;
   onSubmit: (values: IntentionForms[1]) => void;
   onOpen: () => void;
   defaultValues: PartialIntentionForms[1];
+  defaultEtablissement: ApiType<
+    typeof api.getDemande
+  >["metadata"]["etablissement"];
 }) => {
   const {
-    register,
     formState: { errors },
     handleSubmit,
+    control,
   } = useForm<IntentionForms[1]>({
     defaultValues,
     reValidateMode: "onSubmit",
   });
 
-  const {
-    data,
-    mutateAsync: checkUai,
-    reset,
-    isLoading,
-  } = useMutation({
-    mutationFn: async (uai: string) => {
-      if (!UaiRegex.test(uai)) return await { status: "wrong_format" as const };
-      return await api.checkUai({ params: { uai } }).call();
-    },
-  });
+  const selectStyle = {
+    control: (styles: CSSObjectWithLabel) => ({
+      ...styles,
+      borderColor: errors.uai ? "red" : undefined,
+    }),
+  };
+
+  const [uaiInfo, setUaiInfo] = useState<
+    ApiType<typeof api.searchEtab>[number] | undefined
+  >(
+    defaultValues.uai && defaultEtablissement
+      ? {
+          label: defaultEtablissement.libelleEtablissement,
+          value: defaultValues.uai,
+          commune: defaultEtablissement.commune,
+        }
+      : undefined
+  );
 
   return (
     <DarkMode>
@@ -70,10 +80,7 @@ export const UaiBlock = ({
             variant="ghost"
             ml="auto"
             aria-label="Editer"
-            onClick={() => {
-              onOpen();
-              reset();
-            }}
+            onClick={onOpen}
           >
             <EditIcon />
           </IconButton>
@@ -88,63 +95,62 @@ export const UaiBlock = ({
             maxW="400"
             minH={150}
           >
-            {!data && !defaultValues.uai && (
+            {!uaiInfo && !defaultValues.uai && (
               <Text>Veuillez saisir le numéro établissement.</Text>
             )}
-            {!data && defaultValues.uai && (
-              <Text>Veuillez valider le numéro établissement.</Text>
-            )}
-            {data?.status === "wrong_format" && (
-              <>
-                <Badge mb="2" colorScheme="red">
-                  Format incorrect
-                </Badge>
-                <Text>Le numéro d'établissment n'est pas au bon format.</Text>
-              </>
-            )}
-            {data?.status === "not_found" && (
-              <>
-                <Badge colorScheme="red">Établissement non trouvé</Badge>
-              </>
-            )}
-            {data?.status === "valid" && (
+
+            {uaiInfo && (
               <>
                 <Badge mb="2" colorScheme="green">
                   Établissement validé
                 </Badge>
-                <Text fontSize="sm">{data.data.libelle}</Text>
+                <Text fontSize="sm">{uaiInfo.label}</Text>
                 <Text fontSize="sm" mt="1">
-                  {data.data.commune}
+                  {uaiInfo.commune}
                 </Text>
               </>
             )}
           </Box>
-          <FormControl mr="8" flex="1" maxW="280px" isInvalid={!!errors.uai}>
-            <FormLabel>Numéro UAI de l'établissement</FormLabel>
-            <Input
-              {...register("uai", {
-                disabled: !active,
-                validate: async (uai) => {
-                  if (!uai) return false;
-                  const validation = await checkUai(uai);
-                  if (validation.status === "valid") {
-                    return true;
-                  } else {
-                    return "Le code UAI est introuvable";
+          <FormControl mr="8" flex="1" maxW="480px" isInvalid={!!errors.uai}>
+            <FormLabel>Recherche d'un établissement</FormLabel>
+            <Controller
+              name="uai"
+              control={control}
+              render={({ field: { onChange, onBlur, value, name } }) => (
+                <AsyncSelect
+                  onBlur={onBlur}
+                  name={name}
+                  styles={selectStyle}
+                  onChange={(selected) => {
+                    onChange(selected?.value);
+                    setUaiInfo(selected ?? undefined);
+                    if (selected) {
+                      onSubmit({ uai: selected.value });
+                    }
+                  }}
+                  defaultValue={
+                    defaultEtablissement && {
+                      value,
+                      label: defaultEtablissement.libelleEtablissement,
+                      commune: defaultEtablissement.commune,
+                    }
                   }
-                },
-              })}
-              placeholder={"0010001W"}
+                  loadOptions={(inputValue: string) =>
+                    api.searchEtab({ params: { search: inputValue } }).call()
+                  }
+                  loadingMessage={() => "Recherche..."}
+                  isClearable={true}
+                  noOptionsMessage={({ inputValue }) =>
+                    inputValue
+                      ? "Pas d'établissement correspondant"
+                      : "Commencez à écrire..."
+                  }
+                  placeholder="UAI, nom, commune"
+                  isDisabled={!active}
+                />
+              )}
             />
           </FormControl>
-          <Button
-            isDisabled={!active}
-            type="submit"
-            isLoading={isLoading}
-            variant="primary"
-          >
-            Valider l'établissement
-          </Button>
         </Flex>
       </Box>
     </DarkMode>

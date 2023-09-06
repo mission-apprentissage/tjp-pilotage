@@ -3,7 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { LyceesACCELine } from "../../../data/fileTypes/LyceesACCELine";
 
-export const findManyInLyccesACCE = async ({ uai }: { uai: string }) => {
+export const findManyInLyceesACCE = async ({ uai }: { uai: string }) => {
   const lines = await kdb
     .selectFrom("rawData")
     .selectAll()

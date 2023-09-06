@@ -1,13 +1,13 @@
 import { inject } from "injecti";
 
-import { findInLyccesACCE } from "./findInLyceesACCE.dep";
-import { findManyInLyccesACCE } from "./findManyInLyceesACCE.dep";
+import { findInLyceesACCE } from "./findInLyceesACCE.dep";
+import { findManyInLyceesACCE } from "./findManyInLyceesACCE.dep";
 export const [checkUai] = inject(
-  { findInLyccesACCE, findManyInLyccesACCE },
+  { findInLyceesACCE, findManyInLyceesACCE },
   (deps) =>
     async ({ uai }: { uai: string }) => {
       if (uai.length !== 8) {
-        const lyceeAcceLines = await deps.findManyInLyccesACCE({ uai });
+        const lyceeAcceLines = await deps.findManyInLyceesACCE({ uai });
         const suggestions = lyceeAcceLines.map((item) => ({
           uai: item.numero_uai,
           libelle: item.appellation_officielle,
@@ -16,7 +16,7 @@ export const [checkUai] = inject(
         return { status: "wrong_format" as const, suggestions };
       }
 
-      const lyceeAcceLine = await deps.findInLyccesACCE({ uai });
+      const lyceeAcceLine = await deps.findInLyceesACCE({ uai });
       if (!lyceeAcceLine) return { status: "not_found" as const };
 
       return {

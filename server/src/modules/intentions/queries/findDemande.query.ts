@@ -1,3 +1,4 @@
+import { sql } from "kysely";
 import {
   jsonArrayFrom,
   jsonBuildObject,
@@ -15,25 +16,39 @@ export const findDemande = async ({ id }: { id: string }) => {
       jsonBuildObject({
         dispositifs: jsonArrayFrom(
           eb
-            .selectFrom("formationEtablissement")
-            .innerJoin(
-              "dispositif",
-              "formationEtablissement.dispositifId",
-              "dispositif.codeDispositif"
+            .selectFrom("dispositif")
+            .select(["libelleDispositif", "codeDispositif"])
+            .leftJoin("rawData", (join) =>
+              join
+                .onRef(
+                  sql`"data"->>'DISPOSITIF_FORMATION'`,
+                  "=",
+                  "dispositif.codeDispositif"
+                )
+                .on("rawData.type", "=", "nMef")
             )
-            .select(["codeDispositif", "libelleDispositif"])
-            .whereRef("demande.cfd", "=", "formationEtablissement.cfd")
-            .distinctOn(["dispositif.codeDispositif"])
+            .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "demande.cfd")
+            .distinctOn("codeDispositif")
         ),
         etablissement: jsonObjectFrom(
           eb
-            .selectFrom("etablissement")
+            .selectFrom("rawData")
             .select([
-              "etablissement.libelleEtablissement",
-              "etablissement.commune",
+              sql<string>`"data"->>'appellation_officielle'`.as(
+                "libelleEtablissement"
+              ),
+              sql<string>`"data"->>'commune_libe'`.as("commune"),
             ])
-            .whereRef("etablissement.UAI", "=", "demande.uai")
+            .whereRef(sql`"data"->>'numero_uai'`, "=", "demande.uai")
+            .where("type", "=", "lyceesACCE")
+            .limit(1)
         ),
+        libelleDiplome: eb
+          .selectFrom("formation")
+          .select("libelleDiplome")
+          .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+          .limit(1)
+          .$castTo<string | null>(),
       }).as("metadata"),
     ])
     .where("id", "=", id)

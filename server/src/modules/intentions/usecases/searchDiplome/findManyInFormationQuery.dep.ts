@@ -3,14 +3,17 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 
-export const findFormationFromRawDataQuery = async ({
-  cfd,
+export const findManyInFormationQuery = async ({
+  search,
 }: {
-  cfd: string;
+  search: string;
 }) => {
   const formation = await kdb
     .selectFrom("formation")
-    .selectAll("formation")
+    .select([
+      "formation.codeFormationDiplome as value",
+      "formation.libelleDiplome as label",
+    ])
     .select((eb) =>
       jsonArrayFrom(
         eb
@@ -25,13 +28,21 @@ export const findFormationFromRawDataQuery = async ({
               )
               .on("rawData.type", "=", "nMef")
           )
-          .where(sql`"data"->>'FORMATION_DIPLOME'`, "=", `${cfd}`)
+          .whereRef(
+            sql`"data"->>'FORMATION_DIPLOME'`,
+            "=",
+            "codeFormationDiplome"
+          )
           .distinctOn("codeDispositif")
       ).as("dispositifs")
     )
-    .where("codeFormationDiplome", "=", cfd)
-    .limit(1)
-    .executeTakeFirst();
-
+    .where((eb) =>
+      eb.or([
+        eb("formation.codeFormationDiplome", "ilike", `${search}%`),
+        eb("formation.libelleDiplome", "ilike", `%${search}%`),
+      ])
+    )
+    .limit(10)
+    .execute();
   return formation;
 };
