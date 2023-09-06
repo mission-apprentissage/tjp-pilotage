@@ -11,6 +11,25 @@ export const createDemandeQuery = async ({
   await kdb
     .insertInto("demande")
     .values(demande)
-    .onConflict((oc) => oc.column("id").doUpdateSet(demande))
+    .onConflict((oc) =>
+      oc.column("id").doUpdateSet({
+        libelleColoration: null,
+        autreMotif: null,
+        amiCma: null,
+        cfd: null,
+        codeAcademie: null,
+        codeRegion: null,
+        commentaire: null,
+        dispositifId: null,
+        libelleDiplome: null,
+        motif: null,
+        poursuitePedagogique: null,
+        rentreeScolaire: null,
+        typeDemande: null,
+        uai: null,
+        coloration: null,
+        ...demande,
+      })
+    )
     .execute();
 };

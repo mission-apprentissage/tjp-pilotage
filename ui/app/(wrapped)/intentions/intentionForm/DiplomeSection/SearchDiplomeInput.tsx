@@ -1,12 +1,7 @@
-import { FormControl, FormLabel } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
-import { useEffect, useState } from "react";
+import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import Select, {
-  CSSObjectWithLabel,
-  InputActionMeta,
-  SingleValue,
-} from "react-select";
+import { CSSObjectWithLabel } from "react-select";
+import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
@@ -15,64 +10,27 @@ import { IntentionForms } from "../defaultFormValues";
 export const cfdRegex = /^[0-9]{8}$/;
 
 export const SearchDiplomeInput = ({
-  onCfdInfoChange,
-  cfdInfo,
+  setDispositifs,
+  defaultLibelle,
+  defaultOptions = [],
 }: {
-  onCfdInfoChange: (info?: ApiType<typeof api.checkCfd>) => void;
-  cfdInfo?: ApiType<typeof api.checkCfd>;
+  setDispositifs: (
+    info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
+  ) => void;
+  defaultLibelle?: string;
+  defaultOptions?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
 }) => {
-  const [searchDiplomeInput, setSearchDiplomeInput] = useState<string>("");
   const {
     formState: { errors },
-    trigger,
-    getValues,
-    setValue,
+    resetField,
     control,
   } = useFormContext<IntentionForms["2"]>();
-
-  const { data: diplomeOptions, isLoading: isDiplomeOptionsLoading } = useQuery(
-    {
-      keepPreviousData: false,
-      staleTime: 1000,
-      queryKey: ["searchDiplome", searchDiplomeInput],
-      enabled: searchDiplomeInput.length >= 3,
-      queryFn: api.searchDiplome({ params: { search: searchDiplomeInput } })
-        .call,
-    }
-  );
-
-  useEffect(() => {
-    if (!cfdInfo) return;
-    trigger("cfd");
-  }, [cfdInfo]);
-
-  useEffect(() => {
-    if (!getValues("cfd")) return;
-    setSearchDiplomeInput(getValues("cfd") ?? "");
-    fetchStatus();
-  }, []);
-
-  const handleInputChange = (inputText: string, meta: InputActionMeta) => {
-    if (meta.action !== "input-blur" && meta.action !== "menu-close") {
-      setSearchDiplomeInput(inputText);
-    }
-  };
-
-  const fetchStatus = async () => {
-    const currentCfd = getValues("cfd");
-    console.log(currentCfd);
-    if (!currentCfd) return;
-    const res = await api.checkCfd({ params: { cfd: currentCfd } }).call();
-    if (res.status === "valid") {
-      setValue("libelleDiplome", res.data.libelle ?? "");
-    }
-    onCfdInfoChange(res);
-  };
 
   const colourStyles = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
       backgroundColor: "white",
+      borderColor: errors.cfd ? "red" : undefined,
     }),
     option: (styles: CSSObjectWithLabel) => {
       return {
@@ -95,31 +53,43 @@ export const SearchDiplomeInput = ({
         <Controller
           name="cfd"
           control={control}
-          render={({ field: { onChange, value, name } }) => (
-            <Select
+          rules={{ required: "Le champs est obligatoire" }}
+          render={({ field: { onChange, value, name, onBlur } }) => (
+            <AsyncSelect
+              onBlur={onBlur}
               name={name}
               styles={colourStyles}
-              onChange={(
-                selectedUai: SingleValue<{ label: string; value: string }>
-              ) => {
-                if (selectedUai) {
-                  onChange(selectedUai.value);
-                  fetchStatus();
-                }
+              onChange={(selected) => {
+                if (!selected) resetField("dispositifId");
+                onChange(selected?.value);
+                setDispositifs(selected?.dispositifs);
               }}
-              value={diplomeOptions?.find((uai) => uai.value === value)}
-              options={diplomeOptions}
-              filterOption={null}
-              onInputChange={handleInputChange}
-              isLoading={isDiplomeOptionsLoading}
+              defaultValue={
+                defaultLibelle !== undefined
+                  ? {
+                      value,
+                      label: defaultLibelle,
+                      dispositifs: defaultOptions,
+                    }
+                  : undefined
+              }
+              loadOptions={(search) =>
+                api.searchDiplome({ params: { search } }).call()
+              }
               loadingMessage={() => "Recherche..."}
-              isClearable={false}
-              noOptionsMessage={() => "Pas de diplôme correspondant"}
-              placeholder="Code diplôme, libellé"
-              autoFocus={false}
+              isClearable={true}
+              noOptionsMessage={({ inputValue }) =>
+                inputValue
+                  ? "Pas de diplôme correspondant"
+                  : "Commencez à écrire..."
+              }
+              placeholder="Recherche un diplôme..."
             />
           )}
         />
+        {errors.cfd && (
+          <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+        )}
       </FormControl>
     </>
   );

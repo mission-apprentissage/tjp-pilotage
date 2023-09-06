@@ -9,6 +9,7 @@ export const [searchEtab] = inject(
       const suggestions = lyceeAcceLines.map((item) => ({
         value: item.numero_uai,
         label: `${item.appellation_officielle} - ${item.commune_libe}`,
+        commune: item.commune_libe,
       }));
       return suggestions;
     }

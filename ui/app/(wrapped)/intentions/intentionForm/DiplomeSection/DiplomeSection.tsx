@@ -7,16 +7,26 @@ import { api } from "@/api.client";
 import { DispositifInput } from "./DispositifInput";
 import { SearchDiplomeInput } from "./SearchDiplomeInput";
 
-export const DiplomeSection = () => {
-  const [cfdInfo, setCfdInfo] = useState<ApiType<typeof api.checkCfd>>();
+export const DiplomeSection = ({
+  formMetadata,
+}: {
+  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+}) => {
+  const [dispositifs, setDispositifs] = useState<
+    ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
+  >(formMetadata?.dispositifs);
+
   return (
     <>
       <Heading as="h2" fontSize="xl" mt="8">
         Diplôme concerné
       </Heading>
       <Divider pt="4" mb="4" />
-      <SearchDiplomeInput onCfdInfoChange={setCfdInfo} cfdInfo={cfdInfo} />
-      <DispositifInput cfdInfo={cfdInfo} />
+      <SearchDiplomeInput
+        defaultLibelle={formMetadata?.libelleDiplome}
+        setDispositifs={setDispositifs}
+      />
+      <DispositifInput options={dispositifs} />
     </>
   );
 };
