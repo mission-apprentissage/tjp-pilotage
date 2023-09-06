@@ -1,5 +1,8 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
+import { ApiType } from "shared";
+
+import { api } from "@/api.client";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
@@ -9,12 +12,14 @@ import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
   defaultValues,
+  formMetadata,
   onSubmit,
   isSubmitting,
   onDraftSubmit,
   isDraftSubmitting,
 }: {
   defaultValues: PartialIntentionForms["2"];
+  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
   onSubmit: (values: IntentionForms[2]) => void;
   isSubmitting?: boolean;
   onDraftSubmit: (values: IntentionForms[2]) => void;
@@ -39,7 +44,7 @@ export const InformationsBlock = ({
         borderRadius={6}
       >
         <TypeDemandeSection />
-        <DiplomeSection />
+        <DiplomeSection formMetadata={formMetadata} />
         <CapaciteSection />
         <ComplementaireSection />
 

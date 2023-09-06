@@ -43,6 +43,7 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
+  coloration: boolean | null;
 }
 
 export interface Departement {

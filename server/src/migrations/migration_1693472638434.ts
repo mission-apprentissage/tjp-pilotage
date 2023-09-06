@@ -16,6 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("typeDemande", "varchar")
     .addColumn("motif", sql`varchar[]`)
     .addColumn("autreMotif", "varchar")
+    .addColumn("coloration", "boolean")
     .addColumn("libelleColoration", "varchar")
     .addColumn("amiCma", "boolean")
     .addColumn("poursuitePedagogique", "boolean")
