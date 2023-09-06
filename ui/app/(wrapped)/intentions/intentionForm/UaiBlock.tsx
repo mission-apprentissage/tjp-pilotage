@@ -9,6 +9,7 @@ import {
   FormLabel,
   Heading,
   IconButton,
+  LightMode,
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -113,43 +114,49 @@ export const UaiBlock = ({
           </Box>
           <FormControl mr="8" flex="1" maxW="480px" isInvalid={!!errors.uai}>
             <FormLabel>Recherche d'un établissement</FormLabel>
-            <Controller
-              name="uai"
-              control={control}
-              render={({ field: { onChange, onBlur, value, name } }) => (
-                <AsyncSelect
-                  onBlur={onBlur}
-                  name={name}
-                  styles={selectStyle}
-                  onChange={(selected) => {
-                    onChange(selected?.value);
-                    setUaiInfo(selected ?? undefined);
-                    if (selected) {
-                      onSubmit({ uai: selected.value });
-                    }
-                  }}
-                  defaultValue={
-                    defaultEtablissement && {
-                      value,
-                      label: defaultEtablissement.libelleEtablissement,
-                      commune: defaultEtablissement.commune,
-                    }
-                  }
-                  loadOptions={(inputValue: string) =>
-                    api.searchEtab({ params: { search: inputValue } }).call()
-                  }
-                  loadingMessage={() => "Recherche..."}
-                  isClearable={true}
-                  noOptionsMessage={({ inputValue }) =>
-                    inputValue
-                      ? "Pas d'établissement correspondant"
-                      : "Commencez à écrire..."
-                  }
-                  placeholder="UAI, nom, commune"
-                  isDisabled={!active}
+            <LightMode>
+              <Box color="chakra-body-text">
+                <Controller
+                  name="uai"
+                  control={control}
+                  render={({ field: { onChange, onBlur, value, name } }) => (
+                    <AsyncSelect
+                      onBlur={onBlur}
+                      name={name}
+                      styles={selectStyle}
+                      onChange={(selected) => {
+                        onChange(selected?.value);
+                        setUaiInfo(selected ?? undefined);
+                        if (selected) {
+                          onSubmit({ uai: selected.value });
+                        }
+                      }}
+                      defaultValue={
+                        defaultEtablissement && {
+                          value,
+                          label: defaultEtablissement.libelleEtablissement,
+                          commune: defaultEtablissement.commune,
+                        }
+                      }
+                      loadOptions={(inputValue: string) =>
+                        api
+                          .searchEtab({ params: { search: inputValue } })
+                          .call()
+                      }
+                      loadingMessage={() => "Recherche..."}
+                      isClearable={true}
+                      noOptionsMessage={({ inputValue }) =>
+                        inputValue
+                          ? "Pas d'établissement correspondant"
+                          : "Commencez à écrire..."
+                      }
+                      placeholder="UAI, nom, commune"
+                      isDisabled={!active}
+                    />
+                  )}
                 />
-              )}
-            />
+              </Box>
+            </LightMode>
           </FormControl>
         </Flex>
       </Box>
