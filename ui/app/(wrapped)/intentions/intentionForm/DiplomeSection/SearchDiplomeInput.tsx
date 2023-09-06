@@ -26,18 +26,11 @@ export const SearchDiplomeInput = ({
     control,
   } = useFormContext<IntentionForms["2"]>();
 
-  const colourStyles = {
+  const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
-      backgroundColor: "white",
       borderColor: errors.cfd ? "red" : undefined,
     }),
-    option: (styles: CSSObjectWithLabel) => {
-      return {
-        ...styles,
-        color: "#000",
-      };
-    },
   };
 
   return (
@@ -58,7 +51,7 @@ export const SearchDiplomeInput = ({
             <AsyncSelect
               onBlur={onBlur}
               name={name}
-              styles={colourStyles}
+              styles={selectStyle}
               onChange={(selected) => {
                 if (!selected) resetField("dispositifId");
                 onChange(selected?.value);
