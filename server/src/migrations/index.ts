@@ -1,10 +1,10 @@
 import { Kysely } from "kysely";
 
-import * as migration1 from "./1";
-import * as migration2 from "./2";
-import * as migration3 from "./3";
-import * as migration4 from "./4";
-import * as migration5 from "./5";
+import * as migration_1693472638401 from "./migration_1693472638401";
+import * as migration_1693472638402 from "./migration_1693472638402";
+import * as migration_1693472638403 from "./migration_1693472638403";
+import * as migration_1693472638404 from "./migration_1693472638404";
+import * as migration_1693472638405 from "./migration_1693472638405";
 import * as migration_1693472638434 from "./migration_1693472638434";
 
 type Migration = {
@@ -15,10 +15,10 @@ type Migration = {
 type Migrations = Record<string, Migration>;
 
 export const migrations: Migrations = {
-  migration1,
-  migration2,
-  migration3,
-  migration4,
-  migration5,
+  migration_1693472638401,
+  migration_1693472638402,
+  migration_1693472638403,
+  migration_1693472638404,
+  migration_1693472638405,
   migration_1693472638434,
 };
