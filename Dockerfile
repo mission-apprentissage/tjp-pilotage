@@ -3,7 +3,7 @@ RUN apk add --no-cache libc6-compat
 WORKDIR /app
 COPY . .
 
-RUN yarn
+RUN yarn workspaces focus --all --production
 
 # Rebuild the source code only when needed
 FROM node:18-alpine AS builder
