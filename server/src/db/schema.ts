@@ -24,6 +24,34 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface DataEtablissement {
+  uai: string;
+  libelle: string | null;
+  commune: string | null;
+  siret: string | null;
+  adresse: string | null;
+  codePostal: string | null;
+  codeMinistereTutuelle: string | null;
+  secteur: string | null;
+  codeDepartement: string | null;
+  codeAcademie: string | null;
+  codeRegion: string | null;
+}
+
+export interface DataFormation {
+  cfd: string;
+  rncp: number | null;
+  libelle: string | null;
+  codeNiveauDiplome: string | null;
+  cpc: string | null;
+  cpcSecteur: string | null;
+  cpcSousSecteur: string | null;
+  libelleFiliere: string | null;
+  dateOuverture: Timestamp | null;
+  dateFermeture: Timestamp | null;
+  contexteFamilleMetier: Generated<boolean>;
+}
+
 export interface Demande {
   id: string;
   cfd: string | null;
@@ -34,6 +62,7 @@ export interface Demande {
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
+  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -43,7 +72,6 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
-  coloration: boolean | null;
 }
 
 export interface Departement {
@@ -203,6 +231,8 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  dataEtablissement: DataEtablissement;
+  dataFormation: DataFormation;
   demande: Demande;
   departement: Departement;
   dispositif: Dispositif;

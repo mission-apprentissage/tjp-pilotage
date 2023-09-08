@@ -14,7 +14,7 @@ export const DiplomeSection = ({
 }) => {
   const [dispositifs, setDispositifs] = useState<
     ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
-  >(formMetadata?.dispositifs);
+  >(formMetadata?.formation?.dispositifs);
 
   return (
     <>

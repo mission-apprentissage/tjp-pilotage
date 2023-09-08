@@ -57,7 +57,7 @@ export const UaiBlock = ({
   >(
     defaultValues.uai && defaultEtablissement
       ? {
-          label: defaultEtablissement.libelleEtablissement,
+          label: defaultEtablissement.libelle,
           value: defaultValues.uai,
           commune: defaultEtablissement.commune,
         }
@@ -134,7 +134,7 @@ export const UaiBlock = ({
                       defaultValue={
                         defaultEtablissement && {
                           value,
-                          label: defaultEtablissement.libelleEtablissement,
+                          label: defaultEtablissement.libelle,
                           commune: defaultEtablissement.commune,
                         }
                       }

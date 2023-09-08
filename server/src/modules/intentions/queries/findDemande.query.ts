@@ -1,4 +1,3 @@
-import { sql } from "kysely";
 import {
   jsonArrayFrom,
   jsonBuildObject,
@@ -14,39 +13,37 @@ export const findDemande = async ({ id }: { id: string }) => {
     .selectAll()
     .select((eb) => [
       jsonBuildObject({
-        dispositifs: jsonArrayFrom(
-          eb
-            .selectFrom("dispositif")
-            .select(["libelleDispositif", "codeDispositif"])
-            .leftJoin("rawData", (join) =>
-              join
-                .onRef(
-                  sql`"data"->>'DISPOSITIF_FORMATION'`,
-                  "=",
-                  "dispositif.codeDispositif"
-                )
-                .on("rawData.type", "=", "nMef")
-            )
-            .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "demande.cfd")
-            .distinctOn("codeDispositif")
-        ),
         etablissement: jsonObjectFrom(
           eb
-            .selectFrom("rawData")
-            .select([
-              sql<string>`"data"->>'appellation_officielle'`.as(
-                "libelleEtablissement"
-              ),
-              sql<string>`"data"->>'commune_libe'`.as("commune"),
-            ])
-            .whereRef(sql`"data"->>'numero_uai'`, "=", "demande.uai")
-            .where("type", "=", "lyceesACCE")
+            .selectFrom("dataEtablissement")
+            .selectAll("dataEtablissement")
+            .whereRef("dataEtablissement.uai", "=", "demande.uai")
+            .limit(1)
+        ),
+        formation: jsonObjectFrom(
+          eb
+            .selectFrom("dataFormation")
+            .select("libelle")
+            .select((eb) =>
+              jsonArrayFrom(
+                eb
+                  .selectFrom("dispositif")
+                  .select(["libelleDispositif", "codeDispositif"])
+                  .whereRef(
+                    "codeNiveauDiplome",
+                    "=",
+                    "dataFormation.codeNiveauDiplome"
+                  )
+                  .distinctOn("codeDispositif")
+              ).as("dispositifs")
+            )
+            .whereRef("dataFormation.cfd", "=", "demande.cfd")
             .limit(1)
         ),
         libelleDiplome: eb
-          .selectFrom("formation")
-          .select("libelleDiplome")
-          .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+          .selectFrom("dataFormation")
+          .select("libelle")
+          .whereRef("dataFormation.cfd", "=", "demande.cfd")
           .limit(1)
           .$castTo<string | null>(),
       }).as("metadata"),
@@ -58,7 +55,7 @@ export const findDemande = async ({ id }: { id: string }) => {
 
   const dispositifId =
     demande?.dispositifId &&
-    demande.metadata.dispositifs.find(
+    demande.metadata.formation?.dispositifs.find(
       (item) => item.codeDispositif === demande?.dispositifId
     )?.codeDispositif;
 
