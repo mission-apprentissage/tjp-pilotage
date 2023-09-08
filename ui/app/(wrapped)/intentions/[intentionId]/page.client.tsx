@@ -27,10 +27,18 @@ export default ({
     <>
       {data && (
         <IntentionForm
+          formId={intentionId}
           defaultValues={{
             1: { uai: data.uai },
             2: {
-              ...data,
+              cfd: data.cfd,
+              dispositifId: data.dispositifId,
+              libelleDiplome: data.libelleDiplome,
+              motif: data.motif,
+              typeDemande: data.typeDemande,
+              autreMotif: data.autreMotif,
+              commentaire: data.commentaire,
+              libelleColoration: data.libelleColoration,
               amiCma: JSON.stringify(data.amiCma),
               poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
               rentreeScolaire: JSON.stringify(data.rentreeScolaire),
