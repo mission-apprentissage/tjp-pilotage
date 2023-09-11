@@ -21,7 +21,7 @@ cli.command("migrateDB").action(async () => {
 
 cli.command("create-migration").action(() =>
   writeFileSync(
-    `${__dirname}/migrations/migration-${new Date().getTime()}.ts`,
+    `${__dirname}/migrations/migration_${new Date().getTime()}.ts`,
     `import { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {};
