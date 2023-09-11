@@ -146,7 +146,7 @@ export default function Formations() {
           limit: 2,
           order: "desc",
           orderBy: "rentreeScolaire",
-          rentreeScolaire: ["2021"],
+          rentreeScolaire: ["2021", "2020"],
           withEmptyFormations: false,
         })
       ).formations;

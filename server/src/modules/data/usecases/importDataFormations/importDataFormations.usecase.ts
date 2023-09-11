@@ -7,19 +7,9 @@ import { streamIt } from "../../utils/streamIt";
 import { getCfdDispositifs } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { createDataFormation } from "./createDataFormation.dep";
 import { findDiplomeProfessionnel } from "./findDiplomeProfessionnel.dep";
-import { findFamilleMetier } from "./findFamilleMetier.dep";
+import { find2ndeCommune, findSpecialite } from "./findFamilleMetier.dep";
 import { findNFormationDiplome } from "./findNFormationDiplome.dep";
 import { findRegroupements } from "./findRegroupements.dep";
-
-const ancienDiplomeFields = [
-  "ANCIEN_DIPLOME_1",
-  "ANCIEN_DIPLOME_2",
-  "ANCIEN_DIPLOME_3",
-  "ANCIEN_DIPLOME_4",
-  "ANCIEN_DIPLOME_5",
-  "ANCIEN_DIPLOME_6",
-  "ANCIEN_DIPLOME_7",
-] as const;
 
 export const [importDataFormations] = inject(
   {
@@ -28,7 +18,8 @@ export const [importDataFormations] = inject(
     findNFormationDiplome,
     createDataFormation,
     getCfdDispositifs,
-    findFamilleMetier,
+    find2ndeCommune,
+    findSpecialite,
   },
   (deps) => async () => {
     await streamIt(
@@ -50,14 +41,8 @@ export const [importDataFormations] = inject(
         );
         const regroupement = await deps.findRegroupements({ mefstats });
 
-        const ancienCfds = ancienDiplomeFields
-          .map((item) => nFormationDiplome[item])
-          .filter((item): item is string => !!item);
-
-        const contexteFamilleMetier =
-          !!(await deps.findFamilleMetier(cfd)) ||
-          (ancienCfds.length === 1 &&
-            !!(await deps.findFamilleMetier(ancienCfds[0])));
+        const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
+        const isSpecialite = !!(await deps.findSpecialite(cfd));
 
         await deps.createDataFormation({
           cfd,
@@ -87,7 +72,11 @@ export const [importDataFormations] = inject(
                 "dd/LL/yyyy"
               ).toJSDate()
             : undefined,
-          contexteFamilleMetier,
+          typeFamille: is2ndeCommune
+            ? "2nde_commune"
+            : isSpecialite
+            ? "specialite"
+            : undefined,
         });
 
         console.log(`${count}: dataFormation added ${cfd}`);

@@ -1,5 +1,6 @@
 import { inject } from "injecti";
 
+import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { createDataEtablissement } from "./createDataEtablissement.dep";
@@ -36,8 +37,8 @@ export const [importDataEtablissements] = inject(
             codePostal: lyceeACCE.code_postal_uai,
             secteur: lyceeACCE.secteur_public_prive,
             codeMinistereTutuelle: lyceeACCE.ministere_tutelle,
+            typeUai: lyceeACCE.type_uai as DB["dataEtablissement"]["typeUai"],
           });
-          // eslint-disable-next-line no-empty
         } catch (e) {
           console.log(e);
         }

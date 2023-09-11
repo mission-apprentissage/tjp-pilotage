@@ -1,6 +1,69 @@
-import { Kysely } from "kysely";
+import { Kysely, sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
+  await db.schema
+    .createType("typeUai")
+    .asEnum([
+      "1ORD",
+      "9999",
+      "ADLE",
+      "AGRI",
+      "AIDE",
+      "APPL",
+      "CDES",
+      "CDP",
+      "CFA",
+      "CFIS",
+      "CFPA",
+      "CLG",
+      "CNED",
+      "CONT",
+      "CSAV",
+      "DIV",
+      "EFE",
+      "EME",
+      "EREA",
+      "ERPD",
+      "ETRA",
+      "EUR",
+      "EXP",
+      "FORP",
+      "GRET",
+      "HOSP",
+      "IEN",
+      "ING",
+      "IO",
+      "IUFM",
+      "JS",
+      "LP",
+      "LYC",
+      "ONIS",
+      "OUS",
+      "PBAC",
+      "PRES",
+      "PRSU",
+      "RECH",
+      "RECT",
+      "SDEN",
+      "SEP",
+      "SERV",
+      "SES",
+      "SET",
+      "SGT",
+      "SMUT",
+      "SOC",
+      "SPEC",
+      "SSEF",
+      "TSGE",
+      "UNIV",
+    ])
+    .execute();
+
+  await db.schema
+    .createType("typeFamille")
+    .asEnum(["2nde_commune", "specialite"])
+    .execute();
+
   await db.schema
     .createTable("dataEtablissement")
     .addColumn("uai", "varchar(8)", (c) => c.primaryKey())
@@ -20,6 +83,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("codeRegion", "varchar(2)", (c) =>
       c.references("region.codeRegion")
     )
+    .addColumn("typeUai", sql`"typeUai"`, (c) => c.notNull())
     .execute();
 
   await db.schema
@@ -34,7 +98,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("libelleFiliere", "varchar")
     .addColumn("dateOuverture", "date")
     .addColumn("dateFermeture", "date")
-    .addColumn("contexteFamilleMetier", "boolean", (c) => c.notNull())
+    .addColumn("typeFamille", sql`"typeFamille"`)
     .execute();
 };
 
