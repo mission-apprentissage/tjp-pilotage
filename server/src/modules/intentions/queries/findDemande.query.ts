@@ -40,12 +40,6 @@ export const findDemande = async ({ id }: { id: string }) => {
             .whereRef("dataFormation.cfd", "=", "demande.cfd")
             .limit(1)
         ),
-        libelleDiplome: eb
-          .selectFrom("dataFormation")
-          .select("libelle")
-          .whereRef("dataFormation.cfd", "=", "demande.cfd")
-          .limit(1)
-          .$castTo<string | null>(),
       }).as("metadata"),
     ])
     .where("id", "=", id)
@@ -65,6 +59,7 @@ export const findDemande = async ({ id }: { id: string }) => {
       ...demande,
       metadata: cleanNull({
         ...demande.metadata,
+        formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
       }),
       createdAt: demande.createdAt?.toISOString(),

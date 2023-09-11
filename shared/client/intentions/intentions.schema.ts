@@ -48,8 +48,8 @@ const SubmitSchemaPost = Type.Omit(
 const MetadataSchema = Type.Object({
   etablissement: Type.Optional(
     Type.Object({
-      libelle: Type.String(),
-      commune: Type.String(),
+      libelle: Type.Optional(Type.String()),
+      commune: Type.Optional(Type.String()),
     })
   ),
   formation: Type.Optional(
