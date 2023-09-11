@@ -132,11 +132,12 @@ export const UaiBlock = ({
                         }
                       }}
                       defaultValue={
-                        defaultEtablissement && {
+                        defaultEtablissement &&
+                        ({
                           value,
                           label: defaultEtablissement.libelle,
                           commune: defaultEtablissement.commune,
-                        }
+                        } as ApiType<typeof api.searchEtab>[0])
                       }
                       loadOptions={(inputValue: string) =>
                         api

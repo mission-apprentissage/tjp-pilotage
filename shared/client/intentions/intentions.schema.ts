@@ -127,8 +127,8 @@ export const intentionsSchemas = {
       200: Type.Array(
         Type.Object({
           value: Type.String(),
-          label: Type.String(),
-          commune: Type.String(),
+          label: Type.Optional(Type.String()),
+          commune: Type.Optional(Type.String()),
         })
       ),
     },
