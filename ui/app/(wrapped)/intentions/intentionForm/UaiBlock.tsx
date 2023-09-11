@@ -57,7 +57,7 @@ export const UaiBlock = ({
   >(
     defaultValues.uai && defaultEtablissement
       ? {
-          label: defaultEtablissement.libelleEtablissement,
+          label: defaultEtablissement.libelle,
           value: defaultValues.uai,
           commune: defaultEtablissement.commune,
         }
@@ -132,11 +132,12 @@ export const UaiBlock = ({
                         }
                       }}
                       defaultValue={
-                        defaultEtablissement && {
+                        defaultEtablissement &&
+                        ({
                           value,
-                          label: defaultEtablissement.libelleEtablissement,
+                          label: defaultEtablissement.libelle,
                           commune: defaultEtablissement.commune,
-                        }
+                        } as ApiType<typeof api.searchEtab>[0])
                       }
                       loadOptions={(inputValue: string) =>
                         api

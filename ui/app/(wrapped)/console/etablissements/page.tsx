@@ -191,7 +191,7 @@ export default function Etablissements() {
           limit: 2,
           order: "desc",
           orderBy: "rentreeScolaire",
-          rentreeScolaire: ["2021"],
+          rentreeScolaire: ["2021", "2020"],
         })
       ).etablissements;
     },

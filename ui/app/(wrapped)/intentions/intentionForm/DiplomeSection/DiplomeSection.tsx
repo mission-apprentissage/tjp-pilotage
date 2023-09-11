@@ -14,7 +14,7 @@ export const DiplomeSection = ({
 }) => {
   const [dispositifs, setDispositifs] = useState<
     ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
-  >(formMetadata?.dispositifs);
+  >(formMetadata?.formation?.dispositifs);
 
   return (
     <>
@@ -23,7 +23,7 @@ export const DiplomeSection = ({
       </Heading>
       <Divider pt="4" mb="4" />
       <SearchDiplomeInput
-        defaultLibelle={formMetadata?.libelleDiplome}
+        defaultLibelle={formMetadata?.formation?.libelle}
         setDispositifs={setDispositifs}
       />
       <DispositifInput options={dispositifs} />

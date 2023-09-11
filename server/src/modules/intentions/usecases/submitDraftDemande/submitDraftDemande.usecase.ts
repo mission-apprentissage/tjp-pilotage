@@ -33,6 +33,8 @@ export const [submitDraftDemande] = inject(
           .toFixed(20)
           .slice(2)}`;
 
+      console.log(demande);
+
       await deps.createDemandeQuery({
         demande: {
           ...demande,

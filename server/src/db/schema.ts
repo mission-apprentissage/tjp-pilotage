@@ -24,6 +24,87 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface DataEtablissement {
+  uai: string;
+  libelle: string | null;
+  commune: string | null;
+  siret: string | null;
+  adresse: string | null;
+  codePostal: string | null;
+  codeMinistereTutuelle: string | null;
+  secteur: string | null;
+  codeDepartement: string | null;
+  codeAcademie: string | null;
+  codeRegion: string | null;
+  typeUai:
+    | "1ORD"
+    | "9999"
+    | "ADLE"
+    | "AGRI"
+    | "AIDE"
+    | "APPL"
+    | "CDES"
+    | "CDP"
+    | "CFA"
+    | "CFIS"
+    | "CFPA"
+    | "CLG"
+    | "CNED"
+    | "CONT"
+    | "CSAV"
+    | "DIV"
+    | "EFE"
+    | "EME"
+    | "EREA"
+    | "ERPD"
+    | "ETRA"
+    | "EUR"
+    | "EXP"
+    | "FORP"
+    | "GRET"
+    | "HOSP"
+    | "IEN"
+    | "ING"
+    | "IO"
+    | "IUFM"
+    | "JS"
+    | "LP"
+    | "LYC"
+    | "ONIS"
+    | "OUS"
+    | "PBAC"
+    | "PRES"
+    | "PRSU"
+    | "RECH"
+    | "RECT"
+    | "SDEN"
+    | "SEP"
+    | "SERV"
+    | "SES"
+    | "SET"
+    | "SGT"
+    | "SMUT"
+    | "SOC"
+    | "SPEC"
+    | "SSEF"
+    | "TSGE"
+    | "UNIV";
+}
+
+export interface DataFormation {
+  cfd: string;
+  rncp: number | null;
+  libelle: string | null;
+  codeNiveauDiplome: string | null;
+  cpc: string | null;
+  cpcSecteur: string | null;
+  cpcSousSecteur: string | null;
+  libelleFiliere: string | null;
+  dateOuverture: Timestamp | null;
+  dateFermeture: Timestamp | null;
+  typeFamille: "2nde_commune" | "specialite" | null;
+}
+
 export interface Demande {
   id: string;
   cfd: string | null;
@@ -34,6 +115,7 @@ export interface Demande {
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
+  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -43,7 +125,6 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
-  coloration: boolean | null;
 }
 
 export interface Departement {
@@ -203,6 +284,8 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  dataEtablissement: DataEtablissement;
+  dataFormation: DataFormation;
   demande: Demande;
   departement: Departement;
   dispositif: Dispositif;
