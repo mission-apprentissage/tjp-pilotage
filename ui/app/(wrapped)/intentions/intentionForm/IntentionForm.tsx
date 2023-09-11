@@ -25,9 +25,11 @@ function toBoolean<
 }
 
 export const IntentionForm = ({
+  formId,
   defaultValues,
   formMetadata,
 }: {
+  formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
@@ -57,6 +59,7 @@ export const IntentionForm = ({
           .submitDraftDemande({
             body: {
               demande: {
+                id: formId,
                 ...forms[1],
                 ...forms[2],
                 amiCma: toBoolean(forms[2].amiCma),

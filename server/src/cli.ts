@@ -4,6 +4,8 @@ import fs, { writeFileSync } from "fs";
 import { basepath } from "./basepath";
 import { migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
+import { importDataEtablissements } from "./modules/data/usecases/importDataEtablissements/importDataEtablissements.usecase";
+import { importDataFormations } from "./modules/data/usecases/importDataFormations/importDataFormations.usecase";
 import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -19,7 +21,7 @@ cli.command("migrateDB").action(async () => {
 
 cli.command("create-migration").action(() =>
   writeFileSync(
-    `${__dirname}/migrations/migration-${new Date().getTime()}.ts`,
+    `${__dirname}/migrations/migration_${new Date().getTime()}.ts`,
     `import { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {};
@@ -112,6 +114,8 @@ cli
       importNiveauxDiplome,
       importDispositifs,
       importFamillesMetiers,
+      importDataEtablissements,
+      importDataFormations,
     };
 
     if (usecaseName) {

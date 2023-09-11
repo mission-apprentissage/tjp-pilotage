@@ -46,16 +46,21 @@ const SubmitSchemaPost = Type.Omit(
 );
 
 const MetadataSchema = Type.Object({
-  dispositifs: Type.Array(
-    Type.Object({
-      codeDispositif: Type.String(),
-      libelleDispositif: Type.String(),
-    })
-  ),
   etablissement: Type.Optional(
     Type.Object({
-      libelleEtablissement: Type.String(),
-      commune: Type.String(),
+      libelle: Type.Optional(Type.String()),
+      commune: Type.Optional(Type.String()),
+    })
+  ),
+  formation: Type.Optional(
+    Type.Object({
+      libelle: Type.Optional(Type.String()),
+      dispositifs: Type.Array(
+        Type.Object({
+          codeDispositif: Type.String(),
+          libelleDispositif: Type.String(),
+        })
+      ),
     })
   ),
   libelleDiplome: Type.Optional(Type.String()),
@@ -75,6 +80,7 @@ const DraftSchemaPost = Partial(SubmitSchemaPost, [
   "poursuitePedagogique",
   "commentaire",
   "dispositifId",
+  "coloration",
 ]);
 
 export const intentionsSchemas = {
@@ -121,8 +127,8 @@ export const intentionsSchemas = {
       200: Type.Array(
         Type.Object({
           value: Type.String(),
-          label: Type.String(),
-          commune: Type.String(),
+          label: Type.Optional(Type.String()),
+          commune: Type.Optional(Type.String()),
         })
       ),
     },
