@@ -124,6 +124,10 @@ export const UaiBlock = ({
                       onBlur={onBlur}
                       name={name}
                       styles={selectStyle}
+                      components={{
+                        DropdownIndicator: () => null,
+                        IndicatorSeparator: () => null,
+                      }}
                       onChange={(selected) => {
                         onChange(selected?.value);
                         setUaiInfo(selected ?? undefined);
