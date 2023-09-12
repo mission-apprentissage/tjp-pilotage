@@ -1,119 +1,123 @@
-codeDepartement;libelleDepartement;codeAcademie;libelleAcademie;codeRegion;libelleRegion
-;;00;Etranger;99;Sans objet
-001;Ain;10;Lyon;84;Auvergne-Rhône-Alpes
-002;Aisne;20;Amiens;32;Hauts-de-France
-003;Allier;06;Clermont-Ferrand;84;Auvergne-Rhône-Alpes
-004;Alpes-de-Haute-Provence;02;Aix-Marseille;93;Provence-Alpes-Côte d'Azur
-005;Hautes-Alpes;02;Aix-Marseille;93;Provence-Alpes-Côte d'Azur
-006;Alpes-Maritimes;23;Nice;93;Provence-Alpes-Côte d'Azur
-007;Ardèche;08;Grenoble;84;Auvergne-Rhône-Alpes
-008;Ardennes;19;Reims;44;Grand Est
-009;Ariège;16;Toulouse;76;Occitanie
-010;Aube;19;Reims;44;Grand Est
-011;Aude;11;Montpellier;76;Occitanie
-012;Aveyron;16;Toulouse;76;Occitanie
-013;Bouches-du-Rhône;02;Aix-Marseille;93;Provence-Alpes-Côte d'Azur
-014;Calvados;70;Normandie;28;Normandie
-015;Cantal;06;Clermont-Ferrand;84;Auvergne-Rhône-Alpes
-016;Charente;13;Poitiers;75;Nouvelle-Aquitaine
-017;Charente-Maritime;13;Poitiers;75;Nouvelle-Aquitaine
-018;Cher;18;Orléans-Tours;24;Centre-Val de Loire
-019;Corrèze;22;Limoges;75;Nouvelle-Aquitaine
-021;Côte-d'Or;07;Dijon;27;Bourgogne-Franche-Comté
-022;Côtes d'Armor;14;Rennes;53;Bretagne
-023;Creuse;22;Limoges;75;Nouvelle-Aquitaine
-024;Dordogne;04;Bordeaux;75;Nouvelle-Aquitaine
-025;Doubs;03;Besançon;27;Bourgogne-Franche-Comté
-026;Drôme;08;Grenoble;84;Auvergne-Rhône-Alpes
-027;Eure;70;Normandie;28;Normandie
-028;Eure-et-Loir;18;Orléans-Tours;24;Centre-Val de Loire
-029;Finistère;14;Rennes;53;Bretagne
-02A;Corse-du-Sud;27;Corse;94;Corse
-02B;Haute-Corse;27;Corse;94;Corse
-030;Gard;11;Montpellier;76;Occitanie
-031;Haute-Garonne;16;Toulouse;76;Occitanie
-032;Gers;16;Toulouse;76;Occitanie
-033;Gironde;04;Bordeaux;75;Nouvelle-Aquitaine
-034;Hérault;11;Montpellier;76;Occitanie
-035;Ille-et-Vilaine;14;Rennes;53;Bretagne
-036;Indre;18;Orléans-Tours;24;Centre-Val de Loire
-037;Indre-et-Loire;18;Orléans-Tours;24;Centre-Val de Loire
-038;Isère;08;Grenoble;84;Auvergne-Rhône-Alpes
-039;Jura;03;Besançon;27;Bourgogne-Franche-Comté
-040;Landes;04;Bordeaux;75;Nouvelle-Aquitaine
-041;Loir-et-Cher;18;Orléans-Tours;24;Centre-Val de Loire
-042;Loire;10;Lyon;84;Auvergne-Rhône-Alpes
-043;Haute-Loire;06;Clermont-Ferrand;84;Auvergne-Rhône-Alpes
-044;Loire-Atlantique;17;Nantes;52;Pays de la Loire
-045;Loiret;18;Orléans-Tours;24;Centre-Val de Loire
-046;Lot;16;Toulouse;76;Occitanie
-047;Lot-et-Garonne;04;Bordeaux;75;Nouvelle-Aquitaine
-048;Lozère;11;Montpellier;76;Occitanie
-049;Maine-et-Loire;17;Nantes;52;Pays de la Loire
-050;Manche;70;Normandie;28;Normandie
-051;Marne;19;Reims;44;Grand Est
-052;Haute-Marne;19;Reims;44;Grand Est
-053;Mayenne;17;Nantes;52;Pays de la Loire
-054;Meurthe-et-Moselle;12;Nancy-Metz;44;Grand Est
-055;Meuse;12;Nancy-Metz;44;Grand Est
-056;Morbihan;14;Rennes;53;Bretagne
-057;Moselle;12;Nancy-Metz;44;Grand Est
-058;Nièvre;07;Dijon;27;Bourgogne-Franche-Comté
-059;Nord;09;Lille;32;Hauts-de-France
-060;Oise;20;Amiens;32;Hauts-de-France
-061;Orne;70;Normandie;28;Normandie
-062;Pas-de-Calais;09;Lille;32;Hauts-de-France
-063;Puy-de-Dôme;06;Clermont-Ferrand;84;Auvergne-Rhône-Alpes
-064;Pyrénées-Atlantiques;04;Bordeaux;75;Nouvelle-Aquitaine
-065;Hautes-Pyrénées;16;Toulouse;76;Occitanie
-066;Pyrénées-Orientales;11;Montpellier;76;Occitanie
-067;Bas-Rhin;15;Strasbourg;44;Grand Est
-068;Haut-Rhin;15;Strasbourg;44;Grand Est
-069;Rhône;10;Lyon;84;Auvergne-Rhône-Alpes
-070;Haute-Saône;03;Besançon;27;Bourgogne-Franche-Comté
-071;Saône-et-Loire;07;Dijon;27;Bourgogne-Franche-Comté
-072;Sarthe;17;Nantes;52;Pays de la Loire
-073;Savoie;08;Grenoble;84;Auvergne-Rhône-Alpes
-074;Haute-Savoie;08;Grenoble;84;Auvergne-Rhône-Alpes
-075;Paris;01;Paris;11;Île-de-France
-076;Seine-Maritime;70;Normandie;28;Normandie
-077;Seine-et-Marne;24;Créteil;11;Île-de-France
-078;Yvelines;25;Versailles;11;Île-de-France
-079;Deux-Sèvres;13;Poitiers;75;Nouvelle-Aquitaine
-080;Somme;20;Amiens;32;Hauts-de-France
-081;Tarn;16;Toulouse;76;Occitanie
-082;Tarn-et-Garonne;16;Toulouse;76;Occitanie
-083;Var;23;Nice;93;Provence-Alpes-Côte d'Azur
-084;Vaucluse;02;Aix-Marseille;93;Provence-Alpes-Côte d'Azur
-085;Vandée;17;Nantes;52;Pays de la Loire
-086;Vienne;13;Poitiers;75;Nouvelle-Aquitaine
-087;Haute-Vienne;22;Limoges;75;Nouvelle-Aquitaine
-088;Vosges;12;Nancy-Metz;44;Grand Est
-089;Yonne;07;Dijon;27;Bourgogne-Franche-Comté
-090;Territoire de Belfort;03;Besançon;27;Bourgogne-Franche-Comté
-091;Essonne;25;Versailles;11;Île-de-France
-092;Hauts-de-Seine;25;Versailles;11;Île-de-France
-093;Seine-St-Denis;24;Créteil;11;Île-de-France
-094;Val-de-Marne;24;Créteil;11;Île-de-France
-095;Val-D'Oise;25;Versailles;11;Île-de-France
-971;Guadeloupe;32;Guadeloupe;01;Guadeloupe
-972;Martinique;31;Martinique;02;Martinique
-973;Guyane;33;Guyane;03;Guyane
-974;La Réunion;28;La Réunion;04;La Réunion
-976;Mayotte;43;Mayotte;06;Mayotte
-;;#;Non recensée;99;Sans objet
-;;$;Non renseignée;99;Sans objet
-;;05;Caen;28;Normandie
-;;21;Rouen;28;Normandie
-;;40;Nouvelle Calédonie;00;Tom et Collectivités territoriales
-;;41;Polynésie Française;00;Tom et Collectivités territoriales
-;;42;Wallis et Futuna;00;Tom et Collectivités territoriales
-;;44;Saint Pierre et Miquelon;00;Tom et Collectivités territoriales
-;;54;Service interacadémique des examens et concours ile de France;99;Sans objet
-;;61;France métropolitaine;99;Sans objet
-;;62;Départements d'Outre-Mer;99;Sans objet
-;;63;Collectivités d'Outre-Mer;99;Sans objet
-;;66;France métropolitaine et DOM;99;Sans objet
-;;67;France entière;99;Sans objet
-;;91;Union européenne;99;Sans objet
-;;99;Non définie ou sans objet;99;Sans objet
+﻿libelleRegion;codeAcademie;codeRegion;codeDepartement;libelleAcademie;libelleDepartement
+Auvergne-Rhône-Alpes;10;84;001;Lyon;Ain
+Hauts-de-France;20;32;002;Amiens;Aisne
+Auvergne-Rhône-Alpes;06;84;003;Clermont-Ferrand;Allier
+Provence-Alpes-Côte d'Azur;02;93;004;Aix-Marseille;Alpes-de-Haute-Provence
+Provence-Alpes-Côte d'Azur;02;93;005;Aix-Marseille;Hautes-Alpes
+Provence-Alpes-Côte d'Azur;23;93;006;Nice;Alpes-Maritimes
+Auvergne-Rhône-Alpes;08;84;007;Grenoble;Ardèche
+Grand Est;19;44;008;Reims;Ardennes
+Occitanie;16;76;009;Toulouse;Ariège
+Grand Est;19;44;010;Reims;Aube
+Occitanie;11;76;011;Montpellier;Aude
+Occitanie;16;76;012;Toulouse;Aveyron
+Provence-Alpes-Côte d'Azur;02;93;013;Aix-Marseille;Bouches-du-Rhône
+Normandie;70;28;014;Normandie;Calvados
+Auvergne-Rhône-Alpes;06;84;015;Clermont-Ferrand;Cantal
+Nouvelle-Aquitaine;13;75;016;Poitiers;Charente
+Nouvelle-Aquitaine;13;75;017;Poitiers;Charente-Maritime
+Centre-Val de Loire;18;24;018;Orléans-Tours;Cher
+Nouvelle-Aquitaine;22;75;019;Limoges;Corrèze
+Corse;27;94;02A;Corse;Corse-du-Sud
+Corse;27;94;02B;Corse;Haute-Corse
+Bourgogne-Franche-Comté;07;27;021;Dijon;Côte-d'Or
+Bretagne;14;53;022;Rennes;Côtes d'Armor
+Nouvelle-Aquitaine;22;75;023;Limoges;Creuse
+Nouvelle-Aquitaine;04;75;024;Bordeaux;Dordogne
+Bourgogne-Franche-Comté;03;27;025;Besançon;Doubs
+Auvergne-Rhône-Alpes;08;84;026;Grenoble;Drôme
+Normandie;70;28;027;Normandie;Eure
+Centre-Val de Loire;18;24;028;Orléans-Tours;Eure-et-Loir
+Bretagne;14;53;029;Rennes;Finistère
+Occitanie;11;76;030;Montpellier;Gard
+Occitanie;16;76;031;Toulouse;Haute-Garonne
+Occitanie;16;76;032;Toulouse;Gers
+Nouvelle-Aquitaine;04;75;033;Bordeaux;Gironde
+Occitanie;11;76;034;Montpellier;Hérault
+Bretagne;14;53;035;Rennes;Ille-et-Vilaine
+Centre-Val de Loire;18;24;036;Orléans-Tours;Indre
+Centre-Val de Loire;18;24;037;Orléans-Tours;Indre-et-Loire
+Auvergne-Rhône-Alpes;08;84;038;Grenoble;Isère
+Bourgogne-Franche-Comté;03;27;039;Besançon;Jura
+Nouvelle-Aquitaine;04;75;040;Bordeaux;Landes
+Centre-Val de Loire;18;24;041;Orléans-Tours;Loir-et-Cher
+Auvergne-Rhône-Alpes;10;84;042;Lyon;Loire
+Auvergne-Rhône-Alpes;06;84;043;Clermont-Ferrand;Haute-Loire
+Pays de la Loire;17;52;044;Nantes;Loire-Atlantique
+Centre-Val de Loire;18;24;045;Orléans-Tours;Loiret
+Occitanie;16;76;046;Toulouse;Lot
+Nouvelle-Aquitaine;04;75;047;Bordeaux;Lot-et-Garonne
+Occitanie;11;76;048;Montpellier;Lozère
+Pays de la Loire;17;52;049;Nantes;Maine-et-Loire
+Normandie;70;28;050;Normandie;Manche
+Grand Est;19;44;051;Reims;Marne
+Grand Est;19;44;052;Reims;Haute-Marne
+Pays de la Loire;17;52;053;Nantes;Mayenne
+Grand Est;12;44;054;Nancy-Metz;Meurthe-et-Moselle
+Grand Est;12;44;055;Nancy-Metz;Meuse
+Bretagne;14;53;056;Rennes;Morbihan
+Grand Est;12;44;057;Nancy-Metz;Moselle
+Bourgogne-Franche-Comté;07;27;058;Dijon;Nièvre
+Hauts-de-France;09;32;059;Lille;Nord
+Hauts-de-France;20;32;060;Amiens;Oise
+Normandie;70;28;061;Normandie;Orne
+Hauts-de-France;09;32;062;Lille;Pas-de-Calais
+Auvergne-Rhône-Alpes;06;84;063;Clermont-Ferrand;Puy-de-Dôme
+Nouvelle-Aquitaine;04;75;064;Bordeaux;Pyrénées-Atlantiques
+Occitanie;16;76;065;Toulouse;Hautes-Pyrénées
+Occitanie;11;76;066;Montpellier;Pyrénées-Orientales
+Grand Est;15;44;067;Strasbourg;Bas-Rhin
+Grand Est;15;44;068;Strasbourg;Haut-Rhin
+Auvergne-Rhône-Alpes;10;84;069;Lyon;Rhône
+Bourgogne-Franche-Comté;03;27;070;Besançon;Haute-Saône
+Bourgogne-Franche-Comté;07;27;071;Dijon;Saône-et-Loire
+Pays de la Loire;17;52;072;Nantes;Sarthe
+Auvergne-Rhône-Alpes;08;84;073;Grenoble;Savoie
+Auvergne-Rhône-Alpes;08;84;074;Grenoble;Haute-Savoie
+Île-de-France;01;11;075;Paris;Paris
+Normandie;70;28;076;Normandie;Seine-Maritime
+Île-de-France;24;11;077;Créteil;Seine-et-Marne
+Île-de-France;25;11;078;Versailles;Yvelines
+Nouvelle-Aquitaine;13;75;079;Poitiers;Deux-Sèvres
+Hauts-de-France;20;32;080;Amiens;Somme
+Occitanie;16;76;081;Toulouse;Tarn
+Occitanie;16;76;082;Toulouse;Tarn-et-Garonne
+Provence-Alpes-Côte d'Azur;23;93;083;Nice;Var
+Provence-Alpes-Côte d'Azur;02;93;084;Aix-Marseille;Vaucluse
+Pays de la Loire;17;52;085;Nantes;Vandée
+Nouvelle-Aquitaine;13;75;086;Poitiers;Vienne
+Nouvelle-Aquitaine;22;75;087;Limoges;Haute-Vienne
+Grand Est;12;44;088;Nancy-Metz;Vosges
+Bourgogne-Franche-Comté;07;27;089;Dijon;Yonne
+Bourgogne-Franche-Comté;03;27;090;Besançon;Territoire de Belfort
+Île-de-France;25;11;091;Versailles;Essonne
+Île-de-France;25;11;092;Versailles;Hauts-de-Seine
+Île-de-France;24;11;093;Créteil;Seine-St-Denis
+Île-de-France;24;11;094;Créteil;Val-de-Marne
+Île-de-France;25;11;095;Versailles;Val-D'Oise
+Guadeloupe;32;01;971;Guadeloupe;Guadeloupe
+Martinique;31;02;972;Martinique;Martinique
+Guyane;33;03;973;Guyane;Guyane
+La Réunion;28;04;974;La Réunion;La Réunion
+Mayotte;43;06;976;Mayotte;Mayotte
+Mayotte;43;06;985;Mayotte;Mayotte
+Occitanie;11;76;130;Montpellier;Andorre
+Tom et Collectivités territoriales;44;00;975;Saint Pierre et Miquelon;Saint-Pierre-et-Miquelon
+Tom et Collectivités territoriales;41;00;987;Polynésie Française;Polynésie Française
+Tom et Collectivités territoriales;40;00;988;Nouvelle Calédonie;Nouvelle Calédonie
+Sans objet;99;99;990;Non définie ou sans objet;Autre pays
+Guadeloupe;32;01;978;Guadeloupe;Saint-Martin
+Guadeloupe;32;01;977;Guadeloupe;Saint-Barthélemy
+Tom et Collectivités territoriales;42;00;986;Wallis et Futuna;Wallis-et-Futuna
+Sans objet;62;99;;Départements d'Outre-Mer;
+Sans objet;54;99;;Service interacadémique des examens et concours ile de France;
+Sans objet;66;99;;France métropolitaine et DOM;
+Normandie;05;28;;Caen;
+Sans objet;#;99;;Non recensée;
+Normandie;21;28;;Rouen;
+Sans objet;00;99;;Etranger;
+Sans objet;$;99;;Non renseignée;
+Sans objet;61;99;;France métropolitaine;
+Sans objet;67;99;;France entière;
+Sans objet;63;99;;Collectivités d'Outre-Mer;
+Sans objet;91;99;;Union européenne;
