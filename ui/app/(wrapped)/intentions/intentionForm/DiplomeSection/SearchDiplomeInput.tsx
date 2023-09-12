@@ -1,4 +1,11 @@
-import { FormControl, FormErrorMessage, FormLabel } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FormControl,
+  FormErrorMessage,
+  FormLabel,
+} from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -37,7 +44,7 @@ export const SearchDiplomeInput = ({
     <>
       <FormControl
         mb="4"
-        maxW="500px"
+        maxW="1000px"
         isInvalid={!!errors.cfd?.message}
         isRequired
         flex="1"
@@ -52,6 +59,10 @@ export const SearchDiplomeInput = ({
               onBlur={onBlur}
               name={name}
               styles={selectStyle}
+              components={{
+                DropdownIndicator: () => null,
+                IndicatorSeparator: () => null,
+              }}
               onChange={(selected) => {
                 if (!selected) resetField("dispositifId");
                 onChange(selected?.value);
@@ -62,6 +73,9 @@ export const SearchDiplomeInput = ({
                   ? {
                       value,
                       label: defaultLibelle,
+                      isFamille: false,
+                      isSecondeCommune: false,
+                      dateFermeture: "",
                       dispositifs: defaultOptions,
                     }
                   : undefined
@@ -69,6 +83,61 @@ export const SearchDiplomeInput = ({
               loadOptions={(search) =>
                 api.searchDiplome({ params: { search } }).call()
               }
+              formatOptionLabel={(option) => {
+                const Tag = ({
+                  children,
+                  type = "specialite",
+                }: {
+                  children: ReactNode;
+                  type: "specialite" | "secondeCommune" | "fermeture";
+                }) => {
+                  let bgColor;
+                  if (type === "specialite") bgColor = "blue.200";
+                  else if (type === "secondeCommune") bgColor = "orange.200";
+                  else bgColor = "red.200";
+                  return (
+                    <Box
+                      borderRadius={5}
+                      bg={bgColor}
+                      color={"white"}
+                      px={2}
+                      pb={1}
+                      mx={2}
+                      height={7}
+                      whiteSpace={"nowrap"}
+                    >
+                      {children}
+                    </Box>
+                  );
+                };
+                if (option.isFamille) {
+                  return option.isSecondeCommune ? (
+                    <Flex>
+                      {option.label}{" "}
+                      <Tag type="secondeCommune">Seconde commune</Tag>
+                    </Flex>
+                  ) : (
+                    <Flex>
+                      {option.label} <Tag type="specialite">Spécialité</Tag>
+                      {option.dateFermeture && (
+                        <Tag type="fermeture">
+                          Fermeture au {option.dateFermeture}
+                        </Tag>
+                      )}
+                    </Flex>
+                  );
+                }
+                return (
+                  <Flex>
+                    {option.label}{" "}
+                    {option.dateFermeture && (
+                      <Tag type="fermeture">
+                        Fermeture au {option.dateFermeture}
+                      </Tag>
+                    )}
+                  </Flex>
+                );
+              }}
               loadingMessage={() => "Recherche..."}
               isClearable={true}
               noOptionsMessage={({ inputValue }) =>
