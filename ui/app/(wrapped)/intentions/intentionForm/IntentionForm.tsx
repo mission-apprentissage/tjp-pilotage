@@ -11,8 +11,8 @@ import {
 } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import { api } from "../../../../api.client";
+import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
-import { UaiBlock } from "./UaiBlock";
 
 export const UaiRegex = /^[A-Z0-9]{8}$/;
 
@@ -73,33 +73,48 @@ export const IntentionForm = ({
           .call(),
     });
 
-  const [step, setStep] = useState(defaultValues[1].uai ? 2 : 1);
+  const [step, setStep] = useState(
+    defaultValues[1].uai &&
+      defaultValues[1].cfd &&
+      defaultValues[1].dispositifId
+      ? 2
+      : 1
+  );
+
+  const [cfdUaiSectionActive, setCfdUaiSectionActive] = useState<boolean>(true);
 
   const [intention, setIntention] = useState(defaultValues);
 
-  const submitUai = async (values: { uai?: string }) => {
+  const submitCfdUai = async (values: {
+    uai?: string;
+    cfd?: string;
+    dispositifId?: string;
+  }) => {
     setIntention({ ...intention, 1: values });
-    setStep(2);
-    return true;
+    if (values?.uai && values?.cfd && values?.dispositifId) {
+      setStep(2);
+      setCfdUaiSectionActive(false);
+      return true;
+    }
+  };
+
+  const onEditUaiCfdSection = () => {
+    setStep(1);
+    setCfdUaiSectionActive(true);
   };
 
   return (
     <Box flex={1} bg="#E2E7F8">
-      <Box maxW="900px" mx="auto" width="100%" mt="10" mb="20">
-        <UaiBlock
-          defaultEtablissement={formMetadata?.etablissement}
-          onOpen={() => setStep(1)}
-          active={step === 1}
+      <Box maxW="1050px" mx="auto" width="100%" mt="10" mb="20">
+        <CfdUaiSection
           defaultValues={intention[1]}
-          onSubmit={(values) => {
-            if (values.uai) {
-              submitUai(values);
-            }
-          }}
+          formMetadata={formMetadata}
+          submitCfdUai={submitCfdUai}
+          onEditUaiCfdSection={onEditUaiCfdSection}
+          active={cfdUaiSectionActive}
         />
         <Collapse in={step === 2} animateOpacity>
           <InformationsBlock
-            formMetadata={formMetadata}
             isSubmitting={isSubmitting}
             onSubmit={(values) => {
               const newIntention = {
