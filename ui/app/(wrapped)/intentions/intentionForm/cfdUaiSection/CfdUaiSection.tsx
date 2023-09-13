@@ -20,11 +20,7 @@ export const CfdUaiSection = ({
   active: boolean;
   defaultValues: PartialIntentionForms[1];
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  submitCfdUai: (values: {
-    uai?: string;
-    cfd?: string;
-    dispositifId?: string;
-  }) => void;
+  submitCfdUai: (values: PartialIntentionForms[1]) => void;
   onEditUaiCfdSection: () => void;
 }) => {
   const [dispositifs, setDispositifs] = useState<
@@ -49,12 +45,13 @@ export const CfdUaiSection = ({
             aria-label="Editer"
             onClick={onEditUaiCfdSection}
           >
+            Modifier
             <EditIcon />
           </IconButton>
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock
-          defaultLibelle={formMetadata?.formation?.libelle}
+          defaultDiplome={formMetadata?.formation}
           defaultValues={defaultValues}
           setDispositifs={setDispositifs}
           onSubmit={submitCfdUai}

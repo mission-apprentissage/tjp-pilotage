@@ -81,17 +81,20 @@ export const IntentionForm = ({
       : 1
   );
 
-  const [cfdUaiSectionActive, setCfdUaiSectionActive] = useState<boolean>(true);
+  const [cfdUaiSectionActive, setCfdUaiSectionActive] = useState<boolean>(
+    step === 1
+  );
 
   const [intention, setIntention] = useState(defaultValues);
 
-  const submitCfdUai = async (values: {
-    uai?: string;
-    cfd?: string;
-    dispositifId?: string;
-  }) => {
+  const submitCfdUai = (values: PartialIntentionForms[1]) => {
     setIntention({ ...intention, 1: values });
-    if (values?.uai && values?.cfd && values?.dispositifId) {
+    if (
+      values?.uai &&
+      values?.cfd &&
+      values?.libelleDiplome &&
+      values?.dispositifId
+    ) {
       setStep(2);
       setCfdUaiSectionActive(false);
       return true;
@@ -105,7 +108,7 @@ export const IntentionForm = ({
 
   return (
     <Box flex={1} bg="#E2E7F8">
-      <Box maxW="1050px" mx="auto" width="100%" mt="10" mb="20">
+      <Box maxWidth={"container.xl"} mx="auto" width="100%" mt="10" mb="20">
         <CfdUaiSection
           defaultValues={intention[1]}
           formMetadata={formMetadata}

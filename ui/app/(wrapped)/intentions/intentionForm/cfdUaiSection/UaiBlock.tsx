@@ -62,6 +62,7 @@ export const UaiBlock = ({
       <FormControl
         isInvalid={!!errors.uai}
         mb="auto"
+        isRequired
         onSubmit={handleSubmit(onSubmit)}
       >
         <LightMode>
@@ -71,6 +72,7 @@ export const UaiBlock = ({
               <Controller
                 name="uai"
                 control={control}
+                rules={{ required: "Ce champ est obligatoire" }}
                 render={({ field: { onChange, onBlur, value, name } }) => (
                   <AsyncSelect
                     onBlur={onBlur}
@@ -87,6 +89,7 @@ export const UaiBlock = ({
                         onSubmit({
                           uai: selected?.value,
                           cfd: defaultValues.cfd,
+                          libelleDiplome: defaultValues.libelleDiplome,
                           dispositifId: defaultValues.dispositifId,
                         });
                       }

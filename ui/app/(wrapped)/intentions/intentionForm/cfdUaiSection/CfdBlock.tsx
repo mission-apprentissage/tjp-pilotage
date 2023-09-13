@@ -19,7 +19,7 @@ export const cfdRegex = /^[0-9]{8}$/;
 
 export const CfdBlock = ({
   setDispositifs,
-  defaultLibelle,
+  defaultDiplome,
   defaultValues,
   defaultOptions = [],
   onSubmit,
@@ -28,14 +28,10 @@ export const CfdBlock = ({
   setDispositifs: (
     info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
   ) => void;
-  defaultLibelle?: string;
+  defaultDiplome: ApiType<typeof api.getDemande>["metadata"]["formation"];
   defaultValues: PartialIntentionForms[1];
   defaultOptions?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
-  onSubmit: (values: {
-    uai?: string;
-    cfd?: string;
-    dispositifId?: string;
-  }) => void;
+  onSubmit: (values: PartialIntentionForms[1]) => void;
   active: boolean;
 }) => {
   const {
@@ -59,7 +55,6 @@ export const CfdBlock = ({
     <>
       <FormControl
         mb="4"
-        maxW="1000px"
         isInvalid={!!errors.cfd?.message}
         isRequired
         flex="1"
@@ -67,11 +62,11 @@ export const CfdBlock = ({
       >
         <LightMode>
           <FormLabel>Recherche d'un diplôme</FormLabel>
-          <Box color="chakra-body-text">
+          <Box color="chakra-body-text" w={"md"}>
             <Controller
               name="cfd"
               control={control}
-              rules={{ required: "Le champs est obligatoire" }}
+              rules={{ required: "Ce champs est obligatoire" }}
               render={({ field: { onChange, value, name, onBlur } }) => (
                 <AsyncSelect
                   onBlur={onBlur}
@@ -89,21 +84,21 @@ export const CfdBlock = ({
                       onSubmit({
                         uai: defaultValues.uai,
                         cfd: selected?.value,
+                        libelleDiplome: selected?.label,
                         dispositifId: defaultValues.dispositifId,
                       });
                     }
                   }}
                   defaultValue={
-                    defaultLibelle !== undefined
-                      ? ({
-                          value,
-                          label: defaultLibelle,
-                          isFamille: false,
-                          isSecondeCommune: false,
-                          dateFermeture: "",
-                          dispositifs: defaultOptions,
-                        } as ApiType<typeof api.searchDiplome>[0])
-                      : undefined
+                    defaultDiplome &&
+                    ({
+                      value,
+                      label: defaultDiplome?.libelle,
+                      isFamille: false,
+                      isSecondeCommune: false,
+                      dateFermeture: "",
+                      dispositifs: defaultOptions,
+                    } as ApiType<typeof api.searchDiplome>[0])
                   }
                   loadOptions={(search) =>
                     api.searchDiplome({ params: { search } }).call()
