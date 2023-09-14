@@ -54,20 +54,12 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
-      sql<boolean>`
-        case when ${eb.ref(
-          "dataFormation.typeFamille"
-        )} in ('2nde_commune', 'specialite')
-        then true
-        else false
-        end
-      `.as("isFamille"),
-      sql<boolean>`
-        case when ${eb.ref("dataFormation.typeFamille")} = '2nde_commune'
-        then true
-        else false
-        end
-      `.as("isSecondeCommune"),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} is not null`.as(
+        "isFamille"
+      ),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '2nde_commune'`.as(
+        "isSecondeCommune"
+      ),
       sql<string>`
         case when ${eb.ref("dataFormation.dateFermeture")} is not null
         then to_char(${eb.ref("dataFormation.dateFermeture")}, 'dd/mm/yyyy')
@@ -78,5 +70,5 @@ export const findManyInDataFormationQuery = async ({
     .distinctOn("dataFormation.cfd")
     .execute();
 
-  return [...formations];
+  return formations;
 };

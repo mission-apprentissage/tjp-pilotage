@@ -19,14 +19,14 @@ export const findManyInDataEtablissementsQuery = async ({
     ])
     .where((eb) =>
       eb.and([
-        eb.or([
-          eb("dataEtablissement.typeUai", "=", "CLG"),
-          eb("dataEtablissement.typeUai", "=", "EREA"),
-          eb("dataEtablissement.typeUai", "=", "EXP"),
-          eb("dataEtablissement.typeUai", "=", "LP"),
-          eb("dataEtablissement.typeUai", "=", "LYC"),
-          eb("dataEtablissement.typeUai", "=", "SEP"),
-          eb("dataEtablissement.typeUai", "=", "TSGE"),
+        eb("dataEtablissement.typeUai", "in", [
+          "CLG",
+          "EREA",
+          "EXP",
+          "LP",
+          "LYC",
+          "SEP",
+          "TSGE",
         ]),
         eb.or([
           eb("dataEtablissement.uai", "ilike", `${search}%`),
