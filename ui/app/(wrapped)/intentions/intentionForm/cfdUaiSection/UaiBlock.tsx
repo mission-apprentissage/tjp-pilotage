@@ -68,7 +68,7 @@ export const UaiBlock = ({
         <LightMode>
           <FormLabel>Recherche d'un établissement</FormLabel>
           <Flex flexDirection={"row"} justifyContent={"space-between"}>
-            <Box color="chakra-body-text" minW="600px">
+            <Box color="chakra-body-text" minW="700px">
               <Controller
                 name="uai"
                 control={control}
@@ -122,8 +122,9 @@ export const UaiBlock = ({
               bg="rgba(255,255,255,0.1)"
               p="4"
               flex="1"
-              maxW="350"
+              w="100%"
               minH={150}
+              ms={8}
             >
               {!uaiInfo && !defaultValues.uai && (
                 <Text>Veuillez saisir le numéro établissement.</Text>
