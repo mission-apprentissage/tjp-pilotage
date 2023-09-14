@@ -81,14 +81,12 @@ export const CfdBlock = ({
                     if (!selected) resetField("dispositifId");
                     onChange(selected?.value);
                     setDispositifs(selected?.dispositifs);
-                    if (selected) {
-                      onSubmit({
-                        uai: defaultValues.uai,
-                        cfd: selected?.value,
-                        libelleDiplome: selected?.label,
-                        dispositifId: defaultValues.dispositifId,
-                      });
-                    }
+                    onSubmit({
+                      uai: defaultValues.uai,
+                      cfd: selected?.value,
+                      libelleDiplome: selected?.label,
+                      dispositifId: defaultValues.dispositifId,
+                    });
                   }}
                   defaultValue={
                     defaultDiplome &&
