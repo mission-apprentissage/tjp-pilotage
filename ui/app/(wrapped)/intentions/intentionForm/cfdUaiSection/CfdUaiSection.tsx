@@ -45,7 +45,6 @@ export const CfdUaiSection = ({
             aria-label="Editer"
             onClick={onEditUaiCfdSection}
           >
-            Modifier
             <EditIcon />
           </IconButton>
         </Heading>

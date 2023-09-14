@@ -80,11 +80,6 @@ export const IntentionForm = ({
       ? 2
       : 1
   );
-
-  const [cfdUaiSectionActive, setCfdUaiSectionActive] = useState<boolean>(
-    step === 1
-  );
-
   const [intention, setIntention] = useState(defaultValues);
 
   const submitCfdUai = (values: PartialIntentionForms[1]) => {
@@ -96,14 +91,12 @@ export const IntentionForm = ({
       values?.dispositifId
     ) {
       setStep(2);
-      setCfdUaiSectionActive(false);
       return true;
     }
   };
 
   const onEditUaiCfdSection = () => {
     setStep(1);
-    setCfdUaiSectionActive(true);
   };
 
   return (
@@ -114,7 +107,7 @@ export const IntentionForm = ({
           formMetadata={formMetadata}
           submitCfdUai={submitCfdUai}
           onEditUaiCfdSection={onEditUaiCfdSection}
-          active={cfdUaiSectionActive}
+          active={step === 1}
         />
         <Collapse in={step === 2} animateOpacity>
           <InformationsBlock
