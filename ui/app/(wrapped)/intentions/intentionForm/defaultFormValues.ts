@@ -12,12 +12,14 @@ export type PartialIntentionForms = {
 };
 
 export type IntentionForms = {
-  1: { uai: string };
-  2: {
+  1: {
+    uai: string;
     cfd: string;
-    typeDemande: string;
     libelleDiplome: string;
     dispositifId: string;
+  };
+  2: {
+    typeDemande: string;
     motif: string[];
     autreMotif?: string;
     commentaire?: string;
