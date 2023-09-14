@@ -15,7 +15,7 @@ export const findManyInDataFormationQuery = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
-    .fullJoin(
+    .leftJoin(
       "familleMetier",
       "dataFormation.cfd",
       "familleMetier.cfdSpecialite"
