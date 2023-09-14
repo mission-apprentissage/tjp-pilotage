@@ -7,7 +7,6 @@ const DemandeSchema = Type.Object({
   createdAt: Type.String(),
   uai: Type.String(),
   cfd: Type.String(),
-  libelleDiplome: Type.String(),
   dispositifId: Type.String(),
   rentreeScolaire: Type.Number(),
   typeDemande: Type.String(),
@@ -26,7 +25,6 @@ const DraftSchema = Type.Object({
   createdAt: Type.String(),
   uai: Type.Optional(Type.String()),
   cfd: Type.Optional(Type.String()),
-  libelleDiplome: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   typeDemande: Type.Optional(Type.String()),
@@ -40,10 +38,10 @@ const DraftSchema = Type.Object({
   status: Type.String(),
 });
 
-const SubmitSchemaPost = Type.Omit(
-  Partial(DemandeSchema, ["id", "autreMotif", "commentaire"]),
-  ["status", "createdAt"]
-);
+const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
+  "status",
+  "createdAt",
+]);
 
 const MetadataSchema = Type.Object({
   etablissement: Type.Optional(
@@ -70,7 +68,6 @@ const DraftSchemaPost = Partial(SubmitSchemaPost, [
   "id",
   "uai",
   "cfd",
-  "libelleDiplome",
   "rentreeScolaire",
   "typeDemande",
   "motif",

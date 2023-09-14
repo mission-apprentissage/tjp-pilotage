@@ -33,7 +33,6 @@ export default ({
               uai: data.uai,
               cfd: data.cfd,
               dispositifId: data.dispositifId,
-              libelleDiplome: data.libelleDiplome,
             },
             2: {
               motif: data.motif,
