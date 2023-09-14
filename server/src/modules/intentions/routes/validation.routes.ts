@@ -5,7 +5,7 @@ import { hasPermissionHandler } from "../../core";
 import { checkCfd } from "../usecases/checkCfd/checkCfd.usecase";
 import { checkUai } from "../usecases/checkUai/checkUai.usecase";
 import { searchDiplome } from "../usecases/searchDiplome/searchDiplome.usecase";
-import { searchEtab } from "../usecases/searchEtab/searchEtab";
+import { searchEtab } from "../usecases/searchEtab/searchEtab.usecase";
 
 export const validationRoutes = ({ server }: { server: Server }) => {
   server.get(
