@@ -62,7 +62,13 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       preHandler: hasPermissionHandler("intentions/envoi"),
     },
     async (request, response) => {
-      const result = await findDemandes();
+      const { order, orderBy, ...rest } = request.query;
+      const result = await findDemandes({
+        ...rest,
+        offset: 0,
+        limit: 1000000,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+      });
       response.status(200).send(result);
     }
   );

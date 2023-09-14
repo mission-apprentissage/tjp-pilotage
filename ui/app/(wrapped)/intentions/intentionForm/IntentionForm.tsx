@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Collapse } from "@chakra-ui/react";
+import { Collapse, Container, Grid, GridItem } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
 import { ApiType } from "shared";
@@ -11,6 +11,7 @@ import {
 } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import { api } from "../../../../api.client";
+import { MenuIntention } from "../menuIntention/MenuIntention";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
@@ -100,35 +101,41 @@ export const IntentionForm = ({
   };
 
   return (
-    <Box flex={1} bg="#E2E7F8">
-      <Box maxWidth={"container.xl"} mx="auto" width="100%" mt="10" mb="20">
-        <CfdUaiSection
-          defaultValues={intention[1]}
-          formMetadata={formMetadata}
-          submitCfdUai={submitCfdUai}
-          onEditUaiCfdSection={onEditUaiCfdSection}
-          active={step === 1}
-        />
-        <Collapse in={step === 2} animateOpacity>
-          <InformationsBlock
-            isSubmitting={isSubmitting}
-            onSubmit={(values) => {
-              const newIntention = {
-                ...intention,
-                2: values,
-              } as IntentionForms;
-              setIntention(newIntention);
-              console.log("submit", newIntention);
-              submit({ forms: newIntention });
-            }}
-            isDraftSubmitting={isDraftSubmitting}
-            onDraftSubmit={(values) =>
-              submitDraft({ forms: { ...intention, 2: values } })
-            }
-            defaultValues={intention[2]}
+    <Container maxW={"container.xl"} my={12}>
+      <Grid templateColumns="repeat(5,1fr)" gap={2}>
+        <GridItem>
+          <MenuIntention></MenuIntention>
+        </GridItem>
+        <GridItem colSpan={4}>
+          <CfdUaiSection
+            formId={formId}
+            defaultValues={intention[1]}
+            formMetadata={formMetadata}
+            submitCfdUai={submitCfdUai}
+            onEditUaiCfdSection={onEditUaiCfdSection}
+            active={step === 1}
           />
-        </Collapse>
-      </Box>
-    </Box>
+          <Collapse in={step === 2} animateOpacity>
+            <InformationsBlock
+              isSubmitting={isSubmitting}
+              onSubmit={(values) => {
+                const newIntention = {
+                  ...intention,
+                  2: values,
+                } as IntentionForms;
+                setIntention(newIntention);
+                console.log("submit", newIntention);
+                submit({ forms: newIntention });
+              }}
+              isDraftSubmitting={isDraftSubmitting}
+              onDraftSubmit={(values) =>
+                submitDraft({ forms: { ...intention, 2: values } })
+              }
+              defaultValues={intention[2]}
+            />
+          </Collapse>
+        </GridItem>
+      </Grid>
+    </Container>
   );
 };

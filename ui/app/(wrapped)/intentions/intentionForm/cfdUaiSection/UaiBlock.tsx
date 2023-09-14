@@ -100,10 +100,17 @@ export const UaiBlock = ({
                         commune: defaultEtablissement.commune,
                       } as ApiType<typeof api.searchEtab>[0])
                     }
-                    loadOptions={(inputValue: string) =>
-                      api.searchEtab({ params: { search: inputValue } }).call()
+                    loadOptions={(inputValue: string) => {
+                      if (inputValue.length >= 3)
+                        return api
+                          .searchEtab({ params: { search: inputValue } })
+                          .call();
+                    }}
+                    loadingMessage={({ inputValue }) =>
+                      inputValue.length >= 3
+                        ? "Recherche..."
+                        : "Veuillez rentrer au moins 3 lettres"
                     }
-                    loadingMessage={() => "Recherche..."}
                     isClearable={true}
                     noOptionsMessage={({ inputValue }) =>
                       inputValue
