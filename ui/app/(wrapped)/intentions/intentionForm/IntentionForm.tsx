@@ -2,6 +2,7 @@
 
 import { Box, Collapse } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ApiType } from "shared";
 
@@ -39,12 +40,12 @@ export const IntentionForm = ({
         .submitDemande({
           body: {
             demande: {
+              id: formId,
               ...forms[1],
               ...forms[2],
               amiCma: toBoolean(forms[2].amiCma),
               poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
               rentreeScolaire: parseInt(forms[2].rentreeScolaire),
-              libelleColoration: forms[2].libelleColoration,
               coloration: toBoolean(forms[2].coloration),
             },
           },
@@ -95,9 +96,9 @@ export const IntentionForm = ({
     }
   };
 
-  const onEditUaiCfdSection = () => {
-    setStep(1);
-  };
+  const onEditUaiCfdSection = () => setStep(1);
+
+  const { push } = useRouter();
 
   return (
     <Box flex={1} bg="#E2E7F8">
@@ -118,8 +119,8 @@ export const IntentionForm = ({
                 2: values,
               } as IntentionForms;
               setIntention(newIntention);
-              console.log("submit", newIntention);
               submit({ forms: newIntention });
+              push("/intentions");
             }}
             isDraftSubmitting={isDraftSubmitting}
             onDraftSubmit={(values) =>
