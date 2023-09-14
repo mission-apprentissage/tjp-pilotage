@@ -58,11 +58,12 @@ export const CfdBlock = ({
         isInvalid={!!errors.cfd?.message}
         isRequired
         flex="1"
+        w="lg"
         onSubmit={handleSubmit(onSubmit)}
       >
         <LightMode>
           <FormLabel>Recherche d'un diplôme</FormLabel>
-          <Box color="chakra-body-text" w={"md"}>
+          <Box color="chakra-body-text" minW="700px">
             <Controller
               name="cfd"
               control={control}
