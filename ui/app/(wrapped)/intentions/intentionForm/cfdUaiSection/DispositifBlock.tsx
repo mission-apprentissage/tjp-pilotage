@@ -56,14 +56,12 @@ export const DispositifBlock = ({
               placeholder="Sélectionner une option"
               onChange={(selected) => {
                 onChange(selected.target.value);
-                if (selected) {
-                  onSubmit({
-                    uai: defaultValues.uai,
-                    cfd: defaultValues.cfd,
-                    libelleDiplome: defaultValues.libelleDiplome,
-                    dispositifId: selected.target.value,
-                  });
-                }
+                onSubmit({
+                  uai: defaultValues.uai,
+                  cfd: defaultValues.cfd,
+                  libelleDiplome: defaultValues.libelleDiplome,
+                  dispositifId: selected.target.value,
+                });
               }}
             >
               {options?.map(({ codeDispositif, libelleDispositif }) => (
