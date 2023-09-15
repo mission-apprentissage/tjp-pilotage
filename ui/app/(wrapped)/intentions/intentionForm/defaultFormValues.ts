@@ -23,10 +23,12 @@ export type IntentionForms = {
     motif: string[];
     autreMotif?: string;
     commentaire?: string;
-    coloration: string;
+    coloration: boolean;
     libelleColoration?: string;
-    poursuitePedagogique: string;
-    amiCma: string;
-    rentreeScolaire: string;
+    poursuitePedagogique: boolean;
+    amiCma: boolean;
+    rentreeScolaire: number;
+    capaciteScolaire: number;
+    capaciteApprentissage: number;
   };
 };

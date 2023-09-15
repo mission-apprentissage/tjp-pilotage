@@ -125,6 +125,8 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
+  capaciteApprentissage: number | null;
+  capaciteScolaire: number | null;
 }
 
 export interface Departement {

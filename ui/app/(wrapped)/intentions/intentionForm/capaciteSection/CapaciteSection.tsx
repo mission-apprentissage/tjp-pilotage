@@ -1,10 +1,12 @@
 import {
+  Box,
   Divider,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Heading,
-  Select,
+  Input,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
@@ -22,30 +24,54 @@ export const CapaciteSection = () => {
         Capacités prévisionnelles pour cette famille de métier
       </Heading>
       <Divider pt="4" mb="4" />
-      <FormControl
-        mb="4"
-        maxW="500px"
-        isInvalid={!!errors.rentreeScolaire}
-        isRequired
-      >
-        <FormLabel>Rentrée scolaire</FormLabel>
-        <Select
-          bg="white"
-          {...register("rentreeScolaire", {
-            required: "La rentrée scolaire est obligatoire",
-          })}
-          placeholder="Sélectionner une option"
-        >
-          <option value="2023">2023</option>
-          <option value="2024">2024</option>
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-          <option value="2027">2027</option>
-        </Select>
-        {errors.rentreeScolaire && (
-          <FormErrorMessage>{errors.rentreeScolaire.message}</FormErrorMessage>
-        )}
-      </FormControl>
+      <Box mb="6">
+        <Heading color="bluefrance.113" fontSize="lg" mb="4">
+          Capacité (2024)
+        </Heading>
+        <Flex maxW="500px">
+          <FormControl
+            flex={1}
+            mr="4"
+            isInvalid={!!errors.capaciteScolaire}
+            isRequired
+          >
+            <FormLabel>Dont scolaire</FormLabel>
+            <Input
+              type="number"
+              {...register("capaciteScolaire", {
+                required: "La capacité scolaire est obligatoire",
+                setValueAs: (value) => parseInt(value) || undefined,
+              })}
+              placeholder="Capacité scolaire"
+            />
+            {errors.capaciteScolaire && (
+              <FormErrorMessage>
+                {errors.capaciteScolaire.message}
+              </FormErrorMessage>
+            )}
+          </FormControl>
+          <FormControl
+            flex={1}
+            isInvalid={!!errors.capaciteApprentissage}
+            isRequired
+          >
+            <FormLabel>Dont apprentissage</FormLabel>
+            <Input
+              type="number"
+              {...register("capaciteApprentissage", {
+                required: "La capacité apprentissage est obligatoire",
+                setValueAs: (value) => parseInt(value) || undefined,
+              })}
+              placeholder="Capacité apprentissage"
+            />
+            {errors.capaciteApprentissage && (
+              <FormErrorMessage>
+                {errors.capaciteApprentissage.message}
+              </FormErrorMessage>
+            )}
+          </FormControl>
+        </Flex>
+      </Box>
     </>
   );
 };
