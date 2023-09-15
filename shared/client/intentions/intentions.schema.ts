@@ -18,6 +18,8 @@ const DemandeSchema = Type.Object({
   poursuitePedagogique: Type.Boolean(),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  capaciteScolaire: Type.Number(),
+  capaciteApprentissage: Type.Number(),
 });
 
 const DraftSchema = Type.Object({
@@ -36,12 +38,16 @@ const DraftSchema = Type.Object({
   poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  capaciteScolaire: Type.Optional(Type.Number()),
+  capaciteApprentissage: Type.Optional(Type.Number()),
 });
 
 const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
   "status",
   "createdAt",
 ]);
+
+const DraftSchemaPost = Partial(DraftSchema, ["id", "status", "createdAt"]);
 
 const MetadataSchema = Type.Object({
   etablissement: Type.Optional(
@@ -61,24 +67,7 @@ const MetadataSchema = Type.Object({
       ),
     })
   ),
-  libelleDiplome: Type.Optional(Type.String()),
 });
-
-const DraftSchemaPost = Partial(SubmitSchemaPost, [
-  "id",
-  "uai",
-  "cfd",
-  "rentreeScolaire",
-  "typeDemande",
-  "motif",
-  "autreMotif",
-  "libelleColoration",
-  "amiCma",
-  "poursuitePedagogique",
-  "commentaire",
-  "dispositifId",
-  "coloration",
-]);
 
 export const intentionsSchemas = {
   checkUai: {

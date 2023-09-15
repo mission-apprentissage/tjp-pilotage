@@ -25,6 +25,8 @@ export const [submitDraftDemande] = inject(
         poursuitePedagogique?: boolean;
         commentaire?: string;
         coloration?: boolean;
+        capaciteScolaire?: number;
+        capaciteApprentissage?: number;
       };
     }) => {
       const id =
@@ -32,8 +34,6 @@ export const [submitDraftDemande] = inject(
         `${new Date().getFullYear().toString()}-${Math.random()
           .toFixed(20)
           .slice(2)}`;
-
-      console.log(demande);
 
       await deps.createDemandeQuery({
         demande: {

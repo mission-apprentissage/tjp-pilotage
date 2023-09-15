@@ -10,31 +10,77 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-const labels = {
-  1: "Taux d’emploi favorable",
-  2: "Taux de poursuite favorable",
-  3: "Besoins recrutements avérés localement",
-  4: "Métiers 2030 Texte de description additionnel",
-  5: "Parcours pédagogique",
-  6: "Maintien pour public spécifique",
-  7: "Nouvel établissement",
-  8: "Établissement privé sous contrat",
-  9: "Fermeture / diminution en compensation",
-  10: "Autre motif (veuillez préciser)",
+const motifLabels = {
+  taux_insertion_satisfaisant: "Taux d’insertion satisfaisant",
+  taux_poursuite_satisfaisant: "Taux de poursuite satisfaisant",
+  taux_insertion_insatisfaisant: "Taux d’insertion insatisfaisant",
+  taux_poursuite_insatisfaisant: "Taux de poursuite insatisfaisant",
+  besoin_recrutement_local: "Besoins recrutements avérés localement",
+  ouverture_plus_inserante: "Ouverture d’une formation plus insérante",
+  repartition_autres_etablissements:
+    "Répartition des élèves sur d’autres établissements",
+  transfert_apprentissage: "Transfert vers l’apprentissage",
+  recrutements_baisse: "Recrutements en baisse",
+  capacite_trop_élevée_territoire: "Capacité trop élevée sur le territoire",
+  locaux: "Locaux",
+  cout_financier: "Coût financier",
+  plateau_technique: "Plateau technique",
+  metiers_2030: "Métiers 2030",
+  parcours_pedagogique: "Parcours pédagogique",
+  projet_pedagogique_territorial: "Projet pédagogique territorial",
+  maintien_specifique: "Maintien pour public spécifique",
+  fermeture_compensation: "Fermeture en compensation",
+  nouvel_etablissement: "Nouvel établissement",
+  perspective_ami: "Perspective AMI",
+  sauvegarde_metier_rare: "Sauvegarde métier rare",
+  etablissement_prive_sous_contrat: "Établissement privé sous contrat",
+  autre: "Autre motif (veuillez préciser)",
 };
 
-const motifs = {
-  ouverture: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  ouverture_compensation: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  fermeture: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  augmentation: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  diminution: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
-  fcil: ["1", "2", "3", "4", "5", "6", "7", "8", "9", "10"],
+type MotifLabel = keyof typeof motifLabels;
+
+const motifsOuverture: MotifLabel[] = [
+  "taux_insertion_satisfaisant",
+  "taux_poursuite_satisfaisant",
+  "parcours_pedagogique",
+  "besoin_recrutement_local",
+  "metiers_2030",
+  "projet_pedagogique_territorial",
+  "fermeture_compensation",
+  "etablissement_prive_sous_contrat",
+  "nouvel_etablissement",
+  "perspective_ami",
+  "maintien_specifique",
+  "sauvegarde_metier_rare",
+  "autre",
+];
+
+const motifsFermeture: MotifLabel[] = [
+  "taux_insertion_insatisfaisant",
+  "taux_poursuite_insatisfaisant",
+  "ouverture_plus_inserante",
+  "repartition_autres_etablissements",
+  "transfert_apprentissage",
+  "recrutements_baisse",
+  "capacite_trop_élevée_territoire",
+  "locaux",
+  "cout_financier",
+  "plateau_technique",
+  "autre",
+];
+
+const motifs: Record<string, MotifLabel[]> = {
+  ouverture_nette: motifsOuverture,
+  ouverture_compensation: motifsOuverture,
+  augmentation_nette: motifsOuverture,
+  augmentation_compensation: motifsOuverture,
+  fermeture: motifsFermeture,
+  diminution: motifsFermeture,
 };
 
 const getMotifOptions = (typeDemande: keyof typeof motifs) => {
-  return Object.entries(labels)
-    .filter(([key]) => motifs[typeDemande]?.includes(key))
+  return Object.entries(motifLabels)
+    .filter(([key]) => motifs[typeDemande]?.includes(key as MotifLabel))
     .map(([value, label]) => ({
       value,
       label,
@@ -49,7 +95,6 @@ export const MotifField = () => {
   } = useFormContext<IntentionForms[2]>();
 
   const [typeDemande] = watch(["typeDemande"]);
-  console.log(typeDemande);
 
   if (!typeDemande) return <></>;
 
@@ -58,6 +103,7 @@ export const MotifField = () => {
       <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
       <Controller
         name="motif"
+        shouldUnregister
         control={control}
         rules={{ required: "Le motif est obligatoire" }}
         render={({ field: { onChange, value, onBlur } }) => (

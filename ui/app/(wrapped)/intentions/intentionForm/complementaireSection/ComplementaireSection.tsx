@@ -13,6 +13,7 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
+import { toBoolean } from "../toBoolean";
 
 export const ComplementaireSection = () => {
   const {
@@ -42,15 +43,15 @@ export const ComplementaireSection = () => {
             name="coloration"
             control={control}
             shouldUnregister={true}
-            rules={{ required: "Ce champ est obligatoire" }}
+            rules={{ validate: (value) => typeof value === "boolean" }}
             render={({ field: { onChange, ref, name, onBlur, value } }) => (
               <RadioGroup
                 as={Stack}
-                onChange={onChange}
                 ref={ref}
                 name={name}
                 onBlur={onBlur}
-                value={value}
+                onChange={(v) => onChange(toBoolean(v))}
+                value={JSON.stringify(value)}
               >
                 <Radio value="true">Oui</Radio>
                 <Radio value="false">Non</Radio>
@@ -62,7 +63,7 @@ export const ComplementaireSection = () => {
           )}
         </FormControl>
       )}
-      {coloration === "true" && (
+      {coloration && (
         <FormControl
           maxW="500px"
           mb="4"
@@ -88,12 +89,12 @@ export const ComplementaireSection = () => {
         <Controller
           name="poursuitePedagogique"
           control={control}
-          rules={{ required: "Ce champ est obligatoire" }}
+          rules={{ validate: (value) => typeof value === "boolean" }}
           render={({ field: { onChange, value, ref, name, onBlur } }) => (
             <RadioGroup
               as={Stack}
-              onChange={onChange}
-              value={value}
+              onChange={(v) => onChange(toBoolean(v))}
+              value={JSON.stringify(value)}
               ref={ref}
               name={name}
               onBlur={onBlur}
@@ -114,9 +115,13 @@ export const ComplementaireSection = () => {
         <Controller
           name="amiCma"
           control={control}
-          rules={{ required: "Ce champ est obligatoire" }}
+          rules={{ validate: (value) => typeof value === "boolean" }}
           render={({ field: { onChange, value } }) => (
-            <RadioGroup as={Stack} onChange={onChange} value={value}>
+            <RadioGroup
+              as={Stack}
+              onChange={(v) => onChange(toBoolean(v))}
+              value={JSON.stringify(value)}
+            >
               <Radio value="true">Oui</Radio>
               <Radio value="false">Non</Radio>
             </RadioGroup>

@@ -28,6 +28,8 @@ export const createDemandeQuery = async ({
         typeDemande: null,
         uai: null,
         coloration: null,
+        capaciteScolaire: null,
+        capaciteApprentissage: null,
         ...demande,
       })
     )

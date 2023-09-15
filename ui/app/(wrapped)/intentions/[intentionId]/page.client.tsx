@@ -40,10 +40,12 @@ export default ({
               autreMotif: data.autreMotif,
               commentaire: data.commentaire,
               libelleColoration: data.libelleColoration,
-              amiCma: JSON.stringify(data.amiCma),
-              poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
-              rentreeScolaire: JSON.stringify(data.rentreeScolaire),
-              coloration: JSON.stringify(data.coloration),
+              amiCma: data.amiCma,
+              poursuitePedagogique: data.poursuitePedagogique,
+              rentreeScolaire: data.rentreeScolaire,
+              coloration: data.coloration,
+              capaciteScolaire: data.capaciteScolaire,
+              capaciteApprentissage: data.capaciteApprentissage,
             },
           }}
           formMetadata={data.metadata}

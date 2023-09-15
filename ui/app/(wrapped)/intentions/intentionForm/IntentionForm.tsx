@@ -17,14 +17,6 @@ import { InformationsBlock } from "./InformationsBlock";
 
 export const UaiRegex = /^[A-Z0-9]{8}$/;
 
-function toBoolean<
-  V extends string | undefined,
-  R = V extends undefined ? boolean | undefined : boolean
->(value: V): R {
-  if (typeof value === "undefined") return undefined as R;
-  return (value === "true") as R;
-}
-
 export const IntentionForm = ({
   formId,
   defaultValues,
@@ -43,10 +35,6 @@ export const IntentionForm = ({
               id: formId,
               ...forms[1],
               ...forms[2],
-              amiCma: toBoolean(forms[2].amiCma),
-              poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
-              rentreeScolaire: parseInt(forms[2].rentreeScolaire),
-              coloration: toBoolean(forms[2].coloration),
             },
           },
         })
@@ -63,11 +51,6 @@ export const IntentionForm = ({
                 id: formId,
                 ...forms[1],
                 ...forms[2],
-                amiCma: toBoolean(forms[2].amiCma),
-                poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
-                rentreeScolaire:
-                  parseInt(forms[2].rentreeScolaire ?? "") || undefined,
-                coloration: toBoolean(forms[2].coloration),
               },
             },
           })
