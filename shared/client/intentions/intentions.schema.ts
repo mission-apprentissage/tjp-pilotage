@@ -249,4 +249,14 @@ export const intentionsSchemas = {
       ),
     },
   },
+  countDemandes: {
+    querystring: Type.Object({
+      status: Type.Optional(
+        Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+      ),
+    }),
+    response: {
+      200: Type.String(),
+    },
+  },
 } as const;
