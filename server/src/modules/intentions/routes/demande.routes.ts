@@ -3,6 +3,7 @@ import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
+import { countDemandes } from "../queries/countDemandes.query";
 import { findDemande } from "../queries/findDemande.query";
 import { findDemandes } from "../queries/findDemandes.query";
 import { submitDemande } from "../usecases/submitDemande/submitDemande.usecase";
@@ -68,6 +69,21 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+      });
+      response.status(200).send(result);
+    }
+  );
+
+  server.get(
+    "/demandes/count",
+    {
+      schema: ROUTES_CONFIG.countDemandes,
+      preHandler: hasPermissionHandler("intentions/envoi"),
+    },
+    async (request, response) => {
+      const { status } = request.query;
+      const result = await countDemandes({
+        status: status,
       });
       response.status(200).send(result);
     }

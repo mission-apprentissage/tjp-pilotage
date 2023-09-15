@@ -83,6 +83,7 @@ export const PageClient = () => {
         limit: PAGE_SIZE,
       }),
   });
+
   if (isLoading) {
     return (
       <Center mt={12}>
@@ -95,7 +96,7 @@ export const PageClient = () => {
     <Container maxW={"container.xl"} my={12}>
       <Grid templateColumns="repeat(5,1fr)" gap={2}>
         <GridItem>
-          <MenuIntention></MenuIntention>
+          <MenuIntention isRecapView></MenuIntention>
         </GridItem>
         <GridItem colSpan={4}>
           <TableContainer overflow="auto">
