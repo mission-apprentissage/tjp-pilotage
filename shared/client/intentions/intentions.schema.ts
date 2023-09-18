@@ -236,27 +236,36 @@ export const intentionsSchemas = {
       }),
     ]),
     response: {
-      200: Type.Array(
-        Type.Object({
-          id: Type.String(),
-          cfd: Type.Optional(Type.String()),
-          libelleDiplome: Type.Optional(Type.String()),
-          uai: Type.Optional(Type.String()),
-          createdAt: Type.String(),
-          createurId: Type.String(),
-          status: Type.String(),
-        })
-      ),
+      200: Type.Object({
+        demandes: Type.Array(
+          Type.Object({
+            id: Type.String(),
+            cfd: Type.Optional(Type.String()),
+            libelleDiplome: Type.Optional(Type.String()),
+            uai: Type.Optional(Type.String()),
+            createdAt: Type.String(),
+            createurId: Type.String(),
+            status: Type.String(),
+          })
+        ),
+        count: Type.Number(),
+      }),
+    },
+  },
+  getDemandesCsv: {
+    produces: ["text/csv"] as string[],
+    querystring: FiltersSchema,
+    response: {
+      200: Type.String(),
     },
   },
   countDemandes: {
-    querystring: Type.Object({
-      status: Type.Optional(
-        Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
-      ),
-    }),
     response: {
-      200: Type.String(),
+      200: Type.Object({
+        total: Type.String(),
+        draft: Type.String(),
+        submitted: Type.String(),
+      }),
     },
   },
 } as const;

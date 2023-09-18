@@ -8,8 +8,7 @@ import { api } from "../../../../api.client";
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
-const fetchCountDemandes = async (query: Query) =>
-  api.countDemandes({ query }).call();
+const fetchCountDemandes = async () => api.countDemandes({}).call();
 
 export const MenuIntention = ({
   isRecapView = false,
@@ -28,35 +27,18 @@ export const MenuIntention = ({
       ? searchParams.filters?.status[0]
       : "";
 
-  const { data: countAll } = useQuery({
+  const { data: countDemandes } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["countAll"],
-    queryFn: () => fetchCountDemandes({}),
-  });
-
-  const { data: countDraft } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["countDraft"],
-    queryFn: () => fetchCountDemandes({ status: "draft" }),
-  });
-
-  const { data: countSubmitted } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["countSubmitted"],
-    queryFn: () => fetchCountDemandes({ status: "submitted" }),
+    queryKey: ["countDemandes"],
+    queryFn: () => fetchCountDemandes(),
   });
 
   return (
     <Container mb={"auto"} px={4}>
       <VStack>
         <Button
-          variant="primary"
-          borderRadius={5}
-          bgColor={"#5770BE"}
-          color={"white"}
+          variant="createButton"
           size={"lg"}
           as={NextLink}
           href="/intentions/new"
@@ -77,7 +59,7 @@ export const MenuIntention = ({
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countAll}</Text>}
+          rightIcon={<Text fontSize={"14"}>{countDemandes?.total}</Text>}
         >
           <Text
             fontWeight={isRecapView && status === "none" ? "bold" : "normal"}
@@ -96,7 +78,7 @@ export const MenuIntention = ({
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countDraft}</Text>}
+          rightIcon={<Text fontSize={"14"}>{countDemandes?.draft}</Text>}
         >
           <Text
             fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
@@ -115,7 +97,7 @@ export const MenuIntention = ({
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countSubmitted}</Text>}
+          rightIcon={<Text fontSize={"14"}>{countDemandes?.submitted}</Text>}
         >
           <Text
             fontWeight={

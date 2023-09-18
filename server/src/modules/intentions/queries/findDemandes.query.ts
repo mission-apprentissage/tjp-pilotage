@@ -17,6 +17,7 @@ export const findDemandes = async ({
   const demandes = await kdb
     .selectFrom("demande")
     .selectAll()
+    .select(sql<string>`count(*) over()`.as("count"))
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
       return eb;
@@ -32,7 +33,10 @@ export const findDemandes = async ({
     .limit(limit)
     .execute();
 
-  return demandes.map((item) =>
-    cleanNull({ ...item, createdAt: item.createdAt?.toISOString() })
-  );
+  return {
+    demandes: demandes.map((item) =>
+      cleanNull({ ...item, createdAt: item.createdAt?.toISOString() })
+    ),
+    count: parseInt(demandes[0]?.count) || 0,
+  };
 };
