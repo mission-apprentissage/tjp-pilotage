@@ -35,7 +35,7 @@ export const [submitDraftDemande] = inject(
           .toFixed(20)
           .slice(2)}`;
 
-      await deps.createDemandeQuery({
+      return await deps.createDemandeQuery({
         demande: {
           ...demande,
           id,

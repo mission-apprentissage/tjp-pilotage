@@ -3,9 +3,10 @@ import { useFormContext } from "react-hook-form";
 
 import { MotifField } from "@/app/(wrapped)/intentions/intentionForm/typeDemandeSection/MotifField";
 
-import { RentreeScolaireField } from "../capaciteSection/RentreeScolaireField";
 import { IntentionForms } from "../defaultFormValues";
 import { AutreMotif } from "./AutreMotifField";
+import { RentreeScolaireField } from "./RentreeScolaireField";
+import { TypeDemandeField } from "./TypeDemandeField";
 
 export const TypeDemandeSection = () => {
   const { watch } = useFormContext<IntentionForms[2]>();
@@ -19,7 +20,7 @@ export const TypeDemandeSection = () => {
       </Heading>
       <Divider pt="4" mb="4" />
       <RentreeScolaireField />
-
+      <TypeDemandeField />
       {typeDemande === "ouverture_compensation" && (
         <FormControl mb="4" isRequired maxW="500px">
           <FormLabel>Compensation</FormLabel>

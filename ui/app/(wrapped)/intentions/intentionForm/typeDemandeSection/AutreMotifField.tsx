@@ -23,7 +23,7 @@ export const AutreMotif = () => {
   return (
     <Collapse in={visible} unmountOnExit>
       <FormControl
-        mb="4"
+        mb="6"
         maxW="500px"
         isInvalid={!!errors.autreMotif}
         isRequired

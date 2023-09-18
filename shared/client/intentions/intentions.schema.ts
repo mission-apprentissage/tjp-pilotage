@@ -182,7 +182,7 @@ export const intentionsSchemas = {
       demande: DraftSchemaPost,
     }),
     response: {
-      200: Type.Undefined(),
+      200: Type.Object({ id: Type.String() }),
     },
   },
   getDemande: {

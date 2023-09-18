@@ -8,12 +8,8 @@ export default ({
   params: {
     intentionId: string;
   };
-}) => {
-  return (
-    <>
-      <GuardPermission permission="intentions/envoi">
-        <PageClient params={params}></PageClient>
-      </GuardPermission>
-    </>
-  );
-};
+}) => (
+  <GuardPermission permission="intentions/envoi">
+    <PageClient params={params}></PageClient>
+  </GuardPermission>
+);

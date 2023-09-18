@@ -81,7 +81,7 @@ export const IntentionForm = ({
 
   const onEditUaiCfdSection = () => setStep(1);
 
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
 
   return (
     <Box flex={1} bg="#E2E7F8">
@@ -101,14 +101,19 @@ export const IntentionForm = ({
                 ...intention,
                 2: values,
               } as IntentionForms;
+              console.log(newIntention);
               setIntention(newIntention);
               submit({ forms: newIntention });
               push("/intentions");
             }}
             isDraftSubmitting={isDraftSubmitting}
-            onDraftSubmit={(values) =>
-              submitDraft({ forms: { ...intention, 2: values } })
-            }
+            onDraftSubmit={async (values) => {
+              const { id } = await submitDraft({
+                forms: { ...intention, 2: values },
+              });
+              console.log(id);
+              replace(id);
+            }}
             defaultValues={intention[2]}
           />
         </Collapse>
