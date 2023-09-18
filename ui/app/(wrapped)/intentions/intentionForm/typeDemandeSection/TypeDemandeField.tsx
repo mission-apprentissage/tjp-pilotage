@@ -25,7 +25,7 @@ export const TypeDemandeField = () => {
 
   return (
     <FormControl
-      mb="4"
+      mb="6"
       maxW="500px"
       isInvalid={!!errors.typeDemande}
       isRequired

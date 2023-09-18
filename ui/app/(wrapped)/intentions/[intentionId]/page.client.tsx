@@ -17,6 +17,7 @@ export default ({
     queryKey: [intentionId],
     queryFn: api.getDemande({ params: { id: intentionId } }).call,
   });
+
   if (isLoading)
     return (
       <Center mt="6">

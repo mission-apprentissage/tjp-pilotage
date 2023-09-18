@@ -99,7 +99,7 @@ export const MotifField = () => {
   if (!typeDemande) return <></>;
 
   return (
-    <FormControl mb="4" isInvalid={!!errors.motif} isRequired maxW="500px">
+    <FormControl mb="6" isInvalid={!!errors.motif} isRequired maxW="500px">
       <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
       <Controller
         name="motif"
