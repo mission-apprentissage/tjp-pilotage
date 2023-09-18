@@ -27,7 +27,11 @@ export const [submitDemande] = inject(
         commentaire?: string;
         coloration?: boolean;
         capaciteScolaire: number;
-        capaciteApprentissage: number;
+        capaciteScolaireActuelle?: number;
+        capaciteScolaireColoree?: number;
+        capaciteApprentissage?: number;
+        capaciteApprentissageActuelle?: number;
+        capaciteApprentissageColoree?: number;
       };
     }) => {
       const id =

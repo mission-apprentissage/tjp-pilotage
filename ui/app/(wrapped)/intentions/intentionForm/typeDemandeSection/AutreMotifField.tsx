@@ -1,4 +1,5 @@
 import {
+  chakra,
   Collapse,
   FormControl,
   FormErrorMessage,
@@ -9,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-export const AutreMotif = () => {
+export const AutreMotif = chakra(({ className }: { className?: string }) => {
   const {
     formState: { errors },
     register,
@@ -23,8 +24,7 @@ export const AutreMotif = () => {
   return (
     <Collapse in={visible} unmountOnExit>
       <FormControl
-        mb="6"
-        maxW="500px"
+        className={className}
         isInvalid={!!errors.autreMotif}
         isRequired
       >
@@ -43,4 +43,4 @@ export const AutreMotif = () => {
       </FormControl>
     </Collapse>
   );
-};
+});

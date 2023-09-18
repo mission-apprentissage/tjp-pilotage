@@ -83,6 +83,23 @@ export const IntentionForm = ({
 
   const { push, replace } = useRouter();
 
+  const onSubmit = async (values: IntentionForms[2]) => {
+    const newIntention = {
+      ...intention,
+      2: values,
+    } as IntentionForms;
+    setIntention(newIntention);
+    await submit({ forms: newIntention });
+    push("/intentions");
+  };
+
+  const onDraftSubmit = async (values: PartialIntentionForms[2]) => {
+    const { id } = await submitDraft({
+      forms: { ...intention, 2: values },
+    });
+    replace(id, { scroll: false });
+  };
+
   return (
     <Box flex={1} bg="#E2E7F8">
       <Box maxWidth={"container.xl"} mx="auto" width="100%" mt="10" mb="20">
@@ -96,24 +113,9 @@ export const IntentionForm = ({
         <Collapse in={step === 2} animateOpacity>
           <InformationsBlock
             isSubmitting={isSubmitting}
-            onSubmit={(values) => {
-              const newIntention = {
-                ...intention,
-                2: values,
-              } as IntentionForms;
-              console.log(newIntention);
-              setIntention(newIntention);
-              submit({ forms: newIntention });
-              push("/intentions");
-            }}
+            onSubmit={onSubmit}
             isDraftSubmitting={isDraftSubmitting}
-            onDraftSubmit={async (values) => {
-              const { id } = await submitDraft({
-                forms: { ...intention, 2: values },
-              });
-              console.log(id);
-              replace(id);
-            }}
+            onDraftSubmit={onDraftSubmit}
             defaultValues={intention[2]}
           />
         </Collapse>

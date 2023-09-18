@@ -25,10 +25,15 @@ export type IntentionForms = {
     commentaire?: string;
     coloration: boolean;
     libelleColoration?: string;
+    mixte: boolean;
     poursuitePedagogique: boolean;
     amiCma: boolean;
     rentreeScolaire: number;
+    capaciteScolaireActuelle?: number;
     capaciteScolaire: number;
-    capaciteApprentissage: number;
+    capaciteScolaireColoree?: number;
+    capaciteApprentissageActuelle?: number;
+    capaciteApprentissage?: number;
+    capaciteApprentissageColoree?: number;
   };
 };

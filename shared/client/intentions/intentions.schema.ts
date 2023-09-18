@@ -18,8 +18,12 @@ const DemandeSchema = Type.Object({
   poursuitePedagogique: Type.Boolean(),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  capaciteScolaireActuelle: Type.Optional(Type.Number()),
   capaciteScolaire: Type.Number(),
-  capaciteApprentissage: Type.Number(),
+  capaciteScolaireColoree: Type.Optional(Type.Number()),
+  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
+  capaciteApprentissage: Type.Optional(Type.Number()),
+  capaciteApprentissageColoree: Type.Optional(Type.Number()),
 });
 
 const DraftSchema = Type.Object({
@@ -38,8 +42,12 @@ const DraftSchema = Type.Object({
   poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  capaciteScolaireActuelle: Type.Optional(Type.Number()),
   capaciteScolaire: Type.Optional(Type.Number()),
+  capaciteScolaireColoree: Type.Optional(Type.Number()),
+  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
   capaciteApprentissage: Type.Optional(Type.Number()),
+  capaciteApprentissageColoree: Type.Optional(Type.Number()),
 });
 
 const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [

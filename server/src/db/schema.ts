@@ -125,8 +125,13 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
-  capaciteApprentissage: number | null;
   capaciteScolaire: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissage: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteApprentissageColoree: number | null;
+  mixte: boolean | null;
 }
 
 export interface Departement {

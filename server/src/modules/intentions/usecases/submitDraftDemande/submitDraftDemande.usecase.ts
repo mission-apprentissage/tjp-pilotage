@@ -26,7 +26,11 @@ export const [submitDraftDemande] = inject(
         commentaire?: string;
         coloration?: boolean;
         capaciteScolaire?: number;
+        capaciteScolaireActuelle?: number;
+        capaciteScolaireColoree?: number;
         capaciteApprentissage?: number;
+        capaciteApprentissageActuelle?: number;
+        capaciteApprentissageColoree?: number;
       };
     }) => {
       const id =

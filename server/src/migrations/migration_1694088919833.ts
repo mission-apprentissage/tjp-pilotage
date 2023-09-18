@@ -102,4 +102,9 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 };
 
-export const down = async () => {};
+export const down = async (db: Kysely<unknown>) => {
+  await db.schema.dropTable("dataEtablissement").execute();
+  await db.schema.dropTable("dataFormation").execute();
+  await db.schema.dropType("typeUai").execute();
+  await db.schema.dropType("typeFamille").execute();
+};

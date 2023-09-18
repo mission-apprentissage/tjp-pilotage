@@ -15,7 +15,12 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("demande")
     .addColumn("capaciteScolaire", "integer")
+    .addColumn("capaciteScolaireActuelle", "integer")
+    .addColumn("capaciteScolaireColoree", "integer")
     .addColumn("capaciteApprentissage", "integer")
+    .addColumn("capaciteApprentissageActuelle", "integer")
+    .addColumn("capaciteApprentissageColoree", "integer")
+    .addColumn("mixte", "boolean")
     .execute();
 };
 
@@ -28,6 +33,11 @@ export const down = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("demande")
     .dropColumn("capaciteScolaire")
+    .dropColumn("capaciteScolaireActuelle")
+    .dropColumn("capaciteScolaireColoree")
     .dropColumn("capaciteApprentissage")
+    .dropColumn("capaciteApprentissageActuelle")
+    .dropColumn("capaciteApprentissageColoree")
+    .dropColumn("mixte")
     .execute();
 };
