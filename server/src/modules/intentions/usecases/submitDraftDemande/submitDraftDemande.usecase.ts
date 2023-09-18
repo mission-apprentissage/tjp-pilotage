@@ -25,6 +25,7 @@ export const [submitDraftDemande] = inject(
         poursuitePedagogique?: boolean;
         commentaire?: string;
         coloration?: boolean;
+        mixte?: boolean;
         capaciteScolaire?: number;
         capaciteScolaireActuelle?: number;
         capaciteScolaireColoree?: number;
