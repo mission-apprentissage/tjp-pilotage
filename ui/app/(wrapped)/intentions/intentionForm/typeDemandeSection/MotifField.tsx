@@ -1,4 +1,5 @@
 import {
+  chakra,
   Checkbox,
   CheckboxGroup,
   FormControl,
@@ -87,7 +88,7 @@ const getMotifOptions = (typeDemande: keyof typeof motifs) => {
     }));
 };
 
-export const MotifField = () => {
+export const MotifField = chakra(({ className }: { className?: string }) => {
   const {
     formState: { errors },
     control,
@@ -99,7 +100,7 @@ export const MotifField = () => {
   if (!typeDemande) return <></>;
 
   return (
-    <FormControl mb="6" isInvalid={!!errors.motif} isRequired maxW="500px">
+    <FormControl className={className} isInvalid={!!errors.motif} isRequired>
       <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
       <Controller
         name="motif"
@@ -130,4 +131,4 @@ export const MotifField = () => {
       )}
     </FormControl>
   );
-};
+});
