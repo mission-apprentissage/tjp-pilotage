@@ -5,6 +5,7 @@ import {
   FormErrorMessage,
   FormLabel,
   LightMode,
+  Tag,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
 import { CSSObjectWithLabel } from "react-select";
@@ -12,7 +13,6 @@ import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { Tag } from "../../../../../components/Tag";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 
 export const cfdRegex = /^[0-9]{8}$/;
@@ -108,13 +108,18 @@ export const CfdBlock = ({
                       return option.isSecondeCommune ? (
                         <Flex>
                           {option.label}{" "}
-                          <Tag type="warning">Seconde commune</Tag>
+                          <Tag colorScheme={"orange"} size={"md"} ms={2}>
+                            Seconde commune
+                          </Tag>
                         </Flex>
                       ) : (
                         <Flex>
-                          {option.label} <Tag type="neutral">Spécialité</Tag>
+                          {option.label}{" "}
+                          <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                            Spécialité
+                          </Tag>
                           {option.dateFermeture && (
-                            <Tag type="danger">
+                            <Tag colorScheme={"red"} size={"md"} ms={2}>
                               Fermeture au {option.dateFermeture}
                             </Tag>
                           )}
@@ -125,7 +130,7 @@ export const CfdBlock = ({
                       <Flex>
                         {option.label}{" "}
                         {option.dateFermeture && (
-                          <Tag type="danger">
+                          <Tag colorScheme={"red"} size={"md"} ms={2}>
                             Fermeture au {option.dateFermeture}
                           </Tag>
                         )}

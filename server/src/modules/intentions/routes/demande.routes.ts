@@ -1,5 +1,7 @@
 import Boom from "@hapi/boom";
-import { ROUTES_CONFIG } from "shared";
+//@ts-ignore
+import { Parser } from "@json2csv/plainjs";
+import { DEMANDES_COLUMNS, ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
@@ -75,16 +77,43 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
   );
 
   server.get(
+    "/demandes/csv",
+    { schema: ROUTES_CONFIG.getDemandesCsv },
+    async (request, response) => {
+      const { order, orderBy, ...rest } = request.query;
+      const { demandes } = await findDemandes({
+        ...rest,
+        offset: 0,
+        limit: 1000000,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+      });
+
+      const parser = new Parser({
+        fields: Object.entries(DEMANDES_COLUMNS).map(([value, label]) => ({
+          label,
+          value,
+        })),
+      });
+      const csv = parser.parse(demandes);
+      response
+        .status(200)
+        .header("Content-Type", "text/csv")
+        .header(
+          "Content-Disposition",
+          `attachment; filename=${"demandes_export"}.csv`
+        )
+        .send(csv);
+    }
+  );
+
+  server.get(
     "/demandes/count",
     {
       schema: ROUTES_CONFIG.countDemandes,
       preHandler: hasPermissionHandler("intentions/envoi"),
     },
-    async (request, response) => {
-      const { status } = request.query;
-      const result = await countDemandes({
-        status: status,
-      });
+    async (_, response) => {
+      const result = await countDemandes();
       response.status(200).send(result);
     }
   );

@@ -22,6 +22,7 @@ import qs from "qs";
 
 import { api } from "../../../api.client";
 import { OrderIcon } from "../../../components/OrderIcon";
+import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { MenuIntention } from "./menuIntention/MenuIntention";
 
@@ -134,7 +135,7 @@ export const PageClient = () => {
                 </Tr>
               </Thead>
               <Tbody>
-                {data?.map((demande) => (
+                {data?.demandes.map((demande) => (
                   <Tr
                     key={demande.id}
                     cursor="pointer"
@@ -177,6 +178,18 @@ export const PageClient = () => {
                 ))}
               </Tbody>
             </Table>
+            <TableFooter
+              onExport={() => trackEvent("demandes:export")}
+              downloadLink={
+                api.getDemandesCsv({
+                  query: { ...filters, ...order },
+                }).url
+              }
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
           </TableContainer>
         </GridItem>
       </Grid>
