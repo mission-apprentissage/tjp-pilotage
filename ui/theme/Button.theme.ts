@@ -22,6 +22,17 @@ const primary = defineStyle({
   },
 });
 
+const createButton = defineStyle({
+  ...commonButtonStyle,
+  bg: "#5770BE",
+  color: "white",
+  _hover: {
+    bg: "bluefrance.525_hover",
+    _disabled: { bg: "bluefrance.525" },
+  },
+  borderRadius: 5,
+});
+
 const input = defineStyle({
   ...commonButtonStyle,
   bg: "grey.950",
@@ -41,6 +52,6 @@ const input = defineStyle({
 });
 
 export const buttonTheme = defineStyleConfig({
-  variants: { primary, input },
+  variants: { primary, input, createButton },
   baseStyle: {},
 });
