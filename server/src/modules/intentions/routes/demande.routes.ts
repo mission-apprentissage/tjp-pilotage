@@ -23,7 +23,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       if (!request.user) throw Boom.unauthorized();
       const result = await submitDemande({
         demande,
-        userId: request.user.id,
+        user: request.user,
       });
       response.status(200).send(result);
     }

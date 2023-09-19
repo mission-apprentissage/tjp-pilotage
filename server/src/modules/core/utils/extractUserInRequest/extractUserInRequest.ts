@@ -5,9 +5,8 @@ import jwt from "jsonwebtoken";
 
 import { config } from "../../../../../config/config";
 import { cleanNull } from "../../../../utils/noNull";
+import { RequestUser } from "../../model/User";
 import { findUserQuery } from "./findUserQuery.dep";
-
-type RequestUser = { email: string; id: string; role?: "admin" };
 
 export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   { jwtSecret: config.auth.authJwtSecret, findUserQuery },

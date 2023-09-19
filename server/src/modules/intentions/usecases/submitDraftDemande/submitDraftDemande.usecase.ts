@@ -1,9 +1,10 @@
 import { inject } from "injecti";
+import { v4 as uuidv4 } from "uuid";
 
-import { checkUai } from "../checkUai/checkUai.usecase";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
+
 export const [submitDraftDemande] = inject(
-  { createDemandeQuery, checkUai },
+  { createDemandeQuery },
   (deps) =>
     async ({
       demande,
@@ -34,11 +35,7 @@ export const [submitDraftDemande] = inject(
         capaciteApprentissageColoree?: number;
       };
     }) => {
-      const id =
-        demande.id ??
-        `${new Date().getFullYear().toString()}-${Math.random()
-          .toFixed(20)
-          .slice(2)}`;
+      const id = demande.id ?? uuidv4();
 
       return await deps.createDemandeQuery({
         demande: {
