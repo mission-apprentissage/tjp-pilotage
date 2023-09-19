@@ -5,8 +5,8 @@ import {
   FormErrorMessage,
   FormLabel,
   LightMode,
+  Tag,
 } from "@chakra-ui/react";
-import { ReactNode } from "react";
 import { Controller, useForm } from "react-hook-form";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -58,7 +58,7 @@ export const CfdBlock = ({
         isInvalid={!!errors.cfd?.message}
         isRequired
         flex="1"
-        w="lg"
+        w="md"
         onSubmit={handleSubmit(onSubmit)}
       >
         <LightMode>
@@ -99,48 +99,27 @@ export const CfdBlock = ({
                       dispositifs: defaultOptions,
                     } as ApiType<typeof api.searchDiplome>[0])
                   }
-                  loadOptions={(search) =>
-                    api.searchDiplome({ params: { search } }).call()
-                  }
+                  loadOptions={(search) => {
+                    if (search.length >= 3)
+                      return api.searchDiplome({ params: { search } }).call();
+                  }}
                   formatOptionLabel={(option) => {
-                    const Tag = ({
-                      children,
-                      type = "specialite",
-                    }: {
-                      children: ReactNode;
-                      type: "specialite" | "secondeCommune" | "fermeture";
-                    }) => {
-                      let bgColor;
-                      if (type === "specialite") bgColor = "blue.200";
-                      else if (type === "secondeCommune")
-                        bgColor = "orange.200";
-                      else bgColor = "red.200";
-                      return (
-                        <Box
-                          borderRadius={5}
-                          bg={bgColor}
-                          color={"white"}
-                          px={2}
-                          pb={1}
-                          mx={2}
-                          height={7}
-                          whiteSpace={"nowrap"}
-                        >
-                          {children}
-                        </Box>
-                      );
-                    };
                     if (option.isFamille) {
                       return option.isSecondeCommune ? (
                         <Flex>
                           {option.label}{" "}
-                          <Tag type="secondeCommune">Seconde commune</Tag>
+                          <Tag colorScheme={"orange"} size={"md"} ms={2}>
+                            Seconde commune
+                          </Tag>
                         </Flex>
                       ) : (
                         <Flex>
-                          {option.label} <Tag type="specialite">Spécialité</Tag>
+                          {option.label}{" "}
+                          <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                            Spécialité
+                          </Tag>
                           {option.dateFermeture && (
-                            <Tag type="fermeture">
+                            <Tag colorScheme={"red"} size={"md"} ms={2}>
                               Fermeture au {option.dateFermeture}
                             </Tag>
                           )}
@@ -151,14 +130,18 @@ export const CfdBlock = ({
                       <Flex>
                         {option.label}{" "}
                         {option.dateFermeture && (
-                          <Tag type="fermeture">
+                          <Tag colorScheme={"red"} size={"md"} ms={2}>
                             Fermeture au {option.dateFermeture}
                           </Tag>
                         )}
                       </Flex>
                     );
                   }}
-                  loadingMessage={() => "Recherche..."}
+                  loadingMessage={({ inputValue }) =>
+                    inputValue.length >= 3
+                      ? "Recherche..."
+                      : "Veuillez rentrer au moins 3 lettres"
+                  }
                   isClearable={true}
                   noOptionsMessage={({ inputValue }) =>
                     inputValue

@@ -16,6 +16,7 @@ export default ({
   const { data, isLoading } = useQuery({
     queryKey: [intentionId],
     queryFn: api.getDemande({ params: { id: intentionId } }).call,
+    cacheTime: 0,
   });
 
   if (isLoading)

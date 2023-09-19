@@ -79,6 +79,24 @@ const MetadataSchema = Type.Object({
   ),
 });
 
+const DemandesItem = Type.Object({
+  id: Type.String(),
+  cfd: Type.Optional(Type.String()),
+  libelleDiplome: Type.Optional(Type.String()),
+  uai: Type.Optional(Type.String()),
+  createdAt: Type.String(),
+  createurId: Type.String(),
+  status: Type.String(),
+});
+
+const FiltersSchema = Type.Object({
+  status: Type.Optional(
+    Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+  ),
+  order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+  orderBy: Type.Optional(Type.KeyOf(DemandesItem)),
+});
+
 export const intentionsSchemas = {
   checkUai: {
     params: Type.Object({
@@ -211,15 +229,34 @@ export const intentionsSchemas = {
     },
   },
   getDemandes: {
+    querystring: Type.Intersect([
+      FiltersSchema,
+      Type.Object({
+        offset: Type.Optional(Type.Number()),
+        limit: Type.Optional(Type.Number()),
+      }),
+    ]),
     response: {
-      200: Type.Array(
-        Type.Object({
-          id: Type.String(),
-          createdAt: Type.String(),
-          createurId: Type.String(),
-          status: Type.String(),
-        })
-      ),
+      200: Type.Object({
+        demandes: Type.Array(DemandesItem),
+        count: Type.Number(),
+      }),
+    },
+  },
+  getDemandesCsv: {
+    produces: ["text/csv"] as string[],
+    querystring: FiltersSchema,
+    response: {
+      200: Type.String(),
+    },
+  },
+  countDemandes: {
+    response: {
+      200: Type.Object({
+        total: Type.String(),
+        draft: Type.String(),
+        submitted: Type.String(),
+      }),
     },
   },
 } as const;

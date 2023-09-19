@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Collapse } from "@chakra-ui/react";
+import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
@@ -102,8 +102,9 @@ export const IntentionForm = ({
 
   return (
     <Box flex={1} bg="#E2E7F8">
-      <Box maxWidth={"container.xl"} mx="auto" width="100%" mt="10" mb="20">
+      <Container maxW={"container.xl"} my={12}>
         <CfdUaiSection
+          formId={formId}
           defaultValues={intention[1]}
           formMetadata={formMetadata}
           submitCfdUai={submitCfdUai}
@@ -119,7 +120,7 @@ export const IntentionForm = ({
             defaultValues={intention[2]}
           />
         </Collapse>
-      </Box>
+      </Container>
     </Box>
   );
 };
