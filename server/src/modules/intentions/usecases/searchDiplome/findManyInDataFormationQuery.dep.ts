@@ -8,6 +8,8 @@ export const findManyInDataFormationQuery = async ({
 }: {
   search: string;
 }) => {
+  const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
+
   const formations = await kdb
     .selectFrom("dataFormation")
     .leftJoin(
@@ -23,12 +25,36 @@ export const findManyInDataFormationQuery = async ({
     .where((eb) =>
       eb.and([
         eb.or([
-          eb("dataFormation.cfd", "ilike", `${search}%`),
-          eb("dataFormation.libelle", "ilike", `%${search}%`),
-          eb("familleMetier.cfdFamille", "ilike", `${search}%`),
-          eb("familleMetier.cfdSpecialite", "ilike", `${search}%`),
-          eb("familleMetier.libelleOfficielFamille", "ilike", `%${search}%`),
-          eb("familleMetier.libelleOfficielSpecialite", "ilike", `%${search}%`),
+          eb(
+            sql`unaccent(${eb.ref("dataFormation.cfd")})`,
+            "ilike",
+            `${cleanSearch}%`
+          ),
+          eb(
+            sql`unaccent(${eb.ref("dataFormation.libelle")})`,
+            "ilike",
+            `%${cleanSearch}%`
+          ),
+          eb(
+            sql`unaccent(${eb.ref("familleMetier.cfdFamille")})`,
+            "ilike",
+            `${cleanSearch}%`
+          ),
+          eb(
+            sql`unaccent(${eb.ref("familleMetier.cfdSpecialite")})`,
+            "ilike",
+            `${cleanSearch}%`
+          ),
+          eb(
+            sql`unaccent(${eb.ref("familleMetier.libelleOfficielFamille")})`,
+            "ilike",
+            `%${cleanSearch}%`
+          ),
+          eb(
+            sql`unaccent(${eb.ref("familleMetier.libelleOfficielSpecialite")})`,
+            "ilike",
+            `%${cleanSearch}%`
+          ),
         ]),
         eb.or([
           eb("dataFormation.dateFermeture", "is", null),
