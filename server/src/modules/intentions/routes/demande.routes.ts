@@ -50,10 +50,13 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demande/:id",
     {
       schema: ROUTES_CONFIG.getDemande,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
-      const result = await findDemande({ id: request.params.id });
+      const result = await findDemande({
+        id: request.params.id,
+        codeRegion: request.user?.codeRegion,
+      });
       response.status(200).send(result);
     }
   );
@@ -62,12 +65,13 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demandes",
     {
       schema: ROUTES_CONFIG.getDemandes,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
       const result = await findDemandes({
         ...rest,
+        codeRegion: request.user?.codeRegion,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -78,11 +82,15 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
 
   server.get(
     "/demandes/csv",
-    { schema: ROUTES_CONFIG.getDemandesCsv },
+    {
+      schema: ROUTES_CONFIG.getDemandesCsv,
+      preHandler: hasPermissionHandler("intentions/lecture"),
+    },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
       const { demandes } = await findDemandes({
         ...rest,
+        codeRegion: request.user?.codeRegion,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -110,10 +118,12 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demandes/count",
     {
       schema: ROUTES_CONFIG.countDemandes,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
-    async (_, response) => {
-      const result = await countDemandes();
+    async (request, response) => {
+      const result = await countDemandes({
+        codeRegion: request.user?.codeRegion,
+      });
       response.status(200).send(result);
     }
   );
