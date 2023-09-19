@@ -74,7 +74,7 @@ export const PageClient = () => {
 
   const { data, isLoading } = useQuery({
     keepPreviousData: true,
-    staleTime: 10000000,
+    staleTime: 0,
     queryKey: ["demandes", filters, order, page],
     queryFn: () =>
       fetchDemandes({

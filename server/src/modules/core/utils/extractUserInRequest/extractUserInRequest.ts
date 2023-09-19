@@ -35,3 +35,9 @@ declare module "fastify" {
     user?: RequestUser;
   }
 }
+
+declare module "fastify/types/type-provider" {
+  interface FastifyRequestType {
+    user?: RequestUser;
+  }
+}

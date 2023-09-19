@@ -2,7 +2,7 @@ import { program as cli } from "commander";
 import fs, { writeFileSync } from "fs";
 
 import { basepath } from "./basepath";
-import { migrateToLatest } from "./migrations/migrate";
+import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
 import { importDataEtablissements } from "./modules/data/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/data/usecases/importDataFormations/importDataFormations.usecase";
@@ -17,6 +17,10 @@ import { importLieuxGeographiques } from "./modules/data/usecases/importRegions/
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
+});
+
+cli.command("migrateDownDB").action(async () => {
+  await migrateDownDB();
 });
 
 cli.command("create-migration").action(() =>

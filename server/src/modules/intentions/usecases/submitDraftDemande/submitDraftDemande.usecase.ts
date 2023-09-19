@@ -25,6 +25,13 @@ export const [submitDraftDemande] = inject(
         poursuitePedagogique?: boolean;
         commentaire?: string;
         coloration?: boolean;
+        mixte?: boolean;
+        capaciteScolaire?: number;
+        capaciteScolaireActuelle?: number;
+        capaciteScolaireColoree?: number;
+        capaciteApprentissage?: number;
+        capaciteApprentissageActuelle?: number;
+        capaciteApprentissageColoree?: number;
       };
     }) => {
       const id =
@@ -33,9 +40,7 @@ export const [submitDraftDemande] = inject(
           .toFixed(20)
           .slice(2)}`;
 
-      console.log(demande);
-
-      await deps.createDemandeQuery({
+      return await deps.createDemandeQuery({
         demande: {
           ...demande,
           id,

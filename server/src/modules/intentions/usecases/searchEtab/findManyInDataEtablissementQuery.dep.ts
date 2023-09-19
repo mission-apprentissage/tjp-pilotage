@@ -33,11 +33,12 @@ export const findManyInDataEtablissementsQuery = async ({
           eb.and(
             search_array.map((search_word) =>
               eb(
-                sql`concat(${eb.ref("dataEtablissement.libelle")},' ',${eb.ref(
-                  "dataEtablissement.commune"
-                )})`,
+                sql`concat(unaccent(${eb.ref("dataEtablissement.libelle")}),
+                  ' ',${eb.ref("dataEtablissement.commune")})`,
                 "ilike",
-                `%${search_word}%`
+                `%${search_word
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")}%`
               )
             )
           ),

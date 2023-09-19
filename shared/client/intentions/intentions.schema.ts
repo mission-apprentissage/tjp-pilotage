@@ -7,7 +7,6 @@ const DemandeSchema = Type.Object({
   createdAt: Type.String(),
   uai: Type.String(),
   cfd: Type.String(),
-  libelleDiplome: Type.String(),
   dispositifId: Type.String(),
   rentreeScolaire: Type.Number(),
   typeDemande: Type.String(),
@@ -19,6 +18,13 @@ const DemandeSchema = Type.Object({
   poursuitePedagogique: Type.Boolean(),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  mixte: Type.Boolean(),
+  capaciteScolaireActuelle: Type.Optional(Type.Number()),
+  capaciteScolaire: Type.Number(),
+  capaciteScolaireColoree: Type.Optional(Type.Number()),
+  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
+  capaciteApprentissage: Type.Optional(Type.Number()),
+  capaciteApprentissageColoree: Type.Optional(Type.Number()),
 });
 
 const DraftSchema = Type.Object({
@@ -26,7 +32,6 @@ const DraftSchema = Type.Object({
   createdAt: Type.String(),
   uai: Type.Optional(Type.String()),
   cfd: Type.Optional(Type.String()),
-  libelleDiplome: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   typeDemande: Type.Optional(Type.String()),
@@ -38,12 +43,21 @@ const DraftSchema = Type.Object({
   poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
+  mixte: Type.Optional(Type.Boolean()),
+  capaciteScolaireActuelle: Type.Optional(Type.Number()),
+  capaciteScolaire: Type.Optional(Type.Number()),
+  capaciteScolaireColoree: Type.Optional(Type.Number()),
+  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
+  capaciteApprentissage: Type.Optional(Type.Number()),
+  capaciteApprentissageColoree: Type.Optional(Type.Number()),
 });
 
-const SubmitSchemaPost = Type.Omit(
-  Partial(DemandeSchema, ["id", "autreMotif", "commentaire"]),
-  ["status", "createdAt"]
-);
+const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
+  "status",
+  "createdAt",
+]);
+
+const DraftSchemaPost = Partial(DraftSchema, ["id", "status", "createdAt"]);
 
 const MetadataSchema = Type.Object({
   etablissement: Type.Optional(
@@ -63,37 +77,24 @@ const MetadataSchema = Type.Object({
       ),
     })
   ),
-  libelleDiplome: Type.Optional(Type.String()),
 });
 
-const DraftSchemaPost = Partial(SubmitSchemaPost, [
-  "id",
-  "uai",
-  "cfd",
-  "libelleDiplome",
-  "rentreeScolaire",
-  "typeDemande",
-  "motif",
-  "autreMotif",
-  "libelleColoration",
-  "amiCma",
-  "poursuitePedagogique",
-  "commentaire",
-  "dispositifId",
-  "coloration",
-]);
+const DemandesItem = Type.Object({
+  id: Type.String(),
+  cfd: Type.Optional(Type.String()),
+  libelleDiplome: Type.Optional(Type.String()),
+  uai: Type.Optional(Type.String()),
+  createdAt: Type.String(),
+  createurId: Type.String(),
+  status: Type.String(),
+});
 
 const FiltersSchema = Type.Object({
   status: Type.Optional(
     Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
   ),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
-  orderBy: Type.Optional(
-    Type.Union([
-      Type.KeyOf(Type.Omit(DraftSchema, [])),
-      Type.KeyOf(Type.Omit(DemandeSchema, [])),
-    ])
-  ),
+  orderBy: Type.Optional(Type.KeyOf(DemandesItem)),
 });
 
 export const intentionsSchemas = {
@@ -209,7 +210,7 @@ export const intentionsSchemas = {
       demande: DraftSchemaPost,
     }),
     response: {
-      200: Type.Undefined(),
+      200: Type.Object({ id: Type.String() }),
     },
   },
   getDemande: {
@@ -237,17 +238,7 @@ export const intentionsSchemas = {
     ]),
     response: {
       200: Type.Object({
-        demandes: Type.Array(
-          Type.Object({
-            id: Type.String(),
-            cfd: Type.Optional(Type.String()),
-            libelleDiplome: Type.Optional(Type.String()),
-            uai: Type.Optional(Type.String()),
-            createdAt: Type.String(),
-            createurId: Type.String(),
-            status: Type.String(),
-          })
-        ),
+        demandes: Type.Array(DemandesItem),
         count: Type.Number(),
       }),
     },
