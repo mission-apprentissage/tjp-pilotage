@@ -6,6 +6,7 @@ import {
   FormLabel,
   RadioGroup,
   SimpleGrid,
+  Tag,
   Text,
   useToken,
 } from "@chakra-ui/react";
@@ -24,6 +25,7 @@ const typeDemandesOptions = [
         diminution de place).
       </>
     ),
+    tag: <>Objectif de la réforme : +15%</>,
   },
   {
     value: "ouverture_compensation",
@@ -70,17 +72,21 @@ const typeDemandesOptions = [
 function RadioCard({
   title,
   desc,
+  tag,
   selected,
   ...props
 }: {
   title: ReactNode;
   desc: ReactNode;
+  tag: ReactNode;
   selected: boolean;
 } & ComponentProps<"div">) {
   const bf113 = useToken("colors", "bluefrance.113");
 
   return (
     <Box
+      display="flex"
+      flexDirection="column"
       {...props}
       flex={1}
       cursor="pointer"
@@ -96,7 +102,14 @@ function RadioCard({
       <Text mb="3" fontWeight="bold" fontSize="lg" color="bluefrance.113">
         {title}
       </Text>
-      <Text fontSize="sm">{desc}</Text>
+      <Text fontSize="sm" mb="auto">
+        {desc}
+      </Text>
+      {tag && (
+        <Tag size="sm" colorScheme="green" mt="3" ml="auto">
+          {tag}
+        </Tag>
+      )}
     </Box>
   );
 }
@@ -135,6 +148,7 @@ export const TypeDemandeField = chakra(
                   key={item.value}
                   title={item.label}
                   desc={item.desc}
+                  tag={item.tag}
                   onClick={() => onChange(item.value)}
                 />
               ))}

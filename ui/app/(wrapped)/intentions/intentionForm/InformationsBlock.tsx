@@ -49,17 +49,17 @@ export const InformationsBlock = ({
         borderRadius={6}
       >
         <CapaciteSection />
-        <Flex justify="flex-end" mt="10" mb="4">
+        <Flex justify="flex-end" mt="12" mb="4">
           <Button
             isLoading={isDraftSubmitting}
-            variant="primary"
+            variant="secondary"
             mr="4"
             onClick={() => onDraftSubmit(form.getValues())}
           >
-            Brouillon
+            Enregistrer en brouillon
           </Button>
           <Button isLoading={isSubmitting} variant="primary" type="submit">
-            Envoyer
+            Envoyer la demande
           </Button>
         </Flex>
       </Box>

@@ -33,6 +33,7 @@ export const LibelleColorationField = chakra(
                 shouldUnregister: true,
                 required: "Ce champ est obligatoire",
               })}
+              placeholder="Complément du libéllé formation"
             />
             {errors.libelleColoration && (
               <FormErrorMessage>
