@@ -11,12 +11,14 @@ import { DispositifBlock } from "./DispositifBlock";
 import { UaiBlock } from "./UaiBlock";
 
 export const CfdUaiSection = ({
+  formId,
   active,
   defaultValues,
   formMetadata,
   submitCfdUai,
   onEditUaiCfdSection,
 }: {
+  formId?: string;
   active: boolean;
   defaultValues: PartialIntentionForms[1];
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
@@ -37,7 +39,7 @@ export const CfdUaiSection = ({
         borderRadius="6"
       >
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
-          Nouvelle demande
+          {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <IconButton
             visibility={active ? "collapse" : "visible"}
             variant="ghost"

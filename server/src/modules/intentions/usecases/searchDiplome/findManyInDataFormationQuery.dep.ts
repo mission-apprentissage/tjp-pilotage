@@ -15,15 +15,19 @@ export const findManyInDataFormationQuery = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
-    .leftJoin("familleMetier", "dataFormation.cfd", "familleMetier.cfdFamille")
+    .leftJoin(
+      "familleMetier",
+      "dataFormation.cfd",
+      "familleMetier.cfdSpecialite"
+    )
     .where((eb) =>
       eb.and([
         eb.or([
           eb("dataFormation.cfd", "ilike", `${search}%`),
           eb("dataFormation.libelle", "ilike", `%${search}%`),
           eb("familleMetier.cfdFamille", "ilike", `${search}%`),
-          eb("familleMetier.cfdSpecialite", "ilike", `%${search}%`),
-          eb("familleMetier.libelleOfficielFamille", "ilike", `${search}%`),
+          eb("familleMetier.cfdSpecialite", "ilike", `${search}%`),
+          eb("familleMetier.libelleOfficielFamille", "ilike", `%${search}%`),
           eb("familleMetier.libelleOfficielSpecialite", "ilike", `%${search}%`),
         ]),
         eb.or([
@@ -68,6 +72,7 @@ export const findManyInDataFormationQuery = async ({
       `.as("dateFermeture"),
     ])
     .distinctOn("dataFormation.cfd")
+    .limit(20)
     .execute();
 
   return formations;
