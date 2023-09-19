@@ -12,7 +12,11 @@ export const PERMISSIONS: {
   [R in typeof roles[number]]: { permissions: typeof permissions[number][] };
 } = {
   admin: {
-    permissions: ["pilotage_reforme/lecture", "intentions/envoi"],
+    permissions: [
+      "intentions/envoi",
+      "intentions/lecture",
+      "pilotage_reforme/lecture",
+    ],
   },
   pilote: {
     permissions: ["pilotage_reforme/lecture"],
