@@ -117,8 +117,8 @@ export const CapaciteSection = () => {
               <FormLabel>Nombre de nouvelles places</FormLabel>
               <ConstanteField
                 value={differenceCapacité(
-                  capaciteApprentissage,
-                  capaciteApprentissageActuelle
+                  capaciteApprentissageActuelle,
+                  capaciteApprentissage
                 )}
               />
             </FormControl>

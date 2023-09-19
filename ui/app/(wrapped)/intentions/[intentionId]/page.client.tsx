@@ -45,8 +45,13 @@ export default ({
               poursuitePedagogique: data.poursuitePedagogique,
               rentreeScolaire: data.rentreeScolaire,
               coloration: data.coloration,
+              mixte: data.mixte,
               capaciteScolaire: data.capaciteScolaire,
+              capaciteScolaireActuelle: data.capaciteScolaireActuelle,
+              capaciteScolaireColoree: data.capaciteScolaireColoree,
               capaciteApprentissage: data.capaciteApprentissage,
+              capaciteApprentissageActuelle: data.capaciteApprentissageActuelle,
+              capaciteApprentissageColoree: data.capaciteApprentissageColoree,
             },
           }}
           formMetadata={data.metadata}
