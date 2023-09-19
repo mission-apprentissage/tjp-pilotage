@@ -16,7 +16,9 @@ export default ({
   const { data, isLoading } = useQuery({
     queryKey: [intentionId],
     queryFn: api.getDemande({ params: { id: intentionId } }).call,
+    cacheTime: 0,
   });
+
   if (isLoading)
     return (
       <Center mt="6">
@@ -33,7 +35,6 @@ export default ({
               uai: data.uai,
               cfd: data.cfd,
               dispositifId: data.dispositifId,
-              libelleDiplome: data.libelleDiplome,
             },
             2: {
               motif: data.motif,
@@ -41,10 +42,17 @@ export default ({
               autreMotif: data.autreMotif,
               commentaire: data.commentaire,
               libelleColoration: data.libelleColoration,
-              amiCma: JSON.stringify(data.amiCma),
-              poursuitePedagogique: JSON.stringify(data.poursuitePedagogique),
-              rentreeScolaire: JSON.stringify(data.rentreeScolaire),
-              coloration: JSON.stringify(data.coloration),
+              amiCma: data.amiCma,
+              poursuitePedagogique: data.poursuitePedagogique,
+              rentreeScolaire: data.rentreeScolaire,
+              coloration: data.coloration,
+              mixte: data.mixte,
+              capaciteScolaire: data.capaciteScolaire,
+              capaciteScolaireActuelle: data.capaciteScolaireActuelle,
+              capaciteScolaireColoree: data.capaciteScolaireColoree,
+              capaciteApprentissage: data.capaciteApprentissage,
+              capaciteApprentissageActuelle: data.capaciteApprentissageActuelle,
+              capaciteApprentissageColoree: data.capaciteApprentissageColoree,
             },
           }}
           formMetadata={data.metadata}

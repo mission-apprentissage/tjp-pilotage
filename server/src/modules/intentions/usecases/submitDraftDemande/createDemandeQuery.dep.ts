@@ -8,7 +8,7 @@ export const createDemandeQuery = async ({
 }: {
   demande: Insertable<DB["demande"]>;
 }) => {
-  await kdb
+  return await kdb
     .insertInto("demande")
     .values(demande)
     .onConflict((oc) =>
@@ -28,8 +28,16 @@ export const createDemandeQuery = async ({
         typeDemande: null,
         uai: null,
         coloration: null,
+        mixte: null,
+        capaciteScolaire: null,
+        capaciteScolaireActuelle: null,
+        capaciteScolaireColoree: null,
+        capaciteApprentissage: null,
+        capaciteApprentissageActuelle: null,
+        capaciteApprentissageColoree: null,
         ...demande,
       })
     )
-    .execute();
+    .returning(["id"])
+    .executeTakeFirst();
 };

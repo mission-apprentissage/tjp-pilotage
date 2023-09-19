@@ -17,7 +17,6 @@ export const [submitDemande] = inject(
         uai: string;
         typeDemande: string;
         cfd: string;
-        libelleDiplome: string;
         dispositifId: string;
         motif: string[];
         autreMotif?: string;
@@ -26,7 +25,14 @@ export const [submitDemande] = inject(
         libelleColoration?: string;
         poursuitePedagogique: boolean;
         commentaire?: string;
-        coloration?: boolean;
+        coloration: boolean;
+        mixte: boolean;
+        capaciteScolaire: number;
+        capaciteScolaireActuelle?: number;
+        capaciteScolaireColoree?: number;
+        capaciteApprentissage?: number;
+        capaciteApprentissageActuelle?: number;
+        capaciteApprentissageColoree?: number;
       };
     }) => {
       const id =

@@ -2273,7 +2273,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/ajv-compiler@npm:^3.3.1":
+"@fastify/ajv-compiler@npm:^3.5.0":
   version: 3.5.0
   resolution: "@fastify/ajv-compiler@npm:3.5.0"
   dependencies:
@@ -2301,19 +2301,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/error@npm:^3.0.0":
-  version: 3.2.0
-  resolution: "@fastify/error@npm:3.2.0"
-  checksum: e538ef76fd2dedd0584691e0c891997321a2050092b11089a70090f5a0edab0dc8ab069747aa6025782280824e2348548e051c8e77558baec699bd44e581e187
+"@fastify/error@npm:^3.2.0":
+  version: 3.3.0
+  resolution: "@fastify/error@npm:3.3.0"
+  checksum: 202507c8c7f49922cac2f5afc82802151b0bd9c583ca1c2850bf43d0f4cd97eedb3a3388b9016da74f8a01b517a5861d1f666c506dd64fd22995e559bc139264
   languageName: node
   linkType: hard
 
-"@fastify/fast-json-stringify-compiler@npm:^4.1.0":
-  version: 4.2.0
-  resolution: "@fastify/fast-json-stringify-compiler@npm:4.2.0"
+"@fastify/fast-json-stringify-compiler@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "@fastify/fast-json-stringify-compiler@npm:4.3.0"
   dependencies:
-    fast-json-stringify: ^5.0.0
-  checksum: c79e9aab14fe2693c4ae399824e0bdd2337a5f1ae403aeec0178a566b03633681d10fc16f010bcf503fb13a50127db463cfa25783dfbed1338b9ccd2593124bd
+    fast-json-stringify: ^5.7.0
+  checksum: 2734afabe2539d3e15d2bd9f8dfee756d9cd969f7303dc085dd91c744ff61742bb0d3ebd3b561cf3c32be54567048a634b4962f943eb6bd9ed3fbd71cbf6a4fa
   languageName: node
   linkType: hard
 
@@ -2371,13 +2371,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fastify/type-provider-typebox@npm:^2.4.0":
-  version: 2.4.0
-  resolution: "@fastify/type-provider-typebox@npm:2.4.0"
+"@fastify/type-provider-typebox@npm:^3.5.0":
+  version: 3.5.0
+  resolution: "@fastify/type-provider-typebox@npm:3.5.0"
   peerDependencies:
-    "@sinclair/typebox": ^0.25.9
-    fastify: ^4.0.0
-  checksum: abaf019e25bb4dd7adbf5ad6d588b1cc846c60695b01c7ae5d4a98d4c8f8263c531f08ca2e81a54c8176117b856978cf541d7aff19d98b4c28f26a9f2a61da3a
+    "@sinclair/typebox": ">=0.26 <=0.31"
+  checksum: 32f85c3b1be93bac684736202757330347dda9c76e3a613d305ca7f8fe00ab4da48424c231ec7c2bfccb40c5681c57dcebba60c7f2cb813879cc2ed34deeafa6
   languageName: node
   linkType: hard
 
@@ -2851,10 +2850,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/env@npm:13.4.20-canary.18"
-  checksum: a4c2c37c3edd881715b6559c6d2aee2c55105d7fb487852ad5cbde1afe2be81f00eaf9807387da9b29356f6ca62560791546d10b1cf17285a994fdfbae20693c
+"@next/env@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/env@npm:13.4.20-canary.35"
+  checksum: 9e9421b6e092454af8ca25f04d07594b4be8856937f173ae1e8e8e193746fb2f312571a189bff7f5e2767b926ec148abe9988e586ffe9d23ab6791ce80c0bc94
   languageName: node
   linkType: hard
 
@@ -2867,65 +2866,65 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-darwin-arm64@npm:13.4.20-canary.18"
+"@next/swc-darwin-arm64@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-darwin-arm64@npm:13.4.20-canary.35"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-darwin-x64@npm:13.4.20-canary.18"
+"@next/swc-darwin-x64@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-darwin-x64@npm:13.4.20-canary.35"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-linux-arm64-gnu@npm:13.4.20-canary.18"
+"@next/swc-linux-arm64-gnu@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-linux-arm64-gnu@npm:13.4.20-canary.35"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-linux-arm64-musl@npm:13.4.20-canary.18"
+"@next/swc-linux-arm64-musl@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-linux-arm64-musl@npm:13.4.20-canary.35"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-linux-x64-gnu@npm:13.4.20-canary.18"
+"@next/swc-linux-x64-gnu@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-linux-x64-gnu@npm:13.4.20-canary.35"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-linux-x64-musl@npm:13.4.20-canary.18"
+"@next/swc-linux-x64-musl@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-linux-x64-musl@npm:13.4.20-canary.35"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-win32-arm64-msvc@npm:13.4.20-canary.18"
+"@next/swc-win32-arm64-msvc@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-win32-arm64-msvc@npm:13.4.20-canary.35"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-ia32-msvc@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-win32-ia32-msvc@npm:13.4.20-canary.18"
+"@next/swc-win32-ia32-msvc@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-win32-ia32-msvc@npm:13.4.20-canary.35"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "@next/swc-win32-x64-msvc@npm:13.4.20-canary.18"
+"@next/swc-win32-x64-msvc@npm:13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "@next/swc-win32-x64-msvc@npm:13.4.20-canary.35"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -3560,12 +3559,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@swc/helpers@npm:0.5.1":
-  version: 0.5.1
-  resolution: "@swc/helpers@npm:0.5.1"
+"@swc/helpers@npm:0.5.2":
+  version: 0.5.2
+  resolution: "@swc/helpers@npm:0.5.2"
   dependencies:
     tslib: ^2.4.0
-  checksum: 71e0e27234590435e4c62b97ef5e796f88e786841a38c7116a5e27a3eafa7b9ead7cdec5249b32165902076de78446945311c973e59bddf77c1e24f33a8f272a
+  checksum: 51d7e3d8bd56818c49d6bfbd715f0dbeedc13cf723af41166e45c03e37f109336bbcb57a1f2020f4015957721aeb21e1a7fff281233d797ff7d3dd1f447fa258
   languageName: node
   linkType: hard
 
@@ -4763,14 +4762,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"avvio@npm:^8.2.0":
-  version: 8.2.0
-  resolution: "avvio@npm:8.2.0"
+"avvio@npm:^8.2.1":
+  version: 8.2.1
+  resolution: "avvio@npm:8.2.1"
   dependencies:
     archy: ^1.0.0
     debug: ^4.0.0
     fastq: ^1.6.1
-  checksum: bbd06eeb1f9ef428dbc32a32e06c350a7b320f60348698fd234145a4100f3688ce5d0999b966eb6ca70f9511d0c35fed5ef4651d276715e7e3e94a2d465cb56d
+  checksum: 4c96922ea123d13b26cb78a071a8989fde62ee8580352b6d2f05b7976ed3d23efa663c12ee1be35501dfe65e12a769a2ea522bcdb7ca35a5ba4d86766467075a
   languageName: node
   linkType: hard
 
@@ -7850,9 +7849,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fast-json-stringify@npm:^5.0.0":
-  version: 5.5.0
-  resolution: "fast-json-stringify@npm:5.5.0"
+"fast-json-stringify@npm:^5.7.0":
+  version: 5.8.0
+  resolution: "fast-json-stringify@npm:5.8.0"
   dependencies:
     "@fastify/deepmerge": ^1.0.0
     ajv: ^8.10.0
@@ -7860,7 +7859,7 @@ __metadata:
     fast-deep-equal: ^3.1.3
     fast-uri: ^2.1.0
     rfdc: ^1.2.0
-  checksum: 800401324af712f562b3912c1a31c1a055e9af12a10227fbb507ad4e0d17fc01945c71f7e269b080bcf8051364d7422122c7c18d811f61ac79a21583067049e4
+  checksum: 04232ace5a5758e6a92b9a4518234a1c05e55ef9b788c80bf741ec6a64cf7273a9ef07938ca4b82a96ea470295b4c3e84a657a9bbaacee4bd97daa16595b1a9a
   languageName: node
   linkType: hard
 
@@ -7939,26 +7938,27 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastify@npm:^4.12.0":
-  version: 4.12.0
-  resolution: "fastify@npm:4.12.0"
+"fastify@npm:^4.23.2":
+  version: 4.23.2
+  resolution: "fastify@npm:4.23.2"
   dependencies:
-    "@fastify/ajv-compiler": ^3.3.1
-    "@fastify/error": ^3.0.0
-    "@fastify/fast-json-stringify-compiler": ^4.1.0
+    "@fastify/ajv-compiler": ^3.5.0
+    "@fastify/error": ^3.2.0
+    "@fastify/fast-json-stringify-compiler": ^4.3.0
     abstract-logging: ^2.0.1
-    avvio: ^8.2.0
+    avvio: ^8.2.1
     fast-content-type-parse: ^1.0.0
-    find-my-way: ^7.3.0
-    light-my-request: ^5.6.1
-    pino: ^8.5.0
-    process-warning: ^2.0.0
+    fast-json-stringify: ^5.7.0
+    find-my-way: ^7.6.0
+    light-my-request: ^5.9.1
+    pino: ^8.12.0
+    process-warning: ^2.2.0
     proxy-addr: ^2.0.7
     rfdc: ^1.3.0
     secure-json-parse: ^2.5.0
-    semver: ^7.3.7
-    tiny-lru: ^10.0.0
-  checksum: 7f5ec6aad14cd57acf11899c3c64186c7b0a1716c068ad7174375fdcc21248e5cd1c54ac71d496504b0255f5eefdb6858446d859286c70472742ea75a4eb4cad
+    semver: ^7.5.0
+    toad-cache: ^3.2.0
+  checksum: 125cc67b3dbd86f97918e2dbfc0655cea93d20a93a9a0d14c3a0fd0a1c7fa60bb2a204331baeedea606f085f7b0c11c532c2eac52d1b2bb7bb10334b7e072512
   languageName: node
   linkType: hard
 
@@ -8049,14 +8049,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"find-my-way@npm:^7.3.0":
-  version: 7.4.0
-  resolution: "find-my-way@npm:7.4.0"
+"find-my-way@npm:^7.6.0":
+  version: 7.6.2
+  resolution: "find-my-way@npm:7.6.2"
   dependencies:
     fast-deep-equal: ^3.1.3
     fast-querystring: ^1.0.0
     safe-regex2: ^2.0.0
-  checksum: 8f01b63c28d2a95f5bea674ca4c2ea6f444af5a5d87b54e124fe8a656d26617f4be1443f13e5e7cc155ddf40c2c9604dcd2fe9cfd5d06343aa9e32e06af42a16
+  checksum: 56c02350aba2cc4cff82b3e00171cf4db72756b8ca5f0e41562d21f89cf29512b9e83b6e29ab352303ca9d0dcbfcd8c93f50d52dc92f1eeecc4bc991404ef533
   languageName: node
   linkType: hard
 
@@ -11027,14 +11027,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"light-my-request@npm:^5.6.1":
-  version: 5.8.0
-  resolution: "light-my-request@npm:5.8.0"
+"light-my-request@npm:^5.9.1":
+  version: 5.11.0
+  resolution: "light-my-request@npm:5.11.0"
   dependencies:
     cookie: ^0.5.0
     process-warning: ^2.0.0
     set-cookie-parser: ^2.4.1
-  checksum: 8744ba4a43f19e82b6e51a67d1b0b2b789b96ad54e120bfc1a985cd0c05a2ba136510f2abf23c82e913ab791bcb115e820cdbdeb3a02e1b4d05c670d95d5a8c8
+  checksum: f639edb4664534bfcc87aff3fc36e7199ef5b04c399ce51a87481786d23ad1d439a71a5beeada5d0fe607c9d6efccbcd1bef265f31397e130f4077d43cc6d45f
   languageName: node
   linkType: hard
 
@@ -12617,21 +12617,21 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:v13.4.20-canary.18":
-  version: 13.4.20-canary.18
-  resolution: "next@npm:13.4.20-canary.18"
+"next@npm:v13.4.20-canary.35":
+  version: 13.4.20-canary.35
+  resolution: "next@npm:13.4.20-canary.35"
   dependencies:
-    "@next/env": 13.4.20-canary.18
-    "@next/swc-darwin-arm64": 13.4.20-canary.18
-    "@next/swc-darwin-x64": 13.4.20-canary.18
-    "@next/swc-linux-arm64-gnu": 13.4.20-canary.18
-    "@next/swc-linux-arm64-musl": 13.4.20-canary.18
-    "@next/swc-linux-x64-gnu": 13.4.20-canary.18
-    "@next/swc-linux-x64-musl": 13.4.20-canary.18
-    "@next/swc-win32-arm64-msvc": 13.4.20-canary.18
-    "@next/swc-win32-ia32-msvc": 13.4.20-canary.18
-    "@next/swc-win32-x64-msvc": 13.4.20-canary.18
-    "@swc/helpers": 0.5.1
+    "@next/env": 13.4.20-canary.35
+    "@next/swc-darwin-arm64": 13.4.20-canary.35
+    "@next/swc-darwin-x64": 13.4.20-canary.35
+    "@next/swc-linux-arm64-gnu": 13.4.20-canary.35
+    "@next/swc-linux-arm64-musl": 13.4.20-canary.35
+    "@next/swc-linux-x64-gnu": 13.4.20-canary.35
+    "@next/swc-linux-x64-musl": 13.4.20-canary.35
+    "@next/swc-win32-arm64-msvc": 13.4.20-canary.35
+    "@next/swc-win32-ia32-msvc": 13.4.20-canary.35
+    "@next/swc-win32-x64-msvc": 13.4.20-canary.35
+    "@swc/helpers": 0.5.2
     busboy: 1.6.0
     caniuse-lite: ^1.0.30001406
     postcss: 8.4.14
@@ -12669,7 +12669,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 46968b52ddfaa9a818554c3a2e513ef0daf103ea657aa8bbaf4d4c64bc21b1b3452d56236e2bb01dfe6ef28865ffb0343dc74bf7926937a838a703469fd6315a
+  checksum: 9dcce157e2cef0a7fbfa9f36c7d9818ecefae3ddfc41be1a587c54d42c38614dc6893157604b12afd63cc3f79267c0113bf55ce75a7d8b3c5c70360d92616b93
   languageName: node
   linkType: hard
 
@@ -13793,13 +13793,13 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino-abstract-transport@npm:v1.0.0":
-  version: 1.0.0
-  resolution: "pino-abstract-transport@npm:1.0.0"
+"pino-abstract-transport@npm:v1.1.0":
+  version: 1.1.0
+  resolution: "pino-abstract-transport@npm:1.1.0"
   dependencies:
     readable-stream: ^4.0.0
     split2: ^4.0.0
-  checksum: 05dd0eda52dd99fd204b39fe7b62656744b63e863bc052cdd5105d25f226a236966d0a46e39a1ace4838f6e988c608837ff946d2d0bc92835ca7baa0a3bff8d8
+  checksum: cc84caabee5647b5753ae484d5f63a1bca0f6e1791845e2db2b6d830a561c2b5dd1177720f68d78994c8a93aecc69f2729e6ac2bc871a1bf5bb4b0ec17210668
   languageName: node
   linkType: hard
 
@@ -13810,14 +13810,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"pino@npm:^8.5.0":
-  version: 8.8.0
-  resolution: "pino@npm:8.8.0"
+"pino@npm:^8.12.0":
+  version: 8.15.1
+  resolution: "pino@npm:8.15.1"
   dependencies:
     atomic-sleep: ^1.0.0
     fast-redact: ^3.1.1
     on-exit-leak-free: ^2.1.0
-    pino-abstract-transport: v1.0.0
+    pino-abstract-transport: v1.1.0
     pino-std-serializers: ^6.0.0
     process-warning: ^2.0.0
     quick-format-unescaped: ^4.0.3
@@ -13827,7 +13827,7 @@ __metadata:
     thread-stream: ^2.0.0
   bin:
     pino: bin.js
-  checksum: 69256469221b332776333069d637100053eb15dc7baa3f95897d7864bf2e6fd99f15cfd9cfc94b56e7b00da2e6b349c49affcff1abaca9a3d4b7ba63ff86b4f0
+  checksum: cbc6aa4e7fcf28dac326292f6c9276bb6abd1c480e49a830601071c99fc74c09eb56c7049034ea011ccf7a224243af3452f59b73f07f4a22929b8f886130d5a2
   languageName: node
   linkType: hard
 
@@ -14010,6 +14010,13 @@ __metadata:
   version: 2.1.0
   resolution: "process-warning@npm:2.1.0"
   checksum: 2f22a3b8ec0de018c3a35e5945a2261c006aa3dfecf3d4f7aa323bc57e4fcdedfd566003283708547fde666d3ab7097d70f8d9765cd831d300723e4008adb7ab
+  languageName: node
+  linkType: hard
+
+"process-warning@npm:^2.2.0":
+  version: 2.2.0
+  resolution: "process-warning@npm:2.2.0"
+  checksum: 394ae451c2622ee7d014a7196d36658fc1a5d5cc9f3bfeb54aadd5b77fcfecc89a30a25db259ae76ff49fde3f3f3dd7031dcdfb4da2e5445dac795549352e5d0
   languageName: node
   linkType: hard
 
@@ -14274,12 +14281,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.46.0":
-  version: 7.46.0
-  resolution: "react-hook-form@npm:7.46.0"
+"react-hook-form@npm:^7.46.1":
+  version: 7.46.1
+  resolution: "react-hook-form@npm:7.46.1"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: cc8f054d964206df1da115e0cf7c2d03dd1b28e8ccb943e455bdcdb256fa9bc33bb2e1b437403631e4d0d94478f342feea2621cca4a9ef84eeb14442804f8146
+  checksum: 9c11ba454ce5b2a16e7499f2ca710e0c0cff227f39689b8e7985902f27f99bfc7a2c49f145ef228528764cf8286bf6101fc8a0f5094ce652eb31cab1684518d1
   languageName: node
   linkType: hard
 
@@ -15357,7 +15364,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"semver@npm:^7.5.3":
+"semver@npm:^7.5.0, semver@npm:^7.5.3":
   version: 7.5.4
   resolution: "semver@npm:7.5.4"
   dependencies:
@@ -15375,7 +15382,7 @@ __metadata:
     "@fastify/cors": ^8.2.0
     "@fastify/swagger": ^8.3.1
     "@fastify/swagger-ui": ^1.6.0
-    "@fastify/type-provider-typebox": ^2.4.0
+    "@fastify/type-provider-typebox": ^3.5.0
     "@hapi/boom": ^10.0.1
     "@json2csv/node": ^6.1.3
     "@json2csv/plainjs": ^6.1.3
@@ -15404,7 +15411,7 @@ __metadata:
     ejs: ^3.1.9
     env-var: 7.1.1
     esbuild-jest: ^0.5.0
-    fastify: ^4.12.0
+    fastify: ^4.23.2
     fastify-qs: ^4.0.1
     jest: ^29.5.0
     jsonwebtoken: 8.5.1
@@ -16369,13 +16376,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tiny-lru@npm:^10.0.0":
-  version: 10.0.1
-  resolution: "tiny-lru@npm:10.0.1"
-  checksum: 58b5f17a357625335aa3b90ee8c9b3e9abede5c1f46066c73deb129574a205efb112807d6d473909e73f1d874ea99bf14eb5c88223d540eb32ebb5e1ff146689
-  languageName: node
-  linkType: hard
-
 "tiny-relative-date@npm:^1.3.0":
   version: 1.3.0
   resolution: "tiny-relative-date@npm:1.3.0"
@@ -16472,6 +16472,13 @@ __metadata:
     regex-not: ^1.0.2
     safe-regex: ^1.1.0
   checksum: 4ed4a619059b64e204aad84e4e5f3ea82d97410988bcece7cf6cbfdbf193d11bff48cf53842d88b8bb00b1bfc0d048f61f20f0709e6f393fd8fe0122662d9db4
+  languageName: node
+  linkType: hard
+
+"toad-cache@npm:^3.2.0":
+  version: 3.2.0
+  resolution: "toad-cache@npm:3.2.0"
+  checksum: 9d64f7760cd8ae6d0684d17e9153a39c088877e4b9f5e648fe11c4f9c82c033d3b606ff0dfe566cd5a0056dee9ebeaf4ab9bee1de1e6597d7cc6745042413b2b
   languageName: node
   linkType: hard
 
@@ -16889,13 +16896,13 @@ __metadata:
     axios: 1.3.5
     echarts: ^5.4.2
     framer-motion: ^10.9.1
-    next: v13.4.20-canary.18
+    next: v13.4.20-canary.35
     next-plausible: ^3.7.2
     notion-client: ^6.16.0
     qs: ^6.11.1
     react: 18.2.0
     react-dom: 18.2.0
-    react-hook-form: ^7.46.0
+    react-hook-form: ^7.46.1
     react-notion-x: ^6.16.0
     react-select: ^5.7.4
     shared: "*"

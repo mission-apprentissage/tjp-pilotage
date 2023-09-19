@@ -1,29 +1,27 @@
 import {
-  Checkbox,
-  CheckboxGroup,
-  Collapse,
   Divider,
+  Flex,
   FormControl,
-  FormErrorMessage,
   FormLabel,
   Heading,
-  Select,
-  Stack,
-  Textarea,
+  ListItem,
+  OrderedList,
+  Text,
 } from "@chakra-ui/react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
+
+import { MotifField } from "@/app/(wrapped)/intentions/intentionForm/typeDemandeSection/MotifField";
 
 import { IntentionForms } from "../defaultFormValues";
+import { InfoBox } from "../InfoBox";
+import { AutreMotif } from "./AutreMotifField";
+import { RentreeScolaireField } from "./RentreeScolaireField";
+import { TypeDemandeField } from "./TypeDemandeField";
 
 export const TypeDemandeSection = () => {
-  const {
-    formState: { errors },
-    control,
-    register,
-    watch,
-  } = useFormContext<IntentionForms[2]>();
+  const { watch } = useFormContext<IntentionForms[2]>();
 
-  const [motif] = watch(["motif"]);
+  const [typeDemande] = watch(["typeDemande"]);
 
   return (
     <>
@@ -31,99 +29,34 @@ export const TypeDemandeSection = () => {
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <FormControl
-        mb="4"
-        maxW="500px"
-        isInvalid={!!errors.typeDemande}
-        isRequired
-      >
-        <FormLabel>Ma demande concerne</FormLabel>
-        <Select
-          bg="white"
-          {...register("typeDemande", {
-            required: "Le type de demande est obligatoire",
-          })}
-          placeholder="Sélectionner une option"
-        >
-          <option value="ouverture">Ouverture</option>
-          <option value="fermeture">Fermeture</option>
-          <option value="augmentation">Augmentation</option>
-          <option value="diminution">Diminution</option>
-          <option value="fcil">FCIL</option>
-        </Select>
-        {errors.typeDemande && (
-          <FormErrorMessage>{errors.typeDemande.message}</FormErrorMessage>
-        )}
-      </FormControl>
-      <FormControl mb="4" isInvalid={!!errors.motif} isRequired maxW="500px">
-        <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
-        <Controller
-          name="motif"
-          control={control}
-          rules={{ required: "Le motif est obligatoire" }}
-          render={({ field: { onChange, value, onBlur } }) => (
-            <CheckboxGroup onChange={onChange} value={value}>
-              <Stack spacing={[3]}>
-                {[
-                  { label: "Taux d’emploi favorable", value: "1" },
-                  { label: "Taux de poursuite favorable", value: "2" },
-                  {
-                    label: "Besoins recrutements avérés localement",
-                    value: "3",
-                  },
-                  {
-                    label: "Métiers 2030 Texte de description additionnel",
-                    value: "4",
-                  },
-                  { label: "Parcours pédagogique", value: "5" },
-                  { label: "Maintien pour public spécifique", value: "6" },
-                  { label: "Nouvel établissement", value: "7" },
-                  { label: "Établissement privé sous contrat", value: "8" },
-                  {
-                    label: "Fermeture / diminution en compensation",
-                    value: "9",
-                  },
-                  { label: "Autre motif (veuillez préciser)", value: "10" },
-                ].map(({ value, label }) => (
-                  <Checkbox
-                    isRequired={false}
-                    key={value}
-                    onBlur={onBlur}
-                    value={value}
-                  >
-                    {label}
-                  </Checkbox>
-                ))}
-              </Stack>
-            </CheckboxGroup>
-          )}
-        />
-        {errors.motif && (
-          <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
-        )}
-      </FormControl>
-
-      <Collapse in={(motif as string[])?.includes("10")} unmountOnExit>
-        <FormControl
-          mb="4"
-          maxW="500px"
-          isInvalid={!!errors.autreMotif}
-          isRequired
-        >
-          <FormLabel>Autre motif</FormLabel>
-          {(motif as string[])?.includes("10") && (
-            <Textarea
-              {...register("autreMotif", {
-                shouldUnregister: true,
-                required: "Veuillez préciser votre motif",
-              })}
-            />
-          )}
-          {errors.autreMotif && (
-            <FormErrorMessage>{errors.autreMotif.message}</FormErrorMessage>
-          )}
+      <RentreeScolaireField mb="6" maxW="752px" />
+      <Flex align="flex-start">
+        <TypeDemandeField maxWidth="752px" mb="6" />
+        <InfoBox flex="1" mt="10" ml="6">
+          <Text mb="3">
+            Si j’ouvre un BAC PRO AEPA et que je ferme un BAC PRO AGORA.
+          </Text>
+          <OrderedList>
+            <ListItem mb="2">
+              Je choisis “Ouverture par compensation” dans ma première demande
+              pour le BAC PRO AEPA.
+            </ListItem>
+            <ListItem>
+              Je saisis ensuite une seconde demande de Fermeture pour le BAC PRO
+              AGORA.
+            </ListItem>
+          </OrderedList>
+        </InfoBox>
+      </Flex>
+      {typeDemande === "ouverture_compensation" && (
+        <FormControl mb="4" isRequired maxW="752px">
+          <FormLabel>Compensation</FormLabel>
+          todo
         </FormControl>
-      </Collapse>
+      )}
+
+      <MotifField maxW="752px" mb="6" />
+      <AutreMotif mb="6" maxW="752px" />
     </>
   );
 };

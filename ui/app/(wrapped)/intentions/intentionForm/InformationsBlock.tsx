@@ -2,7 +2,6 @@ import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
-import { ComplementaireSection } from "./complementaireSection/ComplementaireSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -35,22 +34,32 @@ export const InformationsBlock = ({
         as="form"
         p="6"
         mt="6"
+        mb="6"
         borderRadius={6}
       >
         <TypeDemandeSection />
+      </Box>
+      <Box
+        noValidate
+        onSubmit={handleSubmit(onSubmit)}
+        bg="white"
+        as="form"
+        p="6"
+        mt="6"
+        borderRadius={6}
+      >
         <CapaciteSection />
-        <ComplementaireSection />
-        <Flex justify="flex-end" mt="10" mb="4">
+        <Flex justify="flex-end" mt="12" mb="4">
           <Button
             isLoading={isDraftSubmitting}
-            variant="primary"
+            variant="secondary"
             mr="4"
             onClick={() => onDraftSubmit(form.getValues())}
           >
-            Brouillon
+            Enregistrer en brouillon
           </Button>
           <Button isLoading={isSubmitting} variant="primary" type="submit">
-            Envoyer
+            Envoyer la demande
           </Button>
         </Flex>
       </Box>

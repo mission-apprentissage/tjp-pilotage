@@ -48,7 +48,6 @@ export const DispositifBlock = ({
           render={({ field: { onChange, value, name } }) => (
             <Select
               value={value}
-              defaultValue={defaultValues.dispositifId}
               name={name}
               bg={"white"}
               color="chakra-body-text"

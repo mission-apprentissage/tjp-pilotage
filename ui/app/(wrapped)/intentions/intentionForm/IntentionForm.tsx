@@ -1,7 +1,8 @@
 "use client";
 
-import { Collapse, Container, Grid, GridItem } from "@chakra-ui/react";
+import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { ApiType } from "shared";
 
@@ -11,19 +12,10 @@ import {
 } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import { api } from "../../../../api.client";
-import { MenuIntention } from "../menuIntention/MenuIntention";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
 export const UaiRegex = /^[A-Z0-9]{8}$/;
-
-function toBoolean<
-  V extends string | undefined,
-  R = V extends undefined ? boolean | undefined : boolean
->(value: V): R {
-  if (typeof value === "undefined") return undefined as R;
-  return (value === "true") as R;
-}
 
 export const IntentionForm = ({
   formId,
@@ -40,13 +32,9 @@ export const IntentionForm = ({
         .submitDemande({
           body: {
             demande: {
+              id: formId,
               ...forms[1],
               ...forms[2],
-              amiCma: toBoolean(forms[2].amiCma),
-              poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
-              rentreeScolaire: parseInt(forms[2].rentreeScolaire),
-              libelleColoration: forms[2].libelleColoration,
-              coloration: toBoolean(forms[2].coloration),
             },
           },
         })
@@ -63,11 +51,6 @@ export const IntentionForm = ({
                 id: formId,
                 ...forms[1],
                 ...forms[2],
-                amiCma: toBoolean(forms[2].amiCma),
-                poursuitePedagogique: toBoolean(forms[2].poursuitePedagogique),
-                rentreeScolaire:
-                  parseInt(forms[2].rentreeScolaire ?? "") || undefined,
-                coloration: toBoolean(forms[2].coloration),
               },
             },
           })
@@ -96,46 +79,48 @@ export const IntentionForm = ({
     }
   };
 
-  const onEditUaiCfdSection = () => {
-    setStep(1);
+  const onEditUaiCfdSection = () => setStep(1);
+
+  const { push, replace } = useRouter();
+
+  const onSubmit = async (values: IntentionForms[2]) => {
+    const newIntention = {
+      ...intention,
+      2: values,
+    } as IntentionForms;
+    setIntention(newIntention);
+    await submit({ forms: newIntention });
+    push("/intentions");
+  };
+
+  const onDraftSubmit = async (values: PartialIntentionForms[2]) => {
+    const { id } = await submitDraft({
+      forms: { ...intention, 2: values },
+    });
+    replace(id, { scroll: false });
   };
 
   return (
-    <Container maxW={"container.xl"} my={12}>
-      <Grid templateColumns="repeat(5,1fr)" gap={2}>
-        <GridItem>
-          <MenuIntention></MenuIntention>
-        </GridItem>
-        <GridItem colSpan={4}>
-          <CfdUaiSection
-            formId={formId}
-            defaultValues={intention[1]}
-            formMetadata={formMetadata}
-            submitCfdUai={submitCfdUai}
-            onEditUaiCfdSection={onEditUaiCfdSection}
-            active={step === 1}
+    <Box flex={1} bg="#E2E7F8">
+      <Container maxW={"container.xl"} my={12}>
+        <CfdUaiSection
+          formId={formId}
+          defaultValues={intention[1]}
+          formMetadata={formMetadata}
+          submitCfdUai={submitCfdUai}
+          onEditUaiCfdSection={onEditUaiCfdSection}
+          active={step === 1}
+        />
+        <Collapse in={step === 2} animateOpacity>
+          <InformationsBlock
+            isSubmitting={isSubmitting}
+            onSubmit={onSubmit}
+            isDraftSubmitting={isDraftSubmitting}
+            onDraftSubmit={onDraftSubmit}
+            defaultValues={intention[2]}
           />
-          <Collapse in={step === 2} animateOpacity>
-            <InformationsBlock
-              isSubmitting={isSubmitting}
-              onSubmit={(values) => {
-                const newIntention = {
-                  ...intention,
-                  2: values,
-                } as IntentionForms;
-                setIntention(newIntention);
-                console.log("submit", newIntention);
-                submit({ forms: newIntention });
-              }}
-              isDraftSubmitting={isDraftSubmitting}
-              onDraftSubmit={(values) =>
-                submitDraft({ forms: { ...intention, 2: values } })
-              }
-              defaultValues={intention[2]}
-            />
-          </Collapse>
-        </GridItem>
-      </Grid>
-    </Container>
+        </Collapse>
+      </Container>
+    </Box>
   );
 };
