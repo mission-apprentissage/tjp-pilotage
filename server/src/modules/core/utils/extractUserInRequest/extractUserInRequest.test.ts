@@ -45,6 +45,7 @@ describe("extractUserInRequest usecase", () => {
         role: "",
         firstname: "firstname",
         lastname: "lastname",
+        codeRegion: undefined,
       }),
     });
 
