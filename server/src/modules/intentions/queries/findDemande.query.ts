@@ -7,7 +7,13 @@ import {
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
 
-export const findDemande = async ({ id }: { id: string }) => {
+export const findDemande = async ({
+  id,
+  codeRegion,
+}: {
+  id: string;
+  codeRegion?: string;
+}) => {
   const demande = await kdb
     .selectFrom("demande")
     .selectAll()
@@ -42,6 +48,10 @@ export const findDemande = async ({ id }: { id: string }) => {
         ),
       }).as("metadata"),
     ])
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("codeRegion", "=", codeRegion);
+    })
     .where("id", "=", id)
     .orderBy("createdAt", "asc")
     .limit(1)

@@ -14,7 +14,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const { search } = request.params;
-      const result = await searchEtab({ search });
+      const result = await searchEtab({ search, user: request.user });
       response.status(200).send(result);
     }
   );

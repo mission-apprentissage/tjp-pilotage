@@ -2,7 +2,11 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../db/db";
 
-export const countDemandes = async () => {
+export const countDemandes = async ({
+  codeRegion,
+}: {
+  codeRegion?: string;
+}) => {
   const countDemandes = await kdb
     .selectFrom("demande")
     .select((eb) => sql<string>`count(${eb.ref("demande.id")})`.as("total"))
@@ -16,6 +20,10 @@ export const countDemandes = async () => {
         "demande.status"
       )} = 'submitted' THEN 1 ELSE 0 END)`.as("submitted")
     )
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("codeRegion", "=", codeRegion);
+    })
     .executeTakeFirstOrThrow();
 
   return countDemandes;

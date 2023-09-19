@@ -5,11 +5,13 @@ import { cleanNull } from "../../../utils/noNull";
 
 export const findDemandes = async ({
   status,
+  codeRegion,
   offset = 0,
   limit = 20,
   orderBy,
 }: {
   status?: "draft" | "submitted";
+  codeRegion?: string;
   offset?: number;
   limit: number;
   orderBy?: { order: "asc" | "desc"; column: string };
@@ -28,6 +30,10 @@ export const findDemandes = async ({
         sql.ref(orderBy.column),
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
+    })
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("codeRegion", "=", codeRegion);
     })
     .offset(offset)
     .limit(limit)
