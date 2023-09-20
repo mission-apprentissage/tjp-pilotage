@@ -33,8 +33,7 @@ export const IntentionForm = ({
           body: {
             demande: {
               id: formId,
-              ...forms[1],
-              ...forms[2],
+              ...forms,
             },
           },
         })
@@ -49,8 +48,7 @@ export const IntentionForm = ({
             body: {
               demande: {
                 id: formId,
-                ...forms[1],
-                ...forms[2],
+                ...forms,
               },
             },
           })
@@ -58,22 +56,13 @@ export const IntentionForm = ({
     });
 
   const [step, setStep] = useState(
-    defaultValues[1].uai &&
-      defaultValues[1].cfd &&
-      defaultValues[1].dispositifId
-      ? 2
-      : 1
+    defaultValues.uai && defaultValues.cfd && defaultValues.dispositifId ? 2 : 1
   );
   const [intention, setIntention] = useState(defaultValues);
 
-  const submitCfdUai = (values: PartialIntentionForms[1]) => {
-    setIntention({ ...intention, 1: values });
-    if (
-      values?.uai &&
-      values?.cfd &&
-      values?.libelleDiplome &&
-      values?.dispositifId
-    ) {
+  const submitCfdUai = (values: PartialIntentionForms) => {
+    setIntention({ ...intention, ...values });
+    if (values?.uai && values?.cfd && values?.dispositifId) {
       setStep(2);
       return true;
     }
@@ -83,19 +72,19 @@ export const IntentionForm = ({
 
   const { push, replace } = useRouter();
 
-  const onSubmit = async (values: IntentionForms[2]) => {
+  const onSubmit = async (values: IntentionForms) => {
     const newIntention = {
       ...intention,
-      2: values,
+      ...values,
     } as IntentionForms;
     setIntention(newIntention);
     await submit({ forms: newIntention });
     push("/intentions");
   };
 
-  const onDraftSubmit = async (values: PartialIntentionForms[2]) => {
+  const onDraftSubmit = async (values: PartialIntentionForms) => {
     const { id } = await submitDraft({
-      forms: { ...intention, 2: values },
+      forms: { ...intention, ...values },
     });
     replace(id, { scroll: false });
   };
@@ -105,7 +94,7 @@ export const IntentionForm = ({
       <Container maxW={"container.xl"} my={12}>
         <CfdUaiSection
           formId={formId}
-          defaultValues={intention[1]}
+          defaultValues={intention}
           formMetadata={formMetadata}
           submitCfdUai={submitCfdUai}
           onEditUaiCfdSection={onEditUaiCfdSection}
@@ -117,7 +106,8 @@ export const IntentionForm = ({
             onSubmit={onSubmit}
             isDraftSubmitting={isDraftSubmitting}
             onDraftSubmit={onDraftSubmit}
-            defaultValues={intention[2]}
+            defaultValues={intention}
+            formMetadata={formMetadata}
           />
         </Collapse>
       </Container>

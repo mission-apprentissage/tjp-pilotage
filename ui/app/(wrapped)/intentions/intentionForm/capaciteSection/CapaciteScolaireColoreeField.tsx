@@ -15,7 +15,7 @@ export const CapaciteScolaireColoreeField = chakra(
       formState: { errors },
       register,
       watch,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     const [coloration] = watch(["coloration"]);
 

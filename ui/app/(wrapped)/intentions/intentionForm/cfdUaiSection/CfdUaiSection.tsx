@@ -20,9 +20,9 @@ export const CfdUaiSection = ({
 }: {
   formId?: string;
   active: boolean;
-  defaultValues: PartialIntentionForms[1];
+  defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  submitCfdUai: (values: PartialIntentionForms[1]) => void;
+  submitCfdUai: (values: PartialIntentionForms) => void;
   onEditUaiCfdSection: () => void;
 }) => {
   const [dispositifs, setDispositifs] = useState<
@@ -52,7 +52,7 @@ export const CfdUaiSection = ({
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock
-          defaultDiplome={formMetadata?.formation}
+          formMetaData={formMetadata}
           defaultValues={defaultValues}
           setDispositifs={setDispositifs}
           onSubmit={submitCfdUai}
@@ -65,7 +65,7 @@ export const CfdUaiSection = ({
           active={active}
         />
         <UaiBlock
-          defaultEtablissement={formMetadata?.etablissement}
+          formMetadata={formMetadata}
           defaultValues={defaultValues}
           onSubmit={submitCfdUai}
           active={active}

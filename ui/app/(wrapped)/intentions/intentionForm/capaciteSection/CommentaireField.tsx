@@ -14,7 +14,7 @@ export const CommentaireField = chakra(
     const {
       formState: { errors },
       register,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     return (
       <FormControl className={className} isInvalid={!!errors.commentaire}>

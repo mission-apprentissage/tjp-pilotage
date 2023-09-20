@@ -1,6 +1,8 @@
 import { Box, Button, Flex } from "@chakra-ui/react";
 import { FormProvider, useForm } from "react-hook-form";
+import { ApiType } from "shared";
 
+import { api } from "../../../../api.client";
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
@@ -11,14 +13,16 @@ export const InformationsBlock = ({
   isSubmitting,
   onDraftSubmit,
   isDraftSubmitting,
+  formMetadata,
 }: {
-  defaultValues: PartialIntentionForms["2"];
-  onSubmit: (values: IntentionForms[2]) => void;
+  defaultValues: PartialIntentionForms;
+  onSubmit: (values: IntentionForms) => void;
   isSubmitting?: boolean;
-  onDraftSubmit: (values: IntentionForms[2]) => void;
+  onDraftSubmit: (values: IntentionForms) => void;
   isDraftSubmitting?: boolean;
+  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
-  const form = useForm<IntentionForms[2]>({
+  const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
@@ -37,7 +41,10 @@ export const InformationsBlock = ({
         mb="6"
         borderRadius={6}
       >
-        <TypeDemandeSection />
+        <TypeDemandeSection
+          formMetadata={formMetadata}
+          defaultValues={defaultValues}
+        />
       </Box>
       <Box
         noValidate

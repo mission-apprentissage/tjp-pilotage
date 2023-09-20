@@ -1,37 +1,34 @@
 import {
   Box,
-  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   LightMode,
-  Tag,
 } from "@chakra-ui/react";
 import { Controller, useForm } from "react-hook-form";
-import { CSSObjectWithLabel } from "react-select";
-import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
+import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 
 export const cfdRegex = /^[0-9]{8}$/;
 
 export const CfdBlock = ({
   setDispositifs,
-  defaultDiplome,
+  formMetaData,
   defaultValues,
-  defaultOptions = [],
+  defaultDispositifs = [],
   onSubmit,
   active,
 }: {
   setDispositifs: (
     info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
   ) => void;
-  defaultDiplome: ApiType<typeof api.getDemande>["metadata"]["formation"];
-  defaultValues: PartialIntentionForms[1];
-  defaultOptions?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
-  onSubmit: (values: PartialIntentionForms[1]) => void;
+  formMetaData?: ApiType<typeof api.getDemande>["metadata"];
+  defaultValues: PartialIntentionForms;
+  defaultDispositifs?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
+  onSubmit: (values: PartialIntentionForms) => void;
   active: boolean;
 }) => {
   const {
@@ -39,20 +36,13 @@ export const CfdBlock = ({
     handleSubmit,
     resetField,
     control,
-  } = useForm<IntentionForms[1]>({
+  } = useForm<IntentionForms>({
     defaultValues,
     reValidateMode: "onSubmit",
   });
 
-  const selectStyle = {
-    control: (styles: CSSObjectWithLabel) => ({
-      ...styles,
-      borderColor: errors.cfd ? "red" : undefined,
-    }),
-  };
-
   return (
-    <>
+    <LightMode>
       <FormControl
         mb="4"
         isInvalid={!!errors.cfd?.message}
@@ -61,104 +51,33 @@ export const CfdBlock = ({
         w="md"
         onSubmit={handleSubmit(onSubmit)}
       >
-        <LightMode>
-          <FormLabel>Recherche d'un diplôme</FormLabel>
-          <Box color="chakra-body-text" minW="700px">
-            <Controller
-              name="cfd"
-              control={control}
-              rules={{ required: "Ce champs est obligatoire" }}
-              render={({ field: { onChange, value, name, onBlur } }) => (
-                <AsyncSelect
-                  onBlur={onBlur}
-                  name={name}
-                  styles={selectStyle}
-                  components={{
-                    DropdownIndicator: () => null,
-                    IndicatorSeparator: () => null,
-                  }}
-                  onChange={(selected) => {
-                    if (!selected) resetField("dispositifId");
-                    onChange(selected?.value);
-                    setDispositifs(selected?.dispositifs);
-                    onSubmit({
-                      uai: defaultValues.uai,
-                      cfd: selected?.value,
-                      libelleDiplome: selected?.label,
-                      dispositifId: defaultValues.dispositifId,
-                    });
-                  }}
-                  defaultValue={
-                    defaultDiplome &&
-                    ({
-                      value,
-                      label: defaultDiplome?.libelle,
-                      isFamille: false,
-                      isSecondeCommune: false,
-                      dateFermeture: "",
-                      dispositifs: defaultOptions,
-                    } as ApiType<typeof api.searchDiplome>[0])
-                  }
-                  loadOptions={(search) => {
-                    if (search.length >= 3)
-                      return api.searchDiplome({ params: { search } }).call();
-                  }}
-                  formatOptionLabel={(option) => {
-                    if (option.isFamille) {
-                      return option.isSecondeCommune ? (
-                        <Flex>
-                          {option.label}{" "}
-                          <Tag colorScheme={"orange"} size={"md"} ms={2}>
-                            Seconde commune
-                          </Tag>
-                        </Flex>
-                      ) : (
-                        <Flex>
-                          {option.label}{" "}
-                          <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                            Spécialité
-                          </Tag>
-                          {option.dateFermeture && (
-                            <Tag colorScheme={"red"} size={"md"} ms={2}>
-                              Fermeture au {option.dateFermeture}
-                            </Tag>
-                          )}
-                        </Flex>
-                      );
-                    }
-                    return (
-                      <Flex>
-                        {option.label}{" "}
-                        {option.dateFermeture && (
-                          <Tag colorScheme={"red"} size={"md"} ms={2}>
-                            Fermeture au {option.dateFermeture}
-                          </Tag>
-                        )}
-                      </Flex>
-                    );
-                  }}
-                  loadingMessage={({ inputValue }) =>
-                    inputValue.length >= 3
-                      ? "Recherche..."
-                      : "Veuillez rentrer au moins 3 lettres"
-                  }
-                  isClearable={true}
-                  noOptionsMessage={({ inputValue }) =>
-                    inputValue
-                      ? "Pas de diplôme correspondant"
-                      : "Commencez à écrire..."
-                  }
-                  placeholder="Recherche un diplôme..."
-                  isDisabled={!active}
-                />
-              )}
-            />
-            {errors.cfd && (
-              <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+        <FormLabel>Recherche d'un diplôme</FormLabel>
+        <Box color="chakra-body-text" minW="700px">
+          <Controller
+            name="cfd"
+            control={control}
+            rules={{ required: "Ce champs est obligatoire" }}
+            render={({ field: { onChange, value, name } }) => (
+              <CfdAutocompleteInput
+                name={name}
+                value={value}
+                inError={errors.cfd ? true : false}
+                formMetadata={formMetaData}
+                defaultValues={defaultValues}
+                defaultDispositifs={defaultDispositifs}
+                active={active}
+                onSubmit={onSubmit}
+                onChange={onChange}
+                resetField={resetField}
+                setDispositifs={setDispositifs}
+              />
             )}
-          </Box>
-        </LightMode>
+          />
+          {errors.cfd && (
+            <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+          )}
+        </Box>
       </FormControl>
-    </>
+    </LightMode>
   );
 };

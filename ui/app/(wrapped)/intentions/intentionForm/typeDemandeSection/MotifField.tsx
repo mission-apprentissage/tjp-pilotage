@@ -93,7 +93,7 @@ export const MotifField = chakra(({ className }: { className?: string }) => {
     formState: { errors },
     control,
     watch,
-  } = useFormContext<IntentionForms[2]>();
+  } = useFormContext<IntentionForms>();
 
   const [typeDemande] = watch(["typeDemande"]);
 

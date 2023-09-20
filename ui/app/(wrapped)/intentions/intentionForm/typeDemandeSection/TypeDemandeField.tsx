@@ -119,7 +119,7 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     return (
       <FormControl
