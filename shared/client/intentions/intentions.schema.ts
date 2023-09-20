@@ -79,8 +79,8 @@ const FormationMetadataSchema = Type.Optional(
     libelle: Type.Optional(Type.String()),
     dispositifs: Type.Array(
       Type.Object({
-        codeDispositif: Type.String(),
-        libelleDispositif: Type.String(),
+        codeDispositif: Type.Optional(Type.String()),
+        libelleDispositif: Type.Optional(Type.String()),
       })
     ),
   })
@@ -97,10 +97,18 @@ const DemandesItem = Type.Object({
   id: Type.String(),
   cfd: Type.Optional(Type.String()),
   libelleDiplome: Type.Optional(Type.String()),
+  libelleEtablissement: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
   createdAt: Type.String(),
   createurId: Type.String(),
   status: Type.String(),
+  typeDemande: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationUai: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
+  estCompensee: Type.Optional(Type.Boolean()),
 });
 
 const FiltersSchema = Type.Object({
@@ -252,7 +260,12 @@ export const intentionsSchemas = {
     ]),
     response: {
       200: Type.Object({
-        demandes: Type.Array(DemandesItem),
+        demandes: Type.Array(
+          Type.Intersect([
+            DemandesItem,
+            Type.Object({ metadata: MetadataSchema }),
+          ])
+        ),
         count: Type.Number(),
       }),
     },
