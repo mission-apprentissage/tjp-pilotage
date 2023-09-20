@@ -1,8 +1,11 @@
 "use client";
 
+import { LinkIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Center,
   Container,
+  Flex,
   Grid,
   GridItem,
   Spinner,
@@ -11,6 +14,7 @@ import {
   Tag,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -19,6 +23,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
+import { ApiType } from "shared";
 
 import { api } from "../../../api.client";
 import { OrderIcon } from "../../../components/OrderIcon";
@@ -32,6 +37,15 @@ export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
 const fetchDemandes = async (query: Query) => api.getDemandes({ query }).call();
+
+const TYPE_DEMANDE_MAPPING: Record<string, string> = {
+  ouverture_nette: "Ouverture nette",
+  ouverture_compensation: "Oouverture par compensation",
+  augmentation: "Augmentation",
+  augmentation_compensation: "Augmentation par compensation",
+  fermeture: "Fermeture",
+  diminution: "Diminiution",
+};
 
 export const PageClient = () => {
   const router = useRouter();
@@ -85,6 +99,25 @@ export const PageClient = () => {
       }),
   });
 
+  const nouvelleCompensation = (
+    demandeCompensee: ApiType<typeof api.getDemandes>["demandes"][0]
+  ) => {
+    router.push(
+      createParametrizedUrl(`${location.pathname}/new`, {
+        values: {
+          cfd: demandeCompensee.compensationCfd,
+          dispositifId: demandeCompensee.compensationDispositifId,
+          uai: demandeCompensee.compensationUai,
+          rentreeScolaire: demandeCompensee.compensationRentreeScolaire,
+        },
+        metadata: {
+          formation: demandeCompensee.metadata?.formationCompensation,
+          etablissement: demandeCompensee.metadata?.etablissementCompensation,
+        },
+      })
+    );
+  };
+
   if (isLoading) {
     return (
       <Center mt={12}>
@@ -94,7 +127,7 @@ export const PageClient = () => {
   }
 
   return (
-    <Container maxW={"container.xl"} my={12}>
+    <Container maxW={"80%"} my={12}>
       <Grid templateColumns="repeat(5,1fr)" gap={2}>
         <GridItem>
           <MenuIntention isRecapView></MenuIntention>
@@ -110,15 +143,14 @@ export const PageClient = () => {
                     onClick={() => handleOrder("libelleDiplome")}
                   >
                     <OrderIcon {...order} column="libelleDiplome" />
-                    libelle
+                    diplôme
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
-                    <OrderIcon {...order} column="cfd" />
-                    CFD
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("uai")}>
-                    <OrderIcon {...order} column="uai" />
-                    UAI
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("typeDemande")}
+                  >
+                    <OrderIcon {...order} column="typeDemande" />
+                    type
                   </Th>
                   <Th cursor="pointer" onClick={() => handleOrder("status")}>
                     <OrderIcon {...order} column="status" />
@@ -132,6 +164,7 @@ export const PageClient = () => {
                     <OrderIcon {...order} column="createdAt" />
                     création
                   </Th>
+                  <Th></Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -139,17 +172,37 @@ export const PageClient = () => {
                   <Tr
                     key={demande.id}
                     cursor="pointer"
-                    onClick={() => {
-                      router.replace(`/intentions/${demande.id}`);
-                    }}
+                    height={"80px"}
+                    whiteSpace={"pre"}
+                    // onClick={() => {
+                    //   router.push(`/intentions/${demande.id}`);
+                    // }}
                   >
-                    <Td maxWidth={20} whiteSpace="nowrap">
-                      {" "}
-                      {demande.id.substring(5, 11)}...{" "}
+                    <Td maxW={"100px"} textOverflow={"ellipsis"} isTruncated>
+                      {demande.id}
                     </Td>
-                    <Td> {demande.libelleDiplome} </Td>
-                    <Td>{demande.cfd}</Td>
-                    <Td>{demande.uai}</Td>
+                    <Td w="sm">
+                      <Text
+                        textOverflow={"ellipsis"}
+                        overflow={"hidden"}
+                        whiteSpace={"break-spaces"}
+                        noOfLines={2}
+                      >
+                        {demande.libelleDiplome}
+                      </Text>
+                    </Td>
+                    <Td w="sm">
+                      <Text
+                        textOverflow={"ellipsis"}
+                        overflow={"hidden"}
+                        whiteSpace={"break-spaces"}
+                        noOfLines={2}
+                      >
+                        {demande.typeDemande
+                          ? TYPE_DEMANDE_MAPPING[demande.typeDemande]
+                          : null}
+                      </Text>
+                    </Td>
                     <Td align="center">
                       {demande.status === "draft" ? (
                         <Tag
@@ -173,6 +226,48 @@ export const PageClient = () => {
                     </Td>
                     <Td isNumeric>
                       {new Date(demande.createdAt).toLocaleDateString()}
+                    </Td>
+                    <Td align="center" w="sm">
+                      {demande.compensationCfd != null &&
+                      demande.compensationDispositifId != null &&
+                      demande.compensationUai != null ? (
+                        demande.estCompensee === false ? (
+                          <Tag
+                            as={Button}
+                            colorScheme={"orange"}
+                            size={"lg"}
+                            justifyContent={"center"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              nouvelleCompensation(demande);
+                            }}
+                            zIndex={2}
+                          >
+                            <Flex
+                              flexDirection={"row"}
+                              justifyContent={"space-evenly"}
+                              alignItems={"center"}
+                            >
+                              <Text maxWidth="60%">
+                                En attente de compensation
+                              </Text>
+                              <LinkIcon boxSize={"1.5em"} focusable={true} />
+                            </Flex>
+                          </Tag>
+                        ) : (
+                          <Tag
+                            colorScheme={"green"}
+                            size={"lg"}
+                            minW="100%"
+                            justifyContent={"center"}
+                          >
+                            Compensée
+                          </Tag>
+                        )
+                      ) : null}
                     </Td>
                   </Tr>
                 ))}
