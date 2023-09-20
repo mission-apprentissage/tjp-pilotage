@@ -47,7 +47,7 @@ const differenceCapacité = (
 };
 
 export const CapaciteSection = () => {
-  const { watch } = useFormContext<IntentionForms[2]>();
+  const { watch } = useFormContext<IntentionForms>();
 
   const [capaciteScolaire, capaciteScolaireActuelle] = watch([
     "capaciteScolaire",

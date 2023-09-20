@@ -17,7 +17,7 @@ export const MixteField = chakra(({ className }: { className?: string }) => {
   const {
     formState: { errors },
     control,
-  } = useFormContext<IntentionForms[2]>();
+  } = useFormContext<IntentionForms>();
 
   return (
     <FormControl className={className} isInvalid={!!errors.mixte} isRequired>

@@ -10,6 +10,10 @@ const DemandeSchema = Type.Object({
   dispositifId: Type.String(),
   rentreeScolaire: Type.Number(),
   typeDemande: Type.String(),
+  compensationUai: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
   motif: Type.Array(Type.String()),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
@@ -35,6 +39,10 @@ const DraftSchema = Type.Object({
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   typeDemande: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationUai: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
   motif: Type.Optional(Type.Array(Type.String())),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
@@ -59,24 +67,30 @@ const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
 
 const DraftSchemaPost = Partial(DraftSchema, ["id", "status", "createdAt"]);
 
+const EtablissementMetadataSchema = Type.Optional(
+  Type.Object({
+    libelle: Type.Optional(Type.String()),
+    commune: Type.Optional(Type.String()),
+  })
+);
+
+const FormationMetadataSchema = Type.Optional(
+  Type.Object({
+    libelle: Type.Optional(Type.String()),
+    dispositifs: Type.Array(
+      Type.Object({
+        codeDispositif: Type.String(),
+        libelleDispositif: Type.String(),
+      })
+    ),
+  })
+);
+
 const MetadataSchema = Type.Object({
-  etablissement: Type.Optional(
-    Type.Object({
-      libelle: Type.Optional(Type.String()),
-      commune: Type.Optional(Type.String()),
-    })
-  ),
-  formation: Type.Optional(
-    Type.Object({
-      libelle: Type.Optional(Type.String()),
-      dispositifs: Type.Array(
-        Type.Object({
-          codeDispositif: Type.String(),
-          libelleDispositif: Type.String(),
-        })
-      ),
-    })
-  ),
+  etablissement: EtablissementMetadataSchema,
+  formation: FormationMetadataSchema,
+  etablissementCompensation: EtablissementMetadataSchema,
+  formationCompensation: FormationMetadataSchema,
 });
 
 const DemandesItem = Type.Object({

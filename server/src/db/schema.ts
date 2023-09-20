@@ -108,14 +108,12 @@ export interface DataFormation {
 export interface Demande {
   id: string;
   cfd: string | null;
-  libelleDiplome: string | null;
   dispositifId: string | null;
   uai: string | null;
   rentreeScolaire: number | null;
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
-  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -125,6 +123,7 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
+  coloration: boolean | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -132,6 +131,10 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
+  compensationUai: string | null;
+  compensationCfd: string | null;
+  compensationDispositifId: string | null;
+  compensationRentreeScolaire: number | null;
 }
 
 export interface Departement {
@@ -148,7 +151,7 @@ export interface Dispositif {
 }
 
 export interface Etablissement {
-  id: Generated<string>;
+  id: string;
   UAI: string;
   siret: string | null;
   codeAcademie: string | null;
@@ -166,7 +169,7 @@ export interface Etablissement {
 }
 
 export interface FamilleMetier {
-  id: Generated<string>;
+  id: string;
   libelleOfficielFamille: string;
   libelleOfficielSpecialite: string;
   codeMinistereTutelle: string;
@@ -177,7 +180,7 @@ export interface FamilleMetier {
 }
 
 export interface Formation {
-  id: Generated<string>;
+  id: string;
   codeFormationDiplome: string;
   rncp: number | null;
   libelleDiplome: string;
@@ -191,7 +194,7 @@ export interface Formation {
 }
 
 export interface FormationEtablissement {
-  id: Generated<string>;
+  id: string;
   cfd: string;
   UAI: string;
   dispositifId: string;
@@ -271,7 +274,7 @@ export interface NiveauDiplome {
 export interface RawData {
   type: string;
   data: Json | null;
-  id: Generated<string | null>;
+  id: string | null;
 }
 
 export interface Region {
@@ -280,7 +283,7 @@ export interface Region {
 }
 
 export interface User {
-  id: Generated<string>;
+  id: string;
   email: string;
   firstname: string | null;
   lastname: string | null;

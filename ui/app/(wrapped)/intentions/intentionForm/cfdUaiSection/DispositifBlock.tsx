@@ -19,14 +19,14 @@ export const DispositifBlock = ({
 }: {
   active: boolean;
   options?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
-  defaultValues: PartialIntentionForms[1];
-  onSubmit: (values: PartialIntentionForms[1]) => void;
+  defaultValues: PartialIntentionForms;
+  onSubmit: (values: PartialIntentionForms) => void;
 }) => {
   const {
     formState: { errors },
     handleSubmit,
     control,
-  } = useForm<IntentionForms[1]>({
+  } = useForm<IntentionForms>({
     defaultValues,
     reValidateMode: "onSubmit",
   });
@@ -58,7 +58,6 @@ export const DispositifBlock = ({
                 onSubmit({
                   uai: defaultValues.uai,
                   cfd: defaultValues.cfd,
-                  libelleDiplome: defaultValues.libelleDiplome,
                   dispositifId: selected.target.value,
                 });
               }}

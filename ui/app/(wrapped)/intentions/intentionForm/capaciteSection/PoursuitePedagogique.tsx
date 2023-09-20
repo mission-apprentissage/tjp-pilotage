@@ -18,7 +18,7 @@ export const PoursuitePedagogiqueField = chakra(
     const {
       formState: { errors },
       control,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     return (
       <FormControl

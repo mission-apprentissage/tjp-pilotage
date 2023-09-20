@@ -1,7 +1,6 @@
 export const DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
-  libelleDiplome: "Libelle Diplome",
   dispositifId: "DispositifId",
   uai: "UAI",
   rentreeScolaire: "RS",

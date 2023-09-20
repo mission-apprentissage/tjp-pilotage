@@ -17,7 +17,7 @@ export const AmiCmaField = chakra(({ className }: { className?: string }) => {
   const {
     formState: { errors },
     control,
-  } = useFormContext<IntentionForms[2]>();
+  } = useFormContext<IntentionForms>();
 
   return (
     <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>

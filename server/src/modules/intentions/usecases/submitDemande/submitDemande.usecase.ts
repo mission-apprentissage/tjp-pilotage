@@ -15,9 +15,13 @@ export const [submitDemande] = inject(
       demande: {
         id?: string;
         uai: string;
-        typeDemande: string;
         cfd: string;
         dispositifId: string;
+        typeDemande: string;
+        compensationCfd?: string;
+        compensationDispositifId?: string;
+        compensationUai?: string;
+        compensationRentreeScolaire?: number;
         motif: string[];
         autreMotif?: string;
         rentreeScolaire: number;
@@ -45,6 +49,11 @@ export const [submitDemande] = inject(
 
       const codeRegion = uaiStatus.data.codeRegion;
       const codeAcademie = uaiStatus.data.codeAcademie;
+      demande.compensationRentreeScolaire =
+        demande.typeDemande === "augmentation_compensation" ||
+        demande.typeDemande === "ouverture_compensation"
+          ? demande.rentreeScolaire
+          : undefined;
 
       await deps.createDemandeQuery({
         demande: {

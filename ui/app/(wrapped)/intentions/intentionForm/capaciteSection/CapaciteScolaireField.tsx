@@ -16,7 +16,7 @@ export const CapaciteScolaireField = chakra(
       formState: { errors },
       register,
       watch,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);
