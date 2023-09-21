@@ -12,7 +12,7 @@ export const findDemandes = async ({
   status,
   offset = 0,
   limit = 20,
-  orderBy = { order: "asc", column: "createdBy" },
+  orderBy = { order: "desc", column: "createdAt" },
 }: {
   status?: "draft" | "submitted";
   offset?: number;
@@ -59,7 +59,7 @@ export const findDemandes = async ({
         formationCompensation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .select("libelle")
+            .select("dataFormation.libelle")
             .select((eb) =>
               jsonArrayFrom(
                 eb
@@ -110,6 +110,17 @@ export const findDemandes = async ({
       cleanNull({
         ...demande,
         createdAt: demande.createdAt?.toISOString(),
+        metadata: cleanNull({
+          ...demande.metadata,
+          formation: undefined,
+          etablissement: undefined,
+          formationCompensation: cleanNull(
+            demande.metadata.formationCompensation
+          ),
+          etablissementCompensation: cleanNull(
+            demande.metadata.etablissementCompensation
+          ),
+        }),
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,
