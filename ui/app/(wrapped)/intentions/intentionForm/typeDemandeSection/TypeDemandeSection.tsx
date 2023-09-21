@@ -41,6 +41,7 @@ export const TypeDemandeSection = ({
       <Flex align="flex-start">
         <TypeDemandeField maxWidth="752px" mb="6" />
         <InfoBox flex="1" mt="10" ml="6">
+          <Text mb="3">Exemple pour une Ouverture par compensation :</Text>
           <Text mb="3">
             Si j’ouvre un BAC PRO AEPA et que je ferme un BAC PRO AGORA.
           </Text>
