@@ -5,7 +5,6 @@ import {
   Button,
   Center,
   Container,
-  Flex,
   Grid,
   GridItem,
   Spinner,
@@ -164,7 +163,7 @@ export const PageClient = () => {
                     <OrderIcon {...order} column="createdAt" />
                     création
                   </Th>
-                  <Th></Th>
+                  <Th>compensation</Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -174,9 +173,9 @@ export const PageClient = () => {
                     cursor="pointer"
                     height={"80px"}
                     whiteSpace={"pre"}
-                    // onClick={() => {
-                    //   router.push(`/intentions/${demande.id}`);
-                    // }}
+                    onClick={() => {
+                      router.push(`/intentions/${demande.id}`);
+                    }}
                   >
                     <Td maxW={"100px"} textOverflow={"ellipsis"} isTruncated>
                       {demande.id}
@@ -241,21 +240,13 @@ export const PageClient = () => {
                             whiteSpace={"break-spaces"}
                             noOfLines={2}
                             onClick={(e) => {
-                              e.preventDefault();
+                              e.stopPropagation();
                               nouvelleCompensation(demande);
                             }}
                             zIndex={2}
+                            rightIcon={<LinkIcon focusable={true} />}
                           >
-                            <Flex
-                              flexDirection={"row"}
-                              justifyContent={"space-evenly"}
-                              alignItems={"center"}
-                            >
-                              <Text maxWidth="60%">
-                                En attente de compensation
-                              </Text>
-                              <LinkIcon boxSize={"1.5em"} focusable={true} />
-                            </Flex>
+                            En attente
                           </Tag>
                         ) : (
                           <Tag
