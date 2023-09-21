@@ -114,9 +114,13 @@ export const findDemandes = async ({
           ...demande.metadata,
           formation: undefined,
           etablissement: undefined,
-          formationCompensation: cleanNull(
-            demande.metadata.formationCompensation
-          ),
+          formationCompensation: cleanNull({
+            ...demande.metadata.formationCompensation,
+            dispositifs:
+              demande.metadata.formationCompensation?.dispositifs.map(
+                cleanNull
+              ),
+          }),
           etablissementCompensation: cleanNull(
             demande.metadata.etablissementCompensation
           ),
