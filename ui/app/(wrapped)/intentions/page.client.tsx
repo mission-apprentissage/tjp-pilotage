@@ -43,7 +43,7 @@ const TYPE_DEMANDE_MAPPING: Record<string, string> = {
   augmentation: "Augmentation",
   augmentation_compensation: "Augmentation par compensation",
   fermeture: "Fermeture",
-  diminution: "Diminiution",
+  diminution: "Diminution",
 };
 
 export const PageClient = () => {
@@ -226,7 +226,7 @@ export const PageClient = () => {
                     <Td isNumeric>
                       {new Date(demande.createdAt).toLocaleDateString()}
                     </Td>
-                    <Td align="center" w="sm">
+                    <Td align="center" w="sm" justifyContent={"center"}>
                       {demande.compensationCfd != null &&
                       demande.compensationDispositifId != null &&
                       demande.compensationUai != null ? (
@@ -235,7 +235,7 @@ export const PageClient = () => {
                             as={Button}
                             colorScheme={"orange"}
                             size={"lg"}
-                            justifyContent={"center"}
+                            minW="100%"
                             overflow={"hidden"}
                             whiteSpace={"break-spaces"}
                             noOfLines={2}
