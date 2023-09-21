@@ -26,7 +26,11 @@ export const authSchemas = {
           id: Type.String(),
           email: Type.String(),
           role: Type.Optional(
-            Type.Union([Type.Literal("admin"), Type.Literal("pilote")])
+            Type.Union([
+              Type.Literal("admin"),
+              Type.Literal("pilote"),
+              Type.Literal("gestionnaire"),
+            ])
           ),
         }),
       }),
