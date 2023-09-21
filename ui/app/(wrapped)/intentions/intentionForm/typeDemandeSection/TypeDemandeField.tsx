@@ -21,8 +21,8 @@ const typeDemandesOptions = [
     label: "Ouverture nette",
     desc: (
       <>
-        Dans le cas d’une ouverture sans compensation (ex : fermeture ou
-        diminution de place).
+        Utiliser ce formulaire pour tout cas de création d'une formation sans
+        fermeture ou diminution de capacité.
       </>
     ),
     tag: <>Objectif de la réforme : +15%</>,
@@ -32,8 +32,8 @@ const typeDemandesOptions = [
     label: "Ouverture avec compensation",
     desc: (
       <>
-        Une Nouvelle demande (fermeture ou diminution) sera attendue une fois
-        que vous aurez finalisé cette demande.
+        Utiliser ce formulaire pour tout cas de transfert de capacité d'une
+        formation vers une autres (voir exemple ci-contre).
       </>
     ),
   },
@@ -42,8 +42,9 @@ const typeDemandesOptions = [
     label: "Augmentation nette",
     desc: (
       <>
-        Dans le cas d’une augmentation sans compensation (ex : fermeture ou
-        diminution de place).
+        Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur
+        une formation existant. Ne pas utiliser pour des places déjà ouvertes
+        sur l'établissement
       </>
     ),
   },
@@ -52,20 +53,31 @@ const typeDemandesOptions = [
     label: "Augmentation par compensation",
     desc: (
       <>
-        Une Nouvelle demande (fermeture ou diminution) sera attendue une fois
-        que vous aurez finalisé cette demande.
+        Utiliser ce formulaire pour tout cas d'augmentation de capacité sur une
+        formation déjà ouverte et en lien avec une fermeture ou diminution de
+        capacité.
       </>
     ),
   },
   {
     value: "fermeture",
     label: "Fermeture",
-    desc: <>Avec ou sans compensation de capacité.</>,
+    desc: (
+      <>
+        Utiliser ce formulaire pour renseigner les places fermées en
+        compoensation d'une ouverture ou pour les fermetures nettes.
+      </>
+    ),
   },
   {
     value: "diminution",
     label: "Diminution",
-    desc: <>Avec ou sans compensation de capacité.</>,
+    desc: (
+      <>
+        Utiliser ce formulaire pour renseigner les places fermées en
+        compensation d'une ouverture, ou pour les diminutions netttes.
+      </>
+    ),
   },
 ];
 
@@ -102,7 +114,7 @@ function RadioCard({
       <Text mb="3" fontWeight="bold" fontSize="lg" color="bluefrance.113">
         {title}
       </Text>
-      <Text fontSize="sm" mb="auto">
+      <Text fontSize="12px" mb="auto">
         {desc}
       </Text>
       {tag && (
