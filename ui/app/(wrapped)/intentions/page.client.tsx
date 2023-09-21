@@ -39,7 +39,7 @@ const fetchDemandes = async (query: Query) => api.getDemandes({ query }).call();
 
 const TYPE_DEMANDE_MAPPING: Record<string, string> = {
   ouverture_nette: "Ouverture nette",
-  ouverture_compensation: "Oouverture par compensation",
+  ouverture_compensation: "Ouverture par compensation",
   augmentation: "Augmentation",
   augmentation_compensation: "Augmentation par compensation",
   fermeture: "Fermeture",
