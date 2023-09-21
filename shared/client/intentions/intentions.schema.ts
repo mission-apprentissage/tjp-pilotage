@@ -77,11 +77,13 @@ const EtablissementMetadataSchema = Type.Optional(
 const FormationMetadataSchema = Type.Optional(
   Type.Object({
     libelle: Type.Optional(Type.String()),
-    dispositifs: Type.Array(
-      Type.Object({
-        codeDispositif: Type.Optional(Type.String()),
-        libelleDispositif: Type.Optional(Type.String()),
-      })
+    dispositifs: Type.Optional(
+      Type.Array(
+        Type.Object({
+          codeDispositif: Type.Optional(Type.String()),
+          libelleDispositif: Type.Optional(Type.String()),
+        })
+      )
     ),
   })
 );
