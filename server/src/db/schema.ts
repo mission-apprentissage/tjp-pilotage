@@ -151,7 +151,7 @@ export interface Dispositif {
 }
 
 export interface Etablissement {
-  id: string;
+  id: Generated<string>;
   UAI: string;
   siret: string | null;
   codeAcademie: string | null;
@@ -169,7 +169,7 @@ export interface Etablissement {
 }
 
 export interface FamilleMetier {
-  id: string;
+  id: Generated<string>;
   libelleOfficielFamille: string;
   libelleOfficielSpecialite: string;
   codeMinistereTutelle: string;
@@ -180,7 +180,7 @@ export interface FamilleMetier {
 }
 
 export interface Formation {
-  id: string;
+  id: Generated<string>;
   codeFormationDiplome: string;
   rncp: number | null;
   libelleDiplome: string;
@@ -194,7 +194,7 @@ export interface Formation {
 }
 
 export interface FormationEtablissement {
-  id: string;
+  id: Generated<string>;
   cfd: string;
   UAI: string;
   dispositifId: string;
@@ -283,7 +283,7 @@ export interface Region {
 }
 
 export interface User {
-  id: string;
+  id: Generated<string>;
   email: string;
   firstname: string | null;
   lastname: string | null;
