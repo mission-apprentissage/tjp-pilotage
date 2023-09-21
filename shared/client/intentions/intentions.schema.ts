@@ -211,11 +211,13 @@ export const intentionsSchemas = {
           isFamille: Type.Boolean(),
           isSecondeCommune: Type.Boolean(),
           dateFermeture: Type.String(),
-          dispositifs: Type.Array(
-            Type.Object({
-              libelleDispositif: Type.String(),
-              codeDispositif: Type.String(),
-            })
+          dispositifs: Type.Optional(
+            Type.Array(
+              Type.Object({
+                codeDispositif: Type.Optional(Type.String()),
+                libelleDispositif: Type.Optional(Type.String()),
+              })
+            )
           ),
         })
       ),
