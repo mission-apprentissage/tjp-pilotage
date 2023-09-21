@@ -32,8 +32,8 @@ export const findDemandes = async ({
     .select((eb) =>
       sql<boolean>`${eb.exists((eb) =>
         eb
-          .selectFrom(["demande", "demande as demandeCompensee"])
-          .where("demandeCompensee.typeDemande", "in", [
+          .selectFrom(["demande as demandeCompensee"])
+          .where("demande.typeDemande", "in", [
             "augmentation_compensation",
             "ouverture_compensation",
           ])
