@@ -1,4 +1,4 @@
-export const roles = ["admin", "pilote"] as const;
+export const roles = ["admin", "pilote", "gestionnaire"] as const;
 
 export const permissions = [
   "pilotage_reforme/lecture",
@@ -14,4 +14,5 @@ export const PERMISSIONS: {
   pilote: {
     permissions: ["pilotage_reforme/lecture"],
   },
+  gestionnaire: { permissions: ["intentions/envoi"] },
 };
