@@ -21,6 +21,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { demande } = request.body;
       if (!request.user) throw Boom.unauthorized();
+
       const result = await submitDemande({
         demande,
         user: request.user,
@@ -38,9 +39,10 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { demande } = request.body;
       if (!request.user) throw Boom.unauthorized();
+
       const result = await submitDraftDemande({
         demande,
-        userId: request.user.id,
+        user: request.user,
       });
       response.status(200).send(result);
     }
@@ -53,9 +55,11 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
+      if (!request.user) throw Boom.forbidden();
+
       const result = await findDemande({
         id: request.params.id,
-        codeRegion: request.user?.codeRegion,
+        user: request.user,
       });
       response.status(200).send(result);
     }
@@ -69,9 +73,11 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
+      if (!request.user) throw Boom.forbidden();
+
       const result = await findDemandes({
         ...rest,
-        codeRegion: request.user?.codeRegion,
+        user: request.user,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -88,9 +94,11 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
+      if (!request.user) throw Boom.forbidden();
+
       const { demandes } = await findDemandes({
         ...rest,
-        codeRegion: request.user?.codeRegion,
+        user: request.user,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -121,8 +129,10 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
+      if (!request.user) throw Boom.forbidden();
+
       const result = await countDemandes({
-        codeRegion: request.user?.codeRegion,
+        user: request.user,
       });
       response.status(200).send(result);
     }

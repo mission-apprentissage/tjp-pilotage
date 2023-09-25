@@ -2,16 +2,18 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
 export const findDemandes = async ({
   status,
-  codeRegion,
+  user,
   offset = 0,
   limit = 20,
   orderBy,
 }: {
   status?: "draft" | "submitted";
-  codeRegion?: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
   limit: number;
   orderBy?: { order: "asc" | "desc"; column: string };
@@ -31,10 +33,7 @@ export const findDemandes = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("codeRegion", "=", codeRegion);
-    })
+    .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
     .execute();

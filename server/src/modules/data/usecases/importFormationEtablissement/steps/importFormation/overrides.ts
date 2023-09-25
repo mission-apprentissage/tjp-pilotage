@@ -21,5 +21,5 @@ export const overrides = overridesData.reduce(
     ...acc,
     [`${cur.Diplôme}_${cur.Libellé}`]: cur,
   }),
-  {} as Record<string, typeof overridesData[number]>
+  {} as Record<string, (typeof overridesData)[number]>
 );

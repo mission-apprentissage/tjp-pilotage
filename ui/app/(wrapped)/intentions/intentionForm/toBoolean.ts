@@ -1,6 +1,6 @@
 export const toBoolean = <
   V extends string | undefined,
-  R = V extends undefined ? boolean | undefined : boolean
+  R = V extends undefined ? boolean | undefined : boolean,
 >(
   value: V
 ): R => {

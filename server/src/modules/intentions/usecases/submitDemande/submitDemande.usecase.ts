@@ -1,12 +1,13 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { hasPermission } from "shared";
+import { assertScopeIsAllowed, getPermissionScope } from "shared";
 import { v4 as uuidv4 } from "uuid";
 
 import { RequestUser } from "../../../core/model/User";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 import { findOneDataEtablissement } from "./findOneDataEtablissement.dep";
 import { findOneDataFormation } from "./findOneDataFormation.dep";
+import { findOneDemande } from "./findOneDemande.dep";
 
 type Demande = {
   id?: string;
@@ -69,7 +70,12 @@ const validations = [
 ];
 
 export const [submitDemande, submitDemandeFactory] = inject(
-  { createDemandeQuery, findOneDataEtablissement, findOneDataFormation },
+  {
+    createDemandeQuery,
+    findOneDataEtablissement,
+    findOneDataFormation,
+    findOneDemande,
+  },
   (deps) =>
     async ({
       demande,
@@ -78,38 +84,51 @@ export const [submitDemande, submitDemandeFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion">;
       demande: Demande;
     }) => {
-      const id = demande.id ?? uuidv4();
+      const currentDemande = demande.id
+        ? await deps.findOneDemande(demande.id)
+        : undefined;
 
-      const dataEtablissement = await deps.findOneDataEtablissement({
-        uai: demande.uai,
+      const scope = getPermissionScope(user.role, "intentions/envoi");
+      assertScopeIsAllowed(scope?.default, {
+        user: () => {
+          if (
+            currentDemande?.createurId &&
+            user.id !== currentDemande?.createurId
+          )
+            throw Boom.forbidden();
+        },
+        national: () => {},
+        region: () => {
+          if (
+            currentDemande?.codeRegion &&
+            user.codeRegion !== currentDemande?.codeRegion
+          ) {
+            throw Boom.forbidden();
+          }
+        },
       });
+
+      const { cfd, uai } = demande;
+
+      const dataEtablissement = await deps.findOneDataEtablissement({ uai });
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
 
-      const codeRegion = dataEtablissement.codeRegion;
-      const codeAcademie = dataEtablissement.codeAcademie;
-
-      if (!hasPermission(user.role, "intentions/envoi")) throw Boom.forbidden();
-      if (user.codeRegion && user.codeRegion !== codeRegion)
+      if (dataEtablissement.codeRegion !== user.codeRegion)
         throw Boom.forbidden();
-
-      const dataFormation = await deps.findOneDataFormation({
-        cfd: demande.cfd,
-      });
-      if (!dataFormation) {
-        throw Boom.badRequest("Code diplome non valide");
-      }
 
       validations.forEach((validate) => validate(demande));
 
-      await deps.createDemandeQuery({
-        demande: {
-          ...demande,
-          id,
-          status: "submitted",
-          createurId: user.id,
-          codeAcademie,
-          codeRegion,
-        },
+      const dataFormation = await deps.findOneDataFormation({ cfd });
+      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+
+      return await deps.createDemandeQuery({
+        ...currentDemande,
+        ...demande,
+        id: currentDemande?.id ?? uuidv4(),
+        createurId: currentDemande?.createurId ?? user.id,
+        status: "submitted",
+        codeAcademie: dataEtablissement.codeAcademie,
+        codeRegion: dataEtablissement.codeRegion,
       });
     }
 );

@@ -48,16 +48,19 @@ export default function Panorama({
   );
 
   const diplomeOptions = Object.values(
-    etablissement?.formations.reduce((acc, cur) => {
-      if (!cur.libelleNiveauDiplome) return acc;
-      return {
-        ...acc,
-        [cur.codeNiveauDiplome]: {
-          value: cur.codeNiveauDiplome,
-          label: cur.libelleNiveauDiplome,
-        },
-      };
-    }, {} as Record<string, { value: string; label: string }>) ?? {}
+    etablissement?.formations.reduce(
+      (acc, cur) => {
+        if (!cur.libelleNiveauDiplome) return acc;
+        return {
+          ...acc,
+          [cur.codeNiveauDiplome]: {
+            value: cur.codeNiveauDiplome,
+            label: cur.libelleNiveauDiplome,
+          },
+        };
+      },
+      {} as Record<string, { value: string; label: string }>
+    ) ?? {}
   );
 
   if (isError) {

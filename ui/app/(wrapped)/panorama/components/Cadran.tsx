@@ -28,7 +28,7 @@ export const Cadran = function <
     effectif?: number;
     tauxPoursuiteEtudes: number;
     tauxInsertion6mois: number;
-  }
+  },
 >({
   className,
   data,

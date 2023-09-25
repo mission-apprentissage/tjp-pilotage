@@ -14,7 +14,7 @@ export const BarGraph = function <
       filtered?: number;
       nationale?: number;
     };
-  }
+  },
 >({
   graphData,
   isFiltered,

@@ -64,20 +64,22 @@ export const RegionSection = ({
   stats?: ApiType<typeof api.getRegionStats>;
   formations?: PanoramaFormation[];
 }) => {
-  const labelRegion = regionOptions?.find(
-    (item) => item.value === codeRegion
-  )?.label;
+  const labelRegion = regionOptions?.find((item) => item.value === codeRegion)
+    ?.label;
 
   const diplomeOptions = Object.values(
-    formations?.reduce((acc, cur) => {
-      return {
-        ...acc,
-        [cur.codeNiveauDiplome]: {
-          value: cur.codeNiveauDiplome,
-          label: cur.libelleNiveauDiplome as string,
-        },
-      };
-    }, {} as Record<string, { value: string; label: string }>) ?? {}
+    formations?.reduce(
+      (acc, cur) => {
+        return {
+          ...acc,
+          [cur.codeNiveauDiplome]: {
+            value: cur.codeNiveauDiplome,
+            label: cur.libelleNiveauDiplome as string,
+          },
+        };
+      },
+      {} as Record<string, { value: string; label: string }>
+    ) ?? {}
   );
 
   return (
