@@ -1,5 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
+import { PERMISSIONS, Role } from "../../security/permissions";
 import { passwordRegex } from "../../utils/passwordRegex";
 
 export const authSchemas = {
@@ -26,11 +27,11 @@ export const authSchemas = {
           id: Type.String(),
           email: Type.String(),
           role: Type.Optional(
-            Type.Union([
-              Type.Literal("admin"),
-              Type.Literal("pilote"),
-              Type.Literal("gestionnaire"),
-            ])
+            Type.Union(
+              Object.keys(PERMISSIONS).map((item) => {
+                return Type.Literal(item as Role);
+              })
+            )
           ),
         }),
       }),

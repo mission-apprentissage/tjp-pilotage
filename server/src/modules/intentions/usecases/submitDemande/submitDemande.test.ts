@@ -9,19 +9,26 @@ type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<
 const valideDeps = {
   createDemandeQuery: jest.fn(() => Promise.resolve()),
   findOneDataEtablissement: () =>
-    Promise.resolve({ codeRegion: "75" } as AwaitedResult<
+    Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<
       Deps["findOneDataEtablissement"]
     >),
   findOneDataFormation: async () =>
     Promise.resolve({ cfd: "cfd" } as AwaitedResult<
       Deps["findOneDataFormation"]
     >),
+  findOneDemande: async () =>
+    Promise.resolve({
+      id: "demande-id",
+      codeRegion: "codeRegion",
+      createurId: "user-id",
+    } as AwaitedResult<Deps["findOneDemande"]>),
 };
 
 const demande = {
   id: "demande-id",
   uai: "demande-uai",
   cfd: "demande-cfd",
+  createurId: "user-id",
   dispositifId: "dispositifId",
   rentreeScolaire: 2025,
   typeDemande: "augmentation",
@@ -163,34 +170,54 @@ describe("submitDemande usecase", () => {
     ).rejects.toThrowError("Forbidden");
   });
 
-  it("should create the demande if data is valid", async () => {
+  it("should create a new demande if data is valid and sent demand does not contain an id", async () => {
     const deps = {
+      ...valideDeps,
+      findOneDemande: () => Promise.resolve(undefined),
       createDemandeQuery: jest.fn(() => Promise.resolve()),
-      findOneDataEtablissement: jest.fn(() =>
-        Promise.resolve({ codeRegion: "75" } as AwaitedResult<
-          Deps["findOneDataEtablissement"]
-        >)
-      ),
-      findOneDataFormation: async () =>
-        Promise.resolve({ cfd: "cfd" } as AwaitedResult<
-          Deps["findOneDataFormation"]
-        >),
     };
 
-    const submitDemande = submitDemandeFactory(
-      deps as Parameters<typeof submitDemandeFactory>[0]
+    const submitDemande = submitDemandeFactory(deps);
+
+    await submitDemande({
+      user: gestionnaire,
+      demande: {
+        ...demande,
+        id: undefined,
+      },
+    });
+    expect(deps.createDemandeQuery).toBeCalledWith(
+      expect.objectContaining({
+        ...demande,
+        codeRegion: "75",
+        codeAcademie: "06",
+        createurId: "user-id",
+        status: "submitted",
+        id: expect.stringMatching(".+"),
+      })
     );
+  });
+
+  it("should update a demande if data is valid and sent demand contains an id", async () => {
+    const deps = {
+      ...valideDeps,
+      createDemandeQuery: jest.fn(() => Promise.resolve()),
+    };
+
+    const submitDemande = submitDemandeFactory(deps);
 
     await submitDemande({
       user: gestionnaire,
       demande: demande,
     });
-    await expect(deps.createDemandeQuery).toBeCalledWith({
-      demande: expect.objectContaining({
+    expect(deps.createDemandeQuery).toBeCalledWith(
+      expect.objectContaining({
         ...demande,
         codeRegion: "75",
+        codeAcademie: "06",
         createurId: "user-id",
-      }),
-    });
+        status: "submitted",
+      })
+    );
   });
 });

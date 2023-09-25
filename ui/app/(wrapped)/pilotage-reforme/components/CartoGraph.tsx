@@ -12,7 +12,7 @@ export const CartoGraph = function <
     tauxInsertion6mois?: number;
     tauxPoursuiteEtudes?: number;
     tauxDecrochage?: number;
-  }[]
+  }[],
 >({
   graphData,
   indicateur,

@@ -1,11 +1,13 @@
 import { sql } from "kysely";
 
 import { kdb } from "../../../db/db";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
 export const countDemandes = async ({
-  codeRegion,
+  user,
 }: {
-  codeRegion?: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
@@ -20,10 +22,7 @@ export const countDemandes = async ({
         "demande.status"
       )} = 'submitted' THEN 1 ELSE 0 END)`.as("submitted")
     )
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("codeRegion", "=", codeRegion);
-    })
+    .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow();
 
   return countDemandes;

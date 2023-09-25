@@ -17,6 +17,7 @@ import {
   MenuList,
   VStack,
 } from "@chakra-ui/react";
+import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useContext } from "react";
 
@@ -27,10 +28,12 @@ import { Nav } from "./Nav";
 
 export const Header = () => {
   const { auth, setAuth } = useContext(AuthContext);
+  const queryClient = useQueryClient();
 
   const logout = async () => {
     await api.logout({}).call();
     setAuth(undefined);
+    queryClient.clear();
   };
   return (
     <VStack

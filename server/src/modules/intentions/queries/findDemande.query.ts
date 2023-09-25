@@ -6,13 +6,15 @@ import {
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
 export const findDemande = async ({
   id,
-  codeRegion,
+  user,
 }: {
   id: string;
-  codeRegion?: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
 }) => {
   const demande = await kdb
     .selectFrom("demande")
@@ -48,10 +50,7 @@ export const findDemande = async ({
         ),
       }).as("metadata"),
     ])
-    .$call((q) => {
-      if (!codeRegion) return q;
-      return q.where("codeRegion", "=", codeRegion);
-    })
+    .where(isDemandeSelectable({ user }))
     .where("id", "=", id)
     .orderBy("createdAt", "asc")
     .limit(1)
