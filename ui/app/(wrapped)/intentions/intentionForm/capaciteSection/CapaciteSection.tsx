@@ -18,7 +18,12 @@ import { PoursuitePedagogiqueField } from "@/app/(wrapped)/intentions/intentionF
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 import { InfoBox } from "@/app/(wrapped)/intentions/intentionForm/InfoBox";
 
-import { isTypeOuverture } from "../isTypeOuverture";
+import {
+  isTypeAugmentation,
+  isTypeDiminution,
+  isTypeFermeture,
+  isTypeOuverture,
+} from "../../utils/typeDemandeUtils";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
@@ -41,9 +46,40 @@ const differenceCapacité = (
   capacite: number | undefined
 ) => {
   if (capaciteActuelle === undefined || capacite === undefined)
-    return "Veuillez compléter les capactités";
+    return "Veuillez compléter les capacités";
   if (capacite >= capaciteActuelle) return capacite - capaciteActuelle;
   return capacite - capaciteActuelle;
+};
+
+const ConstanteSection = ({
+  typeDemande,
+  capaciteActuelle = 0,
+  capacite = 0,
+}: {
+  typeDemande: string;
+  capaciteActuelle?: number;
+  capacite?: number;
+}) => {
+  return (
+    <>
+      {(isTypeOuverture(typeDemande) || isTypeAugmentation(typeDemande)) && (
+        <FormControl mb="8">
+          <FormLabel>Nombre de nouvelles places</FormLabel>
+          <ConstanteField
+            value={differenceCapacité(capaciteActuelle, capacite)}
+          />
+        </FormControl>
+      )}
+      {(isTypeDiminution(typeDemande) || isTypeFermeture(typeDemande)) && (
+        <FormControl mb="8">
+          <FormLabel>Nombre de places fermées</FormLabel>
+          <ConstanteField
+            value={differenceCapacité(capacite, capaciteActuelle)}
+          />
+        </FormControl>
+      )}
+    </>
+  );
 };
 
 export const CapaciteSection = () => {
@@ -59,8 +95,6 @@ export const CapaciteSection = () => {
   ]);
 
   const typeDemande = watch("typeDemande");
-  const ouverture = isTypeOuverture(typeDemande);
-
   const mixte = watch("mixte");
 
   return (
@@ -90,18 +124,11 @@ export const CapaciteSection = () => {
         <CapaciteScolaireField maxW={240} flex={1} />
         <CapaciteScolaireColoreeField maxW={240} flex={1} />
       </Flex>
-
-      {!ouverture && (
-        <FormControl mb="8">
-          <FormLabel>Nombre de nouvelles places</FormLabel>
-          <ConstanteField
-            value={differenceCapacité(
-              capaciteScolaireActuelle,
-              capaciteScolaire
-            )}
-          />
-        </FormControl>
-      )}
+      <ConstanteSection
+        typeDemande={typeDemande}
+        capaciteActuelle={capaciteScolaireActuelle}
+        capacite={capaciteScolaire}
+      />
       {mixte && (
         <>
           <Heading mt="8" fontSize="lg" mb="6" color="bluefrance.113">
@@ -112,17 +139,11 @@ export const CapaciteSection = () => {
             <CapaciteApprentissageField maxW={240} flex={1} />
             <CapaciteApprentissageColoreeField maxW={240} flex={1} />
           </Flex>
-          {!ouverture && (
-            <FormControl mb="8">
-              <FormLabel>Nombre de nouvelles places</FormLabel>
-              <ConstanteField
-                value={differenceCapacité(
-                  capaciteApprentissageActuelle,
-                  capaciteApprentissage
-                )}
-              />
-            </FormControl>
-          )}
+          <ConstanteSection
+            typeDemande={typeDemande}
+            capaciteActuelle={capaciteApprentissageActuelle}
+            capacite={capaciteApprentissage}
+          />
         </>
       )}
 

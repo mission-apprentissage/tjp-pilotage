@@ -1,9 +1,5 @@
 import { sql } from "kysely";
-import {
-  jsonArrayFrom,
-  jsonBuildObject,
-  jsonObjectFrom,
-} from "kysely/helpers/postgres";
+import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
@@ -25,18 +21,13 @@ export const findDemandes = async ({
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
     .selectAll("demande")
-    .select("dataFormation.libelle as libelleDiplome")
-    .select("dataEtablissement.libelle as libelleEtablissement")
-    .select("dispositif.libelleDispositif as libelleDispositif")
-    .select(sql<string>`count(*) over()`.as("count"))
-    .select((eb) =>
-      sql<boolean>`${eb.exists((eb) =>
-        eb
-          .selectFrom(["demande as demandeCompensee"])
-          .where("demande.typeDemande", "in", [
-            "augmentation_compensation",
-            "ouverture_compensation",
-          ])
+    .select((eb) => [
+      "dataFormation.libelle as libelleDiplome",
+      "dataEtablissement.libelle as libelleEtablissement",
+      "dispositif.libelleDispositif as libelleDispositif",
+      sql<string>`count(*) over()`.as("count"),
+      jsonObjectFrom(
+        eb.selectFrom(["demande as demandeCompensee"])
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef(
@@ -44,51 +35,12 @@ export const findDemandes = async ({
             "=",
             "demande.compensationDispositifId"
           )
-          .selectAll()
-      )}`.as("estCompensee")
-    )
-    .select((eb) => [
-      jsonBuildObject({
-        etablissementCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataEtablissement")
-            .select(["dataEtablissement.libelle", "dataEtablissement.commune"])
-            .whereRef("dataEtablissement.uai", "=", "demande.compensationUai")
-            .limit(1)
-        ),
-        formationCompensation: jsonObjectFrom(
-          eb
-            .selectFrom("dataFormation")
-            .select("dataFormation.libelle")
-            .select((eb) =>
-              jsonArrayFrom(
-                eb
-                  .selectFrom("dispositif")
-                  .select([
-                    "dispositif.libelleDispositif",
-                    "dispositif.codeDispositif",
-                  ])
-                  .leftJoin("rawData", (join) =>
-                    join
-                      .onRef(
-                        sql`"data"->>'DISPOSITIF_FORMATION'`,
-                        "=",
-                        "dispositif.codeDispositif"
-                      )
-                      .on("rawData.type", "=", "nMef")
-                  )
-                  .whereRef(
-                    sql`"data"->>'FORMATION_DIPLOME'`,
-                    "=",
-                    "dataFormation.cfd"
-                  )
-                  .distinctOn("dispositif.codeDispositif")
-              ).as("dispositifs")
-            )
-            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
-            .limit(1)
-        ),
-      }).as("metadata"),
+          .select([
+            "demandeCompensee.id",
+            "demandeCompensee.typeDemande"
+          ])
+          .limit(1)
+      ).as("demandeCompensee")
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
@@ -110,21 +62,8 @@ export const findDemandes = async ({
       cleanNull({
         ...demande,
         createdAt: demande.createdAt?.toISOString(),
-        metadata: cleanNull({
-          ...demande.metadata,
-          formation: undefined,
-          etablissement: undefined,
-          formationCompensation: cleanNull({
-            ...demande.metadata.formationCompensation,
-            dispositifs:
-              demande.metadata.formationCompensation?.dispositifs.map(
-                cleanNull
-              ),
-          }),
-          etablissementCompensation: cleanNull(
-            demande.metadata.etablissementCompensation
-          ),
-        }),
+        idCompensation: demande.demandeCompensee?.id,
+        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

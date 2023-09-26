@@ -8,40 +8,35 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { useState } from "react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
 import { UaiAutocomplete } from "../../components/UaiAutocomplete";
-import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const UaiBlock = ({
   active,
-  onSubmit,
-  defaultValues,
   formMetadata,
 }: {
   active: boolean;
-  onSubmit: (values: PartialIntentionForms) => void;
-  defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
   const {
     formState: { errors },
-    handleSubmit,
     control,
-  } = useForm<IntentionForms>({
-    defaultValues,
-    reValidateMode: "onSubmit",
-  });
+    watch,
+  } = useFormContext<IntentionForms>();
+
+  const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
     ApiType<typeof api.searchEtab>[number] | undefined
   >(
-    defaultValues?.uai && formMetadata?.etablissement
+    formMetadata?.etablissement?.libelle && uai
       ? {
           label: formMetadata?.etablissement.libelle,
-          value: defaultValues?.uai,
+          value: uai,
           commune: formMetadata?.etablissement.commune,
         }
       : undefined
@@ -49,12 +44,7 @@ export const UaiBlock = ({
 
   return (
     <LightMode>
-      <FormControl
-        isInvalid={!!errors.uai}
-        mb="auto"
-        isRequired
-        onSubmit={handleSubmit(onSubmit)}
-      >
+      <FormControl isInvalid={!!errors.uai} mb="auto" isRequired>
         <FormLabel>Recherche d'un établissement</FormLabel>
         <Flex flexDirection={"row"} justifyContent={"space-between"}>
           <Box color="chakra-body-text" minW="700px">
@@ -65,14 +55,21 @@ export const UaiBlock = ({
               render={({ field: { onChange, value, name } }) => (
                 <UaiAutocomplete
                   name={name}
-                  value={value}
-                  inError={errors.uai ? true : false}
                   active={active}
-                  defaultValues={defaultValues}
-                  formMetadata={formMetadata}
-                  onSubmit={onSubmit}
-                  onChange={onChange}
-                  setUaiInfo={setUaiInfo}
+                  inError={!!errors.uai}
+                  defaultValue={
+                    formMetadata?.etablissement?.libelle && value
+                      ? {
+                          label: formMetadata?.etablissement.libelle,
+                          value: value,
+                          commune: formMetadata?.etablissement.commune,
+                        }
+                      : undefined
+                  }
+                  onChange={(v) => {
+                    setUaiInfo(v);
+                    onChange(v?.value);
+                  }}
                 />
               )}
             />
@@ -85,9 +82,7 @@ export const UaiBlock = ({
             minH={150}
             ms={8}
           >
-            {!uaiInfo && !defaultValues.uai && (
-              <Text>Veuillez sélectionner un établissement.</Text>
-            )}
+            {!uaiInfo && <Text>Veuillez sélectionner un établissement.</Text>}
 
             {uaiInfo && (
               <>

@@ -7,8 +7,8 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
+import { isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
-import { isTypeOuverture } from "../isTypeOuverture";
 
 export const CapaciteScolaireActuelleField = chakra(
   ({ className }: { className?: string }) => {
@@ -33,8 +33,13 @@ export const CapaciteScolaireActuelleField = chakra(
             <Input
               type="number"
               {...register("capaciteScolaireActuelle", {
-                required: "La capacité scolaire actuelle est obligatoire",
                 setValueAs: (value) => parseInt(value) || undefined,
+                validate: (value) => {
+                  if (Number.isNaN(value))
+                    return "Veuillez remplir un nombre valide.";
+                  if (value && value < 0)
+                    return "Valeurs positives uniquement.";
+                },
               })}
               placeholder="0"
             />

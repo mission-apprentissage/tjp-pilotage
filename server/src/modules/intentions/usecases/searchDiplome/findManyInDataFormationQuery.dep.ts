@@ -22,6 +22,7 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd",
       "familleMetier.cfdSpecialite"
     )
+    // TO DO : concatenner tous les champs et gérer via tableau de mots
     .where((eb) =>
       eb.and([
         eb.or([

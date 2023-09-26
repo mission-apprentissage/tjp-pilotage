@@ -110,7 +110,8 @@ const DemandesItem = Type.Object({
   compensationDispositifId: Type.Optional(Type.String()),
   compensationUai: Type.Optional(Type.String()),
   compensationRentreeScolaire: Type.Optional(Type.Number()),
-  estCompensee: Type.Optional(Type.Boolean()),
+  idCompensation: Type.Optional(Type.String()),
+  typeCompensation: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({
@@ -265,10 +266,7 @@ export const intentionsSchemas = {
     response: {
       200: Type.Object({
         demandes: Type.Array(
-          Type.Intersect([
-            DemandesItem,
-            Type.Object({ metadata: MetadataSchema }),
-          ])
+          DemandesItem,
         ),
         count: Type.Number(),
       }),

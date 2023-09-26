@@ -93,6 +93,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
           label,
           value,
         })),
+        delimiter: ";",
       });
       const csv = parser.parse(demandes);
       response

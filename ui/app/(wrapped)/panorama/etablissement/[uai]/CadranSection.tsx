@@ -67,7 +67,7 @@ export const CadranSection = ({
       <Box px="16" maxW={800} m="auto">
         <Flex justify="flex-end">
           <Text color="grey" fontSize="sm" textAlign="left">
-            {filteredFormations?.length ?? "-"} formations
+            {filteredFormations?.length ?? "-"} certifications
           </Text>
           <Text ml="2" color="grey" fontSize="sm" textAlign="right">
             {filteredFormations?.reduce(

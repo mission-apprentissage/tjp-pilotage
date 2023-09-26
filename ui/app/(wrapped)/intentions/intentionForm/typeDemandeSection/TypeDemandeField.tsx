@@ -1,12 +1,13 @@
 import {
   Box,
   chakra,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
+  Img,
   RadioGroup,
   SimpleGrid,
-  Tag,
   Text,
   useToken,
 } from "@chakra-ui/react";
@@ -15,82 +16,21 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-const typeDemandesOptions = [
-  {
-    value: "ouverture_nette",
-    label: "Ouverture nette",
-    desc: (
-      <>
-        Utiliser ce formulaire pour tout cas de création d'une formation sans
-        fermeture ou diminution de capacité.
-      </>
-    ),
-    tag: <>Objectif de la réforme : +15%</>,
-  },
-  {
-    value: "ouverture_compensation",
-    label: "Ouverture avec compensation",
-    desc: (
-      <>
-        Utiliser ce formulaire pour tout cas de transfert de capacité d'une
-        formation vers une autres (voir exemple ci-contre).
-      </>
-    ),
-  },
-  {
-    value: "augmentation_nette",
-    label: "Augmentation nette",
-    desc: (
-      <>
-        Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur
-        une formation existant. Ne pas utiliser pour des places déjà ouvertes
-        sur l'établissement
-      </>
-    ),
-  },
-  {
-    value: "augmentation_compensation",
-    label: "Augmentation par compensation",
-    desc: (
-      <>
-        Utiliser ce formulaire pour tout cas d'augmentation de capacité sur une
-        formation déjà ouverte et en lien avec une fermeture ou diminution de
-        capacité.
-      </>
-    ),
-  },
-  {
-    value: "fermeture",
-    label: "Fermeture",
-    desc: (
-      <>
-        Utiliser ce formulaire pour renseigner les places fermées en
-        compoensation d'une ouverture ou pour les fermetures nettes.
-      </>
-    ),
-  },
-  {
-    value: "diminution",
-    label: "Diminution",
-    desc: (
-      <>
-        Utiliser ce formulaire pour renseigner les places fermées en
-        compensation d'une ouverture, ou pour les diminutions netttes.
-      </>
-    ),
-  },
-];
+import {
+  isTypeCompensation,
+  typeDemandesOptions,
+} from "../../utils/typeDemandeUtils";
 
 function RadioCard({
+  value,
   title,
   desc,
-  tag,
   selected,
   ...props
 }: {
+  value: string;
   title: ReactNode;
   desc: ReactNode;
-  tag: ReactNode;
   selected: boolean;
 } & ComponentProps<"div">) {
   const bf113 = useToken("colors", "bluefrance.113");
@@ -111,17 +51,21 @@ function RadioCard({
       }}
       p={4}
     >
-      <Text mb="3" fontWeight="bold" fontSize="lg" color="bluefrance.113">
-        {title}
-      </Text>
+      <Flex mb="3">
+        <Img height={"20px"} src={`/icons/${value}.svg`} />
+        <Text
+          ms={2}
+          fontWeight="bold"
+          fontSize="lg"
+          color="bluefrance.113"
+          lineHeight={"20px"}
+        >
+          {title}
+        </Text>
+      </Flex>
       <Text fontSize="12px" mb="auto">
         {desc}
       </Text>
-      {tag && (
-        <Tag size="sm" colorScheme="green" mt="3" ml="auto">
-          {tag}
-        </Tag>
-      )}
     </Box>
   );
 }
@@ -131,7 +75,22 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
+      resetField,
     } = useFormContext<IntentionForms>();
+
+    const resetCapaciteFields = (typeDemande: string) => {
+      resetField("capaciteScolaireActuelle", { defaultValue: 0 });
+      resetField("capaciteApprentissageActuelle", { defaultValue: 0 });
+      resetField("capaciteScolaire", { defaultValue: 0 });
+      resetField("capaciteApprentissage", { defaultValue: 0 });
+      resetField("capaciteScolaireColoree", { defaultValue: 0 });
+      resetField("capaciteApprentissageColoree", { defaultValue: 0 });
+      if (!isTypeCompensation(typeDemande)) {
+        resetField("compensationCfd", { defaultValue: undefined });
+        resetField("compensationDispositifId", { defaultValue: undefined });
+        resetField("compensationUai", { defaultValue: undefined });
+      }
+    };
 
     return (
       <FormControl
@@ -154,14 +113,17 @@ export const TypeDemandeField = chakra(
               onChange={onChange}
               value={value}
             >
-              {typeDemandesOptions.map((item) => (
+              {Object.entries(typeDemandesOptions).map(([_key, item]) => (
                 <RadioCard
                   selected={value === item.value}
                   key={item.value}
+                  value={item.value}
                   title={item.label}
                   desc={item.desc}
-                  tag={item.tag}
-                  onClick={() => onChange(item.value)}
+                  onClick={() => {
+                    resetCapaciteFields(item.value);
+                    return onChange(item.value);
+                  }}
                 />
               ))}
             </RadioGroup>
