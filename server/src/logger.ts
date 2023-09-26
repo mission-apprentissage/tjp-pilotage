@@ -71,11 +71,16 @@ const winstonLogger = winston.createLogger({
     winston.format.json()
   ),
   transports: [
-    new SlackHook({
-      level: "info",
-      webhookUrl: config.slackWebhookUrl,
-      formatter: formatSlackMessage,
-    }),
+    ...(config.slackWebhookUrl
+      ? [
+          new SlackHook({
+            level: "info",
+            webhookUrl: config.slackWebhookUrl,
+            formatter: formatSlackMessage,
+          }),
+        ]
+      : []),
+    new winston.transports.Console({ format: winston.format.prettyPrint() }),
   ],
 });
 const asyncLocalStorage = new AsyncLocalStorage();
@@ -102,6 +107,8 @@ export const myLogger = {
     });
   },
 };
+
+myLogger.error(new Error("salut"));
 
 const getCallStack = () => {
   const stack = new Error().stack;
