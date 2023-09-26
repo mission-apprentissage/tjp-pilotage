@@ -30,10 +30,10 @@ export const InformationsBlock = ({
             mr="4"
             onClick={() => onDraftSubmit()}
           >
-            Enregistrer en brouillon
+            Enregistrer l'intention
           </Button>
           <Button isLoading={isSubmitting} variant="primary" type="submit">
-            Envoyer la demande
+            Valider la demande
           </Button>
         </Flex>
       </Box>

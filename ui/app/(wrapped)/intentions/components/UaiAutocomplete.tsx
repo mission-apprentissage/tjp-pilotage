@@ -58,7 +58,7 @@ export const UaiAutocomplete = ({
           ? "Pas d'établissement correspondant"
           : "Commencez à écrire..."
       }
-      placeholder="UAI, nom, commune"
+      placeholder="UAI, nom de l'établissement ou commune"
       isDisabled={active === false}
     />
   );
