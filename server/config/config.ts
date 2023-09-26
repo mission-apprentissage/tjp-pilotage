@@ -46,4 +46,5 @@ export const config = {
     },
     email_from: env.get("PILOTAGE_EMAIL_FROM").required().asString(),
   },
+  slackWebhookUrl: env.get("PILOTAGE_SLACK_WEBHOOK_URL").required().asString(),
 };

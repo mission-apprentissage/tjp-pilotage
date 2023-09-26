@@ -3,6 +3,7 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 
+import { loggerContextPlugin, myLogger } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
@@ -32,6 +33,7 @@ server.register(fastifySwaggerUi, {
 
 server.setErrorHandler((error, request, reply) => {
   console.error(error);
+  myLogger.error(error);
   if (Boom.isBoom(error)) {
     error.output.statusCode;
     reply.status(error.output.statusCode).send(error.output.payload);
@@ -59,6 +61,7 @@ server.setErrorHandler((error, request, reply) => {
 });
 
 server.addHook("onRequest", extractUserInRequest);
+server.register(loggerContextPlugin);
 
 server.register(
   async (instance) => {
@@ -69,20 +72,19 @@ server.register(
   { prefix: "/api" }
 );
 
+const cb = (err: Error | null) => {
+  if (err) {
+    console.log(err);
+    process.exit(1);
+  } else {
+    console.log("server listening");
+  }
+};
+
 if (process.env.PILOTAGE_ENV !== "dev") {
   migrateToLatest(true).then(() => {
-    server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
-      if (err) {
-        console.log(err);
-        process.exit(1);
-      }
-    });
+    server.listen({ port: 5000, host: "0.0.0.0" }, cb);
   });
 } else {
-  server.listen({ port: 5000, host: "0.0.0.0" }, function (err) {
-    if (err) {
-      console.log(err);
-      process.exit(1);
-    }
-  });
+  server.listen({ port: 5000, host: "0.0.0.0" }, cb);
 }
