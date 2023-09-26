@@ -77,7 +77,7 @@ export const CfdAutocompleteInput = ({
       noOptionsMessage={({ inputValue }) =>
         inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire..."
       }
-      placeholder="Recherche un diplôme..."
+      placeholder="Code diplôme ou libellé"
       isDisabled={active === false}
     />
   );

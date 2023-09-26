@@ -122,7 +122,7 @@ export const PageClient = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>id</Th>
+                  <Th>numéro de demande</Th>
                   <Th
                     cursor="pointer"
                     onClick={() => handleOrder("libelleDiplome")}

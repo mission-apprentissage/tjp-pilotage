@@ -83,7 +83,7 @@ export const MenuIntention = ({
           <Text
             fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
           >
-            Brouillons
+            Intentions
           </Text>
         </Button>
         <Button
@@ -104,7 +104,7 @@ export const MenuIntention = ({
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
           >
-            Validées
+            Demandes validées
           </Text>
         </Button>
       </VStack>
