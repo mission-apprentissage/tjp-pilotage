@@ -52,7 +52,7 @@ export const [submitDemande] = inject(
 
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
-          demande.typeDemande === "ouverture_compensation"
+        demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
@@ -64,7 +64,7 @@ export const [submitDemande] = inject(
           createurId: userId,
           codeAcademie,
           codeRegion,
-          compensationRentreeScolaire: compensationRentreeScolaire
+          compensationRentreeScolaire: compensationRentreeScolaire,
         },
       });
     }

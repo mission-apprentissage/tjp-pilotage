@@ -96,7 +96,7 @@ export const theme = extendBaseTheme(chakraTheme, {
       525: "#d64d00",
       "525_hover": "#ff754e",
       "525_active": "#ff8e76",
-    }
+    },
   },
   components: {
     Button: buttonTheme,

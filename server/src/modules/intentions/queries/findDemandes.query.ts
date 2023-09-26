@@ -27,7 +27,8 @@ export const findDemandes = async ({
       "dispositif.libelleDispositif as libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(
-        eb.selectFrom(["demande as demandeCompensee"])
+        eb
+          .selectFrom(["demande as demandeCompensee"])
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef(
@@ -35,12 +36,9 @@ export const findDemandes = async ({
             "=",
             "demande.compensationDispositifId"
           )
-          .select([
-            "demandeCompensee.id",
-            "demandeCompensee.typeDemande"
-          ])
+          .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
           .limit(1)
-      ).as("demandeCompensee")
+      ).as("demandeCompensee"),
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
@@ -63,7 +61,7 @@ export const findDemandes = async ({
         ...demande,
         createdAt: demande.createdAt?.toISOString(),
         idCompensation: demande.demandeCompensee?.id,
-        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined
+        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

@@ -264,9 +264,7 @@ export const intentionsSchemas = {
     ]),
     response: {
       200: Type.Object({
-        demandes: Type.Array(
-          DemandesItem,
-        ),
+        demandes: Type.Array(DemandesItem),
         count: Type.Number(),
       }),
     },
