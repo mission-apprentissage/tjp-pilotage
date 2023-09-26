@@ -3,6 +3,7 @@ import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 
+import { config } from "../config/config";
 import { loggerContextPlugin, myLogger } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
@@ -49,7 +50,7 @@ server.setErrorHandler((error, request, reply) => {
     return;
   }
 
-  if (process.env.PILOTAGE_ENV === "dev") {
+  if (config.env === "dev") {
     reply.status(500).send({
       error: error.name,
       statusCode: 500,
@@ -81,7 +82,7 @@ const cb = (err: Error | null) => {
   }
 };
 
-if (process.env.PILOTAGE_ENV !== "dev") {
+if (config.env !== "dev") {
   migrateToLatest(true).then(() => {
     server.listen({ port: 5000, host: "0.0.0.0" }, cb);
   });

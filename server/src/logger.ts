@@ -39,7 +39,7 @@ const formatSlackMessage = (info: {
         elements: [
           {
             type: "mrkdwn",
-            text: `*Env:* ${process.env.PILOTAGE_ENV}`,
+            text: `*Env:* ${config.env}`,
           },
           {
             type: "mrkdwn",
