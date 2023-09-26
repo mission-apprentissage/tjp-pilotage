@@ -1,11 +1,11 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { assertScopeIsAllowed, getPermissionScope } from "shared";
+import { getPermissionScope, guardScope } from "shared";
 import { v4 as uuidv4 } from "uuid";
 
 import { RequestUser } from "../../../core/model/User";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { findOneDataEtablissement } from "./findOneDataEtablissement.dep";
 import { findOneDataFormation } from "./findOneDataFormation.dep";
 import { findOneDemande } from "./findOneDemande.dep";
 
@@ -88,33 +88,19 @@ export const [submitDemande, submitDemandeFactory] = inject(
         ? await deps.findOneDemande(demande.id)
         : undefined;
 
-      const scope = getPermissionScope(user.role, "intentions/envoi");
-      assertScopeIsAllowed(scope?.default, {
-        user: () => {
-          if (
-            currentDemande?.createurId &&
-            user.id !== currentDemande?.createurId
-          )
-            throw Boom.forbidden();
-        },
-        national: () => {},
-        region: () => {
-          if (
-            currentDemande?.codeRegion &&
-            user.codeRegion !== currentDemande?.codeRegion
-          ) {
-            throw Boom.forbidden();
-          }
-        },
-      });
-
       const { cfd, uai } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissement({ uai });
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
+      if (!dataEtablissement.codeRegion) throw Boom.badData();
 
-      if (dataEtablissement.codeRegion !== user.codeRegion)
-        throw Boom.forbidden();
+      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const isAllowed = guardScope(scope?.default, {
+        user: () => !currentDemande || user.id === currentDemande?.createurId,
+        region: () => user.codeRegion === dataEtablissement.codeRegion,
+        national: () => true,
+      });
+      if (!isAllowed) throw Boom.forbidden();
 
       validations.forEach((validate) => validate(demande));
 
@@ -123,12 +109,22 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       return await deps.createDemandeQuery({
         ...currentDemande,
+        libelleColoration: null,
+        autreMotif: null,
+        commentaire: null,
+        libelleDiplome: null,
+        capaciteScolaireActuelle: null,
+        capaciteScolaireColoree: null,
+        capaciteApprentissage: null,
+        capaciteApprentissageActuelle: null,
+        capaciteApprentissageColoree: null,
         ...demande,
         id: currentDemande?.id ?? uuidv4(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "submitted",
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
+        updatedAt: new Date(),
       });
     }
 );

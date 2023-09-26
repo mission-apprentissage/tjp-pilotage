@@ -1,5 +1,5 @@
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { kdb } from "../../../db/db";
+import { cleanNull } from "../../../utils/noNull";
 
 export const findOneDataEtablissement = async ({ uai }: { uai: string }) => {
   const etablissement = await kdb
