@@ -5,41 +5,29 @@ import {
   FormLabel,
   LightMode,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
 import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
-import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
-
-export const cfdRegex = /^[0-9]{8}$/;
+import { IntentionForms } from "../defaultFormValues";
 
 export const CfdBlock = ({
   setDispositifs,
   formMetaData,
-  defaultValues,
-  defaultDispositifs = [],
-  onSubmit,
   active,
 }: {
   setDispositifs: (
     info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
   ) => void;
   formMetaData?: ApiType<typeof api.getDemande>["metadata"];
-  defaultValues: PartialIntentionForms;
-  defaultDispositifs?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
-  onSubmit: (values: PartialIntentionForms) => void;
   active: boolean;
 }) => {
   const {
     formState: { errors },
-    handleSubmit,
     resetField,
     control,
-  } = useForm<IntentionForms>({
-    defaultValues,
-    reValidateMode: "onSubmit",
-  });
+  } = useFormContext<IntentionForms>();
 
   return (
     <LightMode>
@@ -49,7 +37,6 @@ export const CfdBlock = ({
         isRequired
         flex="1"
         w="md"
-        onSubmit={handleSubmit(onSubmit)}
       >
         <FormLabel>Recherche d'un diplôme</FormLabel>
         <Box color="chakra-body-text" minW="700px">
@@ -60,16 +47,22 @@ export const CfdBlock = ({
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
                 name={name}
-                value={value}
                 inError={errors.cfd ? true : false}
-                formMetadata={formMetaData}
-                defaultValues={defaultValues}
-                defaultDispositifs={defaultDispositifs}
+                defaultValue={
+                  value && formMetaData?.formation?.libelle
+                    ? {
+                        value,
+                        label: formMetaData?.formation?.libelle,
+                      }
+                    : undefined
+                }
                 active={active}
-                onSubmit={onSubmit}
-                onChange={onChange}
-                resetField={resetField}
-                setDispositifs={setDispositifs}
+                onChange={(selected) => {
+                  console.log(selected);
+                  if (!selected) resetField("dispositifId");
+                  onChange(selected?.value);
+                  setDispositifs(selected?.dispositifs);
+                }}
               />
             )}
           />

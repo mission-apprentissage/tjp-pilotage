@@ -13,16 +13,13 @@ import { UaiBlock } from "./UaiBlock";
 export const CfdUaiSection = ({
   formId,
   active,
-  defaultValues,
   formMetadata,
-  submitCfdUai,
   onEditUaiCfdSection,
 }: {
   formId?: string;
   active: boolean;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  submitCfdUai: (values: PartialIntentionForms) => void;
   onEditUaiCfdSection: () => void;
 }) => {
   const [dispositifs, setDispositifs] = useState<
@@ -33,7 +30,6 @@ export const CfdUaiSection = ({
     <DarkMode>
       <Box
         color="chakra-body-text"
-        as="form"
         bg="blue.main"
         p="6"
         borderRadius="6"
@@ -53,23 +49,11 @@ export const CfdUaiSection = ({
         <Divider pt="4" mb="4" />
         <CfdBlock
           formMetaData={formMetadata}
-          defaultValues={defaultValues}
           setDispositifs={setDispositifs}
-          onSubmit={submitCfdUai}
           active={active}
         />
-        <DispositifBlock
-          options={dispositifs}
-          defaultValues={defaultValues}
-          onSubmit={submitCfdUai}
-          active={active}
-        />
-        <UaiBlock
-          formMetadata={formMetadata}
-          defaultValues={defaultValues}
-          onSubmit={submitCfdUai}
-          active={active}
-        />
+        <DispositifBlock options={dispositifs} active={active} />
+        <UaiBlock formMetadata={formMetadata} active={active} />
       </Box>
     </DarkMode>
   );

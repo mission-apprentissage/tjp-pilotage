@@ -11,7 +11,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-import { toBoolean } from "../toBoolean";
+import { toBoolean } from "../../utils/toBoolean";
 
 export const AmiCmaField = chakra(({ className }: { className?: string }) => {
   const {

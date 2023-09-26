@@ -124,7 +124,7 @@ export const VueRegionAcademieSection = ({
                   {data?.statsRegions.map((region) => {
                     const trBgColor =
                       region.codeRegion === codeRegion
-                        ? "#5770BE !important"
+                        ? "blue.main !important"
                         : "";
 
                     const tdBgColor =

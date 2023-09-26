@@ -43,9 +43,9 @@ export const [submitDraftDemande] = inject(
           .toFixed(20)
           .slice(2)}`;
 
-      demande.compensationRentreeScolaire =
+      const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
-        demande.typeDemande === "ouverture_compensation"
+          demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
@@ -55,6 +55,7 @@ export const [submitDraftDemande] = inject(
           id,
           status: "draft",
           createurId: userId,
+          compensationRentreeScolaire: compensationRentreeScolaire
         },
       });
     }

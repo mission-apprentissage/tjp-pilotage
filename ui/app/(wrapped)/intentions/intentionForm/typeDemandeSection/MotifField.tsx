@@ -11,6 +11,8 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
+import { typeDemandesOptions } from "../../utils/typeDemandeUtils";
+
 const motifLabels = {
   taux_insertion_satisfaisant: "Taux d’insertion satisfaisant",
   taux_poursuite_satisfaisant: "Taux de poursuite satisfaisant",
@@ -101,7 +103,10 @@ export const MotifField = chakra(({ className }: { className?: string }) => {
 
   return (
     <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-      <FormLabel>Merci de préciser le(s) motif(s)</FormLabel>
+      <FormLabel>
+        Merci de préciser le(s) motif(s) de votre{" "}
+        {typeDemandesOptions[typeDemande].label.toLowerCase()}
+      </FormLabel>
       <Controller
         name="motif"
         shouldUnregister

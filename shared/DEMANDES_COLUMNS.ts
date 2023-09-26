@@ -18,7 +18,8 @@ export const DEMANDES_COLUMNS = {
   status: "Status",
   codeRegion: "CodeRegion",
   codeAcademie: "CodeAcadémie",
-  createurId: "Id créateur",
   createdAt: "Date de création",
-  compensationUai: "Date de création",
+  compensationCfd: "CFD compensé",
+  compensationUai: "UAI compensé",
+  compensationDispositifId: "Dispositif compensé",
 } as const;

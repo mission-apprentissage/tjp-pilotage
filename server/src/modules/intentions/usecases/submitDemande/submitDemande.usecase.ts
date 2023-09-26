@@ -49,9 +49,10 @@ export const [submitDemande] = inject(
 
       const codeRegion = uaiStatus.data.codeRegion;
       const codeAcademie = uaiStatus.data.codeAcademie;
-      demande.compensationRentreeScolaire =
+
+      const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
-        demande.typeDemande === "ouverture_compensation"
+          demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
@@ -63,6 +64,7 @@ export const [submitDemande] = inject(
           createurId: userId,
           codeAcademie,
           codeRegion,
+          compensationRentreeScolaire: compensationRentreeScolaire
         },
       });
     }
