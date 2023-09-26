@@ -13,7 +13,7 @@ import { ApiType } from "shared";
 import { MotifField } from "@/app/(wrapped)/intentions/intentionForm/typeDemandeSection/MotifField";
 
 import { api } from "../../../../../api.client";
-import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 import { InfoBox } from "../InfoBox";
 import { AutreMotif } from "./AutreMotifField";
 import { CompensationSection } from "./CompensationSection";
@@ -22,10 +22,8 @@ import { TypeDemandeField } from "./TypeDemandeField";
 
 export const TypeDemandeSection = ({
   formMetadata,
-  defaultValues,
 }: {
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  defaultValues: PartialIntentionForms;
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
@@ -61,10 +59,7 @@ export const TypeDemandeSection = ({
         typeDemande === "augmentation_compensation") && (
         <Flex align="flex-start" mt={6}>
           <Box flexDirection={"column"} maxWidth="752px" mb="6">
-            <CompensationSection
-              defaultValues={defaultValues}
-              formMetadata={formMetadata}
-            />
+            <CompensationSection formMetadata={formMetadata} />
           </Box>
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
