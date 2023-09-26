@@ -50,6 +50,7 @@ export const IntentionForm = ({
               demande: {
                 id: formId,
                 ...forms[1],
+                uai: forms[1].uai!,
                 ...forms[2],
               },
             },

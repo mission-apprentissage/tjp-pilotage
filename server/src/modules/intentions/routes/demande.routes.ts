@@ -1,7 +1,12 @@
 import Boom from "@hapi/boom";
 //@ts-ignore
 import { Parser } from "@json2csv/plainjs";
-import { DEMANDES_COLUMNS, ROUTES_CONFIG } from "shared";
+import {
+  DEMANDES_COLUMNS,
+  getPermissionScope,
+  guardScope,
+  ROUTES_CONFIG,
+} from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
@@ -55,13 +60,19 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
-      if (!request.user) throw Boom.forbidden();
+      const user = request.user;
+      if (!user) throw Boom.forbidden();
+      const demande = await findDemande({ id: request.params.id, user });
+      if (!demande) return response.status(404).send();
 
-      const result = await findDemande({
-        id: request.params.id,
-        user: request.user,
+      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const canEdit = guardScope(scope?.default, {
+        user: () => user.id === demande.createurId,
+        region: () => user.codeRegion === demande.codeRegion,
+        national: () => true,
       });
-      response.status(200).send(result);
+
+      response.status(200).send({ ...demande, canEdit });
     }
   );
 
