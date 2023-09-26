@@ -30,7 +30,7 @@ const DemandeSchema = Type.Object({
 const DraftSchema = Type.Object({
   id: Type.String(),
   createdAt: Type.String(),
-  uai: Type.Optional(Type.String()),
+  uai: Type.String(),
   cfd: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
@@ -157,10 +157,12 @@ export const intentionsSchemas = {
         Type.Intersect([
           DemandeSchema,
           Type.Object({ metadata: MetadataSchema }),
+          Type.Object({ canEdit: Type.Boolean() }),
         ]),
         Type.Intersect([
           DraftSchema,
           Type.Object({ metadata: MetadataSchema }),
+          Type.Object({ canEdit: Type.Boolean() }),
         ]),
       ]),
     },

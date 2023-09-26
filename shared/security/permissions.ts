@@ -26,11 +26,6 @@ export const PERMISSIONS = {
     "intentions/suppression": { default: "user" },
     "intentions/envoi": { default: "user" },
   },
-  gestionnaire_region: {
-    "intentions/lecture": { draft: "user", default: "region" },
-    "intentions/suppression": { default: "user" },
-    "intentions/envoi": { default: "user" },
-  },
   admin: {
     "pilotage_reforme/lecture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },

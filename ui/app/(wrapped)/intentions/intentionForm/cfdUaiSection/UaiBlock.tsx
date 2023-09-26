@@ -86,7 +86,7 @@ export const UaiBlock = ({
                       onChange(selected?.value);
                       setUaiInfo(selected ?? undefined);
                       onSubmit({
-                        uai: selected?.value,
+                        uai: value,
                         cfd: defaultValues.cfd,
                         libelleDiplome: defaultValues.libelleDiplome,
                         dispositifId: defaultValues.dispositifId,

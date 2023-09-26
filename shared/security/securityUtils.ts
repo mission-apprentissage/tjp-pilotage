@@ -1,5 +1,3 @@
-import Boom from "@hapi/boom";
-
 import { Permission, PERMISSIONS } from "./permissions";
 
 type KeyOfUnion<T> = T extends any ? keyof T : never;
@@ -34,10 +32,10 @@ export const getPermissionScope = <P extends Permission>(
   return permissionScope as { [DS in KeyOfUnion<D>]: KOfUnion<D>[DS] };
 };
 
-export function assertScopeIsAllowed<S extends string>(
+export function guardScope<S extends string>(
   scope: S | undefined,
-  assertions: { [C in S]: () => void }
-): asserts scope is Exclude<S, undefined> {
-  if (!scope) throw Boom.forbidden();
-  assertions[scope]();
+  guards: { [C in S]: () => boolean }
+): scope is Exclude<S, undefined> {
+  if (!scope) return false;
+  return guards[scope]();
 }
