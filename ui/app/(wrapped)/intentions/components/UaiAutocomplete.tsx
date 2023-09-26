@@ -3,32 +3,21 @@ import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
-import { PartialIntentionForms } from "../intentionForm/defaultFormValues";
 
 export const cfdRegex = /^[0-9]{8}$/;
 
 export const UaiAutocomplete = ({
   name,
-  value,
-  defaultValues,
-  formMetadata,
+  defaultValue,
   active,
   inError,
-  type = "demande",
-  setUaiInfo,
-  onSubmit,
   onChange,
 }: {
   name: string;
-  value?: string;
-  defaultValues?: PartialIntentionForms;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  defaultValue?: { value: string; label: string; commune?: string };
   active?: boolean;
   inError: boolean;
-  type?: "demande" | "compensation";
-  setUaiInfo: (info?: ApiType<typeof api.searchEtab>[number]) => void;
-  onSubmit: (values: PartialIntentionForms) => void;
-  onChange: (value?: string) => void;
+  onChange: (value?: ApiType<typeof api.searchEtab>[number]) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -46,33 +35,12 @@ export const UaiAutocomplete = ({
         IndicatorSeparator: () => null,
       }}
       onChange={(selected) => {
-        onChange(selected?.value);
-        setUaiInfo(selected ?? undefined);
-        onSubmit({
-          uai: selected?.value,
-          cfd:
-            type === "demande"
-              ? defaultValues?.cfd
-              : defaultValues?.compensationCfd,
-          dispositifId:
-            type === "demande"
-              ? defaultValues?.dispositifId
-              : defaultValues?.compensationDispositifId,
-        });
+        onChange(selected ?? undefined);
       }}
       defaultValue={
-        (formMetadata?.etablissement ||
-          formMetadata?.etablissementCompensation) &&
+        defaultValue &&
         ({
-          value,
-          label:
-            type === "demande"
-              ? `${formMetadata?.etablissement?.libelle} - ${formMetadata?.etablissement?.commune}`
-              : formMetadata?.etablissementCompensation?.libelle,
-          commune:
-            type === "demande"
-              ? formMetadata?.etablissement?.commune
-              : formMetadata?.etablissementCompensation?.commune,
+          ...defaultValue,
         } as ApiType<typeof api.searchEtab>[0])
       }
       loadOptions={(inputValue: string) => {

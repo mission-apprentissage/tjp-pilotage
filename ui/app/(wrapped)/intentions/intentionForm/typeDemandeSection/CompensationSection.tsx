@@ -10,10 +10,7 @@ import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
-import {
-  IntentionForms,
-  PartialIntentionForms,
-} from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
+import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import { api } from "../../../../../api.client";
 import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
@@ -21,10 +18,8 @@ import { UaiAutocomplete } from "../../components/UaiAutocomplete";
 
 export const CompensationSection = ({
   formMetadata,
-  defaultValues,
 }: {
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  defaultValues: PartialIntentionForms;
 }) => {
   const {
     formState: { errors },
@@ -56,15 +51,20 @@ export const CompensationSection = ({
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
                 name={name}
-                value={value}
-                type={"compensation"}
                 inError={errors.compensationCfd ? true : false}
-                formMetadata={formMetadata}
-                defaultValues={defaultValues}
-                onChange={onChange}
-                resetField={resetField}
-                setDispositifs={setDispositifsCompensation}
-                onSubmit={() => {}}
+                defaultValue={
+                  value && formMetadata?.formationCompensation?.libelle
+                    ? {
+                        value,
+                        label: formMetadata?.formationCompensation?.libelle,
+                      }
+                    : undefined
+                }
+                onChange={(selected) => {
+                  if (!selected) resetField("dispositifId");
+                  onChange(selected?.value);
+                  setDispositifsCompensation(selected?.dispositifs);
+                }}
               />
             )}
           />
@@ -129,14 +129,18 @@ export const CompensationSection = ({
             render={({ field: { onChange, value, name } }) => (
               <UaiAutocomplete
                 name={name}
-                value={value}
-                type={"compensation"}
                 inError={errors.compensationUai ? true : false}
-                formMetadata={formMetadata}
-                defaultValues={defaultValues}
+                defaultValue={
+                  formMetadata?.etablissementCompensation?.libelle && value
+                    ? {
+                        label: formMetadata?.etablissementCompensation.libelle,
+                        value: value,
+                        commune:
+                          formMetadata?.etablissementCompensation.commune,
+                      }
+                    : undefined
+                }
                 onChange={onChange}
-                setUaiInfo={() => {}}
-                onSubmit={() => {}}
               />
             )}
           />
