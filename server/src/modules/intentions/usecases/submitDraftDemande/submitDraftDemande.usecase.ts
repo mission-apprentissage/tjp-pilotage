@@ -1,14 +1,15 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { assertScopeIsAllowed, getPermissionScope } from "shared";
+import { getPermissionScope, guardScope } from "shared";
 import { v4 as uuidv4 } from "uuid";
 
 import { RequestUser } from "../../../core/model/User";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 import { findOneDemande } from "./findOneDemande.dep";
 
 export const [submitDraftDemande] = inject(
-  { createDemandeQuery, findOneDemande },
+  { createDemandeQuery, findOneDemande, findOneDataEtablissement },
   (deps) =>
     async ({
       demande,
@@ -17,7 +18,7 @@ export const [submitDraftDemande] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion">;
       demande: {
         id?: string;
-        uai?: string;
+        uai: string;
         typeDemande?: string;
         cfd?: string;
         libelleDiplome?: string;
@@ -43,28 +44,19 @@ export const [submitDraftDemande] = inject(
         ? await deps.findOneDemande(demande.id)
         : undefined;
 
-      const scope = getPermissionScope(user.role, "intentions/envoi");
-      assertScopeIsAllowed(scope?.default, {
-        user: () => {
-          if (
-            currentDemande?.createurId &&
-            user.id !== currentDemande?.createurId
-          )
-            throw Boom.forbidden();
-        },
-        national: () => {},
-        region: () => {
-          if (
-            currentDemande?.codeRegion &&
-            user.codeRegion !== currentDemande?.codeRegion
-          ) {
-            throw Boom.forbidden();
-          }
-        },
-      });
+      const { uai } = demande;
 
-      const codeRegion = currentDemande?.codeRegion ?? user.codeRegion;
-      if (!codeRegion) throw "missing code region";
+      const dataEtablissement = await deps.findOneDataEtablissement({ uai });
+      if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
+      if (!dataEtablissement.codeRegion) throw Boom.badData();
+
+      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const isAllowed = guardScope(scope?.default, {
+        user: () => !currentDemande || user.id === currentDemande?.createurId,
+        region: () => user.codeRegion === dataEtablissement.codeRegion,
+        national: () => true,
+      });
+      if (!isAllowed) throw Boom.forbidden();
 
       return await deps.createDemandeQuery({
         ...currentDemande,
@@ -72,7 +64,6 @@ export const [submitDraftDemande] = inject(
         autreMotif: null,
         amiCma: null,
         cfd: null,
-        codeAcademie: null,
         commentaire: null,
         dispositifId: null,
         libelleDiplome: null,
@@ -80,7 +71,6 @@ export const [submitDraftDemande] = inject(
         poursuitePedagogique: null,
         rentreeScolaire: null,
         typeDemande: null,
-        uai: null,
         coloration: null,
         mixte: null,
         capaciteScolaire: null,
@@ -93,7 +83,9 @@ export const [submitDraftDemande] = inject(
         id: currentDemande?.id ?? uuidv4(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "draft",
-        codeRegion,
+        codeAcademie: dataEtablissement.codeAcademie,
+        codeRegion: dataEtablissement.codeRegion,
+        updatedAt: new Date(),
       });
     }
 );

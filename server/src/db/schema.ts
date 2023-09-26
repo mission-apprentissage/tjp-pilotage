@@ -110,7 +110,7 @@ export interface Demande {
   cfd: string | null;
   libelleDiplome: string | null;
   dispositifId: string | null;
-  uai: string | null;
+  uai: string;
   rentreeScolaire: number | null;
   typeDemande: string | null;
   motif: string[] | null;
@@ -121,7 +121,7 @@ export interface Demande {
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
   status: "draft" | "submitted";
-  codeRegion: string | null;
+  codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
@@ -132,6 +132,7 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
+  updatedAt: Timestamp;
 }
 
 export interface Departement {

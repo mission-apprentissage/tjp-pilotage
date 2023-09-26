@@ -155,12 +155,16 @@ describe("submitDemande usecase", () => {
     ).rejects.toThrowError("Capacité apprentissage manquante");
   });
 
-  it("should throw an exception if the user's codeRegion is different from the etablissement's codeRegion", async () => {
+  it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {
     const submitDemande = submitDemandeFactory(valideDeps);
 
     await expect(() =>
       submitDemande({
-        user: { ...gestionnaire, codeRegion: "other" },
+        user: {
+          codeRegion: "other",
+          id: "user-id",
+          role: "expert_region",
+        },
         demande: {
           ...demande,
           mixte: true,
