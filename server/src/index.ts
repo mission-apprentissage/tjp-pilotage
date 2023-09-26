@@ -4,7 +4,7 @@ import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
 
 import { config } from "../config/config";
-import { loggerContextPlugin, myLogger } from "./logger";
+import { logger, loggerContextPlugin } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
@@ -33,8 +33,7 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, request, reply) => {
-  console.error(error);
-  myLogger.error(error);
+  logger.error(error);
   if (Boom.isBoom(error)) {
     error.output.statusCode;
     reply.status(error.output.statusCode).send(error.output.payload);

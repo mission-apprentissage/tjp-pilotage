@@ -91,7 +91,7 @@ const getContext = () =>
     requestId: string;
   };
 
-export const myLogger = {
+export const logger = {
   info: (msg: string, details?: object) => {
     const stack = getCallStack();
     const { userId, requestId } = getContext();
@@ -107,8 +107,6 @@ export const myLogger = {
     });
   },
 };
-
-myLogger.error(new Error("salut"));
 
 const getCallStack = () => {
   const stack = new Error().stack;
