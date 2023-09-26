@@ -42,8 +42,7 @@ export const CfdAutocompleteInput = ({
         defaultValue &&
         ({
           ...defaultValue,
-          isFamille: false,
-          isSecondeCommune: false,
+          isSpecialite: false,
           dateFermeture: "",
           dispositifs: [],
         } as ApiType<typeof api.searchDiplome>[0])
@@ -53,31 +52,14 @@ export const CfdAutocompleteInput = ({
           return api.searchDiplome({ params: { search } }).call();
       }}
       formatOptionLabel={(option) => {
-        if (option.isFamille) {
-          return option.isSecondeCommune ? (
-            <Flex>
-              {option.label}{" "}
-              <Tag colorScheme={"orange"} size={"md"} ms={2}>
-                Seconde commune
-              </Tag>
-            </Flex>
-          ) : (
-            <Flex>
-              {option.label}{" "}
-              <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                Spécialité
-              </Tag>
-              {option.dateFermeture && (
-                <Tag colorScheme={"red"} size={"md"} ms={2}>
-                  Fermeture au {option.dateFermeture}
-                </Tag>
-              )}
-            </Flex>
-          );
-        }
         return (
           <Flex>
             {option.label}{" "}
+            {option.isSpecialite && (
+              <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                Spécialité
+              </Tag>
+            )}
             {option.dateFermeture && (
               <Tag colorScheme={"red"} size={"md"} ms={2}>
                 Fermeture au {option.dateFermeture}

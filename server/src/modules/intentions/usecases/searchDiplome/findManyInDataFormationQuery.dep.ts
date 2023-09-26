@@ -61,6 +61,10 @@ export const findManyInDataFormationQuery = async ({
           eb("dataFormation.dateFermeture", "is", null),
           eb("dataFormation.dateFermeture", ">", sql<Date>`now()`),
         ]),
+        eb.or([
+          eb("dataFormation.typeFamille", "is", null),
+          eb("dataFormation.typeFamille", "=", "specialite"),
+        ]),
       ])
     )
     .select((eb) =>
@@ -85,11 +89,8 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} is not null`.as(
-        "isFamille"
-      ),
-      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '2nde_commune'`.as(
-        "isSecondeCommune"
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(
+        "isSpecialite"
       ),
       sql<string>`
         case when ${eb.ref("dataFormation.dateFermeture")} is not null

@@ -209,8 +209,7 @@ export const intentionsSchemas = {
         Type.Object({
           value: Type.String(),
           label: Type.String(),
-          isFamille: Type.Boolean(),
-          isSecondeCommune: Type.Boolean(),
+          isSpecialite: Type.Boolean(),
           dateFermeture: Type.String(),
           dispositifs: Type.Optional(
             Type.Array(
