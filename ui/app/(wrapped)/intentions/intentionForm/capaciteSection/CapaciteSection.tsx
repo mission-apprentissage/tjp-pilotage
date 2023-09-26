@@ -117,12 +117,21 @@ export const CapaciteSection = () => {
       <LibelleColorationField maxW="752px" mb="4" />
 
       <Heading fontSize="lg" mb="6" mt="8" color="bluefrance.113">
-        Capacité en voie scolaire
+        Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>
-      <Flex gap={4} mb="8">
-        <CapaciteScolaireActuelleField maxW={240} flex={1} />
-        <CapaciteScolaireField maxW={240} flex={1} />
-        <CapaciteScolaireColoreeField maxW={240} flex={1} />
+      <Flex mb="8">
+        <Flex w={752} gap={4}>
+          <CapaciteScolaireActuelleField maxW={240} flex={1} />
+          <CapaciteScolaireField maxW={240} flex={1} />
+          <CapaciteScolaireColoreeField maxW={240} flex={1} />
+        </Flex>
+        {mixte && (
+          <InfoBox flex="1" mt="8" ms="6" p={"16px"}>
+            Pour une formation pouvant accueillir 30 élèves dont 20 en
+            apprentissage, remplir 10 dans le champ capacité en voie scolaire et
+            20 dans le champ capacité en apprentissage.
+          </InfoBox>
+        )}
       </Flex>
       <ConstanteSection
         typeDemande={typeDemande}
