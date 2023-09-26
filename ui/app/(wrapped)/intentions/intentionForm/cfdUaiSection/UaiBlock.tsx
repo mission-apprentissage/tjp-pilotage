@@ -86,7 +86,7 @@ export const UaiBlock = ({
             ms={8}
           >
             {!uaiInfo && !defaultValues.uai && (
-              <Text>Veuillez saisir le numéro établissement.</Text>
+              <Text>Veuillez sélectionner un établissement.</Text>
             )}
 
             {uaiInfo && (
@@ -94,6 +94,7 @@ export const UaiBlock = ({
                 <Badge mb="2" colorScheme="green">
                   Établissement validé
                 </Badge>
+                <Text fontSize="sm">{`UAI : ${uaiInfo.value}`}</Text>
                 <Text fontSize="sm">{uaiInfo.label?.split("-")[0]}</Text>
                 <Text fontSize="sm" mt="1">
                   {uaiInfo.commune}
