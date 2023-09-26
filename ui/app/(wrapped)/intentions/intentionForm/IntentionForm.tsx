@@ -3,7 +3,7 @@
 import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { ApiType } from "shared";
 
 import {
@@ -59,11 +59,15 @@ export const IntentionForm = ({
     defaultValues.uai && defaultValues.cfd && defaultValues.dispositifId ? 2 : 1
   );
   const [intention, setIntention] = useState(defaultValues);
+  const ref = useRef<HTMLDivElement>(null);
 
   const submitCfdUai = (values: PartialIntentionForms) => {
     setIntention({ ...intention, ...values });
     if (values?.uai && values?.cfd && values?.dispositifId) {
       setStep(2);
+      setTimeout(() => {
+        ref.current?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
       return true;
     }
   };
@@ -100,7 +104,7 @@ export const IntentionForm = ({
           onEditUaiCfdSection={onEditUaiCfdSection}
           active={step === 1}
         />
-        <Collapse in={step === 2} animateOpacity>
+        <Collapse in={step === 2} animateOpacity ref={ref}>
           <InformationsBlock
             isSubmitting={isSubmitting}
             onSubmit={onSubmit}

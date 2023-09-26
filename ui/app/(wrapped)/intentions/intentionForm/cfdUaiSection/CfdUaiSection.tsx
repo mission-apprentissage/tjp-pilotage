@@ -34,7 +34,7 @@ export const CfdUaiSection = ({
       <Box
         color="chakra-body-text"
         as="form"
-        bg="#5770BE"
+        bg="blue.main"
         p="6"
         borderRadius="6"
       >
