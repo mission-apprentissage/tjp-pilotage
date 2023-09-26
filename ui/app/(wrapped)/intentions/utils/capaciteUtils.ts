@@ -1,4 +1,9 @@
-import { isTypeAugmentation, isTypeDiminution, isTypeFermeture, isTypeOuverture } from "./typeDemandeUtils";
+import {
+  isTypeAugmentation,
+  isTypeDiminution,
+  isTypeFermeture,
+  isTypeOuverture,
+} from "./typeDemandeUtils";
 
 export const capaciteDoitEtreInferieure = (typeDemande: string) =>
   isTypeFermeture(typeDemande) || isTypeDiminution(typeDemande);

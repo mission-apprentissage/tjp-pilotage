@@ -28,12 +28,7 @@ export const CfdUaiSection = ({
 
   return (
     <DarkMode>
-      <Box
-        color="chakra-body-text"
-        bg="blue.main"
-        p="6"
-        borderRadius="6"
-      >
+      <Box color="chakra-body-text" bg="blue.main" p="6" borderRadius="6">
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <IconButton
