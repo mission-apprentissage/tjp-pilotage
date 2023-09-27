@@ -47,7 +47,7 @@ export const UaiBlock = ({
       <FormControl isInvalid={!!errors.uai} mb="auto" isRequired>
         <FormLabel>Recherche d'un établissement</FormLabel>
         <Flex flexDirection={"row"} justifyContent={"space-between"}>
-          <Box color="chakra-body-text" minW="700px">
+          <Box color="chakra-body-text" w="100%" maxW="752px">
             <Controller
               name="uai"
               control={control}
@@ -89,8 +89,10 @@ export const UaiBlock = ({
                 <Badge mb="2" colorScheme="green">
                   Établissement validé
                 </Badge>
-                <Text fontSize="sm">{`UAI : ${uaiInfo.value}`}</Text>
-                <Text fontSize="sm">{uaiInfo.label?.split("-")[0]}</Text>
+                <Text fontSize="sm">{`Numéro UAI : ${uaiInfo.value}`}</Text>
+                <Text fontSize="sm" mt="1">
+                  {uaiInfo.label?.split("-")[0]}
+                </Text>
                 <Text fontSize="sm" mt="1">
                   {uaiInfo.commune}
                 </Text>
