@@ -38,7 +38,7 @@ export const CapaciteScolaireColoreeField = chakra(
             <Input
               type="number"
               {...register("capaciteScolaireColoree", {
-                required: "La capacité scolaire est obligatoire",
+                required: "Le champ est obligatoire",
                 setValueAs: (value) => parseInt(value) || undefined,
                 validate: (value) => {
                   if (Number.isNaN(value))
@@ -56,7 +56,6 @@ export const CapaciteScolaireColoreeField = chakra(
                     return "Le nombre de places colorées fermées ne peut pas être supérieur au nombre de places actuelles.";
                 },
               })}
-              placeholder="0"
             />
             {errors.capaciteScolaireColoree && (
               <FormErrorMessage>

@@ -42,6 +42,7 @@ export const CapaciteScolaireField = chakra(
           type="number"
           {...register("capaciteScolaire", {
             setValueAs: (value) => parseInt(value) || undefined,
+            required: "Le champ est obligatoire",
             validate: (value) => {
               if (Number.isNaN(value))
                 return "Veuillez remplir un nombre valide.";
@@ -60,7 +61,6 @@ export const CapaciteScolaireField = chakra(
                 return "La future capacité prévisionnelle doit être inférieure à la capacité actuelle.";
             },
           })}
-          placeholder="0"
           disabled={fermeture}
         />
         {errors.capaciteScolaire && (
