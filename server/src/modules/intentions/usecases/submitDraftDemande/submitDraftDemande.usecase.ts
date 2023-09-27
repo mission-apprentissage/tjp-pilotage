@@ -1,10 +1,10 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
-import { v4 as uuidv4 } from "uuid";
 
 import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 import { findOneDemande } from "./findOneDemande.dep";
 
@@ -92,7 +92,7 @@ export const [submitDraftDemande] = inject(
         compensationUai: null,
         ...demande,
         compensationRentreeScolaire,
-        id: currentDemande?.id ?? uuidv4(),
+        id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "draft",
         codeAcademie: dataEtablissement.codeAcademie,

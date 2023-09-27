@@ -17,10 +17,12 @@ import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
 export const IntentionForm = ({
+  canEdit = false,
   formId,
   defaultValues,
   formMetadata,
 }: {
+  canEdit?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
@@ -118,6 +120,7 @@ export const IntentionForm = ({
           />
           <Collapse in={step === 2} animateOpacity ref={step2Ref}>
             <InformationsBlock
+              canEdit={canEdit}
               isSubmitting={isSubmitting}
               isDraftSubmitting={isDraftSubmitting}
               onDraftSubmit={onDraftSubmit}
