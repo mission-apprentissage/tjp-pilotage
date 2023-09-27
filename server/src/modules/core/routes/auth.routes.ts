@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import cookie from "cookie";
 import { ROUTES_CONFIG } from "shared";
 
@@ -48,8 +47,7 @@ export const authRoutes = ({ server }: { server: Server }) => {
     { schema: ROUTES_CONFIG.whoAmI },
     async (request, response) => {
       const user = request.user;
-      if (!user) throw Boom.unauthorized();
-      response.status(200).send({ user });
+      response.status(200).send(user && { user });
     }
   );
 
