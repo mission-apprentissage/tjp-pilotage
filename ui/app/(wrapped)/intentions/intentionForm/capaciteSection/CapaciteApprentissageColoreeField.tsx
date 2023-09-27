@@ -54,7 +54,6 @@ export const CapaciteApprentissageColoreeField = chakra(
                     return "Le nombre de places colorées fermées ne peut pas être supérieur au nombre de places actuelles.";
                 },
               })}
-              placeholder=""
             />
             {errors.capaciteApprentissageColoree && (
               <FormErrorMessage>
