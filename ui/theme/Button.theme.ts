@@ -30,7 +30,7 @@ const secondary = defineStyle({
   borderWidth: "1px",
   _hover: {
     bg: "gray.100",
-    _disabled: { bg: "bluefrance.113" },
+    _disabled: { bg: "white" },
   },
 });
 

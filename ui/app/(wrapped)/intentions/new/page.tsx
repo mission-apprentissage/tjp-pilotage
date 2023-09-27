@@ -29,6 +29,7 @@ export default () => {
       {intentionId ? (
         data && (
           <IntentionForm
+            canEdit={true}
             defaultValues={{
               cfd: data?.compensationCfd,
               dispositifId: data?.compensationDispositifId,
@@ -42,7 +43,7 @@ export default () => {
           />
         )
       ) : (
-        <IntentionForm defaultValues={{}} formMetadata={{}} />
+        <IntentionForm canEdit={true} defaultValues={{}} formMetadata={{}} />
       )}
     </GuardPermission>
   );

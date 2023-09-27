@@ -19,7 +19,6 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -157,7 +156,6 @@ export const PageClient = () => {
                 {data?.demandes.map((demande) => (
                   <Tr
                     display="table-row"
-                    as={Link}
                     key={demande.id}
                     cursor="pointer"
                     height={"80px"}
@@ -170,7 +168,7 @@ export const PageClient = () => {
                     }}
                   >
                     <Td maxW={"36"} textOverflow={"ellipsis"} isTruncated>
-                      {demande.id.substring(5)}
+                      {demande.id}
                     </Td>
                     <Td w="sm">
                       <Text
