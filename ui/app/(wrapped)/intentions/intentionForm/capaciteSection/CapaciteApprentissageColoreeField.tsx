@@ -39,6 +39,7 @@ export const CapaciteApprentissageColoreeField = chakra(
               type="number"
               {...register("capaciteApprentissageColoree", {
                 setValueAs: (value) => parseInt(value) || undefined,
+                required: "Le champ est obligatoire",
                 validate: (value) => {
                   if (Number.isNaN(value))
                     return "Veuillez remplir un nombre valide.";
@@ -59,7 +60,7 @@ export const CapaciteApprentissageColoreeField = chakra(
                     return "Le nombre de places colorées fermées ne peut pas être supérieur au nombre de places actuelles.";
                 },
               })}
-              placeholder="0"
+              placeholder=""
             />
             {errors.capaciteApprentissageColoree && (
               <FormErrorMessage>
