@@ -31,7 +31,7 @@ export const [submitDemande] = inject(
         commentaire?: string;
         coloration: boolean;
         mixte: boolean;
-        capaciteScolaire: number;
+        capaciteScolaire?: number;
         capaciteScolaireActuelle?: number;
         capaciteScolaireColoree?: number;
         capaciteApprentissage?: number;
