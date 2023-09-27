@@ -35,11 +35,11 @@ export const CfdBlock = ({
         mb="4"
         isInvalid={!!errors.cfd?.message}
         isRequired
-        flex="1"
-        w="md"
+        w="100%"
+        maxW="752px"
       >
         <FormLabel>Recherche d'un diplôme</FormLabel>
-        <Box color="chakra-body-text" minW="700px">
+        <Box color="chakra-body-text">
           <Controller
             name="cfd"
             control={control}

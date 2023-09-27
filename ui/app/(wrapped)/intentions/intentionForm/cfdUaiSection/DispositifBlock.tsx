@@ -27,7 +27,8 @@ export const DispositifBlock = ({
     <LightMode>
       <FormControl
         mb="4"
-        maxW="sm"
+        w="100%"
+        maxW="752px"
         isInvalid={!!errors.dispositifId}
         isRequired
       >
