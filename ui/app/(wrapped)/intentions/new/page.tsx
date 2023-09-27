@@ -3,7 +3,6 @@
 import { Center, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
-import qs from "qs";
 
 import { api } from "../../../../api.client";
 import { GuardPermission } from "../../../../utils/security/GuardPermission";
@@ -27,7 +26,7 @@ export default () => {
     );
   return (
     <GuardPermission permission="intentions/envoi">
-      {searchParams.intentionId ? (
+      {intentionId ? (
         data && (
           <IntentionForm
             defaultValues={{
