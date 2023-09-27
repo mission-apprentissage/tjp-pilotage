@@ -74,20 +74,21 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
-      resetField,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const resetCapaciteFields = (typeDemande: string) => {
-      resetField("capaciteScolaireActuelle", { defaultValue: 0 });
-      resetField("capaciteApprentissageActuelle", { defaultValue: 0 });
-      resetField("capaciteScolaire", { defaultValue: 0 });
-      resetField("capaciteApprentissage", { defaultValue: 0 });
-      resetField("capaciteScolaireColoree", { defaultValue: 0 });
-      resetField("capaciteApprentissageColoree", { defaultValue: 0 });
+    const resetFields = (typeDemande: string) => {
+      setValue("motif", []);
+      setValue("capaciteScolaireActuelle", undefined);
+      setValue("capaciteApprentissageActuelle", undefined);
+      setValue("capaciteScolaire", undefined);
+      setValue("capaciteApprentissage", undefined);
+      setValue("capaciteScolaireColoree", undefined);
+      setValue("capaciteApprentissageColoree", undefined);
       if (!isTypeCompensation(typeDemande)) {
-        resetField("compensationCfd", { defaultValue: undefined });
-        resetField("compensationDispositifId", { defaultValue: undefined });
-        resetField("compensationUai", { defaultValue: undefined });
+        setValue("compensationCfd", undefined);
+        setValue("compensationDispositifId", undefined);
+        setValue("compensationUai", undefined);
       }
     };
 
@@ -121,7 +122,7 @@ export const TypeDemandeField = chakra(
                   title={item.label}
                   desc={item.desc}
                   onClick={() => {
-                    resetCapaciteFields(item.value);
+                    resetFields(item.value);
                     return onChange(item.value);
                   }}
                 />
