@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
 
+import { logger } from "../../../../logger";
 import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
 import { generateId } from "../../utils/generateId";
@@ -116,7 +117,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
           ? demande.rentreeScolaire
           : undefined;
 
-      return await deps.createDemandeQuery({
+      const created = await deps.createDemandeQuery({
         ...currentDemande,
         libelleColoration: null,
         autreMotif: null,
@@ -138,5 +139,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),
       });
+
+      logger.info("Demande envoyée", { demande: created });
     }
 );

@@ -10,6 +10,6 @@ export const createDemandeQuery = async (
     .insertInto("demande")
     .values(demande)
     .onConflict((oc) => oc.column("id").doUpdateSet(demande))
-    .returning(["id"])
+    .returningAll()
     .executeTakeFirst();
 };
