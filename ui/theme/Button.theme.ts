@@ -36,7 +36,7 @@ const secondary = defineStyle({
 
 const createButton = defineStyle({
   ...commonButtonStyle,
-  bg: "#5770BE",
+  bg: "blue.main",
   color: "white",
   _hover: {
     bg: "bluefrance.525_hover",

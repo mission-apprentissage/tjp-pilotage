@@ -1,3 +1,4 @@
+import { sql } from "kysely";
 import {
   jsonArrayFrom,
   jsonBuildObject,
@@ -29,15 +30,60 @@ export const findDemande = async ({ id }: { id: string }) => {
                 eb
                   .selectFrom("dispositif")
                   .select(["libelleDispositif", "codeDispositif"])
+                  .leftJoin("rawData", (join) =>
+                    join
+                      .onRef(
+                        sql`"data"->>'DISPOSITIF_FORMATION'`,
+                        "=",
+                        "dispositif.codeDispositif"
+                      )
+                      .on("rawData.type", "=", "nMef")
+                  )
                   .whereRef(
-                    "codeNiveauDiplome",
+                    sql`"data"->>'FORMATION_DIPLOME'`,
                     "=",
-                    "dataFormation.codeNiveauDiplome"
+                    "dataFormation.cfd"
                   )
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
             .whereRef("dataFormation.cfd", "=", "demande.cfd")
+            .limit(1)
+        ),
+        etablissementCompensation: jsonObjectFrom(
+          eb
+            .selectFrom("dataEtablissement")
+            .selectAll("dataEtablissement")
+            .whereRef("dataEtablissement.uai", "=", "demande.compensationUai")
+            .limit(1)
+        ),
+        formationCompensation: jsonObjectFrom(
+          eb
+            .selectFrom("dataFormation")
+            .select("libelle")
+            .select((eb) =>
+              jsonArrayFrom(
+                eb
+                  .selectFrom("dispositif")
+                  .select(["libelleDispositif", "codeDispositif"])
+                  .leftJoin("rawData", (join) =>
+                    join
+                      .onRef(
+                        sql`"data"->>'DISPOSITIF_FORMATION'`,
+                        "=",
+                        "dispositif.codeDispositif"
+                      )
+                      .on("rawData.type", "=", "nMef")
+                  )
+                  .whereRef(
+                    sql`"data"->>'FORMATION_DIPLOME'`,
+                    "=",
+                    "dataFormation.cfd"
+                  )
+                  .distinctOn("codeDispositif")
+              ).as("dispositifs")
+            )
+            .whereRef("dataFormation.cfd", "=", "demande.compensationCfd")
             .limit(1)
         ),
       }).as("metadata"),
@@ -61,6 +107,12 @@ export const findDemande = async ({ id }: { id: string }) => {
         ...demande.metadata,
         formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
+        formationCompensation: cleanNull(
+          demande.metadata.formationCompensation
+        ),
+        etablissementCompensation: cleanNull(
+          demande.metadata.etablissementCompensation
+        ),
       }),
       createdAt: demande.createdAt?.toISOString(),
       dispositifId,

@@ -11,14 +11,14 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-import { toBoolean } from "../toBoolean";
+import { toBoolean } from "../../utils/toBoolean";
 
 export const ColorationField = chakra(
   ({ className }: { className?: string }) => {
     const {
       formState: { errors },
       control,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     return (
       <FormControl

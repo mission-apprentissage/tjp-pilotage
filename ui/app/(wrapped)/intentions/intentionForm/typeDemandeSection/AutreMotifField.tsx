@@ -15,7 +15,7 @@ export const AutreMotif = chakra(({ className }: { className?: string }) => {
     formState: { errors },
     register,
     watch,
-  } = useFormContext<IntentionForms[2]>();
+  } = useFormContext<IntentionForms>();
 
   const [motif] = watch(["motif"]);
 

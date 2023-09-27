@@ -11,7 +11,6 @@ export const UaiForm = ({
   const [uai, setUai] = useState(defaultUai ?? "");
   return (
     <FormControl
-      as="form"
       margin="auto"
       maxW="300px"
       onSubmit={(e) => {

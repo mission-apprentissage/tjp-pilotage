@@ -13,11 +13,14 @@ export const [submitDraftDemande] = inject(
       demande: {
         id?: string;
         uai?: string;
-        typeDemande?: string;
         cfd?: string;
-        libelleDiplome?: string;
         dispositifId?: string;
         motif?: string[];
+        typeDemande?: string;
+        compensationCfd?: string;
+        compensationDispositifId?: string;
+        compensationUai?: string;
+        compensationRentreeScolaire?: number;
         autreMotif?: string;
         rentreeScolaire?: number;
         amiCma?: boolean;
@@ -40,12 +43,19 @@ export const [submitDraftDemande] = inject(
           .toFixed(20)
           .slice(2)}`;
 
+      const compensationRentreeScolaire =
+        demande.typeDemande === "augmentation_compensation" ||
+        demande.typeDemande === "ouverture_compensation"
+          ? demande.rentreeScolaire
+          : undefined;
+
       return await deps.createDemandeQuery({
         demande: {
           ...demande,
           id,
           status: "draft",
           createurId: userId,
+          compensationRentreeScolaire,
         },
       });
     }

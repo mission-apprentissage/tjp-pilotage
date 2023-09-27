@@ -1,6 +1,8 @@
 "use client";
 
+import { LinkIcon } from "@chakra-ui/icons";
 import {
+  Button,
   Center,
   Container,
   Grid,
@@ -11,6 +13,7 @@ import {
   Tag,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
@@ -19,12 +22,15 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
+import { useState } from "react";
+import { ApiType } from "shared";
 
 import { api } from "../../../api.client";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { MenuIntention } from "./menuIntention/MenuIntention";
+import { typeDemandesOptions } from "./utils/typeDemandeUtils";
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
@@ -85,6 +91,18 @@ export const PageClient = () => {
       }),
   });
 
+  const nouvelleCompensation = (
+    demandeCompensee: ApiType<typeof api.getDemandes>["demandes"][0]
+  ) => {
+    router.push(
+      createParametrizedUrl(`${location.pathname}/new`, {
+        intentionId: demandeCompensee.id,
+      })
+    );
+  };
+
+  const [selectedRow, setSelectedRow] = useState("");
+
   if (isLoading) {
     return (
       <Center mt={12}>
@@ -94,7 +112,7 @@ export const PageClient = () => {
   }
 
   return (
-    <Container maxW={"container.xl"} my={12}>
+    <Container maxW={"80%"} my={12}>
       <Grid templateColumns="repeat(5,1fr)" gap={2}>
         <GridItem>
           <MenuIntention isRecapView></MenuIntention>
@@ -104,26 +122,22 @@ export const PageClient = () => {
             <Table variant="simple">
               <Thead>
                 <Tr>
-                  <Th>id</Th>
+                  <Th>numéro de demande</Th>
                   <Th
                     cursor="pointer"
                     onClick={() => handleOrder("libelleDiplome")}
                   >
                     <OrderIcon {...order} column="libelleDiplome" />
-                    libelle
+                    diplôme
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
-                    <OrderIcon {...order} column="cfd" />
-                    CFD
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("typeDemande")}
+                  >
+                    <OrderIcon {...order} column="typeDemande" />
+                    type
                   </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("uai")}>
-                    <OrderIcon {...order} column="uai" />
-                    UAI
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("status")}>
-                    <OrderIcon {...order} column="status" />
-                    status
-                  </Th>
+                  <Th>compensation</Th>
                   <Th
                     cursor="pointer"
                     isNumeric
@@ -132,6 +146,10 @@ export const PageClient = () => {
                     <OrderIcon {...order} column="createdAt" />
                     création
                   </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("status")}>
+                    <OrderIcon {...order} column="status" />
+                    status
+                  </Th>
                 </Tr>
               </Thead>
               <Tbody>
@@ -139,17 +157,104 @@ export const PageClient = () => {
                   <Tr
                     key={demande.id}
                     cursor="pointer"
+                    height={"80px"}
+                    whiteSpace={"pre"}
+                    bg={
+                      demande.id === selectedRow ? "bluefrance.950" : "inherit"
+                    }
                     onClick={() => {
-                      router.replace(`/intentions/${demande.id}`);
+                      router.push(`/intentions/${demande.id}`);
                     }}
                   >
-                    <Td maxWidth={20} whiteSpace="nowrap">
-                      {" "}
-                      {demande.id.substring(5, 11)}...{" "}
+                    <Td maxW={"36"} textOverflow={"ellipsis"} isTruncated>
+                      {demande.id.substring(5)}
                     </Td>
-                    <Td> {demande.libelleDiplome} </Td>
-                    <Td>{demande.cfd}</Td>
-                    <Td>{demande.uai}</Td>
+                    <Td w="sm">
+                      <Text
+                        textOverflow={"ellipsis"}
+                        overflow={"hidden"}
+                        whiteSpace={"break-spaces"}
+                        noOfLines={2}
+                      >
+                        {demande.libelleDiplome}
+                      </Text>
+                    </Td>
+                    <Td w="sm">
+                      <Text
+                        textOverflow={"ellipsis"}
+                        overflow={"hidden"}
+                        whiteSpace={"break-spaces"}
+                        noOfLines={2}
+                      >
+                        {demande.typeDemande
+                          ? typeDemandesOptions[demande.typeDemande].label
+                          : null}
+                      </Text>
+                    </Td>
+                    <Td align="center" w="36">
+                      {demande.compensationCfd != null &&
+                      demande.compensationDispositifId != null &&
+                      demande.compensationUai != null ? (
+                        demande.idCompensation != undefined ? (
+                          <Tag
+                            as={Button}
+                            colorScheme={"green"}
+                            variant={"outline"}
+                            size={"lg"}
+                            maxW="xs"
+                            minH={"12"}
+                            justifyContent={"center"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                            disabled={true}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              router.push(
+                                `/intentions/${demande.idCompensation}`
+                              );
+                            }}
+                            onMouseEnter={() =>
+                              setSelectedRow(demande.idCompensation ?? "")
+                            }
+                            onMouseLeave={() => setSelectedRow("")}
+                          >
+                            {`${
+                              demande.typeCompensation
+                                ? typeDemandesOptions[demande.typeCompensation]
+                                    .label
+                                : "Demande"
+                            } liée `}
+                            <Text textDecoration="underline">
+                              {demande.idCompensation.substring(5)}
+                            </Text>
+                          </Tag>
+                        ) : (
+                          <Tag
+                            as={Button}
+                            variant={"outline"}
+                            colorScheme={"orange"}
+                            size={"lg"}
+                            minW="100%"
+                            maxW="xs"
+                            minH={"12"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                            onClick={(e) => {
+                              e.stopPropagation();
+                              nouvelleCompensation(demande);
+                            }}
+                            rightIcon={<LinkIcon focusable={true} />}
+                          >
+                            Lier une demande
+                          </Tag>
+                        )
+                      ) : null}
+                    </Td>
+                    <Td isNumeric>
+                      {new Date(demande.createdAt).toLocaleDateString()}
+                    </Td>
                     <Td align="center">
                       {demande.status === "draft" ? (
                         <Tag
@@ -170,9 +275,6 @@ export const PageClient = () => {
                           Validée
                         </Tag>
                       )}
-                    </Td>
-                    <Td isNumeric>
-                      {new Date(demande.createdAt).toLocaleDateString()}
                     </Td>
                   </Tr>
                 ))}

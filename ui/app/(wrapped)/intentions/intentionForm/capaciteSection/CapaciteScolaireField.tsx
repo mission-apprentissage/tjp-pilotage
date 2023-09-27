@@ -7,8 +7,12 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
+import {
+  capaciteDoitEtreInferieure,
+  capaciteDoitEtreSuperieure,
+} from "../../utils/capaciteUtils";
+import { isTypeFermeture, isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
-import { isTypeOuverture } from "../isTypeOuverture";
 
 export const CapaciteScolaireField = chakra(
   ({ className }: { className?: string }) => {
@@ -16,10 +20,14 @@ export const CapaciteScolaireField = chakra(
       formState: { errors },
       register,
       watch,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     const typeDemande = watch("typeDemande");
+    const capaciteActuelle = watch("capaciteScolaireActuelle");
+    const doitEtreSuperieure = capaciteDoitEtreSuperieure(typeDemande);
+    const doitEtreInferieure = capaciteDoitEtreInferieure(typeDemande);
     const ouverture = isTypeOuverture(typeDemande);
+    const fermeture = isTypeFermeture(typeDemande);
 
     return (
       <FormControl
@@ -33,10 +41,27 @@ export const CapaciteScolaireField = chakra(
         <Input
           type="number"
           {...register("capaciteScolaire", {
-            required: "La capacité scolaire est obligatoire",
             setValueAs: (value) => parseInt(value) || undefined,
+            validate: (value) => {
+              if (Number.isNaN(value))
+                return "Veuillez remplir un nombre valide.";
+              if (value < 0) return "Valeurs positives uniquement.";
+              if (
+                doitEtreSuperieure &&
+                capaciteActuelle &&
+                value <= capaciteActuelle
+              )
+                return "La future capacité prévisionnelle doit être supérieure à la capacité actuelle.";
+              if (
+                doitEtreInferieure &&
+                capaciteActuelle &&
+                value >= capaciteActuelle
+              )
+                return "La future capacité prévisionnelle doit être inférieure à la capacité actuelle.";
+            },
           })}
           placeholder="0"
+          disabled={fermeture}
         />
         {errors.capaciteScolaire && (
           <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>

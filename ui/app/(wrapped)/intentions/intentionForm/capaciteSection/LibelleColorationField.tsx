@@ -15,7 +15,7 @@ export const LibelleColorationField = chakra(
       formState: { errors },
       watch,
       register,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     const [coloration] = watch(["coloration"]);
 
