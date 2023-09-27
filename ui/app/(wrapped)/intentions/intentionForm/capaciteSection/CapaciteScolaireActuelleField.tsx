@@ -20,13 +20,13 @@ export const CapaciteScolaireActuelleField = chakra(
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);
-
+    console.log(errors);
     return (
       <>
         {!ouverture && (
           <FormControl
             className={className}
-            isInvalid={!!errors.capaciteApprentissageActuelle}
+            isInvalid={!!errors.capaciteScolaireActuelle}
             isRequired
           >
             <FormLabel>Capacité actuelle</FormLabel>
@@ -34,6 +34,7 @@ export const CapaciteScolaireActuelleField = chakra(
               type="number"
               {...register("capaciteScolaireActuelle", {
                 setValueAs: (value) => parseInt(value) || undefined,
+                required: "La capacité actuelle est obligatoire",
                 validate: (value) => {
                   if (Number.isNaN(value))
                     return "Veuillez remplir un nombre valide.";
