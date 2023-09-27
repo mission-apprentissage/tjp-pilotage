@@ -89,6 +89,7 @@ export const CapaciteSection = () => {
     "capaciteScolaire",
     "capaciteScolaireActuelle",
   ]);
+  console.log(capaciteScolaire);
   const [capaciteApprentissage, capaciteApprentissageActuelle] = watch([
     "capaciteApprentissage",
     "capaciteApprentissageActuelle",

@@ -7,6 +7,8 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
+import { safeParseInt } from "@/app/(wrapped)/intentions/utils/safeParseInt";
+
 import { isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -33,7 +35,7 @@ export const CapaciteScolaireActuelleField = chakra(
             <Input
               type="number"
               {...register("capaciteScolaireActuelle", {
-                setValueAs: parseInt,
+                setValueAs: safeParseInt,
                 validate: (value) => {
                   if (value === undefined) return "Le champ est obligatoire";
                   if (Number.isNaN(value))
