@@ -98,8 +98,6 @@ export const IntentionForm = ({
       }).unsubscribe
   );
 
-  useEffect(() => console.log(defaultValues), []);
-
   return (
     <FormProvider {...form}>
       <Box
