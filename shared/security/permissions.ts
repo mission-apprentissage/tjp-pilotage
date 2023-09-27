@@ -8,29 +8,28 @@ export type Permission = KeyOfUnion<
 >;
 
 export const PERMISSIONS = {
-  pilote: {},
-  pilote_national: {
+  admin: {
+    "pilotage_reforme/lecture": { default: "national" },
+    "intentions/lecture": { default: "national", draft: "national" },
+    "intentions/suppression": { default: "national" },
+    "intentions/envoi": { default: "national" },
+  },
+  pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
+  },
+  pilote_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
   },
   expert_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "intentions/suppression": { default: "region" },
     "intentions/envoi": { default: "region" },
   },
-  pilote_region: {
-    "intentions/lecture": { default: "region", draft: "region" },
-  },
-  gestionnaire: {
+  gestionnaire_region: {
     "intentions/lecture": { draft: "user", default: "region" },
     "intentions/suppression": { default: "user" },
     "intentions/envoi": { default: "user" },
-  },
-  admin: {
-    "pilotage_reforme/lecture": { default: "national" },
-    "intentions/lecture": { default: "national", draft: "national" },
-    "intentions/suppression": { default: "national" },
-    "intentions/envoi": { default: "national" },
   },
 } satisfies {
   [R: string]: {
