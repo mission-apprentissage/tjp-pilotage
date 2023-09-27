@@ -70,6 +70,7 @@ const winstonLogger = winston.createLogger({
     winston.format.timestamp({ format: () => new Date().toISOString() }),
     winston.format.json()
   ),
+  silent: config.env === "test",
   transports: [
     ...(config.slackWebhookUrl
       ? [

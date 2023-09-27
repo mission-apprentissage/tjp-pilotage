@@ -51,7 +51,7 @@ const demande = {
 const gestionnaire = {
   codeRegion: "75",
   id: "user-id",
-  role: "gestionnaire",
+  role: "gestionnaire_region",
 } as const;
 
 describe("submitDemande usecase", () => {

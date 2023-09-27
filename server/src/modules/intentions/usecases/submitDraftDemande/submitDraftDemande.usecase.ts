@@ -56,7 +56,9 @@ export const [submitDraftDemande] = inject(
 
       const scope = getPermissionScope(user.role, "intentions/envoi");
       const isAllowed = guardScope(scope?.default, {
-        user: () => !currentDemande || user.id === currentDemande?.createurId,
+        user: () =>
+          user.codeRegion === dataEtablissement.codeRegion &&
+          (!currentDemande || user.id === currentDemande?.createurId),
         region: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
