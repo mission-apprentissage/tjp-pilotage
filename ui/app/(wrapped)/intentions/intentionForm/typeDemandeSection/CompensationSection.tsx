@@ -6,6 +6,7 @@ import {
   LightMode,
   Select,
 } from "@chakra-ui/react";
+import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
@@ -26,7 +27,27 @@ export const CompensationSection = ({
     control,
     handleSubmit,
     resetField,
+    getValues,
   } = useFormContext<IntentionForms>();
+
+  const { data, isLoading } = useQuery({
+    queryKey: [getValues("uai")],
+    queryFn: api.getEtab({ params: { uai: getValues("uai") } }).call,
+    cacheTime: 0,
+  });
+
+  const getSameEtabDefaultValue = (): ApiType<typeof api.getEtab> =>
+    data ?? ({} as ApiType<typeof api.getEtab>);
+
+  const getUaiDefaultValue = (value?: string): ApiType<typeof api.getEtab> => {
+    if (formMetadata?.etablissementCompensation?.libelle && value)
+      return {
+        label: formMetadata?.etablissementCompensation.libelle,
+        value: value,
+        commune: formMetadata?.etablissementCompensation.commune,
+      };
+    return getSameEtabDefaultValue();
+  };
 
   const [dispositifsCompensation, setDispositifsCompensation] = useState<
     ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
@@ -126,23 +147,22 @@ export const CompensationSection = ({
             name="compensationUai"
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
-            render={({ field: { onChange, value, name } }) => (
-              <UaiAutocomplete
-                name={name}
-                inError={errors.compensationUai ? true : false}
-                defaultValue={
-                  formMetadata?.etablissementCompensation?.libelle && value
-                    ? {
-                        label: formMetadata?.etablissementCompensation.libelle,
-                        value: value,
-                        commune:
-                          formMetadata?.etablissementCompensation.commune,
-                      }
-                    : undefined
-                }
-                onChange={(selected) => onChange(selected?.value)}
-              />
-            )}
+            render={({ field: { onChange, name } }) =>
+              !isLoading ? (
+                <UaiAutocomplete
+                  name={name}
+                  inError={errors.compensationUai ? true : false}
+                  defaultValue={getUaiDefaultValue(
+                    getValues("compensationUai")
+                  )}
+                  onChange={(selected) => {
+                    onChange(selected?.value);
+                  }}
+                />
+              ) : (
+                <></>
+              )
+            }
           />
           {errors.cfd && (
             <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
