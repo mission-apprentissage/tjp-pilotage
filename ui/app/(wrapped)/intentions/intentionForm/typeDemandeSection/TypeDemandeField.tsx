@@ -46,7 +46,6 @@ function RadioCard({
       aria-checked={selected}
       _checked={{
         bg: "#E2E7F8",
-        borderColor: "bluefrance.113",
         boxShadow: `0 0 0 2px ${bf113}`,
       }}
       p={4}

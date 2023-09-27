@@ -3,7 +3,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  LightMode,
   Select,
 } from "@chakra-ui/react";
 import { useState } from "react";
@@ -33,17 +32,16 @@ export const CompensationSection = ({
   >(formMetadata?.formationCompensation?.dispositifs);
 
   return (
-    <LightMode>
+    <>
       <FormControl
         mb="4"
+        w="100%"
         isInvalid={!!errors.compensationCfd?.message}
         isRequired
-        flex="1"
-        w="752px"
         onSubmit={handleSubmit(() => {})}
       >
         <FormLabel>Diplôme compensé</FormLabel>
-        <Box color="chakra-body-text" minW="700px">
+        <Box color="chakra-body-text">
           <Controller
             name="compensationCfd"
             control={control}
@@ -61,22 +59,24 @@ export const CompensationSection = ({
                     : undefined
                 }
                 onChange={(selected) => {
-                  if (!selected) resetField("dispositifId");
+                  if (!selected) resetField("compensationDispositifId");
                   onChange(selected?.value);
                   setDispositifsCompensation(selected?.dispositifs);
                 }}
               />
             )}
           />
-          {errors.cfd && (
-            <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+          {errors.compensationCfd && (
+            <FormErrorMessage>
+              {errors.compensationCfd.message}
+            </FormErrorMessage>
           )}
         </Box>
       </FormControl>
       <FormControl
         mb="4"
-        maxW="sm"
-        isInvalid={!!errors.dispositifId}
+        w="100%"
+        isInvalid={!!errors.compensationDispositifId}
         isRequired
         onSubmit={handleSubmit(() => {})}
       >
@@ -108,20 +108,20 @@ export const CompensationSection = ({
           )}
         />
 
-        {errors.dispositifId && (
-          <FormErrorMessage>{errors.dispositifId.message}</FormErrorMessage>
+        {errors.compensationDispositifId && (
+          <FormErrorMessage>
+            {errors.compensationDispositifId.message}
+          </FormErrorMessage>
         )}
       </FormControl>
       <FormControl
-        mb="4"
-        isInvalid={!!errors.compensationCfd?.message}
+        w="100%"
+        isInvalid={!!errors.compensationUai?.message}
         isRequired
-        flex="1"
-        maxW="752px"
         onSubmit={handleSubmit(() => {})}
       >
         <FormLabel>Établissement</FormLabel>
-        <Box color="chakra-body-text" minW="700px">
+        <Box color="chakra-body-text">
           <Controller
             name="compensationUai"
             control={control}
@@ -144,11 +144,13 @@ export const CompensationSection = ({
               />
             )}
           />
-          {errors.cfd && (
-            <FormErrorMessage>{errors.cfd.message}</FormErrorMessage>
+          {errors.compensationUai && (
+            <FormErrorMessage>
+              {errors.compensationUai.message}
+            </FormErrorMessage>
           )}
         </Box>
       </FormControl>
-    </LightMode>
+    </>
   );
 };
