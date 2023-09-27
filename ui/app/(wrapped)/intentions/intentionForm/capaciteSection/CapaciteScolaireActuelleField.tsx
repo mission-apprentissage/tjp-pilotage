@@ -34,12 +34,11 @@ export const CapaciteScolaireActuelleField = chakra(
               type="number"
               {...register("capaciteScolaireActuelle", {
                 setValueAs: (value) => parseInt(value) || undefined,
-                required: "Le champ est obligatoire",
                 validate: (value) => {
+                  if (value === undefined) return "Le champ est obligatoire";
                   if (Number.isNaN(value))
                     return "Veuillez remplir un nombre valide.";
-                  if (value && value < 0)
-                    return "Valeurs positives uniquement.";
+                  if (value < 0) return "Valeurs positives uniquement.";
                 },
               })}
             />
