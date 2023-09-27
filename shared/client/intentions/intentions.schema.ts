@@ -24,7 +24,7 @@ const DemandeSchema = Type.Object({
   status: Type.String(),
   mixte: Type.Boolean(),
   capaciteScolaireActuelle: Type.Optional(Type.Number()),
-  capaciteScolaire: Type.Number(),
+  capaciteScolaire: Type.Optional(Type.Number()),
   capaciteScolaireColoree: Type.Optional(Type.Number()),
   capaciteApprentissageActuelle: Type.Optional(Type.Number()),
   capaciteApprentissage: Type.Optional(Type.Number()),

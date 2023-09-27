@@ -230,17 +230,11 @@ export const PageClient = () => {
                             </Text>
                           </Tag>
                         ) : (
-                          <Tag
-                            as={Button}
-                            variant={"outline"}
+                          <Button
+                            // as={Button}
+                            variant={"primary"}
                             colorScheme={"orange"}
-                            size={"lg"}
-                            minW="100%"
-                            maxW="xs"
-                            minH={"12"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
+                            size={"sm"}
                             onClick={(e) => {
                               e.stopPropagation();
                               nouvelleCompensation(demande);
@@ -248,7 +242,7 @@ export const PageClient = () => {
                             rightIcon={<LinkIcon focusable={true} />}
                           >
                             Lier une demande
-                          </Tag>
+                          </Button>
                         )
                       ) : null}
                     </Td>
