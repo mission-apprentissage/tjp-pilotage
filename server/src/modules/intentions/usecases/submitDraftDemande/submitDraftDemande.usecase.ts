@@ -21,9 +21,12 @@ export const [submitDraftDemande] = inject(
         uai: string;
         typeDemande?: string;
         cfd?: string;
-        libelleDiplome?: string;
         dispositifId?: string;
         motif?: string[];
+        compensationCfd?: string;
+        compensationDispositifId?: string;
+        compensationUai?: string;
+        compensationRentreeScolaire?: number;
         autreMotif?: string;
         rentreeScolaire?: number;
         amiCma?: boolean;
@@ -58,6 +61,12 @@ export const [submitDraftDemande] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
+      const compensationRentreeScolaire =
+        demande.typeDemande === "augmentation_compensation" ||
+        demande.typeDemande === "ouverture_compensation"
+          ? demande.rentreeScolaire
+          : undefined;
+
       return await deps.createDemandeQuery({
         ...currentDemande,
         libelleColoration: null,
@@ -66,7 +75,6 @@ export const [submitDraftDemande] = inject(
         cfd: null,
         commentaire: null,
         dispositifId: null,
-        libelleDiplome: null,
         motif: null,
         poursuitePedagogique: null,
         rentreeScolaire: null,
@@ -79,7 +87,11 @@ export const [submitDraftDemande] = inject(
         capaciteApprentissage: null,
         capaciteApprentissageActuelle: null,
         capaciteApprentissageColoree: null,
+        compensationCfd: null,
+        compensationDispositifId: null,
+        compensationUai: null,
         ...demande,
+        compensationRentreeScolaire,
         id: currentDemande?.id ?? uuidv4(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "draft",

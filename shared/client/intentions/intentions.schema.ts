@@ -10,6 +10,10 @@ const DemandeSchema = Type.Object({
   dispositifId: Type.String(),
   rentreeScolaire: Type.Number(),
   typeDemande: Type.String(),
+  compensationUai: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
   motif: Type.Array(Type.String()),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
@@ -20,7 +24,7 @@ const DemandeSchema = Type.Object({
   status: Type.String(),
   mixte: Type.Boolean(),
   capaciteScolaireActuelle: Type.Optional(Type.Number()),
-  capaciteScolaire: Type.Number(),
+  capaciteScolaire: Type.Optional(Type.Number()),
   capaciteScolaireColoree: Type.Optional(Type.Number()),
   capaciteApprentissageActuelle: Type.Optional(Type.Number()),
   capaciteApprentissage: Type.Optional(Type.Number()),
@@ -35,6 +39,10 @@ const DraftSchema = Type.Object({
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   typeDemande: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationUai: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
   motif: Type.Optional(Type.Array(Type.String())),
   autreMotif: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),
@@ -59,34 +67,51 @@ const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
 
 const DraftSchemaPost = Partial(DraftSchema, ["id", "status", "createdAt"]);
 
-const MetadataSchema = Type.Object({
-  etablissement: Type.Optional(
-    Type.Object({
-      libelle: Type.Optional(Type.String()),
-      commune: Type.Optional(Type.String()),
-    })
-  ),
-  formation: Type.Optional(
-    Type.Object({
-      libelle: Type.Optional(Type.String()),
-      dispositifs: Type.Array(
+const EtablissementMetadataSchema = Type.Optional(
+  Type.Object({
+    libelle: Type.Optional(Type.String()),
+    commune: Type.Optional(Type.String()),
+  })
+);
+
+const FormationMetadataSchema = Type.Optional(
+  Type.Object({
+    libelle: Type.Optional(Type.String()),
+    dispositifs: Type.Optional(
+      Type.Array(
         Type.Object({
-          codeDispositif: Type.String(),
-          libelleDispositif: Type.String(),
+          codeDispositif: Type.Optional(Type.String()),
+          libelleDispositif: Type.Optional(Type.String()),
         })
-      ),
-    })
-  ),
+      )
+    ),
+  })
+);
+
+const MetadataSchema = Type.Object({
+  etablissement: EtablissementMetadataSchema,
+  formation: FormationMetadataSchema,
+  etablissementCompensation: EtablissementMetadataSchema,
+  formationCompensation: FormationMetadataSchema,
 });
 
 const DemandesItem = Type.Object({
   id: Type.String(),
   cfd: Type.Optional(Type.String()),
   libelleDiplome: Type.Optional(Type.String()),
+  libelleEtablissement: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
   createdAt: Type.String(),
   createurId: Type.String(),
   status: Type.String(),
+  typeDemande: Type.Optional(Type.String()),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationUai: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
+  idCompensation: Type.Optional(Type.String()),
+  typeCompensation: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({
@@ -121,14 +146,15 @@ export const intentionsSchemas = {
         Type.Object({
           value: Type.String(),
           label: Type.String(),
-          isFamille: Type.Boolean(),
-          isSecondeCommune: Type.Boolean(),
+          isSpecialite: Type.Boolean(),
           dateFermeture: Type.String(),
-          dispositifs: Type.Array(
-            Type.Object({
-              libelleDispositif: Type.String(),
-              codeDispositif: Type.String(),
-            })
+          dispositifs: Type.Optional(
+            Type.Array(
+              Type.Object({
+                codeDispositif: Type.Optional(Type.String()),
+                libelleDispositif: Type.Optional(Type.String()),
+              })
+            )
           ),
         })
       ),

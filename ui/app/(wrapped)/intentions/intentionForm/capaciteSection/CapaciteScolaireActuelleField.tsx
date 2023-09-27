@@ -7,8 +7,8 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
+import { isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
-import { isTypeOuverture } from "../isTypeOuverture";
 
 export const CapaciteScolaireActuelleField = chakra(
   ({ className }: { className?: string }) => {
@@ -16,7 +16,7 @@ export const CapaciteScolaireActuelleField = chakra(
       formState: { errors },
       register,
       watch,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);
@@ -26,15 +26,21 @@ export const CapaciteScolaireActuelleField = chakra(
         {!ouverture && (
           <FormControl
             className={className}
-            isInvalid={!!errors.capaciteApprentissageActuelle}
+            isInvalid={!!errors.capaciteScolaireActuelle}
             isRequired
           >
             <FormLabel>Capacité actuelle</FormLabel>
             <Input
               type="number"
               {...register("capaciteScolaireActuelle", {
-                required: "La capacité scolaire actuelle est obligatoire",
                 setValueAs: (value) => parseInt(value) || undefined,
+                required: "La capacité actuelle est obligatoire",
+                validate: (value) => {
+                  if (Number.isNaN(value))
+                    return "Veuillez remplir un nombre valide.";
+                  if (value && value < 0)
+                    return "Valeurs positives uniquement.";
+                },
               })}
               placeholder="0"
             />

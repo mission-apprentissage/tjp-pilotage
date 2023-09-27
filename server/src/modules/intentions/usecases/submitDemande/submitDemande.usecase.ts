@@ -15,6 +15,10 @@ type Demande = {
   typeDemande: string;
   cfd: string;
   dispositifId: string;
+  compensationCfd?: string;
+  compensationDispositifId?: string;
+  compensationUai?: string;
+  compensationRentreeScolaire?: number;
   motif: string[];
   autreMotif?: string;
   rentreeScolaire: number;
@@ -24,7 +28,6 @@ type Demande = {
   commentaire?: string;
   coloration: boolean;
   mixte: boolean;
-  capaciteScolaire: number;
   capaciteScolaireActuelle?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissage?: number;
@@ -107,18 +110,27 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const dataFormation = await deps.findOneDataFormation({ cfd });
       if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
 
+      const compensationRentreeScolaire =
+        demande.typeDemande === "augmentation_compensation" ||
+        demande.typeDemande === "ouverture_compensation"
+          ? demande.rentreeScolaire
+          : undefined;
+
       return await deps.createDemandeQuery({
         ...currentDemande,
         libelleColoration: null,
         autreMotif: null,
         commentaire: null,
-        libelleDiplome: null,
         capaciteScolaireActuelle: null,
         capaciteScolaireColoree: null,
         capaciteApprentissage: null,
         capaciteApprentissageActuelle: null,
         capaciteApprentissageColoree: null,
+        compensationCfd: null,
+        compensationDispositifId: null,
+        compensationUai: null,
         ...demande,
+        compensationRentreeScolaire,
         id: currentDemande?.id ?? uuidv4(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "submitted",

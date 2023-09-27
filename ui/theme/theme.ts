@@ -10,6 +10,7 @@ import { selectTheme } from "@/theme/Select.theme";
 import { sliderTheme } from "@/theme/slider.theme";
 import { tableTheme } from "@/theme/Table.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
+import { tagTheme } from "@/theme/Tag.theme";
 import { tooltipTheme } from "@/theme/Tooltip.theme";
 
 import { buttonTheme } from "./Button.theme";
@@ -31,6 +32,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
     },
+    blue: {
+      main: "#5770BE",
+    },
     bluefrance: {
       113: "#000091",
       "113_hover": "#1212ff",
@@ -47,6 +51,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       925: "#e3e3fd",
       "925_hover": "#c1c1fb",
       "925_active": "#adadf9",
+      950: "#ececfe",
+      "950_hover": "#cecefc",
+      "950_active": "#bbbbfc",
     },
     redmarianne: {
       625: "#f95c5e",
@@ -85,6 +92,11 @@ export const theme = extendBaseTheme(chakraTheme, {
       "525_hover": "#a6a6a6",
       "525_active": "#bababa",
     },
+    warning: {
+      525: "#d64d00",
+      "525_hover": "#ff754e",
+      "525_active": "#ff8e76",
+    },
   },
   components: {
     Button: buttonTheme,
@@ -98,5 +110,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Slider: sliderTheme,
     Link: linkTheme,
     Form: formStyle,
+    Tag: tagTheme,
   },
 });

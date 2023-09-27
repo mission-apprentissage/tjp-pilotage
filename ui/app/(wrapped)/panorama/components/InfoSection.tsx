@@ -33,51 +33,6 @@ const lienDares: Record<string, string> = {
   93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
 };
 
-const liensDocumentation: Record<string, { label: string; href: string }[]> = {
-  84: [
-    { label: "Académie de Lyon", href: "/Lyon.pdf" },
-    { label: "Académie de Grenoble", href: "/Grenoble.pdf" },
-    { label: "Académie de Clermont-Ferrand", href: "/ClermontF.pdf" },
-  ],
-  11: [
-    { label: "Académie de Paris", href: "/Paris.pdf" },
-    { label: "Académie de Créteil", href: "/Creteil.pdf" },
-    { label: "Académie de Versailles", href: "/Versailles.pdf" },
-  ],
-  32: [
-    { label: "Académie de Amiens", href: "/Amiens.pdf" },
-    { label: "Académie de Lille", href: "/Lille.pdf" },
-  ],
-  75: [
-    { label: "Académie de Bordeaux", href: "/Bordeaux.pdf" },
-    { label: "Académie de Limoges", href: "/Limoges.pdf" },
-    { label: "Académie de Poitiers", href: "/Poitiers.pdf" },
-  ],
-  93: [
-    { label: "Académie de Aix-Marseille", href: "/Aix-Marseille.pdf" },
-    { label: "Académie de Nice", href: "/Nice.pdf" },
-  ],
-  94: [{ label: "Académie de Corse", href: "/Corse.pdf" }],
-  76: [
-    { label: "Académie de Toulouse", href: "/Toulouse.pdf" },
-    { label: "Académie de Montpellier", href: "/Montpellier.pdf" },
-  ],
-  44: [
-    { label: "Académie de Reims", href: "/Reims.pdf" },
-    { label: "Académie de Strasbourg", href: "/Strasbourg.pdf" },
-    { label: "Académie de Nancy-Metz", href: "/Nancy-Metz.pdf" },
-  ],
-  28: [{ label: "Académie de Normandie", href: "/Normandie.pdf" }],
-  24: [{ label: "Académie de Orléans Tours", href: "/Orléans Tours.pdf" }],
-  52: [{ label: "Académie de Nantes", href: "/Nantes.pdf" }],
-  27: [{ label: "Académie de Besancon", href: "/Besancon.pdf" }],
-  53: [{ label: "Académie de Rennes", href: "/Rennes.pdf" }],
-  "03": [{ label: "Académie de Guyane", href: "/Guyane.pdf" }],
-  "01": [{ label: "Académie de Guadeloupe", href: "/Guadeloupe.pdf" }],
-  "02": [{ label: "Académie de Martinique", href: "/Martinique.pdf" }],
-  "04": [{ label: "Académie de La Réunion", href: "/Réunion.pdf" }],
-};
-
 const InfoCard = ({
   title,
   description,
@@ -201,15 +156,6 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
             }}
             img="/dashboard_girl.png"
             sourceText="* Source: Pole Emploi"
-          />
-          <InfoCard
-            title="Documentation région voie professionelle"
-            description="Retrouvez les informations essentielles pour décrypter les formations sur votre territoire"
-            links={
-              (codeRegion && liensDocumentation[codeRegion]) || { href: "" }
-            }
-            img="/team.png"
-            sourceText="* Source: DEPP"
           />
         </SimpleGrid>
       </Container>
