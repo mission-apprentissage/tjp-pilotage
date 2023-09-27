@@ -29,6 +29,7 @@ export default ({
     <>
       {data && (
         <IntentionForm
+          canEdit={data.canEdit}
           formId={intentionId}
           defaultValues={data}
           formMetadata={data.metadata}

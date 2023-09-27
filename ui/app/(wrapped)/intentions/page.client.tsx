@@ -155,6 +155,7 @@ export const PageClient = () => {
               <Tbody>
                 {data?.demandes.map((demande) => (
                   <Tr
+                    display="table-row"
                     key={demande.id}
                     cursor="pointer"
                     height={"80px"}
@@ -167,7 +168,7 @@ export const PageClient = () => {
                     }}
                   >
                     <Td maxW={"36"} textOverflow={"ellipsis"} isTruncated>
-                      {demande.id.substring(5)}
+                      {demande.id}
                     </Td>
                     <Td w="sm">
                       <Text

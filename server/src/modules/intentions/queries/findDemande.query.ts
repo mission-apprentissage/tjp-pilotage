@@ -7,8 +7,16 @@ import {
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
-export const findDemande = async ({ id }: { id: string }) => {
+export const findDemande = async ({
+  id,
+  user,
+}: {
+  id: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+}) => {
   const demande = await kdb
     .selectFrom("demande")
     .selectAll()
@@ -88,6 +96,7 @@ export const findDemande = async ({ id }: { id: string }) => {
         ),
       }).as("metadata"),
     ])
+    .where(isDemandeSelectable({ user }))
     .where("id", "=", id)
     .orderBy("createdAt", "asc")
     .limit(1)

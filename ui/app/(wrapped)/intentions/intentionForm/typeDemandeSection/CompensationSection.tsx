@@ -140,7 +140,7 @@ export const CompensationSection = ({
                       }
                     : undefined
                 }
-                onChange={onChange}
+                onChange={(selected) => onChange(selected?.value)}
               />
             )}
           />

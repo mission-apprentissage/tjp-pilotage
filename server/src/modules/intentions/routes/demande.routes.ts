@@ -1,7 +1,12 @@
 import Boom from "@hapi/boom";
 //@ts-ignore
 import { Parser } from "@json2csv/plainjs";
-import { DEMANDES_COLUMNS, ROUTES_CONFIG } from "shared";
+import {
+  DEMANDES_COLUMNS,
+  getPermissionScope,
+  guardScope,
+  ROUTES_CONFIG,
+} from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
@@ -21,9 +26,10 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { demande } = request.body;
       if (!request.user) throw Boom.unauthorized();
+
       const result = await submitDemande({
         demande,
-        userId: request.user.id,
+        user: request.user,
       });
       response.status(200).send(result);
     }
@@ -38,9 +44,10 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     async (request, response) => {
       const { demande } = request.body;
       if (!request.user) throw Boom.unauthorized();
+
       const result = await submitDraftDemande({
         demande,
-        userId: request.user.id,
+        user: request.user,
       });
       response.status(200).send(result);
     }
@@ -50,11 +57,22 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demande/:id",
     {
       schema: ROUTES_CONFIG.getDemande,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
-      const result = await findDemande({ id: request.params.id });
-      response.status(200).send(result);
+      const user = request.user;
+      if (!user) throw Boom.forbidden();
+      const demande = await findDemande({ id: request.params.id, user });
+      if (!demande) return response.status(404).send();
+
+      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const canEdit = guardScope(scope?.default, {
+        user: () => user.id === demande.createurId,
+        region: () => user.codeRegion === demande.codeRegion,
+        national: () => true,
+      });
+
+      response.status(200).send({ ...demande, canEdit });
     }
   );
 
@@ -62,12 +80,15 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demandes",
     {
       schema: ROUTES_CONFIG.getDemandes,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
+      if (!request.user) throw Boom.forbidden();
+
       const result = await findDemandes({
         ...rest,
+        user: request.user,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -78,11 +99,17 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
 
   server.get(
     "/demandes/csv",
-    { schema: ROUTES_CONFIG.getDemandesCsv },
+    {
+      schema: ROUTES_CONFIG.getDemandesCsv,
+      preHandler: hasPermissionHandler("intentions/lecture"),
+    },
     async (request, response) => {
       const { order, orderBy, ...rest } = request.query;
+      if (!request.user) throw Boom.forbidden();
+
       const { demandes } = await findDemandes({
         ...rest,
+        user: request.user,
         offset: 0,
         limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
@@ -111,10 +138,14 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demandes/count",
     {
       schema: ROUTES_CONFIG.countDemandes,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
-    async (_, response) => {
-      const result = await countDemandes();
+    async (request, response) => {
+      if (!request.user) throw Boom.forbidden();
+
+      const result = await countDemandes({
+        user: request.user,
+      });
       response.status(200).send(result);
     }
   );

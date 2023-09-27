@@ -1,8 +1,14 @@
 import { sql } from "kysely";
 
 import { kdb } from "../../../db/db";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
-export const countDemandes = async () => {
+export const countDemandes = async ({
+  user,
+}: {
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+}) => {
   const countDemandes = await kdb
     .selectFrom("demande")
     .select((eb) => sql<string>`count(${eb.ref("demande.id")})`.as("total"))
@@ -16,6 +22,7 @@ export const countDemandes = async () => {
         "demande.status"
       )} = 'submitted' THEN 1 ELSE 0 END)`.as("submitted")
     )
+    .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow();
 
   return countDemandes;

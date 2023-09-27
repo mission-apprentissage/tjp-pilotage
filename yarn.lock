@@ -2861,10 +2861,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/env@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/env@npm:13.4.20-canary.35"
-  checksum: 9e9421b6e092454af8ca25f04d07594b4be8856937f173ae1e8e8e193746fb2f312571a189bff7f5e2767b926ec148abe9988e586ffe9d23ab6791ce80c0bc94
+"@next/env@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/env@npm:13.5.1"
+  checksum: 251859d90a953d88692129b72a1c09e9f44b2981ccab1c2d9ad67898634f8999c15b290dd6b341be9fc710cc2d25ceb9229a40de90ab0946fa2c6997144fe13f
   languageName: node
   linkType: hard
 
@@ -2877,65 +2877,65 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-arm64@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-darwin-arm64@npm:13.4.20-canary.35"
+"@next/swc-darwin-arm64@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-darwin-arm64@npm:13.5.1"
   conditions: os=darwin & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-darwin-x64@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-darwin-x64@npm:13.4.20-canary.35"
+"@next/swc-darwin-x64@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-darwin-x64@npm:13.5.1"
   conditions: os=darwin & cpu=x64
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-gnu@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-linux-arm64-gnu@npm:13.4.20-canary.35"
+"@next/swc-linux-arm64-gnu@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-linux-arm64-gnu@npm:13.5.1"
   conditions: os=linux & cpu=arm64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-arm64-musl@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-linux-arm64-musl@npm:13.4.20-canary.35"
+"@next/swc-linux-arm64-musl@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-linux-arm64-musl@npm:13.5.1"
   conditions: os=linux & cpu=arm64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-gnu@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-linux-x64-gnu@npm:13.4.20-canary.35"
+"@next/swc-linux-x64-gnu@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-linux-x64-gnu@npm:13.5.1"
   conditions: os=linux & cpu=x64 & libc=glibc
   languageName: node
   linkType: hard
 
-"@next/swc-linux-x64-musl@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-linux-x64-musl@npm:13.4.20-canary.35"
+"@next/swc-linux-x64-musl@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-linux-x64-musl@npm:13.5.1"
   conditions: os=linux & cpu=x64 & libc=musl
   languageName: node
   linkType: hard
 
-"@next/swc-win32-arm64-msvc@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-win32-arm64-msvc@npm:13.4.20-canary.35"
+"@next/swc-win32-arm64-msvc@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-win32-arm64-msvc@npm:13.5.1"
   conditions: os=win32 & cpu=arm64
   languageName: node
   linkType: hard
 
-"@next/swc-win32-ia32-msvc@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-win32-ia32-msvc@npm:13.4.20-canary.35"
+"@next/swc-win32-ia32-msvc@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-win32-ia32-msvc@npm:13.5.1"
   conditions: os=win32 & cpu=ia32
   languageName: node
   linkType: hard
 
-"@next/swc-win32-x64-msvc@npm:13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "@next/swc-win32-x64-msvc@npm:13.4.20-canary.35"
+"@next/swc-win32-x64-msvc@npm:13.5.1":
+  version: 13.5.1
+  resolution: "@next/swc-win32-x64-msvc@npm:13.5.1"
   conditions: os=win32 & cpu=x64
   languageName: node
   linkType: hard
@@ -4033,6 +4033,13 @@ __metadata:
   version: 2.0.6
   resolution: "@types/unist@npm:2.0.6"
   checksum: 25cb860ff10dde48b54622d58b23e66214211a61c84c0f15f88d38b61aa1b53d4d46e42b557924a93178c501c166aa37e28d7f6d994aba13d24685326272d5db
+  languageName: node
+  linkType: hard
+
+"@types/uuid@npm:^9.0.4":
+  version: 9.0.4
+  resolution: "@types/uuid@npm:9.0.4"
+  checksum: 356e2504456eaebbc43a5af5ca6c07d71f5ae5520b5767cb1c62cd0ec55475fc4ee3d16a2874f4a5fce78e40e8583025afd3a7d9ba41f82939de310665f53f0e
   languageName: node
   linkType: hard
 
@@ -12434,20 +12441,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"next@npm:v13.4.20-canary.35":
-  version: 13.4.20-canary.35
-  resolution: "next@npm:13.4.20-canary.35"
+"next@npm:v13.5.1":
+  version: 13.5.1
+  resolution: "next@npm:13.5.1"
   dependencies:
-    "@next/env": 13.4.20-canary.35
-    "@next/swc-darwin-arm64": 13.4.20-canary.35
-    "@next/swc-darwin-x64": 13.4.20-canary.35
-    "@next/swc-linux-arm64-gnu": 13.4.20-canary.35
-    "@next/swc-linux-arm64-musl": 13.4.20-canary.35
-    "@next/swc-linux-x64-gnu": 13.4.20-canary.35
-    "@next/swc-linux-x64-musl": 13.4.20-canary.35
-    "@next/swc-win32-arm64-msvc": 13.4.20-canary.35
-    "@next/swc-win32-ia32-msvc": 13.4.20-canary.35
-    "@next/swc-win32-x64-msvc": 13.4.20-canary.35
+    "@next/env": 13.5.1
+    "@next/swc-darwin-arm64": 13.5.1
+    "@next/swc-darwin-x64": 13.5.1
+    "@next/swc-linux-arm64-gnu": 13.5.1
+    "@next/swc-linux-arm64-musl": 13.5.1
+    "@next/swc-linux-x64-gnu": 13.5.1
+    "@next/swc-linux-x64-musl": 13.5.1
+    "@next/swc-win32-arm64-msvc": 13.5.1
+    "@next/swc-win32-ia32-msvc": 13.5.1
+    "@next/swc-win32-x64-msvc": 13.5.1
     "@swc/helpers": 0.5.2
     busboy: 1.6.0
     caniuse-lite: ^1.0.30001406
@@ -12486,7 +12493,7 @@ __metadata:
       optional: true
   bin:
     next: dist/bin/next
-  checksum: 9dcce157e2cef0a7fbfa9f36c7d9818ecefae3ddfc41be1a587c54d42c38614dc6893157604b12afd63cc3f79267c0113bf55ce75a7d8b3c5c70360d92616b93
+  checksum: a54aaeadb68d324107ddd2bd0c12967f06b844ef321aae4aba99f7a79406bab4ab85d51e3430106f1bc2831c55c8bf408a2352f702590d9bedb88fbdb60b2955
   languageName: node
   linkType: hard
 
@@ -13777,12 +13784,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier@npm:2.7.1":
-  version: 2.7.1
-  resolution: "prettier@npm:2.7.1"
+"prettier@npm:3.0.3":
+  version: 3.0.3
+  resolution: "prettier@npm:3.0.3"
   bin:
-    prettier: bin-prettier.js
-  checksum: 55a4409182260866ab31284d929b3cb961e5fdb91fe0d2e099dac92eaecec890f36e524b4c19e6ceae839c99c6d7195817579cdffc8e2c80da0cb794463a748b
+    prettier: bin/prettier.cjs
+  checksum: e10b9af02b281f6c617362ebd2571b1d7fc9fb8a3bd17e371754428cda992e5e8d8b7a046e8f7d3e2da1dcd21aa001e2e3c797402ebb6111b5cd19609dd228e0
   languageName: node
   linkType: hard
 
@@ -14079,12 +14086,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-hook-form@npm:^7.46.1":
-  version: 7.46.1
-  resolution: "react-hook-form@npm:7.46.1"
+"react-hook-form@npm:^7.46.2":
+  version: 7.46.2
+  resolution: "react-hook-form@npm:7.46.2"
   peerDependencies:
     react: ^16.8.0 || ^17 || ^18
-  checksum: 9c11ba454ce5b2a16e7499f2ca710e0c0cff227f39689b8e7985902f27f99bfc7a2c49f145ef228528764cf8286bf6101fc8a0f5094ce652eb31cab1684518d1
+  checksum: 5ad2b478337fed3ab1a7bee79844d89a85485626fb1afd4acba54e28adb8f6663d37efefa9000b6ddb33f7de23b765bfac9a1d12e10c63e71463317a307134cf
   languageName: node
   linkType: hard
 
@@ -15162,6 +15169,7 @@ __metadata:
     "@types/nodemailer-html-to-text": ^3.1.0
     "@types/pg": ^8.6.6
     "@types/qs": ^6.9.7
+    "@types/uuid": ^9.0.4
     axios: 1.3.5
     commander: ^10.0.0
     cookie: ^0.5.0
@@ -15191,7 +15199,7 @@ __metadata:
     tsup: ^6.5.0
     typescript: 4.9.4
     uglify-js: ^3.17.4
-    uuid: 9.0.0
+    uuid: ^9.0.1
     winston: ^3.10.0
     winston-slack-webhook-transport: ^2.3.2
   languageName: unknown
@@ -16177,7 +16185,7 @@ __metadata:
     global: 4.4.0
     husky: 4.3.8
     lint-staged: 11.2.6
-    prettier: 2.7.1
+    prettier: 3.0.3
     semantic-release: 19.0.2
     semantic-release-slack-bot: 3.5.2
     typescript: 4.9.4
@@ -16640,13 +16648,13 @@ __metadata:
     axios: 1.3.5
     echarts: ^5.4.2
     framer-motion: ^10.9.1
-    next: v13.4.20-canary.35
+    next: v13.5.1
     next-plausible: ^3.7.2
     notion-client: ^6.16.0
     qs: ^6.11.1
     react: 18.2.0
     react-dom: 18.2.0
-    react-hook-form: ^7.46.1
+    react-hook-form: ^7.46.2
     react-notion-x: ^6.16.0
     react-select: ^5.7.4
     shared: "*"
@@ -16906,12 +16914,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uuid@npm:9.0.0":
-  version: 9.0.0
-  resolution: "uuid@npm:9.0.0"
+"uuid@npm:^9.0.1":
+  version: 9.0.1
+  resolution: "uuid@npm:9.0.1"
   bin:
     uuid: dist/bin/uuid
-  checksum: 8dd2c83c43ddc7e1c71e36b60aea40030a6505139af6bee0f382ebcd1a56f6cd3028f7f06ffb07f8cf6ced320b76aea275284b224b002b289f89fe89c389b028
+  checksum: 39931f6da74e307f51c0fb463dc2462807531dc80760a9bff1e35af4316131b4fc3203d16da60ae33f07fdca5b56f3f1dd662da0c99fea9aaeab2004780cc5f4
   languageName: node
   linkType: hard
 
