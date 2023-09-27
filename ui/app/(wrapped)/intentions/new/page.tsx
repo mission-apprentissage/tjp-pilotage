@@ -10,15 +10,12 @@ import { GuardPermission } from "../../../../utils/security/GuardPermission";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 export default () => {
   const queryParams = useSearchParams();
-
-  const searchParams: {
-    intentionId?: string;
-  } = qs.parse(queryParams.toString());
+  const intentionId = queryParams.get("intentionId");
 
   const { data, isLoading } = useQuery({
-    queryKey: [searchParams.intentionId],
-    queryFn: api.getDemande({ params: { id: searchParams.intentionId ?? "" } })
-      .call,
+    enabled: !!intentionId,
+    queryKey: [intentionId],
+    queryFn: api.getDemande({ params: { id: intentionId ?? "" } }).call,
     cacheTime: 0,
   });
 
