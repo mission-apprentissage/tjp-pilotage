@@ -14,16 +14,19 @@ export const FiltersSection = ({
   libelleFiliere?: string[];
 }) => {
   const libelleFiliereOptions = Object.values(
-    formations?.reduce((acc, cur) => {
-      if (!cur.libelleFiliere) return acc;
-      return {
-        ...acc,
-        [cur.libelleFiliere]: {
-          value: cur.libelleFiliere,
-          label: cur.libelleFiliere as string,
-        },
-      };
-    }, {} as Record<string, { value: string; label: string }>) ?? {}
+    formations?.reduce(
+      (acc, cur) => {
+        if (!cur.libelleFiliere) return acc;
+        return {
+          ...acc,
+          [cur.libelleFiliere]: {
+            value: cur.libelleFiliere,
+            label: cur.libelleFiliere as string,
+          },
+        };
+      },
+      {} as Record<string, { value: string; label: string }>
+    ) ?? {}
   );
 
   return (

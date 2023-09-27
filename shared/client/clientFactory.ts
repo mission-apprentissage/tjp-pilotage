@@ -9,16 +9,18 @@ export type ParamsFromSchema<S> = S extends {
   ? Static<S["params"]>
   : undefined;
 
-export type Params<S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]> =
-  ParamsFromSchema<S>;
+export type Params<
+  S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG],
+> = ParamsFromSchema<S>;
 
 export type QueryFromSchema<S> = S extends {
   querystring: TSchema;
 }
   ? Static<S["querystring"]>
   : undefined;
-export type Query<S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]> =
-  QueryFromSchema<S>;
+export type Query<
+  S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG],
+> = QueryFromSchema<S>;
 
 export type BodyFromSchema<S> = S extends {
   body: TSchema;
@@ -26,10 +28,10 @@ export type BodyFromSchema<S> = S extends {
   ? Static<S["body"]>
   : undefined;
 
-export type Body<S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]> =
+export type Body<S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG]> =
   BodyFromSchema<S>;
 
-export type Args<S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]> =
+export type Args<S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG]> =
   Record<string, unknown> &
     (Body<S> extends undefined ? { body?: undefined } : { body: Body<S> }) &
     (Query<S> extends undefined ? { query?: undefined } : { query: Query<S> }) &
@@ -44,11 +46,11 @@ export type ResponseFromSchema<S> = S extends {
   : undefined;
 
 export type Response<
-  S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]
+  S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG],
 > = ResponseFromSchema<S>;
 
 export const callApi = async <
-  S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]
+  S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG],
 >({
   config,
   method,
@@ -72,7 +74,7 @@ export const callApi = async <
 };
 
 export const createClientMethod =
-  <S extends typeof ROUTES_CONFIG[keyof typeof ROUTES_CONFIG]>({
+  <S extends (typeof ROUTES_CONFIG)[keyof typeof ROUTES_CONFIG]>({
     method,
     url,
     instance,

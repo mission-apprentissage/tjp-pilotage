@@ -6,11 +6,13 @@ import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
+  canEdit,
   isSubmitting,
   onDraftSubmit,
   isDraftSubmitting,
   formMetadata,
 }: {
+  canEdit: boolean;
   isSubmitting?: boolean;
   onDraftSubmit: () => void;
   isDraftSubmitting?: boolean;
@@ -25,6 +27,7 @@ export const InformationsBlock = ({
         <CapaciteSection />
         <Flex justify="flex-end" mt="12" mb="4">
           <Button
+            isDisabled={!canEdit}
             isLoading={isDraftSubmitting}
             variant="secondary"
             mr="4"
@@ -32,7 +35,12 @@ export const InformationsBlock = ({
           >
             Enregistrer l'intention
           </Button>
-          <Button isLoading={isSubmitting} variant="primary" type="submit">
+          <Button
+            isDisabled={!canEdit}
+            isLoading={isSubmitting}
+            variant="primary"
+            type="submit"
+          >
             Valider la demande
           </Button>
         </Flex>

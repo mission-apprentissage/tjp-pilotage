@@ -5,8 +5,10 @@ import { cleanNull } from "../../../../utils/noNull";
 
 export const findManyInDataEtablissementsQuery = async ({
   search,
+  codeRegion,
 }: {
   search: string;
+  codeRegion?: string;
 }) => {
   const search_array = search.split(" ");
 
@@ -45,6 +47,10 @@ export const findManyInDataEtablissementsQuery = async ({
         ]),
       ])
     )
+    .$call((q) => {
+      if (!codeRegion) return q;
+      return q.where("codeRegion", "=", codeRegion);
+    })
     .limit(20)
     .execute();
 

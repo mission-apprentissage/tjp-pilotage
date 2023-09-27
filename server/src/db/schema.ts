@@ -109,7 +109,7 @@ export interface Demande {
   id: string;
   cfd: string | null;
   dispositifId: string | null;
-  uai: string | null;
+  uai: string;
   rentreeScolaire: number | null;
   typeDemande: string | null;
   motif: string[] | null;
@@ -119,7 +119,7 @@ export interface Demande {
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
   status: "draft" | "submitted";
-  codeRegion: string | null;
+  codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
@@ -131,6 +131,7 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
+  updatedAt: Timestamp;
   compensationUai: string | null;
   compensationCfd: string | null;
   compensationDispositifId: string | null;
@@ -290,6 +291,7 @@ export interface User {
   password: string | null;
   createdAt: Generated<Timestamp | null>;
   role: string | null;
+  codeRegion: string | null;
 }
 
 export interface DB {

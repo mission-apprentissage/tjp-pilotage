@@ -5,9 +5,16 @@ import { findManyInDataEtablissementsQuery } from "./findManyInDataEtablissement
 export const [searchEtab] = inject(
   { findManyInDataEtablissementsQuery },
   (deps) =>
-    async ({ search }: { search: string }) => {
+    async ({
+      search,
+      user,
+    }: {
+      search: string;
+      user?: { codeRegion?: string };
+    }) => {
       const etablissements = await deps.findManyInDataEtablissementsQuery({
         search,
+        codeRegion: user?.codeRegion,
       });
       const suggestions = etablissements.map((etablissement) => ({
         value: etablissement.uai,

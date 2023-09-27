@@ -3,14 +3,18 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { RequestUser } from "../../core/model/User";
+import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
 export const findDemandes = async ({
   status,
+  user,
   offset = 0,
   limit = 20,
   orderBy = { order: "desc", column: "createdAt" },
 }: {
   status?: "draft" | "submitted";
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
   limit: number;
   orderBy?: { order: "asc" | "desc"; column: string };
@@ -51,6 +55,7 @@ export const findDemandes = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
+    .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
     .execute();
