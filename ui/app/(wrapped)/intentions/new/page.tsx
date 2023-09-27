@@ -18,7 +18,7 @@ export default () => {
     cacheTime: 0,
   });
 
-  if (isLoading)
+  if (isLoading && !!intentionId)
     return (
       <Center mt="6">
         <Spinner />
