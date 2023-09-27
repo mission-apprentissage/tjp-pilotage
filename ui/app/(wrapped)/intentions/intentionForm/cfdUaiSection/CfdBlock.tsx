@@ -58,7 +58,6 @@ export const CfdBlock = ({
                 }
                 active={active}
                 onChange={(selected) => {
-                  console.log(selected);
                   if (!selected) resetField("dispositifId");
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
