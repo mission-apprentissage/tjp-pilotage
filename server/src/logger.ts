@@ -97,13 +97,16 @@ export const logger = {
     const { userId, requestId } = getContext();
     winstonLogger.info(msg, { userId, requestId, details, stack });
   },
-  error: (error: Error, details?: object) => {
+  error: (
+    msg: string,
+    { error, ...details }: { error: Error } & Record<string, any>
+  ) => {
     const { userId, requestId } = getContext();
     winstonLogger.error(error.name, {
       userId,
       requestId,
       details,
-      error: { name: error.name, message: error.message, stack: error.stack },
+      error: { name: msg, message: error.message, stack: error.stack },
     });
   },
 };
