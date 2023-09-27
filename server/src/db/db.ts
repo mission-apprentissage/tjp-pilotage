@@ -2,6 +2,7 @@ import { Kysely, PostgresDialect } from "kysely";
 import { Pool } from "pg";
 
 import { config } from "../../config/config";
+import { logger } from "../logger";
 import { DB } from "./schema";
 
 const pool = new Pool({
@@ -11,8 +12,8 @@ const pool = new Pool({
     : undefined,
 });
 
-pool.on("error", (err) => {
-  console.error("pg pool lost connexion with database", err);
+pool.on("error", (error) => {
+  logger.error("pg pool lost connexion with database", { error });
 });
 
 export const kdb = new Kysely<DB>({
