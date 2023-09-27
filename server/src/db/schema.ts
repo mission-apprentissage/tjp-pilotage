@@ -108,14 +108,12 @@ export interface DataFormation {
 export interface Demande {
   id: string;
   cfd: string | null;
-  libelleDiplome: string | null;
   dispositifId: string | null;
   uai: string;
   rentreeScolaire: number | null;
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
-  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -125,6 +123,7 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
+  coloration: boolean | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -133,6 +132,10 @@ export interface Demande {
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
   updatedAt: Timestamp;
+  compensationUai: string | null;
+  compensationCfd: string | null;
+  compensationDispositifId: string | null;
+  compensationRentreeScolaire: number | null;
 }
 
 export interface Departement {
@@ -272,7 +275,7 @@ export interface NiveauDiplome {
 export interface RawData {
   type: string;
   data: Json | null;
-  id: Generated<string | null>;
+  id: string | null;
 }
 
 export interface Region {

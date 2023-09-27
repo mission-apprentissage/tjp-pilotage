@@ -30,31 +30,7 @@ export default ({
       {data && (
         <IntentionForm
           formId={intentionId}
-          defaultValues={{
-            1: {
-              uai: data.uai,
-              cfd: data.cfd,
-              dispositifId: data.dispositifId,
-            },
-            2: {
-              motif: data.motif,
-              typeDemande: data.typeDemande,
-              autreMotif: data.autreMotif,
-              commentaire: data.commentaire,
-              libelleColoration: data.libelleColoration,
-              amiCma: data.amiCma,
-              poursuitePedagogique: data.poursuitePedagogique,
-              rentreeScolaire: data.rentreeScolaire,
-              coloration: data.coloration,
-              mixte: data.mixte,
-              capaciteScolaire: data.capaciteScolaire,
-              capaciteScolaireActuelle: data.capaciteScolaireActuelle,
-              capaciteScolaireColoree: data.capaciteScolaireColoree,
-              capaciteApprentissage: data.capaciteApprentissage,
-              capaciteApprentissageActuelle: data.capaciteApprentissageActuelle,
-              capaciteApprentissageColoree: data.capaciteApprentissageColoree,
-            },
-          }}
+          defaultValues={data}
           formMetadata={data.metadata}
         />
       )}

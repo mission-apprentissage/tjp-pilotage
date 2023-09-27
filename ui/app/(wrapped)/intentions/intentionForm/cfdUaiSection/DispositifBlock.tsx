@@ -5,31 +5,23 @@ import {
   LightMode,
   Select,
 } from "@chakra-ui/react";
-import { Controller, useForm } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const DispositifBlock = ({
   active,
   options,
-  defaultValues,
-  onSubmit,
 }: {
   active: boolean;
   options?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
-  defaultValues: PartialIntentionForms[1];
-  onSubmit: (values: PartialIntentionForms[1]) => void;
 }) => {
   const {
     formState: { errors },
-    handleSubmit,
     control,
-  } = useForm<IntentionForms[1]>({
-    defaultValues,
-    reValidateMode: "onSubmit",
-  });
+  } = useFormContext<IntentionForms>();
 
   return (
     <LightMode>
@@ -38,7 +30,6 @@ export const DispositifBlock = ({
         maxW="sm"
         isInvalid={!!errors.dispositifId}
         isRequired
-        onSubmit={handleSubmit(onSubmit)}
       >
         <FormLabel>Dispositif</FormLabel>
         <Controller
@@ -55,12 +46,6 @@ export const DispositifBlock = ({
               placeholder="Sélectionner une option"
               onChange={(selected) => {
                 onChange(selected.target.value);
-                onSubmit({
-                  uai: defaultValues.uai,
-                  cfd: defaultValues.cfd,
-                  libelleDiplome: defaultValues.libelleDiplome,
-                  dispositifId: selected.target.value,
-                });
               }}
             >
               {options?.map(({ codeDispositif, libelleDispositif }) => (

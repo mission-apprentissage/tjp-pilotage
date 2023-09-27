@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
@@ -10,7 +11,7 @@ export const findDemandes = async ({
   user,
   offset = 0,
   limit = 20,
-  orderBy,
+  orderBy = { order: "desc", column: "createdAt" },
 }: {
   status?: "draft" | "submitted";
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
@@ -20,8 +21,29 @@ export const findDemandes = async ({
 }) => {
   const demandes = await kdb
     .selectFrom("demande")
-    .selectAll()
-    .select(sql<string>`count(*) over()`.as("count"))
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .selectAll("demande")
+    .select((eb) => [
+      "dataFormation.libelle as libelleDiplome",
+      "dataEtablissement.libelle as libelleEtablissement",
+      "dispositif.libelleDispositif as libelleDispositif",
+      sql<string>`count(*) over()`.as("count"),
+      jsonObjectFrom(
+        eb
+          .selectFrom(["demande as demandeCompensee"])
+          .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
+          .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
+          .whereRef(
+            "demandeCompensee.dispositifId",
+            "=",
+            "demande.compensationDispositifId"
+          )
+          .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
+          .limit(1)
+      ).as("demandeCompensee"),
+    ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
       return eb;
@@ -39,8 +61,13 @@ export const findDemandes = async ({
     .execute();
 
   return {
-    demandes: demandes.map((item) =>
-      cleanNull({ ...item, createdAt: item.createdAt?.toISOString() })
+    demandes: demandes.map((demande) =>
+      cleanNull({
+        ...demande,
+        createdAt: demande.createdAt?.toISOString(),
+        idCompensation: demande.demandeCompensee?.id,
+        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
+      })
     ),
     count: parseInt(demandes[0]?.count) || 0,
   };

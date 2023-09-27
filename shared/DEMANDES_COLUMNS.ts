@@ -1,9 +1,11 @@
 export const DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
-  libelleDiplome: "Libelle Diplome",
+  libelleDiplome: "Diplôme",
   dispositifId: "DispositifId",
+  libelleDispositif: "Dispositif",
   uai: "UAI",
+  libelleEtablissement: "Établissement",
   rentreeScolaire: "RS",
   typeDemande: "Type de demande",
   motif: "Motif",
@@ -16,6 +18,8 @@ export const DEMANDES_COLUMNS = {
   status: "Status",
   codeRegion: "CodeRegion",
   codeAcademie: "CodeAcadémie",
-  createurId: "Id créateur",
   createdAt: "Date de création",
+  compensationCfd: "CFD compensé",
+  compensationUai: "UAI compensé",
+  compensationDispositifId: "Dispositif compensé",
 } as const;

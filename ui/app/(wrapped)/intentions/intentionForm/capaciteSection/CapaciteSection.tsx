@@ -18,7 +18,12 @@ import { PoursuitePedagogiqueField } from "@/app/(wrapped)/intentions/intentionF
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 import { InfoBox } from "@/app/(wrapped)/intentions/intentionForm/InfoBox";
 
-import { isTypeOuverture } from "../isTypeOuverture";
+import {
+  isTypeAugmentation,
+  isTypeDiminution,
+  isTypeFermeture,
+  isTypeOuverture,
+} from "../../utils/typeDemandeUtils";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
@@ -41,13 +46,44 @@ const differenceCapacité = (
   capacite: number | undefined
 ) => {
   if (capaciteActuelle === undefined || capacite === undefined)
-    return "Veuillez compléter les capactités";
+    return "Veuillez compléter les capacités";
   if (capacite >= capaciteActuelle) return capacite - capaciteActuelle;
   return capacite - capaciteActuelle;
 };
 
+const ConstanteSection = ({
+  typeDemande,
+  capaciteActuelle = 0,
+  capacite = 0,
+}: {
+  typeDemande: string;
+  capaciteActuelle?: number;
+  capacite?: number;
+}) => {
+  return (
+    <>
+      {(isTypeOuverture(typeDemande) || isTypeAugmentation(typeDemande)) && (
+        <FormControl mb="8">
+          <FormLabel>Nombre de nouvelles places</FormLabel>
+          <ConstanteField
+            value={differenceCapacité(capaciteActuelle, capacite)}
+          />
+        </FormControl>
+      )}
+      {(isTypeDiminution(typeDemande) || isTypeFermeture(typeDemande)) && (
+        <FormControl mb="8">
+          <FormLabel>Nombre de places fermées</FormLabel>
+          <ConstanteField
+            value={differenceCapacité(capacite, capaciteActuelle)}
+          />
+        </FormControl>
+      )}
+    </>
+  );
+};
+
 export const CapaciteSection = () => {
-  const { watch } = useFormContext<IntentionForms[2]>();
+  const { watch } = useFormContext<IntentionForms>();
 
   const [capaciteScolaire, capaciteScolaireActuelle] = watch([
     "capaciteScolaire",
@@ -59,8 +95,6 @@ export const CapaciteSection = () => {
   ]);
 
   const typeDemande = watch("typeDemande");
-  const ouverture = isTypeOuverture(typeDemande);
-
   const mixte = watch("mixte");
 
   return (
@@ -83,25 +117,27 @@ export const CapaciteSection = () => {
       <LibelleColorationField maxW="752px" mb="4" />
 
       <Heading fontSize="lg" mb="6" mt="8" color="bluefrance.113">
-        Capacité en voie scolaire
+        Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>
-      <Flex gap={4} mb="8">
-        <CapaciteScolaireActuelleField maxW={240} flex={1} />
-        <CapaciteScolaireField maxW={240} flex={1} />
-        <CapaciteScolaireColoreeField maxW={240} flex={1} />
+      <Flex mb="8">
+        <Flex w={752} gap={4}>
+          <CapaciteScolaireActuelleField maxW={240} flex={1} />
+          <CapaciteScolaireField maxW={240} flex={1} />
+          <CapaciteScolaireColoreeField maxW={240} flex={1} />
+        </Flex>
+        {mixte && (
+          <InfoBox flex="1" mt="8" ms="6" p={"16px"}>
+            Pour une formation pouvant accueillir 30 élèves dont 20 en
+            apprentissage, remplir 10 dans le champ capacité en voie scolaire et
+            20 dans le champ capacité en apprentissage.
+          </InfoBox>
+        )}
       </Flex>
-
-      {!ouverture && (
-        <FormControl mb="8">
-          <FormLabel>Nombre de nouvelles places</FormLabel>
-          <ConstanteField
-            value={differenceCapacité(
-              capaciteScolaireActuelle,
-              capaciteScolaire
-            )}
-          />
-        </FormControl>
-      )}
+      <ConstanteSection
+        typeDemande={typeDemande}
+        capaciteActuelle={capaciteScolaireActuelle}
+        capacite={capaciteScolaire}
+      />
       {mixte && (
         <>
           <Heading mt="8" fontSize="lg" mb="6" color="bluefrance.113">
@@ -112,17 +148,11 @@ export const CapaciteSection = () => {
             <CapaciteApprentissageField maxW={240} flex={1} />
             <CapaciteApprentissageColoreeField maxW={240} flex={1} />
           </Flex>
-          {!ouverture && (
-            <FormControl mb="8">
-              <FormLabel>Nombre de nouvelles places</FormLabel>
-              <ConstanteField
-                value={differenceCapacité(
-                  capaciteApprentissageActuelle,
-                  capaciteApprentissage
-                )}
-              />
-            </FormControl>
-          )}
+          <ConstanteSection
+            typeDemande={typeDemande}
+            capaciteActuelle={capaciteApprentissageActuelle}
+            capacite={capaciteApprentissage}
+          />
         </>
       )}
 
