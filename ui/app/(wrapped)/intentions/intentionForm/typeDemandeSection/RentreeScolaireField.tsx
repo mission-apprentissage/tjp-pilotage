@@ -14,7 +14,7 @@ export const RentreeScolaireField = chakra(
     const {
       formState: { errors },
       register,
-    } = useFormContext<IntentionForms[2]>();
+    } = useFormContext<IntentionForms>();
 
     return (
       <FormControl

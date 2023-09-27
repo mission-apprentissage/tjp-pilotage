@@ -37,6 +37,7 @@ export const etablissementsRoutes = ({ server }: { server: Server }) => {
             value,
           })
         ),
+        delimiter: ";",
       });
       const csv = parser.parse(etablissements.etablissements);
       response

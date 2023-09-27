@@ -13,16 +13,13 @@ import { UaiBlock } from "./UaiBlock";
 export const CfdUaiSection = ({
   formId,
   active,
-  defaultValues,
   formMetadata,
-  submitCfdUai,
   onEditUaiCfdSection,
 }: {
   formId?: string;
   active: boolean;
-  defaultValues: PartialIntentionForms[1];
+  defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
-  submitCfdUai: (values: PartialIntentionForms[1]) => void;
   onEditUaiCfdSection: () => void;
 }) => {
   const [dispositifs, setDispositifs] = useState<
@@ -31,13 +28,7 @@ export const CfdUaiSection = ({
 
   return (
     <DarkMode>
-      <Box
-        color="chakra-body-text"
-        as="form"
-        bg="#5770BE"
-        p="6"
-        borderRadius="6"
-      >
+      <Box color="chakra-body-text" bg="blue.main" p="6" borderRadius="6">
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <IconButton
@@ -52,24 +43,12 @@ export const CfdUaiSection = ({
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock
-          defaultDiplome={formMetadata?.formation}
-          defaultValues={defaultValues}
+          formMetaData={formMetadata}
           setDispositifs={setDispositifs}
-          onSubmit={submitCfdUai}
           active={active}
         />
-        <DispositifBlock
-          options={dispositifs}
-          defaultValues={defaultValues}
-          onSubmit={submitCfdUai}
-          active={active}
-        />
-        <UaiBlock
-          defaultEtablissement={formMetadata?.etablissement}
-          defaultValues={defaultValues}
-          onSubmit={submitCfdUai}
-          active={active}
-        />
+        <DispositifBlock options={dispositifs} active={active} />
+        <UaiBlock formMetadata={formMetadata} active={active} />
       </Box>
     </DarkMode>
   );

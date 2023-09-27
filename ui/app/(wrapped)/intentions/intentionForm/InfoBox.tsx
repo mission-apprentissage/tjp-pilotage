@@ -10,7 +10,7 @@ export const InfoBox = chakra(
         fontSize="sm"
         p="4"
         bg="#F5F5FE"
-        color="#5770BE"
+        color="blue.main"
       >
         {children}
       </Box>
