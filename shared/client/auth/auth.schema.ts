@@ -22,20 +22,21 @@ export const authSchemas = {
   },
   whoAmI: {
     response: {
-      200: Type.Object({
-        user: Type.Object({
-          id: Type.String(),
-          email: Type.String(),
-          role: Type.Optional(
-            Type.Union(
-              Object.keys(PERMISSIONS).map((item) => {
-                return Type.Literal(item as Role);
-              })
-            )
-          ),
-        }),
-      }),
-      401: Type.Void(),
+      200: Type.Optional(
+        Type.Object({
+          user: Type.Object({
+            id: Type.String(),
+            email: Type.String(),
+            role: Type.Optional(
+              Type.Union(
+                Object.keys(PERMISSIONS).map((item) => {
+                  return Type.Literal(item as Role);
+                })
+              )
+            ),
+          }),
+        })
+      ),
     },
   },
   activateUser: {
