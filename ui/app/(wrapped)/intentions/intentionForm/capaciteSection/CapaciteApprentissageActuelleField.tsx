@@ -33,13 +33,12 @@ export const CapaciteApprentissageActuelleField = chakra(
             <Input
               type="number"
               {...register("capaciteApprentissageActuelle", {
-                required: "Le champ est obligatoire",
                 setValueAs: (value) => parseInt(value) || undefined,
                 validate: (value) => {
+                  if (value === undefined) return "Le champ est obligatoire";
                   if (Number.isNaN(value))
                     return "Veuillez remplir un nombre valide.";
-                  if (value && value < 0)
-                    return "Valeurs positives uniquement.";
+                  if (value < 0) return "Valeurs positives uniquement.";
                 },
               })}
             />
