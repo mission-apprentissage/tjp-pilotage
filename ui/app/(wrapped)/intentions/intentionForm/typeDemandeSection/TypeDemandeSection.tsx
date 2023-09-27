@@ -43,7 +43,9 @@ export const TypeDemandeSection = ({
       <Flex align="flex-start">
         <TypeDemandeField maxWidth="752px" mb="6" />
         <InfoBox flex="1" mt="10" ml="6">
-          <Text mb="3">Exemple pour une Ouverture par compensation :</Text>
+          <Text mb="3" fontWeight="bold">
+            Exemple pour une Ouverture par compensation :
+          </Text>
           <Text mb="3">
             Si j’ouvre un BAC PRO AEPA et que je ferme un BAC PRO AGORA.
           </Text>
@@ -60,16 +62,22 @@ export const TypeDemandeSection = ({
         </InfoBox>
       </Flex>
       {isTypeCompensation(typeDemande) && (
-        <Flex align="flex-start" mt={6}>
-          <Box flexDirection={"column"} maxWidth="752px" mb="6">
+        <Flex
+          bg="#E2E7F8"
+          mb="6"
+          p="6"
+          align="flex-start"
+          boxShadow="0 0 0 2px #000091"
+        >
+          <Box flexDirection={"column"} flex="2" maxW="752px">
             <CompensationSection formMetadata={formMetadata} />
           </Box>
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
             {` ${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
             par compensation, veuillez saisir le code diplôme et l’établissement
-            si il est différent. Nous ferons le lien automatiquement entre la
-            demande
+            si il est différent. <br />
+            Nous ferons le lien automatiquement entre la demande
             {` d'${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
             et la demande de fermeture / diminution pour le code diplôme et
             l’UAI renseigné
