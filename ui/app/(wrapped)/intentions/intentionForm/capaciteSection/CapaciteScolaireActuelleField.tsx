@@ -20,7 +20,7 @@ export const CapaciteScolaireActuelleField = chakra(
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);
-    console.log(errors);
+
     return (
       <>
         {!ouverture && (
