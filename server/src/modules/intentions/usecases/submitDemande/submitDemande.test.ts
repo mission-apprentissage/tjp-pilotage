@@ -7,7 +7,7 @@ type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<
 >;
 
 const valideDeps = {
-  createDemandeQuery: jest.fn(() => Promise.resolve()),
+  createDemandeQuery: jest.fn((data) => Promise.resolve(data)),
   findOneDataEtablissement: () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<
       Deps["findOneDataEtablissement"]
@@ -178,7 +178,7 @@ describe("submitDemande usecase", () => {
     const deps = {
       ...valideDeps,
       findOneDemande: () => Promise.resolve(undefined),
-      createDemandeQuery: jest.fn(() => Promise.resolve()),
+      createDemandeQuery: jest.fn((data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitDemandeFactory(deps);
@@ -205,7 +205,7 @@ describe("submitDemande usecase", () => {
   it("should update a demande if data is valid and sent demand contains an id", async () => {
     const deps = {
       ...valideDeps,
-      createDemandeQuery: jest.fn(() => Promise.resolve()),
+      createDemandeQuery: jest.fn((data) => Promise.resolve(data)),
     };
 
     const submitDemande = submitDemandeFactory(deps);
