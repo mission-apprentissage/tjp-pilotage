@@ -64,7 +64,7 @@ export const [submitDemande] = inject(
           createurId: userId,
           codeAcademie,
           codeRegion,
-          compensationRentreeScolaire: compensationRentreeScolaire,
+          compensationRentreeScolaire,
         },
       });
     }

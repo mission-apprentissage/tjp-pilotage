@@ -55,7 +55,7 @@ export const [submitDraftDemande] = inject(
           id,
           status: "draft",
           createurId: userId,
-          compensationRentreeScolaire: compensationRentreeScolaire,
+          compensationRentreeScolaire,
         },
       });
     }
