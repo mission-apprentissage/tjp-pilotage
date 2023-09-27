@@ -113,7 +113,7 @@ export const TypeDemandeField = chakra(
               onChange={onChange}
               value={value}
             >
-              {Object.entries(typeDemandesOptions).map(([_key, item]) => (
+              {Object.values(typeDemandesOptions).map((item) => (
                 <RadioCard
                   selected={value === item.value}
                   key={item.value}
