@@ -12,8 +12,8 @@ const pool = new Pool({
     : undefined,
 });
 
-pool.on("error", (err) => {
-  logger.error(err, "pg pool lost connexion with database");
+pool.on("error", (error) => {
+  logger.error("pg pool lost connexion with database", { error });
 });
 
 export const kdb = new Kysely<DB>({
