@@ -102,6 +102,7 @@ export const TypeDemandeField = chakra(
         <Controller
           name="typeDemande"
           control={control}
+          rules={{ required: "Le type de demande est obligatoire." }}
           render={({ field: { onChange, ref, name, onBlur, value } }) => (
             <RadioGroup
               as={SimpleGrid}
