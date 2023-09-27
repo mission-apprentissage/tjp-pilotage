@@ -29,7 +29,7 @@ export const CapaciteApprentissageActuelleField = chakra(
             isInvalid={!!errors.capaciteApprentissageActuelle}
             isRequired
           >
-            <FormLabel>Capacité apprentissage</FormLabel>
+            <FormLabel>Capacité actuelle</FormLabel>
             <Input
               type="number"
               {...register("capaciteApprentissageActuelle", {
