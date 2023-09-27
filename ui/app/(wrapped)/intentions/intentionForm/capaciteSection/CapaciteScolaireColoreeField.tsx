@@ -19,9 +19,11 @@ export const CapaciteScolaireColoreeField = chakra(
     } = useFormContext<IntentionForms>();
 
     const [coloration] = watch(["coloration"]);
-    const typeDemande = watch("typeDemande");
-    const capaciteScolaireActuelle = watch("capaciteScolaireActuelle");
-    const capaciteScolaire = watch("capaciteScolaire");
+    const [typeDemande, capaciteScolaireActuelle, capaciteScolaire] = watch([
+      "typeDemande",
+      "capaciteScolaireActuelle",
+      "capaciteScolaire",
+    ]);
     const doitEtreInferieure = capaciteDoitEtreInferieure(typeDemande);
 
     return (
