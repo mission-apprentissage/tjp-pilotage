@@ -4,22 +4,16 @@ import { EChartsOption } from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import CarteFranceRegions from "../../../../public/fond_carte_regions.json";
+import { IndicateurType } from "../types";
 
 export const CartoGraph = function <
   F extends {
     codeRegion: string;
     libelleRegion?: string;
-    tauxInsertion6mois?: number;
-    tauxPoursuiteEtudes?: number;
-    tauxDecrochage?: number;
+    insertion?: number;
+    poursuite?: number;
   }[],
->({
-  graphData,
-  indicateur,
-}: {
-  graphData?: F;
-  indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage";
-}) {
+>({ graphData, indicateur }: { graphData?: F; indicateur: IndicateurType }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -40,7 +34,7 @@ export const CartoGraph = function <
 
   //TODO : améliorer la gestion de la graduation dynamique
   const getPieces = (
-    indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage"
+    indicateur: IndicateurType
   ): { min: number; max: number; label: string; color: string }[] => {
     const data = Array.from(
       graphData?.map((it) => it[indicateur] ?? -1) ?? []
@@ -55,10 +49,7 @@ export const CartoGraph = function <
       max,
     ];
 
-    const colorRange =
-      indicateur === "tauxDecrochage"
-        ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
-        : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
+    const colorRange = ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
 
     return [
       {
@@ -134,8 +125,7 @@ export const CartoGraph = function <
             },
             itemStyle: {
               areaColor: "white",
-              borderColor:
-                indicateur === "tauxDecrochage" ? "#E18B76" : "#000091",
+              borderColor: "#000091",
             },
           },
           select: {

@@ -1,7 +1,7 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
 import { BarGraph } from "../components/BarGraph";
-import { PilotageReformeStats } from "../types";
+import { IndicateurType, PilotageReformeStats } from "../types";
 
 export const EvolutionIndicateursClesSection = ({
   data,
@@ -16,7 +16,7 @@ export const EvolutionIndicateursClesSection = ({
   isLoading: boolean;
   isFiltered?: boolean | string;
   codeRegion?: string;
-  indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage";
+  indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: { label: string; value: string; isDefault: boolean }[];
 }) => {
