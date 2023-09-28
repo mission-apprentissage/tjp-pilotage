@@ -11,10 +11,6 @@ import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../utils/notHistorique";
-import {
-  selectTauxDecrochageAgg,
-  selectTauxDecrochageNatAgg,
-} from "../utils/tauxDecrochage";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
@@ -119,21 +115,12 @@ export const getPilotageReformeStats = async ({
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-          "tauxInsertion6mois"
+          "insertion"
         ),
         selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-          "tauxPoursuiteEtudes"
+          "poursuite"
         ),
       ])
-      .$call((q) => {
-        if (isFiltered)
-          return q.select([
-            selectTauxDecrochageAgg("indicateurRegion").as("tauxDecrochage"),
-          ]);
-        return q.select([
-          selectTauxDecrochageNatAgg("indicateurRegion").as("tauxDecrochage"),
-        ]);
-      })
       .executeTakeFirstOrThrow();
 
   const filtersBase = kdb

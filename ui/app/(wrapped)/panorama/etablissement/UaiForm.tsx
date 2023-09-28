@@ -13,6 +13,7 @@ export const UaiForm = ({
     <FormControl
       margin="auto"
       maxW="300px"
+      as="form"
       onSubmit={(e) => {
         e.preventDefault();
         onUaiChanged(uai);
