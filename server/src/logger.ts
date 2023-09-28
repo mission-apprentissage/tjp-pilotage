@@ -7,9 +7,10 @@ import {
 } from "fastify/types/type-provider";
 import fp from "fastify-plugin";
 import winston from "winston";
-import SlackHook from "winston-slack-webhook-transport";
+import Transport from "winston-transport";
 
 import { config } from "../config/config";
+import { sendToSlack } from "./modules/core/services/slack/slack";
 import { Server } from "./server";
 
 const emojis = {
@@ -17,13 +18,13 @@ const emojis = {
   error: "🚨",
 };
 
-const formatSlackMessage = (info: {
+const sendLogToSlack = (info: {
   level: string;
   message: string;
   userId?: string;
 }) => {
-  return {
-    blocks: [
+  sendToSlack(
+    [
       {
         type: "header",
         text: {
@@ -51,6 +52,8 @@ const formatSlackMessage = (info: {
           },
         ],
       },
+    ],
+    [
       {
         type: "context",
         elements: [
@@ -60,8 +63,8 @@ const formatSlackMessage = (info: {
           },
         ],
       },
-    ],
-  };
+    ]
+  );
 };
 
 const winstonLogger = winston.createLogger({
@@ -72,12 +75,16 @@ const winstonLogger = winston.createLogger({
   ),
   silent: config.env === "test",
   transports: [
-    ...(config.slackWebhookUrl
+    ...(config.slack.token
       ? [
-          new SlackHook({
-            level: "info",
-            webhookUrl: config.slackWebhookUrl,
-            formatter: formatSlackMessage,
+          new Transport({
+            log: (info: {
+              level: string;
+              message: string;
+              userId?: string;
+            }) => {
+              sendLogToSlack(info);
+            },
           }),
         ]
       : []),
