@@ -4,7 +4,6 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/inserJeunesApi/formatMillesime";
 import { notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
-import { selectTauxDecrochageAgg } from "../utils/tauxDecrochage";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 
@@ -51,12 +50,11 @@ export const getPilotageReformeStatsRegions = async ({
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
+        "insertion"
       ),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuiteEtudes"
+        "poursuite"
       ),
-      selectTauxDecrochageAgg("indicateurRegion").as("tauxDecrochage"),
     ])
     .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion"])
     .$call((q) => {

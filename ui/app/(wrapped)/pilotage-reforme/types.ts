@@ -27,3 +27,5 @@ export type PilotageReformeStats = ApiType<typeof api.getPilotageReformeStats>;
 export type PilotageReformeStatsRegion = ApiType<
   typeof api.getPilotageReformeStatsRegions
 >;
+
+export type IndicateurType = "insertion" | "poursuite";

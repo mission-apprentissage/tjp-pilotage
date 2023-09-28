@@ -15,7 +15,7 @@ import { EvolutionIndicateursClesSection } from "./stats/EvolutionIndicateursCle
 import { FiltersSection } from "./stats/FiltersSection";
 import { IndicateursClesSection } from "./stats/IndicateursClesSection";
 import { VueRegionAcademieSection } from "./stats/VueRegionAcademieSection";
-import { Filters, FiltersRegions, Order } from "./types";
+import { Filters, FiltersRegions, IndicateurType, Order } from "./types";
 
 export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const router = useRouter();
@@ -96,31 +96,20 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const indicateurOptions = [
     {
       label: "Taux d'emploi à 6 mois",
-      value: "tauxInsertion6mois",
+      value: "insertion",
       isDefault: true,
     },
     {
       label: "Taux de poursuite d'études",
-      value: "tauxPoursuiteEtudes",
-      isDefault: false,
-    },
-    {
-      label: "Taux de décrochage",
-      value: "tauxDecrochage",
+      value: "poursuite",
       isDefault: false,
     },
   ];
 
-  const [indicateur, setIndicateur] = useState<
-    "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage"
-  >("tauxInsertion6mois");
+  const [indicateur, setIndicateur] = useState<IndicateurType>("insertion");
 
   const handleIndicateurChange = (indicateur: string): void => {
-    if (
-      indicateur === "tauxInsertion6mois" ||
-      indicateur === "tauxPoursuiteEtudes" ||
-      indicateur === "tauxDecrochage"
-    )
+    if (indicateur === "insertion" || indicateur === "poursuite")
       setIndicateur(indicateur);
   };
 
