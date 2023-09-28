@@ -43,6 +43,7 @@ export const CfdAutocompleteInput = ({
         ({
           ...defaultValue,
           isSpecialite: false,
+          isFCIL: false,
           dateFermeture: "",
           dispositifs: [],
         } as ApiType<typeof api.searchDiplome>[0])

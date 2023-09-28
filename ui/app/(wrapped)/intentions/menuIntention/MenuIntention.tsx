@@ -39,11 +39,13 @@ export const MenuIntention = ({
       <VStack>
         <Button
           variant="createButton"
-          size={"lg"}
+          size={"md"}
+          width={"100%"}
+          maxW={"48"}
           as={NextLink}
           href="/intentions/new"
           px={3}
-          mx={"auto"}
+          me={"10"}
         >
           Nouvelle demande
         </Button>
@@ -56,6 +58,8 @@ export const MenuIntention = ({
           me={"auto"}
           fontWeight={"normal"}
           width={"100%"}
+          maxW={"52"}
+          h={8}
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
@@ -63,6 +67,7 @@ export const MenuIntention = ({
         >
           <Text
             fontWeight={isRecapView && status === "none" ? "bold" : "normal"}
+            fontSize="14px"
           >
             Toutes
           </Text>
@@ -75,6 +80,8 @@ export const MenuIntention = ({
           me={"auto"}
           fontWeight={"normal"}
           width={"100%"}
+          maxW={"52"}
+          h={8}
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
@@ -82,8 +89,9 @@ export const MenuIntention = ({
         >
           <Text
             fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
+            fontSize="14px"
           >
-            Intentions
+            Projets de demande
           </Text>
         </Button>
         <Button
@@ -94,6 +102,8 @@ export const MenuIntention = ({
           me={"auto"}
           fontWeight={"normal"}
           width={"100%"}
+          maxW={"52"}
+          h={8}
           borderRadius={"0 12px 12px 0"}
           px={3}
           iconSpacing={"auto"}
@@ -103,6 +113,7 @@ export const MenuIntention = ({
             fontWeight={
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
+            fontSize="14px"
           >
             Demandes validées
           </Text>

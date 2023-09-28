@@ -45,6 +45,26 @@ export const typeDemandesOptions: Record<
       </>
     ),
   },
+  augmentation_nette: {
+    value: "augmentation_nette",
+    label: "Augmentation nette",
+    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
+    exemple: (
+      <>
+        <Text mb="3">Exemple pour une augmentation nette :</Text>
+        <Text mb="3">J’ouvre des places sur un BAC Pro Aéronautique.</Text>
+        <OrderedList>
+          <ListItem mb="2">
+            J’indique le motif ; je peux préciser qu’il s’agit d’une coloration.
+          </ListItem>
+          <ListItem>
+            Je ne peux pas lier une fermeture ou une diminution de capacité sur
+            une autre formation.
+          </ListItem>
+        </OrderedList>
+      </>
+    ),
+  },
   fermeture: {
     value: "fermeture",
     label: "Fermeture",
@@ -63,26 +83,6 @@ export const typeDemandesOptions: Record<
           <ListItem>
             Si je ne saisis pas d’ouverture en compensation en lien ; cette
             fermeture sera considérée comme une fermeture nette.
-          </ListItem>
-        </OrderedList>
-      </>
-    ),
-  },
-  augmentation_nette: {
-    value: "augmentation_nette",
-    label: "Augmentation nette",
-    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
-    exemple: (
-      <>
-        <Text mb="3">Exemple pour une augmentation nette :</Text>
-        <Text mb="3">J’ouvre des places sur un BAC Pro Aéronautique.</Text>
-        <OrderedList>
-          <ListItem mb="2">
-            J’indique le motif ; je peux préciser qu’il s’agit d’une coloration.
-          </ListItem>
-          <ListItem>
-            Je ne peux pas lier une fermeture ou une diminution de capacité sur
-            une autre formation.
           </ListItem>
         </OrderedList>
       </>

@@ -6,7 +6,7 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
@@ -25,7 +25,7 @@ export const CompensationSection = ({
     formState: { errors },
     control,
     handleSubmit,
-    resetField,
+    setValue,
     getValues,
   } = useFormContext<IntentionForms>();
 
@@ -35,8 +35,9 @@ export const CompensationSection = ({
     cacheTime: 0,
   });
 
-  const getSameEtabDefaultValue = (): ApiType<typeof api.getEtab> =>
-    data ?? ({} as ApiType<typeof api.getEtab>);
+  const getSameEtabDefaultValue = (): ApiType<typeof api.getEtab> => {
+    return data ?? ({} as ApiType<typeof api.getEtab>);
+  };
 
   const getUaiDefaultValue = (value?: string): ApiType<typeof api.getEtab> => {
     if (formMetadata?.etablissementCompensation?.libelle && value)
@@ -47,6 +48,11 @@ export const CompensationSection = ({
       };
     return getSameEtabDefaultValue();
   };
+
+  useEffect(() => {
+    if (!formMetadata?.etablissementCompensation?.libelle)
+      setValue("compensationUai", getValues("uai"));
+  }, []);
 
   const [dispositifsCompensation, setDispositifsCompensation] = useState<
     ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
@@ -80,7 +86,7 @@ export const CompensationSection = ({
                     : undefined
                 }
                 onChange={(selected) => {
-                  if (!selected) resetField("compensationDispositifId");
+                  if (!selected) setValue("compensationDispositifId", "");
                   onChange(selected?.value);
                   setDispositifsCompensation(selected?.dispositifs);
                 }}
@@ -147,14 +153,12 @@ export const CompensationSection = ({
             name="compensationUai"
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
-            render={({ field: { onChange, name } }) =>
+            render={({ field: { onChange, value, name } }) =>
               !isLoading ? (
                 <UaiAutocomplete
                   name={name}
                   inError={errors.compensationUai ? true : false}
-                  defaultValue={getUaiDefaultValue(
-                    getValues("compensationUai")
-                  )}
+                  defaultValue={getUaiDefaultValue(value)}
                   onChange={(selected) => {
                     onChange(selected?.value);
                   }}

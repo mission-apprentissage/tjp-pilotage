@@ -8,7 +8,6 @@ import {
   Flex,
   Grid,
   GridItem,
-  Spinner,
   Table,
   TableContainer,
   Tag,
@@ -31,6 +30,7 @@ import { api } from "../../../api.client";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./menuIntention/MenuIntention";
 import { typeDemandesOptions } from "./utils/typeDemandeUtils";
 
@@ -99,22 +99,16 @@ export const PageClient = () => {
     router.push(
       createParametrizedUrl(`${location.pathname}/new`, {
         intentionId: demandeCompensee.id,
+        compensation: true,
       })
     );
   };
 
   const [selectedRow, setSelectedRow] = useState("");
 
-  if (isLoading) {
-    return (
-      <Center mt={12}>
-        <Spinner />
-      </Center>
-    );
-  }
-
+  if (isLoading) return <IntentionSpinner />;
   return (
-    <Container maxW={"80%"} my={12}>
+    <Container maxW={"95%"} my={12}>
       <Grid templateColumns="repeat(5,1fr)" gap={2}>
         <GridItem>
           <MenuIntention isRecapView></MenuIntention>
@@ -122,11 +116,12 @@ export const PageClient = () => {
         <GridItem colSpan={4}>
           {data?.demandes.length ? (
             <TableContainer overflow="auto">
-              <Table variant="simple">
+              <Table variant="striped" fontSize="14px" gap="0">
                 <Thead>
                   <Tr>
-                    <Th>numéro de demande</Th>
+                    <Th px={"12px"}>n° demande</Th>
                     <Th
+                      px={"12px"}
                       cursor="pointer"
                       onClick={() => handleOrder("libelleDiplome")}
                     >
@@ -134,14 +129,16 @@ export const PageClient = () => {
                       diplôme
                     </Th>
                     <Th
+                      px={"12px"}
                       cursor="pointer"
                       onClick={() => handleOrder("typeDemande")}
                     >
                       <OrderIcon {...order} column="typeDemande" />
                       type
                     </Th>
-                    <Th>compensation</Th>
+                    <Th px={"12px"}>compensation</Th>
                     <Th
+                      px={"12px"}
                       cursor="pointer"
                       isNumeric
                       onClick={() => handleOrder("createdAt")}
@@ -149,7 +146,11 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="createdAt" />
                       création
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("status")}>
+                    <Th
+                      px={"12px"}
+                      cursor="pointer"
+                      onClick={() => handleOrder("status")}
+                    >
                       <OrderIcon {...order} column="status" />
                       status
                     </Th>
@@ -172,10 +173,15 @@ export const PageClient = () => {
                         router.push(`/intentions/${demande.id}`);
                       }}
                     >
-                      <Td maxW={"36"} textOverflow={"ellipsis"} isTruncated>
+                      <Td
+                        maxW={"36"}
+                        textOverflow={"ellipsis"}
+                        isTruncated
+                        px={"12px"}
+                      >
                         {demande.id}
                       </Td>
-                      <Td w="sm">
+                      <Td w="lg" px={"12px"}>
                         <Text
                           textOverflow={"ellipsis"}
                           overflow={"hidden"}
@@ -185,7 +191,7 @@ export const PageClient = () => {
                           {demande.libelleDiplome}
                         </Text>
                       </Td>
-                      <Td w="sm">
+                      <Td w="xs" px={"12px"}>
                         <Text
                           textOverflow={"ellipsis"}
                           overflow={"hidden"}
@@ -197,7 +203,7 @@ export const PageClient = () => {
                             : null}
                         </Text>
                       </Td>
-                      <Td align="center" w="36">
+                      <Td align="center" w="2xs" px={"12px"}>
                         {demande.compensationCfd != null &&
                         demande.compensationDispositifId != null &&
                         demande.compensationUai != null ? (
@@ -206,9 +212,8 @@ export const PageClient = () => {
                               as={Button}
                               colorScheme={"green"}
                               variant={"outline"}
-                              size={"lg"}
-                              maxW="xs"
-                              minH={"12"}
+                              size={"sm"}
+                              minW="44"
                               justifyContent={"center"}
                               overflow={"hidden"}
                               whiteSpace={"break-spaces"}
@@ -217,7 +222,12 @@ export const PageClient = () => {
                               onClick={(e) => {
                                 e.stopPropagation();
                                 router.push(
-                                  `/intentions/${demande.idCompensation}`
+                                  createParametrizedUrl(
+                                    `/intentions/${demande.idCompensation}`,
+                                    {
+                                      compensation: true,
+                                    }
+                                  )
                                 );
                               }}
                               onMouseEnter={() =>
@@ -233,7 +243,7 @@ export const PageClient = () => {
                                   : "Demande"
                               } liée `}
                               <Text textDecoration="underline">
-                                {demande.idCompensation.substring(5)}
+                                {demande.idCompensation}
                               </Text>
                             </Tag>
                           ) : (
@@ -241,10 +251,8 @@ export const PageClient = () => {
                               as={Button}
                               variant={"outline"}
                               colorScheme={"orange"}
-                              size={"lg"}
-                              minW="100%"
-                              maxW="xs"
-                              minH={"12"}
+                              size={"sm"}
+                              minW="44"
                               overflow={"hidden"}
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
@@ -259,14 +267,14 @@ export const PageClient = () => {
                           )
                         ) : null}
                       </Td>
-                      <Td isNumeric>
+                      <Td isNumeric px={"12px"}>
                         {new Date(demande.createdAt).toLocaleDateString()}
                       </Td>
-                      <Td align="center">
+                      <Td align="center" px={"12px"}>
                         {demande.status === "draft" ? (
                           <Tag
                             colorScheme={"orange"}
-                            size={"lg"}
+                            size={"md"}
                             minW="100%"
                             justifyContent={"center"}
                           >
@@ -275,7 +283,7 @@ export const PageClient = () => {
                         ) : (
                           <Tag
                             colorScheme={"green"}
-                            size={"lg"}
+                            size={"md"}
                             minW="100%"
                             justifyContent={"center"}
                           >

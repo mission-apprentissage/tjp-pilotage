@@ -136,6 +136,7 @@ export interface Demande {
   compensationCfd: string | null;
   compensationDispositifId: string | null;
   compensationRentreeScolaire: number | null;
+  libelleFCIL: string | null;
 }
 
 export interface Departement {

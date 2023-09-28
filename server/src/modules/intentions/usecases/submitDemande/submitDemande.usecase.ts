@@ -16,6 +16,7 @@ type Demande = {
   typeDemande: string;
   cfd: string;
   dispositifId: string;
+  libelleFCIL?: string;
   compensationCfd?: string;
   compensationDispositifId?: string;
   compensationUai?: string;
@@ -122,6 +123,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const created = await deps.createDemandeQuery({
         ...currentDemande,
         libelleColoration: null,
+        libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
         capaciteScolaireActuelle: null,
