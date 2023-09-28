@@ -4,10 +4,10 @@ import { getPermissionScope, guardScope } from "shared";
 
 import { logger } from "../../../../logger";
 import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
+import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { findOneDemande } from "./findOneDemande.dep";
 
 export const [submitDraftDemande] = inject(
   { createDemandeQuery, findOneDemande, findOneDataEtablissement },

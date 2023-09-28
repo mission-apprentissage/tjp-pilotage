@@ -1,5 +1,5 @@
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { kdb } from "../../../db/db";
+import { cleanNull } from "../../../utils/noNull";
 
 export const findOneDemande = async (id: string) => {
   return cleanNull(
