@@ -23,6 +23,7 @@ export const [submitDraftDemande] = inject(
         typeDemande?: string;
         cfd?: string;
         dispositifId?: string;
+        libelleFCIL?: string;
         motif?: string[];
         compensationCfd?: string;
         compensationDispositifId?: string;
@@ -73,6 +74,7 @@ export const [submitDraftDemande] = inject(
       const created = await deps.createDemandeQuery({
         ...currentDemande,
         libelleColoration: null,
+        libelleFCIL: null,
         autreMotif: null,
         amiCma: null,
         cfd: null,

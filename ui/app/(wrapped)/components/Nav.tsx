@@ -58,7 +58,7 @@ export const Nav = () => {
       </NavLink>
       {hasPermission(auth?.user.role, "intentions/envoi") && (
         <NavLink mr="4" href="/intentions" segment="intentions">
-          Intentions
+          Recueil des demandes
         </NavLink>
       )}
       {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (

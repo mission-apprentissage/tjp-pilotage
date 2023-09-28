@@ -1,4 +1,4 @@
-import { Box, Button, Flex } from "@chakra-ui/react";
+import { Box, Button, Divider, Flex } from "@chakra-ui/react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
@@ -25,6 +25,7 @@ export const InformationsBlock = ({
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <CapaciteSection />
+        <Divider mt={8}></Divider>
         <Flex justify="flex-end" mt="12" mb="4">
           <Button
             isDisabled={!canEdit}
@@ -33,7 +34,7 @@ export const InformationsBlock = ({
             mr="4"
             onClick={() => onDraftSubmit()}
           >
-            Enregistrer l'intention
+            Enregister le projet de demande
           </Button>
           <Button
             isDisabled={!canEdit}
@@ -41,7 +42,7 @@ export const InformationsBlock = ({
             variant="primary"
             type="submit"
           >
-            Valider la demande
+            Valider la demande définitive
           </Button>
         </Flex>
       </Box>
