@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Collapse, Container } from "@chakra-ui/react";
+import { Box, Collapse, Container, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -35,6 +36,8 @@ export const IntentionForm = ({
 
   const { getValues, handleSubmit, watch } = form;
 
+  const toast = useToast();
+
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
       api
@@ -47,6 +50,18 @@ export const IntentionForm = ({
           },
         })
         .call(),
+    onError: (e: AxiosError<{ errors: string[] }>) => {
+      toast({
+        description: e.response?.data.errors.map((msg, i) => (
+          <div key={i}>- {msg}</div>
+        )),
+        position: "top-right",
+        colorScheme: "red",
+        duration: 12000,
+        title: "Erreurs dans votre demande",
+        isClosable: true,
+      });
+    },
   });
 
   const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =

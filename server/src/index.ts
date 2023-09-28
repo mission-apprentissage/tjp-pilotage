@@ -35,7 +35,9 @@ server.register(fastifySwaggerUi, {
 server.setErrorHandler((error, _, reply) => {
   logger.error(error.message, { error });
   if (Boom.isBoom(error)) {
-    reply.status(error.output.statusCode).send(error.output.payload);
+    reply
+      .status(error.output.statusCode)
+      .send({ ...error.output.payload, ...error.data });
     return;
   }
 

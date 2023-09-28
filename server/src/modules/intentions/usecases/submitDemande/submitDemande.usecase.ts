@@ -4,11 +4,11 @@ import { getPermissionScope, guardScope } from "shared";
 
 import { logger } from "../../../../logger";
 import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
+import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 import { findOneDataFormation } from "./findOneDataFormation.dep";
-import { findOneDemande } from "./findOneDemande.dep";
 
 type Demande = {
   id?: string;
@@ -34,6 +34,51 @@ type Demande = {
   capaciteApprentissage?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissageColoree?: number;
+};
+
+const validators = {
+  motif: (demande: Partial<Demande>) => {
+    if (!demande.motif?.length) {
+      return "motifs manquant";
+    }
+  },
+  autreMotif: (demande: Partial<Demande>) => {
+    if (demande.motif?.includes("autre_motif") && !demande.autreMotif) {
+      return "autreMotif manquant";
+    }
+  },
+  libelleColoration: (demande: Partial<Demande>) => {
+    if (demande.coloration && !demande.libelleColoration) {
+      return "libelleColoration manquant";
+    }
+  },
+  capaciteColoration: (demande: Partial<Demande>) => {
+    if (
+      demande.coloration &&
+      !demande.capaciteApprentissageColoree &&
+      !demande.capaciteScolaireColoree
+    ) {
+      return "Capacité colorée manquante";
+    }
+  },
+  capaciteApprentissage: (demande: Partial<Demande>) => {
+    if (!demande.mixte && demande.capaciteApprentissage) {
+      return "Capacité apprentissage invalide";
+    }
+    if (demande.mixte && !demande.capaciteApprentissage) {
+      return "Capacité apprentissage manquante";
+    }
+  },
+};
+
+const validateDemande = (demande: Demande) => {
+  let errors: string[] = [];
+  for (const validator of Object.values(validators)) {
+    const error = validator(demande);
+    if (!error) continue;
+    errors = [...errors, error];
+  }
+  return errors;
 };
 
 const validations = [
@@ -108,7 +153,10 @@ export const [submitDemande, submitDemandeFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      validations.forEach((validate) => validate(demande));
+      const errors = validateDemande(demande);
+      if (errors?.length) {
+        throw Boom.badData("Donnée incorrectes", { errors });
+      }
 
       const dataFormation = await deps.findOneDataFormation({ cfd });
       if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
