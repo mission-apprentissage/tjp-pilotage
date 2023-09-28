@@ -66,6 +66,7 @@ export const CompensationSection = ({
           <Controller
             name="compensationCfd"
             control={control}
+            shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
@@ -105,6 +106,7 @@ export const CompensationSection = ({
         <Controller
           name="compensationDispositifId"
           control={control}
+          shouldUnregister
           rules={{ required: "Ce champ est obligatoire" }}
           render={({ field: { onChange, value, name } }) => (
             <Select
@@ -146,6 +148,7 @@ export const CompensationSection = ({
           <Controller
             name="compensationUai"
             control={control}
+            shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, name } }) =>
               !isLoading ? (

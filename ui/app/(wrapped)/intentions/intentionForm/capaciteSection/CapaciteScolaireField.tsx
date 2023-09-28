@@ -7,10 +7,8 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import {
-  capaciteDoitEtreInferieure,
-  capaciteDoitEtreSuperieure,
-} from "../../utils/capaciteUtils";
+import { safeParseInt } from "@/app/(wrapped)/intentions/utils/safeParseInt";
+
 import { isTypeFermeture, isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -23,11 +21,10 @@ export const CapaciteScolaireField = chakra(
     } = useFormContext<IntentionForms>();
 
     const typeDemande = watch("typeDemande");
-    const capaciteActuelle = watch("capaciteScolaireActuelle");
-    const doitEtreSuperieure = capaciteDoitEtreSuperieure(typeDemande);
-    const doitEtreInferieure = capaciteDoitEtreInferieure(typeDemande);
+
     const ouverture = isTypeOuverture(typeDemande);
     const fermeture = isTypeFermeture(typeDemande);
+    if (fermeture) return <></>;
 
     return (
       <FormControl
@@ -41,26 +38,17 @@ export const CapaciteScolaireField = chakra(
         <Input
           type="number"
           {...register("capaciteScolaire", {
-            setValueAs: parseInt,
+            shouldUnregister: true,
+            setValueAs: safeParseInt,
+            value: null as unknown as undefined,
             validate: (value) => {
               if (value === undefined) return "Le champ est obligatoire";
               if (Number.isNaN(value))
                 return "Veuillez remplir un nombre valide.";
               if (value < 0) return "Valeurs positives uniquement.";
-              if (
-                doitEtreSuperieure &&
-                capaciteActuelle &&
-                value <= capaciteActuelle
-              )
-                return "La future capacité prévisionnelle doit être supérieure à la capacité actuelle.";
-              if (
-                doitEtreInferieure &&
-                capaciteActuelle &&
-                value >= capaciteActuelle
-              )
-                return "La future capacité prévisionnelle doit être inférieure à la capacité actuelle.";
             },
           })}
+          placeholder={fermeture ? "0" : ""}
           disabled={fermeture}
         />
         {errors.capaciteScolaire && (
