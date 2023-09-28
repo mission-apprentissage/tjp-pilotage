@@ -46,6 +46,11 @@ export const config = {
     },
     email_from: env.get("PILOTAGE_EMAIL_FROM").required().asString(),
   },
-  slackWebhookUrl: env.get("PILOTAGE_SLACK_WEBHOOK_URL").asString(),
+  slack: {
+    webhook: env.get("PILOTAGE_SLACK_WEBHOOK_URL").asString(),
+    token: env.get("PILOTAGE_SLACK_TOKEN").asString(),
+    signingSecret: env.get("PILOTAGE_SLACK_SIGNING_SECRET").asString(),
+    chanel: env.get("PILOTAGE_SLACK_CHANEL").asString(),
+  },
   env: env.get("PILOTAGE_ENV").required().asString(),
 };
