@@ -72,7 +72,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
         national: () => true,
       });
 
-      response.status(200).send({ ...demande, canEdit });
+      response.status(200).send({ ...(demande as any), canEdit });
     }
   );
 

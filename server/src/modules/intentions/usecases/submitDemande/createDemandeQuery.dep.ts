@@ -12,5 +12,5 @@ export const createDemandeQuery = async (
     .values(demande)
     .onConflict((oc) => oc.column("id").doUpdateSet(demande))
     .returningAll()
-    .execute();
+    .executeTakeFirst();
 };

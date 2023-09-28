@@ -70,18 +70,34 @@ export const IntentionForm = ({
 
   const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
     useMutation({
-      mutationFn: ({ forms }: { forms: PartialIntentionForms }) =>
+      mutationFn: ({ forms }: { forms: IntentionForms }) =>
         api
           .submitDraftDemande({
             body: {
               demande: {
                 id: formId,
                 ...forms,
-                uai: forms.uai!,
+                uai: forms.uai,
               },
             },
           })
           .call(),
+      onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+        const errors = e.response?.data.errors;
+        if (!errors) return;
+        toast({
+          description: Object.entries(errors).map(([key, msg]) => (
+            <div key={key}>
+              - {key} : {msg}
+            </div>
+          )),
+          position: "top-right",
+          colorScheme: "red",
+          duration: 20000,
+          title: "Erreurs dans votre demande",
+          isClosable: true,
+        });
+      },
     });
 
   const [step, setStep] = useState(
@@ -100,10 +116,12 @@ export const IntentionForm = ({
   };
 
   const onDraftSubmit = async () => {
-    const { id } = await submitDraft({
-      forms: getValues(),
-    });
-    replace(id, { scroll: false });
+    handleSubmit(async () => {
+      const { id } = await submitDraft({
+        forms: getValues(),
+      });
+      replace(id, { scroll: false });
+    })();
   };
 
   useEffect(
