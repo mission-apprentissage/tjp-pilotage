@@ -6,10 +6,10 @@ import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
+import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { findOneDataFormation } from "./findOneDataFormation.dep";
 
 type Demande = {
   id?: string;
@@ -98,23 +98,21 @@ export const [submitDemande, submitDemandeFactory] = inject(
         poursuitePedagogique: null,
         autreMotif: null,
         commentaire: null,
+        compensationCfd: null,
+        compensationDispositifId: null,
+        compensationUai: null,
         capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,
         capaciteScolaireColoree: 0,
         capaciteApprentissage: 0,
         capaciteApprentissageActuelle: 0,
         capaciteApprentissageColoree: 0,
-        compensationCfd: null,
-        compensationDispositifId: null,
-        compensationUai: null,
         ...demande,
         compensationRentreeScolaire,
       };
 
       const errors = validateDemande(cleanNull(toSave));
-      if (errors) {
-        throw Boom.badData("Donnée incorrectes", { errors });
-      }
+      if (errors) throw Boom.badData("Donnée incorrectes", { errors });
 
       const created = await deps.createDemandeQuery({
         ...toSave,
