@@ -1,12 +1,4 @@
-import {
-  Box,
-  Divider,
-  Flex,
-  Heading,
-  ListItem,
-  OrderedList,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Divider, Fade, Flex, Heading } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
@@ -42,24 +34,13 @@ export const TypeDemandeSection = ({
       <RentreeScolaireField mb="6" maxW="752px" />
       <Flex align="flex-start">
         <TypeDemandeField maxWidth="752px" mb="6" />
-        <InfoBox flex="1" mt="10" ml="6">
-          <Text mb="3" fontWeight="bold">
-            Exemple pour une Ouverture par compensation :
-          </Text>
-          <Text mb="3">
-            Si j’ouvre un BAC PRO AEPA et que je ferme un BAC PRO AGORA.
-          </Text>
-          <OrderedList>
-            <ListItem mb="2">
-              Je choisis “Ouverture par compensation” dans ma première demande
-              pour le BAC PRO AEPA.
-            </ListItem>
-            <ListItem>
-              Je saisis ensuite une seconde demande de Fermeture pour le BAC PRO
-              AGORA.
-            </ListItem>
-          </OrderedList>
-        </InfoBox>
+        <Fade in={typeDemande != undefined}>
+          {typeDemande && (
+            <InfoBox flex="1" mt="10" ml="6" maxW="440px">
+              {typeDemandesOptions[typeDemande].exemple}
+            </InfoBox>
+          )}
+        </Fade>
       </Flex>
       {isTypeCompensation(typeDemande) && (
         <Flex

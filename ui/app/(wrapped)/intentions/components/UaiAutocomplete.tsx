@@ -4,8 +4,6 @@ import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 
-export const cfdRegex = /^[0-9]{8}$/;
-
 export const UaiAutocomplete = ({
   name,
   defaultValue,
@@ -14,7 +12,7 @@ export const UaiAutocomplete = ({
   onChange,
 }: {
   name: string;
-  defaultValue?: { value: string; label: string; commune?: string };
+  defaultValue?: { value: string; label?: string; commune?: string };
   active?: boolean;
   inError: boolean;
   onChange: (value?: ApiType<typeof api.searchEtab>[number]) => void;

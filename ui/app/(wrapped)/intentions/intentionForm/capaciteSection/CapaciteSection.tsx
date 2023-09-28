@@ -103,19 +103,17 @@ export const CapaciteSection = () => {
         Précisions sur votre demande et saisie de la capacité
       </Heading>
       <Divider pt="4" mb="4" />
-
-      <Flex maxW="752px" gap="6" mb="6">
-        <MixteField />
-        <AmiCmaField />
-      </Flex>
-
+      {!isTypeFermeture(typeDemande) && (
+        <Flex maxW="752px" gap="6" mb="6">
+          <MixteField />
+          <PoursuitePedagogiqueField />
+        </Flex>
+      )}
       <Flex maxW="752px" gap="6" mb="6">
         <ColorationField />
-        <PoursuitePedagogiqueField />
+        <AmiCmaField />
       </Flex>
-
       <LibelleColorationField maxW="752px" mb="4" />
-
       <Heading fontSize="lg" mb="6" mt="8" color="bluefrance.113">
         Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>
@@ -155,7 +153,6 @@ export const CapaciteSection = () => {
           />
         </>
       )}
-
       <Flex align={"flex-start"} mt={8}>
         <CommentaireField maxW={752} />
         <InfoBox flex="1" mt="8" ml="6">
