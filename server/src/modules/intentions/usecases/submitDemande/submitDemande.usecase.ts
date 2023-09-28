@@ -1,8 +1,9 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { getPermissionScope, guardScope } from "shared";
+import { demandeValidators, getPermissionScope, guardScope } from "shared";
 
 import { logger } from "../../../../logger";
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
@@ -25,10 +26,11 @@ type Demande = {
   rentreeScolaire: number;
   amiCma: boolean;
   libelleColoration?: string;
-  poursuitePedagogique: boolean;
+  poursuitePedagogique?: boolean;
   commentaire?: string;
   coloration: boolean;
   mixte: boolean;
+  capaciteScolaire?: number;
   capaciteScolaireActuelle?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissage?: number;
@@ -36,87 +38,15 @@ type Demande = {
   capaciteApprentissageColoree?: number;
 };
 
-const validators = {
-  motif: (demande: Partial<Demande>) => {
-    if (!demande.motif?.length) {
-      return "motifs manquant";
-    }
-  },
-  autreMotif: (demande: Partial<Demande>) => {
-    if (demande.motif?.includes("autre_motif") && !demande.autreMotif) {
-      return "autreMotif manquant";
-    }
-  },
-  libelleColoration: (demande: Partial<Demande>) => {
-    if (demande.coloration && !demande.libelleColoration) {
-      return "libelleColoration manquant";
-    }
-  },
-  capaciteColoration: (demande: Partial<Demande>) => {
-    if (
-      demande.coloration &&
-      !demande.capaciteApprentissageColoree &&
-      !demande.capaciteScolaireColoree
-    ) {
-      return "Capacité colorée manquante";
-    }
-  },
-  capaciteApprentissage: (demande: Partial<Demande>) => {
-    if (!demande.mixte && demande.capaciteApprentissage) {
-      return "Capacité apprentissage invalide";
-    }
-    if (demande.mixte && !demande.capaciteApprentissage) {
-      return "Capacité apprentissage manquante";
-    }
-  },
-};
-
 const validateDemande = (demande: Demande) => {
-  let errors: string[] = [];
-  for (const validator of Object.values(validators)) {
+  let errors: Record<string, string> = {};
+  for (const [key, validator] of Object.entries(demandeValidators)) {
     const error = validator(demande);
     if (!error) continue;
-    errors = [...errors, error];
+    errors = { ...errors, [key]: error };
   }
-  return errors;
+  return Object.keys(errors).length ? errors : undefined;
 };
-
-const validations = [
-  (demande: Demande) => {
-    if (!demande.motif.length) {
-      throw Boom.badRequest("motifs manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.motif.includes("autre_motif") && !demande.autreMotif) {
-      throw Boom.badRequest("autreMotif manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.coloration && !demande.libelleColoration) {
-      throw Boom.badRequest("libelleColoration manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (
-      demande.coloration &&
-      !demande.capaciteApprentissageColoree &&
-      !demande.capaciteScolaireColoree
-    ) {
-      throw Boom.badRequest("Capacité colorée manquante");
-    }
-  },
-  (demande: Demande) => {
-    if (!demande.mixte && demande.capaciteApprentissage) {
-      throw Boom.badRequest("Capacité apprentissage invalide");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.mixte && !demande.capaciteApprentissage) {
-      throw Boom.badRequest("Capacité apprentissage manquante");
-    }
-  },
-];
 
 export const [submitDemande, submitDemandeFactory] = inject(
   {
@@ -153,35 +83,41 @@ export const [submitDemande, submitDemandeFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      const errors = validateDemande(demande);
-      if (errors?.length) {
-        throw Boom.badData("Donnée incorrectes", { errors });
-      }
-
-      const dataFormation = await deps.findOneDataFormation({ cfd });
-      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
-
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
         demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
-      const created = await deps.createDemandeQuery({
+      const dataFormation = await deps.findOneDataFormation({ cfd });
+      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+
+      const toSave = {
         ...currentDemande,
         libelleColoration: null,
+        poursuitePedagogique: null,
         autreMotif: null,
         commentaire: null,
-        capaciteScolaireActuelle: null,
-        capaciteScolaireColoree: null,
-        capaciteApprentissage: null,
-        capaciteApprentissageActuelle: null,
-        capaciteApprentissageColoree: null,
+        capaciteScolaire: 0,
+        capaciteScolaireActuelle: 0,
+        capaciteScolaireColoree: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageActuelle: 0,
+        capaciteApprentissageColoree: 0,
         compensationCfd: null,
         compensationDispositifId: null,
         compensationUai: null,
         ...demande,
         compensationRentreeScolaire,
+      };
+
+      const errors = validateDemande(cleanNull(toSave));
+      if (errors) {
+        throw Boom.badData("Donnée incorrectes", { errors });
+      }
+
+      const created = await deps.createDemandeQuery({
+        ...toSave,
         id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "submitted",

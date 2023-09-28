@@ -19,7 +19,7 @@ const DemandeSchema = Type.Object({
   libelleColoration: Type.Optional(Type.String()),
   coloration: Type.Boolean(),
   amiCma: Type.Boolean(),
-  poursuitePedagogique: Type.Boolean(),
+  poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
   status: Type.String(),
   mixte: Type.Boolean(),

@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
 
 export const [getEtab] = inject(
   { findOneDataEtablissement },

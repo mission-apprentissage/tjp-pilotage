@@ -50,14 +50,18 @@ export const IntentionForm = ({
           },
         })
         .call(),
-    onError: (e: AxiosError<{ errors: string[] }>) => {
+    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+      const errors = e.response?.data.errors;
+      if (!errors) return;
       toast({
-        description: e.response?.data.errors.map((msg, i) => (
-          <div key={i}>- {msg}</div>
+        description: Object.entries(errors).map(([key, msg]) => (
+          <div key={key}>
+            - {key} : {msg}
+          </div>
         )),
         position: "top-right",
         colorScheme: "red",
-        duration: 12000,
+        duration: 20000,
         title: "Erreurs dans votre demande",
         isClosable: true,
       });

@@ -45,16 +45,15 @@ const differenceCapacité = (
   capaciteActuelle: number | undefined,
   capacite: number | undefined
 ) => {
-  if (capaciteActuelle === undefined || capacite === undefined)
-    return "Veuillez compléter les capacités";
+  if (capaciteActuelle === undefined || capacite === undefined) return "-";
   if (capacite >= capaciteActuelle) return capacite - capaciteActuelle;
   return capacite - capaciteActuelle;
 };
 
 const ConstanteSection = ({
   typeDemande,
-  capaciteActuelle = 0,
-  capacite = 0,
+  capaciteActuelle,
+  capacite,
 }: {
   typeDemande: string;
   capaciteActuelle?: number;
