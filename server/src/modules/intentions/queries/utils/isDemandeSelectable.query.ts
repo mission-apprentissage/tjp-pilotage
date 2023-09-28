@@ -45,7 +45,7 @@ const getDemandeSelectableFilters = (
     national: {},
     region: { codeRegion: user.codeRegion },
     user: { userId: user.id },
-  }[scope?.draft];
+  }[scope?.default];
 
   return { filter, draftFilter };
 };

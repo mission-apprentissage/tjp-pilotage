@@ -17,7 +17,7 @@ export type IntentionForms = {
   amiCma: boolean;
   rentreeScolaire: number;
   capaciteScolaireActuelle?: number;
-  capaciteScolaire: number;
+  capaciteScolaire?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissage?: number;
