@@ -10,9 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { PilotageReformeStats } from "../types";
-
-type IndicateurType = "insertion" | "poursuite" | "decrochage";
+import { IndicateurType, PilotageReformeStats } from "../types";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
@@ -30,12 +28,7 @@ const Loader = () => {
           </Box>
         )}
         <Flex mt={8} height={"168px"}>
-          <SimpleGrid spacing={3} columns={[3]} width={"100%"}>
-            <Card height={40}>
-              <CardBody py="2" px="3">
-                <Skeleton opacity={0.3} height={"100%"} />
-              </CardBody>
-            </Card>
+          <SimpleGrid spacing={3} columns={[2]} width={"100%"}>
             <Card height={40}>
               <CardBody py="2" px="3">
                 <Skeleton opacity={0.3} height={"100%"} />
@@ -202,11 +195,9 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
 const Delta = ({
   delta,
   isNational = false,
-  type = "insertion",
 }: {
   delta: number | null;
   isNational?: boolean;
-  type?: IndicateurType;
 }) => {
   let deltaIcon;
 
@@ -214,11 +205,7 @@ const Delta = ({
     if (delta < 0)
       deltaIcon = (
         <Flex>
-          {type === "decrochage" ? (
-            <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
-          ) : (
-            <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
-          )}
+          <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
           <Text>{`${delta} pts`}</Text>
         </Flex>
       );
@@ -231,11 +218,7 @@ const Delta = ({
     else
       deltaIcon = (
         <Flex>
-          {type === "decrochage" ? (
-            <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
-          ) : (
-            <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
-          )}
+          <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
           <Text>{`+${delta} pts`}</Text>
         </Flex>
       );
@@ -269,32 +252,32 @@ const StatCard = ({
     switch (type) {
       case "insertion":
         if (
-          data?.anneeN.filtered.tauxInsertion6mois &&
-          data?.anneeNMoins1.filtered.tauxInsertion6mois
+          data?.anneeN.filtered.insertion &&
+          data?.anneeNMoins1.filtered.insertion
         )
           return (
-            data?.anneeN.filtered.tauxInsertion6mois -
-            data?.anneeNMoins1.filtered.tauxInsertion6mois
+            data?.anneeN.filtered.insertion -
+            data?.anneeNMoins1.filtered.insertion
           );
         return null;
       case "poursuite":
         if (
-          data?.anneeN.filtered.tauxPoursuiteEtudes &&
-          data?.anneeNMoins1.filtered.tauxPoursuiteEtudes
+          data?.anneeN.filtered.poursuite &&
+          data?.anneeNMoins1.filtered.poursuite
         )
           return (
-            data?.anneeN.filtered.tauxPoursuiteEtudes -
-            data?.anneeNMoins1.filtered.tauxPoursuiteEtudes
+            data?.anneeN.filtered.poursuite -
+            data?.anneeNMoins1.filtered.poursuite
           );
         return null;
       default:
         if (
-          data?.anneeN.filtered.tauxDecrochage &&
-          data?.anneeNMoins1.filtered.tauxDecrochage
+          data?.anneeN.filtered.insertion &&
+          data?.anneeNMoins1.filtered.insertion
         ) {
           return (
-            data?.anneeN.filtered.tauxDecrochage -
-            data?.anneeNMoins1.filtered.tauxDecrochage
+            data?.anneeN.filtered.insertion -
+            data?.anneeNMoins1.filtered.insertion
           );
         }
         return null;
@@ -307,45 +290,45 @@ const StatCard = ({
     switch (type) {
       case "insertion":
         if (
-          data?.anneeN.filtered.tauxInsertion6mois &&
-          data?.anneeNMoins1.nationale.tauxInsertion6mois
+          data?.anneeN.filtered.insertion &&
+          data?.anneeNMoins1.nationale.insertion
         )
           return (
-            data?.anneeN.filtered.tauxInsertion6mois -
-            data?.anneeNMoins1.nationale.tauxInsertion6mois
+            data?.anneeN.filtered.insertion -
+            data?.anneeNMoins1.nationale.insertion
           );
         return null;
       case "poursuite":
         if (
-          data?.anneeN.filtered.tauxPoursuiteEtudes &&
-          data?.anneeNMoins1.nationale.tauxPoursuiteEtudes
+          data?.anneeN.filtered.poursuite &&
+          data?.anneeNMoins1.nationale.poursuite
         )
           return (
-            data?.anneeN.filtered.tauxPoursuiteEtudes -
-            data?.anneeNMoins1.nationale.tauxPoursuiteEtudes
+            data?.anneeN.filtered.poursuite -
+            data?.anneeNMoins1.nationale.poursuite
           );
         return null;
       default:
         if (
-          data?.anneeN.filtered.tauxDecrochage &&
-          data?.anneeNMoins1.nationale.tauxDecrochage
+          data?.anneeN.filtered.insertion &&
+          data?.anneeNMoins1.nationale.insertion
         )
           return (
-            data?.anneeN.filtered.tauxDecrochage -
-            data?.anneeNMoins1.nationale.tauxDecrochage
+            data?.anneeN.filtered.insertion -
+            data?.anneeNMoins1.nationale.insertion
           );
         return null;
     }
   };
 
-  const getValue = (type: "insertion" | "poursuite" | "decrochage") => {
+  const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return data?.anneeN.filtered.tauxInsertion6mois;
+        return data?.anneeN.filtered.insertion;
       case "poursuite":
-        return data?.anneeN.filtered.tauxPoursuiteEtudes;
+        return data?.anneeN.filtered.poursuite;
       default:
-        return data?.anneeN.filtered.tauxDecrochage;
+        return data?.anneeN.filtered.insertion;
     }
   };
 
@@ -376,7 +359,7 @@ const StatCard = ({
         </Box>
         <Box fontWeight="bold" fontSize="2xl">
           {getDeltaAnneeNMoins1(type) != null ? (
-            <Delta delta={getDeltaAnneeNMoins1(type)} type={type} />
+            <Delta delta={getDeltaAnneeNMoins1(type)} />
           ) : (
             <></>
           )}
@@ -392,7 +375,6 @@ const StatCard = ({
             <Delta
               delta={getDeltaAnneeNMoins1Nationale(type)}
               isNational={true}
-              type={type}
             />
           ) : (
             <></>
@@ -408,17 +390,12 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
     <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
       INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2021
     </Text>
-    <SimpleGrid spacing={3} columns={[3]} mt={4}>
+    <SimpleGrid spacing={3} columns={[2]} mt={4}>
       <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
       <StatCard
         label="taux poursuite d'études"
         data={data}
         type="poursuite"
-      ></StatCard>
-      <StatCard
-        label="taux de décrochage"
-        data={data}
-        type="decrochage"
       ></StatCard>
     </SimpleGrid>
   </Flex>

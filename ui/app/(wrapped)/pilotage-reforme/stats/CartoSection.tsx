@@ -1,7 +1,7 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
 import { CartoGraph } from "../components/CartoGraph";
-import { PilotageReformeStatsRegion } from "../types";
+import { IndicateurType, PilotageReformeStatsRegion } from "../types";
 
 export const CartoSection = ({
   data,
@@ -12,7 +12,7 @@ export const CartoSection = ({
 }: {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
-  indicateur: "tauxInsertion6mois" | "tauxPoursuiteEtudes" | "tauxDecrochage";
+  indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: {
     label: string;
@@ -24,9 +24,8 @@ export const CartoSection = ({
     return {
       codeRegion: region.codeRegion,
       libelleRegion: region.libelleRegion,
-      tauxInsertion6mois: region.tauxInsertion6mois ?? 0,
-      tauxPoursuiteEtudes: region.tauxPoursuiteEtudes ?? 0,
-      tauxDecrochage: region.tauxDecrochage ?? 0,
+      insertion: region.insertion ?? 0,
+      poursuite: region.poursuite ?? 0,
     };
   });
 
