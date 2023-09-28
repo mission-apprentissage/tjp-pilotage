@@ -125,5 +125,6 @@ export const [submitDemande, submitDemandeFactory] = inject(
       });
 
       logger.info("Demande envoyée", { demande: created });
+      return created;
     }
 );

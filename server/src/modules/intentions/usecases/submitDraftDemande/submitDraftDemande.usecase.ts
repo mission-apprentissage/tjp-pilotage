@@ -125,5 +125,6 @@ export const [submitDraftDemande] = inject(
       });
 
       logger.info("Intention sauvegardée", { intention: created });
+      return created;
     }
 );
