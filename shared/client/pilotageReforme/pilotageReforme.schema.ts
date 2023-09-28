@@ -9,9 +9,8 @@ const StatsSchema = Type.Object({
   effectif: Type.Optional(Type.Number()),
   nbFormations: Type.Optional(Type.Number()),
   nbEtablissements: Type.Optional(Type.Number()),
-  tauxPoursuiteEtudes: Type.Optional(Type.Number()),
-  tauxInsertion6mois: Type.Optional(Type.Number()),
-  tauxDecrochage: Type.Optional(Type.Number()),
+  poursuite: Type.Optional(Type.Number()),
+  insertion: Type.Optional(Type.Number()),
 });
 
 const StatsAnneeSchema = Type.Object({
@@ -22,9 +21,8 @@ const StatsAnneeSchema = Type.Object({
 const StatsRegionLineSchema = Type.Object({
   codeRegion: Type.String(),
   libelleRegion: Type.Optional(Type.String()),
-  tauxPoursuiteEtudes: Type.Optional(Type.Number()),
-  tauxInsertion6mois: Type.Optional(Type.Number()),
-  tauxDecrochage: Type.Optional(Type.Number()),
+  poursuite: Type.Optional(Type.Number()),
+  insertion: Type.Optional(Type.Number()),
 });
 
 const FiltersSchema = Type.Object({

@@ -137,6 +137,18 @@ export const intentionsSchemas = {
       ),
     },
   },
+  getEtab: {
+    params: Type.Object({
+      uai: Type.String(),
+    }),
+    response: {
+      200: Type.Object({
+        value: Type.String(),
+        label: Type.Optional(Type.String()),
+        commune: Type.Optional(Type.String()),
+      }),
+    },
+  },
   searchDiplome: {
     params: Type.Object({
       search: Type.String(),

@@ -92,9 +92,9 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
-                    onClick={() => handleOrder("tauxInsertion6mois")}
+                    onClick={() => handleOrder("insertion")}
                   >
-                    <OrderIcon {...order} column="tauxInsertion6mois" />
+                    <OrderIcon {...order} column="insertion" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion6mois}
                   </Th>
                   <Th
@@ -102,20 +102,10 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
-                    onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                    onClick={() => handleOrder("poursuite")}
                   >
-                    <OrderIcon {...order} column="tauxPoursuiteEtudes" />
+                    <OrderIcon {...order} column="poursuite" />
                     {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
-                  </Th>
-                  <Th
-                    isNumeric
-                    cursor="pointer"
-                    pb="4"
-                    width="20%"
-                    onClick={() => handleOrder("tauxDecrochage")}
-                  >
-                    <OrderIcon {...order} column="tauxDecrochage" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxDecrochage}
                   </Th>
                 </Tr>
               </Thead>
@@ -151,13 +141,10 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxInsertion6mois} %
+                            {region.insertion} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxPoursuiteEtudes} %
-                          </Td>
-                          <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.tauxDecrochage} %
+                            {region.poursuite} %
                           </Td>
                         </Tr>
                       </Fragment>

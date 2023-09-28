@@ -9,6 +9,11 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: ({ params }) => `/etab/search/${params.search}`,
     instance,
   }),
+  getEtab: createClientMethod<typeof ROUTES_CONFIG.getEtab>({
+    method: "GET",
+    url: ({ params }) => `/etab/${params.uai}`,
+    instance,
+  }),
   searchDiplome: createClientMethod<typeof ROUTES_CONFIG.searchDiplome>({
     method: "GET",
     url: ({ params }) => `/diplome/search/${params.search}`,
