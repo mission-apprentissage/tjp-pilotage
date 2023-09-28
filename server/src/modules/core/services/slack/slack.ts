@@ -2,16 +2,17 @@ import { App, Block, KnownBlock } from "@slack/bolt";
 
 import { config } from "../../../../../config/config";
 
-const slack = new App({
-  token: config.slack.token,
-  signingSecret: config.slack.signingSecret,
-});
-
 export const sendToSlack = async (
   main: (Block | KnownBlock)[],
   answer?: (Block | KnownBlock)[]
 ) => {
   if (!config.slack.chanel) return;
+
+  const slack = new App({
+    token: config.slack.token,
+    signingSecret: config.slack.signingSecret ?? "",
+  });
+
   const sent = await slack.client.chat.postMessage({
     blocks: main,
     channel: config.slack.chanel,
