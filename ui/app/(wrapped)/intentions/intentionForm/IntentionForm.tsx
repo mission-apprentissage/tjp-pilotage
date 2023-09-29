@@ -58,6 +58,7 @@ export const IntentionForm = ({
               demande: {
                 id: formId,
                 ...forms,
+                // @ts-ignore
                 uai: forms.uai!,
               },
             },
@@ -75,25 +76,8 @@ export const IntentionForm = ({
     libelleFCIL?: string,
     uai?: string
   ): boolean => {
-    if (isFCIL)
-      return (
-        cfd != "" &&
-        cfd != undefined &&
-        dispositifId != "" &&
-        dispositifId != undefined &&
-        libelleFCIL != "" &&
-        libelleFCIL != undefined &&
-        uai != "" &&
-        uai != undefined
-      );
-    return (
-      cfd != "" &&
-      cfd != undefined &&
-      dispositifId != "" &&
-      dispositifId != undefined &&
-      uai != "" &&
-      uai != undefined
-    );
+    if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
+    return !!(cfd && dispositifId && uai);
   };
 
   const [step, setStep] = useState(

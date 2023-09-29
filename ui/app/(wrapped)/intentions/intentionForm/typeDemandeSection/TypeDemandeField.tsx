@@ -21,7 +21,6 @@ import {
   isTypeCompensation,
   isTypeDiminution,
   isTypeFermeture,
-  isTypeOuverture,
   typeDemandesOptions,
 } from "../../utils/typeDemandeUtils";
 
@@ -95,16 +94,6 @@ export const TypeDemandeField = chakra(
       setValue("capaciteApprentissage", undefined);
       setValue("capaciteScolaireColoree", undefined);
       setValue("capaciteApprentissageColoree", undefined);
-      if (isTypeOuverture(typeDemande)) {
-        setValue("capaciteScolaireActuelle", 0);
-        setValue("capaciteApprentissageActuelle", 0);
-      }
-      if (isTypeFermeture(typeDemande)) {
-        setValue("capaciteScolaire", 0);
-        setValue("capaciteApprentissage", 0);
-        setValue("poursuitePedagogique", false);
-        setValue("mixte", false);
-      }
       if (!isTypeCompensation(typeDemande)) {
         setValue("compensationCfd", undefined);
         setValue("compensationDispositifId", undefined);
