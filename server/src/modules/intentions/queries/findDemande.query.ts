@@ -32,11 +32,13 @@ export const findDemande = async ({
         formation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .select((eb2) => [
+            .select((ebDataFormation) => [
               "libelle",
-              sql<boolean>`${eb2.ref(
-                "dataFormation.codeNiveauDiplome"
-              )} in ('381','481','581')`.as("isFCIL"),
+              ebDataFormation("dataFormation.codeNiveauDiplome", "in", [
+                "381",
+                "481",
+                "581",
+              ]).as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(

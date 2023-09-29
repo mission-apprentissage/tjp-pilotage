@@ -60,7 +60,6 @@ export const CfdBlock = ({
                 }
                 active={active}
                 onChange={(selected) => {
-                  if (!selected) setValue("dispositifId", "");
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
                   setIsFCIL(selected?.isFCIL ?? false);
