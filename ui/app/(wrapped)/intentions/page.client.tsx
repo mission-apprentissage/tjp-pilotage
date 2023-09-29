@@ -104,11 +104,6 @@ export const PageClient = () => {
 
   if (isLoading) return <IntentionSpinner />;
 
-  console.log(
-    data?.demandes?.[1].compensationCfd,
-    data?.demandes?.[1].compensationCfd != null
-  );
-
   return (
     <Container maxWidth="100%" my={12}>
       <Flex>
