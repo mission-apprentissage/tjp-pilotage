@@ -1,13 +1,12 @@
 "use client";
 
-import { LinkIcon } from "@chakra-ui/icons";
+import { LinkIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Center,
   Container,
   Flex,
-  Grid,
-  GridItem,
   Table,
   TableContainer,
   Tag,
@@ -23,7 +22,6 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useState } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../api.client";
@@ -104,24 +102,26 @@ export const PageClient = () => {
     );
   };
 
-  const [selectedRow, setSelectedRow] = useState("");
-
   if (isLoading) return <IntentionSpinner />;
+
   return (
-    <Container maxW={"95%"} my={12}>
-      <Grid templateColumns="repeat(5,1fr)" gap={2}>
-        <GridItem>
-          <MenuIntention isRecapView></MenuIntention>
-        </GridItem>
-        <GridItem colSpan={4}>
+    <Container maxWidth="100%" my={12}>
+      <Flex>
+        <MenuIntention isRecapView />
+        <Box flex={1} overflow="hidden">
           {data?.demandes.length ? (
             <TableContainer overflow="auto">
-              <Table variant="striped" fontSize="14px" gap="0">
+              <Table
+                sx={{ td: { py: "2", px: 4 } }}
+                size="md"
+                variant="striped"
+                fontSize="14px"
+                gap="0"
+              >
                 <Thead>
                   <Tr>
-                    <Th px={"12px"}>n° demande</Th>
+                    <Th>n° demande</Th>
                     <Th
-                      px={"12px"}
                       cursor="pointer"
                       onClick={() => handleOrder("libelleDiplome")}
                     >
@@ -129,61 +129,39 @@ export const PageClient = () => {
                       diplôme
                     </Th>
                     <Th
-                      px={"12px"}
                       cursor="pointer"
                       onClick={() => handleOrder("typeDemande")}
                     >
                       <OrderIcon {...order} column="typeDemande" />
                       type
                     </Th>
-                    <Th px={"12px"}>compensation</Th>
+                    <Th>compensation</Th>
+
+                    <Th cursor="pointer" onClick={() => handleOrder("status")}>
+                      <OrderIcon {...order} column="status" />
+                      status
+                    </Th>
                     <Th
-                      px={"12px"}
                       cursor="pointer"
-                      isNumeric
                       onClick={() => handleOrder("createdAt")}
                     >
                       <OrderIcon {...order} column="createdAt" />
-                      création
-                    </Th>
-                    <Th
-                      px={"12px"}
-                      cursor="pointer"
-                      onClick={() => handleOrder("status")}
-                    >
-                      <OrderIcon {...order} column="status" />
-                      status
+                      Date de création
                     </Th>
                   </Tr>
                 </Thead>
                 <Tbody>
                   {data?.demandes.map((demande) => {
-                    const bgColor =
-                      demande.id === selectedRow
-                        ? "bluefrance.525_active !important"
-                        : "inherit";
                     return (
                       <Tr
-                        display="table-row"
+                        height={"60px"}
                         key={demande.id}
                         cursor="pointer"
-                        height={"80px"}
                         whiteSpace={"pre"}
-                        bg={bgColor}
-                        onClick={() => {
-                          router.push(`/intentions/${demande.id}`);
-                        }}
+                        onClick={() => router.push(`/intentions/${demande.id}`)}
                       >
-                        <Td
-                          maxW={"36"}
-                          textOverflow={"ellipsis"}
-                          isTruncated
-                          px={"12px"}
-                          bg={bgColor}
-                        >
-                          {demande.id}
-                        </Td>
-                        <Td w="lg" px={"12px"} bg={bgColor}>
+                        <Td>{demande.id}</Td>
+                        <Td>
                           <Text
                             textOverflow={"ellipsis"}
                             overflow={"hidden"}
@@ -193,106 +171,84 @@ export const PageClient = () => {
                             {demande.libelleDiplome}
                           </Text>
                         </Td>
-                        <Td w="xs" px={"12px"} bg={bgColor}>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {demande.typeDemande
-                              ? typeDemandesOptions[demande.typeDemande].label
-                              : null}
-                          </Text>
+                        <Td>
+                          {demande.typeDemande
+                            ? typeDemandesOptions[demande.typeDemande].label
+                            : null}
                         </Td>
-                        <Td w="44" px={"12px"} bg={bgColor}>
-                          {demande.compensationCfd != null &&
-                          demande.compensationDispositifId != null &&
-                          demande.compensationUai != null ? (
-                            demande.idCompensation != undefined ? (
-                              <Tag
-                                as={Button}
-                                color={"green.700"}
-                                bg={"unset"}
-                                border={"none"}
-                                size={"sm"}
-                                minW="44"
-                                overflow={"hidden"}
+                        <Td>
+                          {demande.compensationCfd &&
+                          demande.compensationDispositifId &&
+                          demande.compensationUai ? (
+                            demande.idCompensation ? (
+                              <Button
+                                _hover={{ bg: "gray.200" }}
+                                variant="ghost"
                                 whiteSpace={"break-spaces"}
-                                noOfLines={2}
+                                size="xs"
+                                py="2"
+                                height="auto"
+                                fontWeight="normal"
                                 leftIcon={<LinkIcon focusable={true} />}
-                                disabled={true}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   router.push(
-                                    createParametrizedUrl(
-                                      `/intentions/${demande.idCompensation}`,
-                                      {
-                                        compensation: true,
-                                      }
-                                    )
+                                    `/intentions/${demande.idCompensation}?compensation=true`
                                   );
                                 }}
-                                onMouseEnter={() =>
-                                  setSelectedRow(demande.idCompensation ?? "")
-                                }
-                                onMouseLeave={() => setSelectedRow("")}
                               >
-                                {`${
-                                  demande.typeCompensation
-                                    ? typeDemandesOptions[
-                                        demande.typeCompensation
-                                      ].label
-                                    : "Demande"
-                                } liée `}
-                                <Text textDecoration="underline">
-                                  {demande.idCompensation}
-                                </Text>
-                              </Tag>
+                                <Box textAlign="left">
+                                  <Box whiteSpace="nowrap">
+                                    {`${
+                                      demande.typeCompensation
+                                        ? typeDemandesOptions[
+                                            demande.typeCompensation
+                                          ].label
+                                        : "Demande"
+                                    } liée `}
+                                  </Box>
+                                  <Text textDecoration="underline">
+                                    {demande.idCompensation}
+                                  </Text>
+                                </Box>
+                              </Button>
                             ) : (
-                              <Tag
-                                as={Button}
-                                variant={"outline"}
-                                colorScheme={"orange"}
-                                size={"sm"}
-                                minW="44"
-                                overflow={"hidden"}
+                              <Button
+                                _hover={{ bg: "gray.200" }}
+                                variant="ghost"
                                 whiteSpace={"break-spaces"}
-                                noOfLines={2}
+                                size="xs"
+                                py="2"
+                                height="auto"
+                                fontWeight="normal"
+                                color="red.500"
+                                leftIcon={<WarningTwoIcon />}
                                 onClick={(e) => {
                                   e.stopPropagation();
                                   nouvelleCompensation(demande);
                                 }}
                               >
-                                Aucune demande liée identifiée
-                              </Tag>
+                                <Box textAlign="left" whiteSpace="nowrap">
+                                  Aucune demande liée <br /> identifiée
+                                </Box>
+                              </Button>
                             )
-                          ) : null}
+                          ) : (
+                            <></>
+                          )}
                         </Td>
-                        <Td isNumeric px={"12px"} bg={bgColor}>
-                          {new Date(demande.createdAt).toLocaleDateString()}
-                        </Td>
-                        <Td align="center" px={"12px"} bg={bgColor}>
+                        <Td align="center" w={0}>
                           {demande.status === "draft" ? (
-                            <Tag
-                              colorScheme={"orange"}
-                              size={"md"}
-                              minW="100%"
-                              justifyContent={"center"}
-                            >
-                              Brouillon
+                            <Tag size="sm" colorScheme={"orange"}>
+                              Projet de demande
                             </Tag>
                           ) : (
-                            <Tag
-                              colorScheme={"green"}
-                              size={"md"}
-                              minW="100%"
-                              justifyContent={"center"}
-                            >
-                              Validée
+                            <Tag size="sm" colorScheme={"green"}>
+                              Demande validée
                             </Tag>
                           )}
                         </Td>
+                        <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
                       </Tr>
                     );
                   })}
@@ -329,8 +285,8 @@ export const PageClient = () => {
               </Flex>
             </Center>
           )}
-        </GridItem>
-      </Grid>
+        </Box>
+      </Flex>
     </Container>
   );
 };

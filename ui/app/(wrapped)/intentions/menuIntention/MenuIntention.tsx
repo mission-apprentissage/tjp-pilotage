@@ -1,4 +1,4 @@
-import { Button, Container, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -31,43 +31,32 @@ export const MenuIntention = ({
     keepPreviousData: true,
     staleTime: 10000000,
     queryKey: ["countDemandes"],
-    queryFn: () => fetchCountDemandes(),
+    queryFn: fetchCountDemandes,
   });
 
   return (
-    <Container mb={"auto"} px={4}>
-      <VStack>
+    <Box pr={6} minW={250}>
+      <Button
+        variant="createButton"
+        size={"md"}
+        width={"100%"}
+        as={NextLink}
+        href="/intentions/new"
+      >
+        Nouvelle demande
+      </Button>
+      <VStack align="flex-start" mt="4" spacing={2}>
         <Button
-          variant="createButton"
-          size={"md"}
-          width={"100%"}
-          maxW={"48"}
-          as={NextLink}
-          href="/intentions/new"
-          px={3}
-          me={"10"}
-        >
-          Nouvelle demande
-        </Button>
-        <Button
-          mt={5}
           bgColor={"unset"}
           as={NextLink}
-          size={"lg"}
+          size="sm"
           href="/intentions"
-          me={"auto"}
-          fontWeight={"normal"}
           width={"100%"}
-          maxW={"52"}
-          h={8}
-          borderRadius={"0 12px 12px 0"}
-          px={3}
           iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countDemandes?.total}</Text>}
+          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
         >
           <Text
             fontWeight={isRecapView && status === "none" ? "bold" : "normal"}
-            fontSize="14px"
           >
             Toutes
           </Text>
@@ -75,50 +64,38 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           as={NextLink}
-          size={"lg"}
-          href="/intentions?filters[status][0]=draft"
-          me={"auto"}
-          fontWeight={"normal"}
-          width={"100%"}
-          maxW={"52"}
-          h={8}
-          borderRadius={"0 12px 12px 0"}
-          px={3}
-          iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countDemandes?.draft}</Text>}
-        >
-          <Text
-            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
-            fontSize="14px"
-          >
-            Projets de demande
-          </Text>
-        </Button>
-        <Button
-          bgColor={"unset"}
-          as={NextLink}
-          size={"lg"}
+          size="sm"
           href="/intentions?filters[status][0]=submitted"
-          me={"auto"}
-          fontWeight={"normal"}
           width={"100%"}
-          maxW={"52"}
-          h={8}
-          borderRadius={"0 12px 12px 0"}
-          px={3}
           iconSpacing={"auto"}
-          rightIcon={<Text fontSize={"14"}>{countDemandes?.submitted}</Text>}
+          rightIcon={
+            <Text fontWeight={"normal"}>{countDemandes?.submitted}</Text>
+          }
         >
           <Text
             fontWeight={
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
-            fontSize="14px"
           >
-            Demandes validées
+            Demande validées
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href="/intentions?filters[status][0]=draft"
+          width={"100%"}
+          iconSpacing={"auto"}
+          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
+        >
+          <Text
+            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
+          >
+            Projets de demandes
           </Text>
         </Button>
       </VStack>
-    </Container>
+    </Box>
   );
 };
