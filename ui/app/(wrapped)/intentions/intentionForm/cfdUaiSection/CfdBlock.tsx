@@ -27,7 +27,6 @@ export const CfdBlock = ({
 }) => {
   const {
     formState: { errors },
-    setValue,
     control,
   } = useFormContext<IntentionForms>();
 
