@@ -22,4 +22,10 @@ export const DEMANDES_COLUMNS = {
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
   compensationDispositifId: "Dispositif compensé",
+  capaciteScolaireActuelle: "Capacité scolaire actuelle",
+  capaciteScolaire: "Capacité scolaire",
+  capaciteScolaireColoree: "Capacité scolaire coloree",
+  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
+  capaciteApprentissage: "Capacité apprentissage",
+  capaciteApprentissageColoree: "Capacité apprentissage coloree",
 } as const;
