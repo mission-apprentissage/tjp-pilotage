@@ -91,7 +91,7 @@ export const typeDemandesOptions: Record<
   ouverture_compensation: {
     value: "ouverture_compensation",
     label: "Ouverture avec compensation",
-    desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autres(voir exemple ci - contre).",
+    desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autres (voir exemple ci-contre).",
     exemple: (
       <>
         <Text mb="3">Exemple pour une ouverture avec compensation :</Text>

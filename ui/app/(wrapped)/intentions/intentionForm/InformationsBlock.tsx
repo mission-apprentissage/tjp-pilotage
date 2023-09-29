@@ -65,7 +65,7 @@ export const InformationsBlock = ({
               Enregister le projet de demande
             </Button>
             <Text fontSize={"xs"} mt="1" align={"center"}>
-              (Phase d'enregistrement du 02 au 12 octobre)
+              (Phase d'enregistrement du 02 au 16 octobre)
             </Text>
           </Box>
           <Box justifyContent={"center"}>
