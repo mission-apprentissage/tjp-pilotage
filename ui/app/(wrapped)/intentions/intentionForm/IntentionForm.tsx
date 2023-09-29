@@ -110,19 +110,16 @@ export const IntentionForm = ({
 
   const onEditUaiCfdSection = () => setStep(1);
 
-  const { push, replace } = useRouter();
+  const { push } = useRouter();
 
   const onSubmit = async () => {
-    const newIntention = getValues();
-    await submit({ forms: newIntention });
+    await submit({ forms: getValues() });
     push("/intentions");
   };
 
   const onDraftSubmit = async () => {
-    const { id } = await submitDraft({
-      forms: getValues(),
-    });
-    replace(id, { scroll: false });
+    await submitDraft({ forms: getValues() });
+    push("/intentions");
   };
 
   useEffect(() => {

@@ -157,142 +157,145 @@ export const PageClient = () => {
                   </Tr>
                 </Thead>
                 <Tbody>
-                  {data?.demandes.map((demande) => (
-                    <Tr
-                      display="table-row"
-                      key={demande.id}
-                      cursor="pointer"
-                      height={"80px"}
-                      whiteSpace={"pre"}
-                      bg={
-                        demande.id === selectedRow
-                          ? "bluefrance.950"
-                          : "inherit"
-                      }
-                      onClick={() => {
-                        router.push(`/intentions/${demande.id}`);
-                      }}
-                    >
-                      <Td
-                        maxW={"36"}
-                        textOverflow={"ellipsis"}
-                        isTruncated
-                        px={"12px"}
+                  {data?.demandes.map((demande) => {
+                    const bgColor =
+                      demande.id === selectedRow
+                        ? "bluefrance.525_active !important"
+                        : "inherit";
+                    return (
+                      <Tr
+                        display="table-row"
+                        key={demande.id}
+                        cursor="pointer"
+                        height={"80px"}
+                        whiteSpace={"pre"}
+                        bg={bgColor}
+                        onClick={() => {
+                          router.push(`/intentions/${demande.id}`);
+                        }}
                       >
-                        {demande.id}
-                      </Td>
-                      <Td w="lg" px={"12px"}>
-                        <Text
+                        <Td
+                          maxW={"36"}
                           textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
+                          isTruncated
+                          px={"12px"}
+                          bg={bgColor}
                         >
-                          {demande.libelleDiplome}
-                        </Text>
-                      </Td>
-                      <Td w="xs" px={"12px"}>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
-                          {demande.typeDemande
-                            ? typeDemandesOptions[demande.typeDemande].label
-                            : null}
-                        </Text>
-                      </Td>
-                      <Td align="center" w="2xs" px={"12px"}>
-                        {demande.compensationCfd != null &&
-                        demande.compensationDispositifId != null &&
-                        demande.compensationUai != null ? (
-                          demande.idCompensation != undefined ? (
+                          {demande.id}
+                        </Td>
+                        <Td w="lg" px={"12px"} bg={bgColor}>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {demande.libelleDiplome}
+                          </Text>
+                        </Td>
+                        <Td w="xs" px={"12px"} bg={bgColor}>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {demande.typeDemande
+                              ? typeDemandesOptions[demande.typeDemande].label
+                              : null}
+                          </Text>
+                        </Td>
+                        <Td w="44" px={"12px"} bg={bgColor}>
+                          {demande.compensationCfd != null &&
+                          demande.compensationDispositifId != null &&
+                          demande.compensationUai != null ? (
+                            demande.idCompensation != undefined ? (
+                              <Tag
+                                as={Button}
+                                color={"green.700"}
+                                bg={"unset"}
+                                border={"none"}
+                                size={"sm"}
+                                minW="44"
+                                overflow={"hidden"}
+                                whiteSpace={"break-spaces"}
+                                noOfLines={2}
+                                leftIcon={<LinkIcon focusable={true} />}
+                                disabled={true}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  router.push(
+                                    createParametrizedUrl(
+                                      `/intentions/${demande.idCompensation}`,
+                                      {
+                                        compensation: true,
+                                      }
+                                    )
+                                  );
+                                }}
+                                onMouseEnter={() =>
+                                  setSelectedRow(demande.idCompensation ?? "")
+                                }
+                                onMouseLeave={() => setSelectedRow("")}
+                              >
+                                {`${
+                                  demande.typeCompensation
+                                    ? typeDemandesOptions[
+                                        demande.typeCompensation
+                                      ].label
+                                    : "Demande"
+                                } liée `}
+                                <Text textDecoration="underline">
+                                  {demande.idCompensation}
+                                </Text>
+                              </Tag>
+                            ) : (
+                              <Tag
+                                as={Button}
+                                variant={"outline"}
+                                colorScheme={"orange"}
+                                size={"sm"}
+                                minW="44"
+                                overflow={"hidden"}
+                                whiteSpace={"break-spaces"}
+                                noOfLines={2}
+                                onClick={(e) => {
+                                  e.stopPropagation();
+                                  nouvelleCompensation(demande);
+                                }}
+                              >
+                                Aucune demande liée identifiée
+                              </Tag>
+                            )
+                          ) : null}
+                        </Td>
+                        <Td isNumeric px={"12px"} bg={bgColor}>
+                          {new Date(demande.createdAt).toLocaleDateString()}
+                        </Td>
+                        <Td align="center" px={"12px"} bg={bgColor}>
+                          {demande.status === "draft" ? (
                             <Tag
-                              as={Button}
-                              colorScheme={"green"}
-                              variant={"outline"}
-                              size={"sm"}
-                              minW="44"
+                              colorScheme={"orange"}
+                              size={"md"}
+                              minW="100%"
                               justifyContent={"center"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                              disabled={true}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                router.push(
-                                  createParametrizedUrl(
-                                    `/intentions/${demande.idCompensation}`,
-                                    {
-                                      compensation: true,
-                                    }
-                                  )
-                                );
-                              }}
-                              onMouseEnter={() =>
-                                setSelectedRow(demande.idCompensation ?? "")
-                              }
-                              onMouseLeave={() => setSelectedRow("")}
                             >
-                              {`${
-                                demande.typeCompensation
-                                  ? typeDemandesOptions[
-                                      demande.typeCompensation
-                                    ].label
-                                  : "Demande"
-                              } liée `}
-                              <Text textDecoration="underline">
-                                {demande.idCompensation}
-                              </Text>
+                              Brouillon
                             </Tag>
                           ) : (
                             <Tag
-                              as={Button}
-                              variant={"outline"}
-                              colorScheme={"orange"}
-                              size={"sm"}
-                              minW="44"
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                              onClick={(e) => {
-                                e.stopPropagation();
-                                nouvelleCompensation(demande);
-                              }}
-                              rightIcon={<LinkIcon focusable={true} />}
+                              colorScheme={"green"}
+                              size={"md"}
+                              minW="100%"
+                              justifyContent={"center"}
                             >
-                              Lier une demande
+                              Validée
                             </Tag>
-                          )
-                        ) : null}
-                      </Td>
-                      <Td isNumeric px={"12px"}>
-                        {new Date(demande.createdAt).toLocaleDateString()}
-                      </Td>
-                      <Td align="center" px={"12px"}>
-                        {demande.status === "draft" ? (
-                          <Tag
-                            colorScheme={"orange"}
-                            size={"md"}
-                            minW="100%"
-                            justifyContent={"center"}
-                          >
-                            Brouillon
-                          </Tag>
-                        ) : (
-                          <Tag
-                            colorScheme={"green"}
-                            size={"md"}
-                            minW="100%"
-                            justifyContent={"center"}
-                          >
-                            Validée
-                          </Tag>
-                        )}
-                      </Td>
-                    </Tr>
-                  ))}
+                          )}
+                        </Td>
+                      </Tr>
+                    );
+                  })}
                 </Tbody>
               </Table>
               <TableFooter
