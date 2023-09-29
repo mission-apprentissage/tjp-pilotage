@@ -6,12 +6,11 @@ import { DB } from "../../../../db/schema";
 export const createDemandeQuery = async (
   demande: Insertable<DB["demande"]>
 ) => {
+  console.log("save", demande);
   return await kdb
     .insertInto("demande")
     .values(demande)
-    .onConflict((oc) =>
-      oc.column("id").doUpdateSet({ ...demande, createurId: undefined })
-    )
+    .onConflict((oc) => oc.column("id").doUpdateSet(demande))
     .returningAll()
-    .execute();
+    .executeTakeFirst();
 };

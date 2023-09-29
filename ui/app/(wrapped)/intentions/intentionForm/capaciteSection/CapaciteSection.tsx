@@ -43,19 +43,18 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
 );
 
 const differenceCapacité = (
-  capaciteActuelle: number | undefined,
+  capaciteActuelle: number | undefined = 0,
   capacite: number | undefined
 ) => {
-  if (capaciteActuelle === undefined || capacite === undefined)
-    return "Veuillez compléter les capacités";
+  if (capaciteActuelle === undefined || capacite === undefined) return "-";
   if (capacite >= capaciteActuelle) return capacite - capaciteActuelle;
   return capacite - capaciteActuelle;
 };
 
 const ConstanteSection = ({
   typeDemande,
-  capaciteActuelle = 0,
-  capacite = 0,
+  capaciteActuelle,
+  capacite,
 }: {
   typeDemande: string;
   capaciteActuelle?: number;

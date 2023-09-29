@@ -5,9 +5,12 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { capaciteDoitEtreInferieure } from "../../utils/capaciteUtils";
+import { safeParseInt } from "@/app/(wrapped)/intentions/utils/safeParseInt";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { IntentionForms } from "../defaultFormValues";
 
 export const CapaciteScolaireColoreeField = chakra(
@@ -16,53 +19,49 @@ export const CapaciteScolaireColoreeField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const [coloration] = watch(["coloration"]);
-    const [typeDemande, capaciteScolaireActuelle, capaciteScolaire] = watch([
-      "typeDemande",
-      "capaciteScolaireActuelle",
-      "capaciteScolaire",
-    ]);
-    const doitEtreInferieure = capaciteDoitEtreInferieure(typeDemande);
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "typeDemande") return;
+          setValue("capaciteScolaireColoree", undefined);
+        }).unsubscribe
+    );
+
+    const [coloration, typeDemande] = watch(["coloration", "typeDemande"]);
+    const fermeture = isTypeFermeture(typeDemande);
+    if (!coloration) return <></>;
+    if (fermeture) return <></>;
 
     return (
-      <>
-        {coloration && (
-          <FormControl
-            className={className}
-            isInvalid={!!errors.capaciteScolaireColoree}
-            isRequired
-          >
-            <FormLabel>Dont places colorées</FormLabel>
-            <Input
-              type="number"
-              {...register("capaciteScolaireColoree", {
-                setValueAs: parseInt,
-                validate: (value) => {
-                  if (value === undefined) return "Le champ est obligatoire";
-                  if (Number.isNaN(value))
-                    return "Veuillez remplir un nombre valide.";
-                  if (value < 0) return "Valeurs positives uniquement.";
-                  if (capaciteScolaire && value > capaciteScolaire)
-                    return "Le nombre de places colorées ne peut être supérieur au nombre de places total.";
-                  if (
-                    doitEtreInferieure &&
-                    capaciteScolaireActuelle &&
-                    value > capaciteScolaireActuelle
-                  )
-                    return "Le nombre de places colorées fermées ne peut pas être supérieur au nombre de places actuelles.";
-                },
-              })}
-            />
-            {errors.capaciteScolaireColoree && (
-              <FormErrorMessage>
-                {errors.capaciteScolaireColoree.message}
-              </FormErrorMessage>
-            )}
-          </FormControl>
+      <FormControl
+        className={className}
+        isInvalid={!!errors.capaciteScolaireColoree}
+        isRequired
+      >
+        <FormLabel>Dont places colorées</FormLabel>
+        <Input
+          type="number"
+          {...register("capaciteScolaireColoree", {
+            shouldUnregister: true,
+            setValueAs: safeParseInt,
+            value: null as unknown as undefined,
+            validate: (value) => {
+              if (value === undefined) return "Le champ est obligatoire";
+              if (Number.isNaN(value))
+                return "Veuillez remplir un nombre valide.";
+              if (value < 0) return "Valeurs positives uniquement.";
+            },
+          })}
+        />
+        {errors.capaciteScolaireColoree && (
+          <FormErrorMessage>
+            {errors.capaciteScolaireColoree.message}
+          </FormErrorMessage>
         )}
-      </>
+      </FormControl>
     );
   }
 );

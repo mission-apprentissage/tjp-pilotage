@@ -1,7 +1,8 @@
 "use client";
 
-import { Box, Collapse, Container } from "@chakra-ui/react";
+import { Box, Collapse, Container, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
@@ -35,6 +36,8 @@ export const IntentionForm = ({
 
   const { getValues, handleSubmit } = form;
 
+  const toast = useToast();
+
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
       api
@@ -47,23 +50,54 @@ export const IntentionForm = ({
           },
         })
         .call(),
+    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+      const errors = e.response?.data.errors;
+      if (!errors) return;
+      toast({
+        description: Object.entries(errors).map(([key, msg]) => (
+          <div key={key}>
+            - {key} : {msg}
+          </div>
+        )),
+        position: "top-right",
+        colorScheme: "red",
+        duration: 20000,
+        title: "Erreurs dans votre demande",
+        isClosable: true,
+      });
+    },
   });
 
   const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
     useMutation({
-      mutationFn: ({ forms }: { forms: PartialIntentionForms }) =>
+      mutationFn: ({ forms }: { forms: IntentionForms }) =>
         api
           .submitDraftDemande({
             body: {
               demande: {
                 id: formId,
                 ...forms,
-                // @ts-ignore
-                uai: forms.uai!,
+                uai: forms.uai,
               },
             },
           })
           .call(),
+      onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+        const errors = e.response?.data.errors;
+        if (!errors) return;
+        toast({
+          description: Object.entries(errors).map(([key, msg]) => (
+            <div key={key}>
+              - {key} : {msg}
+            </div>
+          )),
+          position: "top-right",
+          colorScheme: "red",
+          duration: 20000,
+          title: `${Object.keys(errors).length} erreurs dans votre demande`,
+          isClosable: true,
+        });
+      },
     });
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
@@ -102,8 +136,10 @@ export const IntentionForm = ({
   };
 
   const onDraftSubmit = async () => {
-    await submitDraft({ forms: getValues() });
-    push("/intentions");
+    handleSubmit(async () => {
+      await submitDraft({ forms: getValues() });
+      push("/intentions");
+    })();
   };
 
   useEffect(() => {
