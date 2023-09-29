@@ -14,12 +14,14 @@ import { IntentionForms } from "../defaultFormValues";
 
 export const CfdBlock = ({
   setDispositifs,
+  setIsFCIL,
   formMetaData,
   active,
 }: {
   setDispositifs: (
     info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
   ) => void;
+  setIsFCIL: (isFcil: boolean) => void;
   formMetaData?: ApiType<typeof api.getDemande>["metadata"];
   active: boolean;
 }) => {
@@ -59,6 +61,7 @@ export const CfdBlock = ({
                 onChange={(selected) => {
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
+                  setIsFCIL(selected?.isFCIL ?? false);
                 }}
               />
             )}

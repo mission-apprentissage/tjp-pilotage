@@ -48,16 +48,16 @@ export const TypeDemandeSection = ({
           mb="6"
           p="6"
           align="flex-start"
-          boxShadow="0 0 0 2px #000091"
+          boxShadow="0 0 0 1px #000091"
         >
           <Box flexDirection={"column"} flex="2" maxW="752px">
             <CompensationSection formMetadata={formMetadata} />
           </Box>
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
-            {` ${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
-            par compensation, veuillez saisir le code diplôme et l’établissement
-            si il est différent. <br />
+            {` ${typeDemandesOptions[typeDemande].label.toLowerCase()}, `}
+            veuillez saisir le code diplôme et l’établissement si il est
+            différent. <br />
             Nous ferons le lien automatiquement entre la demande
             {` d'${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
             et la demande de fermeture / diminution pour le code diplôme et

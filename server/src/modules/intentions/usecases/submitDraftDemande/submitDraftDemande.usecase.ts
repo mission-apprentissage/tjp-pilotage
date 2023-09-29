@@ -17,6 +17,7 @@ type Demande = {
   typeDemande: string;
   cfd: string;
   dispositifId: string;
+  libelleFCIL?: string;
   compensationCfd?: string;
   compensationDispositifId?: string;
   compensationUai?: string;
@@ -95,6 +96,7 @@ export const [submitDraftDemande] = inject(
       const toSave = {
         ...currentDemande,
         libelleColoration: null,
+        libelleFCIL: null,
         poursuitePedagogique: null,
         autreMotif: null,
         commentaire: null,
