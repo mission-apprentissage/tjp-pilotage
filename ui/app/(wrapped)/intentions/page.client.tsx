@@ -111,7 +111,13 @@ export const PageClient = () => {
         <Box flex={1} overflow="hidden">
           {data?.demandes.length ? (
             <TableContainer overflow="auto">
-              <Table size="md" variant="striped" fontSize="14px" gap="0">
+              <Table
+                sx={{ td: { py: "2", px: 4 } }}
+                size="md"
+                variant="striped"
+                fontSize="14px"
+                gap="0"
+              >
                 <Thead>
                   <Tr>
                     <Th>n° demande</Th>
@@ -148,6 +154,7 @@ export const PageClient = () => {
                   {data?.demandes.map((demande) => {
                     return (
                       <Tr
+                        height={"60px"}
                         key={demande.id}
                         cursor="pointer"
                         whiteSpace={"pre"}
