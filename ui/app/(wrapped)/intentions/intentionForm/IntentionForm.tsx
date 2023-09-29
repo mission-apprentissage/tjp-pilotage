@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Collapse, Container, useToast } from "@chakra-ui/react";
+import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -38,35 +38,18 @@ export const IntentionForm = ({
 
   const { getValues, handleSubmit } = form;
 
-  const toast = useToast();
+  const [errors, setErrors] = useState<Record<string, string>>();
 
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
       api
         .submitDemande({
-          body: {
-            demande: {
-              id: formId,
-              ...forms,
-            },
-          },
+          body: { demande: { id: formId, ...forms } },
         })
         .call(),
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
-      if (!errors) return;
-      toast({
-        description: Object.entries(errors).map(([key, msg]) => (
-          <div key={key}>
-            - {key} : {msg}
-          </div>
-        )),
-        position: "top-right",
-        colorScheme: "red",
-        duration: 20000,
-        title: "Erreurs dans votre demande",
-        isClosable: true,
-      });
+      setErrors(errors);
     },
   });
 
@@ -75,30 +58,12 @@ export const IntentionForm = ({
       mutationFn: ({ forms }: { forms: IntentionForms }) =>
         api
           .submitDraftDemande({
-            body: {
-              demande: {
-                id: formId,
-                ...forms,
-                uai: forms.uai,
-              },
-            },
+            body: { demande: { id: formId, ...forms } },
           })
           .call(),
       onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
         const errors = e.response?.data.errors;
-        if (!errors) return;
-        toast({
-          description: Object.entries(errors).map(([key, msg]) => (
-            <div key={key}>
-              - {key} : {msg}
-            </div>
-          )),
-          position: "top-right",
-          colorScheme: "red",
-          duration: 20000,
-          title: `${Object.keys(errors).length} erreurs dans votre demande`,
-          isClosable: true,
-        });
+        setErrors(errors);
       },
     });
 
@@ -106,26 +71,17 @@ export const IntentionForm = ({
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isCFDUaiSectionValid = (
-    cfd?: string,
-    dispositifId?: string,
-    libelleFCIL?: string,
-    uai?: string
-  ): boolean => {
+  const isCFDUaiSectionValid = ({
+    cfd,
+    dispositifId,
+    libelleFCIL,
+    uai,
+  }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
     return !!(cfd && dispositifId && uai);
   };
 
-  const [step, setStep] = useState(
-    isCFDUaiSectionValid(
-      defaultValues.cfd,
-      defaultValues.dispositifId,
-      defaultValues.libelleFCIL,
-      defaultValues.uai
-    )
-      ? 2
-      : 1
-  );
+  const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);
   const step2Ref = useRef<HTMLDivElement>(null);
 
   const onEditUaiCfdSection = () => setStep(1);
@@ -137,23 +93,13 @@ export const IntentionForm = ({
     push("/intentions");
   };
 
-  const onDraftSubmit = async () => {
-    handleSubmit(async () => {
-      await submitDraft({ forms: getValues() });
-      push("/intentions");
-    })();
-  };
+  const onDraftSubmit = handleSubmit(async () => {
+    await submitDraft({ forms: getValues() });
+    push("/intentions");
+  });
 
   useEffect(() => {
-    const values = getValues();
-    if (
-      isCFDUaiSectionValid(
-        values?.cfd,
-        values.dispositifId,
-        values?.libelleFCIL,
-        values?.uai
-      )
-    ) {
+    if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
     }
   }, []);
@@ -176,10 +122,10 @@ export const IntentionForm = ({
           noValidate
           onSubmit={handleSubmit(onSubmit)}
         >
-          <Container maxW={"container.xl"} my={12} mb={24}>
+          <Container maxW={"container.xl"} pt="4" mb={24}>
             <Breadcrumb
               ml={4}
-              mb={8}
+              mb={4}
               pages={[
                 { title: "Accueil", to: "/" },
                 { title: "Recueil des demandes", to: "/intentions" },
@@ -213,6 +159,7 @@ export const IntentionForm = ({
                 isSubmitting={isSubmitting}
                 isDraftSubmitting={isDraftSubmitting}
                 onDraftSubmit={onDraftSubmit}
+                errors={errors}
                 formMetadata={formMetadata}
               />
             </Collapse>

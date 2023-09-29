@@ -48,7 +48,7 @@ export const TypeDemandeSection = ({
           mb="6"
           p="6"
           align="flex-start"
-          boxShadow="0 0 0 1px #000091"
+          boxShadow="0 0 0 2px #000091"
         >
           <Box flexDirection={"column"} flex="2" maxW="752px">
             <CompensationSection formMetadata={formMetadata} />

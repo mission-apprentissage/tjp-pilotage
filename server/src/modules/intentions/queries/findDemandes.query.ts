@@ -65,6 +65,7 @@ export const findDemandes = async ({
       cleanNull({
         ...demande,
         createdAt: demande.createdAt?.toISOString(),
+        updatedAt: demande.updatedAt?.toISOString(),
         idCompensation: demande.demandeCompensee?.id,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })
