@@ -16,7 +16,6 @@ import { LibelleColorationField } from "@/app/(wrapped)/intentions/intentionForm
 import { MixteField } from "@/app/(wrapped)/intentions/intentionForm/capaciteSection/MixteField";
 import { PoursuitePedagogiqueField } from "@/app/(wrapped)/intentions/intentionForm/capaciteSection/PoursuitePedagogique";
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
-import { InfoBox } from "@/app/(wrapped)/intentions/intentionForm/InfoBox";
 
 import {
   isTypeAugmentation,
@@ -148,11 +147,6 @@ export const CapaciteSection = () => {
       )}
       <Flex align={"flex-start"} mt={16}>
         <CommentaireField maxW={752} />
-        <InfoBox flex="1" mt="8" ml="6">
-          Toutes les précisions et observations utiles pour comprendre votre
-          demande. Vous pouvez par exemple préciser le numéro d’une autre
-          demande si les deux demandes sont liées.
-        </InfoBox>
       </Flex>
     </>
   );
