@@ -1,4 +1,15 @@
-import { Box, Button, Divider, Flex, Text } from "@chakra-ui/react";
+import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
+  Box,
+  Button,
+  Divider,
+  Flex,
+  Text,
+  UnorderedList,
+} from "@chakra-ui/react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
@@ -7,12 +18,14 @@ import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
   canEdit,
+  errors,
   isSubmitting,
   onDraftSubmit,
   isDraftSubmitting,
   formMetadata,
 }: {
   canEdit: boolean;
+  errors?: Record<string, string>;
   isSubmitting?: boolean;
   onDraftSubmit: () => void;
   isDraftSubmitting?: boolean;
@@ -26,6 +39,21 @@ export const InformationsBlock = ({
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <CapaciteSection />
         <Divider mt={8}></Divider>
+        {errors && (
+          <Alert mt="8" alignItems="flex-start" status="error">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+              <AlertDescription mt="2">
+                <UnorderedList>
+                  {Object.entries(errors).map(([key, msg]) => (
+                    <li key={key}>{msg}</li>
+                  ))}
+                </UnorderedList>
+              </AlertDescription>
+            </Box>
+          </Alert>
+        )}
         <Flex justify="flex-end" mt="12" mb="4" gap={6}>
           <Box justifyContent={"center"}>
             <Button
