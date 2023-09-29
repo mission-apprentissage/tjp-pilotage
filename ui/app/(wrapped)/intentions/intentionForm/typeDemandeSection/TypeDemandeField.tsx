@@ -16,10 +16,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
-import {
-  isTypeCompensation,
-  typeDemandesOptions,
-} from "../../utils/typeDemandeUtils";
+import { typeDemandesOptions } from "../../utils/typeDemandeUtils";
 
 function RadioCard({
   value,
@@ -74,23 +71,7 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
-      setValue,
     } = useFormContext<IntentionForms>();
-
-    const resetFields = (typeDemande: string) => {
-      setValue("motif", []);
-      setValue("capaciteScolaireActuelle", undefined);
-      setValue("capaciteApprentissageActuelle", undefined);
-      setValue("capaciteScolaire", undefined);
-      setValue("capaciteApprentissage", undefined);
-      setValue("capaciteScolaireColoree", undefined);
-      setValue("capaciteApprentissageColoree", undefined);
-      if (!isTypeCompensation(typeDemande)) {
-        setValue("compensationCfd", undefined);
-        setValue("compensationDispositifId", undefined);
-        setValue("compensationUai", undefined);
-      }
-    };
 
     return (
       <FormControl
@@ -121,10 +102,7 @@ export const TypeDemandeField = chakra(
                   value={item.value}
                   title={item.label}
                   desc={item.desc}
-                  onClick={() => {
-                    resetFields(item.value);
-                    return onChange(item.value);
-                  }}
+                  onClick={() => onChange(item.value)}
                 />
               ))}
             </RadioGroup>

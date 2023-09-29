@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { safeParseInt } from "../../utils/safeParseInt";
@@ -17,7 +18,16 @@ export const CapaciteScolaireActuelleField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "typeDemande") return;
+          setValue("capaciteScolaireActuelle", undefined);
+        }).unsubscribe
+    );
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);

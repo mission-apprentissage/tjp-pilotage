@@ -6,9 +6,10 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
+import { isTypeCompensation } from "shared/demandeValidators/validators";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
@@ -27,7 +28,22 @@ export const CompensationSection = ({
     handleSubmit,
     resetField,
     getValues,
+    setValue,
+    watch,
   } = useFormContext<IntentionForms>();
+
+  useEffect(
+    () =>
+      watch(({ typeDemande }, { name }) => {
+        if (name !== "typeDemande") return;
+        if (!typeDemande || isTypeCompensation(typeDemande)) return;
+
+        setValue("compensationCfd", undefined);
+        setValue("compensationDispositifId", undefined);
+        setValue("compensationUai", undefined);
+        setValue("compensationRentreeScolaire", undefined);
+      }).unsubscribe
+  );
 
   const { data, isLoading } = useQuery({
     queryKey: [getValues("uai")],

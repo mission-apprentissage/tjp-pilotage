@@ -94,7 +94,7 @@ export const IntentionForm = ({
           position: "top-right",
           colorScheme: "red",
           duration: 20000,
-          title: "Erreurs dans votre demande",
+          title: `${Object.keys(errors).length} erreurs dans votre demande`,
           isClosable: true,
         });
       },
@@ -107,7 +107,7 @@ export const IntentionForm = ({
 
   const onEditUaiCfdSection = () => setStep(1);
 
-  const { push, replace } = useRouter();
+  const { push } = useRouter();
 
   const onSubmit = async () => {
     const newIntention = getValues();
@@ -117,10 +117,8 @@ export const IntentionForm = ({
 
   const onDraftSubmit = async () => {
     handleSubmit(async () => {
-      const { id } = await submitDraft({
-        forms: getValues(),
-      });
-      replace(id, { scroll: false });
+      await submitDraft({ forms: getValues() });
+      push("/intentions");
     })();
   };
 

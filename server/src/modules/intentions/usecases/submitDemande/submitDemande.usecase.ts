@@ -29,7 +29,7 @@ type Demande = {
   poursuitePedagogique?: boolean;
   commentaire?: string;
   coloration: boolean;
-  mixte: boolean;
+  mixte?: boolean;
   capaciteScolaire?: number;
   capaciteScolaireActuelle?: number;
   capaciteScolaireColoree?: number;
@@ -107,6 +107,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         capaciteApprentissage: 0,
         capaciteApprentissageActuelle: 0,
         capaciteApprentissageColoree: 0,
+        mixte: false,
         ...demande,
         compensationRentreeScolaire,
       };

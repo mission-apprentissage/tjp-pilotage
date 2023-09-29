@@ -38,14 +38,17 @@ export const ColorationField = chakra(
           render={({ field: { onChange, ref, name, onBlur, value } }) => (
             <RadioGroup
               as={Stack}
-              ref={ref}
               name={name}
               onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
             >
-              <Radio value="true">Oui</Radio>
-              <Radio value="false">Non</Radio>
+              <Radio ref={ref} value="true">
+                Oui
+              </Radio>
+              <Radio ref={ref} value="false">
+                Non
+              </Radio>
             </RadioGroup>
           )}
         />
