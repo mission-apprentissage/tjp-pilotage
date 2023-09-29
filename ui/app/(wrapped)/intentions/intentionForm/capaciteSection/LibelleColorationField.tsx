@@ -27,13 +27,13 @@ export const LibelleColorationField = chakra(
             isInvalid={!!errors.libelleColoration}
             isRequired
           >
-            <FormLabel>Complément du libéllé formation</FormLabel>
+            <FormLabel>Complément du libellé formation</FormLabel>
             <Input
               {...register("libelleColoration", {
                 shouldUnregister: true,
                 required: "Ce champ est obligatoire",
               })}
-              placeholder="Complément du libéllé formation"
+              placeholder="Complément du libellé formation"
             />
             {errors.libelleColoration && (
               <FormErrorMessage>

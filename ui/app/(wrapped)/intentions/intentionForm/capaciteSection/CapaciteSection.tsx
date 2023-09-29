@@ -34,9 +34,10 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
     opacity="1!important"
     bg="#ABB8DE"
-    color="white"
+    color="#000091"
+    fontWeight={"bold"}
     isDisabled
-    value={value}
+    value={Number.isNaN(value) ? undefined : value}
     maxW={496}
   />
 );
@@ -113,34 +114,27 @@ export const CapaciteSection = () => {
         <AmiCmaField />
       </Flex>
       <LibelleColorationField maxW="752px" mb="4" />
-      <Heading fontSize="lg" mb="6" mt="8" color="bluefrance.113">
+      <Heading fontSize="lg" mb="6" mt="16" color="bluefrance.113">
         Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>
-      <Flex mb="8">
-        <Flex w={752} gap={4}>
-          <CapaciteScolaireActuelleField maxW={240} flex={1} />
-          <CapaciteScolaireField maxW={240} flex={1} />
-          <CapaciteScolaireColoreeField maxW={240} flex={1} />
-        </Flex>
-        {mixte && (
-          <InfoBox flex="1" mt="8" ms="6" p={"16px"}>
-            Pour une formation pouvant accueillir 30 élèves dont 20 en
-            apprentissage, remplir 10 dans le champ capacité en voie scolaire et
-            20 dans le champ capacité en apprentissage.
-          </InfoBox>
-        )}
+      <Flex mb="4" gap={4}>
+        <CapaciteScolaireActuelleField maxW={240} flex={1} />
+        <CapaciteScolaireField maxW={240} flex={1} />
+        <CapaciteScolaireColoreeField maxW={240} flex={1} />
       </Flex>
-      <ConstanteSection
-        typeDemande={typeDemande}
-        capaciteActuelle={capaciteScolaireActuelle}
-        capacite={capaciteScolaire}
-      />
+      <Flex mb="8">
+        <ConstanteSection
+          typeDemande={typeDemande}
+          capaciteActuelle={capaciteScolaireActuelle}
+          capacite={capaciteScolaire}
+        />
+      </Flex>
       {mixte && (
         <>
           <Heading mt="8" fontSize="lg" mb="6" color="bluefrance.113">
             Capacité en apprentissage
           </Heading>
-          <Flex gap={4} mb="8">
+          <Flex gap={4} mb="4">
             <CapaciteApprentissageActuelleField maxW={240} flex={1} />
             <CapaciteApprentissageField maxW={240} flex={1} />
             <CapaciteApprentissageColoreeField maxW={240} flex={1} />
@@ -152,7 +146,7 @@ export const CapaciteSection = () => {
           />
         </>
       )}
-      <Flex align={"flex-start"} mt={8}>
+      <Flex align={"flex-start"} mt={16}>
         <CommentaireField maxW={752} />
         <InfoBox flex="1" mt="8" ml="6">
           Toutes les précisions et observations utiles pour comprendre votre

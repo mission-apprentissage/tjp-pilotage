@@ -49,12 +49,8 @@ export const getPilotageReformeStatsRegions = async ({
     .select([
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "insertion"
-      ),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "poursuite"
-      ),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
     ])
     .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion"])
     .$call((q) => {

@@ -6,6 +6,7 @@ export type IntentionForms = {
   uai: string;
   cfd: string;
   dispositifId: string;
+  libelleFCIL?: string;
   typeDemande: string;
   motif: string[];
   autreMotif?: string;

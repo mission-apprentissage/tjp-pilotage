@@ -1,11 +1,11 @@
 "use client";
 
-import { Center, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useSearchParams } from "next/navigation";
 
 import { api } from "../../../../api.client";
 import { GuardPermission } from "../../../../utils/security/GuardPermission";
+import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 export default () => {
   const queryParams = useSearchParams();
@@ -18,12 +18,7 @@ export default () => {
     cacheTime: 0,
   });
 
-  if (isLoading && !!intentionId)
-    return (
-      <Center mt="6">
-        <Spinner />
-      </Center>
-    );
+  if (isLoading && !!intentionId) return <IntentionSpinner />;
   return (
     <GuardPermission permission="intentions/envoi">
       {intentionId ? (

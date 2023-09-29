@@ -34,7 +34,7 @@ export const IntentionForm = ({
     reValidateMode: "onChange",
   });
 
-  const { getValues, handleSubmit, watch } = form;
+  const { getValues, handleSubmit } = form;
 
   const toast = useToast();
 
@@ -100,8 +100,29 @@ export const IntentionForm = ({
       },
     });
 
+  const [isFCIL, setIsFCIL] = useState<boolean>(
+    formMetadata?.formation?.isFCIL ?? false
+  );
+
+  const isCFDUaiSectionValid = (
+    cfd?: string,
+    dispositifId?: string,
+    libelleFCIL?: string,
+    uai?: string
+  ): boolean => {
+    if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
+    return !!(cfd && dispositifId && uai);
+  };
+
   const [step, setStep] = useState(
-    defaultValues.uai && defaultValues.cfd && defaultValues.dispositifId ? 2 : 1
+    isCFDUaiSectionValid(
+      defaultValues.cfd,
+      defaultValues.dispositifId,
+      defaultValues.libelleFCIL,
+      defaultValues.uai
+    )
+      ? 2
+      : 1
   );
   const step2Ref = useRef<HTMLDivElement>(null);
 
@@ -110,8 +131,7 @@ export const IntentionForm = ({
   const { push } = useRouter();
 
   const onSubmit = async () => {
-    const newIntention = getValues();
-    await submit({ forms: newIntention });
+    await submit({ forms: getValues() });
     push("/intentions");
   };
 
@@ -122,19 +142,27 @@ export const IntentionForm = ({
     })();
   };
 
-  useEffect(
-    () =>
-      watch(() => {
-        const values = getValues();
-        if (values?.uai && values?.cfd && values?.dispositifId) {
-          if (step != 2)
-            setTimeout(() => {
-              step2Ref.current?.scrollIntoView({ behavior: "smooth" });
-            }, 500);
-          setStep(2);
-        }
-      }).unsubscribe
-  );
+  useEffect(() => {
+    const values = getValues();
+    if (
+      isCFDUaiSectionValid(
+        values?.cfd,
+        values.dispositifId,
+        values?.libelleFCIL,
+        values?.uai
+      )
+    ) {
+      submitCFDUAISection();
+    }
+  }, []);
+
+  const submitCFDUAISection = () => {
+    if (step != 2)
+      setTimeout(() => {
+        step2Ref.current?.scrollIntoView({ behavior: "smooth" });
+      }, 500);
+    setStep(2);
+  };
 
   return (
     <FormProvider {...form}>
@@ -145,13 +173,17 @@ export const IntentionForm = ({
         noValidate
         onSubmit={handleSubmit(onSubmit)}
       >
-        <Container maxW={"container.xl"} my={12}>
+        <Container maxW={"container.xl"} my={12} mb={24}>
           <CfdUaiSection
             formId={formId}
             defaultValues={defaultValues}
             formMetadata={formMetadata}
             onEditUaiCfdSection={onEditUaiCfdSection}
             active={step === 1}
+            isFCIL={isFCIL}
+            setIsFCIL={setIsFCIL}
+            isCFDUaiSectionValid={isCFDUaiSectionValid}
+            submitCFDUAISection={submitCFDUAISection}
           />
           <Collapse in={step === 2} animateOpacity ref={step2Ref}>
             <InformationsBlock
