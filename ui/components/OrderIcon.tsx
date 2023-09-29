@@ -14,9 +14,9 @@ export const OrderIcon = ({
   orderBy?: string;
   order?: "desc" | "asc";
 }) => {
-  if (!order || orderBy !== column) return <ArrowUpDownIcon mx={2} />;
+  if (!order || orderBy !== column) return <ArrowUpDownIcon mr={2} />;
   if (order === "desc") {
-    return <ChevronDownIcon mx={2} />;
+    return <ChevronDownIcon mr={2} />;
   }
-  return <ChevronUpIcon mx={2} />;
+  return <ChevronUpIcon mr={2} />;
 };
