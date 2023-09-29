@@ -2,7 +2,7 @@
 
 import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ApiType } from "shared";
@@ -13,6 +13,7 @@ import {
 } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import { api } from "../../../../api.client";
+import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
@@ -27,6 +28,7 @@ export const IntentionForm = ({
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
+  const pathname = usePathname();
   const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
@@ -129,37 +131,58 @@ export const IntentionForm = ({
   };
 
   return (
-    <FormProvider {...form}>
-      <Box
-        flex={1}
-        bg="#E2E7F8"
-        as="form"
-        noValidate
-        onSubmit={handleSubmit(onSubmit)}
-      >
-        <Container maxW={"container.xl"} my={12} mb={24}>
-          <CfdUaiSection
-            formId={formId}
-            defaultValues={defaultValues}
-            formMetadata={formMetadata}
-            onEditUaiCfdSection={onEditUaiCfdSection}
-            active={step === 1}
-            isFCIL={isFCIL}
-            setIsFCIL={setIsFCIL}
-            isCFDUaiSectionValid={isCFDUaiSectionValid}
-            submitCFDUAISection={submitCFDUAISection}
-          />
-          <Collapse in={step === 2} animateOpacity ref={step2Ref}>
-            <InformationsBlock
-              canEdit={canEdit}
-              isSubmitting={isSubmitting}
-              isDraftSubmitting={isDraftSubmitting}
-              onDraftSubmit={onDraftSubmit}
-              formMetadata={formMetadata}
+    <>
+      <FormProvider {...form}>
+        <Box
+          flex={1}
+          bg="#E2E7F8"
+          as="form"
+          noValidate
+          onSubmit={handleSubmit(onSubmit)}
+        >
+          <Container maxW={"container.xl"} my={12} mb={24}>
+            <Breadcrumb
+              ml={4}
+              mb={8}
+              pages={[
+                { title: "Accueil", to: "/" },
+                { title: "Recueil des demandes", to: "/intentions" },
+                pathname === "/intentions/new"
+                  ? {
+                      title: "Nouvelle demande",
+                      to: "/intentions/new",
+                      active: true,
+                    }
+                  : {
+                      title: `Demande n°${formId}`,
+                      to: `/intentions/${formId}`,
+                      active: true,
+                    },
+              ]}
             />
-          </Collapse>
-        </Container>
-      </Box>
-    </FormProvider>
+            <CfdUaiSection
+              formId={formId}
+              defaultValues={defaultValues}
+              formMetadata={formMetadata}
+              onEditUaiCfdSection={onEditUaiCfdSection}
+              active={step === 1}
+              isFCIL={isFCIL}
+              setIsFCIL={setIsFCIL}
+              isCFDUaiSectionValid={isCFDUaiSectionValid}
+              submitCFDUAISection={submitCFDUAISection}
+            />
+            <Collapse in={step === 2} animateOpacity ref={step2Ref}>
+              <InformationsBlock
+                canEdit={canEdit}
+                isSubmitting={isSubmitting}
+                isDraftSubmitting={isDraftSubmitting}
+                onDraftSubmit={onDraftSubmit}
+                formMetadata={formMetadata}
+              />
+            </Collapse>
+          </Container>
+        </Box>
+      </FormProvider>
+    </>
   );
 };
