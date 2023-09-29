@@ -28,7 +28,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour tout cas de création d'une formation sans fermeture ou diminution de capacité.",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une ouverture nette :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une ouverture nette :
+        </Text>
         <Text mb="3">
           J’ouvre un CAP Cuisine dans un établissement qui ne dispense pas cette
           formation.
@@ -51,7 +53,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une augmentation nette :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une augmentation nette :
+        </Text>
         <Text mb="3">J’ouvre des places sur un BAC Pro Aéronautique.</Text>
         <OrderedList>
           <ListItem mb="2">
@@ -71,7 +75,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture ou pour les fermetures nettes.",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une fermeture :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une fermeture :
+        </Text>
         <Text mb="3">
           Je ferme un CAP Petite enfance dans un établissement.
         </Text>
@@ -94,7 +100,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autres (voir exemple ci-contre).",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une ouverture avec compensation :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une ouverture avec compensation :
+        </Text>
         <Text mb="3">
           J’ouvre des places sur Bac Pro Logistique et je ferme un CAP Agent
           Propreté et Hygiène.
@@ -118,7 +126,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour tout cas d'augmentation de capacité sur une formation déjà ouverte et en lien avec une fermeture ou diminution de capacité.",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une augmentation avec compensation :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une augmentation avec compensation :
+        </Text>
         <Text mb="3">
           J’ouvre des places sur le Bac Pro Cuisine et je ferme des places en
           CAP Cuisine.
@@ -143,7 +153,9 @@ export const typeDemandesOptions: Record<
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions netttes.",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une diminution :</Text>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une diminution :
+        </Text>
         <Text mb="3">
           Je diminue les places sur un CAP Menuisier Fabricant.
         </Text>
