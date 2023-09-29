@@ -117,12 +117,12 @@ export const PageClient = () => {
           ]}
         />
       </Container>
-      <Container maxWidth="100%" mb={12}>
-        <Flex>
-          <MenuIntention isRecapView />
-          <Box flex={1} overflow="hidden">
-            {data?.demandes.length ? (
-              <TableContainer overflow="auto">
+      <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0}>
+        <MenuIntention isRecapView />
+        <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
+          {data?.demandes.length ? (
+            <>
+              <TableContainer overflowY="auto" flex={1}>
                 <Table
                   sx={{ td: { py: "2", px: 4 } }}
                   size="md"
@@ -130,7 +130,13 @@ export const PageClient = () => {
                   fontSize="14px"
                   gap="0"
                 >
-                  <Thead>
+                  <Thead
+                    position="sticky"
+                    zIndex={1}
+                    top="0"
+                    boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                    bg="white"
+                  >
                     <Tr>
                       <Th>n° demande</Th>
                       <Th
@@ -273,38 +279,38 @@ export const PageClient = () => {
                     })}
                   </Tbody>
                 </Table>
-                <TableFooter
-                  onExport={() => trackEvent("demandes:export")}
-                  downloadLink={
-                    api.getDemandesCsv({
-                      query: { ...filters, ...order },
-                    }).url
-                  }
-                  page={page}
-                  pageSize={PAGE_SIZE}
-                  count={data?.count}
-                  onPageChange={(newPage) => setSearchParams({ page: newPage })}
-                />
               </TableContainer>
-            ) : (
-              <Center mt={12}>
-                <Flex flexDirection={"column"}>
-                  <Text fontSize={"2xl"}>Pas encore de demande à afficher</Text>
-                  <Button
-                    variant="createButton"
-                    size={"lg"}
-                    as={NextLink}
-                    href="/intentions/new"
-                    px={3}
-                    mt={12}
-                    mx={"auto"}
-                  >
-                    Nouvelle demande
-                  </Button>
-                </Flex>
-              </Center>
-            )}
-          </Box>
+              <TableFooter
+                onExport={() => trackEvent("demandes:export")}
+                downloadLink={
+                  api.getDemandesCsv({
+                    query: { ...filters, ...order },
+                  }).url
+                }
+                page={page}
+                pageSize={PAGE_SIZE}
+                count={data?.count}
+                onPageChange={(newPage) => setSearchParams({ page: newPage })}
+              />
+            </>
+          ) : (
+            <Center mt={12}>
+              <Flex flexDirection={"column"}>
+                <Text fontSize={"2xl"}>Pas encore de demande à afficher</Text>
+                <Button
+                  variant="createButton"
+                  size={"lg"}
+                  as={NextLink}
+                  href="/intentions/new"
+                  px={3}
+                  mt={12}
+                  mx={"auto"}
+                >
+                  Nouvelle demande
+                </Button>
+              </Flex>
+            </Center>
+          )}
         </Flex>
       </Container>
     </>
