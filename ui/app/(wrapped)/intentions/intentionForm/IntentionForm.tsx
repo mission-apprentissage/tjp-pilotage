@@ -2,6 +2,7 @@
 
 import { Box, Collapse, Container, useToast } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
