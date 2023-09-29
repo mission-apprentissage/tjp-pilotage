@@ -29,14 +29,19 @@ export const AmiCmaField = chakra(({ className }: { className?: string }) => {
           validate: (value) =>
             typeof value === "boolean" || "Le champ est obligatoire",
         }}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange, value, onBlur, ref } }) => (
           <RadioGroup
             as={Stack}
+            onBlur={onBlur}
             onChange={(v) => onChange(toBoolean(v))}
             value={JSON.stringify(value)}
           >
-            <Radio value="true">Oui</Radio>
-            <Radio value="false">Non</Radio>
+            <Radio ref={ref} value="true">
+              Oui
+            </Radio>
+            <Radio ref={ref} value="false">
+              Non
+            </Radio>
           </RadioGroup>
         )}
       />

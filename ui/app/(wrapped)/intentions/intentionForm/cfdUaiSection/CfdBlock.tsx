@@ -25,7 +25,6 @@ export const CfdBlock = ({
 }) => {
   const {
     formState: { errors },
-    resetField,
     control,
   } = useFormContext<IntentionForms>();
 
@@ -58,7 +57,6 @@ export const CfdBlock = ({
                 }
                 active={active}
                 onChange={(selected) => {
-                  if (!selected) resetField("dispositifId");
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
                 }}

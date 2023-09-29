@@ -42,7 +42,7 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
 );
 
 const differenceCapacité = (
-  capaciteActuelle: number | undefined,
+  capaciteActuelle: number | undefined = 0,
   capacite: number | undefined
 ) => {
   if (capaciteActuelle === undefined || capacite === undefined) return "-";

@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { safeParseInt } from "@/app/(wrapped)/intentions/utils/safeParseInt";
@@ -18,7 +19,16 @@ export const CapaciteApprentissageColoreeField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "typeDemande") return;
+          setValue("capaciteApprentissageColoree", undefined);
+        }).unsubscribe
+    );
 
     const [coloration, typeDemande] = watch(["coloration", "typeDemande"]);
     const fermeture = isTypeFermeture(typeDemande);

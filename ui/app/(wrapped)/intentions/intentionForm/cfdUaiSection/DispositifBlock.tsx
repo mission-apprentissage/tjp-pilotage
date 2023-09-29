@@ -5,6 +5,7 @@ import {
   LightMode,
   Select,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
 
@@ -21,7 +22,17 @@ export const DispositifBlock = ({
   const {
     formState: { errors },
     control,
+    watch,
+    setValue,
   } = useFormContext<IntentionForms>();
+
+  useEffect(
+    () =>
+      watch((_, { name }) => {
+        if (name !== "cfd") return;
+        setValue("dispositifId", "");
+      }).unsubscribe
+  );
 
   return (
     <LightMode>
