@@ -39,12 +39,7 @@ export const CfdUaiSection = ({
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
   submitCFDUAISection: () => void;
-  isCFDUaiSectionValid: (
-    cfd?: string,
-    dispositifId?: string,
-    libelleFCIL?: string,
-    uai?: string
-  ) => boolean;
+  isCFDUaiSectionValid: (_: Partial<IntentionForms>) => boolean;
 }) => {
   const { watch, getValues } = useFormContext<IntentionForms>();
 
@@ -70,15 +65,7 @@ export const CfdUaiSection = ({
 
   useEffect(() => {
     watch(() => {
-      const values = getValues();
-      setIsSubmitDisabled(
-        !isCFDUaiSectionValid(
-          values.cfd,
-          values.dispositifId,
-          values.libelleFCIL,
-          values.uai
-        )
-      );
+      setIsSubmitDisabled(!isCFDUaiSectionValid(getValues()));
     }).unsubscribe;
   });
 
