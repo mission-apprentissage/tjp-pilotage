@@ -36,7 +36,7 @@ export const InformationsBlock = ({
             >
               Enregister le projet de demande
             </Button>
-            <Text fontSize={"12"} align={"center"}>
+            <Text fontSize={"xs"} mt="1" align={"center"}>
               (Phase d'enregistrement du 02 au 12 octobre)
             </Text>
           </Box>
@@ -49,7 +49,7 @@ export const InformationsBlock = ({
             >
               Valider la demande définitive
             </Button>
-            <Text fontSize={"12"} align={"center"}>
+            <Text fontSize={"xs"} mt="1" align={"center"}>
               Pour soumission au vote du Conseil Régional
             </Text>
           </Box>
