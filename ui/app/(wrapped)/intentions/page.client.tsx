@@ -108,7 +108,7 @@ export const PageClient = () => {
     <Container maxWidth="100%" my={12}>
       <Flex>
         <MenuIntention isRecapView />
-        <Box flex={1}>
+        <Box flex={1} overflow="hidden">
           {data?.demandes.length ? (
             <TableContainer overflow="auto">
               <Table size="md" variant="striped" fontSize="14px" gap="0">
@@ -182,7 +182,6 @@ export const PageClient = () => {
                                 py="2"
                                 height="auto"
                                 fontWeight="normal"
-                                noOfLines={2}
                                 leftIcon={<LinkIcon focusable={true} />}
                                 onClick={(e) => {
                                   e.stopPropagation();
@@ -191,16 +190,20 @@ export const PageClient = () => {
                                   );
                                 }}
                               >
-                                {`${
-                                  demande.typeCompensation
-                                    ? typeDemandesOptions[
-                                        demande.typeCompensation
-                                      ].label
-                                    : "Demande"
-                                } liée `}
-                                <Text textDecoration="underline">
-                                  {demande.idCompensation}
-                                </Text>
+                                <Box textAlign="left">
+                                  <Box whiteSpace="nowrap">
+                                    {`${
+                                      demande.typeCompensation
+                                        ? typeDemandesOptions[
+                                            demande.typeCompensation
+                                          ].label
+                                        : "Demande"
+                                    } liée `}
+                                  </Box>
+                                  <Text textDecoration="underline">
+                                    {demande.idCompensation}
+                                  </Text>
+                                </Box>
                               </Button>
                             ) : (
                               <Button
@@ -211,7 +214,6 @@ export const PageClient = () => {
                                 py="2"
                                 height="auto"
                                 fontWeight="normal"
-                                noOfLines={2}
                                 color="red.500"
                                 leftIcon={<WarningTwoIcon />}
                                 onClick={(e) => {
@@ -219,8 +221,9 @@ export const PageClient = () => {
                                   nouvelleCompensation(demande);
                                 }}
                               >
-                                Aucune demande liée
-                                <br /> identifiée
+                                <Box textAlign="left" whiteSpace="nowrap">
+                                  Aucune demande liée <br /> identifiée
+                                </Box>
                               </Button>
                             )
                           ) : (
