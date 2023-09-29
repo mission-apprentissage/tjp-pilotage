@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Collapse, Container, useToast } from "@chakra-ui/react";
+import { Box, Collapse, Container } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
@@ -36,7 +36,7 @@ export const IntentionForm = ({
 
   const { getValues, handleSubmit } = form;
 
-  const toast = useToast();
+  const [errors, setErrors] = useState<Record<string, string>>();
 
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
@@ -52,19 +52,7 @@ export const IntentionForm = ({
         .call(),
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
-      if (!errors) return;
-      toast({
-        description: Object.entries(errors).map(([key, msg]) => (
-          <div key={key}>
-            - {key} : {msg}
-          </div>
-        )),
-        position: "top-right",
-        colorScheme: "red",
-        duration: 20000,
-        title: "Erreurs dans votre demande",
-        isClosable: true,
-      });
+      setErrors(errors);
     },
   });
 
@@ -84,19 +72,7 @@ export const IntentionForm = ({
           .call(),
       onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
         const errors = e.response?.data.errors;
-        if (!errors) return;
-        toast({
-          description: Object.entries(errors).map(([key, msg]) => (
-            <div key={key}>
-              - {key} : {msg}
-            </div>
-          )),
-          position: "top-right",
-          colorScheme: "red",
-          duration: 20000,
-          title: `${Object.keys(errors).length} erreurs dans votre demande`,
-          isClosable: true,
-        });
+        setErrors(errors);
       },
     });
 
@@ -191,6 +167,7 @@ export const IntentionForm = ({
               isSubmitting={isSubmitting}
               isDraftSubmitting={isDraftSubmitting}
               onDraftSubmit={onDraftSubmit}
+              errors={errors}
               formMetadata={formMetadata}
             />
           </Collapse>
