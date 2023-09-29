@@ -266,11 +266,12 @@ export const demandeValidators: Record<
   },
   sommeCapaciteColoree: (demande) => {
     if (
-      demande.typeDemande === "fermeture" ||
+      isTypeFermeture(demande.typeDemande) ||
       !demande.coloration ||
       !demande.mixte
     )
       return;
+
     if (
       !demande.capaciteApprentissageColoree &&
       !demande.capaciteScolaireColoree
