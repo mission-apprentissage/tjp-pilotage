@@ -8,6 +8,7 @@ const DemandeSchema = Type.Object({
   uai: Type.String(),
   cfd: Type.String(),
   dispositifId: Type.String(),
+  libelleFCIL: Type.Optional(Type.String()),
   rentreeScolaire: Type.Number(),
   typeDemande: Type.String(),
   compensationUai: Type.Optional(Type.String()),
@@ -37,6 +38,7 @@ const DraftSchema = Type.Object({
   uai: Type.String(),
   cfd: Type.Optional(Type.String()),
   dispositifId: Type.Optional(Type.String()),
+  libelleFCIL: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   typeDemande: Type.Optional(Type.String()),
   compensationCfd: Type.Optional(Type.String()),
@@ -77,6 +79,7 @@ const EtablissementMetadataSchema = Type.Optional(
 const FormationMetadataSchema = Type.Optional(
   Type.Object({
     libelle: Type.Optional(Type.String()),
+    isFCIL: Type.Optional(Type.Boolean()),
     dispositifs: Type.Optional(
       Type.Array(
         Type.Object({
@@ -101,6 +104,7 @@ const DemandesItem = Type.Object({
   libelleDiplome: Type.Optional(Type.String()),
   libelleEtablissement: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
+  libelleFCIL: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
   createdAt: Type.String(),
   createurId: Type.String(),
@@ -159,6 +163,7 @@ export const intentionsSchemas = {
           value: Type.String(),
           label: Type.String(),
           isSpecialite: Type.Boolean(),
+          isFCIL: Type.Boolean(),
           dateFermeture: Type.String(),
           dispositifs: Type.Optional(
             Type.Array(

@@ -14,18 +14,19 @@ import { IntentionForms } from "../defaultFormValues";
 
 export const CfdBlock = ({
   setDispositifs,
+  setIsFCIL,
   formMetaData,
   active,
 }: {
   setDispositifs: (
     info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
   ) => void;
+  setIsFCIL: (isFcil: boolean) => void;
   formMetaData?: ApiType<typeof api.getDemande>["metadata"];
   active: boolean;
 }) => {
   const {
     formState: { errors },
-    resetField,
     control,
   } = useFormContext<IntentionForms>();
 
@@ -58,9 +59,9 @@ export const CfdBlock = ({
                 }
                 active={active}
                 onChange={(selected) => {
-                  if (!selected) resetField("dispositifId");
                   onChange(selected?.value);
                   setDispositifs(selected?.dispositifs);
+                  setIsFCIL(selected?.isFCIL ?? false);
                 }}
               />
             )}
