@@ -86,6 +86,9 @@ export const findManyInDataFormationQuery = async ({
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(
         "isSpecialite"
       ),
+      sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
+        "isFCIL"
+      ),
       sql<string>`
         case when ${eb.ref("dataFormation.dateFermeture")} is not null
         then to_char(${eb.ref("dataFormation.dateFermeture")}, 'dd/mm/yyyy')

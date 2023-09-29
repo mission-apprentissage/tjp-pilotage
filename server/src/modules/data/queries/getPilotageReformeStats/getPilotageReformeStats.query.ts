@@ -114,12 +114,8 @@ export const getPilotageReformeStats = async ({
       )
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
-        selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-          "insertion"
-        ),
-        selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-          "poursuite"
-        ),
+        selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
+        selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
       ])
       .executeTakeFirstOrThrow();
 

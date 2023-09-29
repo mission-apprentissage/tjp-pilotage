@@ -45,6 +45,26 @@ export const typeDemandesOptions: Record<
       </>
     ),
   },
+  augmentation_nette: {
+    value: "augmentation_nette",
+    label: "Augmentation nette",
+    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
+    exemple: (
+      <>
+        <Text mb="3">Exemple pour une augmentation nette :</Text>
+        <Text mb="3">J’ouvre des places sur un BAC Pro Aéronautique.</Text>
+        <OrderedList>
+          <ListItem mb="2">
+            J’indique le motif ; je peux préciser qu’il s’agit d’une coloration.
+          </ListItem>
+          <ListItem>
+            Je ne peux pas lier une fermeture ou une diminution de capacité sur
+            une autre formation.
+          </ListItem>
+        </OrderedList>
+      </>
+    ),
+  },
   fermeture: {
     value: "fermeture",
     label: "Fermeture",
@@ -68,45 +88,25 @@ export const typeDemandesOptions: Record<
       </>
     ),
   },
-  augmentation_nette: {
-    value: "augmentation_nette",
-    label: "Augmentation nette",
-    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
-    exemple: (
-      <>
-        <Text mb="3">Exemple pour une augmentation nette :</Text>
-        <Text mb="3">J’ouvre des places sur un BAC Pro Aéronautique.</Text>
-        <OrderedList>
-          <ListItem mb="2">
-            J’indique le motif ; je peux préciser qu’il s’agit d’une coloration.
-          </ListItem>
-          <ListItem>
-            Je ne peux pas lier une fermeture ou une diminution de capacité sur
-            une autre formation.
-          </ListItem>
-        </OrderedList>
-      </>
-    ),
-  },
   ouverture_compensation: {
     value: "ouverture_compensation",
     label: "Ouverture avec compensation",
     desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autres(voir exemple ci - contre).",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une ouverture par compensation :</Text>
+        <Text mb="3">Exemple pour une ouverture avec compensation :</Text>
         <Text mb="3">
           J’ouvre des places sur Bac Pro Logistique et je ferme un CAP Agent
           Propreté et Hygiène.
         </Text>
         <OrderedList>
           <ListItem mb="2">
-            Dans la demande d’ouverture par compensation j’indique la formation
+            Dans la demande d’ouverture avec compensation j’indique la formation
             et l’établissement sur laquelle la fermeture va intervenir.
           </ListItem>
           <ListItem>
-            Une fois cette saisie terminée, je saisis la fermeture qui
-            intervient en compensation sur le CAP Agent Propreté et Hygiène.
+            Une fois cette saisie terminée, je saisis la fermeture en lien sur
+            le CAP Agent Propreté et Hygiène.
           </ListItem>
         </OrderedList>
       </>
@@ -114,24 +114,24 @@ export const typeDemandesOptions: Record<
   },
   augmentation_compensation: {
     value: "augmentation_compensation",
-    label: "Augmentation par compensation",
+    label: "Augmentation avec compensation",
     desc: "Utiliser ce formulaire pour tout cas d'augmentation de capacité sur une formation déjà ouverte et en lien avec une fermeture ou diminution de capacité.",
     exemple: (
       <>
-        <Text mb="3">Exemple pour une augmentation par compensation :</Text>
+        <Text mb="3">Exemple pour une augmentation avec compensation :</Text>
         <Text mb="3">
-          J’ouvre des places sur le BTS Hôtellerie Restauration et je ferme des
-          places en CAP Cuisine.
+          J’ouvre des places sur le Bac Pro Cuisine et je ferme des places en
+          CAP Cuisine.
         </Text>
         <OrderedList>
           <ListItem mb="2">
-            Dans la demande d’augmentation par compensation, j’indique la
-            formation et l’établissement sur laquelle je vais baisser la
+            Dans la demande d’augmentation avec compensation, j’indique la
+            formation et l’établissement sur laquelle je vais augmenter la
             capacité.
           </ListItem>
           <ListItem>
-            Une fois cette saisie terminée, je saisis la diminution qui
-            intervient en compensation sur le CAP Cuisine.
+            Une fois cette saisie terminée, je saisis la diminution en lien sur
+            le CAP Cuisine.
           </ListItem>
         </OrderedList>
       </>

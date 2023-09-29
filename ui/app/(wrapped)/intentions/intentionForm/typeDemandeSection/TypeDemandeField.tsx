@@ -11,6 +11,7 @@ import {
   Text,
   useToken,
 } from "@chakra-ui/react";
+import { useSearchParams } from "next/navigation";
 import { ComponentProps, ReactNode } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
@@ -18,6 +19,8 @@ import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/default
 
 import {
   isTypeCompensation,
+  isTypeDiminution,
+  isTypeFermeture,
   typeDemandesOptions,
 } from "../../utils/typeDemandeUtils";
 
@@ -26,12 +29,14 @@ function RadioCard({
   title,
   desc,
   selected,
+  disabled,
   ...props
 }: {
   value: string;
   title: ReactNode;
   desc: ReactNode;
   selected: boolean;
+  disabled: boolean;
 } & ComponentProps<"div">) {
   const bf113 = useToken("colors", "bluefrance.113");
 
@@ -41,14 +46,15 @@ function RadioCard({
       flexDirection="column"
       {...props}
       flex={1}
-      cursor="pointer"
+      cursor={disabled ? "not-allowed" : "pointer"}
       borderWidth="1px"
       aria-checked={selected}
       _checked={{
         bg: "#E2E7F8",
-        boxShadow: `0 0 0 2px ${bf113}`,
+        boxShadow: `0 0 0 1px ${bf113}`,
       }}
       p={4}
+      opacity={disabled ? "0.5" : "1"}
     >
       <Flex mb="3">
         <Img height={"20px"} src={`/icons/${value}.svg`} />
@@ -76,6 +82,9 @@ export const TypeDemandeField = chakra(
       control,
       setValue,
     } = useFormContext<IntentionForms>();
+
+    const queryParams = useSearchParams();
+    const compensation = queryParams.get("compensation");
 
     const resetFields = (typeDemande: string) => {
       setValue("motif", []);
@@ -121,7 +130,18 @@ export const TypeDemandeField = chakra(
                   value={item.value}
                   title={item.label}
                   desc={item.desc}
+                  disabled={
+                    compensation != null &&
+                    !isTypeFermeture(item.value) &&
+                    !isTypeDiminution(item.value)
+                  }
                   onClick={() => {
+                    if (
+                      compensation != null &&
+                      !isTypeFermeture(item.value) &&
+                      !isTypeDiminution(item.value)
+                    )
+                      return;
                     resetFields(item.value);
                     return onChange(item.value);
                   }}

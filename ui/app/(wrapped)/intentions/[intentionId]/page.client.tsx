@@ -1,9 +1,9 @@
 "use client";
 
-import { Center, Spinner } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 
 import { api } from "../../../../api.client";
+import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 
 export default ({
@@ -19,12 +19,7 @@ export default ({
     cacheTime: 0,
   });
 
-  if (isLoading)
-    return (
-      <Center mt="6">
-        <Spinner />
-      </Center>
-    );
+  if (isLoading) return <IntentionSpinner />;
   return (
     <>
       {data && (
