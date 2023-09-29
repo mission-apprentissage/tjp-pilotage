@@ -34,11 +34,11 @@ export const findDemande = async ({
             .selectFrom("dataFormation")
             .select((ebDataFormation) => [
               "libelle",
-              ebDataFormation("dataFormation.codeNiveauDiplome", "in", [
+              sql<boolean>`${ebDataFormation("dataFormation.codeNiveauDiplome", "in", [
                 "381",
                 "481",
                 "581",
-              ]).as("isFCIL"),
+              ])}`.as("isFCIL"),
             ])
             .select((eb) =>
               jsonArrayFrom(

@@ -86,7 +86,7 @@ export const findManyInDataFormationQuery = async ({
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(
         "isSpecialite"
       ),
-      eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"]).as(
+      sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", ["381", "481", "581"])}`.as(
         "isFCIL"
       ),
       sql<string>`
