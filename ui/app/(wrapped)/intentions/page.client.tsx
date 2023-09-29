@@ -124,7 +124,7 @@ export const PageClient = () => {
             <>
               <TableContainer overflowY="auto" flex={1}>
                 <Table
-                  sx={{ td: { py: "2", px: 4 } }}
+                  sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
                   size="md"
                   variant="striped"
                   fontSize="14px"
