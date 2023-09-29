@@ -110,7 +110,6 @@ export const PageClient = () => {
       <Container maxW="container.xl" py="4">
         <Breadcrumb
           ml={4}
-          mb={4}
           pages={[
             { title: "Accueil", to: "/" },
             { title: "Recueil des demandes", to: "/intentions", active: true },
@@ -119,6 +118,7 @@ export const PageClient = () => {
       </Container>
       <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0}>
         <MenuIntention isRecapView />
+        <Box borderLeft="solid 1px" borderColor="gray.100" height="100%" />
         <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
           {data?.demandes.length ? (
             <>
