@@ -77,7 +77,7 @@ export const MenuIntention = ({
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
           >
-            Demande validées
+            Demandes validées
           </Text>
         </Button>
         <Button
