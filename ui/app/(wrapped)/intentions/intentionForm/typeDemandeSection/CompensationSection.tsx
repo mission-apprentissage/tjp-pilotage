@@ -9,6 +9,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { ApiType } from "shared";
+import { isTypeCompensation } from "shared/demandeValidators/validators";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
@@ -25,9 +26,23 @@ export const CompensationSection = ({
     formState: { errors },
     control,
     handleSubmit,
-    setValue,
     getValues,
+    setValue,
+    watch,
   } = useFormContext<IntentionForms>();
+
+  useEffect(
+    () =>
+      watch(({ typeDemande }, { name }) => {
+        if (name !== "typeDemande") return;
+        if (!typeDemande || isTypeCompensation(typeDemande)) return;
+
+        setValue("compensationCfd", undefined);
+        setValue("compensationDispositifId", undefined);
+        setValue("compensationUai", undefined);
+        setValue("compensationRentreeScolaire", undefined);
+      }).unsubscribe
+  );
 
   const { data, isLoading } = useQuery({
     queryKey: [getValues("uai")],
@@ -72,6 +87,7 @@ export const CompensationSection = ({
           <Controller
             name="compensationCfd"
             control={control}
+            shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
@@ -111,6 +127,7 @@ export const CompensationSection = ({
         <Controller
           name="compensationDispositifId"
           control={control}
+          shouldUnregister
           rules={{ required: "Ce champ est obligatoire" }}
           render={({ field: { onChange, value, name } }) => (
             <Select
@@ -152,6 +169,7 @@ export const CompensationSection = ({
           <Controller
             name="compensationUai"
             control={control}
+            shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) =>
               !isLoading ? (

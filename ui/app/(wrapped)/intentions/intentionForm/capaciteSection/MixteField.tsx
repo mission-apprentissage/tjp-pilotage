@@ -29,14 +29,18 @@ export const MixteField = chakra(({ className }: { className?: string }) => {
           validate: (value) =>
             typeof value === "boolean" || "Le champ est obligatoire",
         }}
-        render={({ field: { onChange, value } }) => (
+        render={({ field: { onChange, value, ref } }) => (
           <RadioGroup
             as={Stack}
             onChange={(v) => onChange(toBoolean(v))}
             value={JSON.stringify(value)}
           >
-            <Radio value="true">Oui</Radio>
-            <Radio value="false">Non</Radio>
+            <Radio ref={ref} value="true">
+              Oui
+            </Radio>
+            <Radio ref={ref} value="false">
+              Non
+            </Radio>
           </RadioGroup>
         )}
       />

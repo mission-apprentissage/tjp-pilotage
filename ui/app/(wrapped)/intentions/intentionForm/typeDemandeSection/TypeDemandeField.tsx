@@ -18,7 +18,6 @@ import { Controller, useFormContext } from "react-hook-form";
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 import {
-  isTypeCompensation,
   isTypeDiminution,
   isTypeFermeture,
   typeDemandesOptions,
@@ -80,26 +79,9 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
-      setValue,
     } = useFormContext<IntentionForms>();
-
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
-
-    const resetFields = (typeDemande: string) => {
-      setValue("motif", []);
-      setValue("capaciteScolaireActuelle", undefined);
-      setValue("capaciteApprentissageActuelle", undefined);
-      setValue("capaciteScolaire", undefined);
-      setValue("capaciteApprentissage", undefined);
-      setValue("capaciteScolaireColoree", undefined);
-      setValue("capaciteApprentissageColoree", undefined);
-      if (!isTypeCompensation(typeDemande)) {
-        setValue("compensationCfd", undefined);
-        setValue("compensationDispositifId", undefined);
-        setValue("compensationUai", undefined);
-      }
-    };
 
     return (
       <FormControl
@@ -135,16 +117,7 @@ export const TypeDemandeField = chakra(
                     !isTypeFermeture(item.value) &&
                     !isTypeDiminution(item.value)
                   }
-                  onClick={() => {
-                    if (
-                      compensation != null &&
-                      !isTypeFermeture(item.value) &&
-                      !isTypeDiminution(item.value)
-                    )
-                      return;
-                    resetFields(item.value);
-                    return onChange(item.value);
-                  }}
+                  onClick={() => onChange(item.value)}
                 />
               ))}
             </RadioGroup>

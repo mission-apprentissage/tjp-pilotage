@@ -29,6 +29,8 @@ export const cleanNull = <T extends object | undefined | null>(
     return value.map(cleanNull) as NoNull<T>;
   }
 
+  if (!Object.keys(value).length) return value as NoNull<T>;
+
   return Object.fromEntries(
     Object.entries(value).map(([key, val]) => [key, cleanNull(val)])
   ) as NoNull<T>;

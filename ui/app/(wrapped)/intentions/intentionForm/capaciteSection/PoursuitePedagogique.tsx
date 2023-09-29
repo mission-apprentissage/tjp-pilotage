@@ -10,6 +10,7 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { toBoolean } from "../../utils/toBoolean";
 
@@ -18,7 +19,12 @@ export const PoursuitePedagogiqueField = chakra(
     const {
       formState: { errors },
       control,
+      watch,
     } = useFormContext<IntentionForms>();
+
+    const typeDemande = watch("typeDemande");
+    const fermeture = isTypeFermeture(typeDemande);
+    if (fermeture) return <></>;
 
     return (
       <FormControl
@@ -29,19 +35,25 @@ export const PoursuitePedagogiqueField = chakra(
         <FormLabel>Poursuite pédagogique pour ce diplôme</FormLabel>
         <Controller
           name="poursuitePedagogique"
+          shouldUnregister
           control={control}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({ field: { onChange, value } }) => (
+          render={({ field: { onChange, value, ref, onBlur } }) => (
             <RadioGroup
               as={Stack}
+              onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
             >
-              <Radio value="true">Oui</Radio>
-              <Radio value="false">Non</Radio>
+              <Radio ref={ref} value="true">
+                Oui
+              </Radio>
+              <Radio ref={ref} value="false">
+                Non
+              </Radio>
             </RadioGroup>
           )}
         />

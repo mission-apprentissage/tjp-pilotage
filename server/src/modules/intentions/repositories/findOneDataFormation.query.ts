@@ -1,5 +1,5 @@
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { kdb } from "../../../db/db";
+import { cleanNull } from "../../../utils/noNull";
 
 export const findOneDataFormation = async ({ cfd }: { cfd: string }) => {
   const formation = await kdb
