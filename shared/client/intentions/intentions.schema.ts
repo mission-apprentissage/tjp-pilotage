@@ -72,6 +72,7 @@ const DemandesItem = Type.Object({
   libelleFCIL: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
   createdAt: Type.String(),
+  updatedAt: Type.String(),
   createurId: Type.String(),
   status: Type.String(),
   typeDemande: Type.Optional(Type.String()),
