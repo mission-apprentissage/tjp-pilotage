@@ -1,3 +1,4 @@
+export { demandeValidators } from "./demandeValidators/validators";
 export * from "./security/securityUtils";
 export * from "./security/permissions";
 
