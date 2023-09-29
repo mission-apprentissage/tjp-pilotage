@@ -31,7 +31,7 @@ export const MenuIntention = ({
     keepPreviousData: true,
     staleTime: 10000000,
     queryKey: ["countDemandes"],
-    queryFn: () => fetchCountDemandes(),
+    queryFn: fetchCountDemandes,
   });
 
   return (
@@ -65,21 +65,6 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions?filters[status][0]=draft"
-          width={"100%"}
-          iconSpacing={"auto"}
-          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
-        >
-          <Text
-            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
-          >
-            Projets de demandes
-          </Text>
-        </Button>
-        <Button
-          bgColor={"unset"}
-          as={NextLink}
-          size="sm"
           href="/intentions?filters[status][0]=submitted"
           width={"100%"}
           iconSpacing={"auto"}
@@ -91,6 +76,21 @@ export const MenuIntention = ({
             fontWeight={
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
+          >
+            Demande validées
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href="/intentions?filters[status][0]=draft"
+          width={"100%"}
+          iconSpacing={"auto"}
+          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
+        >
+          <Text
+            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
           >
             Projets de demandes
           </Text>

@@ -104,6 +104,11 @@ export const PageClient = () => {
 
   if (isLoading) return <IntentionSpinner />;
 
+  console.log(
+    data?.demandes?.[1].compensationCfd,
+    data?.demandes?.[1].compensationCfd != null
+  );
+
   return (
     <Container maxWidth="100%" my={12}>
       <Flex>
@@ -170,10 +175,10 @@ export const PageClient = () => {
                             : null}
                         </Td>
                         <Td>
-                          {demande.compensationCfd != null &&
-                          demande.compensationDispositifId != null &&
-                          demande.compensationUai != null ? (
-                            demande.idCompensation != undefined ? (
+                          {demande.compensationCfd &&
+                          demande.compensationDispositifId &&
+                          demande.compensationUai ? (
+                            demande.idCompensation ? (
                               <Button
                                 _hover={{ bg: "gray.200" }}
                                 variant="ghost"
@@ -223,7 +228,9 @@ export const PageClient = () => {
                                 <br /> identifiée
                               </Button>
                             )
-                          ) : null}
+                          ) : (
+                            <></>
+                          )}
                         </Td>
                         <Td align="center" w={0}>
                           {demande.status === "draft" ? (
@@ -232,7 +239,7 @@ export const PageClient = () => {
                             </Tag>
                           ) : (
                             <Tag size="sm" colorScheme={"green"}>
-                              Validée
+                              Demande validée
                             </Tag>
                           )}
                         </Td>
