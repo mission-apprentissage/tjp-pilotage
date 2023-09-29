@@ -25,7 +25,7 @@ export const InformationsBlock = ({
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <CapaciteSection />
-        <Flex justify="flex-end" mt="1200" mb="4">
+        <Flex justify="flex-end" mt="12" mb="4">
           <Button
             isDisabled={!canEdit}
             isLoading={isDraftSubmitting}
