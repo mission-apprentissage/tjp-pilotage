@@ -5,7 +5,7 @@ import { intentionsSchemas } from "../client/intentions/intentions.schema";
 type Demande = Static<typeof intentionsSchemas.submitDemande.body>["demande"];
 
 export const isTypeFermeture = (typeDemande: string) =>
-  typeDemande === "fermeture";
+  ["fermeture"].includes(typeDemande);
 
 export const isTypeOuverture = (typeDemande: string) =>
   ["ouverture_compensation", "ouverture_nette"].includes(typeDemande);
