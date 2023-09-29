@@ -42,12 +42,7 @@ export const IntentionForm = ({
     mutationFn: ({ forms }: { forms: IntentionForms }) =>
       api
         .submitDemande({
-          body: {
-            demande: {
-              id: formId,
-              ...forms,
-            },
-          },
+          body: { demande: { id: formId, ...forms } },
         })
         .call(),
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
@@ -61,13 +56,7 @@ export const IntentionForm = ({
       mutationFn: ({ forms }: { forms: IntentionForms }) =>
         api
           .submitDraftDemande({
-            body: {
-              demande: {
-                id: formId,
-                ...forms,
-                uai: forms.uai,
-              },
-            },
+            body: { demande: { id: formId, ...forms } },
           })
           .call(),
       onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
@@ -80,26 +69,17 @@ export const IntentionForm = ({
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isCFDUaiSectionValid = (
-    cfd?: string,
-    dispositifId?: string,
-    libelleFCIL?: string,
-    uai?: string
-  ): boolean => {
+  const isCFDUaiSectionValid = ({
+    cfd,
+    dispositifId,
+    libelleFCIL,
+    uai,
+  }: Partial<IntentionForms>): boolean => {
     if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
     return !!(cfd && dispositifId && uai);
   };
 
-  const [step, setStep] = useState(
-    isCFDUaiSectionValid(
-      defaultValues.cfd,
-      defaultValues.dispositifId,
-      defaultValues.libelleFCIL,
-      defaultValues.uai
-    )
-      ? 2
-      : 1
-  );
+  const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);
   const step2Ref = useRef<HTMLDivElement>(null);
 
   const onEditUaiCfdSection = () => setStep(1);
@@ -111,23 +91,13 @@ export const IntentionForm = ({
     push("/intentions");
   };
 
-  const onDraftSubmit = async () => {
-    handleSubmit(async () => {
-      await submitDraft({ forms: getValues() });
-      push("/intentions");
-    })();
-  };
+  const onDraftSubmit = handleSubmit(async () => {
+    await submitDraft({ forms: getValues() });
+    push("/intentions");
+  });
 
   useEffect(() => {
-    const values = getValues();
-    if (
-      isCFDUaiSectionValid(
-        values?.cfd,
-        values.dispositifId,
-        values?.libelleFCIL,
-        values?.uai
-      )
-    ) {
+    if (isCFDUaiSectionValid(getValues())) {
       submitCFDUAISection();
     }
   }, []);
