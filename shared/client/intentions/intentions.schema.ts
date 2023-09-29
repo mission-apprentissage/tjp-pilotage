@@ -1,10 +1,6 @@
 import { Type } from "@sinclair/typebox";
 
-import { Partial } from "../utils";
-
-const DemandeSchema = Type.Object({
-  id: Type.String(),
-  createdAt: Type.String(),
+const DemandeData = Type.Object({
   uai: Type.String(),
   cfd: Type.String(),
   dispositifId: Type.String(),
@@ -20,39 +16,8 @@ const DemandeSchema = Type.Object({
   libelleColoration: Type.Optional(Type.String()),
   coloration: Type.Boolean(),
   amiCma: Type.Boolean(),
-  poursuitePedagogique: Type.Boolean(),
-  commentaire: Type.Optional(Type.String()),
-  status: Type.String(),
-  mixte: Type.Boolean(),
-  capaciteScolaireActuelle: Type.Optional(Type.Number()),
-  capaciteScolaire: Type.Optional(Type.Number()),
-  capaciteScolaireColoree: Type.Optional(Type.Number()),
-  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
-  capaciteApprentissage: Type.Optional(Type.Number()),
-  capaciteApprentissageColoree: Type.Optional(Type.Number()),
-});
-
-const DraftSchema = Type.Object({
-  id: Type.String(),
-  createdAt: Type.String(),
-  uai: Type.String(),
-  cfd: Type.Optional(Type.String()),
-  dispositifId: Type.Optional(Type.String()),
-  libelleFCIL: Type.Optional(Type.String()),
-  rentreeScolaire: Type.Optional(Type.Number()),
-  typeDemande: Type.Optional(Type.String()),
-  compensationCfd: Type.Optional(Type.String()),
-  compensationDispositifId: Type.Optional(Type.String()),
-  compensationUai: Type.Optional(Type.String()),
-  compensationRentreeScolaire: Type.Optional(Type.Number()),
-  motif: Type.Optional(Type.Array(Type.String())),
-  autreMotif: Type.Optional(Type.String()),
-  libelleColoration: Type.Optional(Type.String()),
-  coloration: Type.Optional(Type.Boolean()),
-  amiCma: Type.Optional(Type.Boolean()),
   poursuitePedagogique: Type.Optional(Type.Boolean()),
   commentaire: Type.Optional(Type.String()),
-  status: Type.String(),
   mixte: Type.Optional(Type.Boolean()),
   capaciteScolaireActuelle: Type.Optional(Type.Number()),
   capaciteScolaire: Type.Optional(Type.Number()),
@@ -62,12 +27,12 @@ const DraftSchema = Type.Object({
   capaciteApprentissageColoree: Type.Optional(Type.Number()),
 });
 
-const SubmitSchemaPost = Type.Omit(Partial(DemandeSchema, ["id"]), [
-  "status",
-  "createdAt",
-]);
-
-const DraftSchemaPost = Partial(DraftSchema, ["id", "status", "createdAt"]);
+const DemandeSchema = Type.Object({
+  id: Type.String(),
+  createdAt: Type.String(),
+  status: Type.String(),
+  ...DemandeData.properties,
+});
 
 const EtablissementMetadataSchema = Type.Optional(
   Type.Object({
@@ -179,15 +144,21 @@ export const intentionsSchemas = {
   },
   submitDemande: {
     body: Type.Object({
-      demande: SubmitSchemaPost,
+      demande: Type.Object({
+        id: Type.Optional(Type.String()),
+        ...DemandeData.properties,
+      }),
     }),
     response: {
-      200: Type.Undefined(),
+      200: Type.Object({ id: Type.String() }),
     },
   },
   submitDraftDemande: {
     body: Type.Object({
-      demande: DraftSchemaPost,
+      demande: Type.Object({
+        id: Type.Optional(Type.String()),
+        ...DemandeData.properties,
+      }),
     }),
     response: {
       200: Type.Object({ id: Type.String() }),
@@ -196,18 +167,11 @@ export const intentionsSchemas = {
   getDemande: {
     params: Type.Object({ id: Type.String() }),
     response: {
-      200: Type.Union([
-        Type.Intersect([
-          DemandeSchema,
-          Type.Object({ metadata: MetadataSchema }),
-          Type.Object({ canEdit: Type.Boolean() }),
-        ]),
-        Type.Intersect([
-          DraftSchema,
-          Type.Object({ metadata: MetadataSchema }),
-          Type.Object({ canEdit: Type.Boolean() }),
-        ]),
-      ]),
+      200: Type.Object({
+        ...Type.Partial(DemandeSchema).properties,
+        ...Type.Object({ metadata: MetadataSchema }).properties,
+        ...Type.Object({ canEdit: Type.Boolean() }).properties,
+      }),
     },
   },
   getDemandes: {

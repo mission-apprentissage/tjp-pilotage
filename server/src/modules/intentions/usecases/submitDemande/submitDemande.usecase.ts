@@ -1,14 +1,15 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { getPermissionScope, guardScope } from "shared";
+import { demandeValidators, getPermissionScope, guardScope } from "shared";
 
 import { logger } from "../../../../logger";
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
+import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
+import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { findOneDataFormation } from "./findOneDataFormation.dep";
-import { findOneDemande } from "./findOneDemande.dep";
 
 type Demande = {
   id?: string;
@@ -26,10 +27,11 @@ type Demande = {
   rentreeScolaire: number;
   amiCma: boolean;
   libelleColoration?: string;
-  poursuitePedagogique: boolean;
+  poursuitePedagogique?: boolean;
   commentaire?: string;
   coloration: boolean;
-  mixte: boolean;
+  mixte?: boolean;
+  capaciteScolaire?: number;
   capaciteScolaireActuelle?: number;
   capaciteScolaireColoree?: number;
   capaciteApprentissage?: number;
@@ -37,42 +39,15 @@ type Demande = {
   capaciteApprentissageColoree?: number;
 };
 
-const validations = [
-  (demande: Demande) => {
-    if (!demande.motif.length) {
-      throw Boom.badRequest("motifs manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.motif.includes("autre_motif") && !demande.autreMotif) {
-      throw Boom.badRequest("autreMotif manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.coloration && !demande.libelleColoration) {
-      throw Boom.badRequest("libelleColoration manquant");
-    }
-  },
-  (demande: Demande) => {
-    if (
-      demande.coloration &&
-      !demande.capaciteApprentissageColoree &&
-      !demande.capaciteScolaireColoree
-    ) {
-      throw Boom.badRequest("Capacité colorée manquante");
-    }
-  },
-  (demande: Demande) => {
-    if (!demande.mixte && demande.capaciteApprentissage) {
-      throw Boom.badRequest("Capacité apprentissage invalide");
-    }
-  },
-  (demande: Demande) => {
-    if (demande.mixte && !demande.capaciteApprentissage) {
-      throw Boom.badRequest("Capacité apprentissage manquante");
-    }
-  },
-];
+const validateDemande = (demande: Demande) => {
+  let errors: Record<string, string> = {};
+  for (const [key, validator] of Object.entries(demandeValidators)) {
+    const error = validator(demande);
+    if (!error) continue;
+    errors = { ...errors, [key]: error };
+  }
+  return Object.keys(errors).length ? errors : undefined;
+};
 
 export const [submitDemande, submitDemandeFactory] = inject(
   {
@@ -109,33 +84,41 @@ export const [submitDemande, submitDemandeFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      validations.forEach((validate) => validate(demande));
-
-      const dataFormation = await deps.findOneDataFormation({ cfd });
-      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
-
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
         demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
-      const created = await deps.createDemandeQuery({
+      const dataFormation = await deps.findOneDataFormation({ cfd });
+      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+
+      const toSave = {
         ...currentDemande,
         libelleColoration: null,
+        poursuitePedagogique: null,
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
-        capaciteScolaireActuelle: null,
-        capaciteScolaireColoree: null,
-        capaciteApprentissage: null,
-        capaciteApprentissageActuelle: null,
-        capaciteApprentissageColoree: null,
         compensationCfd: null,
         compensationDispositifId: null,
         compensationUai: null,
+        capaciteScolaire: 0,
+        capaciteScolaireActuelle: 0,
+        capaciteScolaireColoree: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageActuelle: 0,
+        capaciteApprentissageColoree: 0,
+        mixte: false,
         ...demande,
         compensationRentreeScolaire,
+      };
+
+      const errors = validateDemande(cleanNull(toSave));
+      if (errors) throw Boom.badData("Donnée incorrectes", { errors });
+
+      const created = await deps.createDemandeQuery({
+        ...toSave,
         id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "submitted",
@@ -145,5 +128,6 @@ export const [submitDemande, submitDemandeFactory] = inject(
       });
 
       logger.info("Demande envoyée", { demande: created });
+      return created;
     }
 );

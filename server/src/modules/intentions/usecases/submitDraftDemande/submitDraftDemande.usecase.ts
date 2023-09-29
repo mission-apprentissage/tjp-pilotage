@@ -1,55 +1,74 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { getPermissionScope, guardScope } from "shared";
+import { demandeValidators, getPermissionScope, guardScope } from "shared";
 
 import { logger } from "../../../../logger";
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.dep";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
+import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
+import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
-import { findOneDemande } from "./findOneDemande.dep";
+
+type Demande = {
+  id?: string;
+  uai: string;
+  typeDemande: string;
+  cfd: string;
+  dispositifId: string;
+  libelleFCIL?: string;
+  compensationCfd?: string;
+  compensationDispositifId?: string;
+  compensationUai?: string;
+  compensationRentreeScolaire?: number;
+  motif: string[];
+  autreMotif?: string;
+  rentreeScolaire: number;
+  amiCma: boolean;
+  libelleColoration?: string;
+  poursuitePedagogique?: boolean;
+  commentaire?: string;
+  coloration: boolean;
+  mixte?: boolean;
+  capaciteScolaire?: number;
+  capaciteScolaireActuelle?: number;
+  capaciteScolaireColoree?: number;
+  capaciteApprentissage?: number;
+  capaciteApprentissageActuelle?: number;
+  capaciteApprentissageColoree?: number;
+};
+
+const validateDemande = (demande: Demande) => {
+  let errors: Record<string, string> = {};
+  for (const [key, validator] of Object.entries(demandeValidators)) {
+    const error = validator(demande);
+    if (!error) continue;
+    errors = { ...errors, [key]: error };
+  }
+  return Object.keys(errors).length ? errors : undefined;
+};
 
 export const [submitDraftDemande] = inject(
-  { createDemandeQuery, findOneDemande, findOneDataEtablissement },
+  {
+    createDemandeQuery,
+    findOneDemande,
+    findOneDataEtablissement,
+    findOneDataFormation,
+  },
   (deps) =>
     async ({
       demande,
       user,
     }: {
       user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-      demande: {
-        id?: string;
-        uai: string;
-        typeDemande?: string;
-        cfd?: string;
-        dispositifId?: string;
-        libelleFCIL?: string;
-        motif?: string[];
-        compensationCfd?: string;
-        compensationDispositifId?: string;
-        compensationUai?: string;
-        compensationRentreeScolaire?: number;
-        autreMotif?: string;
-        rentreeScolaire?: number;
-        amiCma?: boolean;
-        libelleColoration?: string;
-        poursuitePedagogique?: boolean;
-        commentaire?: string;
-        coloration?: boolean;
-        mixte?: boolean;
-        capaciteScolaire?: number;
-        capaciteScolaireActuelle?: number;
-        capaciteScolaireColoree?: number;
-        capaciteApprentissage?: number;
-        capaciteApprentissageActuelle?: number;
-        capaciteApprentissageColoree?: number;
-      };
+      demande: Demande;
     }) => {
       const currentDemande = demande.id
         ? await deps.findOneDemande(demande.id)
         : undefined;
 
-      const { uai } = demande;
+      const { cfd, uai } = demande;
 
       const dataEtablissement = await deps.findOneDataEtablissement({ uai });
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
@@ -71,32 +90,35 @@ export const [submitDraftDemande] = inject(
           ? demande.rentreeScolaire
           : undefined;
 
-      const created = await deps.createDemandeQuery({
+      const dataFormation = await deps.findOneDataFormation({ cfd });
+      if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
+
+      const toSave = {
         ...currentDemande,
         libelleColoration: null,
         libelleFCIL: null,
-        autreMotif: null,
-        amiCma: null,
-        cfd: null,
-        commentaire: null,
-        dispositifId: null,
-        motif: null,
         poursuitePedagogique: null,
-        rentreeScolaire: null,
-        typeDemande: null,
-        coloration: null,
-        mixte: null,
-        capaciteScolaire: null,
-        capaciteScolaireActuelle: null,
-        capaciteScolaireColoree: null,
-        capaciteApprentissage: null,
-        capaciteApprentissageActuelle: null,
-        capaciteApprentissageColoree: null,
+        autreMotif: null,
+        commentaire: null,
         compensationCfd: null,
         compensationDispositifId: null,
         compensationUai: null,
+        capaciteScolaire: 0,
+        capaciteScolaireActuelle: 0,
+        capaciteScolaireColoree: 0,
+        capaciteApprentissage: 0,
+        capaciteApprentissageActuelle: 0,
+        capaciteApprentissageColoree: 0,
+        mixte: false,
         ...demande,
         compensationRentreeScolaire,
+      };
+
+      const errors = validateDemande(cleanNull(toSave));
+      if (errors) throw Boom.badData("Donnée incorrectes", { errors });
+
+      const created = await deps.createDemandeQuery({
+        ...toSave,
         id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "draft",
@@ -106,7 +128,6 @@ export const [submitDraftDemande] = inject(
       });
 
       logger.info("Intention sauvegardée", { intention: created });
-
       return created;
     }
 );

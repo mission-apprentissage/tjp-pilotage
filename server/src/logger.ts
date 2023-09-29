@@ -78,12 +78,16 @@ const winstonLogger = winston.createLogger({
     ...(config.slack.token
       ? [
           new Transport({
-            log: (info: {
-              level: string;
-              message: string;
-              userId?: string;
-            }) => {
+            log: (
+              info: {
+                level: string;
+                message: string;
+                userId?: string;
+              },
+              callback
+            ) => {
               sendLogToSlack(info);
+              callback();
             },
           }),
         ]
