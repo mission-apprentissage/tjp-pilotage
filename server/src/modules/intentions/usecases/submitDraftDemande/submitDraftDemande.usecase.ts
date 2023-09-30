@@ -93,7 +93,7 @@ export const [submitDraftDemande] = inject(
       const dataFormation = await deps.findOneDataFormation({ cfd });
       if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
 
-      const toSave = {
+      const demandeData = {
         ...currentDemande,
         libelleColoration: null,
         libelleFCIL: null,
@@ -114,11 +114,12 @@ export const [submitDraftDemande] = inject(
         compensationRentreeScolaire,
       };
 
-      const errors = validateDemande(cleanNull(toSave));
-      if (errors) throw Boom.badData("Donnée incorrectes", { errors });
+      const errors = validateDemande(cleanNull(demandeData));
+      if (errors)
+        throw Boom.badData("Donnée incorrectes", { errors, demandeData });
 
       const created = await deps.createDemandeQuery({
-        ...toSave,
+        ...demandeData,
         id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
         status: "draft",

@@ -19,6 +19,9 @@ export const isTypeDiminution = (typeDemande: string) =>
 export const isTypeCompensation = (typeDemande: string) =>
   ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
 
+const isTransfertApprentissage = (motif: string[]) =>
+  motif.includes("transfert_apprentissage");
+
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
   if (value === undefined) return false;
@@ -38,6 +41,11 @@ export const demandeValidators: Record<
   autreMotif: (demande) => {
     if (demande.motif?.includes("autre_motif") && !demande.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
+    }
+  },
+  mixte: (demande) => {
+    if (isTransfertApprentissage(demande.motif) && !demande.mixte) {
+      return "Dans le cas d'un transfert vers l'apprentissage, la demande doit être mixte";
     }
   },
   poursuitePedagogique: (demande) => {
@@ -122,6 +130,13 @@ export const demandeValidators: Record<
       return "Le champ capacité en apprentissage actuelle doit être à 0";
     }
     if (
+      (isTypeDiminution(demande.typeDemande) ||
+        isTypeFermeture(demande.typeDemande)) &&
+      isTransfertApprentissage(demande.motif)
+    )
+      return;
+
+    if (
       isTypeOuverture(demande.typeDemande) &&
       demande.capaciteApprentissageActuelle !== 0
     ) {
@@ -149,7 +164,19 @@ export const demandeValidators: Record<
     ) {
       return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une ouverture";
     }
-
+    if (
+      (isTypeDiminution(demande.typeDemande) ||
+        isTypeFermeture(demande.typeDemande)) &&
+      isTransfertApprentissage(demande.motif)
+    ) {
+      if (
+        isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+        demande.capaciteApprentissage <= demande.capaciteApprentissageActuelle
+      ) {
+        return "La capacité en apprentissage doit être supérieure à la capacité actuelle en apprentissage dans le cas d'un transfert vers l'apprentissage";
+      }
+      return;
+    }
     if (
       isTypeFermeture(demande.typeDemande) &&
       demande.capaciteApprentissage !== 0
@@ -239,11 +266,12 @@ export const demandeValidators: Record<
   },
   sommeCapaciteColoree: (demande) => {
     if (
-      demande.typeDemande === "fermeture" ||
+      isTypeFermeture(demande.typeDemande) ||
       !demande.coloration ||
       !demande.mixte
     )
       return;
+
     if (
       !demande.capaciteApprentissageColoree &&
       !demande.capaciteScolaireColoree
