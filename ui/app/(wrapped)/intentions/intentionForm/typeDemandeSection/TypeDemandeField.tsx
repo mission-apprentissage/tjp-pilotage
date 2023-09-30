@@ -44,6 +44,7 @@ function RadioCard({
       display="flex"
       flexDirection="column"
       {...props}
+      onClick={!disabled ? props.onClick : undefined}
       flex={1}
       cursor={disabled ? "not-allowed" : "pointer"}
       borderWidth="1px"

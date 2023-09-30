@@ -1,10 +1,8 @@
-import { kdb } from "../../../../db/db";
+import { Insertable } from "kysely";
 
-export const insertUserQuery = async (user: {
-  email: string;
-  firstname?: string;
-  lastname?: string;
-  role: string;
-}) => {
+import { kdb } from "../../../../db/db";
+import { DB } from "../../../../db/schema";
+
+export const insertUserQuery = async (user: Insertable<DB["user"]>) => {
   await kdb.insertInto("user").values(user).execute();
 };
