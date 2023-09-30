@@ -11,7 +11,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     "/etab/search/:search",
     {
       schema: ROUTES_CONFIG.searchEtab,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
       const { search } = request.params;
@@ -24,7 +24,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     "/etab/:uai",
     {
       schema: ROUTES_CONFIG.getEtab,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
       const { uai } = request.params;
@@ -37,7 +37,7 @@ export const validationRoutes = ({ server }: { server: Server }) => {
     "/diplome/search/:search",
     {
       schema: ROUTES_CONFIG.searchDiplome,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/lecture"),
     },
     async (request, response) => {
       const { search } = request.params;
