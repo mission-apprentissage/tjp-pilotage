@@ -52,7 +52,8 @@
     "uglify-js": "^3.17.4",
     "uuid": "^9.0.1",
     "winston": "^3.10.0",
-    "winston-transport": "^4.5.0"
+    "winston-transport": "^4.5.0",
+    "zod": "^3.22.2"
   },
   "engines": {
     "node": ">=18.0.0"
