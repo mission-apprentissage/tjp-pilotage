@@ -35,7 +35,7 @@ export const MenuIntention = ({
   });
 
   return (
-    <Box pr={6} minW={250}>
+    <Box pr={4} minW={250}>
       <Button
         variant="createButton"
         size={"md"}
@@ -77,7 +77,7 @@ export const MenuIntention = ({
               isRecapView && status === "submitted" ? "bold" : "normal"
             }
           >
-            Demande validées
+            Demandes validées
           </Text>
         </Button>
         <Button

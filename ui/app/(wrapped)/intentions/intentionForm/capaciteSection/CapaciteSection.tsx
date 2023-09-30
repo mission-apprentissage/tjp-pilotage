@@ -113,7 +113,7 @@ export const CapaciteSection = () => {
         <AmiCmaField />
       </Flex>
       <LibelleColorationField maxW="752px" mb="4" />
-      <Heading fontSize="lg" mb="6" mt="16" color="bluefrance.113">
+      <Heading fontSize="lg" mb="6" mt="10" color="bluefrance.113">
         Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>
       <Flex mb="4" gap={4}>
@@ -121,16 +121,14 @@ export const CapaciteSection = () => {
         <CapaciteScolaireField maxW={240} flex={1} />
         <CapaciteScolaireColoreeField maxW={240} flex={1} />
       </Flex>
-      <Flex mb="8">
-        <ConstanteSection
-          typeDemande={typeDemande}
-          capaciteActuelle={capaciteScolaireActuelle}
-          capacite={capaciteScolaire}
-        />
-      </Flex>
+      <ConstanteSection
+        typeDemande={typeDemande}
+        capaciteActuelle={capaciteScolaireActuelle}
+        capacite={capaciteScolaire}
+      />
       {mixte && (
         <>
-          <Heading mt="8" fontSize="lg" mb="6" color="bluefrance.113">
+          <Heading mt="10" fontSize="lg" mb="6" color="bluefrance.113">
             Capacité en apprentissage
           </Heading>
           <Flex gap={4} mb="4">
@@ -145,9 +143,7 @@ export const CapaciteSection = () => {
           />
         </>
       )}
-      <Flex align={"flex-start"} mt={16}>
-        <CommentaireField maxW={752} />
-      </Flex>
+      <CommentaireField mt={12} maxW={752} />
     </>
   );
 };

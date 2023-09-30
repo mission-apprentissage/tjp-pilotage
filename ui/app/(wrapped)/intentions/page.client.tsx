@@ -25,6 +25,7 @@ import qs from "qs";
 import { ApiType } from "shared";
 
 import { api } from "../../../api.client";
+import { Breadcrumb } from "../../../components/Breadcrumb";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
@@ -105,155 +106,180 @@ export const PageClient = () => {
   if (isLoading) return <IntentionSpinner />;
 
   return (
-    <Container maxWidth="100%" my={12}>
-      <Flex>
+    <>
+      <Container maxW="container.xl" py="4">
+        <Breadcrumb
+          ml={4}
+          pages={[
+            { title: "Accueil", to: "/" },
+            { title: "Recueil des demandes", to: "/intentions", active: true },
+          ]}
+        />
+      </Container>
+      <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0}>
         <MenuIntention isRecapView />
-        <Box flex={1} overflow="hidden">
+        <Box borderLeft="solid 1px" borderColor="gray.100" height="100%" />
+        <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
           {data?.demandes.length ? (
-            <TableContainer overflow="auto">
-              <Table
-                sx={{ td: { py: "2", px: 4 } }}
-                size="md"
-                variant="striped"
-                fontSize="14px"
-                gap="0"
-              >
-                <Thead>
-                  <Tr>
-                    <Th>n° demande</Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("libelleDiplome")}
-                    >
-                      <OrderIcon {...order} column="libelleDiplome" />
-                      diplôme
-                    </Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("typeDemande")}
-                    >
-                      <OrderIcon {...order} column="typeDemande" />
-                      type
-                    </Th>
-                    <Th>compensation</Th>
-
-                    <Th cursor="pointer" onClick={() => handleOrder("status")}>
-                      <OrderIcon {...order} column="status" />
-                      status
-                    </Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("createdAt")}
-                    >
-                      <OrderIcon {...order} column="createdAt" />
-                      Date de création
-                    </Th>
-                  </Tr>
-                </Thead>
-                <Tbody>
-                  {data?.demandes.map((demande) => {
-                    return (
-                      <Tr
-                        height={"60px"}
-                        key={demande.id}
+            <>
+              <TableContainer overflowY="auto" flex={1}>
+                <Table
+                  sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
+                  size="md"
+                  variant="striped"
+                  fontSize="14px"
+                  gap="0"
+                >
+                  <Thead
+                    position="sticky"
+                    zIndex={1}
+                    top="0"
+                    boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                    bg="white"
+                  >
+                    <Tr>
+                      <Th>n° demande</Th>
+                      <Th
                         cursor="pointer"
-                        whiteSpace={"pre"}
-                        onClick={() => router.push(`/intentions/${demande.id}`)}
+                        onClick={() => handleOrder("libelleDiplome")}
                       >
-                        <Td>{demande.id}</Td>
-                        <Td>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {demande.libelleDiplome}
-                          </Text>
-                        </Td>
-                        <Td>
-                          {demande.typeDemande
-                            ? typeDemandesOptions[demande.typeDemande].label
-                            : null}
-                        </Td>
-                        <Td>
-                          {demande.compensationCfd &&
-                          demande.compensationDispositifId &&
-                          demande.compensationUai ? (
-                            demande.idCompensation ? (
-                              <Button
-                                _hover={{ bg: "gray.200" }}
-                                variant="ghost"
-                                whiteSpace={"break-spaces"}
-                                size="xs"
-                                py="2"
-                                height="auto"
-                                fontWeight="normal"
-                                leftIcon={<LinkIcon focusable={true} />}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  router.push(
-                                    `/intentions/${demande.idCompensation}?compensation=true`
-                                  );
-                                }}
-                              >
-                                <Box textAlign="left">
-                                  <Box whiteSpace="nowrap">
-                                    {`${
-                                      demande.typeCompensation
-                                        ? typeDemandesOptions[
-                                            demande.typeCompensation
-                                          ].label
-                                        : "Demande"
-                                    } liée `}
+                        <OrderIcon {...order} column="libelleDiplome" />
+                        diplôme
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("typeDemande")}
+                      >
+                        <OrderIcon {...order} column="typeDemande" />
+                        type
+                      </Th>
+                      <Th>compensation</Th>
+
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("status")}
+                      >
+                        <OrderIcon {...order} column="status" />
+                        status
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("createdAt")}
+                      >
+                        <OrderIcon {...order} column="createdAt" />
+                        Date de création
+                      </Th>
+                    </Tr>
+                  </Thead>
+                  <Tbody>
+                    {data?.demandes.map((demande) => {
+                      return (
+                        <Tr
+                          height={"60px"}
+                          key={demande.id}
+                          cursor="pointer"
+                          whiteSpace={"pre"}
+                          onClick={() =>
+                            router.push(`/intentions/${demande.id}`)
+                          }
+                        >
+                          <Td>{demande.id}</Td>
+                          <Td>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {demande.libelleDiplome}
+                            </Text>
+                          </Td>
+                          <Td>
+                            {demande.typeDemande
+                              ? typeDemandesOptions[demande.typeDemande].label
+                              : null}
+                          </Td>
+                          <Td>
+                            {demande.compensationCfd &&
+                            demande.compensationDispositifId &&
+                            demande.compensationUai ? (
+                              demande.idCompensation ? (
+                                <Button
+                                  _hover={{ bg: "gray.200" }}
+                                  variant="ghost"
+                                  whiteSpace={"break-spaces"}
+                                  size="xs"
+                                  py="2"
+                                  height="auto"
+                                  fontWeight="normal"
+                                  leftIcon={<LinkIcon focusable={true} />}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    router.push(
+                                      `/intentions/${demande.idCompensation}?compensation=true`
+                                    );
+                                  }}
+                                >
+                                  <Box textAlign="left">
+                                    <Box whiteSpace="nowrap">
+                                      {`${
+                                        demande.typeCompensation
+                                          ? typeDemandesOptions[
+                                              demande.typeCompensation
+                                            ].label
+                                          : "Demande"
+                                      } liée `}
+                                    </Box>
+                                    <Text textDecoration="underline">
+                                      {demande.idCompensation}
+                                    </Text>
                                   </Box>
-                                  <Text textDecoration="underline">
-                                    {demande.idCompensation}
-                                  </Text>
-                                </Box>
-                              </Button>
+                                </Button>
+                              ) : (
+                                <Button
+                                  _hover={{ bg: "gray.200" }}
+                                  variant="ghost"
+                                  whiteSpace={"break-spaces"}
+                                  size="xs"
+                                  py="2"
+                                  height="auto"
+                                  fontWeight="normal"
+                                  color="red.500"
+                                  leftIcon={<WarningTwoIcon />}
+                                  onClick={(e) => {
+                                    e.stopPropagation();
+                                    nouvelleCompensation(demande);
+                                  }}
+                                >
+                                  <Box textAlign="left" whiteSpace="nowrap">
+                                    Aucune demande liée <br /> identifiée
+                                  </Box>
+                                </Button>
+                              )
                             ) : (
-                              <Button
-                                _hover={{ bg: "gray.200" }}
-                                variant="ghost"
-                                whiteSpace={"break-spaces"}
-                                size="xs"
-                                py="2"
-                                height="auto"
-                                fontWeight="normal"
-                                color="red.500"
-                                leftIcon={<WarningTwoIcon />}
-                                onClick={(e) => {
-                                  e.stopPropagation();
-                                  nouvelleCompensation(demande);
-                                }}
-                              >
-                                <Box textAlign="left" whiteSpace="nowrap">
-                                  Aucune demande liée <br /> identifiée
-                                </Box>
-                              </Button>
-                            )
-                          ) : (
-                            <></>
-                          )}
-                        </Td>
-                        <Td align="center" w={0}>
-                          {demande.status === "draft" ? (
-                            <Tag size="sm" colorScheme={"orange"}>
-                              Projet de demande
-                            </Tag>
-                          ) : (
-                            <Tag size="sm" colorScheme={"green"}>
-                              Demande validée
-                            </Tag>
-                          )}
-                        </Td>
-                        <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
-                      </Tr>
-                    );
-                  })}
-                </Tbody>
-              </Table>
+                              <></>
+                            )}
+                          </Td>
+                          <Td align="center" w={0}>
+                            {demande.status === "draft" ? (
+                              <Tag size="sm" colorScheme={"orange"}>
+                                Projet de demande
+                              </Tag>
+                            ) : (
+                              <Tag size="sm" colorScheme={"green"}>
+                                Demande validée
+                              </Tag>
+                            )}
+                          </Td>
+                          <Td>
+                            {new Date(demande.createdAt).toLocaleString()}
+                          </Td>
+                        </Tr>
+                      );
+                    })}
+                  </Tbody>
+                </Table>
+              </TableContainer>
               <TableFooter
                 onExport={() => trackEvent("demandes:export")}
                 downloadLink={
@@ -266,7 +292,7 @@ export const PageClient = () => {
                 count={data?.count}
                 onPageChange={(newPage) => setSearchParams({ page: newPage })}
               />
-            </TableContainer>
+            </>
           ) : (
             <Center mt={12}>
               <Flex flexDirection={"column"}>
@@ -285,8 +311,8 @@ export const PageClient = () => {
               </Flex>
             </Center>
           )}
-        </Box>
-      </Flex>
-    </Container>
+        </Flex>
+      </Container>
+    </>
   );
 };
