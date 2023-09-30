@@ -9,7 +9,7 @@ export default ({
     intentionId: string;
   };
 }) => (
-  <GuardPermission permission="intentions/envoi">
+  <GuardPermission permission="intentions/lecture">
     <PageClient params={params}></PageClient>
   </GuardPermission>
 );
