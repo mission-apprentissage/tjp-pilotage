@@ -24,6 +24,8 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { ApiType } from "shared";
 
+import { usePermission } from "@/utils/security/usePermission";
+
 import { api } from "../../../api.client";
 import { Breadcrumb } from "../../../components/Breadcrumb";
 import { OrderIcon } from "../../../components/OrderIcon";
@@ -103,6 +105,8 @@ export const PageClient = () => {
     );
   };
 
+  const hasPermissionEnvoi = usePermission("intentions/envoi");
+
   if (isLoading) return <IntentionSpinner />;
 
   return (
@@ -117,7 +121,7 @@ export const PageClient = () => {
         />
       </Container>
       <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0}>
-        <MenuIntention isRecapView />
+        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
         <Box borderLeft="solid 1px" borderColor="gray.100" height="100%" />
         <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
           {data?.demandes.length ? (
@@ -297,17 +301,19 @@ export const PageClient = () => {
             <Center mt={12}>
               <Flex flexDirection={"column"}>
                 <Text fontSize={"2xl"}>Pas encore de demande à afficher</Text>
-                <Button
-                  variant="createButton"
-                  size={"lg"}
-                  as={NextLink}
-                  href="/intentions/new"
-                  px={3}
-                  mt={12}
-                  mx={"auto"}
-                >
-                  Nouvelle demande
-                </Button>
+                {hasPermissionEnvoi && (
+                  <Button
+                    variant="createButton"
+                    size={"lg"}
+                    as={NextLink}
+                    href="/intentions/new"
+                    px={3}
+                    mt={12}
+                    mx={"auto"}
+                  >
+                    Nouvelle demande
+                  </Button>
+                )}
               </Flex>
             </Center>
           )}

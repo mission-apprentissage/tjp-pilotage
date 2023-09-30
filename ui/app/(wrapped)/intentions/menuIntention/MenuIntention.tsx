@@ -12,8 +12,10 @@ const fetchCountDemandes = async () => api.countDemandes({}).call();
 
 export const MenuIntention = ({
   isRecapView = false,
+  hasPermissionEnvoi,
 }: {
   isRecapView?: boolean;
+  hasPermissionEnvoi: boolean;
 }) => {
   const queryParams = useSearchParams();
   const searchParams: {
@@ -36,16 +38,19 @@ export const MenuIntention = ({
 
   return (
     <Box pr={4} minW={250}>
-      <Button
-        variant="createButton"
-        size={"md"}
-        width={"100%"}
-        as={NextLink}
-        href="/intentions/new"
-      >
-        Nouvelle demande
-      </Button>
-      <VStack align="flex-start" mt="4" spacing={2}>
+      {hasPermissionEnvoi && (
+        <Button
+          mb="4"
+          variant="createButton"
+          size={"md"}
+          width={"100%"}
+          as={NextLink}
+          href="/intentions/new"
+        >
+          Nouvelle demande
+        </Button>
+      )}
+      <VStack align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
           as={NextLink}
