@@ -1,5 +1,8 @@
 import { program as cli } from "commander";
+import { parse } from "csv-parse/sync";
 import fs, { writeFileSync } from "fs";
+import _ from "lodash";
+import { z } from "zod";
 
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
@@ -36,21 +39,55 @@ export const down = async () => {};
 );
 
 cli
-  .command("create-user")
-  .requiredOption("--email <string>")
-  .requiredOption("--firstname <string>")
-  .requiredOption("--lastname <string>")
-  .requiredOption("--role <string>")
-  .action(
-    async (options: {
-      email: string;
-      firstname: string;
-      lastname: string;
-      role: string;
-    }) => {
-      await createUser(options);
+  .command("importUsers")
+  .description("usage: cat << EOF | xargs -0 -I arg yarn cli importUsers arg")
+  .argument("<json>")
+  .option("--dryRun <boolean>", "parse the data only", false)
+  .action(async (input: string, { dryRun }) => {
+    const data = (
+      parse(input, {
+        columns: true,
+        skip_empty_lines: true,
+        trim: true,
+        delimiter: ";",
+      }) as {
+        firstname: string;
+        lastname: string;
+        email: string;
+        role: string;
+        codeRegion?: string;
+      }[]
+    ).map((user) => _.mapValues(user, (value) => value || undefined));
+
+    const users = z
+      .array(
+        z.object({
+          firstname: z.string(),
+          lastname: z.string(),
+          email: z.string(),
+          role: z.string(),
+          codeRegion: z
+            .string()
+            .optional()
+            .transform((val) => val || undefined),
+        })
+      )
+      .parse(data);
+
+    if (dryRun) {
+      console.log(users);
+      return;
     }
-  );
+
+    for (const user of users) {
+      try {
+        await createUser(user);
+        console.log(`${user.email} created successfuly`);
+      } catch (e) {
+        console.log(`${user.email} failed`, (e as Error).message);
+      }
+    }
+  });
 
 cli
   .command("importFiles")
