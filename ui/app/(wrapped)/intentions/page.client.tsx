@@ -24,6 +24,8 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { ApiType } from "shared";
 
+import { usePermission } from "@/utils/security/usePermission";
+
 import { api } from "../../../api.client";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
@@ -102,12 +104,14 @@ export const PageClient = () => {
     );
   };
 
+  const hasPermissionEnvoi = usePermission("intentions/envoi");
+
   if (isLoading) return <IntentionSpinner />;
 
   return (
     <Container maxWidth="100%" my={12}>
       <Flex>
-        <MenuIntention isRecapView />
+        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
         <Box flex={1} overflow="hidden">
           {data?.demandes.length ? (
             <TableContainer overflow="auto">
@@ -271,17 +275,19 @@ export const PageClient = () => {
             <Center mt={12}>
               <Flex flexDirection={"column"}>
                 <Text fontSize={"2xl"}>Pas encore de demande à afficher</Text>
-                <Button
-                  variant="createButton"
-                  size={"lg"}
-                  as={NextLink}
-                  href="/intentions/new"
-                  px={3}
-                  mt={12}
-                  mx={"auto"}
-                >
-                  Nouvelle demande
-                </Button>
+                {hasPermissionEnvoi && (
+                  <Button
+                    variant="createButton"
+                    size={"lg"}
+                    as={NextLink}
+                    href="/intentions/new"
+                    px={3}
+                    mt={12}
+                    mx={"auto"}
+                  >
+                    Nouvelle demande
+                  </Button>
+                )}
               </Flex>
             </Center>
           )}
