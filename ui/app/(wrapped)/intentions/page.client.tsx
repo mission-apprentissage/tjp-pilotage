@@ -285,6 +285,7 @@ export const PageClient = () => {
                 </Table>
               </TableContainer>
               <TableFooter
+                pl="4"
                 onExport={() => trackEvent("demandes:export")}
                 downloadLink={
                   api.getDemandesCsv({

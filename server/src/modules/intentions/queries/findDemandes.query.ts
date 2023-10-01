@@ -16,7 +16,7 @@ export const findDemandes = async ({
   status?: "draft" | "submitted";
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
-  limit: number;
+  limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
   const demandes = await kdb
