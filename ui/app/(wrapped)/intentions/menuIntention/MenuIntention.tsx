@@ -39,18 +39,17 @@ export const MenuIntention = ({
 
   return (
     <Flex direction="column" pr={4} minW={250}>
-      {hasPermissionEnvoi && (
-        <Button
-          mb="4"
-          variant="createButton"
-          size={"md"}
-          width={"100%"}
-          as={NextLink}
-          href="/intentions/new"
-        >
-          Nouvelle demande
-        </Button>
-      )}
+      <Button
+        disabled={!hasPermissionEnvoi}
+        mb="4"
+        variant="createButton"
+        size={"md"}
+        width={"100%"}
+        as={NextLink}
+        href="/intentions/new"
+      >
+        Nouvelle demande
+      </Button>
       <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
@@ -103,7 +102,8 @@ export const MenuIntention = ({
         </Button>
 
         <Button
-          mb="4"
+          variant="ghost"
+          mb="2"
           as={NextLink}
           size="sm"
           mt="auto"
