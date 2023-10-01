@@ -1,4 +1,5 @@
-import { Box, Button, Text, VStack } from "@chakra-ui/react";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
+import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -37,7 +38,7 @@ export const MenuIntention = ({
   });
 
   return (
-    <Box pr={4} minW={250}>
+    <Flex direction="column" pr={4} minW={250}>
       {hasPermissionEnvoi && (
         <Button
           mb="4"
@@ -50,7 +51,7 @@ export const MenuIntention = ({
           Nouvelle demande
         </Button>
       )}
-      <VStack align="flex-start" spacing={2}>
+      <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
           as={NextLink}
@@ -100,7 +101,19 @@ export const MenuIntention = ({
             Projets de demandes
           </Text>
         </Button>
+
+        <Button
+          mb="4"
+          as={NextLink}
+          size="sm"
+          mt="auto"
+          href="/intentions/documentation"
+          width={"100%"}
+          leftIcon={<QuestionOutlineIcon />}
+        >
+          Documentation
+        </Button>
       </VStack>
-    </Box>
+    </Flex>
   );
 };

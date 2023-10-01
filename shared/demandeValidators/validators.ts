@@ -276,7 +276,7 @@ export const demandeValidators: Record<
       !demande.capaciteApprentissageColoree &&
       !demande.capaciteScolaireColoree
     ) {
-      return "La somme des capacités colorés doit être supérieure à 0";
+      return "La somme des capacités colorées doit être supérieure à 0";
     }
   },
   compensation: (demande) => {

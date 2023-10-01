@@ -7,7 +7,7 @@ export const revalidate = 60;
 const fetchData = async () => {
   const notion = new NotionAPI();
   const recordMap = await notion.getPage(
-    "Enregistrer-une-demande-d-ouverture-ou-de-fermeture-dans-Orion-aa580451c49b4e548bb545829de227d4?pvs=4"
+    "Documentation-V0-Orion-32a009e0dabe48e890893f789162a451"
   );
   return recordMap;
 };
