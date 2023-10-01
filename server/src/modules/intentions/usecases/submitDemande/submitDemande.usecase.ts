@@ -96,7 +96,6 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const demandeData = {
         ...currentDemande,
         libelleColoration: null,
-        poursuitePedagogique: null,
         libelleFCIL: null,
         autreMotif: null,
         commentaire: null,
@@ -110,6 +109,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         capaciteApprentissageActuelle: 0,
         capaciteApprentissageColoree: 0,
         mixte: false,
+        poursuitePedagogique: false,
         ...demande,
         compensationRentreeScolaire,
       };
