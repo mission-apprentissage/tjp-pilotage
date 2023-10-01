@@ -89,8 +89,6 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       const result = await findDemandes({
         ...rest,
         user: request.user,
-        offset: 0,
-        limit: 1000000,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
       response.status(200).send(result);
