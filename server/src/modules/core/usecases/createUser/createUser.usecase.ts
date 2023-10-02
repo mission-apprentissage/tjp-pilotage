@@ -49,8 +49,14 @@ export const [createUser, createUserFactory] = inject(
       );
 
       const template =
-        ({ pilote: "activate_account_pilote" } as const)[role] ??
-        ("activate_account" as const);
+        (
+          {
+            pilote: "activate_account_pilote",
+            pilote_region: "activate_account_region",
+            gestionnaire_region: "activate_account_region",
+            expert_region: "activate_account_region",
+          } as const
+        )[role] ?? ("activate_account" as const);
 
       deps.shootTemplate({
         to: email,
