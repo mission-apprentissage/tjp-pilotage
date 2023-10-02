@@ -37,6 +37,15 @@ export type TemplatePayloads = {
     };
     activationToken: string;
   };
+  activate_account_region: {
+    recipient: {
+      lastname?: string | undefined;
+      firstname?: string | undefined;
+      email: string;
+      role: string;
+    };
+    activationToken: string;
+  };
 };
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {
