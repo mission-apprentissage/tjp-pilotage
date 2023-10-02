@@ -6,4 +6,4 @@ logpath = /var/log/auth.log
 maxretry = 10
 bantime = 2592000
 banaction = iptables-multiport
-            slack-notify
+#            slack-notify

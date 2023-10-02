@@ -13,11 +13,10 @@ const pool = new Pool({
 });
 
 pool.on("error", (error) => {
+  console.error("lost connection with DB!");
   logger.error("pg pool lost connexion with database", { error });
 });
 
 export const kdb = new Kysely<DB>({
-  dialect: new PostgresDialect({
-    pool,
-  }),
+  dialect: new PostgresDialect({ pool }),
 });
