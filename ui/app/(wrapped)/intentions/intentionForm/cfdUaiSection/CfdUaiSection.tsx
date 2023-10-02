@@ -24,6 +24,7 @@ import { UaiBlock } from "./UaiBlock";
 export const CfdUaiSection = ({
   formId,
   active,
+  disabled,
   formMetadata,
   onEditUaiCfdSection,
   isFCIL,
@@ -33,6 +34,7 @@ export const CfdUaiSection = ({
 }: {
   formId?: string;
   active: boolean;
+  disabled?: boolean;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
   onEditUaiCfdSection: () => void;
@@ -74,15 +76,17 @@ export const CfdUaiSection = ({
       <Box color="chakra-body-text" bg="blue.main" p="6" borderRadius="6">
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
-          <Button
-            visibility={active ? "collapse" : "visible"}
-            ml="auto"
-            aria-label="Editer"
-            onClick={onEditUaiCfdSection}
-            leftIcon={<EditIcon />}
-          >
-            Modifier
-          </Button>
+          {!disabled && (
+            <Button
+              visibility={active ? "collapse" : "visible"}
+              ml="auto"
+              aria-label="Editer"
+              onClick={onEditUaiCfdSection}
+              leftIcon={<EditIcon />}
+            >
+              Modifier
+            </Button>
+          )}
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock

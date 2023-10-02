@@ -13,6 +13,7 @@ import { hasPermissionHandler } from "../../core";
 import { countDemandes } from "../queries/countDemandes.query";
 import { findDemande } from "../queries/findDemande.query";
 import { findDemandes } from "../queries/findDemandes.query";
+import { deleteDemande } from "../usecases/deleteDemande/deleteDemande.usecase";
 import { submitDemande } from "../usecases/submitDemande/submitDemande.usecase";
 import { submitDraftDemande } from "../usecases/submitDraftDemande/submitDraftDemande.usecase";
 
@@ -21,7 +22,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demande/submit",
     {
       schema: ROUTES_CONFIG.submitDemande,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/ecriture"),
     },
     async (request, response) => {
       const { demande } = request.body;
@@ -39,7 +40,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
     "/demande/draft",
     {
       schema: ROUTES_CONFIG.submitDraftDemande,
-      preHandler: hasPermissionHandler("intentions/envoi"),
+      preHandler: hasPermissionHandler("intentions/ecriture"),
     },
     async (request, response) => {
       const { demande } = request.body;
@@ -65,7 +66,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       const demande = await findDemande({ id: request.params.id, user });
       if (!demande) return response.status(404).send();
 
-      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const scope = getPermissionScope(user.role, "intentions/ecriture");
       const canEdit = guardScope(scope?.default, {
         user: () => user.id === demande.createurId,
         region: () => user.codeRegion === demande.codeRegion,
@@ -73,6 +74,20 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       });
 
       response.status(200).send({ ...demande, canEdit });
+    }
+  );
+
+  server.delete(
+    "/demande/:id",
+    {
+      schema: ROUTES_CONFIG.deleteDemande,
+      preHandler: hasPermissionHandler("intentions/ecriture"),
+    },
+    async (request, response) => {
+      const user = request.user;
+      if (!user) throw Boom.forbidden();
+      await deleteDemande({ id: request.params.id, user });
+      response.status(200).send();
     }
   );
 

@@ -175,6 +175,12 @@ export const intentionsSchemas = {
       }),
     },
   },
+  deleteDemande: {
+    params: Type.Object({ id: Type.String() }),
+    response: {
+      200: Type.Void(),
+    },
+  },
   getDemandes: {
     querystring: Type.Intersect([
       FiltersSchema,

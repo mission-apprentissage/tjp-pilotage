@@ -20,11 +20,11 @@ export default () => {
 
   if (isLoading && !!intentionId) return <IntentionSpinner />;
   return (
-    <GuardPermission permission="intentions/envoi">
+    <GuardPermission permission="intentions/ecriture">
       {intentionId ? (
         data && (
           <IntentionForm
-            canEdit={true}
+            disabled={false}
             defaultValues={{
               cfd: data?.compensationCfd,
               dispositifId: data?.compensationDispositifId,
@@ -38,7 +38,7 @@ export default () => {
           />
         )
       ) : (
-        <IntentionForm canEdit={true} defaultValues={{}} formMetadata={{}} />
+        <IntentionForm disabled={false} defaultValues={{}} formMetadata={{}} />
       )}
     </GuardPermission>
   );

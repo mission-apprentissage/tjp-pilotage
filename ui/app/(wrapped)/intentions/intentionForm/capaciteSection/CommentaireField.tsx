@@ -10,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 export const CommentaireField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       register,
@@ -19,7 +19,10 @@ export const CommentaireField = chakra(
     return (
       <FormControl className={className} isInvalid={!!errors.commentaire}>
         <FormLabel>Commentaires / Observations sur la demande</FormLabel>
-        <Textarea height={150} {...register("commentaire", {})} />
+        <Textarea
+          height={150}
+          {...register("commentaire", { shouldUnregister: true, disabled })}
+        />
         {errors.commentaire && (
           <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>
         )}

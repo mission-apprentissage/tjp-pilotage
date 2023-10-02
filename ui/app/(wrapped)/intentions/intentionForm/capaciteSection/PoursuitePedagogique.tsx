@@ -15,7 +15,7 @@ import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUti
 import { toBoolean } from "../../utils/toBoolean";
 
 export const PoursuitePedagogiqueField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -37,16 +37,18 @@ export const PoursuitePedagogiqueField = chakra(
           name="poursuitePedagogique"
           shouldUnregister
           control={control}
+          disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({ field: { onChange, value, ref, onBlur } }) => (
+          render={({ field: { onChange, value, ref, onBlur, disabled } }) => (
             <RadioGroup
               as={Stack}
               onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
+              isDisabled={disabled}
             >
               <Radio ref={ref} value="true">
                 Oui

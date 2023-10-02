@@ -14,7 +14,7 @@ import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/default
 import { toBoolean } from "../../utils/toBoolean";
 
 export const ColorationField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
@@ -31,17 +31,21 @@ export const ColorationField = chakra(
           name="coloration"
           control={control}
           shouldUnregister={true}
+          disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({ field: { onChange, ref, name, onBlur, value } }) => (
+          render={({
+            field: { onChange, ref, name, onBlur, value, disabled },
+          }) => (
             <RadioGroup
               as={Stack}
               name={name}
               onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
+              isDisabled={disabled}
             >
               <Radio ref={ref} value="true">
                 Oui

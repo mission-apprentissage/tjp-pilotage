@@ -76,7 +76,13 @@ function RadioCard({
 }
 
 export const TypeDemandeField = chakra(
-  ({ className }: { className?: string }) => {
+  ({
+    disabled = false,
+    className,
+  }: {
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       control,
@@ -114,9 +120,10 @@ export const TypeDemandeField = chakra(
                   title={item.label}
                   desc={item.desc}
                   disabled={
-                    compensation != null &&
-                    !isTypeFermeture(item.value) &&
-                    !isTypeDiminution(item.value)
+                    disabled ||
+                    (compensation != null &&
+                      !isTypeFermeture(item.value) &&
+                      !isTypeDiminution(item.value))
                   }
                   onClick={() => onChange(item.value)}
                 />
