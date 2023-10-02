@@ -10,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 export const RentreeScolaireField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       register,
@@ -27,6 +27,7 @@ export const RentreeScolaireField = chakra(
           bg="white"
           {...register("rentreeScolaire", {
             required: "La rentrée scolaire est obligatoire",
+            disabled,
             setValueAs: (value) => parseInt(value) || undefined,
           })}
           placeholder="Sélectionner une option"

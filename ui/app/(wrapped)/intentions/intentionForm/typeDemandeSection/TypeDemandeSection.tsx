@@ -5,21 +5,22 @@ import { ApiType } from "shared";
 import { MotifField } from "@/app/(wrapped)/intentions/intentionForm/typeDemandeSection/MotifField";
 
 import { api } from "../../../../../api.client";
+import { InfoBox } from "../../components/InfoBox";
 import {
   isTypeCompensation,
   typeDemandesOptions,
 } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
-import { InfoBox } from "../InfoBox";
 import { AutreMotif } from "./AutreMotifField";
 import { CompensationSection } from "./CompensationSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
-
 export const TypeDemandeSection = ({
   formMetadata,
+  disabled,
 }: {
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  disabled?: boolean;
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
@@ -31,9 +32,9 @@ export const TypeDemandeSection = ({
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <RentreeScolaireField mb="6" maxW="752px" />
+      <RentreeScolaireField disabled={disabled} mb="6" maxW="752px" />
       <Flex align="flex-start">
-        <TypeDemandeField maxWidth="752px" mb="6" />
+        <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
         <Fade in={typeDemande != undefined}>
           {typeDemande && (
             <InfoBox flex="1" mt="10" ml="6" maxW="440px">
@@ -51,7 +52,10 @@ export const TypeDemandeSection = ({
           boxShadow="0 0 0 2px #000091"
         >
           <Box flexDirection={"column"} flex="2" maxW="752px">
-            <CompensationSection formMetadata={formMetadata} />
+            <CompensationSection
+              disabled={disabled}
+              formMetadata={formMetadata}
+            />
           </Box>
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
@@ -66,8 +70,8 @@ export const TypeDemandeSection = ({
         </Flex>
       )}
 
-      <MotifField maxW="752px" mb="6" />
-      <AutreMotif mb="6" maxW="752px" />
+      <MotifField disabled={disabled} maxW="752px" mb="6" />
+      <AutreMotif disabled={disabled} mb="6" maxW="752px" />
     </>
   );
 };

@@ -24,7 +24,7 @@ export default ({
     <>
       {data && (
         <IntentionForm
-          canEdit={data.canEdit}
+          disabled={!data.canEdit}
           formId={intentionId}
           defaultValues={data}
           formMetadata={data.metadata}
