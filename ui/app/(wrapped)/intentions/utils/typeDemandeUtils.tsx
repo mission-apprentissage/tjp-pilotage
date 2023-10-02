@@ -50,7 +50,7 @@ export const typeDemandesOptions: Record<
   augmentation_nette: {
     value: "augmentation_nette",
     label: "Augmentation nette",
-    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement",
+    desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existant. Ne pas utiliser pour des places déjà ouvertes sur l'établissement.",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
@@ -97,7 +97,7 @@ export const typeDemandesOptions: Record<
   ouverture_compensation: {
     value: "ouverture_compensation",
     label: "Ouverture avec compensation",
-    desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autres (voir exemple ci-contre).",
+    desc: "Utiliser ce formulaire pour tout cas de transfert de capacité d'une formation vers une autre (voir exemple ci-contre).",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
@@ -110,7 +110,7 @@ export const typeDemandesOptions: Record<
         <OrderedList>
           <ListItem mb="2">
             Dans la demande d’ouverture avec compensation j’indique la formation
-            et l’établissement sur laquelle la fermeture va intervenir.
+            et l’établissement sur lequel la fermeture va intervenir.
           </ListItem>
           <ListItem>
             Une fois cette saisie terminée, je saisis la fermeture en lien sur
@@ -136,7 +136,7 @@ export const typeDemandesOptions: Record<
         <OrderedList>
           <ListItem mb="2">
             Dans la demande d’augmentation avec compensation, j’indique la
-            formation et l’établissement sur laquelle je vais augmenter la
+            formation et l’établissement sur lequel je vais augmenter la
             capacité.
           </ListItem>
           <ListItem>

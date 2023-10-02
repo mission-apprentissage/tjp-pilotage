@@ -40,12 +40,12 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={4} minW={250}>
       <Button
-        disabled={!hasPermissionEnvoi}
+        isDisabled={!hasPermissionEnvoi}
         mb="4"
         variant="createButton"
         size={"md"}
         width={"100%"}
-        as={NextLink}
+        as={hasPermissionEnvoi ? NextLink : undefined}
         href="/intentions/new"
       >
         Nouvelle demande
