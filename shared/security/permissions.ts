@@ -11,8 +11,7 @@ export const PERMISSIONS = {
   admin: {
     "pilotage_reforme/lecture": { default: "national" },
     "intentions/lecture": { default: "national", draft: "national" },
-    "intentions/suppression": { default: "national" },
-    "intentions/envoi": { default: "national" },
+    "intentions/ecriture": { default: "national" },
   },
   pilote: {
     // "intentions/lecture": { default: "national", draft: "national" },
@@ -23,13 +22,11 @@ export const PERMISSIONS = {
   },
   expert_region: {
     "intentions/lecture": { default: "region", draft: "region" },
-    "intentions/suppression": { default: "region" },
-    "intentions/envoi": { default: "region" },
+    "intentions/ecriture": { default: "region" },
   },
   gestionnaire_region: {
     "intentions/lecture": { draft: "user", default: "region" },
-    "intentions/suppression": { default: "user" },
-    "intentions/envoi": { default: "user" },
+    "intentions/ecriture": { default: "user" },
   },
 } satisfies {
   [R: string]: {
