@@ -33,14 +33,16 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, _, reply) => {
+  if (!error.statusCode || error.statusCode >= 500) {
+    logger.error(error.message, { error });
+  }
+
   if (Boom.isBoom(error)) {
     reply
       .status(error.output.statusCode)
       .send({ ...error.output.payload, ...error.data });
-    logger.error(error.message, { error, data: error.data });
     return;
   }
-  logger.error(error.message, { error });
 
   if (error.statusCode && error.statusCode < 500) {
     reply.status(error.statusCode).send({
