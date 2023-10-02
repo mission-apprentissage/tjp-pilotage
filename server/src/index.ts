@@ -38,7 +38,7 @@ server.setErrorHandler((error, _, reply) => {
       .status(error.output.statusCode)
       .send({ ...error.output.payload, ...error.data });
     if (error.output.statusCode >= 500) {
-      logger.error(error.message, { error });
+      logger.error(error.message, { error, data: error.data });
     }
     return;
   }
