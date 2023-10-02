@@ -10,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/defaultFormValues";
 
 export const LibelleColorationField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       watch,
@@ -31,6 +31,7 @@ export const LibelleColorationField = chakra(
             <Input
               {...register("libelleColoration", {
                 shouldUnregister: true,
+                disabled,
                 required: "Ce champ est obligatoire",
               })}
               placeholder="Complément du libellé formation"

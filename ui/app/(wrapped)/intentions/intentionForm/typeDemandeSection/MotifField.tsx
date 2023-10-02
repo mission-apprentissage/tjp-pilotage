@@ -83,65 +83,68 @@ const getMotifOptions = (typeDemande: keyof typeof motifs) => {
     }));
 };
 
-export const MotifField = chakra(({ className }: { className?: string }) => {
-  const {
-    formState: { errors },
-    control,
-    watch,
-    setValue,
-  } = useFormContext<IntentionForms>();
+export const MotifField = chakra(
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+    const {
+      formState: { errors },
+      control,
+      watch,
+      setValue,
+    } = useFormContext<IntentionForms>();
 
-  useEffect(
-    () =>
-      watch((_, { name }) => {
-        if (name !== "typeDemande") return;
-        setValue("motif", []);
-      }).unsubscribe
-  );
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "typeDemande") return;
+          setValue("motif", []);
+        }).unsubscribe
+    );
 
-  const [typeDemande] = watch(["typeDemande"]);
-  if (!typeDemande) return <></>;
+    const [typeDemande] = watch(["typeDemande"]);
+    if (!typeDemande) return <></>;
 
-  return (
-    <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-      <FormLabel>
-        Merci de préciser le(s) motif(s) de votre{" "}
-        {typeDemandesOptions[typeDemande].label.toLowerCase()}
-      </FormLabel>
-      <Controller
-        name="motif"
-        shouldUnregister
-        control={control}
-        rules={{ required: "Le motif est obligatoire" }}
-        render={({
-          field: { onChange, value, onBlur, ref, name, disabled },
-        }) => {
-          return (
-            <CheckboxGroup onChange={onChange} value={value}>
-              <Stack spacing={[3]}>
-                {getMotifOptions(typeDemande as keyof typeof motifs)?.map(
-                  ({ value, label }) => (
-                    <Checkbox
-                      ref={ref}
-                      disabled={disabled}
-                      name={name}
-                      isRequired={false}
-                      key={value}
-                      onBlur={onBlur}
-                      value={value}
-                    >
-                      {label}
-                    </Checkbox>
-                  )
-                )}
-              </Stack>
-            </CheckboxGroup>
-          );
-        }}
-      />
-      {errors.motif && (
-        <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
-      )}
-    </FormControl>
-  );
-});
+    return (
+      <FormControl className={className} isInvalid={!!errors.motif} isRequired>
+        <FormLabel>
+          Merci de préciser le(s) motif(s) de votre{" "}
+          {typeDemandesOptions[typeDemande].label.toLowerCase()}
+        </FormLabel>
+        <Controller
+          name="motif"
+          shouldUnregister
+          disabled={disabled}
+          control={control}
+          rules={{ required: "Le motif est obligatoire" }}
+          render={({
+            field: { onChange, value, onBlur, ref, name, disabled },
+          }) => {
+            return (
+              <CheckboxGroup onChange={onChange} value={value}>
+                <Stack spacing={[3]}>
+                  {getMotifOptions(typeDemande as keyof typeof motifs)?.map(
+                    ({ value, label }) => (
+                      <Checkbox
+                        ref={ref}
+                        disabled={disabled}
+                        name={name}
+                        isRequired={false}
+                        key={value}
+                        onBlur={onBlur}
+                        value={value}
+                      >
+                        {label}
+                      </Checkbox>
+                    )
+                  )}
+                </Stack>
+              </CheckboxGroup>
+            );
+          }}
+        />
+        {errors.motif && (
+          <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
+        )}
+      </FormControl>
+    );
+  }
+);

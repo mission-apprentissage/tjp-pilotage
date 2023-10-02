@@ -13,41 +13,45 @@ import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/default
 
 import { toBoolean } from "../../utils/toBoolean";
 
-export const AmiCmaField = chakra(({ className }: { className?: string }) => {
-  const {
-    formState: { errors },
-    control,
-  } = useFormContext<IntentionForms>();
+export const AmiCmaField = chakra(
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+    const {
+      formState: { errors },
+      control,
+    } = useFormContext<IntentionForms>();
 
-  return (
-    <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>
-      <FormLabel>AMI / CMA</FormLabel>
-      <Controller
-        name="amiCma"
-        control={control}
-        rules={{
-          validate: (value) =>
-            typeof value === "boolean" || "Le champ est obligatoire",
-        }}
-        render={({ field: { onChange, value, onBlur, ref } }) => (
-          <RadioGroup
-            as={Stack}
-            onBlur={onBlur}
-            onChange={(v) => onChange(toBoolean(v))}
-            value={JSON.stringify(value)}
-          >
-            <Radio ref={ref} value="true">
-              Oui
-            </Radio>
-            <Radio ref={ref} value="false">
-              Non
-            </Radio>
-          </RadioGroup>
+    return (
+      <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>
+        <FormLabel>AMI / CMA</FormLabel>
+        <Controller
+          name="amiCma"
+          control={control}
+          disabled={disabled}
+          rules={{
+            validate: (value) =>
+              typeof value === "boolean" || "Le champ est obligatoire",
+          }}
+          render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
+            <RadioGroup
+              isDisabled={disabled}
+              as={Stack}
+              onBlur={onBlur}
+              onChange={(v) => onChange(toBoolean(v))}
+              value={JSON.stringify(value)}
+            >
+              <Radio ref={ref} value="true">
+                Oui
+              </Radio>
+              <Radio ref={ref} value="false">
+                Non
+              </Radio>
+            </RadioGroup>
+          )}
+        />
+        {errors.amiCma && (
+          <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
         )}
-      />
-      {errors.amiCma && (
-        <FormErrorMessage>{errors.amiCma?.message}</FormErrorMessage>
-      )}
-    </FormControl>
-  );
-});
+      </FormControl>
+    );
+  }
+);

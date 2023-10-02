@@ -18,8 +18,10 @@ import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
 import { UaiAutocomplete } from "../../components/UaiAutocomplete";
 
 export const CompensationSection = ({
+  disabled,
   formMetadata,
 }: {
+  disabled?: boolean;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
   const {
@@ -87,11 +89,13 @@ export const CompensationSection = ({
           <Controller
             name="compensationCfd"
             control={control}
+            disabled={disabled}
             shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
-            render={({ field: { onChange, value, name } }) => (
+            render={({ field: { onChange, value, name, disabled } }) => (
               <CfdAutocompleteInput
                 name={name}
+                active={!disabled}
                 inError={errors.compensationCfd ? true : false}
                 defaultValue={
                   value && formMetadata?.formationCompensation?.libelle
@@ -126,16 +130,17 @@ export const CompensationSection = ({
         <FormLabel>Dispositif</FormLabel>
         <Controller
           name="compensationDispositifId"
+          disabled={disabled}
           control={control}
           shouldUnregister
           rules={{ required: "Ce champ est obligatoire" }}
-          render={({ field: { onChange, value, name } }) => (
+          render={({ field: { onChange, value, name, disabled } }) => (
             <Select
               value={value}
               name={name}
               bg={"white"}
               color="chakra-body-text"
-              disabled={!dispositifsCompensation}
+              disabled={disabled || !dispositifsCompensation}
               placeholder="Sélectionner une option"
               onChange={(selected) => {
                 onChange(selected.target.value);
@@ -168,13 +173,15 @@ export const CompensationSection = ({
         <Box color="chakra-body-text">
           <Controller
             name="compensationUai"
+            disabled={disabled}
             control={control}
             shouldUnregister
             rules={{ required: "Ce champs est obligatoire" }}
-            render={({ field: { onChange, value, name } }) =>
+            render={({ field: { onChange, value, name, disabled } }) =>
               !isLoading ? (
                 <UaiAutocomplete
                   name={name}
+                  active={!disabled}
                   inError={errors.compensationUai ? true : false}
                   defaultValue={getUaiDefaultValue(value)}
                   onChange={(selected) => {

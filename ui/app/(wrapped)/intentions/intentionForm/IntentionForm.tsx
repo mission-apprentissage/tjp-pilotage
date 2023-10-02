@@ -1,6 +1,7 @@
 "use client";
 
-import { Box, Collapse, Container } from "@chakra-ui/react";
+import { DeleteIcon } from "@chakra-ui/icons";
+import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -8,6 +9,7 @@ import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import { ApiType } from "shared";
 
+import { ConfirmationDelete } from "@/app/(wrapped)/intentions/components/ConfirmationDelete";
 import {
   IntentionForms,
   PartialIntentionForms,
@@ -19,16 +21,17 @@ import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
 export const IntentionForm = ({
-  canEdit = false,
+  disabled = true,
   formId,
   defaultValues,
   formMetadata,
 }: {
-  canEdit?: boolean;
+  disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
 }) => {
+  const { push } = useRouter();
   const pathname = usePathname();
   const form = useForm<IntentionForms>({
     defaultValues,
@@ -41,12 +44,9 @@ export const IntentionForm = ({
   const [errors, setErrors] = useState<Record<string, string>>();
 
   const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
-    mutationFn: ({ forms }: { forms: IntentionForms }) =>
-      api
-        .submitDemande({
-          body: { demande: { id: formId, ...forms } },
-        })
-        .call(),
+    mutationFn: (forms: IntentionForms) =>
+      api.submitDemande({ body: { demande: { id: formId, ...forms } } }).call(),
+    onSuccess: () => push("/intentions"),
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
       setErrors(errors);
@@ -55,17 +55,24 @@ export const IntentionForm = ({
 
   const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
     useMutation({
-      mutationFn: ({ forms }: { forms: IntentionForms }) =>
+      mutationFn: (forms: IntentionForms) =>
         api
-          .submitDraftDemande({
-            body: { demande: { id: formId, ...forms } },
-          })
+          .submitDraftDemande({ body: { demande: { id: formId, ...forms } } })
           .call(),
+      onSuccess: () => push("/intentions"),
       onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
         const errors = e.response?.data.errors;
         setErrors(errors);
       },
     });
+
+  const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
+    mutationFn: async () => {
+      if (!formId) return;
+      await api.deleteDemande({ params: { id: formId } }).call();
+    },
+    onSuccess: () => push("/intentions"),
+  });
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
     formMetadata?.formation?.isFCIL ?? false
@@ -85,18 +92,6 @@ export const IntentionForm = ({
   const step2Ref = useRef<HTMLDivElement>(null);
 
   const onEditUaiCfdSection = () => setStep(1);
-
-  const { push } = useRouter();
-
-  const onSubmit = async () => {
-    await submit({ forms: getValues() });
-    push("/intentions");
-  };
-
-  const onDraftSubmit = handleSubmit(async () => {
-    await submitDraft({ forms: getValues() });
-    push("/intentions");
-  });
 
   useEffect(() => {
     if (isCFDUaiSectionValid(getValues())) {
@@ -120,7 +115,7 @@ export const IntentionForm = ({
           bg="#E2E7F8"
           as="form"
           noValidate
-          onSubmit={handleSubmit(onSubmit)}
+          onSubmit={handleSubmit((values) => submit(values))}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
             <Breadcrumb
@@ -148,6 +143,7 @@ export const IntentionForm = ({
               formMetadata={formMetadata}
               onEditUaiCfdSection={onEditUaiCfdSection}
               active={step === 1}
+              disabled={disabled}
               isFCIL={isFCIL}
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
@@ -155,12 +151,58 @@ export const IntentionForm = ({
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
-                canEdit={canEdit}
-                isSubmitting={isSubmitting}
-                isDraftSubmitting={isDraftSubmitting}
-                onDraftSubmit={onDraftSubmit}
+                disabled={disabled}
                 errors={errors}
                 formMetadata={formMetadata}
+                footerActions={
+                  <>
+                    {formId && (
+                      <ConfirmationDelete
+                        onConfirm={deleteDemande}
+                        Trigger={({ onClick }) => (
+                          <Button
+                            onClick={onClick}
+                            color="red"
+                            borderColor="red"
+                            mr="auto"
+                            isDisabled={disabled}
+                            isLoading={isDeleting}
+                            variant="secondary"
+                            leftIcon={<DeleteIcon />}
+                          >
+                            Supprimer la demande
+                          </Button>
+                        )}
+                      />
+                    )}
+                    <Box justifyContent={"center"}>
+                      <Button
+                        isDisabled={disabled}
+                        isLoading={isDraftSubmitting}
+                        variant="secondary"
+                        onClick={handleSubmit((values) => submitDraft(values))}
+                      >
+                        Enregistrer le projet de demande
+                      </Button>
+                      <Text fontSize={"xs"} mt="1" align={"center"}>
+                        (Phase d'enregistrement du 02 au 16 octobre)
+                      </Text>
+                    </Box>
+                    <Box justifyContent={"center"}>
+                      <Button
+                        isDisabled={disabled}
+                        isLoading={isSubmitting}
+                        variant="primary"
+                        type="submit"
+                      >
+                        Valider la demande définitive
+                      </Button>
+                      <Text fontSize={"xs"} mt="1" align={"center"}>
+                        Pour soumission au vote du Conseil Régional
+                      </Text>
+                    </Box>
+                  </>
+                }
               />
             </Collapse>
           </Container>

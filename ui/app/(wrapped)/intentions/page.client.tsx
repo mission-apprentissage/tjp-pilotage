@@ -32,7 +32,7 @@ import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { IntentionSpinner } from "./components/IntentionSpinner";
-import { MenuIntention } from "./menuIntention/MenuIntention";
+import { MenuIntention } from "./components/MenuIntention";
 import { typeDemandesOptions } from "./utils/typeDemandeUtils";
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
@@ -105,7 +105,7 @@ export const PageClient = () => {
     );
   };
 
-  const hasPermissionEnvoi = usePermission("intentions/envoi");
+  const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
   if (isLoading) return <IntentionSpinner />;
 
