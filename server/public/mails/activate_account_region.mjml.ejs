@@ -1,0 +1,54 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour <%= data.recipient.firstname %> <%= data.recipient.lastname
+            %>,<br />
+            <br />
+            Orion vous donne accès à différentes données et indicateurs qui
+            outillent les réflexions autour de la transformation de la carte des
+            formations professionnelles en voie initiale.<br />
+            <br />
+            À compter d’aujourd’hui, vous pouvez saisir les demandes
+            d’ouverture/fermeture de formations dans Orion, ce qui permettra
+            d’initier le dialogue de gestion avec la DGESCO.<br />
+            <br />
+            Pour y accéder, activez votre compte en cliquant sur le lien
+            ci-dessous :<br />
+          </mj-text>
+          <mj-button
+            href="<%= utils.getPublicUrl(`/auth/activer-compte?activationToken=${data.activationToken}`) %>"
+            background-color="#0e4194"
+            color="white"
+          >
+            Activer votre compte
+          </mj-button>
+          <mj-text>
+            À venir pour compléter ce module de saisie :
+            <br />
+            <ul>
+              <li>
+                Le 16/10, une console d’analyse des demandes enrichie par les
+                indicateurs InserJeunes ;
+              </li>
+              <li>
+                Le 23/10, une page de pilotage du taux de transformation de la
+                carte.
+              </li>
+            </ul>
+          </mj-text>
+          <mj-text>
+            Si vous rencontrez des problèmes lors de la connexion ou de la
+            saisie, vous pouvez contacter notre équipe à l’adresse suivante :
+            orion@inserjeunes.beta.gouv.fr
+          </mj-text>
+          <%- include('./common/signature.ejs'); %>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>
