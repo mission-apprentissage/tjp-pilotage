@@ -14,7 +14,7 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "national" },
   },
   pilote: {
-    // "intentions/lecture": { default: "national", draft: "national" },
+    "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
   },
   pilote_region: {
