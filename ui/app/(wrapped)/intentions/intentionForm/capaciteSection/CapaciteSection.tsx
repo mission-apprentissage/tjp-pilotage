@@ -19,7 +19,6 @@ import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/default
 
 import {
   isTypeAugmentation,
-  isTypeDiminution,
   isTypeFermeture,
   isTypeOuverture,
 } from "../../utils/typeDemandeUtils";
@@ -42,41 +41,27 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
 );
 
 const differenceCapacité = (
-  capaciteActuelle: number | undefined = 0,
-  capacite: number | undefined
+  valueA: number | undefined,
+  valueB: number | undefined = 0
 ) => {
-  if (capaciteActuelle === undefined || capacite === undefined) return "-";
-  if (capacite >= capaciteActuelle) return capacite - capaciteActuelle;
-  return capacite - capaciteActuelle;
+  if (valueB === undefined || valueA === undefined) return "-";
+  if (valueA < valueB) return "-";
+  return valueA - valueB;
 };
 
 const ConstanteSection = ({
-  typeDemande,
-  capaciteActuelle,
-  capacite,
+  label,
+  value,
 }: {
-  typeDemande: string;
-  capaciteActuelle?: number;
-  capacite?: number;
+  label: string;
+  value: number | string;
 }) => {
   return (
     <>
-      {(isTypeOuverture(typeDemande) || isTypeAugmentation(typeDemande)) && (
-        <FormControl mb="8">
-          <FormLabel>Nombre de nouvelles places</FormLabel>
-          <ConstanteField
-            value={differenceCapacité(capaciteActuelle, capacite)}
-          />
-        </FormControl>
-      )}
-      {(isTypeDiminution(typeDemande) || isTypeFermeture(typeDemande)) && (
-        <FormControl mb="8">
-          <FormLabel>Nombre de places fermées</FormLabel>
-          <ConstanteField
-            value={differenceCapacité(capacite, capaciteActuelle)}
-          />
-        </FormControl>
-      )}
+      <FormControl mb="8">
+        <FormLabel>{label}</FormLabel>
+        <ConstanteField value={value} />
+      </FormControl>
     </>
   );
 };
@@ -95,6 +80,9 @@ export const CapaciteSection = () => {
 
   const typeDemande = watch("typeDemande");
   const mixte = watch("mixte");
+  const isTransfertApprentissage = watch("motif").includes(
+    "transfert_apprentissage"
+  );
 
   return (
     <>
@@ -122,9 +110,16 @@ export const CapaciteSection = () => {
         <CapaciteScolaireColoreeField maxW={240} flex={1} />
       </Flex>
       <ConstanteSection
-        typeDemande={typeDemande}
-        capaciteActuelle={capaciteScolaireActuelle}
-        capacite={capaciteScolaire}
+        label={
+          isTypeOuverture(typeDemande) || isTypeAugmentation(typeDemande)
+            ? "Nombre de nouvelles places"
+            : "Nombre de places fermées"
+        }
+        value={
+          isTypeOuverture(typeDemande) || isTypeAugmentation(typeDemande)
+            ? differenceCapacité(capaciteScolaire, capaciteScolaireActuelle)
+            : differenceCapacité(capaciteScolaireActuelle, capaciteScolaire)
+        }
       />
       {mixte && (
         <>
@@ -137,9 +132,27 @@ export const CapaciteSection = () => {
             <CapaciteApprentissageColoreeField maxW={240} flex={1} />
           </Flex>
           <ConstanteSection
-            typeDemande={typeDemande}
-            capaciteActuelle={capaciteApprentissageActuelle}
-            capacite={capaciteApprentissage}
+            label={
+              isTransfertApprentissage
+                ? "Nombre de places transférées"
+                : isTypeOuverture(typeDemande) ||
+                  isTypeAugmentation(typeDemande)
+                ? "Nombre de nouvelles places"
+                : "Nombre de places fermées"
+            }
+            value={
+              isTransfertApprentissage ||
+              isTypeOuverture(typeDemande) ||
+              isTypeAugmentation(typeDemande)
+                ? differenceCapacité(
+                    capaciteApprentissage,
+                    capaciteApprentissageActuelle
+                  )
+                : differenceCapacité(
+                    capaciteApprentissageActuelle,
+                    capaciteApprentissage
+                  )
+            }
           />
         </>
       )}
