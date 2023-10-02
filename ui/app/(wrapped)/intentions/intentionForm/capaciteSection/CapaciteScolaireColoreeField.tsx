@@ -14,7 +14,7 @@ import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUti
 import { IntentionForms } from "../defaultFormValues";
 
 export const CapaciteScolaireColoreeField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       register,
@@ -46,6 +46,7 @@ export const CapaciteScolaireColoreeField = chakra(
           type="number"
           {...register("capaciteScolaireColoree", {
             shouldUnregister: true,
+            disabled,
             setValueAs: safeParseInt,
             value: null as unknown as undefined,
             validate: (value) => {

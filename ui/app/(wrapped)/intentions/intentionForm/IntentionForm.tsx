@@ -21,12 +21,12 @@ import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
 export const IntentionForm = ({
-  canEdit = false,
+  disabled = true,
   formId,
   defaultValues,
   formMetadata,
 }: {
-  canEdit?: boolean;
+  disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
@@ -143,6 +143,7 @@ export const IntentionForm = ({
               formMetadata={formMetadata}
               onEditUaiCfdSection={onEditUaiCfdSection}
               active={step === 1}
+              disabled={disabled}
               isFCIL={isFCIL}
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
@@ -150,12 +151,12 @@ export const IntentionForm = ({
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
-                canEdit={canEdit}
+                disabled={disabled}
                 errors={errors}
                 formMetadata={formMetadata}
                 footerActions={
                   <>
-                    {formId && canEdit && (
+                    {formId && (
                       <ConfirmationDelete
                         onConfirm={deleteDemande}
                         Trigger={({ onClick }) => (
@@ -164,7 +165,7 @@ export const IntentionForm = ({
                             color="red"
                             borderColor="red"
                             mr="auto"
-                            isDisabled={!canEdit}
+                            isDisabled={disabled}
                             isLoading={isDeleting}
                             variant="secondary"
                             leftIcon={<DeleteIcon />}
@@ -176,7 +177,7 @@ export const IntentionForm = ({
                     )}
                     <Box justifyContent={"center"}>
                       <Button
-                        isDisabled={!canEdit}
+                        isDisabled={disabled}
                         isLoading={isDraftSubmitting}
                         variant="secondary"
                         onClick={() => submitDraft({ forms: getValues() })}
@@ -189,7 +190,7 @@ export const IntentionForm = ({
                     </Box>
                     <Box justifyContent={"center"}>
                       <Button
-                        isDisabled={!canEdit}
+                        isDisabled={disabled}
                         isLoading={isSubmitting}
                         variant="primary"
                         type="submit"

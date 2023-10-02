@@ -13,7 +13,7 @@ import { isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const CapaciteScolaireActuelleField = chakra(
-  ({ className }: { className?: string }) => {
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       register,
@@ -44,6 +44,7 @@ export const CapaciteScolaireActuelleField = chakra(
           type="number"
           {...register("capaciteScolaireActuelle", {
             shouldUnregister: true,
+            disabled,
             setValueAs: safeParseInt,
             value: null as unknown as undefined,
             validate: (value) => {

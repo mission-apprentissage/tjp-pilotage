@@ -16,11 +16,12 @@ import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
+  disabled,
   errors,
   formMetadata,
   footerActions,
 }: {
-  canEdit: boolean;
+  disabled: boolean;
   errors?: Record<string, string>;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
   footerActions: ReactNode;
@@ -28,10 +29,10 @@ export const InformationsBlock = ({
   return (
     <>
       <Box bg="white" p="6" mt="6" mb="6" borderRadius={6}>
-        <TypeDemandeSection formMetadata={formMetadata} />
+        <TypeDemandeSection disabled={disabled} formMetadata={formMetadata} />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <CapaciteSection />
+        <CapaciteSection disabled={disabled} />
         <Divider mt={8}></Divider>
         {errors && (
           <Alert mt="8" alignItems="flex-start" status="error">
@@ -48,9 +49,11 @@ export const InformationsBlock = ({
             </Box>
           </Alert>
         )}
-        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-          {footerActions}
-        </Flex>
+        {footerActions && (
+          <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+            {footerActions}
+          </Flex>
+        )}
       </Box>
     </>
   );
