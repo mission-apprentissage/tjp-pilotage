@@ -56,12 +56,12 @@ export const TypeDemandeSection = ({
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
             {` ${typeDemandesOptions[typeDemande].label.toLowerCase()}, `}
-            veuillez saisir le code diplôme et l’établissement si il est
+            veuillez saisir le code diplôme et l’établissement s'il est
             différent. <br />
             Nous ferons le lien automatiquement entre la demande
             {` d'${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
             et la demande de fermeture / diminution pour le code diplôme et
-            l’UAI renseigné
+            l’UAI renseignés
           </InfoBox>
         </Flex>
       )}
