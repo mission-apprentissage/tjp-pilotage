@@ -80,7 +80,7 @@ export const CapaciteSection = () => {
 
   const typeDemande = watch("typeDemande");
   const mixte = watch("mixte");
-  const isTransfertApprentissage = watch("motif").includes(
+  const isTransfertApprentissage = watch("motif")?.includes(
     "transfert_apprentissage"
   );
 
