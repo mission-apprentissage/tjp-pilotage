@@ -115,8 +115,10 @@ export const [submitDraftDemande] = inject(
       };
 
       const errors = validateDemande(cleanNull(demandeData));
-      if (errors)
-        throw Boom.badData("Donnée incorrectes", { errors, demandeData });
+      if (errors) {
+        logger.info("demande incorrecte", { demande: demandeData });
+        throw Boom.badData("Donnée incorrectes", { errors });
+      }
 
       const created = await deps.createDemandeQuery({
         ...demandeData,
