@@ -20,7 +20,7 @@ export default () => {
 
   if (isLoading && !!intentionId) return <IntentionSpinner />;
   return (
-    <GuardPermission permission="intentions/envoi">
+    <GuardPermission permission="intentions/ecriture">
       {intentionId ? (
         data && (
           <IntentionForm

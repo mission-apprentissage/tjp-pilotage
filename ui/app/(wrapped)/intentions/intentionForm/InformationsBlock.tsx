@@ -4,12 +4,11 @@ import {
   AlertIcon,
   AlertTitle,
   Box,
-  Button,
   Divider,
   Flex,
-  Text,
   UnorderedList,
 } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
@@ -17,19 +16,14 @@ import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
-  canEdit,
   errors,
-  isSubmitting,
-  onDraftSubmit,
-  isDraftSubmitting,
   formMetadata,
+  footerActions,
 }: {
   canEdit: boolean;
   errors?: Record<string, string>;
-  isSubmitting?: boolean;
-  onDraftSubmit: () => void;
-  isDraftSubmitting?: boolean;
   formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  footerActions: ReactNode;
 }) => {
   return (
     <>
@@ -55,32 +49,7 @@ export const InformationsBlock = ({
           </Alert>
         )}
         <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-          <Box justifyContent={"center"}>
-            <Button
-              isDisabled={!canEdit}
-              isLoading={isDraftSubmitting}
-              variant="secondary"
-              onClick={() => onDraftSubmit()}
-            >
-              Enregister le projet de demande
-            </Button>
-            <Text fontSize={"xs"} mt="1" align={"center"}>
-              (Phase d'enregistrement du 02 au 16 octobre)
-            </Text>
-          </Box>
-          <Box justifyContent={"center"}>
-            <Button
-              isDisabled={!canEdit}
-              isLoading={isSubmitting}
-              variant="primary"
-              type="submit"
-            >
-              Valider la demande définitive
-            </Button>
-            <Text fontSize={"xs"} mt="1" align={"center"}>
-              Pour soumission au vote du Conseil Régional
-            </Text>
-          </Box>
+          {footerActions}
         </Flex>
       </Box>
     </>

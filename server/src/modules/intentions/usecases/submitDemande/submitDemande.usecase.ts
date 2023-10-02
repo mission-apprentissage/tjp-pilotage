@@ -74,7 +74,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
-      const scope = getPermissionScope(user.role, "intentions/envoi");
+      const scope = getPermissionScope(user.role, "intentions/ecriture");
       const isAllowed = guardScope(scope?.default, {
         user: () =>
           user.codeRegion === dataEtablissement.codeRegion &&
