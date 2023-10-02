@@ -55,7 +55,7 @@ export const IntentionForm = ({
 
   const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
     useMutation({
-      mutationFn: ({ forms }: { forms: IntentionForms }) =>
+      mutationFn: (forms: IntentionForms) =>
         api
           .submitDraftDemande({ body: { demande: { id: formId, ...forms } } })
           .call(),
@@ -180,7 +180,7 @@ export const IntentionForm = ({
                         isDisabled={disabled}
                         isLoading={isDraftSubmitting}
                         variant="secondary"
-                        onClick={() => submitDraft({ forms: getValues() })}
+                        onClick={handleSubmit((values) => submitDraft(values))}
                       >
                         Enregistrer le projet de demande
                       </Button>
