@@ -41,7 +41,7 @@ export const ConfirmationDelete = ({
                 Confirmation de suppression
               </Heading>
               <Text mt="4">
-                Êtes-vous sûr de vouloir supprimer la séléction ?
+                Êtes-vous sûr de vouloir supprimer la demande ?
               </Text>
               <Text mt="4">
                 Cette action est irréversible, vous perdrez l’ensemble des
