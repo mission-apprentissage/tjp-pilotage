@@ -116,7 +116,7 @@ export const [submitDraftDemande] = inject(
 
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
-        logger.info("demande incorrecte", { demande: demandeData });
+        logger.info("demande incorrecte", { errors, demande: demandeData });
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
