@@ -18,53 +18,56 @@ const emojis = {
   error: "🚨",
 };
 
-const sendLogToSlack = (info: {
+const sendLogToSlack = async (info: {
   level: string;
   message: string;
   userId?: string;
 }) => {
-  sendToSlack(
-    [
-      {
-        type: "header",
-        text: {
-          type: "plain_text",
-          text: `${emojis[info.level as keyof typeof emojis]} ${info.level}: ${
-            info.message
-          }`,
-          emoji: true,
+  try {
+    await sendToSlack(
+      [
+        {
+          type: "header",
+          text: {
+            type: "plain_text",
+            text: `${emojis[info.level as keyof typeof emojis]} ${
+              info.level
+            }: ${info.message}`,
+            emoji: true,
+          },
         },
-      },
-      {
-        type: "context",
-        elements: [
-          {
-            type: "mrkdwn",
-            text: `*Env:* ${config.env}`,
-          },
-          {
-            type: "mrkdwn",
-            text: `*userId:* ${info.userId}`,
-          },
-          {
-            type: "mrkdwn",
-            text: `*date:* ${new Date().toLocaleString()}`,
-          },
-        ],
-      },
-    ],
-    [
-      {
-        type: "context",
-        elements: [
-          {
-            type: "mrkdwn",
-            text: `*details:*\n${JSON.stringify(info ?? {}, null, "  ")}`,
-          },
-        ],
-      },
-    ]
-  );
+        {
+          type: "context",
+          elements: [
+            {
+              type: "mrkdwn",
+              text: `*Env:* ${config.env}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*userId:* ${info.userId}`,
+            },
+            {
+              type: "mrkdwn",
+              text: `*date:* ${new Date().toLocaleString()}`,
+            },
+          ],
+        },
+      ],
+      [
+        {
+          type: "context",
+          elements: [
+            {
+              type: "mrkdwn",
+              text: `*details:*\n${JSON.stringify(info ?? {}, null, "  ")}`,
+            },
+          ],
+        },
+      ]
+    );
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 };
 
 const winstonLogger = winston.createLogger({
@@ -75,15 +78,12 @@ const winstonLogger = winston.createLogger({
   ),
   silent: config.env === "test",
   transports: [
+    new winston.transports.Console({ format: winston.format.prettyPrint() }),
     ...(config.slack.token
       ? [
           new Transport({
             log: (
-              info: {
-                level: string;
-                message: string;
-                userId?: string;
-              },
+              info: { level: string; message: string; userId?: string },
               callback
             ) => {
               sendLogToSlack(info);
@@ -92,7 +92,6 @@ const winstonLogger = winston.createLogger({
           }),
         ]
       : []),
-    new winston.transports.Console({ format: winston.format.prettyPrint() }),
   ],
 });
 const asyncLocalStorage = new AsyncLocalStorage();
