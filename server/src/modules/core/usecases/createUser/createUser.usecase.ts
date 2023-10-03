@@ -30,7 +30,7 @@ export const [createUser, createUserFactory] = inject(
     }) => {
       if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
 
-      const formattedEmail = email.toLocaleLowerCase();
+      const formattedEmail = email.toLowerCase();
 
       const existingUser = await deps.findUserQuery({ email });
       if (existingUser) throw Boom.badRequest("email already exist");

@@ -21,7 +21,7 @@ export const [checkActivationToken, checkActivationTokenFactory] = inject(
         throw Boom.unauthorized("wrong token");
       }
 
-      const email = decryptedToken.email.toLocaleLowerCase();
+      const email = decryptedToken.email.toLowerCase();
       const user = await deps.findUserQuery({ email });
 
       if (!user) {

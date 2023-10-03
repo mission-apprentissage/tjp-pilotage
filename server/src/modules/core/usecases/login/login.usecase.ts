@@ -13,7 +13,7 @@ export const [login, loginFactory] = inject(
   },
   (deps) =>
     async ({ email, password }: { email: string; password: string }) => {
-      const formattedEmail = email.toLocaleLowerCase();
+      const formattedEmail = email.toLowerCase();
       const user = await deps.findUserQuery({ email: formattedEmail });
       if (!user) throw Boom.unauthorized("wrong credentials");
       if (!user.password) throw Boom.unauthorized("wrong credentials");
