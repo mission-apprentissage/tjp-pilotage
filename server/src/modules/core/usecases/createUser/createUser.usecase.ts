@@ -30,18 +30,20 @@ export const [createUser, createUserFactory] = inject(
     }) => {
       if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
 
+      const formattedEmail = email.toLocaleLowerCase();
+
       const existingUser = await deps.findUserQuery({ email });
       if (existingUser) throw Boom.badRequest("email already exist");
 
       await deps.insertUserQuery({
-        email,
+        email: formattedEmail,
         firstname,
         lastname,
         role,
         codeRegion,
       });
       const activationToken = jwt.sign(
-        { email },
+        { email: formattedEmail },
         config.auth.activationJwtSecret,
         {
           issuer: "orion",
@@ -59,12 +61,12 @@ export const [createUser, createUserFactory] = inject(
         )[role] ?? ("activate_account" as const);
 
       deps.shootTemplate({
-        to: email,
+        to: formattedEmail,
         subject: "Orion : activez votre compte personnel",
         template,
         data: {
           activationToken,
-          recipient: { email, firstname, lastname, role },
+          recipient: { email: formattedEmail, firstname, lastname, role },
         },
       });
     }
