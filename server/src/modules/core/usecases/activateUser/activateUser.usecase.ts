@@ -33,7 +33,7 @@ export const [activateUser, activateUserFactory] = inject(
         throw Boom.unauthorized("wrong token");
       }
 
-      const email = decryptedToken.email;
+      const email = decryptedToken.email.toLowerCase();
 
       if (password !== repeatPassword) {
         throw Boom.badRequest("different passwords");
