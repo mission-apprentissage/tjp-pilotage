@@ -13,8 +13,11 @@ const pool = new Pool({
 });
 
 pool.on("error", (error) => {
-  console.error("lost connection with DB!");
-  logger.error("pg pool lost connexion with database", { error });
+  try {
+    console.error("lost connection with DB!");
+    logger.error("pg pool lost connexion with database", { error });
+    // eslint-disable-next-line no-empty
+  } catch (e) {}
 });
 
 export const kdb = new Kysely<DB>({
