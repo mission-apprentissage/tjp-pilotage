@@ -13,7 +13,7 @@ export const [sendResetPassword, sendResetPasswordFactory] = inject(
   },
   (deps) =>
     async ({ email }: { email: string }) => {
-      const formattedEmail = email.toLocaleLowerCase();
+      const formattedEmail = email.toLowerCase();
       const user = await deps.findUserQuery({ email: formattedEmail });
       if (!user) throw Boom.notFound("email does not exist");
 
