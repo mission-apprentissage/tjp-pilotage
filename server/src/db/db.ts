@@ -10,7 +10,6 @@ const pool = new Pool({
   ssl: config.PILOTAGE_POSTGRES_CA
     ? { rejectUnauthorized: false, ca: config.PILOTAGE_POSTGRES_CA }
     : undefined,
-  idleTimeoutMillis: 100000,
 });
 
 pool.on("error", (error) => {
