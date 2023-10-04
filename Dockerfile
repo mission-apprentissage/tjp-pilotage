@@ -42,4 +42,4 @@ COPY --from=builder /app/. .
 
 EXPOSE 5000
 EXPOSE 3000
-CMD parallel --ungroup --halt-on-error 2 ::: "yarn workspace server start" "yarn workspace ui dev"
+CMD parallel --ungroup --halt-on-error 2 ::: "yarn workspace server start" "yarn workspace ui start"
