@@ -143,11 +143,19 @@ const StatsFiltersSchema = Type.Object({
   cfd: Type.Optional(Type.Array(Type.String())),
   dispositif: Type.Optional(Type.Array(Type.String())),
   filiere: Type.Optional(Type.Array(Type.String())),
+  cfdFamille: Type.Optional(Type.Array(Type.String())),
   coloration: Type.Optional(Type.String()),
   amiCMA: Type.Optional(Type.String()),
   secteur: Type.Optional(Type.String()),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(StatsDemandesItem)),
+});
+
+const CountCapaciteStatsDemandesSchema = Type.Object({
+  total: Type.String(),
+  scolaire: Type.String(),
+  apprentissage: Type.String(),
+  coloration: Type.Optional(Type.String()),
 });
 
 export const intentionsSchemas = {
@@ -289,6 +297,7 @@ export const intentionsSchemas = {
           diplomes: Type.Array(OptionSchema),
           formations: Type.Array(OptionSchema),
           filieres: Type.Array(OptionSchema),
+          familles: Type.Array(OptionSchema),
           dispositifs: Type.Array(OptionSchema),
           secteurs: Type.Array(OptionSchema),
           amiCMAs: Type.Array(OptionSchema),
@@ -306,15 +315,13 @@ export const intentionsSchemas = {
     }),
     response: {
       200: Type.Object({
-        total: Type.String(),
-        draft: Type.String(),
-        submitted: Type.String(),
-        ouvertures: Type.String(),
-        fermetures: Type.String(),
-        augmentations: Type.String(),
-        diminutions: Type.String(),
-        amiCMAs: Type.String(),
-        FCILs: Type.String(),
+        total: CountCapaciteStatsDemandesSchema,
+        ouvertures: CountCapaciteStatsDemandesSchema,
+        fermetures: CountCapaciteStatsDemandesSchema,
+        augmentations: CountCapaciteStatsDemandesSchema,
+        diminutions: CountCapaciteStatsDemandesSchema,
+        amiCMAs: CountCapaciteStatsDemandesSchema,
+        FCILs: CountCapaciteStatsDemandesSchema,
       }),
     },
   },

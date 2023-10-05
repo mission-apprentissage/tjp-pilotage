@@ -34,10 +34,10 @@ export const PrimaryFiltersSection = ({
             <Flex
               justifyContent={"start"}
               flexDirection={"column"}
-              gap={8}
+              gap={4}
               py={3}
             >
-              <Flex justifyContent={"start"} gap={8}>
+              <Flex justifyContent={"start"} gap={4}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
                   <Multiselect

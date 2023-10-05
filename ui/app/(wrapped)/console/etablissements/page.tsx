@@ -566,7 +566,7 @@ export default function Etablissements() {
                 <Fragment
                   key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
-                  <Tr>
+                  <Tr h="12">
                     <EtablissementLineContent
                       line={line}
                       defaultRentreeScolaire="2022"

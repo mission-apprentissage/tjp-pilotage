@@ -12,6 +12,7 @@ import {
 import { Fragment } from "react";
 import { STATS_DEMANDES_COLUMNS } from "shared";
 
+import { GraphWrapper } from "../../../../components/GraphWrapper";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
@@ -67,7 +68,7 @@ export const ConsoleSection = ({
           <Loader />
         ) : (
           <TableContainer overflowY="auto" flex={1} position="relative">
-            <Table variant="striped" size={"sm"}>
+            <Table variant="simple" size={"sm"}>
               <Thead
                 position="sticky"
                 top="0"
@@ -164,8 +165,10 @@ export const ConsoleSection = ({
                   {data?.demandes.map((demande) => {
                     return (
                       <Fragment key={`${demande.id}`}>
-                        <Tr fontWeight="700">
-                          <Td>{getTypeDemandeLabel(demande.typeDemande)}</Td>
+                        <Tr h="12">
+                          <Td pr="0" py="1">
+                            {getTypeDemandeLabel(demande.typeDemande)}
+                          </Td>
                           <Td>
                             {demande.motif ? (
                               demande.motif.map(
@@ -195,21 +198,13 @@ export const ConsoleSection = ({
                               (demande.capaciteApprentissageActuelle ?? 0)}
                           </Td>
                           <Td isNumeric>
-                            {`${
-                              demande.insertion ? `${demande.insertion} %` : "-"
-                            }`}
+                            <GraphWrapper value={demande.insertion} />
                           </Td>
                           <Td isNumeric>
-                            {`${
-                              demande.poursuite ? `${demande.poursuite} %` : "-"
-                            }`}
+                            <GraphWrapper value={demande.poursuite} />
                           </Td>
                           <Td isNumeric>
-                            {`${
-                              demande.devenirFavorable
-                                ? `${demande.devenirFavorable} %`
-                                : "-"
-                            }`}
+                            <GraphWrapper value={demande.devenirFavorable} />
                           </Td>
                         </Tr>
                       </Fragment>
