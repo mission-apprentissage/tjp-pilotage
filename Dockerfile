@@ -33,6 +33,7 @@ RUN yarn workspaces foreach -p run build
 
 # Production image, copy all the files and run next
 FROM node:18-alpine AS runner
+RUN apk add --no-cache parallel
 WORKDIR /app
 
 ENV NODE_ENV production
@@ -41,4 +42,4 @@ COPY --from=builder /app/. .
 
 EXPOSE 5000
 EXPOSE 3000
-CMD yarn workspace server start & yarn workspace ui start
+CMD parallel --ungroup --halt-on-error 2 ::: "yarn workspace server start" "yarn workspace ui start"

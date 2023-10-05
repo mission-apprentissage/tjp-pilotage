@@ -10,7 +10,6 @@ import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { registerIntentionsModule } from "./modules/intentions/index";
 import { server } from "./server";
-
 server.register(fastifyCors, {});
 
 server.register(fastifySwagger, {
@@ -67,6 +66,10 @@ server.setErrorHandler((error, _, reply) => {
   reply.status(500).send({ error: "internal error", statusCode: 500 });
 });
 
+process.on("uncaughtExceptionMonitor", (error, origin) => {
+  logger.error("error: process exit", { error, origin });
+});
+
 server.addHook("onRequest", extractUserInRequest);
 server.register(loggerContextPlugin);
 
@@ -79,12 +82,12 @@ server.register(
   { prefix: "/api" }
 );
 
-const cb = (err: Error | null) => {
-  if (err) {
-    console.log(err);
+const cb = (error: Error | null) => {
+  if (error) {
+    logger.error("server failed to start", { error });
     process.exit(1);
   } else {
-    console.log("server listening");
+    logger.info("server started");
   }
 };
 
