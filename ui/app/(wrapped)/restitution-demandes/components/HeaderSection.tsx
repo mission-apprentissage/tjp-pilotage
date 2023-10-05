@@ -13,6 +13,21 @@ import { CountStatsDemandes, Filters, StatsDemandes } from "../types";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
 
+const Loader = () => (
+  <Flex gap={8} flexDirection={"column"} px="8">
+    <Flex w="100%" gap={4} mb="8">
+      <Flex h="160px" w="100%">
+        <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+      </Flex>
+    </Flex>
+    <Flex w="100%" gap={4} mb="8">
+      <Flex h="184px" w="100%">
+        <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+      </Flex>
+    </Flex>
+  </Flex>
+);
+
 const CountCard = ({
   label,
   value,
@@ -112,49 +127,50 @@ export const HeaderSection = ({
   isLoading: boolean;
   data?: StatsDemandes;
   countData?: CountStatsDemandes;
-}) => {
-  if (isLoading) return <Skeleton />;
-
-  return (
-    <Flex gap={8} flexDirection={"column"}>
-      <Flex gap={4} px={8}>
-        <PrimaryFiltersSection
+}) => (
+  <>
+    {isLoading ? (
+      <Loader />
+    ) : (
+      <Flex gap={8} flexDirection={"column"}>
+        <Flex gap={4} px={8}>
+          <PrimaryFiltersSection
+            activeFilters={activeFilters}
+            handleFilters={handleFilters}
+            filterTracker={filterTracker}
+            isLoading={isLoading}
+            data={data}
+          />
+          <CountCard
+            label="Ouvertures"
+            value={countData?.ouvertures}
+            type="ouverture_nette"
+          />
+          <CountCard
+            label="Fermetures"
+            value={countData?.fermetures}
+            type="fermeture"
+          />
+          <CountCard
+            label="Augmentations"
+            value={countData?.augmentations}
+            type="augmentation_nette"
+          />
+          <CountCard
+            label="Diminutions"
+            value={countData?.diminutions}
+            type="diminution"
+          />
+          <CountCard label="AMI / CMA" value={countData?.amiCMAs} />
+          <CountCard label="FCIL" value={countData?.FCILs} />
+        </Flex>
+        <SecondaryFiltersSection
           activeFilters={activeFilters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
-          isLoading={isLoading}
           data={data}
         />
-        <CountCard
-          label="Ouvertures"
-          value={countData?.ouvertures}
-          type="ouverture_nette"
-        />
-        <CountCard
-          label="Fermetures"
-          value={countData?.fermetures}
-          type="fermeture"
-        />
-        <CountCard
-          label="Augmentations"
-          value={countData?.augmentations}
-          type="augmentation_nette"
-        />
-        <CountCard
-          label="Diminutions"
-          value={countData?.diminutions}
-          type="diminution"
-        />
-        <CountCard label="AMI / CMA" value={countData?.amiCMAs} />
-        <CountCard label="FCIL" value={countData?.FCILs} />
       </Flex>
-      <SecondaryFiltersSection
-        activeFilters={activeFilters}
-        handleFilters={handleFilters}
-        filterTracker={filterTracker}
-        isLoading={isLoading}
-        data={data}
-      />
-    </Flex>
-  );
-};
+    )}
+  </>
+);
