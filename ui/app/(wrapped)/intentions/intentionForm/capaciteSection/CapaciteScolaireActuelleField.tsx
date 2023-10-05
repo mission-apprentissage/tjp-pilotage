@@ -8,8 +8,8 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
+import { isTypeOuverture } from "../../../utils/typeDemandeUtils";
 import { safeParseInt } from "../../utils/safeParseInt";
-import { isTypeOuverture } from "../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const CapaciteScolaireActuelleField = chakra(

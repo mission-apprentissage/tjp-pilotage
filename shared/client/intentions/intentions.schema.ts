@@ -84,12 +84,70 @@ const DemandesItem = Type.Object({
   typeCompensation: Type.Optional(Type.String()),
 });
 
+const OptionSchema = Type.Object({
+  label: Type.String(),
+  value: Type.String(),
+});
+
 const FiltersSchema = Type.Object({
   status: Type.Optional(
     Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
   ),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(DemandesItem)),
+});
+
+const StatsDemandesItem = Type.Object({
+  id: Type.String(),
+  cfd: Type.Optional(Type.String()),
+  libelleDiplome: Type.Optional(Type.String()),
+  libelleEtablissement: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
+  libelleFCIL: Type.Optional(Type.String()),
+  uai: Type.Optional(Type.String()),
+  createdAt: Type.String(),
+  updatedAt: Type.String(),
+  createurId: Type.String(),
+  status: Type.String(),
+  typeDemande: Type.Optional(Type.String()),
+  motif: Type.Optional(Type.Array(Type.String())),
+  compensationCfd: Type.Optional(Type.String()),
+  compensationDispositifId: Type.Optional(Type.String()),
+  compensationUai: Type.Optional(Type.String()),
+  compensationRentreeScolaire: Type.Optional(Type.Number()),
+  idCompensation: Type.Optional(Type.String()),
+  typeCompensation: Type.Optional(Type.String()),
+  codeRegion: Type.Optional(Type.String()),
+  libelleRegion: Type.Optional(Type.String()),
+  codeDepartement: Type.Optional(Type.String()),
+  libelleDepartement: Type.Optional(Type.String()),
+  libelleFiliere: Type.Optional(Type.String()),
+  capaciteScolaireActuelle: Type.Optional(Type.Number()),
+  capaciteScolaire: Type.Optional(Type.Number()),
+  capaciteApprentissageActuelle: Type.Optional(Type.Number()),
+  capaciteApprentissage: Type.Optional(Type.Number()),
+  insertion: Type.Optional(Type.Number()),
+  poursuite: Type.Optional(Type.Number()),
+  devenirFavorable: Type.Optional(Type.Number()),
+});
+
+const StatsFiltersSchema = Type.Object({
+  codeRegion: Type.Optional(Type.Array(Type.String())),
+  rentreeScolaire: Type.Optional(Type.Array(Type.String())),
+  typeDemande: Type.Optional(Type.Array(Type.String())),
+  motifDemande: Type.Optional(Type.Array(Type.String())),
+  status: Type.Optional(
+    Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+  ),
+  codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+  cfd: Type.Optional(Type.Array(Type.String())),
+  dispositif: Type.Optional(Type.Array(Type.String())),
+  filiere: Type.Optional(Type.Array(Type.String())),
+  coloration: Type.Optional(Type.String()),
+  amiCMA: Type.Optional(Type.String()),
+  secteur: Type.Optional(Type.String()),
+  order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+  orderBy: Type.Optional(Type.KeyOf(StatsDemandesItem)),
 });
 
 export const intentionsSchemas = {
@@ -209,6 +267,54 @@ export const intentionsSchemas = {
         total: Type.String(),
         draft: Type.String(),
         submitted: Type.String(),
+      }),
+    },
+  },
+  getStatsDemandes: {
+    querystring: Type.Intersect([
+      StatsFiltersSchema,
+      Type.Object({
+        offset: Type.Optional(Type.Number()),
+        limit: Type.Optional(Type.Number()),
+      }),
+    ]),
+    response: {
+      200: Type.Object({
+        filters: Type.Object({
+          rentreesScolaires: Type.Array(OptionSchema),
+          regions: Type.Array(OptionSchema),
+          typesDemande: Type.Array(OptionSchema),
+          motifs: Type.Array(OptionSchema),
+          status: Type.Array(OptionSchema),
+          diplomes: Type.Array(OptionSchema),
+          formations: Type.Array(OptionSchema),
+          filieres: Type.Array(OptionSchema),
+          dispositifs: Type.Array(OptionSchema),
+          secteurs: Type.Array(OptionSchema),
+          amiCMAs: Type.Array(OptionSchema),
+          colorations: Type.Array(OptionSchema),
+        }),
+        demandes: Type.Array(StatsDemandesItem),
+        count: Type.Number(),
+      }),
+    },
+  },
+  countStatsDemandes: {
+    querystring: Type.Object({
+      rentreeScolaire: Type.Optional(Type.Array(Type.String())),
+      codeRegion: Type.Optional(Type.Array(Type.String())),
+    }),
+    response: {
+      200: Type.Object({
+        total: Type.String(),
+        draft: Type.String(),
+        submitted: Type.String(),
+        ouvertures: Type.String(),
+        fermetures: Type.String(),
+        augmentations: Type.String(),
+        diminutions: Type.String(),
+        amiCMAs: Type.String(),
+        FCILs: Type.String(),
       }),
     },
   },

@@ -20,8 +20,8 @@ import { IntentionForms } from "@/app/(wrapped)/intentions/intentionForm/default
 import {
   isTypeDiminution,
   isTypeFermeture,
-  typeDemandesOptions,
-} from "../../utils/typeDemandeUtils";
+  TYPES_DEMANDES_OPTIONS,
+} from "../../../utils/typeDemandeUtils";
 
 function RadioCard({
   value,
@@ -112,7 +112,7 @@ export const TypeDemandeField = chakra(
               onChange={onChange}
               value={value}
             >
-              {Object.values(typeDemandesOptions).map((item) => (
+              {Object.values(TYPES_DEMANDES_OPTIONS).map((item) => (
                 <RadioCard
                   selected={value === item.value}
                   key={item.value}

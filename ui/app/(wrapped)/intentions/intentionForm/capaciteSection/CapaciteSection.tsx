@@ -21,7 +21,7 @@ import {
   isTypeAugmentation,
   isTypeFermeture,
   isTypeOuverture,
-} from "../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
