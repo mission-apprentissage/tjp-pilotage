@@ -466,7 +466,7 @@ export default function Formations() {
                 <Fragment
                   key={`${line.codeFormationDiplome}_${line.dispositifId}`}
                 >
-                  <Tr>
+                  <Tr h="12">
                     <FormationLineContent
                       filters={filters}
                       defaultRentreeScolaire="2022"

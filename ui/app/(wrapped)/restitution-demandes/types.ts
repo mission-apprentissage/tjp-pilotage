@@ -20,6 +20,7 @@ export type Filters = Pick<
   | "codeNiveauDiplome"
   | "dispositif"
   | "secteur"
+  | "cfdFamille"
 >;
 
 export type Order = Pick<StatsDemandesQuery, "order" | "orderBy">;

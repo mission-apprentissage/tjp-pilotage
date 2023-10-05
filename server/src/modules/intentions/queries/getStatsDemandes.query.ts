@@ -8,6 +8,10 @@ import { RequestUser } from "../../core/model/User";
 import { selectTauxDevenirFavorable } from "../../data/queries/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../data/queries/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../data/queries/utils/tauxPoursuite";
+import {
+  countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteScolaire,
+} from "./utils/countCapacite.query";
 import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
 export const getStatsDemandes = async ({
@@ -23,6 +27,7 @@ export const getStatsDemandes = async ({
   coloration,
   amiCMA,
   secteur,
+  cfdFamille,
   user,
   offset = 0,
   limit = 20,
@@ -40,6 +45,7 @@ export const getStatsDemandes = async ({
   coloration?: string;
   amiCMA?: string;
   secteur?: string;
+  cfdFamille?: string[];
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
   limit?: number;
@@ -62,6 +68,7 @@ export const getStatsDemandes = async ({
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
         .on("indicateurRegionSortie.millesimeSortie", "=", "2020_2021")
     )
+    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .selectAll("demande")
     .select((eb) => [
       "dataFormation.libelle as libelleDiplome",
@@ -70,6 +77,10 @@ export const getStatsDemandes = async ({
       "dispositif.libelleDispositif as libelleDispositif",
       "departement.libelle as libelleDepartement",
       "departement.codeDepartement as codeDepartement",
+      countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
+      countDifferenceCapaciteApprentissage(eb).as(
+        "differenceCapaciteApprentissage"
+      ),
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(
         eb
@@ -142,6 +153,11 @@ export const getStatsDemandes = async ({
       return eb;
     })
     .$call((eb) => {
+      if (cfdFamille)
+        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
+      return eb;
+    })
+    .$call((eb) => {
       if (coloration)
         return eb.where(
           "demande.coloration",
@@ -186,6 +202,7 @@ export const getStatsDemandes = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
+    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -213,6 +230,11 @@ export const getStatsDemandes = async ({
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!filiere) return sql<true>`true`;
     return eb("dataFormation.libelleFiliere", "in", filiere);
+  };
+
+  const inFamilleMetier = (eb: ExpressionBuilder<DB, "familleMetier">) => {
+    if (!cfdFamille) return sql<true>`true`;
+    return eb("familleMetier.cfdFamille", "in", cfdFamille);
   };
 
   const inCodeDispositif = (eb: ExpressionBuilder<DB, "dispositif">) => {
@@ -253,26 +275,13 @@ export const getStatsDemandes = async ({
     return eb("dataEtablissement.secteur", "=", secteur);
   };
 
-  const regionsFilters = filtersBase
+  const regionsFilters = kdb
+    .selectFrom("region")
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inRentreeScolaire(eb),
-          inTypeDemande(eb),
-          inMotifDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFiliere(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-        ]),
-        codeRegion ? eb("region.codeRegion", "in", codeRegion) : sql`false`,
-      ]);
-    })
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
     .execute();
 
   const rentreesScolairesFilters = filtersBase
@@ -290,6 +299,7 @@ export const getStatsDemandes = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -314,6 +324,7 @@ export const getStatsDemandes = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -339,6 +350,7 @@ export const getStatsDemandes = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -364,6 +376,7 @@ export const getStatsDemandes = async ({
           inTypeDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -391,6 +404,7 @@ export const getStatsDemandes = async ({
           inTypeDemande(eb),
           inCfd(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -421,12 +435,41 @@ export const getStatsDemandes = async ({
           inTypeDemande(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
         ]),
         cfd ? eb("dataFormation.cfd", "in", cfd) : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const famillesFilters = await filtersBase
+    .select([
+      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.cfdFamille as value",
+    ])
+    .where("familleMetier.cfdFamille", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inRentreeScolaire(eb),
+          inMotifDemande(eb),
+          inTypeDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inCodeDispositif(eb),
+          inFiliere(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+        ]),
+        cfdFamille
+          ? eb("familleMetier.cfdFamille", "in", cfdFamille)
+          : sql`false`,
       ]);
     })
     .execute();
@@ -447,6 +490,7 @@ export const getStatsDemandes = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inFamilleMetier(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -466,6 +510,7 @@ export const getStatsDemandes = async ({
     dispositifs: (await dispositifsFilters).map(cleanNull),
     diplomes: (await diplomesFilters).map(cleanNull),
     formations: (await formationsFilters).map(cleanNull),
+    familles: (await famillesFilters).map(cleanNull),
     filieres: (await filieresFilters).map(cleanNull),
     status: [
       {

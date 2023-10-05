@@ -35,26 +35,10 @@ export const SecondaryFiltersSection = ({
           <Flex
             justifyContent={"start"}
             flexDirection={"column"}
-            gap={8}
+            gap={4}
             py={3}
           >
-            <Flex justifyContent={"start"} gap={8}>
-              <Box justifyContent={"start"}>
-                <FormLabel>Diplôme</FormLabel>
-                <Multiselect
-                  onClose={filterTracker("codeNiveauDiplome")}
-                  width={"72"}
-                  size="md"
-                  variant={"newInput"}
-                  onChange={(selected) =>
-                    handleFilters("codeNiveauDiplome", selected)
-                  }
-                  options={data?.filters.diplomes}
-                  value={activeFilters.codeNiveauDiplome ?? []}
-                >
-                  TOUS ({data?.filters.diplomes.length ?? 0})
-                </Multiselect>
-              </Box>
+            <Flex justifyContent={"start"} gap={4}>
               <Box justifyContent={"start"}>
                 <FormLabel>Formation</FormLabel>
                 <Multiselect
@@ -84,33 +68,6 @@ export const SecondaryFiltersSection = ({
                 </Multiselect>
               </Box>
               <Box justifyContent={"start"}>
-                <FormLabel>Type de demande</FormLabel>
-                <Multiselect
-                  onClose={filterTracker("typeDemande")}
-                  width={"72"}
-                  size="md"
-                  variant={"newInput"}
-                  onChange={(selected) =>
-                    handleFilters("typeDemande", selected)
-                  }
-                  options={data?.filters.typesDemande.map(
-                    (typeDemande: { value: string; label: string }) => {
-                      return {
-                        value: typeDemande.value,
-                        label: getTypeDemandeLabel(
-                          typeDemande.value as TypeDemande
-                        ),
-                      };
-                    }
-                  )}
-                  value={activeFilters.typeDemande ?? []}
-                >
-                  TOUS ({data?.filters.typesDemande.length ?? 0})
-                </Multiselect>
-              </Box>
-            </Flex>
-            <Flex justifyContent={"start"} gap={8}>
-              <Box justifyContent={"start"}>
                 <FormLabel>Motif(s)</FormLabel>
                 <Multiselect
                   onClose={filterTracker("motifDemande")}
@@ -132,23 +89,6 @@ export const SecondaryFiltersSection = ({
                 >
                   TOUS ({data?.filters.motifs.length ?? 0})
                 </Multiselect>
-              </Box>
-              <Box justifyContent={"start"}>
-                <FormLabel>Coloration</FormLabel>
-                <Select
-                  width={"72"}
-                  size="md"
-                  variant={"newInput"}
-                  value={activeFilters.coloration?.toString() ?? ""}
-                  onChange={(e) => handleFilters("coloration", e.target.value)}
-                  placeholder="Oui / non"
-                >
-                  {data?.filters.colorations?.map((option) => (
-                    <option key={option.value} value={option.value}>
-                      {option.label}
-                    </option>
-                  ))}
-                </Select>
               </Box>
               <Box justifyContent={"start"}>
                 <FormLabel>AMI/CMA</FormLabel>
@@ -183,6 +123,94 @@ export const SecondaryFiltersSection = ({
                     </option>
                   ))}
                 </Select>
+              </Box>
+            </Flex>
+            <Flex justifyContent={"start"} gap={4}>
+              <Box justifyContent={"start"}>
+                <FormLabel>Diplôme</FormLabel>
+                <Multiselect
+                  onClose={filterTracker("codeNiveauDiplome")}
+                  width={"72"}
+                  size="md"
+                  variant={"newInput"}
+                  onChange={(selected) =>
+                    handleFilters("codeNiveauDiplome", selected)
+                  }
+                  options={data?.filters.diplomes}
+                  value={activeFilters.codeNiveauDiplome ?? []}
+                >
+                  TOUS ({data?.filters.diplomes.length ?? 0})
+                </Multiselect>
+              </Box>
+              <Box justifyContent={"start"}>
+                <FormLabel>Type de demande</FormLabel>
+                <Multiselect
+                  onClose={filterTracker("typeDemande")}
+                  width={"72"}
+                  size="md"
+                  variant={"newInput"}
+                  onChange={(selected) =>
+                    handleFilters("typeDemande", selected)
+                  }
+                  options={data?.filters.typesDemande.map(
+                    (typeDemande: { value: string; label: string }) => {
+                      return {
+                        value: typeDemande.value,
+                        label: getTypeDemandeLabel(
+                          typeDemande.value as TypeDemande
+                        ),
+                      };
+                    }
+                  )}
+                  value={activeFilters.typeDemande ?? []}
+                >
+                  TOUS ({data?.filters.typesDemande.length ?? 0})
+                </Multiselect>
+              </Box>
+              <Box justifyContent={"start"}>
+                <FormLabel>Coloration</FormLabel>
+                <Select
+                  width={"72"}
+                  size="md"
+                  variant={"newInput"}
+                  value={activeFilters.coloration?.toString() ?? ""}
+                  onChange={(e) => handleFilters("coloration", e.target.value)}
+                  placeholder="Oui / non"
+                >
+                  {data?.filters.colorations?.map((option) => (
+                    <option key={option.value} value={option.value}>
+                      {option.label}
+                    </option>
+                  ))}
+                </Select>
+              </Box>
+              <Box justifyContent={"start"}>
+                <FormLabel>Secteur d'activité</FormLabel>
+                <Multiselect
+                  onClose={filterTracker("filiere")}
+                  width={"72"}
+                  size="md"
+                  variant={"newInput"}
+                  onChange={(selected) => handleFilters("filiere", selected)}
+                  options={data?.filters.filieres}
+                  value={activeFilters.filiere ?? []}
+                >
+                  TOUS ({data?.filters.filieres.length ?? 0})
+                </Multiselect>
+              </Box>
+              <Box justifyContent={"start"}>
+                <FormLabel>Famille</FormLabel>
+                <Multiselect
+                  onClose={filterTracker("cfdFamille")}
+                  width={"72"}
+                  size="md"
+                  variant={"newInput"}
+                  onChange={(selected) => handleFilters("cfdFamille", selected)}
+                  options={data?.filters.familles}
+                  value={activeFilters.cfdFamille ?? []}
+                >
+                  TOUS ({data?.filters.familles.length ?? 0})
+                </Multiselect>
               </Box>
             </Flex>
           </Flex>

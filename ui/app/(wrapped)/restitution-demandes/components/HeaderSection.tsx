@@ -2,7 +2,9 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   Flex,
+  Img,
   Skeleton,
   Text,
 } from "@chakra-ui/react";
@@ -11,17 +13,87 @@ import { CountStatsDemandes, Filters, StatsDemandes } from "../types";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
 
-const CountCard = ({ label, value }: { label: string; value?: string }) => (
-  <Card minW="40" bgColor="grey.975" borderRadius={"7px"}>
+const CountCard = ({
+  label,
+  value,
+  type,
+}: {
+  label: string;
+  value?: {
+    total: string;
+    scolaire: string;
+    apprentissage: string;
+    coloration?: string;
+  };
+  type?:
+    | "ouverture_nette"
+    | "augmentation_nette"
+    | "fermeture"
+    | "diminution"
+    | undefined;
+}) => (
+  <Card minW="64" bgColor="grey.975" borderRadius={"7px"}>
     <CardHeader>
-      <Text fontSize="lg" fontWeight="bold">
-        {label}
-      </Text>
+      <Flex>
+        {type && <Img height={"20px"} src={`/icons/${type}.svg`} />}
+        <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"} ms="2">
+          {label}
+        </Text>
+      </Flex>
     </CardHeader>
     <CardBody py={3}>
-      <Text fontSize="40" fontWeight={"extrabold"}>
-        {value ?? 0}
-      </Text>
+      <Flex justify={"space-between"}>
+        <Text fontSize="40" fontWeight={"extrabold"}>
+          {value?.total ? value?.total : "0"}
+        </Text>
+        <Flex flexDirection="column" justifyContent={"end"} width="40%">
+          <Flex justify={"space-between"} pb="2">
+            <Text
+              justifyContent="start"
+              fontSize="14"
+              fontWeight="bold"
+              lineHeight={"4"}
+            >
+              {`${value?.scolaire ? value?.scolaire : 0} `}
+            </Text>
+            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+              Scolaire
+            </Text>
+          </Flex>
+          <Divider />
+          <Flex justify={"space-between"} pt="2">
+            <Text
+              justifyContent="start"
+              fontSize="14"
+              fontWeight="bold"
+              lineHeight={"4"}
+            >
+              {`${value?.apprentissage ? value?.apprentissage : 0} `}
+            </Text>
+            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+              Apprent.
+            </Text>
+          </Flex>
+          {value?.coloration && (
+            <>
+              <Divider />
+              <Flex justify={"space-between"} pt="2">
+                <Text
+                  justifyContent="start"
+                  fontSize="14"
+                  fontWeight="bold"
+                  lineHeight={"4"}
+                >
+                  {`${value?.coloration ? value?.coloration : 0} `}
+                </Text>
+                <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+                  Coloration
+                </Text>
+              </Flex>
+            </>
+          )}
+        </Flex>
+      </Flex>
     </CardBody>
   </Card>
 );
@@ -45,7 +117,7 @@ export const HeaderSection = ({
 
   return (
     <Flex gap={8} flexDirection={"column"}>
-      <Flex gap={8} px={8}>
+      <Flex gap={4} px={8}>
         <PrimaryFiltersSection
           activeFilters={activeFilters}
           handleFilters={handleFilters}
@@ -53,10 +125,26 @@ export const HeaderSection = ({
           isLoading={isLoading}
           data={data}
         />
-        <CountCard label="Ouvertures" value={countData?.ouvertures} />
-        <CountCard label="Fermetures" value={countData?.fermetures} />
-        <CountCard label="Augmentations" value={countData?.augmentations} />
-        <CountCard label="Diminutions" value={countData?.diminutions} />
+        <CountCard
+          label="Ouvertures"
+          value={countData?.ouvertures}
+          type="ouverture_nette"
+        />
+        <CountCard
+          label="Fermetures"
+          value={countData?.fermetures}
+          type="fermeture"
+        />
+        <CountCard
+          label="Augmentations"
+          value={countData?.augmentations}
+          type="augmentation_nette"
+        />
+        <CountCard
+          label="Diminutions"
+          value={countData?.diminutions}
+          type="diminution"
+        />
         <CountCard label="AMI / CMA" value={countData?.amiCMAs} />
         <CountCard label="FCIL" value={countData?.FCILs} />
       </Flex>
