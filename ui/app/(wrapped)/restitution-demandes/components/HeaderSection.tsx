@@ -35,10 +35,10 @@ const CountCard = ({
 }: {
   label: string;
   value?: {
-    total: string;
-    scolaire: string;
-    apprentissage: string;
-    coloration?: string;
+    total: number;
+    scolaire: number;
+    apprentissage: number;
+    coloration?: number;
   };
   type?:
     | "ouverture_nette"
