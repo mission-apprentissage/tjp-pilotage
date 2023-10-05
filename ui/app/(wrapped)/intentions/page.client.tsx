@@ -31,9 +31,9 @@ import { Breadcrumb } from "../../../components/Breadcrumb";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
-import { typeDemandesOptions } from "./utils/typeDemandeUtils";
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
@@ -176,8 +176,10 @@ export const PageClient = () => {
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data?.demandes.map((demande) => {
-                      return (
+                    {data?.demandes.map(
+                      (
+                        demande: ApiType<typeof api.getDemandes>["demandes"][0]
+                      ) => (
                         <Tr
                           height={"60px"}
                           key={demande.id}
@@ -200,7 +202,7 @@ export const PageClient = () => {
                           </Td>
                           <Td>
                             {demande.typeDemande
-                              ? typeDemandesOptions[demande.typeDemande].label
+                              ? getTypeDemandeLabel(demande.typeDemande)
                               : null}
                           </Td>
                           <Td>
@@ -228,9 +230,9 @@ export const PageClient = () => {
                                     <Box whiteSpace="nowrap">
                                       {`${
                                         demande.typeCompensation
-                                          ? typeDemandesOptions[
+                                          ? getTypeDemandeLabel(
                                               demande.typeCompensation
-                                            ].label
+                                            )
                                           : "Demande"
                                       } liée `}
                                     </Box>
@@ -279,8 +281,8 @@ export const PageClient = () => {
                             {new Date(demande.createdAt).toLocaleString()}
                           </Td>
                         </Tr>
-                      );
-                    })}
+                      )
+                    )}
                   </Tbody>
                 </Table>
               </TableContainer>
