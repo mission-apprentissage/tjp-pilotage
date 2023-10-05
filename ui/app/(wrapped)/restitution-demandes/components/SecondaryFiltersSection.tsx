@@ -30,6 +30,7 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) => handleFilters("cfd", selected)}
               options={data?.filters.formations}
               value={activeFilters.cfd ?? []}
+              disabled={data?.filters.formations.length === 0}
             >
               TOUTES ({data?.filters.formations.length ?? 0})
             </Multiselect>
@@ -44,6 +45,7 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) => handleFilters("dispositif", selected)}
               options={data?.filters.dispositifs}
               value={activeFilters.dispositif ?? []}
+              disabled={data?.filters.dispositifs.length === 0}
             >
               TOUS ({data?.filters.dispositifs.length ?? 0})
             </Multiselect>
@@ -65,6 +67,7 @@ export const SecondaryFiltersSection = ({
                 }
               )}
               value={activeFilters.motifDemande ?? []}
+              disabled={data?.filters.motifs.length === 0}
             >
               TOUS ({data?.filters.motifs.length ?? 0})
             </Multiselect>
@@ -117,6 +120,7 @@ export const SecondaryFiltersSection = ({
               }
               options={data?.filters.diplomes}
               value={activeFilters.codeNiveauDiplome ?? []}
+              disabled={data?.filters.diplomes.length === 0}
             >
               TOUS ({data?.filters.diplomes.length ?? 0})
             </Multiselect>
@@ -140,6 +144,7 @@ export const SecondaryFiltersSection = ({
                 }
               )}
               value={activeFilters.typeDemande ?? []}
+              disabled={data?.filters.typesDemande.length === 0}
             >
               TOUS ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
@@ -171,6 +176,7 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) => handleFilters("filiere", selected)}
               options={data?.filters.filieres}
               value={activeFilters.filiere ?? []}
+              disabled={data?.filters.filieres.length === 0}
             >
               TOUS ({data?.filters.filieres.length ?? 0})
             </Multiselect>
@@ -185,6 +191,7 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) => handleFilters("cfdFamille", selected)}
               options={data?.filters.familles}
               value={activeFilters.cfdFamille ?? []}
+              disabled={data?.filters.familles.length === 0}
             >
               TOUS ({data?.filters.familles.length ?? 0})
             </Multiselect>

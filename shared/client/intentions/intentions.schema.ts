@@ -152,10 +152,10 @@ const StatsFiltersSchema = Type.Object({
 });
 
 const CountCapaciteStatsDemandesSchema = Type.Object({
-  total: Type.String(),
-  scolaire: Type.String(),
-  apprentissage: Type.String(),
-  coloration: Type.Optional(Type.String()),
+  total: Type.Number(),
+  scolaire: Type.Number(),
+  apprentissage: Type.Number(),
+  coloration: Type.Optional(Type.Number()),
 });
 
 export const intentionsSchemas = {
