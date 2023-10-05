@@ -13,7 +13,6 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
   (deps) => async (request: FastifyRequest) => {
     const token = cookie.parse(request.headers.cookie ?? "").Authorization;
     if (!token) return;
-
     try {
       const decoded = jwt.verify(token, deps.jwtSecret) as
         | { email: string }

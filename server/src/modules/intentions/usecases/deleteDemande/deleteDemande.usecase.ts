@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { getPermissionScope, guardScope } from "shared";
 
+import { logger } from "../../../../logger";
 import { RequestUser } from "../../../core/model/User";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { deleteDemandeQuery } from "./deleteDemande.dep";
@@ -25,6 +26,7 @@ export const deleteDemandeFactory =
     });
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteDemandeQuery(demande.id);
+    logger.info("demande supprimée", { id, demande });
   };
 
 export const deleteDemande = deleteDemandeFactory();
