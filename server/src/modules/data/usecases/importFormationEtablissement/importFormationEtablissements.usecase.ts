@@ -94,7 +94,7 @@ export const [importFormationEtablissements] = inject(
           for (const enseignement of enseignements) {
             const { uai, anneesEnseignement, voie } = enseignement;
             if (!processedUais.includes(uai)) {
-              if (false && fetchIj) await deps.fetchIJ({ uai });
+              if (fetchIj) await deps.fetchIJ({ uai });
 
               await deps.importEtablissement({ uai });
               for (const millesime of MILLESIMES_IJ) {
