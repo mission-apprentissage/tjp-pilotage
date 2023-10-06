@@ -2,20 +2,70 @@ import { inject } from "injecti";
 import _ from "lodash";
 import { DateTime } from "luxon";
 
+import { DiplomeProfessionnelLine } from "../../fileTypes/DiplomesProfessionnels";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
-import { getCfdDispositifs } from "../getCfdRentrees/getCfdRentrees.usecase";
+import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { createDataFormation } from "./createDataFormation.dep";
 import { findDiplomeProfessionnel } from "./findDiplomeProfessionnel.dep";
 import { find2ndeCommune, findSpecialite } from "./findFamilleMetier.dep";
-import { findNFormationDiplome } from "./findNFormationDiplome.dep";
 import { findRegroupements } from "./findRegroupements.dep";
+import { overrides } from "./overrides";
+
+const getLineOverride = (line: DiplomeProfessionnelLine) => {
+  return overrides[
+    `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
+  ];
+};
+
+const formatCFD = (line: DiplomeProfessionnelLine) => {
+  if (!line["Code diplôme"]) return;
+  const cfd = line["Code diplôme"].replace("-", "").slice(0, 8);
+
+  if (isNaN(parseInt(cfd))) return;
+  return cfd;
+};
+
+const formatRNCP = (line: DiplomeProfessionnelLine) => {
+  if (!line["Code RNCP"]) return;
+  if (isNaN(parseInt(line["Code RNCP"]))) return;
+  return line["Code RNCP"];
+};
+
+type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
+  "Code diplôme": string;
+};
+
+const isCompleteDiplomePorfessionelLine = (
+  diplomeProfessionnelLine: DiplomeProfessionnelLine
+): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
+  !!diplomeProfessionnelLine["Code diplôme"];
+
+const formatDiplomeProfessionel = (
+  line?: DiplomeProfessionnelLine
+): CompleteDiplomePorfessionelLine | undefined => {
+  if (!line) return;
+  const formattedLine = {
+    ...line,
+    "Code diplôme": formatCFD(line),
+    "Code RNCP": formatRNCP(line),
+  };
+
+  const overridedLine = {
+    ...formattedLine,
+    ..._.pickBy(
+      getLineOverride(line),
+      (val) => _.isString(val) && val.trim() !== ""
+    ),
+  };
+  if (!isCompleteDiplomePorfessionelLine(overridedLine)) return;
+  return overridedLine;
+};
 
 export const [importDataFormations] = inject(
   {
     findDiplomeProfessionnel,
     findRegroupements,
-    findNFormationDiplome,
     createDataFormation,
     getCfdDispositifs,
     find2ndeCommune,
@@ -31,9 +81,10 @@ export const [importDataFormations] = inject(
         }),
       async (nFormationDiplome, count) => {
         const cfd = nFormationDiplome.FORMATION_DIPLOME;
-        const diplomeProfessionnel = await deps.findDiplomeProfessionnel({
-          cfd,
-        });
+
+        const diplomeProfessionnel = await deps
+          .findDiplomeProfessionnel({ cfd })
+          .then(formatDiplomeProfessionel);
 
         const dispositifs = await deps.getCfdDispositifs({ cfd });
         const mefstats = dispositifs.flatMap((dispositif) =>
@@ -47,9 +98,10 @@ export const [importDataFormations] = inject(
         await deps.createDataFormation({
           cfd,
           libelle:
-            (diplomeProfessionnel?.["Intitulé de la spécialité (et options)"] ||
-              formatLibelle(nFormationDiplome.LIBELLE_LONG_200)) ??
-            undefined,
+            diplomeProfessionnel?.[
+              "Intitulé de la spécialité (et options)"
+            ]?.replace(/ \(.*\)/, "") ||
+            formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
           rncp: diplomeProfessionnel?.["Code RNCP"]
             ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
             : undefined,
@@ -85,5 +137,5 @@ export const [importDataFormations] = inject(
   }
 );
 
-const formatLibelle = (libelle?: string) =>
+const formatLibelle = (libelle: string) =>
   libelle && _.capitalize(libelle).replace(/ \(.*\)/, "");
