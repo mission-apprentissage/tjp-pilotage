@@ -36,66 +36,14 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
   cfd: string;
   rncp: number | null;
-  libelle: string | null;
-  codeNiveauDiplome: string | null;
+  libelle: string;
+  codeNiveauDiplome: string;
   cpc: string | null;
   cpcSecteur: string | null;
   cpcSousSecteur: string | null;
@@ -114,6 +62,7 @@ export interface Demande {
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
+  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -123,7 +72,6 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
-  coloration: boolean | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -131,11 +79,11 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
-  updatedAt: Timestamp;
   compensationUai: string | null;
   compensationCfd: string | null;
   compensationDispositifId: string | null;
   compensationRentreeScolaire: number | null;
+  updatedAt: Timestamp;
   libelleFCIL: string | null;
 }
 
@@ -276,7 +224,7 @@ export interface NiveauDiplome {
 export interface RawData {
   type: string;
   data: Json | null;
-  id: string | null;
+  id: Generated<string | null>;
 }
 
 export interface Region {

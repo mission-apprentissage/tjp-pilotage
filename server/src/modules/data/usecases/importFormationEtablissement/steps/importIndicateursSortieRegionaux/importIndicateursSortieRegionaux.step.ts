@@ -4,6 +4,9 @@ import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapp
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 import { inserJeunesApi } from "../../../../services/inserJeunesApi/inserJeunes.api";
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
+import { findAnciennesFormation } from "./findAnciennesFormation.dep";
+import { findIndicateurRegionSortie } from "./findIndicateurRegionSortie.dep";
+import { findNouvellesFormation } from "./findNouvellesFormation.dep";
 
 export const [importIndicateursRegionSortie] = inject(
   {
@@ -28,7 +31,20 @@ export const [importIndicateursRegionSortie] = inject(
             filter: { millesime: millesimeSortie, codeRegion },
           });
           const mefstatData = data?.meftstats[mefstat];
-          if (!mefstatData) continue;
+
+          if (!mefstatData) {
+            const continuumData = await getContinuumData({
+              cfd,
+              dispositifId,
+              codeRegion,
+              millesimeSortie,
+            });
+
+            if (!continuumData) continue;
+            await deps.createIndicateurRegionSortie({ ...continuumData, cfd });
+            continue;
+          }
+
           await deps.createIndicateurRegionSortie({
             cfd,
             dispositifId,
@@ -46,5 +62,40 @@ export const [importIndicateursRegionSortie] = inject(
               mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
           });
         }
+    }
+);
+
+const [getContinuumData] = inject(
+  {
+    findIndicateurRegionSortie,
+    findAnciennesFormation,
+    findNouvellesFormation,
+  },
+  (deps) =>
+    async ({
+      cfd,
+      dispositifId,
+      codeRegion,
+      millesimeSortie,
+    }: {
+      cfd: string;
+      dispositifId: string;
+      codeRegion: string;
+      millesimeSortie: string;
+    }) => {
+      const ancienneFormation = await deps.findAnciennesFormation({ cfd });
+      if (ancienneFormation.length !== 1) return;
+      const cfdContinuum = ancienneFormation[0].ancienCFD;
+      const nouvellesFormation = await deps.findNouvellesFormation({
+        cfd: cfdContinuum,
+      });
+      if (nouvellesFormation.length !== 1) return;
+
+      return await deps.findIndicateurRegionSortie({
+        cfd: cfdContinuum,
+        dispositifId,
+        codeRegion,
+        millesimeSortie,
+      });
     }
 );

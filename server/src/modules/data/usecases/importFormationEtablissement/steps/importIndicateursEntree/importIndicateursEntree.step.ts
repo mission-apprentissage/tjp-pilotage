@@ -4,14 +4,15 @@ import {
   AnneeDispositif,
   AnneeEnseignement,
 } from "../../../getCfdRentrees/getCfdRentrees.usecase";
-import { dependencies } from "../../dependencies.di";
-import { getIndicateursAffelnet as getIndicateursAffelnetDep } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
+import { getIndicateursAffelnet } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
+import { createIndicateurEntree } from "./createIndicateurEntree.dep";
+import { findFamilleMetier } from "./findFamilleMetier";
 
 export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
   {
-    createIndicateurEntree: dependencies.createIndicateurEntree,
-    getIndicateursAffelnet: getIndicateursAffelnetDep,
-    findFamilleMetier: dependencies.findFamilleMetier,
+    createIndicateurEntree,
+    getIndicateursAffelnet,
+    findFamilleMetier,
   },
   (deps) => {
     return async ({

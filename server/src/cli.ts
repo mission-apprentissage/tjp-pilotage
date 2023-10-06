@@ -11,7 +11,10 @@ import { importDataEtablissements } from "./modules/data/usecases/importDataEtab
 import { importDataFormations } from "./modules/data/usecases/importDataFormations/importDataFormations.usecase";
 import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import {
+  importFormationEtablissements,
+  importFormations,
+} from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIndicateursAcademie } from "./modules/data/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
 import { importIndicateursRegion } from "./modules/data/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/data/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
@@ -175,7 +178,7 @@ cli
     const fetchIj = fetchIjOption !== "false";
     await importIndicateursAcademie();
     await importIndicateursRegion();
-    await importFormationEtablissements({ fetchIj });
+    await importFormations({ fetchIj });
   });
 
 cli.parse(process.argv);
