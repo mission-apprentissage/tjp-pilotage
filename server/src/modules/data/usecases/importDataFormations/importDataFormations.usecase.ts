@@ -100,7 +100,7 @@ export const [importDataFormations] = inject(
           libelle:
             diplomeProfessionnel?.[
               "Intitulé de la spécialité (et options)"
-            ]?.replace(/ \(.*\)/, "") ||
+            ]?.replace(/"/g, "") ||
             formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
           rncp: diplomeProfessionnel?.["Code RNCP"]
             ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
