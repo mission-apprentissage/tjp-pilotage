@@ -8,6 +8,7 @@ import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
 import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
+import { findOneSimilarDemande } from "../../repositories/findOneSimilarDemande.query";
 import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 
@@ -55,6 +56,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
     findOneDataEtablissement,
     findOneDataFormation,
     findOneDemande,
+    findOneSimilarDemande,
   },
   (deps) =>
     async ({
@@ -83,6 +85,21 @@ export const [submitDemande, submitDemandeFactory] = inject(
         national: () => true,
       });
       if (!isAllowed) throw Boom.forbidden();
+
+      const sameDemande = await deps.findOneSimilarDemande({
+        ...demande,
+        notId: demande.id,
+      });
+      if (sameDemande) {
+        logger.info("Demande similaire existante", { sameDemande, demande });
+        throw Boom.badRequest("Demande similaire existante", {
+          id: sameDemande.id,
+          errors: {
+            same_demande:
+              "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
+          },
+        });
+      }
 
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
