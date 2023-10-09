@@ -1,4 +1,11 @@
-import { Box, Flex, FormLabel, LightMode, Skeleton } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FormLabel,
+  LightMode,
+  Select,
+  Skeleton,
+} from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { Filters, StatsDemandes } from "../types";
@@ -40,25 +47,28 @@ export const PrimaryFiltersSection = ({
               <Flex justifyContent={"start"} gap={4}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
-                  <Multiselect
-                    onClose={filterTracker("rentreeScolaire")}
-                    width={"72"}
+                  <Select
+                    width={"48"}
                     size="md"
                     variant={"newInput"}
-                    onChange={(selected) =>
-                      handleFilters("rentreeScolaire", selected)
+                    value={activeFilters.rentreeScolaire?.toString() ?? ""}
+                    onChange={(e) =>
+                      handleFilters("rentreeScolaire", e.target.value)
                     }
-                    options={data?.filters.rentreesScolaires}
-                    value={activeFilters.rentreeScolaire ?? []}
+                    placeholder="TOUTES"
                   >
-                    TOUTES ({data?.filters.rentreesScolaires.length ?? 0})
-                  </Multiselect>
+                    {data?.filters.rentreesScolaires?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
                 </Box>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">RÉGION</FormLabel>
                   <Multiselect
                     onClose={filterTracker("codeRegion")}
-                    width={"72"}
+                    width={"48"}
                     size="md"
                     variant={"newInput"}
                     onChange={(selected) =>

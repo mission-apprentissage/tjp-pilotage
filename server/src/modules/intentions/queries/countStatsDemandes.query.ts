@@ -4,9 +4,9 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { kdb } from "../../../db/db";
 import { RequestUser } from "../../core/model/User";
 import {
-  countDifferenceCapacite,
-  countDifferenceCapaciteApprentissage,
-  countDifferenceCapaciteScolaire,
+  countDifferenceCapaciteAbs,
+  countDifferenceCapaciteApprentissageAbs,
+  countDifferenceCapaciteScolaireAbs,
 } from "./utils/countCapacite.query";
 import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
 
@@ -17,7 +17,7 @@ export const countStatsDemandes = async ({
 }: {
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   codeRegion?: string[];
-  rentreeScolaire?: string[];
+  rentreeScolaire?: string;
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
@@ -27,19 +27,19 @@ export const countStatsDemandes = async ({
       return eb;
     })
     .$call((eb) => {
-      if (rentreeScolaire)
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
         return eb.where(
           "demande.rentreeScolaire",
-          "in",
-          rentreeScolaire.map(parseInt)
+          "=",
+          parseInt(rentreeScolaire)
         );
       return eb;
     })
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(${countDifferenceCapacite(eb)})`,
-        scolaire: sql<number>`SUM(${countDifferenceCapaciteScolaire(eb)})`,
-        apprentissage: sql<number>`SUM(${countDifferenceCapaciteApprentissage(
+        total: sql<number>`SUM(${countDifferenceCapaciteAbs(eb)})`,
+        scolaire: sql<number>`SUM(${countDifferenceCapaciteScolaireAbs(eb)})`,
+        apprentissage: sql<number>`SUM(${countDifferenceCapaciteApprentissageAbs(
           eb
         )})`,
       }).as("total")
@@ -49,27 +49,27 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('ouverture_nette','ouverture_compensation')
-          THEN ${countDifferenceCapacite(eb)}
+            "demande.typeDemande"
+          )} IN ('ouverture_nette','ouverture_compensation')
+          THEN ${countDifferenceCapaciteAbs(eb)}
           ELSE 0
           END
         )`,
         scolaire: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('ouverture_nette','ouverture_compensation')
-          THEN ${countDifferenceCapaciteScolaire(eb)}
+            "demande.typeDemande"
+          )} IN ('ouverture_nette','ouverture_compensation')
+          THEN ${countDifferenceCapaciteScolaireAbs(eb)}
           ELSE 0
           END
         )`,
         apprentissage: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('ouverture_nette','ouverture_compensation')
-          THEN ${countDifferenceCapaciteApprentissage(eb)}
+            "demande.typeDemande"
+          )} IN ('ouverture_nette','ouverture_compensation')
+          THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
           ELSE 0
           END
         )`,
@@ -80,21 +80,21 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
         CASE WHEN
         ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapacite(eb)}
+        THEN ${countDifferenceCapaciteAbs(eb)}
         ELSE 0
         END
       )`,
         scolaire: sql<number>`SUM(
         CASE WHEN
         ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapaciteScolaire(eb)}
+        THEN ${countDifferenceCapaciteScolaireAbs(eb)}
         ELSE 0
         END
       )`,
         apprentissage: sql<number>`SUM(
         CASE WHEN
         ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapaciteApprentissage(eb)}
+        THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
         ELSE 0
         END
       )`,
@@ -105,27 +105,27 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapacite(eb)}
+            "demande.typeDemande"
+          )} IN ('augmentation_nette','augmentation_compensation')
+          THEN ${countDifferenceCapaciteAbs(eb)}
           ELSE 0
           END
         )`,
         scolaire: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapaciteScolaire(eb)}
+            "demande.typeDemande"
+          )} IN ('augmentation_nette','augmentation_compensation')
+          THEN ${countDifferenceCapaciteScolaireAbs(eb)}
           ELSE 0
           END
         )`,
         apprentissage: sql<number>`SUM(
           CASE WHEN
           ${eb.ref(
-          "demande.typeDemande"
-        )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapaciteApprentissage(eb)}
+            "demande.typeDemande"
+          )} IN ('augmentation_nette','augmentation_compensation')
+          THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
           ELSE 0
           END
         )`,
@@ -136,21 +136,21 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.typeDemande")} = 'diminution'
-      THEN ${countDifferenceCapacite(eb)}
+      THEN ${countDifferenceCapaciteAbs(eb)}
       ELSE 0
       END
     )`,
         scolaire: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.typeDemande")} = 'diminution'
-      THEN ${countDifferenceCapaciteScolaire(eb)}
+      THEN ${countDifferenceCapaciteScolaireAbs(eb)}
       ELSE 0
       END
     )`,
         apprentissage: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.typeDemande")} = 'diminution'
-      THEN ${countDifferenceCapaciteApprentissage(eb)}
+      THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
       ELSE 0
       END
     )`,
@@ -161,21 +161,21 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.amiCma")} = true
-      THEN ${countDifferenceCapacite(eb)}
+      THEN ${countDifferenceCapaciteAbs(eb)}
       ELSE 0
       END
     )`,
         scolaire: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.amiCma")} = true
-      THEN ${countDifferenceCapaciteScolaire(eb)}
+      THEN ${countDifferenceCapaciteScolaireAbs(eb)}
       ELSE 0
       END
     )`,
         apprentissage: sql<number>`SUM(
       CASE WHEN
       ${eb.ref("demande.amiCma")} = true
-      THEN ${countDifferenceCapaciteApprentissage(eb)}
+      THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
       ELSE 0
       END
     )`,
@@ -186,21 +186,21 @@ export const countStatsDemandes = async ({
         total: sql<number>`SUM(
           CASE WHEN
           ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countDifferenceCapacite(eb)}
+          THEN ${countDifferenceCapaciteAbs(eb)}
           ELSE 0
           END
         )`,
         scolaire: sql<number>`SUM(
           CASE WHEN
           ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countDifferenceCapaciteScolaire(eb)}
+          THEN ${countDifferenceCapaciteScolaireAbs(eb)}
           ELSE 0
           END
         )`,
         apprentissage: sql<number>`SUM(
           CASE WHEN
           ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countDifferenceCapaciteApprentissage(eb)}
+          THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
           ELSE 0
           END
         )`,

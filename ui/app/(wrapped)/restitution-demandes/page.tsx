@@ -9,6 +9,7 @@ import qs from "qs";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { api } from "../../../api.client";
+import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { ConsoleSection } from "./components/ConsoleSection";
 import { HeaderSection } from "./components/HeaderSection";
@@ -114,6 +115,20 @@ export default () => {
           isLoading={isLoading}
           handleOrder={handleOrder}
           order={order}
+        />
+        <TableFooter
+          mb={36}
+          pl="4"
+          onExport={() => trackEvent("restituition-demandes:export")}
+          downloadLink={
+            api.getStatsDemandesCsv({
+              query: { ...filters, ...order },
+            }).url
+          }
+          page={page}
+          pageSize={PAGE_SIZE}
+          count={data?.count}
+          onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
       </Container>
     </GuardPermission>

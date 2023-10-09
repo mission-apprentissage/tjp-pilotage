@@ -16,15 +16,19 @@ export const SecondaryFiltersSection = ({
   filterTracker: (filterName: keyof Filters) => () => void;
   data?: StatsDemandes;
 }) => {
+  const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
+    if (motifLabel === "autre") return "Autre";
+    return getMotifLabel(motifLabel as MotifLabel);
+  };
   return (
-    <Box borderRadius={4} px={8} mb={8}>
+    <Box borderRadius={4} mb={8}>
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
             <FormLabel>Formation</FormLabel>
             <Multiselect
               onClose={filterTracker("cfd")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("cfd", selected)}
@@ -39,7 +43,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Dispositif</FormLabel>
             <Multiselect
               onClose={filterTracker("dispositif")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("dispositif", selected)}
@@ -53,20 +57,20 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Motif(s)</FormLabel>
             <Multiselect
-              onClose={filterTracker("motifDemande")}
-              width={"72"}
+              onClose={filterTracker("motif")}
+              width={"48"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("motifDemande", selected)}
+              onChange={(selected) => handleFilters("motif", selected)}
               options={data?.filters.motifs.map(
                 (motif: { value: string; label: string }) => {
                   return {
                     value: motif.value,
-                    label: getMotifLabel(motif.value as MotifLabel),
+                    label: handleMotifLabelFilter(motif.value as MotifLabel),
                   };
                 }
               )}
-              value={activeFilters.motifDemande ?? []}
+              value={activeFilters.motif ?? []}
               disabled={data?.filters.motifs.length === 0}
             >
               TOUS ({data?.filters.motifs.length ?? 0})
@@ -75,7 +79,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>AMI/CMA</FormLabel>
             <Select
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
@@ -92,7 +96,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Secteur</FormLabel>
             <Select
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
@@ -112,7 +116,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Diplôme</FormLabel>
             <Multiselect
               onClose={filterTracker("codeNiveauDiplome")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) =>
@@ -129,7 +133,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Type de demande</FormLabel>
             <Multiselect
               onClose={filterTracker("typeDemande")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
@@ -152,7 +156,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Coloration</FormLabel>
             <Select
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
@@ -170,7 +174,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Secteur d'activité</FormLabel>
             <Multiselect
               onClose={filterTracker("filiere")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("filiere", selected)}
@@ -185,7 +189,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Famille</FormLabel>
             <Multiselect
               onClose={filterTracker("cfdFamille")}
-              width={"72"}
+              width={"48"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("cfdFamille", selected)}

@@ -1,8 +1,9 @@
 export const STATS_DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
-  libelleDiplome: "Diplôme",
+  libelleDiplome: "Formation",
   dispositifId: "DispositifId",
+  niveauDiplome: "Diplôme",
   libelleDispositif: "Dispositif",
   uai: "UAI",
   libelleEtablissement: "Établissement",
@@ -34,7 +35,10 @@ export const STATS_DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  insertion: "Taux d'insertion",
-  poursuite: "Taux de poursuite d'études",
-  devenirFavorable: "Taux de devenir favorable",
+  insertion: "Taux d'insertion régional",
+  poursuite: "Taux de poursuite d'études régional",
+  devenirFavorable: "Taux de devenir favorable régional",
+  pression: "Taux de pression de la formation au niveau régional",
+  nbEtablissement:
+    "Nb établissements dispensant la formation dans la région en 2022",
 } as const;

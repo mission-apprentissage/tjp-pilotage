@@ -7,9 +7,9 @@ export const countDifferenceCapaciteScolaire = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`abs(${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
-    "demande.capaciteScolaireActuelle"
-  )})`;
+  sql<number>`
+  ${eb.ref("demande.capaciteScolaire")} -
+  ${eb.ref("demande.capaciteScolaireActuelle")}`;
 
 export const countDifferenceCapaciteApprentissage = ({
   eb,
@@ -18,12 +18,10 @@ export const countDifferenceCapaciteApprentissage = ({
 }) =>
   sql<number>`
   CASE WHEN
-  ${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-    "demande.capaciteApprentissageActuelle"
-  )} > 0
-  THEN abs(${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-    "demande.capaciteApprentissageActuelle"
-  )})
+  (${eb.ref("demande.capaciteApprentissage")} -
+  ${eb.ref("demande.capaciteApprentissageActuelle")}) > 0
+  THEN (${eb.ref("demande.capaciteApprentissage")} -
+  ${eb.ref("demande.capaciteApprentissageActuelle")})
   ELSE 0
   END
   `;
@@ -44,8 +42,43 @@ export const countDifferenceCapacite = ({
   eb: ExpressionBuilder<DB, "demande">;
   countColoration?: boolean;
 }) =>
-  sql<number>`${countDifferenceCapaciteScolaire(
-    eb
-  )} + ${countDifferenceCapaciteApprentissage} + ${
-    countColoration ? countDifferenceCapaciteColoration(eb) : 0
-  }`;
+  sql<number>`${countDifferenceCapaciteScolaire(eb)} +
+              ${countDifferenceCapaciteApprentissage} +
+              ${countColoration ? countDifferenceCapaciteColoration(eb) : 0}`;
+
+export const countDifferenceCapaciteScolaireAbs = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  sql<number>`abs(${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
+    "demande.capaciteScolaireActuelle"
+  )})`;
+
+export const countDifferenceCapaciteApprentissageAbs = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  sql<number>`
+    CASE WHEN
+    ${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+      "demande.capaciteApprentissageActuelle"
+    )} > 0
+    THEN abs(${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+      "demande.capaciteApprentissageActuelle"
+    )})
+    ELSE 0
+    END
+    `;
+
+export const countDifferenceCapaciteAbs = ({
+  eb,
+  countColoration = false,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  countColoration?: boolean;
+}) =>
+  sql<number>`${countDifferenceCapaciteScolaireAbs(eb)} +
+        ${countDifferenceCapaciteApprentissageAbs(eb)} +
+        ${countColoration ? countDifferenceCapaciteColoration(eb) : 0}`;

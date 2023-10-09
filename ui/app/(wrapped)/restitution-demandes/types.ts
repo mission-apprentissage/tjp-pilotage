@@ -11,7 +11,7 @@ export type Filters = Pick<
   | "codeRegion"
   | "rentreeScolaire"
   | "typeDemande"
-  | "motifDemande"
+  | "motif"
   | "status"
   | "cfd"
   | "filiere"
