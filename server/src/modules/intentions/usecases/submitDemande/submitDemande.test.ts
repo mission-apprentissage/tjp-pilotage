@@ -22,7 +22,8 @@ const valideDeps = {
       codeRegion: "codeRegion",
       createurId: "user-id",
     } as AwaitedResult<Deps["findOneDemande"]>),
-};
+  findOneSimilarDemande: () => Promise.resolve(),
+} as Deps;
 
 const demande = {
   id: "demande-id",
