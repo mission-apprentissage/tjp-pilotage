@@ -5,9 +5,11 @@ import { kdb } from "../../../db/db";
 import { DB } from "../../../db/schema";
 import { cleanNull } from "../../../utils/noNull";
 import { RequestUser } from "../../core/model/User";
+import { nbEtablissementFormationRegion } from "../../data/queries/utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../data/queries/utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../data/queries/utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../data/queries/utils/tauxPoursuite";
+import { withTauxPressionReg } from "../../data/queries/utils/tauxPression";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -35,7 +37,7 @@ export const getStatsDemandes = async ({
 }: {
   status?: "draft" | "submitted";
   codeRegion?: string[];
-  rentreeScolaire?: string[];
+  rentreeScolaire?: string;
   typeDemande?: string[];
   motif?: string[];
   cfd?: string[];
@@ -62,15 +64,46 @@ export const getStatsDemandes = async ({
       "dataEtablissement.codeDepartement"
     )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNiveauDiplome"
+    )
     .leftJoin("indicateurRegionSortie", (join) =>
       join
         .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
         .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
+        .onRef(
+          "indicateurRegionSortie.dispositifId",
+          "=",
+          "demande.dispositifId"
+        )
         .on("indicateurRegionSortie.millesimeSortie", "=", "2020_2021")
     )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("etablissement", "etablissement.UAI", "demande.uai")
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.UAI", "=", "demande.uai")
+        .onRef("formationEtablissement.cfd", "=", "demande.cfd")
+        .onRef(
+          "formationEtablissement.dispositifId",
+          "=",
+          "demande.dispositifId"
+        )
+    )
+    .leftJoin("indicateurEntree", (join) =>
+      join
+        .onRef(
+          "indicateurEntree.formationEtablissementId",
+          "=",
+          "formationEtablissement.id"
+        )
+        .on("indicateurEntree.rentreeScolaire", "=", "2022")
+    )
     .selectAll("demande")
     .select((eb) => [
+      "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelle as libelleDiplome",
       "dataFormation.libelleFiliere as libelleFiliere",
       "dataEtablissement.libelle as libelleEtablissement",
@@ -100,6 +133,10 @@ export const getStatsDemandes = async ({
       selectTauxDevenirFavorable("indicateurRegionSortie").as(
         "devenirFavorable"
       ),
+      withTauxPressionReg({ eb, codeRegion: "ref" }).as("pression"),
+      nbEtablissementFormationRegion({ eb, rentreeScolaire: "2022" }).as(
+        "nbEtablissement"
+      ),
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
@@ -110,18 +147,22 @@ export const getStatsDemandes = async ({
       return eb;
     })
     .$call((eb) => {
-      if (rentreeScolaire)
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
         return eb.where(
           "demande.rentreeScolaire",
-          "in",
-          rentreeScolaire.map(parseInt)
+          "=",
+          parseInt(rentreeScolaire)
         );
       return eb;
     })
     .$call((eb) => {
       if (motif)
         return eb.where((eb) =>
-          eb.or(motif.map((m) => sql`${m} <@ ${eb.ref("demande.motif")}`))
+          eb.or(
+            motif.map(
+              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+            )
+          )
         );
       return eb;
     })
@@ -213,8 +254,9 @@ export const getStatsDemandes = async ({
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!rentreeScolaire) return sql<true>`true`;
-    return eb("demande.rentreeScolaire", "in", rentreeScolaire.map(parseInt));
+    if (!rentreeScolaire || Number.isNaN(rentreeScolaire))
+      return sql<true>`true`;
+    return eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -249,7 +291,9 @@ export const getStatsDemandes = async ({
 
   const inMotifDemande = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!motif) return sql<true>`true`;
-    return eb("demande.motif", "@>", motif);
+    return eb.or(
+      motif.map((m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`)
+    );
   };
 
   const inColoration = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -279,6 +323,7 @@ export const getStatsDemandes = async ({
     .selectFrom("region")
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
+    .where("region.codeRegion", "not in", ["99", "00"])
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc")
@@ -305,8 +350,8 @@ export const getStatsDemandes = async ({
           inAmiCMA(eb),
           inSecteur(eb),
         ]),
-        rentreeScolaire
-          ? eb("demande.rentreeScolaire", "in", rentreeScolaire.map(parseInt))
+        rentreeScolaire && !Number.isNaN(rentreeScolaire)
+          ? eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire))
           : sql`false`,
       ]);
     })
@@ -356,7 +401,13 @@ export const getStatsDemandes = async ({
           inAmiCMA(eb),
           inSecteur(eb),
         ]),
-        motif ? eb("demande.motif", "@>", motif) : sql`false`,
+        motif
+          ? eb.or(
+              motif.map(
+                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              )
+            )
+          : sql`false`,
       ]);
     })
     .execute();
@@ -422,7 +473,7 @@ export const getStatsDemandes = async ({
       sql`CONCAT(${eb.ref("dataFormation.libelle")}, ' (', ${eb.ref(
         "dataFormation.libelle"
       )}, ')')
-              `.as("label"),
+          `.as("label"),
       "dataFormation.cfd as value",
     ])
     .where("dataFormation.cfd", "is not", null)

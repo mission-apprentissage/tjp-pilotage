@@ -6,6 +6,7 @@ import {
   getPermissionScope,
   guardScope,
   ROUTES_CONFIG,
+  STATS_DEMANDES_COLUMNS,
 } from "shared";
 
 import { Server } from "../../../server";
@@ -181,6 +182,45 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
         user: request.user,
       });
       response.status(200).send(result);
+    }
+  );
+
+  server.get(
+    "/demandes/stats/csv",
+    {
+      schema: ROUTES_CONFIG.getStatsDemandesCsv,
+      preHandler: hasPermissionHandler("intentions/lecture"),
+    },
+    async (request, response) => {
+      const { order, orderBy, ...rest } = request.query;
+      if (!request.user) throw Boom.forbidden();
+
+      const { demandes } = await getStatsDemandes({
+        ...rest,
+        user: request.user,
+        offset: 0,
+        limit: 1000000,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+      });
+
+      const parser = new Parser({
+        fields: Object.entries(STATS_DEMANDES_COLUMNS).map(
+          ([value, label]) => ({
+            label,
+            value,
+          })
+        ),
+        delimiter: ";",
+      });
+      const csv = parser.parse(demandes);
+      response
+        .status(200)
+        .header("Content-Type", "text/csv")
+        .header(
+          "Content-Disposition",
+          `attachment; filename=${"demandes_stats_export"}.csv`
+        )
+        .send(csv);
     }
   );
 

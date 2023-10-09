@@ -101,6 +101,7 @@ const StatsDemandesItem = Type.Object({
   id: Type.String(),
   cfd: Type.Optional(Type.String()),
   libelleDiplome: Type.Optional(Type.String()),
+  niveauDiplome: Type.Optional(Type.String()),
   libelleEtablissement: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
   libelleFCIL: Type.Optional(Type.String()),
@@ -111,6 +112,7 @@ const StatsDemandesItem = Type.Object({
   status: Type.String(),
   typeDemande: Type.Optional(Type.String()),
   motif: Type.Optional(Type.Array(Type.String())),
+  autreMotif: Type.Optional(Type.String()),
   compensationCfd: Type.Optional(Type.String()),
   compensationDispositifId: Type.Optional(Type.String()),
   compensationUai: Type.Optional(Type.String()),
@@ -124,18 +126,22 @@ const StatsDemandesItem = Type.Object({
   libelleFiliere: Type.Optional(Type.String()),
   capaciteScolaireActuelle: Type.Optional(Type.Number()),
   capaciteScolaire: Type.Optional(Type.Number()),
+  differenceCapaciteScolaire: Type.Optional(Type.Number()),
   capaciteApprentissageActuelle: Type.Optional(Type.Number()),
   capaciteApprentissage: Type.Optional(Type.Number()),
+  differenceCapaciteApprentissage: Type.Optional(Type.Number()),
   insertion: Type.Optional(Type.Number()),
   poursuite: Type.Optional(Type.Number()),
   devenirFavorable: Type.Optional(Type.Number()),
+  pression: Type.Optional(Type.Number()),
+  nbEtablissement: Type.Optional(Type.Number()),
 });
 
 const StatsFiltersSchema = Type.Object({
   codeRegion: Type.Optional(Type.Array(Type.String())),
-  rentreeScolaire: Type.Optional(Type.Array(Type.String())),
+  rentreeScolaire: Type.Optional(Type.String()),
   typeDemande: Type.Optional(Type.Array(Type.String())),
-  motifDemande: Type.Optional(Type.Array(Type.String())),
+  motif: Type.Optional(Type.Array(Type.String())),
   status: Type.Optional(
     Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
   ),
@@ -308,9 +314,16 @@ export const intentionsSchemas = {
       }),
     },
   },
+  getStatsDemandesCsv: {
+    produces: ["text/csv"] as string[],
+    querystring: StatsFiltersSchema,
+    response: {
+      200: Type.String(),
+    },
+  },
   countStatsDemandes: {
     querystring: Type.Object({
-      rentreeScolaire: Type.Optional(Type.Array(Type.String())),
+      rentreeScolaire: Type.Optional(Type.String()),
       codeRegion: Type.Optional(Type.Array(Type.String())),
     }),
     response: {

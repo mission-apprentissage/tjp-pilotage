@@ -14,14 +14,14 @@ import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
 
 const Loader = () => (
-  <Flex gap={8} flexDirection={"column"} px="8">
+  <Flex gap={8} flexDirection={"column"}>
     <Flex w="100%" gap={4} mb="8">
-      <Flex h="160px" w="100%">
+      <Flex h="140px" w="100%">
         <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
       </Flex>
     </Flex>
     <Flex w="100%" gap={4} mb="8">
-      <Flex h="184px" w="100%">
+      <Flex h="140px" w="100%">
         <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
       </Flex>
     </Flex>
@@ -47,8 +47,8 @@ const CountCard = ({
     | "diminution"
     | undefined;
 }) => (
-  <Card minW="64" bgColor="grey.975" borderRadius={"7px"}>
-    <CardHeader>
+  <Card minW="56" bgColor="grey.975" borderRadius={"7px"}>
+    <CardHeader px={3}>
       <Flex>
         {type && <Img height={"20px"} src={`/icons/${type}.svg`} />}
         <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"} ms="2">
@@ -56,16 +56,16 @@ const CountCard = ({
         </Text>
       </Flex>
     </CardHeader>
-    <CardBody py={3}>
+    <CardBody py={3} px={3}>
       <Flex justify={"space-between"}>
-        <Text fontSize="40" fontWeight={"extrabold"}>
+        <Text fontSize="36" fontWeight={"extrabold"}>
           {value?.total ? value?.total : "0"}
         </Text>
-        <Flex flexDirection="column" justifyContent={"end"} width="40%">
+        <Flex flexDirection="column" justifyContent={"end"} width="50%">
           <Flex justify={"space-between"} pb="2">
             <Text
               justifyContent="start"
-              fontSize="14"
+              fontSize="12"
               fontWeight="bold"
               lineHeight={"4"}
             >
@@ -79,7 +79,7 @@ const CountCard = ({
           <Flex justify={"space-between"} pt="2">
             <Text
               justifyContent="start"
-              fontSize="14"
+              fontSize="12"
               fontWeight="bold"
               lineHeight={"4"}
             >
@@ -95,7 +95,7 @@ const CountCard = ({
               <Flex justify={"space-between"} pt="2">
                 <Text
                   justifyContent="start"
-                  fontSize="14"
+                  fontSize="12"
                   fontWeight="bold"
                   lineHeight={"4"}
                 >
@@ -133,7 +133,7 @@ export const HeaderSection = ({
       <Loader />
     ) : (
       <Flex gap={8} flexDirection={"column"}>
-        <Flex gap={4} px={8}>
+        <Flex gap={4}>
           <PrimaryFiltersSection
             activeFilters={activeFilters}
             handleFilters={handleFilters}
