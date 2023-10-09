@@ -33,5 +33,4 @@ export const migrations: Migrations = {
   migration_1695129025327,
   migration_1695713687238,
   migration_1695902173541,
-  migration_1696855197939,
 };
