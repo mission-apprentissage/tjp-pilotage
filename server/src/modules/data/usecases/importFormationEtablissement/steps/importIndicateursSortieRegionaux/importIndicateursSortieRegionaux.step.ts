@@ -41,7 +41,11 @@ export const [importIndicateursRegionSortie] = inject(
             });
 
             if (!continuumData) continue;
-            await deps.createIndicateurRegionSortie({ ...continuumData, cfd });
+            await deps.createIndicateurRegionSortie({
+              ...continuumData,
+              cfd,
+              cfdContinuum: continuumData.cfd,
+            });
             continue;
           }
 

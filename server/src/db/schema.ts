@@ -254,6 +254,7 @@ export interface IndicateurRegionSortie {
   nbInsertion6mois: number | null;
   nbInsertion12mois: number | null;
   nbInsertion24mois: number | null;
+  cfdContinuum: string | null;
 }
 
 export interface IndicateurSortie {
