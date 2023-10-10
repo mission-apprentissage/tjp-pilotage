@@ -58,7 +58,6 @@ export const CapaciteScolaireField = chakra(
               if (value < 0) return "Valeurs positives uniquement.";
             },
           })}
-          placeholder={fermeture ? "0" : ""}
         />
         {errors.capaciteScolaire && (
           <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>

@@ -90,12 +90,12 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
         Précisions sur votre demande et saisie de la capacité
       </Heading>
       <Divider pt="4" mb="4" />
-      {!isTypeFermeture(typeDemande) && (
-        <Flex maxW="752px" gap="6" mb="6">
-          <MixteField disabled={disabled} />
+      <Flex maxW="752px" gap="6" mb="6">
+        <MixteField disabled={disabled} />
+        {!isTypeFermeture(typeDemande) && (
           <PoursuitePedagogiqueField disabled={disabled} />
-        </Flex>
-      )}
+        )}
+      </Flex>
       <Flex maxW="752px" gap="6" mb="6">
         <ColorationField disabled={disabled} />
         <AmiCmaField disabled={disabled} />
