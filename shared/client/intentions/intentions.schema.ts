@@ -105,6 +105,7 @@ const StatsDemandesItem = Type.Object({
   libelleEtablissement: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
   libelleFCIL: Type.Optional(Type.String()),
+  libelleColoration: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
   createdAt: Type.String(),
   updatedAt: Type.String(),
@@ -135,6 +136,7 @@ const StatsDemandesItem = Type.Object({
   devenirFavorable: Type.Optional(Type.Number()),
   pression: Type.Optional(Type.Number()),
   nbEtablissement: Type.Optional(Type.Number()),
+  commentaire: Type.Optional(Type.String()),
 });
 
 const StatsFiltersSchema = Type.Object({
