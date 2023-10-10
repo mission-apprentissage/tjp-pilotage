@@ -101,7 +101,7 @@ export default () => {
 
   return (
     <GuardPermission permission="intentions/lecture">
-      <Container maxWidth={"100%"} py="4" mt={8}>
+      <Container maxWidth={"100%"} py="4" pt={8} bg="#E2E7F8">
         <HeaderSection
           countData={countData}
           activeFilters={filters}
