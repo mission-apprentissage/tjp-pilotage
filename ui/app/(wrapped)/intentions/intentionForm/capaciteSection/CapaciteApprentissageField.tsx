@@ -30,10 +30,11 @@ export const CapaciteApprentissageField = chakra(
         }).unsubscribe
     );
 
-    const typeDemande = watch("typeDemande");
+    const [typeDemande, motif] = watch(["typeDemande", "motif"]);
     const ouverture = isTypeOuverture(typeDemande);
     const fermeture = isTypeFermeture(typeDemande);
-    if (fermeture) return <></>;
+    const isTransfertApprentissage = motif.includes("transfert_apprentissage");
+    if (fermeture && !isTransfertApprentissage) return <></>;
 
     return (
       <FormControl
@@ -58,8 +59,6 @@ export const CapaciteApprentissageField = chakra(
               if (value < 0) return "Valeurs positives uniquement.";
             },
           })}
-          placeholder={fermeture ? "0" : ""}
-          disabled={fermeture}
         />
         {errors.capaciteApprentissage && (
           <FormErrorMessage>
