@@ -242,6 +242,9 @@ export const ConsoleSection = ({
                   <OrderIcon {...order} column="pression" />
                   {STATS_DEMANDES_COLUMNS.pression}
                 </Th>
+                <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleColoration}</Th>
+                <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleFCIL}</Th>
+                <Th pb="4">{STATS_DEMANDES_COLUMNS.commentaire}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -291,6 +294,15 @@ export const ConsoleSection = ({
                         </Td>
                         <Td isNumeric>
                           <GraphWrapper value={demande.pression} />
+                        </Td>
+                        <Td minW={300} maxW={300} whiteSpace="normal">
+                          {demande.libelleColoration}
+                        </Td>
+                        <Td minW={300} maxW={300} whiteSpace="normal">
+                          {demande.libelleFCIL}
+                        </Td>
+                        <Td minW={300} maxW={300} whiteSpace="normal">
+                          {demande.commentaire}
                         </Td>
                       </Tr>
                     </Fragment>
