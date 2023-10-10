@@ -24,11 +24,17 @@ import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Order, StatsDemandes } from "../types";
 
 const Loader = () => (
-  <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
+  <TableContainer
+    overflowY={"auto"}
+    flex={1}
+    position="relative"
+    height={"sm"}
+    bg={"white"}
+  >
     <Table variant="simple" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          <Tr key={i} bg={"#f5f5f5"} h="12">
+          <Tr key={i} h="12">
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
             </Td>
@@ -67,14 +73,14 @@ export const ConsoleSection = ({
 }) => {
   const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
     return motif ? (
-      motif.map(
+      `(${motif.length}) ${motif.map(
         (motifLabel: string, index: number) =>
           `${
             motifLabel === "autre"
-              ? `Autre : ${autreMotif}`
+              ? `Autre : ${autreMotif}\n`
               : getMotifLabel(motifLabel as MotifLabel)
           }${motif && motif.length - 1 > index ? ", " : ""}`
-      )
+      )}`
     ) : (
       <></>
     );
@@ -87,6 +93,7 @@ export const ConsoleSection = ({
       borderColor="grey.900"
       p={4}
       wrap={"wrap"}
+      bg={"white"}
     >
       {isLoading ? (
         <Loader />
@@ -285,13 +292,13 @@ export const ConsoleSection = ({
                 {data?.demandes.map((demande) => {
                   return (
                     <Fragment key={`${demande.id}`}>
-                      <Tr h="12">
+                      <Tr h="12" _hover={{ bg: "#E2E7F8" }}>
                         <Td pr="0" py="1">
                           {getTypeDemandeLabel(demande.typeDemande)}
                         </Td>
                         <Td
-                          minW={300}
-                          maxW={300}
+                          minW={400}
+                          maxW={400}
                           whiteSpace="normal"
                           textOverflow={"ellipsis"}
                           isTruncated={true}
@@ -344,7 +351,12 @@ export const ConsoleSection = ({
                         <Td minW={300} maxW={300} whiteSpace="normal">
                           {demande.libelleFCIL}
                         </Td>
-                        <Td minW={300} maxW={300} whiteSpace="normal">
+                        <Td
+                          minW={600}
+                          maxW={600}
+                          textOverflow={"ellipsis"}
+                          isTruncated={true}
+                        >
                           {demande.commentaire}
                         </Td>
                       </Tr>

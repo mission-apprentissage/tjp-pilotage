@@ -36,7 +36,7 @@ export const PrimaryFiltersSection = ({
           ></Skeleton>
         </Box>
       ) : (
-        <Flex borderRadius={4} px={4} py={8} bg="blue.main" h="100%">
+        <Flex borderRadius={5} px={4} py={2} mb={2} bg="blue.main" h="100%">
           <LightMode>
             <Flex
               justifyContent={"start"}
@@ -44,7 +44,7 @@ export const PrimaryFiltersSection = ({
               gap={4}
               py={3}
             >
-              <Flex justifyContent={"start"} gap={4}>
+              <Flex justifyContent={"start"} gap={4} flexDirection={"column"}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
                   <Select
@@ -68,7 +68,7 @@ export const PrimaryFiltersSection = ({
                   <FormLabel color="white">RÉGION</FormLabel>
                   <Multiselect
                     onClose={filterTracker("codeRegion")}
-                    width={"48"}
+                    width={"72"}
                     size="md"
                     variant={"newInput"}
                     onChange={(selected) =>

@@ -327,14 +327,15 @@ export const intentionsSchemas = {
     querystring: Type.Object({
       rentreeScolaire: Type.Optional(Type.String()),
       codeRegion: Type.Optional(Type.Array(Type.String())),
+      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+      coloration: Type.Optional(Type.String()),
+      secteur: Type.Optional(Type.String()),
     }),
     response: {
       200: Type.Object({
         total: CountCapaciteStatsDemandesSchema,
         ouvertures: CountCapaciteStatsDemandesSchema,
         fermetures: CountCapaciteStatsDemandesSchema,
-        augmentations: CountCapaciteStatsDemandesSchema,
-        diminutions: CountCapaciteStatsDemandesSchema,
         amiCMAs: CountCapaciteStatsDemandesSchema,
         FCILs: CountCapaciteStatsDemandesSchema,
       }),

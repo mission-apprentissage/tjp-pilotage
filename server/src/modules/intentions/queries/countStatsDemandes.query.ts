@@ -14,14 +14,21 @@ export const countStatsDemandes = async ({
   user,
   codeRegion,
   rentreeScolaire,
+  codeNiveauDiplome,
+  coloration,
+  secteur,
 }: {
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   codeRegion?: string[];
   rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  coloration?: string;
+  secteur?: string;
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .$call((eb) => {
       if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
       return eb;
@@ -33,6 +40,28 @@ export const countStatsDemandes = async ({
           "=",
           parseInt(rentreeScolaire)
         );
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (coloration)
+        return eb.where(
+          "demande.coloration",
+          "=",
+          coloration === "true" ? sql<true>`true` : sql<false>`false`
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
       return eb;
     })
     .select((eb) =>
@@ -50,7 +79,7 @@ export const countStatsDemandes = async ({
           CASE WHEN
           ${eb.ref(
             "demande.typeDemande"
-          )} IN ('ouverture_nette','ouverture_compensation')
+          )} IN ('augmentation_nette','augmentation_compensation', 'ouverture_nette', 'ouverture_compensation')
           THEN ${countDifferenceCapaciteAbs(eb)}
           ELSE 0
           END
@@ -59,7 +88,7 @@ export const countStatsDemandes = async ({
           CASE WHEN
           ${eb.ref(
             "demande.typeDemande"
-          )} IN ('ouverture_nette','ouverture_compensation')
+          )} IN ('augmentation_nette','augmentation_compensation', 'ouverture_nette', 'ouverture_compensation')
           THEN ${countDifferenceCapaciteScolaireAbs(eb)}
           ELSE 0
           END
@@ -68,7 +97,7 @@ export const countStatsDemandes = async ({
           CASE WHEN
           ${eb.ref(
             "demande.typeDemande"
-          )} IN ('ouverture_nette','ouverture_compensation')
+          )} IN ('augmentation_nette','augmentation_compensation', 'ouverture_nette', 'ouverture_compensation')
           THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
           ELSE 0
           END
@@ -78,83 +107,27 @@ export const countStatsDemandes = async ({
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`SUM(
-        CASE WHEN
-        ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapaciteAbs(eb)}
-        ELSE 0
-        END
-      )`,
-        scolaire: sql<number>`SUM(
-        CASE WHEN
-        ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapaciteScolaireAbs(eb)}
-        ELSE 0
-        END
-      )`,
-        apprentissage: sql<number>`SUM(
-        CASE WHEN
-        ${eb.ref("demande.typeDemande")} = 'fermeture'
-        THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
-        ELSE 0
-        END
-      )`,
-      }).as("fermetures")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref(
-            "demande.typeDemande"
-          )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapaciteAbs(eb)}
-          ELSE 0
-          END
-        )`,
-        scolaire: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref(
-            "demande.typeDemande"
-          )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapaciteScolaireAbs(eb)}
-          ELSE 0
-          END
-        )`,
-        apprentissage: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref(
-            "demande.typeDemande"
-          )} IN ('augmentation_nette','augmentation_compensation')
-          THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
-          ELSE 0
-          END
-        )`,
-      }).as("augmentations")
-    )
-    .select((eb) =>
-      jsonBuildObject({
-        total: sql<number>`SUM(
       CASE WHEN
-      ${eb.ref("demande.typeDemande")} = 'diminution'
+      ${eb.ref("demande.typeDemande")} IN ('diminution', 'fermeture')
       THEN ${countDifferenceCapaciteAbs(eb)}
       ELSE 0
       END
     )`,
         scolaire: sql<number>`SUM(
       CASE WHEN
-      ${eb.ref("demande.typeDemande")} = 'diminution'
+      ${eb.ref("demande.typeDemande")} IN ('diminution', 'fermeture')
       THEN ${countDifferenceCapaciteScolaireAbs(eb)}
       ELSE 0
       END
     )`,
         apprentissage: sql<number>`SUM(
       CASE WHEN
-      ${eb.ref("demande.typeDemande")} = 'diminution'
+      ${eb.ref("demande.typeDemande")} IN ('diminution', 'fermeture')
       THEN ${countDifferenceCapaciteApprentissageAbs(eb)}
       ELSE 0
       END
     )`,
-      }).as("diminutions")
+      }).as("fermetures")
     )
     .select((eb) =>
       jsonBuildObject({
