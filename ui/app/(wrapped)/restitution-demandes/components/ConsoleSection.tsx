@@ -14,6 +14,8 @@ import { STATS_DEMANDES_COLUMNS } from "shared";
 
 import { GraphWrapper } from "../../../../components/GraphWrapper";
 import { OrderIcon } from "../../../../components/OrderIcon";
+import { TableBadge } from "../../../../components/TableBadge";
+import { getTauxPressionStyle } from "../../../../utils/getBgScale";
 import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Order, StatsDemandes } from "../types";
@@ -293,7 +295,17 @@ export const ConsoleSection = ({
                           <GraphWrapper value={demande.devenirFavorable} />
                         </Td>
                         <Td isNumeric>
-                          <GraphWrapper value={demande.pression} />
+                          <TableBadge
+                            sx={getTauxPressionStyle(
+                              demande.pression !== undefined
+                                ? demande.pression / 100
+                                : undefined
+                            )}
+                          >
+                            {demande.pression !== undefined
+                              ? demande.pression / 100
+                              : "-"}
+                          </TableBadge>
                         </Td>
                         <Td minW={300} maxW={300} whiteSpace="normal">
                           {demande.libelleColoration}
