@@ -36,10 +36,9 @@ export const STATS_DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  insertion: "Taux d'insertion régional",
-  poursuite: "Taux de poursuite d'études régional",
-  devenirFavorable: "Taux de devenir favorable régional",
-  pression: "Taux de pression de la formation au niveau régional",
-  nbEtablissement:
-    "Nb établissements dispensant la formation dans la région en 2022",
+  insertion: "Tx d'insertion",
+  poursuite: "Tx de poursuite d'études",
+  devenirFavorable: "Tx de devenir favorable",
+  pression: "Tx de pression",
+  nbEtablissement: "Nb établissement",
 } as const;

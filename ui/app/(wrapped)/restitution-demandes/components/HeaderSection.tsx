@@ -58,10 +58,12 @@ const CountCard = ({
     </CardHeader>
     <CardBody py={3} px={3}>
       <Flex justify={"space-between"}>
-        <Text fontSize="36" fontWeight={"extrabold"}>
-          {value?.total ? value?.total : "0"}
-        </Text>
-        <Flex flexDirection="column" justifyContent={"end"} width="50%">
+        <Flex me={1}>
+          <Text fontSize="36" fontWeight={"extrabold"}>
+            {value?.total ? value?.total : "0"}
+          </Text>
+        </Flex>
+        <Flex flexDirection="column" justifyContent={"end"} width="50%" ms={1}>
           <Flex justify={"space-between"} pb="2">
             <Text
               justifyContent="start"
@@ -72,7 +74,7 @@ const CountCard = ({
               {`${value?.scolaire ? value?.scolaire : 0} `}
             </Text>
             <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
-              Scolaire
+              scolaire
             </Text>
           </Flex>
           <Divider />
@@ -86,7 +88,7 @@ const CountCard = ({
               {`${value?.apprentissage ? value?.apprentissage : 0} `}
             </Text>
             <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
-              Apprent.
+              apprent.
             </Text>
           </Flex>
           {value?.coloration && (

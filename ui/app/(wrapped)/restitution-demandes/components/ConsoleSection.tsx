@@ -1,4 +1,5 @@
 import {
+  Box,
   Flex,
   Skeleton,
   Table,
@@ -15,7 +16,9 @@ import { STATS_DEMANDES_COLUMNS } from "shared";
 import { GraphWrapper } from "../../../../components/GraphWrapper";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableBadge } from "../../../../components/TableBadge";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { getTauxPressionStyle } from "../../../../utils/getBgScale";
+import { TauxPressionScale } from "../../../_components/TauxPressionScale";
 import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Order, StatsDemandes } from "../types";
@@ -160,6 +163,10 @@ export const ConsoleSection = ({
                 >
                   <OrderIcon {...order} column="nbEtablissement" />
                   {STATS_DEMANDES_COLUMNS.nbEtablissement}
+                  <TooltipIcon
+                    ml="1"
+                    label="Le nombre d'établissement dispensant la formation dans la région."
+                  />
                 </Th>
                 <Th
                   cursor="pointer"
@@ -207,42 +214,66 @@ export const ConsoleSection = ({
                 >
                   <OrderIcon {...order} column="insertion" />
                   {STATS_DEMANDES_COLUMNS.insertion}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale"
+                  />
                 </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("poursuite")}
-                  minW={200}
-                  maxW={200}
+                  minW={250}
+                  maxW={250}
                   whiteSpace="normal"
                 >
                   <OrderIcon {...order} column="poursuite" />
                   {STATS_DEMANDES_COLUMNS.poursuite}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale."
+                  />
                 </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("devenirFavorable")}
-                  minW={200}
-                  maxW={200}
+                  minW={220}
+                  maxW={220}
                   whiteSpace="normal"
                 >
                   <OrderIcon {...order} column="devenirFavorable" />
                   {STATS_DEMANDES_COLUMNS.devenirFavorable}
+                  <TooltipIcon
+                    ml="2"
+                    label="Part des jeunes en emploi ou en poursuite d’étude pour cette formation à l'échelle régionale"
+                  />
                 </Th>
                 <Th
                   isNumeric
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("pression")}
-                  minW={200}
-                  maxW={200}
+                  minW={170}
+                  maxW={170}
                   whiteSpace="normal"
                 >
                   <OrderIcon {...order} column="pression" />
                   {STATS_DEMANDES_COLUMNS.pression}
+                  <TooltipIcon
+                    ml="1"
+                    label={
+                      <>
+                        <Box>
+                          Le ratio entre le nombre de premiers voeux et la
+                          capacité de la formation au niveau régional.
+                        </Box>
+                        <TauxPressionScale />
+                      </>
+                    }
+                  />
                 </Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleColoration}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleFCIL}</Th>
