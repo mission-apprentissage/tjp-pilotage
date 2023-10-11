@@ -72,7 +72,6 @@ const sendLogToSlack = async (info: {
 
 const winstonLogger = winston.createLogger({
   level: "info",
-  exitOnError: false,
   format: winston.format.combine(
     winston.format.timestamp({ format: () => new Date().toISOString() }),
     winston.format.json()
