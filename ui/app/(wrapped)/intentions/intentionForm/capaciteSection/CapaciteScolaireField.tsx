@@ -3,7 +3,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -44,21 +45,23 @@ export const CapaciteScolaireField = chakra(
         <FormLabel>
           {ouverture ? "Capacité prévisionnelle" : "Nouvelle capacité"}
         </FormLabel>
-        <Input
-          type="number"
-          {...register("capaciteScolaire", {
-            shouldUnregister: true,
-            disabled: disabled || fermeture,
-            setValueAs: safeParseInt,
-            value: null as unknown as undefined,
-            validate: (value) => {
-              if (value === undefined) return "Le champ est obligatoire";
-              if (Number.isNaN(value))
-                return "Veuillez remplir un nombre valide.";
-              if (value < 0) return "Valeurs positives uniquement.";
-            },
-          })}
-        />
+        <NumberInput>
+          <NumberInputField
+            {...register("capaciteScolaire", {
+              shouldUnregister: true,
+              disabled: disabled || fermeture,
+              setValueAs: safeParseInt,
+              value: null as unknown as undefined,
+              validate: (value) => {
+                if (value === undefined) return "Le champ est obligatoire";
+                if (Number.isNaN(value))
+                  return "Veuillez remplir un nombre valide.";
+                if (value < 0) return "Valeurs positives uniquement.";
+              },
+            })}
+          />
+        </NumberInput>
+
         {errors.capaciteScolaire && (
           <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>
         )}
