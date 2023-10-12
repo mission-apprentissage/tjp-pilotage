@@ -9,6 +9,35 @@ import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+export function hasContinuums({
+  eb,
+  millesimeSortie,
+}: {
+  eb: ExpressionBuilder<DB, "etablissement" | "formationEtablissement">;
+  millesimeSortie: string;
+}) {
+  return eb
+    .exists(
+      eb
+        .selectFrom("indicateurRegionSortie as subIRS")
+        .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
+        .whereRef(
+          "subIRS.dispositifId",
+          "=",
+          "formationEtablissement.dispositifId"
+        )
+        .whereRef(
+          "subIRS.codeRegion",
+          "=",
+          sql`ANY(array_agg(${eb.ref("etablissement.codeRegion")}))`
+        )
+        .where("subIRS.millesimeSortie", "=", millesimeSortie)
+        .where("subIRS.cfdContinuum", "is not", null)
+        .select(sql`true`.as("true"))
+        .groupBy("subIRS.codeRegion")
+    )
+    .$castTo<boolean>();
+}
 
 const findFormationsInDb = async ({
   offset = 0,
@@ -137,6 +166,7 @@ const findFormationsInDb = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
     ])
     .select((eb) => [
+      hasContinuums({ eb, millesimeSortie }).as("continuum"),
       withPoursuiteReg({
         eb,
         millesimeSortie,

@@ -34,6 +34,7 @@ const EtablissementLineSchema = Type.Object({
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),
   libelleFiliere: Type.Optional(Type.String()),
+  continuum: Type.Optional(Type.Any()),
 });
 
 const FiltersSchema = Type.Object({
