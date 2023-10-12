@@ -33,7 +33,7 @@ cli.command("create-migration").action(() =>
 
 export const up = async (db: Kysely<unknown>) => {};
     
-export const down = async () => {};
+export const down = async (db: Kysely<unknown>) => {};
     `
   )
 );
@@ -41,6 +41,7 @@ export const down = async () => {};
 cli
   .command("importUsers")
   .description("usage: cat << EOF | xargs -0 -I arg yarn cli importUsers arg")
+  .description("csv: role;codeRegion;lastname;firstname;email")
   .argument("<json>")
   .option("--dryRun <boolean>", "parse the data only", false)
   .action(async (input: string, { dryRun }) => {

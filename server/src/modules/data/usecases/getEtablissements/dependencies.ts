@@ -5,6 +5,7 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { hasContinuums } from "../../queries/utils/hasContinuums";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPression } from "../../queries/utils/tauxPression";
@@ -100,6 +101,7 @@ const findEtablissementsInDb = async ({
     .selectAll("etablissement")
     .selectAll("formation")
     .select([
+      (eb) => hasContinuums({ eb, millesimeSortie }).as("continuum"),
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelle as departement",
       "etablissement.UAI",
