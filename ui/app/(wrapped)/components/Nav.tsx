@@ -61,7 +61,7 @@ export const Nav = () => {
           Recueil des demandes
         </NavLink>
       )}
-      {hasPermission(auth?.user.role, "intentions/lecture") && (
+      {hasPermission(auth?.user.role, "restitution-intentions/lecture") && (
         <NavLink
           mr="4"
           href="/restitution-demandes"

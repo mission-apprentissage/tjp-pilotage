@@ -100,7 +100,7 @@ export default () => {
   });
 
   return (
-    <GuardPermission permission="intentions/lecture">
+    <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} py="4" pt={8} bg="#E2E7F8">
         <HeaderSection
           countData={countData}

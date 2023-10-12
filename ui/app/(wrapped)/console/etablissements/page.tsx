@@ -28,11 +28,11 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { TauxPressionScale } from "../../../_components/TauxPressionScale";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
 } from "../../../layoutClient";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 import {
   EtablissementLineContent,
   EtablissementLineLoader,

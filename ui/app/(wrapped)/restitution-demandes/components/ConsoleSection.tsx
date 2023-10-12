@@ -18,7 +18,7 @@ import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableBadge } from "../../../../components/TableBadge";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { getTauxPressionStyle } from "../../../../utils/getBgScale";
-import { TauxPressionScale } from "../../../_components/TauxPressionScale";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Order, StatsDemandes } from "../types";
@@ -323,6 +323,7 @@ export const ConsoleSection = ({
                         <Td isNumeric>
                           {demande.differenceCapaciteApprentissage ?? 0}
                         </Td>
+                        <Td isNumeric>{demande.id}</Td>
                         <Td isNumeric>
                           <GraphWrapper value={demande.insertion} />
                         </Td>

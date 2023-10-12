@@ -181,6 +181,7 @@ export const SecondaryFiltersSection = ({
               options={data?.filters.filieres}
               value={activeFilters.filiere ?? []}
               disabled={data?.filters.filieres.length === 0}
+              hasDefaultValue={false}
             >
               TOUS ({data?.filters.filieres.length ?? 0})
             </Multiselect>
@@ -196,6 +197,7 @@ export const SecondaryFiltersSection = ({
               options={data?.filters.familles}
               value={activeFilters.cfdFamille ?? []}
               disabled={data?.filters.familles.length === 0}
+              hasDefaultValue={false}
             >
               TOUS ({data?.filters.familles.length ?? 0})
             </Multiselect>
