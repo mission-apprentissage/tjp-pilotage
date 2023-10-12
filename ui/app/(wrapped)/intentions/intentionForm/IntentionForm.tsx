@@ -43,7 +43,11 @@ export const IntentionForm = ({
 
   const [errors, setErrors] = useState<Record<string, string>>();
 
-  const { isLoading: isSubmitting, mutateAsync: submit } = useMutation({
+  const {
+    isLoading: isSubmittingDemande,
+    mutateAsync: submitDemande,
+    isSuccess: isDemandeSuccess,
+  } = useMutation({
     mutationFn: (forms: IntentionForms) =>
       api.submitDemande({ body: { demande: { id: formId, ...forms } } }).call(),
     onSuccess: () => push("/intentions"),
@@ -53,26 +57,37 @@ export const IntentionForm = ({
     },
   });
 
-  const { isLoading: isDraftSubmitting, mutateAsync: submitDraft } =
-    useMutation({
-      mutationFn: (forms: IntentionForms) =>
-        api
-          .submitDraftDemande({ body: { demande: { id: formId, ...forms } } })
-          .call(),
-      onSuccess: () => push("/intentions"),
-      onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-        const errors = e.response?.data.errors;
-        setErrors(errors);
-      },
-    });
+  const {
+    isLoading: isSubmittingDraft,
+    mutateAsync: submitDraft,
+    isSuccess: isDraftSuccess,
+  } = useMutation({
+    mutationFn: (forms: IntentionForms) =>
+      api
+        .submitDraftDemande({ body: { demande: { id: formId, ...forms } } })
+        .call(),
+    onSuccess: () => push("/intentions"),
+    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+      const errors = e.response?.data.errors;
+      setErrors(errors);
+    },
+  });
 
-  const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
+  const {
+    isLoading: isDeleting,
+    mutateAsync: deleteDemande,
+    isSuccess: isDeleteSuccess,
+  } = useMutation({
     mutationFn: async () => {
       if (!formId) return;
       await api.deleteDemande({ params: { id: formId } }).call();
     },
     onSuccess: () => push("/intentions"),
   });
+
+  const isSubmitting = isSubmittingDraft || isSubmittingDemande || isDeleting;
+  const isSuccess = isDraftSuccess || isDeleteSuccess || isDemandeSuccess;
+  const isActionsDisabled = isSuccess || isSubmitting;
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
     formMetadata?.formation?.isFCIL ?? false
@@ -115,7 +130,7 @@ export const IntentionForm = ({
           bg="#E2E7F8"
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) => submit(values))}
+          onSubmit={handleSubmit((values) => submitDemande(values))}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
             <Breadcrumb
@@ -165,7 +180,7 @@ export const IntentionForm = ({
                             color="red"
                             borderColor="red"
                             mr="auto"
-                            isDisabled={disabled}
+                            isDisabled={disabled || isActionsDisabled}
                             isLoading={isDeleting}
                             variant="secondary"
                             leftIcon={<DeleteIcon />}
@@ -177,8 +192,8 @@ export const IntentionForm = ({
                     )}
                     <Box justifyContent={"center"}>
                       <Button
-                        isDisabled={disabled}
-                        isLoading={isDraftSubmitting}
+                        isDisabled={disabled || isActionsDisabled}
+                        isLoading={isSubmittingDraft}
                         variant="secondary"
                         onClick={handleSubmit((values) => submitDraft(values))}
                       >
@@ -190,8 +205,8 @@ export const IntentionForm = ({
                     </Box>
                     <Box justifyContent={"center"}>
                       <Button
-                        isDisabled={disabled}
-                        isLoading={isSubmitting}
+                        isDisabled={disabled || isActionsDisabled}
+                        isLoading={isSubmittingDemande}
                         variant="primary"
                         type="submit"
                       >
