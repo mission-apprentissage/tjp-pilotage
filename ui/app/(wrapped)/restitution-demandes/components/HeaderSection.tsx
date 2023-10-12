@@ -44,7 +44,6 @@ const Loader = () => (
 const CountCard = ({
   label,
   value,
-  type,
 }: {
   label: string;
   value?: {
@@ -53,9 +52,8 @@ const CountCard = ({
     apprentissage: number;
     coloration?: number;
   };
-  type?: "fermeture" | undefined;
 }) => (
-  <Card minW="56" bgColor="white" borderRadius={5}>
+  <Card minW="60" bgColor="white" borderRadius={5}>
     <CardHeader px={3} pb={1}>
       <Flex>
         <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
@@ -70,55 +68,53 @@ const CountCard = ({
             {value?.total ? value?.total : "0"}
           </Text>
         </Flex>
-        {type != "fermeture" && (
-          <Flex flexDirection="column" justifyContent={"end"}>
-            <Flex justify={"space-between"} pb="2">
-              <Text
-                justifyContent="start"
-                fontSize="12"
-                fontWeight="bold"
-                lineHeight={"4"}
-              >
-                {`${value?.scolaire ? value?.scolaire : 0} `}
-              </Text>
-              <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
-                scolaire
-              </Text>
-            </Flex>
-            <Divider />
-            <Flex justify={"space-between"} pt="2">
-              <Text
-                justifyContent="start"
-                fontSize="12"
-                fontWeight="bold"
-                lineHeight={"4"}
-              >
-                {`${value?.apprentissage ? value?.apprentissage : 0} `}
-              </Text>
-              <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
-                apprentissage
-              </Text>
-            </Flex>
-            {value?.coloration && (
-              <>
-                <Divider />
-                <Flex justify={"space-between"} pt="2">
-                  <Text
-                    justifyContent="start"
-                    fontSize="12"
-                    fontWeight="bold"
-                    lineHeight={"4"}
-                  >
-                    {`${value?.coloration ? value?.coloration : 0} `}
-                  </Text>
-                  <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
-                    coloration
-                  </Text>
-                </Flex>
-              </>
-            )}
+        <Flex flexDirection="column" justifyContent={"end"}>
+          <Flex justify={"space-between"} pb="2">
+            <Text
+              justifyContent="start"
+              fontSize="12"
+              fontWeight="bold"
+              lineHeight={"4"}
+            >
+              {`${value?.scolaire ? value?.scolaire : 0} `}
+            </Text>
+            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+              scolaire
+            </Text>
           </Flex>
-        )}
+          <Divider />
+          <Flex justify={"space-between"} pt="2">
+            <Text
+              justifyContent="start"
+              fontSize="12"
+              fontWeight="bold"
+              lineHeight={"4"}
+            >
+              {`${value?.apprentissage ? value?.apprentissage : 0} `}
+            </Text>
+            <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+              apprentissage
+            </Text>
+          </Flex>
+          {value?.coloration && (
+            <>
+              <Divider />
+              <Flex justify={"space-between"} pt="2">
+                <Text
+                  justifyContent="start"
+                  fontSize="12"
+                  fontWeight="bold"
+                  lineHeight={"4"}
+                >
+                  {`${value?.coloration ? value?.coloration : 0} `}
+                </Text>
+                <Text justifyContent="end" fontSize={"12"} lineHeight={"4"}>
+                  coloration
+                </Text>
+              </Flex>
+            </>
+          )}
+        </Flex>
       </Flex>
     </CardBody>
   </Card>
@@ -154,11 +150,7 @@ export const HeaderSection = ({
           />
           <Flex flexDirection={"row"} gap={4} overflowY={"auto"} pb={2}>
             <CountCard label="Places ouvertes" value={countData?.ouvertures} />
-            <CountCard
-              label="Places fermées"
-              value={countData?.fermetures}
-              type="fermeture"
-            />
+            <CountCard label="Places fermées" value={countData?.fermetures} />
             <CountCard label="Places AMI / CMA" value={countData?.amiCMAs} />
             <CountCard label="Places FCIL" value={countData?.FCILs} />
           </Flex>

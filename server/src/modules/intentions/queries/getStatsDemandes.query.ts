@@ -14,7 +14,10 @@ import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
 } from "./utils/countCapacite.query";
-import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
+import {
+  isRegionVisible,
+  isStatsDemandeVisible,
+} from "./utils/isStatsDemandesVisible";
 
 export const getStatsDemandes = async ({
   status,
@@ -227,7 +230,7 @@ export const getStatsDemandes = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .where(isDemandeSelectable({ user }))
+    .where(isStatsDemandeVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();
@@ -249,8 +252,11 @@ export const getStatsDemandes = async ({
     .orderBy("label", "asc");
 
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
-    if (!codeRegion) return sql<true>`true`;
-    return eb("region.codeRegion", "in", codeRegion);
+    if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
+    return eb.and([
+      eb("region.codeRegion", "in", codeRegion),
+      sql<boolean>`${isRegionVisible({ user })}`,
+    ]);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -324,6 +330,7 @@ export const getStatsDemandes = async ({
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .where("region.codeRegion", "not in", ["99", "00"])
+    .where(isRegionVisible({ user }))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc")

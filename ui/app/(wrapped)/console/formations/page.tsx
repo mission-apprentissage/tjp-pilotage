@@ -21,7 +21,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
-import { TauxPressionScale } from "@/app/_components/TauxPressionScale";
+import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
