@@ -3,7 +3,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -42,21 +43,22 @@ export const CapaciteApprentissageColoreeField = chakra(
         isRequired
       >
         <FormLabel>Dont places colorées</FormLabel>
-        <Input
-          type="number"
-          {...register("capaciteApprentissageColoree", {
-            shouldUnregister: true,
-            setValueAs: safeParseInt,
-            disabled,
-            value: null as unknown as undefined,
-            validate: (value) => {
-              if (value === undefined) return "Le champ est obligatoire";
-              if (Number.isNaN(value))
-                return "Veuillez remplir un nombre valide.";
-              if (value < 0) return "Valeurs positives uniquement.";
-            },
-          })}
-        />
+        <NumberInput>
+          <NumberInputField
+            {...register("capaciteApprentissageColoree", {
+              shouldUnregister: true,
+              setValueAs: safeParseInt,
+              disabled,
+              value: null as unknown as undefined,
+              validate: (value) => {
+                if (value === undefined) return "Le champ est obligatoire";
+                if (Number.isNaN(value))
+                  return "Veuillez remplir un nombre valide.";
+                if (value < 0) return "Valeurs positives uniquement.";
+              },
+            })}
+          />
+        </NumberInput>
         {errors.capaciteApprentissageColoree && (
           <FormErrorMessage>
             {errors.capaciteApprentissageColoree.message}
