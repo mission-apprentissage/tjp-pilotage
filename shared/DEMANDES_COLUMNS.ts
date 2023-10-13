@@ -4,8 +4,10 @@ export const DEMANDES_COLUMNS = {
   libelleDiplome: "Diplôme",
   dispositifId: "DispositifId",
   libelleDispositif: "Dispositif",
+  libelleFCIL: "Libellé de la FCIL",
   uai: "UAI",
   libelleEtablissement: "Établissement",
+  libelleDepartement: "Département",
   rentreeScolaire: "RS",
   typeDemande: "Type de demande",
   motif: "Motif",
@@ -16,8 +18,8 @@ export const DEMANDES_COLUMNS = {
   poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
   status: "Status",
-  codeRegion: "CodeRegion",
-  codeAcademie: "CodeAcadémie",
+  codeRegion: "Code Region",
+  codeAcademie: "Cod eAcadémie",
   createdAt: "Date de création",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
@@ -27,5 +29,5 @@ export const DEMANDES_COLUMNS = {
   capaciteScolaireColoree: "Capacité scolaire coloree",
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  capaciteApprentissageColoree: "Capacité apprentissage coloree"
 } as const;
