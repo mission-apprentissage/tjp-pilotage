@@ -15,14 +15,20 @@ import { isStatsDemandeVisible } from "./utils/isStatsDemandesVisible";
 
 export const countStatsDemandes = async ({
   user,
+  status,
   codeRegion,
+  codeAcademie,
+  codeDepartement,
   rentreeScolaire,
   codeNiveauDiplome,
   coloration,
   secteur,
 }: {
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+  status?: "draft" | "submitted";
   codeRegion?: string[];
+  codeAcademie?: string[];
+  codeDepartement?: string[];
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   coloration?: string;
@@ -33,7 +39,19 @@ export const countStatsDemandes = async ({
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .$call((eb) => {
+      if (status && status != undefined) return eb.where("demande.status", "=", status);
+      return eb;
+    })
+    .$call((eb) => {
       if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "in", codeDepartement);
       return eb;
     })
     .$call((eb) => {

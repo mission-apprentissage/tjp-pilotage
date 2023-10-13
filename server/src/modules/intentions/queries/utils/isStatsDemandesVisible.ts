@@ -7,25 +7,25 @@ import { RequestUser } from "../../../core/model/User";
 
 export const isStatsDemandeVisible =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
-  (eb: ExpressionBuilder<DB, "demande">) => {
-    const filter = getStatsDemandesVisibleFilters(user);
-    return eb.and([
-      filter.codeRegion
-        ? eb("demande.codeRegion", "=", filter.codeRegion)
-        : sql`true`,
-    ]);
-  };
+    (eb: ExpressionBuilder<DB, "demande">) => {
+      const filter = getStatsDemandesVisibleFilters(user);
+      return eb.and([
+        filter.codeRegion
+          ? eb("demande.codeRegion", "=", filter.codeRegion)
+          : sql`true`,
+      ]);
+    };
 
 export const isRegionVisible =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
-  (eb: ExpressionBuilder<DB, "region">) => {
-    const filter = getStatsDemandesVisibleFilters(user);
-    return eb.and([
-      filter.codeRegion
-        ? eb("region.codeRegion", "=", filter.codeRegion)
-        : sql`true`,
-    ]);
-  };
+    (eb: ExpressionBuilder<DB, "region">) => {
+      const filter = getStatsDemandesVisibleFilters(user);
+      return eb.and([
+        filter.codeRegion
+          ? eb("region.codeRegion", "=", filter.codeRegion)
+          : sql`true`,
+      ]);
+    };
 
 const getStatsDemandesVisibleFilters = (
   user?: Pick<RequestUser, "id" | "role" | "codeRegion">

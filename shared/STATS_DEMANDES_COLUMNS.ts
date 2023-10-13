@@ -1,5 +1,5 @@
 export const STATS_DEMANDES_COLUMNS = {
-  id: "id",
+  id: "N° demande",
   cfd: "CFD",
   libelleDiplome: "Formation",
   dispositifId: "DispositifId",

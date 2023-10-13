@@ -33,6 +33,11 @@ export const getStatsDemandes = async ({
   amiCMA,
   secteur,
   cfdFamille,
+  codeDepartement,
+  codeAcademie,
+  commune,
+  uai,
+  compensation,
   user,
   offset = 0,
   limit = 20,
@@ -51,6 +56,11 @@ export const getStatsDemandes = async ({
   amiCMA?: string;
   secteur?: string;
   cfdFamille?: string[];
+  codeDepartement?: string[];
+  codeAcademie?: string[];
+  commune?: string[];
+  uai?: string[];
+  compensation?: string;
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
   limit?: number;
@@ -142,11 +152,27 @@ export const getStatsDemandes = async ({
       ),
     ])
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "=", status);
+      if (status && status != undefined) return eb.where("demande.status", "=", status);
       return eb;
     })
     .$call((eb) => {
       if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeDepartement) return eb.where("dataEtablissement.codeDepartement", "in", codeDepartement);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeAcademie) return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      return eb;
+    })
+    .$call((eb) => {
+      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
+      return eb;
+    })
+    .$call((eb) => {
+      if (uai) return eb.where("dataEtablissement.uai", "in", uai);
       return eb;
     })
     .$call((eb) => {
@@ -220,6 +246,11 @@ export const getStatsDemandes = async ({
       return eb;
     })
     .$call((eb) => {
+      if (compensation)
+        return eb.where("demande.typeDemande", "in", ["ouverture_compensation", "augmentation_compensation"]);
+      return eb;
+    })
+    .$call((eb) => {
       if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
       return eb;
     })
@@ -235,28 +266,32 @@ export const getStatsDemandes = async ({
     .limit(limit)
     .execute();
 
-  const filtersBase = kdb
-    .selectFrom("demande")
-    .leftJoin("region", "region.codeRegion", "demande.codeRegion")
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
-    .distinct()
-    .$castTo<{ label: string; value: string }>()
-    .orderBy("label", "asc");
-
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
     return eb.and([
       eb("region.codeRegion", "in", codeRegion),
       sql<boolean>`${isRegionVisible({ user })}`,
     ]);
+  };
+
+  const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
+    if (!codeDepartement) return sql<true>`true`;
+    return eb("departement.codeDepartement", "in", codeDepartement);
+  };
+
+  const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
+    if (!codeAcademie) return sql<true>`true`;
+    return eb("academie.codeAcademie", "in", codeAcademie);
+  };
+
+  const inCommune = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
+    if (!commune) return sql<true>`true`;
+    return eb("dataEtablissement.commune", "in", commune);
+  };
+
+  const inEtablissement = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
+    if (!uai) return sql<true>`true`;
+    return eb("dataEtablissement.uai", "in", uai);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -325,15 +360,134 @@ export const getStatsDemandes = async ({
     return eb("dataEtablissement.secteur", "=", secteur);
   };
 
-  const regionsFilters = kdb
+  const inCompensation = (eb: ExpressionBuilder<DB, "demande">) => {
+    if (!compensation) return sql<true>`true`;
+    return eb("demande.typeDemande", "in", ["ouverture_compensation", "augmentation_compensation"]);
+  };
+
+  const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
+    if (!status || status == undefined) return sql<true>`true`;
+    return eb("demande.status", "=", status);
+  };
+
+  const geoFiltersBase = kdb
     .selectFrom("region")
+    .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
+    .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc");
+
+  const regionsFilters = geoFiltersBase
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .where("region.codeRegion", "not in", ["99", "00"])
     .where(isRegionVisible({ user }))
+    .execute();
+
+  const departementsFilters = geoFiltersBase
+    .select(["departement.libelle as label", "departement.codeDepartement as value"])
+    .where("departement.codeDepartement", "is not", null)
+    .where("departement.libelle", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+        ]),
+        codeDepartement ? eb("departement.codeDepartement", "in", codeDepartement) : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const academiesFilters = geoFiltersBase
+    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .where("academie.codeAcademie", "is not", null)
+    .where("academie.codeAcademie", "not in", ["00", "54", "61", "62", "63", "67", "66", "91", "99"])
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+        ]),
+        codeAcademie ? eb("academie.codeAcademie", "in", codeAcademie) : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const filtersBase = kdb
+    .selectFrom("demande")
+    .leftJoin("region", "region.codeRegion", "demande.codeRegion")
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNiveauDiplome"
+    )
+    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
+    .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .distinct()
     .$castTo<{ label: string; value: string }>()
-    .orderBy("label", "asc")
+    .orderBy("label", "asc");
+
+
+  const communesFilters = filtersBase
+    .select(["dataEtablissement.commune as label", "dataEtablissement.commune as value"])
+    .where("dataEtablissement.commune", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inEtablissement(eb),
+          inRentreeScolaire(eb),
+          inTypeDemande(eb),
+          inMotifDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inCodeDispositif(eb),
+          inFamilleMetier(eb),
+          inFiliere(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
+        ]),
+        commune ? eb("dataEtablissement.commune", "in", commune) : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const etablissementsFilters = filtersBase
+    .select(["dataEtablissement.libelle as label", "dataEtablissement.uai as value"])
+    .where("dataEtablissement.libelle", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inRentreeScolaire(eb),
+          inTypeDemande(eb),
+          inMotifDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inCodeDispositif(eb),
+          inFamilleMetier(eb),
+          inFiliere(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
+        ]),
+        uai ? eb("dataEtablissement.uai", "in", uai) : sql`false`,
+      ]);
+    })
     .execute();
 
   const rentreesScolairesFilters = filtersBase
@@ -346,6 +500,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inTypeDemande(eb),
           inMotifDemande(eb),
           inCfd(eb),
@@ -356,6 +514,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         rentreeScolaire && !Number.isNaN(rentreeScolaire)
           ? eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire))
@@ -371,6 +531,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inCfd(eb),
@@ -381,6 +545,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         typeDemande ? eb("demande.typeDemande", "in", typeDemande) : sql`false`,
       ]);
@@ -397,6 +563,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inTypeDemande(eb),
           inCfd(eb),
@@ -407,13 +577,15 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         motif
           ? eb.or(
-              motif.map(
-                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-              )
+            motif.map(
+              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
             )
+          )
           : sql`false`,
       ]);
     })
@@ -429,6 +601,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inTypeDemande(eb),
@@ -439,6 +615,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         dispositif
           ? eb("dispositif.codeDispositif", "in", dispositif)
@@ -457,6 +635,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inTypeDemande(eb),
@@ -467,6 +649,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         codeNiveauDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
@@ -488,6 +672,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inTypeDemande(eb),
@@ -498,6 +686,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         cfd ? eb("dataFormation.cfd", "in", cfd) : sql`false`,
       ]);
@@ -514,6 +704,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inTypeDemande(eb),
@@ -524,6 +718,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
@@ -542,6 +738,10 @@ export const getStatsDemandes = async ({
       return eb.or([
         eb.and([
           inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
           inRentreeScolaire(eb),
           inMotifDemande(eb),
           inTypeDemande(eb),
@@ -552,6 +752,8 @@ export const getStatsDemandes = async ({
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb)
         ]),
         filiere
           ? eb("dataFormation.libelleFiliere", "in", filiere)
@@ -570,6 +772,10 @@ export const getStatsDemandes = async ({
     formations: (await formationsFilters).map(cleanNull),
     familles: (await famillesFilters).map(cleanNull),
     filieres: (await filieresFilters).map(cleanNull),
+    departements: (await departementsFilters).map(cleanNull),
+    academies: (await academiesFilters).map(cleanNull),
+    communes: (await communesFilters).map(cleanNull),
+    etablissements: (await etablissementsFilters).map(cleanNull),
     status: [
       {
         label: "Brouillon",
@@ -610,6 +816,26 @@ export const getStatsDemandes = async ({
         value: "false",
       },
     ],
+    compensations: [
+      {
+        label: "Oui",
+        value: "true",
+      },
+      {
+        label: "Non",
+        value: "false",
+      },
+    ],
+    statuts: [
+      {
+        label: "Projet",
+        value: "draft",
+      },
+      {
+        label: "Validée",
+        value: "submitted",
+      },
+    ]
   };
 
   return {

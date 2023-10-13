@@ -285,6 +285,7 @@ export const ConsoleSection = ({
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleColoration}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleFCIL}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.commentaire}</Th>
+                <Th pb="4">{STATS_DEMANDES_COLUMNS.id}</Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -323,7 +324,6 @@ export const ConsoleSection = ({
                         <Td isNumeric>
                           {demande.differenceCapaciteApprentissage ?? 0}
                         </Td>
-                        <Td isNumeric>{demande.id}</Td>
                         <Td isNumeric>
                           <GraphWrapper value={demande.insertion} />
                         </Td>
@@ -360,6 +360,7 @@ export const ConsoleSection = ({
                         >
                           {demande.commentaire}
                         </Td>
+                        <Td>{demande.id}</Td>
                       </Tr>
                     </Fragment>
                   );
