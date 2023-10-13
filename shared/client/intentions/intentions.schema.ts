@@ -68,6 +68,7 @@ const DemandesItem = Type.Object({
   cfd: Type.Optional(Type.String()),
   libelleDiplome: Type.Optional(Type.String()),
   libelleEtablissement: Type.Optional(Type.String()),
+  libelleDepartement: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
   libelleFCIL: Type.Optional(Type.String()),
   uai: Type.Optional(Type.String()),
