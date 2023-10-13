@@ -5,12 +5,14 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
+import { useContext, useEffect, useState } from "react";
 
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { api } from "../../../api.client";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { AuthContext } from "../auth/authContext";
 import { ConsoleSection } from "./components/ConsoleSection";
 import { HeaderSection } from "./components/HeaderSection";
 import { Filters, Order } from "./types";
@@ -18,6 +20,7 @@ import { Filters, Order } from "./types";
 const PAGE_SIZE = 30;
 
 export default () => {
+  const { auth } = useContext(AuthContext);
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -30,6 +33,15 @@ export default () => {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
+  const getDefaultCodeRegion = () =>
+    auth?.user.role === "pilote_region" ? auth?.user?.codeRegion : "";
+
+  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
+    getDefaultCodeRegion() ?? ""
+  );
+  const [rentreeScolaireFilter, setRentreeScolaireFilter] =
+    useState<string>("2024");
+
   const setSearchParams = (params: {
     filters?: typeof filters;
     order?: typeof order;
@@ -39,6 +51,16 @@ export default () => {
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
   };
+
+  useEffect(() => {
+    if (codeRegionFilter != "") {
+      filters.codeRegion = [codeRegionFilter];
+    }
+    if (rentreeScolaireFilter != "") {
+      filters.rentreeScolaire = rentreeScolaireFilter;
+    }
+    setSearchParams({ filters: filters });
+  }, []);
 
   const trackEvent = usePlausible();
   const filterTracker = (filterName: keyof Filters) => () => {
@@ -62,10 +84,21 @@ export default () => {
     });
   };
 
+  const handleDefaultFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    if (type === "codeRegion" && value != null)
+      setCodeRegionFilter(value[0] ?? "");
+    if (type === "rentreeScolaire" && value != null)
+      setRentreeScolaireFilter(value[0] ?? "");
+  };
+
   const handleFilters = (
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
+    handleDefaultFilters(type, value);
     setSearchParams({
       filters: { ...filters, [type]: value },
     });

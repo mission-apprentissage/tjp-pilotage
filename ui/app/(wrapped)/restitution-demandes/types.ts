@@ -9,6 +9,10 @@ export type StatsDemandesQuery = Parameters<
 export type Filters = Pick<
   StatsDemandesQuery,
   | "codeRegion"
+  | "codeAcademie"
+  | "codeDepartement"
+  | "commune"
+  | "uai"
   | "rentreeScolaire"
   | "typeDemande"
   | "motif"
@@ -21,6 +25,7 @@ export type Filters = Pick<
   | "dispositif"
   | "secteur"
   | "cfdFamille"
+  | "compensation"
 >;
 
 export type Order = Pick<StatsDemandesQuery, "order" | "orderBy">;

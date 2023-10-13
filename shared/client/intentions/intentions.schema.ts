@@ -142,11 +142,15 @@ const StatsDemandesItem = Type.Object({
 
 const StatsFiltersSchema = Type.Object({
   codeRegion: Type.Optional(Type.Array(Type.String())),
+  codeAcademie: Type.Optional(Type.Array(Type.String())),
+  codeDepartement: Type.Optional(Type.Array(Type.String())),
+  commune: Type.Optional(Type.Array(Type.String())),
+  uai: Type.Optional(Type.Array(Type.String())),
   rentreeScolaire: Type.Optional(Type.String()),
   typeDemande: Type.Optional(Type.Array(Type.String())),
   motif: Type.Optional(Type.Array(Type.String())),
   status: Type.Optional(
-    Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+    Type.Union([Type.Literal("draft"), Type.Literal("submitted"), Type.Undefined()])
   ),
   codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
   cfd: Type.Optional(Type.Array(Type.String())),
@@ -156,6 +160,7 @@ const StatsFiltersSchema = Type.Object({
   coloration: Type.Optional(Type.String()),
   amiCMA: Type.Optional(Type.String()),
   secteur: Type.Optional(Type.String()),
+  compensation: Type.Optional(Type.String()),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(StatsDemandesItem)),
 });
@@ -299,7 +304,12 @@ export const intentionsSchemas = {
       200: Type.Object({
         filters: Type.Object({
           rentreesScolaires: Type.Array(OptionSchema),
+          statuts: Type.Array(OptionSchema),
           regions: Type.Array(OptionSchema),
+          academies: Type.Array(OptionSchema),
+          departements: Type.Array(OptionSchema),
+          communes: Type.Array(OptionSchema),
+          etablissements: Type.Array(OptionSchema),
           typesDemande: Type.Array(OptionSchema),
           motifs: Type.Array(OptionSchema),
           status: Type.Array(OptionSchema),
@@ -311,6 +321,7 @@ export const intentionsSchemas = {
           secteurs: Type.Array(OptionSchema),
           amiCMAs: Type.Array(OptionSchema),
           colorations: Type.Array(OptionSchema),
+          compensations: Type.Array(OptionSchema),
         }),
         demandes: Type.Array(StatsDemandesItem),
         count: Type.Number(),
@@ -326,8 +337,13 @@ export const intentionsSchemas = {
   },
   countStatsDemandes: {
     querystring: Type.Object({
+      status: Type.Optional(
+        Type.Union([Type.Literal("draft"), Type.Literal("submitted"), Type.Undefined()])
+      ),
       rentreeScolaire: Type.Optional(Type.String()),
       codeRegion: Type.Optional(Type.Array(Type.String())),
+      codeAcademie: Type.Optional(Type.Array(Type.String())),
+      codeDepartement: Type.Optional(Type.Array(Type.String())),
       codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
       coloration: Type.Optional(Type.String()),
       secteur: Type.Optional(Type.String()),

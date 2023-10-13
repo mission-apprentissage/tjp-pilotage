@@ -45,41 +45,79 @@ export const PrimaryFiltersSection = ({
               py={3}
             >
               <Flex justifyContent={"start"} gap={4} flexDirection={"column"}>
-                <Box justifyContent={"start"}>
-                  <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
-                  <Select
-                    width={"48"}
-                    size="md"
-                    variant={"newInput"}
-                    value={activeFilters.rentreeScolaire?.toString() ?? ""}
-                    onChange={(e) =>
-                      handleFilters("rentreeScolaire", e.target.value)
-                    }
-                    placeholder="TOUTES"
-                  >
-                    {data?.filters.rentreesScolaires?.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
-                </Box>
-                <Box justifyContent={"start"}>
-                  <FormLabel color="white">RÉGION</FormLabel>
-                  <Multiselect
-                    onClose={filterTracker("codeRegion")}
-                    width={"72"}
-                    size="md"
-                    variant={"newInput"}
-                    onChange={(selected) =>
-                      handleFilters("codeRegion", selected)
-                    }
-                    options={data?.filters.regions}
-                    value={activeFilters.codeRegion ?? []}
-                  >
-                    TOUTES ({data?.filters.regions.length ?? 0})
-                  </Multiselect>
-                </Box>
+                <Flex gap={4}>
+                  <Box justifyContent={"start"}>
+                    <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
+                    <Select
+                      width={"72"}
+                      size="md"
+                      variant={"newInput"}
+                      value={activeFilters.rentreeScolaire?.toString() ?? ""}
+                      onChange={(e) =>
+                        handleFilters("rentreeScolaire", e.target.value)
+                      }
+                      placeholder="TOUTES"
+                    >
+                      {data?.filters.rentreesScolaires?.map((option) => (
+                        <option key={option.value} value={option.value}>
+                          {option.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </Box>
+                  <Box justifyContent={"start"}>
+                    <FormLabel color="white">RÉGION</FormLabel>
+                    <Multiselect
+                      onClose={filterTracker("codeRegion")}
+                      width={"72"}
+                      size="md"
+                      variant={"newInput"}
+                      onChange={(selected) =>
+                        handleFilters("codeRegion", selected)
+                      }
+                      options={data?.filters.regions}
+                      value={activeFilters.codeRegion ?? []}
+                    >
+                      TOUTES ({data?.filters.regions.length ?? 0})
+                    </Multiselect>
+                  </Box>
+                </Flex>
+                <Flex gap={4}>
+                  <Box justifyContent={"start"}>
+                    <FormLabel color="white">ACADÉMIE</FormLabel>
+                    <Multiselect
+                      onClose={filterTracker("codeAcademie")}
+                      width={"72"}
+                      size="md"
+                      variant={"newInput"}
+                      onChange={(selected) =>
+                        handleFilters("codeAcademie", selected)
+                      }
+                      options={data?.filters.academies}
+                      value={activeFilters.codeAcademie ?? []}
+                      disabled={data?.filters.academies.length === 0}
+                    >
+                      TOUTES ({data?.filters.academies.length ?? 0})
+                    </Multiselect>
+                  </Box>
+                  <Box justifyContent={"start"}>
+                    <FormLabel color="white">DÉPARTEMENT</FormLabel>
+                    <Multiselect
+                      onClose={filterTracker("codeDepartement")}
+                      width={"72"}
+                      size="md"
+                      variant={"newInput"}
+                      onChange={(selected) =>
+                        handleFilters("codeDepartement", selected)
+                      }
+                      options={data?.filters.departements}
+                      value={activeFilters.codeDepartement ?? []}
+                      disabled={data?.filters.departements.length === 0}
+                    >
+                      TOUS ({data?.filters.departements.length ?? 0})
+                    </Multiselect>
+                  </Box>
+                </Flex>
               </Flex>
             </Flex>
           </LightMode>
