@@ -202,7 +202,7 @@ export const demandeValidators: Record<
 
       if (
         isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-        demande.capaciteApprentissage >= demande.capaciteApprentissageActuelle
+        demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
       ) {
         return "La capacité en apprentissage devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
       }
