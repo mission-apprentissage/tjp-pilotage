@@ -1,25 +1,25 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { kdb } from "../../../db/db";
-import { DB } from "../../../db/schema";
-import { cleanNull } from "../../../utils/noNull";
-import { RequestUser } from "../../core/model/User";
-import { nbEtablissementFormationRegion } from "../../data/queries/utils/nbEtablissementFormationRegion";
-import { selectTauxDevenirFavorable } from "../../data/queries/utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../data/queries/utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../data/queries/utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../data/queries/utils/tauxPression";
+import { kdb } from "../../../../db/db";
+import { DB } from "../../../../db/schema";
+import { cleanNull } from "../../../../utils/noNull";
+import { RequestUser } from "../../../core/model/User";
+import { nbEtablissementFormationRegion } from "../../../data/queries/utils/nbEtablissementFormationRegion";
+import { selectTauxDevenirFavorable } from "../../../data/queries/utils/tauxDevenirFavorable";
+import { selectTauxInsertion6mois } from "../../../data/queries/utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "../../../data/queries/utils/tauxPoursuite";
+import { withTauxPressionReg } from "../../../data/queries/utils/tauxPression";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
-} from "./utils/countCapacite.query";
+} from "../../utils/countCapacite";
 import {
   isRegionVisible,
   isStatsDemandeVisible,
-} from "./utils/isStatsDemandesVisible";
+} from "../../utils/isStatsDemandesVisible";
 
-export const getStatsDemandes = async ({
+const findStatsDemandesInDB = async ({
   status,
   codeRegion,
   rentreeScolaire,
@@ -265,6 +265,64 @@ export const getStatsDemandes = async ({
     .offset(offset)
     .limit(limit)
     .execute();
+
+
+  return {
+    demandes: demandes.map((demande) =>
+      cleanNull({
+        ...demande,
+        createdAt: demande.createdAt?.toISOString(),
+        updatedAt: demande.updatedAt?.toISOString(),
+        idCompensation: demande.demandeCompensee?.id,
+        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
+      })
+    ),
+    count: parseInt(demandes[0]?.count) || 0,
+  };
+
+}
+
+const findFiltersInDb = async ({
+  status,
+  codeRegion,
+  rentreeScolaire,
+  typeDemande,
+  motif,
+  cfd,
+  codeNiveauDiplome,
+  dispositif,
+  filiere,
+  coloration,
+  amiCMA,
+  secteur,
+  cfdFamille,
+  codeDepartement,
+  codeAcademie,
+  commune,
+  uai,
+  compensation,
+  user,
+}: {
+  status?: "draft" | "submitted";
+  codeRegion?: string[];
+  rentreeScolaire?: string;
+  typeDemande?: string[];
+  motif?: string[];
+  cfd?: string[];
+  codeNiveauDiplome?: string[];
+  dispositif?: string[];
+  filiere?: string[];
+  coloration?: string;
+  amiCMA?: string;
+  secteur?: string;
+  cfdFamille?: string[];
+  codeDepartement?: string[];
+  codeAcademie?: string[];
+  commune?: string[];
+  uai?: string[];
+  compensation?: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+}) => {
 
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
@@ -839,16 +897,11 @@ export const getStatsDemandes = async ({
   };
 
   return {
-    filters: filters,
-    demandes: demandes.map((demande) =>
-      cleanNull({
-        ...demande,
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-        idCompensation: demande.demandeCompensee?.id,
-        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
-      })
-    ),
-    count: parseInt(demandes[0]?.count) || 0,
+    ...filters
   };
+};
+
+export const dependencies = {
+  findStatsDemandesInDB,
+  findFiltersInDb,
 };
