@@ -12,11 +12,11 @@ import {
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
 import { countDemandes } from "../queries/countDemandes.query";
-import { countStatsDemandes } from "../queries/countStatsDemandes.query";
 import { findDemande } from "../queries/findDemande.query";
 import { findDemandes } from "../queries/findDemandes.query";
-import { getStatsDemandes } from "../queries/getStatsDemandes.query";
 import { deleteDemande } from "../usecases/deleteDemande/deleteDemande.usecase";
+import { getCountStatsDemandes } from "../usecases/getCountStatsDemandes/getCountStatsDemandes.usecase";
+import { getStatsDemandes } from "../usecases/getStatsDemandes/getStatsDemandes.usecase";
 import { submitDemande } from "../usecases/submitDemande/submitDemande.usecase";
 import { submitDraftDemande } from "../usecases/submitDraftDemande/submitDraftDemande.usecase";
 
@@ -234,7 +234,7 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       const { ...filters } = request.query;
       if (!request.user) throw Boom.forbidden();
 
-      const result = await countStatsDemandes({
+      const result = await getCountStatsDemandes({
         ...filters,
         user: request.user,
       });

@@ -1,8 +1,8 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 
-import { kdb } from "../../../db/db";
-import { RequestUser } from "../../core/model/User";
+import { kdb } from "../../../../db/db";
+import { RequestUser } from "../../../core/model/User";
 import {
   countFermetures,
   countFermeturesApprentissage,
@@ -10,10 +10,10 @@ import {
   countOuvertures,
   countOuverturesApprentissage,
   countOuverturesSco,
-} from "./utils/countCapacite.query";
-import { isStatsDemandeVisible } from "./utils/isStatsDemandesVisible";
+} from "../../utils/countCapacite";
+import { isStatsDemandeVisible } from "../../utils/isStatsDemandesVisible";
 
-export const countStatsDemandes = async ({
+const countStatsDemandesInDB = async ({
   user,
   status,
   codeRegion,
@@ -166,4 +166,10 @@ export const countStatsDemandes = async ({
     .executeTakeFirstOrThrow();
 
   return countDemandes;
+};
+
+
+
+export const dependencies = {
+  countStatsDemandesInDB
 };
