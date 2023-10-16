@@ -1,6 +1,6 @@
 "use client";
 
-import { Container } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -18,6 +18,24 @@ import { HeaderSection } from "./components/HeaderSection";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
+
+const TableHeader = ({
+  page,
+  pageSize,
+  count = 0,
+}: {
+  page: number;
+  pageSize: number;
+  count?: number;
+}) => {
+  return (
+    <Flex align="center" py="1.5" justifyContent={"end"}>
+      <Box mr="4">
+        {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
+      </Box>
+    </Flex>
+  );
+};
 
 export default () => {
   const { auth } = useContext(AuthContext);
@@ -142,6 +160,7 @@ export default () => {
           isLoading={isLoading || isLoadingCount}
           data={data}
         />
+        <TableHeader page={page} pageSize={PAGE_SIZE} count={data?.count} />
         <ConsoleSection
           data={data}
           isLoading={isLoading}

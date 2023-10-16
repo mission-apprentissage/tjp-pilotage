@@ -104,6 +104,7 @@ const StatsDemandesItem = Type.Object({
   libelleDiplome: Type.Optional(Type.String()),
   niveauDiplome: Type.Optional(Type.String()),
   libelleEtablissement: Type.Optional(Type.String()),
+  commune: Type.Optional(Type.String()),
   libelleDispositif: Type.Optional(Type.String()),
   libelleFCIL: Type.Optional(Type.String()),
   libelleColoration: Type.Optional(Type.String()),

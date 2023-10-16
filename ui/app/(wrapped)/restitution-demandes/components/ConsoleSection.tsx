@@ -151,6 +151,14 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
+                  onClick={() => handleOrder("commune")}
+                >
+                  <OrderIcon {...order} column="commune" />
+                  {STATS_DEMANDES_COLUMNS.commune}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
                   onClick={() => handleOrder("libelleFiliere")}
                   minW={200}
                   maxW={200}
@@ -321,6 +329,7 @@ export const ConsoleSection = ({
                         <Td minW={300} maxW={300} whiteSpace="normal">
                           {demande.libelleEtablissement}
                         </Td>
+                        <Td>{demande.commune}</Td>
                         <Td minW={300} maxW={300} whiteSpace="normal">
                           {demande.libelleFiliere}
                         </Td>
