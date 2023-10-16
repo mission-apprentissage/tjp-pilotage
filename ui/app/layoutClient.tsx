@@ -72,7 +72,10 @@ export default function RootLayoutClient({
   const [queryClient] = useState(
     () =>
       new QueryClient({
-        defaultOptions: { mutations: { useErrorBoundary: false } },
+        defaultOptions: {
+          queries: { retry: false },
+          mutations: { useErrorBoundary: false, retry: false },
+        },
       })
   );
 

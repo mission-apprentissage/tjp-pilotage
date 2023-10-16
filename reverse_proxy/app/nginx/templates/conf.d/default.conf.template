@@ -21,7 +21,7 @@ server {
     listen ${SSL_PORT} ssl;
 
     server_name ${SERVER_NAME};
-
+    set $always_redirect off;
 
 
     ssl_certificate ${PROXY_SSL_CERT};

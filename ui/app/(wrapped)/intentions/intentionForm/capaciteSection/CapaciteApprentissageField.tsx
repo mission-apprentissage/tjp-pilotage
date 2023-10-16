@@ -3,7 +3,8 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
+  NumberInput,
+  NumberInputField,
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
@@ -30,10 +31,11 @@ export const CapaciteApprentissageField = chakra(
         }).unsubscribe
     );
 
-    const typeDemande = watch("typeDemande");
+    const [typeDemande, motif] = watch(["typeDemande", "motif"]);
     const ouverture = isTypeOuverture(typeDemande);
     const fermeture = isTypeFermeture(typeDemande);
-    if (fermeture) return <></>;
+    const isTransfertApprentissage = motif.includes("transfert_apprentissage");
+    if (fermeture && !isTransfertApprentissage) return <></>;
 
     return (
       <FormControl
@@ -44,23 +46,22 @@ export const CapaciteApprentissageField = chakra(
         <FormLabel>
           {ouverture ? "Capacité prévisionnelle" : "Nouvelle capacité"}
         </FormLabel>
-        <Input
-          type="number"
-          {...register("capaciteApprentissage", {
-            shouldUnregister: true,
-            disabled,
-            setValueAs: safeParseInt,
-            value: null as unknown as undefined,
-            validate: (value) => {
-              if (value === undefined) return "Le champ est obligatoire";
-              if (Number.isNaN(value))
-                return "Veuillez remplir un nombre valide.";
-              if (value < 0) return "Valeurs positives uniquement.";
-            },
-          })}
-          placeholder={fermeture ? "0" : ""}
-          disabled={fermeture}
-        />
+        <NumberInput>
+          <NumberInputField
+            {...register("capaciteApprentissage", {
+              shouldUnregister: true,
+              disabled,
+              setValueAs: safeParseInt,
+              value: null as unknown as undefined,
+              validate: (value) => {
+                if (value === undefined) return "Le champ est obligatoire";
+                if (Number.isNaN(value))
+                  return "Veuillez remplir un nombre valide.";
+                if (value < 0) return "Valeurs positives uniquement.";
+              },
+            })}
+          />
+        </NumberInput>
         {errors.capaciteApprentissage && (
           <FormErrorMessage>
             {errors.capaciteApprentissage.message}
