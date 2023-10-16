@@ -28,7 +28,7 @@ const FormationLineSchema = Type.Object({
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),
   libelleFiliere: Type.Optional(Type.String()),
-  continuum: Type.Boolean(),
+  cfdContinuum: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({

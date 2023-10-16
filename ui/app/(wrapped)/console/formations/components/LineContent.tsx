@@ -83,10 +83,16 @@ export const FormationLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion6mois} />
+        <GraphWrapper
+          zebra={!!line.cfdContinuum}
+          value={line.tauxInsertion6mois}
+        />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxPoursuiteEtudes} />
+        <GraphWrapper
+          zebra={!!line.cfdContinuum}
+          value={line.tauxPoursuiteEtudes}
+        />
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>

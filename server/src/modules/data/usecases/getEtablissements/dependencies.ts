@@ -5,7 +5,7 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { hasContinuums } from "../../queries/utils/hasContinuums";
+import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPression } from "../../queries/utils/tauxPression";
@@ -101,7 +101,7 @@ const findEtablissementsInDb = async ({
     .selectAll("etablissement")
     .selectAll("formation")
     .select([
-      (eb) => hasContinuums({ eb, millesimeSortie }).as("continuum"),
+      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelle as departement",
       "etablissement.UAI",
@@ -538,7 +538,7 @@ const findFiltersInDb = async ({
     )
     .execute();
 
-  const libelleFilieres = base
+  const libelleFilieres = await base
     .select([
       "formation.libelleFiliere as label",
       "formation.libelleFiliere as value",
@@ -548,26 +548,26 @@ const findFiltersInDb = async ({
       eb.or([
         eb.and([]),
         libelleFiliere
-          ? eb.cmpr("formation.libelleFiliere", "in", libelleFiliere)
+          ? eb("formation.libelleFiliere", "in", libelleFiliere)
           : sql`false`,
       ])
     )
     .execute();
 
-  return await {
-    regions: (await regions).map(cleanNull),
-    departements: (await departements).map(cleanNull),
-    academies: (await academies).map(cleanNull),
-    communes: (await communes).map(cleanNull),
-    etablissements: (await etablissements).map(cleanNull),
-    diplomes: (await diplomes).map(cleanNull),
-    dispositifs: (await dispositifs).map(cleanNull),
-    familles: (await familles).map(cleanNull),
-    formations: (await formations).map(cleanNull),
-    CPCs: (await CPCs).map(cleanNull),
-    CPCSecteurs: (await CPCSecteurs).map(cleanNull),
-    CPCSousSecteurs: (await CPCSousSecteurs).map(cleanNull),
-    libelleFilieres: (await libelleFilieres).map(cleanNull),
+  return {
+    regions: regions.map(cleanNull),
+    departements: departements.map(cleanNull),
+    academies: academies.map(cleanNull),
+    communes: communes.map(cleanNull),
+    etablissements: etablissements.map(cleanNull),
+    diplomes: diplomes.map(cleanNull),
+    dispositifs: dispositifs.map(cleanNull),
+    familles: familles.map(cleanNull),
+    formations: formations.map(cleanNull),
+    CPCs: CPCs.map(cleanNull),
+    CPCSecteurs: CPCSecteurs.map(cleanNull),
+    CPCSousSecteurs: CPCSousSecteurs.map(cleanNull),
+    libelleFilieres: libelleFilieres.map(cleanNull),
   };
 };
 

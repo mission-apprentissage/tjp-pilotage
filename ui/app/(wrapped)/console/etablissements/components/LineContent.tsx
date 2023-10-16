@@ -72,10 +72,16 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion6mois} />
+        <GraphWrapper
+          zebra={!!line.cfdContinuum}
+          value={line.tauxInsertion6mois}
+        />
       </Td>
       <Td isNumeric>
-        <GraphWrapper value={line.tauxPoursuiteEtudes} />
+        <GraphWrapper
+          zebra={!!line.cfdContinuum}
+          value={line.tauxPoursuiteEtudes}
+        />
       </Td>
       <Td isNumeric>{line.valeurAjoutee ?? "-"} </Td>
       <Td>{line.secteur ?? "-"} </Td>

@@ -24,13 +24,10 @@ const getFormationsFactory =
     orderBy?: { order: "asc" | "desc"; column: string };
     withEmptyFormations?: boolean;
   }) => {
-    const formationsPromise = findFormationsInDb(activeFilters);
-    const filtersPromise = findFiltersInDb(activeFilters);
-
-    const { filters, count, formations } = {
-      filters: await filtersPromise,
-      ...(await formationsPromise),
-    };
+    const [{ formations, count }, filters] = await Promise.all([
+      findFormationsInDb(activeFilters),
+      findFiltersInDb(activeFilters),
+    ]);
 
     return {
       count,
