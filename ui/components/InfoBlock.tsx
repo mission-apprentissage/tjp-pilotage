@@ -14,7 +14,9 @@ export const InfoBlock = chakra(
   }) => {
     return (
       <Box className={className}>
-        <Text fontWeight="bold">{label}</Text>
+        <Text mb="0.5" fontWeight="bold">
+          {label}
+        </Text>
         <Text p="1" bg="#EEEEEE">
           {value}
         </Text>

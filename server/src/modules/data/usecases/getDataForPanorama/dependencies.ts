@@ -3,9 +3,10 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { selectTauxDevenirFavorable } from "../../queries/utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../queries/utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../queries/utils/tauxPoursuite";
+import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
@@ -44,17 +45,6 @@ export const queryFormations = async ({
         )
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
-    .leftJoin("indicateurRegionSortie", (join) =>
-      join
-        .onRef("indicateurRegionSortie.cfd", "=", "formationEtablissement.cfd")
-        .onRef(
-          "indicateurRegionSortie.dispositifId",
-          "=",
-          "formationEtablissement.dispositifId"
-        )
-        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-        .on("indicateurRegionSortie.codeRegion", "=", codeRegion)
-    )
     .leftJoin(
       "etablissement",
       "etablissement.UAI",
@@ -66,13 +56,6 @@ export const queryFormations = async ({
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
     .where("etablissement.codeRegion", "=", codeRegion)
-    .leftJoin("indicateurRegionSortie as IRSP", (join) =>
-      join
-        .onRef("IRSP.cfd", "=", "formationEtablissement.cfd")
-        .onRef("IRSP.dispositifId", "=", "formationEtablissement.dispositifId")
-        .on("IRSP.millesimeSortie", "=", "2019_2020")
-        .on("IRSP.codeRegion", "=", codeRegion)
-    )
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
@@ -98,18 +81,31 @@ export const queryFormations = async ({
         "effectifPrecedent"
       ),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
-      selectTauxInsertion6mois("IRSP").as("tauxInsertion6moisPrecedent"),
-      selectTauxPoursuite("IRSP").as("tauxPoursuiteEtudesPrecedent"),
-      selectTauxInsertion6mois("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
-      ),
-      selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuiteEtudes"),
-      selectTauxDevenirFavorable("indicateurRegionSortie").as(
-        "tauxDevenirFavorable"
-      ),
+      (eb) =>
+        withInsertionReg({ eb, millesimeSortie: "2019_2020" }).as(
+          "tauxInsertion6moisPrecedent"
+        ),
+      (eb) =>
+        withPoursuiteReg({ eb, millesimeSortie: "2019_2020" }).as(
+          "tauxPoursuiteEtudesPrecedent"
+        ),
+      (eb) =>
+        withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+      (eb) =>
+        withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
+      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+      (eb) =>
+        withDevenirFavorableReg({ eb, millesimeSortie }).as(
+          "tauxDevenirFavorable"
+        ),
     ])
-    .where(selectTauxInsertion6mois("indicateurRegionSortie"), "is not", null)
-    .where(selectTauxPoursuite("indicateurRegionSortie"), "is not", null)
+    .$narrowType<{
+      tauxInsertion6mois: number;
+      tauxPoursuiteEtudes: number;
+      tauxDevenirFavorable: number;
+    }>()
+    .having((eb) => withInsertionReg({ eb, millesimeSortie }), "is not", null)
+    .having((eb) => withPoursuiteReg({ eb, millesimeSortie }), "is not", null)
     .groupBy([
       "formationEtablissement.cfd",
       "formation.id",
@@ -117,14 +113,6 @@ export const queryFormations = async ({
       "formationEtablissement.dispositifId",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
-      "indicateurRegionSortie.nbInsertion6mois",
-      "indicateurRegionSortie.nbPoursuiteEtudes",
-      "indicateurRegionSortie.effectifSortie",
-      "indicateurRegionSortie.nbSortants",
-      "IRSP.nbInsertion6mois",
-      "IRSP.nbPoursuiteEtudes",
-      "IRSP.effectifSortie",
-      "IRSP.nbSortants",
     ])
     .execute();
 

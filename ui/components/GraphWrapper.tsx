@@ -3,20 +3,17 @@ import { Graph } from "./Graph";
 
 export const GraphWrapper = ({
   value,
-  centered,
-  zebra,
+  continuum,
 }: {
   value?: number;
-  centered?: boolean;
-  zebra?: boolean;
+  continuum?: boolean;
 }) => (
   <>
     {value !== undefined && !Number.isNaN(value) ? (
       <>
         {value.toFixed()}%
         <Graph
-          zebra={zebra}
-          centered={centered}
+          continuum={continuum}
           value={value}
           width="100px"
           display="inline-block"

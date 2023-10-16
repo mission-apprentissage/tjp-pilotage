@@ -121,6 +121,7 @@ export const etablissementSchemas = {
             CPCSecteur: Type.Optional(Type.String()),
             CPCSousSecteur: Type.Optional(Type.String()),
             libelleFiliere: Type.Optional(Type.String()),
+            cfdContinuum: Type.Optional(Type.String()),
           })
         ),
       }),

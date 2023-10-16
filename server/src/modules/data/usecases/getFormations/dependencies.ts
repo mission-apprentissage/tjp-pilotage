@@ -139,16 +139,8 @@ const findFormationsInDb = async ({
     ])
     .select((eb) => [
       hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
-      withPoursuiteReg({
-        eb,
-        millesimeSortie,
-        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
-      }).as("tauxPoursuiteEtudes"),
-      withInsertionReg({
-        eb,
-        millesimeSortie,
-        codeRegion: codeRegion?.length === 1 ? codeRegion[0] : undefined,
-      }).as("tauxInsertion6mois"),
+      withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
+      withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
     ])
     .where(
       "codeFormationDiplome",

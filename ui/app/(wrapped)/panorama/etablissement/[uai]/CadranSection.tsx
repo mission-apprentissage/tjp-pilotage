@@ -12,8 +12,8 @@ import { useMemo } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { InfoBlock } from "../../../../../components/InfoBlock";
 import { Cadran } from "../../components/Cadran";
+import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
 
@@ -99,46 +99,6 @@ export const CadranSection = ({
         </Text>
       </Box>
     </Container>
-  );
-};
-
-const FormationTooltipContent = ({
-  formation,
-}: {
-  formation: ApiType<typeof api.getEtablissement>["formations"][number];
-}) => {
-  return (
-    <Box bg="white" fontSize="xs">
-      <InfoBlock
-        mb="2"
-        label="Formation concernée:"
-        value={formation.libelleDiplome}
-      />
-      <InfoBlock
-        mb="2"
-        label="Dispositif concerné:"
-        value={formation.libelleDispositif}
-      />
-      <InfoBlock
-        mb="2"
-        label="Effectif de l'établissement:"
-        value={formation.effectif ?? "-"}
-      />
-      <InfoBlock
-        mb="2"
-        label="Taux de pression de l'établissement:"
-        value={formation.tauxPression ? formation?.tauxPression / 100 : "-"}
-      />
-      <InfoBlock
-        mb="2"
-        label="Taux d'emploi régional:"
-        value={`${formation.tauxInsertion6mois}%`}
-      />
-      <InfoBlock
-        label="Taux de pousuite d'études régional:"
-        value={`${formation.tauxPoursuiteEtudes}%`}
-      />
-    </Box>
   );
 };
 
