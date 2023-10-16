@@ -7,6 +7,7 @@ export const STATS_DEMANDES_COLUMNS = {
   libelleDispositif: "Dispositif",
   uai: "UAI",
   libelleEtablissement: "Établissement",
+  commune: "Commune",
   rentreeScolaire: "RS",
   typeDemande: "Type de demande",
   motifs: "Motif(s) de la demande",

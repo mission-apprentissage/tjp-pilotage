@@ -100,6 +100,7 @@ const findStatsDemandesInDB = async ({
       "dataFormation.libelle as libelleDiplome",
       "dataFormation.libelleFiliere as libelleFiliere",
       "dataEtablissement.libelle as libelleEtablissement",
+      "dataEtablissement.commune as commune",
       "dispositif.libelleDispositif as libelleDispositif",
       "region.libelleRegion as libelleRegion",
       "departement.libelle as libelleDepartement",
