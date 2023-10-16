@@ -101,7 +101,6 @@ const findEtablissementsInDb = async ({
     .selectAll("etablissement")
     .selectAll("formation")
     .select([
-      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelle as departement",
       "etablissement.UAI",
@@ -135,20 +134,13 @@ const findEtablissementsInDb = async ({
       ),
       selectTauxPression("indicateurEntree").as("tauxPression"),
     ])
-    .select((eb) =>
-      withInsertionReg({
-        eb,
-        millesimeSortie,
-        codeRegion: "ref",
-      }).as("tauxInsertion6mois")
-    )
-    .select((eb) =>
-      withPoursuiteReg({
-        eb,
-        millesimeSortie,
-        codeRegion: "ref",
-      }).as("tauxPoursuiteEtudes")
-    )
+    .select([
+      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+      (eb) =>
+        withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
+      (eb) =>
+        withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+    ])
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);

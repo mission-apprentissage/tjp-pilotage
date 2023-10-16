@@ -1,5 +1,9 @@
 import { Box, HStack } from "@chakra-ui/react";
 
+import {
+  ContinuumIcon,
+  ContinuumIconOutline,
+} from "../../../../../components/icons/ContinuumIcon";
 import { InfoBlock } from "../../../../../components/InfoBlock";
 import { PanoramaFormations } from "./type";
 
@@ -35,13 +39,34 @@ export const FormationTooltipContent = ({
       />
       <InfoBlock
         mb="2"
-        label="Tx d'emploi:"
+        label={
+          <>
+            Taux d'emploi régional:
+            {formation.cfdContinuum && (
+              <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
+            )}
+          </>
+        }
         value={`${formation?.tauxInsertion6mois}%`}
       />
       <InfoBlock
-        label="Tx de pousuite d'études:"
+        label={
+          <>
+            Taux de pousuite d'études régional:
+            {formation.cfdContinuum && (
+              <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
+            )}
+          </>
+        }
         value={`${formation?.tauxPoursuiteEtudes}%`}
       />
+      {formation.cfdContinuum && (
+        <Box bg="#7B61FF" mt="4" color="white" p="2">
+          <ContinuumIconOutline fontSize="16" mr="1" />
+          Données manquantes sur cette formation, le taux affiché est celui de
+          la formation historique.
+        </Box>
+      )}
     </Box>
   );
 };
