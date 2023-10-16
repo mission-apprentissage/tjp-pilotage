@@ -178,6 +178,14 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
+                  onClick={() => handleOrder("libelleRegion")}
+                >
+                  <OrderIcon {...order} column="libelleRegion" />
+                  {STATS_DEMANDES_COLUMNS.libelleRegion}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
                   onClick={() => handleOrder("libelleDepartement")}
                 >
                   <OrderIcon {...order} column="libelleDepartement" />
@@ -211,7 +219,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.differenceCapaciteApprentissage}
                 </Th>
                 <Th
-                  isNumeric
+                  textAlign="center"
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("insertion")}
@@ -227,7 +235,7 @@ export const ConsoleSection = ({
                   />
                 </Th>
                 <Th
-                  isNumeric
+                  textAlign="center"
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("poursuite")}
@@ -243,7 +251,7 @@ export const ConsoleSection = ({
                   />
                 </Th>
                 <Th
-                  isNumeric
+                  textAlign="center"
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("devenirFavorable")}
@@ -259,7 +267,7 @@ export const ConsoleSection = ({
                   />
                 </Th>
                 <Th
-                  isNumeric
+                  textAlign="center"
                   cursor="pointer"
                   pb="4"
                   onClick={() => handleOrder("pression")}
@@ -317,6 +325,7 @@ export const ConsoleSection = ({
                           {demande.libelleFiliere}
                         </Td>
                         <Td isNumeric>{demande.nbEtablissement}</Td>
+                        <Td>{demande.libelleRegion}</Td>
                         <Td>{demande.libelleDepartement}</Td>
                         <Td isNumeric>
                           {demande.differenceCapaciteScolaire ?? 0}
@@ -324,16 +333,16 @@ export const ConsoleSection = ({
                         <Td isNumeric>
                           {demande.differenceCapaciteApprentissage ?? 0}
                         </Td>
-                        <Td isNumeric>
+                        <Td textAlign="center">
                           <GraphWrapper value={demande.insertion} />
                         </Td>
-                        <Td isNumeric>
+                        <Td textAlign="center">
                           <GraphWrapper value={demande.poursuite} />
                         </Td>
-                        <Td isNumeric>
+                        <Td textAlign="center">
                           <GraphWrapper value={demande.devenirFavorable} />
                         </Td>
-                        <Td isNumeric>
+                        <Td textAlign="center">
                           <TableBadge
                             sx={getTauxPressionStyle(
                               demande.pression !== undefined

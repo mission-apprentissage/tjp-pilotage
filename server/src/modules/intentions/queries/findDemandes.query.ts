@@ -23,7 +23,11 @@ export const findDemandes = async ({
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("departement", "departement.codeDepartement", "dataEtablissement.codeDepartement")
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
     .selectAll("demande")
     .select((eb) => [

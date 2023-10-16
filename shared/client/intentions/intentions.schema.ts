@@ -150,7 +150,11 @@ const StatsFiltersSchema = Type.Object({
   typeDemande: Type.Optional(Type.Array(Type.String())),
   motif: Type.Optional(Type.Array(Type.String())),
   status: Type.Optional(
-    Type.Union([Type.Literal("draft"), Type.Literal("submitted"), Type.Undefined()])
+    Type.Union([
+      Type.Literal("draft"),
+      Type.Literal("submitted"),
+      Type.Undefined(),
+    ])
   ),
   codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
   cfd: Type.Optional(Type.Array(Type.String())),
@@ -338,7 +342,11 @@ export const intentionsSchemas = {
   countStatsDemandes: {
     querystring: Type.Object({
       status: Type.Optional(
-        Type.Union([Type.Literal("draft"), Type.Literal("submitted"), Type.Undefined()])
+        Type.Union([
+          Type.Literal("draft"),
+          Type.Literal("submitted"),
+          Type.Undefined(),
+        ])
       ),
       rentreeScolaire: Type.Optional(Type.String()),
       codeRegion: Type.Optional(Type.Array(Type.String())),
