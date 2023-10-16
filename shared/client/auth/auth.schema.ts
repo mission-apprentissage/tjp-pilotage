@@ -34,7 +34,7 @@ export const authSchemas = {
                 })
               )
             ),
-            codeRegion: Type.Optional(Type.String())
+            codeRegion: Type.Optional(Type.String()),
           }),
         })
       ),

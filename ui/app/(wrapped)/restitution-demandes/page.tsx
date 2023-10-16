@@ -76,7 +76,6 @@ export default () => {
       return;
     }
     setSearchParams({
-      ...filters,
       order: {
         order: order?.order === "asc" ? "desc" : "asc",
         orderBy: column,

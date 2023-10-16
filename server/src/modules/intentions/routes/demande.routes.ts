@@ -203,6 +203,13 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
 
+      demandes.map(
+        (demande) =>
+          (demande.pression = demande.pression
+            ? demande.pression / 100
+            : undefined)
+      );
+
       const parser = new Parser({
         fields: Object.entries(STATS_DEMANDES_COLUMNS).map(
           ([value, label]) => ({

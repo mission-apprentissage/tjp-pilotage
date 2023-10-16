@@ -16,8 +16,8 @@ export const countOuverturesSco = ({
 }) => sql<number>`
     CASE WHEN
     (${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
-  "demande.capaciteScolaireActuelle"
-)}) >= 0
+      "demande.capaciteScolaireActuelle"
+    )}) >= 0
     THEN (${eb.ref("demande.capaciteScolaire")} -
     ${eb.ref("demande.capaciteScolaireActuelle")})
     ELSE 0
@@ -30,8 +30,8 @@ export const countOuverturesApprentissage = ({
 }) => sql<number>`
     CASE WHEN
     (${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-  "demande.capaciteApprentissageActuelle"
-)}) >= 0
+      "demande.capaciteApprentissageActuelle"
+    )}) >= 0
     THEN (${eb.ref("demande.capaciteApprentissage")} -
     ${eb.ref("demande.capaciteApprentissageActuelle")})
     ELSE 0
@@ -51,11 +51,11 @@ export const countFermeturesSco = ({
 }) => sql<number>`
     CASE WHEN
     (${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
-  "demande.capaciteScolaireActuelle"
-)}) <= 0
+      "demande.capaciteScolaireActuelle"
+    )}) <= 0
     THEN abs(${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
-  "demande.capaciteScolaireActuelle"
-)})
+      "demande.capaciteScolaireActuelle"
+    )})
     ELSE 0
     END`;
 
@@ -66,11 +66,11 @@ export const countFermeturesApprentissage = ({
 }) => sql<number>`
     CASE WHEN
     (${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-  "demande.capaciteApprentissageActuelle"
-)}) <= 0
+      "demande.capaciteApprentissageActuelle"
+    )}) <= 0
     THEN abs(${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-  "demande.capaciteApprentissageActuelle"
-)})
+      "demande.capaciteApprentissageActuelle"
+    )})
     ELSE 0
     END`;
 

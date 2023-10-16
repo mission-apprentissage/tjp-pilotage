@@ -29,5 +29,5 @@ export const DEMANDES_COLUMNS = {
   capaciteScolaireColoree: "Capacité scolaire coloree",
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree"
+  capaciteApprentissageColoree: "Capacité apprentissage coloree",
 } as const;
