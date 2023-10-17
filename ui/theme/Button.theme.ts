@@ -45,6 +45,20 @@ const createButton = defineStyle({
   borderRadius: 5,
 });
 
+const newInput = defineStyle({
+  ...commonButtonStyle,
+  bg: "white",
+  borderRadius: "6px",
+  border: "1px solid",
+  borderColor: "grey.950",
+  color: "inherit",
+  textAlign: "left",
+  span: {
+    overflow: "hidden",
+    textOverflow: "ellipsis",
+  },
+});
+
 const input = defineStyle({
   ...commonButtonStyle,
   bg: "grey.950",
@@ -64,6 +78,6 @@ const input = defineStyle({
 });
 
 export const buttonTheme = defineStyleConfig({
-  variants: { primary, input, secondary, createButton },
+  variants: { primary, input, newInput, secondary, createButton },
   baseStyle: {},
 });

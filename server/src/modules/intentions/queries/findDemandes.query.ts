@@ -4,7 +4,7 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
 import { RequestUser } from "../../core/model/User";
-import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
+import { isDemandeSelectable } from "../utils/isDemandeSelectable";
 
 export const findDemandes = async ({
   status,
@@ -23,11 +23,17 @@ export const findDemandes = async ({
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
     .selectAll("demande")
     .select((eb) => [
       "dataFormation.libelle as libelleDiplome",
       "dataEtablissement.libelle as libelleEtablissement",
+      "departement.libelle as libelleDepartement",
       "dispositif.libelleDispositif as libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(

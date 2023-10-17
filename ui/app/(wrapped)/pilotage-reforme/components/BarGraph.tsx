@@ -140,7 +140,7 @@ export const BarGraph = function <
         top="0"
         left="0"
         bottom="0"
-        height={350}
+        height={380}
       ></Box>
     </Box>
   );

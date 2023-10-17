@@ -32,6 +32,7 @@ export const CartoSection = ({
       borderRadius={4}
       border={"1px solid"}
       borderColor="grey.900"
+      bg="white"
       p={3}
       height={"601"}
       mt={12}
@@ -45,9 +46,10 @@ export const CartoSection = ({
               VISUALISATION TERRITORIALE
             </Text>
             <Select
-              width="52"
+              width="64"
               size="sm"
-              variant="input"
+              variant="newInput"
+              bg={"grey.150"}
               onChange={(e) => handleIndicateurChange(e.target.value)}
               value={indicateur}
             >
