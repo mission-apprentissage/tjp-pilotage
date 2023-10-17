@@ -84,7 +84,7 @@ export const getEtablissement = async ({
             selectTauxPression("indicateurEntree").as("tauxPression"),
           ])
           .select((eb) => [
-            (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+            (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
             withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
             withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
           ])

@@ -28,7 +28,12 @@ const FormationLineSchema = Type.Object({
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),
   libelleFiliere: Type.Optional(Type.String()),
-  cfdContinuum: Type.Optional(Type.String()),
+  continuum: Type.Optional(
+    Type.Object({
+      cfd: Type.String(),
+      libelle: Type.Optional(Type.String()),
+    })
+  ),
 });
 
 const FiltersSchema = Type.Object({
@@ -115,7 +120,12 @@ export const formationSchemas = {
             CPCSecteur: Type.Optional(Type.String()),
             CPCSousSecteur: Type.Optional(Type.String()),
             libelleFiliere: Type.Optional(Type.String()),
-            cfdContinuum: Type.Optional(Type.String()),
+            continuum: Type.Optional(
+              Type.Object({
+                cfd: Type.String(),
+                libelle: Type.Optional(Type.String()),
+              })
+            ),
           })
         ),
       }),

@@ -42,7 +42,7 @@ export const FormationTooltipContent = ({
         label={
           <>
             Taux d'emploi régional:
-            {formation.cfdContinuum && (
+            {formation.continuum && (
               <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
             )}
           </>
@@ -53,14 +53,14 @@ export const FormationTooltipContent = ({
         label={
           <>
             Taux de pousuite d'études régional:
-            {formation.cfdContinuum && (
+            {formation.continuum && (
               <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
             )}
           </>
         }
         value={`${formation?.tauxPoursuiteEtudes}%`}
       />
-      {formation.cfdContinuum && (
+      {formation.continuum && (
         <Box bg="#7B61FF" mt="4" color="white" p="2">
           <ContinuumIconOutline fontSize="16" mr="1" />
           Données manquantes sur cette formation, le taux affiché est celui de

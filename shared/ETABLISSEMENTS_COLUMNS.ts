@@ -24,4 +24,6 @@ export const ETABLISSEMENTS_COLUMNS = {
   CPCSecteur: "CPCSecteur",
   CPCSousSecteur: "CPCSousSecteur",
   libelleFiliere: "Secteur d’activité",
+  "continuum.libelle": "Diplôme historique",
+  "continuum.cfd": "Code diplôme historique",
 } as const;

@@ -93,7 +93,7 @@ export const queryFormations = async ({
         withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
       (eb) =>
         withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
-      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+      (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
       (eb) =>
         withDevenirFavorableReg({ eb, millesimeSortie }).as(
           "tauxDevenirFavorable"
