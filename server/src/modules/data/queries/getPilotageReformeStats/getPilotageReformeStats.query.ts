@@ -92,11 +92,6 @@ export const getPilotageReformeStats = async ({
         "formation.codeFormationDiplome",
         "indicateurRegionSortie.cfd"
       )
-      .leftJoin(
-        "indicateurRegion",
-        "indicateurRegion.codeRegion",
-        "indicateurRegionSortie.codeRegion"
-      )
       .$call((q) => {
         if (!isFiltered || !codeRegion) return q;
         return q.where("indicateurRegionSortie.codeRegion", "=", codeRegion);
@@ -112,6 +107,7 @@ export const getPilotageReformeStats = async ({
           getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: annee })
         )
       )
+      .where("indicateurRegionSortie.cfdContinuum", "is", null)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),

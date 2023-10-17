@@ -45,24 +45,20 @@ export const selectTauxPoursuite = (
 export function withPoursuiteReg({
   eb,
   millesimeSortie,
-  codeRegion,
 }: {
   eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
   millesimeSortie: string;
-  codeRegion?: string | "ref";
 }) {
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
     .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
     .whereRef("subIRS.dispositifId", "=", "formationEtablissement.dispositifId")
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
-    .$call((q) => {
-      if (!codeRegion) return q;
-      if (codeRegion === "ref") {
-        return q.whereRef("subIRS.codeRegion", "=", "etablissement.codeRegion");
-      }
-      return q.where("subIRS.codeRegion", "=", codeRegion);
-    })
+    .whereRef(
+      "subIRS.codeRegion",
+      "=",
+      sql`ANY(array_agg(${eb.ref("etablissement.codeRegion")}))`
+    )
     .select([selectTauxPoursuiteAgg("subIRS").as("sa")])
     .groupBy(["subIRS.cfd", "subIRS.dispositifId"]);
 }

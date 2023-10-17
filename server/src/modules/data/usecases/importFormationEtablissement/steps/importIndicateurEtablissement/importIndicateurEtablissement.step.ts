@@ -3,7 +3,8 @@ import { Insertable } from "kysely";
 
 import { DB } from "../../../../../../db/schema";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
-import { dependencies } from "../../dependencies.di";
+import { getUaiData } from "./getUaiData.dep";
+import { upsertIndicateurEtablissement } from "./upsertIndicateurEtablissement.dep";
 
 const toIndicateurEtablissement = ({
   deppEtablissement,
@@ -24,8 +25,8 @@ const toIndicateurEtablissement = ({
 
 export const [importIndicateurEtablissement] = inject(
   {
-    getUaiData: dependencies.getUaiData,
-    upsertIndicateurEtablissement: dependencies.upsertIndicateurEtablissement,
+    getUaiData,
+    upsertIndicateurEtablissement,
   },
   (deps) =>
     async ({ uai, millesime }: { uai: string; millesime: string }) => {

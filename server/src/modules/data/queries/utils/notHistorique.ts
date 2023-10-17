@@ -5,7 +5,7 @@ import { DB } from "../../../../db/schema";
 export const notHistorique = (
   eb: ExpressionBuilder<DB, "formationEtablissement">
 ) => {
-  return eb.cmpr(
+  return eb(
     "formationEtablissement.cfd",
     "not in",
     sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
@@ -15,7 +15,7 @@ export const notHistorique = (
 export const notHistoriqueIndicateurRegionSortie = (
   eb: ExpressionBuilder<DB, "indicateurRegionSortie">
 ) => {
-  return eb.cmpr(
+  return eb(
     "indicateurRegionSortie.cfd",
     "not in",
     sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
