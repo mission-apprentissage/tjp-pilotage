@@ -17,14 +17,20 @@ export const createFormationHistorique = async (
     await t
       .insertInto("formation")
       .values(_.omit(ancienneFormation, "nouveauCFD"))
-      .onConflict((oc) => oc.column("codeFormationDiplome").doNothing())
+      .onConflict((oc) =>
+        oc
+          .column("codeFormationDiplome")
+          .doUpdateSet(_.omit(ancienneFormation, "nouveauCFD"))
+      )
       .execute();
 
     await t
       .insertInto("formationHistorique")
       .values(formationHistorique)
       .onConflict((oc) =>
-        oc.columns(["ancienCFD", "codeFormationDiplome"]).doNothing()
+        oc
+          .columns(["ancienCFD", "codeFormationDiplome"])
+          .doUpdateSet(formationHistorique)
       )
       .execute();
   });

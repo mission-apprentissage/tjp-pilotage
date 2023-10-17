@@ -6,7 +6,7 @@ export const GraphWrapper = ({
   continuum,
 }: {
   value?: number;
-  continuum?: boolean;
+  continuum?: { cfd: string; libelle?: string };
 }) => (
   <>
     {value !== undefined && !Number.isNaN(value) ? (

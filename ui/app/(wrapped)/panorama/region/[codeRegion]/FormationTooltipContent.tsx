@@ -64,7 +64,7 @@ export const FormationTooltipContent = ({
         <Box bg="#7B61FF" mt="4" color="white" p="2">
           <ContinuumIconOutline fontSize="16" mr="1" />
           Données manquantes sur cette formation, le taux affiché est celui de
-          la formation historique.
+          la formation historique "{formation.continuum.libelle}".
         </Box>
       )}
     </Box>
