@@ -1,8 +1,8 @@
 "use client";
-import { Box, chakra, Tooltip } from "@chakra-ui/react";
+import { Box, chakra, Text, Tooltip } from "@chakra-ui/react";
 import { memo } from "react";
 
-import { ContinuumIconOutline } from "./icons/ContinuumIcon";
+import { ContinuumIcon } from "./icons/ContinuumIcon";
 
 export const Graph = memo(
   chakra(
@@ -21,16 +21,19 @@ export const Graph = memo(
         p="3"
         label={
           <>
-            <ContinuumIconOutline fontSize={16} mr="1" />
+            <ContinuumIcon fontSize={16} mr="1" />
             Données manquantes sur cette formation, le taux affiché est celui de
-            la formation historique <i>"{continuum?.libelle}"</i>.
+            la formation historique :<br />
+            <Text mt="1" fontStyle="italic">
+              {continuum?.libelle}
+            </Text>
           </>
         }
       >
         <Box
           className={className}
           bg="grey.900"
-          height="10px"
+          height="14px"
           position="relative"
           borderRadius="4"
           overflow="hidden"

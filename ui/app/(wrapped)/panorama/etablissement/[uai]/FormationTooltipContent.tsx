@@ -1,11 +1,10 @@
 "use client";
-import { Box } from "@chakra-ui/react";
+import { Box, Text } from "@chakra-ui/react";
 import { ApiType } from "shared";
 
-import { ContinuumIcon } from "@/components/icons/ContinuumIcon";
+import { GraphWrapper } from "@/components/GraphWrapper";
 
 import { api } from "../../../../../api.client";
-import { ContinuumIconOutline } from "../../../../../components/icons/ContinuumIcon";
 import { InfoBlock } from "../../../../../components/InfoBlock";
 
 export const FormationTooltipContent = ({
@@ -29,40 +28,26 @@ export const FormationTooltipContent = ({
       label="Effectif de l'établissement:"
       value={formation.effectif ?? "-"}
     />
-    <InfoBlock
+    <Text mb="1" fontWeight="medium">
+      Taux de pression :
+    </Text>
+    <GraphWrapper mb="2" w="100%" value={formation.tauxPression} />
+    <Text mb="1" fontWeight="medium">
+      Taux d'emploi régional :
+    </Text>
+    <GraphWrapper
       mb="2"
-      label="Taux de pression de l'établissement:"
-      value={formation.tauxPression ? formation?.tauxPression / 100 : "-"}
+      w="100%"
+      continuum={formation.continuum}
+      value={formation.tauxInsertion6mois}
     />
-    <InfoBlock
-      mb="2"
-      label={
-        <>
-          Taux d'emploi régional:
-          {formation.continuum && (
-            <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
-          )}
-        </>
-      }
-      value={`${formation?.tauxInsertion6mois}%`}
+    <Text mb="1" fontWeight="medium">
+      Taux de pousuite d'études régional :
+    </Text>
+    <GraphWrapper
+      w="100%"
+      continuum={formation.continuum}
+      value={formation.tauxInsertion6mois}
     />
-    <InfoBlock
-      label={
-        <>
-          Taux de pousuite d'études régional:
-          {formation.continuum && (
-            <ContinuumIcon fontSize="16" mb="0.5" m={"1"} color="#7B61FF" />
-          )}
-        </>
-      }
-      value={`${formation?.tauxPoursuiteEtudes}%`}
-    />
-    {formation.continuum && (
-      <Box bg="#7B61FF" mt="4" color="white" p="2">
-        <ContinuumIconOutline fontSize="16" mr="1" />
-        Données manquantes sur cette formation, le taux affiché est celui de la
-        formation historique <i>"{formation.continuum.libelle}"</i>.
-      </Box>
-    )}
   </Box>
 );
