@@ -30,10 +30,11 @@ export const FormationTooltipContent = ({
           value={formation?.nbEtablissement}
         />
       </HStack>
-      <Text mb="1" fontWeight="medium">
-        Taux de pression :
-      </Text>
-      <GraphWrapper mb="2" w="100%" value={formation.tauxPression} />
+      <InfoBlock
+        mb="2"
+        label="Taux de pression :"
+        value={formation.tauxPression ? formation?.tauxPression / 100 : "-"}
+      />
       <Text mb="1" fontWeight="medium">
         Taux d'emploi régional :
       </Text>

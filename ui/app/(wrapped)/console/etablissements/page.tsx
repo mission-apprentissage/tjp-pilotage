@@ -461,7 +461,6 @@ export default function Etablissements() {
                   />
                 </Th>
                 <Th
-                  isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("tauxRemplissage")}
                 >
@@ -473,7 +472,6 @@ export default function Etablissements() {
                   />
                 </Th>
                 <Th
-                  isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("tauxInsertion6mois")}
                 >
@@ -485,7 +483,6 @@ export default function Etablissements() {
                   />
                 </Th>
                 <Th
-                  isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("tauxPoursuiteEtudes")}
                 >

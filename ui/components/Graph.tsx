@@ -33,7 +33,7 @@ export const Graph = memo(
         <Box
           className={className}
           bg="grey.900"
-          height="14px"
+          height="10px"
           position="relative"
           borderRadius="4"
           overflow="hidden"
