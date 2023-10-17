@@ -1,7 +1,7 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
-import { BarGraph } from "./components/BarGraph";
-import { IndicateurType, PilotageReformeStats } from "./types";
+import { IndicateurType, PilotageReformeStats } from "../types";
+import { BarGraph } from "./BarGraph";
 
 export const EvolutionIndicateursClesSection = ({
   data,

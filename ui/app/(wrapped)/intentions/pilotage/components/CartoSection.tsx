@@ -1,7 +1,7 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
-import { CartoGraph } from "../../../../components/CartoGraph";
-import { IndicateurType, PilotageReformeStatsRegion } from "./types";
+import { CartoGraph } from "../../../../../components/CartoGraph";
+import { IndicateurType, PilotageReformeStatsRegion } from "../types";
 
 export const CartoSection = ({
   data,

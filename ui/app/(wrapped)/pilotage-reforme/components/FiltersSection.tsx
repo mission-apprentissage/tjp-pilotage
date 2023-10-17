@@ -1,7 +1,7 @@
 import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../components/Multiselect";
-import { Filters, PilotageReformeStats } from "./types";
+import { Multiselect } from "../../../../components/Multiselect";
+import { Filters, PilotageReformeStats } from "../types";
 
 export const FiltersSection = ({
   activeFilters,

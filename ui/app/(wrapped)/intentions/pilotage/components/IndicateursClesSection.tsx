@@ -10,7 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { IndicateurType, PilotageReformeStats } from "./types";
+import { IndicateurType, PilotageReformeStats } from "../types";
 
 const EFFECTIF_FEATURE_FLAG = false;
 
