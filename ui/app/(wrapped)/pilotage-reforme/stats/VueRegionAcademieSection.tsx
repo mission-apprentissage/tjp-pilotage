@@ -65,6 +65,7 @@ export const VueRegionAcademieSection = ({
         borderColor="grey.900"
         p={4}
         mb={36}
+        bg="white"
       >
         {isLoading ? (
           <Loader />
