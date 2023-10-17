@@ -49,8 +49,9 @@ export const EvolutionIndicateursClesSection = ({
       borderRadius={4}
       border={"1px solid"}
       borderColor="grey.900"
+      bg="white"
       p={3}
-      height={"400"}
+      height={"428"}
       mt={8}
     >
       {isLoading ? (
@@ -62,9 +63,10 @@ export const EvolutionIndicateursClesSection = ({
               ÉVOLUTION DES INDICATEURS CLÉS
             </Text>
             <Select
-              width="52"
+              width="64"
               size="sm"
-              variant="input"
+              variant="newInput"
+              bg={"grey.150"}
               onChange={(e) => handleIndicateurChange(e.target.value)}
               value={indicateur}
             >

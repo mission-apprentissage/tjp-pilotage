@@ -28,11 +28,11 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { TauxPressionScale } from "../../../_components/TauxPressionScale";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
 } from "../../../layoutClient";
+import { TauxPressionScale } from "../../components/TauxPressionScale";
 import {
   EtablissementLineContent,
   EtablissementLineLoader,
@@ -566,7 +566,7 @@ export default function Etablissements() {
                 <Fragment
                   key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
                 >
-                  <Tr>
+                  <Tr h="12">
                     <EtablissementLineContent
                       line={line}
                       defaultRentreeScolaire="2022"

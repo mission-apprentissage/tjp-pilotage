@@ -10,7 +10,7 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { safeParseInt } from "@/app/(wrapped)/intentions/utils/safeParseInt";
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { isTypeFermeture } from "@/app/(wrapped)/utils/typeDemandeUtils";
 
 import { IntentionForms } from "../defaultFormValues";
 

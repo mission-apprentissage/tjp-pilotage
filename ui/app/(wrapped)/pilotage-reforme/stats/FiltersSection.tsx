@@ -29,7 +29,7 @@ export const FiltersSection = ({
           ></Skeleton>
         </Box>
       ) : (
-        <Box borderRadius={4} bgColor="grey.975" px={8}>
+        <Box borderRadius={4}>
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
               <FormLabel>Niveau de diplôme</FormLabel>
@@ -37,6 +37,7 @@ export const FiltersSection = ({
                 onClose={filterTracker("codeNiveauDiplome")}
                 width="52"
                 size="md"
+                variant="newInput"
                 onChange={(selected) =>
                   handleFilters("codeNiveauDiplome", selected)
                 }
@@ -51,7 +52,7 @@ export const FiltersSection = ({
               <Select
                 width={"72"}
                 size="md"
-                variant="input"
+                variant="newInput"
                 value={activeFilters.codeRegion ?? ""}
                 onChange={(e) => handleFilters("codeRegion", e.target.value)}
                 placeholder="TOUTES"

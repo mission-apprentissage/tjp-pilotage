@@ -5,11 +5,12 @@ import { ApiType } from "shared";
 import { MotifField } from "@/app/(wrapped)/intentions/intentionForm/typeDemandeSection/MotifField";
 
 import { api } from "../../../../../api.client";
-import { InfoBox } from "../../components/InfoBox";
 import {
+  getTypeDemandeExemple,
+  getTypeDemandeLabel,
   isTypeCompensation,
-  typeDemandesOptions,
-} from "../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
+import { InfoBox } from "../../components/InfoBox";
 import { IntentionForms } from "../defaultFormValues";
 import { AutreMotif } from "./AutreMotifField";
 import { CompensationSection } from "./CompensationSection";
@@ -38,7 +39,7 @@ export const TypeDemandeSection = ({
         <Fade in={typeDemande != undefined}>
           {typeDemande && (
             <InfoBox flex="1" mt="10" ml="6" maxW="440px">
-              {typeDemandesOptions[typeDemande].exemple}
+              {getTypeDemandeExemple(typeDemande)}
             </InfoBox>
           )}
         </Fade>
@@ -59,11 +60,11 @@ export const TypeDemandeSection = ({
           </Box>
           <InfoBox flex="1" mt="8" ml="6">
             Dans le cadre de votre
-            {` ${typeDemandesOptions[typeDemande].label.toLowerCase()}, `}
+            {` ${getTypeDemandeLabel(typeDemande).toLowerCase()}, `}
             veuillez saisir le code diplôme et l’établissement s'il est
             différent. <br />
             Nous ferons le lien automatiquement entre la demande
-            {` d'${typeDemandesOptions[typeDemande].label.toLowerCase()} `}
+            {` d'${getTypeDemandeLabel(typeDemande).toLowerCase()} `}
             et la demande de fermeture / diminution pour le code diplôme et
             l’UAI renseignés
           </InfoBox>
