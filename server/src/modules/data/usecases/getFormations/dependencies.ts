@@ -138,7 +138,7 @@ const findFormationsInDb = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
     ])
     .select((eb) => [
-      hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+      hasContinuum({ eb, millesimeSortie }).as("continuum"),
       withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
       withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
     ])

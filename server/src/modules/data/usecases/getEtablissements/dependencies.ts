@@ -6,6 +6,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { notHistorique } from "../../queries/utils/notHistorique";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPression } from "../../queries/utils/tauxPression";
@@ -135,7 +136,7 @@ const findEtablissementsInDb = async ({
       selectTauxPression("indicateurEntree").as("tauxPression"),
     ])
     .select([
-      (eb) => hasContinuum({ eb, millesimeSortie }).as("cfdContinuum"),
+      (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
       (eb) =>
         withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
       (eb) =>
@@ -251,6 +252,7 @@ const findFiltersInDb = async ({
   CPCSecteur,
   CPCSousSecteur,
   libelleFiliere,
+  rentreeScolaire = ["2022"],
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -265,6 +267,7 @@ const findFiltersInDb = async ({
   CPCSecteur?: string[];
   CPCSousSecteur?: string[];
   libelleFiliere?: string[];
+  rentreeScolaire?: string[];
 }) => {
   const base = kdb
     .selectFrom("formation")
@@ -272,6 +275,15 @@ const findFiltersInDb = async ({
       "formationEtablissement",
       "formationEtablissement.cfd",
       "formation.codeFormationDiplome"
+    )
+    .innerJoin("indicateurEntree", (join) =>
+      join
+        .onRef(
+          "formationEtablissement.id",
+          "=",
+          "indicateurEntree.formationEtablissementId"
+        )
+        .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
     .leftJoin(
       "dispositif",
@@ -300,11 +312,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where(
-      "codeFormationDiplome",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
+    .where(notHistorique)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

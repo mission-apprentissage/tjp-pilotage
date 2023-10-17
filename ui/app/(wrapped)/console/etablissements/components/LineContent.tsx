@@ -73,13 +73,13 @@ export const EtablissementLineContent = ({
       </Td>
       <Td isNumeric>
         <GraphWrapper
-          continuum={!!line.cfdContinuum}
+          continuum={!!line.continuum}
           value={line.tauxInsertion6mois}
         />
       </Td>
       <Td isNumeric>
         <GraphWrapper
-          continuum={!!line.cfdContinuum}
+          continuum={!!line.continuum}
           value={line.tauxPoursuiteEtudes}
         />
       </Td>
