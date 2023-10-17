@@ -8,7 +8,7 @@ import {
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
 import { RequestUser } from "../../core/model/User";
-import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
+import { isDemandeSelectable } from "../utils/isDemandeSelectable";
 
 export const findDemande = async ({
   id,
@@ -32,8 +32,21 @@ export const findDemande = async ({
         formation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
+            .leftJoin(
+              "niveauDiplome",
+              "niveauDiplome.codeNiveauDiplome",
+              "dataFormation.codeNiveauDiplome"
+            )
             .select((ebDataFormation) => [
-              "libelle",
+              sql<string>`CONCAT(${ebDataFormation.ref(
+                "dataFormation.libelle"
+              )},
+              ' (',${ebDataFormation.ref(
+                "niveauDiplome.libelleNiveauDiplome"
+              )},')',
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
+                "libelle"
+              ),
               sql<boolean>`${ebDataFormation(
                 "dataFormation.codeNiveauDiplome",
                 "in",
@@ -75,7 +88,27 @@ export const findDemande = async ({
         formationCompensation: jsonObjectFrom(
           eb
             .selectFrom("dataFormation")
-            .select("libelle")
+            .leftJoin(
+              "niveauDiplome",
+              "niveauDiplome.codeNiveauDiplome",
+              "dataFormation.codeNiveauDiplome"
+            )
+            .select((ebDataFormation) => [
+              sql<string>`CONCAT(${ebDataFormation.ref(
+                "dataFormation.libelle"
+              )},
+              ' (',${ebDataFormation.ref(
+                "niveauDiplome.libelleNiveauDiplome"
+              )},')',
+              ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
+                "libelle"
+              ),
+              sql<boolean>`${ebDataFormation(
+                "dataFormation.codeNiveauDiplome",
+                "in",
+                ["381", "481", "581"]
+              )}`.as("isFCIL"),
+            ])
             .select((eb) =>
               jsonArrayFrom(
                 eb

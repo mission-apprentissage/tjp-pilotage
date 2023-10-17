@@ -24,11 +24,11 @@ export const selectDenominateurPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
   SUM(
-    case when 
+    case when
     ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
-    )} is not null 
+    )} is not null
     then ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
@@ -39,12 +39,12 @@ export const selectDenominateurPressionAgg = (
 export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when 
+    case when
     ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
-    then (100 * SUM(${premierVoeuxAnnee(
+    then round(100 * SUM(${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
-    )}) 
+    )})
     / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})
     end
   `;
@@ -52,11 +52,11 @@ export const selectTauxPressionAgg = (
 export const selectDenominateurPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when 
+    case when
     ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
-    )} is not null 
+    )} is not null
     then ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
@@ -66,7 +66,7 @@ export const selectDenominateurPression = (
 export const selectTauxPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when 
+    case when
     ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
     then (100 * ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
@@ -75,6 +75,81 @@ export const selectTauxPression = (
     / ${selectDenominateurPression(indicateurEntreeAlias)})
     end
   `;
+
+export const selectTauxPressionParFormationEtParRegionDemande = ({
+  eb,
+  rentreeScolaire = "2022",
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  rentreeScolaire?: string;
+}) => {
+  return eb
+    .selectFrom(
+      tauxPressionFormationRegional({ eb, rentreeScolaire }).as(
+        "pressionDetails"
+      )
+    )
+    .innerJoin("region", "region.codeRegion", "pressionDetails.codeRegion")
+    .innerJoin(
+      "formation",
+      "formation.codeFormationDiplome",
+      "pressionDetails.codeFormationDiplome"
+    )
+    .whereRef("region.codeRegion", "=", "demande.codeRegion")
+    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .select(["pressionDetails.pression as pression"])
+    .groupBy([
+      "pressionDetails.codeFormationDiplome",
+      "pressionDetails.codeRegion",
+      "pressionDetails.pression",
+      "region.codeRegion",
+    ]);
+};
+
+export const tauxPressionFormationRegional = ({
+  eb,
+  rentreeScolaire = "2022",
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+  rentreeScolaire?: string;
+}) => {
+  return eb
+    .selectFrom("formation")
+    .leftJoin(
+      "formationEtablissement",
+      "formationEtablissement.cfd",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "etablissement",
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
+    )
+    .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .innerJoin(
+      "indicateurEntree",
+      "indicateurEntree.formationEtablissementId",
+      "formationEtablissement.id"
+    )
+    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .whereRef(
+      "formationEtablissement.dispositifId",
+      "=",
+      "demande.dispositifId"
+    )
+    .whereRef("region.codeRegion", "=", "demande.codeRegion")
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+    .select([
+      selectTauxPressionAgg("indicateurEntree").as("pression"),
+      "region.codeRegion",
+      "formation.codeFormationDiplome",
+    ])
+    .groupBy([
+      "formation.codeFormationDiplome",
+      "formationEtablissement.dispositifId",
+      "region.codeRegion",
+    ]);
+};
 
 export const withTauxPressionReg = ({
   eb,

@@ -19,7 +19,7 @@ export const theme = extendBaseTheme(chakraTheme, {
   styles: {
     global: {
       "html, body": {
-        fontSize: `16px`,
+        fontSize: `14px`,
         fontFamily: "Marianne, Arial",
         background: "white",
       },
