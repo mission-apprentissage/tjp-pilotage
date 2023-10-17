@@ -114,49 +114,51 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   };
 
   return (
-    <Container maxWidth={"container.xl"} py="4">
-      <FiltersSection
-        activeFilters={filters}
-        handleFilters={handleFilters}
-        filterTracker={filterTracker}
-        isLoading={isLoading}
-        data={data}
-      ></FiltersSection>
-      <Box>
-        <SimpleGrid spacing={8} columns={[2]} mt={8}>
-          <Box>
-            <IndicateursClesSection
-              data={data}
-              isLoading={isLoading}
-            ></IndicateursClesSection>
-            <EvolutionIndicateursClesSection
-              data={data}
-              isLoading={isLoading}
-              isFiltered={isFiltered}
-              codeRegion={filters.codeRegion}
+    <Container maxWidth={"100%"} bg="#E2E7F8">
+      <Container maxWidth={"container.xl"} py="4">
+        <FiltersSection
+          activeFilters={filters}
+          handleFilters={handleFilters}
+          filterTracker={filterTracker}
+          isLoading={isLoading}
+          data={data}
+        ></FiltersSection>
+        <Box>
+          <SimpleGrid spacing={8} columns={[2]} mt={8}>
+            <Box>
+              <IndicateursClesSection
+                data={data}
+                isLoading={isLoading}
+              ></IndicateursClesSection>
+              <EvolutionIndicateursClesSection
+                data={data}
+                isLoading={isLoading}
+                isFiltered={isFiltered}
+                codeRegion={filters.codeRegion}
+                indicateur={indicateur}
+                handleIndicateurChange={handleIndicateurChange}
+                indicateurOptions={indicateurOptions}
+              ></EvolutionIndicateursClesSection>
+            </Box>
+            <CartoSection
+              data={dataRegions}
+              isLoading={isLoadingRegions}
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
-            ></EvolutionIndicateursClesSection>
-          </Box>
-          <CartoSection
-            data={dataRegions}
-            isLoading={isLoadingRegions}
-            indicateur={indicateur}
-            handleIndicateurChange={handleIndicateurChange}
-            indicateurOptions={indicateurOptions}
-          ></CartoSection>
-        </SimpleGrid>
-        <SimpleGrid spacing={5} columns={[1]} mt={14}>
-          <VueRegionAcademieSection
-            data={dataRegions}
-            order={order}
-            isLoading={isLoadingRegions}
-            handleOrder={handleOrder}
-            codeRegion={filters.codeRegion}
-          ></VueRegionAcademieSection>
-        </SimpleGrid>
-      </Box>
+            ></CartoSection>
+          </SimpleGrid>
+          <SimpleGrid spacing={5} columns={[1]} mt={14}>
+            <VueRegionAcademieSection
+              data={dataRegions}
+              order={order}
+              isLoading={isLoadingRegions}
+              handleOrder={handleOrder}
+              codeRegion={filters.codeRegion}
+            ></VueRegionAcademieSection>
+          </SimpleGrid>
+        </Box>
+      </Container>
     </Container>
   );
 });

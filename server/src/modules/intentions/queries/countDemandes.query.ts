@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../db/db";
 import { RequestUser } from "../../core/model/User";
-import { isDemandeSelectable } from "./utils/isDemandeSelectable.query";
+import { isDemandeSelectable } from "../utils/isDemandeSelectable";
 
 export const countDemandes = async ({
   user,

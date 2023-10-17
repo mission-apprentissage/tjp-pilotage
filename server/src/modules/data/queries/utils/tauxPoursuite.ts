@@ -8,19 +8,37 @@ export const selectDenominateurPoursuiteAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
   SUM(
-    case when 
-    ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null 
-    then ${sql.table(indicateurSortieAlias)}."effectifSortie" 
+    case when
+    ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null
+    then ${sql.table(indicateurSortieAlias)}."effectifSortie"
     end
   )`;
 
 export const selectTauxPoursuiteAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when 
+    case when
     ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)} >= ${seuil}
-    then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes") 
+    then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
     / ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)})
+    end
+  `;
+
+export const selectDenominateurPoursuite = (
+  indicateurSortieAlias: string
+) => sql<number>`
+  case when
+  ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null
+  then ${sql.table(indicateurSortieAlias)}."effectifSortie"
+  end`;
+
+export const selectTauxPoursuite = (
+  indicateurSortieAlias: string
+) => sql<number>`
+    case when
+    ${selectDenominateurPoursuite(indicateurSortieAlias)} >= ${seuil}
+    then (100 * ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
+    / ${selectDenominateurPoursuite(indicateurSortieAlias)})
     end
   `;
 

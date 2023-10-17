@@ -56,4 +56,23 @@ export const createIntentionsClient = (instance: AxiosInstance) => ({
     url: "/demandes/count",
     instance,
   }),
+  getStatsDemandes: createClientMethod<typeof ROUTES_CONFIG.getStatsDemandes>({
+    method: "GET",
+    url: "/demandes/stats",
+    instance,
+  }),
+  getStatsDemandesCsv: createClientMethod<
+    typeof ROUTES_CONFIG.getStatsDemandesCsv
+  >({
+    method: "GET",
+    url: "/demandes/stats/csv",
+    instance,
+  }),
+  countStatsDemandes: createClientMethod<
+    typeof ROUTES_CONFIG.countStatsDemandes
+  >({
+    method: "GET",
+    url: "/demandes/stats/count",
+    instance,
+  }),
 });

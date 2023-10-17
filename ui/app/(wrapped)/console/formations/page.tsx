@@ -21,7 +21,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { FORMATIONS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
-import { TauxPressionScale } from "@/app/_components/TauxPressionScale";
+import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -463,7 +463,7 @@ export default function Formations() {
                 <Fragment
                   key={`${line.codeFormationDiplome}_${line.dispositifId}`}
                 >
-                  <Tr>
+                  <Tr h="12">
                     <FormationLineContent
                       filters={filters}
                       defaultRentreeScolaire="2022"
