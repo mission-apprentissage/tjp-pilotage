@@ -1,6 +1,6 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 
-import { CartoGraph } from "../components/CartoGraph";
+import { CartoGraph } from "../../../../components/CartoGraph";
 import { IndicateurType, PilotageReformeStatsRegion } from "../types";
 
 export const CartoSection = ({
@@ -22,10 +22,8 @@ export const CartoSection = ({
 }) => {
   const graphData = data?.statsRegions.map((region) => {
     return {
-      codeRegion: region.codeRegion,
-      libelleRegion: region.libelleRegion,
-      insertion: region.insertion ?? 0,
-      poursuite: region.poursuite ?? 0,
+      label: region.libelleRegion,
+      value: region[indicateur] ?? 0,
     };
   });
 
@@ -60,7 +58,7 @@ export const CartoSection = ({
               ))}
             </Select>
           </Flex>
-          <CartoGraph graphData={graphData} indicateur={indicateur} />
+          <CartoGraph graphData={graphData} />
         </Box>
       )}
     </Box>
