@@ -38,4 +38,4 @@ const getFormationsFactory =
     };
   };
 
-export const getFormations = getFormationsFactory({});
+export const getFormations = getFormationsFactory();

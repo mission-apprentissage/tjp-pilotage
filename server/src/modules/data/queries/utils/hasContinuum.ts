@@ -16,7 +16,7 @@ export function hasContinuum({
       .leftJoin(
         "formation as subFormation",
         "subFormation.codeFormationDiplome",
-        "subIRS.cfd"
+        "subIRS.cfdContinuum"
       )
       .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
       .whereRef(

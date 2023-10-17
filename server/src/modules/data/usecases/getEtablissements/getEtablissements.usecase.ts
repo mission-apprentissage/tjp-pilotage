@@ -34,4 +34,4 @@ const getEtablissementsFactory =
     };
   };
 
-export const getEtablissements = getEtablissementsFactory({});
+export const getEtablissements = getEtablissementsFactory();
