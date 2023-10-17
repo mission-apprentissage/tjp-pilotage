@@ -1,10 +1,12 @@
 import { dependencies } from "./dependencies";
 
 const getFormationsFactory =
-  ({
-    findFormationsInDb = dependencies.findFormationsInDb,
-    findFiltersInDb = dependencies.findFiltersInDb,
-  }) =>
+  (
+    deps = {
+      findFormationsInDb: dependencies.findFormationsInDb,
+      findFiltersInDb: dependencies.findFiltersInDb,
+    }
+  ) =>
   async (activeFilters: {
     offset?: number;
     limit?: number;
@@ -25,8 +27,8 @@ const getFormationsFactory =
     withEmptyFormations?: boolean;
   }) => {
     const [{ formations, count }, filters] = await Promise.all([
-      findFormationsInDb(activeFilters),
-      findFiltersInDb(activeFilters),
+      deps.findFormationsInDb(activeFilters),
+      deps.findFiltersInDb(activeFilters),
     ]);
 
     return {

@@ -1,10 +1,12 @@
 import { dependencies } from "./dependencies";
 
 const getEtablissementsFactory =
-  ({
-    findEtablissementsInDb = dependencies.findEtablissementsInDb,
-    findFiltersInDb = dependencies.findFiltersInDb,
-  }) =>
+  (
+    deps = {
+      findEtablissementsInDb: dependencies.findEtablissementsInDb,
+      findFiltersInDb: dependencies.findFiltersInDb,
+    }
+  ) =>
   async (activeFilters: {
     offset?: number;
     limit?: number;
@@ -20,13 +22,10 @@ const getEtablissementsFactory =
     secteur?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
-    const etablissementsPromise = findEtablissementsInDb(activeFilters);
-    const filtersPromise = findFiltersInDb(activeFilters);
-
-    const { filters, count, etablissements } = {
-      filters: await filtersPromise,
-      ...(await etablissementsPromise),
-    };
+    const [{ etablissements, count }, filters] = await Promise.all([
+      deps.findEtablissementsInDb(activeFilters),
+      deps.findFiltersInDb(activeFilters),
+    ]);
 
     return {
       count,
