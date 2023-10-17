@@ -160,7 +160,7 @@ const TopItem = ({
         </Box>
       </Flex>
 
-      <PopoverContent _focusVisible={{ outline: "none" }} p="3" width="250px">
+      <PopoverContent _focusVisible={{ outline: "none" }} p="3" width="280px">
         <PopoverCloseButton />
         <FormationTooltipContent formation={formation} />
       </PopoverContent>

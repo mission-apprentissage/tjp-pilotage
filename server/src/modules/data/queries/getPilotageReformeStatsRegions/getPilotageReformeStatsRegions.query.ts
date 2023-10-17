@@ -45,6 +45,7 @@ export const getPilotageReformeStatsRegions = async ({
         getMillesimeFromRentreeScolaire({ rentreeScolaire, offset: 0 })
       );
     })
+    .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       "indicateurRegionSortie.codeRegion",

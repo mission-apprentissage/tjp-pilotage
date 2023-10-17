@@ -104,25 +104,36 @@ const getContext = () =>
 
 export const logger = {
   info: (msg: string, details?: object) => {
-    const stack = getCallStack();
+    const logOrigin = getLogOrigin();
     const { userId, requestId } = getContext();
-    winstonLogger.info(msg, { userId, requestId, details, stack });
+    winstonLogger.info(msg, {
+      userId,
+      requestId,
+      details,
+      logOrigin,
+    });
   },
   error: (
     msg: string,
     { error, ...details }: { error: Error } & Record<string, any>
   ) => {
+    const logOrigin = getLogOrigin();
     const { userId, requestId } = getContext();
     winstonLogger.error(msg, {
       userId,
       requestId,
       details,
-      error: { name: error.name, message: error.message, stack: error.stack },
+      error: {
+        name: error.name,
+        message: error.message,
+        stack: error.stack,
+        logOrigin,
+      },
     });
   },
 };
 
-const getCallStack = () => {
+const getLogOrigin = () => {
   const stack = new Error().stack;
   return stack?.split("\n")[3].replace(/.*\(/, "").replace(/\)$/, "");
 };

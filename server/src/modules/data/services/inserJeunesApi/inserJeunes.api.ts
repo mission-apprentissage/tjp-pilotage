@@ -23,6 +23,7 @@ export const login = async () => {
 
 instance.interceptors.response.use(undefined, async (err) => {
   const { config, response } = err;
+
   if (config.retried || ![500, 401, undefined].includes(response?.status)) {
     return Promise.reject(err);
   }

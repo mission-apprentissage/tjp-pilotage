@@ -79,14 +79,20 @@ export const FormationLineContent = ({
           {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
         </TableBadge>
       </Td>
-      <Td isNumeric>
+      <Td>
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
-      <Td isNumeric>
-        <GraphWrapper value={line.tauxInsertion6mois} />
+      <Td>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxInsertion6mois}
+        />
       </Td>
-      <Td isNumeric>
-        <GraphWrapper value={line.tauxPoursuiteEtudes} />
+      <Td>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxPoursuiteEtudes}
+        />
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>

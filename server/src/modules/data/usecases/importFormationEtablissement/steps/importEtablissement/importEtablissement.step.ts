@@ -4,13 +4,15 @@ import { DateTime } from "luxon";
 
 import { DB } from "../../../../../../db/schema";
 import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
-import { dependencies } from "../../dependencies.di";
+import { createEtablissement } from "./createEtablissement.dep";
+import { findDepartement } from "./findDepartement.dep";
+import { findLyceeACCE } from "./findLyceeAcce.dep";
 
 export const [importEtablissement] = inject(
   {
-    createEtablissement: dependencies.createEtablissement,
-    findLyceeACCE: dependencies.findLyceeACCE,
-    findDepartement: dependencies.findDepartement,
+    createEtablissement,
+    findLyceeACCE,
+    findDepartement,
   },
   (deps) =>
     async ({ uai }: { uai: string }) => {
