@@ -34,6 +34,7 @@ export const theme = extendBaseTheme(chakraTheme, {
     },
     blue: {
       main: "#5770BE",
+      faded: "#E2E7F8",
     },
     bluefrance: {
       113: "#000091",
