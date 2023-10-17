@@ -24,6 +24,24 @@ export const selectTauxInsertion6moisAgg = (
       end
     `;
 
+export const selectDenominateurInsertion6mois = (
+  indicateurSortieAlias: string
+) => sql<number>`
+    case when 
+    ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null 
+    then ${sql.table(indicateurSortieAlias)}."nbSortants" 
+    end`;
+
+export const selectTauxInsertion6mois = (
+  indicateurSortieAlias: string
+) => sql<number>`
+          case when 
+          ${selectDenominateurInsertion6mois(indicateurSortieAlias)} >= ${seuil}
+          then (100 * ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" 
+          / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})
+          end
+        `;
+
 export function withInsertionReg({
   eb,
   millesimeSortie,

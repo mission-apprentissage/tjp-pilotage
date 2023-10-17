@@ -14,7 +14,7 @@ export const effectifAnnee = ({
 NULLIF(
 jsonb_extract_path(
   ${sql.table(indicateurEntreeAlias)}."effectifs",${processedAnnee}
-), 
+),
 'null'
 )::INT`;
 };

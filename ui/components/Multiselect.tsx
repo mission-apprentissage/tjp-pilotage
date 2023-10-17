@@ -130,6 +130,8 @@ export const Multiselect = chakra(
     disabled,
     value,
     size,
+    hasDefaultValue = true,
+    variant = "input",
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -139,6 +141,8 @@ export const Multiselect = chakra(
     disabled?: boolean;
     value: string[];
     size?: "sm" | "md";
+    hasDefaultValue?: boolean;
+    variant?: string;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -192,6 +196,8 @@ export const Multiselect = chakra(
 
     const [limit, setLimit] = useState(150);
 
+    const showDefaultValue = () => hasDefaultValue && options.length === 1;
+
     return (
       <Menu
         isLazy={true}
@@ -211,15 +217,15 @@ export const Multiselect = chakra(
         <MenuButton
           as={Button}
           size={size ?? "sm"}
-          isDisabled={disabled}
+          isDisabled={disabled || showDefaultValue()}
           pointerEvents={disabled ? "none" : "unset"}
           className={className}
-          variant="input"
+          variant={variant}
           borderBottomColor={value.length ? "info.525" : ""}
           rightIcon={<ChevronDownIcon />}
         >
           <ButtonContent selected={Array.from(map.values())}>
-            {children}
+            {showDefaultValue() ? options[0].label : children}
           </ButtonContent>
         </MenuButton>
         <Portal>

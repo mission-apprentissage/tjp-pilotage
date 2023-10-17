@@ -1,24 +1,32 @@
 import { ListItem, OrderedList, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-export const isTypeFermeture = (typeDemande: string) =>
+export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
+
+export const isTypeFermeture = (typeDemande: TypeDemande) =>
   typeDemande === "fermeture";
 
-export const isTypeOuverture = (typeDemande: string) =>
+export const isTypeOuverture = (typeDemande: TypeDemande) =>
   typeDemande === "ouverture_compensation" || typeDemande === "ouverture_nette";
 
-export const isTypeAugmentation = (typeDemande: string) =>
+export const isTypeAugmentation = (typeDemande: TypeDemande) =>
   typeDemande === "augmentation_compensation" ||
   typeDemande === "augmentation_nette";
 
-export const isTypeDiminution = (typeDemande: string) =>
+export const isTypeDiminution = (typeDemande: TypeDemande) =>
   typeDemande === "diminution";
 
-export const isTypeCompensation = (typeDemande: string) =>
+export const isTypeCompensation = (typeDemande: TypeDemande) =>
   typeDemande === "augmentation_compensation" ||
   typeDemande === "ouverture_compensation";
 
-export const typeDemandesOptions: Record<
+export const getTypeDemandeLabel = (typeDemande?: TypeDemande): string =>
+  typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].label : "";
+
+export const getTypeDemandeExemple = (typeDemande?: TypeDemande): ReactNode =>
+  typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].exemple : "";
+
+export const TYPES_DEMANDES_OPTIONS: Record<
   string,
   { value: string; label: string; desc: string; exemple: ReactNode }
 > = {

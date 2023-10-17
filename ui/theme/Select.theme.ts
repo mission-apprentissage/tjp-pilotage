@@ -30,6 +30,30 @@ const input = definePartsStyle({
   },
 });
 
+const newInput = definePartsStyle({
+  field: {
+    bg: "white",
+    borderRadius: "6px",
+    border: "1px solid",
+    borderColor: "grey.950",
+    color: "inherit",
+    textAlign: "left",
+    span: {
+      overflow: "hidden",
+      textOverflow: "ellipsis",
+    },
+    _focus: {
+      outlineColor: "#0A76F6",
+    },
+    _focusVisible: {
+      outlineColor: "#0A76F6",
+    },
+    _active: {
+      outlineColor: "#0A76F6",
+    },
+  },
+});
+
 export const selectTheme = defineMultiStyleConfig({
-  variants: { input },
+  variants: { input, newInput },
 });

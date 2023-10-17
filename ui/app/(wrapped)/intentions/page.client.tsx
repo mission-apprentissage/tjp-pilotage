@@ -22,7 +22,7 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { ApiType } from "shared";
+import { ApiType, DEMANDES_COLUMNS } from "shared";
 
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -31,9 +31,9 @@ import { Breadcrumb } from "../../../components/Breadcrumb";
 import { OrderIcon } from "../../../components/OrderIcon";
 import { TableFooter } from "../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
+import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
-import { typeDemandesOptions } from "./utils/typeDemandeUtils";
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
@@ -148,36 +148,51 @@ export const PageClient = () => {
                         onClick={() => handleOrder("libelleDiplome")}
                       >
                         <OrderIcon {...order} column="libelleDiplome" />
-                        diplôme
+                        {DEMANDES_COLUMNS.libelleDiplome}
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("libelleEtablissement")}
+                      >
+                        <OrderIcon {...order} column="libelleEtablissement" />
+                        {DEMANDES_COLUMNS.libelleEtablissement}
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("libelleDepartement")}
+                      >
+                        <OrderIcon {...order} column="libelleDepartement" />
+                        {DEMANDES_COLUMNS.libelleDepartement}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("typeDemande")}
                       >
                         <OrderIcon {...order} column="typeDemande" />
-                        type
+                        {DEMANDES_COLUMNS.typeDemande}
                       </Th>
                       <Th>compensation</Th>
-
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("status")}
                       >
                         <OrderIcon {...order} column="status" />
-                        status
+                        {DEMANDES_COLUMNS.status}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("createdAt")}
                       >
                         <OrderIcon {...order} column="createdAt" />
-                        Date de création
+                        {DEMANDES_COLUMNS.createdAt}
                       </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data?.demandes.map((demande) => {
-                      return (
+                    {data?.demandes.map(
+                      (
+                        demande: ApiType<typeof api.getDemandes>["demandes"][0]
+                      ) => (
                         <Tr
                           height={"60px"}
                           key={demande.id}
@@ -199,9 +214,36 @@ export const PageClient = () => {
                             </Text>
                           </Td>
                           <Td>
-                            {demande.typeDemande
-                              ? typeDemandesOptions[demande.typeDemande].label
-                              : null}
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {demande.libelleEtablissement}
+                            </Text>
+                          </Td>
+                          <Td>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {demande.libelleDepartement}
+                            </Text>
+                          </Td>
+                          <Td>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {demande.typeDemande
+                                ? getTypeDemandeLabel(demande.typeDemande)
+                                : null}
+                            </Text>
                           </Td>
                           <Td>
                             {demande.compensationCfd &&
@@ -228,9 +270,9 @@ export const PageClient = () => {
                                     <Box whiteSpace="nowrap">
                                       {`${
                                         demande.typeCompensation
-                                          ? typeDemandesOptions[
+                                          ? getTypeDemandeLabel(
                                               demande.typeCompensation
-                                            ].label
+                                            )
                                           : "Demande"
                                       } liée `}
                                     </Box>
@@ -279,8 +321,8 @@ export const PageClient = () => {
                             {new Date(demande.createdAt).toLocaleString()}
                           </Td>
                         </Tr>
-                      );
-                    })}
+                      )
+                    )}
                   </Tbody>
                 </Table>
               </TableContainer>
