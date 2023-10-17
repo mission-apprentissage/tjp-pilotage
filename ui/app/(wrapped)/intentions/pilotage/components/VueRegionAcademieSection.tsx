@@ -13,8 +13,8 @@ import {
 import { Fragment } from "react";
 import { PILOTAGE_REFORME_STATS_REGIONS_COLUMNS } from "shared";
 
-import { OrderIcon } from "../../../../components/OrderIcon";
-import { Order, PilotageReformeStatsRegion } from "./types";
+import { OrderIcon } from "../../../../../components/OrderIcon";
+import { Order, PilotageReformeStatsRegion } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>

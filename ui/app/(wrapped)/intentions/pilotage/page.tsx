@@ -10,11 +10,11 @@ import { useState } from "react";
 import { api } from "../../../../api.client";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../../utils/security/withAuth";
-import { CartoSection } from "./CartoSection";
-import { EvolutionIndicateursClesSection } from "./EvolutionIndicateursClesSection";
-import { FiltersSection } from "./FiltersSection";
-import { IndicateursClesSection } from "./IndicateursClesSection";
-import { VueRegionAcademieSection } from "./VueRegionAcademieSection";
+import { CartoSection } from "./components/CartoSection";
+import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
+import { FiltersSection } from "./components/FiltersSection";
+import { IndicateursClesSection } from "./components/IndicateursClesSection";
+import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
 import { Filters, FiltersRegions, IndicateurType, Order } from "./types";
 
 export default withAuth(
