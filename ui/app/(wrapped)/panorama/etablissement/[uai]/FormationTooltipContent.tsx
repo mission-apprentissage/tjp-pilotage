@@ -48,7 +48,7 @@ export const FormationTooltipContent = ({
     <GraphWrapper
       w="100%"
       continuum={formation.continuum}
-      value={formation.tauxInsertion6mois}
+      value={formation.tauxPoursuiteEtudes}
     />
   </Box>
 );
