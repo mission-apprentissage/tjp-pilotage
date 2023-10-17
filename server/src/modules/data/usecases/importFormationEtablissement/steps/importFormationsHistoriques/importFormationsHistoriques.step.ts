@@ -57,9 +57,7 @@ export const [importFormationHistorique] = inject(
         };
 
         if (isOldFormation(ancienneFormation.dateFermeture)) continue;
-        console.log(ancienneFormation);
         await deps.createFormationHistorique(ancienneFormation);
-        console.log(ancienneFormation);
       }
 
       return ancienCfds;
