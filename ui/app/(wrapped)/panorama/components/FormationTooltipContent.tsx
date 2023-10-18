@@ -2,13 +2,13 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 
-import { InfoBlock } from "../../../../../components/InfoBlock";
-import { PanoramaFormations } from "./type";
+import { InfoBlock } from "../../../../components/InfoBlock";
+import { PanoramaFormation } from "../types";
 
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation: PanoramaFormations[number];
+  formation: PanoramaFormation;
 }) => {
   return (
     <Box bg="white" fontSize="xs">

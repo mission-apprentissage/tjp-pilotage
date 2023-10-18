@@ -52,6 +52,14 @@ export const CodeRegionFilterContext = createContext<{
   setCodeRegionFilter: () => {},
 });
 
+export const CodeDepartementFilterContext = createContext<{
+  codeDepartementFilter: string;
+  setCodeDepartementFilter: Dispatch<SetStateAction<string>>;
+}>({
+  codeDepartementFilter: "",
+  setCodeDepartementFilter: () => {},
+});
+
 export const UaiFilterContext = createContext<{
   uaiFilter: string;
   setUaiFilter: Dispatch<SetStateAction<string>>;

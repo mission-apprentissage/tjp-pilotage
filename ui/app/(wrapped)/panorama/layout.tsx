@@ -16,7 +16,8 @@ import { Breadcrumb } from "../../../components/Breadcrumb";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
-  if (segment === "etablissement") return 1;
+  if (segment === "departement") return 1;
+  if (segment === "etablissement") return 2;
 };
 
 export default function PanoramaLayout({ children }: { children: ReactNode }) {
@@ -35,6 +36,12 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
               ? {
                   title: "Panorama régional",
                   to: "/panorama/region",
+                  active: true,
+                }
+              : segment === "departement"
+              ? {
+                  title: "Panorama départemental",
+                  to: "/panorama/departement",
                   active: true,
                 }
               : {
@@ -56,6 +63,9 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
           <TabList px={5}>
             <Tab as={Link} href="/panorama/region">
               Région
+            </Tab>
+            <Tab as={Link} href="/panorama/departement">
+              Département
             </Tab>
             <Tab as={Link} href="/panorama/etablissement">
               Etablissement
