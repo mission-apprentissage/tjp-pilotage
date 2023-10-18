@@ -4,6 +4,7 @@ import {
   CardHeader,
   Divider,
   Flex,
+  Img,
   Text,
 } from "@chakra-ui/react";
 import { ApiType } from "shared";
@@ -12,10 +13,12 @@ import { api } from "../../../../../api.client";
 
 const CountCard = ({
   label,
+  icon,
   subLabel,
   value,
 }: {
   label: string;
+  icon: string;
   subLabel?: string;
   value?: {
     total: number;
@@ -27,9 +30,12 @@ const CountCard = ({
   <Card minW="52" bgColor="white" borderRadius={5}>
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
-        <Text fontSize="lg" fontWeight="bold">
-          {label}
-        </Text>
+        <Flex>
+          <Img src={`/icons/${icon}.svg`} height="20px" me={2}></Img>
+          <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
+            {label}
+          </Text>
+        </Flex>
         <Text fontSize="sm">{subLabel}</Text>
       </Flex>
     </CardHeader>
@@ -81,15 +87,25 @@ export const CountersSection = ({
 }) => {
   return (
     <>
-      <CountCard label="Places ouvertes" value={countData?.ouvertures} />
-      <CountCard label="Places fermées" value={countData?.fermetures} />
+      <CountCard
+        label="Places ouvertes"
+        value={countData?.ouvertures}
+        icon={"places_ouvertes"}
+      />
+      <CountCard
+        label="Places fermées"
+        icon={"places_fermees"}
+        value={countData?.fermetures}
+      />
       <CountCard
         label="AMI / CMA"
+        icon={"places_ami-cma"}
         subLabel="Places ouvertes"
         value={countData?.amiCMAs}
       />
       <CountCard
         label="FCIL"
+        icon={"places_fcil"}
         subLabel="Places ouvertes"
         value={countData?.FCILs}
       />
