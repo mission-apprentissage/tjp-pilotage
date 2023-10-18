@@ -1,6 +1,6 @@
 export const FORMATIONS_COLUMNS = {
   rentreeScolaire: "RS",
-  libelleNiveauDiplome: "Diplome",
+  libelleNiveauDiplome: "Diplôme",
   libelleDiplome: "Formation",
   nbEtablissement: "Nb Etab",
   effectif1: "Année 1",
@@ -12,9 +12,11 @@ export const FORMATIONS_COLUMNS = {
   tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
-  codeFormationDiplome: "CodeDiplome",
+  codeFormationDiplome: "Code diplôme",
   CPC: "CPC",
   CPCSecteur: "CPCSecteur",
   CPCSousSecteur: "CPCSousSecteur",
   libelleFiliere: "Secteur d’activité",
+  "continuum.libelle": "Diplôme historique",
+  "continuum.cfd": "Code diplôme historique",
 } as const;

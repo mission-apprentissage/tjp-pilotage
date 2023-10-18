@@ -11,7 +11,7 @@ import { importDataEtablissements } from "./modules/data/usecases/importDataEtab
 import { importDataFormations } from "./modules/data/usecases/importDataFormations/importDataFormations.usecase";
 import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormationEtablissements } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importFormations } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIndicateursAcademie } from "./modules/data/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
 import { importIndicateursRegion } from "./modules/data/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/data/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
@@ -33,7 +33,7 @@ cli.command("create-migration").action(() =>
 
 export const up = async (db: Kysely<unknown>) => {};
     
-export const down = async () => {};
+export const down = async (db: Kysely<unknown>) => {};
     `
   )
 );
@@ -41,6 +41,7 @@ export const down = async () => {};
 cli
   .command("importUsers")
   .description("usage: cat << EOF | xargs -0 -I arg yarn cli importUsers arg")
+  .description("csv: role;codeRegion;lastname;firstname;email")
   .argument("<json>")
   .option("--dryRun <boolean>", "parse the data only", false)
   .action(async (input: string, { dryRun }) => {
@@ -175,7 +176,7 @@ cli
     const fetchIj = fetchIjOption !== "false";
     await importIndicateursAcademie();
     await importIndicateursRegion();
-    await importFormationEtablissements({ fetchIj });
+    await importFormations({ fetchIj });
   });
 
 cli.parse(process.argv);

@@ -94,8 +94,8 @@ export interface DataEtablissement {
 export interface DataFormation {
   cfd: string;
   rncp: number | null;
-  libelle: string | null;
-  codeNiveauDiplome: string | null;
+  libelle: string;
+  codeNiveauDiplome: string;
   cpc: string | null;
   cpcSecteur: string | null;
   cpcSousSecteur: string | null;
@@ -114,6 +114,7 @@ export interface Demande {
   typeDemande: string | null;
   motif: string[] | null;
   autreMotif: string | null;
+  coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
@@ -123,7 +124,6 @@ export interface Demande {
   codeAcademie: string | null;
   createurId: string;
   createdAt: Generated<Timestamp>;
-  coloration: boolean | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -131,11 +131,11 @@ export interface Demande {
   capaciteApprentissageActuelle: number | null;
   capaciteApprentissageColoree: number | null;
   mixte: boolean | null;
-  updatedAt: Timestamp;
   compensationUai: string | null;
   compensationCfd: string | null;
   compensationDispositifId: string | null;
   compensationRentreeScolaire: number | null;
+  updatedAt: Timestamp;
   libelleFCIL: string | null;
 }
 
@@ -254,6 +254,7 @@ export interface IndicateurRegionSortie {
   nbInsertion6mois: number | null;
   nbInsertion12mois: number | null;
   nbInsertion24mois: number | null;
+  cfdContinuum: string | null;
 }
 
 export interface IndicateurSortie {
@@ -276,7 +277,7 @@ export interface NiveauDiplome {
 export interface RawData {
   type: string;
   data: Json | null;
-  id: string | null;
+  id: Generated<string | null>;
 }
 
 export interface Region {

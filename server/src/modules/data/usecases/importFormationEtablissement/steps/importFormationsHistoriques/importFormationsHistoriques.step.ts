@@ -1,38 +1,9 @@
 import { inject } from "injecti";
-import { Insertable } from "kysely";
-import _ from "lodash";
-import { DateTime } from "luxon";
 
-import { kdb } from "../../../../../../db/db";
-import { DB } from "../../../../../../db/schema";
 import { NFormationDiplomeLine } from "../../../../fileTypes/NFormationDiplome";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
-
-export const createFormationHistorique = async (
-  ancienneFormation: Insertable<DB["formation"]> & {
-    nouveauCFD: string;
-  }
-) => {
-  const formationHistorique = {
-    codeFormationDiplome: ancienneFormation.nouveauCFD,
-    ancienCFD: ancienneFormation.codeFormationDiplome,
-  };
-  kdb.transaction().execute(async (t) => {
-    await t
-      .insertInto("formation")
-      .values(_.omit(ancienneFormation, "nouveauCFD"))
-      .onConflict((oc) => oc.column("codeFormationDiplome").doNothing())
-      .execute();
-
-    await t
-      .insertInto("formationHistorique")
-      .values(formationHistorique)
-      .onConflict((oc) =>
-        oc.columns(["ancienCFD", "codeFormationDiplome"]).doNothing()
-      )
-      .execute();
-  });
-};
+import { createFormationHistorique } from "./createFormationHistorique.dep";
+import { findDataFormation } from "./findDataFormation.dep";
 
 const ancienDiplomeFields = [
   "ANCIEN_DIPLOME_1",
@@ -44,48 +15,14 @@ const ancienDiplomeFields = [
   "ANCIEN_DIPLOME_7",
 ] as const;
 
-const toAncienneFormation = ({
-  cfd,
-  ancienCfd,
-  ancienneFormationData,
-}: {
-  cfd: string;
-  ancienCfd: string;
-  ancienneFormationData?: NFormationDiplomeLine;
-}):
-  | (Insertable<DB["formation"]> & {
-      nouveauCFD: string;
-    })
-  | undefined => {
-  if (!ancienneFormationData) return;
-  if (!ancienneFormationData.DATE_OUVERTURE) return;
-  return {
-    nouveauCFD: cfd,
-    codeFormationDiplome: ancienCfd,
-    libelleDiplome: ancienneFormationData.LIBELLE_LONG_200.replace(/"/g, ""),
-    codeNiveauDiplome: ancienCfd.slice(0, 3),
-    dateOuverture: DateTime.fromFormat(
-      ancienneFormationData.DATE_OUVERTURE,
-      "dd/LL/yyyy"
-    ).toJSDate(),
-    dateFermeture: ancienneFormationData.DATE_FERMETURE
-      ? DateTime.fromFormat(
-          ancienneFormationData.DATE_FERMETURE,
-          "dd/LL/yyyy"
-        ).toJSDate()
-      : undefined,
-  };
-};
-
 const toAncienCfds = ({
   formationData,
 }: {
   formationData: NFormationDiplomeLine;
-}) => {
-  return ancienDiplomeFields
+}) =>
+  ancienDiplomeFields
     .map((field) => formationData[field])
     .filter((item): item is string => !!item);
-};
 
 const isOldFormation = (dateFermeture: Date | undefined) => {
   return dateFermeture && dateFermeture?.getFullYear() < 2018;
@@ -95,6 +32,7 @@ export const [importFormationHistorique] = inject(
   {
     createFormationHistorique,
     findRawData: rawDataRepository.findRawData,
+    findDataFormation,
   },
   (deps) =>
     async ({ cfd }: { cfd: string }) => {
@@ -107,28 +45,21 @@ export const [importFormationHistorique] = inject(
       const ancienCfds = toAncienCfds({ formationData });
 
       for (const ancienCfd of ancienCfds) {
-        const ancienneFormationData = await deps.findRawData({
-          type: "nFormationDiplome_",
-          filter: { FORMATION_DIPLOME: ancienCfd },
-        });
+        const dataFormation = await deps.findDataFormation(ancienCfd);
+        if (!dataFormation?.dateOuverture) continue;
+        const ancienneFormation = {
+          nouveauCFD: cfd,
+          codeFormationDiplome: ancienCfd,
+          libelleDiplome: dataFormation.libelle,
+          codeNiveauDiplome: dataFormation.codeNiveauDiplome,
+          dateOuverture: dataFormation.dateOuverture,
+          dateFermeture: dataFormation.dateFermeture,
+        };
 
-        const ancienneFormation = toAncienneFormation({
-          cfd,
-          ancienCfd,
-          ancienneFormationData,
-        });
-        if (!ancienneFormation) continue;
-        if (
-          isOldFormation(
-            ancienneFormation.dateFermeture
-              ? new Date(ancienneFormation.dateFermeture)
-              : undefined
-          )
-        ) {
-          continue;
-        }
-
-        deps.createFormationHistorique(ancienneFormation);
+        if (isOldFormation(ancienneFormation.dateFermeture)) continue;
+        await deps.createFormationHistorique(ancienneFormation);
       }
+
+      return ancienCfds;
     }
 );
