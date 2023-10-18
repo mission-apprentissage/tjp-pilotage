@@ -25,9 +25,9 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "../../components/Cadran";
+import { PanoramaFormations } from "../types";
+import { Cadran } from "./Cadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
-import { PanoramaFormations } from "./type";
 
 const effectifSizes = [
   { max: 50, size: 6 },

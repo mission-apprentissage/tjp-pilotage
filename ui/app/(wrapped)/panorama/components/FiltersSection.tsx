@@ -2,14 +2,13 @@ import { Container, Flex } from "@chakra-ui/react";
 
 import { Multiselect } from "@/components/Multiselect";
 
-import { PanoramaFormation } from "./type";
+import { PanoramaFormations } from "../types";
 export const FiltersSection = ({
   formations,
   onLibelleFiliereChanged,
   libelleFiliere,
 }: {
-  formations?: PanoramaFormation[];
-
+  formations?: PanoramaFormations;
   onLibelleFiliereChanged?: (diplome: string[]) => void;
   libelleFiliere?: string[];
 }) => {
