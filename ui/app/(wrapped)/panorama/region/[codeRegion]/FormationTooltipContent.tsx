@@ -1,4 +1,6 @@
-import { Box, HStack } from "@chakra-ui/react";
+import { Box, HStack, Text } from "@chakra-ui/react";
+
+import { GraphWrapper } from "@/components/GraphWrapper";
 
 import { InfoBlock } from "../../../../../components/InfoBlock";
 import { PanoramaFormations } from "./type";
@@ -12,35 +14,43 @@ export const FormationTooltipContent = ({
     <Box bg="white" fontSize="xs">
       <InfoBlock
         mb="2"
-        label="Formation concernée:"
+        label="Formation concernée :"
         value={formation?.libelleDiplome}
       />
       <InfoBlock
         mb="2"
-        label="Dispositif concerné:"
+        label="Dispositif concerné :"
         value={formation?.libelleDispositif}
       />
       <HStack mb="2" spacing={4}>
-        <InfoBlock flex={1} label="Effectif:" value={formation?.effectif} />
+        <InfoBlock flex={1} label="Effectif :" value={formation?.effectif} />
         <InfoBlock
           flex={2}
-          label="Nb Etablissements:"
+          label="Nb Etablissements :"
           value={formation?.nbEtablissement}
         />
       </HStack>
       <InfoBlock
         mb="2"
-        label="Tx de pression:"
-        value={formation?.tauxPression ? formation?.tauxPression / 100 : "-"}
+        label="Taux de pression :"
+        value={formation.tauxPression ? formation?.tauxPression / 100 : "-"}
       />
-      <InfoBlock
+      <Text mb="1" fontWeight="medium">
+        Taux d'emploi régional :
+      </Text>
+      <GraphWrapper
         mb="2"
-        label="Tx d'emploi:"
-        value={`${formation?.tauxInsertion6mois}%`}
+        w="100%"
+        continuum={formation.continuum}
+        value={formation.tauxInsertion6mois}
       />
-      <InfoBlock
-        label="Tx de pousuite d'études:"
-        value={`${formation?.tauxPoursuiteEtudes}%`}
+      <Text mb="1" fontWeight="medium">
+        Taux de pousuite d'études régional :
+      </Text>
+      <GraphWrapper
+        w="100%"
+        continuum={formation.continuum}
+        value={formation.tauxPoursuiteEtudes}
       />
     </Box>
   );

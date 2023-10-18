@@ -33,7 +33,7 @@ export const getRegionStats = async ({
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
-      eb.cmpr(
+      eb(
         "indicateurRegionSortie.cfd",
         "not in",
         sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`

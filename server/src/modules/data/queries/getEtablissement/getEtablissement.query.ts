@@ -3,6 +3,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { hasContinuum } from "../utils/hasContinuum";
 import { notHistorique } from "../utils/notHistorique";
 import { withInsertionReg } from "../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../utils/tauxPoursuite";
@@ -83,12 +84,9 @@ export const getEtablissement = async ({
             selectTauxPression("indicateurEntree").as("tauxPression"),
           ])
           .select((eb) => [
-            withInsertionReg({ eb, codeRegion: "ref", millesimeSortie }).as(
-              "tauxInsertion6mois"
-            ),
-            withPoursuiteReg({ eb, codeRegion: "ref", millesimeSortie }).as(
-              "tauxPoursuiteEtudes"
-            ),
+            (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
+            withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+            withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
           ])
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")

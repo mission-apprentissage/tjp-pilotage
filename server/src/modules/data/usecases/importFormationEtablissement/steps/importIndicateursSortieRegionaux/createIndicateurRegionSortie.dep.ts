@@ -5,8 +5,8 @@ import { DB } from "../../../../../../db/schema";
 
 export const createIndicateurRegionSortie = async (
   indicateurRegionSortie: Insertable<DB["indicateurRegionSortie"]>
-) => {
-  await kdb
+) =>
+  kdb
     .insertInto("indicateurRegionSortie")
     .values(indicateurRegionSortie)
     .onConflict((oc) =>
@@ -19,4 +19,3 @@ export const createIndicateurRegionSortie = async (
         .doUpdateSet(indicateurRegionSortie)
     )
     .execute();
-};

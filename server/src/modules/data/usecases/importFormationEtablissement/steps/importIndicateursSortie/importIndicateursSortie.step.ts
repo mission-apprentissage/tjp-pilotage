@@ -4,8 +4,9 @@ import { Insertable } from "kysely";
 import { DB } from "../../../../../../db/schema";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
 import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
-import { dependencies } from "../../dependencies.di";
 import { logger } from "../../importLogger";
+import { createIndicateurSortie } from "./createIndicateurSortie.dep";
+import { getUaiData } from "./getUaiData.dep";
 
 const toIndicateurSorties = ({
   uai,
@@ -56,10 +57,7 @@ const toIndicateurSorties = ({
 };
 
 export const [importIndicateurSortie] = inject(
-  {
-    createIndicateurSortie: dependencies.createIndicateurSortie,
-    getUaiData: dependencies.getUaiData,
-  },
+  { createIndicateurSortie, getUaiData },
   (deps) => {
     return async ({
       uai,
