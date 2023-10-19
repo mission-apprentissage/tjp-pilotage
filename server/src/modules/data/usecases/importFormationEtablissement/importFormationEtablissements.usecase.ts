@@ -36,9 +36,9 @@ export const [importFormations] = inject(
         (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
         async (item, count) => {
-          if (!item["Code diplôme"]) return;
           const cfd = item["Code diplôme"]?.replace("-", "").slice(0, 8);
           console.log("cfd", cfd, count);
+          if (!cfd) return;
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
@@ -46,9 +46,10 @@ export const [importFormations] = inject(
           }
           await importFormationEtablissements(cfd, { fetchIj });
           if (!formation) return;
-        }
+        },
+        { parallel: 20 }
       );
-      logger.write();
+      // logger.write();
     };
   }
 );
