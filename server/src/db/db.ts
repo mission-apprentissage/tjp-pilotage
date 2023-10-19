@@ -22,5 +22,4 @@ pool.on("error", (error) => {
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),
-  log: (a) => console.log(a.query.sql, a.query.parameters),
 });
