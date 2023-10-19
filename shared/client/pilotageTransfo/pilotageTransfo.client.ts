@@ -6,8 +6,8 @@ import { ROUTES_CONFIG } from "../ROUTES_CONFIG";
 export const createPilotageTransformationClient = (
   instance: AxiosInstance
 ) => ({
-  getPilotageTransformationStats: createClientMethod<
-    typeof ROUTES_CONFIG.getStatsTransformation
+  getTransformationStats: createClientMethod<
+    typeof ROUTES_CONFIG.getTransformationStats
   >({
     method: "GET",
     url: "/pilotage-transformation/stats",

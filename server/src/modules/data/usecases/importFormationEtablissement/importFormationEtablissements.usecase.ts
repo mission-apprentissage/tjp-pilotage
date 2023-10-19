@@ -34,7 +34,7 @@ export const [importFormations] = inject(
 
       await streamIt(
         (count) =>
-          deps.findDiplomesProfessionnels({ offset: count, limit: 50 }),
+          deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item["Code diplôme"]?.replace("-", "").slice(0, 8);
           console.log("cfd", cfd, count);
@@ -47,7 +47,7 @@ export const [importFormations] = inject(
           await importFormationEtablissements(cfd, { fetchIj });
           if (!formation) return;
         },
-        { parallel: 20 }
+        { parallel: 30 }
       );
       // logger.write();
     };

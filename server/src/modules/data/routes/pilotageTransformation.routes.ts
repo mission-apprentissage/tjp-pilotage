@@ -12,7 +12,7 @@ export const pilotageTransformationRoutes = ({
   server.get(
     "/pilotage-transformation/stats",
     {
-      schema: ROUTES_CONFIG.getStatsTransformation,
+      schema: ROUTES_CONFIG.getTransformationStats,
       preHandler: hasPermissionHandler("pilotage_reforme/lecture"),
     },
     async (request, response) => {

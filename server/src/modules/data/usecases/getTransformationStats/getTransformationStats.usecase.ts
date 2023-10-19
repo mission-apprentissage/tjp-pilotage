@@ -1,9 +1,11 @@
 import { inject } from "injecti";
 import _ from "lodash";
 
-import { query } from "./query";
+import { getTransformationStatsQuery } from "./getTransformationStatsQuery.dep";
 
-const formatResult = (result: Awaited<ReturnType<typeof query>>) => {
+const formatResult = (
+  result: Awaited<ReturnType<typeof getTransformationStatsQuery>>
+) => {
   return {
     national: {
       ...result[0]?.national,
@@ -40,17 +42,17 @@ const formatResult = (result: Awaited<ReturnType<typeof query>>) => {
 };
 
 export const [getTransformationStats] = inject(
-  { query },
+  { getTransformationStatsQuery },
   (deps) =>
     async ({ rentreeScolaire = 2024 }: { rentreeScolaire?: number } = {}) => {
       const resultDraft = await deps
-        .query({
+        .getTransformationStatsQuery({
           rentreeScolaire,
           status: "draft",
         })
         .then(formatResult);
       const resultSubmitted = await deps
-        .query({
+        .getTransformationStatsQuery({
           rentreeScolaire,
           status: "submitted",
         })

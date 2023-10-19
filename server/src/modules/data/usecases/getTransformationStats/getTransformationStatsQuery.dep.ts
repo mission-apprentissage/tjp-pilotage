@@ -89,7 +89,7 @@ const selectNbDemandes =
       .count<number>("demande.id")
       .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
-export const query = ({
+export const getTransformationStatsQuery = ({
   rentreeScolaire,
   status,
 }: {
