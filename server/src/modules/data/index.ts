@@ -3,6 +3,7 @@ import { etablissementsRoutes } from "./routes/etablissements.routes";
 import { formationsRoutes } from "./routes/formations.routes";
 import { cadranRoutes } from "./routes/panorama.routes";
 import { pilotageReformeRoutes } from "./routes/pilotageReforme.routes";
+import { pilotageTransformationRoutes } from "./routes/pilotageTransformation.routes";
 import { regionsRoutes } from "./routes/regions.routes";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
@@ -11,4 +12,5 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
   cadranRoutes({ server });
   regionsRoutes({ server });
   pilotageReformeRoutes({ server });
+  pilotageTransformationRoutes({ server });
 };
