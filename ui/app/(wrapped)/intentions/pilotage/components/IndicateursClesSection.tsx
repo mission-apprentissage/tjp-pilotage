@@ -3,30 +3,23 @@ import {
   Box,
   Card,
   CardBody,
-  Divider,
+  CardHeader,
   Flex,
+  Grid,
+  GridItem,
+  Img,
   SimpleGrid,
   Skeleton,
   Text,
 } from "@chakra-ui/react";
+import { ReactNode } from "react";
 
-import { IndicateurType, PilotageReformeStats } from "../types";
-
-const EFFECTIF_FEATURE_FLAG = false;
+import { PilotageTransformationStats, Scope } from "../types";
 
 const Loader = () => {
   return (
     <>
       <Box mt={12}>
-        {EFFECTIF_FEATURE_FLAG && (
-          <Box height={"124px"} mb={24}>
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-            <Divider borderBottom={"2px solid"} opacity={"15%"} />
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-            <Divider borderBottom={"2px solid"} opacity={"15%"} />
-            <Skeleton opacity={0.3} m={2} height={6}></Skeleton>
-          </Box>
-        )}
         <Flex mt={8} height={"168px"}>
           <SimpleGrid spacing={3} columns={[2]} width={"100%"}>
             <Card height={40}>
@@ -45,119 +38,6 @@ const Loader = () => {
     </>
   );
 };
-
-const DeltaIcon = ({
-  delta,
-  children,
-  ...props
-}: {
-  delta: number;
-  children: React.ReactNode;
-}) => {
-  let deltaIcon;
-  if (delta) {
-    if (delta < 0)
-      deltaIcon = (
-        <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleDownIcon mt={1} me={"auto"} boxSize={4} color={"#D85766"} />
-          {children}
-        </Flex>
-      );
-    else if (delta === 0) deltaIcon = <Flex {...props}>{children}</Flex>;
-    else
-      deltaIcon = (
-        <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleUpIcon mt={1} me={"auto"} boxSize={4} color={"#81DC6F"} />
-          {children}
-        </Flex>
-      );
-  } else {
-    deltaIcon = (
-      <Flex {...props} width="50%" justifyContent={"end"} color={"#96A6D8"}>
-        -
-      </Flex>
-    );
-  }
-
-  return deltaIcon;
-};
-
-const IndicateurCompare = ({
-  indicateuranneeN,
-  indicateuranneeNMoins1,
-}: {
-  indicateuranneeN?: number;
-  indicateuranneeNMoins1?: number;
-}) => {
-  return (
-    <>
-      <Text
-        px={8}
-        color={"#5770BE"}
-        width={"40%"}
-        textAlign="end"
-        whiteSpace={"nowrap"}
-      >
-        {indicateuranneeN ?? "-"}
-      </Text>
-      <DeltaIcon
-        delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}
-      >
-        <Text color={"#96A6D8"} whiteSpace={"nowrap"}>
-          {indicateuranneeNMoins1 ? `${indicateuranneeNMoins1} / N-1` : "-"}
-        </Text>
-      </DeltaIcon>
-    </>
-  );
-};
-
-const IndicateurEffectifLine = ({
-  label,
-  indicateuranneeN,
-  indicateuranneeNMoins1,
-  isLastLine = false,
-}: {
-  label: string;
-  indicateuranneeN?: number;
-  indicateuranneeNMoins1?: number;
-  isLastLine?: boolean;
-}) => (
-  <>
-    <SimpleGrid spacing={3} columns={[2]} p={2} fontWeight={700}>
-      <Text align="start" textTransform={"uppercase"} color={"#96A6D8"}>
-        {label}
-      </Text>
-      <Flex justifyContent={"end"}>
-        <IndicateurCompare
-          indicateuranneeN={indicateuranneeN}
-          indicateuranneeNMoins1={indicateuranneeNMoins1}
-        ></IndicateurCompare>
-      </Flex>
-    </SimpleGrid>
-    {!isLastLine && <Divider borderBottom={"2px solid"} opacity={"15%"} />}
-  </>
-);
-
-const IndicateursEffectif = ({ data }: { data?: PilotageReformeStats }) => (
-  <Box flex={1}>
-    <IndicateurEffectifLine
-      label="effectif"
-      indicateuranneeN={data?.anneeN.filtered.effectif}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.effectif}
-    />
-    <IndicateurEffectifLine
-      label="nombre d'établissements"
-      indicateuranneeN={data?.anneeN.filtered.nbEtablissements}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbEtablissements}
-    />
-    <IndicateurEffectifLine
-      label="nombre de formations"
-      indicateuranneeN={data?.anneeN.filtered.nbFormations}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbFormations}
-      isLastLine={true}
-    />
-  </Box>
-);
 
 const DrapeauFrancaisIcon = ({ ...props }) => (
   <Icon boxSize={4} {...props}>
@@ -192,13 +72,7 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
     </svg>
   </Icon>
 );
-const Delta = ({
-  delta,
-  isNational = false,
-}: {
-  delta: number | null;
-  isNational?: boolean;
-}) => {
+const Delta = ({ delta }: { delta: number | null }) => {
   let deltaIcon;
 
   if (delta != null) {
@@ -230,8 +104,68 @@ const Delta = ({
     <Flex fontSize={12} color={"#96A6D8"}>
       {deltaIcon}
       <Flex ms="auto">
-        {isNational && <DrapeauFrancaisIcon mt={1.5} mx={1} />}
-        <Text>N-1</Text>
+        <DrapeauFrancaisIcon mt={1.5} mx={1} />
+      </Flex>
+    </Flex>
+  );
+};
+
+const ProgressBar = ({
+  percentage,
+  colorScheme = "bluefrance.525",
+  leftLabel,
+  rightLabel,
+}: {
+  percentage: number;
+  colorScheme?: string;
+  leftLabel?: string | number;
+  rightLabel?: string | number;
+}) => {
+  return (
+    <Flex flexDirection={"column"}>
+      <Flex
+        w="100%"
+        bgColor="gray.100"
+        justifyContent={"space-between"}
+        borderRightRadius={"4px"}
+      >
+        <Flex
+          w={`${percentage}%`}
+          bgColor={colorScheme}
+          fontSize="10px"
+          overflow={"visible"}
+          height="15px"
+          borderLeftRadius={"4px"}
+        >
+          <Text
+            textOverflow={"hidden"}
+            whiteSpace={"nowrap"}
+            lineHeight="12px"
+            my="auto"
+            fontSize="10px"
+            ps={1}
+          >
+            {leftLabel}
+          </Text>
+        </Flex>
+        <Flex
+          w={`${100 - percentage}%`}
+          fontSize="10px"
+          overflow={"visible"}
+          height="15px"
+          justifyContent={"end"}
+        >
+          <Text
+            textOverflow={"hidden"}
+            whiteSpace={"nowrap"}
+            lineHeight="12px"
+            my="auto"
+            fontSize="10px"
+            pe={1}
+          >
+            {rightLabel}
+          </Text>
+        </Flex>
       </Flex>
     </Flex>
   );
@@ -239,188 +173,350 @@ const Delta = ({
 
 const StatCard = ({
   label,
-  data,
-  type = "insertion",
-  color = "inherit",
+  className,
+  children,
+  icon,
 }: {
   label: string;
-  data?: PilotageReformeStats;
-  type?: IndicateurType;
-  color?: string;
+  className?: string;
+  children: ReactNode;
+  icon?: string;
 }) => {
-  const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
-    switch (type) {
-      case "insertion":
-        if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.filtered.insertion
-        )
-          return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.filtered.insertion
-          );
-        return null;
-      case "poursuite":
-        if (
-          data?.anneeN.filtered.poursuite &&
-          data?.anneeNMoins1.filtered.poursuite
-        )
-          return (
-            data?.anneeN.filtered.poursuite -
-            data?.anneeNMoins1.filtered.poursuite
-          );
-        return null;
-      default:
-        if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.filtered.insertion
-        ) {
-          return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.filtered.insertion
-          );
-        }
-        return null;
-    }
-  };
-
-  const getDeltaAnneeNMoins1Nationale = (
-    type: IndicateurType
-  ): number | null => {
-    switch (type) {
-      case "insertion":
-        if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.nationale.insertion
-        )
-          return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.nationale.insertion
-          );
-        return null;
-      case "poursuite":
-        if (
-          data?.anneeN.filtered.poursuite &&
-          data?.anneeNMoins1.nationale.poursuite
-        )
-          return (
-            data?.anneeN.filtered.poursuite -
-            data?.anneeNMoins1.nationale.poursuite
-          );
-        return null;
-      default:
-        if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.nationale.insertion
-        )
-          return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.nationale.insertion
-          );
-        return null;
-    }
-  };
-
-  const getValue = (type: IndicateurType) => {
-    switch (type) {
-      case "insertion":
-        return data?.anneeN.filtered.insertion;
-      case "poursuite":
-        return data?.anneeN.filtered.poursuite;
-      default:
-        return data?.anneeN.filtered.insertion;
-    }
-  };
-
   return (
-    <Card>
-      <CardBody
-        color={color}
-        py="2"
-        px="3"
-        alignItems={"center"}
-        minHeight={40}
-      >
-        <Box
-          mr="4"
-          flex={1}
-          textTransform={"uppercase"}
-          color={"#000091"}
-          fontWeight={700}
-        >
-          {label}
-        </Box>
-        <Box fontWeight="bold" fontSize="40" color={"#000091"}>
-          {getValue(type) ? (
-            `${getValue(type)} %`
-          ) : (
-            <Text textAlign={"center"}>-</Text>
-          )}
-        </Box>
-        <Box fontWeight="bold" fontSize="2xl">
-          {getDeltaAnneeNMoins1(type) != null ? (
-            <Delta delta={getDeltaAnneeNMoins1(type)} />
-          ) : (
-            <></>
-          )}
-        </Box>
-        {getDeltaAnneeNMoins1(type) != null &&
-        getDeltaAnneeNMoins1Nationale(type) != null ? (
-          <Divider />
-        ) : (
-          <></>
-        )}
-        <Box fontWeight="bold" fontSize="2xl">
-          {getDeltaAnneeNMoins1Nationale(type) != null ? (
-            <Delta
-              delta={getDeltaAnneeNMoins1Nationale(type)}
-              isNational={true}
-            />
-          ) : (
-            <></>
-          )}
-        </Box>
+    <Card className={className} minH="2xs">
+      <CardHeader>
+        <Flex>
+          {icon && <Img alt="" h="20px" src={`/icons/${icon}.svg`} me={2} />}
+          <Text
+            color="bluefrance.113"
+            fontSize={"14px"}
+            fontWeight={700}
+            textTransform="uppercase"
+          >
+            {label}
+          </Text>
+        </Flex>
+      </CardHeader>
+      <CardBody py="2" px="3" minH="3">
+        {children}
       </CardBody>
     </Card>
   );
 };
 
-const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
-  <Flex direction={"column"}>
-    <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2021
-    </Text>
-    <SimpleGrid spacing={3} columns={[2]} mt={4}>
-      <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
-      <StatCard
-        label="taux poursuite d'études"
-        data={data}
-        type="poursuite"
-      ></StatCard>
-    </SimpleGrid>
-  </Flex>
-);
-
 export const IndicateursClesSection = ({
   data,
   isLoading,
+  scope,
+  scopeCode,
 }: {
-  data?: PilotageReformeStats;
+  data?: PilotageTransformationStats;
   isLoading: boolean;
+  scope?: Scope;
+  scopeCode?: string;
 }) => {
+  const submittedNationalData = data?.submitted?.national;
+  const draftNationalData = data?.draft?.national;
+  const allNationalData = data?.all?.national;
+
+  let submittedScopedData = data?.submitted?.national;
+  let draftScopedData = data?.draft?.national;
+  let allScopedData = data?.all?.national;
+
+  if (scope && scopeCode) {
+    submittedScopedData = data?.submitted[scope][scopeCode];
+    draftScopedData = data?.draft[scope][scopeCode];
+    allScopedData = data?.all[scope][scopeCode];
+  }
+  const scopedData = {
+    tauxTransfoSubmitted: submittedScopedData?.tauxTransformation ?? 0,
+    tauxTransfoDraft: draftScopedData?.tauxTransformation ?? 0,
+    tauxTransfoAll: allScopedData?.tauxTransformation ?? 0,
+    placesOuvertesScolaireSubmitted:
+      submittedScopedData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageSubmitted:
+      submittedScopedData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesSubmitted:
+      (submittedScopedData?.placesOuvertesScolaire ?? 0) +
+      (submittedScopedData?.placesOuvertesApprentissage ?? 0),
+    placesOuvertesScolaireDraft: draftScopedData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageDraft:
+      draftScopedData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesDraft:
+      (draftScopedData?.placesOuvertesScolaire ?? 0) +
+      (draftScopedData?.placesOuvertesApprentissage ?? 0),
+    placesOuvertesScolaireAll: allScopedData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageAll:
+      allScopedData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesAll:
+      (allScopedData?.placesOuvertesScolaire ?? 0) +
+      (allScopedData?.placesOuvertesApprentissage ?? 0),
+    placesFermeesScolaireSubmitted:
+      submittedScopedData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageSubmitted:
+      submittedScopedData?.placesFermeesApprentissage ?? 0,
+    placesFermeesSubmitted:
+      (submittedScopedData?.placesFermeesScolaire ?? 0) +
+      (submittedScopedData?.placesFermeesApprentissage ?? 0),
+    placesFermeesScolaireDraft: draftScopedData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageDraft:
+      draftScopedData?.placesFermeesApprentissage ?? 0,
+    placesFermeesDraft:
+      (draftScopedData?.placesFermeesScolaire ?? 0) +
+      (draftScopedData?.placesFermeesApprentissage ?? 0),
+    placesFermeesScolaireAll: allScopedData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageAll:
+      allScopedData?.placesFermeesApprentissage ?? 0,
+    placesFermeesAll:
+      (allScopedData?.placesFermeesScolaire ?? 0) +
+      (allScopedData?.placesFermeesApprentissage ?? 0),
+    ratioFermetures: Math.round(
+      (((allScopedData?.placesFermeesScolaire ?? 0) +
+        (allScopedData?.placesFermeesApprentissage ?? 0)) /
+        ((allScopedData?.placesOuvertesScolaire ?? 0) +
+          (allScopedData?.placesOuvertesApprentissage ?? 0))) *
+        100
+    ),
+  };
+
+  const nationalData = {
+    tauxTransfoSubmitted: submittedNationalData?.tauxTransformation ?? 0,
+    tauxTransfoDraft: draftNationalData?.tauxTransformation ?? 0,
+    tauxTransfoAll: allNationalData?.tauxTransformation ?? 0,
+    placesOuvertesScolaireSubmitted:
+      submittedNationalData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageSubmitted:
+      submittedNationalData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesSubmitted:
+      (submittedNationalData?.placesOuvertesScolaire ?? 0) +
+      (submittedNationalData?.placesOuvertesApprentissage ?? 0),
+    placesOuvertesScolaireDraft: draftNationalData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageDraft:
+      draftNationalData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesDraft:
+      (draftNationalData?.placesOuvertesScolaire ?? 0) +
+      (draftNationalData?.placesOuvertesApprentissage ?? 0),
+    placesOuvertesScolaireAll: allNationalData?.placesOuvertesScolaire ?? 0,
+    placesOuvertesApprentissageAll:
+      allNationalData?.placesOuvertesApprentissage ?? 0,
+    placesOuvertesAll:
+      (allNationalData?.placesOuvertesScolaire ?? 0) +
+      (allNationalData?.placesOuvertesApprentissage ?? 0),
+    placesFermeesScolaireSubmitted:
+      submittedNationalData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageSubmitted:
+      submittedNationalData?.placesFermeesApprentissage ?? 0,
+    placesFermeesSubmitted:
+      (submittedNationalData?.placesFermeesScolaire ?? 0) +
+      (submittedNationalData?.placesFermeesApprentissage ?? 0),
+    placesFermeesScolaireDraft: draftNationalData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageDraft:
+      draftNationalData?.placesFermeesApprentissage ?? 0,
+    placesFermeesDraft:
+      (draftNationalData?.placesFermeesScolaire ?? 0) +
+      (draftNationalData?.placesFermeesApprentissage ?? 0),
+    placesFermeesScolaireAll: allNationalData?.placesFermeesScolaire ?? 0,
+    placesFermeesApprentissageAll:
+      allNationalData?.placesFermeesApprentissage ?? 0,
+    placesFermeesAll:
+      (allNationalData?.placesFermeesScolaire ?? 0) +
+      (allNationalData?.placesFermeesApprentissage ?? 0),
+    ratioFermetures: Math.round(
+      (((allNationalData?.placesFermeesScolaire ?? 0) +
+        (allNationalData?.placesFermeesScolaire ?? 0)) /
+        ((allNationalData?.placesOuvertesScolaire ?? 0) +
+          (allNationalData?.placesOuvertesApprentissage ?? 0))) *
+        100
+    ),
+  };
+
   return (
     <>
       {isLoading ? (
         <Loader></Loader>
       ) : (
         <Box>
-          {EFFECTIF_FEATURE_FLAG && (
-            <Flex>
-              <IndicateursEffectif data={data}></IndicateursEffectif>
-            </Flex>
-          )}
-          <Flex mt={EFFECTIF_FEATURE_FLAG ? 14 : 0}>
-            <IndicateursSortie data={data}></IndicateursSortie>
+          <Flex direction={"column"}>
+            <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
+              INDICATEURS CLÉS DE LA TRANSFORMATIONS
+            </Text>
+            <Grid gap={5} templateColumns="repeat(3, 1fr)" mt={5}>
+              <GridItem colSpan={2}>
+                <Flex flexDirection={"column"} gap={5}>
+                  <StatCard label="taux de transformation">
+                    <Flex justifyContent={"space-between"}>
+                      <Flex flexDirection={"column"} gap={2}>
+                        <Flex>
+                          <Img alt="" src="/icons/green_dot.svg" me={2} />
+                          <Text>DEMANDES VALIDÉES</Text>
+                        </Flex>
+                        <Flex>
+                          <Text
+                            fontSize="40px"
+                            fontWeight="800"
+                            color="bluefrance.113"
+                          >
+                            {`${scopedData.tauxTransfoSubmitted} %`}
+                          </Text>
+                        </Flex>
+                        <Flex flexDirection="column">
+                          <ProgressBar
+                            percentage={
+                              (scopedData.tauxTransfoSubmitted / 6) * 100
+                            }
+                          />
+                          <Text>
+                            {`
+                            ${Math.round(
+                              (scopedData.tauxTransfoSubmitted / 6) * 100
+                            )}% de l'objectif`}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                      <Flex flexDirection={"column"} gap={2}>
+                        <Flex>
+                          <Img alt="" src="/icons/orange_dot.svg" me={2} />
+                          <Text>PROJETS DE DEMANDE</Text>
+                        </Flex>
+                        <Flex>
+                          <Text
+                            fontSize="40px"
+                            fontWeight="800"
+                            color="bluefrance.113"
+                          >
+                            {`${scopedData.tauxTransfoDraft} %`}
+                          </Text>
+                        </Flex>
+                        <Flex flexDirection="column" gap={2}>
+                          <ProgressBar
+                            percentage={(scopedData.tauxTransfoDraft / 6) * 100}
+                          />
+                          <Text>
+                            {`
+                            ${Math.round(
+                              (scopedData.tauxTransfoDraft / 6) * 100
+                            )}% de l'objectif`}
+                          </Text>
+                        </Flex>
+                      </Flex>
+                    </Flex>
+                  </StatCard>
+                  <SimpleGrid spacing={5} columns={[2]}>
+                    <StatCard label="places ouvertes" icon="places_ouvertes">
+                      <Flex flexDirection={"column"} gap={3}>
+                        <Flex>
+                          <Text
+                            fontSize="40px"
+                            fontWeight="800"
+                            color="bluefrance.113"
+                          >
+                            {scopedData.placesOuvertesAll}
+                          </Text>
+                        </Flex>
+                        <ProgressBar
+                          percentage={
+                            (scopedData.placesOuvertesSubmitted /
+                              scopedData.placesOuvertesAll) *
+                            100
+                          }
+                          leftLabel="Validées"
+                          rightLabel={scopedData.placesOuvertesSubmitted}
+                          colorScheme="green.submitted"
+                        />
+                        <ProgressBar
+                          percentage={
+                            (scopedData.placesOuvertesDraft /
+                              scopedData.placesOuvertesAll) *
+                            100
+                          }
+                          leftLabel="En projet"
+                          rightLabel={scopedData.placesOuvertesDraft}
+                          colorScheme="orange.draft"
+                        />
+                      </Flex>
+                    </StatCard>
+                    <StatCard label="places fermées" icon="places_fermees">
+                      <Flex flexDirection={"column"} gap={3}>
+                        <Flex>
+                          <Text
+                            fontSize="40px"
+                            fontWeight="800"
+                            color="bluefrance.113"
+                          >
+                            {scopedData.placesFermeesAll}
+                          </Text>
+                        </Flex>
+                        <ProgressBar
+                          percentage={
+                            (scopedData.placesFermeesSubmitted /
+                              scopedData.placesFermeesAll) *
+                            100
+                          }
+                          leftLabel="Validées"
+                          rightLabel={scopedData.placesFermeesSubmitted}
+                          colorScheme="green.submitted"
+                        />
+                        <ProgressBar
+                          percentage={
+                            (scopedData.placesFermeesDraft /
+                              scopedData.placesFermeesAll) *
+                            100
+                          }
+                          leftLabel="En projet"
+                          rightLabel={scopedData.placesFermeesDraft}
+                          colorScheme="orange.draft"
+                        />
+                      </Flex>
+                    </StatCard>
+                  </SimpleGrid>
+                </Flex>
+              </GridItem>
+              <GridItem>
+                <Flex flexDirection={"column"} gap={5}>
+                  <Flex minH="2xs">
+                    {scope && scopeCode && (
+                      <StatCard label="écart vs moyenne nationale">
+                        <Text
+                          fontSize="40px"
+                          fontWeight="800"
+                          color={
+                            nationalData.tauxTransfoAll -
+                              scopedData.tauxTransfoAll >=
+                            0
+                              ? "green"
+                              : "orange"
+                          }
+                        >
+                          {`${Math.round(
+                            nationalData.tauxTransfoAll -
+                              scopedData.tauxTransfoAll
+                          )} pts`}
+                        </Text>
+                      </StatCard>
+                    )}
+                  </Flex>
+                  <StatCard label="ratio des fermetures">
+                    <Flex flexDirection={"column"}>
+                      <Flex
+                        fontSize="40px"
+                        fontWeight="800"
+                        color={
+                          scopedData.ratioFermetures < 30 ? "orange" : "green"
+                        }
+                      >
+                        {`${scopedData.ratioFermetures} %`}
+                      </Flex>
+                      <Delta
+                        delta={
+                          scopedData.ratioFermetures -
+                          nationalData.ratioFermetures
+                        }
+                      />
+                    </Flex>
+                  </StatCard>
+                </Flex>
+              </GridItem>
+            </Grid>
           </Flex>
         </Box>
       )}

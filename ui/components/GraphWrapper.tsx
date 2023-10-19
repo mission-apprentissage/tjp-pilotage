@@ -8,10 +8,12 @@ export const GraphWrapper = chakra(
     value,
     continuum,
     className,
+    objective = 100,
   }: {
     value?: number;
     continuum?: { cfd: string; libelle?: string };
     className?: string;
+    objective?: number;
   }) => (
     <Box w="160px" className={className} display="flex" alignItems="center">
       {value !== undefined && !Number.isNaN(value) ? (

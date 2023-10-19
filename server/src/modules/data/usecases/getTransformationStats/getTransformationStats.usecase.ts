@@ -9,15 +9,15 @@ const formatResult = (
   return {
     national: {
       ...result[0]?.national,
-      tauxTransformation: result[0]?.national.transformes / effectifNationnal,
+      tauxTransformation: Math.round((result[0]?.national.transformes / effectifNational || 0) * 10000) / 100,
     },
     regions: _.chain(result)
       .groupBy((item) => item.region.codeRegion)
       .mapValues((items) => ({
         ...items[0].region,
         tauxTransformation:
-          items[0].region.transforme /
-          effectifsRegions[items[0].region.codeRegion ?? ""],
+          Math.round((items[0].region.transforme /
+            effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000) / 100,
       }))
       .value(),
     academies: _.chain(result)
@@ -25,8 +25,8 @@ const formatResult = (
       .mapValues((items) => ({
         ...items[0].academie,
         tauxTransformation:
-          items[0].academie.transforme /
-          effectifsAcademie[items[0].academie.codeAcademie ?? ""],
+          Math.round((items[0].academie.transforme /
+            effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) * 10000) / 100,
       }))
       .value(),
     departements: _.chain(result)
@@ -34,8 +34,8 @@ const formatResult = (
       .mapValues((items) => ({
         ...items[0].departement,
         tauxTransformation:
-          items[0].departement.transforme /
-          effectifsDepartements[items[0].departement.codeDepartement ?? ""],
+          Math.round((items[0].departement.transforme /
+            effectifsDepartements[items[0].departement.codeDepartement ?? ""] || 0) * 10000) / 100,
       }))
       .value(),
   };
@@ -57,10 +57,16 @@ export const [getTransformationStats] = inject(
           status: "submitted",
         })
         .then(formatResult);
+      const resultAll = await deps
+        .getTransformationStatsQuery({
+          rentreeScolaire
+        })
+        .then(formatResult);
 
       return {
         submitted: resultSubmitted,
         draft: resultDraft,
+        all: resultAll
       };
     }
 );
@@ -86,7 +92,7 @@ const effectifsRegions: Record<string, number> = {
   "01": 3751,
 };
 
-const effectifNationnal = Object.values(effectifsRegions).reduce(
+const effectifNational = Object.values(effectifsRegions).reduce(
   (acc, cur) => acc + cur,
   0
 );
