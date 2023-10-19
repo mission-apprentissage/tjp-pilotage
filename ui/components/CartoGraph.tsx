@@ -9,23 +9,25 @@ import CarteFranceRegions from "../public/fond_carte_regions.json";
 
 export const CartoGraph = ({
   graphData,
-  scope = "region",
+  scope = "regions",
   objectif = "haut",
+  customPiecesSteps,
 }: {
-  graphData?: { label?: string; value: number }[];
-  scope?: "region" | "academie" | "departement";
+  graphData?: { name?: string; value: number }[];
+  scope?: "national" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
+  customPiecesSteps?: [number, number, number, number];
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getGeoMap = () => {
     switch (scope) {
-      case "region":
+      case "regions":
         return JSON.parse(JSON.stringify(CarteFranceRegions));
-      case "academie":
+      case "academies":
         return JSON.parse(JSON.stringify(CarteFranceAcademies));
-      case "departement":
+      case "departements":
         return JSON.parse(JSON.stringify(CarteFranceDepartements));
       default:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
@@ -34,11 +36,11 @@ export const CartoGraph = ({
 
   const getNameProperty = (): string => {
     switch (scope) {
-      case "region":
+      case "regions":
         return "reg";
-      case "academie":
+      case "academies":
         return "code_academie";
-      case "departement":
+      case "departements":
         return "dep";
       default:
         return "reg";
@@ -47,11 +49,11 @@ export const CartoGraph = ({
 
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
-      case "region":
+      case "regions":
         return REGION_LABEL_MAPPING;
-      case "academie":
+      case "academies":
         return ACADEMIES_LABEL_MAPPING;
-      case "departement":
+      case "departements":
         return DEPARTEMENTS_LABEL_MAPPING;
       default:
         return REGION_LABEL_MAPPING;
@@ -78,6 +80,39 @@ export const CartoGraph = ({
     label: string;
     color: string;
   }[] => {
+    const colorRange =
+      objectif === "bas"
+        ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
+        : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
+
+    if (customPiecesSteps)
+      return [
+        {
+          min: 0,
+          max: customPiecesSteps[1],
+          label: `< ${customPiecesSteps[1]}%`,
+          color: colorRange[0],
+        },
+        {
+          min: customPiecesSteps[1],
+          max: customPiecesSteps[2],
+          label: `< ${customPiecesSteps[2]}%`,
+          color: colorRange[1],
+        },
+        {
+          min: customPiecesSteps[2],
+          max: customPiecesSteps[3],
+          label: `< ${customPiecesSteps[3]}%`,
+          color: colorRange[2],
+        },
+        {
+          min: customPiecesSteps[3],
+          max: 100,
+          label: `> ${customPiecesSteps[3]}%`,
+          color: colorRange[3],
+        },
+      ];
+
     const data = Array.from(
       graphData?.map((it) => it.value ?? -1) ?? []
     ).filter((value) => value != -1);
@@ -90,11 +125,6 @@ export const CartoGraph = ({
       Math.ceil(max - diff / 4),
       max,
     ];
-
-    const colorRange =
-      objectif === "bas"
-        ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
-        : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
 
     return [
       {
@@ -181,12 +211,7 @@ export const CartoGraph = ({
           itemStyle: {
             borderColor: "#FFF",
           },
-          data: graphData?.map((region) => {
-            return {
-              name: region.label,
-              value: region.value,
-            };
-          }),
+          data: graphData,
         },
       ],
     }),

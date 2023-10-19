@@ -1,20 +1,17 @@
 import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../../../components/Multiselect";
-import { Filters, PilotageReformeStats } from "../types";
+import { Filters, PilotageTransformationStats } from "../types";
 
 export const FiltersSection = ({
   activeFilters,
   handleFilters,
-  filterTracker,
   isLoading,
   data,
 }: {
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
   isLoading: boolean;
-  data?: PilotageReformeStats;
+  data?: PilotageTransformationStats;
 }) => {
   return (
     <>
@@ -32,36 +29,27 @@ export const FiltersSection = ({
         <Box borderRadius={4}>
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
-              <FormLabel>Niveau de diplôme</FormLabel>
-              <Multiselect
-                onClose={filterTracker("codeNiveauDiplome")}
-                width="52"
-                size="md"
-                variant="newInput"
-                onChange={(selected) =>
-                  handleFilters("codeNiveauDiplome", selected)
-                }
-                options={data?.filters.diplomes}
-                value={activeFilters.codeNiveauDiplome ?? []}
-              >
-                TOUS
-              </Multiselect>
-            </Box>
-            <Box justifyContent={"start"}>
-              <FormLabel>Régions</FormLabel>
+              <FormLabel>Rentrées scolaires</FormLabel>
               <Select
                 width={"72"}
                 size="md"
                 variant="newInput"
-                value={activeFilters.codeRegion ?? ""}
-                onChange={(e) => handleFilters("codeRegion", e.target.value)}
+                value={activeFilters.rentreeScolaire ?? ""}
+                onChange={(e) =>
+                  handleFilters(
+                    "rentreeScolaire",
+                    Number.parseInt(e.target.value)
+                  )
+                }
                 placeholder="TOUTES"
               >
-                {data?.filters.regions?.map((option) => (
+                {/* {data?.filters.rentreesScolaire?.map((option) => (
                   <option key={option.value} value={option.value}>
                     {option.label}
                   </option>
-                ))}
+                ))} */}
+                <option value={"2024"}>2024</option>
+                <option value={"2025"}>2025</option>
               </Select>
             </Box>
           </Flex>

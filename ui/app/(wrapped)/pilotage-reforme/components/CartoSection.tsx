@@ -22,7 +22,7 @@ export const CartoSection = ({
 }) => {
   const graphData = data?.statsRegions.map((region) => {
     return {
-      label: region.libelleRegion,
+      name: region.libelleRegion,
       value: region[indicateur] ?? 0,
     };
   });

@@ -2,30 +2,16 @@ import { ApiType } from "shared";
 
 import { api } from "../../../../api.client";
 
-export type PilotageReformeStatsQuery = Parameters<
-  typeof api.getPilotageReformeStats
->[0]["query"];
-
-export type PilotageReformeStatsRegionsQuery = Parameters<
-  typeof api.getPilotageReformeStatsRegions
+export type PilotageTransformationStatsQuery = Parameters<
+  typeof api.getTransformationStats
 >[0]["query"];
 
 export type Filters = Pick<
-  PilotageReformeStatsQuery,
-  "codeNiveauDiplome" | "codeRegion"
+  PilotageTransformationStatsQuery,
+  "rentreeScolaire"
 >;
+export type PilotageTransformationStats = ApiType<typeof api.getTransformationStats>;
 
-export type FiltersRegions = Pick<
-  PilotageReformeStatsRegionsQuery,
-  "codeNiveauDiplome"
->;
+export type IndicateurType = "tauxTransformation";
 
-export type Order = Pick<PilotageReformeStatsRegionsQuery, "order" | "orderBy">;
-
-export type PilotageReformeStats = ApiType<typeof api.getPilotageReformeStats>;
-
-export type PilotageReformeStatsRegion = ApiType<
-  typeof api.getPilotageReformeStatsRegions
->;
-
-export type IndicateurType = "insertion" | "poursuite";
+export type Scope = "regions" | "academies" | "departements";

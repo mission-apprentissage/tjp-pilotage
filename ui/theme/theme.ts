@@ -98,6 +98,12 @@ export const theme = extendBaseTheme(chakraTheme, {
       "525_hover": "#ff754e",
       "525_active": "#ff8e76",
     },
+    orange: {
+      draft: "#FEEBCA",
+    },
+    green: {
+      submitted: "#C8F6D6",
+    },
   },
   components: {
     Button: buttonTheme,
