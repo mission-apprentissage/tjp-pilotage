@@ -1,8 +1,10 @@
+import _ from "lodash";
 import { Readable, Writable } from "stream";
 import { pipeline } from "stream/promises";
 export const streamIt = <T>(
   load: (count: number) => Promise<T[]>,
-  write: (chunk: T, writeCount: number) => Promise<void>
+  write: (chunk: T, writeCount: number) => Promise<void>,
+  { parallel = 1 } = {}
 ) => {
   let count = 0;
 
@@ -13,8 +15,9 @@ export const streamIt = <T>(
       const data = await load(count);
       count += data.length;
       if (data.length) {
-        data.forEach((item) => {
-          readable.push(item);
+        const chunks = _.chunk(data, parallel);
+        chunks.forEach((chunk) => {
+          readable.push(chunk);
         });
       } else {
         readable.push(null);
@@ -22,11 +25,17 @@ export const streamIt = <T>(
     },
   });
   let writeCount = 0;
+
   const writable = new Writable({
     objectMode: true,
     write: async (chunk, _, callback) => {
-      await write(chunk, writeCount);
-      writeCount++;
+      await Promise.all(
+        chunk.map(async (item: T) => {
+          writeCount++;
+          await write(item, writeCount);
+        })
+      );
+
       callback();
     },
   });
