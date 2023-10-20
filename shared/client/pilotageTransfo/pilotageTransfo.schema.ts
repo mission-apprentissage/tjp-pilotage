@@ -1,6 +1,12 @@
 import { Type } from "@sinclair/typebox";
 
+const OptionSchema = Type.Object({
+  label: Type.String(),
+  value: Type.String(),
+});
+
 const ScopedStatsTransfoSchema = Type.Object({
+  libelle: Type.Optional(Type.String()),
   countDemande: Type.Number(),
   differenceCapaciteScolaire: Type.Number(),
   differenceCapaciteApprentissage: Type.Number(),
@@ -17,7 +23,6 @@ const StatsTransfoSchema = Type.Object({
     Type.String(),
     Type.Object({
       ...ScopedStatsTransfoSchema.properties,
-      libelleRegion: Type.Optional(Type.String()),
       codeRegion: Type.Optional(Type.String()),
     })
   ),
@@ -25,7 +30,6 @@ const StatsTransfoSchema = Type.Object({
     Type.String(),
     Type.Object({
       ...ScopedStatsTransfoSchema.properties,
-      libelleAcademie: Type.Optional(Type.String()),
       codeAcademie: Type.Optional(Type.String()),
     })
   ),
@@ -33,20 +37,29 @@ const StatsTransfoSchema = Type.Object({
     Type.String(),
     Type.Object({
       ...ScopedStatsTransfoSchema.properties,
-      libelleDepartement: Type.Optional(Type.String()),
       codeDepartement: Type.Optional(Type.String()),
     })
   ),
-})
+});
 
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Object({ rentreeScolaire: Type.Optional(Type.Number()) }),
+    querystring: Type.Object({
+      rentreeScolaire: Type.Optional(Type.Number()),
+      codeRegion: Type.Optional(Type.String()),
+      codeAcademie: Type.Optional(Type.String()),
+      codeDepartement: Type.Optional(Type.String()),
+    }),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
         draft: StatsTransfoSchema,
         all: StatsTransfoSchema,
+        filters: Type.Object({
+          regions: Type.Array(OptionSchema),
+          academies: Type.Array(OptionSchema),
+          departements: Type.Array(OptionSchema),
+        }),
       }),
     },
   },

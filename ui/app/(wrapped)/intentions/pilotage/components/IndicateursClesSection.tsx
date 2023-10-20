@@ -4,6 +4,7 @@ import {
   Card,
   CardBody,
   CardHeader,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -21,18 +22,44 @@ const Loader = () => {
     <>
       <Box mt={12}>
         <Flex mt={8} height={"168px"}>
-          <SimpleGrid spacing={3} columns={[2]} width={"100%"}>
-            <Card height={40}>
-              <CardBody py="2" px="3">
-                <Skeleton opacity={0.3} height={"100%"} />
-              </CardBody>
-            </Card>
-            <Card height={40}>
-              <CardBody py="2" px="3">
-                <Skeleton opacity={0.3} height={"100%"} />
-              </CardBody>
-            </Card>
-          </SimpleGrid>
+          <Grid gap={5} templateColumns="repeat(3, 1fr)" width="100%">
+            <GridItem colSpan={2}>
+              <Flex flexDirection={"column"} gap={5}>
+                <Card height={"2xs"}>
+                  <CardBody py="2" px="3">
+                    <Skeleton opacity={0.3} height={"100%"} />
+                  </CardBody>
+                </Card>
+                <SimpleGrid spacing={5} columns={[2]}>
+                  <Card height={"2xs"}>
+                    <CardBody py="2" px="3">
+                      <Skeleton opacity={0.3} height={"100%"} />
+                    </CardBody>
+                  </Card>
+
+                  <Card height={"2xs"}>
+                    <CardBody py="2" px="3">
+                      <Skeleton opacity={0.3} height={"100%"} />
+                    </CardBody>
+                  </Card>
+                </SimpleGrid>
+              </Flex>
+            </GridItem>
+            <GridItem>
+              <Flex flexDirection={"column"} gap={5}>
+                <Card height={"2xs"}>
+                  <CardBody py="2" px="3">
+                    <Skeleton opacity={0.3} height={"100%"} />
+                  </CardBody>
+                </Card>
+                <Card height={"2xs"}>
+                  <CardBody py="2" px="3">
+                    <Skeleton opacity={0.3} height={"100%"} />
+                  </CardBody>
+                </Card>
+              </Flex>
+            </GridItem>
+          </Grid>
         </Flex>
       </Box>
     </>
@@ -183,8 +210,8 @@ const StatCard = ({
   icon?: string;
 }) => {
   return (
-    <Card className={className} minH="2xs">
-      <CardHeader>
+    <Card className={className} minH="2xs" p={0}>
+      <CardHeader p={4}>
         <Flex>
           {icon && <Img alt="" h="20px" src={`/icons/${icon}.svg`} me={2} />}
           <Text
@@ -228,6 +255,8 @@ export const IndicateursClesSection = ({
     draftScopedData = data?.draft[scope][scopeCode];
     allScopedData = data?.all[scope][scopeCode];
   }
+
+  // TODO REFACTO
   const scopedData = {
     tauxTransfoSubmitted: submittedScopedData?.tauxTransformation ?? 0,
     tauxTransfoDraft: draftScopedData?.tauxTransformation ?? 0,
@@ -274,7 +303,9 @@ export const IndicateursClesSection = ({
       (((allScopedData?.placesFermeesScolaire ?? 0) +
         (allScopedData?.placesFermeesApprentissage ?? 0)) /
         ((allScopedData?.placesOuvertesScolaire ?? 0) +
-          (allScopedData?.placesOuvertesApprentissage ?? 0))) *
+          (allScopedData?.placesOuvertesApprentissage ?? 0) +
+          ((allScopedData?.placesFermeesScolaire ?? 0) +
+            (allScopedData?.placesFermeesApprentissage ?? 0)))) *
         100
     ),
   };
@@ -323,9 +354,11 @@ export const IndicateursClesSection = ({
       (allNationalData?.placesFermeesApprentissage ?? 0),
     ratioFermetures: Math.round(
       (((allNationalData?.placesFermeesScolaire ?? 0) +
-        (allNationalData?.placesFermeesScolaire ?? 0)) /
+        (allNationalData?.placesFermeesApprentissage ?? 0)) /
         ((allNationalData?.placesOuvertesScolaire ?? 0) +
-          (allNationalData?.placesOuvertesApprentissage ?? 0))) *
+          (allNationalData?.placesOuvertesApprentissage ?? 0) +
+          ((allNationalData?.placesFermeesScolaire ?? 0) +
+            (allNationalData?.placesFermeesApprentissage ?? 0)))) *
         100
     ),
   };
@@ -340,17 +373,17 @@ export const IndicateursClesSection = ({
             <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
               INDICATEURS CLÉS DE LA TRANSFORMATIONS
             </Text>
-            <Grid gap={5} templateColumns="repeat(3, 1fr)" mt={5}>
+            <Grid gap={5} templateColumns={"repeat(3,1fr)"} mt={3}>
               <GridItem colSpan={2}>
-                <Flex flexDirection={"column"} gap={5}>
+                <Flex flexDirection={"column"} h="2xs" gap={5}>
                   <StatCard label="taux de transformation">
                     <Flex justifyContent={"space-between"}>
                       <Flex flexDirection={"column"} gap={2}>
-                        <Flex>
+                        <Flex mt={1}>
                           <Img alt="" src="/icons/green_dot.svg" me={2} />
                           <Text>DEMANDES VALIDÉES</Text>
                         </Flex>
-                        <Flex>
+                        <Flex mt={2}>
                           <Text
                             fontSize="40px"
                             fontWeight="800"
@@ -359,7 +392,7 @@ export const IndicateursClesSection = ({
                             {`${scopedData.tauxTransfoSubmitted} %`}
                           </Text>
                         </Flex>
-                        <Flex flexDirection="column">
+                        <Flex flexDirection="column" mt={1}>
                           <ProgressBar
                             percentage={
                               (scopedData.tauxTransfoSubmitted / 6) * 100
@@ -367,18 +400,19 @@ export const IndicateursClesSection = ({
                           />
                           <Text>
                             {`
-                            ${Math.round(
-                              (scopedData.tauxTransfoSubmitted / 6) * 100
-                            )}% de l'objectif`}
+                            ${(
+                              (scopedData.tauxTransfoSubmitted / 6) *
+                              100
+                            ).toFixed(2)}% de l'objectif`}
                           </Text>
                         </Flex>
                       </Flex>
                       <Flex flexDirection={"column"} gap={2}>
-                        <Flex>
+                        <Flex mt={1}>
                           <Img alt="" src="/icons/orange_dot.svg" me={2} />
                           <Text>PROJETS DE DEMANDE</Text>
                         </Flex>
-                        <Flex>
+                        <Flex mt={2}>
                           <Text
                             fontSize="40px"
                             fontWeight="800"
@@ -387,91 +421,23 @@ export const IndicateursClesSection = ({
                             {`${scopedData.tauxTransfoDraft} %`}
                           </Text>
                         </Flex>
-                        <Flex flexDirection="column" gap={2}>
+                        <Flex flexDirection="column" gap={2} mt={1}>
                           <ProgressBar
                             percentage={(scopedData.tauxTransfoDraft / 6) * 100}
                           />
                           <Text>
                             {`
-                            ${Math.round(
-                              (scopedData.tauxTransfoDraft / 6) * 100
+                            ${((scopedData.tauxTransfoDraft / 6) * 100).toFixed(
+                              2
                             )}% de l'objectif`}
                           </Text>
                         </Flex>
                       </Flex>
                     </Flex>
                   </StatCard>
-                  <SimpleGrid spacing={5} columns={[2]}>
-                    <StatCard label="places ouvertes" icon="places_ouvertes">
-                      <Flex flexDirection={"column"} gap={3}>
-                        <Flex>
-                          <Text
-                            fontSize="40px"
-                            fontWeight="800"
-                            color="bluefrance.113"
-                          >
-                            {scopedData.placesOuvertesAll}
-                          </Text>
-                        </Flex>
-                        <ProgressBar
-                          percentage={
-                            (scopedData.placesOuvertesSubmitted /
-                              scopedData.placesOuvertesAll) *
-                            100
-                          }
-                          leftLabel="Validées"
-                          rightLabel={scopedData.placesOuvertesSubmitted}
-                          colorScheme="green.submitted"
-                        />
-                        <ProgressBar
-                          percentage={
-                            (scopedData.placesOuvertesDraft /
-                              scopedData.placesOuvertesAll) *
-                            100
-                          }
-                          leftLabel="En projet"
-                          rightLabel={scopedData.placesOuvertesDraft}
-                          colorScheme="orange.draft"
-                        />
-                      </Flex>
-                    </StatCard>
-                    <StatCard label="places fermées" icon="places_fermees">
-                      <Flex flexDirection={"column"} gap={3}>
-                        <Flex>
-                          <Text
-                            fontSize="40px"
-                            fontWeight="800"
-                            color="bluefrance.113"
-                          >
-                            {scopedData.placesFermeesAll}
-                          </Text>
-                        </Flex>
-                        <ProgressBar
-                          percentage={
-                            (scopedData.placesFermeesSubmitted /
-                              scopedData.placesFermeesAll) *
-                            100
-                          }
-                          leftLabel="Validées"
-                          rightLabel={scopedData.placesFermeesSubmitted}
-                          colorScheme="green.submitted"
-                        />
-                        <ProgressBar
-                          percentage={
-                            (scopedData.placesFermeesDraft /
-                              scopedData.placesFermeesAll) *
-                            100
-                          }
-                          leftLabel="En projet"
-                          rightLabel={scopedData.placesFermeesDraft}
-                          colorScheme="orange.draft"
-                        />
-                      </Flex>
-                    </StatCard>
-                  </SimpleGrid>
                 </Flex>
               </GridItem>
-              <GridItem>
+              <GridItem h="100%">
                 <Flex flexDirection={"column"} gap={5}>
                   <Flex minH="2xs">
                     {scope && scopeCode && (
@@ -480,41 +446,116 @@ export const IndicateursClesSection = ({
                           fontSize="40px"
                           fontWeight="800"
                           color={
-                            nationalData.tauxTransfoAll -
-                              scopedData.tauxTransfoAll >=
+                            scopedData.tauxTransfoAll -
+                              nationalData.tauxTransfoAll >=
                             0
                               ? "green"
                               : "orange"
                           }
                         >
-                          {`${Math.round(
-                            nationalData.tauxTransfoAll -
-                              scopedData.tauxTransfoAll
-                          )} pts`}
+                          {`${(
+                            scopedData.tauxTransfoAll -
+                            nationalData.tauxTransfoAll
+                          ).toFixed(2)} pts`}
                         </Text>
                       </StatCard>
                     )}
                   </Flex>
-                  <StatCard label="ratio des fermetures">
-                    <Flex flexDirection={"column"}>
-                      <Flex
-                        fontSize="40px"
-                        fontWeight="800"
-                        color={
-                          scopedData.ratioFermetures < 30 ? "orange" : "green"
-                        }
-                      >
-                        {`${scopedData.ratioFermetures} %`}
+                </Flex>
+              </GridItem>
+              <GridItem colSpan={2}>
+                <SimpleGrid spacing={5} columns={[2]}>
+                  <StatCard label="places ouvertes" icon="places_ouvertes">
+                    <Flex flexDirection={"column"} gap={3}>
+                      <Flex>
+                        <Text
+                          fontSize="40px"
+                          fontWeight="800"
+                          color="bluefrance.113"
+                        >
+                          {scopedData.placesOuvertesAll}
+                        </Text>
                       </Flex>
-                      <Delta
-                        delta={
-                          scopedData.ratioFermetures -
-                          nationalData.ratioFermetures
+                      <ProgressBar
+                        percentage={
+                          (scopedData.placesOuvertesSubmitted /
+                            scopedData.placesOuvertesAll) *
+                          100
                         }
+                        leftLabel="Validées"
+                        rightLabel={scopedData.placesOuvertesSubmitted}
+                        colorScheme="green.submitted"
+                      />
+                      <ProgressBar
+                        percentage={
+                          (scopedData.placesOuvertesDraft /
+                            scopedData.placesOuvertesAll) *
+                          100
+                        }
+                        leftLabel="En projet"
+                        rightLabel={scopedData.placesOuvertesDraft}
+                        colorScheme="orange.draft"
                       />
                     </Flex>
                   </StatCard>
-                </Flex>
+                  <StatCard label="places fermées" icon="places_fermees">
+                    <Flex flexDirection={"column"} gap={3}>
+                      <Flex>
+                        <Text
+                          fontSize="40px"
+                          fontWeight="800"
+                          color="bluefrance.113"
+                        >
+                          {scopedData.placesFermeesAll}
+                        </Text>
+                      </Flex>
+                      <ProgressBar
+                        percentage={
+                          (scopedData.placesFermeesSubmitted /
+                            scopedData.placesFermeesAll) *
+                          100
+                        }
+                        leftLabel="Validées"
+                        rightLabel={scopedData.placesFermeesSubmitted}
+                        colorScheme="green.submitted"
+                      />
+                      <ProgressBar
+                        percentage={
+                          (scopedData.placesFermeesDraft /
+                            scopedData.placesFermeesAll) *
+                          100
+                        }
+                        leftLabel="En projet"
+                        rightLabel={scopedData.placesFermeesDraft}
+                        colorScheme="orange.draft"
+                      />
+                    </Flex>
+                  </StatCard>
+                </SimpleGrid>
+              </GridItem>
+              <GridItem>
+                <StatCard label="ratio des fermetures">
+                  <Flex flexDirection={"column"}>
+                    <Flex
+                      fontSize="40px"
+                      fontWeight="800"
+                      color={
+                        scopedData.ratioFermetures < 30
+                          ? "warning.525"
+                          : "green"
+                      }
+                    >
+                      {`${scopedData.ratioFermetures} %`}
+                    </Flex>
+                    <Divider w="100%" />
+                    <Delta
+                      delta={
+                        scopedData.ratioFermetures -
+                        nationalData.ratioFermetures
+                      }
+                    />
+                  </Flex>
+                </StatCard>
               </GridItem>
             </Grid>
           </Flex>
