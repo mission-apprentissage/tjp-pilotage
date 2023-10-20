@@ -8,10 +8,18 @@ export type PilotageTransformationStatsQuery = Parameters<
 
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
-  "rentreeScolaire"
+  "rentreeScolaire" | "codeRegion" | "codeAcademie" | "codeDepartement"
 >;
-export type PilotageTransformationStats = ApiType<typeof api.getTransformationStats>;
+export type PilotageTransformationStats = ApiType<
+  typeof api.getTransformationStats
+>;
 
 export type IndicateurType = "tauxTransformation";
 
-export type Scope = "regions" | "academies" | "departements";
+export type Scope = "regions" | "academies" | "departements" | undefined;
+
+export type TerritoiresFilters = {
+  codeRegion?: string;
+  codeAcademie?: string;
+  codeDepartement?: string;
+};

@@ -1,7 +1,10 @@
 import { inject } from "injecti";
 import _ from "lodash";
 
-import { getTransformationStatsQuery } from "./getTransformationStatsQuery.dep";
+import {
+  getFiltersQuery,
+  getTransformationStatsQuery,
+} from "./getTransformationStatsQuery.dep";
 
 const formatResult = (
   result: Awaited<ReturnType<typeof getTransformationStatsQuery>>
@@ -9,15 +12,20 @@ const formatResult = (
   return {
     national: {
       ...result[0]?.national,
-      tauxTransformation: Math.round((result[0]?.national.transformes / effectifNational || 0) * 10000) / 100,
+      tauxTransformation:
+        Math.round(
+          (result[0]?.national.transformes / effectifNational || 0) * 10000
+        ) / 100,
     },
     regions: _.chain(result)
       .groupBy((item) => item.region.codeRegion)
       .mapValues((items) => ({
         ...items[0].region,
         tauxTransformation:
-          Math.round((items[0].region.transforme /
-            effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000) / 100,
+          Math.round(
+            (items[0].region.transforme /
+              effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000
+          ) / 100,
       }))
       .value(),
     academies: _.chain(result)
@@ -25,8 +33,11 @@ const formatResult = (
       .mapValues((items) => ({
         ...items[0].academie,
         tauxTransformation:
-          Math.round((items[0].academie.transforme /
-            effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) * 10000) / 100,
+          Math.round(
+            (items[0].academie.transforme /
+              effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) *
+              10000
+          ) / 100,
       }))
       .value(),
     departements: _.chain(result)
@@ -34,15 +45,19 @@ const formatResult = (
       .mapValues((items) => ({
         ...items[0].departement,
         tauxTransformation:
-          Math.round((items[0].departement.transforme /
-            effectifsDepartements[items[0].departement.codeDepartement ?? ""] || 0) * 10000) / 100,
+          Math.round(
+            (items[0].departement.transforme /
+              effectifsDepartements[
+                items[0].departement.codeDepartement ?? ""
+              ] || 0) * 10000
+          ) / 100,
       }))
       .value(),
   };
 };
 
 export const [getTransformationStats] = inject(
-  { getTransformationStatsQuery },
+  { getTransformationStatsQuery, getFiltersQuery },
   (deps) =>
     async ({ rentreeScolaire = 2024 }: { rentreeScolaire?: number } = {}) => {
       const resultDraft = await deps
@@ -59,14 +74,17 @@ export const [getTransformationStats] = inject(
         .then(formatResult);
       const resultAll = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire
+          rentreeScolaire,
         })
         .then(formatResult);
+
+      const filters = await deps.getFiltersQuery().then();
 
       return {
         submitted: resultSubmitted,
         draft: resultDraft,
-        all: resultAll
+        all: resultAll,
+        filters: filters,
       };
     }
 );
@@ -119,7 +137,7 @@ const effectifsAcademie: Record<string, number> = {
   "32": 3751,
   "33": 3697,
   "43": 2851,
-  "70": 16550,
+  "05": 16550,
   "09": 29133,
   "08": 15823,
   "07": 7344,

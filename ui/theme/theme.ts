@@ -104,6 +104,16 @@ export const theme = extendBaseTheme(chakraTheme, {
     green: {
       submitted: "#C8F6D6",
     },
+    pilotage: {
+      red: "#FA9293",
+      orange: "#FFBBAB",
+      yellow: "#FEEBD0",
+      green: {
+        1: "#C8F6D6",
+        2: "#58B77D",
+        3: "#4B9F6C",
+      },
+    },
   },
   components: {
     Button: buttonTheme,

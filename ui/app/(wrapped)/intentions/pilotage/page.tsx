@@ -12,7 +12,9 @@ import { withAuth } from "../../../../utils/security/withAuth";
 import { CartoSection } from "./components/CartoSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
-import { Filters, IndicateurType } from "./types";
+import { VueOuverturesFermeturesSection } from "./components/VueOuverturesFermeturesSection";
+import { VueTauxTransformationSection } from "./components/VueTauxTransformationSection";
+import { Filters, IndicateurType, Scope, TerritoiresFilters } from "./types";
 
 export default withAuth(
   "restitution-intentions/lecture",
@@ -24,6 +26,11 @@ export default withAuth(
     } = qs.parse(queryParams.toString());
 
     const filters = searchParams.filters ?? {};
+    const [scope, setScope] = useState<Scope>();
+    const [scopeCode, setScopeCode] = useState<string | undefined>();
+    const [territoiresFilters, setTerritoiresFilters] = useState<
+      Partial<TerritoiresFilters>
+    >({});
 
     const setSearchParams = (params: { filters?: typeof filters }) => {
       router.replace(
@@ -38,6 +45,27 @@ export default withAuth(
       setSearchParams({
         filters: { ...filters, [type]: value },
       });
+    };
+
+    const handleTerritoiresFilters = (
+      type: keyof TerritoiresFilters,
+      value: TerritoiresFilters[keyof TerritoiresFilters]
+    ) => {
+      setTerritoiresFilters({ [type]: value });
+      switch (type) {
+        case "codeRegion":
+          setScope("regions");
+          break;
+        case "codeAcademie":
+          setScope("academies");
+          break;
+        case "codeDepartement":
+          setScope("departements");
+          break;
+        default:
+          break;
+      }
+      setScopeCode(value);
     };
 
     const { data, isLoading: isLoading } = useQuery({
@@ -72,13 +100,20 @@ export default withAuth(
           <FiltersSection
             activeFilters={filters}
             handleFilters={handleFilters}
+            activeTerritoiresFilters={territoiresFilters}
+            handleTerritoiresFilters={handleTerritoiresFilters}
             isLoading={isLoading}
             data={data}
           ></FiltersSection>
           <Box>
             <SimpleGrid spacing={8} columns={[2]} mt={8}>
               <Box>
-                <IndicateursClesSection data={data} isLoading={isLoading} />
+                <IndicateursClesSection
+                  data={data}
+                  isLoading={isLoading}
+                  scope={scope}
+                  scopeCode={scopeCode}
+                />
               </Box>
               <CartoSection
                 data={data}
@@ -86,17 +121,20 @@ export default withAuth(
                 indicateur={indicateur}
                 handleIndicateurChange={handleIndicateurChange}
                 indicateurOptions={indicateurOptions}
-              ></CartoSection>
+              />
             </SimpleGrid>
-            {/* <SimpleGrid spacing={5} columns={[1]} mt={14}>
-              <VueRegionAcademieSection
-                data={dataRegions}
-                order={order}
-                isLoading={isLoadingRegions}
-                handleOrder={handleOrder}
-                codeRegion={filters.codeRegion}
-              ></VueRegionAcademieSection>
-            </SimpleGrid> */}
+            <SimpleGrid spacing={5} columns={[2]} mt={14}>
+              <VueTauxTransformationSection
+                data={data}
+                isLoading={isLoading}
+                codeRegion={territoiresFilters.codeRegion}
+              />
+              <VueOuverturesFermeturesSection
+                data={data}
+                isLoading={isLoading}
+                codeRegion={territoiresFilters.codeRegion}
+              />
+            </SimpleGrid>
           </Box>
         </Container>
       </Container>

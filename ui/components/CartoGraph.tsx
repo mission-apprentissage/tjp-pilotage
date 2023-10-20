@@ -12,11 +12,13 @@ export const CartoGraph = ({
   scope = "regions",
   objectif = "haut",
   customPiecesSteps,
+  customColorPalette,
 }: {
   graphData?: { name?: string; value: number }[];
   scope?: "national" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
-  customPiecesSteps?: [number, number, number, number];
+  customPiecesSteps?: number[][];
+  customColorPalette?: string[];
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -80,78 +82,37 @@ export const CartoGraph = ({
     label: string;
     color: string;
   }[] => {
-    const colorRange =
-      objectif === "bas"
-        ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
-        : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
-
-    if (customPiecesSteps)
-      return [
-        {
-          min: 0,
-          max: customPiecesSteps[1],
-          label: `< ${customPiecesSteps[1]}%`,
-          color: colorRange[0],
-        },
-        {
-          min: customPiecesSteps[1],
-          max: customPiecesSteps[2],
-          label: `< ${customPiecesSteps[2]}%`,
-          color: colorRange[1],
-        },
-        {
-          min: customPiecesSteps[2],
-          max: customPiecesSteps[3],
-          label: `< ${customPiecesSteps[3]}%`,
-          color: colorRange[2],
-        },
-        {
-          min: customPiecesSteps[3],
-          max: 100,
-          label: `> ${customPiecesSteps[3]}%`,
-          color: colorRange[3],
-        },
-      ];
-
     const data = Array.from(
       graphData?.map((it) => it.value ?? -1) ?? []
     ).filter((value) => value != -1);
     const min = Math.min(...removeMin(data));
     const max = Math.max(...removeMax(data));
     const diff = max - min;
-    const steps = [
-      min,
-      Math.ceil(min + diff / 4),
-      Math.ceil(max - diff / 4),
-      max,
-    ];
 
-    return [
-      {
-        min: 0,
-        max: steps[1] - 1,
-        label: `< ${steps[1] - 1}%`,
-        color: colorRange[0],
-      },
-      {
-        min: steps[1],
-        max: steps[2] - 1,
-        label: `< ${steps[2] - 1}%`,
-        color: colorRange[1],
-      },
-      {
-        min: steps[2],
-        max: steps[3],
-        label: `< ${steps[3]}%`,
-        color: colorRange[2],
-      },
-      {
-        min: steps[3],
-        max: 100,
-        label: `> ${steps[3]}%`,
-        color: colorRange[3],
-      },
-    ];
+    const colorRange = customColorPalette
+      ? customColorPalette
+      : objectif === "bas"
+      ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
+      : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
+
+    const piecesStep = customPiecesSteps
+      ? customPiecesSteps
+      : [
+          [0, min],
+          [min, Math.ceil(max - diff / 4)],
+          [Math.ceil(max - diff / 4), max],
+          [max, 100],
+        ];
+
+    return piecesStep.map((step, index, steps) => {
+      const isLastStep = index + 1 === steps.length;
+      return {
+        min: step[0],
+        max: step[1],
+        label: isLastStep ? `> ${step[0]}%` : `< ${step[1]}%`,
+        color: colorRange[index],
+      };
+    });
   };
 
   const option = useMemo<EChartsOption>(
@@ -393,7 +354,6 @@ const ACADEMIES_LABEL_MAPPING = {
   "32": "Guadeloupe",
   "18": "Orléans-Tours",
   "23": "Nice",
-  "70": "Normandie",
   "28": "La Réunion",
   "61": "France métropolitaine",
   "10": "Lyon",
