@@ -13,20 +13,24 @@ export const PERMISSIONS = {
     "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
   },
   pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
   },
   expert_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "intentions/ecriture": { default: "region" },
     "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
   },
   gestionnaire_region: {
     "intentions/lecture": { draft: "user", default: "region" },
