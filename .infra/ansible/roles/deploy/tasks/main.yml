@@ -1,5 +1,31 @@
-- name: "Deploy branch {{ git_revision }}"
-  shell: "sudo /opt/pilotage/start-app.sh {{ git_revision }}"
+- name: "Clone du repository (branche : {{ git_revision }})"
+  git:
+    repo: "https://github.com/mission-apprentissage/tjp-pilotage.git"
+    version: "{{ git_revision }}"
+    force: yes
+    accept_hostkey: yes
+    dest: /opt/pilotage/repository
+
+- name: Prune docker images
+  become: yes
+  community.docker.docker_prune:
+    timeout: 300
+    images: true
+    images_filters:
+      until: 12h
+
+- name: Create and start services
+  become: yes
+  community.docker.docker_compose:
+    project_src: "{{ REPO_DIR }}"
+    build: true
+    restarted: true
+    files:
+      - "./docker-compose.yml"
+      - /opt/pilotage/.overrides/docker-compose.common.yml
+      - /opt/pilotage/.overrides/docker-compose.env.yml
+  vars:
+    ansible_command_timeout: 30
   register: output
 
 - debug:
