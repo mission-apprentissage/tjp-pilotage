@@ -154,28 +154,28 @@ export const Nav = () => {
                 Formulaire
               </NavMenuLink>
             </MenuItem>
+            {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink
+                  href="/intentions/pilotage"
+                  segment="pilotage-intentions"
+                >
+                  Pilotage
+                </NavMenuLink>
+              </MenuItem>
+            )}
             {hasPermission(
               auth?.user.role,
               "restitution-intentions/lecture"
             ) && (
-              <>
-                <MenuItem p="0">
-                  <NavMenuLink
-                    href="/intentions/pilotage"
-                    segment="pilotage-intentions"
-                  >
-                    Pilotage
-                  </NavMenuLink>
-                </MenuItem>
-                <MenuItem p="0">
-                  <NavMenuLink
-                    href="/intentions/restitution"
-                    segment="restitution-intentions"
-                  >
-                    Restitution
-                  </NavMenuLink>
-                </MenuItem>
-              </>
+              <MenuItem p="0">
+                <NavMenuLink
+                  href="/intentions/restitution"
+                  segment="restitution-intentions"
+                >
+                  Restitution
+                </NavMenuLink>
+              </MenuItem>
             )}
           </MenuList>
         </Menu>
