@@ -44,18 +44,13 @@ const StatsTransfoSchema = Type.Object({
 
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Object({
-      rentreeScolaire: Type.Optional(Type.Number()),
-      codeRegion: Type.Optional(Type.String()),
-      codeAcademie: Type.Optional(Type.String()),
-      codeDepartement: Type.Optional(Type.String()),
-    }),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
         draft: StatsTransfoSchema,
         all: StatsTransfoSchema,
         filters: Type.Object({
+          rentreesScolaires: Type.Array(OptionSchema),
           regions: Type.Array(OptionSchema),
           academies: Type.Array(OptionSchema),
           departements: Type.Array(OptionSchema),

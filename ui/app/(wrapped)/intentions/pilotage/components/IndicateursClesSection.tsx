@@ -31,13 +31,13 @@ const Loader = () => {
                   </CardBody>
                 </Card>
                 <SimpleGrid spacing={5} columns={[2]}>
-                  <Card height={"2xs"}>
+                  <Card height={"3xs"}>
                     <CardBody py="2" px="3">
                       <Skeleton opacity={0.3} height={"100%"} />
                     </CardBody>
                   </Card>
 
-                  <Card height={"2xs"}>
+                  <Card height={"3xs"}>
                     <CardBody py="2" px="3">
                       <Skeleton opacity={0.3} height={"100%"} />
                     </CardBody>
@@ -52,7 +52,7 @@ const Loader = () => {
                     <Skeleton opacity={0.3} height={"100%"} />
                   </CardBody>
                 </Card>
-                <Card height={"2xs"}>
+                <Card height={"3xs"}>
                   <CardBody py="2" px="3">
                     <Skeleton opacity={0.3} height={"100%"} />
                   </CardBody>
@@ -106,7 +106,12 @@ const Delta = ({ delta }: { delta: number | null }) => {
     if (delta < 0)
       deltaIcon = (
         <Flex>
-          <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
+          <TriangleDownIcon
+            mt={1}
+            me={2}
+            boxSize={4}
+            color={"orange.warning"}
+          />
           <Text>{`${delta} pts`}</Text>
         </Flex>
       );
@@ -119,7 +124,12 @@ const Delta = ({ delta }: { delta: number | null }) => {
     else
       deltaIcon = (
         <Flex>
-          <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
+          <TriangleUpIcon
+            mt={1}
+            me={2}
+            boxSize={4}
+            color={"pilotage.green.3"}
+          />
           <Text>{`+${delta} pts`}</Text>
         </Flex>
       );
@@ -154,15 +164,16 @@ const ProgressBar = ({
         w="100%"
         bgColor="gray.100"
         justifyContent={"space-between"}
-        borderRightRadius={"4px"}
+        borderRadius={"4px"}
       >
         <Flex
-          w={`${percentage}%`}
+          w={`${percentage < 100 ? percentage : 100}%`}
           bgColor={colorScheme}
           fontSize="10px"
           overflow={"visible"}
           height="15px"
-          borderLeftRadius={"4px"}
+          borderLeftRadius={"inherit"}
+          borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
           <Text
             textOverflow={"hidden"}
@@ -176,11 +187,13 @@ const ProgressBar = ({
           </Text>
         </Flex>
         <Flex
-          w={`${100 - percentage}%`}
+          w={`${100 - percentage > 0 ? 100 - percentage : 0}%`}
           fontSize="10px"
           overflow={"visible"}
           height="15px"
           justifyContent={"end"}
+          borderLeftRadius={percentage === 0 ? "inherit" : "none"}
+          borderRightRadius={percentage >= 100 ? "inherit" : "none"}
         >
           <Text
             textOverflow={"hidden"}
@@ -203,14 +216,16 @@ const StatCard = ({
   className,
   children,
   icon,
+  minH = "2xs",
 }: {
   label: string;
   className?: string;
   children: ReactNode;
   icon?: string;
+  minH?: string;
 }) => {
   return (
-    <Card className={className} minH="2xs" p={0}>
+    <Card className={className} minH={minH} p={0}>
       <CardHeader p={4}>
         <Flex>
           {icon && <Img alt="" h="20px" src={`/icons/${icon}.svg`} me={2} />}
@@ -235,132 +250,100 @@ export const IndicateursClesSection = ({
   data,
   isLoading,
   scope,
-  scopeCode,
 }: {
   data?: PilotageTransformationStats;
   isLoading: boolean;
-  scope?: Scope;
-  scopeCode?: string;
+  scope?: { type: Scope; value: string | undefined };
 }) => {
-  const submittedNationalData = data?.submitted?.national;
-  const draftNationalData = data?.draft?.national;
-  const allNationalData = data?.all?.national;
-
-  let submittedScopedData = data?.submitted?.national;
-  let draftScopedData = data?.draft?.national;
-  let allScopedData = data?.all?.national;
-
-  if (scope && scopeCode) {
-    submittedScopedData = data?.submitted[scope][scopeCode];
-    draftScopedData = data?.draft[scope][scopeCode];
-    allScopedData = data?.all[scope][scopeCode];
-  }
-
-  // TODO REFACTO
-  const scopedData = {
-    tauxTransfoSubmitted: submittedScopedData?.tauxTransformation ?? 0,
-    tauxTransfoDraft: draftScopedData?.tauxTransformation ?? 0,
-    tauxTransfoAll: allScopedData?.tauxTransformation ?? 0,
-    placesOuvertesScolaireSubmitted:
-      submittedScopedData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageSubmitted:
-      submittedScopedData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesSubmitted:
-      (submittedScopedData?.placesOuvertesScolaire ?? 0) +
-      (submittedScopedData?.placesOuvertesApprentissage ?? 0),
-    placesOuvertesScolaireDraft: draftScopedData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageDraft:
-      draftScopedData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesDraft:
-      (draftScopedData?.placesOuvertesScolaire ?? 0) +
-      (draftScopedData?.placesOuvertesApprentissage ?? 0),
-    placesOuvertesScolaireAll: allScopedData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageAll:
-      allScopedData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesAll:
-      (allScopedData?.placesOuvertesScolaire ?? 0) +
-      (allScopedData?.placesOuvertesApprentissage ?? 0),
-    placesFermeesScolaireSubmitted:
-      submittedScopedData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageSubmitted:
-      submittedScopedData?.placesFermeesApprentissage ?? 0,
-    placesFermeesSubmitted:
-      (submittedScopedData?.placesFermeesScolaire ?? 0) +
-      (submittedScopedData?.placesFermeesApprentissage ?? 0),
-    placesFermeesScolaireDraft: draftScopedData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageDraft:
-      draftScopedData?.placesFermeesApprentissage ?? 0,
-    placesFermeesDraft:
-      (draftScopedData?.placesFermeesScolaire ?? 0) +
-      (draftScopedData?.placesFermeesApprentissage ?? 0),
-    placesFermeesScolaireAll: allScopedData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageAll:
-      allScopedData?.placesFermeesApprentissage ?? 0,
-    placesFermeesAll:
-      (allScopedData?.placesFermeesScolaire ?? 0) +
-      (allScopedData?.placesFermeesApprentissage ?? 0),
-    ratioFermetures: Math.round(
-      (((allScopedData?.placesFermeesScolaire ?? 0) +
-        (allScopedData?.placesFermeesApprentissage ?? 0)) /
-        ((allScopedData?.placesOuvertesScolaire ?? 0) +
-          (allScopedData?.placesOuvertesApprentissage ?? 0) +
-          ((allScopedData?.placesFermeesScolaire ?? 0) +
-            (allScopedData?.placesFermeesApprentissage ?? 0)))) *
-        100
-    ),
+  const getScopedData = (
+    status: "submitted" | "draft" | "all",
+    indicateur:
+      | "tauxTransformation"
+      | "countDemande"
+      | "differenceCapaciteScolaire"
+      | "differenceCapaciteApprentissage"
+      | "placesOuvertesScolaire"
+      | "placesFermeesScolaire"
+      | "placesOuvertesApprentissage"
+      | "placesFermeesApprentissage"
+  ): number => {
+    if (data) {
+      if (scope && scope.type && scope.value && data[status][scope.type]) {
+        if (data[status][scope.type][scope.value])
+          return Number.parseFloat(
+            (data[status][scope.type][scope.value][indicateur] ?? 0).toFixed(2)
+          );
+        return 0;
+      }
+      return getNationalData(status, indicateur);
+    }
+    return 0;
   };
 
-  const nationalData = {
-    tauxTransfoSubmitted: submittedNationalData?.tauxTransformation ?? 0,
-    tauxTransfoDraft: draftNationalData?.tauxTransformation ?? 0,
-    tauxTransfoAll: allNationalData?.tauxTransformation ?? 0,
-    placesOuvertesScolaireSubmitted:
-      submittedNationalData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageSubmitted:
-      submittedNationalData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesSubmitted:
-      (submittedNationalData?.placesOuvertesScolaire ?? 0) +
-      (submittedNationalData?.placesOuvertesApprentissage ?? 0),
-    placesOuvertesScolaireDraft: draftNationalData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageDraft:
-      draftNationalData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesDraft:
-      (draftNationalData?.placesOuvertesScolaire ?? 0) +
-      (draftNationalData?.placesOuvertesApprentissage ?? 0),
-    placesOuvertesScolaireAll: allNationalData?.placesOuvertesScolaire ?? 0,
-    placesOuvertesApprentissageAll:
-      allNationalData?.placesOuvertesApprentissage ?? 0,
-    placesOuvertesAll:
-      (allNationalData?.placesOuvertesScolaire ?? 0) +
-      (allNationalData?.placesOuvertesApprentissage ?? 0),
-    placesFermeesScolaireSubmitted:
-      submittedNationalData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageSubmitted:
-      submittedNationalData?.placesFermeesApprentissage ?? 0,
-    placesFermeesSubmitted:
-      (submittedNationalData?.placesFermeesScolaire ?? 0) +
-      (submittedNationalData?.placesFermeesApprentissage ?? 0),
-    placesFermeesScolaireDraft: draftNationalData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageDraft:
-      draftNationalData?.placesFermeesApprentissage ?? 0,
-    placesFermeesDraft:
-      (draftNationalData?.placesFermeesScolaire ?? 0) +
-      (draftNationalData?.placesFermeesApprentissage ?? 0),
-    placesFermeesScolaireAll: allNationalData?.placesFermeesScolaire ?? 0,
-    placesFermeesApprentissageAll:
-      allNationalData?.placesFermeesApprentissage ?? 0,
-    placesFermeesAll:
-      (allNationalData?.placesFermeesScolaire ?? 0) +
-      (allNationalData?.placesFermeesApprentissage ?? 0),
-    ratioFermetures: Math.round(
-      (((allNationalData?.placesFermeesScolaire ?? 0) +
-        (allNationalData?.placesFermeesApprentissage ?? 0)) /
-        ((allNationalData?.placesOuvertesScolaire ?? 0) +
-          (allNationalData?.placesOuvertesApprentissage ?? 0) +
-          ((allNationalData?.placesFermeesScolaire ?? 0) +
-            (allNationalData?.placesFermeesApprentissage ?? 0)))) *
-        100
-    ),
+  const getNationalData = (
+    status: "submitted" | "draft" | "all",
+    indicateur:
+      | "tauxTransformation"
+      | "countDemande"
+      | "differenceCapaciteScolaire"
+      | "differenceCapaciteApprentissage"
+      | "placesOuvertesScolaire"
+      | "placesFermeesScolaire"
+      | "placesOuvertesApprentissage"
+      | "placesFermeesApprentissage"
+  ): number => {
+    if (data) {
+      return Number.parseFloat(
+        (data[status]["national"][indicateur] ?? 0).toFixed(2)
+      );
+    }
+    return 0;
+  };
+
+  const getScopedRatioFermetures = (
+    status: "submitted" | "draft" | "all"
+  ): number => {
+    if (data) {
+      if (
+        scope &&
+        scope.type &&
+        scope.value &&
+        data[status][scope.type] &&
+        data[status][scope.type][scope.value]
+      )
+        return Number.parseFloat(
+          (
+            ((getScopedData(status, "placesFermeesScolaire") +
+              getScopedData(status, "placesFermeesApprentissage")) /
+              (getScopedData(status, "placesFermeesScolaire") +
+                getScopedData(status, "placesFermeesApprentissage") +
+                getScopedData(status, "placesOuvertesScolaire") +
+                getScopedData(status, "placesOuvertesApprentissage"))) *
+            100
+          ).toFixed(2)
+        );
+      return getNationalRatioFermetures(status);
+    }
+    return 0;
+  };
+
+  const getNationalRatioFermetures = (
+    status: "submitted" | "draft" | "all"
+  ): number => {
+    if (data)
+      return Number.parseFloat(
+        (
+          ((getNationalData(status, "placesFermeesScolaire") +
+            getNationalData(status, "placesFermeesApprentissage")) /
+            (getNationalData(status, "placesFermeesScolaire") +
+              getNationalData(status, "placesFermeesApprentissage") +
+              getNationalData(status, "placesOuvertesScolaire") +
+              getNationalData(status, "placesOuvertesApprentissage"))) *
+          100
+        ).toFixed(2)
+      );
+
+    return 0;
   };
 
   return (
@@ -371,7 +354,7 @@ export const IndicateursClesSection = ({
         <Box>
           <Flex direction={"column"}>
             <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-              INDICATEURS CLÉS DE LA TRANSFORMATIONS
+              INDICATEURS CLÉS DE LA TRANSFORMATION
             </Text>
             <Grid gap={5} templateColumns={"repeat(3,1fr)"} mt={3}>
               <GridItem colSpan={2}>
@@ -389,19 +372,31 @@ export const IndicateursClesSection = ({
                             fontWeight="800"
                             color="bluefrance.113"
                           >
-                            {`${scopedData.tauxTransfoSubmitted} %`}
+                            {`${getScopedData(
+                              "submitted",
+                              "tauxTransformation"
+                            )} %`}
                           </Text>
                         </Flex>
                         <Flex flexDirection="column" mt={1}>
                           <ProgressBar
                             percentage={
-                              (scopedData.tauxTransfoSubmitted / 6) * 100
+                              (getScopedData(
+                                "submitted",
+                                "tauxTransformation"
+                              ) /
+                                6) *
+                              100
                             }
                           />
                           <Text>
                             {`
                             ${(
-                              (scopedData.tauxTransfoSubmitted / 6) *
+                              (getScopedData(
+                                "submitted",
+                                "tauxTransformation"
+                              ) /
+                                6) *
                               100
                             ).toFixed(2)}% de l'objectif`}
                           </Text>
@@ -418,18 +413,27 @@ export const IndicateursClesSection = ({
                             fontWeight="800"
                             color="bluefrance.113"
                           >
-                            {`${scopedData.tauxTransfoDraft} %`}
+                            {`${getScopedData(
+                              "draft",
+                              "tauxTransformation"
+                            )} %`}
                           </Text>
                         </Flex>
                         <Flex flexDirection="column" gap={2} mt={1}>
                           <ProgressBar
-                            percentage={(scopedData.tauxTransfoDraft / 6) * 100}
+                            percentage={
+                              (getScopedData("draft", "tauxTransformation") /
+                                6) *
+                              100
+                            }
                           />
                           <Text>
                             {`
-                            ${((scopedData.tauxTransfoDraft / 6) * 100).toFixed(
-                              2
-                            )}% de l'objectif`}
+                            ${(
+                              (getScopedData("draft", "tauxTransformation") /
+                                6) *
+                              100
+                            ).toFixed(2)}% de l'objectif`}
                           </Text>
                         </Flex>
                       </Flex>
@@ -440,22 +444,22 @@ export const IndicateursClesSection = ({
               <GridItem h="100%">
                 <Flex flexDirection={"column"} gap={5}>
                   <Flex minH="2xs">
-                    {scope && scopeCode && (
-                      <StatCard label="écart vs moyenne nationale">
+                    {scope && scope.type && scope.value && (
+                      <StatCard label="écart vs. moyenne nationale">
                         <Text
                           fontSize="40px"
                           fontWeight="800"
                           color={
-                            scopedData.tauxTransfoAll -
-                              nationalData.tauxTransfoAll >=
+                            getScopedData("all", "tauxTransformation") -
+                              getNationalData("all", "tauxTransformation") >=
                             0
-                              ? "green"
-                              : "orange"
+                              ? "pilotage.green.3"
+                              : "orange.warning"
                           }
                         >
                           {`${(
-                            scopedData.tauxTransfoAll -
-                            nationalData.tauxTransfoAll
+                            getScopedData("all", "tauxTransformation") -
+                            getNationalData("all", "tauxTransformation")
                           ).toFixed(2)} pts`}
                         </Text>
                       </StatCard>
@@ -465,7 +469,11 @@ export const IndicateursClesSection = ({
               </GridItem>
               <GridItem colSpan={2}>
                 <SimpleGrid spacing={5} columns={[2]}>
-                  <StatCard label="places ouvertes" icon="places_ouvertes">
+                  <StatCard
+                    label="places ouvertes"
+                    icon="places_ouvertes"
+                    minH="3xs"
+                  >
                     <Flex flexDirection={"column"} gap={3}>
                       <Flex>
                         <Text
@@ -473,32 +481,65 @@ export const IndicateursClesSection = ({
                           fontWeight="800"
                           color="bluefrance.113"
                         >
-                          {scopedData.placesOuvertesAll}
+                          {getScopedData("all", "placesOuvertesScolaire") +
+                            getScopedData("all", "placesOuvertesApprentissage")}
                         </Text>
                       </Flex>
                       <ProgressBar
                         percentage={
-                          (scopedData.placesOuvertesSubmitted /
-                            scopedData.placesOuvertesAll) *
+                          ((getScopedData(
+                            "submitted",
+                            "placesOuvertesScolaire"
+                          ) +
+                            getScopedData(
+                              "submitted",
+                              "placesOuvertesApprentissage"
+                            )) /
+                            (getScopedData("all", "placesOuvertesScolaire") +
+                              getScopedData(
+                                "all",
+                                "placesOuvertesApprentissage"
+                              ))) *
                           100
                         }
                         leftLabel="Validées"
-                        rightLabel={scopedData.placesOuvertesSubmitted}
+                        rightLabel={
+                          getScopedData("submitted", "placesOuvertesScolaire") +
+                          getScopedData(
+                            "submitted",
+                            "placesOuvertesApprentissage"
+                          )
+                        }
                         colorScheme="green.submitted"
                       />
                       <ProgressBar
                         percentage={
-                          (scopedData.placesOuvertesDraft /
-                            scopedData.placesOuvertesAll) *
+                          ((getScopedData("draft", "placesOuvertesScolaire") +
+                            getScopedData(
+                              "draft",
+                              "placesOuvertesApprentissage"
+                            )) /
+                            (getScopedData("all", "placesOuvertesScolaire") +
+                              getScopedData(
+                                "all",
+                                "placesOuvertesApprentissage"
+                              ))) *
                           100
                         }
                         leftLabel="En projet"
-                        rightLabel={scopedData.placesOuvertesDraft}
+                        rightLabel={
+                          getScopedData("draft", "placesOuvertesScolaire") +
+                          getScopedData("draft", "placesOuvertesApprentissage")
+                        }
                         colorScheme="orange.draft"
                       />
                     </Flex>
                   </StatCard>
-                  <StatCard label="places fermées" icon="places_fermees">
+                  <StatCard
+                    label="places fermées"
+                    icon="places_fermees"
+                    minH="3xs"
+                  >
                     <Flex flexDirection={"column"} gap={3}>
                       <Flex>
                         <Text
@@ -506,27 +547,56 @@ export const IndicateursClesSection = ({
                           fontWeight="800"
                           color="bluefrance.113"
                         >
-                          {scopedData.placesFermeesAll}
+                          {getScopedData("all", "placesFermeesScolaire") +
+                            getScopedData("all", "placesFermeesApprentissage")}
                         </Text>
                       </Flex>
                       <ProgressBar
                         percentage={
-                          (scopedData.placesFermeesSubmitted /
-                            scopedData.placesFermeesAll) *
+                          ((getScopedData(
+                            "submitted",
+                            "placesFermeesScolaire"
+                          ) +
+                            getScopedData(
+                              "submitted",
+                              "placesFermeesApprentissage"
+                            )) /
+                            (getScopedData("all", "placesFermeesScolaire") +
+                              getScopedData(
+                                "all",
+                                "placesFermeesApprentissage"
+                              ))) *
                           100
                         }
                         leftLabel="Validées"
-                        rightLabel={scopedData.placesFermeesSubmitted}
+                        rightLabel={
+                          getScopedData("submitted", "placesFermeesScolaire") +
+                          getScopedData(
+                            "submitted",
+                            "placesFermeesApprentissage"
+                          )
+                        }
                         colorScheme="green.submitted"
                       />
                       <ProgressBar
                         percentage={
-                          (scopedData.placesFermeesDraft /
-                            scopedData.placesFermeesAll) *
+                          ((getScopedData("draft", "placesFermeesScolaire") +
+                            getScopedData(
+                              "draft",
+                              "placesFermeesApprentissage"
+                            )) /
+                            (getScopedData("all", "placesFermeesScolaire") +
+                              getScopedData(
+                                "all",
+                                "placesFermeesApprentissage"
+                              ))) *
                           100
                         }
                         leftLabel="En projet"
-                        rightLabel={scopedData.placesFermeesDraft}
+                        rightLabel={
+                          getScopedData("draft", "placesFermeesScolaire") +
+                          getScopedData("draft", "placesFermeesApprentissage")
+                        }
                         colorScheme="orange.draft"
                       />
                     </Flex>
@@ -534,26 +604,33 @@ export const IndicateursClesSection = ({
                 </SimpleGrid>
               </GridItem>
               <GridItem>
-                <StatCard label="ratio des fermetures">
+                <StatCard label="ratio des fermetures" minH="3xs">
                   <Flex flexDirection={"column"}>
                     <Flex
                       fontSize="40px"
                       fontWeight="800"
+                      mb={1}
                       color={
-                        scopedData.ratioFermetures < 30
-                          ? "warning.525"
-                          : "green"
+                        getScopedRatioFermetures("all") >= 30
+                          ? "pilotage.green.3"
+                          : "orange.warning"
                       }
                     >
-                      {`${scopedData.ratioFermetures} %`}
+                      {`${getScopedRatioFermetures("all")} %`}
                     </Flex>
-                    <Divider w="100%" />
-                    <Delta
-                      delta={
-                        scopedData.ratioFermetures -
-                        nationalData.ratioFermetures
-                      }
-                    />
+                    {scope && scope.type && scope.value && (
+                      <>
+                        <Divider w="100%" mb={2} />
+                        <Delta
+                          delta={Number.parseFloat(
+                            (
+                              getScopedRatioFermetures("all") -
+                              getNationalRatioFermetures("all")
+                            ).toFixed(2)
+                          )}
+                        />
+                      </>
+                    )}
                   </Flex>
                 </StatCard>
               </GridItem>

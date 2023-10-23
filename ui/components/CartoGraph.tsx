@@ -343,6 +343,7 @@ const ACADEMIES_LABEL_MAPPING = {
   "01": "Paris",
   "27": "Corse",
   "05": "Caen",
+  "70": "Normandie",
   "00": "Etranger",
   "15": "Strasbourg",
   "40": "Nouvelle Calédonie",

@@ -100,6 +100,7 @@ export const theme = extendBaseTheme(chakraTheme, {
     },
     orange: {
       draft: "#FEEBCA",
+      warning: "#FF6F4C",
     },
     green: {
       submitted: "#C8F6D6",

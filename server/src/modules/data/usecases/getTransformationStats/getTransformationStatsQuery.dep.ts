@@ -90,10 +90,8 @@ const selectNbDemandes =
       .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 export const getTransformationStatsQuery = ({
-  rentreeScolaire,
   status,
 }: {
-  rentreeScolaire: number;
   status?: "draft" | "submitted";
 }) =>
   kdb
@@ -204,7 +202,6 @@ export const getTransformationStatsQuery = ({
         libelle: eb.ref("departement.libelle"),
       }).as("departement"),
     ])
-    .where("demande.rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
       if (!status) return q;
       return q.where("demande.status", "=", status);
@@ -231,6 +228,14 @@ export const getFiltersQuery = async () => {
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
+  const rentreesScolaires = await base
+    .select([
+      "demande.rentreeScolaire as value",
+      "demande.rentreeScolaire as label",
+    ])
+    .where("demande.rentreeScolaire", "is not", null)
+    .execute();
+
   const regions = await base
     .select(["region.codeRegion as value", "region.libelleRegion as label"])
     .where("region.codeRegion", "is not", null)
@@ -250,6 +255,7 @@ export const getFiltersQuery = async () => {
     .execute();
 
   return {
+    rentreesScolaires: rentreesScolaires.map(cleanNull),
     regions: regions.map(cleanNull),
     academies: academies.map(cleanNull),
     departements: departements.map(cleanNull),

@@ -31142,12 +31142,12 @@
         ]
       },
       "properties": {
-        "libelle_aca_majuscules": "CAEN",
-        "code_academie": "05",
+        "libelle_aca_majuscules": "NORMANDIE",
+        "code_academie": "70",
         "geo_point_2d": [49.1043075421, -0.306234601792],
-        "name": "Caen",
+        "name": "Normandie",
         "code_region_2016": "28",
-        "libelle_region_2016": "Caen"
+        "libelle_region_2016": "Normandie"
       }
     },
     {

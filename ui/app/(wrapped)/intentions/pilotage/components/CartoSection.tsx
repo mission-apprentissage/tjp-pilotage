@@ -30,11 +30,19 @@ export const CartoSection = ({
     isDefault: boolean;
   }[];
 }) => {
-  const [scope, setScope] = useState<Scope>("regions");
+  const [cartoScope, setCartoScope] = useState<Scope>("regions");
+  const customPalette = [
+    useToken("colors", "pilotage.red"),
+    useToken("colors", "pilotage.orange"),
+    useToken("colors", "pilotage.yellow"),
+    useToken("colors", "pilotage.green.1"),
+    useToken("colors", "pilotage.green.2"),
+    useToken("colors", "pilotage.green.3"),
+  ];
 
   const getGraphData = () => {
-    if (scope && data?.all[scope])
-      return Object.values(data?.all[scope]).map((territoire) => {
+    if (cartoScope && data?.all[cartoScope])
+      return Object.values(data?.all[cartoScope]).map((territoire) => {
         return {
           name: territoire.libelle,
           value: territoire[indicateur] ?? 0,
@@ -80,30 +88,30 @@ export const CartoSection = ({
                 mt="3"
                 ms="auto"
                 justifyContent={"end"}
-                onChange={(value) => setScope(value as Scope)}
+                onChange={(value) => setCartoScope(value as Scope)}
                 defaultChecked
-                defaultValue={scope}
+                defaultValue={cartoScope}
                 zIndex={"banner"}
               >
                 <Flex flexDirection={"column"}>
                   <Radio
                     value="regions"
-                    isChecked={scope === "regions"}
-                    defaultChecked={scope === "regions"}
+                    isChecked={cartoScope === "regions"}
+                    defaultChecked={cartoScope === "regions"}
                   >
                     Régions
                   </Radio>
                   <Radio
                     value="academies"
-                    isChecked={scope === "academies"}
-                    defaultChecked={scope === "academies"}
+                    isChecked={cartoScope === "academies"}
+                    defaultChecked={cartoScope === "academies"}
                   >
                     Académies
                   </Radio>
                   <Radio
                     value="departements"
-                    isChecked={scope === "departements"}
-                    defaultChecked={scope === "departements"}
+                    isChecked={cartoScope === "departements"}
+                    defaultChecked={cartoScope === "departements"}
                   >
                     Départements
                   </Radio>
@@ -114,7 +122,7 @@ export const CartoSection = ({
           <Box mt={"-20"}>
             <CartoGraph
               graphData={getGraphData()}
-              scope={scope}
+              scope={cartoScope}
               customPiecesSteps={[
                 [0, 1],
                 [1, 2],
@@ -123,14 +131,7 @@ export const CartoSection = ({
                 [5, 6],
                 [6, 100],
               ]}
-              customColorPalette={[
-                useToken("colors", "pilotage.red"),
-                useToken("colors", "pilotage.orange"),
-                useToken("colors", "pilotage.yellow"),
-                useToken("colors", "pilotage.green.1"),
-                useToken("colors", "pilotage.green.2"),
-                useToken("colors", "pilotage.green.3"),
-              ]}
+              customColorPalette={customPalette}
             />
           </Box>
         </Box>
