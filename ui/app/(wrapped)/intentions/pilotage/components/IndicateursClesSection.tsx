@@ -15,6 +15,7 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { PilotageTransformationStats, Scope } from "../types";
 
 const Loader = () => {
@@ -213,12 +214,14 @@ const ProgressBar = ({
 
 const StatCard = ({
   label,
+  tooltip,
   className,
   children,
   icon,
   minH = "2xs",
 }: {
   label: string;
+  tooltip?: ReactNode;
   className?: string;
   children: ReactNode;
   icon?: string;
@@ -237,6 +240,7 @@ const StatCard = ({
           >
             {label}
           </Text>
+          {tooltip}
         </Flex>
       </CardHeader>
       <CardBody py="2" px="3" minH="3">
@@ -359,7 +363,16 @@ export const IndicateursClesSection = ({
             <Grid gap={5} templateColumns={"repeat(3,1fr)"} mt={3}>
               <GridItem colSpan={scope && scope.type && scope.value ? 2 : 3}>
                 <Flex flexDirection={"column"} h="2xs" gap={5}>
-                  <StatCard label="taux de transformation">
+                  <StatCard
+                    label="taux de transformation"
+                    tooltip={
+                      <TooltipIcon
+                        ms={1}
+                        mt={1}
+                        label="Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation."
+                      />
+                    }
+                  >
                     <Flex justifyContent={"space-between"}>
                       <Flex
                         flexDirection={"column"}
