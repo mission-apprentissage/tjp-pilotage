@@ -1,6 +1,12 @@
 import { Type } from "@sinclair/typebox";
 
-const StatsTransfoSchema = Type.Object({
+const OptionSchema = Type.Object({
+  label: Type.String(),
+  value: Type.String(),
+});
+
+const ScopedStatsTransfoSchema = Type.Object({
+  libelle: Type.Optional(Type.String()),
   countDemande: Type.Number(),
   differenceCapaciteScolaire: Type.Number(),
   differenceCapaciteApprentissage: Type.Number(),
@@ -11,64 +17,46 @@ const StatsTransfoSchema = Type.Object({
   tauxTransformation: Type.Number(),
 });
 
+const StatsTransfoSchema = Type.Object({
+  national: Type.Object(ScopedStatsTransfoSchema.properties),
+  regions: Type.Record(
+    Type.String(),
+    Type.Object({
+      ...ScopedStatsTransfoSchema.properties,
+      codeRegion: Type.Optional(Type.String()),
+    })
+  ),
+  academies: Type.Record(
+    Type.String(),
+    Type.Object({
+      ...ScopedStatsTransfoSchema.properties,
+      codeAcademie: Type.Optional(Type.String()),
+    })
+  ),
+  departements: Type.Record(
+    Type.String(),
+    Type.Object({
+      ...ScopedStatsTransfoSchema.properties,
+      codeDepartement: Type.Optional(Type.String()),
+    })
+  ),
+});
+
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Object({ rentreeScolaire: Type.Optional(Type.Number()) }),
+    querystring: Type.Object({
+      rentreeScolaire: Type.Optional(Type.Number()),
+    }),
     response: {
       200: Type.Object({
-        submitted: Type.Object({
-          national: Type.Object(StatsTransfoSchema.properties),
-          regions: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleRegion: Type.Optional(Type.String()),
-              codeRegion: Type.Optional(Type.String()),
-            })
-          ),
-          academies: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleAcademie: Type.Optional(Type.String()),
-              codeAcademie: Type.Optional(Type.String()),
-            })
-          ),
-          departements: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleDepartement: Type.Optional(Type.String()),
-              codeDepartement: Type.Optional(Type.String()),
-            })
-          ),
-        }),
-        draft: Type.Object({
-          national: Type.Object(StatsTransfoSchema.properties),
-          regions: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleRegion: Type.Optional(Type.String()),
-              codeRegion: Type.Optional(Type.String()),
-            })
-          ),
-          academies: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleAcademie: Type.Optional(Type.String()),
-              codeAcademie: Type.Optional(Type.String()),
-            })
-          ),
-          departements: Type.Record(
-            Type.String(),
-            Type.Object({
-              ...StatsTransfoSchema.properties,
-              libelleDepartement: Type.Optional(Type.String()),
-              codeDepartement: Type.Optional(Type.String()),
-            })
-          ),
+        submitted: StatsTransfoSchema,
+        draft: StatsTransfoSchema,
+        all: StatsTransfoSchema,
+        filters: Type.Object({
+          rentreesScolaires: Type.Array(OptionSchema),
+          regions: Type.Array(OptionSchema),
+          academies: Type.Array(OptionSchema),
+          departements: Type.Array(OptionSchema),
         }),
       }),
     },

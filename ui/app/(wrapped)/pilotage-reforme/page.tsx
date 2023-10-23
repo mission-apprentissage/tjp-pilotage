@@ -10,11 +10,11 @@ import { useState } from "react";
 import { api } from "../../../api.client";
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../utils/security/withAuth";
-import { CartoSection } from "./stats/CartoSection";
-import { EvolutionIndicateursClesSection } from "./stats/EvolutionIndicateursClesSection";
-import { FiltersSection } from "./stats/FiltersSection";
-import { IndicateursClesSection } from "./stats/IndicateursClesSection";
-import { VueRegionAcademieSection } from "./stats/VueRegionAcademieSection";
+import { CartoSection } from "./components/CartoSection";
+import { EvolutionIndicateursClesSection } from "./components/EvolutionIndicateursClesSection";
+import { FiltersSection } from "./components/FiltersSection";
+import { IndicateursClesSection } from "./components/IndicateursClesSection";
+import { VueRegionAcademieSection } from "./components/VueRegionAcademieSection";
 import { Filters, FiltersRegions, IndicateurType, Order } from "./types";
 
 export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
@@ -114,7 +114,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   };
 
   return (
-    <Container maxWidth={"100%"} bg="#E2E7F8">
+    <Container maxWidth={"100%"} bg="blue.faded">
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
           activeFilters={filters}
