@@ -33,13 +33,12 @@ export const FiltersSection = ({
           <Flex justifyContent={"start"} gap={8} py={3}>
             <Box justifyContent={"start"}>
               <FormLabel>Rentrée scolaire</FormLabel>
-              <Select
-                width={"72"}
-                size="md"
-                variant="newInput"
-                placeholder="2024"
-                isDisabled={true}
-              ></Select>
+              <Select width={"72"} size="md" variant="newInput">
+                <option>2024</option>
+                <option disabled>2025</option>
+                <option disabled>2026</option>
+                <option disabled>2027</option>
+              </Select>
             </Box>
             <Box justifyContent={"start"}>
               <FormLabel>Région</FormLabel>

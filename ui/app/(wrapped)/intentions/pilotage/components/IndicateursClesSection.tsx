@@ -357,11 +357,18 @@ export const IndicateursClesSection = ({
               INDICATEURS CLÉS DE LA TRANSFORMATION
             </Text>
             <Grid gap={5} templateColumns={"repeat(3,1fr)"} mt={3}>
-              <GridItem colSpan={2}>
+              <GridItem colSpan={scope && scope.type && scope.value ? 2 : 3}>
                 <Flex flexDirection={"column"} h="2xs" gap={5}>
                   <StatCard label="taux de transformation">
                     <Flex justifyContent={"space-between"}>
-                      <Flex flexDirection={"column"} gap={2}>
+                      <Flex
+                        flexDirection={"column"}
+                        gap={2}
+                        width={
+                          scope && scope.type && scope.value ? "unset" : "50%"
+                        }
+                        px={scope && scope.type && scope.value ? 0 : 4}
+                      >
                         <Flex mt={1}>
                           <Img alt="" src="/icons/green_dot.svg" me={2} />
                           <Text>DEMANDES VALIDÉES</Text>
@@ -378,7 +385,7 @@ export const IndicateursClesSection = ({
                             )} %`}
                           </Text>
                         </Flex>
-                        <Flex flexDirection="column" mt={1}>
+                        <Flex flexDirection="column" gap={2} mt={1}>
                           <ProgressBar
                             percentage={
                               (getScopedData(
@@ -402,7 +409,14 @@ export const IndicateursClesSection = ({
                           </Text>
                         </Flex>
                       </Flex>
-                      <Flex flexDirection={"column"} gap={2}>
+                      <Flex
+                        flexDirection={"column"}
+                        gap={2}
+                        width={
+                          scope && scope.type && scope.value ? "unset" : "50%"
+                        }
+                        px={scope && scope.type && scope.value ? 0 : 4}
+                      >
                         <Flex mt={1}>
                           <Img alt="" src="/icons/orange_dot.svg" me={2} />
                           <Text>PROJETS DE DEMANDE</Text>
@@ -441,10 +455,10 @@ export const IndicateursClesSection = ({
                   </StatCard>
                 </Flex>
               </GridItem>
-              <GridItem h="100%">
-                <Flex flexDirection={"column"} gap={5}>
-                  <Flex minH="2xs">
-                    {scope && scope.type && scope.value && (
+              {scope && scope.type && scope.value && (
+                <GridItem h="100%">
+                  <Flex flexDirection={"column"} gap={5}>
+                    <Flex minH="2xs">
                       <StatCard label="écart vs. moyenne nationale">
                         <Text
                           fontSize="40px"
@@ -463,10 +477,10 @@ export const IndicateursClesSection = ({
                           ).toFixed(2)} pts`}
                         </Text>
                       </StatCard>
-                    )}
+                    </Flex>
                   </Flex>
-                </Flex>
-              </GridItem>
+                </GridItem>
+              )}
               <GridItem colSpan={2}>
                 <SimpleGrid spacing={5} columns={[2]}>
                   <StatCard

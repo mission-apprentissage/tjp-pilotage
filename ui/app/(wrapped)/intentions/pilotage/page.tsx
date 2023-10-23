@@ -37,8 +37,8 @@ export default withAuth(
     const { data, isLoading: isLoading } = useQuery({
       keepPreviousData: true,
       staleTime: 10000000,
-      queryKey: ["pilotageTransfo", scope],
-      queryFn: api.getTransformationStats({}).call,
+      queryKey: ["pilotageTransfo"],
+      queryFn: api.getTransformationStats({ query: {} }).call,
     });
 
     const indicateurOptions = [
