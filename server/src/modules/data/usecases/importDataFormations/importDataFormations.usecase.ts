@@ -77,7 +77,7 @@ export const [importDataFormations] = inject(
         rawDataRepository.findRawDatas({
           type: "nFormationDiplome_",
           offset,
-          limit: 100,
+          limit: 1000,
         }),
       async (nFormationDiplome, count) => {
         const cfd = nFormationDiplome.FORMATION_DIPLOME;
@@ -132,7 +132,8 @@ export const [importDataFormations] = inject(
         });
 
         console.log(`${count}: dataFormation added ${cfd}`);
-      }
+      },
+      { parallel: 20 }
     );
   }
 );
