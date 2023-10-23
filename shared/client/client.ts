@@ -5,6 +5,7 @@ import { createEtablissementClient } from "./etablissements/etablissements.clien
 import { createFormationClient } from "./formations/formation.client";
 import { createIntentionsClient } from "./intentions/intentions.client";
 import { createPilotageReformeClient } from "./pilotageReforme/pilotageReforme.client";
+import { createPilotageTransformationClient } from "./pilotageTransfo/pilotageTransfo.client";
 
 export const createClient = (instance: AxiosInstance) => ({
   ...createFormationClient(instance),
@@ -12,4 +13,5 @@ export const createClient = (instance: AxiosInstance) => ({
   ...createPilotageReformeClient(instance),
   ...createAuthClient(instance),
   ...createIntentionsClient(instance),
+  ...createPilotageTransformationClient(instance),
 });
