@@ -4,32 +4,32 @@ import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { createDataEtablissement } from "./createDataEtablissement.dep";
-import { findAcademie } from "./findAcademie.dep";
+import { findDepartement } from "./findDepartement.dep";
 
 export const [importDataEtablissements] = inject(
   {
     createDataEtablissement,
     findRawDatas: rawDataRepository.findRawDatas,
-    findAcademie,
+    findDepartement,
   },
   (deps) => async () => {
     await streamIt(
-      (offset) => deps.findRawDatas({ type: "lyceesACCE", offset }),
-      async (lyceeACCE) => {
+      (offset) =>
+        deps.findRawDatas({ type: "lyceesACCE", offset, limit: 10000 }),
+      async (lyceeACCE, count) => {
         const codeDepartement = formatCodeDepartement(
           lyceeACCE.departement_insee_3
         );
 
-        const academie = lyceeACCE.academie
-          ? await deps.findAcademie(lyceeACCE.academie)
-          : undefined;
+        const departement =
+          codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
         try {
           await deps.createDataEtablissement({
             uai: lyceeACCE.numero_uai,
             siret: lyceeACCE.numero_siren_siret_uai,
-            codeAcademie: lyceeACCE.academie,
-            codeRegion: academie?.codeRegion,
+            codeAcademie: departement?.codeAcademie,
+            codeRegion: departement?.codeRegion,
             codeDepartement,
             libelle: lyceeACCE.appellation_officielle,
             adresse: lyceeACCE.adresse_uai,
@@ -43,8 +43,11 @@ export const [importDataEtablissements] = inject(
           console.log(e);
         }
 
-        console.info(`dataEtablissement added ${lyceeACCE.numero_uai}`);
-      }
+        console.info(
+          `${count}: dataEtablissement added ${lyceeACCE.numero_uai}`
+        );
+      },
+      { parallel: 20 }
     );
   }
 );
