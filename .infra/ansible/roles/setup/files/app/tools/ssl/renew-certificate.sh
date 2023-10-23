@@ -5,12 +5,11 @@ readonly SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 readonly DNS_NAME=${1:?"Merci de préciser le nom de domaine"}; shift;
 
 start_reverse_proxy() {
-  bash /opt/pilotage/start-app.sh "$(git --git-dir=/opt/pilotage/repository/.git rev-parse --abbrev-ref HEAD)" \
-    --no-deps reverse_proxy
+  docker container start pilotage_reverse_proxy
 }
 
 stop_reverse_proxy() {
-  bash /opt/pilotage/stop-app.sh pilotage_reverse_proxy --no-deps reverse_proxy
+  docker container stop pilotage_reverse_proxy
 }
 
 renew_certificate() {

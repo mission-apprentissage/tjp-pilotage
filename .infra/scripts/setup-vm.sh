@@ -17,6 +17,7 @@ function setup() {
   ansible-galaxy install geerlingguy.docker
   ansible-galaxy collection install community.general
   ansible-galaxy collection install community.crypto
+  ansible-galaxy collection install community.docker
   ansible-galaxy collection install ansible.posix
   ansible-playbook \
     -i env.ini \

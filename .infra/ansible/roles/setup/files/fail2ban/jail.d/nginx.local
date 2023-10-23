@@ -3,13 +3,15 @@ enabled = true
 port = http,https
 filter = nginx-req-limit
 logpath = /opt/pilotage/data/nginx/error.log
-banaction = iptables-multiport[name=nginx-req-limit, port="http,https", protocol=tcp, chain=DOCKER-USER]
+banaction = iptables[type=multiport, port="http,https", protocol=tcp]
 #            slack-notify
+chain=DOCKER-USER
 
 [nginx-conn-limit]
 enabled = true
 port = http,https
 filter = nginx-conn-limit
 logpath = /opt/pilotage/data/nginx/error.log
-banaction = iptables-multiport[name=nginx-conn-limit, port="http,https", protocol=tcp, chain=DOCKER-USER]
+banaction = iptables[type=multiport, port="http,https", protocol=tcp]
 #            slack-notify
+chain=DOCKER-USER
