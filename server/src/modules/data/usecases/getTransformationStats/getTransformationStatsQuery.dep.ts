@@ -91,8 +91,10 @@ const selectNbDemandes =
 
 export const getTransformationStatsQuery = ({
   status,
+  rentreeScolaire = 2024,
 }: {
   status?: "draft" | "submitted";
+  rentreeScolaire: number;
 }) =>
   kdb
     .selectFrom("demande")
@@ -202,6 +204,7 @@ export const getTransformationStatsQuery = ({
         libelle: eb.ref("departement.libelle"),
       }).as("departement"),
     ])
+    .where("demande.rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
       if (!status) return q;
       return q.where("demande.status", "=", status);

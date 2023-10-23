@@ -21,17 +21,17 @@ const formatResult = (
       .groupBy((item) => item.region.codeRegion)
       .mapValues((items) => ({
         ...items[0].region,
-        countDemande: items[0].region.countDemande | 0,
-        placesOuvertesScolaire: items[0].region.placesOuvertesScolaire | 0,
+        countDemande: items[0].region.countDemande || 0,
+        placesOuvertesScolaire: items[0].region.placesOuvertesScolaire || 0,
         placesOuvertesApprentissage:
-          items[0].region.placesOuvertesApprentissage | 0,
-        placesFermeesScolaire: items[0].region.placesFermeesScolaire | 0,
+          items[0].region.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].region.placesFermeesScolaire || 0,
         placesFermeesApprentissage:
-          items[0].region.placesFermeesApprentissage | 0,
+          items[0].region.placesFermeesApprentissage || 0,
         differenceCapaciteScolaire:
-          items[0].region.differenceCapaciteScolaire | 0,
+          items[0].region.differenceCapaciteScolaire || 0,
         differenceCapaciteApprentissage:
-          items[0].region.differenceCapaciteApprentissage | 0,
+          items[0].region.differenceCapaciteApprentissage || 0,
         tauxTransformation:
           Math.round(
             (items[0].region.transforme /
@@ -43,17 +43,17 @@ const formatResult = (
       .groupBy((item) => item.academie.codeAcademie)
       .mapValues((items) => ({
         ...items[0].academie,
-        countDemande: items[0].academie.countDemande | 0,
-        placesOuvertesScolaire: items[0].academie.placesOuvertesScolaire | 0,
+        countDemande: items[0].academie.countDemande || 0,
+        placesOuvertesScolaire: items[0].academie.placesOuvertesScolaire || 0,
         placesOuvertesApprentissage:
-          items[0].academie.placesOuvertesApprentissage | 0,
-        placesFermeesScolaire: items[0].academie.placesFermeesScolaire | 0,
+          items[0].academie.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].academie.placesFermeesScolaire || 0,
         placesFermeesApprentissage:
-          items[0].academie.placesFermeesApprentissage | 0,
+          items[0].academie.placesFermeesApprentissage || 0,
         differenceCapaciteScolaire:
-          items[0].academie.differenceCapaciteScolaire | 0,
+          items[0].academie.differenceCapaciteScolaire || 0,
         differenceCapaciteApprentissage:
-          items[0].academie.differenceCapaciteApprentissage | 0,
+          items[0].academie.differenceCapaciteApprentissage || 0,
         tauxTransformation:
           Math.round(
             (items[0].academie.transforme /
@@ -66,17 +66,18 @@ const formatResult = (
       .groupBy((item) => item.departement.codeDepartement)
       .mapValues((items) => ({
         ...items[0].departement,
-        countDemande: items[0].departement.countDemande | 0,
-        placesOuvertesScolaire: items[0].departement.placesOuvertesScolaire | 0,
+        countDemande: items[0].departement.countDemande || 0,
+        placesOuvertesScolaire:
+          items[0].departement.placesOuvertesScolaire || 0,
         placesOuvertesApprentissage:
-          items[0].departement.placesOuvertesApprentissage | 0,
-        placesFermeesScolaire: items[0].departement.placesFermeesScolaire | 0,
+          items[0].departement.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].departement.placesFermeesScolaire || 0,
         placesFermeesApprentissage:
-          items[0].departement.placesFermeesApprentissage | 0,
+          items[0].departement.placesFermeesApprentissage || 0,
         differenceCapaciteScolaire:
-          items[0].departement.differenceCapaciteScolaire | 0,
+          items[0].departement.differenceCapaciteScolaire || 0,
         differenceCapaciteApprentissage:
-          items[0].departement.differenceCapaciteApprentissage | 0,
+          items[0].departement.differenceCapaciteApprentissage || 0,
         tauxTransformation:
           Math.round(
             (items[0].departement.transforme /
@@ -91,30 +92,35 @@ const formatResult = (
 
 export const [getTransformationStats] = inject(
   { getTransformationStatsQuery, getFiltersQuery },
-  (deps) => async () => {
-    const resultDraft = await deps
-      .getTransformationStatsQuery({
-        status: "draft",
-      })
-      .then(formatResult);
-    const resultSubmitted = await deps
-      .getTransformationStatsQuery({
-        status: "submitted",
-      })
-      .then(formatResult);
-    const resultAll = await deps
-      .getTransformationStatsQuery({})
-      .then(formatResult);
+  (deps) =>
+    async ({ rentreeScolaire = 2024 }: { rentreeScolaire?: number } = {}) => {
+      const resultDraft = await deps
+        .getTransformationStatsQuery({
+          rentreeScolaire,
+          status: "draft",
+        })
+        .then(formatResult);
+      const resultSubmitted = await deps
+        .getTransformationStatsQuery({
+          rentreeScolaire,
+          status: "submitted",
+        })
+        .then(formatResult);
+      const resultAll = await deps
+        .getTransformationStatsQuery({
+          rentreeScolaire,
+        })
+        .then(formatResult);
 
-    const filters = await deps.getFiltersQuery().then();
+      const filters = await deps.getFiltersQuery();
 
-    return {
-      submitted: resultSubmitted,
-      draft: resultDraft,
-      all: resultAll,
-      filters: filters,
-    };
-  }
+      return {
+        submitted: resultSubmitted,
+        draft: resultDraft,
+        all: resultAll,
+        filters: filters,
+      };
+    }
 );
 
 const effectifsRegions: Record<string, number> = {

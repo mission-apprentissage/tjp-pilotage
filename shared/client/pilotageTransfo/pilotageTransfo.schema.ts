@@ -44,6 +44,9 @@ const StatsTransfoSchema = Type.Object({
 
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
+    querystring: Type.Object({
+      rentreeScolaire: Type.Optional(Type.Number()),
+    }),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
