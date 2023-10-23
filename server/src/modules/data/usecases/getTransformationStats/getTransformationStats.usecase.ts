@@ -171,7 +171,6 @@ const effectifsAcademie: Record<string, number> = {
   "32": 3751,
   "33": 3697,
   "43": 2851,
-  "05": 16550,
   "09": 29133,
   "08": 15823,
   "07": 7344,
@@ -180,6 +179,7 @@ const effectifsAcademie: Record<string, number> = {
   "03": 6164,
   "02": 16244,
   "01": 13290,
+  "70": 16550,
 };
 
 const effectifsDepartements: Record<string, number> = {
