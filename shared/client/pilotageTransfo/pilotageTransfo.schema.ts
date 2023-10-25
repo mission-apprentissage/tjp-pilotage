@@ -70,7 +70,9 @@ export const pilotageTransformationSchemas = {
       codeRegion: Type.Optional(Type.String()),
       codeAcademie: Type.Optional(Type.String()),
       codeDepartement: Type.Optional(Type.String()),
-      type: Type.Union([Type.Literal("ouverture"), Type.Literal("fermeture")]),
+      type: Type.Optional(
+        Type.Union([Type.Literal("ouverture"), Type.Literal("fermeture")])
+      ),
       tauxPression: Type.Optional(
         Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
       ),
@@ -88,6 +90,9 @@ export const pilotageTransformationSchemas = {
           nbDemandes: Type.Number(),
           nbEtablissements: Type.Number(),
           differencePlaces: Type.Number(),
+          placesOuvertes: Type.Number(),
+          placesFermees: Type.Number(),
+          placesOuvertesOuFermees: Type.Number(),
           continuum: Type.Optional(
             Type.Object({
               cfd: Type.String(),

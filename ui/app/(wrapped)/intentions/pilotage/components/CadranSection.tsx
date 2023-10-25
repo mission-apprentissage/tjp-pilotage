@@ -18,8 +18,7 @@ import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useState } from "react";
-import { ApiType } from "shared";
+import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -69,8 +68,7 @@ export const CadranSection = ({
     },
   });
 
-  const [formation, setFormation] =
-    useState<ApiType<typeof api.getformationsTransformationStats>[0]>();
+  const [currentCfd, setFormationId] = useState<string | undefined>();
 
   const { data: formations } = useQuery({
     keepPreviousData: true,
@@ -85,8 +83,12 @@ export const CadranSection = ({
           scope?.type === "departements" ? scope.value : undefined,
       },
     }).call,
-    onSettled: () => setFormation(undefined),
   });
+
+  const formation = useMemo(
+    () => formations?.find((item) => item.cfd === currentCfd),
+    [currentCfd, formations]
+  );
 
   return (
     <>
@@ -108,23 +110,34 @@ export const CadranSection = ({
               {formation && (
                 <>
                   <InfoBlock
+                    textBg="white"
                     mb="4"
                     label="Formation concernée"
                     value={formation?.libelleDiplome}
                   />
                   <InfoBlock
+                    textBg="white"
                     mb="4"
                     label="Dispositif"
                     value={formation?.libelleDispositif}
                   />
                   <InfoBlock
+                    textBg="white"
                     mb="4"
-                    label="Places transformées"
+                    label={
+                      (
+                        {
+                          ouverture: "Places ouvertes",
+                          fermeture: "Places fermées",
+                        } as const
+                      )[filters.type] ?? "Places ouvertes ou fermées"
+                    }
                     value={formation?.differencePlaces}
                   />
 
                   <Box mb="4">
                     <InfoBlock
+                      textBg="white"
                       label="Établissements concernés"
                       value={formation?.nbEtablissements}
                     />
@@ -143,6 +156,7 @@ export const CadranSection = ({
                   </Box>
 
                   <InfoBlock
+                    textBg="white"
                     mb="4"
                     label="Taux de pression"
                     value={
@@ -175,7 +189,7 @@ export const CadranSection = ({
               <>
                 {formations && (
                   <Cadran
-                    onClick={setFormation}
+                    onClick={({ cfd }) => setFormationId(cfd)}
                     meanInsertion={50}
                     meanPoursuite={50}
                     data={formations?.map((item) => ({
@@ -206,11 +220,12 @@ export const CadranSection = ({
                   onChange={(v) =>
                     setFilters({
                       ...filters,
-                      type: v as "ouverture" | "fermeture",
+                      type: (v || undefined) as "ouverture" | "fermeture",
                     })
                   }
-                  value={filters.type}
+                  value={filters.type ?? ""}
                 >
+                  <Radio value="">Toutes</Radio>
                   <Radio value="ouverture">Places ouvertes</Radio>
                   <Radio value="fermeture">Places fermées</Radio>
                 </RadioGroup>
