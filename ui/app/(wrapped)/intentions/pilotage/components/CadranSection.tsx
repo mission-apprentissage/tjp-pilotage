@@ -14,12 +14,11 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Parser } from "@json2csv/plainjs";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { ApiType } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
