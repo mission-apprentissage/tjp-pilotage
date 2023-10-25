@@ -14,11 +14,12 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { Parser } from "@json2csv/plainjs";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ApiType } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -171,7 +172,7 @@ export const CadranSection = ({
                 </>
               )}
             </Box>
-            <AspectRatio flex={1} ratio={1} maxW="60vh">
+            <AspectRatio flex={1} ratio={1}>
               <>
                 {formations && (
                   <Cadran
