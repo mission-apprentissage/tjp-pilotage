@@ -8,15 +8,45 @@ import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { withTauxPressionReg } from "../../queries/utils/tauxPression";
 
-const selectDifferencePlaces = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`${eb.ref("capaciteScolaire")} 
-  + ${eb.ref("capaciteApprentissage")} 
-  - ${eb.ref("capaciteScolaireActuelle")} 
-  - ${eb.ref("capaciteApprentissageActuelle")}`;
+const selectDifferencePlaces = (
+  eb: ExpressionBuilder<DB, "demande">,
+  type?: "fermeture" | "ouverture"
+) => {
+  if (type === "ouverture")
+    return sql`GREATEST(${eb.ref("capaciteScolaire")} 
+  - ${eb.ref("capaciteScolaireActuelle")}, 0) 
++ GREATEST(${eb.ref("capaciteApprentissage")} 
+  - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
 
-const selectDifferencePlacesPartionned = (
-  eb: ExpressionBuilder<DB, "demande">
-) => eb.fn.sum(selectDifferencePlaces(eb));
+  if (type === "fermeture")
+    return sql`GREATEST(${eb.ref("capaciteScolaireActuelle")} 
+  - ${eb.ref("capaciteScolaire")}, 0) 
++ GREATEST(${eb.ref("capaciteApprentissageActuelle")} 
+  - ${eb.ref("capaciteApprentissage")}, 0)`;
+
+  return sql`ABS(${eb.ref("capaciteScolaire")} 
+  - ${eb.ref("capaciteScolaireActuelle")}) 
++ ABS(${eb.ref("capaciteApprentissage")} 
+  - ${eb.ref("capaciteApprentissageActuelle")})`;
+};
+
+const selectPlacesOuverteOuFermees = (eb: ExpressionBuilder<DB, "demande">) =>
+  sql`ABS(${eb.ref("capaciteScolaire")} 
+      - ${eb.ref("capaciteScolaireActuelle")}) 
+    + ABS(${eb.ref("capaciteApprentissage")} 
+      - ${eb.ref("capaciteApprentissageActuelle")})`;
+
+const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
+  sql`GREATEST(${eb.ref("capaciteScolaire")} 
+      - ${eb.ref("capaciteScolaireActuelle")}, 0) 
+    + GREATEST(${eb.ref("capaciteApprentissage")} 
+      - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
+
+const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
+  sql`GREATEST(${eb.ref("capaciteScolaireActuelle")} 
+      - ${eb.ref("capaciteScolaire")}, 0) 
+    + GREATEST(${eb.ref("capaciteApprentissageActuelle")} 
+      - ${eb.ref("capaciteApprentissage")}, 0)`;
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.id").distinct();
@@ -93,9 +123,12 @@ export const getformationsTransformationStatsQuery = ({
       }).as("tauxPression"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
-      sql<number>`ABS(${selectDifferencePlacesPartionned(eb)})`.as(
+      sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
         "differencePlaces"
       ),
+      eb.fn.sum(selectPlacesOuvertes(eb)).as("placesOuvertes"),
+      eb.fn.sum(selectPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum(selectPlacesOuverteOuFermees(eb)).as("placesOuvertesOuFermees"),
       hasContinuum({
         eb,
         millesimeSortie: "2020_2021",
@@ -105,11 +138,10 @@ export const getformationsTransformationStatsQuery = ({
       }).as("continuum"),
     ])
     .where("demande.rentreeScolaire", "=", rentreeScolaire)
-    .where(
-      (eb) => selectDifferencePlaces(eb),
-      ({ ouverture: ">", fermeture: "<" } as const)[type],
-      0
-    )
+    .where((wb) => {
+      if (!type) return wb.val(true);
+      return wb((eb) => selectDifferencePlaces(eb, type), ">", 0);
+    })
     .having(
       (eb) =>
         withInsertionReg({
