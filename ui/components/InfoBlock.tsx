@@ -17,7 +17,7 @@ export const InfoBlock = chakra(
         <Text mb="1" fontWeight="medium">
           {label}
         </Text>
-        <Text py="1" px="1.5" bg="#EEEEEE">
+        <Text py="1" px="1.5" bg="white">
           {value}
         </Text>
       </Box>
