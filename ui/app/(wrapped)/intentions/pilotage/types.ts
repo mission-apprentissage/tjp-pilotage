@@ -10,7 +10,7 @@ export type PilotageTransformationStats = ApiType<
   typeof api.getTransformationStats
 >;
 
-export type IndicateurType = "tauxTransformation";
+export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
 export type Scope = "regions" | "academies" | "departements" | undefined;
 

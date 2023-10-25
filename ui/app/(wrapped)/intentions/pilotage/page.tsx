@@ -2,10 +2,11 @@
 
 import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
 import { api } from "../../../../api.client";
 import { withAuth } from "../../../../utils/security/withAuth";
+import { CodeRegionFilterContext } from "../../../layoutClient";
 import { CartoSection } from "./components/CartoSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
@@ -16,6 +17,9 @@ import { IndicateurType, Scope, TerritoiresFilters } from "./types";
 export default withAuth(
   "restitution-intentions/lecture",
   function PilotageIntentions() {
+    const { codeRegionFilter, setCodeRegionFilter } = useContext(
+      CodeRegionFilterContext
+    );
     const [scope, setScope] = useState<{
       type: Scope;
       value: string | undefined;
@@ -32,6 +36,7 @@ export default withAuth(
     ) => {
       setTerritoiresFilters({ [type]: value });
       setScope({ type, value });
+      if (type === "regions" && value) setCodeRegionFilter(value);
     };
 
     const { data, isLoading: isLoading } = useQuery({
@@ -41,11 +46,22 @@ export default withAuth(
       queryFn: api.getTransformationStats({ query: {} }).call,
     });
 
+    useEffect(() => {
+      if (codeRegionFilter != "") {
+        handleTerritoiresFilters("regions", codeRegionFilter);
+      }
+    }, []);
+
     const indicateurOptions = [
       {
         label: "Taux de transformation",
         value: "tauxTransformation",
         isDefault: true,
+      },
+      {
+        label: "Ratio de fermetures",
+        value: "ratioFermeture",
+        isDefault: false,
       },
     ];
 
@@ -77,6 +93,7 @@ export default withAuth(
                 indicateur={indicateur}
                 handleIndicateurChange={handleIndicateurChange}
                 indicateurOptions={indicateurOptions}
+                handleTerritoiresFilters={handleTerritoiresFilters}
               />
             </SimpleGrid>
             <SimpleGrid spacing={5} columns={[2]} mt={14}>
