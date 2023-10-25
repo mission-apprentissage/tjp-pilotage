@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { Fragment } from "react";
 
+import { Legend } from "../../../../../components/Legend";
 import { PilotageTransformationStats } from "../types";
 
 const Loader = () => (
@@ -55,6 +56,24 @@ export const VueTauxTransformationSection = ({
   isLoading: boolean;
   codeRegion?: string;
 }) => {
+  const customPalette = [
+    useToken("colors", "pilotage.red"),
+    useToken("colors", "pilotage.orange"),
+    useToken("colors", "pilotage.yellow"),
+    useToken("colors", "pilotage.green.1"),
+    useToken("colors", "pilotage.green.2"),
+    useToken("colors", "pilotage.green.3"),
+  ];
+
+  const legendElements = [
+    { label: "< 1%", color: customPalette[0] },
+    { label: "< 2%", color: customPalette[1] },
+    { label: "< 4%", color: customPalette[2] },
+    { label: "< 5%", color: customPalette[3] },
+    { label: "< 6%", color: customPalette[4] },
+    { label: "> 6%", color: customPalette[5] },
+  ];
+
   return (
     <Flex
       flexDirection={"column"}
@@ -113,18 +132,12 @@ export const VueTauxTransformationSection = ({
                       : "";
 
                   const getTdBgColor = (indicateur: number) => {
-                    if (indicateur <= 1)
-                      return useToken("colors", "pilotage.red !important");
-                    if (indicateur <= 2)
-                      return useToken("colors", "pilotage.orange !important");
-                    if (indicateur <= 4)
-                      return useToken("colors", "pilotage.yellow !important");
-                    if (indicateur <= 5)
-                      return useToken("colors", "pilotage.green.1 !important");
-                    if (indicateur <= 6)
-                      return useToken("colors", "pilotage.green.2 !important");
-                    if (indicateur > 6)
-                      return useToken("colors", "pilotage.green.3 !important");
+                    if (indicateur <= 1) return customPalette[0];
+                    if (indicateur <= 2) return customPalette[1];
+                    if (indicateur <= 4) return customPalette[2];
+                    if (indicateur <= 5) return customPalette[3];
+                    if (indicateur <= 6) return customPalette[4];
+                    if (indicateur > 6) return customPalette[5];
                   };
 
                   const trColor =
@@ -162,6 +175,7 @@ export const VueTauxTransformationSection = ({
               </Fragment>
             </Tbody>
           </Table>
+          <Legend elements={legendElements} />
         </TableContainer>
       )}
     </Flex>

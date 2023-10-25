@@ -11,7 +11,12 @@ import {
 import { useState } from "react";
 
 import { CartoGraph } from "../../../../../components/CartoGraph";
-import { IndicateurType, PilotageTransformationStats, Scope } from "../types";
+import {
+  IndicateurType,
+  PilotageTransformationStats,
+  Scope,
+  TerritoiresFilters,
+} from "../types";
 
 export const CartoSection = ({
   data,
@@ -19,6 +24,7 @@ export const CartoSection = ({
   indicateur,
   handleIndicateurChange,
   indicateurOptions,
+  handleTerritoiresFilters,
 }: {
   data?: PilotageTransformationStats;
   isLoading: boolean;
@@ -29,6 +35,10 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
+  handleTerritoiresFilters: (
+    type: keyof TerritoiresFilters,
+    value: TerritoiresFilters[keyof TerritoiresFilters]
+  ) => void;
 }) => {
   const [cartoScope, setCartoScope] = useState<Scope>("regions");
   const customPalette = [
@@ -40,15 +50,90 @@ export const CartoSection = ({
     useToken("colors", "pilotage.green.3"),
   ];
 
+  const getCustomPalette = () => {
+    switch (indicateur) {
+      case "tauxTransformation":
+        return customPalette;
+      case "ratioFermeture":
+        return [
+          customPalette[0],
+          customPalette[1],
+          customPalette[2],
+          customPalette[4],
+        ];
+    }
+  };
+
+  const getCustomPieces = () => {
+    switch (indicateur) {
+      case "tauxTransformation":
+        return [
+          [0, 1],
+          [1, 2],
+          [2, 4],
+          [4, 5],
+          [5, 6],
+          [6, 100],
+        ];
+      case "ratioFermeture":
+        return [
+          [0, 15],
+          [15, 25],
+          [25, 30],
+          [30, 100],
+        ];
+    }
+  };
+
+  const getNombrePlace = (
+    type: "ouverture" | "fermeture",
+    territoire:
+      | PilotageTransformationStats["all"]["regions"][string]
+      | PilotageTransformationStats["all"]["academies"][string]
+      | PilotageTransformationStats["all"]["departements"][string]
+  ): number => {
+    return type === "ouverture"
+      ? territoire.placesOuvertesScolaire +
+          territoire.placesOuvertesApprentissage
+      : territoire.placesFermeesScolaire +
+          territoire.placesFermeesApprentissage;
+  };
+
+  const getRatioFermeture = (
+    territoire:
+      | PilotageTransformationStats["all"]["regions"][string]
+      | PilotageTransformationStats["all"]["academies"][string]
+      | PilotageTransformationStats["all"]["departements"][string]
+  ): string => {
+    return (
+      (getNombrePlace("fermeture", territoire) /
+        (getNombrePlace("ouverture", territoire) +
+          getNombrePlace("fermeture", territoire))) *
+      100
+    ).toFixed(2);
+  };
+
   const getGraphData = () => {
     if (cartoScope && data?.all[cartoScope])
       return Object.values(data?.all[cartoScope]).map((territoire) => {
-        return {
-          name: territoire.libelle,
-          value: territoire[indicateur] ?? 0,
-        };
+        switch (indicateur) {
+          case "tauxTransformation":
+            return {
+              name: territoire.libelle,
+              value: territoire["tauxTransformation"] ?? 0,
+            };
+          case "ratioFermeture":
+            return {
+              name: territoire.libelle,
+              value: getRatioFermeture(territoire),
+            };
+        }
       });
     return [];
+  };
+
+  const handleClickOnTerritoire = (code: string | undefined) => {
+    handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
   };
 
   return (
@@ -123,15 +208,9 @@ export const CartoSection = ({
             <CartoGraph
               graphData={getGraphData()}
               scope={cartoScope}
-              customPiecesSteps={[
-                [0, 1],
-                [1, 2],
-                [2, 4],
-                [4, 5],
-                [5, 6],
-                [6, 100],
-              ]}
-              customColorPalette={customPalette}
+              customPiecesSteps={getCustomPieces()}
+              customColorPalette={getCustomPalette()}
+              handleClick={handleClickOnTerritoire}
             />
           </Box>
         </Box>
