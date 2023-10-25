@@ -151,37 +151,35 @@ export const tauxPressionFormationRegional = ({
     ]);
 };
 
-export const withTauxPressionReg = ({
+type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
+
+export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, never>>({
   eb,
-  codeRegion,
+  cfdRef,
+  dispositifIdRef,
+  codeRegionRef,
 }: {
-  eb: ExpressionBuilder<
-    DB,
-    "formationEtablissement" | "etablissement" | "indicateurEntree"
-  >;
+  eb: EB;
   codeRegion?: string | "ref";
+  cfdRef: EbRef<EB>;
+  dispositifIdRef: EbRef<EB>;
+  codeRegionRef: EbRef<EB>;
 }) => {
   return eb
     .selectFrom("formationEtablissement as subFE")
     .innerJoin("indicateurEntree as subIE", (join) =>
       join
         .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-        .onRef("subIE.rentreeScolaire", "=", "indicateurEntree.rentreeScolaire")
+        .on("subIE.rentreeScolaire", "=", "2022")
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
-    .whereRef("subFE.cfd", "=", "formationEtablissement.cfd")
-    .whereRef("subFE.dispositifId", "=", "formationEtablissement.dispositifId")
-    .$call((q) => {
-      if (!codeRegion) return q;
-      if (codeRegion === "ref") {
-        return q.whereRef(
-          "subEtab.codeRegion",
-          "=",
-          "etablissement.codeRegion"
-        );
-      }
-      return q.where("subEtab.codeRegion", "=", codeRegion);
-    })
+    .whereRef("subFE.cfd", "=", cfdRef)
+    .whereRef("subFE.dispositifId", "=", dispositifIdRef)
+    .whereRef(
+      "subEtab.codeRegion",
+      "=",
+      sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
+    )
     .select([selectTauxPressionAgg("subIE").as("s")])
     .groupBy(["cfd", "dispositifId"]);
 };
