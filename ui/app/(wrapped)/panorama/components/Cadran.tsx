@@ -37,6 +37,7 @@ export const Cadran = function <
   TooltipContent,
   InfoTootipContent,
   effectifSizes,
+  onClick,
 }: {
   className?: string;
   data: F[];
@@ -45,6 +46,7 @@ export const Cadran = function <
   TooltipContent?: FC<{ formation: F }>;
   InfoTootipContent?: FC;
   effectifSizes: { max: number; size: number }[];
+  onClick?: (_: F) => void;
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -220,7 +222,7 @@ export const Cadran = function <
       const [x, y] = chartRef.current?.convertToPixel("grid", event.data) ?? [
         0, 0,
       ];
-
+      onClick?.(data[event.dataIndex]);
       setDisplayedDetail({
         x,
         y,
@@ -256,7 +258,7 @@ export const Cadran = function <
         </InfoTooltip>
       )}
 
-      {displayedDetail && (
+      {displayedDetail && TooltipContent && (
         <FormationTooltipWrapper
           ref={popperInstance.popperRef}
           clickOutside={() => setDisplayedDetail(undefined)}
