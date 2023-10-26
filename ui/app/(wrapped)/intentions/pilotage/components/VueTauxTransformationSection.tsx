@@ -158,7 +158,9 @@ export const VueTauxTransformationSection = ({
                         </Td>
                         <Td isNumeric>
                           {region.placesOuvertesScolaire +
-                            region.placesOuvertesApprentissage}
+                            region.placesOuvertesApprentissage +
+                            region.placesFermeesScolaire +
+                            region.placesFermeesApprentissage}
                         </Td>
                         <Td
                           isNumeric
