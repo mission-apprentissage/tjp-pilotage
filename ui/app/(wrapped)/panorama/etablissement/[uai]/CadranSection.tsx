@@ -86,6 +86,7 @@ export const CadranSection = ({
                 TooltipContent={FormationTooltipContent}
                 InfoTootipContent={InfoTooltipContent}
                 data={filteredFormations}
+                itemId={(item) => item.cfd + item.dispositifId}
                 effectifSizes={effectifSizes}
               />
             )}

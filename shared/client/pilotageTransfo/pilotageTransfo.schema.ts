@@ -78,29 +78,35 @@ export const pilotageTransformationSchemas = {
       ),
     }),
     response: {
-      200: Type.Array(
-        Type.Object({
-          libelleDiplome: Type.Optional(Type.String()),
-          libelleDispositif: Type.Optional(Type.String()),
+      200: Type.Object({
+        stats: Type.Object({
           tauxInsertion: Type.Number(),
           tauxPoursuite: Type.Number(),
-          tauxPression: Type.Optional(Type.Number()),
-          dispositifId: Type.Optional(Type.String()),
-          cfd: Type.String(),
-          nbDemandes: Type.Number(),
-          nbEtablissements: Type.Number(),
-          differencePlaces: Type.Number(),
-          placesOuvertes: Type.Number(),
-          placesFermees: Type.Number(),
-          placesOuvertesOuFermees: Type.Number(),
-          continuum: Type.Optional(
-            Type.Object({
-              cfd: Type.String(),
-              libelle: Type.Optional(Type.String()),
-            })
-          ),
-        })
-      ),
+        }),
+        formations: Type.Array(
+          Type.Object({
+            libelleDiplome: Type.Optional(Type.String()),
+            libelleDispositif: Type.Optional(Type.String()),
+            tauxInsertion: Type.Number(),
+            tauxPoursuite: Type.Number(),
+            tauxPression: Type.Optional(Type.Number()),
+            dispositifId: Type.Optional(Type.String()),
+            cfd: Type.String(),
+            nbDemandes: Type.Number(),
+            nbEtablissements: Type.Number(),
+            differencePlaces: Type.Number(),
+            placesOuvertes: Type.Number(),
+            placesFermees: Type.Number(),
+            placesOuvertesOuFermees: Type.Number(),
+            continuum: Type.Optional(
+              Type.Object({
+                cfd: Type.String(),
+                libelle: Type.Optional(Type.String()),
+              })
+            ),
+          })
+        ),
+      }),
     },
   },
 } as const;
