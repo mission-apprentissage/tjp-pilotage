@@ -103,18 +103,22 @@ export const CadranSection = ({
                     label="Dispositif"
                     value={formation?.libelleDispositif}
                   />
-                  <InfoBlock
-                    textBg="white"
-                    mb="4"
-                    label={"Places ouvertes"}
-                    value={formation?.placesOuvertes ?? 0}
-                  />
-                  <InfoBlock
-                    textBg="white"
-                    mb="4"
-                    label={"Places fermées"}
-                    value={formation?.placesFermees ?? 0}
-                  />
+                  {(!filters.type || filters.type === "ouverture") && (
+                    <InfoBlock
+                      textBg="white"
+                      mb="4"
+                      label={"Places ouvertes"}
+                      value={formation?.placesOuvertes ?? 0}
+                    />
+                  )}
+                  {(!filters.type || filters.type === "fermeture") && (
+                    <InfoBlock
+                      textBg="white"
+                      mb="4"
+                      label={"Places fermées"}
+                      value={formation?.placesFermees ?? 0}
+                    />
+                  )}
                   <Box mb="4">
                     <InfoBlock
                       textBg="white"
