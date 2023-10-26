@@ -23,6 +23,14 @@ import {
   useState,
 } from "react";
 
+const cadranLabelStyle = {
+  show: true,
+  distance: 14,
+  fontSize: 14,
+  color: "rgba(0,0,0,0.3)",
+  fontWeight: "bold",
+} as const;
+
 export const Cadran = function <
   F extends {
     effectif?: number;
@@ -37,6 +45,9 @@ export const Cadran = function <
   TooltipContent,
   InfoTootipContent,
   effectifSizes,
+  onClick,
+  itemColor = "rgba(58, 85, 209, 0.6)",
+  itemId,
 }: {
   className?: string;
   data: F[];
@@ -45,6 +56,9 @@ export const Cadran = function <
   TooltipContent?: FC<{ formation: F }>;
   InfoTootipContent?: FC;
   effectifSizes: { max: number; size: number }[];
+  onClick?: (_: F) => void;
+  itemColor?: string | ((_: F) => string | undefined);
+  itemId: (_: F) => string;
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -82,14 +96,62 @@ export const Cadran = function <
     });
   }, [containerRef.current, popperInstance, displayedDetail]);
 
-  const series = data.map((formation) => [
-    formation.tauxPoursuiteEtudes,
-    formation.tauxInsertion6mois,
-  ]);
+  const prev = useRef<Record<string, number>>();
+  const orderedData = useMemo(() => {
+    const temp = data.reduce((acc, cur, i) => {
+      const prevIndex = prev.current?.[itemId(cur)];
+      if (prevIndex) {
+        acc[prevIndex] = cur;
+        return acc;
+      }
+      acc[1000 + i] = cur;
+      return acc;
+    }, [] as F[]);
+
+    prev.current = temp.reduce(
+      (acc, cur, i) => ({ ...acc, [itemId(cur)]: i }),
+      {}
+    );
+    return temp;
+  }, [JSON.stringify(data)]);
+
+  const series = useMemo(() => {
+    return orderedData.map((formation) => [
+      formation.tauxPoursuiteEtudes,
+      formation.tauxInsertion6mois,
+    ]);
+  }, [orderedData]);
+
+  const repartitionCadrans = useMemo(() => {
+    if (!meanInsertion || !meanPoursuite) return;
+    return {
+      q1: orderedData.filter(
+        (item) =>
+          item.tauxInsertion6mois >= meanInsertion &&
+          item.tauxPoursuiteEtudes < meanPoursuite
+      ).length,
+      q2: orderedData.filter(
+        (item) =>
+          item.tauxInsertion6mois >= meanInsertion &&
+          item.tauxPoursuiteEtudes > meanPoursuite
+      ).length,
+      q3: orderedData.filter(
+        (item) =>
+          item.tauxInsertion6mois >= meanInsertion &&
+          item.tauxPoursuiteEtudes < meanPoursuite
+      ).length,
+      q4: orderedData.filter(
+        (item) =>
+          item.tauxInsertion6mois < meanInsertion &&
+          item.tauxPoursuiteEtudes < meanPoursuite
+      ).length,
+    };
+  }, [orderedData, meanInsertion, meanPoursuite]);
 
   const option = useMemo<EChartsOption>(
     () => ({
       grid: { top: 10, right: 15, bottom: 50, left: 65 },
+
       xAxis: [
         {
           type: "value",
@@ -143,13 +205,21 @@ export const Cadran = function <
       series: [
         {
           itemStyle: {
-            color: "rgba(58, 85, 209, 0.6)",
+            color: ({ dataIndex }) => {
+              const formation = orderedData[dataIndex];
+              if (!formation) return "";
+              if (typeof itemColor === "string") return itemColor;
+              return itemColor(formation) ?? "rgba(58, 85, 209, 0.6)";
+            },
           },
-          //@ts-ignore
+          animation: true,
+          animationDuration: 200,
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           data: series as any,
           type: "scatter",
           symbolSize: (_, { dataIndex }) => {
-            const formation = data[dataIndex];
+            const formation = orderedData[dataIndex];
+            if (!formation) return 0;
             const size = effectifSizes.find(
               ({ max }) => formation.effectif && formation.effectif < max
             )?.size;
@@ -176,13 +246,26 @@ export const Cadran = function <
                   animation: false,
                   data: [
                     [
-                      { coord: [0, 0], itemStyle: { color: "#ffe2e1" } },
+                      {
+                        coord: [0, 0],
+                        itemStyle: { color: "#ffe2e1" },
+                        name: `Q4 - ${repartitionCadrans?.q4} formations`,
+                        label: {
+                          ...cadranLabelStyle,
+                          position: "insideBottomLeft",
+                        },
+                      },
                       { coord: [meanPoursuite, meanInsertion] },
                     ],
                     [
                       {
                         coord: [meanPoursuite, meanInsertion],
                         itemStyle: { color: "#E5F9DB" },
+                        name: `Q2 - ${repartitionCadrans?.q2} formations`,
+                        label: {
+                          ...cadranLabelStyle,
+                          position: "insideTopRight",
+                        },
                       },
                       { coord: [100, 100] },
                     ],
@@ -190,6 +273,11 @@ export const Cadran = function <
                       {
                         coord: [0, meanInsertion],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        name: `Q1 - ${repartitionCadrans?.q1} formations`,
+                        label: {
+                          ...cadranLabelStyle,
+                          position: "insideTopLeft",
+                        },
                       },
                       { coord: [meanPoursuite, 100] },
                     ],
@@ -197,6 +285,11 @@ export const Cadran = function <
                       {
                         coord: [meanPoursuite, 0],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        name: `Q3 - ${repartitionCadrans?.q3} formations`,
+                        label: {
+                          ...cadranLabelStyle,
+                          position: "insideBottomRight",
+                        },
                       },
                       { coord: [100, meanInsertion] },
                     ],
@@ -206,7 +299,7 @@ export const Cadran = function <
         },
       ],
     }),
-    [data, meanPoursuite, meanInsertion]
+    [orderedData, meanPoursuite, meanInsertion, itemColor, itemId]
   );
 
   useLayoutEffect(() => {
@@ -220,11 +313,12 @@ export const Cadran = function <
       const [x, y] = chartRef.current?.convertToPixel("grid", event.data) ?? [
         0, 0,
       ];
-
+      chartRef.current?.setOption(option);
+      onClick?.(orderedData[event.dataIndex]);
       setDisplayedDetail({
         x,
         y,
-        formation: data[event.dataIndex],
+        formation: orderedData[event.dataIndex],
       });
       return true;
     };
@@ -233,7 +327,7 @@ export const Cadran = function <
     return () => {
       chartRef.current?.off("click", handler);
     };
-  }, [option, data]);
+  }, [option, orderedData]);
 
   return (
     <Box
@@ -256,7 +350,7 @@ export const Cadran = function <
         </InfoTooltip>
       )}
 
-      {displayedDetail && (
+      {displayedDetail && TooltipContent && (
         <FormationTooltipWrapper
           ref={popperInstance.popperRef}
           clickOutside={() => setDisplayedDetail(undefined)}

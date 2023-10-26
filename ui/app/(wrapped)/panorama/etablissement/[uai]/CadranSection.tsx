@@ -12,7 +12,7 @@ import { useMemo } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { Cadran } from "../../components/Cadran";
+import { Cadran } from "../../../../../components/Cadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
@@ -86,6 +86,7 @@ export const CadranSection = ({
                 TooltipContent={FormationTooltipContent}
                 InfoTootipContent={InfoTooltipContent}
                 data={filteredFormations}
+                itemId={(item) => item.cfd + item.dispositifId}
                 effectifSizes={effectifSizes}
               />
             )}
