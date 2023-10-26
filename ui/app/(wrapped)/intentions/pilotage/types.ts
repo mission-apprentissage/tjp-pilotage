@@ -11,9 +11,7 @@ export type PilotageTransformationStats = ApiType<
 >;
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
-  | "rentreeScolaire"
-  | "filiere"
-  | "codeNiveauDiplome"
+  "rentreeScolaire" | "filiere" | "codeNiveauDiplome"
 >;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";

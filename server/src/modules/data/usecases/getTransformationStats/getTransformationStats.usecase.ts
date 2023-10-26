@@ -69,7 +69,7 @@ const formatResult = (
           Math.round(
             (items[0].academie.transforme /
               effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) *
-            10000
+              10000
           ) / 100,
       }))
       .value(),
@@ -93,7 +93,7 @@ const formatResult = (
           Math.round(
             (items[0].departement.transforme /
               effectifsDepartements[
-              items[0].departement.codeDepartement ?? ""
+                items[0].departement.codeDepartement ?? ""
               ] || 0) * 10000
           ) / 100,
       }))
@@ -128,7 +128,7 @@ export const [getTransformationStats] = inject(
         .then(formatResult);
 
       const filters = await deps.getFiltersQuery({
-        ...activeFilters
+        ...activeFilters,
       });
 
       return {

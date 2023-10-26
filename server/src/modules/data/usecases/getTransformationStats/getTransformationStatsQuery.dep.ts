@@ -7,87 +7,87 @@ import { cleanNull } from "../../../../utils/noNull";
 
 const selectPlacesTransformees =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .sum<number>(
-          sql`ABS(
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .sum<number>(
+        sql`ABS(
         ${eb.ref("demande.capaciteScolaire")}
         -${eb.ref("demande.capaciteScolaireActuelle")})
         +GREATEST(${eb.ref("demande.capaciteApprentissage")}
         -${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`
-        )
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+      )
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 const selectDifferenceScolaire =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      sql<number>`
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    sql<number>`
 ${eb.fn
-          .sum("demande.capaciteScolaire")
-          .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
+  .sum("demande.capaciteScolaire")
+  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
 -
 ${eb.fn
-          .sum("demande.capaciteScolaireActuelle")
-          .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
+  .sum("demande.capaciteScolaireActuelle")
+  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
 
 const selectDifferenceApprentissage =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      sql<number>`
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    sql<number>`
 ${eb.fn
-          .sum("demande.capaciteApprentissage")
-          .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
+  .sum("demande.capaciteApprentissage")
+  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
 -
 ${eb.fn
-          .sum("demande.capaciteApprentissageActuelle")
-          .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
+  .sum("demande.capaciteApprentissageActuelle")
+  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
 
 const selectPlacesOuvertesScolaire =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .sum<number>(
-          sql`GREATEST(${eb.ref("demande.capaciteScolaire")}
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .sum<number>(
+        sql`GREATEST(${eb.ref("demande.capaciteScolaire")}
         - ${eb.ref("demande.capaciteScolaireActuelle")}, 0)`
-        )
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+      )
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 const selectPlacesFermeesScolaire =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .sum<number>(
-          sql`GREATEST(${eb.ref("demande.capaciteScolaireActuelle")}
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .sum<number>(
+        sql`GREATEST(${eb.ref("demande.capaciteScolaireActuelle")}
       - ${eb.ref("demande.capaciteScolaire")}, 0)`
-        )
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+      )
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 const selectPlacesOuvertesApprentissage =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .sum<number>(
-          sql`GREATEST(${eb.ref("demande.capaciteApprentissage")}
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .sum<number>(
+        sql`GREATEST(${eb.ref("demande.capaciteApprentissage")}
       - ${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`
-        )
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+      )
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 const selectPlacesFermeesApprentissage =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .sum<number>(
-          sql`GREATEST(${eb.ref("demande.capaciteApprentissageActuelle")}
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .sum<number>(
+        sql`GREATEST(${eb.ref("demande.capaciteApprentissageActuelle")}
     - ${eb.ref("demande.capaciteApprentissage")}, 0)`
-        )
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+      )
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 const selectNbDemandes =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-    (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-      eb.fn
-        .count<number>("demande.id")
-        .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
+    eb.fn
+      .count<number>("demande.id")
+      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
 export const getTransformationStatsQuery = ({
   status,
@@ -114,11 +114,7 @@ export const getTransformationStatsQuery = ({
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
-    .leftJoin(
-      "dataFormation",
-      "dataFormation.cfd",
-      "demande.cfd"
-    )
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .distinctOn(["dataEtablissement.codeDepartement"])
     .select((eb) => [
       selectNbDemandes(eb)().as("nbDemandesNational"),
@@ -256,7 +252,6 @@ export const getFiltersQuery = async ({
   codeNiveauDiplome?: string[];
   filiere?: string[];
 }) => {
-
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!status || status == undefined) return sql<true>`true`;
     return eb("demande.status", "=", status);
@@ -292,11 +287,7 @@ export const getFiltersQuery = async ({
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
-    .leftJoin(
-      "dataFormation",
-      "dataFormation.cfd",
-      "demande.cfd"
-    )
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -335,14 +326,12 @@ export const getFiltersQuery = async ({
   const filieres = await base
     .select([
       "dataFormation.libelleFiliere as label",
-      "dataFormation.libelleFiliere as value",])
+      "dataFormation.libelleFiliere as value",
+    ])
     .where("dataFormation.libelleFiliere", "is not", null)
     .where((eb) =>
-      eb.and([
-        inStatus(eb),
-        inRentreeScolaire(eb),
-        inCodeNiveauDiplome(eb),
-      ]))
+      eb.and([inStatus(eb), inRentreeScolaire(eb), inCodeNiveauDiplome(eb)])
+    )
     .execute();
 
   const diplomes = await base
@@ -351,12 +340,7 @@ export const getFiltersQuery = async ({
       "niveauDiplome.codeNiveauDiplome as value",
     ])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where((eb) =>
-      eb.and([
-        inStatus(eb),
-        inRentreeScolaire(eb),
-        inFiliere(eb),
-      ]))
+    .where((eb) => eb.and([inStatus(eb), inRentreeScolaire(eb), inFiliere(eb)]))
     .execute();
 
   return {
@@ -365,6 +349,6 @@ export const getFiltersQuery = async ({
     academies: academies.map(cleanNull),
     departements: departements.map(cleanNull),
     filieres: filieres.map(cleanNull),
-    diplomes: diplomes.map(cleanNull)
+    diplomes: diplomes.map(cleanNull),
   };
 };
