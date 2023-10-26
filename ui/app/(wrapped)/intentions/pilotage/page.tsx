@@ -7,6 +7,8 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
+import { CadranSection } from "@/app/(wrapped)/intentions/pilotage/components/CadranSection";
+
 import { api } from "../../../../api.client";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../../utils/security/withAuth";
@@ -117,7 +119,8 @@ export default withAuth(
             filterTracker={filterTracker}
             isLoading={isLoading}
             data={data}
-          ></FiltersSection>
+          />
+
           <Box>
             <SimpleGrid spacing={8} columns={[2]} mt={8}>
               <Box>
@@ -136,6 +139,9 @@ export default withAuth(
                 handleTerritoiresFilters={handleTerritoiresFilters}
               />
             </SimpleGrid>
+            <Box mt={14}>
+              <CadranSection scope={scope} />
+            </Box>
             <SimpleGrid spacing={5} columns={[2]} mt={14}>
               <VueTauxTransformationSection
                 data={data}
