@@ -86,7 +86,7 @@ export const CadranSection = ({
               </Heading>
               {!formation && (
                 <Text color="gray.500">
-                  Cliquez sur un point pour afficher le détails de la formation.
+                  Cliquez sur un point pour afficher le détail de la formation.
                 </Text>
               )}
               {formation && (
