@@ -211,6 +211,8 @@ export const getTransformationStatsQuery = ({
         ),
         codeDepartement: eb.ref("dataEtablissement.codeDepartement"),
         libelle: eb.ref("departement.libelle"),
+        libelleAcademie: eb.ref("academie.libelle"),
+        libelleRegion: eb.ref("region.libelleRegion"),
       }).as("departement"),
     ])
     .$call((eb) => {

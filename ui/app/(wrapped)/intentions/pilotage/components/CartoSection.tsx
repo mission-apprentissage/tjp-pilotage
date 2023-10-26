@@ -120,11 +120,13 @@ export const CartoSection = ({
           case "tauxTransformation":
             return {
               name: territoire.libelle,
+              parentName: territoire.libelleAcademie,
               value: territoire["tauxTransformation"] ?? 0,
             };
           case "ratioFermeture":
             return {
               name: territoire.libelle,
+              parentName: territoire.libelleAcademie,
               value: getRatioFermeture(territoire),
             };
         }

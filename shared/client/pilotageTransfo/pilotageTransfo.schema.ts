@@ -7,6 +7,8 @@ const OptionSchema = Type.Object({
 
 const ScopedStatsTransfoSchema = Type.Object({
   libelle: Type.Optional(Type.String()),
+  libelleAcademie: Type.Optional(Type.String()),
+  libelleRegion: Type.Optional(Type.String()),
   countDemande: Type.Number(),
   differenceCapaciteScolaire: Type.Number(),
   differenceCapaciteApprentissage: Type.Number(),

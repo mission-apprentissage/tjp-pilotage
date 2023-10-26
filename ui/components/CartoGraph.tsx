@@ -16,7 +16,7 @@ export const CartoGraph = ({
   customColorPalette,
   handleClick,
 }: {
-  graphData?: { name?: string; value: number }[];
+  graphData?: { name?: string; parentName?: string; value: number }[];
   scope?: "national" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
@@ -125,9 +125,15 @@ export const CartoGraph = ({
         showDelay: 0,
         transitionDuration: 0.2,
         //@ts-ignore
-        formatter: function (params: any) {
-          if (params.data && params.data?.value)
+        formatter: (params: any) => {
+          if (params.data && params.data?.value) {
+            if (params.data.parentName) {
+              return `${params.name} : ${params.data?.value}%
+                  <br>
+                  (<span style="font-style:italic">${params.data.parentName}</span>)`;
+            }
             return `${params.name} : ${params.data?.value}%`;
+          }
           return `Aucune donnée disponible pour ${params.name}`;
         },
       },
@@ -212,6 +218,9 @@ export const CartoGraph = ({
     chartRef.current.on("click", "series", (params) =>
       handleClickOnSeries(params.name)
     );
+    chartRef.current.getZr().on("click", () => {
+      if (handleClick) handleClick(undefined);
+    });
   }, [option, graphData]);
 
   return (
@@ -377,7 +386,7 @@ const DEPARTEMENTS_LABEL_MAPPING = {
   "014": "Calvados",
   "027": "Eure",
   "043": "Haute-Loire",
-  "65": "Hautes-Pyrénées",
+  "065": "Hautes-Pyrénées",
   "022": "Côtes d'Armor",
   "028": "Eure-et-Loir",
   "059": "Nord",
