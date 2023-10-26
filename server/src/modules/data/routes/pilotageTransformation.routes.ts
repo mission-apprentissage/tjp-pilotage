@@ -19,7 +19,7 @@ export const pilotageTransformationRoutes = ({
       const { ...filters } = request.query;
 
       const stats = await getTransformationStats({
-        ...filters
+        ...filters,
       });
       response.status(200).send(stats);
     }

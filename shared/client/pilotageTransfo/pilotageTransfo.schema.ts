@@ -44,7 +44,6 @@ const StatsTransfoSchema = Type.Object({
   ),
 });
 
-
 const StatsFiltersSchema = Type.Object({
   rentreeScolaire: Type.Optional(Type.String()),
   codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
@@ -53,9 +52,7 @@ const StatsFiltersSchema = Type.Object({
 
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Intersect([
-      StatsFiltersSchema,
-    ]),
+    querystring: Type.Intersect([StatsFiltersSchema]),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
