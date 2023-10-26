@@ -341,22 +341,7 @@ export const intentionsSchemas = {
     },
   },
   countStatsDemandes: {
-    querystring: Type.Object({
-      status: Type.Optional(
-        Type.Union([
-          Type.Literal("draft"),
-          Type.Literal("submitted"),
-          Type.Undefined(),
-        ])
-      ),
-      rentreeScolaire: Type.Optional(Type.String()),
-      codeRegion: Type.Optional(Type.Array(Type.String())),
-      codeAcademie: Type.Optional(Type.Array(Type.String())),
-      codeDepartement: Type.Optional(Type.Array(Type.String())),
-      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
-      coloration: Type.Optional(Type.String()),
-      secteur: Type.Optional(Type.String()),
-    }),
+    querystring: StatsFiltersSchema,
     response: {
       200: Type.Object({
         total: CountCapaciteStatsDemandesSchema,
