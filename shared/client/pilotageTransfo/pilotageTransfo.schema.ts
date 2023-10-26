@@ -61,4 +61,51 @@ export const pilotageTransformationSchemas = {
       }),
     },
   },
+  getformationsTransformationStats: {
+    querystring: Type.Object({
+      status: Type.Optional(
+        Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+      ),
+      rentreeScolaire: Type.Optional(Type.Number()),
+      codeRegion: Type.Optional(Type.String()),
+      codeAcademie: Type.Optional(Type.String()),
+      codeDepartement: Type.Optional(Type.String()),
+      type: Type.Optional(
+        Type.Union([Type.Literal("ouverture"), Type.Literal("fermeture")])
+      ),
+      tauxPression: Type.Optional(
+        Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
+      ),
+    }),
+    response: {
+      200: Type.Object({
+        stats: Type.Object({
+          tauxInsertion: Type.Number(),
+          tauxPoursuite: Type.Number(),
+        }),
+        formations: Type.Array(
+          Type.Object({
+            libelleDiplome: Type.Optional(Type.String()),
+            libelleDispositif: Type.Optional(Type.String()),
+            tauxInsertion: Type.Number(),
+            tauxPoursuite: Type.Number(),
+            tauxPression: Type.Optional(Type.Number()),
+            dispositifId: Type.Optional(Type.String()),
+            cfd: Type.String(),
+            nbDemandes: Type.Number(),
+            nbEtablissements: Type.Number(),
+            differencePlaces: Type.Number(),
+            placesOuvertes: Type.Number(),
+            placesFermees: Type.Number(),
+            continuum: Type.Optional(
+              Type.Object({
+                cfd: Type.String(),
+                libelle: Type.Optional(Type.String()),
+              })
+            ),
+          })
+        ),
+      }),
+    },
+  },
 } as const;

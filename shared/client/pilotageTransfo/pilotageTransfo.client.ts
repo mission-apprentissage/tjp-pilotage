@@ -13,4 +13,11 @@ export const createPilotageTransformationClient = (
     url: "/pilotage-transformation/stats",
     instance,
   }),
+  getformationsTransformationStats: createClientMethod<
+    typeof ROUTES_CONFIG.getformationsTransformationStats
+  >({
+    method: "GET",
+    url: "/pilotage-transformation/formations",
+    instance,
+  }),
 });
