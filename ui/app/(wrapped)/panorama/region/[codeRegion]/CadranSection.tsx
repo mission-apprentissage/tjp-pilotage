@@ -267,6 +267,9 @@ export const CadranSection = ({
                   meanInsertion={meanInsertion}
                   data={filteredFormations}
                   TooltipContent={FormationTooltipContent}
+                  itemId={(item) =>
+                    item.codeFormationDiplome + item.dispositifId
+                  }
                   InfoTootipContent={InfoTooltipContent}
                   effectifSizes={effectifSizes}
                 />

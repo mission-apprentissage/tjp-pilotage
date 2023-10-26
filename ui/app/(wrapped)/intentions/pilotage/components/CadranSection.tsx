@@ -39,7 +39,7 @@ function useFilters<F>({ defaultValues }: { defaultValues: F }) {
       setFilters({ ...params, ...filters });
       router.replace(
         createParametrizedUrl(location.pathname, { ...params, ...filters }),
-        { scroll: true }
+        { scroll: false }
       );
     },
     filters,
@@ -53,6 +53,7 @@ export const CadranSection = ({
     type: Scope;
     value: string | undefined;
   };
+  rentreeScolaire?: string;
 }) => {
   const { filters, setFilters } = useFilters({
     defaultValues: {
@@ -70,7 +71,7 @@ export const CadranSection = ({
 
   const [currentCfd, setFormationId] = useState<string | undefined>();
 
-  const { data: formations } = useQuery({
+  const { data: { formations, stats } = {} } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
     queryKey: ["getformationsTransformationStats", scope, filters],
@@ -190,19 +191,23 @@ export const CadranSection = ({
                 {formations && (
                   <Cadran
                     onClick={({ cfd }) => setFormationId(cfd)}
-                    meanInsertion={50}
-                    meanPoursuite={50}
+                    meanInsertion={stats?.tauxInsertion}
+                    meanPoursuite={stats?.tauxPoursuite}
+                    itemId={(item) => item.cfd + item.dispositifId}
                     data={formations?.map((item) => ({
                       ...item,
                       tauxInsertion6mois: item.tauxInsertion,
                       tauxPoursuiteEtudes: item.tauxPoursuite,
-                      effectif: item.nbDemandes,
+                      effectif: item.differencePlaces,
                     }))}
+                    itemColor={(item) =>
+                      item.cfd === currentCfd ? "#fd3b4cb5" : undefined
+                    }
                     effectifSizes={[
-                      { max: 1, size: 5 },
-                      { max: 5, size: 15 },
-                      { max: 10, size: 25 },
-                      { max: 10000, size: 40 },
+                      { max: 15, size: 6 },
+                      { max: 60, size: 12 },
+                      { max: 150, size: 20 },
+                      { max: 100000, size: 30 },
                     ]}
                   />
                 )}
