@@ -97,7 +97,6 @@ export const pilotageTransformationSchemas = {
             differencePlaces: Type.Number(),
             placesOuvertes: Type.Number(),
             placesFermees: Type.Number(),
-            placesOuvertesOuFermees: Type.Number(),
             continuum: Type.Optional(
               Type.Object({
                 cfd: Type.String(),

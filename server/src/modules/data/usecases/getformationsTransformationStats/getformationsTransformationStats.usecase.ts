@@ -8,7 +8,7 @@ export const [getformationsTransformationStats] = inject(
   (deps) =>
     async (filters: {
       status?: "draft" | "submitted";
-      type: "fermeture" | "ouverture";
+      type?: "fermeture" | "ouverture";
       rentreeScolaire?: number;
       codeRegion?: string;
       codeAcademie?: string;

@@ -30,12 +30,6 @@ const selectDifferencePlaces = (
   - ${eb.ref("capaciteApprentissageActuelle")})`;
 };
 
-const selectPlacesOuverteOuFermees = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`ABS(${eb.ref("capaciteScolaire")} 
-      - ${eb.ref("capaciteScolaireActuelle")}) 
-    + ABS(${eb.ref("capaciteApprentissage")} 
-      - ${eb.ref("capaciteApprentissageActuelle")})`;
-
 const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
   sql`GREATEST(${eb.ref("capaciteScolaire")} 
       - ${eb.ref("capaciteScolaireActuelle")}, 0) 
@@ -65,7 +59,7 @@ export const getformationsTransformationStatsQuery = ({
   tauxPression,
 }: {
   status?: "draft" | "submitted";
-  type: "fermeture" | "ouverture";
+  type?: "fermeture" | "ouverture";
   rentreeScolaire?: number;
   codeRegion?: string;
   codeAcademie?: string;
@@ -126,9 +120,8 @@ export const getformationsTransformationStatsQuery = ({
       sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
         "differencePlaces"
       ),
-      eb.fn.sum(selectPlacesOuvertes(eb)).as("placesOuvertes"),
-      eb.fn.sum(selectPlacesFermees(eb)).as("placesFermees"),
-      eb.fn.sum(selectPlacesOuverteOuFermees(eb)).as("placesOuvertesOuFermees"),
+      eb.fn.sum<number>(selectPlacesOuvertes(eb)).as("placesOuvertes"),
+      eb.fn.sum<number>(selectPlacesFermees(eb)).as("placesFermees"),
       hasContinuum({
         eb,
         millesimeSortie: "2020_2021",
