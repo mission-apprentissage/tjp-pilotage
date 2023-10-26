@@ -16,35 +16,16 @@ import {
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
 import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 
 import { api } from "../../../../../api.client";
+import { Cadran } from "../../../../../components/Cadran";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { Cadran } from "../../../panorama/components/Cadran";
+import { useStateParams } from "../../../../../utils/useFilters";
 import { Scope } from "../types";
-
-function useFilters<F>({ defaultValues }: { defaultValues: F }) {
-  const queryParams = useSearchParams();
-  const router = useRouter();
-  const params = qs.parse(queryParams.toString());
-  const [filters, setFilters] = useState<F>({ ...defaultValues, ...params });
-
-  return {
-    setFilters: (filters: F) => {
-      setFilters({ ...params, ...filters });
-      router.replace(
-        createParametrizedUrl(location.pathname, { ...params, ...filters }),
-        { scroll: false }
-      );
-    },
-    filters,
-  };
-}
 
 export const CadranSection = ({
   scope,
@@ -55,7 +36,7 @@ export const CadranSection = ({
   };
   rentreeScolaire?: string;
 }) => {
-  const { filters, setFilters } = useFilters({
+  const { filters, setFilters } = useStateParams({
     defaultValues: {
       tauxPression: undefined,
       status: undefined,
