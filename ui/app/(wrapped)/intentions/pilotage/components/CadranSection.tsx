@@ -106,17 +106,15 @@ export const CadranSection = ({
                   <InfoBlock
                     textBg="white"
                     mb="4"
-                    label={
-                      (
-                        {
-                          ouverture: "Places ouvertes",
-                          fermeture: "Places fermées",
-                        } as const
-                      )[filters.type] ?? "Places ouvertes ou fermées"
-                    }
-                    value={formation?.differencePlaces}
+                    label={"Places ouvertes"}
+                    value={formation?.placesOuvertes ?? 0}
                   />
-
+                  <InfoBlock
+                    textBg="white"
+                    mb="4"
+                    label={"Places fermées"}
+                    value={formation?.placesFermees ?? 0}
+                  />
                   <Box mb="4">
                     <InfoBlock
                       textBg="white"
@@ -126,14 +124,15 @@ export const CadranSection = ({
                     <Link
                       fontSize="xs"
                       as={NextLink}
-                      href={createParametrizedUrl("/console/etablissements", {
+                      href={createParametrizedUrl("/intentions/restitution", {
                         filters: {
+                          rentreeScolaire: "2024",
                           cfd: [formation.cfd],
                           codeDispositif: [formation.dispositifId],
                         },
                       })}
                     >
-                      Liste des établissements qui proposent cette formation
+                      Voir la liste des demandes
                     </Link>
                   </Box>
 
