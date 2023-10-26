@@ -16,7 +16,11 @@ export const pilotageTransformationRoutes = ({
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
     },
     async (request, response) => {
-      const stats = await getTransformationStats();
+      const { ...filters } = request.query;
+
+      const stats = await getTransformationStats({
+        ...filters
+      });
       response.status(200).send(stats);
     }
   );

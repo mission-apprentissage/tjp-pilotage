@@ -2,9 +2,13 @@
 
 import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import { useRouter, useSearchParams } from "next/navigation";
+import { usePlausible } from "next-plausible";
+import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { api } from "../../../../api.client";
+import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../../utils/security/withAuth";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { CartoSection } from "./components/CartoSection";
@@ -12,11 +16,25 @@ import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueOuverturesFermeturesSection } from "./components/VueOuverturesFermeturesSection";
 import { VueTauxTransformationSection } from "./components/VueTauxTransformationSection";
-import { IndicateurType, Scope, TerritoiresFilters } from "./types";
+import { Filters, IndicateurType, Scope, TerritoiresFilters } from "./types";
 
 export default withAuth(
   "restitution-intentions/lecture",
   function PilotageIntentions() {
+    const router = useRouter();
+    const queryParams = useSearchParams();
+    const searchParams: {
+      filters?: Partial<Filters>;
+    } = qs.parse(queryParams.toString());
+
+    const filters = searchParams.filters ?? {};
+
+    const setSearchParams = (params: { filters?: typeof filters }) => {
+      router.replace(
+        createParametrizedUrl(location.pathname, { ...searchParams, ...params })
+      );
+    };
+
     const { codeRegionFilter, setCodeRegionFilter } = useContext(
       CodeRegionFilterContext
     );
@@ -39,11 +57,30 @@ export default withAuth(
       if (type === "regions" && value) setCodeRegionFilter(value);
     };
 
+    const trackEvent = usePlausible();
+    const filterTracker = (filterName: keyof Filters) => () => {
+      trackEvent("pilotage-intentions:filtre", {
+        props: { filter_name: filterName },
+      });
+    };
+    const handleFilters = (
+      type: keyof Filters,
+      value: Filters[keyof Filters]
+    ) => {
+      setSearchParams({
+        filters: { ...filters, [type]: value },
+      });
+    };
+
     const { data, isLoading: isLoading } = useQuery({
       keepPreviousData: true,
       staleTime: 10000000,
-      queryKey: ["pilotageTransfo"],
-      queryFn: api.getTransformationStats({ query: {} }).call,
+      queryKey: ["pilotageTransfo", filters],
+      queryFn: api.getTransformationStats({
+        query: {
+          ...filters,
+        },
+      }).call,
     });
 
     useEffect(() => {
@@ -75,6 +112,9 @@ export default withAuth(
           <FiltersSection
             activeTerritoiresFilters={territoiresFilters}
             handleTerritoiresFilters={handleTerritoiresFilters}
+            activeFilters={filters}
+            handleFilters={handleFilters}
+            filterTracker={filterTracker}
             isLoading={isLoading}
             data={data}
           ></FiltersSection>

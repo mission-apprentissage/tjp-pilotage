@@ -42,11 +42,18 @@ const StatsTransfoSchema = Type.Object({
   ),
 });
 
+
+const StatsFiltersSchema = Type.Object({
+  rentreeScolaire: Type.Optional(Type.String()),
+  codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+  filiere: Type.Optional(Type.Array(Type.String())),
+});
+
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Object({
-      rentreeScolaire: Type.Optional(Type.Number()),
-    }),
+    querystring: Type.Intersect([
+      StatsFiltersSchema,
+    ]),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
@@ -57,6 +64,8 @@ export const pilotageTransformationSchemas = {
           regions: Type.Array(OptionSchema),
           academies: Type.Array(OptionSchema),
           departements: Type.Array(OptionSchema),
+          filieres: Type.Array(OptionSchema),
+          diplomes: Type.Array(OptionSchema),
         }),
       }),
     },
