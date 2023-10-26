@@ -2824,6 +2824,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@json2csv/formatters@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "@json2csv/formatters@npm:7.0.3"
+  checksum: 283ae93eda527a25f0dedbfe3350f06a2c35c925da293e92a54b31fba979fa9afc39de2b3766012e52f8f8539bfa0468eb25081370d8728f93bf5cb8d08a9a8f
+  languageName: node
+  linkType: hard
+
 "@json2csv/node@npm:^6.1.3":
   version: 6.1.3
   resolution: "@json2csv/node@npm:6.1.3"
@@ -2841,6 +2848,17 @@ __metadata:
     "@streamparser/json": ^0.0.12
     lodash.get: ^4.4.2
   checksum: 2d90b68958cf4390ec332f604b2e8ee87526125ddb4dafe965c0d68cd49d977ac360fade6ba9e4b993d529a4821ef066c5768e7433d3dc71fa996e86b69b7a66
+  languageName: node
+  linkType: hard
+
+"@json2csv/plainjs@npm:^7.0.3":
+  version: 7.0.3
+  resolution: "@json2csv/plainjs@npm:7.0.3"
+  dependencies:
+    "@json2csv/formatters": ^7.0.3
+    "@streamparser/json": ^0.0.17
+    lodash.get: ^4.4.2
+  checksum: 34d0d9558494f530938bf4a259c65413bb069bd4ab66f6c56e1e46e02c20d35f68b3c994e2784aeae81dc365e59b22be2d2d88a11a0777b168a76ebf68f350f7
   languageName: node
   linkType: hard
 
@@ -3666,6 +3684,13 @@ __metadata:
   version: 0.0.12
   resolution: "@streamparser/json@npm:0.0.12"
   checksum: 976975f0169253c6397240434ca8bb87c09be09597b949a8d473be009a6aac6469d5e0df8c8bc47b5a0a9e679ebb48d415f4bcef3169cb1707e45e9296211197
+  languageName: node
+  linkType: hard
+
+"@streamparser/json@npm:^0.0.17":
+  version: 0.0.17
+  resolution: "@streamparser/json@npm:0.0.17"
+  checksum: 5e1cb2113d3393b5858a2d32133ba9efed2ea732100f9967c50ec6104bc4d4948546d3263cbdb6b69185a49420dc216fb5f341b38eaad57293d6693357036c46
   languageName: node
   linkType: hard
 
@@ -17595,6 +17620,7 @@ __metadata:
     "@chakra-ui/react": ^2.8.0
     "@emotion/react": ^11.10.6
     "@emotion/styled": ^11.10.6
+    "@json2csv/plainjs": ^7.0.3
     "@tanstack/react-query": ^4.29.3
     "@types/node": 18.11.18
     "@types/qs": ^6.9.7
