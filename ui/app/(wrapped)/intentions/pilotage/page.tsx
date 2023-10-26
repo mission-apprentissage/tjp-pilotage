@@ -4,6 +4,8 @@ import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import { useState } from "react";
 
+import { CadranSection } from "@/app/(wrapped)/intentions/pilotage/components/CadranSection";
+
 import { api } from "../../../../api.client";
 import { withAuth } from "../../../../utils/security/withAuth";
 import { CartoSection } from "./components/CartoSection";
@@ -61,7 +63,8 @@ export default withAuth(
             handleTerritoiresFilters={handleTerritoiresFilters}
             isLoading={isLoading}
             data={data}
-          ></FiltersSection>
+          />
+
           <Box>
             <SimpleGrid spacing={8} columns={[2]} mt={8}>
               <Box>
@@ -79,6 +82,9 @@ export default withAuth(
                 indicateurOptions={indicateurOptions}
               />
             </SimpleGrid>
+            <Box mt={14}>
+              <CadranSection scope={scope} />
+            </Box>
             <SimpleGrid spacing={5} columns={[2]} mt={14}>
               <VueTauxTransformationSection
                 data={data}
