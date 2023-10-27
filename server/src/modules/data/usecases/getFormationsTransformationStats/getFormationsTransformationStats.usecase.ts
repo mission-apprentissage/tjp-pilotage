@@ -1,10 +1,10 @@
 import { inject } from "injecti";
 
-import { getformationsTransformationStatsQuery } from "./getFormationsStatsQuery.dep";
+import { getFormationsTransformationStatsQuery } from "./getFormationsStatsQuery.dep";
 import { getRegionStats } from "./getRegionStats.dep";
 
-export const [getformationsTransformationStats] = inject(
-  { getformationsTransformationStatsQuery, getRegionStats },
+export const [getFormationsTransformationStats] = inject(
+  { getFormationsTransformationStatsQuery, getRegionStats },
   (deps) =>
     async (filters: {
       status?: "draft" | "submitted";
@@ -14,13 +14,15 @@ export const [getformationsTransformationStats] = inject(
       codeAcademie?: string;
       codeDepartement?: string;
       tauxPression?: "eleve" | "faible";
+      codeNiveauDiplome?: string[];
+      filiere?: string[];
     }) => {
       const [stats, formations] = await Promise.all([
         deps.getRegionStats({
           ...filters,
           millesimeSortie: "2020_2021",
         }),
-        deps.getformationsTransformationStatsQuery(filters),
+        deps.getFormationsTransformationStatsQuery(filters),
       ]);
       return { stats, formations };
     }

@@ -69,22 +69,24 @@ export const pilotageTransformationSchemas = {
       }),
     },
   },
-  getformationsTransformationStats: {
-    querystring: Type.Object({
-      status: Type.Optional(
-        Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
-      ),
-      rentreeScolaire: Type.Optional(Type.Number()),
-      codeRegion: Type.Optional(Type.String()),
-      codeAcademie: Type.Optional(Type.String()),
-      codeDepartement: Type.Optional(Type.String()),
-      type: Type.Optional(
-        Type.Union([Type.Literal("ouverture"), Type.Literal("fermeture")])
-      ),
-      tauxPression: Type.Optional(
-        Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
-      ),
-    }),
+  getFormationsTransformationStats: {
+    querystring: Type.Intersect([
+      StatsFiltersSchema,
+      Type.Object({
+        status: Type.Optional(
+          Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
+        ),
+        codeRegion: Type.Optional(Type.String()),
+        codeAcademie: Type.Optional(Type.String()),
+        codeDepartement: Type.Optional(Type.String()),
+        type: Type.Optional(
+          Type.Union([Type.Literal("ouverture"), Type.Literal("fermeture")])
+        ),
+        tauxPression: Type.Optional(
+          Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
+        ),
+      }),
+    ]),
     response: {
       200: Type.Object({
         stats: Type.Object({

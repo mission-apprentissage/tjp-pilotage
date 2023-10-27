@@ -13,33 +13,33 @@ const selectDifferencePlaces = (
   type?: "fermeture" | "ouverture"
 ) => {
   if (type === "ouverture")
-    return sql`GREATEST(${eb.ref("capaciteScolaire")} 
-  - ${eb.ref("capaciteScolaireActuelle")}, 0) 
-+ GREATEST(${eb.ref("capaciteApprentissage")} 
+    return sql`GREATEST(${eb.ref("capaciteScolaire")}
+  - ${eb.ref("capaciteScolaireActuelle")}, 0)
++ GREATEST(${eb.ref("capaciteApprentissage")}
   - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
 
   if (type === "fermeture")
-    return sql`GREATEST(${eb.ref("capaciteScolaireActuelle")} 
-  - ${eb.ref("capaciteScolaire")}, 0) 
-+ GREATEST(${eb.ref("capaciteApprentissageActuelle")} 
+    return sql`GREATEST(${eb.ref("capaciteScolaireActuelle")}
+  - ${eb.ref("capaciteScolaire")}, 0)
++ GREATEST(${eb.ref("capaciteApprentissageActuelle")}
   - ${eb.ref("capaciteApprentissage")}, 0)`;
 
-  return sql`ABS(${eb.ref("capaciteScolaire")} 
-  - ${eb.ref("capaciteScolaireActuelle")}) 
-+ ABS(${eb.ref("capaciteApprentissage")} 
+  return sql`ABS(${eb.ref("capaciteScolaire")}
+  - ${eb.ref("capaciteScolaireActuelle")})
++ ABS(${eb.ref("capaciteApprentissage")}
   - ${eb.ref("capaciteApprentissageActuelle")})`;
 };
 
 const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`GREATEST(${eb.ref("capaciteScolaire")} 
-      - ${eb.ref("capaciteScolaireActuelle")}, 0) 
-    + GREATEST(${eb.ref("capaciteApprentissage")} 
+  sql`GREATEST(${eb.ref("capaciteScolaire")}
+      - ${eb.ref("capaciteScolaireActuelle")}, 0)
+    + GREATEST(${eb.ref("capaciteApprentissage")}
       - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
 
 const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
-  sql`GREATEST(${eb.ref("capaciteScolaireActuelle")} 
-      - ${eb.ref("capaciteScolaire")}, 0) 
-    + GREATEST(${eb.ref("capaciteApprentissageActuelle")} 
+  sql`GREATEST(${eb.ref("capaciteScolaireActuelle")}
+      - ${eb.ref("capaciteScolaire")}, 0)
+    + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
       - ${eb.ref("capaciteApprentissage")}, 0)`;
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
@@ -49,7 +49,7 @@ const selectNbEtablissements = (
   eb: ExpressionBuilder<DB, "dataEtablissement">
 ) => eb.fn.count<number>("dataEtablissement.uai").distinct();
 
-export const getformationsTransformationStatsQuery = ({
+export const getFormationsTransformationStatsQuery = ({
   status,
   type,
   rentreeScolaire = 2024,
@@ -57,6 +57,8 @@ export const getformationsTransformationStatsQuery = ({
   codeAcademie,
   codeDepartement,
   tauxPression,
+  codeNiveauDiplome,
+  filiere,
 }: {
   status?: "draft" | "submitted";
   type?: "fermeture" | "ouverture";
@@ -65,6 +67,8 @@ export const getformationsTransformationStatsQuery = ({
   codeAcademie?: string;
   codeDepartement?: string;
   tauxPression?: "eleve" | "faible";
+  codeNiveauDiplome?: string[];
+  filiere?: string[];
 }) => {
   const partition = (() => {
     if (codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
@@ -197,6 +201,18 @@ export const getformationsTransformationStatsQuery = ({
     .$call((q) => {
       if (!status) return q;
       return q.where("demande.status", "=", status);
+    })
+    .$call((q) => {
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where(
+        "dataFormation.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
+    })
+    .$call((q) => {
+      if (!filiere?.length) return q;
+      return q.where("dataFormation.libelleFiliere", "in", filiere);
     })
     .execute()
     .then(cleanNull);
