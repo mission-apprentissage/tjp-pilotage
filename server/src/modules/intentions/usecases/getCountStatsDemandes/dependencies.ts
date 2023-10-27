@@ -14,84 +14,51 @@ import {
 import { isStatsDemandeVisible } from "../../utils/isStatsDemandesVisible";
 
 const countStatsDemandesInDB = async ({
-  user,
   status,
   codeRegion,
-  codeAcademie,
-  codeDepartement,
   rentreeScolaire,
+  typeDemande,
+  motif,
+  cfd,
   codeNiveauDiplome,
+  dispositif,
+  filiere,
   coloration,
+  amiCMA,
   secteur,
+  cfdFamille,
+  codeDepartement,
+  codeAcademie,
+  commune,
+  uai,
+  compensation,
+  user,
 }: {
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   status?: "draft" | "submitted";
   codeRegion?: string[];
-  codeAcademie?: string[];
-  codeDepartement?: string[];
   rentreeScolaire?: string;
+  typeDemande?: string[];
+  motif?: string[];
+  cfd?: string[];
   codeNiveauDiplome?: string[];
+  dispositif?: string[];
+  filiere?: string[];
   coloration?: string;
+  amiCMA?: string;
   secteur?: string;
+  cfdFamille?: string[];
+  codeDepartement?: string[];
+  codeAcademie?: string[];
+  commune?: string[];
+  uai?: string[];
+  compensation?: string;
+  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .$call((eb) => {
-      if (status && status != undefined)
-        return eb.where("demande.status", "=", status);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "in",
-          codeDepartement
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
-        return eb.where(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
-      return eb;
-    })
+    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`SUM(${countOuvertures(eb)} + ${countFermetures(
@@ -169,6 +136,119 @@ const countStatsDemandesInDB = async ({
         )`,
       }).as("FCILs")
     )
+    .$call((eb) => {
+      if (status && status != undefined)
+        return eb.where("demande.status", "=", status);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeDepartement)
+        return eb.where(
+          "dataEtablissement.codeDepartement",
+          "in",
+          codeDepartement
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeAcademie)
+        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
+      return eb;
+    })
+    .$call((eb) => {
+      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
+      return eb;
+    })
+    .$call((eb) => {
+      if (uai) return eb.where("dataEtablissement.uai", "in", uai);
+      return eb;
+    })
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (motif)
+        return eb.where((eb) =>
+          eb.or(
+            motif.map(
+              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+            )
+          )
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (typeDemande)
+        return eb.where("demande.typeDemande", "in", typeDemande);
+      return eb;
+    })
+    .$call((eb) => {
+      if (cfd) return eb.where("demande.cfd", "in", cfd);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (dispositif) return eb.where("demande.dispositifId", "in", dispositif);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (cfdFamille)
+        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
+      return eb;
+    })
+    .$call((eb) => {
+      if (coloration)
+        return eb.where(
+          "demande.coloration",
+          "=",
+          coloration === "true" ? sql<true>`true` : sql<false>`false`
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (amiCMA)
+        return eb.where(
+          "demande.amiCma",
+          "=",
+          amiCMA === "true" ? sql<true>`true` : sql<false>`false`
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (compensation)
+        return eb.where("demande.typeDemande", "in", [
+          "ouverture_compensation",
+          "augmentation_compensation",
+        ]);
+      return eb;
+    })
+    .$call((eb) => {
+      if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
+      return eb;
+    })
     .where(isStatsDemandeVisible({ user }))
     .executeTakeFirstOrThrow();
 

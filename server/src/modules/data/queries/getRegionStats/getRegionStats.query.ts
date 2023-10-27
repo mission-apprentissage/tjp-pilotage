@@ -75,7 +75,6 @@ export const getRegionStats = async ({
     })
     .where(notHistorique)
     .select([
-      // sql<string>`MAX("region"."libelleRegion")`.as("libelleRegion"),
       "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"

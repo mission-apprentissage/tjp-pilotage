@@ -1,4 +1,5 @@
 import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
+import _ from "lodash";
 
 import { IndicateurType, PilotageReformeStats } from "../types";
 import { BarGraph } from "./BarGraph";
@@ -37,7 +38,7 @@ export const EvolutionIndicateursClesSection = ({
     regions?: Array<{ label: string; value: string }>,
     codeRegion?: string
   ) => {
-    return regions?.filter((region) => region.value === codeRegion)[0].label;
+    return _.find(regions, (region) => region.value === codeRegion)?.label;
   };
 
   const libelleRegion = isFiltered
