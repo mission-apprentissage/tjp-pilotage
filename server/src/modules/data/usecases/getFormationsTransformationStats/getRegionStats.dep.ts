@@ -7,14 +7,16 @@ export const getRegionStats = async ({
   codeRegion,
   codeAcademie,
   codeDepartement,
-  codeDiplome,
+  codeNiveauDiplome,
+  filiere,
   millesimeSortie = "2020_2021",
 }: {
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
-  codeDiplome?: string[];
   millesimeSortie?: string;
+  codeNiveauDiplome?: string[];
+  filiere?: string[];
 }) => {
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
@@ -47,10 +49,13 @@ export const getRegionStats = async ({
           return w("departement.codeDepartement", "=", codeDepartement);
         });
     })
-
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    })
+    .$call((q) => {
+      if (!filiere?.length) return q;
+      return q.where("formation.libelleFiliere", "in", filiere);
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)

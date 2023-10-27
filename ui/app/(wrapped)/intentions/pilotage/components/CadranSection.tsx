@@ -29,23 +29,25 @@ import { Scope } from "../types";
 
 export const CadranSection = ({
   scope,
+  codeNiveauDiplome,
+  filiere,
 }: {
   scope?: {
     type: Scope;
     value: string | undefined;
   };
   rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  filiere?: string[];
 }) => {
   const { filters, setFilters } = useStateParams({
     defaultValues: {
       tauxPression: undefined,
       status: undefined,
-      filiere: undefined,
       type: "ouverture",
     } as {
       tauxPression?: "eleve" | "faible";
       status?: "submitted" | "draft";
-      filiere?: string;
       type: "ouverture" | "fermeture";
     },
   });
@@ -55,10 +57,18 @@ export const CadranSection = ({
   const { data: { formations, stats } = {} } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["getformationsTransformationStats", scope, filters],
-    queryFn: api.getformationsTransformationStats({
+    queryKey: [
+      "getFormationsTransformationStats",
+      scope,
+      filters,
+      codeNiveauDiplome,
+      filiere,
+    ],
+    queryFn: api.getFormationsTransformationStats({
       query: {
         ...filters,
+        codeNiveauDiplome,
+        filiere,
         codeRegion: scope?.type === "regions" ? scope.value : undefined,
         codeAcademie: scope?.type === "academies" ? scope.value : undefined,
         codeDepartement:

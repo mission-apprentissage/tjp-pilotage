@@ -140,7 +140,11 @@ export default withAuth(
               />
             </SimpleGrid>
             <Box mt={14}>
-              <CadranSection scope={scope} />
+              <CadranSection
+                scope={scope}
+                codeNiveauDiplome={filters.codeNiveauDiplome}
+                filiere={filters.filiere}
+              />
             </Box>
             <SimpleGrid spacing={5} columns={[2]} mt={14}>
               <VueTauxTransformationSection
