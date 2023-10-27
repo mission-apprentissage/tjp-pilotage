@@ -1,4 +1,3 @@
-//@ts-ignore
 import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";

@@ -121,7 +121,7 @@ export const CartoGraph = ({
         trigger: "item",
         showDelay: 0,
         transitionDuration: 0.2,
-        //@ts-ignore
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: function (params: any) {
           if (params.data && params.data?.value)
             return `${params.name} : ${params.data?.value}%`;

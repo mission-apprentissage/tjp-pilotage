@@ -326,13 +326,6 @@ export const intentionsSchemas = {
       }),
     },
   },
-  getStatsDemandesCsv: {
-    produces: ["text/csv"] as string[],
-    querystring: StatsFiltersSchema,
-    response: {
-      200: Type.String(),
-    },
-  },
   countStatsDemandes: {
     querystring: Type.Object({
       status: Type.Optional(

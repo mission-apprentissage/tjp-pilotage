@@ -1,5 +1,4 @@
 import Boom from "@hapi/boom";
-//@ts-ignore
 import { getPermissionScope, guardScope, ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
