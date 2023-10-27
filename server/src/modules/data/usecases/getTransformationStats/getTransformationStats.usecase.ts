@@ -1,7 +1,10 @@
 import { inject } from "injecti";
 import _ from "lodash";
 
-import { getTransformationStatsQuery } from "./getTransformationStatsQuery.dep";
+import {
+  getFiltersQuery,
+  getTransformationStatsQuery,
+} from "./getTransformationStatsQuery.dep";
 
 const formatResult = (
   result: Awaited<ReturnType<typeof getTransformationStatsQuery>>
@@ -9,58 +12,128 @@ const formatResult = (
   return {
     national: {
       ...result[0]?.national,
-      tauxTransformation: result[0]?.national.transformes / effectifNationnal,
+      countDemande: result[0]?.national.countDemande || 0,
+      placesOuvertesScolaire: result[0]?.national.placesOuvertesScolaire || 0,
+      placesOuvertesApprentissage:
+        result[0]?.national.placesOuvertesApprentissage || 0,
+      placesFermeesScolaire: result[0]?.national.placesFermeesScolaire || 0,
+      placesFermeesApprentissage:
+        result[0]?.national.placesFermeesApprentissage || 0,
+      differenceCapaciteScolaire:
+        result[0]?.national.differenceCapaciteScolaire || 0,
+      differenceCapaciteApprentissage:
+        result[0]?.national.differenceCapaciteApprentissage || 0,
+      tauxTransformation:
+        Math.round(
+          (result[0]?.national.transformes / effectifNational || 0) * 10000
+        ) / 100,
     },
     regions: _.chain(result)
       .groupBy((item) => item.region.codeRegion)
       .mapValues((items) => ({
         ...items[0].region,
+        countDemande: items[0].region.countDemande || 0,
+        placesOuvertesScolaire: items[0].region.placesOuvertesScolaire || 0,
+        placesOuvertesApprentissage:
+          items[0].region.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].region.placesFermeesScolaire || 0,
+        placesFermeesApprentissage:
+          items[0].region.placesFermeesApprentissage || 0,
+        differenceCapaciteScolaire:
+          items[0].region.differenceCapaciteScolaire || 0,
+        differenceCapaciteApprentissage:
+          items[0].region.differenceCapaciteApprentissage || 0,
         tauxTransformation:
-          items[0].region.transforme /
-          effectifsRegions[items[0].region.codeRegion ?? ""],
+          Math.round(
+            (items[0].region.transforme /
+              effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000
+          ) / 100,
       }))
       .value(),
     academies: _.chain(result)
       .groupBy((item) => item.academie.codeAcademie)
       .mapValues((items) => ({
         ...items[0].academie,
+        countDemande: items[0].academie.countDemande || 0,
+        placesOuvertesScolaire: items[0].academie.placesOuvertesScolaire || 0,
+        placesOuvertesApprentissage:
+          items[0].academie.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].academie.placesFermeesScolaire || 0,
+        placesFermeesApprentissage:
+          items[0].academie.placesFermeesApprentissage || 0,
+        differenceCapaciteScolaire:
+          items[0].academie.differenceCapaciteScolaire || 0,
+        differenceCapaciteApprentissage:
+          items[0].academie.differenceCapaciteApprentissage || 0,
         tauxTransformation:
-          items[0].academie.transforme /
-          effectifsAcademie[items[0].academie.codeAcademie ?? ""],
+          Math.round(
+            (items[0].academie.transforme /
+              effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) *
+              10000
+          ) / 100,
       }))
       .value(),
     departements: _.chain(result)
       .groupBy((item) => item.departement.codeDepartement)
       .mapValues((items) => ({
         ...items[0].departement,
+        countDemande: items[0].departement.countDemande || 0,
+        placesOuvertesScolaire:
+          items[0].departement.placesOuvertesScolaire || 0,
+        placesOuvertesApprentissage:
+          items[0].departement.placesOuvertesApprentissage || 0,
+        placesFermeesScolaire: items[0].departement.placesFermeesScolaire || 0,
+        placesFermeesApprentissage:
+          items[0].departement.placesFermeesApprentissage || 0,
+        differenceCapaciteScolaire:
+          items[0].departement.differenceCapaciteScolaire || 0,
+        differenceCapaciteApprentissage:
+          items[0].departement.differenceCapaciteApprentissage || 0,
         tauxTransformation:
-          items[0].departement.transforme /
-          effectifsDepartements[items[0].departement.codeDepartement ?? ""],
+          Math.round(
+            (items[0].departement.transforme /
+              effectifsDepartements[
+                items[0].departement.codeDepartement ?? ""
+              ] || 0) * 10000
+          ) / 100,
       }))
       .value(),
   };
 };
 
 export const [getTransformationStats] = inject(
-  { getTransformationStatsQuery },
+  { getTransformationStatsQuery, getFiltersQuery },
   (deps) =>
-    async ({ rentreeScolaire = 2024 }: { rentreeScolaire?: number } = {}) => {
+    async (activeFilters: {
+      rentreeScolaire?: string;
+      codeNiveauDiplome?: string[];
+      filiere?: string[];
+    }) => {
       const resultDraft = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire,
+          ...activeFilters,
           status: "draft",
         })
         .then(formatResult);
       const resultSubmitted = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire,
+          ...activeFilters,
           status: "submitted",
         })
         .then(formatResult);
+      const resultAll = await deps
+        .getTransformationStatsQuery({
+          ...activeFilters,
+        })
+        .then(formatResult);
+
+      const filters = await deps.getFiltersQuery(activeFilters);
 
       return {
         submitted: resultSubmitted,
         draft: resultDraft,
+        all: resultAll,
+        filters: filters,
       };
     }
 );
@@ -86,7 +159,7 @@ const effectifsRegions: Record<string, number> = {
   "01": 3751,
 };
 
-const effectifNationnal = Object.values(effectifsRegions).reduce(
+const effectifNational = Object.values(effectifsRegions).reduce(
   (acc, cur) => acc + cur,
   0
 );
@@ -113,7 +186,6 @@ const effectifsAcademie: Record<string, number> = {
   "32": 3751,
   "33": 3697,
   "43": 2851,
-  "70": 16550,
   "09": 29133,
   "08": 15823,
   "07": 7344,
@@ -122,6 +194,7 @@ const effectifsAcademie: Record<string, number> = {
   "03": 6164,
   "02": 16244,
   "01": 13290,
+  "70": 16550,
 };
 
 const effectifsDepartements: Record<string, number> = {

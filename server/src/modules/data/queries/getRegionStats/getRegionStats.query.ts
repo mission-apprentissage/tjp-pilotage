@@ -2,7 +2,10 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../utils/effectifAnnee";
-import { notHistorique } from "../utils/notHistorique";
+import {
+  notHistorique,
+  notHistoriqueIndicateurRegionSortie,
+} from "../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
@@ -21,7 +24,7 @@ export const getRegionStats = async ({
 }) => {
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
-    .leftJoin(
+    .innerJoin(
       "formation",
       "formation.codeFormationDiplome",
       "indicateurRegionSortie.cfd"
@@ -32,13 +35,7 @@ export const getRegionStats = async ({
       return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where((eb) =>
-      eb(
-        "indicateurRegionSortie.cfd",
-        "not in",
-        sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-      )
-    )
+    .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
         "tauxInsertion6mois"
@@ -78,7 +75,6 @@ export const getRegionStats = async ({
     })
     .where(notHistorique)
     .select([
-      // sql<string>`MAX("region"."libelleRegion")`.as("libelleRegion"),
       "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
