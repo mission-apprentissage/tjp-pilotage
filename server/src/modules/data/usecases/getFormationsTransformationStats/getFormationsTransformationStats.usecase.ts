@@ -9,7 +9,7 @@ export const [getFormationsTransformationStats] = inject(
     async (filters: {
       status?: "draft" | "submitted";
       type?: "fermeture" | "ouverture";
-      rentreeScolaire?: number;
+      rentreeScolaire?: string;
       codeRegion?: string;
       codeAcademie?: string;
       codeDepartement?: string;
