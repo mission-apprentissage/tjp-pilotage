@@ -165,16 +165,35 @@ export const CartoGraph = ({
           emphasis: {
             label: {
               show: false,
-              color: "#000091",
+              color: customColorPalette
+                ? customColorPalette[customColorPalette.length - 1]
+                : objectif === "bas"
+                ? "#E18B76"
+                : "#000091",
               fontWeight: 700,
             },
             itemStyle: {
               areaColor: "white",
-              borderColor: objectif === "bas" ? "#E18B76" : "#000091",
+              borderColor: customColorPalette
+                ? customColorPalette[customColorPalette.length - 1]
+                : objectif === "bas"
+                ? "#E18B76"
+                : "#000091",
             },
           },
+          selectedMode: "single",
           select: {
-            disabled: true,
+            disabled: false,
+            label: {
+              color: "#000",
+              fontWeight: 500,
+            },
+            itemStyle: {
+              areaColor: "#fff",
+              borderColor: "#000",
+              borderWidth: 1.5,
+              fontWeight: 700,
+            },
           },
           nameProperty: getNameProperty(),
           nameMap: getNameMap(),
