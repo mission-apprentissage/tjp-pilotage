@@ -127,9 +127,7 @@ export const [getTransformationStats] = inject(
         })
         .then(formatResult);
 
-      const filters = await deps.getFiltersQuery({
-        ...activeFilters,
-      });
+      const filters = await deps.getFiltersQuery(activeFilters);
 
       return {
         submitted: resultSubmitted,
