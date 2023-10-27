@@ -150,7 +150,7 @@ export const Cadran = function <
 
   const option = useMemo<EChartsOption>(
     () => ({
-      grid: { top: 10, right: 15, bottom: 50, left: 65 },
+      grid: { top: 0, right: 0, bottom: 50, left: 60 },
 
       xAxis: [
         {
@@ -170,6 +170,7 @@ export const Cadran = function <
           axisLabel: {
             formatter: "{value}%",
             fontWeight: "bold",
+            showMaxLabel: false,
           },
           axisLine: {
             onZero: false,
@@ -195,6 +196,7 @@ export const Cadran = function <
           axisLabel: {
             formatter: "{value}%",
             fontWeight: "bold",
+            showMaxLabel: false,
           },
           axisLine: {
             onZero: false,

@@ -12,9 +12,11 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 import { api } from "../../../../api.client";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
+import { downloadCsv } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
+import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
@@ -168,12 +170,22 @@ export default () => {
         <TableFooter
           mb={36}
           pl="4"
-          onExport={() => trackEvent("restitution-demandes:export")}
-          downloadLink={
-            api.getStatsDemandesCsv({
-              query: { ...filters, ...order },
-            }).url
-          }
+          onExport={async () => {
+            trackEvent("restituition-demandes:export");
+            const data = await api
+              .getStatsDemandes({
+                query: { ...filters, ...order },
+              })
+              .call();
+            downloadCsv(
+              "demandes_stats_export.csv",
+              data.demandes.map((demande) => ({
+                ...demande,
+                pression: demande.pression ? demande.pression / 100 : undefined,
+              })),
+              STATS_DEMANDES_COLUMNS
+            );
+          }}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}

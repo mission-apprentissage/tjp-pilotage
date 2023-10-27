@@ -93,13 +93,6 @@ export const etablissementSchemas = {
       }),
     },
   },
-  getEtablissementsCsv: {
-    produces: ["text/csv"] as string[],
-    querystring: FiltersSchema,
-    response: {
-      200: Type.String(),
-    },
-  },
   getEtablissement: {
     params: Type.Object({ uai: Type.String() }),
     response: {
