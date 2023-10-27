@@ -4,17 +4,30 @@ import { useState } from "react";
 
 import { createParametrizedUrl } from "./createParametrizedUrl";
 
-export function useStateParams<F>({ defaultValues }: { defaultValues: F }) {
+export function useStateParams<F extends object>({
+  defaultValues,
+  prefix,
+}: {
+  defaultValues: F;
+  prefix?: string;
+}) {
   const queryParams = useSearchParams();
   const router = useRouter();
   const params = qs.parse(queryParams.toString());
-  const [filters, setFilters] = useState<F>({ ...defaultValues, ...params });
+  const prefixed = (prefix ? params[prefix] : params) as F;
+  const [filters, setFilters] = useState<F>({ ...defaultValues, ...prefixed });
 
   return {
     setFilters: (filters: F) => {
-      setFilters({ ...params, ...filters });
+      const mergedFilters = { ...prefixed, ...filters };
+      setFilters(mergedFilters);
       router.replace(
-        createParametrizedUrl(location.pathname, { ...params, ...filters }),
+        createParametrizedUrl(
+          location.pathname,
+          prefix
+            ? { ...params, [prefix]: mergedFilters }
+            : { ...params, ...mergedFilters }
+        ),
         { scroll: false }
       );
     },
