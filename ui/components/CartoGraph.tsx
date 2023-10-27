@@ -162,19 +162,14 @@ export const CartoGraph = ({
           name: scope,
           type: "map",
           map: scope,
+          animation: false,
           emphasis: {
             label: {
-              color: "#3a3a3a",
-              fontWeight: 700,
-              fontSize: 15,
+              show: false,
             },
             itemStyle: {
-              areaColor: "white",
-              borderColor: customColorPalette
-                ? customColorPalette[customColorPalette.length - 1]
-                : objectif === "bas"
-                ? "#E18B76"
-                : "#000091",
+              areaColor: "#fff",
+              borderColor: "#7b7b7b",
             },
           },
           selectedMode: "single",
