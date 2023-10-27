@@ -146,6 +146,8 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
+              activeFilters={filters}
+              handleFilters={handleFilters}
             ></CartoSection>
           </SimpleGrid>
           <SimpleGrid spacing={5} columns={[1]} mt={14}>

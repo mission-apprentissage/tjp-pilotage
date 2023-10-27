@@ -136,6 +136,7 @@ export default withAuth(
                 indicateur={indicateur}
                 handleIndicateurChange={handleIndicateurChange}
                 indicateurOptions={indicateurOptions}
+                territoiresFilters={territoiresFilters}
                 handleTerritoiresFilters={handleTerritoiresFilters}
               />
             </SimpleGrid>
