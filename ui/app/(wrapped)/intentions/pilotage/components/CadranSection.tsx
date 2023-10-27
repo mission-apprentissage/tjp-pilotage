@@ -38,7 +38,7 @@ export const CadranSection = ({
   rentreeScolaire?: string;
   parentFilters: Partial<Filters>;
 }) => {
-  const { filters, setFilters } = useStateParams({
+  const [filters, setFilters] = useStateParams({
     prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
