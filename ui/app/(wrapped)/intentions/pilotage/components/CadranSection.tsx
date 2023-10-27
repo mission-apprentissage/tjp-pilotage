@@ -59,7 +59,7 @@ export const CadranSection = ({
 
   const mergedFilters = {
     ...filters,
-    parentFilters,
+    ...parentFilters,
     codeRegion: scope?.type === "regions" ? scope.value : undefined,
     codeAcademie: scope?.type === "academies" ? scope.value : undefined,
     codeDepartement: scope?.type === "departements" ? scope.value : undefined,
