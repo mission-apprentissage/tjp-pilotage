@@ -9,11 +9,6 @@ export const createFormationClient = (instance: AxiosInstance) => ({
     url: "/formations",
     instance,
   }),
-  getFormationsCsv: createClientMethod<typeof ROUTES_CONFIG.getFormationsCsv>({
-    method: "GET",
-    url: "/formations/csv",
-    instance,
-  }),
   getDataForPanorama: createClientMethod<
     typeof ROUTES_CONFIG.getDataForPanorama
   >({

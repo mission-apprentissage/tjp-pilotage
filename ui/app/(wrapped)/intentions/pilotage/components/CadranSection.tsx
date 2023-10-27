@@ -1,6 +1,8 @@
+import { DownloadIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
+  Button,
   Card,
   CardBody,
   Flex,
@@ -10,6 +12,7 @@ import {
   Link,
   Radio,
   RadioGroup,
+  Select,
   Skeleton,
   Stack,
   Text,
@@ -24,6 +27,7 @@ import { InfoBlock } from "@/components/InfoBlock";
 import { api } from "../../../../../api.client";
 import { Cadran } from "../../../../../components/Cadran";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
+import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
 import { Filters, Scope } from "../types";
 
@@ -53,25 +57,20 @@ export const CadranSection = ({
 
   const [currentCfd, setFormationId] = useState<string | undefined>();
 
+  const mergedFilters = {
+    ...filters,
+    ...parentFilters,
+    codeRegion: scope?.type === "regions" ? scope.value : undefined,
+    codeAcademie: scope?.type === "academies" ? scope.value : undefined,
+    codeDepartement: scope?.type === "departements" ? scope.value : undefined,
+  };
+
   const { data: { formations, stats } = {} } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: [
-      "getFormationsTransformationStats",
-      scope,
-      filters,
-      parentFilters,
-    ],
-    queryFn: api.getFormationsTransformationStats({
-      query: {
-        ...filters,
-        ...parentFilters,
-        codeRegion: scope?.type === "regions" ? scope.value : undefined,
-        codeAcademie: scope?.type === "academies" ? scope.value : undefined,
-        codeDepartement:
-          scope?.type === "departements" ? scope.value : undefined,
-      },
-    }).call,
+    queryKey: ["getformationsTransformationStats", mergedFilters],
+    queryFn: api.getFormationsTransformationStats({ query: mergedFilters })
+      .call,
   });
 
   const formation = useMemo(
@@ -86,7 +85,47 @@ export const CadranSection = ({
       </Heading>
       <Card>
         <CardBody p="8">
-          <Flex>
+          <Flex align="center">
+            <Heading fontSize="md" mr="auto" color="bluefrance.113">
+              RÉPARTITION DES OFFRES DE FORMATIONS TRANSFORMÉES
+            </Heading>
+            <Button
+              aria-label="csv"
+              variant="solid"
+              onClick={async () => {
+                if (!formations) return;
+                downloadCsv("formations_transformees.csv", formations, {
+                  libelleDiplome: "Formation",
+                  libelleDispositif: "Dispositif",
+                  tauxInsertion: "Tx emploi",
+                  tauxPoursuite: "Tx poursuite",
+                  tauxPression: "Tx pression",
+                });
+              }}
+            >
+              <DownloadIcon mr="2" />
+              Exporter en csv
+            </Button>
+            <Select
+              ml="6"
+              variant="newInput"
+              bg="blue.main"
+              color="white"
+              maxW={200}
+              value={filters.type ?? ""}
+              onChange={(item) =>
+                setFilters({
+                  ...filters,
+                  type: (item.target.value || undefined) as typeof filters.type,
+                })
+              }
+            >
+              <option value="">Toutes</option>
+              <option value="ouverture">Places ouvertes</option>
+              <option value="fermeture">Places fermées</option>
+            </Select>
+          </Flex>
+          <Flex mt="4">
             <Box p="4" w="300px" bg="#F3F5FC" mr="6">
               <Heading size="sm" mb="6">
                 DÉTAILS SUR LA FORMATION
@@ -96,6 +135,7 @@ export const CadranSection = ({
                   Cliquez sur un point pour afficher le détail de la formation.
                 </Text>
               )}
+
               {formation && (
                 <>
                   <InfoBlock
@@ -209,23 +249,6 @@ export const CadranSection = ({
               <Heading size="sm" mb="6">
                 FILTRES
               </Heading>
-              <FormControl mb="6">
-                <FormLabel>Type</FormLabel>
-                <RadioGroup
-                  as={Stack}
-                  onChange={(v) =>
-                    setFilters({
-                      ...filters,
-                      type: (v || undefined) as "ouverture" | "fermeture",
-                    })
-                  }
-                  value={filters.type ?? ""}
-                >
-                  <Radio value="">Toutes</Radio>
-                  <Radio value="ouverture">Places ouvertes</Radio>
-                  <Radio value="fermeture">Places fermées</Radio>
-                </RadioGroup>
-              </FormControl>
               <FormControl mb="6">
                 <FormLabel>Taux de pression</FormLabel>
                 <RadioGroup

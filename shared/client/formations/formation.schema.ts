@@ -85,13 +85,6 @@ export const formationSchemas = {
       }),
     },
   },
-  getFormationsCsv: {
-    produces: ["text/csv"] as string[],
-    querystring: FiltersSchema,
-    response: {
-      200: Type.String(),
-    },
-  },
   getDataForPanorama: {
     querystring: Type.Object({
       codeRegion: Type.String(),
