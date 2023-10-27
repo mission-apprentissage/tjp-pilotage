@@ -12,6 +12,17 @@ const formatResult = (
   return {
     national: {
       ...result[0]?.national,
+      countDemande: result[0]?.national.countDemande || 0,
+      placesOuvertesScolaire: result[0]?.national.placesOuvertesScolaire || 0,
+      placesOuvertesApprentissage:
+        result[0]?.national.placesOuvertesApprentissage || 0,
+      placesFermeesScolaire: result[0]?.national.placesFermeesScolaire || 0,
+      placesFermeesApprentissage:
+        result[0]?.national.placesFermeesApprentissage || 0,
+      differenceCapaciteScolaire:
+        result[0]?.national.differenceCapaciteScolaire || 0,
+      differenceCapaciteApprentissage:
+        result[0]?.national.differenceCapaciteApprentissage || 0,
       tauxTransformation:
         Math.round(
           (result[0]?.national.transformes / effectifNational || 0) * 10000
@@ -93,26 +104,30 @@ const formatResult = (
 export const [getTransformationStats] = inject(
   { getTransformationStatsQuery, getFiltersQuery },
   (deps) =>
-    async ({ rentreeScolaire = 2024 }: { rentreeScolaire?: number } = {}) => {
+    async (activeFilters: {
+      rentreeScolaire?: string;
+      codeNiveauDiplome?: string[];
+      filiere?: string[];
+    }) => {
       const resultDraft = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire,
+          ...activeFilters,
           status: "draft",
         })
         .then(formatResult);
       const resultSubmitted = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire,
+          ...activeFilters,
           status: "submitted",
         })
         .then(formatResult);
       const resultAll = await deps
         .getTransformationStatsQuery({
-          rentreeScolaire,
+          ...activeFilters,
         })
         .then(formatResult);
 
-      const filters = await deps.getFiltersQuery();
+      const filters = await deps.getFiltersQuery(activeFilters);
 
       return {
         submitted: resultSubmitted,

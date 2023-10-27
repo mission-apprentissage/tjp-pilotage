@@ -229,7 +229,7 @@ const StatCard = ({
 }) => {
   return (
     <Card className={className} minH={minH} p={0}>
-      <CardHeader p={4}>
+      <CardHeader p={4} pb={1}>
         <Flex>
           {icon && <Img alt="" h="20px" src={`/icons/${icon}.svg`} me={2} />}
           <Text
@@ -275,7 +275,7 @@ export const IndicateursClesSection = ({
       if (scope && scope.type && scope.value && data[status][scope.type]) {
         if (data[status][scope.type][scope.value])
           return Number.parseFloat(
-            (data[status][scope.type][scope.value][indicateur] ?? 0).toFixed(2)
+            (data[status][scope.type][scope.value][indicateur] ?? 0).toFixed(1)
           );
         return 0;
       }
@@ -298,7 +298,7 @@ export const IndicateursClesSection = ({
   ): number => {
     if (data) {
       return Number.parseFloat(
-        (data[status]["national"][indicateur] ?? 0).toFixed(2)
+        (data[status]["national"][indicateur] ?? 0).toFixed(1)
       );
     }
     return 0;
@@ -324,7 +324,7 @@ export const IndicateursClesSection = ({
                 getScopedData(status, "placesOuvertesScolaire") +
                 getScopedData(status, "placesOuvertesApprentissage"))) *
             100
-          ).toFixed(2)
+          ).toFixed(1)
         );
       return getNationalRatioFermetures(status);
     }
@@ -344,7 +344,7 @@ export const IndicateursClesSection = ({
               getNationalData(status, "placesOuvertesScolaire") +
               getNationalData(status, "placesOuvertesApprentissage"))) *
           100
-        ).toFixed(2)
+        ).toFixed(1)
       );
 
     return 0;
@@ -380,13 +380,9 @@ export const IndicateursClesSection = ({
                         width={
                           scope && scope.type && scope.value ? "unset" : "50%"
                         }
-                        px={scope && scope.type && scope.value ? 0 : 4}
+                        px={scope && scope.type && scope.value ? 2 : 4}
                       >
-                        <Flex mt={1}>
-                          <Img alt="" src="/icons/green_dot.svg" me={2} />
-                          <Text>DEMANDES VALIDÉES</Text>
-                        </Flex>
-                        <Flex mt={2}>
+                        <Flex>
                           <Text
                             fontSize="40px"
                             fontWeight="800"
@@ -398,7 +394,10 @@ export const IndicateursClesSection = ({
                             )} %`}
                           </Text>
                         </Flex>
-                        <Flex flexDirection="column" gap={2} mt={1}>
+                        <Flex flexDirection="column" gap={2}>
+                          <Text fontSize={14} color={"blue.main"}>
+                            (CALCULÉ SUR LES DEMANDES VALIDÉES)
+                          </Text>
                           <ProgressBar
                             percentage={
                               (getScopedData(
@@ -418,7 +417,7 @@ export const IndicateursClesSection = ({
                               ) /
                                 6) *
                               100
-                            ).toFixed(2)}% de l'objectif`}
+                            ).toFixed(0)}% de l'objectif`}
                           </Text>
                         </Flex>
                       </Flex>
@@ -428,13 +427,9 @@ export const IndicateursClesSection = ({
                         width={
                           scope && scope.type && scope.value ? "unset" : "50%"
                         }
-                        px={scope && scope.type && scope.value ? 0 : 4}
+                        px={scope && scope.type && scope.value ? 2 : 4}
                       >
-                        <Flex mt={1}>
-                          <Img alt="" src="/icons/orange_dot.svg" me={2} />
-                          <Text>PROJETS DE DEMANDE</Text>
-                        </Flex>
-                        <Flex mt={2}>
+                        <Flex>
                           <Text
                             fontSize="40px"
                             fontWeight="800"
@@ -446,7 +441,10 @@ export const IndicateursClesSection = ({
                             )} %`}
                           </Text>
                         </Flex>
-                        <Flex flexDirection="column" gap={2} mt={1}>
+                        <Flex flexDirection="column" gap={2}>
+                          <Text fontSize={14} color={"blue.main"}>
+                            (CALCULÉ SUR LES PROJETS DE DEMANDE)
+                          </Text>
                           <ProgressBar
                             percentage={
                               (getScopedData("draft", "tauxTransformation") /
@@ -460,7 +458,7 @@ export const IndicateursClesSection = ({
                               (getScopedData("draft", "tauxTransformation") /
                                 6) *
                               100
-                            ).toFixed(2)}% de l'objectif`}
+                            ).toFixed(0)}% de l'objectif`}
                           </Text>
                         </Flex>
                       </Flex>
@@ -487,7 +485,7 @@ export const IndicateursClesSection = ({
                           {`${(
                             getScopedData("all", "tauxTransformation") -
                             getNationalData("all", "tauxTransformation")
-                          ).toFixed(2)} pts`}
+                          ).toFixed(1)} pts`}
                         </Text>
                       </StatCard>
                     </Flex>
@@ -499,7 +497,7 @@ export const IndicateursClesSection = ({
                   <StatCard
                     label="places ouvertes"
                     icon="places_ouvertes"
-                    minH="3xs"
+                    minH="52"
                   >
                     <Flex flexDirection={"column"} gap={3}>
                       <Flex>
@@ -565,7 +563,7 @@ export const IndicateursClesSection = ({
                   <StatCard
                     label="places fermées"
                     icon="places_fermees"
-                    minH="3xs"
+                    minH="52"
                   >
                     <Flex flexDirection={"column"} gap={3}>
                       <Flex>
@@ -631,7 +629,7 @@ export const IndicateursClesSection = ({
                 </SimpleGrid>
               </GridItem>
               <GridItem>
-                <StatCard label="ratio des fermetures" minH="3xs">
+                <StatCard label="ratio des fermetures" minH="52">
                   <Flex flexDirection={"column"}>
                     <Flex
                       fontSize="40px"
@@ -653,7 +651,7 @@ export const IndicateursClesSection = ({
                             (
                               getScopedRatioFermetures("all") -
                               getNationalRatioFermetures("all")
-                            ).toFixed(2)
+                            ).toFixed(1)
                           )}
                         />
                       </>
