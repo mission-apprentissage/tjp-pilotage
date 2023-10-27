@@ -52,7 +52,7 @@ const selectNbEtablissements = (
 export const getFormationsTransformationStatsQuery = ({
   status,
   type,
-  rentreeScolaire = 2024,
+  rentreeScolaire = "2024",
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -62,7 +62,7 @@ export const getFormationsTransformationStatsQuery = ({
 }: {
   status?: "draft" | "submitted";
   type?: "fermeture" | "ouverture";
-  rentreeScolaire?: number;
+  rentreeScolaire?: string;
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
@@ -134,7 +134,15 @@ export const getFormationsTransformationStatsQuery = ({
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
     ])
-    .where("demande.rentreeScolaire", "=", rentreeScolaire)
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
     .where((wb) => {
       if (!type) return wb.val(true);
       return wb((eb) => selectDifferencePlaces(eb, type), ">", 0);
