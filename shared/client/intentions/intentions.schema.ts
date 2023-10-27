@@ -281,13 +281,6 @@ export const intentionsSchemas = {
       }),
     },
   },
-  getDemandesCsv: {
-    produces: ["text/csv"] as string[],
-    querystring: FiltersSchema,
-    response: {
-      200: Type.String(),
-    },
-  },
   countDemandes: {
     response: {
       200: Type.Object({

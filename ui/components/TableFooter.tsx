@@ -6,7 +6,6 @@ export const TableFooter = chakra(
     page,
     count = 0,
     onPageChange,
-    downloadLink,
     onExport,
     className,
   }: {
@@ -14,7 +13,6 @@ export const TableFooter = chakra(
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    downloadLink?: string;
     onExport?: () => void;
     className?: string;
   }) => {
@@ -26,15 +24,8 @@ export const TableFooter = chakra(
         py="1.5"
         className={className}
       >
-        {(downloadLink || onExport) && (
-          <Button
-            onClick={onExport}
-            href={downloadLink}
-            as="a"
-            mr="auto"
-            size="sm"
-            variant="ghost"
-          >
+        {onExport && (
+          <Button onClick={onExport} mr="auto" size="sm" variant="ghost">
             <DownloadIcon mr="2" />
             Exporter en CSV
           </Button>
