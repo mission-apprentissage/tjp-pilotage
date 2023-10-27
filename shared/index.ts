@@ -2,7 +2,6 @@ export { demandeValidators } from "./demandeValidators/validators";
 export * from "./security/securityUtils";
 export * from "./security/permissions";
 
-export { FORMATIONS_COLUMNS } from "./FORMATIONS_COLUMNS";
 export { ETABLISSEMENTS_COLUMNS } from "./ETABLISSEMENTS_COLUMNS";
 export { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 export { PILOTAGE_REFORME_STATS_REGIONS_COLUMNS } from "./PILOTAGE_REFORME_STATS_REGIONS_COLUMNS";

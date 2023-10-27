@@ -26,7 +26,7 @@ export const TableFooter = chakra(
         py="1.5"
         className={className}
       >
-        {downloadLink && (
+        {(downloadLink || onExport) && (
           <Button
             onClick={onExport}
             href={downloadLink}
