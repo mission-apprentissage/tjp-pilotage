@@ -137,8 +137,8 @@ export const Cadran = function <
       ).length,
       q3: orderedData.filter(
         (item) =>
-          item.tauxInsertion6mois >= meanInsertion &&
-          item.tauxPoursuiteEtudes < meanPoursuite
+          item.tauxInsertion6mois < meanInsertion &&
+          item.tauxPoursuiteEtudes >= meanPoursuite
       ).length,
       q4: orderedData.filter(
         (item) =>
