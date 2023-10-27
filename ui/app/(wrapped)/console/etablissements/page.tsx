@@ -19,7 +19,6 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
-import { ETABLISSEMENTS_COLUMNS } from "shared";
 
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -28,6 +27,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { downloadCsv } from "../../../../utils/downloadCsv";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -38,6 +38,36 @@ import {
   EtablissementLineLoader,
   EtablissementLinePlaceholder,
 } from "./components/LineContent";
+
+const ETABLISSEMENTS_COLUMNS = {
+  libelleEtablissement: "Nom d'établissement",
+  rentreeScolaire: "RS",
+  commune: "Commune",
+  departement: "Département",
+  libelleNiveauDiplome: "Diplome",
+  libelleDiplome: "Formation",
+  effectif1: "Année 1",
+  effectif2: "Année 2",
+  effectif3: "Année 3",
+  capacite: "Capacité",
+  tauxPression: "Tx de pression",
+  tauxRemplissage: "Tx de remplissage",
+  tauxInsertion6mois: "Tx d'emploi 6 mois régional",
+  tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  valeurAjoutee: "Valeur ajoutée",
+  decrochage: "Décrochage",
+  secteur: "Secteur",
+  UAI: "UAI",
+  libelleDispositif: "Dispositif",
+  libelleOfficielFamille: "Famille de métiers",
+  codeFormationDiplome: "CodeDiplome",
+  CPC: "CPC",
+  CPCSecteur: "CPCSecteur",
+  CPCSousSecteur: "CPCSousSecteur",
+  libelleFiliere: "Secteur d’activité",
+  "continuum.libelle": "Diplôme historique",
+  "continuum.cfd": "Code diplôme historique",
+} as const;
 
 type Query = Parameters<typeof api.getEtablissements>[0]["query"];
 
@@ -610,12 +640,19 @@ export default function Etablissements() {
         </TableContainer>
       </Flex>
       <TableFooter
-        onExport={() => trackEvent("etablissements:export")}
-        downloadLink={
-          api.getEtablissementsCsv({
-            query: { ...filters, ...order },
-          }).url
-        }
+        onExport={async () => {
+          const data = await api
+            .getEtablissements({
+              query: { ...filters, ...order, limit: 10000000 },
+            })
+            .call();
+          trackEvent("etablissements:export");
+          downloadCsv(
+            "etablissement_export.csv",
+            data.etablissements,
+            ETABLISSEMENTS_COLUMNS
+          );
+        }}
         page={page}
         pageSize={PAGE_SIZE}
         count={data?.count}

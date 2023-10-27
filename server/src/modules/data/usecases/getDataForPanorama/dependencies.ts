@@ -82,18 +82,45 @@ export const queryFormations = async ({
       ),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       (eb) =>
-        withInsertionReg({ eb, millesimeSortie: "2019_2020" }).as(
-          "tauxInsertion6moisPrecedent"
-        ),
+        withInsertionReg({
+          eb,
+          millesimeSortie: "2019_2020",
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxInsertion6moisPrecedent"),
       (eb) =>
-        withPoursuiteReg({ eb, millesimeSortie: "2019_2020" }).as(
-          "tauxPoursuiteEtudesPrecedent"
-        ),
+        withPoursuiteReg({
+          eb,
+          millesimeSortie: "2019_2020",
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxPoursuiteEtudesPrecedent"),
       (eb) =>
-        withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+        withInsertionReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxInsertion6mois"),
       (eb) =>
-        withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
-      (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
+        withPoursuiteReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxPoursuiteEtudes"),
+      (eb) =>
+        hasContinuum({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("continuum"),
       (eb) =>
         withDevenirFavorableReg({ eb, millesimeSortie }).as(
           "tauxDevenirFavorable"
@@ -104,8 +131,30 @@ export const queryFormations = async ({
       tauxPoursuiteEtudes: number;
       tauxDevenirFavorable: number;
     }>()
-    .having((eb) => withInsertionReg({ eb, millesimeSortie }), "is not", null)
-    .having((eb) => withPoursuiteReg({ eb, millesimeSortie }), "is not", null)
+    .having(
+      (eb) =>
+        withInsertionReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }),
+      "is not",
+      null
+    )
+    .having(
+      (eb) =>
+        withPoursuiteReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }),
+      "is not",
+      null
+    )
     .groupBy([
       "formationEtablissement.cfd",
       "formation.id",

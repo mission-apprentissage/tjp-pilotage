@@ -84,9 +84,28 @@ export const getEtablissement = async ({
             selectTauxPression("indicateurEntree").as("tauxPression"),
           ])
           .select((eb) => [
-            (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
-            withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
-            withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
+            (eb) =>
+              hasContinuum({
+                eb,
+                millesimeSortie,
+                cfdRef: "formationEtablissement.cfd",
+                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeRegionRef: "etablissement.codeRegion",
+              }).as("continuum"),
+            withInsertionReg({
+              eb,
+              millesimeSortie,
+              cfdRef: "formationEtablissement.cfd",
+              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeRegionRef: "etablissement.codeRegion",
+            }).as("tauxInsertion6mois"),
+            withPoursuiteReg({
+              eb,
+              millesimeSortie,
+              cfdRef: "formationEtablissement.cfd",
+              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeRegionRef: "etablissement.codeRegion",
+            }).as("tauxPoursuiteEtudes"),
           ])
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")

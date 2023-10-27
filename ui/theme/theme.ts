@@ -34,6 +34,7 @@ export const theme = extendBaseTheme(chakraTheme, {
     },
     blue: {
       main: "#5770BE",
+      faded: "#E2E7F8",
     },
     bluefrance: {
       113: "#000091",
@@ -96,6 +97,23 @@ export const theme = extendBaseTheme(chakraTheme, {
       525: "#d64d00",
       "525_hover": "#ff754e",
       "525_active": "#ff8e76",
+    },
+    orange: {
+      draft: "#FEEBCA",
+      warning: "#FF6F4C",
+    },
+    green: {
+      submitted: "#C8F6D6",
+    },
+    pilotage: {
+      red: "#FA9293",
+      orange: "#FFBBAB",
+      yellow: "#FEEBD0",
+      green: {
+        1: "#C8F6D6",
+        2: "#58B77D",
+        3: "#4B9F6C",
+      },
     },
   },
   components: {

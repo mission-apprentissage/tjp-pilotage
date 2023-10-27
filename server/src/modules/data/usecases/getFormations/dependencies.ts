@@ -138,9 +138,27 @@ const findFormationsInDb = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
     ])
     .select((eb) => [
-      hasContinuum({ eb, millesimeSortie }).as("continuum"),
-      withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
-      withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+      hasContinuum({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("continuum"),
+      withPoursuiteReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxPoursuiteEtudes"),
+      withInsertionReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxInsertion6mois"),
     ])
     .where(
       "codeFormationDiplome",

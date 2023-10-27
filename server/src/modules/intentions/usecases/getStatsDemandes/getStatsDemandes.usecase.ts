@@ -33,13 +33,10 @@ const getStatsDemandesFactory =
       column: string;
     };
   }) => {
-    const statsDemandesPromise = findStatsDemandesInDB(activeFilters);
-    const filtersPromise = findFiltersInDb(activeFilters);
-
-    const { filters, count, demandes } = {
-      filters: await filtersPromise,
-      ...(await statsDemandesPromise),
-    };
+    const [{ count, demandes }, filters] = await Promise.all([
+      findStatsDemandesInDB(activeFilters),
+      findFiltersInDb(activeFilters),
+    ]);
 
     return {
       count,
