@@ -10,15 +10,16 @@ export function useStateParams<F extends object>({
 }: {
   defaultValues: F;
   prefix?: string;
-}) {
+}): [F, (filters: F) => void] {
   const queryParams = useSearchParams();
   const router = useRouter();
   const params = qs.parse(queryParams.toString());
   const prefixed = (prefix ? params[prefix] : params) as F;
   const [filters, setFilters] = useState<F>({ ...defaultValues, ...prefixed });
 
-  return {
-    setFilters: (filters: F) => {
+  return [
+    filters,
+    (filters: F) => {
       const mergedFilters = { ...prefixed, ...filters };
       setFilters(mergedFilters);
       router.replace(
@@ -31,6 +32,5 @@ export function useStateParams<F extends object>({
         { scroll: false }
       );
     },
-    filters,
-  };
+  ];
 }
