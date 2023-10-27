@@ -164,13 +164,9 @@ export const CartoGraph = ({
           map: scope,
           emphasis: {
             label: {
-              show: false,
-              color: customColorPalette
-                ? customColorPalette[customColorPalette.length - 1]
-                : objectif === "bas"
-                ? "#E18B76"
-                : "#000091",
+              color: "#3a3a3a",
               fontWeight: 700,
+              fontSize: 15,
             },
             itemStyle: {
               areaColor: "white",
@@ -185,12 +181,13 @@ export const CartoGraph = ({
           select: {
             disabled: false,
             label: {
-              color: "#000",
-              fontWeight: 500,
+              color: "#3a3a3a",
+              fontWeight: 700,
+              fontSize: 15,
             },
             itemStyle: {
               areaColor: "#fff",
-              borderColor: "#000",
+              borderColor: "#7b7b7b",
               borderWidth: 1.5,
               fontWeight: 700,
             },
@@ -228,17 +225,32 @@ export const CartoGraph = ({
       }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClickOnBlankSpace = (chartInstance: any) => {
+    if (handleClick) {
+      handleClick(undefined);
+      chartInstance.dispatchAction({
+        type: "unselect",
+        dataIndex: new Array(graphData?.length ?? 0)
+          .fill(0)
+          .map((_, index) => index),
+      });
+    }
+  };
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option);
-    chartRef.current.on("click", "series", (params) =>
-      handleClickOnSeries(params.name)
-    );
-    chartRef.current.getZr().on("click", () => {
-      if (handleClick) handleClick(undefined);
+    chartRef.current.on("click", "series", (params) => {
+      handleClickOnSeries(params.name);
+    });
+    chartRef.current.getZr().on("click", (event) => {
+      if (!event.target) {
+        handleClickOnBlankSpace(chartRef.current);
+      }
     });
   }, [option, graphData]);
 
