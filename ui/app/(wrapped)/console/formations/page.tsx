@@ -146,12 +146,6 @@ export default function Formations() {
     });
   };
 
-  useQuery({
-    queryKey: ["sdf"],
-    queryFn: api.getTransformationStats({ query: { rentreeScolaire: 2024 } })
-      .call,
-  });
-
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
   };
