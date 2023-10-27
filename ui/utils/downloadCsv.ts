@@ -3,7 +3,7 @@ import { Parser } from "@json2csv/plainjs";
 export function downloadCsv<D>(
   filename: string,
   data: D[],
-  columns: Partial<Record<keyof D, string>>
+  columns: { [K in keyof D]?: string }
 ) {
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
@@ -13,8 +13,7 @@ export function downloadCsv<D>(
     delimiter: ";",
   });
   const csv = parser.parse(data);
-  console.log(data, csv);
-  download("data.csv", csv);
+  download(filename, csv);
 }
 
 function download(filename: string, text: string) {
