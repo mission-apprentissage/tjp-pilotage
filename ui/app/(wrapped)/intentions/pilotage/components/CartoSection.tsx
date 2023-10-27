@@ -24,6 +24,7 @@ export const CartoSection = ({
   indicateur,
   handleIndicateurChange,
   indicateurOptions,
+  territoiresFilters,
   handleTerritoiresFilters,
 }: {
   data?: PilotageTransformationStats;
@@ -35,6 +36,7 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
+  territoiresFilters: Partial<TerritoiresFilters>;
   handleTerritoiresFilters: (
     type: keyof TerritoiresFilters,
     value: TerritoiresFilters[keyof TerritoiresFilters]
@@ -135,7 +137,16 @@ export const CartoSection = ({
   };
 
   const handleClickOnTerritoire = (code: string | undefined) => {
-    handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
+    if (
+      cartoScope &&
+      territoiresFilters[cartoScope] &&
+      territoiresFilters[cartoScope] === code
+    )
+      handleTerritoiresFilters(
+        cartoScope as keyof TerritoiresFilters,
+        undefined
+      );
+    else handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
   };
 
   return (
