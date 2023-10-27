@@ -25,22 +25,21 @@ import { api } from "../../../../../api.client";
 import { Cadran } from "../../../../../components/Cadran";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { useStateParams } from "../../../../../utils/useFilters";
-import { Scope } from "../types";
+import { Filters, Scope } from "../types";
 
 export const CadranSection = ({
   scope,
-  codeNiveauDiplome,
-  filiere,
+  parentFilters,
 }: {
   scope?: {
     type: Scope;
     value: string | undefined;
   };
   rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  filiere?: string[];
+  parentFilters: Partial<Filters>;
 }) => {
   const { filters, setFilters } = useStateParams({
+    prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
       status: undefined,
@@ -61,14 +60,12 @@ export const CadranSection = ({
       "getFormationsTransformationStats",
       scope,
       filters,
-      codeNiveauDiplome,
-      filiere,
+      parentFilters,
     ],
     queryFn: api.getFormationsTransformationStats({
       query: {
         ...filters,
-        codeNiveauDiplome,
-        filiere,
+        ...parentFilters,
         codeRegion: scope?.type === "regions" ? scope.value : undefined,
         codeAcademie: scope?.type === "academies" ? scope.value : undefined,
         codeDepartement:
