@@ -29,27 +29,28 @@ import { Cadran } from "../../../../../components/Cadran";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
-import { Scope } from "../types";
+import { Filters, Scope } from "../types";
 
 export const CadranSection = ({
   scope,
+  parentFilters,
 }: {
   scope?: {
     type: Scope;
     value: string | undefined;
   };
   rentreeScolaire?: string;
+  parentFilters: Partial<Filters>;
 }) => {
-  const { filters, setFilters } = useStateParams({
+  const [filters, setFilters] = useStateParams({
+    prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
       status: undefined,
-      filiere: undefined,
       type: "ouverture",
     } as {
       tauxPression?: "eleve" | "faible";
       status?: "submitted" | "draft";
-      filiere?: string;
       type: "ouverture" | "fermeture";
     },
   });
@@ -58,6 +59,7 @@ export const CadranSection = ({
 
   const mergedFilters = {
     ...filters,
+    parentFilters,
     codeRegion: scope?.type === "regions" ? scope.value : undefined,
     codeAcademie: scope?.type === "academies" ? scope.value : undefined,
     codeDepartement: scope?.type === "departements" ? scope.value : undefined,
@@ -66,8 +68,8 @@ export const CadranSection = ({
   const { data: { formations, stats } = {} } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["getformationsTransformationStats", scope, filters],
-    queryFn: api.getformationsTransformationStats({ query: mergedFilters })
+    queryKey: ["getformationsTransformationStats", mergedFilters],
+    queryFn: api.getFormationsTransformationStats({ query: mergedFilters })
       .call,
   });
 

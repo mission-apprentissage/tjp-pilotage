@@ -13,7 +13,7 @@ import { api } from "../../../../api.client";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../utils/downloadCsv";
-import { AuthContext } from "../../auth/authContext";
+import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
@@ -40,7 +40,6 @@ const TableHeader = ({
 };
 
 export default () => {
-  const { auth } = useContext(AuthContext);
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -53,15 +52,6 @@ export default () => {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
-  const getDefaultCodeRegion = () =>
-    auth?.user.role === "pilote_region" ? auth?.user?.codeRegion : "";
-
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
-    getDefaultCodeRegion() ?? ""
-  );
-  const [rentreeScolaireFilter, setRentreeScolaireFilter] =
-    useState<string>("2024");
-
   const setSearchParams = (params: {
     filters?: typeof filters;
     order?: typeof order;
@@ -71,6 +61,13 @@ export default () => {
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
   };
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const [rentreeScolaireFilter, setRentreeScolaireFilter] =
+    useState<string>("2024");
 
   useEffect(() => {
     if (codeRegionFilter != "") {
@@ -107,8 +104,9 @@ export default () => {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    if (type === "codeRegion" && value != null)
+    if (type === "codeRegion" && value != null) {
       setCodeRegionFilter(value[0] ?? "");
+    }
     if (type === "rentreeScolaire" && value != null)
       setRentreeScolaireFilter(value[0] ?? "");
   };
