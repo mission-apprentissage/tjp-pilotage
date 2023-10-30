@@ -32,7 +32,7 @@ cli.command("create-migration").action(() =>
     `import { Kysely } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {};
-    
+
 export const down = async (db: Kysely<unknown>) => {};
     `
   )
@@ -89,6 +89,25 @@ cli
       }
     }
   });
+
+cli
+  .command("create-user")
+  .requiredOption("--email <string>")
+  .requiredOption("--firstname <string>")
+  .requiredOption("--lastname <string>")
+  .requiredOption("--role <string>")
+  .option("--codeRegion <string>")
+  .action(
+    async (options: {
+      email: string;
+      firstname: string;
+      lastname: string;
+      role: string;
+      codeRegion?: string;
+    }) => {
+      await createUser(options);
+    }
+  );
 
 cli
   .command("importFiles")
