@@ -1,6 +1,7 @@
 import { Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
+import _ from "lodash";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
 import CarteFranceAcademies from "../public/fond_carte_academies.json";
@@ -13,12 +14,14 @@ export const CartoGraph = ({
   objectif = "haut",
   customPiecesSteps,
   customColorPalette,
+  handleClick,
 }: {
-  graphData?: { name?: string; value: number }[];
+  graphData?: { name?: string; parentName?: string; value: number }[];
   scope?: "national" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
+  handleClick?: (dataCode: string | undefined) => void;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -52,13 +55,13 @@ export const CartoGraph = ({
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
       case "regions":
-        return REGION_LABEL_MAPPING;
+        return REGIONS_LABEL_MAPPING;
       case "academies":
         return ACADEMIES_LABEL_MAPPING;
       case "departements":
         return DEPARTEMENTS_LABEL_MAPPING;
       default:
-        return REGION_LABEL_MAPPING;
+        return REGIONS_LABEL_MAPPING;
     }
   };
 
@@ -121,16 +124,22 @@ export const CartoGraph = ({
         trigger: "item",
         showDelay: 0,
         transitionDuration: 0.2,
-        //@ts-ignore
-        formatter: function (params: any) {
-          if (params.data && params.data?.value)
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        formatter: (params: any) => {
+          if (params.data && params.data?.value) {
+            if (params.data.parentName) {
+              return `${params.name} : ${params.data?.value}%
+                  <br>
+                  (<span style="font-style:italic">${params.data.parentName}</span>)`;
+            }
             return `${params.name} : ${params.data?.value}%`;
+          }
           return `Aucune donnée disponible pour ${params.name}`;
         },
       },
       visualMap: {
         type: "piecewise",
-        splitNumber: 4,
+        splitNumber: 6,
         pieces: getPieces(),
         left: "left",
         min: 0,
@@ -153,19 +162,30 @@ export const CartoGraph = ({
           name: scope,
           type: "map",
           map: scope,
+          animation: false,
           emphasis: {
             label: {
               show: false,
-              color: "#000091",
-              fontWeight: 700,
             },
             itemStyle: {
-              areaColor: "white",
-              borderColor: objectif === "bas" ? "#E18B76" : "#000091",
+              areaColor: "#fff",
+              borderColor: "#7b7b7b",
             },
           },
+          selectedMode: "single",
           select: {
-            disabled: true,
+            disabled: false,
+            label: {
+              color: "#3a3a3a",
+              fontWeight: 700,
+              fontSize: 15,
+            },
+            itemStyle: {
+              areaColor: "#fff",
+              borderColor: "#7b7b7b",
+              borderWidth: 1.5,
+              fontWeight: 700,
+            },
           },
           nameProperty: getNameProperty(),
           nameMap: getNameMap(),
@@ -179,12 +199,54 @@ export const CartoGraph = ({
     [graphData]
   );
 
+  const handleClickOnSeries = (name: string) => {
+    if (handleClick)
+      switch (scope) {
+        case "regions":
+          handleClick(
+            _.findKey(REGIONS_LABEL_MAPPING, _.partial(_.isEqual, name))
+          );
+          break;
+        case "academies":
+          handleClick(
+            _.findKey(ACADEMIES_LABEL_MAPPING, _.partial(_.isEqual, name))
+          );
+          break;
+        case "departements":
+          handleClick(
+            _.findKey(DEPARTEMENTS_LABEL_MAPPING, _.partial(_.isEqual, name))
+          );
+          break;
+      }
+  };
+
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClickOnBlankSpace = (chartInstance: any) => {
+    if (handleClick) {
+      handleClick(undefined);
+      chartInstance.dispatchAction({
+        type: "unselect",
+        dataIndex: new Array(graphData?.length ?? 0)
+          .fill(0)
+          .map((_, index) => index),
+      });
+    }
+  };
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option);
+    chartRef.current.on("click", "series", (params) => {
+      handleClickOnSeries(params.name);
+    });
+    chartRef.current.getZr().on("click", (event) => {
+      if (!event.target) {
+        handleClickOnBlankSpace(chartRef.current);
+      }
+    });
   }, [option, graphData]);
 
   return (
@@ -202,7 +264,7 @@ export const CartoGraph = ({
   );
 };
 
-const REGION_LABEL_MAPPING = {
+const REGIONS_LABEL_MAPPING = {
   "52": "Pays de la Loire",
   "24": "Centre-Val de Loire",
   "03": "Guyane",
@@ -221,119 +283,6 @@ const REGION_LABEL_MAPPING = {
   "27": "Bourgogne-Franche-Comté",
   "53": "Bretagne",
   "06": "Mayotte",
-};
-
-const DEPARTEMENTS_LABEL_MAPPING = {
-  "987": "Polynésie Française",
-  "975": "Saint-Pierre-et-Miquelon",
-  "61": "Orne",
-  "42": "Loire",
-  "78": "Yvelines",
-  "2A": "Corse-du-Sud",
-  "2B": "Haute-Corse",
-  "01": "Ain",
-  "88": "Vosges",
-  "977": "Saint-Barthélemy",
-  "18": "Cher",
-  "68": "Haut-Rhin",
-  "67": "Bas-Rhin",
-  "15": "Cantal",
-  "76": "Seine-Maritime",
-  "36": "Indre",
-  "52": "Haute-Marne",
-  "34": "Hérault",
-  "988": "Nouvelle Calédonie",
-  "26": "Drôme",
-  "985": "Mayotte",
-  "92": "Hauts-de-Seine",
-  "976": "Mayotte",
-  "986": "Wallis-et-Futuna",
-  "38": "Isère",
-  "57": "Moselle",
-  "82": "Tarn-et-Garonne",
-  "87": "Haute-Vienne",
-  "07": "Ardèche",
-  "49": "Maine-et-Loire",
-  "41": "Loir-et-Cher",
-  "46": "Lot",
-  "45": "Loiret",
-  "33": "Gironde",
-  "06": "Alpes-Maritimes",
-  "86": "Vienne",
-  "69": "Rhône",
-  "51": "Marne",
-  "74": "Haute-Savoie",
-  "84": "Vaucluse",
-  "02": "Aisne",
-  "29": "Finistère",
-  "05": "Hautes-Alpes",
-  "972": "Martinique",
-  "58": "Nièvre",
-  "94": "Val-de-Marne",
-  "24": "Dordogne",
-  "19": "Corrèze",
-  "55": "Meuse",
-  "80": "Somme",
-  "79": "Deux-Sèvres",
-  "12": "Aveyron",
-  "03": "Allier",
-  "81": "Tarn",
-  "17": "Charente-Maritime",
-  "77": "Seine-et-Marne",
-  "63": "Puy-de-Dôme",
-  "60": "Oise",
-  "971": "Guadeloupe",
-  "75": "Paris",
-  "25": "Doubs",
-  "04": "Alpes-de-Haute-Provence",
-  "35": "Ille-et-Vilaine",
-  "37": "Indre-et-Loire",
-  "73": "Savoie",
-  "32": "Gers",
-  "40": "Landes",
-  "21": "Côte-d'Or",
-  "16": "Charente",
-  "11": "Aude",
-  "83": "Var",
-  "93": "Seine-St-Denis",
-  "47": "Lot-et-Garonne",
-  "62": "Pas-de-Calais",
-  "30": "Gard",
-  "14": "Calvados",
-  "27": "Eure",
-  "43": "Haute-Loire",
-  "65": "Hautes-Pyrénées",
-  "22": "Côtes d'Armor",
-  "28": "Eure-et-Loir",
-  "59": "Nord",
-  "95": "Val-D'Oise",
-  "72": "Sarthe",
-  "31": "Haute-Garonne",
-  "53": "Mayenne",
-  "978": "Saint-Martin",
-  "66": "Pyrénées-Orientales",
-  "130": "Andorre",
-  "50": "Manche",
-  "974": "La Réunion",
-  "39": "Jura",
-  "44": "Loire-Atlantique",
-  "08": "Ardennes",
-  "973": "Guyane",
-  "89": "Yonne",
-  "64": "Pyrénées-Atlantiques",
-  "13": "Bouches-du-Rhône",
-  "70": "Haute-Saône",
-  "71": "Saône-et-Loire",
-  "23": "Creuse",
-  "90": "Territoire de Belfort",
-  "56": "Morbihan",
-  "54": "Meurthe-et-Moselle",
-  "10": "Aube",
-  "990": "Autre pays",
-  "48": "Lozère",
-  "09": "Ariège",
-  "91": "Essonne",
-  "85": "Vendée",
 };
 
 const ACADEMIES_LABEL_MAPPING = {
@@ -382,4 +331,117 @@ const ACADEMIES_LABEL_MAPPING = {
   "17": "Nantes",
   "62": "Départements d'Outre-Mer",
   "21": "Rouen",
+};
+
+const DEPARTEMENTS_LABEL_MAPPING = {
+  "987": "Polynésie Française",
+  "975": "Saint-Pierre-et-Miquelon",
+  "061": "Orne",
+  "042": "Loire",
+  "078": "Yvelines",
+  "02A": "Corse-du-Sud",
+  "02B": "Haute-Corse",
+  "001": "Ain",
+  "088": "Vosges",
+  "977": "Saint-Barthélemy",
+  "018": "Cher",
+  "068": "Haut-Rhin",
+  "067": "Bas-Rhin",
+  "015": "Cantal",
+  "076": "Seine-Maritime",
+  "036": "Indre",
+  "052": "Haute-Marne",
+  "034": "Hérault",
+  "988": "Nouvelle Calédonie",
+  "026": "Drôme",
+  "985": "Mayotte",
+  "092": "Hauts-de-Seine",
+  "976": "Mayotte",
+  "986": "Wallis-et-Futuna",
+  "038": "Isère",
+  "057": "Moselle",
+  "082": "Tarn-et-Garonne",
+  "087": "Haute-Vienne",
+  "007": "Ardèche",
+  "049": "Maine-et-Loire",
+  "041": "Loir-et-Cher",
+  "046": "Lot",
+  "045": "Loiret",
+  "033": "Gironde",
+  "006": "Alpes-Maritimes",
+  "086": "Vienne",
+  "069": "Rhône",
+  "051": "Marne",
+  "074": "Haute-Savoie",
+  "084": "Vaucluse",
+  "002": "Aisne",
+  "029": "Finistère",
+  "005": "Hautes-Alpes",
+  "972": "Martinique",
+  "058": "Nièvre",
+  "094": "Val-de-Marne",
+  "024": "Dordogne",
+  "019": "Corrèze",
+  "055": "Meuse",
+  "080": "Somme",
+  "079": "Deux-Sèvres",
+  "012": "Aveyron",
+  "003": "Allier",
+  "081": "Tarn",
+  "017": "Charente-Maritime",
+  "077": "Seine-et-Marne",
+  "063": "Puy-de-Dôme",
+  "060": "Oise",
+  "971": "Guadeloupe",
+  "075": "Paris",
+  "025": "Doubs",
+  "004": "Alpes-de-Haute-Provence",
+  "035": "Ille-et-Vilaine",
+  "037": "Indre-et-Loire",
+  "073": "Savoie",
+  "032": "Gers",
+  "040": "Landes",
+  "021": "Côte-d'Or",
+  "016": "Charente",
+  "011": "Aude",
+  "083": "Var",
+  "093": "Seine-St-Denis",
+  "047": "Lot-et-Garonne",
+  "062": "Pas-de-Calais",
+  "030": "Gard",
+  "014": "Calvados",
+  "027": "Eure",
+  "043": "Haute-Loire",
+  "065": "Hautes-Pyrénées",
+  "022": "Côtes d'Armor",
+  "028": "Eure-et-Loir",
+  "059": "Nord",
+  "095": "Val-D'Oise",
+  "072": "Sarthe",
+  "031": "Haute-Garonne",
+  "053": "Mayenne",
+  "978": "Saint-Martin",
+  "066": "Pyrénées-Orientales",
+  "130": "Andorre",
+  "050": "Manche",
+  "974": "La Réunion",
+  "039": "Jura",
+  "044": "Loire-Atlantique",
+  "008": "Ardennes",
+  "973": "Guyane",
+  "089": "Yonne",
+  "064": "Pyrénées-Atlantiques",
+  "013": "Bouches-du-Rhône",
+  "070": "Haute-Saône",
+  "071": "Saône-et-Loire",
+  "023": "Creuse",
+  "090": "Territoire de Belfort",
+  "056": "Morbihan",
+  "054": "Meurthe-et-Moselle",
+  "010": "Aube",
+  "990": "Autre pays",
+  "048": "Lozère",
+  "009": "Ariège",
+  "091": "Essonne",
+  "085": "Vendée",
 };

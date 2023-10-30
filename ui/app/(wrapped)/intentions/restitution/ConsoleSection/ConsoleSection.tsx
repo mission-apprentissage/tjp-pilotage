@@ -11,12 +11,13 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
-import { ApiType, STATS_DEMANDES_COLUMNS } from "shared";
+import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
 import { OrderIcon } from "../../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
+import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import { Order, StatsDemandes } from "../types";
 import { LineContent } from "./LineContent";
 

@@ -136,11 +136,30 @@ const findEtablissementsInDb = async ({
       selectTauxPression("indicateurEntree").as("tauxPression"),
     ])
     .select([
-      (eb) => hasContinuum({ eb, millesimeSortie }).as("continuum"),
       (eb) =>
-        withPoursuiteReg({ eb, millesimeSortie }).as("tauxPoursuiteEtudes"),
+        hasContinuum({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("continuum"),
       (eb) =>
-        withInsertionReg({ eb, millesimeSortie }).as("tauxInsertion6mois"),
+        withPoursuiteReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxPoursuiteEtudes"),
+      (eb) =>
+        withInsertionReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxInsertion6mois"),
     ])
     .$call((q) => {
       if (!codeRegion) return q;

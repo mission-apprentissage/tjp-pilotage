@@ -3,12 +3,20 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { DB } from "../../../../db/schema";
 
-export function hasContinuum({
+type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
+
+export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
   eb,
   millesimeSortie,
+  cfdRef,
+  dispositifIdRef,
+  codeRegionRef,
 }: {
-  eb: ExpressionBuilder<DB, "etablissement" | "formationEtablissement">;
+  eb: EB;
   millesimeSortie: string;
+  cfdRef: EbRef<EB>;
+  dispositifIdRef: EbRef<EB>;
+  codeRegionRef: EbRef<EB>;
 }) {
   return jsonObjectFrom(
     eb
@@ -18,16 +26,12 @@ export function hasContinuum({
         "subFormation.codeFormationDiplome",
         "subIRS.cfdContinuum"
       )
-      .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
-      .whereRef(
-        "subIRS.dispositifId",
-        "=",
-        "formationEtablissement.dispositifId"
-      )
+      .whereRef("subIRS.cfd", "=", cfdRef)
+      .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
       .whereRef(
         "subIRS.codeRegion",
         "=",
-        sql`ANY(array_agg(${eb.ref("etablissement.codeRegion")}))`
+        sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
       )
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
       .where("subIRS.cfdContinuum", "is not", null)

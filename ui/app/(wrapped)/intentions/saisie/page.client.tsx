@@ -22,7 +22,7 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { ApiType, DEMANDES_COLUMNS } from "shared";
+import { ApiType } from "shared";
 
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -31,9 +31,44 @@ import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
+import { downloadCsv } from "../../../../utils/downloadCsv";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
+
+const DEMANDES_COLUMNS = {
+  id: "id",
+  cfd: "CFD",
+  libelleDiplome: "Diplôme",
+  dispositifId: "DispositifId",
+  libelleDispositif: "Dispositif",
+  libelleFCIL: "Libellé de la FCIL",
+  uai: "UAI",
+  libelleEtablissement: "Établissement",
+  libelleDepartement: "Département",
+  rentreeScolaire: "RS",
+  typeDemande: "Type de demande",
+  motif: "Motif",
+  autreMotif: "Autre motif",
+  coloration: "Coloration",
+  libelleColoration: "Libelle coloration",
+  amiCma: "AMI/CMA ?",
+  poursuitePedagogique: "Poursuite pédagogique ?",
+  commentaire: "Commentaire",
+  status: "Status",
+  codeRegion: "Code Region",
+  codeAcademie: "Cod eAcadémie",
+  createdAt: "Date de création",
+  compensationCfd: "CFD compensé",
+  compensationUai: "UAI compensé",
+  compensationDispositifId: "Dispositif compensé",
+  capaciteScolaireActuelle: "Capacité scolaire actuelle",
+  capaciteScolaire: "Capacité scolaire",
+  capaciteScolaireColoree: "Capacité scolaire coloree",
+  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
+  capaciteApprentissage: "Capacité apprentissage",
+  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+} as const;
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
@@ -331,12 +366,19 @@ export const PageClient = () => {
               </TableContainer>
               <TableFooter
                 pl="4"
-                onExport={() => trackEvent("demandes:export")}
-                downloadLink={
-                  api.getDemandesCsv({
-                    query: { ...filters, ...order },
-                  }).url
-                }
+                onExport={async () => {
+                  trackEvent("demandes:export");
+                  const data = await api
+                    .getDemandes({
+                      query: { ...filters, ...order, limit: 10000000 },
+                    })
+                    .call();
+                  downloadCsv(
+                    "export_demandes.csv",
+                    data.demandes,
+                    DEMANDES_COLUMNS
+                  );
+                }}
                 page={page}
                 pageSize={PAGE_SIZE}
                 count={data?.count}

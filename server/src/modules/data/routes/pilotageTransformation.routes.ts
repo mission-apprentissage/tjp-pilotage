@@ -2,6 +2,7 @@ import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
+import { getFormationsTransformationStats } from "../usecases/getFormationsTransformationStats/getFormationsTransformationStats.usecase";
 import { getTransformationStats } from "../usecases/getTransformationStats/getTransformationStats.usecase";
 
 export const pilotageTransformationRoutes = ({
@@ -16,7 +17,23 @@ export const pilotageTransformationRoutes = ({
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
     },
     async (request, response) => {
-      const stats = await getTransformationStats();
+      const { ...filters } = request.query;
+
+      const stats = await getTransformationStats({
+        ...filters,
+      });
+      response.status(200).send(stats);
+    }
+  );
+
+  server.get(
+    "/pilotage-transformation/formations",
+    {
+      schema: ROUTES_CONFIG.getFormationsTransformationStats,
+      preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
+    },
+    async (request, response) => {
+      const stats = await getFormationsTransformationStats(request.query);
       response.status(200).send(stats);
     }
   );

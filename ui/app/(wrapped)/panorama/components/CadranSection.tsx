@@ -24,8 +24,8 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
+import { Cadran } from "../../../../components/Cadran";
 import { PanoramaFormations } from "../types";
-import { Cadran } from "./Cadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 const effectifSizes = [
@@ -353,6 +353,9 @@ export const CadranSection = ({
                   meanInsertion={meanInsertion}
                   data={filteredFormations}
                   TooltipContent={FormationTooltipContent}
+                  itemId={(item) =>
+                    item.codeFormationDiplome + item.dispositifId
+                  }
                   InfoTootipContent={InfoTooltipContent}
                   effectifSizes={effectifSizes}
                 />
