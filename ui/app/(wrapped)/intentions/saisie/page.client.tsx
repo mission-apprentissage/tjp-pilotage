@@ -370,7 +370,7 @@ export const PageClient = () => {
                   trackEvent("demandes:export");
                   const data = await api
                     .getDemandes({
-                      query: { ...filters, ...order, limit: 10000 },
+                      query: { ...filters, ...order, limit: 10000000 },
                     })
                     .call();
                   downloadCsv(
