@@ -9,9 +9,11 @@ import {
   Th,
   Thead,
   Tr,
+  useToken,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
 
+import { Legend } from "../../../../../components/Legend";
 import { PilotageTransformationStats } from "../types";
 
 const Loader = () => (
@@ -81,6 +83,10 @@ export const VueOuverturesFermeturesSection = ({
           100
         ).toFixed(2);
   };
+
+  const legendElements = [
+    { label: "< 33%", color: useToken("colors", "pilotage.red") },
+  ];
 
   return (
     <Flex
@@ -211,6 +217,7 @@ export const VueOuverturesFermeturesSection = ({
           </Table>
         </TableContainer>
       )}
+      <Legend elements={legendElements} />
     </Flex>
   );
 };

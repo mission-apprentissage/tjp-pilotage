@@ -9,8 +9,12 @@ export type PilotageTransformationStatsQuery = Parameters<
 export type PilotageTransformationStats = ApiType<
   typeof api.getTransformationStats
 >;
+export type Filters = Pick<
+  PilotageTransformationStatsQuery,
+  "rentreeScolaire" | "filiere" | "codeNiveauDiplome"
+>;
 
-export type IndicateurType = "tauxTransformation";
+export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
 export type Scope = "regions" | "academies" | "departements" | undefined;
 

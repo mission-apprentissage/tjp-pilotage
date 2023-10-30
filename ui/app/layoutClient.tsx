@@ -88,7 +88,9 @@ export default function RootLayoutClient({
   );
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
-  const [codeRegionFilter, setCodeRegionFilter] = useState<string>("");
+  const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
+    auth?.user.codeRegion ?? ""
+  );
   const [uaiFilter, setUaiFilter] = useState("");
 
   const codeRegionFilterValue = useMemo(
