@@ -125,28 +125,28 @@ export const Cadran = function <
   const repartitionCadrans = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
     return {
-      q1: orderedData.filter(
+      q1: data.filter(
         (item) =>
           item.tauxInsertion6mois >= meanInsertion &&
           item.tauxPoursuiteEtudes < meanPoursuite
       ).length,
-      q2: orderedData.filter(
+      q2: data.filter(
         (item) =>
           item.tauxInsertion6mois >= meanInsertion &&
           item.tauxPoursuiteEtudes > meanPoursuite
       ).length,
-      q3: orderedData.filter(
+      q3: data.filter(
         (item) =>
           item.tauxInsertion6mois < meanInsertion &&
           item.tauxPoursuiteEtudes >= meanPoursuite
       ).length,
-      q4: orderedData.filter(
+      q4: data.filter(
         (item) =>
           item.tauxInsertion6mois < meanInsertion &&
           item.tauxPoursuiteEtudes < meanPoursuite
       ).length,
     };
-  }, [orderedData, meanInsertion, meanPoursuite]);
+  }, [data, meanInsertion, meanPoursuite]);
 
   const option = useMemo<EChartsOption>(
     () => ({
