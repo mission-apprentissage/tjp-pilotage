@@ -1,12 +1,14 @@
 import { inject } from "injecti";
 
-import { queryFormationsDepartement, queryFormationsRegion } from "./dependencies"
-
+import {
+  queryFormationsDepartement,
+  queryFormationsRegion,
+} from "./dependencies";
 
 export const [getDataForPanoramaRegion] = inject(
   { queryFormationsRegion },
   (deps) =>
-    async ({ codeRegion }: { codeRegion: string; }) => {
+    async ({ codeRegion }: { codeRegion: string }) => {
       const formations = await deps.queryFormationsRegion({ codeRegion });
 
       return {
@@ -19,7 +21,9 @@ export const [getDataForPanoramaDepartement] = inject(
   { queryFormationsDepartement },
   (deps) =>
     async ({ codeDepartement }: { codeDepartement: string }) => {
-      const formations = await deps.queryFormationsDepartement({ codeDepartement });
+      const formations = await deps.queryFormationsDepartement({
+        codeDepartement,
+      });
 
       return {
         formations,

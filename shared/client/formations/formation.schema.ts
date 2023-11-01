@@ -123,9 +123,7 @@ export const formationSchemas = {
     }),
     response: {
       200: Type.Object({
-        formations: Type.Array(
-          FormationSchema
-        ),
+        formations: Type.Array(FormationSchema),
       }),
     },
   },
@@ -135,9 +133,7 @@ export const formationSchemas = {
     }),
     response: {
       200: Type.Object({
-        formations: Type.Array(
-          FormationSchema
-        ),
+        formations: Type.Array(FormationSchema),
       }),
     },
   },

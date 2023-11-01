@@ -190,7 +190,6 @@ export const queryFormationsRegion = async ({
   return formations.map(cleanNull);
 };
 
-
 export const queryFormationsDepartement = async ({
   codeDepartement,
   rentreeScolaire = "2022",

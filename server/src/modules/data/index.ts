@@ -2,7 +2,7 @@ import { Server } from "../../server";
 import { departementsRoutes } from "./routes/departements.routes";
 import { etablissementsRoutes } from "./routes/etablissements.routes";
 import { formationsRoutes } from "./routes/formations.routes";
-import { panoramaRoutes } from "./routes/panorama.routes"
+import { panoramaRoutes } from "./routes/panorama.routes";
 import { pilotageReformeRoutes } from "./routes/pilotageReforme.routes";
 import { pilotageTransformationRoutes } from "./routes/pilotageTransformation.routes";
 import { regionsRoutes } from "./routes/regions.routes";
