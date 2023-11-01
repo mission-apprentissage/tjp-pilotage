@@ -136,6 +136,8 @@ export const CartoGraph = ({
           }
           return `Aucune donnée disponible pour ${params.name}`;
         },
+        fontFamily: "Marianne, Arial",
+        fontWeight: 600,
       },
       visualMap: {
         type: "piecewise",
@@ -166,25 +168,37 @@ export const CartoGraph = ({
           emphasis: {
             label: {
               show: false,
+              color: "#000091",
+              fontWeight: 600,
+              fontSize: 14,
+              fontFamily: "Marianne, Arial",
+              backgroundColor: "white",
+              height: 20,
+              lineHeight: 15,
+              formatter: "  {b}  ",
             },
             itemStyle: {
-              areaColor: "#fff",
-              borderColor: "#7b7b7b",
+              areaColor: "inherit",
+              borderColor: "#6a6af4",
+              borderWidth: 1,
             },
           },
           selectedMode: "single",
           select: {
             disabled: false,
             label: {
-              color: "#3a3a3a",
-              fontWeight: 700,
-              fontSize: 15,
+              color: "#000091",
+              fontWeight: 600,
+              fontSize: 14,
+              fontFamily: "Marianne, Arial",
+              backgroundColor: "white",
+              height: 20,
+              lineHeight: 15,
+              formatter: "  {b}  ",
             },
             itemStyle: {
-              areaColor: "#fff",
-              borderColor: "#7b7b7b",
-              borderWidth: 1.5,
-              fontWeight: 700,
+              areaColor: "white",
+              borderColor: "#000091",
             },
           },
           nameProperty: getNameProperty(),

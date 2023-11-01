@@ -16,6 +16,7 @@ export const [getFormationsTransformationStats] = inject(
       tauxPression?: "eleve" | "faible";
       codeNiveauDiplome?: string[];
       filiere?: string[];
+      orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
       const [stats, formations] = await Promise.all([
         deps.getRegionStats({

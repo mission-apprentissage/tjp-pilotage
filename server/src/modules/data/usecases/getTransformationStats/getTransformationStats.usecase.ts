@@ -6,8 +6,48 @@ import {
   getTransformationStatsQuery,
 } from "./getTransformationStatsQuery.dep";
 
+type DataTerritoire = Awaited<
+  ReturnType<typeof getTransformationStatsQuery>
+>[0]["region" | "academie" | "departement"];
+
+const formatTerritoire = (item: DataTerritoire) => ({
+  ...item,
+  countDemande: item.countDemande || 0,
+  placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
+  placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
+  placesOuvertes:
+    item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
+  placesFermeesScolaire: item.placesFermeesScolaire || 0,
+  placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
+  placesFermees:
+    item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
+  ratioOuverture:
+    Math.round(
+      ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
+        (item.placesOuvertesScolaire +
+          item.placesOuvertesApprentissage +
+          item.placesFermeesScolaire +
+          item.placesFermeesApprentissage) || 0) * 10000
+    ) / 100,
+  ratioFermeture:
+    Math.round(
+      ((item.placesFermeesScolaire + item.placesFermeesApprentissage) /
+        (item.placesOuvertesScolaire +
+          item.placesOuvertesApprentissage +
+          item.placesFermeesScolaire +
+          item.placesFermeesApprentissage) || 0) * 10000
+    ) / 100,
+  differenceCapaciteScolaire: item.differenceCapaciteScolaire || 0,
+  differenceCapaciteApprentissage: item.differenceCapaciteApprentissage || 0,
+  placesTransformees:
+    item.placesOuvertesScolaire +
+      item.placesOuvertesApprentissage +
+      item.placesFermeesScolaire || 0,
+});
+
 const formatResult = (
-  result: Awaited<ReturnType<typeof getTransformationStatsQuery>>
+  result: Awaited<ReturnType<typeof getTransformationStatsQuery>>,
+  orderBy?: { column: string; order: "asc" | "desc" }
 ) => {
   return {
     national: {
@@ -16,13 +56,40 @@ const formatResult = (
       placesOuvertesScolaire: result[0]?.national.placesOuvertesScolaire || 0,
       placesOuvertesApprentissage:
         result[0]?.national.placesOuvertesApprentissage || 0,
+      placesOuvertes:
+        result[0]?.national.placesOuvertesScolaire +
+          result[0]?.national.placesOuvertesApprentissage || 0,
       placesFermeesScolaire: result[0]?.national.placesFermeesScolaire || 0,
       placesFermeesApprentissage:
         result[0]?.national.placesFermeesApprentissage || 0,
+      placesFermees:
+        result[0]?.national.placesFermeesScolaire +
+          result[0]?.national.placesFermeesApprentissage || 0,
+      ratioFermeture:
+        Math.round(
+          ((result[0]?.national.placesFermeesScolaire +
+            result[0]?.national.placesFermeesApprentissage) /
+            (result[0]?.national.placesOuvertesScolaire +
+              result[0]?.national.placesOuvertesApprentissage +
+              result[0]?.national.placesFermeesScolaire +
+              result[0]?.national.placesFermeesApprentissage) || 0) * 10000
+        ) / 100,
+      ratioOuverture:
+        Math.round(
+          ((result[0]?.national.placesOuvertesScolaire +
+            result[0]?.national.placesOuvertesApprentissage) /
+            (result[0]?.national.placesOuvertesScolaire +
+              result[0]?.national.placesOuvertesApprentissage +
+              result[0]?.national.placesFermeesScolaire +
+              result[0]?.national.placesFermeesApprentissage) || 0) * 10000
+        ) / 100,
       differenceCapaciteScolaire:
         result[0]?.national.differenceCapaciteScolaire || 0,
       differenceCapaciteApprentissage:
         result[0]?.national.differenceCapaciteApprentissage || 0,
+      placesTransformees:
+        result[0]?.national.differenceCapaciteScolaire +
+          result[0]?.national.differenceCapaciteApprentissage || 0,
       tauxTransformation:
         Math.round(
           (result[0]?.national.transformes / effectifNational || 0) * 10000
@@ -31,40 +98,29 @@ const formatResult = (
     regions: _.chain(result)
       .groupBy((item) => item.region.codeRegion)
       .mapValues((items) => ({
-        ...items[0].region,
-        countDemande: items[0].region.countDemande || 0,
-        placesOuvertesScolaire: items[0].region.placesOuvertesScolaire || 0,
-        placesOuvertesApprentissage:
-          items[0].region.placesOuvertesApprentissage || 0,
-        placesFermeesScolaire: items[0].region.placesFermeesScolaire || 0,
-        placesFermeesApprentissage:
-          items[0].region.placesFermeesApprentissage || 0,
-        differenceCapaciteScolaire:
-          items[0].region.differenceCapaciteScolaire || 0,
-        differenceCapaciteApprentissage:
-          items[0].region.differenceCapaciteApprentissage || 0,
+        ...formatTerritoire(items[0].region),
+        code: `_${items[0].region.codeRegion}`,
         tauxTransformation:
           Math.round(
             (items[0].region.transforme /
               effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000
           ) / 100,
       }))
+      .orderBy(
+        (item) => {
+          if (orderBy && orderBy.column)
+            return item[orderBy.column as keyof typeof item];
+          return item.libelle;
+        },
+        orderBy?.order ?? "asc"
+      )
+      .keyBy("code")
       .value(),
     academies: _.chain(result)
       .groupBy((item) => item.academie.codeAcademie)
       .mapValues((items) => ({
-        ...items[0].academie,
-        countDemande: items[0].academie.countDemande || 0,
-        placesOuvertesScolaire: items[0].academie.placesOuvertesScolaire || 0,
-        placesOuvertesApprentissage:
-          items[0].academie.placesOuvertesApprentissage || 0,
-        placesFermeesScolaire: items[0].academie.placesFermeesScolaire || 0,
-        placesFermeesApprentissage:
-          items[0].academie.placesFermeesApprentissage || 0,
-        differenceCapaciteScolaire:
-          items[0].academie.differenceCapaciteScolaire || 0,
-        differenceCapaciteApprentissage:
-          items[0].academie.differenceCapaciteApprentissage || 0,
+        ...formatTerritoire(items[0].academie),
+        code: `_${items[0].academie.codeAcademie}`,
         tauxTransformation:
           Math.round(
             (items[0].academie.transforme /
@@ -72,23 +128,21 @@ const formatResult = (
               10000
           ) / 100,
       }))
+      .orderBy(
+        (item) => {
+          if (orderBy && orderBy.column)
+            return item[orderBy.column as keyof typeof item];
+          return item.libelle;
+        },
+        orderBy?.order ?? "asc"
+      )
+      .keyBy("code")
       .value(),
     departements: _.chain(result)
       .groupBy((item) => item.departement.codeDepartement)
       .mapValues((items) => ({
-        ...items[0].departement,
-        countDemande: items[0].departement.countDemande || 0,
-        placesOuvertesScolaire:
-          items[0].departement.placesOuvertesScolaire || 0,
-        placesOuvertesApprentissage:
-          items[0].departement.placesOuvertesApprentissage || 0,
-        placesFermeesScolaire: items[0].departement.placesFermeesScolaire || 0,
-        placesFermeesApprentissage:
-          items[0].departement.placesFermeesApprentissage || 0,
-        differenceCapaciteScolaire:
-          items[0].departement.differenceCapaciteScolaire || 0,
-        differenceCapaciteApprentissage:
-          items[0].departement.differenceCapaciteApprentissage || 0,
+        ...formatTerritoire(items[0].departement),
+        code: `_${items[0].departement.codeDepartement}`,
         tauxTransformation:
           Math.round(
             (items[0].departement.transforme /
@@ -97,6 +151,15 @@ const formatResult = (
               ] || 0) * 10000
           ) / 100,
       }))
+      .orderBy(
+        (item) => {
+          if (orderBy && orderBy.column)
+            return item[orderBy.column as keyof typeof item];
+          return item.libelle;
+        },
+        orderBy?.order ?? "asc"
+      )
+      .keyBy("code")
       .value(),
   };
 };
@@ -108,24 +171,25 @@ export const [getTransformationStats] = inject(
       rentreeScolaire?: string;
       codeNiveauDiplome?: string[];
       filiere?: string[];
+      orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
       const resultDraft = await deps
         .getTransformationStatsQuery({
           ...activeFilters,
           status: "draft",
         })
-        .then(formatResult);
+        .then((result) => formatResult(result, activeFilters.orderBy));
       const resultSubmitted = await deps
         .getTransformationStatsQuery({
           ...activeFilters,
           status: "submitted",
         })
-        .then(formatResult);
+        .then((result) => formatResult(result, activeFilters.orderBy));
       const resultAll = await deps
         .getTransformationStatsQuery({
           ...activeFilters,
         })
-        .then(formatResult);
+        .then((result) => formatResult(result, activeFilters.orderBy));
 
       const filters = await deps.getFiltersQuery(activeFilters);
 
