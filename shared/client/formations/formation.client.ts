@@ -9,8 +9,8 @@ export const createFormationClient = (instance: AxiosInstance) => ({
     url: "/formations",
     instance,
   }),
-  getDataForPanorama: createClientMethod<
-    typeof ROUTES_CONFIG.getDataForPanorama
+  getDataForPanoramaRegion: createClientMethod<
+    typeof ROUTES_CONFIG.getDataForPanoramaRegion
   >({
     method: "GET",
     url: "/panorama/stats/region",
