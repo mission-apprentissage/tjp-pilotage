@@ -1,7 +1,10 @@
 import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
-import { getDataForPanoramaDepartement, getDataForPanoramaRegion } from "../usecases/getDataForPanorama/getDataForPanorama.usecase";
+import {
+  getDataForPanoramaDepartement,
+  getDataForPanoramaRegion,
+} from "../usecases/getDataForPanorama/getDataForPanorama.usecase";
 export const panoramaRoutes = ({ server }: { server: Server }) => {
   server.get(
     "/panorama/stats/region",

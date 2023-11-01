@@ -26,7 +26,11 @@ export const getDepartementsStats = async ({
       "formation.codeFormationDiplome",
       "indicateurRegionSortie.cfd"
     )
-    .leftJoin("departement", "departement.codeRegion", "indicateurRegionSortie.codeRegion")
+    .leftJoin(
+      "departement",
+      "departement.codeRegion",
+      "indicateurRegionSortie.codeRegion"
+    )
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeDiplome?.length) return q;
@@ -72,7 +76,11 @@ export const getDepartementsStats = async ({
       "etablissement.UAI"
     )
     .where("etablissement.codeDepartement", "=", codeDepartement)
-    .innerJoin("departement", "departement.codeDepartement", "etablissement.codeDepartement")
+    .innerJoin(
+      "departement",
+      "departement.codeDepartement",
+      "etablissement.codeDepartement"
+    )
     .$call((q) => {
       if (!codeDiplome?.length) return q;
       return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
