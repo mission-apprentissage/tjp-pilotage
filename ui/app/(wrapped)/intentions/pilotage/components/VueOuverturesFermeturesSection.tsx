@@ -14,7 +14,8 @@ import {
 import { Fragment } from "react";
 
 import { Legend } from "../../../../../components/Legend";
-import { PilotageTransformationStats } from "../types";
+import { OrderIcon } from "../../../../../components/OrderIcon";
+import { Order, PilotageTransformationStats } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -51,10 +52,14 @@ export const VueOuverturesFermeturesSection = ({
   data,
   isLoading,
   codeRegion,
+  order,
+  handleOrder,
 }: {
   data?: PilotageTransformationStats;
   isLoading: boolean;
   codeRegion?: string;
+  order: Order;
+  handleOrder: (column: Order["orderBy"]) => void;
 }) => {
   const getNombrePlace = (
     type: "ouverture" | "fermeture",
@@ -121,7 +126,12 @@ export const VueOuverturesFermeturesSection = ({
               height="16"
             >
               <Tr>
-                <Th cursor="pointer" pb="4">
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("libelle")}
+                >
+                  <OrderIcon {...order} column="libelle" />
                   Région
                 </Th>
                 <Th
@@ -130,7 +140,9 @@ export const VueOuverturesFermeturesSection = ({
                   pb="4"
                   width="10%"
                   whiteSpace="normal"
+                  onClick={() => handleOrder("placesFermees")}
                 >
+                  <OrderIcon {...order} column="placesFermees" />
                   Nb fermetures
                 </Th>
                 <Th
@@ -139,7 +151,9 @@ export const VueOuverturesFermeturesSection = ({
                   pb="4"
                   width="10%"
                   whiteSpace="normal"
+                  onClick={() => handleOrder("placesOuvertes")}
                 >
+                  <OrderIcon {...order} column="placesOuvertes" />
                   Nb ouvertures
                 </Th>
                 <Th
@@ -148,7 +162,9 @@ export const VueOuverturesFermeturesSection = ({
                   pb="4"
                   width="10%"
                   whiteSpace="normal"
+                  onClick={() => handleOrder("ratioFermeture")}
                 >
+                  <OrderIcon {...order} column="ratioFermeture" />
                   Ratio fermetures
                 </Th>
                 <Th
@@ -157,7 +173,9 @@ export const VueOuverturesFermeturesSection = ({
                   pb="4"
                   width="10%"
                   whiteSpace="normal"
+                  onClick={() => handleOrder("ratioOuverture")}
                 >
+                  <OrderIcon {...order} column="ratioOuverture" />
                   Ratio ouvertures
                 </Th>
               </Tr>
@@ -207,7 +225,9 @@ export const VueOuverturesFermeturesSection = ({
                         >
                           {getRatio("fermeture", region)}%
                         </Td>
-                        <Td isNumeric>{getRatio("ouverture", region)}%</Td>
+                        <Td isNumeric backgroundColor={tdBgColor}>
+                          {getRatio("ouverture", region)}%
+                        </Td>
                       </Tr>
                     </Fragment>
                   );
