@@ -1,4 +1,4 @@
-import { DownloadIcon } from "@chakra-ui/icons";
+import { DownloadIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -15,21 +15,31 @@ import {
   Select,
   Skeleton,
   Stack,
+  Table,
+  TableContainer,
+  Tbody,
+  Td,
   Text,
+  Th,
+  Thead,
+  Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
+import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
+import { ApiType } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 
 import { api } from "../../../../../api.client";
 import { Cadran } from "../../../../../components/Cadran";
+import { OrderIcon } from "../../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
-import { Filters, Scope } from "../types";
+import { Filters, OrderFormationsTransformationStats, Scope } from "../types";
 
 export const CadranSection = ({
   scope,
@@ -42,24 +52,38 @@ export const CadranSection = ({
   rentreeScolaire?: string;
   parentFilters: Partial<Filters>;
 }) => {
+  const trackEvent = usePlausible();
+  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+
+  const toggleTypeVue = () => {
+    if (typeVue === "cadran") setTypeVue("tableau");
+    else setTypeVue("cadran");
+  };
+
   const [filters, setFilters] = useStateParams({
     prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
       status: undefined,
-      type: "ouverture",
+      type: undefined,
+      order: undefined,
     } as {
       tauxPression?: "eleve" | "faible";
       status?: "submitted" | "draft";
-      type: "ouverture" | "fermeture";
+      type?: "ouverture" | "fermeture";
+      order?: Partial<OrderFormationsTransformationStats>;
     },
   });
+
+  const order = filters.order;
 
   const [currentCfd, setFormationId] = useState<string | undefined>();
 
   const mergedFilters = {
-    ...filters,
     ...parentFilters,
+    tauxPression: filters.tauxPression,
+    status: filters.status,
+    type: filters.type,
     codeRegion: scope?.type === "regions" ? scope.value : undefined,
     codeAcademie: scope?.type === "academies" ? scope.value : undefined,
     codeDepartement: scope?.type === "departements" ? scope.value : undefined,
@@ -68,15 +92,71 @@ export const CadranSection = ({
   const { data: { formations, stats } = {} } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["getformationsTransformationStats", mergedFilters],
-    queryFn: api.getFormationsTransformationStats({ query: mergedFilters })
-      .call,
+    queryKey: ["getformationsTransformationStats", mergedFilters, order],
+    queryFn: api.getFormationsTransformationStats({
+      query: {
+        ...mergedFilters,
+        ...order,
+      },
+    }).call,
   });
 
   const formation = useMemo(
     () => formations?.find((item) => item.cfd === currentCfd),
     [currentCfd, formations]
   );
+
+  const getTdColor = (
+    formation: ApiType<
+      typeof api.getFormationsTransformationStats
+    >["formations"][0]
+  ) => {
+    if (formation.cfd === currentCfd) return "white !important";
+    return "";
+  };
+
+  const getTrBgColor = (
+    formation: ApiType<
+      typeof api.getFormationsTransformationStats
+    >["formations"][0]
+  ) => {
+    if (formation.cfd === currentCfd) return "blue.main !important";
+    if (stats?.tauxInsertion && stats?.tauxPoursuite) {
+      if (
+        formation.tauxInsertion >= stats?.tauxInsertion &&
+        formation.tauxPoursuite >= stats?.tauxPoursuite
+      )
+        return "#C8F6D6";
+      if (
+        formation.tauxInsertion < stats?.tauxInsertion &&
+        formation.tauxPoursuite < stats?.tauxPoursuite
+      )
+        return "#ffe2e1";
+    }
+    return "inherit";
+  };
+
+  const handleOrder = (
+    column: OrderFormationsTransformationStats["orderBy"]
+  ) => {
+    trackEvent("tableau-cadran-intentions:ordre", {
+      props: { colonne: column },
+    });
+    if (order?.orderBy !== column) {
+      setFilters({
+        ...filters,
+        order: { order: "desc", orderBy: column },
+      });
+      return;
+    }
+    setFilters({
+      ...filters,
+      order: {
+        order: order?.order === "asc" ? "desc" : "asc",
+        orderBy: column,
+      },
+    });
+  };
 
   return (
     <>
@@ -89,7 +169,12 @@ export const CadranSection = ({
             <Heading fontSize="md" mr="auto" color="bluefrance.113">
               RÉPARTITION DES OFFRES DE FORMATIONS TRANSFORMÉES
             </Heading>
+            <Button onClick={() => toggleTypeVue()} variant="solid">
+              <ViewIcon mr={2}></ViewIcon>
+              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+            </Button>
             <Button
+              ml="6"
               aria-label="csv"
               variant="solid"
               onClick={async () => {
@@ -111,7 +196,7 @@ export const CadranSection = ({
               variant="newInput"
               bg="blue.main"
               color="white"
-              maxW={200}
+              maxW={250}
               value={filters.type ?? ""}
               onChange={(item) =>
                 setFilters({
@@ -120,9 +205,15 @@ export const CadranSection = ({
                 })
               }
             >
-              <option value="">Toutes</option>
-              <option value="ouverture">Places ouvertes</option>
-              <option value="fermeture">Places fermées</option>
+              <option value="" style={{ color: "black" }}>
+                Places ouvertes et fermées
+              </option>
+              <option value="ouverture" style={{ color: "black" }}>
+                Places ouvertes
+              </option>
+              <option value="fermeture" style={{ color: "black" }}>
+                Places fermées
+              </option>
             </Select>
           </Flex>
           <Flex mt="4">
@@ -175,11 +266,22 @@ export const CadranSection = ({
                     <Link
                       fontSize="xs"
                       as={NextLink}
+                      target="_blank"
                       href={createParametrizedUrl("/intentions/restitution", {
                         filters: {
                           rentreeScolaire: "2024",
                           cfd: [formation.cfd],
                           codeDispositif: [formation.dispositifId],
+                          typeDemande: filters.type
+                            ? filters.type === "ouverture"
+                              ? [
+                                  "ouverture",
+                                  "ouverture_compensation",
+                                  "augmentation",
+                                  "augmentation_compensation",
+                                ]
+                              : ["fermeture", "diminution"]
+                            : undefined,
                         },
                       })}
                     >
@@ -217,34 +319,166 @@ export const CadranSection = ({
                 </>
               )}
             </Box>
-            <AspectRatio flex={1} ratio={1}>
-              <>
-                {formations && (
-                  <Cadran
-                    onClick={({ cfd }) => setFormationId(cfd)}
-                    meanInsertion={stats?.tauxInsertion}
-                    meanPoursuite={stats?.tauxPoursuite}
-                    itemId={(item) => item.cfd + item.dispositifId}
-                    data={formations?.map((item) => ({
-                      ...item,
-                      tauxInsertion6mois: item.tauxInsertion,
-                      tauxPoursuiteEtudes: item.tauxPoursuite,
-                      effectif: item.differencePlaces,
-                    }))}
-                    itemColor={(item) =>
-                      item.cfd === currentCfd ? "#fd3b4cb5" : undefined
-                    }
-                    effectifSizes={[
-                      { max: 15, size: 6 },
-                      { max: 60, size: 12 },
-                      { max: 150, size: 20 },
-                      { max: 100000, size: 30 },
-                    ]}
-                  />
-                )}
-                {!formations && <Skeleton opacity="0.3" height="100%" />}
-              </>
-            </AspectRatio>
+            <Box flex="1">
+              <Flex justify="flex-end">
+                <Text color="grey" fontSize="sm" textAlign="left">
+                  {formations?.length ?? "-"} certifications,
+                </Text>
+                <Text ml="2" color="grey" fontSize="sm" textAlign="right">
+                  {formations?.reduce(
+                    (acc, { placesOuvertes, placesFermees }) => {
+                      if (filters.type === "fermeture")
+                        return acc + (placesFermees ?? 0);
+                      if (filters.type === "ouverture")
+                        return acc + (placesOuvertes ?? 0);
+                      return acc + (placesOuvertes + placesFermees ?? 0);
+                    },
+                    0
+                  ) ?? "-"}{" "}
+                  places
+                </Text>
+              </Flex>
+              <AspectRatio flex={1} ratio={1}>
+                <>
+                  {formations &&
+                    (typeVue === "cadran" ? (
+                      <Cadran
+                        onClick={({ cfd }) => setFormationId(cfd)}
+                        meanInsertion={stats?.tauxInsertion}
+                        meanPoursuite={stats?.tauxPoursuite}
+                        itemId={(item) => item.cfd + item.dispositifId}
+                        data={formations?.map((item) => ({
+                          ...item,
+                          tauxInsertion6mois: item.tauxInsertion,
+                          tauxPoursuiteEtudes: item.tauxPoursuite,
+                          effectif: item.differencePlaces,
+                        }))}
+                        itemColor={(item) =>
+                          item.cfd === currentCfd ? "#fd3b4cb5" : undefined
+                        }
+                        effectifSizes={[
+                          { max: 15, size: 6 },
+                          { max: 60, size: 12 },
+                          { max: 150, size: 20 },
+                          { max: 100000, size: 30 },
+                        ]}
+                      />
+                    ) : (
+                      <Flex
+                        direction="column"
+                        flex={1}
+                        position="relative"
+                        minH="0"
+                      >
+                        <TableContainer
+                          overflowY="auto"
+                          flex={1}
+                          position="relative"
+                          width="100%"
+                        >
+                          <Table
+                            variant="simple"
+                            size={"sm"}
+                            mb={"auto"}
+                            mt={2}
+                          >
+                            <Thead
+                              bgColor="#96A6D8"
+                              h="12"
+                              position="sticky"
+                              top="0"
+                              boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                              zIndex={1}
+                            >
+                              <Tr>
+                                <Th
+                                  maxW="40%"
+                                  color="white"
+                                  cursor="pointer"
+                                  onClick={() => handleOrder("libelleDiplome")}
+                                >
+                                  <OrderIcon
+                                    {...order}
+                                    column="libelleDiplome"
+                                  />
+                                  FORMATION
+                                </Th>
+                                <Th
+                                  maxW="20%"
+                                  isNumeric
+                                  color="white"
+                                  cursor="pointer"
+                                  onClick={() => handleOrder("tauxPression")}
+                                >
+                                  <OrderIcon {...order} column="tauxPression" />
+                                  TX PRESSION
+                                </Th>
+                                <Th
+                                  maxW="20%"
+                                  isNumeric
+                                  color="white"
+                                  cursor="pointer"
+                                  onClick={() => handleOrder("tauxInsertion")}
+                                >
+                                  <OrderIcon
+                                    {...order}
+                                    column="tauxInsertion"
+                                  />
+                                  TX EMPLOI
+                                </Th>
+                                <Th
+                                  maxW="20%"
+                                  isNumeric
+                                  color="white"
+                                  cursor="pointer"
+                                  onClick={() => handleOrder("tauxPoursuite")}
+                                >
+                                  <OrderIcon
+                                    {...order}
+                                    column="tauxPoursuite"
+                                  />
+                                  TX POURSUITE
+                                </Th>
+                              </Tr>
+                            </Thead>
+                            <Tbody>
+                              {formations.map((formation, index) => (
+                                <Tr
+                                  key={`${formation.cfd}-${index}`}
+                                  bgColor={getTrBgColor(formation)}
+                                  onClick={() => setFormationId(formation.cfd)}
+                                  cursor="pointer"
+                                >
+                                  <Td
+                                    whiteSpace="normal"
+                                    color={getTdColor(formation)}
+                                  >
+                                    {formation.libelleDiplome}
+                                  </Td>
+                                  <Td isNumeric color={getTdColor(formation)}>
+                                    {formation.tauxPression
+                                      ? `${formation.tauxPression} %`
+                                      : "-"}
+                                  </Td>
+                                  <Td
+                                    isNumeric
+                                    color={getTdColor(formation)}
+                                  >{`${formation.tauxInsertion} %`}</Td>
+                                  <Td
+                                    isNumeric
+                                    color={getTdColor(formation)}
+                                  >{`${formation.tauxPoursuite} %`}</Td>
+                                </Tr>
+                              ))}
+                            </Tbody>
+                          </Table>
+                        </TableContainer>
+                      </Flex>
+                    ))}
+                  {!formations && <Skeleton opacity="0.3" height="100%" />}
+                </>
+              </AspectRatio>
+            </Box>
             <Box p="4" ml="6" bg="#F3F5FC" w="200px">
               <Heading size="sm" mb="6">
                 FILTRES
