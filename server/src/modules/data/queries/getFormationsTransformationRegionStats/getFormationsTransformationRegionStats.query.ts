@@ -3,7 +3,7 @@ import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHist
 import { selectTauxInsertion6moisAgg } from "../../queries/utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../queries/utils/tauxPoursuite";
 
-export const getRegionStats = async ({
+export const getFormationsTransformationRegionStats = async ({
   codeRegion,
   codeAcademie,
   codeDepartement,

@@ -5,6 +5,7 @@ import { cadranRoutes } from "./routes/panorama.routes";
 import { pilotageReformeRoutes } from "./routes/pilotageReforme.routes";
 import { pilotageTransformationRoutes } from "./routes/pilotageTransformation.routes";
 import { regionsRoutes } from "./routes/regions.routes";
+import { restitutionIntentionsRoutes } from "./routes/restitutionIntentions.routes";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
   formationsRoutes({ server });
@@ -13,4 +14,5 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
   regionsRoutes({ server });
   pilotageReformeRoutes({ server });
   pilotageTransformationRoutes({ server });
+  restitutionIntentionsRoutes({ server });
 };

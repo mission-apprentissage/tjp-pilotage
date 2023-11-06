@@ -25,6 +25,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
@@ -39,18 +40,24 @@ import { OrderIcon } from "../../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
-import { Filters, OrderFormationsTransformationStats, Scope } from "../types";
+import {
+  Filters,
+  OrderFormationsTransformationStats,
+  PilotageTransformationStats,
+  Scope,
+} from "../types";
 
 export const CadranSection = ({
   scope,
   parentFilters,
+  scopeFilters,
 }: {
   scope?: {
     type: Scope;
     value: string | undefined;
   };
-  rentreeScolaire?: string;
   parentFilters: Partial<Filters>;
+  scopeFilters?: PilotageTransformationStats["filters"];
 }) => {
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
@@ -106,6 +113,45 @@ export const CadranSection = ({
     [currentCfd, formations]
   );
 
+  const getCadranPosition = (
+    formation: ApiType<
+      typeof api.getFormationsTransformationStats
+    >["formations"][0]
+  ): string => {
+    if (stats?.tauxInsertion && stats?.tauxPoursuite) {
+      if (
+        formation.tauxInsertion >= stats?.tauxInsertion &&
+        formation.tauxPoursuite < stats?.tauxPoursuite
+      )
+        return "q1";
+      else if (
+        formation.tauxInsertion >= stats?.tauxInsertion &&
+        formation.tauxPoursuite > stats?.tauxPoursuite
+      )
+        return "q2";
+      else if (
+        formation.tauxInsertion < stats?.tauxInsertion &&
+        formation.tauxPoursuite >= stats?.tauxPoursuite
+      )
+        return "q3";
+      else if (
+        formation.tauxInsertion < stats?.tauxInsertion &&
+        formation.tauxPoursuite < stats?.tauxPoursuite
+      )
+        return "q4";
+    }
+    return "";
+  };
+  const getLibelleTerritoire = (
+    territoires?: Array<{ label: string; value: string }>,
+    code?: string
+  ) => {
+    if (scope?.value && scopeFilters)
+      return _.find(territoires, (territoire) => territoire.value === code)
+        ?.label;
+    return undefined;
+  };
+
   const getTdColor = (
     formation: ApiType<
       typeof api.getFormationsTransformationStats
@@ -121,19 +167,14 @@ export const CadranSection = ({
     >["formations"][0]
   ) => {
     if (formation.cfd === currentCfd) return "blue.main !important";
-    if (stats?.tauxInsertion && stats?.tauxPoursuite) {
-      if (
-        formation.tauxInsertion >= stats?.tauxInsertion &&
-        formation.tauxPoursuite >= stats?.tauxPoursuite
-      )
+    switch (getCadranPosition(formation)) {
+      case "q2":
         return "#C8F6D6";
-      if (
-        formation.tauxInsertion < stats?.tauxInsertion &&
-        formation.tauxPoursuite < stats?.tauxPoursuite
-      )
+      case "q4":
         return "#ffe2e1";
+      default:
+        return "inherit";
     }
-    return "inherit";
   };
 
   const handleOrder = (
@@ -179,13 +220,45 @@ export const CadranSection = ({
               variant="solid"
               onClick={async () => {
                 if (!formations) return;
-                downloadCsv("formations_transformees.csv", formations, {
-                  libelleDiplome: "Formation",
-                  libelleDispositif: "Dispositif",
-                  tauxInsertion: "Tx emploi",
-                  tauxPoursuite: "Tx poursuite",
-                  tauxPression: "Tx pression",
-                });
+                downloadCsv(
+                  "formations_transformees.csv",
+                  formations.map((formation) => ({
+                    ...formation,
+                    cadranPosition: getCadranPosition(formation),
+                    libelleRegion:
+                      scope?.type === "regions"
+                        ? getLibelleTerritoire(
+                            scopeFilters?.regions,
+                            scope.value
+                          )
+                        : undefined,
+                    libelleAcademie:
+                      scope?.type === "academies"
+                        ? getLibelleTerritoire(
+                            scopeFilters?.academies,
+                            scope.value
+                          )
+                        : undefined,
+                    libelleDepartement:
+                      scope?.type === "departements"
+                        ? getLibelleTerritoire(
+                            scopeFilters?.departements,
+                            scope.value
+                          )
+                        : undefined,
+                  })),
+                  {
+                    libelleDiplome: "Formation",
+                    libelleDispositif: "Dispositif",
+                    tauxInsertion: "Taux d'emploi",
+                    tauxPoursuite: "Taux de poursuite",
+                    tauxPression: "Taux de pression",
+                    cadranPosition: "Position dans le cadran",
+                    libelleRegion: "Région",
+                    libelleAcademie: "Académie",
+                    libelleDepartement: "Département",
+                  }
+                );
               }}
             >
               <DownloadIcon mr="2" />

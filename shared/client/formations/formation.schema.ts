@@ -34,6 +34,7 @@ const FormationLineSchema = Type.Object({
       libelle: Type.Optional(Type.String()),
     })
   ),
+  positionCadran: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({

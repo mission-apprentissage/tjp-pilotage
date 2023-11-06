@@ -1,8 +1,10 @@
 import { RequestUser } from "../../../core/model/User";
 import { dependencies } from "./dependencies";
 
-const getCountStatsDemandesFactory =
-  ({ countStatsDemandesInDB = dependencies.countStatsDemandesInDB }) =>
+const getCountRestitutionIntentionsStatsFactory =
+  ({
+    countRestitutionIntentionsStatsInDB = dependencies.countRestitutionIntentionsStatsInDB,
+  }) =>
   async (activeFilters: {
     status?: "draft" | "submitted";
     codeRegion?: string[];
@@ -24,9 +26,11 @@ const getCountStatsDemandesFactory =
     compensation?: string;
     user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   }) => {
-    const countStatsDemandesPromise = countStatsDemandesInDB(activeFilters);
+    const countStatsDemandesPromise =
+      countRestitutionIntentionsStatsInDB(activeFilters);
 
     return await countStatsDemandesPromise;
   };
 
-export const getCountStatsDemandes = getCountStatsDemandesFactory({});
+export const getCountRestitutionIntentionsStats =
+  getCountRestitutionIntentionsStatsFactory({});

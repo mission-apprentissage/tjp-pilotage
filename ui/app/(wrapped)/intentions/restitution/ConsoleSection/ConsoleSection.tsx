@@ -11,9 +11,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
 import { OrderIcon } from "../../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
@@ -284,24 +282,21 @@ export const ConsoleSection = ({
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleColoration}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleFCIL}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.commentaire}</Th>
+                <Th pb="4">{STATS_DEMANDES_COLUMNS.positionCadran}</Th>
                 <Th pb="4">{STATS_DEMANDES_COLUMNS.id}</Th>
               </Tr>
             </Thead>
             <Tbody>
               <Fragment>
-                {data?.demandes.map(
-                  (
-                    demande: ApiType<typeof api.getStatsDemandes>["demandes"][0]
-                  ) => {
-                    return (
-                      <Fragment key={`${demande.id}`}>
-                        <Tr h="12" _hover={{ bg: "blue.faded" }}>
-                          <LineContent demande={demande} />
-                        </Tr>
-                      </Fragment>
-                    );
-                  }
-                )}
+                {data?.demandes.map((demande: StatsDemandes["demandes"][0]) => {
+                  return (
+                    <Fragment key={`${demande.id}`}>
+                      <Tr h="12" _hover={{ bg: "blue.faded" }}>
+                        <LineContent demande={demande} />
+                      </Tr>
+                    </Fragment>
+                  );
+                })}
               </Fragment>
             </Tbody>
           </Table>

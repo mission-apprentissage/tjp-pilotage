@@ -10,10 +10,10 @@ import {
   countOuvertures,
   countOuverturesApprentissage,
   countOuverturesSco,
-} from "../../utils/countCapacite";
-import { isStatsDemandeVisible } from "../../utils/isStatsDemandesVisible";
+} from "../../../utils/countCapacite";
+import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 
-const countStatsDemandesInDB = async ({
+const countRestitutionIntentionsStatsInDB = async ({
   status,
   codeRegion,
   rentreeScolaire,
@@ -249,12 +249,12 @@ const countStatsDemandesInDB = async ({
       if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
       return eb;
     })
-    .where(isStatsDemandeVisible({ user }))
+    .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow();
 
   return countDemandes;
 };
 
 export const dependencies = {
-  countStatsDemandesInDB,
+  countRestitutionIntentionsStatsInDB,
 };

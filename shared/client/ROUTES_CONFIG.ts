@@ -4,6 +4,7 @@ import { formationSchemas } from "./formations/formation.schema";
 import { intentionsSchemas } from "./intentions/intentions.schema";
 import { pilotageReformeSchemas } from "./pilotageReforme/pilotageReforme.schema";
 import { pilotageTransformationSchemas } from "./pilotageTransfo/pilotageTransfo.schema";
+import { restitutionIntentionsSchemas } from "./restitutionIntentions/restitutionIntentions.schema";
 
 export const ROUTES_CONFIG = {
   ...formationSchemas,
@@ -12,4 +13,5 @@ export const ROUTES_CONFIG = {
   ...authSchemas,
   ...intentionsSchemas,
   ...pilotageTransformationSchemas,
+  ...restitutionIntentionsSchemas,
 };
