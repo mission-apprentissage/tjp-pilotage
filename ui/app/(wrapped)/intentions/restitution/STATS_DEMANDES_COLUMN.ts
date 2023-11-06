@@ -10,7 +10,7 @@ export const STATS_DEMANDES_COLUMNS = {
   commune: "Commune",
   rentreeScolaire: "RS",
   typeDemande: "Type de demande",
-  motifs: "Motif(s) de la demande",
+  motif: "Motif(s) de la demande",
   autreMotif: "Autre motif",
   coloration: "Coloration",
   libelleColoration: "Libellé coloration",

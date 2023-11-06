@@ -12,10 +12,15 @@ const ScopedStatsTransfoSchema = Type.Object({
   countDemande: Type.Number(),
   differenceCapaciteScolaire: Type.Number(),
   differenceCapaciteApprentissage: Type.Number(),
+  placesTransformees: Type.Number(),
   placesOuvertesScolaire: Type.Number(),
-  placesFermeesScolaire: Type.Number(),
   placesOuvertesApprentissage: Type.Number(),
+  placesOuvertes: Type.Number(),
+  placesFermeesScolaire: Type.Number(),
   placesFermeesApprentissage: Type.Number(),
+  placesFermees: Type.Number(),
+  ratioOuverture: Type.Number(),
+  ratioFermeture: Type.Number(),
   tauxTransformation: Type.Number(),
 });
 
@@ -50,9 +55,47 @@ const StatsFiltersSchema = Type.Object({
   filiere: Type.Optional(Type.Array(Type.String())),
 });
 
+const FormationTransformationStatsSchema = Type.Object({
+  libelleDiplome: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
+  tauxInsertion: Type.Number(),
+  tauxPoursuite: Type.Number(),
+  tauxPression: Type.Optional(Type.Number()),
+  dispositifId: Type.Optional(Type.String()),
+  cfd: Type.String(),
+  nbDemandes: Type.Number(),
+  nbEtablissements: Type.Number(),
+  differencePlaces: Type.Number(),
+  placesOuvertes: Type.Number(),
+  placesFermees: Type.Number(),
+  placesTransformees: Type.Number(),
+  continuum: Type.Optional(
+    Type.Object({
+      cfd: Type.String(),
+      libelle: Type.Optional(Type.String()),
+    })
+  ),
+});
+
+const FormationsTransformationStatsFiltersSchema = Type.Object({
+  rentreeScolaire: Type.Optional(Type.String()),
+  codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+  filiere: Type.Optional(Type.Array(Type.String())),
+});
+
 export const pilotageTransformationSchemas = {
   getTransformationStats: {
-    querystring: Type.Intersect([StatsFiltersSchema]),
+    querystring: Type.Intersect([
+      StatsFiltersSchema,
+      Type.Object({
+        order: Type.Optional(
+          Type.Union([Type.Literal("asc"), Type.Literal("desc")])
+        ),
+        orderBy: Type.Optional(
+          Type.KeyOf(Type.Omit(ScopedStatsTransfoSchema, []))
+        ),
+      }),
+    ]),
     response: {
       200: Type.Object({
         submitted: StatsTransfoSchema,
@@ -71,7 +114,7 @@ export const pilotageTransformationSchemas = {
   },
   getFormationsTransformationStats: {
     querystring: Type.Intersect([
-      StatsFiltersSchema,
+      FormationsTransformationStatsFiltersSchema,
       Type.Object({
         status: Type.Optional(
           Type.Union([Type.Literal("draft"), Type.Literal("submitted")])
@@ -86,6 +129,14 @@ export const pilotageTransformationSchemas = {
           Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
         ),
       }),
+      Type.Object({
+        order: Type.Optional(
+          Type.Union([Type.Literal("asc"), Type.Literal("desc")])
+        ),
+        orderBy: Type.Optional(
+          Type.KeyOf(Type.Omit(FormationTransformationStatsSchema, []))
+        ),
+      }),
     ]),
     response: {
       200: Type.Object({
@@ -93,28 +144,7 @@ export const pilotageTransformationSchemas = {
           tauxInsertion: Type.Number(),
           tauxPoursuite: Type.Number(),
         }),
-        formations: Type.Array(
-          Type.Object({
-            libelleDiplome: Type.Optional(Type.String()),
-            libelleDispositif: Type.Optional(Type.String()),
-            tauxInsertion: Type.Number(),
-            tauxPoursuite: Type.Number(),
-            tauxPression: Type.Optional(Type.Number()),
-            dispositifId: Type.Optional(Type.String()),
-            cfd: Type.String(),
-            nbDemandes: Type.Number(),
-            nbEtablissements: Type.Number(),
-            differencePlaces: Type.Number(),
-            placesOuvertes: Type.Number(),
-            placesFermees: Type.Number(),
-            continuum: Type.Optional(
-              Type.Object({
-                cfd: Type.String(),
-                libelle: Type.Optional(Type.String()),
-              })
-            ),
-          })
-        ),
+        formations: Type.Array(FormationTransformationStatsSchema),
       }),
     },
   },

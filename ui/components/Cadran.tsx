@@ -243,7 +243,7 @@ export const Cadran = function <
                     [
                       {
                         coord: [meanPoursuite, meanInsertion],
-                        itemStyle: { color: "#E5F9DB" },
+                        itemStyle: { color: "#C8F6D6" },
                         name: `Q2 - ${repartitionCadrans?.q2} formations`,
                         label: {
                           ...cadranLabelStyle,
