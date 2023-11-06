@@ -270,12 +270,18 @@ export const IndicateursClesSection = ({
       | "placesFermeesScolaire"
       | "placesOuvertesApprentissage"
       | "placesFermeesApprentissage"
+      | "placesOuvertes"
+      | "placesFermees"
+      | "ratioFermeture"
+      | "ratioOuverture"
   ): number => {
     if (data) {
       if (scope && scope.type && scope.value && data[status][scope.type]) {
-        if (data[status][scope.type][scope.value])
+        if (data[status][scope.type][`_${scope.value}`])
           return Number.parseFloat(
-            (data[status][scope.type][scope.value][indicateur] ?? 0).toFixed(1)
+            (
+              data[status][scope.type][`_${scope.value}`][indicateur] ?? 0
+            ).toFixed(1)
           );
         return 0;
       }
@@ -295,58 +301,16 @@ export const IndicateursClesSection = ({
       | "placesFermeesScolaire"
       | "placesOuvertesApprentissage"
       | "placesFermeesApprentissage"
+      | "placesOuvertes"
+      | "placesFermees"
+      | "ratioFermeture"
+      | "ratioOuverture"
   ): number => {
     if (data) {
       return Number.parseFloat(
         (data[status]["national"][indicateur] ?? 0).toFixed(1)
       );
     }
-    return 0;
-  };
-
-  const getScopedRatioFermetures = (
-    status: "submitted" | "draft" | "all"
-  ): number => {
-    if (data) {
-      if (
-        scope &&
-        scope.type &&
-        scope.value &&
-        data[status][scope.type] &&
-        data[status][scope.type][scope.value]
-      )
-        return Number.parseFloat(
-          (
-            ((getScopedData(status, "placesFermeesScolaire") +
-              getScopedData(status, "placesFermeesApprentissage")) /
-              (getScopedData(status, "placesFermeesScolaire") +
-                getScopedData(status, "placesFermeesApprentissage") +
-                getScopedData(status, "placesOuvertesScolaire") +
-                getScopedData(status, "placesOuvertesApprentissage"))) *
-            100
-          ).toFixed(1)
-        );
-      return getNationalRatioFermetures(status);
-    }
-    return 0;
-  };
-
-  const getNationalRatioFermetures = (
-    status: "submitted" | "draft" | "all"
-  ): number => {
-    if (data)
-      return Number.parseFloat(
-        (
-          ((getNationalData(status, "placesFermeesScolaire") +
-            getNationalData(status, "placesFermeesApprentissage")) /
-            (getNationalData(status, "placesFermeesScolaire") +
-              getNationalData(status, "placesFermeesApprentissage") +
-              getNationalData(status, "placesOuvertesScolaire") +
-              getNationalData(status, "placesOuvertesApprentissage"))) *
-          100
-        ).toFixed(1)
-      );
-
     return 0;
   };
 
@@ -512,50 +476,25 @@ export const IndicateursClesSection = ({
                       </Flex>
                       <ProgressBar
                         percentage={
-                          ((getScopedData(
-                            "submitted",
-                            "placesOuvertesScolaire"
-                          ) +
-                            getScopedData(
-                              "submitted",
-                              "placesOuvertesApprentissage"
-                            )) /
-                            (getScopedData("all", "placesOuvertesScolaire") +
-                              getScopedData(
-                                "all",
-                                "placesOuvertesApprentissage"
-                              ))) *
+                          (getScopedData("submitted", "placesOuvertes") /
+                            getScopedData("all", "placesOuvertes")) *
                           100
                         }
                         leftLabel="Validées"
-                        rightLabel={
-                          getScopedData("submitted", "placesOuvertesScolaire") +
-                          getScopedData(
-                            "submitted",
-                            "placesOuvertesApprentissage"
-                          )
-                        }
+                        rightLabel={getScopedData(
+                          "submitted",
+                          "placesOuvertes"
+                        )}
                         colorScheme="green.submitted"
                       />
                       <ProgressBar
                         percentage={
-                          ((getScopedData("draft", "placesOuvertesScolaire") +
-                            getScopedData(
-                              "draft",
-                              "placesOuvertesApprentissage"
-                            )) /
-                            (getScopedData("all", "placesOuvertesScolaire") +
-                              getScopedData(
-                                "all",
-                                "placesOuvertesApprentissage"
-                              ))) *
+                          (getScopedData("draft", "placesOuvertes") /
+                            getScopedData("all", "placesOuvertes")) *
                           100
                         }
                         leftLabel="En projet"
-                        rightLabel={
-                          getScopedData("draft", "placesOuvertesScolaire") +
-                          getScopedData("draft", "placesOuvertesApprentissage")
-                        }
+                        rightLabel={getScopedData("draft", "placesOuvertes")}
                         colorScheme="orange.draft"
                       />
                     </Flex>
@@ -572,56 +511,27 @@ export const IndicateursClesSection = ({
                           fontWeight="800"
                           color="bluefrance.113"
                         >
-                          {getScopedData("all", "placesFermeesScolaire") +
-                            getScopedData("all", "placesFermeesApprentissage")}
+                          {getScopedData("all", "placesFermees")}
                         </Text>
                       </Flex>
                       <ProgressBar
                         percentage={
-                          ((getScopedData(
-                            "submitted",
-                            "placesFermeesScolaire"
-                          ) +
-                            getScopedData(
-                              "submitted",
-                              "placesFermeesApprentissage"
-                            )) /
-                            (getScopedData("all", "placesFermeesScolaire") +
-                              getScopedData(
-                                "all",
-                                "placesFermeesApprentissage"
-                              ))) *
+                          (getScopedData("submitted", "placesFermees") /
+                            getScopedData("all", "placesFermees")) *
                           100
                         }
                         leftLabel="Validées"
-                        rightLabel={
-                          getScopedData("submitted", "placesFermeesScolaire") +
-                          getScopedData(
-                            "submitted",
-                            "placesFermeesApprentissage"
-                          )
-                        }
+                        rightLabel={getScopedData("submitted", "placesFermees")}
                         colorScheme="green.submitted"
                       />
                       <ProgressBar
                         percentage={
-                          ((getScopedData("draft", "placesFermeesScolaire") +
-                            getScopedData(
-                              "draft",
-                              "placesFermeesApprentissage"
-                            )) /
-                            (getScopedData("all", "placesFermeesScolaire") +
-                              getScopedData(
-                                "all",
-                                "placesFermeesApprentissage"
-                              ))) *
+                          (getScopedData("draft", "placesFermees") /
+                            getScopedData("all", "placesFermees")) *
                           100
                         }
                         leftLabel="En projet"
-                        rightLabel={
-                          getScopedData("draft", "placesFermeesScolaire") +
-                          getScopedData("draft", "placesFermeesApprentissage")
-                        }
+                        rightLabel={getScopedData("draft", "placesFermees")}
                         colorScheme="orange.draft"
                       />
                     </Flex>
@@ -636,12 +546,12 @@ export const IndicateursClesSection = ({
                       fontWeight="800"
                       mb={1}
                       color={
-                        getScopedRatioFermetures("all") >= 30
+                        getScopedData("all", "ratioFermeture") >= 30
                           ? "pilotage.green.3"
                           : "orange.warning"
                       }
                     >
-                      {`${getScopedRatioFermetures("all")} %`}
+                      {`${getScopedData("all", "ratioFermeture")} %`}
                     </Flex>
                     {scope && scope.type && scope.value && (
                       <>
@@ -649,8 +559,8 @@ export const IndicateursClesSection = ({
                         <Delta
                           delta={Number.parseFloat(
                             (
-                              getScopedRatioFermetures("all") -
-                              getNationalRatioFermetures("all")
+                              getScopedData("all", "ratioFermeture") -
+                              getNationalData("all", "ratioFermeture")
                             ).toFixed(1)
                           )}
                         />

@@ -77,6 +77,11 @@ const findStatsDemandesInDB = async ({
       "dataEtablissement.codeDepartement"
     )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
     .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .leftJoin(
       "niveauDiplome",
@@ -105,6 +110,8 @@ const findStatsDemandesInDB = async ({
       "region.libelleRegion as libelleRegion",
       "departement.libelle as libelleDepartement",
       "departement.codeDepartement as codeDepartement",
+      "academie.libelle as libelleAcademie",
+      "academie.codeAcademie as codeAcademie",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
