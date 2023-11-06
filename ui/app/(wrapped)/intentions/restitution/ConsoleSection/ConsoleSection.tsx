@@ -105,7 +105,7 @@ export const ConsoleSection = ({
                   onClick={() => handleOrder("motif")}
                 >
                   <OrderIcon {...order} column="motif" />
-                  {STATS_DEMANDES_COLUMNS.motifs}
+                  {STATS_DEMANDES_COLUMNS.motif}
                 </Th>
                 <Th
                   cursor="pointer"
