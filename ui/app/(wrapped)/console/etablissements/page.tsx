@@ -19,11 +19,13 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { ApiType } from "shared";
 
 import { api } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { ExportColumns } from "@/utils/downloadCsv";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
@@ -55,7 +57,6 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxInsertion6mois: "Tx d'emploi 6 mois régional",
   tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
   valeurAjoutee: "Valeur ajoutée",
-  decrochage: "Décrochage",
   secteur: "Secteur",
   UAI: "UAI",
   libelleDispositif: "Dispositif",
@@ -67,7 +68,9 @@ const ETABLISSEMENTS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
-} as const;
+} satisfies ExportColumns<
+  ApiType<typeof api.getEtablissements>["etablissements"][number]
+>;
 
 type Query = Parameters<typeof api.getEtablissements>[0]["query"];
 

@@ -1,9 +1,21 @@
 import { Parser } from "@json2csv/plainjs";
 
-export function downloadCsv<D>(
+export type ExportColumns<T extends object> = {
+  [K in keyof T as T[K] extends string | string[] | number | boolean | undefined
+    ? K
+    : T[K] extends
+        | {
+            [Te in infer K2]?: string | string[] | number | boolean | undefined;
+          }
+        | undefined
+    ? `${Exclude<K, symbol>}.${Exclude<K2, symbol>}`
+    : never]?: string;
+};
+
+export function downloadCsv<D extends object>(
   filename: string,
   data: D[],
-  columns: { [K in keyof D]?: string }
+  columns: ExportColumns<D>
 ) {
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
