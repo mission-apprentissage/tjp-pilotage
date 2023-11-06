@@ -7,5 +7,6 @@ shift
 
 echo "Déploiement sur l'(es) environnement(s) ${ENV_FILTER}..."
 cd "${ANSIBLE_DIR}"
+ansible-galaxy collection install --requirements-file galaxy-requirements.yml
 ansible-playbook -i env.ini --limit "${ENV_FILTER}" deploy.yml "$@"
 cd -
