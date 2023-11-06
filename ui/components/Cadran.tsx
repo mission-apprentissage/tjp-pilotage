@@ -96,31 +96,12 @@ export const Cadran = function <
     });
   }, [containerRef.current, popperInstance, displayedDetail]);
 
-  const prev = useRef<Record<string, number>>();
-  const orderedData = useMemo(() => {
-    const temp = data.reduce((acc, cur, i) => {
-      const prevIndex = prev.current?.[itemId(cur)];
-      if (prevIndex) {
-        acc[prevIndex] = cur;
-        return acc;
-      }
-      acc[1000 + i] = cur;
-      return acc;
-    }, [] as F[]);
-
-    prev.current = temp.reduce(
-      (acc, cur, i) => ({ ...acc, [itemId(cur)]: i }),
-      {}
-    );
-    return temp;
-  }, [JSON.stringify(data)]);
-
   const series = useMemo(() => {
-    return orderedData.map((formation) => [
-      formation.tauxPoursuiteEtudes,
-      formation.tauxInsertion6mois,
-    ]);
-  }, [orderedData]);
+    return data.map((formation) => ({
+      value: [formation.tauxPoursuiteEtudes, formation.tauxInsertion6mois],
+      name: itemId(formation),
+    }));
+  }, [data]);
 
   const repartitionCadrans = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
@@ -208,7 +189,7 @@ export const Cadran = function <
         {
           itemStyle: {
             color: ({ dataIndex }) => {
-              const formation = orderedData[dataIndex];
+              const formation = data[dataIndex];
               if (!formation) return "";
               if (typeof itemColor === "string") return itemColor;
               return itemColor(formation) ?? "rgba(58, 85, 209, 0.6)";
@@ -220,7 +201,7 @@ export const Cadran = function <
           data: series as any,
           type: "scatter",
           symbolSize: (_, { dataIndex }) => {
-            const formation = orderedData[dataIndex];
+            const formation = data[dataIndex];
             if (!formation) return 0;
             const size = effectifSizes.find(
               ({ max }) => formation.effectif && formation.effectif < max
@@ -301,7 +282,7 @@ export const Cadran = function <
         },
       ],
     }),
-    [orderedData, meanPoursuite, meanInsertion, itemColor, itemId]
+    [data, meanPoursuite, meanInsertion, itemColor, itemId]
   );
 
   useLayoutEffect(() => {
@@ -316,11 +297,11 @@ export const Cadran = function <
         0, 0,
       ];
       chartRef.current?.setOption(option);
-      onClick?.(orderedData[event.dataIndex]);
+      onClick?.(data[event.dataIndex]);
       setDisplayedDetail({
         x,
         y,
-        formation: orderedData[event.dataIndex],
+        formation: data[event.dataIndex],
       });
       return true;
     };
@@ -329,7 +310,7 @@ export const Cadran = function <
     return () => {
       chartRef.current?.off("click", handler);
     };
-  }, [option, orderedData]);
+  }, [option, data]);
 
   return (
     <Box
