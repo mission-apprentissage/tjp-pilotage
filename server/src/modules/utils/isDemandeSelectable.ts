@@ -2,8 +2,8 @@ import Boom from "@hapi/boom";
 import { ExpressionBuilder, sql } from "kysely";
 import { getPermissionScope } from "shared";
 
-import { DB } from "../../../db/schema";
-import { RequestUser } from "../../core/model/User";
+import { DB } from "../../db/schema";
+import { RequestUser } from "../core/model/User";
 
 export const isDemandeSelectable =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>

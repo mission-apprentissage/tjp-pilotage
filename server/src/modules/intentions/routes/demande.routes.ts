@@ -7,8 +7,6 @@ import { countDemandes } from "../queries/countDemandes.query";
 import { findDemande } from "../queries/findDemande.query";
 import { findDemandes } from "../queries/findDemandes.query";
 import { deleteDemande } from "../usecases/deleteDemande/deleteDemande.usecase";
-import { getCountStatsDemandes } from "../usecases/getCountStatsDemandes/getCountStatsDemandes.usecase";
-import { getStatsDemandes } from "../usecases/getStatsDemandes/getStatsDemandes.usecase";
 import { submitDemande } from "../usecases/submitDemande/submitDemande.usecase";
 import { submitDraftDemande } from "../usecases/submitDraftDemande/submitDraftDemande.usecase";
 
@@ -115,43 +113,6 @@ export const demandeRoutes = ({ server }: { server: Server }) => {
       if (!request.user) throw Boom.forbidden();
 
       const result = await countDemandes({
-        user: request.user,
-      });
-      response.status(200).send(result);
-    }
-  );
-
-  server.get(
-    "/demandes/stats",
-    {
-      schema: ROUTES_CONFIG.getStatsDemandes,
-      preHandler: hasPermissionHandler("intentions/lecture"),
-    },
-    async (request, response) => {
-      const { order, orderBy, ...rest } = request.query;
-      if (!request.user) throw Boom.forbidden();
-
-      const result = await getStatsDemandes({
-        ...rest,
-        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
-        user: request.user,
-      });
-      response.status(200).send(result);
-    }
-  );
-
-  server.get(
-    "/demandes/stats/count",
-    {
-      schema: ROUTES_CONFIG.countStatsDemandes,
-      preHandler: hasPermissionHandler("intentions/lecture"),
-    },
-    async (request, response) => {
-      const { ...filters } = request.query;
-      if (!request.user) throw Boom.forbidden();
-
-      const result = await getCountStatsDemandes({
-        ...filters,
         user: request.user,
       });
       response.status(200).send(result);

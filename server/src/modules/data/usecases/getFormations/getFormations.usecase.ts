@@ -25,6 +25,7 @@ const getFormationsFactory =
     libelleFiliere?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
     withEmptyFormations?: boolean;
+    positionCadran?: string;
   }) => {
     const [{ formations, count }, filters] = await Promise.all([
       deps.findFormationsInDb(activeFilters),

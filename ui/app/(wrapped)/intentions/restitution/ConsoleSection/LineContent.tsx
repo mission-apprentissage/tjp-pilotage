@@ -1,16 +1,15 @@
 import { Td } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../utils/typeDemandeUtils";
+import { StatsDemandes } from "../types";
 export const LineContent = ({
   demande,
 }: {
-  demande: ApiType<typeof api.getStatsDemandes>["demandes"][0];
+  demande: StatsDemandes["demandes"][0];
 }) => {
   const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
     return motif ? (
@@ -84,6 +83,7 @@ export const LineContent = ({
       <Td minW={600} maxW={600} textOverflow={"ellipsis"} isTruncated={true}>
         {demande.commentaire}
       </Td>
+      <Td>{demande.positionCadran}</Td>
       <Td>{demande.id}</Td>
     </>
   );

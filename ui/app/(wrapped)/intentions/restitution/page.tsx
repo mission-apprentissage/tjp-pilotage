@@ -124,8 +124,8 @@ export default () => {
   const { data, isLoading: isLoading } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["statsDemandes", filters, order, page],
-    queryFn: api.getStatsDemandes({
+    queryKey: ["restitutionIntentionsStats", filters, order, page],
+    queryFn: api.getRestitutionIntentionsStats({
       query: {
         ...filters,
         ...order,
@@ -138,10 +138,10 @@ export default () => {
   const { data: countData, isLoading: isLoadingCount } = useQuery({
     keepPreviousData: true,
     staleTime: 10000000,
-    queryKey: ["countStatsDemandes", filters],
+    queryKey: ["countRestitutionIntentionsStats", filters],
     queryFn: async () =>
       api
-        .countStatsDemandes({
+        .countRestitutionIntentionsStats({
           query: {
             ...filters,
           },
@@ -173,7 +173,7 @@ export default () => {
           onExport={async () => {
             trackEvent("restitution-demandes:export");
             const data = await api
-              .getStatsDemandes({
+              .getRestitutionIntentionsStats({
                 query: { ...filters, ...order, limit: 10000000 },
               })
               .call();

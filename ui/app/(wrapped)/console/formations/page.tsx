@@ -59,6 +59,7 @@ const FORMATIONS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
+  positionCadran: "Position dans le cadran",
 } as const;
 
 const fetchFormations = async (query: Query) =>
@@ -479,6 +480,7 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleFiliere" />
                   {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
+                <Th>{FORMATIONS_COLUMNS.positionCadran}</Th>
               </Tr>
             </Thead>
             <Tbody>

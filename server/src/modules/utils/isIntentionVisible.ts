@@ -2,13 +2,13 @@ import Boom from "@hapi/boom";
 import { ExpressionBuilder, sql } from "kysely";
 import { getPermissionScope } from "shared";
 
-import { DB } from "../../../db/schema";
-import { RequestUser } from "../../core/model/User";
+import { DB } from "../../db/schema";
+import { RequestUser } from "../core/model/User";
 
-export const isStatsDemandeVisible =
+export const isIntentionVisible =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
-    const filter = getStatsDemandesVisibleFilters(user);
+    const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
       filter.codeRegion
         ? eb("demande.codeRegion", "=", filter.codeRegion)
@@ -19,7 +19,7 @@ export const isStatsDemandeVisible =
 export const isRegionVisible =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
   (eb: ExpressionBuilder<DB, "region">) => {
-    const filter = getStatsDemandesVisibleFilters(user);
+    const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
       filter.codeRegion
         ? eb("region.codeRegion", "=", filter.codeRegion)
@@ -27,7 +27,7 @@ export const isRegionVisible =
     ]);
   };
 
-const getStatsDemandesVisibleFilters = (
+const getIntentionsVisiblesFilters = (
   user?: Pick<RequestUser, "id" | "role" | "codeRegion">
 ) => {
   if (!user) throw new Error("missing variable user");
