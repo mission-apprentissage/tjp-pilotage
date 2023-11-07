@@ -31,7 +31,7 @@ import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../utils/downloadCsv";
+import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -57,7 +57,7 @@ const DEMANDES_COLUMNS = {
   commentaire: "Commentaire",
   status: "Status",
   codeRegion: "Code Region",
-  codeAcademie: "Cod eAcadémie",
+  codeAcademie: "Code Académie",
   createdAt: "Date de création",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
@@ -68,7 +68,7 @@ const DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-} as const;
+} satisfies ExportColumns<ApiType<typeof api.getDemandes>["demandes"][number]>;
 
 export type Query = Parameters<typeof api.getDemandes>[0]["query"];
 export type Filters = Pick<Query, "status">;
@@ -373,6 +373,7 @@ export const PageClient = () => {
                       query: { ...filters, ...order, limit: 10000000 },
                     })
                     .call();
+
                   downloadCsv(
                     "export_demandes.csv",
                     data.demandes,
