@@ -4,7 +4,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { withDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
+import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
@@ -122,9 +122,13 @@ export const queryFormations = async ({
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
-        withDevenirFavorableReg({ eb, millesimeSortie }).as(
-          "tauxDevenirFavorable"
-        ),
+        withTauxDevenirFavorableReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxDevenirFavorable"),
     ])
     .$narrowType<{
       tauxInsertion6mois: number;

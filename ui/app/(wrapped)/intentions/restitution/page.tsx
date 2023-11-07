@@ -171,10 +171,10 @@ export default () => {
           mb={36}
           pl="4"
           onExport={async () => {
-            trackEvent("restituition-demandes:export");
+            trackEvent("restitution-demandes:export");
             const data = await api
               .getStatsDemandes({
-                query: { ...filters, ...order },
+                query: { ...filters, ...order, limit: 10000000 },
               })
               .call();
             downloadCsv(

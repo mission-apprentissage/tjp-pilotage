@@ -24,6 +24,7 @@ export const CartoSection = ({
   indicateur,
   handleIndicateurChange,
   indicateurOptions,
+  territoiresFilters,
   handleTerritoiresFilters,
 }: {
   data?: PilotageTransformationStats;
@@ -35,6 +36,7 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
+  territoiresFilters: Partial<TerritoiresFilters>;
   handleTerritoiresFilters: (
     type: keyof TerritoiresFilters,
     value: TerritoiresFilters[keyof TerritoiresFilters]
@@ -85,57 +87,27 @@ export const CartoSection = ({
     }
   };
 
-  const getNombrePlace = (
-    type: "ouverture" | "fermeture",
-    territoire:
-      | PilotageTransformationStats["all"]["regions"][string]
-      | PilotageTransformationStats["all"]["academies"][string]
-      | PilotageTransformationStats["all"]["departements"][string]
-  ): number => {
-    return type === "ouverture"
-      ? territoire.placesOuvertesScolaire +
-          territoire.placesOuvertesApprentissage
-      : territoire.placesFermeesScolaire +
-          territoire.placesFermeesApprentissage;
-  };
-
-  const getRatioFermeture = (
-    territoire:
-      | PilotageTransformationStats["all"]["regions"][string]
-      | PilotageTransformationStats["all"]["academies"][string]
-      | PilotageTransformationStats["all"]["departements"][string]
-  ): string => {
-    return (
-      (getNombrePlace("fermeture", territoire) /
-        (getNombrePlace("ouverture", territoire) +
-          getNombrePlace("fermeture", territoire))) *
-      100
-    ).toFixed(2);
-  };
-
   const getGraphData = () => {
     if (cartoScope && data?.all[cartoScope])
-      return Object.values(data?.all[cartoScope]).map((territoire) => {
-        switch (indicateur) {
-          case "tauxTransformation":
-            return {
-              name: territoire.libelle,
-              parentName: territoire.libelleAcademie,
-              value: territoire["tauxTransformation"] ?? 0,
-            };
-          case "ratioFermeture":
-            return {
-              name: territoire.libelle,
-              parentName: territoire.libelleAcademie,
-              value: getRatioFermeture(territoire),
-            };
-        }
-      });
+      return Object.values(data?.all[cartoScope]).map((territoire) => ({
+        name: territoire.libelle,
+        parentName: territoire.libelleAcademie,
+        value: territoire[indicateur] ?? 0,
+      }));
     return [];
   };
 
   const handleClickOnTerritoire = (code: string | undefined) => {
-    handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
+    if (
+      cartoScope &&
+      territoiresFilters[cartoScope] &&
+      territoiresFilters[cartoScope] === code
+    )
+      handleTerritoiresFilters(
+        cartoScope as keyof TerritoiresFilters,
+        undefined
+      );
+    else handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
   };
 
   return (
@@ -178,7 +150,7 @@ export const CartoSection = ({
                 onChange={(value) => setCartoScope(value as Scope)}
                 defaultChecked
                 defaultValue={cartoScope}
-                zIndex={"banner"}
+                zIndex={"dropdown"}
               >
                 <Flex flexDirection={"column"}>
                   <Radio

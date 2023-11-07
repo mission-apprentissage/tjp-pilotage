@@ -18,7 +18,13 @@ import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { VueOuverturesFermeturesSection } from "./components/VueOuverturesFermeturesSection";
 import { VueTauxTransformationSection } from "./components/VueTauxTransformationSection";
-import { Filters, IndicateurType, Scope, TerritoiresFilters } from "./types";
+import {
+  Filters,
+  IndicateurType,
+  Order,
+  Scope,
+  TerritoiresFilters,
+} from "./types";
 
 export default withAuth(
   "restitution-intentions/lecture",
@@ -27,11 +33,16 @@ export default withAuth(
     const queryParams = useSearchParams();
     const searchParams: {
       filters?: Partial<Filters>;
+      order?: Partial<Order>;
     } = qs.parse(queryParams.toString());
 
     const filters = searchParams.filters ?? {};
+    const order = searchParams.order ?? { order: "asc" };
 
-    const setSearchParams = (params: { filters?: typeof filters }) => {
+    const setSearchParams = (params: {
+      filters?: typeof filters;
+      order?: typeof order;
+    }) => {
       router.replace(
         createParametrizedUrl(location.pathname, { ...searchParams, ...params })
       );
@@ -49,6 +60,20 @@ export default withAuth(
     >({});
     const [indicateur, setIndicateur] =
       useState<IndicateurType>("tauxTransformation");
+
+    const handleOrder = (column: Order["orderBy"]) => {
+      trackEvent("pilotage-intentions:ordre", { props: { colonne: column } });
+      if (order?.orderBy !== column) {
+        setSearchParams({ order: { order: "desc", orderBy: column } });
+        return;
+      }
+      setSearchParams({
+        order: {
+          order: order?.order === "asc" ? "desc" : "asc",
+          orderBy: column,
+        },
+      });
+    };
 
     const handleTerritoiresFilters = (
       type: keyof TerritoiresFilters,
@@ -77,10 +102,11 @@ export default withAuth(
     const { data, isLoading: isLoading } = useQuery({
       keepPreviousData: true,
       staleTime: 10000000,
-      queryKey: ["pilotageTransfo", filters],
+      queryKey: ["pilotageTransfo", filters, order],
       queryFn: api.getTransformationStats({
         query: {
           ...filters,
+          ...order,
         },
       }).call,
     });
@@ -120,7 +146,6 @@ export default withAuth(
             isLoading={isLoading}
             data={data}
           />
-
           <Box>
             <SimpleGrid spacing={8} columns={[2]} mt={8}>
               <Box>
@@ -136,6 +161,7 @@ export default withAuth(
                 indicateur={indicateur}
                 handleIndicateurChange={handleIndicateurChange}
                 indicateurOptions={indicateurOptions}
+                territoiresFilters={territoiresFilters}
                 handleTerritoiresFilters={handleTerritoiresFilters}
               />
             </SimpleGrid>
@@ -147,11 +173,15 @@ export default withAuth(
                 data={data}
                 isLoading={isLoading}
                 codeRegion={territoiresFilters.regions}
+                order={order}
+                handleOrder={handleOrder}
               />
               <VueOuverturesFermeturesSection
                 data={data}
                 isLoading={isLoading}
                 codeRegion={territoiresFilters.regions}
+                order={order}
+                handleOrder={handleOrder}
               />
             </SimpleGrid>
           </Box>

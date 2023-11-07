@@ -77,6 +77,11 @@ const findStatsDemandesInDB = async ({
       "dataEtablissement.codeDepartement"
     )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
     .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .leftJoin(
       "niveauDiplome",
@@ -105,6 +110,8 @@ const findStatsDemandesInDB = async ({
       "region.libelleRegion as libelleRegion",
       "departement.libelle as libelleDepartement",
       "departement.codeDepartement as codeDepartement",
+      "academie.libelle as libelleAcademie",
+      "academie.codeAcademie as codeAcademie",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
@@ -731,7 +738,15 @@ const findFiltersInDb = async ({
     .execute();
 
   const formationsFilters = await filtersBase
-    .select(["dataFormation.libelle as label", "dataFormation.cfd as value"])
+    .select((eb) => [
+      sql`CONCAT(
+      ${eb.ref("dataFormation.libelle")},
+      ' (',
+      ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
+      ')'
+    )`.as("label"),
+      "dataFormation.cfd as value",
+    ])
     .where("dataFormation.cfd", "is not", null)
     .where((eb) => {
       return eb.or([

@@ -4,6 +4,7 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { withTauxPressionReg } from "../../queries/utils/tauxPression";
@@ -30,17 +31,25 @@ const selectDifferencePlaces = (
   - ${eb.ref("capaciteApprentissageActuelle")})`;
 };
 
+const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
+  sql`GREATEST(${eb.ref("capaciteScolaire")}
+  - ${eb.ref("capaciteScolaireActuelle")}, 0)
+  + GREATEST(${eb.ref("capaciteApprentissage")}
+  - ${eb.ref("capaciteApprentissageActuelle")}, 0)
+  + GREATEST(${eb.ref("capaciteScolaireActuelle")}
+  - ${eb.ref("capaciteScolaire")}, 0)`;
+
 const selectPlacesOuvertes = (eb: ExpressionBuilder<DB, "demande">) =>
   sql`GREATEST(${eb.ref("capaciteScolaire")}
-      - ${eb.ref("capaciteScolaireActuelle")}, 0)
-    + GREATEST(${eb.ref("capaciteApprentissage")}
-      - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
+            - ${eb.ref("capaciteScolaireActuelle")}, 0)
+          + GREATEST(${eb.ref("capaciteApprentissage")}
+            - ${eb.ref("capaciteApprentissageActuelle")}, 0)`;
 
 const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
   sql`GREATEST(${eb.ref("capaciteScolaireActuelle")}
-      - ${eb.ref("capaciteScolaire")}, 0)
-    + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
-      - ${eb.ref("capaciteApprentissage")}, 0)`;
+            - ${eb.ref("capaciteScolaire")}, 0)
+          + GREATEST(${eb.ref("capaciteApprentissageActuelle")}
+            - ${eb.ref("capaciteApprentissage")}, 0)`;
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.id").distinct();
@@ -59,6 +68,7 @@ export const getFormationsTransformationStatsQuery = ({
   tauxPression,
   codeNiveauDiplome,
   filiere,
+  orderBy,
 }: {
   status?: "draft" | "submitted";
   type?: "fermeture" | "ouverture";
@@ -69,6 +79,7 @@ export const getFormationsTransformationStatsQuery = ({
   tauxPression?: "eleve" | "faible";
   codeNiveauDiplome?: string[];
   filiere?: string[];
+  orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
   const partition = (() => {
     if (codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
@@ -119,6 +130,13 @@ export const getFormationsTransformationStatsQuery = ({
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPression"),
+      withTauxDevenirFavorableReg({
+        eb,
+        millesimeSortie: "2020_2021",
+        cfdRef: "demande.cfd",
+        dispositifIdRef: "demande.dispositifId",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
       sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
@@ -126,6 +144,7 @@ export const getFormationsTransformationStatsQuery = ({
       ),
       eb.fn.sum<number>(selectPlacesOuvertes(eb)).as("placesOuvertes"),
       eb.fn.sum<number>(selectPlacesFermees(eb)).as("placesFermees"),
+      eb.fn.sum<number>(selectPlacesTransformees(eb)).as("placesTransformees"),
       hasContinuum({
         eb,
         millesimeSortie: "2020_2021",
@@ -222,6 +241,14 @@ export const getFormationsTransformationStatsQuery = ({
       if (!filiere?.length) return q;
       return q.where("dataFormation.libelleFiliere", "in", filiere);
     })
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
+        sql.ref(orderBy.column),
+        sql`${sql.raw(orderBy.order)} NULLS LAST`
+      );
+    })
+    .orderBy("tauxDevenirFavorable", "desc")
     .execute()
     .then(cleanNull);
 };

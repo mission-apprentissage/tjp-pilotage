@@ -14,6 +14,8 @@ export type Filters = Pick<
   "rentreeScolaire" | "filiere" | "codeNiveauDiplome"
 >;
 
+export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;
+
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
 export type Scope = "regions" | "academies" | "departements" | undefined;
@@ -23,3 +25,16 @@ export type TerritoiresFilters = {
   academies?: string;
   departements?: string;
 };
+
+export type FormationsTransformationStatsQuery = Parameters<
+  typeof api.getFormationsTransformationStats
+>[0]["query"];
+
+export type FormationsTransformationStats = ApiType<
+  typeof api.getFormationsTransformationStats
+>;
+
+export type OrderFormationsTransformationStats = Pick<
+  FormationsTransformationStatsQuery,
+  "order" | "orderBy"
+>;

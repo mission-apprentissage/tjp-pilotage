@@ -49,22 +49,32 @@ export const selectTauxDevenirFavorableAgg = (
       end
     `;
 
-export function withDevenirFavorableReg({
+type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
+
+export function withTauxDevenirFavorableReg<
+  EB extends ExpressionBuilder<DB, never>,
+>({
   eb,
   millesimeSortie,
+  cfdRef,
+  dispositifIdRef,
+  codeRegionRef,
 }: {
-  eb: ExpressionBuilder<DB, "formationEtablissement" | "etablissement">;
+  eb: EB;
   millesimeSortie: string;
+  cfdRef: EbRef<EB>;
+  dispositifIdRef: EbRef<EB>;
+  codeRegionRef: EbRef<EB>;
 }) {
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
-    .whereRef("subIRS.cfd", "=", "formationEtablissement.cfd")
-    .whereRef("subIRS.dispositifId", "=", "formationEtablissement.dispositifId")
+    .whereRef("subIRS.cfd", "=", cfdRef)
+    .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .whereRef(
       "subIRS.codeRegion",
       "=",
-      sql`ANY(array_agg(${eb.ref("etablissement.codeRegion")}))`
+      sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .select([selectTauxDevenirFavorableAgg("subIRS").as("sa")])
     .groupBy(["subIRS.cfd", "subIRS.dispositifId"]);

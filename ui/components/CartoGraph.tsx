@@ -136,6 +136,8 @@ export const CartoGraph = ({
           }
           return `Aucune donnée disponible pour ${params.name}`;
         },
+        fontFamily: "Marianne, Arial",
+        fontWeight: 600,
       },
       visualMap: {
         type: "piecewise",
@@ -162,37 +164,41 @@ export const CartoGraph = ({
           name: scope,
           type: "map",
           map: scope,
+          animation: false,
           emphasis: {
             label: {
               show: false,
-              color: customColorPalette
-                ? customColorPalette[customColorPalette.length - 1]
-                : objectif === "bas"
-                ? "#E18B76"
-                : "#000091",
-              fontWeight: 700,
+              color: "#000091",
+              fontWeight: 600,
+              fontSize: 14,
+              fontFamily: "Marianne, Arial",
+              backgroundColor: "white",
+              height: 20,
+              lineHeight: 15,
+              formatter: "  {b}  ",
             },
             itemStyle: {
-              areaColor: "white",
-              borderColor: customColorPalette
-                ? customColorPalette[customColorPalette.length - 1]
-                : objectif === "bas"
-                ? "#E18B76"
-                : "#000091",
+              areaColor: "inherit",
+              borderColor: "#6a6af4",
+              borderWidth: 1,
             },
           },
           selectedMode: "single",
           select: {
             disabled: false,
             label: {
-              color: "#000",
-              fontWeight: 500,
+              color: "#000091",
+              fontWeight: 600,
+              fontSize: 14,
+              fontFamily: "Marianne, Arial",
+              backgroundColor: "white",
+              height: 20,
+              lineHeight: 15,
+              formatter: "  {b}  ",
             },
             itemStyle: {
-              areaColor: "#fff",
-              borderColor: "#000",
-              borderWidth: 1.5,
-              fontWeight: 700,
+              areaColor: "white",
+              borderColor: "#000091",
             },
           },
           nameProperty: getNameProperty(),
@@ -228,17 +234,32 @@ export const CartoGraph = ({
       }
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const handleClickOnBlankSpace = (chartInstance: any) => {
+    if (handleClick) {
+      handleClick(undefined);
+      chartInstance.dispatchAction({
+        type: "unselect",
+        dataIndex: new Array(graphData?.length ?? 0)
+          .fill(0)
+          .map((_, index) => index),
+      });
+    }
+  };
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option);
-    chartRef.current.on("click", "series", (params) =>
-      handleClickOnSeries(params.name)
-    );
-    chartRef.current.getZr().on("click", () => {
-      if (handleClick) handleClick(undefined);
+    chartRef.current.on("click", "series", (params) => {
+      handleClickOnSeries(params.name);
+    });
+    chartRef.current.getZr().on("click", (event) => {
+      if (!event.target) {
+        handleClickOnBlankSpace(chartRef.current);
+      }
     });
   }, [option, graphData]);
 
