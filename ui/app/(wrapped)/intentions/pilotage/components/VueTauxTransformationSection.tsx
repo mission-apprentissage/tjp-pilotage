@@ -14,7 +14,8 @@ import {
 import { Fragment } from "react";
 
 import { Legend } from "../../../../../components/Legend";
-import { PilotageTransformationStats } from "../types";
+import { OrderIcon } from "../../../../../components/OrderIcon";
+import { Order, PilotageTransformationStats } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -51,18 +52,22 @@ export const VueTauxTransformationSection = ({
   data,
   isLoading,
   codeRegion,
+  order,
+  handleOrder,
 }: {
   data?: PilotageTransformationStats;
   isLoading: boolean;
   codeRegion?: string;
+  order: Order;
+  handleOrder: (column: Order["orderBy"]) => void;
 }) => {
   const customPalette = [
-    useToken("colors", "pilotage.red"),
-    useToken("colors", "pilotage.orange"),
-    useToken("colors", "pilotage.yellow"),
-    useToken("colors", "pilotage.green.1"),
-    useToken("colors", "pilotage.green.2"),
-    useToken("colors", "pilotage.green.3"),
+    useToken("colors", "pilotage.red !important"),
+    useToken("colors", "pilotage.orange !important"),
+    useToken("colors", "pilotage.yellow !important"),
+    useToken("colors", "pilotage.green.1 !important"),
+    useToken("colors", "pilotage.green.2 !important"),
+    useToken("colors", "pilotage.green.3 !important"),
   ];
 
   const legendElements = [
@@ -107,13 +112,32 @@ export const VueTauxTransformationSection = ({
               height="16"
             >
               <Tr>
-                <Th cursor="pointer" pb="4">
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("libelle")}
+                >
+                  <OrderIcon {...order} column="libelle" />
                   Région
                 </Th>
-                <Th isNumeric cursor="pointer" pb="4" width="20%">
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  pb="4"
+                  width="20%"
+                  onClick={() => handleOrder("placesTransformees")}
+                >
+                  <OrderIcon {...order} column="placesTransformees" />
                   Places transformées
                 </Th>
-                <Th isNumeric cursor="pointer" pb="4" width="20%">
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  pb="4"
+                  width="20%"
+                  onClick={() => handleOrder("tauxTransformation")}
+                >
+                  <OrderIcon {...order} column="tauxTransformation" />
                   Taux de transformation
                 </Th>
               </Tr>
@@ -156,7 +180,7 @@ export const VueTauxTransformationSection = ({
                         <Td backgroundColor={tdBgColor} color={color}>
                           {region.libelle}
                         </Td>
-                        <Td isNumeric>
+                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
                           {region.placesOuvertesScolaire +
                             region.placesOuvertesApprentissage +
                             region.placesFermeesScolaire +
