@@ -14,11 +14,7 @@ function setup() {
   fi
 
   cd "${ANSIBLE_DIR}"
-  ansible-galaxy install geerlingguy.docker
-  ansible-galaxy collection install community.general
-  ansible-galaxy collection install community.crypto
-  ansible-galaxy collection install community.docker
-  ansible-galaxy collection install ansible.posix
+  ansible-galaxy collection install --requirements-file galaxy-requirements.yml
   ansible-playbook \
     -i env.ini \
     --limit "${ENV_FILTER}" \

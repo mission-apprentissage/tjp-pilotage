@@ -12,9 +12,6 @@
     name: ["tcpdump", "gdb", "libX11", "telnet", "gcc"]
     state: absent
 
-- include_role:
-    name: geerlingguy.docker
-
 - name: Vérification binaires ctop déja installés
   stat: path=/usr/local/bin/ctop
   register: ctop

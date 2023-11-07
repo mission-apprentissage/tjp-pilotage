@@ -9,7 +9,6 @@ function destroy_vm() {
 }
 
 function create_vm() {
-  ansible-galaxy install geerlingguy.docker
   ansible-galaxy collection install community.general
   ansible-galaxy collection install community.crypto
   ansible-galaxy collection install ansible.posix
