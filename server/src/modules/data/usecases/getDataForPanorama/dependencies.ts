@@ -284,9 +284,13 @@ export const queryFormationsDepartement = async ({
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
-        withDevenirFavorableReg({ eb, millesimeSortie }).as(
-          "tauxDevenirFavorable"
-        ),
+        withTauxDevenirFavorableReg({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("tauxDevenirFavorable"),
     ])
     .$narrowType<{
       tauxInsertion6mois: number;
