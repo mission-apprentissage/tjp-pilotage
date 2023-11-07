@@ -774,7 +774,15 @@ const findFiltersInDb = async ({
     .execute();
 
   const formationsFilters = await filtersBase
-    .select(["dataFormation.libelle as label", "dataFormation.cfd as value"])
+    .select((eb) => [
+      sql`CONCAT(
+      ${eb.ref("dataFormation.libelle")},
+      ' (',
+      ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
+      ')'
+    )`.as("label"),
+      "dataFormation.cfd as value",
+    ])
     .where("dataFormation.cfd", "is not", null)
     .where((eb) => {
       return eb.or([
