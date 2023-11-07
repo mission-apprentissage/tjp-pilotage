@@ -4,6 +4,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withPositionCadran } from "../../queries/utils/positionCadran";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
@@ -129,6 +130,14 @@ export const queryFormations = async ({
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
+      (eb) =>
+        withPositionCadran({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("positionCadran"),
     ])
     .$narrowType<{
       tauxInsertion6mois: number;

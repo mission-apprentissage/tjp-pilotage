@@ -140,10 +140,11 @@ export const getFormationsTransformationStatsQuery = ({
       }).as("tauxDevenirFavorable"),
       withPositionCadran({
         eb,
+        millesimeSortie: "2020_2021",
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
-        millesimeSortie: "2020_2021",
+        codeNiveauDiplomeRef: codeNiveauDiplome ? "dataFormation.codeNiveauDiplome" : undefined,
       }).as("positionCadran"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),

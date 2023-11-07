@@ -168,6 +168,7 @@ const findFormationsInDb = async ({
         cfdRef: "formationEtablissement.cfd",
         dispositifIdRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
+        codeNiveauDiplomeRef: "formation.codeNiveauDiplome",
       }).as("positionCadran"),
     ])
     .where(

@@ -113,35 +113,6 @@ export const CadranSection = ({
     [currentCfd, formations]
   );
 
-  const getCadranPosition = (
-    formation: ApiType<
-      typeof api.getFormationsTransformationStats
-    >["formations"][0]
-  ): string => {
-    if (stats?.tauxInsertion && stats?.tauxPoursuite) {
-      if (
-        formation.tauxInsertion >= stats?.tauxInsertion &&
-        formation.tauxPoursuite < stats?.tauxPoursuite
-      )
-        return "q1";
-      else if (
-        formation.tauxInsertion >= stats?.tauxInsertion &&
-        formation.tauxPoursuite > stats?.tauxPoursuite
-      )
-        return "q2";
-      else if (
-        formation.tauxInsertion < stats?.tauxInsertion &&
-        formation.tauxPoursuite >= stats?.tauxPoursuite
-      )
-        return "q3";
-      else if (
-        formation.tauxInsertion < stats?.tauxInsertion &&
-        formation.tauxPoursuite < stats?.tauxPoursuite
-      )
-        return "q4";
-    }
-    return "";
-  };
   const getLibelleTerritoire = (
     territoires?: Array<{ label: string; value: string }>,
     code?: string
@@ -167,10 +138,10 @@ export const CadranSection = ({
     >["formations"][0]
   ) => {
     if (formation.cfd === currentCfd) return "blue.main !important";
-    switch (getCadranPosition(formation)) {
-      case "q2":
+    switch (formation.positionCadran) {
+      case "Q1":
         return "#C8F6D6";
-      case "q4":
+      case "Q4":
         return "#ffe2e1";
       default:
         return "inherit";
@@ -224,7 +195,6 @@ export const CadranSection = ({
                   "formations_transformees.csv",
                   formations.map((formation) => ({
                     ...formation,
-                    cadranPosition: getCadranPosition(formation),
                     libelleRegion:
                       scope?.type === "regions"
                         ? getLibelleTerritoire(
@@ -253,7 +223,7 @@ export const CadranSection = ({
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
                     tauxPression: "Taux de pression",
-                    cadranPosition: "Position dans le cadran",
+                    positionCadran: "Position dans le cadran",
                     libelleRegion: "Région",
                     libelleAcademie: "Académie",
                     libelleDepartement: "Département",

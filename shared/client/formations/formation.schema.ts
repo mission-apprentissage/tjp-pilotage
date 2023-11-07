@@ -110,6 +110,7 @@ export const formationSchemas = {
             tauxPoursuiteEtudes: Type.Number(),
             tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
             tauxDevenirFavorable: Type.Number(),
+            positionCadran: Type.Optional(Type.String()),
             CPC: Type.Optional(Type.String()),
             CPCSecteur: Type.Optional(Type.String()),
             CPCSousSecteur: Type.Optional(Type.String()),

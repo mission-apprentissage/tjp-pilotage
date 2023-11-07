@@ -32,8 +32,8 @@ export const getPositionCadran = (
 
   return sql<string>`
     CASE
-      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q1'
-      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} > ${tauxPoursuiteReg}) THEN 'Q2'
+      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} > ${tauxPoursuiteReg}) THEN 'Q1'
+      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q2'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} >= ${tauxPoursuiteReg}) THEN 'Q3'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q4'
       ELSE 'Hors cadran'
@@ -81,7 +81,6 @@ export function withPositionCadran<EB extends ExpressionBuilder<DB, never>>({
       "=",
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
-    .whereRef("indicateurRegionSortie.dispositifId", "=", dispositifIdRef)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .innerJoin(
@@ -102,32 +101,32 @@ export function withPositionCadran<EB extends ExpressionBuilder<DB, never>>({
       sql<string>`
       CASE
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-          "indicateurRegionSortie"
-        )}
-        AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-          "indicateurRegionSortie"
-        )})
+        "indicateurRegionSortie"
+      )}
+        AND ${tauxPoursuiteReg} > ${selectTauxPoursuiteAgg(
+        "indicateurRegionSortie"
+      )})
         THEN 'Q1'
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-          "indicateurRegionSortie"
-        )}
-        AND ${tauxPoursuiteReg} > ${selectTauxPoursuiteAgg(
-          "indicateurRegionSortie"
-        )})
+        "indicateurRegionSortie"
+      )}
+        AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
+        "indicateurRegionSortie"
+      )})
         THEN 'Q2'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-          "indicateurRegionSortie"
-        )}
+        "indicateurRegionSortie"
+      )}
         AND ${tauxPoursuiteReg} >= ${selectTauxPoursuiteAgg(
-          "indicateurRegionSortie"
-        )})
+        "indicateurRegionSortie"
+      )})
         THEN 'Q3'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-          "indicateurRegionSortie"
-        )}
+        "indicateurRegionSortie"
+      )}
         AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-          "indicateurRegionSortie"
-        )})
+        "indicateurRegionSortie"
+      )})
         THEN 'Q4'
         ELSE 'Hors cadran'
       END`.as("positionCadran"),
