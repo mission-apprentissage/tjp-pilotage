@@ -48,5 +48,5 @@ export const STATS_DEMANDES_COLUMNS = {
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
 } satisfies ExportColumns<
-  ApiType<typeof api.getStatsDemandes>["demandes"][number]
+  ApiType<typeof api.getRestitutionIntentionsStats>["demandes"][number]
 >;

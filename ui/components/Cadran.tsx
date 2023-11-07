@@ -36,6 +36,7 @@ export const Cadran = function <
     effectif?: number;
     tauxPoursuiteEtudes: number;
     tauxInsertion6mois: number;
+    positionCadran?: string;
   },
 >({
   className,
@@ -106,26 +107,10 @@ export const Cadran = function <
   const repartitionCadrans = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
     return {
-      q1: data.filter(
-        (item) =>
-          item.tauxInsertion6mois >= meanInsertion &&
-          item.tauxPoursuiteEtudes < meanPoursuite
-      ).length,
-      q2: data.filter(
-        (item) =>
-          item.tauxInsertion6mois >= meanInsertion &&
-          item.tauxPoursuiteEtudes > meanPoursuite
-      ).length,
-      q3: data.filter(
-        (item) =>
-          item.tauxInsertion6mois < meanInsertion &&
-          item.tauxPoursuiteEtudes >= meanPoursuite
-      ).length,
-      q4: data.filter(
-        (item) =>
-          item.tauxInsertion6mois < meanInsertion &&
-          item.tauxPoursuiteEtudes < meanPoursuite
-      ).length,
+      q1: data.filter((item) => item.positionCadran === "Q1").length,
+      q2: data.filter((item) => item.positionCadran === "Q2").length,
+      q3: data.filter((item) => item.positionCadran === "Q3").length,
+      q4: data.filter((item) => item.positionCadran === "Q4").length,
     };
   }, [data, meanInsertion, meanPoursuite]);
 
@@ -244,7 +229,7 @@ export const Cadran = function <
                       {
                         coord: [meanPoursuite, meanInsertion],
                         itemStyle: { color: "#C8F6D6" },
-                        name: `Q2 - ${repartitionCadrans?.q2} formations`,
+                        name: `Q1 - ${repartitionCadrans?.q1} formations`,
                         label: {
                           ...cadranLabelStyle,
                           position: "insideTopRight",
@@ -256,7 +241,7 @@ export const Cadran = function <
                       {
                         coord: [0, meanInsertion],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
-                        name: `Q1 - ${repartitionCadrans?.q1} formations`,
+                        name: `Q2 - ${repartitionCadrans?.q2} formations`,
                         label: {
                           ...cadranLabelStyle,
                           position: "insideTopLeft",

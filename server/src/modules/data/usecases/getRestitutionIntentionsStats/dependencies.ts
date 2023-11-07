@@ -162,6 +162,11 @@ const findRestitutionIntentionsStatsInDB = async ({
           )
           .whereRef("subIRS.codeRegion", "=", "demande.codeRegion")
           .whereRef("subIRS.dispositifId", "=", "demande.dispositifId")
+          .whereRef(
+            "formation.codeNiveauDiplome",
+            "=",
+            "dataFormation.codeNiveauDiplome"
+          )
           .where("subIRS.millesimeSortie", "=", millesimeSortie)
           .where(notHistoriqueIndicateurRegionSortie)
           .select([
