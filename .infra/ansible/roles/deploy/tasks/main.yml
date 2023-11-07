@@ -22,7 +22,7 @@
     build: true
     restarted: true
     files:
-      - "./docker-compose.yml"
+      - /opt/pilotage/repository/docker-compose.yml
       - /opt/pilotage/.overrides/docker-compose.common.yml
       - /opt/pilotage/.overrides/docker-compose.env.yml
   vars:
