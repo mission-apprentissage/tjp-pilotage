@@ -1,3 +1,8 @@
+import { ApiType } from "shared";
+
+import { api } from "../../../../api.client";
+import { ExportColumns } from "../../../../utils/downloadCsv";
+
 export const STATS_DEMANDES_COLUMNS = {
   id: "N° demande",
   cfd: "CFD",
@@ -12,7 +17,6 @@ export const STATS_DEMANDES_COLUMNS = {
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
   autreMotif: "Autre motif",
-  coloration: "Coloration",
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
@@ -43,4 +47,6 @@ export const STATS_DEMANDES_COLUMNS = {
   positionCadran: "Position dans le cadran",
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
-} as const;
+} satisfies ExportColumns<
+  ApiType<typeof api.getStatsDemandes>["demandes"][number]
+>;

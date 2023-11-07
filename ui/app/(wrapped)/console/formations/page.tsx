@@ -18,6 +18,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { ApiType } from "shared";
 
 import { api } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
@@ -27,7 +28,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import { Multiselect } from "../../../../components/Multiselect";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../utils/downloadCsv";
+import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import {
   FormationLineContent,
@@ -60,7 +61,9 @@ const FORMATIONS_COLUMNS = {
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionCadran: "Position dans le cadran",
-} as const;
+} satisfies ExportColumns<
+  ApiType<typeof api.getFormations>["formations"][number]
+>;
 
 const fetchFormations = async (query: Query) =>
   api.getFormations({ query }).call();

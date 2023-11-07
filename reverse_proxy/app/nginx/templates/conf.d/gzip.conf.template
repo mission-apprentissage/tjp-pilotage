@@ -1,1 +1,2 @@
 gzip on;
+gzip_types *;
