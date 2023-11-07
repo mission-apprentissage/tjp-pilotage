@@ -83,7 +83,6 @@ const DemandesItem = Type.Object({
   compensationRentreeScolaire: Type.Optional(Type.Number()),
   idCompensation: Type.Optional(Type.String()),
   typeCompensation: Type.Optional(Type.String()),
-
   dispositifId: Type.Optional(Type.String()),
   rentreeScolaire: Type.Optional(Type.Number()),
   motif: Type.Optional(Type.Array(Type.String())),
@@ -101,7 +100,7 @@ const DemandesItem = Type.Object({
   capaciteApprentissage: Type.Optional(Type.Number()),
   capaciteApprentissageColoree: Type.Optional(Type.Number()),
   codeRegion: Type.String(),
-  codeAcademie: Type.String(),
+  codeAcademie: Type.Optional(Type.String()),
 });
 
 const OptionSchema = Type.Object({
