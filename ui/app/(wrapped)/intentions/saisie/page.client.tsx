@@ -376,9 +376,7 @@ export const PageClient = () => {
 
                   downloadCsv(
                     "export_demandes.csv",
-                    data.demandes.map((item) => ({
-                      ...item,
-                    })),
+                    data.demandes,
                     DEMANDES_COLUMNS
                   );
                 }}
