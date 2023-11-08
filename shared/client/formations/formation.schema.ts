@@ -24,6 +24,7 @@ const FormationLineSchema = Type.Object({
   tauxPression: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+  tauxDevenirFavorable: Type.Optional(Type.Number()),
   CPC: Type.Optional(Type.String()),
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),
