@@ -22,7 +22,17 @@
 
 - name: Installation des packages apt
   apt:
-    name: ["vim", "htop", "jq", "git"]
+    name:
+      [
+        "vim",
+        "htop",
+        "jq",
+        "git",
+        "python3",
+        "python3-pip",
+        "docker",
+        "docker-compose",
+      ]
 
 - name: Set timezone to Europe/Paris
   community.general.timezone:
