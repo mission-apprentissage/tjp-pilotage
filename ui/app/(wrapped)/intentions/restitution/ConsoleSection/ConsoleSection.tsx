@@ -279,11 +279,39 @@ export const ConsoleSection = ({
                     }
                   />
                 </Th>
-                <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleColoration}</Th>
-                <Th pb="4">{STATS_DEMANDES_COLUMNS.libelleFCIL}</Th>
-                <Th pb="4">{STATS_DEMANDES_COLUMNS.commentaire}</Th>
-                <Th pb="4">{STATS_DEMANDES_COLUMNS.positionCadran}</Th>
-                <Th pb="4">{STATS_DEMANDES_COLUMNS.id}</Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("libelleColoration")}
+                >
+                  <OrderIcon {...order} column="libelleColoration" />
+                  {STATS_DEMANDES_COLUMNS.libelleColoration}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("libelleFCIL")}
+                >
+                  <OrderIcon {...order} column="libelleFCIL" />
+                  {STATS_DEMANDES_COLUMNS.libelleFCIL}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("commentaire")}
+                >
+                  <OrderIcon {...order} column="commentaire" />
+                  {STATS_DEMANDES_COLUMNS.commentaire}
+                </Th>
+                <Th pb={4}>{STATS_DEMANDES_COLUMNS.positionCadran}</Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("pression")}
+                >
+                  <OrderIcon {...order} column="id" />
+                  {STATS_DEMANDES_COLUMNS.id}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
