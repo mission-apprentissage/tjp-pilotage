@@ -113,7 +113,17 @@ const InfoCard = ({
   );
 };
 
-export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
+export const InfoSection = ({
+  codeRegion,
+  codeDepartement,
+}: {
+  codeRegion?: string;
+  codeDepartement?: string;
+}) => {
+  codeDepartement = codeDepartement?.startsWith("0")
+    ? codeDepartement.substring(1)
+    : codeDepartement;
+
   return (
     <>
       <Container as="section" pt="6" maxWidth={"container.xl"}>
@@ -152,7 +162,9 @@ export const InfoSection = ({ codeRegion }: { codeRegion?: string }) => {
             title="Data emploi"
             description="Retrouvez les informations essentielles pour décrypter le marché du travail sur votre territoire"
             links={{
-              href: `https://dataemploi.pole-emploi.fr/panorama/REG/${codeRegion}`,
+              href: `https://dataemploi.pole-emploi.fr/panorama/${
+                codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
+              }`,
             }}
             img="/dashboard_girl.png"
             sourceText="* Source: Pole Emploi"

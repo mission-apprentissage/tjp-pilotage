@@ -21,4 +21,9 @@ export const createEtablissementClient = (instance: AxiosInstance) => ({
     url: ({ params }) => `/region/${params.codeRegion}`,
     instance,
   }),
+  getDepartementStats: createClientMethod<typeof ROUTES_CONFIG.getDepartementStats>({
+    method: "GET",
+    url: ({ params }) => `/departement/${params.codeDepartement}`,
+    instance,
+  }),
 });

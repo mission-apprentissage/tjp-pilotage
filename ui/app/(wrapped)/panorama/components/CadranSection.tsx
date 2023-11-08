@@ -5,14 +5,13 @@ import {
   Button,
   Center,
   chakra,
+  Checkbox,
   Container,
   createIcon,
   Flex,
   FormControl,
   FormLabel,
   Heading,
-  Radio,
-  RadioGroup,
   SimpleGrid,
   Skeleton,
   Slider,
@@ -26,10 +25,10 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "../../../../../components/Cadran";
-import { TableCadran } from "../../../../../components/TableCadran";
+import { Cadran } from "../../../../components/Cadran";
+import { TableCadran } from "../../../../components/TableCadran";
+import { PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
-import { PanoramaFormations } from "./type";
 
 const effectifSizes = [
   { max: 50, size: 6 },
@@ -44,18 +43,29 @@ const labelStyles = {
   fontSize: "sm",
 };
 
+type Tendances = {
+  effectif_hausse: boolean;
+  effectif_baisse: boolean;
+  insertion_hausse: boolean;
+  insertion_baisse: boolean;
+  poursuite_hausse: boolean;
+  poursuite_baisse: boolean;
+  forte_pression: boolean;
+  faible_pression: boolean;
+};
+
 const filterFormations = ({
   effectifMin,
   codeNiveauDiplome,
   libelleFiliere,
   cadranFormations,
-  tendance,
+  tendances,
 }: {
   effectifMin: number;
   codeNiveauDiplome?: string[];
   libelleFiliere?: string[];
   cadranFormations?: PanoramaFormations;
-  tendance?: string;
+  tendances: Tendances;
 }) =>
   cadranFormations
     ?.filter((item) => {
@@ -72,51 +82,58 @@ const filterFormations = ({
       return item.effectif && item.effectif >= effectifMin;
     })
     .filter((item) => {
-      if (tendance === "insertion_hausse") {
-        return (
+      let mustBeReturned = true;
+      if (tendances["insertion_hausse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois > item.tauxInsertion6moisPrecedent
-        );
+          item.tauxInsertion6mois > item.tauxInsertion6moisPrecedent;
       }
-      if (tendance === "insertion_baisse") {
-        return (
+      if (tendances["insertion_baisse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois < item.tauxInsertion6moisPrecedent
-        );
+          item.tauxInsertion6mois < item.tauxInsertion6moisPrecedent;
       }
-      if (tendance === "poursuite_hausse") {
-        return (
+      if (tendances["poursuite_hausse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes > item.tauxPoursuiteEtudesPrecedent
-        );
+          item.tauxPoursuiteEtudes > item.tauxPoursuiteEtudesPrecedent;
       }
-      if (tendance === "poursuite_baisse") {
-        return (
+      if (tendances["poursuite_baisse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes < item.tauxPoursuiteEtudesPrecedent
-        );
+          item.tauxPoursuiteEtudes < item.tauxPoursuiteEtudesPrecedent;
       }
-      if (tendance === "effectif_hausse") {
-        return (
+      if (tendances["effectif_hausse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.effectifPrecedent !== undefined &&
           item.effectif !== undefined &&
-          item.effectif > item.effectifPrecedent
-        );
+          item.effectif > item.effectifPrecedent;
       }
-      if (tendance === "effectif_baisse") {
-        return (
+      if (tendances["effectif_baisse"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
           item.effectifPrecedent !== undefined &&
           item.effectif !== undefined &&
-          item.effectif < item.effectifPrecedent
-        );
+          item.effectif < item.effectifPrecedent;
       }
-      if (tendance === "forte_pression") {
-        return item.tauxPression !== undefined && item.tauxPression >= 130;
+      if (tendances["forte_pression"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
+          item.tauxPression !== undefined &&
+          item.tauxPression >= 130;
       }
-      if (tendance === "faible_pression") {
-        return item.tauxPression !== undefined && item.tauxPression < 70;
+      if (tendances["faible_pression"] === true) {
+        mustBeReturned =
+          mustBeReturned &&
+          item.tauxPression !== undefined &&
+          item.tauxPression < 70;
       }
-      return true;
+      return mustBeReturned;
     });
 
 export const CadranSection = ({
@@ -133,7 +150,18 @@ export const CadranSection = ({
   libelleFiliere?: string[];
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
-  const [tendance, setTendance] = useState<string>();
+  const tendancesDefaultValue = {
+    effectif_hausse: false,
+    effectif_baisse: false,
+    insertion_hausse: false,
+    insertion_baisse: false,
+    poursuite_hausse: false,
+    poursuite_baisse: false,
+    forte_pression: false,
+    faible_pression: false,
+  };
+
+  const [tendances, setTendances] = useState<Tendances>(tendancesDefaultValue);
   const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
 
   const toggleTypeVue = () => {
@@ -147,11 +175,57 @@ export const CadranSection = ({
         effectifMin,
         codeNiveauDiplome,
         cadranFormations,
-        tendance,
+        tendances,
         libelleFiliere,
       }),
-    [effectifMin, codeNiveauDiplome, cadranFormations, tendance, libelleFiliere]
+    [
+      effectifMin,
+      codeNiveauDiplome,
+      cadranFormations,
+      tendances,
+      libelleFiliere,
+    ]
   );
+
+  const handleOppositesTendances = (value: boolean, name: keyof Tendances) => {
+    const tendancesTmp = tendances;
+    tendancesTmp[name] = value;
+    switch (name) {
+      case "insertion_hausse":
+        tendancesTmp["insertion_baisse"] = false;
+        break;
+      case "insertion_baisse":
+        tendancesTmp["insertion_hausse"] = false;
+        break;
+      case "poursuite_hausse":
+        tendancesTmp["poursuite_baisse"] = false;
+        break;
+      case "poursuite_baisse":
+        tendancesTmp["poursuite_hausse"] = false;
+        break;
+      case "effectif_hausse":
+        tendancesTmp["effectif_baisse"] = false;
+        break;
+      case "effectif_baisse":
+        tendancesTmp["effectif_hausse"] = false;
+        break;
+      case "forte_pression":
+        tendancesTmp["faible_pression"] = false;
+        break;
+      case "faible_pression":
+        tendancesTmp["forte_pression"] = false;
+        break;
+    }
+    setTendances({ ...tendances, ...tendancesTmp });
+  };
+
+  const handleCheckboxCardChange = (
+    value: boolean,
+    name: keyof Tendances | "none"
+  ) => {
+    if (name === "none") setTendances(tendancesDefaultValue);
+    else handleOppositesTendances(value, name);
+  };
 
   return (
     <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
@@ -197,61 +271,72 @@ export const CadranSection = ({
               </SliderTrack>
               <SliderThumb />
             </Slider>
-
-            <RadioGroup
-              onChange={setTendance}
-              defaultValue={"undefined"}
-              defaultChecked
-            >
-              <SimpleGrid mt="12" columns={2} gap={4}>
-                <RadioCard
-                  label="Effectif en hausse"
-                  value="effectif_hausse"
-                  icon={<TendanceHausseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Effectif en baisse"
-                  value="effectif_baisse"
-                  icon={<TendanceBaisseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Tx d'emploi à 6 mois en hausse"
-                  value="insertion_hausse"
-                  icon={<TendanceHausseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Tx d'emploi à 6 mois en baisse"
-                  value="insertion_baisse"
-                  icon={<TendanceBaisseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Poursuite d’étude en hausse"
-                  value="poursuite_hausse"
-                  icon={<TendanceHausseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Poursuite d’étude en baisse"
-                  value="poursuite_baisse"
-                  icon={<TendanceBaisseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Fort taux de pression"
-                  value="forte_pression"
-                  icon={<TendanceHausseIcon color="info.525" />}
-                />
-                <RadioCard
-                  label="Faible taux de pression"
-                  value="faible_pression"
-                  icon={<TendanceBaisseIcon color="info.525" />}
-                />
-              </SimpleGrid>
-              <RadioCard
-                mt="4"
-                label="Remise à niveau des filtres"
-                value={"undefined"}
-                icon={<SmallCloseIcon></SmallCloseIcon>}
+            <SimpleGrid mt="12" columns={2} gap={4}>
+              <CheckboxCard
+                label="Effectif en hausse"
+                name="effectif_hausse"
+                value={tendances["effectif_hausse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceHausseIcon color="info.525" />}
               />
-            </RadioGroup>
+              <CheckboxCard
+                label="Effectif en baisse"
+                name="effectif_baisse"
+                value={tendances["effectif_baisse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceBaisseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Tx d'emploi à 6 mois en hausse"
+                name="insertion_hausse"
+                value={tendances["insertion_hausse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceHausseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Tx d'emploi à 6 mois en baisse"
+                name="insertion_baisse"
+                value={tendances["insertion_baisse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceBaisseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Poursuite d’étude en hausse"
+                name="poursuite_hausse"
+                value={tendances["poursuite_hausse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceHausseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Poursuite d’étude en baisse"
+                name="poursuite_baisse"
+                value={tendances["poursuite_baisse"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceBaisseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Fort taux de pression"
+                name="forte_pression"
+                value={tendances["forte_pression"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceHausseIcon color="info.525" />}
+              />
+              <CheckboxCard
+                label="Faible taux de pression"
+                name="faible_pression"
+                value={tendances["faible_pression"]}
+                changeHandle={handleCheckboxCardChange}
+                icon={<TendanceBaisseIcon color="info.525" />}
+              />
+            </SimpleGrid>
+            <CheckboxCard
+              mt="4"
+              label="Remise à niveau des filtres"
+              value={Object.values(tendances).every((value) => value === false)}
+              name="none"
+              changeHandle={handleCheckboxCardChange}
+              icon={<SmallCloseIcon></SmallCloseIcon>}
+            />
           </FormControl>
         </Box>
         <Box flex={1}>
@@ -317,22 +402,32 @@ export const CadranSection = ({
   );
 };
 
-const RadioCard = chakra(
+const CheckboxCard = chakra(
   ({
     label,
+    name,
     value,
     icon,
+    changeHandle,
     className,
   }: {
     label: string;
-    value?: string;
+    name: keyof Tendances | "none";
+    value: boolean;
     icon: ReactNode;
+    changeHandle: (value: boolean, name: keyof Tendances | "none") => void;
     className?: string;
   }) => (
     <Flex className={className} border="1px solid" borderColor="grey.900">
-      <Radio flex={1} p="4" value={value}>
+      <Checkbox
+        flex={1}
+        p="4"
+        name={name}
+        isChecked={value}
+        onChange={(e) => changeHandle(e.target.checked, name)}
+      >
         {label}
-      </Radio>
+      </Checkbox>
       <Center bg="grey.950" p="4">
         {icon}
       </Center>
