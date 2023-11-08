@@ -8,10 +8,6 @@ shift
 
 function setup() {
   echo "Installation de(s) environnement(s) ${ENV_FILTER}..."
-  local ansible_become_default=""
-  if [[ $* != *"pass"* ]]; then
-    ansible_become_default="--ask-become-pass"
-  fi
 
   cd "${ANSIBLE_DIR}"
   ansible-galaxy collection install --requirements-file galaxy-requirements.yml
@@ -19,8 +15,7 @@ function setup() {
     -i env.ini \
     --limit "${ENV_FILTER}" \
     --vault-password-file="${SCRIPT_DIR}/vault/get-vault-password-client.sh" \
-    ${ansible_become_default} \
-     setup.yml "$@"
+     setup.yml "$@" --ask-become-pass
   cd -
 }
 
