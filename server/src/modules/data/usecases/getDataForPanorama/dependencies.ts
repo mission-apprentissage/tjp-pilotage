@@ -11,16 +11,14 @@ import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
-export const queryFormations = async ({
-  codeRegion,
+const queryFormations = ({
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
-  codeRegion: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
-}) => {
-  const formations = await kdb
+}) =>
+  kdb
     .selectFrom("formation")
     .leftJoin(
       "formationEtablissement",
@@ -56,7 +54,6 @@ export const queryFormations = async ({
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
-    .where("etablissement.codeRegion", "=", codeRegion)
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
@@ -176,6 +173,35 @@ export const queryFormations = async ({
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+
+export const queryFormationsRegion = async ({
+  codeRegion,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeRegion: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+    .where("etablissement.codeRegion", "=", codeRegion)
+    .execute();
+
+  return formations.map(cleanNull);
+};
+
+
+export const queryFormationsDepartement = async ({
+  codeDepartement,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeDepartement: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+    .where("etablissement.codeDepartement", "=", codeDepartement)
     .execute();
 
   return formations.map(cleanNull);

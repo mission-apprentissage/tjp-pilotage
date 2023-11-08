@@ -14,11 +14,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
-import { Multiselect } from "../../../../../components/Multiselect";
-import { PanoramaFormation } from "./type";
+import { Multiselect } from "../../../../components/Multiselect";
+import { PanoramaFormations, StatsFormations } from "../types";
 
 const StatCard = ({
   label,
@@ -47,25 +45,26 @@ const StatCard = ({
   </Card>
 );
 
-export const RegionSection = ({
-  codeRegion,
-  onCodeRegionChanged,
-  regionOptions,
+export const IndicateursSection = ({
+  code,
+  onCodeChanged,
+  options,
   stats,
   codeDiplome,
   onDiplomeChanged,
   formations,
+  typeTerritoire = "region",
 }: {
   onDiplomeChanged?: (diplome: string[]) => void;
   codeDiplome?: string[];
-  codeRegion?: string;
-  onCodeRegionChanged: (codeRegion: string) => void;
-  regionOptions?: { label: string; value: string }[];
-  stats?: ApiType<typeof api.getRegionStats>;
-  formations?: PanoramaFormation[];
+  code?: string;
+  onCodeChanged: (code: string) => void;
+  options?: { label: string; value: string }[];
+  stats?: StatsFormations;
+  formations?: PanoramaFormations;
+  typeTerritoire?: "region" | "departement";
 }) => {
-  const labelRegion = regionOptions?.find((item) => item.value === codeRegion)
-    ?.label;
+  const labelRegion = options?.find((item) => item.value === code)?.label;
 
   const diplomeOptions = Object.values(
     formations?.reduce(
@@ -94,13 +93,16 @@ export const RegionSection = ({
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
           <FormControl maxW="300px">
-            <FormLabel>Choisissez une région</FormLabel>
+            <FormLabel>
+              Choisissez{" "}
+              {typeTerritoire === "region" ? "une région" : "un département"}
+            </FormLabel>
             <Select
-              onChange={(e) => onCodeRegionChanged(e.target.value)}
+              onChange={(e) => onCodeChanged(e.target.value)}
               variant="input"
-              value={codeRegion}
+              value={code}
             >
-              {regionOptions?.map((option) => (
+              {options?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>
@@ -153,11 +155,15 @@ export const RegionSection = ({
               }
             />
             <StatCard
-              label="Nombre de formations dans votre région"
+              label={`Nombre de formations dans votre ${
+                typeTerritoire === "region" ? "région" : "département"
+              }`}
               value={stats?.nbFormations ?? "-"}
             />
             <StatCard
-              label="Effectif en entrée dans votre région"
+              label={`Effectif en entrée dans votre ${
+                typeTerritoire === "region" ? "région" : "département"
+              }`}
               value={stats?.effectif ?? "-"}
             />
           </SimpleGrid>

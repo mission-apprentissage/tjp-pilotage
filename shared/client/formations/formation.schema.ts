@@ -57,6 +57,36 @@ const FiltersSchema = Type.Object({
   withEmptyFormations: Type.Optional(Type.Boolean()),
 });
 
+const FormationSchema = Type.Object({
+  codeFormationDiplome: Type.String(),
+  libelleDiplome: Type.String(),
+  codeNiveauDiplome: Type.String(),
+  libelleNiveauDiplome: Type.Optional(Type.String()),
+  dispositifId: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
+  nbEtablissement: Type.Number(),
+  effectif: Type.Optional(Type.Number()),
+  effectifPrecedent: Type.Optional(Type.Number()),
+  tauxRemplissage: Type.Optional(Type.Number()),
+  tauxPression: Type.Optional(Type.Number()),
+  tauxInsertion6mois: Type.Number(),
+  tauxInsertion6moisPrecedent: Type.Optional(Type.Number()),
+  tauxPoursuiteEtudes: Type.Number(),
+  tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
+  tauxDevenirFavorable: Type.Number(),
+  positionCadran: Type.Optional(Type.String()),
+  CPC: Type.Optional(Type.String()),
+  CPCSecteur: Type.Optional(Type.String()),
+  CPCSousSecteur: Type.Optional(Type.String()),
+  libelleFiliere: Type.Optional(Type.String()),
+  continuum: Type.Optional(
+    Type.Object({
+      cfd: Type.String(),
+      libelle: Type.Optional(Type.String()),
+    })
+  ),
+});
+
 export const formationSchemas = {
   getFormations: {
     querystring: Type.Intersect([
@@ -87,47 +117,36 @@ export const formationSchemas = {
       }),
     },
   },
-  getDataForPanorama: {
+  getDataForPanoramaRegion: {
     querystring: Type.Object({
       codeRegion: Type.String(),
     }),
     response: {
       200: Type.Object({
         formations: Type.Array(
-          Type.Object({
-            codeFormationDiplome: Type.String(),
-            libelleDiplome: Type.String(),
-            codeNiveauDiplome: Type.String(),
-            libelleNiveauDiplome: Type.Optional(Type.String()),
-            dispositifId: Type.Optional(Type.String()),
-            libelleDispositif: Type.Optional(Type.String()),
-            nbEtablissement: Type.Number(),
-            effectif: Type.Optional(Type.Number()),
-            effectifPrecedent: Type.Optional(Type.Number()),
-            tauxRemplissage: Type.Optional(Type.Number()),
-            tauxPression: Type.Optional(Type.Number()),
-            tauxInsertion6mois: Type.Number(),
-            tauxInsertion6moisPrecedent: Type.Optional(Type.Number()),
-            tauxPoursuiteEtudes: Type.Number(),
-            tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
-            tauxDevenirFavorable: Type.Number(),
-            positionCadran: Type.Optional(Type.String()),
-            CPC: Type.Optional(Type.String()),
-            CPCSecteur: Type.Optional(Type.String()),
-            CPCSousSecteur: Type.Optional(Type.String()),
-            libelleFiliere: Type.Optional(Type.String()),
-            continuum: Type.Optional(
-              Type.Object({
-                cfd: Type.String(),
-                libelle: Type.Optional(Type.String()),
-              })
-            ),
-          })
+          FormationSchema
+        ),
+      }),
+    },
+  },
+  getDataForPanoramaDepartement: {
+    querystring: Type.Object({
+      codeDepartement: Type.String(),
+    }),
+    response: {
+      200: Type.Object({
+        formations: Type.Array(
+          FormationSchema
         ),
       }),
     },
   },
   getRegions: {
+    response: {
+      200: Type.Array(OptionSchema),
+    },
+  },
+  getDepartements: {
     response: {
       200: Type.Array(OptionSchema),
     },
