@@ -34,8 +34,8 @@ const cadranLabelStyle = {
 export const Cadran = function <
   F extends {
     effectif?: number;
-    tauxPoursuiteEtudes: number;
-    tauxInsertion6mois: number;
+    tauxPoursuite: number;
+    tauxInsertion: number;
     positionCadran?: string;
   },
 >({
@@ -99,7 +99,7 @@ export const Cadran = function <
 
   const series = useMemo(() => {
     return data.map((formation) => ({
-      value: [formation.tauxPoursuiteEtudes, formation.tauxInsertion6mois],
+      value: [formation.tauxPoursuite, formation.tauxInsertion],
       name: itemId(formation),
     }));
   }, [data]);
@@ -312,23 +312,25 @@ export const Cadran = function <
         bottom="0"
       ></Box>
 
-      {InfoTootipContent && (
-        <InfoTooltip>
-          <InfoTootipContent />
-        </InfoTooltip>
-      )}
+      <Box position="absolute" right="0" top="10px" left="0" bottom="0">
+        {InfoTootipContent && (
+          <InfoTooltip>
+            <InfoTootipContent />
+          </InfoTooltip>
+        )}
 
-      {displayedDetail && TooltipContent && (
-        <FormationTooltipWrapper
-          ref={popperInstance.popperRef}
-          clickOutside={() => setDisplayedDetail(undefined)}
-          {...popperInstance.getPopperProps()}
-        >
-          {TooltipContent && displayedDetail && (
-            <TooltipContent formation={displayedDetail?.formation} />
-          )}
-        </FormationTooltipWrapper>
-      )}
+        {displayedDetail && TooltipContent && (
+          <FormationTooltipWrapper
+            ref={popperInstance.popperRef}
+            clickOutside={() => setDisplayedDetail(undefined)}
+            {...popperInstance.getPopperProps()}
+          >
+            {TooltipContent && displayedDetail && (
+              <TooltipContent formation={displayedDetail?.formation} />
+            )}
+          </FormationTooltipWrapper>
+        )}
+      </Box>
     </Box>
   );
 };

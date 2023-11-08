@@ -115,6 +115,7 @@ export const etablissementSchemas = {
             tauxPression: Type.Optional(Type.Number()),
             tauxInsertion6mois: Type.Optional(Type.Number()),
             tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+            positionCadran: Type.Optional(Type.String()),
             CPC: Type.Optional(Type.String()),
             CPCSecteur: Type.Optional(Type.String()),
             CPCSousSecteur: Type.Optional(Type.String()),
