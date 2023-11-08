@@ -294,7 +294,7 @@ const findRestitutionIntentionsStatsInDB = async ({
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(
-        sql.ref(orderBy.column),
+        sql`NULLIF(${sql.ref(orderBy.column)},'')`,
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
@@ -701,10 +701,10 @@ const findFiltersInDb = async ({
         ]),
         motif
           ? eb.or(
-              motif.map(
-                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-              )
+            motif.map(
+              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
             )
+          )
           : sql`false`,
       ]);
     })
