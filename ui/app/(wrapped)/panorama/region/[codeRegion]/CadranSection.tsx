@@ -1,7 +1,8 @@
-import { SmallCloseIcon } from "@chakra-ui/icons";
+import { SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
+  Button,
   Center,
   chakra,
   Container,
@@ -26,6 +27,7 @@ import {
 import { ReactNode, useMemo, useState } from "react";
 
 import { Cadran } from "../../../../../components/Cadran";
+import { TableCadran } from "../../../../../components/TableCadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 import { PanoramaFormations } from "./type";
 
@@ -132,6 +134,12 @@ export const CadranSection = ({
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
   const [tendance, setTendance] = useState<string>();
+  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+
+  const toggleTypeVue = () => {
+    if (typeVue === "cadran") setTypeVue("tableau");
+    else setTypeVue("cadran");
+  };
 
   const filteredFormations = useMemo(
     () =>
@@ -247,33 +255,54 @@ export const CadranSection = ({
           </FormControl>
         </Box>
         <Box flex={1}>
-          <Flex justify="flex-end">
-            <Text color="grey" fontSize="sm" textAlign="left">
-              {filteredFormations?.length ?? "-"} certifications
-            </Text>
-            <Text ml="2" color="grey" fontSize="sm" textAlign="right">
-              {filteredFormations?.reduce(
-                (acc, { effectif }) => acc + (effectif ?? 0),
-                0
-              ) ?? "-"}{" "}
-              élèves
-            </Text>
+          <Flex justify="space-between">
+            <Flex>
+              <Button onClick={() => toggleTypeVue()} variant="solid">
+                <ViewIcon mr={2}></ViewIcon>
+                {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+              </Button>
+            </Flex>
+            <Flex alignItems={"flex-end"}>
+              <Text color="grey" fontSize="sm" textAlign="left">
+                {filteredFormations?.length ?? "-"} certifications
+              </Text>
+              <Text ml="2" color="grey" fontSize="sm" textAlign="right">
+                {filteredFormations?.reduce(
+                  (acc, { effectif }) => acc + (effectif ?? 0),
+                  0
+                ) ?? "-"}{" "}
+                élèves
+              </Text>
+            </Flex>
           </Flex>
-          <AspectRatio ratio={1}>
+          <AspectRatio ratio={1} mt={2}>
             <>
-              {filteredFormations && (
-                <Cadran
-                  meanPoursuite={meanPoursuite}
-                  meanInsertion={meanInsertion}
-                  data={filteredFormations}
-                  TooltipContent={FormationTooltipContent}
-                  itemId={(item) =>
-                    item.codeFormationDiplome + item.dispositifId
-                  }
-                  InfoTootipContent={InfoTooltipContent}
-                  effectifSizes={effectifSizes}
-                />
-              )}
+              {filteredFormations &&
+                (typeVue === "cadran" ? (
+                  <Cadran
+                    meanPoursuite={meanPoursuite}
+                    meanInsertion={meanInsertion}
+                    data={filteredFormations.map((formation) => ({
+                      ...formation,
+                      tauxInsertion: formation.tauxInsertion6mois,
+                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    }))}
+                    TooltipContent={FormationTooltipContent}
+                    itemId={(item) =>
+                      item.codeFormationDiplome + item.dispositifId
+                    }
+                    InfoTootipContent={InfoTooltipContent}
+                    effectifSizes={effectifSizes}
+                  />
+                ) : (
+                  <TableCadran
+                    formations={filteredFormations.map((formation) => ({
+                      ...formation,
+                      tauxInsertion: formation.tauxInsertion6mois,
+                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    }))}
+                  />
+                ))}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>

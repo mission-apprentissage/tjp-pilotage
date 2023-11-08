@@ -34,8 +34,8 @@ export const TableCadran = ({
   order,
 }: {
   formations: Formation[];
-  handleOrder: (column?: string) => void;
-  handleClick: (value?: string) => void;
+  handleOrder?: (column?: string) => void;
+  handleClick?: (value?: string) => void;
   currentCfd?: string;
   order?: {
     order?: "asc" | "desc";
@@ -43,12 +43,13 @@ export const TableCadran = ({
   };
 }) => {
   const getTdColor = (formation: Formation) => {
-    if (formation.cfd === currentCfd) return "white !important";
+    if (currentCfd && formation.cfd === currentCfd) return "white !important";
     return "";
   };
 
   const getTrBgColor = (formation: Formation) => {
-    if (formation.cfd === currentCfd) return "blue.main !important";
+    if (currentCfd && formation.cfd === currentCfd)
+      return "blue.main !important";
     switch (formation.positionCadran) {
       case "Q1":
         return "#C8F6D6";
@@ -66,7 +67,7 @@ export const TableCadran = ({
         position="relative"
         width="100%"
       >
-        <Table variant="simple" size={"sm"} mb={"auto"} mt={2}>
+        <Table variant="simple" size={"sm"} mb={"auto"}>
           <Thead
             bgColor="#96A6D8"
             h="12"
@@ -79,19 +80,21 @@ export const TableCadran = ({
               <Th
                 maxW="40%"
                 color="white"
-                cursor="pointer"
-                onClick={() => handleOrder("libelleDiplome")}
+                cursor={handleOrder ? "pointer" : "default"}
+                onClick={() => handleOrder && handleOrder("libelleDiplome")}
               >
-                <OrderIcon {...order} column="libelleDiplome" />
+                {handleOrder && (
+                  <OrderIcon {...order} column="libelleDiplome" />
+                )}
                 FORMATION
               </Th>
               <Th
                 maxW="20%"
                 color="white"
-                cursor="pointer"
-                onClick={() => handleOrder("tauxPression")}
+                cursor={handleOrder ? "pointer" : "default"}
+                onClick={() => handleOrder && handleOrder("tauxPression")}
               >
-                <OrderIcon {...order} column="tauxPression" />
+                {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
                 <TooltipIcon
                   ml="1"
@@ -109,19 +112,19 @@ export const TableCadran = ({
               <Th
                 maxW="20%"
                 color="white"
-                cursor="pointer"
-                onClick={() => handleOrder("tauxInsertion")}
+                cursor={handleOrder ? "pointer" : "default"}
+                onClick={() => handleOrder && handleOrder("tauxInsertion")}
               >
-                <OrderIcon {...order} column="tauxInsertion" />
+                {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
               </Th>
               <Th
                 maxW="20%"
                 color="white"
-                cursor="pointer"
-                onClick={() => handleOrder("tauxPoursuite")}
+                cursor={handleOrder ? "pointer" : "default"}
+                onClick={() => handleOrder && handleOrder("tauxPoursuite")}
               >
-                <OrderIcon {...order} column="tauxPoursuite" />
+                {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
               </Th>
             </Tr>
@@ -131,8 +134,8 @@ export const TableCadran = ({
               <Tr
                 key={`${formation.cfd}-${index}`}
                 bgColor={getTrBgColor(formation)}
-                onClick={() => handleClick(formation.cfd)}
-                cursor="pointer"
+                onClick={() => handleClick && handleClick(formation.cfd)}
+                cursor={handleClick ? "pointer" : "default"}
               >
                 <Td whiteSpace="normal" color={getTdColor(formation)}>
                   {formation.libelleDiplome}
