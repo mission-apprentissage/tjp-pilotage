@@ -15,28 +15,20 @@ import {
   Select,
   Skeleton,
   Stack,
-  Table,
-  TableContainer,
-  Tbody,
-  Td,
   Text,
-  Th,
-  Thead,
-  Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
-import { ApiType } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 
 import { api } from "../../../../../api.client";
 import { Cadran } from "../../../../../components/Cadran";
-import { OrderIcon } from "../../../../../components/OrderIcon";
+import { TableCadran } from "../../../../../components/TableCadran";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
@@ -121,31 +113,6 @@ export const CadranSection = ({
       return _.find(territoires, (territoire) => territoire.value === code)
         ?.label;
     return undefined;
-  };
-
-  const getTdColor = (
-    formation: ApiType<
-      typeof api.getFormationsTransformationStats
-    >["formations"][0]
-  ) => {
-    if (formation.cfd === currentCfd) return "white !important";
-    return "";
-  };
-
-  const getTrBgColor = (
-    formation: ApiType<
-      typeof api.getFormationsTransformationStats
-    >["formations"][0]
-  ) => {
-    if (formation.cfd === currentCfd) return "blue.main !important";
-    switch (formation.positionCadran) {
-      case "Q1":
-        return "#C8F6D6";
-      case "Q4":
-        return "#ffe2e1";
-      default:
-        return "inherit";
-    }
   };
 
   const handleOrder = (
@@ -407,116 +374,17 @@ export const CadranSection = ({
                         ]}
                       />
                     ) : (
-                      <Flex
-                        direction="column"
-                        flex={1}
-                        position="relative"
-                        minH="0"
-                      >
-                        <TableContainer
-                          overflowY="auto"
-                          flex={1}
-                          position="relative"
-                          width="100%"
-                        >
-                          <Table
-                            variant="simple"
-                            size={"sm"}
-                            mb={"auto"}
-                            mt={2}
-                          >
-                            <Thead
-                              bgColor="#96A6D8"
-                              h="12"
-                              position="sticky"
-                              top="0"
-                              boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                              zIndex={1}
-                            >
-                              <Tr>
-                                <Th
-                                  maxW="40%"
-                                  color="white"
-                                  cursor="pointer"
-                                  onClick={() => handleOrder("libelleDiplome")}
-                                >
-                                  <OrderIcon
-                                    {...order}
-                                    column="libelleDiplome"
-                                  />
-                                  FORMATION
-                                </Th>
-                                <Th
-                                  maxW="20%"
-                                  isNumeric
-                                  color="white"
-                                  cursor="pointer"
-                                  onClick={() => handleOrder("tauxPression")}
-                                >
-                                  <OrderIcon {...order} column="tauxPression" />
-                                  TX PRESSION
-                                </Th>
-                                <Th
-                                  maxW="20%"
-                                  isNumeric
-                                  color="white"
-                                  cursor="pointer"
-                                  onClick={() => handleOrder("tauxInsertion")}
-                                >
-                                  <OrderIcon
-                                    {...order}
-                                    column="tauxInsertion"
-                                  />
-                                  TX EMPLOI
-                                </Th>
-                                <Th
-                                  maxW="20%"
-                                  isNumeric
-                                  color="white"
-                                  cursor="pointer"
-                                  onClick={() => handleOrder("tauxPoursuite")}
-                                >
-                                  <OrderIcon
-                                    {...order}
-                                    column="tauxPoursuite"
-                                  />
-                                  TX POURSUITE
-                                </Th>
-                              </Tr>
-                            </Thead>
-                            <Tbody>
-                              {formations.map((formation, index) => (
-                                <Tr
-                                  key={`${formation.cfd}-${index}`}
-                                  bgColor={getTrBgColor(formation)}
-                                  onClick={() => setFormationId(formation.cfd)}
-                                  cursor="pointer"
-                                >
-                                  <Td
-                                    whiteSpace="normal"
-                                    color={getTdColor(formation)}
-                                  >
-                                    {formation.libelleDiplome}
-                                  </Td>
-                                  <Td isNumeric color={getTdColor(formation)}>
-                                    {formation.tauxPression
-                                      ? `${formation.tauxPression} %`
-                                      : "-"}
-                                  </Td>
-                                  <Td
-                                    isNumeric
-                                    color={getTdColor(formation)}
-                                  >{`${formation.tauxInsertion} %`}</Td>
-                                  <Td
-                                    isNumeric
-                                    color={getTdColor(formation)}
-                                  >{`${formation.tauxPoursuite} %`}</Td>
-                                </Tr>
-                              ))}
-                            </Tbody>
-                          </Table>
-                        </TableContainer>
-                      </Flex>
+                      <TableCadran
+                        formations={formations}
+                        handleClick={setFormationId}
+                        currentCfd={currentCfd}
+                        order={order}
+                        handleOrder={(column?: string) =>
+                          handleOrder(
+                            column as OrderFormationsTransformationStats["orderBy"]
+                          )
+                        }
+                      />
                     ))}
                   {!formations && <Skeleton opacity="0.3" height="100%" />}
                 </>
