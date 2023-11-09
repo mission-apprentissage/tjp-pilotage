@@ -53,10 +53,10 @@ export const QuadrantSection = ({
           item
         ): item is RequiredFields<
           ApiType<typeof api.getEtablissement>["formations"][number],
-          "tauxInsertion6mois" | "tauxPoursuiteEtudes"
+          "tauxInsertion" | "tauxPoursuite"
         > =>
-          item.tauxInsertion6mois !== undefined &&
-          item.tauxPoursuiteEtudes !== undefined &&
+          item.tauxInsertion !== undefined &&
+          item.tauxPoursuite !== undefined &&
           (!codeNiveauDiplome?.length ||
             codeNiveauDiplome.includes(item.codeNiveauDiplome))
       ),
@@ -107,8 +107,8 @@ export const QuadrantSection = ({
                   InfoTootipContent={InfoTooltipContent}
                   data={filteredFormations.map((formation) => ({
                     ...formation,
-                    tauxInsertion: formation.tauxInsertion6mois,
-                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    tauxInsertion: formation.tauxInsertion,
+                    tauxPoursuite: formation.tauxPoursuite,
                   }))}
                   itemId={(item) => item.cfd + item.dispositifId}
                   effectifSizes={effectifSizes}
@@ -117,8 +117,8 @@ export const QuadrantSection = ({
                 <TableQuadrant
                   formations={filteredFormations.map((formation) => ({
                     ...formation,
-                    tauxInsertion: formation.tauxInsertion6mois,
-                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    tauxInsertion: formation.tauxInsertion,
+                    tauxPoursuite: formation.tauxPoursuite,
                   }))}
                 />
               ))}

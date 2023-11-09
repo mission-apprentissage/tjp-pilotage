@@ -8,8 +8,17 @@ import {
 export const [getDataForPanoramaRegion] = inject(
   { queryFormationsRegion },
   (deps) =>
-    async ({ codeRegion }: { codeRegion: string }) => {
-      const formations = await deps.queryFormationsRegion({ codeRegion });
+    async (
+      {
+        codeRegion,
+        orderBy
+      }: {
+        codeRegion: string;
+        orderBy?: { column: string; order: "asc" | "desc" };
+      }) => {
+      console.log("codeRegion", codeRegion)
+      console.log("orderBy", orderBy)
+      const formations = await deps.queryFormationsRegion({ codeRegion, orderBy });
 
       return {
         formations,
@@ -20,9 +29,17 @@ export const [getDataForPanoramaRegion] = inject(
 export const [getDataForPanoramaDepartement] = inject(
   { queryFormationsDepartement },
   (deps) =>
-    async ({ codeDepartement }: { codeDepartement: string }) => {
+    async (
+      {
+        codeDepartement,
+        orderBy
+      }: {
+        codeDepartement: string;
+        orderBy?: { column: string; order: "asc" | "desc" };
+      }) => {
       const formations = await deps.queryFormationsDepartement({
         codeDepartement,
+        orderBy
       });
 
       return {

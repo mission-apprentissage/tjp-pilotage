@@ -10,12 +10,11 @@ export const panoramaRoutes = ({ server }: { server: Server }) => {
     "/panorama/stats/region",
     { schema: ROUTES_CONFIG.getDataForPanoramaRegion },
     async (request, response) => {
-      const q = request.query;
-      if (!("codeRegion" in q)) {
-        q;
-      }
+      const { order, orderBy, ...filters } = request.query;
+      console.log(request.query)
       const stats = await getDataForPanoramaRegion({
-        ...request.query,
+        ...filters,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
       response.status(200).send(stats);
     }
@@ -24,12 +23,10 @@ export const panoramaRoutes = ({ server }: { server: Server }) => {
     "/panorama/stats/departement",
     { schema: ROUTES_CONFIG.getDataForPanoramaDepartement },
     async (request, response) => {
-      const q = request.query;
-      if (!("codeDepartement" in q)) {
-        q;
-      }
+      const { order, orderBy, ...filters } = request.query;
       const stats = await getDataForPanoramaDepartement({
-        ...request.query,
+        ...filters,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
       });
       response.status(200).send(stats);
     }

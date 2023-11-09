@@ -49,8 +49,8 @@ const FORMATIONS_COLUMNS = {
   effectif3: "Année 3",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion6mois: "Tx d'emploi 6 mois régional",
-  tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  tauxInsertion: "Tx d'emploi 6 mois régional",
+  tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
@@ -421,10 +421,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
+                  onClick={() => handleOrder("tauxInsertion")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  {FORMATIONS_COLUMNS.tauxInsertion6mois}
+                  <OrderIcon {...order} column="tauxInsertion" />
+                  {FORMATIONS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
@@ -432,10 +432,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  onClick={() => handleOrder("tauxPoursuite")}
                 >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
+                  <OrderIcon {...order} column="tauxPoursuite" />
+                  {FORMATIONS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."

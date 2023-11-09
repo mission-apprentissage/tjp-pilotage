@@ -22,8 +22,8 @@ const FormationLineSchema = Type.Object({
   effectif3: Type.Optional(Type.Number()),
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPression: Type.Optional(Type.Number()),
-  tauxInsertion6mois: Type.Optional(Type.Number()),
-  tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+  tauxInsertion: Type.Optional(Type.Number()),
+  tauxPoursuite: Type.Optional(Type.Number()),
   tauxDevenirFavorable: Type.Optional(Type.Number()),
   CPC: Type.Optional(Type.String()),
   CPCSecteur: Type.Optional(Type.String()),
@@ -69,10 +69,10 @@ const FormationSchema = Type.Object({
   effectifPrecedent: Type.Optional(Type.Number()),
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPression: Type.Optional(Type.Number()),
-  tauxInsertion6mois: Type.Number(),
-  tauxInsertion6moisPrecedent: Type.Optional(Type.Number()),
-  tauxPoursuiteEtudes: Type.Number(),
-  tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
+  tauxInsertion: Type.Number(),
+  tauxInsertionPrecedent: Type.Optional(Type.Number()),
+  tauxPoursuite: Type.Number(),
+  tauxPoursuitePrecedent: Type.Optional(Type.Number()),
   tauxDevenirFavorable: Type.Number(),
   positionQuadrant: Type.Optional(Type.String()),
   CPC: Type.Optional(Type.String()),
@@ -120,6 +120,8 @@ export const formationSchemas = {
   getDataForPanoramaRegion: {
     querystring: Type.Object({
       codeRegion: Type.String(),
+      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
       200: Type.Object({
@@ -130,6 +132,8 @@ export const formationSchemas = {
   getDataForPanoramaDepartement: {
     querystring: Type.Object({
       codeDepartement: Type.String(),
+      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
       200: Type.Object({

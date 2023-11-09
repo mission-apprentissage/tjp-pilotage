@@ -1,15 +1,18 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
 import { useState } from "react";
 
 import { api } from "../../../../../api.client";
+import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
 import { QuadrantSection } from "../../components/QuadrantSection";
 import { TopFlopSection } from "../../components/TopFlopSection";
+import { Order } from "../../types";
 
 export default function Panorama({
   params: { codeRegion },
@@ -19,6 +22,31 @@ export default function Panorama({
   };
 }) {
   const router = useRouter();
+  const queryParams = useSearchParams();
+  const searchParams: {
+    order?: Partial<Order>;
+  } = qs.parse(queryParams.toString());
+
+  const setSearchParams = (params: { order?: typeof order }) => {
+    router.replace(
+      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
+    );
+  };
+
+  const handleOrder = (column: Order["orderBy"]) => {
+    if (order?.orderBy !== column) {
+      setSearchParams({ order: { order: "desc", orderBy: column } });
+      return;
+    }
+    setSearchParams({
+      order: {
+        order: order?.order === "asc" ? "desc" : "asc",
+        orderBy: column,
+      },
+    });
+  };
+
+  const order = searchParams.order ?? { order: "asc" };
 
   const onCodeRegionChanged = (codeRegion: string) => {
     router.push(`/panorama/region/${codeRegion}`);
@@ -48,9 +76,12 @@ export default function Panorama({
   );
 
   const { data } = useQuery(
-    ["formationForPanorama", { codeRegion }],
+    ["formationForPanorama", codeRegion, order],
     api.getDataForPanoramaRegion({
-      query: { codeRegion },
+      query: {
+        codeRegion,
+        ...order,
+      },
     }).call,
     { keepPreviousData: true, staleTime: 10000000 }
   );
@@ -74,9 +105,11 @@ export default function Panorama({
       <QuadrantSection
         codeNiveauDiplome={codeNiveauDiplome}
         libelleFiliere={libelleFiliere}
-        meanInsertion={stats?.tauxInsertion6mois}
-        meanPoursuite={stats?.tauxPoursuiteEtudes}
+        meanInsertion={stats?.tauxInsertion}
+        meanPoursuite={stats?.tauxPoursuite}
         quadrantFormations={data?.formations}
+        order={order}
+        handleOrder={handleOrder}
       />
       <TopFlopSection
         libelleFiliere={libelleFiliere}

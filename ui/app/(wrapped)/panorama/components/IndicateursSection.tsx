@@ -135,9 +135,7 @@ export const IndicateursSection = ({
             <StatCard
               label="Taux poursuite étude dans votre région"
               value={
-                stats?.tauxPoursuiteEtudes
-                  ? `${stats.tauxPoursuiteEtudes}%`
-                  : undefined
+                stats?.tauxPoursuite ? `${stats.tauxPoursuite}%` : undefined
               }
             />
             <StatCard
@@ -149,9 +147,7 @@ export const IndicateursSection = ({
             <StatCard
               label="Taux d'emploi à 6 mois dans votre région"
               value={
-                stats?.tauxInsertion6mois
-                  ? `${stats.tauxInsertion6mois}%`
-                  : undefined
+                stats?.tauxInsertion ? `${stats.tauxInsertion}%` : undefined
               }
             />
             <StatCard

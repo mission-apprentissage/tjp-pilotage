@@ -2,6 +2,9 @@ import { ApiType } from "shared";
 
 import { api } from "@/api.client";
 
+
+export type Query = Parameters<typeof api.getDataForPanoramaRegion>[0]["query"];
+
 export type PanoramaFormationRegion = ApiType<
   typeof api.getDataForPanoramaRegion
 >["formations"][number];
@@ -30,3 +33,6 @@ export type StatsFormationsDepartement = ApiType<
 export type StatsFormations =
   | StatsFormationsRegion
   | StatsFormationsDepartement;
+
+
+export type Order = Pick<Query, "order" | "orderBy">;
