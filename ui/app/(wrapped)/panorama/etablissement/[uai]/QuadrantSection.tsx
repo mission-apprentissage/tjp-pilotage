@@ -14,8 +14,8 @@ import { useMemo, useState } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
-import { Cadran } from "../../../../../components/Cadran";
-import { TableCadran } from "../../../../../components/TableCadran";
+import { Quadrant } from "../../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../../components/TableQuadrant";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
@@ -27,28 +27,28 @@ const effectifSizes = [
   { max: 100, size: 40 },
 ];
 
-export const CadranSection = ({
-  cadranFormations,
+export const QuadrantSection = ({
+  quadrantFormations,
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
   rentreeScolaire,
 }: {
-  cadranFormations?: ApiType<typeof api.getEtablissement>["formations"];
+  quadrantFormations?: ApiType<typeof api.getEtablissement>["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
 }) => {
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
   const filteredFormations = useMemo(
     () =>
-      cadranFormations?.filter(
+      quadrantFormations?.filter(
         (
           item
         ): item is RequiredFields<
@@ -60,7 +60,7 @@ export const CadranSection = ({
           (!codeNiveauDiplome?.length ||
             codeNiveauDiplome.includes(item.codeNiveauDiplome))
       ),
-    [codeNiveauDiplome, cadranFormations]
+    [codeNiveauDiplome, quadrantFormations]
   );
 
   return (
@@ -78,7 +78,9 @@ export const CadranSection = ({
           <Flex>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
-              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+              {`Passer en vue ${
+                typeVue === "quadrant" ? "tableau" : "quadrant"
+              }`}
             </Button>
           </Flex>
           <Flex alignItems={"flex-end"}>
@@ -97,8 +99,8 @@ export const CadranSection = ({
         <AspectRatio ratio={1} mt={2}>
           <>
             {filteredFormations &&
-              (typeVue === "cadran" ? (
-                <Cadran
+              (typeVue === "quadrant" ? (
+                <Quadrant
                   meanPoursuite={meanPoursuite}
                   meanInsertion={meanInsertion}
                   TooltipContent={FormationTooltipContent}
@@ -112,7 +114,7 @@ export const CadranSection = ({
                   effectifSizes={effectifSizes}
                 />
               ) : (
-                <TableCadran
+                <TableQuadrant
                   formations={filteredFormations.map((formation) => ({
                     ...formation,
                     tauxInsertion: formation.tauxInsertion6mois,

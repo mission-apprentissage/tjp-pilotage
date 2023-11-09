@@ -23,7 +23,7 @@ import {
   useState,
 } from "react";
 
-const cadranLabelStyle = {
+const quadrantLabelStyle = {
   show: true,
   distance: 14,
   fontSize: 14,
@@ -31,12 +31,12 @@ const cadranLabelStyle = {
   fontWeight: "bold",
 } as const;
 
-export const Cadran = function <
+export const Quadrant = function <
   F extends {
     effectif?: number;
     tauxPoursuite: number;
     tauxInsertion: number;
-    positionCadran?: string;
+    positionQuadrant?: string;
   },
 >({
   className,
@@ -104,13 +104,13 @@ export const Cadran = function <
     }));
   }, [data]);
 
-  const repartitionCadrans = useMemo(() => {
+  const repartitionsQuadrants = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
     return {
-      q1: data.filter((item) => item.positionCadran === "Q1").length,
-      q2: data.filter((item) => item.positionCadran === "Q2").length,
-      q3: data.filter((item) => item.positionCadran === "Q3").length,
-      q4: data.filter((item) => item.positionCadran === "Q4").length,
+      q1: data.filter((item) => item.positionQuadrant === "Q1").length,
+      q2: data.filter((item) => item.positionQuadrant === "Q2").length,
+      q3: data.filter((item) => item.positionQuadrant === "Q3").length,
+      q4: data.filter((item) => item.positionQuadrant === "Q4").length,
     };
   }, [data, meanInsertion, meanPoursuite]);
 
@@ -217,9 +217,9 @@ export const Cadran = function <
                       {
                         coord: [0, 0],
                         itemStyle: { color: "#ffe2e1" },
-                        name: `Q4 - ${repartitionCadrans?.q4} formations`,
+                        name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideBottomLeft",
                         },
                       },
@@ -229,9 +229,9 @@ export const Cadran = function <
                       {
                         coord: [meanPoursuite, meanInsertion],
                         itemStyle: { color: "#C8F6D6" },
-                        name: `Q1 - ${repartitionCadrans?.q1} formations`,
+                        name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideTopRight",
                         },
                       },
@@ -241,9 +241,9 @@ export const Cadran = function <
                       {
                         coord: [0, meanInsertion],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
-                        name: `Q2 - ${repartitionCadrans?.q2} formations`,
+                        name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideTopLeft",
                         },
                       },
@@ -253,9 +253,9 @@ export const Cadran = function <
                       {
                         coord: [meanPoursuite, 0],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
-                        name: `Q3 - ${repartitionCadrans?.q3} formations`,
+                        name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideBottomRight",
                         },
                       },

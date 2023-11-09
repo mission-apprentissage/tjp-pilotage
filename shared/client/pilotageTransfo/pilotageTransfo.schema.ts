@@ -69,7 +69,7 @@ const FormationTransformationStatsSchema = Type.Object({
   placesOuvertes: Type.Number(),
   placesFermees: Type.Number(),
   placesTransformees: Type.Number(),
-  positionCadran: Type.Optional(Type.String()),
+  positionQuadrant: Type.Optional(Type.String()),
   continuum: Type.Optional(
     Type.Object({
       cfd: Type.String(),

@@ -18,19 +18,19 @@ import { PanoramaFormation, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 export const TopFlopSection = ({
-  cadranFormations,
+  quadrantFormations,
   codeNiveauDiplome,
   libelleFiliere,
 }: {
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
   libelleFiliere?: string[];
 }) => {
   const topFlopFormations = useMemo(() => {
-    if (!cadranFormations) return;
-    const filtered = cadranFormations.filter((item) => {
+    if (!quadrantFormations) return;
+    const filtered = quadrantFormations.filter((item) => {
       if (
         libelleFiliere?.length &&
         (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
@@ -54,7 +54,7 @@ export const TopFlopSection = ({
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
-  }, [cadranFormations, codeNiveauDiplome, libelleFiliere]);
+  }, [quadrantFormations, codeNiveauDiplome, libelleFiliere]);
 
   return (
     <Container as="section" py="6" maxWidth={"container.xl"}>

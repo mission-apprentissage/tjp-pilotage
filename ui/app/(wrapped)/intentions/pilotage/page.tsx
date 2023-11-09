@@ -7,7 +7,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
-import { CadranSection } from "@/app/(wrapped)/intentions/pilotage/components/CadranSection";
+import { QuadrantSection } from "@/app/(wrapped)/intentions/pilotage/components/QuadrantSection";
 
 import { api } from "../../../../api.client";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
@@ -166,7 +166,7 @@ export default withAuth(
               />
             </SimpleGrid>
             <Box mt={14}>
-              <CadranSection
+              <QuadrantSection
                 scope={scope}
                 parentFilters={filters}
                 scopeFilters={data?.filters}

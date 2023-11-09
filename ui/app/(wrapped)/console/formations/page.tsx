@@ -61,7 +61,7 @@ const FORMATIONS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
-  positionCadran: "Position dans le cadran",
+  positionQuadrant: "Position dans le quadrant",
 } satisfies ExportColumns<
   ApiType<typeof api.getFormations>["formations"][number]
 >;
@@ -495,7 +495,7 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleFiliere" />
                   {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
-                <Th>{FORMATIONS_COLUMNS.positionCadran}</Th>
+                <Th>{FORMATIONS_COLUMNS.positionQuadrant}</Th>
               </Tr>
             </Thead>
             <Tbody>

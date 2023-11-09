@@ -35,7 +35,7 @@ const FormationLineSchema = Type.Object({
       libelle: Type.Optional(Type.String()),
     })
   ),
-  positionCadran: Type.Optional(Type.String()),
+  positionQuadrant: Type.Optional(Type.String()),
 });
 
 const FiltersSchema = Type.Object({
@@ -74,7 +74,7 @@ const FormationSchema = Type.Object({
   tauxPoursuiteEtudes: Type.Number(),
   tauxPoursuiteEtudesPrecedent: Type.Optional(Type.Number()),
   tauxDevenirFavorable: Type.Number(),
-  positionCadran: Type.Optional(Type.String()),
+  positionQuadrant: Type.Optional(Type.String()),
   CPC: Type.Optional(Type.String()),
   CPCSecteur: Type.Optional(Type.String()),
   CPCSousSecteur: Type.Optional(Type.String()),

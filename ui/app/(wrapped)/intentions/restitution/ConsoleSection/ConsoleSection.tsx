@@ -303,7 +303,7 @@ export const ConsoleSection = ({
                   <OrderIcon {...order} column="commentaire" />
                   {STATS_DEMANDES_COLUMNS.commentaire}
                 </Th>
-                <Th pb={4}>{STATS_DEMANDES_COLUMNS.positionCadran}</Th>
+                <Th pb={4}>{STATS_DEMANDES_COLUMNS.positionQuadrant}</Th>
                 <Th
                   cursor="pointer"
                   pb="4"

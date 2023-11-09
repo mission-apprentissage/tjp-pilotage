@@ -8,10 +8,10 @@ import { api } from "../../../../../api.client";
 import { UaiFilterContext } from "../../../../layoutClient";
 import { InfoSection } from "../../components/InfoSection";
 import { PanoramaSelection } from "../PanoramaSelection";
-import { CadranSection } from "./CadranSection";
 import { EtablissementSection } from "./EtablissementSection";
 import { FiltersSection } from "./FiltersSection";
 import { FormationsSection } from "./FormationsSection";
+import { QuadrantSection } from "./QuadrantSection";
 import { RegionSection } from "./RegionSection";
 
 export default function Panorama({
@@ -84,12 +84,12 @@ export default function Panorama({
         codeDiplome={codeNiveauDiplome}
       />
       <RegionSection regionsStats={regionStats} />
-      <CadranSection
+      <QuadrantSection
         rentreeScolaire={etablissement?.rentreeScolaire}
         codeNiveauDiplome={codeNiveauDiplome}
         meanInsertion={regionStats?.tauxInsertion6mois}
         meanPoursuite={regionStats?.tauxPoursuiteEtudes}
-        cadranFormations={etablissement?.formations}
+        quadrantFormations={etablissement?.formations}
       />
       <FormationsSection
         rentreeScolaire={etablissement?.rentreeScolaire}

@@ -5,10 +5,10 @@ import { useRouter } from "next/navigation";
 import { useState } from "react";
 
 import { api } from "../../../../../api.client";
-import { CadranSection } from "../../components/CadranSection";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
+import { QuadrantSection } from "../../components/QuadrantSection";
 import { TopFlopSection } from "../../components/TopFlopSection";
 
 export default function Panorama({
@@ -72,17 +72,17 @@ export default function Panorama({
         libelleFiliere={libelleFiliere}
         onLibelleFiliereChanged={setLibelleFiliere}
       />
-      <CadranSection
+      <QuadrantSection
         codeNiveauDiplome={codeNiveauDiplome}
         libelleFiliere={libelleFiliere}
         meanInsertion={stats?.tauxInsertion6mois}
         meanPoursuite={stats?.tauxPoursuiteEtudes}
-        cadranFormations={data?.formations}
+        quadrantFormations={data?.formations}
       />
       <TopFlopSection
         libelleFiliere={libelleFiliere}
         codeNiveauDiplome={codeNiveauDiplome}
-        cadranFormations={data?.formations}
+        quadrantFormations={data?.formations}
       />
       <InfoSection
         codeRegion={stats?.codeRegion}
