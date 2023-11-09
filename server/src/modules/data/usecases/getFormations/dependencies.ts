@@ -6,6 +6,8 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withPositionCadran } from "../../queries/utils/positionCadran";
+import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
@@ -30,6 +32,7 @@ const findFormationsInDb = async ({
   CPCSecteur,
   CPCSousSecteur,
   libelleFiliere,
+  positionCadran,
 }: {
   offset?: number;
   limit?: number;
@@ -49,6 +52,7 @@ const findFormationsInDb = async ({
   CPCSecteur?: string[];
   CPCSousSecteur?: string[];
   libelleFiliere?: string[];
+  positionCadran?: string;
 } = {}) => {
   const query = kdb
     .selectFrom("formation")
@@ -159,6 +163,21 @@ const findFormationsInDb = async ({
         dispositifIdRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxInsertion6mois"),
+      withTauxDevenirFavorableReg({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "etablissement.codeRegion",
+      }).as("tauxDevenirFavorable"),
+      withPositionCadran({
+        eb,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "etablissement.codeRegion",
+        codeNiveauDiplomeRef: "formation.codeNiveauDiplome",
+      }).as("positionCadran"),
     ])
     .where(
       "codeFormationDiplome",
@@ -170,24 +189,24 @@ const findFormationsInDb = async ({
         cmpr("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations
           ? not(
-              exists(
-                selectFrom("formationEtablissement as fe")
-                  .select("cfd")
-                  .distinct()
-                  .innerJoin(
-                    "indicateurEntree",
-                    "id",
-                    "formationEtablissementId"
-                  )
-                  .where("rentreeScolaire", "in", rentreeScolaire)
-                  .whereRef(
-                    "fe.dispositifId",
-                    "=",
-                    "formationEtablissement.dispositifId"
-                  )
-                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
-              )
+            exists(
+              selectFrom("formationEtablissement as fe")
+                .select("cfd")
+                .distinct()
+                .innerJoin(
+                  "indicateurEntree",
+                  "id",
+                  "formationEtablissementId"
+                )
+                .where("rentreeScolaire", "in", rentreeScolaire)
+                .whereRef(
+                  "fe.dispositifId",
+                  "=",
+                  "formationEtablissement.dispositifId"
+                )
+                .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
             )
+          )
           : sql`false`,
       ])
     )
@@ -201,6 +220,21 @@ const findFormationsInDb = async ({
       "familleMetier.libelleOfficielFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+    .having((h) => {
+      if (!positionCadran) return h.val(true);
+      return h(
+        (eb) =>
+          withPositionCadran({
+            eb,
+            millesimeSortie,
+            cfdRef: "formationEtablissement.cfd",
+            dispositifIdRef: "formationEtablissement.dispositifId",
+            codeRegionRef: "etablissement.codeRegion",
+          }),
+        "=",
+        positionCadran
+      );
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);

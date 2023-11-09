@@ -5,6 +5,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { hasContinuum } from "../utils/hasContinuum";
 import { notHistorique } from "../utils/notHistorique";
+import { withPositionCadran } from "../utils/positionCadran";
 import { withInsertionReg } from "../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../utils/tauxPoursuite";
 import { selectTauxPression } from "../utils/tauxPression";
@@ -106,6 +107,13 @@ export const getEtablissement = async ({
               dispositifIdRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxPoursuiteEtudes"),
+            withPositionCadran({
+              eb,
+              millesimeSortie,
+              cfdRef: "formationEtablissement.cfd",
+              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeRegionRef: "etablissement.codeRegion",
+            }).as("positionCadran"),
           ])
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")

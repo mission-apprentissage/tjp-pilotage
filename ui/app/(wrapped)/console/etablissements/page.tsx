@@ -56,6 +56,7 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion6mois: "Tx d'emploi 6 mois régional",
   tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  tauxDevenirFavorable: "Tx de devenir favorable régional",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
   UAI: "UAI",
@@ -524,6 +525,17 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxDevenirFavorable")}
+                >
+                  <OrderIcon {...order} column="tauxDevenirFavorable" />
+                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorable}
+                  <TooltipIcon
+                    ml="1"
+                    label="Part des jeunes en emploi ou en poursuite d’étude."
                   />
                 </Th>
                 <Th

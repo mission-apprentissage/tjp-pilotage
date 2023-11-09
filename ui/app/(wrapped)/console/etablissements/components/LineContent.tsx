@@ -83,6 +83,12 @@ export const EtablissementLineContent = ({
           value={line.tauxPoursuiteEtudes}
         />
       </Td>
+      <Td textAlign="center">
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxDevenirFavorable}
+        />
+      </Td>
       <Td>{line.valeurAjoutee ?? "-"} </Td>
       <Td>{line.secteur ?? "-"} </Td>
       <Td>{line.UAI ?? "-"} </Td>

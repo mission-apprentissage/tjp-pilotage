@@ -8,18 +8,18 @@ export const selectDenominateurInsertion6moisAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
     SUM(
-      case when 
-      ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null 
-      then ${sql.table(indicateurSortieAlias)}."nbSortants" 
+      case when
+      ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
+      then ${sql.table(indicateurSortieAlias)}."nbSortants"
       end
     )`;
 
 export const selectTauxInsertion6moisAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
-      case when 
+      case when
       ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)} >= ${seuil}
-      then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois") 
+      then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
       / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})
       end
     `;
@@ -27,17 +27,17 @@ export const selectTauxInsertion6moisAgg = (
 export const selectDenominateurInsertion6mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when 
-    ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null 
-    then ${sql.table(indicateurSortieAlias)}."nbSortants" 
+    case when
+    ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
+    then ${sql.table(indicateurSortieAlias)}."nbSortants"
     end`;
 
 export const selectTauxInsertion6mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
-          case when 
+          case when
           ${selectDenominateurInsertion6mois(indicateurSortieAlias)} >= ${seuil}
-          then (100 * ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" 
+          then (100 * ${sql.table(indicateurSortieAlias)}."nbInsertion6mois"
           / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})
           end
         `;

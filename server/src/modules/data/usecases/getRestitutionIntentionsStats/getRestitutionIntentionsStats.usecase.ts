@@ -1,9 +1,9 @@
 import { RequestUser } from "../../../core/model/User";
 import { dependencies } from "./dependencies";
 
-const getStatsDemandesFactory =
+const getRestitutionIntentionsStatsFactory =
   ({
-    findStatsDemandesInDB = dependencies.findStatsDemandesInDB,
+    findRestitutionIntentionsStatsInDB = dependencies.findRestitutionIntentionsStatsInDB,
     findFiltersInDb = dependencies.findFiltersInDb,
   }) =>
   async (activeFilters: {
@@ -34,7 +34,10 @@ const getStatsDemandesFactory =
     };
   }) => {
     const [{ count, demandes }, filters] = await Promise.all([
-      findStatsDemandesInDB(activeFilters),
+      findRestitutionIntentionsStatsInDB({
+        ...activeFilters,
+        millesimeSortie: "2020_2021",
+      }),
       findFiltersInDb(activeFilters),
     ]);
 
@@ -45,4 +48,5 @@ const getStatsDemandesFactory =
     };
   };
 
-export const getStatsDemandes = getStatsDemandesFactory({});
+export const getRestitutionIntentionsStats =
+  getRestitutionIntentionsStatsFactory({});

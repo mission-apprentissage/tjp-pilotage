@@ -4,22 +4,21 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withPositionCadran } from "../../queries/utils/positionCadran";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
-export const queryFormations = async ({
-  codeRegion,
+const queryFormations = ({
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
-  codeRegion: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
-}) => {
-  const formations = await kdb
+}) =>
+  kdb
     .selectFrom("formation")
     .leftJoin(
       "formationEtablissement",
@@ -55,7 +54,6 @@ export const queryFormations = async ({
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
-    .where("etablissement.codeRegion", "=", codeRegion)
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
@@ -129,6 +127,14 @@ export const queryFormations = async ({
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
+      (eb) =>
+        withPositionCadran({
+          eb,
+          millesimeSortie,
+          cfdRef: "formationEtablissement.cfd",
+          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeRegionRef: "etablissement.codeRegion",
+        }).as("positionCadran"),
     ])
     .$narrowType<{
       tauxInsertion6mois: number;
@@ -167,6 +173,34 @@ export const queryFormations = async ({
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+
+export const queryFormationsRegion = async ({
+  codeRegion,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeRegion: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+    .where("etablissement.codeRegion", "=", codeRegion)
+    .execute();
+
+  return formations.map(cleanNull);
+};
+
+export const queryFormationsDepartement = async ({
+  codeDepartement,
+  rentreeScolaire = "2022",
+  millesimeSortie = "2020_2021",
+}: {
+  codeDepartement: string;
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}) => {
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+    .where("etablissement.codeDepartement", "=", codeDepartement)
     .execute();
 
   return formations.map(cleanNull);

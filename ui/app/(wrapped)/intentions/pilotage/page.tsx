@@ -166,7 +166,11 @@ export default withAuth(
               />
             </SimpleGrid>
             <Box mt={14}>
-              <CadranSection scope={scope} parentFilters={filters} />
+              <CadranSection
+                scope={scope}
+                parentFilters={filters}
+                scopeFilters={data?.filters}
+              />
             </Box>
             <SimpleGrid spacing={5} columns={[2]} mt={14}>
               <VueTauxTransformationSection
