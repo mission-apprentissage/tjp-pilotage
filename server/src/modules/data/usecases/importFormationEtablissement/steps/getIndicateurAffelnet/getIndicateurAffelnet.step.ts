@@ -35,7 +35,7 @@ export const [getIndicateursAffelnet] = inject(
       anneeDebut,
       rentreeScolaire,
     }: {
-      anneesDispositif: AnneeDispositif[];
+      anneesDispositif: Record<string, AnneeDispositif>;
       uai: string;
       anneeDebut: number;
       rentreeScolaire: string;
