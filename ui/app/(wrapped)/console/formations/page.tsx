@@ -495,7 +495,13 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleFiliere" />
                   {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
-                <Th>{FORMATIONS_COLUMNS.positionQuadrant}</Th>
+                <Th>
+                  {FORMATIONS_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                  />
+                </Th>
               </Tr>
             </Thead>
             <Tbody>

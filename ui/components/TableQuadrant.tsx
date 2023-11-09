@@ -78,6 +78,7 @@ export const TableQuadrant = ({
           >
             <Tr>
               <Th
+                px="2"
                 maxW="40%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
@@ -89,10 +90,12 @@ export const TableQuadrant = ({
                 FORMATION
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxPression")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
@@ -110,22 +113,34 @@ export const TableQuadrant = ({
                 />
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxInsertion")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
+                <TooltipIcon
+                  ml="1"
+                  label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                />
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxPoursuite")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
+                <TooltipIcon
+                  ml="1"
+                  label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                />
               </Th>
             </Tr>
           </Thead>
