@@ -12,9 +12,6 @@
     name: ["tcpdump", "gdb", "libX11", "telnet", "gcc"]
     state: absent
 
-- include_role:
-    name: geerlingguy.docker
-
 - name: Vérification binaires ctop déja installés
   stat: path=/usr/local/bin/ctop
   register: ctop
@@ -25,7 +22,17 @@
 
 - name: Installation des packages apt
   apt:
-    name: ["vim", "htop", "jq", "git"]
+    name:
+      [
+        "vim",
+        "htop",
+        "jq",
+        "git",
+        "python3",
+        "python3-pip",
+        "docker",
+        "docker-compose",
+      ]
 
 - name: Set timezone to Europe/Paris
   community.general.timezone:
