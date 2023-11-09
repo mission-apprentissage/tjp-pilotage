@@ -1,6 +1,3 @@
-- name: Stoppe tous les conteneurs applicatifs
-  shell: "bash /opt/pilotage/stop-app.sh"
-
 - name: "Clone du repository (branche : {{ git_revision }})"
   git:
     repo: "https://github.com/mission-apprentissage/tjp-pilotage.git"
@@ -47,12 +44,3 @@
     minute: "0"
     hour: "1"
     job: "bash /opt/pilotage/tools/rotate-nginx-log-files.sh >> /var/log/cron.log 2>&1"
-
-# - name: Add cron to reload app automatically
-#   when: env_type == "recette"
-#   ansible.builtin.cron:
-#     name: "reload-app"
-#     minute: "*/1"
-#     hour: 8-20
-#     weekday: 1-5
-#     job: "bash /opt/pilotage/reload-app.sh >> /var/log/cron.log 2>&1"
