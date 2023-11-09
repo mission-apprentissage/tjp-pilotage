@@ -312,25 +312,25 @@ export const Quadrant = function <
         bottom="0"
       ></Box>
 
-      <Box position="absolute" right="0" top="10px" left="0" bottom="0">
-        {InfoTootipContent && (
+      {InfoTootipContent && (
+        <Box position={"absolute"} top="10px" bottom="0" right="-20px">
           <InfoTooltip>
             <InfoTootipContent />
           </InfoTooltip>
-        )}
+        </Box>
+      )}
 
-        {displayedDetail && TooltipContent && (
-          <FormationTooltipWrapper
-            ref={popperInstance.popperRef}
-            clickOutside={() => setDisplayedDetail(undefined)}
-            {...popperInstance.getPopperProps()}
-          >
-            {TooltipContent && displayedDetail && (
-              <TooltipContent formation={displayedDetail?.formation} />
-            )}
-          </FormationTooltipWrapper>
-        )}
-      </Box>
+      {displayedDetail && TooltipContent && (
+        <FormationTooltipWrapper
+          ref={popperInstance.popperRef}
+          clickOutside={() => setDisplayedDetail(undefined)}
+          {...popperInstance.getPopperProps()}
+        >
+          {TooltipContent && displayedDetail && (
+            <TooltipContent formation={displayedDetail?.formation} />
+          )}
+        </FormationTooltipWrapper>
+      )}
     </Box>
   );
 };
