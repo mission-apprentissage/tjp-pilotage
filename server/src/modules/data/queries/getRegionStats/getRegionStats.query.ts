@@ -38,10 +38,10 @@ export const getRegionStats = async ({
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
+        "tauxInsertion"
       ),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuiteEtudes"
+        "tauxPoursuite"
       ),
     ])
     .executeTakeFirstOrThrow();

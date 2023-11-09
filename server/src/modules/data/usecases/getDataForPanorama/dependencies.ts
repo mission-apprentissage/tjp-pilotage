@@ -14,9 +14,11 @@ import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 const queryFormations = ({
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
+  orderBy,
 }: {
   rentreeScolaire?: string;
   millesimeSortie?: string;
+  orderBy?: { column: string; order: "asc" | "desc" };
 }) =>
   kdb
     .selectFrom("formation")
@@ -59,9 +61,8 @@ const queryFormations = ({
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
         .on("iep.rentreeScolaire", "=", "2021")
     )
-    .select([
+    .select((eb) => [
       "codeFormationDiplome",
-      "libelleDiplome",
       "formationEtablissement.dispositifId",
       "libelleDispositif",
       "libelleNiveauDiplome",
@@ -78,6 +79,7 @@ const queryFormations = ({
       sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
         "effectifPrecedent"
       ),
+      sql<string>`CONCAT(${eb.ref("formation.libelleDiplome")},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleDiplome"),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       (eb) =>
         withInsertionReg({
@@ -86,7 +88,7 @@ const queryFormations = ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion6moisPrecedent"),
+        }).as("tauxInsertionPrecedent"),
       (eb) =>
         withPoursuiteReg({
           eb,
@@ -94,7 +96,7 @@ const queryFormations = ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuiteEtudesPrecedent"),
+        }).as("tauxPoursuitePrecedent"),
       (eb) =>
         withInsertionReg({
           eb,
@@ -102,7 +104,7 @@ const queryFormations = ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion6mois"),
+        }).as("tauxInsertion"),
       (eb) =>
         withPoursuiteReg({
           eb,
@@ -110,7 +112,7 @@ const queryFormations = ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuiteEtudes"),
+        }).as("tauxPoursuite"),
       (eb) =>
         hasContinuum({
           eb,
@@ -137,8 +139,8 @@ const queryFormations = ({
         }).as("positionQuadrant"),
     ])
     .$narrowType<{
-      tauxInsertion6mois: number;
-      tauxPoursuiteEtudes: number;
+      tauxInsertion: number;
+      tauxPoursuite: number;
       tauxDevenirFavorable: number;
     }>()
     .having(
@@ -173,17 +175,29 @@ const queryFormations = ({
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
     ])
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
+        sql.ref(orderBy.column),
+        sql`${sql.raw(orderBy.order)} NULLS LAST`
+      );
+    })
+    .orderBy("tauxDevenirFavorable", "desc")
 
 export const queryFormationsRegion = async ({
   codeRegion,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
+  orderBy
 }: {
   codeRegion: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
+  orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
-  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+
+  console.log(orderBy)
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie, orderBy })
     .where("etablissement.codeRegion", "=", codeRegion)
     .execute();
 
@@ -194,12 +208,14 @@ export const queryFormationsDepartement = async ({
   codeDepartement,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
+  orderBy
 }: {
   codeDepartement: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
+  orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
-  const formations = await queryFormations({ rentreeScolaire, millesimeSortie })
+  const formations = await queryFormations({ rentreeScolaire, millesimeSortie, orderBy })
     .where("etablissement.codeDepartement", "=", codeDepartement)
     .execute();
 

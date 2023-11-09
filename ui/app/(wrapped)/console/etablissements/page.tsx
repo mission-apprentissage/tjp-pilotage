@@ -54,8 +54,8 @@ const ETABLISSEMENTS_COLUMNS = {
   capacite: "Capacité",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion6mois: "Tx d'emploi 6 mois régional",
-  tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  tauxInsertion: "Tx d'emploi 6 mois régional",
+  tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
@@ -507,10 +507,10 @@ export default function Etablissements() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
+                  onClick={() => handleOrder("tauxInsertion")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  {ETABLISSEMENTS_COLUMNS.tauxInsertion6mois}
+                  <OrderIcon {...order} column="tauxInsertion" />
+                  {ETABLISSEMENTS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
@@ -518,10 +518,10 @@ export default function Etablissements() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  onClick={() => handleOrder("tauxPoursuite")}
                 >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtudes}
+                  <OrderIcon {...order} column="tauxPoursuite" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."

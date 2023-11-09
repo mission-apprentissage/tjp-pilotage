@@ -153,7 +153,7 @@ const findEtablissementsInDb = async ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxPoursuiteEtudes"),
+        }).as("tauxPoursuite"),
       (eb) =>
         withInsertionReg({
           eb,
@@ -161,7 +161,7 @@ const findEtablissementsInDb = async ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-        }).as("tauxInsertion6mois"),
+        }).as("tauxInsertion"),
       (eb) =>
         withTauxDevenirFavorableReg({
           eb,

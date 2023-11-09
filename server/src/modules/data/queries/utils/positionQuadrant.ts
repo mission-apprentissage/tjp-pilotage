@@ -1,7 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../../db/schema";
-import { notHistoriqueIndicateurRegionSortie } from "./notHistorique";
 import {
   selectTauxInsertion6mois,
   selectTauxInsertion6moisAgg,
@@ -82,7 +81,6 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where(notHistoriqueIndicateurRegionSortie)
     .innerJoin(
       "formation",
       "formation.codeFormationDiplome",

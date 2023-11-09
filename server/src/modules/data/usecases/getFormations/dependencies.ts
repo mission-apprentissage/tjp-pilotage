@@ -155,14 +155,14 @@ const findFormationsInDb = async ({
         cfdRef: "formationEtablissement.cfd",
         dispositifIdRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
-      }).as("tauxPoursuiteEtudes"),
+      }).as("tauxPoursuite"),
       withInsertionReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
         dispositifIdRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
-      }).as("tauxInsertion6mois"),
+      }).as("tauxInsertion"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,

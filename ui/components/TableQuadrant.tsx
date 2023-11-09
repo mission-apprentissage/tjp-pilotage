@@ -154,10 +154,10 @@ export const TableQuadrant = ({
                   </TableBadge>
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="130px" value={formation.tauxInsertion} />
+                  <GraphWrapper maxW="120px" value={formation.tauxInsertion} />
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="130px" value={formation.tauxPoursuite} />
+                  <GraphWrapper maxW="120px" value={formation.tauxPoursuite} />
                 </Td>
               </Tr>
             ))}

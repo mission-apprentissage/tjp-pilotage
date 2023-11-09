@@ -17,8 +17,8 @@ import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
-  tauxInsertion6mois: "Emploi",
-  tauxPoursuiteEtudes: "Poursuite",
+  tauxInsertion: "Emploi",
+  tauxPoursuite: "Poursuite",
   tauxDecrochage: "Décrochage",
   tauxTransformation: "Transformation",
 };
@@ -103,7 +103,7 @@ export const VueRegionAcademieSection = ({
                     onClick={() => handleOrder("insertion")}
                   >
                     <OrderIcon {...order} column="insertion" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion6mois}
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
                   </Th>
                   <Th
                     isNumeric
@@ -113,7 +113,7 @@ export const VueRegionAcademieSection = ({
                     onClick={() => handleOrder("poursuite")}
                   >
                     <OrderIcon {...order} column="poursuite" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
                   </Th>
                 </Tr>
               </Thead>

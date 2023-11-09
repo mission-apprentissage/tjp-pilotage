@@ -46,10 +46,10 @@ export const getDepartementsStats = async ({
     )
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
+        "tauxInsertion"
       ),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuiteEtudes"
+        "tauxPoursuite"
       ),
     ])
     .executeTakeFirstOrThrow();

@@ -83,16 +83,10 @@ export const FormationLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxInsertion6mois}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxPoursuiteEtudes}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
       <Td textAlign="center">
         <GraphWrapper

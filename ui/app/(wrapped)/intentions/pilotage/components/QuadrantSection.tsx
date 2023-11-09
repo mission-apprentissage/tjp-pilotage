@@ -361,8 +361,6 @@ export const QuadrantSection = ({
                         itemId={(item) => item.cfd + item.dispositifId}
                         data={formations?.map((item) => ({
                           ...item,
-                          tauxInsertion6mois: item.tauxInsertion,
-                          tauxPoursuiteEtudes: item.tauxPoursuite,
                           effectif: item.differencePlaces,
                         }))}
                         itemColor={(item) =>

@@ -1,4 +1,4 @@
-import { SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
+import { DownloadIcon, SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -27,7 +27,8 @@ import { ReactNode, useMemo, useState } from "react";
 
 import { Quadrant } from "../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../components/TableQuadrant";
-import { PanoramaFormations } from "../types";
+import { downloadCsv } from "../../../../utils/downloadCsv";
+import { Order, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 const effectifSizes = [
@@ -86,26 +87,26 @@ const filterFormations = ({
       if (tendances["insertion_hausse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois > item.tauxInsertion6moisPrecedent;
+          item.tauxInsertionPrecedent !== undefined &&
+          item.tauxInsertion > item.tauxInsertionPrecedent;
       }
       if (tendances["insertion_baisse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois < item.tauxInsertion6moisPrecedent;
+          item.tauxInsertionPrecedent !== undefined &&
+          item.tauxInsertion < item.tauxInsertionPrecedent;
       }
       if (tendances["poursuite_hausse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes > item.tauxPoursuiteEtudesPrecedent;
+          item.tauxPoursuitePrecedent !== undefined &&
+          item.tauxPoursuite > item.tauxPoursuitePrecedent;
       }
       if (tendances["poursuite_baisse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes < item.tauxPoursuiteEtudesPrecedent;
+          item.tauxPoursuitePrecedent !== undefined &&
+          item.tauxPoursuite < item.tauxPoursuitePrecedent;
       }
       if (tendances["effectif_hausse"] === true) {
         mustBeReturned =
@@ -142,12 +143,16 @@ export const QuadrantSection = ({
   meanInsertion,
   codeNiveauDiplome,
   libelleFiliere,
+  order,
+  handleOrder,
 }: {
   quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
   libelleFiliere?: string[];
+  order?: Partial<Order>;
+  handleOrder: (column: Order["orderBy"]) => void;
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
   const tendancesDefaultValue = {
@@ -348,6 +353,31 @@ export const QuadrantSection = ({
                   typeVue === "quadrant" ? "tableau" : "quadrant"
                 }`}
               </Button>
+              <Button
+                ml="2"
+                aria-label="csv"
+                variant="solid"
+                onClick={async () => {
+                  if (!filteredFormations) return;
+                  downloadCsv(
+                    "formations_panorama.csv",
+                    filteredFormations.map((formation) => ({
+                      ...formation,
+                    })),
+                    {
+                      libelleDiplome: "Formation",
+                      libelleDispositif: "Dispositif",
+                      tauxInsertion: "Taux d'emploi",
+                      tauxPoursuite: "Taux de poursuite",
+                      tauxPression: "Taux de pression",
+                      positionQuadrant: "Position dans le quadrant",
+                    }
+                  );
+                }}
+              >
+                <DownloadIcon mr="2" />
+                Exporter en csv
+              </Button>
             </Flex>
             <Flex alignItems={"flex-end"}>
               <Text color="grey" fontSize="sm" textAlign="left">
@@ -371,8 +401,8 @@ export const QuadrantSection = ({
                     meanInsertion={meanInsertion}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion6mois,
-                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                      tauxInsertion: formation.tauxInsertion,
+                      tauxPoursuite: formation.tauxPoursuite,
                     }))}
                     TooltipContent={FormationTooltipContent}
                     itemId={(item) =>
@@ -385,9 +415,13 @@ export const QuadrantSection = ({
                   <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion6mois,
-                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                      tauxInsertion: formation.tauxInsertion,
+                      tauxPoursuite: formation.tauxPoursuite,
                     }))}
+                    order={order}
+                    handleOrder={(column?: string) =>
+                      handleOrder(column as Order["orderBy"])
+                    }
                   />
                 ))}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}

@@ -99,14 +99,14 @@ export const getEtablissement = async ({
               cfdRef: "formationEtablissement.cfd",
               dispositifIdRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
-            }).as("tauxInsertion6mois"),
+            }).as("tauxInsertion"),
             withPoursuiteReg({
               eb,
               millesimeSortie,
               cfdRef: "formationEtablissement.cfd",
               dispositifIdRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
-            }).as("tauxPoursuiteEtudes"),
+            }).as("tauxPoursuite"),
             withPositionQuadrant({
               eb,
               millesimeSortie,
