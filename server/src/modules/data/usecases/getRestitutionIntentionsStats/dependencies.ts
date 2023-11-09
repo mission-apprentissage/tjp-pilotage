@@ -7,19 +7,27 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { nbEtablissementFormationRegion } from "../../../data/queries/utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../../data/queries/utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../../data/queries/utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../../data/queries/utils/tauxPoursuite";
+import {
+  selectTauxInsertion6mois,
+  selectTauxInsertion6moisAgg,
+} from "../../../data/queries/utils/tauxInsertion6mois";
+import {
+  selectTauxPoursuite,
+  selectTauxPoursuiteAgg,
+} from "../../../data/queries/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../../data/queries/utils/tauxPression";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
-} from "../../utils/countCapacite";
+} from "../../../utils/countCapacite";
 import {
+  isIntentionVisible,
   isRegionVisible,
-  isStatsDemandeVisible,
-} from "../../utils/isStatsDemandesVisible";
+} from "../../../utils/isIntentionVisible";
+import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHistorique";
+import { getPositionCadran } from "../../queries/utils/positionCadran";
 
-const findStatsDemandesInDB = async ({
+const findRestitutionIntentionsStatsInDB = async ({
   status,
   codeRegion,
   rentreeScolaire,
@@ -39,6 +47,7 @@ const findStatsDemandesInDB = async ({
   uai,
   compensation,
   user,
+  millesimeSortie = "2020_2021",
   offset = 0,
   limit = 20,
   orderBy = { order: "desc", column: "createdAt" },
@@ -62,6 +71,7 @@ const findStatsDemandesInDB = async ({
   uai?: string[];
   compensation?: string;
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+  millesimeSortie: string;
   offset?: number;
   limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
@@ -97,7 +107,7 @@ const findStatsDemandesInDB = async ({
           "=",
           "demande.dispositifId"
         )
-        .on("indicateurRegionSortie.millesimeSortie", "=", "2020_2021")
+        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     )
     .selectAll("demande")
     .select((eb) => [
@@ -142,6 +152,31 @@ const findStatsDemandesInDB = async ({
       nbEtablissementFormationRegion({ eb, rentreeScolaire: "2022" }).as(
         "nbEtablissement"
       ),
+      jsonObjectFrom(
+        eb
+          .selectFrom("indicateurRegionSortie as subIRS")
+          .innerJoin(
+            "formation",
+            "formation.codeFormationDiplome",
+            "subIRS.cfd"
+          )
+          .whereRef("subIRS.codeRegion", "=", "demande.codeRegion")
+          .whereRef("subIRS.dispositifId", "=", "demande.dispositifId")
+          .whereRef(
+            "formation.codeNiveauDiplome",
+            "=",
+            "dataFormation.codeNiveauDiplome"
+          )
+          .where("subIRS.millesimeSortie", "=", millesimeSortie)
+          .where(notHistoriqueIndicateurRegionSortie)
+          .select([
+            selectTauxInsertion6moisAgg("subIRS").as("tauxInsertion"),
+            selectTauxPoursuiteAgg("subIRS").as("tauxPoursuite"),
+            getPositionCadran("indicateurRegionSortie", "subIRS").as(
+              "positionCadran"
+            ),
+          ])
+      ).as("statsSortieMoyennes"),
     ])
     .$call((eb) => {
       if (status && status != undefined)
@@ -259,11 +294,11 @@ const findStatsDemandesInDB = async ({
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(
-        sql.ref(orderBy.column),
+        sql`NULLIF(${sql.ref(orderBy.column)},'')`,
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .where(isStatsDemandeVisible({ user }))
+    .where(isIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();
@@ -276,6 +311,12 @@ const findStatsDemandesInDB = async ({
         updatedAt: demande.updatedAt?.toISOString(),
         idCompensation: demande.demandeCompensee?.id,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
+        tauxInsertionMoyen:
+          demande.statsSortieMoyennes?.tauxInsertion ?? undefined,
+        tauxPoursuiteMoyen:
+          demande.statsSortieMoyennes?.tauxPoursuite ?? undefined,
+        positionCadran:
+          demande.statsSortieMoyennes?.positionCadran ?? "Hors cadran",
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,
@@ -660,10 +701,10 @@ const findFiltersInDb = async ({
         ]),
         motif
           ? eb.or(
-              motif.map(
-                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-              )
+            motif.map(
+              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
             )
+          )
           : sql`false`,
       ]);
     })
@@ -924,6 +965,6 @@ const findFiltersInDb = async ({
 };
 
 export const dependencies = {
-  findStatsDemandesInDB,
+  findRestitutionIntentionsStatsInDB,
   findFiltersInDb,
 };

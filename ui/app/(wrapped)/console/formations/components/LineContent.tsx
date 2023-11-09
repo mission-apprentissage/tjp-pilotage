@@ -94,6 +94,12 @@ export const FormationLineContent = ({
           value={line.tauxPoursuiteEtudes}
         />
       </Td>
+      <Td textAlign="center">
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxDevenirFavorable}
+        />
+      </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
       <Td>{line.codeFormationDiplome ?? "-"}</Td>
@@ -101,6 +107,7 @@ export const FormationLineContent = ({
       <Td>{line.CPCSecteur ?? "-"}</Td>
       <Td>{line.CPCSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
+      <Td>{line.positionCadran}</Td>
     </>
   );
 };

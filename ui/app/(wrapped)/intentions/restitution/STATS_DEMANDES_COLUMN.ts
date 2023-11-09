@@ -8,8 +8,8 @@ export const STATS_DEMANDES_COLUMNS = {
   cfd: "CFD",
   libelleDiplome: "Formation",
   dispositifId: "DispositifId",
-  niveauDiplome: "Diplôme",
   libelleDispositif: "Dispositif",
+  niveauDiplome: "Diplôme",
   uai: "UAI",
   libelleEtablissement: "Établissement",
   commune: "Commune",
@@ -26,13 +26,13 @@ export const STATS_DEMANDES_COLUMNS = {
   status: "Status",
   codeRegion: "CodeRegion",
   libelleRegion: "Région",
+  codeAcademie: "CodeAcadémie",
   codeDepartement: "CodeDepartement",
   libelleDepartement: "Département",
-  codeAcademie: "CodeAcadémie",
   createdAt: "Date de création",
   compensationCfd: "CFD compensé",
-  compensationUai: "UAI compensé",
   compensationDispositifId: "Dispositif compensé",
+  compensationUai: "UAI compensé",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
@@ -44,8 +44,9 @@ export const STATS_DEMANDES_COLUMNS = {
   insertion: "Tx d'emploi à 6 mois régional",
   poursuite: "Tx de poursuite d'études régional",
   devenirFavorable: "Tx de devenir favorable régional",
+  positionCadran: "Position dans le cadran",
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
 } satisfies ExportColumns<
-  ApiType<typeof api.getStatsDemandes>["demandes"][number]
+  ApiType<typeof api.getRestitutionIntentionsStats>["demandes"][number]
 >;

@@ -5,11 +5,11 @@ import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { generateId } from "../../../utils/generateId";
 import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
 import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "../../repositories/findOneSimilarDemande.query";
-import { generateId } from "../../utils/generateId";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
 
 type Demande = {

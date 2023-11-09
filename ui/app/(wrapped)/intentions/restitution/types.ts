@@ -3,7 +3,7 @@ import { ApiType } from "shared";
 import { api } from "../../../../api.client";
 
 export type StatsDemandesQuery = Parameters<
-  typeof api.getStatsDemandes
+  typeof api.getRestitutionIntentionsStats
 >[0]["query"];
 
 export type Filters = Pick<
@@ -30,12 +30,14 @@ export type Filters = Pick<
 
 export type Order = Pick<StatsDemandesQuery, "order" | "orderBy">;
 
-export type StatsDemandes = ApiType<typeof api.getStatsDemandes>;
+export type StatsDemandes = ApiType<typeof api.getRestitutionIntentionsStats>;
 
 export type IndicateurType = "insertion" | "poursuite";
 
 export type CountStatsDemandesQuery = Parameters<
-  typeof api.countStatsDemandes
+  typeof api.countRestitutionIntentionsStats
 >[0]["query"];
 
-export type CountStatsDemandes = ApiType<typeof api.countStatsDemandes>;
+export type CountStatsDemandes = ApiType<
+  typeof api.countRestitutionIntentionsStats
+>;

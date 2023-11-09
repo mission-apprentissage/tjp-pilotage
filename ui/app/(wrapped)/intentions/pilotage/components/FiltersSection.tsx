@@ -19,7 +19,8 @@ export const FiltersSection = ({
   activeTerritoiresFilters: TerritoiresFilters;
   handleTerritoiresFilters: (
     type: keyof TerritoiresFilters,
-    value: TerritoiresFilters[keyof TerritoiresFilters]
+    value: TerritoiresFilters[keyof TerritoiresFilters],
+    label?: string
   ) => void;
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
@@ -59,7 +60,11 @@ export const FiltersSection = ({
                 variant="newInput"
                 value={activeTerritoiresFilters.regions ?? ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters("regions", e.target.value)
+                  handleTerritoiresFilters(
+                    "regions",
+                    e.target.value,
+                    e.target[e.target.selectedIndex].textContent ?? ""
+                  )
                 }
                 placeholder="TOUTES"
               >
@@ -78,7 +83,11 @@ export const FiltersSection = ({
                 variant="newInput"
                 value={activeTerritoiresFilters.academies ?? ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters("academies", e.target.value)
+                  handleTerritoiresFilters(
+                    "academies",
+                    e.target.value,
+                    e.target[e.target.selectedIndex].textContent ?? ""
+                  )
                 }
                 placeholder="TOUTES"
               >
@@ -97,7 +106,11 @@ export const FiltersSection = ({
                 variant="newInput"
                 value={activeTerritoiresFilters.departements ?? ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters("departements", e.target.value)
+                  handleTerritoiresFilters(
+                    "departements",
+                    e.target.value,
+                    e.target[e.target.selectedIndex].textContent ?? ""
+                  )
                 }
                 placeholder="TOUS"
               >

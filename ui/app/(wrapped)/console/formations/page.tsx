@@ -51,6 +51,7 @@ const FORMATIONS_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion6mois: "Tx d'emploi 6 mois régional",
   tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
   codeFormationDiplome: "Code diplôme",
@@ -60,6 +61,7 @@ const FORMATIONS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
+  positionCadran: "Position dans le cadran",
 } satisfies ExportColumns<
   ApiType<typeof api.getFormations>["formations"][number]
 >;
@@ -441,6 +443,17 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
+                  onClick={() => handleOrder("tauxDevenirFavorable")}
+                >
+                  <OrderIcon {...order} column="tauxDevenirFavorable" />
+                  {FORMATIONS_COLUMNS.tauxDevenirFavorable}
+                  <TooltipIcon
+                    ml="1"
+                    label="Part des jeunes en emploi ou en poursuite d’étude."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
                 >
                   <OrderIcon {...order} column="libelleDispositif" />
@@ -482,6 +495,7 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleFiliere" />
                   {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
+                <Th>{FORMATIONS_COLUMNS.positionCadran}</Th>
               </Tr>
             </Thead>
             <Tbody>

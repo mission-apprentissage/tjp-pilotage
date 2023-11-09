@@ -4,6 +4,7 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { withPositionCadran } from "../../queries/utils/positionCadran";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
@@ -137,6 +138,14 @@ export const getFormationsTransformationStatsQuery = ({
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
+      withPositionCadran({
+        eb,
+        millesimeSortie: "2020_2021",
+        cfdRef: "demande.cfd",
+        dispositifIdRef: "demande.dispositifId",
+        codeRegionRef: "dataEtablissement.codeRegion",
+        codeNiveauDiplomeRef: codeNiveauDiplome ? "dataFormation.codeNiveauDiplome" : undefined,
+      }).as("positionCadran"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
       sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(

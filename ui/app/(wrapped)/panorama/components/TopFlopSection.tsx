@@ -13,9 +13,9 @@ import {
 } from "@chakra-ui/react";
 import { useMemo } from "react";
 
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { PanoramaFormation, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
-import { PanoramaFormation, PanoramaFormations } from "./type";
 
 export const TopFlopSection = ({
   cadranFormations,

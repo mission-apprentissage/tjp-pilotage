@@ -1,6 +1,8 @@
+import { ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
+  Button,
   Container,
   Flex,
   Heading,
@@ -8,11 +10,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
 import { Cadran } from "../../../../../components/Cadran";
+import { TableCadran } from "../../../../../components/TableCadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
@@ -37,6 +40,12 @@ export const CadranSection = ({
   codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
 }) => {
+  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+
+  const toggleTypeVue = () => {
+    if (typeVue === "cadran") setTypeVue("tableau");
+    else setTypeVue("cadran");
+  };
   const filteredFormations = useMemo(
     () =>
       cadranFormations?.filter(
@@ -65,31 +74,52 @@ export const CadranSection = ({
         </Text>
       </Box>
       <Box px="16" maxW={800} m="auto">
-        <Flex justify="flex-end">
-          <Text color="grey" fontSize="sm" textAlign="left">
-            {filteredFormations?.length ?? "-"} certifications
-          </Text>
-          <Text ml="2" color="grey" fontSize="sm" textAlign="right">
-            {filteredFormations?.reduce(
-              (acc, { effectif }) => acc + (effectif ?? 0),
-              0
-            ) ?? "-"}{" "}
-            élèves
-          </Text>
+        <Flex justify="space-between">
+          <Flex>
+            <Button onClick={() => toggleTypeVue()} variant="solid">
+              <ViewIcon mr={2}></ViewIcon>
+              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+            </Button>
+          </Flex>
+          <Flex alignItems={"flex-end"}>
+            <Text color="grey" fontSize="sm" textAlign="left">
+              {filteredFormations?.length ?? "-"} certifications
+            </Text>
+            <Text ml="2" color="grey" fontSize="sm" textAlign="right">
+              {filteredFormations?.reduce(
+                (acc, { effectif }) => acc + (effectif ?? 0),
+                0
+              ) ?? "-"}{" "}
+              élèves
+            </Text>
+          </Flex>
         </Flex>
-        <AspectRatio ratio={1}>
+        <AspectRatio ratio={1} mt={2}>
           <>
-            {filteredFormations && (
-              <Cadran
-                meanPoursuite={meanPoursuite}
-                meanInsertion={meanInsertion}
-                TooltipContent={FormationTooltipContent}
-                InfoTootipContent={InfoTooltipContent}
-                data={filteredFormations}
-                itemId={(item) => item.cfd + item.dispositifId}
-                effectifSizes={effectifSizes}
-              />
-            )}
+            {filteredFormations &&
+              (typeVue === "cadran" ? (
+                <Cadran
+                  meanPoursuite={meanPoursuite}
+                  meanInsertion={meanInsertion}
+                  TooltipContent={FormationTooltipContent}
+                  InfoTootipContent={InfoTooltipContent}
+                  data={filteredFormations.map((formation) => ({
+                    ...formation,
+                    tauxInsertion: formation.tauxInsertion6mois,
+                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                  }))}
+                  itemId={(item) => item.cfd + item.dispositifId}
+                  effectifSizes={effectifSizes}
+                />
+              ) : (
+                <TableCadran
+                  formations={filteredFormations.map((formation) => ({
+                    ...formation,
+                    tauxInsertion: formation.tauxInsertion6mois,
+                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                  }))}
+                />
+              ))}
             {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
           </>
         </AspectRatio>

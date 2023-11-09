@@ -29,6 +29,7 @@ const EtablissementLineSchema = Type.Object({
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPoursuiteEtudes: Type.Optional(Type.Number()),
   tauxInsertion6mois: Type.Optional(Type.Number()),
+  tauxDevenirFavorable: Type.Optional(Type.Number()),
   valeurAjoutee: Type.Optional(Type.Number()),
   CPC: Type.Optional(Type.String()),
   CPCSecteur: Type.Optional(Type.String()),
@@ -115,6 +116,8 @@ export const etablissementSchemas = {
             tauxPression: Type.Optional(Type.Number()),
             tauxInsertion6mois: Type.Optional(Type.Number()),
             tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+            tauxDevenirFavorable: Type.Optional(Type.Number()),
+            positionCadran: Type.Optional(Type.String()),
             CPC: Type.Optional(Type.String()),
             CPCSecteur: Type.Optional(Type.String()),
             CPCSousSecteur: Type.Optional(Type.String()),
@@ -140,6 +143,26 @@ export const etablissementSchemas = {
     response: {
       200: Type.Object({
         libelleRegion: Type.String(),
+        effectif: Type.Number(),
+        nbFormations: Type.Number(),
+        tauxPression: Type.Optional(Type.Number()),
+        tauxRemplissage: Type.Optional(Type.Number()),
+        tauxPoursuiteEtudes: Type.Optional(Type.Number()),
+        tauxInsertion6mois: Type.Optional(Type.Number()),
+      }),
+    },
+  },
+  getDepartementStats: {
+    params: Type.Object({
+      codeDepartement: Type.String(),
+    }),
+    querystring: Type.Object({
+      codeDiplome: Type.Optional(Type.Array(Type.String())),
+    }),
+    response: {
+      200: Type.Object({
+        codeRegion: Type.String(),
+        libelleDepartement: Type.String(),
         effectif: Type.Number(),
         nbFormations: Type.Number(),
         tauxPression: Type.Optional(Type.Number()),

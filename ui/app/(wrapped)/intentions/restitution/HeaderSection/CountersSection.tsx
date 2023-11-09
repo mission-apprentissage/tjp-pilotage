@@ -83,7 +83,7 @@ const CountCard = ({
 export const CountersSection = ({
   countData,
 }: {
-  countData?: ApiType<typeof api.countStatsDemandes>;
+  countData?: ApiType<typeof api.countRestitutionIntentionsStats>;
 }) => {
   return (
     <>

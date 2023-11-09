@@ -12,23 +12,23 @@ import { InfoSection } from "../../components/InfoSection";
 import { TopFlopSection } from "../../components/TopFlopSection";
 
 export default function Panorama({
-  params: { codeRegion },
+  params: { codeDepartement },
 }: {
   params: {
-    codeRegion: string;
+    codeDepartement: string;
   };
 }) {
   const router = useRouter();
 
-  const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/region/${codeRegion}`);
+  const onCodeDepartementChanged = (codeDepartement: string) => {
+    router.push(`/panorama/departement/${codeDepartement}`);
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
   const [libelleFiliere, setLibelleFiliere] = useState<string[]>();
 
-  const { data: regionOptions } = useQuery(
-    ["regions"],
-    api.getRegions({}).call,
+  const { data: departementsOptions } = useQuery(
+    ["departements"],
+    api.getDepartements({}).call,
     {
       keepPreviousData: true,
       staleTime: 10000000,
@@ -36,9 +36,9 @@ export default function Panorama({
   );
 
   const { data: stats } = useQuery(
-    ["region", codeRegion, codeNiveauDiplome],
-    api.getRegionStats({
-      params: { codeRegion },
+    ["departement", codeDepartement, codeNiveauDiplome],
+    api.getDepartementStats({
+      params: { codeDepartement },
       query: { codeDiplome: codeNiveauDiplome },
     }).call,
     {
@@ -48,9 +48,9 @@ export default function Panorama({
   );
 
   const { data } = useQuery(
-    ["formationForPanorama", { codeRegion }],
-    api.getDataForPanoramaRegion({
-      query: { codeRegion },
+    ["formationForPanorama", { codeDepartement }],
+    api.getDataForPanoramaDepartement({
+      query: { codeDepartement },
     }).call,
     { keepPreviousData: true, staleTime: 10000000 }
   );
@@ -58,13 +58,14 @@ export default function Panorama({
   return (
     <>
       <IndicateursSection
-        onCodeChanged={onCodeRegionChanged}
-        code={codeRegion}
-        options={regionOptions}
+        onCodeChanged={onCodeDepartementChanged}
+        code={codeDepartement}
+        options={departementsOptions}
         stats={stats}
         onDiplomeChanged={setCodeNiveauDiplome}
         formations={data?.formations}
         codeDiplome={codeNiveauDiplome}
+        typeTerritoire="departement"
       />
       <FiltersSection
         formations={data?.formations}
@@ -83,7 +84,10 @@ export default function Panorama({
         codeNiveauDiplome={codeNiveauDiplome}
         cadranFormations={data?.formations}
       />
-      <InfoSection codeRegion={codeRegion} />
+      <InfoSection
+        codeRegion={stats?.codeRegion}
+        codeDepartement={codeDepartement}
+      />
     </>
   );
 }
