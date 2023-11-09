@@ -47,7 +47,7 @@ export const [importFormations] = inject(
           await importFormationEtablissements(cfd, { fetchIj });
           if (!formation) return;
         },
-        { parallel: 30 }
+        { parallel: 1 }
       );
       // logger.write();
     };
@@ -74,12 +74,13 @@ export const [importFormationEtablissements] = inject(
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
-        const { dispositifId, anneesDispositif } = cfdDispositif;
+        const { dispositifId, anneesDispositif, dureeDispositif } =
+          cfdDispositif;
 
         await deps.importIndicateursRegionSortie({
           cfd,
           dispositifId,
-          mefstat: anneesDispositif[anneesDispositif.length - 1].mefstat,
+          mefstat: anneesDispositif[dureeDispositif - 1].mefstat,
         });
 
         for (const rentreeScolaire of RENTREES_SCOLAIRES) {
@@ -99,10 +100,7 @@ export const [importFormationEtablissements] = inject(
 
               await deps.importEtablissement({ uai });
               for (const millesime of MILLESIMES_IJ) {
-                await deps.importIndicateurEtablissement({
-                  uai,
-                  millesime,
-                });
+                await deps.importIndicateurEtablissement({ uai, millesime });
               }
               processedUais.push(uai);
             }
@@ -129,7 +127,7 @@ export const [importFormationEtablissements] = inject(
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurSortie({
                 uai,
-                anneesDispositif,
+                mefstat: anneesDispositif[dureeDispositif - 1].mefstat,
                 formationEtablissementId: formationEtablissement.id,
                 millesime,
               });

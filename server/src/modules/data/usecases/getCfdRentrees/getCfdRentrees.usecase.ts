@@ -7,7 +7,7 @@ import { getCfdDispositifs } from "./getCfdDispositifs.dep";
 export type AnneeEnseignement = {
   mefstat: string;
   libelle: string;
-  annee: number;
+  // annee: number;
   effectif?: number;
   constatee: boolean;
 };
@@ -33,7 +33,7 @@ export const [getCfdRentrees] = inject(
       year: string;
     }): Promise<
       | {
-          anneeDebutConstate: number;
+          anneeDebutConstate?: number;
           enseignements: {
             voie: "scolaire" | "apprentissage";
             uai: string;
@@ -49,17 +49,24 @@ export const [getCfdRentrees] = inject(
 
       if (!dispositif) return;
 
-      const chain1 = dispositif.anneesDispositif.map((anneeDispositif) =>
-        deps.findConstatRentrees({ mefStat11: anneeDispositif.mefstat, year })
+      const anneesDispositifAvecConstats = await Promise.all(
+        Object.values(dispositif.anneesDispositif).map(
+          async (anneeDispositif) => ({
+            constats: await deps.findConstatRentrees({
+              mefStat11: anneeDispositif.mefstat,
+              year,
+            }),
+            ...anneeDispositif,
+          })
+        )
       );
 
-      const chain2 = await Promise.all(chain1);
+      const anneeDebutConstate = anneesDispositifAvecConstats.find((nMef) =>
+        nMef.constats.some((constat) => constat)
+      )?.annee;
 
-      const anneeDebutConstate = chain2.findIndex((nMef) =>
-        nMef.some((constat) => constat)
-      );
-
-      const enseignements = await _.chain(chain2)
+      const enseignements = await _.chain(anneesDispositifAvecConstats)
+        .map(({ constats }) => constats)
         .flatMap()
         .groupBy((v) => v["Numéro d'établissement"])
         .entries()
@@ -69,21 +76,27 @@ export const [getCfdRentrees] = inject(
           voie: "scolaire" as const,
           dispositifId: dispositif.dispositifId,
           anneeDebutConstate,
-          anneesEnseignement: dispositif.anneesDispositif.map(
-            (anneeDispositif) => {
+          anneesEnseignement: Object.values(dispositif.anneesDispositif).reduce(
+            (acc, anneeDispositif) => {
               const constat = annees.find(
                 (constat) => constat["Mef Bcp 11"] === anneeDispositif.mefstat
               );
-              return {
+              acc[anneeDispositif.annee] = {
                 libelle: anneeDispositif.libelleDispositif,
                 mefstat: anneeDispositif.mefstat,
-                annee: anneeDispositif.annee,
                 effectif: constat
                   ? parseInt(constat?.["Nombre d'élèves"])
                   : undefined,
                 constatee: !!constat,
               };
-            }
+              return acc;
+            },
+            [] as {
+              libelle: string;
+              mefstat: string;
+              effectif?: number;
+              constatee: boolean;
+            }[]
           ),
         }))
         .value();

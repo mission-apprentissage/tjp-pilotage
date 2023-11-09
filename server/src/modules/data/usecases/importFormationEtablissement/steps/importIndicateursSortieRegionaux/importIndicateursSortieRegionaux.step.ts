@@ -24,7 +24,7 @@ export const [importIndicateursRegionSortie] = inject(
       dispositifId: string;
       mefstat: string;
     }) => {
-      for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
+      for (const [_, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of ["2019_2020", "2020_2021"]) {
           const data = await deps.findRawData({
             type: "ij_reg",
