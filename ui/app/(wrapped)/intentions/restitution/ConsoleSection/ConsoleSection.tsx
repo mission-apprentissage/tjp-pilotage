@@ -303,7 +303,13 @@ export const ConsoleSection = ({
                   <OrderIcon {...order} column="commentaire" />
                   {STATS_DEMANDES_COLUMNS.commentaire}
                 </Th>
-                <Th pb={4}>{STATS_DEMANDES_COLUMNS.positionQuadrant}</Th>
+                <Th pb={4}>
+                  {STATS_DEMANDES_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                  />
+                </Th>
                 <Th
                   cursor="pointer"
                   pb="4"
