@@ -13,7 +13,7 @@ import {
   withPoursuiteReg,
 } from "./tauxPoursuite";
 
-export const getPositionCadran = (
+export const getPositionQuadrant = (
   indicateurRegionSortieAlias: string,
   indicateurRegionSortieRegAlias: string
 ) => {
@@ -36,14 +36,14 @@ export const getPositionCadran = (
       WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q2'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} >= ${tauxPoursuiteReg}) THEN 'Q3'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q4'
-      ELSE 'Hors cadran'
+      ELSE 'Hors quadrant'
     END
   `;
-};
+}
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 
-export function withPositionCadran<EB extends ExpressionBuilder<DB, never>>({
+export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
   eb,
   cfdRef,
   dispositifIdRef,
@@ -128,7 +128,7 @@ export function withPositionCadran<EB extends ExpressionBuilder<DB, never>>({
         "indicateurRegionSortie"
       )})
         THEN 'Q4'
-        ELSE 'Hors cadran'
-      END`.as("positionCadran"),
+        ELSE 'Hors quadrant'
+      END`.as("positionQuadrant"),
     ]);
 }

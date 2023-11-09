@@ -49,7 +49,7 @@ const StatsDemandesItem = Type.Object({
   devenirFavorable: Type.Optional(Type.Number()),
   pression: Type.Optional(Type.Number()),
   nbEtablissement: Type.Optional(Type.Number()),
-  positionCadran: Type.Optional(Type.String()),
+  positionQuadrant: Type.Optional(Type.String()),
   tauxInsertionMoyen: Type.Optional(Type.Number()),
   tauxPoursuiteMoyen: Type.Optional(Type.Number()),
 });
@@ -79,7 +79,7 @@ const StatsFiltersSchema = Type.Object({
   amiCMA: Type.Optional(Type.String()),
   secteur: Type.Optional(Type.String()),
   compensation: Type.Optional(Type.String()),
-  positionCadran: Type.Optional(Type.String()),
+  positionQuadrant: Type.Optional(Type.String()),
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(Type.Omit(StatsDemandesItem, []))),
 });

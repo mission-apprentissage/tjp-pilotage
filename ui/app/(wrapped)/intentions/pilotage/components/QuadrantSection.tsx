@@ -27,8 +27,8 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 
 import { api } from "../../../../../api.client";
-import { Cadran } from "../../../../../components/Cadran";
-import { TableCadran } from "../../../../../components/TableCadran";
+import { Quadrant } from "../../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../../components/TableQuadrant";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
@@ -39,7 +39,7 @@ import {
   Scope,
 } from "../types";
 
-export const CadranSection = ({
+export const QuadrantSection = ({
   scope,
   parentFilters,
   scopeFilters,
@@ -52,11 +52,11 @@ export const CadranSection = ({
   scopeFilters?: PilotageTransformationStats["filters"];
 }) => {
   const trackEvent = usePlausible();
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
 
   const [filters, setFilters] = useStateParams({
@@ -118,7 +118,7 @@ export const CadranSection = ({
   const handleOrder = (
     column: OrderFormationsTransformationStats["orderBy"]
   ) => {
-    trackEvent("tableau-cadran-intentions:ordre", {
+    trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
     });
     if (order?.orderBy !== column) {
@@ -150,7 +150,9 @@ export const CadranSection = ({
             </Heading>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
-              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+              {`Passer en vue ${
+                typeVue === "quadrant" ? "tableau" : "quadrant"
+              }`}
             </Button>
             <Button
               ml="6"
@@ -190,7 +192,7 @@ export const CadranSection = ({
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
                     tauxPression: "Taux de pression",
-                    positionCadran: "Position dans le cadran",
+                    positionQuadrant: "Position dans le quadrant",
                     libelleRegion: "Région",
                     libelleAcademie: "Académie",
                     libelleDepartement: "Département",
@@ -351,8 +353,8 @@ export const CadranSection = ({
               <AspectRatio flex={1} ratio={1}>
                 <>
                   {formations &&
-                    (typeVue === "cadran" ? (
-                      <Cadran
+                    (typeVue === "quadrant" ? (
+                      <Quadrant
                         onClick={({ cfd }) => setFormationId(cfd)}
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
@@ -374,7 +376,7 @@ export const CadranSection = ({
                         ]}
                       />
                     ) : (
-                      <TableCadran
+                      <TableQuadrant
                         formations={formations}
                         handleClick={setFormationId}
                         currentCfd={currentCfd}

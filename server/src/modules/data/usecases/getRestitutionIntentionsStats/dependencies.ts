@@ -25,7 +25,7 @@ import {
   isRegionVisible,
 } from "../../../utils/isIntentionVisible";
 import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHistorique";
-import { getPositionCadran } from "../../queries/utils/positionCadran";
+import { getPositionQuadrant } from "../../queries/utils/positionQuadrant";
 
 const findRestitutionIntentionsStatsInDB = async ({
   status,
@@ -172,8 +172,8 @@ const findRestitutionIntentionsStatsInDB = async ({
           .select([
             selectTauxInsertion6moisAgg("subIRS").as("tauxInsertion"),
             selectTauxPoursuiteAgg("subIRS").as("tauxPoursuite"),
-            getPositionCadran("indicateurRegionSortie", "subIRS").as(
-              "positionCadran"
+            getPositionQuadrant("indicateurRegionSortie", "subIRS").as(
+              "positionQuadrant"
             ),
           ])
       ).as("statsSortieMoyennes"),
@@ -315,8 +315,8 @@ const findRestitutionIntentionsStatsInDB = async ({
           demande.statsSortieMoyennes?.tauxInsertion ?? undefined,
         tauxPoursuiteMoyen:
           demande.statsSortieMoyennes?.tauxPoursuite ?? undefined,
-        positionCadran:
-          demande.statsSortieMoyennes?.positionCadran ?? "Hors cadran",
+          positionQuadrant:
+          demande.statsSortieMoyennes?.positionQuadrant ?? "Hors quadrant",
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,

@@ -107,7 +107,7 @@ export const FormationLineContent = ({
       <Td>{line.CPCSecteur ?? "-"}</Td>
       <Td>{line.CPCSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
-      <Td>{line.positionCadran}</Td>
+      <Td>{line.positionQuadrant}</Td>
     </>
   );
 };

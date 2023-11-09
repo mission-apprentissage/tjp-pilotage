@@ -22,11 +22,11 @@ type Formation = {
   tauxPoursuite?: number;
   tauxInsertion?: number;
   tauxPression?: number;
-  positionCadran?: string;
+  positionQuadrant?: string;
   cfd?: string;
 };
 
-export const TableCadran = ({
+export const TableQuadrant = ({
   formations,
   handleOrder,
   handleClick,
@@ -50,7 +50,7 @@ export const TableCadran = ({
   const getTrBgColor = (formation: Formation) => {
     if (currentCfd && formation.cfd === currentCfd)
       return "blue.main !important";
-    switch (formation.positionCadran) {
+    switch (formation.positionQuadrant) {
       case "Q1":
         return "#C8F6D6";
       case "Q4":

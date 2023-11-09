@@ -83,7 +83,7 @@ export const LineContent = ({
       <Td minW={600} maxW={600} textOverflow={"ellipsis"} isTruncated={true}>
         {demande.commentaire}
       </Td>
-      <Td>{demande.positionCadran}</Td>
+      <Td>{demande.positionQuadrant}</Td>
       <Td>{demande.id}</Td>
     </>
   );

@@ -25,8 +25,8 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "../../../../components/Cadran";
-import { TableCadran } from "../../../../components/TableCadran";
+import { Quadrant } from "../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../components/TableQuadrant";
 import { PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
@@ -58,16 +58,16 @@ const filterFormations = ({
   effectifMin,
   codeNiveauDiplome,
   libelleFiliere,
-  cadranFormations,
+  quadrantFormations,
   tendances,
 }: {
   effectifMin: number;
   codeNiveauDiplome?: string[];
   libelleFiliere?: string[];
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
   tendances: Tendances;
 }) =>
-  cadranFormations
+  quadrantFormations
     ?.filter((item) => {
       if (
         libelleFiliere?.length &&
@@ -136,14 +136,14 @@ const filterFormations = ({
       return mustBeReturned;
     });
 
-export const CadranSection = ({
-  cadranFormations,
+export const QuadrantSection = ({
+  quadrantFormations,
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
   libelleFiliere,
 }: {
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
@@ -162,11 +162,11 @@ export const CadranSection = ({
   };
 
   const [tendances, setTendances] = useState<Tendances>(tendancesDefaultValue);
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
 
   const filteredFormations = useMemo(
@@ -174,14 +174,14 @@ export const CadranSection = ({
       filterFormations({
         effectifMin,
         codeNiveauDiplome,
-        cadranFormations,
+        quadrantFormations,
         tendances,
         libelleFiliere,
       }),
     [
       effectifMin,
       codeNiveauDiplome,
-      cadranFormations,
+      quadrantFormations,
       tendances,
       libelleFiliere,
     ]
@@ -344,7 +344,9 @@ export const CadranSection = ({
             <Flex>
               <Button onClick={() => toggleTypeVue()} variant="solid">
                 <ViewIcon mr={2}></ViewIcon>
-                {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+                {`Passer en vue ${
+                  typeVue === "quadrant" ? "tableau" : "quadrant"
+                }`}
               </Button>
             </Flex>
             <Flex alignItems={"flex-end"}>
@@ -363,8 +365,8 @@ export const CadranSection = ({
           <AspectRatio ratio={1} mt={2}>
             <>
               {filteredFormations &&
-                (typeVue === "cadran" ? (
-                  <Cadran
+                (typeVue === "quadrant" ? (
+                  <Quadrant
                     meanPoursuite={meanPoursuite}
                     meanInsertion={meanInsertion}
                     data={filteredFormations.map((formation) => ({
@@ -380,7 +382,7 @@ export const CadranSection = ({
                     effectifSizes={effectifSizes}
                   />
                 ) : (
-                  <TableCadran
+                  <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
                       tauxInsertion: formation.tauxInsertion6mois,
