@@ -294,7 +294,7 @@ const findRestitutionIntentionsStatsInDB = async ({
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(
-        sql`NULLIF(${sql.ref(orderBy.column)},'')`,
+        sql`${sql.ref(orderBy.column)}`,
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
