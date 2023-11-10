@@ -1,7 +1,7 @@
 import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
-import { getEtablissement } from "../queries/getEtablissement/getEtablissement.query";
+import { getEtablissement } from "../usecases/getEtablissement/getEtablissement.usecase";
 import { getEtablissements } from "../usecases/getEtablissements/getEtablissements.usecase";
 export const etablissementsRoutes = ({ server }: { server: Server }) => {
   server.get(
@@ -18,11 +18,14 @@ export const etablissementsRoutes = ({ server }: { server: Server }) => {
   );
 
   server.get(
-    "/etablissement/:uai",
+    "/etablissement",
     { schema: ROUTES_CONFIG.getEtablissement },
     async (request, response) => {
-      const { uai } = request.params;
-      const etablissement = await getEtablissement({ uai });
+      const { order, orderBy, ...filters } = request.query;
+      const etablissement = await getEtablissement({
+        ...filters,
+        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+      });
       if (!etablissement) return response.status(404).send();
       response.status(200).send(etablissement);
     }

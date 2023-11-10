@@ -71,7 +71,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   uai?: string[];
   compensation?: string;
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-  millesimeSortie: string;
+  millesimeSortie?: string;
   offset?: number;
   limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
@@ -315,7 +315,7 @@ const findRestitutionIntentionsStatsInDB = async ({
           demande.statsSortieMoyennes?.tauxInsertion ?? undefined,
         tauxPoursuiteMoyen:
           demande.statsSortieMoyennes?.tauxPoursuite ?? undefined,
-          positionQuadrant:
+        positionQuadrant:
           demande.statsSortieMoyennes?.positionQuadrant ?? "Hors quadrant",
       })
     ),

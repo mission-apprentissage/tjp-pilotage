@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../utils/effectifAnnee";
-import { notHistorique } from "../utils/notHistorique";
+import { notHistorique, notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
@@ -31,6 +31,7 @@ export const getDepartementsStats = async ({
       "departement.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
+    .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeDiplome?.length) return q;

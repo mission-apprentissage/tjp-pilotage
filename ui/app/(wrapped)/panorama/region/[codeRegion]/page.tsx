@@ -12,7 +12,7 @@ import { IndicateursSection } from "../../components/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
 import { QuadrantSection } from "../../components/QuadrantSection";
 import { TopFlopSection } from "../../components/TopFlopSection";
-import { Order } from "../../types";
+import { OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
   params: { codeRegion },
@@ -24,7 +24,7 @@ export default function Panorama({
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
-    order?: Partial<Order>;
+    order?: Partial<OrderPanoramaFormation>;
   } = qs.parse(queryParams.toString());
 
   const setSearchParams = (params: { order?: typeof order }) => {
@@ -33,7 +33,7 @@ export default function Panorama({
     );
   };
 
-  const handleOrder = (column: Order["orderBy"]) => {
+  const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
@@ -109,7 +109,9 @@ export default function Panorama({
         meanPoursuite={stats?.tauxPoursuite}
         quadrantFormations={data?.formations}
         order={order}
-        handleOrder={handleOrder}
+        handleOrder={(column?: string) =>
+          handleOrder(column as OrderPanoramaFormation["orderBy"])
+        }
       />
       <TopFlopSection
         libelleFiliere={libelleFiliere}

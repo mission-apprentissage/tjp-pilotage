@@ -1,12 +1,15 @@
 "use client";
 
 import { useQuery } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
 import { useContext, useState } from "react";
 
 import { api } from "../../../../../api.client";
+import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { UaiFilterContext } from "../../../../layoutClient";
 import { InfoSection } from "../../components/InfoSection";
+import { OrderPanoramaEtablissement } from "../../types";
 import { PanoramaSelection } from "../PanoramaSelection";
 import { EtablissementSection } from "./EtablissementSection";
 import { FiltersSection } from "./FiltersSection";
@@ -22,6 +25,31 @@ export default function Panorama({
   };
 }) {
   const router = useRouter();
+  const queryParams = useSearchParams();
+  const searchParams: {
+    order?: Partial<OrderPanoramaEtablissement>;
+  } = qs.parse(queryParams.toString());
+
+  const setSearchParams = (params: { order?: typeof order }) => {
+    router.replace(
+      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
+    );
+  };
+
+  const handleOrder = (column: OrderPanoramaEtablissement["orderBy"]) => {
+    if (order?.orderBy !== column) {
+      setSearchParams({ order: { order: "desc", orderBy: column } });
+      return;
+    }
+    setSearchParams({
+      order: {
+        order: order?.order === "asc" ? "desc" : "asc",
+        orderBy: column,
+      },
+    });
+  };
+
+  const order = searchParams.order ?? { order: "asc" };
   const { setUaiFilter } = useContext(UaiFilterContext);
 
   const onUaiChanged = (uai: string) => {
@@ -31,9 +59,12 @@ export default function Panorama({
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
   const { data: etablissement, isError } = useQuery(
-    ["getEtablissement", { uai }],
+    ["getEtablissement", uai, order],
     api.getEtablissement({
-      params: { uai },
+      query: {
+        uai,
+        ...order,
+      },
     }).call,
     { keepPreviousData: true, staleTime: 10000000, retry: false }
   );
@@ -90,6 +121,8 @@ export default function Panorama({
         meanInsertion={regionStats?.tauxInsertion}
         meanPoursuite={regionStats?.tauxPoursuite}
         quadrantFormations={etablissement?.formations}
+        order={order}
+        handleOrder={handleOrder}
       />
       <FormationsSection
         rentreeScolaire={etablissement?.rentreeScolaire}

@@ -1,4 +1,4 @@
-import { ViewIcon } from "@chakra-ui/icons";
+import { DownloadIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -16,6 +16,8 @@ import { ApiType } from "shared";
 import { api } from "../../../../../api.client";
 import { Quadrant } from "../../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../../components/TableQuadrant";
+import { downloadCsv } from "../../../../../utils/downloadCsv";
+import { OrderPanoramaEtablissement } from "../../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
@@ -33,12 +35,16 @@ export const QuadrantSection = ({
   meanInsertion,
   codeNiveauDiplome,
   rentreeScolaire,
+  order,
+  handleOrder,
 }: {
   quadrantFormations?: ApiType<typeof api.getEtablissement>["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
+  order?: Partial<OrderPanoramaEtablissement>;
+  handleOrder: (column: OrderPanoramaEtablissement["orderBy"]) => void;
 }) => {
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
@@ -82,6 +88,31 @@ export const QuadrantSection = ({
                 typeVue === "quadrant" ? "tableau" : "quadrant"
               }`}
             </Button>
+            <Button
+              ml="2"
+              aria-label="csv"
+              variant="solid"
+              onClick={async () => {
+                if (!filteredFormations) return;
+                downloadCsv(
+                  "formations_panorama.csv",
+                  filteredFormations.map((formation) => ({
+                    ...formation,
+                  })),
+                  {
+                    libelleDiplome: "Formation",
+                    libelleDispositif: "Dispositif",
+                    tauxInsertion: "Taux d'emploi",
+                    tauxPoursuite: "Taux de poursuite",
+                    tauxPression: "Taux de pression",
+                    positionQuadrant: "Position dans le quadrant",
+                  }
+                );
+              }}
+            >
+              <DownloadIcon mr="2" />
+              Exporter en csv
+            </Button>
           </Flex>
           <Flex alignItems={"flex-end"}>
             <Text color="grey" fontSize="sm" textAlign="left">
@@ -110,7 +141,9 @@ export const QuadrantSection = ({
                     tauxInsertion: formation.tauxInsertion,
                     tauxPoursuite: formation.tauxPoursuite,
                   }))}
-                  itemId={(item) => item.cfd + item.dispositifId}
+                  itemId={(item) =>
+                    item.codeFormationDiplome + item.dispositifId
+                  }
                   effectifSizes={effectifSizes}
                 />
               ) : (
@@ -120,6 +153,10 @@ export const QuadrantSection = ({
                     tauxInsertion: formation.tauxInsertion,
                     tauxPoursuite: formation.tauxPoursuite,
                   }))}
+                  order={order}
+                  handleOrder={(column?: string) =>
+                    handleOrder(column as OrderPanoramaEtablissement["orderBy"])
+                  }
                 />
               ))}
             {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}

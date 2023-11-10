@@ -6,7 +6,7 @@ import { getRegionStats } from "./getRegionStats.dep";
 export const [getFormationsTransformationStats] = inject(
   { getFormationsTransformationStatsQuery, getRegionStats },
   (deps) =>
-    async (filters: {
+    async (activeFilters: {
       status?: "draft" | "submitted";
       type?: "fermeture" | "ouverture";
       rentreeScolaire?: string;
@@ -19,11 +19,8 @@ export const [getFormationsTransformationStats] = inject(
       orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
       const [stats, formations] = await Promise.all([
-        deps.getRegionStats({
-          ...filters,
-          millesimeSortie: "2020_2021",
-        }),
-        deps.getFormationsTransformationStatsQuery(filters),
+        deps.getRegionStats(activeFilters),
+        deps.getFormationsTransformationStatsQuery(activeFilters),
       ]);
       return { stats, formations };
     }

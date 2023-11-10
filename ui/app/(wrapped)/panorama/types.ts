@@ -3,7 +3,8 @@ import { ApiType } from "shared";
 import { api } from "@/api.client";
 
 
-export type Query = Parameters<typeof api.getDataForPanoramaRegion>[0]["query"];
+export type QueryPanoramaFormation = Parameters<typeof api.getDataForPanoramaRegion>[0]["query"] | Parameters<typeof api.getDataForPanoramaDepartement>[0]["query"];
+export type QueryPanoramaEtablissement = Parameters<typeof api.getEtablissement>[0]["query"];
 
 export type PanoramaFormationRegion = ApiType<
   typeof api.getDataForPanoramaRegion
@@ -19,12 +20,21 @@ export type PanoramaFormationsDepartement = ApiType<
   typeof api.getDataForPanoramaDepartement
 >["formations"];
 
+export type PanoramaFormationEtablissement = ApiType<
+  typeof api.getEtablissement
+>["formations"][number];
+export type PanoramaFormationsEtablissement = ApiType<
+  typeof api.getEtablissement
+>["formations"];
+
 export type PanoramaFormation =
   | PanoramaFormationRegion
   | PanoramaFormationDepartement;
+
 export type PanoramaFormations =
   | PanoramaFormationsRegion
   | PanoramaFormationsDepartement;
+
 
 export type StatsFormationsRegion = ApiType<typeof api.getRegionStats>;
 export type StatsFormationsDepartement = ApiType<
@@ -35,4 +45,6 @@ export type StatsFormations =
   | StatsFormationsDepartement;
 
 
-export type Order = Pick<Query, "order" | "orderBy">;
+export type OrderPanoramaFormation = Pick<QueryPanoramaFormation, "order" | "orderBy">;
+export type OrderPanoramaEtablissement = Pick<QueryPanoramaEtablissement, "order" | "orderBy">;
+export type Order = OrderPanoramaEtablissement | OrderPanoramaFormation;
