@@ -2,22 +2,26 @@ import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { hasContinuum } from "../utils/hasContinuum";
-import { notHistorique } from "../utils/notHistorique";
-import { withPositionQuadrant } from "../utils/positionQuadrant";
-import { withInsertionReg } from "../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../utils/tauxPoursuite";
-import { selectTauxPression } from "../utils/tauxPression";
+import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { notHistorique } from "../../queries/utils/notHistorique";
+import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
+import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
+import { selectTauxPression } from "../../queries/utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 
-export const getEtablissement = async ({
+const getEtablissementInDb = async ({
   uai,
   millesimeSortie = "2020_2021",
   rentreeScolaire = "2022",
+  orderBy
 }: {
   uai: string;
   millesimeSortie?: string;
   rentreeScolaire?: string;
+  orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
   const etablissement = await kdb
     .selectFrom("etablissement")
@@ -69,9 +73,8 @@ export const getEtablissement = async ({
             "dispositif.codeDispositif",
             "formationEtablissement.dispositifId"
           )
-          .select([
-            "formation.libelleDiplome",
-            "formationEtablissement.cfd",
+          .select((sb) => [
+            "formationEtablissement.cfd as codeFormationDiplome",
             "formationEtablissement.dispositifId",
             "libelleDispositif",
             "formation.codeNiveauDiplome",
@@ -79,9 +82,16 @@ export const getEtablissement = async ({
             "formation.libelleFiliere",
             "formation.CPC",
             "formation.CPCSecteur",
+            sql<string>`CONCAT(${sb.ref("formation.libelleDiplome")},' (',${sb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleDiplome"),
             "formation.CPCSousSecteur",
-            sql<number>`NULLIF((jsonb_extract_path("indicateurEntree"."effectifs","indicateurEntree"."anneeDebut"::text)), 'null')::INT
-            `.as("effectif"),
+            sql<number>`COUNT(e."UAI")`.as("nbEtablissement"),
+            selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
+            sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
+              "effectif"
+            ),
+            sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
+              "effectifPrecedent"
+            ),
             selectTauxPression("indicateurEntree").as("tauxPression"),
           ])
           .select((eb) => [
@@ -93,6 +103,22 @@ export const getEtablissement = async ({
                 dispositifIdRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }).as("continuum"),
+            (eb) =>
+              withInsertionReg({
+                eb,
+                millesimeSortie: "2019_2020",
+                cfdRef: "formationEtablissement.cfd",
+                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeRegionRef: "etablissement.codeRegion",
+              }).as("tauxInsertionPrecedent"),
+            (eb) =>
+              withPoursuiteReg({
+                eb,
+                millesimeSortie: "2019_2020",
+                cfdRef: "formationEtablissement.cfd",
+                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeRegionRef: "etablissement.codeRegion",
+              }).as("tauxPoursuitePrecedent"),
             withInsertionReg({
               eb,
               millesimeSortie,
@@ -107,6 +133,13 @@ export const getEtablissement = async ({
               dispositifIdRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxPoursuite"),
+            withTauxDevenirFavorableReg({
+              eb,
+              millesimeSortie,
+              cfdRef: "formationEtablissement.cfd",
+              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeRegionRef: "etablissement.codeRegion",
+            }).as("tauxDevenirFavorable"),
             withPositionQuadrant({
               eb,
               millesimeSortie,
@@ -115,6 +148,35 @@ export const getEtablissement = async ({
               codeRegionRef: "etablissement.codeRegion",
             }).as("positionQuadrant"),
           ])
+          .$narrowType<{
+            tauxInsertion: number;
+            tauxPoursuite: number;
+            tauxDevenirFavorable: number;
+          }>()
+          .having(
+            (eb) =>
+              withInsertionReg({
+                eb,
+                millesimeSortie,
+                cfdRef: "formationEtablissement.cfd",
+                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeRegionRef: "etablissement.codeRegion",
+              }),
+            "is not",
+            null
+          )
+          .having(
+            (eb) =>
+              withPoursuiteReg({
+                eb,
+                millesimeSortie,
+                cfdRef: "formationEtablissement.cfd",
+                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeRegionRef: "etablissement.codeRegion",
+              }),
+            "is not",
+            null
+          )
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
@@ -132,6 +194,14 @@ export const getEtablissement = async ({
             "libelleNiveauDiplome",
             "libelleDispositif",
           ])
+          .$call((q) => {
+            if (!orderBy) return q;
+            return q.orderBy(
+              sql.ref(orderBy.column),
+              sql`${sql.raw(orderBy.order)} NULLS LAST`
+            );
+          })
+          .orderBy("libelleDiplome", "asc")
       ).as("formations")
     )
     .where("etablissement.UAI", "=", uai)
@@ -144,11 +214,9 @@ export const getEtablissement = async ({
     ])
     .executeTakeFirst();
 
-  return (
-    etablissement &&
-    cleanNull({
-      ...etablissement,
-      formations: etablissement.formations.map(cleanNull),
-    })
-  );
+  return etablissement;
+};
+
+export const dependencies = {
+  getEtablissementInDb,
 };

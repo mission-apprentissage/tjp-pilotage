@@ -63,6 +63,36 @@ const FiltersSchema = Type.Object({
   orderBy: Type.Optional(Type.KeyOf(Type.Omit(EtablissementLineSchema, []))),
 });
 
+const FormationSchema = Type.Object({
+  codeFormationDiplome: Type.String(),
+  libelleDiplome: Type.String(),
+  codeNiveauDiplome: Type.String(),
+  libelleNiveauDiplome: Type.Optional(Type.String()),
+  dispositifId: Type.Optional(Type.String()),
+  libelleDispositif: Type.Optional(Type.String()),
+  nbEtablissement: Type.Number(),
+  effectif: Type.Optional(Type.Number()),
+  effectifPrecedent: Type.Optional(Type.Number()),
+  tauxRemplissage: Type.Optional(Type.Number()),
+  tauxPression: Type.Optional(Type.Number()),
+  tauxInsertion: Type.Number(),
+  tauxInsertionPrecedent: Type.Optional(Type.Number()),
+  tauxPoursuite: Type.Number(),
+  tauxPoursuitePrecedent: Type.Optional(Type.Number()),
+  tauxDevenirFavorable: Type.Number(),
+  positionQuadrant: Type.Optional(Type.String()),
+  CPC: Type.Optional(Type.String()),
+  CPCSecteur: Type.Optional(Type.String()),
+  CPCSousSecteur: Type.Optional(Type.String()),
+  libelleFiliere: Type.Optional(Type.String()),
+  continuum: Type.Optional(
+    Type.Object({
+      cfd: Type.String(),
+      libelle: Type.Optional(Type.String()),
+    })
+  ),
+});
+
 export const etablissementSchemas = {
   getEtablissements: {
     querystring: Type.Intersect([
@@ -95,7 +125,11 @@ export const etablissementSchemas = {
     },
   },
   getEtablissement: {
-    params: Type.Object({ uai: Type.String() }),
+    querystring: Type.Object({
+      uai: Type.String(),
+      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
+    }),
     response: {
       200: Type.Object({
         uai: Type.String(),
@@ -104,32 +138,7 @@ export const etablissementSchemas = {
         valeurAjoutee: Type.Optional(Type.Number()),
         codeRegion: Type.Optional(Type.String()),
         libelleRegion: Type.Optional(Type.String()),
-        formations: Type.Array(
-          Type.Object({
-            cfd: Type.String(),
-            codeNiveauDiplome: Type.String(),
-            libelleDiplome: Type.String(),
-            dispositifId: Type.Optional(Type.String()),
-            libelleDispositif: Type.Optional(Type.String()),
-            libelleNiveauDiplome: Type.Optional(Type.String()),
-            effectif: Type.Optional(Type.Number()),
-            tauxPression: Type.Optional(Type.Number()),
-            tauxInsertion: Type.Optional(Type.Number()),
-            tauxPoursuite: Type.Optional(Type.Number()),
-            tauxDevenirFavorable: Type.Optional(Type.Number()),
-            positionQuadrant: Type.Optional(Type.String()),
-            CPC: Type.Optional(Type.String()),
-            CPCSecteur: Type.Optional(Type.String()),
-            CPCSousSecteur: Type.Optional(Type.String()),
-            libelleFiliere: Type.Optional(Type.String()),
-            continuum: Type.Optional(
-              Type.Object({
-                cfd: Type.String(),
-                libelle: Type.Optional(Type.String()),
-              })
-            ),
-          })
-        ),
+        formations: Type.Array(FormationSchema),
       }),
     },
   },

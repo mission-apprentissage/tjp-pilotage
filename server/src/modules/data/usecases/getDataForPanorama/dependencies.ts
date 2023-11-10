@@ -182,7 +182,7 @@ const queryFormations = ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .orderBy("tauxDevenirFavorable", "desc")
+    .orderBy("libelleDiplome", "asc")
 
 export const queryFormationsRegion = async ({
   codeRegion,

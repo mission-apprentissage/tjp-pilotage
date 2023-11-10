@@ -45,7 +45,9 @@ export const FormationsSection = ({
             </Thead>
             <Tbody>
               {formations?.map((formation) => (
-                <Tr key={`${formation.cfd}_${formation.dispositifId}`}>
+                <Tr
+                  key={`${formation.codeFormationDiplome}_${formation.dispositifId}`}
+                >
                   <Td>{formation.libelleDiplome}</Td>
                   <Td>{formation.libelleNiveauDiplome}</Td>
                   <Td isNumeric>{formation.effectif}</Td>

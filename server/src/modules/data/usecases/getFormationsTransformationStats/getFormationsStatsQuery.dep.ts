@@ -63,6 +63,7 @@ export const getFormationsTransformationStatsQuery = ({
   status,
   type,
   rentreeScolaire = "2024",
+  millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -74,6 +75,7 @@ export const getFormationsTransformationStatsQuery = ({
   status?: "draft" | "submitted";
   type?: "fermeture" | "ouverture";
   rentreeScolaire?: string;
+  millesimeSortie?: string;
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
@@ -113,14 +115,14 @@ export const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withInsertionReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -133,14 +135,14 @@ export const getFormationsTransformationStatsQuery = ({
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
       withPositionQuadrant({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -156,7 +158,7 @@ export const getFormationsTransformationStatsQuery = ({
       eb.fn.sum<number>(selectPlacesTransformees(eb)).as("placesTransformees"),
       hasContinuum({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -179,7 +181,7 @@ export const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withInsertionReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
@@ -191,7 +193,7 @@ export const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withPoursuiteReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
