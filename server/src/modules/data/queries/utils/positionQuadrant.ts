@@ -32,7 +32,7 @@ export const getPositionQuadrant = (
 
   return sql<string>`
     CASE
-      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} > ${tauxPoursuiteReg}) THEN 'Q1'
+      WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} >= ${tauxPoursuiteReg}) THEN 'Q1'
       WHEN (${tauxInsertion} >= ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q2'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} >= ${tauxPoursuiteReg}) THEN 'Q3'
       WHEN (${tauxInsertion} < ${tauxInsertionReg} AND ${tauxPoursuite} < ${tauxPoursuiteReg}) THEN 'Q4'
@@ -49,21 +49,21 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
   dispositifIdRef,
   codeRegionRef,
   millesimeSortie,
-  codeNiveauDiplomeRef,
+  codesNiveauxDiplomes,
 }: {
   eb: EB;
   cfdRef: EbRef<EB>;
   dispositifIdRef: EbRef<EB>;
   codeRegionRef: EbRef<EB>;
   millesimeSortie: string;
-  codeNiveauDiplomeRef?: EbRef<EB>;
+  codesNiveauxDiplomes?: string[];
 }) {
   const tauxInsertionReg = withInsertionReg({
     eb,
     cfdRef,
     dispositifIdRef,
     codeRegionRef,
-    millesimeSortie,
+    millesimeSortie
   });
 
   const tauxPoursuiteReg = withPoursuiteReg({
@@ -83,18 +83,19 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
     )
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)
-    .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
-      "indicateurRegionSortie.cfd"
-    )
     .$call((eb) => {
-      if (codeNiveauDiplomeRef)
-        return eb.whereRef(
-          "formation.codeNiveauDiplome",
-          "=",
-          codeNiveauDiplomeRef
-        );
+      if (codesNiveauxDiplomes)
+        return eb
+          .innerJoin(
+            "formation",
+            "formation.codeFormationDiplome",
+            "indicateurRegionSortie.cfd"
+          )
+          .where(
+            "formation.codeNiveauDiplome",
+            "in",
+            codesNiveauxDiplomes
+          );
       return eb;
     })
     .select([
@@ -103,7 +104,7 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
         "indicateurRegionSortie"
       )}
-        AND ${tauxPoursuiteReg} > ${selectTauxPoursuiteAgg(
+        AND ${tauxPoursuiteReg} >= ${selectTauxPoursuiteAgg(
         "indicateurRegionSortie"
       )})
         THEN 'Q1'

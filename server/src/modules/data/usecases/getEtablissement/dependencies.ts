@@ -3,6 +3,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { getMillesimePrecedent } from "../../queries/utils/getMillesime";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
 import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
@@ -44,7 +45,7 @@ const getEtablissementInDb = async ({
       jsonArrayFrom(
         eb
           .selectFrom("formationEtablissement")
-          .innerJoin("indicateurEntree", (join) =>
+          .leftJoin("indicateurEntree", (join) =>
             join
               .onRef(
                 "formationEtablissement.id",
@@ -73,6 +74,11 @@ const getEtablissementInDb = async ({
             "dispositif.codeDispositif",
             "formationEtablissement.dispositifId"
           )
+          .leftJoin("indicateurEntree as iep", (join) =>
+            join
+              .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
+              .on("iep.rentreeScolaire", "=", "2021")
+          )
           .select((sb) => [
             "formationEtablissement.cfd as codeFormationDiplome",
             "formationEtablissement.dispositifId",
@@ -89,7 +95,7 @@ const getEtablissementInDb = async ({
             sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
               "effectif"
             ),
-            sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
+            sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
               "effectifPrecedent"
             ),
             selectTauxPression("indicateurEntree").as("tauxPression"),
@@ -106,7 +112,7 @@ const getEtablissementInDb = async ({
             (eb) =>
               withInsertionReg({
                 eb,
-                millesimeSortie: "2019_2020",
+                millesimeSortie: getMillesimePrecedent(millesimeSortie),
                 cfdRef: "formationEtablissement.cfd",
                 dispositifIdRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
@@ -114,7 +120,7 @@ const getEtablissementInDb = async ({
             (eb) =>
               withPoursuiteReg({
                 eb,
-                millesimeSortie: "2019_2020",
+                millesimeSortie: getMillesimePrecedent(millesimeSortie),
                 cfdRef: "formationEtablissement.cfd",
                 dispositifIdRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",

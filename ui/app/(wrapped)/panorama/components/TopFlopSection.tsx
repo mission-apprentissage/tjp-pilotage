@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Container,
   Divider,
   Flex,
@@ -19,28 +20,14 @@ import { FormationTooltipContent } from "./FormationTooltipContent";
 
 export const TopFlopSection = ({
   quadrantFormations,
-  codeNiveauDiplome,
-  libelleFiliere,
 }: {
   quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
 }) => {
   const topFlopFormations = useMemo(() => {
     if (!quadrantFormations) return;
     const filtered = quadrantFormations.filter((item) => {
-      if (
-        libelleFiliere?.length &&
-        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
-      )
-        return false;
-      if (
-        codeNiveauDiplome?.length &&
-        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
-      )
-        return false;
       return item.dispositifId && !["253", "240"].includes(item.dispositifId);
     });
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
@@ -54,7 +41,7 @@ export const TopFlopSection = ({
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
-  }, [quadrantFormations, codeNiveauDiplome, libelleFiliere]);
+  }, [quadrantFormations]);
 
   return (
     <Container as="section" py="6" maxWidth={"container.xl"}>
@@ -67,8 +54,12 @@ export const TopFlopSection = ({
           formations à examiner
         </Text>
       </Box>
-      {topFlopFormations && (
+      {topFlopFormations && quadrantFormations?.length ? (
         <TopFlopChart topFlopFormations={topFlopFormations} />
+      ) : (
+        <Center mt={20}>
+          <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
+        </Center>
       )}
     </Container>
   );

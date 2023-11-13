@@ -10,12 +10,12 @@ import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
 
 export const getDepartementsStats = async ({
   codeDepartement,
-  codeDiplome,
+  codesNiveauxDiplomes,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeDepartement: string;
-  codeDiplome?: string[];
+  codesNiveauxDiplomes?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -34,8 +34,8 @@ export const getDepartementsStats = async ({
     .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codesNiveauxDiplomes?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
@@ -53,7 +53,7 @@ export const getDepartementsStats = async ({
         "tauxPoursuite"
       ),
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
@@ -62,7 +62,7 @@ export const getDepartementsStats = async ({
       "formation.codeFormationDiplome",
       "formationEtablissement.cfd"
     )
-    .innerJoin("indicateurEntree", (join) =>
+    .leftJoin("indicateurEntree", (join) =>
       join
         .onRef(
           "formationEtablissement.id",
@@ -83,8 +83,8 @@ export const getDepartementsStats = async ({
       "etablissement.codeDepartement"
     )
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codesNiveauxDiplomes?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
     })
     .where(notHistorique)
     .select([

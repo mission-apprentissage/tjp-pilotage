@@ -57,29 +57,15 @@ type Tendances = {
 
 const filterFormations = ({
   effectifMin,
-  codeNiveauDiplome,
-  libelleFiliere,
   quadrantFormations,
   tendances,
 }: {
   effectifMin: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
   quadrantFormations?: PanoramaFormations;
   tendances: Tendances;
 }) =>
   quadrantFormations
     ?.filter((item) => {
-      if (
-        libelleFiliere?.length &&
-        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
-      )
-        return false;
-      if (
-        codeNiveauDiplome?.length &&
-        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
-      )
-        return false;
       return item.effectif && item.effectif >= effectifMin;
     })
     .filter((item) => {
@@ -141,16 +127,12 @@ export const QuadrantSection = ({
   quadrantFormations,
   meanPoursuite,
   meanInsertion,
-  codeNiveauDiplome,
-  libelleFiliere,
   order,
   handleOrder,
 }: {
   quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
   order?: Partial<Order>;
   handleOrder: (column: Order["orderBy"]) => void;
 }) => {
@@ -178,18 +160,10 @@ export const QuadrantSection = ({
     () =>
       filterFormations({
         effectifMin,
-        codeNiveauDiplome,
         quadrantFormations,
         tendances,
-        libelleFiliere,
       }),
-    [
-      effectifMin,
-      codeNiveauDiplome,
-      quadrantFormations,
-      tendances,
-      libelleFiliere,
-    ]
+    [effectifMin, quadrantFormations, tendances]
   );
 
   const handleOppositesTendances = (value: boolean, name: keyof Tendances) => {
@@ -357,6 +331,9 @@ export const QuadrantSection = ({
                 ml="2"
                 aria-label="csv"
                 variant="solid"
+                isDisabled={
+                  !filteredFormations || filteredFormations.length === 0
+                }
                 onClick={async () => {
                   if (!filteredFormations) return;
                   downloadCsv(
@@ -395,7 +372,10 @@ export const QuadrantSection = ({
           <AspectRatio ratio={1} mt={2}>
             <>
               {filteredFormations &&
-                (typeVue === "quadrant" ? (
+              filteredFormations.length &&
+              meanInsertion &&
+              meanPoursuite ? (
+                typeVue === "quadrant" ? (
                   <Quadrant
                     meanPoursuite={meanPoursuite}
                     meanInsertion={meanInsertion}
@@ -423,7 +403,14 @@ export const QuadrantSection = ({
                       handleOrder(column as Order["orderBy"])
                     }
                   />
-                ))}
+                )
+              ) : (
+                <Flex>
+                  <Text>
+                    Aucune donnée à afficher pour les filtres sélectionnés
+                  </Text>
+                </Flex>
+              )}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>

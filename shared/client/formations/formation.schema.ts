@@ -120,24 +120,36 @@ export const formationSchemas = {
   getDataForPanoramaRegion: {
     querystring: Type.Object({
       codeRegion: Type.String(),
+      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
+      libellesFilieres: Type.Optional(Type.Array(Type.String())),
       order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
       orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
       200: Type.Object({
         formations: Type.Array(FormationSchema),
+        filters: Type.Object({
+          diplomes: Type.Array(OptionSchema),
+          filieres: Type.Array(OptionSchema),
+        })
       }),
     },
   },
   getDataForPanoramaDepartement: {
     querystring: Type.Object({
       codeDepartement: Type.String(),
+      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
+      libellesFilieres: Type.Optional(Type.Array(Type.String())),
       order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
       orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
       200: Type.Object({
         formations: Type.Array(FormationSchema),
+        filters: Type.Object({
+          diplomes: Type.Array(OptionSchema),
+          filieres: Type.Array(OptionSchema),
+        })
       }),
     },
   },

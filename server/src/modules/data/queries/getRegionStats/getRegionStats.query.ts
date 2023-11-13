@@ -13,12 +13,12 @@ import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
 
 export const getRegionStats = async ({
   codeRegion,
-  codeDiplome,
+  codesNiveauxDiplomes,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
-  codeDiplome?: string[];
+  codesNiveauxDiplomes?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -30,12 +30,12 @@ export const getRegionStats = async ({
       "indicateurRegionSortie.cfd"
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
-    .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
-    })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .$call((q) => {
+      if (!codesNiveauxDiplomes?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
+    })
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
         "tauxInsertion"
@@ -44,7 +44,7 @@ export const getRegionStats = async ({
         "tauxPoursuite"
       ),
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
@@ -53,7 +53,7 @@ export const getRegionStats = async ({
       "formation.codeFormationDiplome",
       "formationEtablissement.cfd"
     )
-    .innerJoin("indicateurEntree", (join) =>
+    .leftJoin("indicateurEntree", (join) =>
       join
         .onRef(
           "formationEtablissement.id",
@@ -70,8 +70,8 @@ export const getRegionStats = async ({
     .where("etablissement.codeRegion", "=", codeRegion)
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codesNiveauxDiplomes?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
     })
     .where(notHistorique)
     .select([
@@ -88,5 +88,8 @@ export const getRegionStats = async ({
     .groupBy("region.libelleRegion")
     .executeTakeFirstOrThrow();
 
-  return { ...stats, ...statsSortie };
+  return {
+    ...stats,
+    ...statsSortie
+  };
 };

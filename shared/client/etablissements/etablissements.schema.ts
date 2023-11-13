@@ -147,7 +147,7 @@ export const etablissementSchemas = {
       codeRegion: Type.String(),
     }),
     querystring: Type.Object({
-      codeDiplome: Type.Optional(Type.Array(Type.String())),
+      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({
@@ -166,7 +166,7 @@ export const etablissementSchemas = {
       codeDepartement: Type.String(),
     }),
     querystring: Type.Object({
-      codeDiplome: Type.Optional(Type.Array(Type.String())),
+      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({
