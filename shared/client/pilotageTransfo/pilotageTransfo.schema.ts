@@ -22,6 +22,7 @@ const ScopedStatsTransfoSchema = Type.Object({
   ratioOuverture: Type.Number(),
   ratioFermeture: Type.Number(),
   tauxTransformation: Type.Number(),
+  effectif: Type.Number(),
 });
 
 const StatsTransfoSchema = Type.Object({

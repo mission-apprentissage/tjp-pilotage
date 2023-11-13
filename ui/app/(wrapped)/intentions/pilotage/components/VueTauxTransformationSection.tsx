@@ -125,6 +125,7 @@ export const VueTauxTransformationSection = ({
                   cursor="pointer"
                   pb="4"
                   width="20%"
+                  whiteSpace={"normal"}
                   onClick={() => handleOrder("placesTransformees")}
                 >
                   <OrderIcon {...order} column="placesTransformees" />
@@ -135,6 +136,18 @@ export const VueTauxTransformationSection = ({
                   cursor="pointer"
                   pb="4"
                   width="20%"
+                  whiteSpace={"normal"}
+                  onClick={() => handleOrder("effectif")}
+                >
+                  <OrderIcon {...order} column="effectif" />
+                  Effectif en entrée
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  pb="4"
+                  width="20%"
+                  whiteSpace={"normal"}
                   onClick={() => handleOrder("tauxTransformation")}
                 >
                   <OrderIcon {...order} column="tauxTransformation" />
@@ -181,10 +194,10 @@ export const VueTauxTransformationSection = ({
                           {region.libelle}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.placesOuvertesScolaire +
-                            region.placesOuvertesApprentissage +
-                            region.placesFermeesScolaire +
-                            region.placesFermeesApprentissage}
+                          {region.placesTransformees}
+                        </Td>
+                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                          {region.effectif}
                         </Td>
                         <Td
                           isNumeric
