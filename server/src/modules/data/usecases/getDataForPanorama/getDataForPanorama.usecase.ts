@@ -1,49 +1,69 @@
 import { inject } from "injecti";
 
-import {
-  queryFormationsDepartement,
-  queryFormationsRegion,
-} from "./dependencies";
+import { getFilters, queryFormationsDepartement, queryFormationsRegion } from "./dependencies";
 
 export const [getDataForPanoramaRegion] = inject(
-  { queryFormationsRegion },
+  {
+    queryFormationsRegion,
+    getFilters
+  },
   (deps) =>
     async (
       {
         codeRegion,
+        codesNiveauxDiplomes,
+        libellesFilieres,
         orderBy
       }: {
         codeRegion: string;
+        codesNiveauxDiplomes?: string[];
+        libellesFilieres?: string[];
         orderBy?: { column: string; order: "asc" | "desc" };
       }) => {
-      console.log("codeRegion", codeRegion)
-      console.log("orderBy", orderBy)
-      const formations = await deps.queryFormationsRegion({ codeRegion, orderBy });
+
+      const formations = await deps.queryFormationsRegion({ codeRegion, codesNiveauxDiplomes, libellesFilieres, orderBy });
+      const { diplomes, filieres } = await deps.getFilters({ codeRegion })
 
       return {
         formations,
+        filters: {
+          diplomes,
+          filieres
+        }
       };
     }
 );
 
 export const [getDataForPanoramaDepartement] = inject(
-  { queryFormationsDepartement },
+  {
+    queryFormationsDepartement,
+    getFilters
+  },
   (deps) =>
     async (
       {
         codeDepartement,
+        codesNiveauxDiplomes,
+        libellesFilieres,
         orderBy
       }: {
         codeDepartement: string;
+        codesNiveauxDiplomes?: string[];
+        libellesFilieres?: string[];
         orderBy?: { column: string; order: "asc" | "desc" };
       }) => {
+
       const formations = await deps.queryFormationsDepartement({
-        codeDepartement,
-        orderBy
+        codeDepartement, codesNiveauxDiplomes, libellesFilieres, orderBy
       });
+      const { diplomes, filieres } = await deps.getFilters({ codeDepartement })
 
       return {
         formations,
+        filters: {
+          diplomes,
+          filieres
+        }
       };
     }
 );

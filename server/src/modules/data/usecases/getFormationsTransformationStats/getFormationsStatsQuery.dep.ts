@@ -146,7 +146,7 @@ export const getFormationsTransformationStatsQuery = ({
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
-        codeNiveauDiplomeRef: codeNiveauDiplome ? "dataFormation.codeNiveauDiplome" : undefined,
+        codesNiveauxDiplomes: codeNiveauDiplome,
       }).as("positionQuadrant"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),

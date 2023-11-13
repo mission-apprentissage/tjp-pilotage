@@ -2,7 +2,6 @@ import { ApiType } from "shared";
 
 import { api } from "@/api.client";
 
-
 export type QueryPanoramaFormation = Parameters<typeof api.getDataForPanoramaRegion>[0]["query"] | Parameters<typeof api.getDataForPanoramaDepartement>[0]["query"];
 export type QueryPanoramaEtablissement = Parameters<typeof api.getEtablissement>[0]["query"];
 
@@ -48,3 +47,10 @@ export type StatsFormations =
 export type OrderPanoramaFormation = Pick<QueryPanoramaFormation, "order" | "orderBy">;
 export type OrderPanoramaEtablissement = Pick<QueryPanoramaEtablissement, "order" | "orderBy">;
 export type Order = OrderPanoramaEtablissement | OrderPanoramaFormation;
+
+
+export type FiltersPanoramaFormation = Pick<
+  QueryPanoramaFormation,
+  | "codesNiveauxDiplomes"
+  | "libellesFilieres"
+>;

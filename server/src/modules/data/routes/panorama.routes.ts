@@ -11,7 +11,6 @@ export const panoramaRoutes = ({ server }: { server: Server }) => {
     { schema: ROUTES_CONFIG.getDataForPanoramaRegion },
     async (request, response) => {
       const { order, orderBy, ...filters } = request.query;
-      console.log(request.query)
       const stats = await getDataForPanoramaRegion({
         ...filters,
         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
