@@ -9,7 +9,7 @@ import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data/index";
 import { registerIntentionsModule } from "./modules/intentions/index";
-import { server } from "./server";
+import { Server, server } from "./server";
 server.register(fastifyCors, {});
 
 server.register(fastifySwagger, {
@@ -73,9 +73,16 @@ process.on("uncaughtExceptionMonitor", (error, origin) => {
 server.addHook("onRequest", extractUserInRequest);
 server.register(loggerContextPlugin);
 
+const registerRoutes = (instance: Server) => {
+  return { ...registerCoreModule({ server: instance }) };
+};
+
+export type Router = ReturnType<typeof registerRoutes>;
+
 server.register(
-  async (instance) => {
-    registerCoreModule({ server: instance });
+  async (instance: Server) => {
+    registerRoutes(instance);
+    // registerCoreModule({ server: instance });
     registerFormationModule({ server: instance });
     registerIntentionsModule({ server: instance });
   },
