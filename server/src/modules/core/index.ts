@@ -1,11 +1,14 @@
 import { Server } from "../../server";
 import { authRoutes } from "./routes/auth.routes";
-import { coreRoutes } from "./routes/core.routes";
+import { homeRoute } from "./usecases/home/home.route";
 export { extractUserInRequest } from "./utils/extractUserInRequest/extractUserInRequest";
 
 export const registerCoreModule = ({ server }: { server: Server }) => {
   authRoutes({ server });
-  coreRoutes({ server });
+
+  return {
+    ...homeRoute({ server }),
+  };
 };
 
 export { hasPermissionHandler } from "./utils/hasPermission";

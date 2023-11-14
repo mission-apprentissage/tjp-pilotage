@@ -1,5 +1,9 @@
-import { TypeBoxTypeProvider } from "@fastify/type-provider-typebox";
 import fastify from "fastify";
+import {
+  serializerCompiler,
+  validatorCompiler,
+  ZodTypeProvider,
+} from "fastify-type-provider-zod";
 import qs from "qs";
 
 const adapter = () => ({
@@ -23,6 +27,9 @@ export const server = fastify({
       keywords: ["kind", "modifier"],
     },
   },
-}).withTypeProvider<TypeBoxTypeProvider>();
+}).withTypeProvider<ZodTypeProvider>();
+
+server.setValidatorCompiler(validatorCompiler);
+server.setSerializerCompiler(serializerCompiler);
 
 export type Server = typeof server;
