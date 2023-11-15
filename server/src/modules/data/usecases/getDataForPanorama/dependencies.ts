@@ -4,6 +4,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { getMillesimePrecedent } from "../../queries/utils/getMillesime";
+import { getRentreeScolairePrecedente } from "../../queries/utils/getRentreeScolaire";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
 import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
@@ -45,11 +46,7 @@ const queryFormations = ({
     )
     .leftJoin("indicateurEntree", (join) =>
       join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
+        .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin(
@@ -65,7 +62,7 @@ const queryFormations = ({
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
-        .on("iep.rentreeScolaire", "=", "2021")
+        .on("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
     )
     .where(notHistorique)
     .$call((q) => {
@@ -188,7 +185,6 @@ const queryFormations = ({
     .groupBy([
       "formationEtablissement.cfd",
       "formation.id",
-      "indicateurEntree.rentreeScolaire",
       "formationEtablissement.dispositifId",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
@@ -200,7 +196,7 @@ const queryFormations = ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .orderBy("libelleNiveauDiplome", "asc");
+    .orderBy("libelleDiplome", "asc");
 
 export const queryFormationsRegion = async ({
   codeRegion,
