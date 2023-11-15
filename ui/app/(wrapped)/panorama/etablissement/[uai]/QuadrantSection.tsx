@@ -110,6 +110,7 @@ export const QuadrantSection = ({
                   })),
                   {
                     libelleDiplome: "Formation",
+                    codeFormationDiplome: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
