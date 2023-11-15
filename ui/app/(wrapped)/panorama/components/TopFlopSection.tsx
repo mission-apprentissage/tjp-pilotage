@@ -9,6 +9,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -18,12 +19,20 @@ import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { PanoramaFormation, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
+
 export const TopFlopSection = ({
   quadrantFormations,
+  isLoading,
 }: {
   quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
+  isLoading: boolean;
 }) => {
   const topFlopFormations = useMemo(() => {
     if (!quadrantFormations) return;
@@ -53,7 +62,9 @@ export const TopFlopSection = ({
           formations à examiner
         </Text>
       </Box>
-      {topFlopFormations && quadrantFormations?.length ? (
+      {isLoading ? (
+        <Loader></Loader>
+      ) : topFlopFormations && quadrantFormations?.length ? (
         <TopFlopChart topFlopFormations={topFlopFormations} />
       ) : (
         <Center mt={20}>

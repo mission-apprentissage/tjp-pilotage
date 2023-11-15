@@ -82,7 +82,11 @@ const getEtablissementInDb = async ({
                 "=",
                 "iep.formationEtablissementId"
               )
-              .on("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
+              .on(
+                "iep.rentreeScolaire",
+                "=",
+                getRentreeScolairePrecedente(rentreeScolaire)
+              )
           )
           .select((sb) => [
             "formationEtablissement.cfd as codeFormationDiplome",

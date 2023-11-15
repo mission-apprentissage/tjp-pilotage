@@ -46,7 +46,11 @@ const queryFormations = ({
     )
     .leftJoin("indicateurEntree", (join) =>
       join
-        .onRef("formationEtablissement.id", "=", "indicateurEntree.formationEtablissementId")
+        .onRef(
+          "formationEtablissement.id",
+          "=",
+          "indicateurEntree.formationEtablissementId"
+        )
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .leftJoin(
@@ -62,7 +66,11 @@ const queryFormations = ({
     .leftJoin("indicateurEntree as iep", (join) =>
       join
         .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
-        .on("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
+        .on(
+          "iep.rentreeScolaire",
+          "=",
+          getRentreeScolairePrecedente(rentreeScolaire)
+        )
     )
     .where(notHistorique)
     .$call((q) => {
