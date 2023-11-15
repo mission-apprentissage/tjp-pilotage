@@ -90,7 +90,7 @@ export default function Panorama({
     }
   );
 
-  const { data } = useQuery(
+  const { data, isLoading } = useQuery(
     ["formationForPanorama", codeDepartement, order, filters],
     api.getDataForPanoramaDepartement({
       query: {
@@ -119,12 +119,16 @@ export default function Panorama({
         meanInsertion={stats?.tauxInsertion}
         meanPoursuite={stats?.tauxPoursuite}
         quadrantFormations={data?.formations}
+        isLoading={isLoading}
         order={order}
         handleOrder={(column?: string) =>
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }
       />
-      <TopFlopSection quadrantFormations={data?.formations} />
+      <TopFlopSection
+        quadrantFormations={data?.formations}
+        isLoading={isLoading}
+      />
       <InfoSection
         codeRegion={stats?.codeRegion}
         codeDepartement={codeDepartement}
