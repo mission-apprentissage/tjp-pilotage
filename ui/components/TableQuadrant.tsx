@@ -24,6 +24,7 @@ type Formation = {
   tauxPression?: number;
   positionQuadrant?: string;
   cfd?: string;
+  continuum?: { cfd: string; libelle?: string };
 };
 
 export const TableQuadrant = ({
@@ -169,10 +170,18 @@ export const TableQuadrant = ({
                   </TableBadge>
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="120px" value={formation.tauxInsertion} />
+                  <GraphWrapper
+                    maxW="120px"
+                    value={formation.tauxInsertion}
+                    continuum={formation.continuum}
+                  />
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="120px" value={formation.tauxPoursuite} />
+                  <GraphWrapper
+                    maxW="120px"
+                    value={formation.tauxPoursuite}
+                    continuum={formation.continuum}
+                  />
                 </Td>
               </Tr>
             ))}
