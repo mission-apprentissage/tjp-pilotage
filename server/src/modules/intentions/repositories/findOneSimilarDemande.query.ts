@@ -5,12 +5,14 @@ export const findOneSimilarDemande = ({
   cfd,
   uai,
   dispositifId,
+  libelleFCIL,
   rentreeScolaire,
   notId,
 }: {
   cfd: string;
   uai: string;
   dispositifId: string;
+  libelleFCIL?: string;
   rentreeScolaire: number;
   notId?: string;
 }) =>
@@ -20,6 +22,10 @@ export const findOneSimilarDemande = ({
     .where("cfd", "=", cfd)
     .where("uai", "=", uai)
     .where("dispositifId", "=", dispositifId)
+    .$call((q) => {
+      if (!libelleFCIL) return q;
+      return q.where("libelleFCIL", "=", libelleFCIL);
+    })
     .where("rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
       if (!notId) return q;
