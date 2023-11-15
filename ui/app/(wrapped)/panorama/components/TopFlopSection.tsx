@@ -36,7 +36,6 @@ export const TopFlopSection = ({
       .sort((a, b) =>
         a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
       );
-
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
@@ -97,7 +96,7 @@ const TopFlopChart = ({
           .reverse()
           .map((item) => (
             <TopItem
-              key={`${item.codeFormationDiplome}_${item.dispositifId}`}
+              key={`${item.codeFormationDiplome}_${item.dispositifId}_`}
               formation={item}
               color={"grey.425"}
               value={item.tauxDevenirFavorable}

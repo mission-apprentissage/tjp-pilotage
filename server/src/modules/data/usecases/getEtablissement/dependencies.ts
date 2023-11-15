@@ -4,6 +4,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { getMillesimePrecedent } from "../../queries/utils/getMillesime";
+import { getRentreeScolairePrecedente } from "../../queries/utils/getRentreeScolaire";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
 import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
@@ -81,7 +82,7 @@ const getEtablissementInDb = async ({
                 "=",
                 "iep.formationEtablissementId"
               )
-              .on("iep.rentreeScolaire", "=", "2021")
+              .on("iep.rentreeScolaire", "=", getRentreeScolairePrecedente(rentreeScolaire))
           )
           .select((sb) => [
             "formationEtablissement.cfd as codeFormationDiplome",

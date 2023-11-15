@@ -30,7 +30,6 @@ export const [getDataForPanoramaRegion] = inject(
         orderBy,
       });
       const { diplomes, filieres } = await deps.getFilters({ codeRegion });
-
       return {
         formations,
         filters: {
