@@ -28,6 +28,7 @@ import { ReactNode, useMemo, useState } from "react";
 
 import { Quadrant } from "../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../components/TableQuadrant";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { downloadCsv } from "../../../../utils/downloadCsv";
 import { Order, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
@@ -308,6 +309,12 @@ export const QuadrantSection = ({
                 value={tendances["forte_pression"]}
                 changeHandle={handleCheckboxCardChange}
                 icon={<TendanceHausseIcon color="info.525" />}
+                tooltip={
+                  <TooltipIcon
+                    ml="1"
+                    label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                  />
+                }
               />
               <CheckboxCard
                 label="Faible taux de pression"
@@ -315,6 +322,12 @@ export const QuadrantSection = ({
                 value={tendances["faible_pression"]}
                 changeHandle={handleCheckboxCardChange}
                 icon={<TendanceBaisseIcon color="info.525" />}
+                tooltip={
+                  <TooltipIcon
+                    ml="1"
+                    label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                  />
+                }
               />
             </SimpleGrid>
             <CheckboxCard
@@ -352,6 +365,7 @@ export const QuadrantSection = ({
                     })),
                     {
                       libelleDiplome: "Formation",
+                      codeFormationDiplome: "CFD",
                       libelleDispositif: "Dispositif",
                       tauxInsertion: "Taux d'emploi",
                       tauxPoursuite: "Taux de poursuite",
@@ -444,6 +458,7 @@ const CheckboxCard = chakra(
     icon,
     changeHandle,
     className,
+    tooltip,
   }: {
     label: string;
     name: keyof Tendances | "none";
@@ -451,6 +466,7 @@ const CheckboxCard = chakra(
     icon: ReactNode;
     changeHandle: (value: boolean, name: keyof Tendances | "none") => void;
     className?: string;
+    tooltip?: ReactNode;
   }) => (
     <Flex className={className} border="1px solid" borderColor="grey.900">
       <Checkbox
@@ -461,6 +477,7 @@ const CheckboxCard = chakra(
         onChange={(e) => changeHandle(e.target.checked, name)}
       >
         {label}
+        {tooltip}
       </Checkbox>
       <Center bg="grey.950" p="4">
         {icon}
