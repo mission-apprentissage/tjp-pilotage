@@ -6,17 +6,16 @@ import { dependencies } from "./dependencies";
 export const [getEtablissement] = inject(
   { getEtablissementInD: dependencies.getEtablissementInDb },
   (deps) =>
-    async (
-      {
-        uai,
-        orderBy
-      }: {
-        uai: string;
-        orderBy?: { column: string; order: "asc" | "desc" };
-      }) => {
+    async ({
+      uai,
+      orderBy,
+    }: {
+      uai: string;
+      orderBy?: { column: string; order: "asc" | "desc" };
+    }) => {
       const etablissement = await deps.getEtablissementInD({
         uai,
-        orderBy
+        orderBy,
       });
 
       return (

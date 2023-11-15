@@ -7,7 +7,7 @@ export const InfoBlock = chakra(
     label,
     value,
     className,
-    textBg = "#EEEEEE",
+    textBg = "grey.950",
   }: {
     label: ReactNode;
     value: ReactNode;

@@ -127,7 +127,7 @@ export const IntentionForm = ({
       <FormProvider {...form}>
         <Box
           flex={1}
-          bg="blue.faded"
+          bg="blueecume.925"
           as="form"
           noValidate
           onSubmit={handleSubmit((values) => submitDemande(values))}

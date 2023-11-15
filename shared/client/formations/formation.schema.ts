@@ -122,7 +122,9 @@ export const formationSchemas = {
       codeRegion: Type.String(),
       codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
       libellesFilieres: Type.Optional(Type.Array(Type.String())),
-      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      order: Type.Optional(
+        Type.Union([Type.Literal("asc"), Type.Literal("desc")])
+      ),
       orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
@@ -131,7 +133,7 @@ export const formationSchemas = {
         filters: Type.Object({
           diplomes: Type.Array(OptionSchema),
           filieres: Type.Array(OptionSchema),
-        })
+        }),
       }),
     },
   },
@@ -140,7 +142,9 @@ export const formationSchemas = {
       codeDepartement: Type.String(),
       codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
       libellesFilieres: Type.Optional(Type.Array(Type.String())),
-      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      order: Type.Optional(
+        Type.Union([Type.Literal("asc"), Type.Literal("desc")])
+      ),
       orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {
@@ -149,7 +153,7 @@ export const formationSchemas = {
         filters: Type.Object({
           diplomes: Type.Array(OptionSchema),
           filieres: Type.Array(OptionSchema),
-        })
+        }),
       }),
     },
   },

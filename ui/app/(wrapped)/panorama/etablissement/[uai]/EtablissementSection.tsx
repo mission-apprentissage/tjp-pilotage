@@ -71,7 +71,7 @@ export const EtablissementSection = ({
       as="section"
       pb="12"
       pt="6"
-      bg="#F9F8F6"
+      bg="grey.975"
       maxWidth={"container.xl"}
     >
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">

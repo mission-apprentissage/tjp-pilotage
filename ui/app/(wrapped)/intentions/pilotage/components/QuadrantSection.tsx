@@ -206,7 +206,7 @@ export const QuadrantSection = ({
             <Select
               ml="6"
               variant="newInput"
-              bg="blue.main"
+              bg="blueecume.400_hover"
               color="white"
               maxW={250}
               value={filters.type ?? ""}
@@ -229,7 +229,7 @@ export const QuadrantSection = ({
             </Select>
           </Flex>
           <Flex mt="4">
-            <Box p="4" w="300px" bg="#F3F5FC" mr="6">
+            <Box p="4" w="300px" bg="blueecume.975" mr="6">
               <Heading size="sm" mb="6">
                 DÉTAILS SUR LA FORMATION
               </Heading>
@@ -390,7 +390,7 @@ export const QuadrantSection = ({
                 </>
               </AspectRatio>
             </Box>
-            <Box p="4" ml="6" bg="#F3F5FC" w="200px">
+            <Box p="4" ml="6" bg="blueecume.975" w="200px">
               <Heading size="sm" mb="6">
                 FILTRES
               </Heading>

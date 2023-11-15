@@ -41,8 +41,8 @@ const formatTerritoire = (item: DataTerritoire) => ({
   differenceCapaciteApprentissage: item.differenceCapaciteApprentissage || 0,
   placesTransformees:
     item.placesOuvertesScolaire +
-    item.placesOuvertesApprentissage +
-    item.placesFermeesScolaire || 0,
+      item.placesOuvertesApprentissage +
+      item.placesFermeesScolaire || 0,
 });
 
 const formatResult = (
@@ -58,13 +58,13 @@ const formatResult = (
         result[0]?.national.placesOuvertesApprentissage || 0,
       placesOuvertes:
         result[0]?.national.placesOuvertesScolaire +
-        result[0]?.national.placesOuvertesApprentissage || 0,
+          result[0]?.national.placesOuvertesApprentissage || 0,
       placesFermeesScolaire: result[0]?.national.placesFermeesScolaire || 0,
       placesFermeesApprentissage:
         result[0]?.national.placesFermeesApprentissage || 0,
       placesFermees:
         result[0]?.national.placesFermeesScolaire +
-        result[0]?.national.placesFermeesApprentissage || 0,
+          result[0]?.national.placesFermeesApprentissage || 0,
       ratioFermeture:
         Math.round(
           ((result[0]?.national.placesFermeesScolaire +
@@ -89,7 +89,7 @@ const formatResult = (
         result[0]?.national.differenceCapaciteApprentissage || 0,
       placesTransformees:
         result[0]?.national.differenceCapaciteScolaire +
-        result[0]?.national.differenceCapaciteApprentissage || 0,
+          result[0]?.national.differenceCapaciteApprentissage || 0,
       tauxTransformation:
         Math.round(
           (result[0]?.national.transformes / effectifNational || 0) * 10000
@@ -127,7 +127,7 @@ const formatResult = (
           Math.round(
             (items[0].academie.transforme /
               effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) *
-            10000
+              10000
           ) / 100,
         effectif: effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0,
       }))
@@ -150,10 +150,12 @@ const formatResult = (
           Math.round(
             (items[0].departement.transforme /
               effectifsDepartements[
-              items[0].departement.codeDepartement ?? ""
+                items[0].departement.codeDepartement ?? ""
               ] || 0) * 10000
           ) / 100,
-        effectif: effectifsDepartements[items[0].departement.codeDepartement ?? ""] || 0,
+        effectif:
+          effectifsDepartements[items[0].departement.codeDepartement ?? ""] ||
+          0,
       }))
       .orderBy(
         (item) => {

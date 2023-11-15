@@ -39,7 +39,7 @@ export const getPositionQuadrant = (
       ELSE 'Hors quadrant'
     END
   `;
-}
+};
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 
@@ -63,7 +63,7 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
     cfdRef,
     dispositifIdRef,
     codeRegionRef,
-    millesimeSortie
+    millesimeSortie,
   });
 
   const tauxPoursuiteReg = withPoursuiteReg({
@@ -91,43 +91,39 @@ export function withPositionQuadrant<EB extends ExpressionBuilder<DB, never>>({
             "formation.codeFormationDiplome",
             "indicateurRegionSortie.cfd"
           )
-          .where(
-            "formation.codeNiveauDiplome",
-            "in",
-            codesNiveauxDiplomes
-          );
+          .where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
       return eb;
     })
     .select([
       sql<string>`
       CASE
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} >= ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q1'
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q2'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} >= ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q3'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q4'
         ELSE 'Hors quadrant'
       END`.as("positionQuadrant"),

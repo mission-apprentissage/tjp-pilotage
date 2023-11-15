@@ -325,7 +325,7 @@ export const ConsoleSection = ({
                 {data?.demandes.map((demande: StatsDemandes["demandes"][0]) => {
                   return (
                     <Fragment key={`${demande.id}`}>
-                      <Tr h="12" _hover={{ bg: "blue.faded" }}>
+                      <Tr h="12" _hover={{ bg: "blueecume.925" }}>
                         <LineContent demande={demande} />
                       </Tr>
                     </Fragment>

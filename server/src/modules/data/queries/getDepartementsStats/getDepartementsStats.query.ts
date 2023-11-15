@@ -2,7 +2,10 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../utils/effectifAnnee";
-import { notHistorique, notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
+import {
+  notHistorique,
+  notHistoriqueIndicateurRegionSortie,
+} from "../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../utils/tauxPression";
@@ -46,12 +49,8 @@ export const getDepartementsStats = async ({
       )
     )
     .select([
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion"
-      ),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuite"
-      ),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
     .executeTakeFirst();
 

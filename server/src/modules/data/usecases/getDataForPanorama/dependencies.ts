@@ -70,11 +70,11 @@ const queryFormations = ({
     .where(notHistorique)
     .$call((q) => {
       if (!codesNiveauxDiplomes) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes)
+      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
     })
     .$call((q) => {
       if (!libellesFilieres) return q;
-      return q.where("formation.libelleFiliere", "in", libellesFilieres)
+      return q.where("formation.libelleFiliere", "in", libellesFilieres);
     })
     .select((eb) => [
       "codeFormationDiplome",
@@ -94,7 +94,9 @@ const queryFormations = ({
       sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
         "effectifPrecedent"
       ),
-      sql<string>`CONCAT(${eb.ref("formation.libelleDiplome")},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleDiplome"),
+      sql<string>`CONCAT(${eb.ref("formation.libelleDiplome")},' (',${eb.ref(
+        "niveauDiplome.libelleNiveauDiplome"
+      )}, ')')`.as("libelleDiplome"),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       (eb) =>
         withInsertionReg({
@@ -151,7 +153,7 @@ const queryFormations = ({
           cfdRef: "formationEtablissement.cfd",
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
-          codesNiveauxDiplomes
+          codesNiveauxDiplomes,
         }).as("positionQuadrant"),
     ])
     .$narrowType<{
@@ -198,7 +200,7 @@ const queryFormations = ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .orderBy("libelleNiveauDiplome", "asc")
+    .orderBy("libelleNiveauDiplome", "asc");
 
 export const queryFormationsRegion = async ({
   codeRegion,
@@ -206,7 +208,7 @@ export const queryFormationsRegion = async ({
   millesimeSortie = "2020_2021",
   codesNiveauxDiplomes,
   libellesFilieres,
-  orderBy
+  orderBy,
 }: {
   codeRegion: string;
   rentreeScolaire?: string;
@@ -215,7 +217,13 @@ export const queryFormationsRegion = async ({
   libellesFilieres?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
-  const formations = await queryFormations({ rentreeScolaire, millesimeSortie, codesNiveauxDiplomes, libellesFilieres, orderBy })
+  const formations = await queryFormations({
+    rentreeScolaire,
+    millesimeSortie,
+    codesNiveauxDiplomes,
+    libellesFilieres,
+    orderBy,
+  })
     .where("etablissement.codeRegion", "=", codeRegion)
     .execute();
 
@@ -228,7 +236,7 @@ export const queryFormationsDepartement = async ({
   millesimeSortie = "2020_2021",
   codesNiveauxDiplomes,
   libellesFilieres,
-  orderBy
+  orderBy,
 }: {
   codeDepartement: string;
   rentreeScolaire?: string;
@@ -237,7 +245,13 @@ export const queryFormationsDepartement = async ({
   libellesFilieres?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
-  const formations = await queryFormations({ rentreeScolaire, millesimeSortie, codesNiveauxDiplomes, libellesFilieres, orderBy })
+  const formations = await queryFormations({
+    rentreeScolaire,
+    millesimeSortie,
+    codesNiveauxDiplomes,
+    libellesFilieres,
+    orderBy,
+  })
     .where("etablissement.codeDepartement", "=", codeDepartement)
     .execute();
 
@@ -246,16 +260,28 @@ export const queryFormationsDepartement = async ({
 
 export const getFilters = async ({
   codeRegion,
-  codeDepartement
+  codeDepartement,
 }: {
   codeRegion?: string;
   codeDepartement?: string;
 }) => {
-  const filtersBase = kdb.
-    selectFrom("niveauDiplome")
-    .leftJoin("formation", "formation.codeNiveauDiplome", "niveauDiplome.codeNiveauDiplome")
-    .leftJoin("formationEtablissement", "formationEtablissement.cfd", "formation.codeFormationDiplome")
-    .leftJoin("etablissement", "etablissement.UAI", "formationEtablissement.UAI")
+  const filtersBase = kdb
+    .selectFrom("niveauDiplome")
+    .leftJoin(
+      "formation",
+      "formation.codeNiveauDiplome",
+      "niveauDiplome.codeNiveauDiplome"
+    )
+    .leftJoin(
+      "formationEtablissement",
+      "formationEtablissement.cfd",
+      "formation.codeFormationDiplome"
+    )
+    .leftJoin(
+      "etablissement",
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
+    )
     .$call((eb) => {
       if (!codeRegion) return eb;
       return eb.where("etablissement.codeRegion", "=", codeRegion);
@@ -265,13 +291,12 @@ export const getFilters = async ({
       return eb.where("etablissement.codeDepartement", "=", codeDepartement);
     })
     .distinct()
-    .$castTo<{ label: string; value: string }>()
-
+    .$castTo<{ label: string; value: string }>();
 
   const diplomes = await filtersBase
     .select([
       "niveauDiplome.codeNiveauDiplome as value",
-      "niveauDiplome.libelleNiveauDiplome as label"
+      "niveauDiplome.libelleNiveauDiplome as label",
     ])
     .where("formation.codeNiveauDiplome", "is not", null)
     .execute();
@@ -284,9 +309,8 @@ export const getFilters = async ({
     .where("formation.libelleFiliere", "is not", null)
     .execute();
 
-
   return {
     diplomes: diplomes.map(cleanNull),
-    filieres: filieres.map(cleanNull)
-  }
-}
+    filieres: filieres.map(cleanNull),
+  };
+};

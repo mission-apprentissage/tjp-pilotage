@@ -60,7 +60,7 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
           variant="enclosed-colored"
           minHeight="0"
         >
-          <TabList px={5}>
+          <TabList>
             <Tab as={Link} href="/panorama/region">
               Région
             </Tab>

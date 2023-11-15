@@ -114,7 +114,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   };
 
   return (
-    <Container maxWidth={"100%"} bg="blue.faded">
+    <Container maxWidth={"100%"} bg="blueecume.925">
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
           activeFilters={filters}

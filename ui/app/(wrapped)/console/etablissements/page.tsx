@@ -635,7 +635,7 @@ export default function Etablissements() {
                           historique.map((historiqueLine) => (
                             <Tr
                               key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
-                              bg={"#f5f5f5"}
+                              bg={"grey.975"}
                             >
                               <EtablissementLineContent line={historiqueLine} />
                             </Tr>

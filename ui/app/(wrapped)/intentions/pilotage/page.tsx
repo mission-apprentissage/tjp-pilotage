@@ -135,7 +135,7 @@ export default withAuth(
     };
 
     return (
-      <Container maxWidth={"100%"} bg="blue.faded">
+      <Container maxWidth={"100%"} bg="blueecume.950">
         <Container maxWidth={"container.xl"} py="4">
           <FiltersSection
             activeTerritoiresFilters={territoiresFilters}

@@ -534,7 +534,7 @@ export default function Formations() {
                           historique.map((historiqueLine) => (
                             <Tr
                               key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
-                              bg={"#f5f5f5"}
+                              bg={"grey.975"}
                             >
                               <FormationLineContent line={historiqueLine} />
                             </Tr>
