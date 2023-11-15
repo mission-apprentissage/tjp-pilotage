@@ -31,8 +31,8 @@ import { ColorationField } from "./ColorationField";
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
     opacity="1!important"
-    bg="#ABB8DE"
-    color="#000091"
+    bg="blueecume.675_hover"
+    color="bluefrance.113"
     fontWeight={"bold"}
     isDisabled
     value={Number.isNaN(value) ? undefined : value}

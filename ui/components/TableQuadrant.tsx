@@ -49,12 +49,12 @@ export const TableQuadrant = ({
 
   const getTrBgColor = (formation: Formation) => {
     if (currentCfd && formation.cfd === currentCfd)
-      return "blue.main !important";
+      return "blueecume.400_hover !important";
     switch (formation.positionQuadrant) {
       case "Q1":
-        return "#C8F6D6";
+        return "green.submitted";
       case "Q4":
-        return "#ffe2e1";
+        return "redmarianne.925";
       default:
         return "inherit";
     }
@@ -69,7 +69,7 @@ export const TableQuadrant = ({
       >
         <Table variant="simple" size={"sm"} mb={"auto"}>
           <Thead
-            bgColor="#96A6D8"
+            bgColor="blueecume.400_active"
             h="12"
             position="sticky"
             top="0"

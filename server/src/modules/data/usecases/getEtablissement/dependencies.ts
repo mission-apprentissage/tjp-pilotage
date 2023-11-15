@@ -17,7 +17,7 @@ const getEtablissementInDb = async ({
   uai,
   millesimeSortie = "2020_2021",
   rentreeScolaire = "2022",
-  orderBy
+  orderBy,
 }: {
   uai: string;
   millesimeSortie?: string;
@@ -76,7 +76,11 @@ const getEtablissementInDb = async ({
           )
           .leftJoin("indicateurEntree as iep", (join) =>
             join
-              .onRef("formationEtablissement.id", "=", "iep.formationEtablissementId")
+              .onRef(
+                "formationEtablissement.id",
+                "=",
+                "iep.formationEtablissementId"
+              )
               .on("iep.rentreeScolaire", "=", "2021")
           )
           .select((sb) => [
@@ -88,13 +92,17 @@ const getEtablissementInDb = async ({
             "formation.libelleFiliere",
             "formation.CPC",
             "formation.CPCSecteur",
-            sql<string>`CONCAT(${sb.ref("formation.libelleDiplome")},' (',${sb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as("libelleDiplome"),
+            sql<string>`CONCAT(${sb.ref(
+              "formation.libelleDiplome"
+            )},' (',${sb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
+              "libelleDiplome"
+            ),
             "formation.CPCSousSecteur",
             sql<number>`COUNT(e."UAI")`.as("nbEtablissement"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
-            sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
-              "effectif"
-            ),
+            sql<number>`SUM(${effectifAnnee({
+              alias: "indicateurEntree",
+            })})`.as("effectif"),
             sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
               "effectifPrecedent"
             ),

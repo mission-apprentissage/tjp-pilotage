@@ -37,12 +37,8 @@ export const getRegionStats = async ({
       return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
     })
     .select([
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion"
-      ),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuite"
-      ),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
     .executeTakeFirst();
 
@@ -90,6 +86,6 @@ export const getRegionStats = async ({
 
   return {
     ...stats,
-    ...statsSortie
+    ...statsSortie,
   };
 };

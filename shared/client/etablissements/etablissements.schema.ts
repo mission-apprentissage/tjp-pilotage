@@ -127,7 +127,9 @@ export const etablissementSchemas = {
   getEtablissement: {
     querystring: Type.Object({
       uai: Type.String(),
-      order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
+      order: Type.Optional(
+        Type.Union([Type.Literal("asc"), Type.Literal("desc")])
+      ),
       orderBy: Type.Optional(Type.KeyOf(FormationSchema)),
     }),
     response: {

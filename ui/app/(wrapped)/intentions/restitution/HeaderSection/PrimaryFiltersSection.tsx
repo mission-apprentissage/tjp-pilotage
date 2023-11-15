@@ -36,7 +36,14 @@ export const PrimaryFiltersSection = ({
           ></Skeleton>
         </Box>
       ) : (
-        <Flex borderRadius={5} px={4} py={2} mb={2} bg="blue.main" h="100%">
+        <Flex
+          borderRadius={5}
+          px={4}
+          py={2}
+          mb={2}
+          bg="blueecume.400_hover"
+          h="100%"
+        >
           <LightMode>
             <Flex
               justifyContent={"start"}

@@ -71,7 +71,7 @@ const TopFlopChart = ({
   topFlopFormations: { top: PanoramaFormations; flop: PanoramaFormations };
 }) => {
   return (
-    <Box bg="#F9F8F6" p="8" mt="4">
+    <Box bg="grey.975" p="8" mt="4">
       <Flex justify={"flex-end"}>
         <Text mb="4" color="grey" fontSize="sm">
           Taux de devenir favorable
@@ -99,7 +99,7 @@ const TopFlopChart = ({
             <TopItem
               key={`${item.codeFormationDiplome}_${item.dispositifId}`}
               formation={item}
-              color={"#666666"}
+              color={"grey.425"}
               value={item.tauxDevenirFavorable}
             />
           ))}
@@ -111,7 +111,7 @@ const TopFlopChart = ({
 const TopItem = ({
   formation,
   value,
-  color = "#8585F6",
+  color = "bluefrance.625",
 }: {
   formation: PanoramaFormation;
   value: number;

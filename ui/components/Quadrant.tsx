@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
   useOutsideClick,
   usePopper,
+  useToken,
 } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
@@ -63,6 +64,9 @@ export const Quadrant = function <
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const greenColor = useToken("colors", "green.submitted");
+  const redColor = useToken("colors", "redmarianne.925");
 
   const popperInstance = usePopper({
     modifiers: [
@@ -216,7 +220,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [0, 0],
-                        itemStyle: { color: "#ffe2e1" },
+                        itemStyle: { color: redColor },
                         name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -228,7 +232,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [meanPoursuite, meanInsertion],
-                        itemStyle: { color: "#C8F6D6" },
+                        itemStyle: { color: greenColor },
                         name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
                           ...quadrantLabelStyle,
