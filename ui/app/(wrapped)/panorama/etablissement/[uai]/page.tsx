@@ -58,7 +58,11 @@ export default function Panorama({
   };
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
 
-  const { data: etablissement, isError } = useQuery(
+  const {
+    data: etablissement,
+    isError,
+    isLoading,
+  } = useQuery(
     ["getEtablissement", uai, order],
     api.getEtablissement({
       query: {
@@ -121,12 +125,14 @@ export default function Panorama({
         meanInsertion={regionStats?.tauxInsertion}
         meanPoursuite={regionStats?.tauxPoursuite}
         quadrantFormations={etablissement?.formations}
+        isLoading={isLoading}
         order={order}
         handleOrder={handleOrder}
       />
       <FormationsSection
         rentreeScolaire={etablissement?.rentreeScolaire}
         formations={etablissement?.formations}
+        isLoading={isLoading}
       />
       <InfoSection codeRegion={etablissement?.codeRegion} />
     </>

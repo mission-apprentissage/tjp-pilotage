@@ -2,6 +2,7 @@ import {
   Box,
   Container,
   Heading,
+  Skeleton,
   Table,
   TableContainer,
   Tbody,
@@ -15,11 +16,35 @@ import { ApiType } from "shared";
 
 import { api } from "../../../../../api.client";
 
+const Loader = () => (
+  <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
+    <Table variant="striped" size={"sm"}>
+      <Tbody>
+        {new Array(7).fill(0).map((_, i) => (
+          <Tr key={i} bg={"grey.975"}>
+            <Td>
+              <Skeleton opacity={0.3} height="16px" width={"100%"} />
+            </Td>
+            <Td width={"10%"}>
+              <Skeleton opacity={0.3} height="16px" width={"100%"} />
+            </Td>
+            <Td isNumeric width={"10%"}>
+              <Skeleton opacity={0.3} height="16px" width={"100%"} />
+            </Td>
+          </Tr>
+        ))}
+      </Tbody>
+    </Table>
+  </TableContainer>
+);
+
 export const FormationsSection = ({
   formations,
+  isLoading,
   rentreeScolaire,
 }: {
   formations?: ApiType<typeof api.getEtablissement>["formations"];
+  isLoading: boolean;
   rentreeScolaire?: string;
 }) => {
   return (
@@ -34,28 +59,32 @@ export const FormationsSection = ({
           </Text>
         </Box>
 
-        <TableContainer px="8">
-          <Table variant="striped" size="sm">
-            <Thead>
-              <Tr>
-                <Th>Formation</Th>
-                <Th>Diplôme</Th>
-                <Th isNumeric>Effectif</Th>
-              </Tr>
-            </Thead>
-            <Tbody>
-              {formations?.map((formation) => (
-                <Tr
-                  key={`${formation.codeFormationDiplome}_${formation.dispositifId}`}
-                >
-                  <Td>{formation.libelleDiplome}</Td>
-                  <Td>{formation.libelleNiveauDiplome}</Td>
-                  <Td isNumeric>{formation.effectif}</Td>
+        {isLoading ? (
+          <Loader />
+        ) : (
+          <TableContainer px="8">
+            <Table variant="striped" size="sm">
+              <Thead>
+                <Tr>
+                  <Th>Formation</Th>
+                  <Th>Diplôme</Th>
+                  <Th isNumeric>Effectif</Th>
                 </Tr>
-              ))}
-            </Tbody>
-          </Table>
-        </TableContainer>
+              </Thead>
+              <Tbody>
+                {formations?.map((formation) => (
+                  <Tr
+                    key={`${formation.codeFormationDiplome}_${formation.dispositifId}`}
+                  >
+                    <Td>{formation.libelleDiplome}</Td>
+                    <Td>{formation.libelleNiveauDiplome}</Td>
+                    <Td isNumeric>{formation.effectif}</Td>
+                  </Tr>
+                ))}
+              </Tbody>
+            </Table>
+          </TableContainer>
+        )}
       </Box>
     </Container>
   );

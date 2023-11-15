@@ -3,10 +3,12 @@ import {
   AspectRatio,
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   Skeleton,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -29,8 +31,14 @@ const effectifSizes = [
   { max: 100, size: 40 },
 ];
 
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
 export const QuadrantSection = ({
   quadrantFormations,
+  isLoading,
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
@@ -39,6 +47,7 @@ export const QuadrantSection = ({
   handleOrder,
 }: {
   quadrantFormations?: ApiType<typeof api.getEtablissement>["formations"];
+  isLoading: boolean;
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
@@ -129,7 +138,10 @@ export const QuadrantSection = ({
         </Flex>
         <AspectRatio ratio={1} mt={2}>
           <>
-            {filteredFormations &&
+            {isLoading ? (
+              <Loader />
+            ) : (
+              filteredFormations &&
               (typeVue === "quadrant" ? (
                 <Quadrant
                   meanPoursuite={meanPoursuite}
@@ -158,7 +170,8 @@ export const QuadrantSection = ({
                     handleOrder(column as OrderPanoramaEtablissement["orderBy"])
                   }
                 />
-              ))}
+              ))
+            )}
             {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
           </>
         </AspectRatio>

@@ -19,6 +19,7 @@ import {
   SliderMark,
   SliderThumb,
   SliderTrack,
+  Spinner,
   Stack,
   Text,
   VStack,
@@ -123,14 +124,22 @@ const filterFormations = ({
       return mustBeReturned;
     });
 
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
+
 export const QuadrantSection = ({
   quadrantFormations,
+  isLoading,
   meanPoursuite,
   meanInsertion,
   order,
   handleOrder,
 }: {
   quadrantFormations?: PanoramaFormations;
+  isLoading: boolean;
   meanPoursuite?: number;
   meanInsertion?: number;
   order?: Partial<Order>;
@@ -371,10 +380,12 @@ export const QuadrantSection = ({
           </Flex>
           <AspectRatio ratio={1} mt={2}>
             <>
-              {filteredFormations &&
-              filteredFormations.length &&
-              meanInsertion &&
-              meanPoursuite ? (
+              {isLoading ? (
+                <Loader />
+              ) : filteredFormations &&
+                filteredFormations.length &&
+                meanInsertion &&
+                meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
                     meanPoursuite={meanPoursuite}
