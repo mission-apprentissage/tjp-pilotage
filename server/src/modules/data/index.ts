@@ -8,7 +8,7 @@ import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.ro
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/etablissements.routes";
 import { getEtablissementsRoutes } from "./usecases/getEtablissements/getEtablissements.routes";
-import { getFormationsRoutes } from "./usecases/getFormations/formations.routes";
+import { getFormationsRoute } from "./usecases/getFormations/formations.routes";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
   panoramaRoutes({ server });
@@ -18,7 +18,7 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
   restitutionIntentionsRoutes({ server });
 
   return {
-    ...getFormationsRoutes({ server }),
+    ...getFormationsRoute({ server }),
     ...getEtablissementsRoutes({ server }),
     ...getEtablissementRoute({ server }),
     ...getDepartementRoute({ server }),
