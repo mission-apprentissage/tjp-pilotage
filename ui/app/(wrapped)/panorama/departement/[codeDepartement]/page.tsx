@@ -4,7 +4,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api } from "../../../../../api.client";
+import { api, client } from "../../../../../api.client";
 import { CadranSection } from "../../components/CadranSection";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
@@ -26,26 +26,28 @@ export default function Panorama({
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
   const [libelleFiliere, setLibelleFiliere] = useState<string[]>();
 
-  const { data: departementsOptions } = useQuery(
-    ["departements"],
-    api.getDepartements({}).call,
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
+  const { data: departementsOptions } = client
+    .ref("[GET]/departements")
+    .useQuery(
+      {},
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const { data: stats } = useQuery(
-    ["departement", codeDepartement, codeNiveauDiplome],
-    api.getDepartementStats({
-      params: { codeDepartement },
-      query: { codeDiplome: codeNiveauDiplome },
-    }).call,
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
+  const { data: stats } = client
+    .ref("[GET]/departement/:codeDepartement")
+    .useQuery(
+      {
+        params: { codeDepartement },
+        query: { codeDiplome: codeNiveauDiplome },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   const { data } = useQuery(
     ["formationForPanorama", { codeDepartement }],

@@ -7,8 +7,8 @@ import { config } from "../config/config";
 import { logger, loggerContextPlugin } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
-import { registerFormationModule } from "./modules/data/index";
-import { registerIntentionsModule } from "./modules/intentions/index";
+import { registerFormationModule } from "./modules/data";
+import { registerIntentionsModule } from "./modules/intentions";
 import { Server, server } from "./server";
 server.register(fastifyCors, {});
 
@@ -74,20 +74,18 @@ server.addHook("onRequest", extractUserInRequest);
 server.register(loggerContextPlugin);
 
 const registerRoutes = (instance: Server) => {
-  return { ...registerCoreModule({ server: instance }) };
+  return {
+    ...registerCoreModule({ server: instance }),
+    ...registerFormationModule({ server: instance }),
+    ...registerIntentionsModule({ server: instance }),
+  };
 };
 
 export type Router = ReturnType<typeof registerRoutes>;
 
-server.register(
-  async (instance: Server) => {
-    registerRoutes(instance);
-    // registerCoreModule({ server: instance });
-    registerFormationModule({ server: instance });
-    registerIntentionsModule({ server: instance });
-  },
-  { prefix: "/api" }
-);
+server.register(async (instance: Server) => registerRoutes(instance), {
+  prefix: "/api",
+});
 
 const cb = (error: Error | null) => {
   if (error) {

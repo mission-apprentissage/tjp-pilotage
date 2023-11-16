@@ -3,14 +3,14 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { hasContinuum } from "../utils/hasContinuum";
-import { notHistorique } from "../utils/notHistorique";
-import { withPositionCadran } from "../utils/positionCadran";
-import { withInsertionReg } from "../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../utils/tauxPoursuite";
-import { selectTauxPression } from "../utils/tauxPression";
+import { hasContinuum } from "../../queries/utils/hasContinuum";
+import { notHistorique } from "../../queries/utils/notHistorique";
+import { withPositionCadran } from "../../queries/utils/positionCadran";
+import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
+import { selectTauxPression } from "../../queries/utils/tauxPression";
 
-export const getEtablissement = async ({
+export const getEtablissementQuery = async ({
   uai,
   millesimeSortie = "2020_2021",
   rentreeScolaire = "2022",
