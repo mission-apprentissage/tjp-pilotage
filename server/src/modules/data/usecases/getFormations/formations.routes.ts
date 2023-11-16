@@ -4,7 +4,7 @@ import { Server } from "../../../../server";
 import { getFormationSchema } from "./getFormation.schema";
 import { getFormations } from "./getFormations.usecase";
 
-export const getFormationsRoutes = ({ server }: { server: Server }) => {
+export const getFormationsRoute = ({ server }: { server: Server }) => {
   return createRoute("/formations", {
     method: "GET",
     schema: getFormationSchema,
