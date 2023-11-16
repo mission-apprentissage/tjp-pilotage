@@ -189,24 +189,24 @@ const findFormationsInDb = async ({
         cmpr("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations
           ? not(
-            exists(
-              selectFrom("formationEtablissement as fe")
-                .select("cfd")
-                .distinct()
-                .innerJoin(
-                  "indicateurEntree",
-                  "id",
-                  "formationEtablissementId"
-                )
-                .where("rentreeScolaire", "in", rentreeScolaire)
-                .whereRef(
-                  "fe.dispositifId",
-                  "=",
-                  "formationEtablissement.dispositifId"
-                )
-                .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
+              exists(
+                selectFrom("formationEtablissement as fe")
+                  .select("cfd")
+                  .distinct()
+                  .innerJoin(
+                    "indicateurEntree",
+                    "id",
+                    "formationEtablissementId"
+                  )
+                  .where("rentreeScolaire", "in", rentreeScolaire)
+                  .whereRef(
+                    "fe.dispositifId",
+                    "=",
+                    "formationEtablissement.dispositifId"
+                  )
+                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
+              )
             )
-          )
           : sql`false`,
       ])
     )
