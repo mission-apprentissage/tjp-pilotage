@@ -55,6 +55,15 @@ const FiltersSchema = Type.Object({
   order: Type.Optional(Type.Union([Type.Literal("asc"), Type.Literal("desc")])),
   orderBy: Type.Optional(Type.KeyOf(FormationLineSchema)),
   withEmptyFormations: Type.Optional(Type.Boolean()),
+  positionQuadrant: Type.Optional(
+    Type.Union([
+      Type.Literal("Q1"),
+      Type.Literal("Q2"),
+      Type.Literal("Q3"),
+      Type.Literal("Q4"),
+      Type.Literal("Hors quadrant"),
+    ])
+  ),
 });
 
 const FormationSchema = Type.Object({
@@ -120,8 +129,8 @@ export const formationSchemas = {
   getDataForPanoramaRegion: {
     querystring: Type.Object({
       codeRegion: Type.String(),
-      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
-      libellesFilieres: Type.Optional(Type.Array(Type.String())),
+      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+      libelleFiliere: Type.Optional(Type.Array(Type.String())),
       order: Type.Optional(
         Type.Union([Type.Literal("asc"), Type.Literal("desc")])
       ),
@@ -140,8 +149,8 @@ export const formationSchemas = {
   getDataForPanoramaDepartement: {
     querystring: Type.Object({
       codeDepartement: Type.String(),
-      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
-      libellesFilieres: Type.Optional(Type.Array(Type.String())),
+      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
+      libelleFiliere: Type.Optional(Type.Array(Type.String())),
       order: Type.Optional(
         Type.Union([Type.Literal("asc"), Type.Literal("desc")])
       ),

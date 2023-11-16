@@ -29,6 +29,7 @@ const EtablissementLineSchema = Type.Object({
   tauxRemplissage: Type.Optional(Type.Number()),
   tauxPoursuite: Type.Optional(Type.Number()),
   tauxInsertion: Type.Optional(Type.Number()),
+  positionQuadrant: Type.Optional(Type.String()),
   tauxDevenirFavorable: Type.Optional(Type.Number()),
   valeurAjoutee: Type.Optional(Type.Number()),
   CPC: Type.Optional(Type.String()),
@@ -149,7 +150,7 @@ export const etablissementSchemas = {
       codeRegion: Type.String(),
     }),
     querystring: Type.Object({
-      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
+      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({
@@ -168,7 +169,7 @@ export const etablissementSchemas = {
       codeDepartement: Type.String(),
     }),
     querystring: Type.Object({
-      codesNiveauxDiplomes: Type.Optional(Type.Array(Type.String())),
+      codeNiveauDiplome: Type.Optional(Type.Array(Type.String())),
     }),
     response: {
       200: Type.Object({

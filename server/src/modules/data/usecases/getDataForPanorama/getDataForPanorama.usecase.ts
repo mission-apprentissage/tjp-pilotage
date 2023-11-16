@@ -1,5 +1,7 @@
 import { inject } from "injecti";
 
+import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import {
   getFilters,
   queryFormationsDepartement,
@@ -12,26 +14,24 @@ export const [getDataForPanoramaRegion] = inject(
     getFilters,
   },
   (deps) =>
-    async ({
-      codeRegion,
-      codesNiveauxDiplomes,
-      libellesFilieres,
-      orderBy,
-    }: {
+    async (activeFilters: {
       codeRegion: string;
-      codesNiveauxDiplomes?: string[];
-      libellesFilieres?: string[];
+      codeNiveauDiplome?: string[];
+      libelleFiliere?: string[];
       orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
-      const formations = await deps.queryFormationsRegion({
-        codeRegion,
-        codesNiveauxDiplomes,
-        libellesFilieres,
-        orderBy,
-      });
-      const { diplomes, filieres } = await deps.getFilters({ codeRegion });
+      const [formations, { diplomes, filieres }, statsSortie] =
+        await Promise.all([
+          deps.queryFormationsRegion(activeFilters),
+          deps.getFilters(activeFilters),
+          getStatsSortie(activeFilters),
+        ]);
+
       return {
-        formations,
+        formations: formations.map((formation) => ({
+          ...formation,
+          positionQuadrant: getPositionQuadrant(formation, statsSortie),
+        })),
         filters: {
           diplomes,
           filieres,
@@ -46,27 +46,24 @@ export const [getDataForPanoramaDepartement] = inject(
     getFilters,
   },
   (deps) =>
-    async ({
-      codeDepartement,
-      codesNiveauxDiplomes,
-      libellesFilieres,
-      orderBy,
-    }: {
+    async (activeFilters: {
       codeDepartement: string;
-      codesNiveauxDiplomes?: string[];
-      libellesFilieres?: string[];
+      codeNiveauDiplome?: string[];
+      libelleFiliere?: string[];
       orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
-      const formations = await deps.queryFormationsDepartement({
-        codeDepartement,
-        codesNiveauxDiplomes,
-        libellesFilieres,
-        orderBy,
-      });
-      const { diplomes, filieres } = await deps.getFilters({ codeDepartement });
+      const [formations, { diplomes, filieres }, statsSortie] =
+        await Promise.all([
+          deps.queryFormationsDepartement(activeFilters),
+          deps.getFilters(activeFilters),
+          getStatsSortie(activeFilters),
+        ]);
 
       return {
-        formations,
+        formations: formations.map((formation) => ({
+          ...formation,
+          positionQuadrant: getPositionQuadrant(formation, statsSortie),
+        })),
         filters: {
           diplomes,
           filieres,

@@ -7,7 +7,6 @@ import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
-import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
@@ -106,6 +105,7 @@ const findEtablissementsInDb = async ({
     .select([
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelle as departement",
+      "etablissement.codeRegion",
       "etablissement.UAI",
       "libelleOfficielFamille",
       "libelleDispositif",
@@ -170,14 +170,6 @@ const findEtablissementsInDb = async ({
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
-      (eb) =>
-        withPositionQuadrant({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
-          codeRegionRef: "etablissement.codeRegion",
-        }).as("positionQuadrant"),
     ])
     .$call((q) => {
       if (!codeRegion) return q;

@@ -99,11 +99,11 @@ export const IndicateursSection = ({
             <FormLabel mt="4">Diplôme</FormLabel>
             <Multiselect
               onChange={(selected) =>
-                handleFilters("codesNiveauxDiplomes", selected)
+                handleFilters("codeNiveauDiplome", selected)
               }
               width="100%"
               options={diplomeOptions}
-              value={activeFilters.codesNiveauxDiplomes ?? []}
+              value={activeFilters.codeNiveauDiplome ?? []}
               size="md"
             >
               Diplôme

@@ -3,16 +3,15 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { getMillesimePrecedent } from "../../queries/utils/getMillesime";
-import { getRentreeScolairePrecedente } from "../../queries/utils/getRentreeScolaire";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
-import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPression } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+import { getMillesimePrecedent } from "../../services/getMillesime";
+import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 
 const getEtablissementInDb = async ({
   uai,
@@ -159,13 +158,6 @@ const getEtablissementInDb = async ({
               dispositifIdRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxDevenirFavorable"),
-            withPositionQuadrant({
-              eb,
-              millesimeSortie,
-              cfdRef: "formationEtablissement.cfd",
-              dispositifIdRef: "formationEtablissement.dispositifId",
-              codeRegionRef: "etablissement.codeRegion",
-            }).as("positionQuadrant"),
           ])
           .$narrowType<{
             tauxInsertion: number;

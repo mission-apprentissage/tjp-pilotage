@@ -3,28 +3,27 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { getMillesimePrecedent } from "../../queries/utils/getMillesime";
-import { getRentreeScolairePrecedente } from "../../queries/utils/getRentreeScolaire";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
 import { notHistorique } from "../../queries/utils/notHistorique";
-import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+import { getMillesimePrecedent } from "../../services/getMillesime";
+import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 
 const queryFormations = ({
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
-  codesNiveauxDiplomes,
-  libellesFilieres,
+  codeNiveauDiplome,
+  libelleFiliere,
   orderBy,
 }: {
   rentreeScolaire?: string;
   millesimeSortie?: string;
-  codesNiveauxDiplomes?: string[];
-  libellesFilieres?: string[];
+  codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 }) =>
   kdb
@@ -74,12 +73,12 @@ const queryFormations = ({
     )
     .where(notHistorique)
     .$call((q) => {
-      if (!codesNiveauxDiplomes) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
+      if (!codeNiveauDiplome) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .$call((q) => {
-      if (!libellesFilieres) return q;
-      return q.where("formation.libelleFiliere", "in", libellesFilieres);
+      if (!libelleFiliere) return q;
+      return q.where("formation.libelleFiliere", "in", libelleFiliere);
     })
     .select((eb) => [
       "codeFormationDiplome",
@@ -151,15 +150,6 @@ const queryFormations = ({
           dispositifIdRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
-      (eb) =>
-        withPositionQuadrant({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
-          codeRegionRef: "etablissement.codeRegion",
-          codesNiveauxDiplomes,
-        }).as("positionQuadrant"),
     ])
     .$narrowType<{
       tauxInsertion: number;
@@ -210,22 +200,22 @@ export const queryFormationsRegion = async ({
   codeRegion,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
-  codesNiveauxDiplomes,
-  libellesFilieres,
+  codeNiveauDiplome,
+  libelleFiliere,
   orderBy,
 }: {
   codeRegion: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
-  codesNiveauxDiplomes?: string[];
-  libellesFilieres?: string[];
+  codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
   const formations = await queryFormations({
     rentreeScolaire,
     millesimeSortie,
-    codesNiveauxDiplomes,
-    libellesFilieres,
+    codeNiveauDiplome,
+    libelleFiliere,
     orderBy,
   })
     .where("etablissement.codeRegion", "=", codeRegion)
@@ -238,22 +228,22 @@ export const queryFormationsDepartement = async ({
   codeDepartement,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
-  codesNiveauxDiplomes,
-  libellesFilieres,
+  codeNiveauDiplome,
+  libelleFiliere,
   orderBy,
 }: {
   codeDepartement: string;
   rentreeScolaire?: string;
   millesimeSortie?: string;
-  codesNiveauxDiplomes?: string[];
-  libellesFilieres?: string[];
+  codeNiveauDiplome?: string[];
+  libelleFiliere?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
 }) => {
   const formations = await queryFormations({
     rentreeScolaire,
     millesimeSortie,
-    codesNiveauxDiplomes,
-    libellesFilieres,
+    codeNiveauDiplome,
+    libelleFiliere,
     orderBy,
   })
     .where("etablissement.codeDepartement", "=", codeDepartement)

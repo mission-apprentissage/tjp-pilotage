@@ -58,5 +58,5 @@ export type Order = OrderPanoramaEtablissement | OrderPanoramaFormation;
 
 export type FiltersPanoramaFormation = Pick<
   QueryPanoramaFormation,
-  "codesNiveauxDiplomes" | "libellesFilieres"
+  "codeNiveauDiplome" | "libelleFiliere"
 >;

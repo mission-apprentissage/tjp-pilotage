@@ -6,7 +6,6 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
 import { effectifAnnee } from "../../queries/utils/effectifAnnee";
 import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { withPositionQuadrant } from "../../queries/utils/positionQuadrant";
 import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
@@ -32,7 +31,6 @@ const findFormationsInDb = async ({
   CPCSecteur,
   CPCSousSecteur,
   libelleFiliere,
-  positionQuadrant,
 }: {
   offset?: number;
   limit?: number;
@@ -52,7 +50,6 @@ const findFormationsInDb = async ({
   CPCSecteur?: string[];
   CPCSousSecteur?: string[];
   libelleFiliere?: string[];
-  positionQuadrant?: string;
 } = {}) => {
   const query = kdb
     .selectFrom("formation")
@@ -170,13 +167,6 @@ const findFormationsInDb = async ({
         dispositifIdRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
-      withPositionQuadrant({
-        eb,
-        millesimeSortie,
-        cfdRef: "formationEtablissement.cfd",
-        dispositifIdRef: "formationEtablissement.dispositifId",
-        codeRegionRef: "etablissement.codeRegion",
-      }).as("positionQuadrant"),
     ])
     .where(
       "codeFormationDiplome",
@@ -219,21 +209,6 @@ const findFormationsInDb = async ({
       "familleMetier.libelleOfficielFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
-    .having((h) => {
-      if (!positionQuadrant) return h.val(true);
-      return h(
-        (eb) =>
-          withPositionQuadrant({
-            eb,
-            millesimeSortie,
-            cfdRef: "formationEtablissement.cfd",
-            dispositifIdRef: "formationEtablissement.dispositifId",
-            codeRegionRef: "etablissement.codeRegion",
-          }),
-        "=",
-        positionQuadrant
-      );
-    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);
