@@ -48,12 +48,15 @@ const getRestitutionIntentionsStatsFactory =
       demandes: demandes?.map((demande) =>
         cleanNull({
           ...demande,
-          positionQuadrant: getPositionQuadrant(
-            demande,
-            statsSortie[demande.codeRegion ?? ""][
-              demande.codeNiveauDiplome ?? ""
-            ] || {}
-          ),
+          positionQuadrant:
+            statsSortie && statsSortie[demande.codeRegion ?? ""]
+              ? getPositionQuadrant(
+                  demande,
+                  statsSortie[demande.codeRegion ?? ""][
+                    demande.codeNiveauDiplome ?? ""
+                  ] || {}
+                )
+              : "Hors quadrant",
         })
       ),
     };
