@@ -101,32 +101,32 @@ export function withPositionCadran<EB extends ExpressionBuilder<DB, never>>({
       sql<string>`
       CASE
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} > ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q1'
         WHEN (${tauxInsertionReg} >= ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q2'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} >= ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q3'
         WHEN (${tauxInsertionReg} < ${selectTauxInsertion6moisAgg(
-        "indicateurRegionSortie"
-      )}
+          "indicateurRegionSortie"
+        )}
         AND ${tauxPoursuiteReg} < ${selectTauxPoursuiteAgg(
-        "indicateurRegionSortie"
-      )})
+          "indicateurRegionSortie"
+        )})
         THEN 'Q4'
         ELSE 'Hors cadran'
       END`.as("positionCadran"),
