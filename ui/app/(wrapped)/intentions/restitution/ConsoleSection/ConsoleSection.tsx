@@ -211,13 +211,13 @@ export const ConsoleSection = ({
                   textAlign="center"
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("insertion")}
+                  onClick={() => handleOrder("tauxInsertion")}
                   minW={200}
                   maxW={200}
                   whiteSpace="normal"
                 >
-                  <OrderIcon {...order} column="insertion" />
-                  {STATS_DEMANDES_COLUMNS.insertion}
+                  <OrderIcon {...order} column="tauxInsertion" />
+                  {STATS_DEMANDES_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale"
@@ -227,13 +227,13 @@ export const ConsoleSection = ({
                   textAlign="center"
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("poursuite")}
+                  onClick={() => handleOrder("tauxPoursuite")}
                   minW={250}
                   maxW={250}
                   whiteSpace="normal"
                 >
-                  <OrderIcon {...order} column="poursuite" />
-                  {STATS_DEMANDES_COLUMNS.poursuite}
+                  <OrderIcon {...order} column="tauxPoursuite" />
+                  {STATS_DEMANDES_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale."

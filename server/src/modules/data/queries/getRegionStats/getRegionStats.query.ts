@@ -13,12 +13,12 @@ import { selectTauxRemplissageAgg } from "../utils/tauxRemplissage";
 
 export const getRegionStats = async ({
   codeRegion,
-  codesNiveauxDiplomes,
+  codeNiveauDiplome,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
-  codesNiveauxDiplomes?: string[];
+  codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
@@ -33,8 +33,8 @@ export const getRegionStats = async ({
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
-      if (!codesNiveauxDiplomes?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
@@ -66,8 +66,8 @@ export const getRegionStats = async ({
     .where("etablissement.codeRegion", "=", codeRegion)
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
-      if (!codesNiveauxDiplomes?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codesNiveauxDiplomes);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where(notHistorique)
     .select([

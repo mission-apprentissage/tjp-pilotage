@@ -28,10 +28,10 @@ export const FiltersSection = ({
     >
       <Flex justify="flex-end">
         <Multiselect
-          onChange={(selected) => handleFilters("libellesFilieres", selected)}
+          onChange={(selected) => handleFilters("libelleFiliere", selected)}
           width={250}
           options={libelleFiliereOptions}
-          value={activeFilters.libellesFilieres ?? []}
+          value={activeFilters.libelleFiliere ?? []}
           ml="2"
         >
           Secteur d’activité

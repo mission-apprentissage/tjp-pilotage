@@ -130,6 +130,16 @@ export const pilotageTransformationSchemas = {
         tauxPression: Type.Optional(
           Type.Union([Type.Literal("eleve"), Type.Literal("faible")])
         ),
+        positionQuadrant: Type.Optional(
+          Type.Union([
+            Type.Literal("Q1"),
+            Type.Literal("Q2"),
+            Type.Literal("Q3"),
+            Type.Literal("Q4"),
+            Type.Literal("Hors quadrant"),
+            Type.Literal("All"),
+          ])
+        ),
       }),
       Type.Object({
         order: Type.Optional(

@@ -1,4 +1,7 @@
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getRestitutionIntentionsStatsFactory =
@@ -33,15 +36,26 @@ const getRestitutionIntentionsStatsFactory =
       column: string;
     };
   }) => {
-    const [{ count, demandes }, filters] = await Promise.all([
+    const [{ count, demandes }, filters, statsSortie] = await Promise.all([
       findRestitutionIntentionsStatsInDB(activeFilters),
       findFiltersInDb(activeFilters),
+      getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
     ]);
 
     return {
       count,
       filters,
-      demandes,
+      demandes: demandes?.map((demande) =>
+        cleanNull({
+          ...demande,
+          positionQuadrant: getPositionQuadrant(
+            demande,
+            statsSortie[demande.codeRegion ?? ""][
+              demande.codeNiveauDiplome ?? ""
+            ] || {}
+          ),
+        })
+      ),
     };
   };
 

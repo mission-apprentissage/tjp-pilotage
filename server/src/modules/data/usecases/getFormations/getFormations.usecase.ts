@@ -1,3 +1,5 @@
+import { getStatsSortieParNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getFormationsFactory =
@@ -27,15 +29,22 @@ const getFormationsFactory =
     withEmptyFormations?: boolean;
     positionQuadrant?: string;
   }) => {
-    const [{ formations, count }, filters] = await Promise.all([
+    const [{ formations, count }, filters, statsSortie] = await Promise.all([
       deps.findFormationsInDb(activeFilters),
       deps.findFiltersInDb(activeFilters),
+      getStatsSortieParNiveauDiplome(activeFilters),
     ]);
 
     return {
       count,
       filters,
-      formations,
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: getPositionQuadrant(
+          formation,
+          statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
+        ),
+      })),
     };
   };
 

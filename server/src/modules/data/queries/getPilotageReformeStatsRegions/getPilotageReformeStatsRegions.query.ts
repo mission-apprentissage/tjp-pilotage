@@ -2,7 +2,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { getMillesimeFromRentreeScolaire } from "../../services/inserJeunesApi/formatMillesime";
+import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";

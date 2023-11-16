@@ -56,6 +56,7 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  positionQuadrant: "Positionnement dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
@@ -525,6 +526,13 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
+                </Th>
+                <Th>
+                  {ETABLISSEMENTS_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
                   />
                 </Th>
                 <Th

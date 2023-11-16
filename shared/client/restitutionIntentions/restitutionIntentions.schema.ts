@@ -44,14 +44,12 @@ const StatsDemandesItem = Type.Object({
   capaciteApprentissageActuelle: Type.Optional(Type.Number()),
   capaciteApprentissage: Type.Optional(Type.Number()),
   capaciteApprentissageColoree: Type.Optional(Type.Number()),
-  insertion: Type.Optional(Type.Number()),
-  poursuite: Type.Optional(Type.Number()),
+  tauxInsertion: Type.Optional(Type.Number()),
+  tauxPoursuite: Type.Optional(Type.Number()),
   devenirFavorable: Type.Optional(Type.Number()),
   pression: Type.Optional(Type.Number()),
   nbEtablissement: Type.Optional(Type.Number()),
   positionQuadrant: Type.Optional(Type.String()),
-  tauxInsertionMoyen: Type.Optional(Type.Number()),
-  tauxPoursuiteMoyen: Type.Optional(Type.Number()),
 });
 
 const StatsFiltersSchema = Type.Object({

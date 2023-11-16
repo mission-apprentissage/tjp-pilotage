@@ -7,14 +7,8 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { nbEtablissementFormationRegion } from "../../../data/queries/utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../../data/queries/utils/tauxDevenirFavorable";
-import {
-  selectTauxInsertion6mois,
-  selectTauxInsertion6moisAgg,
-} from "../../../data/queries/utils/tauxInsertion6mois";
-import {
-  selectTauxPoursuite,
-  selectTauxPoursuiteAgg,
-} from "../../../data/queries/utils/tauxPoursuite";
+import { selectTauxInsertion6mois } from "../../../data/queries/utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "../../../data/queries/utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../../data/queries/utils/tauxPression";
 import {
   countDifferenceCapaciteApprentissage,
@@ -24,8 +18,6 @@ import {
   isIntentionVisible,
   isRegionVisible,
 } from "../../../utils/isIntentionVisible";
-import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHistorique";
-import { getPositionQuadrant } from "../../queries/utils/positionQuadrant";
 
 const findRestitutionIntentionsStatsInDB = async ({
   status,
@@ -111,6 +103,7 @@ const findRestitutionIntentionsStatsInDB = async ({
     )
     .selectAll("demande")
     .select((eb) => [
+      "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelle as libelleDiplome",
       "dataFormation.libelleFiliere as libelleFiliere",
@@ -140,8 +133,8 @@ const findRestitutionIntentionsStatsInDB = async ({
           .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
           .limit(1)
       ).as("demandeCompensee"),
-      selectTauxInsertion6mois("indicateurRegionSortie").as("insertion"),
-      selectTauxPoursuite("indicateurRegionSortie").as("poursuite"),
+      selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuite"),
       selectTauxDevenirFavorable("indicateurRegionSortie").as(
         "devenirFavorable"
       ),
@@ -152,31 +145,6 @@ const findRestitutionIntentionsStatsInDB = async ({
       nbEtablissementFormationRegion({ eb, rentreeScolaire: "2022" }).as(
         "nbEtablissement"
       ),
-      jsonObjectFrom(
-        eb
-          .selectFrom("indicateurRegionSortie as subIRS")
-          .innerJoin(
-            "formation",
-            "formation.codeFormationDiplome",
-            "subIRS.cfd"
-          )
-          .whereRef("subIRS.codeRegion", "=", "demande.codeRegion")
-          .whereRef("subIRS.dispositifId", "=", "demande.dispositifId")
-          .whereRef(
-            "formation.codeNiveauDiplome",
-            "=",
-            "dataFormation.codeNiveauDiplome"
-          )
-          .where("subIRS.millesimeSortie", "=", millesimeSortie)
-          .where(notHistoriqueIndicateurRegionSortie)
-          .select([
-            selectTauxInsertion6moisAgg("subIRS").as("tauxInsertion"),
-            selectTauxPoursuiteAgg("subIRS").as("tauxPoursuite"),
-            getPositionQuadrant("indicateurRegionSortie", "subIRS").as(
-              "positionQuadrant"
-            ),
-          ])
-      ).as("statsSortieMoyennes"),
     ])
     .$call((eb) => {
       if (status && status != undefined)
@@ -311,12 +279,6 @@ const findRestitutionIntentionsStatsInDB = async ({
         updatedAt: demande.updatedAt?.toISOString(),
         idCompensation: demande.demandeCompensee?.id,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
-        tauxInsertionMoyen:
-          demande.statsSortieMoyennes?.tauxInsertion ?? undefined,
-        tauxPoursuiteMoyen:
-          demande.statsSortieMoyennes?.tauxPoursuite ?? undefined,
-        positionQuadrant:
-          demande.statsSortieMoyennes?.positionQuadrant ?? "Hors quadrant",
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,
