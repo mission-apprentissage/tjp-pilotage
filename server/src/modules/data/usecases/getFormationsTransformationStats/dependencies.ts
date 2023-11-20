@@ -3,12 +3,19 @@ import { ExpressionBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { withPositionCadran } from "../../queries/utils/positionCadran";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../queries/utils/tauxPression";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { withPositionCadran } from "../../utils/positionCadran";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import {
+  selectTauxInsertion6moisAgg,
+  withInsertionReg,
+} from "../../utils/tauxInsertion6mois";
+import {
+  selectTauxPoursuiteAgg,
+  withPoursuiteReg,
+} from "../../utils/tauxPoursuite";
+import { withTauxPressionReg } from "../../utils/tauxPression";
 
 const selectDifferencePlaces = (
   eb: ExpressionBuilder<DB, "demande">,
@@ -59,7 +66,7 @@ const selectNbEtablissements = (
   eb: ExpressionBuilder<DB, "dataEtablissement">
 ) => eb.fn.count<number>("dataEtablissement.uai").distinct();
 
-export const getFormationsTransformationStatsQuery = ({
+const getFormationsTransformationStatsQuery = ({
   status,
   type,
   rentreeScolaire = "2024",
@@ -262,4 +269,67 @@ export const getFormationsTransformationStatsQuery = ({
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
     .then(cleanNull);
+};
+
+const getRegionStats = async ({
+  codeRegion,
+  codeAcademie,
+  codeDepartement,
+  codeNiveauDiplome,
+  millesimeSortie = "2020_2021",
+}: {
+  codeRegion?: string;
+  codeAcademie?: string;
+  codeDepartement?: string;
+  millesimeSortie?: string;
+  codeNiveauDiplome?: string[];
+}) => {
+  const statsSortie = await kdb
+    .selectFrom("indicateurRegionSortie")
+    .innerJoin(
+      "formation",
+      "formation.codeFormationDiplome",
+      "indicateurRegionSortie.cfd"
+    )
+    .where((w) => {
+      if (!codeRegion) return w.val(true);
+      return w("indicateurRegionSortie.codeRegion", "=", codeRegion);
+    })
+    .$call((q) => {
+      if (!codeDepartement && !codeAcademie) {
+        return q;
+      }
+      return q
+        .innerJoin(
+          "departement",
+          "departement.codeRegion",
+          "indicateurRegionSortie.codeRegion"
+        )
+        .where((w) => {
+          if (!codeAcademie) return w.val(true);
+          return w("departement.codeAcademie", "=", codeAcademie);
+        })
+        .where((w) => {
+          if (!codeDepartement) return w.val(true);
+          return w("departement.codeDepartement", "=", codeDepartement);
+        });
+    })
+    .$call((q) => {
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    })
+    .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notHistoriqueIndicateurRegionSortie)
+    .select([
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+    ])
+    .executeTakeFirstOrThrow();
+
+  return statsSortie;
+};
+
+export const dependencies = {
+  getFormationsTransformationStatsQuery,
+  getRegionStats,
 };

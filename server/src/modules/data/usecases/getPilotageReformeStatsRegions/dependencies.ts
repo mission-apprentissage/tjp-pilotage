@@ -3,11 +3,11 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/inserJeunesApi/formatMillesime";
-import { notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
-export const getPilotageReformeStatsRegions = async ({
+const getStatsRegions = async ({
   codeNiveauDiplome,
   orderBy = { order: "asc", column: "libelleRegion" },
 }: {
@@ -63,6 +63,10 @@ export const getPilotageReformeStatsRegions = async ({
     })
     .execute();
 
+  return statsRegions.map(cleanNull);
+};
+
+const findFiltersInDb = async () => {
   const filtersBase = kdb
     .selectFrom("formation")
     .leftJoin(
@@ -87,12 +91,12 @@ export const getPilotageReformeStatsRegions = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const filters = {
+  return {
     diplomes: (await diplomes).map(cleanNull),
   };
+};
 
-  return {
-    filters: filters,
-    statsRegions: statsRegions.map(cleanNull),
-  };
+export const dependencies = {
+  getStatsRegions,
+  findFiltersInDb,
 };

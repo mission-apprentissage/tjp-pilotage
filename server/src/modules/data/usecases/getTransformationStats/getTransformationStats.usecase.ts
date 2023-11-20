@@ -1,13 +1,9 @@
-import { inject } from "injecti";
 import _ from "lodash";
 
-import {
-  getFiltersQuery,
-  getTransformationStatsQuery,
-} from "./getTransformationStatsQuery.dep";
+import { dependencies } from "./dependencies";
 
 type DataTerritoire = Awaited<
-  ReturnType<typeof getTransformationStatsQuery>
+  ReturnType<typeof dependencies.getTransformationStatsQuery>
 >[0]["region" | "academie" | "departement"];
 
 const formatTerritoire = (item: DataTerritoire) => ({
@@ -46,7 +42,7 @@ const formatTerritoire = (item: DataTerritoire) => ({
 });
 
 const formatResult = (
-  result: Awaited<ReturnType<typeof getTransformationStatsQuery>>,
+  result: Awaited<ReturnType<typeof dependencies.getTransformationStatsQuery>>,
   orderBy?: { column: string; order: "asc" | "desc" }
 ) => {
   return {
@@ -164,43 +160,48 @@ const formatResult = (
   };
 };
 
-export const [getTransformationStats] = inject(
-  { getTransformationStatsQuery, getFiltersQuery },
-  (deps) =>
-    async (activeFilters: {
-      rentreeScolaire?: string;
-      codeNiveauDiplome?: string[];
-      filiere?: string[];
-      orderBy?: { column: string; order: "asc" | "desc" };
-    }) => {
-      const resultDraft = await deps
-        .getTransformationStatsQuery({
-          ...activeFilters,
-          status: "draft",
-        })
-        .then((result) => formatResult(result, activeFilters.orderBy));
-      const resultSubmitted = await deps
-        .getTransformationStatsQuery({
-          ...activeFilters,
-          status: "submitted",
-        })
-        .then((result) => formatResult(result, activeFilters.orderBy));
-      const resultAll = await deps
-        .getTransformationStatsQuery({
-          ...activeFilters,
-        })
-        .then((result) => formatResult(result, activeFilters.orderBy));
-
-      const filters = await deps.getFiltersQuery(activeFilters);
-
-      return {
-        submitted: resultSubmitted,
-        draft: resultDraft,
-        all: resultAll,
-        filters: filters,
-      };
+const getTransformationStatsFactory =
+  (
+    deps = {
+      getTransformationStatsQuery: dependencies.getTransformationStatsQuery,
+      getFiltersQuery: dependencies.getFiltersQuery,
     }
-);
+  ) =>
+  async (activeFilters: {
+    rentreeScolaire?: string;
+    codeNiveauDiplome?: string[];
+    filiere?: string[];
+    orderBy?: { column: string; order: "asc" | "desc" };
+  }) => {
+    const resultDraft = await deps
+      .getTransformationStatsQuery({
+        ...activeFilters,
+        status: "draft",
+      })
+      .then((result) => formatResult(result, activeFilters.orderBy));
+    const resultSubmitted = await deps
+      .getTransformationStatsQuery({
+        ...activeFilters,
+        status: "submitted",
+      })
+      .then((result) => formatResult(result, activeFilters.orderBy));
+    const resultAll = await deps
+      .getTransformationStatsQuery({
+        ...activeFilters,
+      })
+      .then((result) => formatResult(result, activeFilters.orderBy));
+
+    const filters = await deps.getFiltersQuery(activeFilters);
+
+    return {
+      submitted: resultSubmitted,
+      draft: resultDraft,
+      all: resultAll,
+      filters: filters,
+    };
+  };
+
+export const getTransformationStats = getTransformationStatsFactory();
 
 const effectifsRegions: Record<string, number> = {
   "11": 64809,

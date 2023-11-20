@@ -6,15 +6,15 @@ import {
   getMillesimeFromRentreeScolaire,
   getRentreeScolaire,
 } from "../../services/inserJeunesApi/formatMillesime";
-import { effectifAnnee } from "../utils/effectifAnnee";
+import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
-} from "../utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
+} from "../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
-export const getPilotageReformeStats = async ({
+export const getStats = async ({
   codeRegion,
   codeNiveauDiplome,
 }: {
@@ -115,6 +115,31 @@ export const getPilotageReformeStats = async ({
       ])
       .executeTakeFirstOrThrow();
 
+  return {
+    anneeN: {
+      filtered: {
+        ...(await selectStatsEffectif({ isFiltered: true, annee: 0 })),
+        ...(await selectStatsSortie({ isFiltered: true, annee: 0 })),
+      },
+      nationale: {
+        ...(await selectStatsEffectif({ isFiltered: false, annee: 0 })),
+        ...(await selectStatsSortie({ isFiltered: false, annee: 0 })),
+      },
+    },
+    anneeNMoins1: {
+      filtered: {
+        ...(await selectStatsEffectif({ isFiltered: true, annee: -1 })),
+        ...(await selectStatsSortie({ isFiltered: true, annee: -1 })),
+      },
+      nationale: {
+        ...(await selectStatsEffectif({ isFiltered: false, annee: -1 })),
+        ...(await selectStatsSortie({ isFiltered: false, annee: -1 })),
+      },
+    },
+  };
+};
+
+const findFiltersInDb = async () => {
   const filtersBase = kdb
     .selectFrom("formation")
     .leftJoin(
@@ -156,32 +181,13 @@ export const getPilotageReformeStats = async ({
     .where("niveauDiplome.codeNiveauDiplome", "in", ["500", "320", "400"])
     .execute();
 
-  const filters = {
+  return {
     regions: (await regions).map(cleanNull),
     diplomes: (await diplomes).map(cleanNull),
   };
+};
 
-  return {
-    filters: filters,
-    anneeN: {
-      filtered: {
-        ...(await selectStatsEffectif({ isFiltered: true, annee: 0 })),
-        ...(await selectStatsSortie({ isFiltered: true, annee: 0 })),
-      },
-      nationale: {
-        ...(await selectStatsEffectif({ isFiltered: false, annee: 0 })),
-        ...(await selectStatsSortie({ isFiltered: false, annee: 0 })),
-      },
-    },
-    anneeNMoins1: {
-      filtered: {
-        ...(await selectStatsEffectif({ isFiltered: true, annee: -1 })),
-        ...(await selectStatsSortie({ isFiltered: true, annee: -1 })),
-      },
-      nationale: {
-        ...(await selectStatsEffectif({ isFiltered: false, annee: -1 })),
-        ...(await selectStatsSortie({ isFiltered: false, annee: -1 })),
-      },
-    },
-  };
+export const dependencies = {
+  getStats,
+  findFiltersInDb,
 };
