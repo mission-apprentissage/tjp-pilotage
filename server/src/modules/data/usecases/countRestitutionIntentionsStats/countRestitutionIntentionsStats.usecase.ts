@@ -1,7 +1,7 @@
 import { RequestUser } from "../../../core/model/User";
 import { dependencies } from "./dependencies";
 
-const getCountRestitutionIntentionsStatsFactory =
+const countRestitutionIntentionsStatsFactory =
   ({
     countRestitutionIntentionsStatsInDB = dependencies.countRestitutionIntentionsStatsInDB,
   }) =>
@@ -32,5 +32,5 @@ const getCountRestitutionIntentionsStatsFactory =
     return await countStatsDemandesPromise;
   };
 
-export const getCountRestitutionIntentionsStats =
-  getCountRestitutionIntentionsStatsFactory({});
+export const countRestitutionIntentionsStats =
+  countRestitutionIntentionsStatsFactory({});

@@ -89,7 +89,7 @@ const selectNbDemandes =
       .count<number>("demande.id")
       .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
 
-export const getTransformationStatsQuery = ({
+const getTransformationStatsQuery = ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
@@ -241,7 +241,7 @@ export const getTransformationStatsQuery = ({
     .execute()
     .then(cleanNull);
 
-export const getFiltersQuery = async ({
+const getFiltersQuery = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
@@ -351,4 +351,9 @@ export const getFiltersQuery = async ({
     filieres: filieres.map(cleanNull),
     diplomes: diplomes.map(cleanNull),
   };
+};
+
+export const dependencies = {
+  getTransformationStatsQuery,
+  getFiltersQuery,
 };

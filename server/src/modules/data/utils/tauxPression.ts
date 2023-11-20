@@ -1,6 +1,6 @@
 import { ExpressionBuilder, RawBuilder, sql } from "kysely";
 
-import { DB } from "../../../../db/schema";
+import { DB } from "../../../db/schema";
 
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,
