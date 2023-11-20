@@ -2,7 +2,7 @@ import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { api, client } from "../../../../../api.client";
 
 export const UaiAutocomplete = ({
   name,
@@ -43,7 +43,9 @@ export const UaiAutocomplete = ({
       }
       loadOptions={(inputValue: string) => {
         if (inputValue.length >= 3)
-          return api.searchEtab({ params: { search: inputValue } }).call();
+          return client
+            .ref("[GET]/etab/search/:search")
+            .query({ params: { search: inputValue } });
       }}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3

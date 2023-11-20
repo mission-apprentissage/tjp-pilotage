@@ -13,14 +13,13 @@ import {
   Link,
   Text,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 import { AuthContext } from "../authContext";
 
 export const LoginForm = () => {
@@ -37,14 +36,12 @@ export const LoginForm = () => {
     mutateAsync: login,
     isLoading,
     isError,
-  } = useMutation({
-    mutationFn: handleSubmit(
-      async ({ email, password }: { email: string; password: string }) => {
-        await api.login({ body: { email, password } }).call();
-        const { user } = await api.whoAmI({}).call();
-        setAuth({ user });
-      }
-    ),
+  } = client.ref("[POST]/auth/login").useMutation({
+    onSuccess: async () => {
+      const whoAmI = await client.ref("[GET]/auth/whoAmI").query({});
+      if (!whoAmI) return;
+      setAuth({ user: whoAmI.user });
+    },
   });
 
   const { setAuth, auth } = useContext(AuthContext);
@@ -58,7 +55,11 @@ export const LoginForm = () => {
   return (
     <Box maxW="360px" mt="20" width="100%" mx="auto">
       <Card boxShadow="md">
-        <CardBody p="6" as="form" onSubmit={login}>
+        <CardBody
+          p="6"
+          as="form"
+          onSubmit={handleSubmit((v) => login({ body: v }))}
+        >
           <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
             Connexion
           </Heading>

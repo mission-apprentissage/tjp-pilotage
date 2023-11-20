@@ -5,7 +5,7 @@ import { checkActivationTokenSchema } from "./checkActivationToken.schema";
 import { checkActivationToken } from "./checkActivationToken.usecase";
 
 export const checkActivationTokenRoute = (server: Server) => {
-  return createRoute("/auth/activate", {
+  return createRoute("/auth/check-activation-token", {
     method: "GET",
     schema: checkActivationTokenSchema,
   }).handle((props) => {
