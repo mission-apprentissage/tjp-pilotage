@@ -10,7 +10,7 @@ export const getTransformationsStatsRoutes = ({
 }: {
   server: Server;
 }) => {
-  return createRoute("/pilotage-transformation/formations", {
+  return createRoute("/pilotage-transformation/stats", {
     method: "GET",
     schema: getTransformationStatsSchema,
   }).handle((props) => {

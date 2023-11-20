@@ -1,15 +1,14 @@
 "use client";
 
 import { Box, Container, SimpleGrid } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
+import { client } from "@/api.client";
 import { CadranSection } from "@/app/(wrapped)/intentions/pilotage/components/CadranSection";
 
-import { api } from "../../../../api.client";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../../utils/security/withAuth";
 import { CodeRegionFilterContext } from "../../../layoutClient";
@@ -99,17 +98,20 @@ export default withAuth(
       });
     };
 
-    const { data, isLoading: isLoading } = useQuery({
-      keepPreviousData: true,
-      staleTime: 10000000,
-      queryKey: ["pilotageTransfo", filters, order],
-      queryFn: api.getTransformationStats({
-        query: {
-          ...filters,
-          ...order,
+    const { data, isLoading: isLoading } = client
+      .ref("[GET]/pilotage-transformation/stats")
+      .useQuery(
+        {
+          query: {
+            ...filters,
+            ...order,
+          },
         },
-      }).call,
-    });
+        {
+          keepPreviousData: true,
+          staleTime: 10000000,
+        }
+      );
 
     useEffect(() => {
       if (codeRegionFilter != "") {

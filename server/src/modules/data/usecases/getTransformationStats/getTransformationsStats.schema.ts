@@ -28,7 +28,7 @@ const StatsTransfoSchema = z.object({
   national: ScopedStatsTransfoSchema,
   regions: z.record(
     z.string(),
-    ScopedStatsTransfoSchema.partial().merge(
+    ScopedStatsTransfoSchema.merge(
       z.object({
         codeRegion: z.string().optional(),
       })
@@ -36,7 +36,7 @@ const StatsTransfoSchema = z.object({
   ),
   academies: z.record(
     z.string(),
-    ScopedStatsTransfoSchema.partial().merge(
+    ScopedStatsTransfoSchema.merge(
       z.object({
         codeAcademie: z.string().optional(),
       })
@@ -44,7 +44,7 @@ const StatsTransfoSchema = z.object({
   ),
   departements: z.record(
     z.string(),
-    ScopedStatsTransfoSchema.partial().merge(
+    ScopedStatsTransfoSchema.merge(
       z.object({
         codeDepartement: z.string().optional(),
       })

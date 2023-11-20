@@ -5,7 +5,7 @@ import { getRegions } from "./getRegions.query";
 import { getRegionsSchema } from "./getRegions.schema";
 
 export const getRegionsRoute = ({ server }: { server: Server }) => {
-  return createRoute("/departements", {
+  return createRoute("/regions", {
     method: "GET",
     schema: getRegionsSchema,
   }).handle((props) => {
