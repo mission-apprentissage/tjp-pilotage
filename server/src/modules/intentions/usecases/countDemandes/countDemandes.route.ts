@@ -7,7 +7,7 @@ import { countDemandes } from "./countDemandes.query";
 import { countDemandesSchema } from "./countDemandes.schema";
 
 export const countDemandesRoute = (server: Server) => {
-  return createRoute("/", {
+  return createRoute("/demandes/count", {
     method: "GET",
     schema: countDemandesSchema,
   }).handle((props) => {
