@@ -1,28 +1,28 @@
-import { ROUTES_CONFIG } from "shared";
+// import { ROUTES_CONFIG } from "shared";
 
-import { Server } from "../../../server";
-import { hasPermissionHandler } from "../../core";
-import { getTransformationStats } from "../usecases/getTransformationStats/getTransformationStats.usecase";
+// import { Server } from "../../../server";
+// import { hasPermissionHandler } from "../../core";
+// import { getTransformationStats } from "../usecases/getTransformationStats/getTransformationStats.usecase";
 
-export const pilotageTransformationRoutes = ({
-  server,
-}: {
-  server: Server;
-}) => {
-  server.get(
-    "/pilotage-transformation/stats",
-    {
-      schema: ROUTES_CONFIG.getTransformationStats,
-      preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
-    },
-    async (request, response) => {
-      const { order, orderBy, ...filters } = request.query;
+// export const pilotageTransformationRoutes = ({
+//   server,
+// }: {
+//   server: Server;
+// }) => {
+//   server.get(
+//     "/pilotage-transformation/stats",
+//     {
+//       schema: ROUTES_CONFIG.getTransformationStats,
+//       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
+//     },
+//     async (request, response) => {
+//       const { order, orderBy, ...filters } = request.query;
 
-      const stats = await getTransformationStats({
-        ...filters,
-        orderBy: order && orderBy ? { order, column: orderBy } : undefined,
-      });
-      response.status(200).send(stats);
-    }
-  );
-};
+//       const stats = await getTransformationStats({
+//         ...filters,
+//         orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+//       });
+//       response.status(200).send(stats);
+//     }
+//   );
+// };

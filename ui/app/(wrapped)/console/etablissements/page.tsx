@@ -21,7 +21,7 @@ import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 import { ApiType } from "shared";
 
-import { api } from "@/api.client";
+import { api, client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -149,19 +149,17 @@ export default function Etablissements() {
     }
   }, []);
 
-  const { data, isFetching } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["etablissements", page, order, filters],
-    queryFn: () => {
-      return fetchEtablissements({
+  const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
+    {
+      query: {
         ...filters,
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
-      });
+      },
     },
-  });
+    { keepPreviousData: true, staleTime: 10000000 }
+  );
 
   const trackEvent = usePlausible();
   const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {

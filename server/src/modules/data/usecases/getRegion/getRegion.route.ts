@@ -1,8 +1,8 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
+import { getRegionStats } from "./getRegion.query";
 import { getRegionSchema } from "./getRegion.schema";
-import { getRegionStats } from "./getRegionsStats.query";
 
 export const getRegionRoute = ({ server }: { server: Server }) => {
   return createRoute("/region/:codeRegion", {

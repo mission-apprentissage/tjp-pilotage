@@ -11,7 +11,7 @@ export const getRestitutionIntentionsStatsRoute = ({
 }: {
   server: Server;
 }) => {
-  return createRoute("/pilotage-transformation/formations", {
+  return createRoute("/intentions/stats", {
     method: "GET",
     schema: getRestitutionIntentionsStatsSchema,
   }).handle((props) => {

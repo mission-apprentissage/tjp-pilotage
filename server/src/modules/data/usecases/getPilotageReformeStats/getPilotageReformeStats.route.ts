@@ -10,7 +10,7 @@ export const getPilotageReformeStatsRoute = ({
 }: {
   server: Server;
 }) => {
-  return createRoute("/pilotage-reforme/stats/regions", {
+  return createRoute("/pilotage-reforme/stats", {
     method: "GET",
     schema: getPilotageReformeStatsSchema,
   }).handle((props) => {
