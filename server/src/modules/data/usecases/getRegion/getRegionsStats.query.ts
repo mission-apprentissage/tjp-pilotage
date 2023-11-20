@@ -1,15 +1,15 @@
 import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
-import { effectifAnnee } from "../../queries/utils/effectifAnnee";
+import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
-} from "../../queries/utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../../queries/utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../queries/utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+} from "../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../../utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 export const getRegionStats = async ({
   codeRegion,

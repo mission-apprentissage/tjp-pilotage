@@ -1,7 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { DB } from "../../../../db/schema";
+import { DB } from "../../../db/schema";
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 
