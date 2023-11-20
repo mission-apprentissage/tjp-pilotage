@@ -3,7 +3,7 @@ import { ROUTES_CONFIG } from "shared";
 
 import { Server } from "../../../server";
 import { hasPermissionHandler } from "../../core";
-import { getCountRestitutionIntentionsStats } from "../usecases/getCountRestitutionIntentionsStats/getCountRestitutionIntentionsStats";
+import { getCountRestitutionIntentionsStats } from "../usecases/countRestitutionIntentionsStats/countRestitutionIntentionsStats";
 import { getRestitutionIntentionsStats } from "../usecases/getRestitutionIntentionsStats/getRestitutionIntentionsStats.usecase";
 
 export const restitutionIntentionsRoutes = ({ server }: { server: Server }) => {
