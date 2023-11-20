@@ -11,12 +11,11 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 
 export const ResetPasswordForm = ({
   resetPasswordToken,
@@ -38,18 +37,21 @@ export const ResetPasswordForm = ({
     mutate: activateAccount,
     isError,
     isLoading,
-  } = useMutation({
-    mutationFn: handleSubmit(async (values) => {
-      await api
-        .resetPassword({ body: { ...values, resetPasswordToken } })
-        .call();
+  } = client.ref("[POST]/auth/reset-password").useMutation({
+    onSuccess: () => {
       router.replace("/auth/reset-password/confirmation");
-    }),
+    },
   });
 
   return (
     <Card boxShadow="md" maxW="360px" mt="20" mx="auto">
-      <CardBody p="6" as="form" onSubmit={activateAccount}>
+      <CardBody
+        p="6"
+        as="form"
+        onSubmit={handleSubmit((v) =>
+          activateAccount({ body: { ...v, resetPasswordToken } })
+        )}
+      >
         <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
           Réinitialisation du mot de passe
         </Heading>

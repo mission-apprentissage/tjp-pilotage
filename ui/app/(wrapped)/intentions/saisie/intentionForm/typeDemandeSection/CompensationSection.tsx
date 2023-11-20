@@ -5,24 +5,24 @@ import {
   FormLabel,
   Select,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useEffect, useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 import { isTypeCompensation } from "shared/demandeValidators/validators";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-import { api } from "../../../../../../api.client";
+import { client } from "../../../../../../api.client";
 import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
 import { UaiAutocomplete } from "../../components/UaiAutocomplete";
+
+type Etablissement = (typeof client.infer)["[GET]/api/etab/:uai"];
 
 export const CompensationSection = ({
   disabled,
   formMetadata,
 }: {
   disabled?: boolean;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
 }) => {
   const {
     formState: { errors },
@@ -46,17 +46,15 @@ export const CompensationSection = ({
       }).unsubscribe
   );
 
-  const { data, isLoading } = useQuery({
-    queryKey: [getValues("uai")],
-    queryFn: api.getEtab({ params: { uai: getValues("uai") } }).call,
-    cacheTime: 0,
-  });
+  const { data, isLoading } = client
+    .ref("[GET]/api/etab/:uai")
+    .useQuery({ params: { uai: getValues("uai") } }, { cacheTime: 0 });
 
-  const getSameEtabDefaultValue = (): ApiType<typeof api.getEtab> => {
-    return data ?? ({} as ApiType<typeof api.getEtab>);
+  const getSameEtabDefaultValue = (): Etablissement => {
+    return data ?? ({} as Etablissement);
   };
 
-  const getUaiDefaultValue = (value?: string): ApiType<typeof api.getEtab> => {
+  const getUaiDefaultValue = (value?: string): Etablissement => {
     if (formMetadata?.etablissementCompensation?.libelle && value)
       return {
         label: formMetadata?.etablissementCompensation.libelle,
@@ -72,7 +70,8 @@ export const CompensationSection = ({
   }, []);
 
   const [dispositifsCompensation, setDispositifsCompensation] = useState<
-    ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
+    | (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
+    | undefined
   >(formMetadata?.formationCompensation?.dispositifs);
 
   return (
