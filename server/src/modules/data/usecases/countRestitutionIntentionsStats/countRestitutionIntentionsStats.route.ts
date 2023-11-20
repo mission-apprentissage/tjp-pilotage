@@ -3,8 +3,8 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { countRestitutionIntentionsStats } from "./countRestitutionIntentionsStats";
 import { countRestitutionIntentionsStatsSchema } from "./countRestitutionIntentionsStats.schema";
+import { countRestitutionIntentionsStats } from "./countRestitutionIntentionsStats.usecase";
 
 export const countRestitutionIntentionsStatsRoute = ({
   server,

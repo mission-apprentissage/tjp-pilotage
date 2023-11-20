@@ -3,19 +3,19 @@ import { ExpressionBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHistorique";
-import { withPositionCadran } from "../../queries/utils/positionCadran";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { withPositionCadran } from "../../utils/positionCadran";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
   selectTauxInsertion6moisAgg,
   withInsertionReg,
-} from "../../queries/utils/tauxInsertion6mois";
+} from "../../utils/tauxInsertion6mois";
 import {
   selectTauxPoursuiteAgg,
   withPoursuiteReg,
-} from "../../queries/utils/tauxPoursuite";
-import { withTauxPressionReg } from "../../queries/utils/tauxPression";
+} from "../../utils/tauxPoursuite";
+import { withTauxPressionReg } from "../../utils/tauxPression";
 
 const selectDifferencePlaces = (
   eb: ExpressionBuilder<DB, "demande">,

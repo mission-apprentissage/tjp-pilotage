@@ -1,6 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 
-import { DB } from "../../../../db/schema";
+import { DB } from "../../../db/schema";
 
 export const nbEtablissementFormationRegion = ({
   eb,

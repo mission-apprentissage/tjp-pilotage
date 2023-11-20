@@ -2,15 +2,15 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { notHistorique } from "../../queries/utils/notHistorique";
-import { withPositionCadran } from "../../queries/utils/positionCadran";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+import { effectifAnnee } from "../../utils/effectifAnnee";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistorique } from "../../utils/notHistorique";
+import { withPositionCadran } from "../../utils/positionCadran";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../../utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 export const queryFormationsDepartement = async ({
   codeDepartement,
