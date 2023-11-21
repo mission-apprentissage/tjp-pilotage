@@ -21,7 +21,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useContext } from "react";
 
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
 import { Nav } from "./Nav";
@@ -31,7 +31,7 @@ export const Header = () => {
   const queryClient = useQueryClient();
 
   const logout = async () => {
-    await api.logout({}).call();
+    await client.ref("[POST]/auth/logout").query({});
     setAuth(undefined);
     queryClient.clear();
   };

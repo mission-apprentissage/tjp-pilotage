@@ -1,8 +1,6 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
-
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 
@@ -13,11 +11,12 @@ export default ({
     intentionId: string;
   };
 }) => {
-  const { data, isLoading } = useQuery({
-    queryKey: [intentionId],
-    queryFn: api.getDemande({ params: { id: intentionId } }).call,
-    cacheTime: 0,
-  });
+  const { data, isLoading } = client.ref("[GET]/demande/:id").useQuery(
+    { params: { id: intentionId } },
+    {
+      cacheTime: 0,
+    }
+  );
 
   if (isLoading) return <IntentionSpinner />;
   return (

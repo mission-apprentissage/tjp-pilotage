@@ -30,7 +30,6 @@ const useTracking = () => {
         (typeof localStorage !== "undefined" &&
           localStorage.getItem("notracking") === "true"))
   );
-
   useEffect(() => {
     if (param === "reset") {
       localStorage.removeItem("notracking");

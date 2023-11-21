@@ -9,9 +9,9 @@ import {
   UnorderedList,
 } from "@chakra-ui/react";
 import { ReactNode } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -23,7 +23,7 @@ export const InformationsBlock = ({
 }: {
   disabled: boolean;
   errors?: Record<string, string>;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   footerActions: ReactNode;
 }) => {
   return (

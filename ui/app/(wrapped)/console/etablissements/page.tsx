@@ -19,9 +19,8 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
-import { ApiType } from "shared";
 
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -70,14 +69,13 @@ const ETABLISSEMENTS_COLUMNS = {
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
 } satisfies ExportColumns<
-  ApiType<typeof api.getEtablissements>["etablissements"][number]
+  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
 >;
 
-type Query = Parameters<typeof api.getEtablissements>[0]["query"];
+type Query = (typeof client.inferArgs)["[GET]/etablissements"]["query"];
 
-export type Line = Awaited<
-  ReturnType<ReturnType<typeof api.getEtablissements>["call"]>
->["etablissements"][number];
+export type Line =
+  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
 
 type Filters = Pick<
   Query,
@@ -106,9 +104,6 @@ type LineId = {
 };
 
 const PAGE_SIZE = 30;
-
-const fetchEtablissements = async (query: Query) =>
-  api.getEtablissements({ query }).call();
 
 export default function Etablissements() {
   const router = useRouter();
@@ -149,19 +144,17 @@ export default function Etablissements() {
     }
   }, []);
 
-  const { data, isFetching } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["etablissements", page, order, filters],
-    queryFn: () => {
-      return fetchEtablissements({
+  const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
+    {
+      query: {
         ...filters,
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
-      });
+      },
     },
-  });
+    { keepPreviousData: true, staleTime: 10000000 }
+  );
 
   const trackEvent = usePlausible();
   const handleOrder = (column: Exclude<Order["orderBy"], undefined>) => {
@@ -215,17 +208,19 @@ export default function Etablissements() {
     queryFn: async () => {
       if (!historiqueId) return;
       return (
-        await fetchEtablissements({
-          ...filters,
-          cfd: [historiqueId?.cfd],
-          codeDispositif: historiqueId?.codeDispositif
-            ? [historiqueId?.codeDispositif]
-            : undefined,
-          uai: [historiqueId.UAI],
-          limit: 2,
-          order: "desc",
-          orderBy: "rentreeScolaire",
-          rentreeScolaire: ["2021", "2020"],
+        await client.ref("[GET]/etablissements").query({
+          query: {
+            ...filters,
+            cfd: [historiqueId?.cfd],
+            codeDispositif: historiqueId?.codeDispositif
+              ? [historiqueId?.codeDispositif]
+              : undefined,
+            uai: [historiqueId.UAI],
+            limit: 2,
+            order: "desc",
+            orderBy: "rentreeScolaire",
+            rentreeScolaire: ["2021", "2020"],
+          },
         })
       ).etablissements;
     },
@@ -656,11 +651,9 @@ export default function Etablissements() {
       </Flex>
       <TableFooter
         onExport={async () => {
-          const data = await api
-            .getEtablissements({
-              query: { ...filters, ...order, limit: 10000000 },
-            })
-            .call();
+          const data = await client.ref("[GET]/etablissements").query({
+            query: { ...filters, ...order, limit: 10000000 },
+          });
           trackEvent("etablissements:export");
           downloadCsv(
             "etablissement_export.csv",

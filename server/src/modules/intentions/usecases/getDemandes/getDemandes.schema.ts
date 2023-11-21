@@ -1,0 +1,57 @@
+import { z } from "zod";
+
+const DemandesItem = z.object({
+  id: z.string(),
+  cfd: z.string().optional(),
+  libelleDiplome: z.string().optional(),
+  libelleEtablissement: z.string().optional(),
+  libelleDepartement: z.string().optional(),
+  libelleDispositif: z.string().optional(),
+  libelleFCIL: z.string().optional(),
+  uai: z.string().optional(),
+  createdAt: z.string(),
+  updatedAt: z.string(),
+  createurId: z.string(),
+  status: z.string(),
+  typeDemande: z.string().optional(),
+  compensationCfd: z.string().optional(),
+  compensationDispositifId: z.string().optional(),
+  compensationUai: z.string().optional(),
+  compensationRentreeScolaire: z.coerce.number().optional(),
+  idCompensation: z.string().optional(),
+  typeCompensation: z.string().optional(),
+  dispositifId: z.string().optional(),
+  rentreeScolaire: z.coerce.number().optional(),
+  motif: z.array(z.string()).optional(),
+  autreMotif: z.string().optional(),
+  libelleColoration: z.string().optional(),
+  coloration: z.boolean().optional(),
+  amiCma: z.boolean().optional(),
+  poursuitePedagogique: z.boolean().optional(),
+  commentaire: z.string().optional(),
+  mixte: z.boolean().optional(),
+  capaciteScolaireActuelle: z.coerce.number().optional(),
+  capaciteScolaire: z.coerce.number().optional(),
+  capaciteScolaireColoree: z.coerce.number().optional(),
+  capaciteApprentissageActuelle: z.coerce.number().optional(),
+  capaciteApprentissage: z.coerce.number().optional(),
+  capaciteApprentissageColoree: z.coerce.number().optional(),
+  codeRegion: z.string(),
+  codeAcademie: z.string().optional(),
+});
+
+export const getDemandesSchema = {
+  querystring: z.object({
+    status: z.enum(["draft", "submitted"]).optional(),
+    order: z.enum(["asc", "desc"]).optional(),
+    orderBy: DemandesItem.keyof().optional(),
+    offset: z.coerce.number().optional(),
+    limit: z.coerce.number().optional(),
+  }),
+  response: {
+    200: z.object({
+      count: z.coerce.number(),
+      demandes: z.array(DemandesItem),
+    }),
+  },
+};

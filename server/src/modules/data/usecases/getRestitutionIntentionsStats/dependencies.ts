@@ -5,17 +5,6 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { nbEtablissementFormationRegion } from "../../../data/queries/utils/nbEtablissementFormationRegion";
-import { selectTauxDevenirFavorable } from "../../../data/queries/utils/tauxDevenirFavorable";
-import {
-  selectTauxInsertion6mois,
-  selectTauxInsertion6moisAgg,
-} from "../../../data/queries/utils/tauxInsertion6mois";
-import {
-  selectTauxPoursuite,
-  selectTauxPoursuiteAgg,
-} from "../../../data/queries/utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "../../../data/queries/utils/tauxPression";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -24,8 +13,19 @@ import {
   isIntentionVisible,
   isRegionVisible,
 } from "../../../utils/isIntentionVisible";
-import { notHistoriqueIndicateurRegionSortie } from "../../queries/utils/notHistorique";
-import { getPositionCadran } from "../../queries/utils/positionCadran";
+import { nbEtablissementFormationRegion } from "../../utils/nbEtablissementFormationRegion";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { getPositionCadran } from "../../utils/positionCadran";
+import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
+import {
+  selectTauxInsertion6mois,
+  selectTauxInsertion6moisAgg,
+} from "../../utils/tauxInsertion6mois";
+import {
+  selectTauxPoursuite,
+  selectTauxPoursuiteAgg,
+} from "../../utils/tauxPoursuite";
+import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
 
 const findRestitutionIntentionsStatsInDB = async ({
   status,
@@ -701,10 +701,10 @@ const findFiltersInDb = async ({
         ]),
         motif
           ? eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              motif.map(
+                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              )
             )
-          )
           : sql`false`,
       ]);
     })
