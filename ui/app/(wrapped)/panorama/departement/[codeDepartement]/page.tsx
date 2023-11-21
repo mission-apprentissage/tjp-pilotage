@@ -4,7 +4,8 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api, client } from "../../../../../api.client";
+import { api, client } from "@/api.client";
+
 import { CadranSection } from "../../components/CadranSection";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";

@@ -1,16 +1,16 @@
 import { z } from "zod";
 
 const OptionSchema = z.object({
-  label: z.string(),
-  value: z.string(),
+  label: z.coerce.string(),
+  value: z.coerce.string(),
 });
 
 const StatsSchema = z.object({
-  effectif: z.number().optional(),
-  nbFormations: z.number().optional(),
-  nbEtablissements: z.number().optional(),
-  poursuite: z.number().optional(),
-  insertion: z.number().optional(),
+  effectif: z.coerce.number().optional(),
+  nbFormations: z.coerce.number().optional(),
+  nbEtablissements: z.coerce.number().optional(),
+  poursuite: z.coerce.number().optional(),
+  insertion: z.coerce.number().optional(),
 });
 
 const StatsAnneeSchema = z.object({

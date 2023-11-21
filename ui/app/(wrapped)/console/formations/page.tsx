@@ -18,9 +18,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
-import { ApiType } from "shared";
 
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -35,7 +34,7 @@ import {
   FormationLineLoader,
   FormationLinePlaceholder,
 } from "./components/LineContent";
-import { Filters, LineId, Order, Query } from "./types";
+import { Filters, LineId, Order } from "./types";
 
 const PAGE_SIZE = 30;
 
@@ -63,11 +62,8 @@ const FORMATIONS_COLUMNS = {
   "continuum.cfd": "Code diplôme historique",
   positionCadran: "Position dans le cadran",
 } satisfies ExportColumns<
-  ApiType<typeof api.getFormations>["formations"][number]
+  (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
-
-const fetchFormations = async (query: Query) =>
-  api.getFormations({ query }).call();
 
 export default function Formations() {
   const router = useRouter();
@@ -103,18 +99,17 @@ export default function Formations() {
     }
   }, []);
 
-  const { data, isFetching } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["formations", filters, order, page],
-    queryFn: () =>
-      fetchFormations({
+  const { data, isFetching } = client.ref("[GET]/formations").useQuery(
+    {
+      query: {
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
         ...filters,
-      }),
-  });
+      },
+    },
+    { keepPreviousData: true, staleTime: 10000000 }
+  );
 
   const trackEvent = usePlausible();
 
@@ -165,17 +160,19 @@ export default function Formations() {
     queryFn: async () => {
       if (!historiqueId) return;
       return (
-        await fetchFormations({
-          ...filters,
-          cfd: [historiqueId?.cfd],
-          codeDispositif: historiqueId?.codeDispositif
-            ? [historiqueId?.codeDispositif]
-            : undefined,
-          limit: 2,
-          order: "desc",
-          orderBy: "rentreeScolaire",
-          rentreeScolaire: ["2021", "2020"],
-          withEmptyFormations: false,
+        await client.ref("[GET]/formations").query({
+          query: {
+            ...filters,
+            cfd: [historiqueId?.cfd],
+            codeDispositif: historiqueId?.codeDispositif
+              ? [historiqueId?.codeDispositif]
+              : undefined,
+            limit: 2,
+            order: "desc",
+            orderBy: "rentreeScolaire",
+            rentreeScolaire: ["2021", "2020"],
+            withEmptyFormations: false,
+          },
         })
       ).formations;
     },
@@ -550,11 +547,9 @@ export default function Formations() {
       <TableFooter
         onExport={async () => {
           trackEvent("formations:export");
-          const data = await api
-            .getFormations({
-              query: { ...filters, ...order, limit: 1000000 },
-            })
-            .call();
+          const data = await client
+            .ref("[GET]/formations")
+            .query({ query: { ...filters, ...order, limit: 1000000 } });
           downloadCsv(
             "formations_export.csv",
             data.formations,

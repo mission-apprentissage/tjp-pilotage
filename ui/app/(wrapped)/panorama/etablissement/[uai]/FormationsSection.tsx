@@ -11,15 +11,14 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
 
 export const FormationsSection = ({
   formations,
   rentreeScolaire,
 }: {
-  formations?: ApiType<typeof api.getEtablissement>["formations"];
+  formations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
   rentreeScolaire?: string;
 }) => {
   return (
