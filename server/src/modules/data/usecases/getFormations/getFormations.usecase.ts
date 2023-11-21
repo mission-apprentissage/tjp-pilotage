@@ -9,43 +9,43 @@ const getFormationsFactory =
       findFiltersInDb: dependencies.findFiltersInDb,
     }
   ) =>
-    async (activeFilters: {
-      offset?: number;
-      limit?: number;
-      codeRegion?: string[];
-      codeAcademie?: string[];
-      codeDepartement?: string[];
-      codeDiplome?: string[];
-      codeDispositif?: string[];
-      commune?: string[];
-      cfd?: string[];
-      rentreeScolaire?: string[];
-      cfdFamille?: string[];
-      CPC?: string[];
-      CPCSecteur?: string[];
-      CPCSousSecteur?: string[];
-      libelleFiliere?: string[];
-      orderBy?: { order: "asc" | "desc"; column: string };
-      withEmptyFormations?: boolean;
-      positionQuadrant?: string;
-    }) => {
-      const [{ formations, count }, filters, statsSortie] = await Promise.all([
-        deps.findFormationsInDb(activeFilters),
-        deps.findFiltersInDb(activeFilters),
-        getStatsSortieParNiveauDiplome(activeFilters),
-      ]);
+  async (activeFilters: {
+    offset?: number;
+    limit?: number;
+    codeRegion?: string[];
+    codeAcademie?: string[];
+    codeDepartement?: string[];
+    codeDiplome?: string[];
+    codeDispositif?: string[];
+    commune?: string[];
+    cfd?: string[];
+    rentreeScolaire?: string[];
+    cfdFamille?: string[];
+    CPC?: string[];
+    CPCSecteur?: string[];
+    CPCSousSecteur?: string[];
+    libelleFiliere?: string[];
+    orderBy?: { order: "asc" | "desc"; column: string };
+    withEmptyFormations?: boolean;
+    positionQuadrant?: string;
+  }) => {
+    const [{ formations, count }, filters, statsSortie] = await Promise.all([
+      deps.findFormationsInDb(activeFilters),
+      deps.findFiltersInDb(activeFilters),
+      getStatsSortieParNiveauDiplome(activeFilters),
+    ]);
 
-      return {
-        count,
-        filters,
-        formations: formations.map((formation) => ({
-          ...formation,
-          positionQuadrant: getPositionQuadrant(
-            formation,
-            statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
-          ),
-        })),
-      };
+    return {
+      count,
+      filters,
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: getPositionQuadrant(
+          formation,
+          statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
+        ),
+      })),
     };
+  };
 
 export const getFormations = getFormationsFactory();

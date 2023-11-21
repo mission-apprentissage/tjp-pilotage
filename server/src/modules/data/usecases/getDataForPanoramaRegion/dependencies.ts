@@ -253,4 +253,4 @@ export const getFilters = async ({
   };
 };
 
-export const dependencies = { getFormationsRegion, getFilters }
+export const dependencies = { getFormationsRegion, getFilters };

@@ -3,7 +3,8 @@ import { client } from "@/api.client";
 export type QueryPanoramaFormation =
   | (typeof client.inferArgs)["[GET]/panorama/stats/region"]["query"]
   | (typeof client.inferArgs)["[GET]/panorama/stats/departement"]["query"];
-export type QueryPanoramaEtablissement = (typeof client.inferArgs)["[GET]/etablissement/:uai"]["query"];
+export type QueryPanoramaEtablissement =
+  (typeof client.inferArgs)["[GET]/etablissement/:uai"]["query"];
 
 export type PanoramaFormationRegion =
   (typeof client.infer)["[GET]/panorama/stats/region"]["formations"][number];

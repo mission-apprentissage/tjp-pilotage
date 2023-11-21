@@ -247,4 +247,4 @@ export const getFilters = async ({
   };
 };
 
-export const dependencies = { getFormationsDepartement, getFilters }
+export const dependencies = { getFormationsDepartement, getFilters };
