@@ -5,7 +5,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import {
   getMillesimeFromRentreeScolaire,
   getRentreeScolaire,
-} from "../../services/inserJeunesApi/formatMillesime";
+} from "../../services/formatMillesime";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,
