@@ -1,10 +1,9 @@
 import { createServerContext } from "react";
-import { ApiType } from "shared";
 
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 
 export const AuthContextServer = createServerContext<{
   auth?: {
-    user: ApiType<typeof api.whoAmI>["user"];
+    user: (typeof client.infer)["[GET]/auth/whoAmI"]["user"];
   };
 }>("authContext", {});
