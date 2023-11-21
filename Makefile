@@ -16,6 +16,9 @@ clean:
 typecheck:
 	yarn --cwd server typecheck && yarn --cwd ui typecheck
 
+prettier_fix:
+	yarn prettier:fix
+
 test:
 	yarn --cwd server test
 

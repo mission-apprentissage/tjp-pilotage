@@ -88,7 +88,7 @@ const TopFlopChart = ({
         </Text>
         <TooltipIcon
           ml="2"
-          label="Part des jeunes en emploi ou en poursuite d’étude"
+          label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
         />
       </Flex>
       <VStack alignItems="stretch" spacing="1">

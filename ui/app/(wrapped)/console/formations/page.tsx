@@ -449,7 +449,7 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
-                    label="Part des jeunes en emploi ou en poursuite d’étude."
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
                   />
                 </Th>
                 <Th

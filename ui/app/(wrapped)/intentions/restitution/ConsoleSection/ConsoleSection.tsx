@@ -252,7 +252,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.devenirFavorable}
                   <TooltipIcon
                     ml="2"
-                    label="Part des jeunes en emploi ou en poursuite d’étude pour cette formation à l'échelle régionale"
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale"
                   />
                 </Th>
                 <Th
