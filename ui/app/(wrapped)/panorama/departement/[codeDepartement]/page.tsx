@@ -1,10 +1,9 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api, client } from "@/api.client";
+import { client } from "@/api.client";
 
 import { CadranSection } from "../../components/CadranSection";
 import { FiltersSection } from "../../components/FiltersSection";
@@ -50,13 +49,12 @@ export default function Panorama({
       }
     );
 
-  const { data } = useQuery(
-    ["formationForPanorama", { codeDepartement }],
-    api.getDataForPanoramaDepartement({
-      query: { codeDepartement },
-    }).call,
-    { keepPreviousData: true, staleTime: 10000000 }
-  );
+  const { data } = client
+    .ref("[GET]/panorama/stats/departement")
+    .useQuery(
+      { query: { codeDepartement } },
+      { keepPreviousData: true, staleTime: 10000000 }
+    );
 
   return (
     <>
