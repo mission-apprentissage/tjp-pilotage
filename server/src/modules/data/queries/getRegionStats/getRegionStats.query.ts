@@ -50,13 +50,11 @@ export const getRegionStats = async ({
       "formationEtablissement.cfd"
     )
     .leftJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+      join.onRef(
+        "formationEtablissement.id",
+        "=",
+        "indicateurEntree.formationEtablissementId"
+      )
     )
     .innerJoin(
       "etablissement",
@@ -64,6 +62,7 @@ export const getRegionStats = async ({
       "etablissement.UAI"
     )
     .where("etablissement.codeRegion", "=", codeRegion)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;

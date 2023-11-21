@@ -62,13 +62,11 @@ export const getDepartementsStats = async ({
       "formationEtablissement.cfd"
     )
     .leftJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+      join.onRef(
+        "formationEtablissement.id",
+        "=",
+        "indicateurEntree.formationEtablissementId"
+      )
     )
     .innerJoin(
       "etablissement",
@@ -86,6 +84,7 @@ export const getDepartementsStats = async ({
       return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where(notHistorique)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",
       "departement.libelle as libelleDepartement",
