@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
+import { cleanNull } from "../../../../utils/noNull";
 
 export const findManyInDataFormationQuery = async ({
   search,
@@ -91,7 +92,7 @@ export const findManyInDataFormationQuery = async ({
         "481",
         "581",
       ])}`.as("isFCIL"),
-      sql<string>`
+      sql<string | null>`
         case when ${eb.ref("dataFormation.dateFermeture")} is not null
         then to_char(${eb.ref("dataFormation.dateFermeture")}, 'dd/mm/yyyy')
         else null
@@ -100,7 +101,8 @@ export const findManyInDataFormationQuery = async ({
     ])
     .distinctOn("dataFormation.cfd")
     .limit(20)
-    .execute();
+    .execute()
+    .then(cleanNull);
 
   return formations;
 };

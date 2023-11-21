@@ -9,9 +9,9 @@ export const searchDiplomeSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
-        isSpecialite: z.boolean(),
+        isSpecialite: z.coerce.boolean(),
         isFCIL: z.boolean(),
-        dateFermeture: z.string(),
+        dateFermeture: z.string().optional(),
         dispositifs: z
           .array(
             z.object({

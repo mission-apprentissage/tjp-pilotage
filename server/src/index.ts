@@ -2,6 +2,7 @@ import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
+import { ZodError } from "zod";
 
 import { config } from "../config/config";
 import { logger, loggerContextPlugin } from "./logger";
@@ -32,6 +33,15 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, _, reply) => {
+  if ("details" in error && error.details instanceof ZodError) {
+    logger.error(error.message, {
+      error,
+      details: error.details.errors,
+    });
+    reply.status(500).send({ error: "internal error", statusCode: 500 });
+    return;
+  }
+
   if (Boom.isBoom(error)) {
     reply
       .status(error.output.statusCode)
@@ -44,6 +54,8 @@ server.setErrorHandler((error, _, reply) => {
 
   if (!error.statusCode || error.statusCode >= 500) {
     logger.error(error.message, { error });
+    reply.status(500).send({ error: "internal error", statusCode: 500 });
+    return;
   }
 
   if (error.statusCode && error.statusCode < 500) {
