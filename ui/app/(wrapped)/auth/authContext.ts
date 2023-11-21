@@ -2,7 +2,9 @@ import { createContext } from "react";
 
 import { client } from "@/api.client";
 
-export type Auth = { user: (typeof client.infer)["[GET]/auth/whoAmI"]["user"] };
+export type Auth = {
+  user: Exclude<(typeof client.infer)["[GET]/auth/whoAmI"], undefined>["user"];
+};
 
 export const AuthContext = createContext<{
   auth?: Auth;
