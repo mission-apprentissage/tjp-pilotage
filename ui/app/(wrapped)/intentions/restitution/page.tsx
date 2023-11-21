@@ -1,15 +1,14 @@
 "use client";
 
 import { Box, Container, Flex } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
+import { client } from "@/api.client";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { api } from "../../../../api.client";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../utils/downloadCsv";
@@ -121,33 +120,36 @@ export default () => {
     });
   };
 
-  const { data, isLoading: isLoading } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["restitutionIntentionsStats", filters, order, page],
-    queryFn: api.getRestitutionIntentionsStats({
-      query: {
-        ...filters,
-        ...order,
-        offset: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
+  const { data, isLoading: isLoading } = client
+    .ref("[GET]/intentions/stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          ...order,
+          offset: page * PAGE_SIZE,
+          limit: PAGE_SIZE,
+        },
       },
-    }).call,
-  });
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const { data: countData, isLoading: isLoadingCount } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["countRestitutionIntentionsStats", filters],
-    queryFn: async () =>
-      api
-        .countRestitutionIntentionsStats({
-          query: {
-            ...filters,
-          },
-        })
-        .call(),
-  });
+  const { data: countData, isLoading: isLoadingCount } = client
+    .ref("[GET]/intentions/stats/count")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+        },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">
@@ -172,11 +174,9 @@ export default () => {
           pl="4"
           onExport={async () => {
             trackEvent("restitution-demandes:export");
-            const data = await api
-              .getRestitutionIntentionsStats({
-                query: { ...filters, ...order, limit: 10000000 },
-              })
-              .call();
+            const data = await client.ref("[GET]/intentions/stats").query({
+              query: { ...filters, ...order, limit: 10000000 },
+            });
             downloadCsv(
               "demandes_stats_export.csv",
               data.demandes.map((demande) => ({

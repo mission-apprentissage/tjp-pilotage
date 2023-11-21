@@ -16,7 +16,7 @@ import { OrderIcon } from "../../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import { Order, StatsDemandes } from "../types";
+import { Order, StatsIntentions } from "../types";
 import { LineContent } from "./LineContent";
 
 const Loader = () => (
@@ -62,7 +62,7 @@ export const ConsoleSection = ({
   order,
   handleOrder,
 }: {
-  data?: StatsDemandes;
+  data?: StatsIntentions;
   isLoading: boolean;
   order: Order;
   handleOrder: (column: Order["orderBy"]) => void;
@@ -316,15 +316,17 @@ export const ConsoleSection = ({
             </Thead>
             <Tbody>
               <Fragment>
-                {data?.demandes.map((demande: StatsDemandes["demandes"][0]) => {
-                  return (
-                    <Fragment key={`${demande.id}`}>
-                      <Tr h="12" _hover={{ bg: "blue.faded" }}>
-                        <LineContent demande={demande} />
-                      </Tr>
-                    </Fragment>
-                  );
-                })}
+                {data?.demandes.map(
+                  (demande: StatsIntentions["demandes"][0]) => {
+                    return (
+                      <Fragment key={`${demande.id}`}>
+                        <Tr h="12" _hover={{ bg: "blue.faded" }}>
+                          <LineContent demande={demande} />
+                        </Tr>
+                      </Fragment>
+                    );
+                  }
+                )}
               </Fragment>
             </Tbody>
           </Table>

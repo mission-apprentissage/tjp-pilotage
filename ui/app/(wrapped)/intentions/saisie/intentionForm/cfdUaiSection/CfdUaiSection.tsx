@@ -11,9 +11,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
@@ -36,7 +35,7 @@ export const CfdUaiSection = ({
   active: boolean;
   disabled?: boolean;
   defaultValues: PartialIntentionForms;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
@@ -46,13 +45,14 @@ export const CfdUaiSection = ({
   const { watch, getValues } = useFormContext<IntentionForms>();
 
   const [dispositifs, setDispositifs] = useState<
-    ApiType<typeof api.searchDiplome>[number]["dispositifs"] | undefined
+    | (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
+    | undefined
   >(formMetadata?.formation?.dispositifs);
 
   const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
-    ApiType<typeof api.searchEtab>[number] | undefined
+    (typeof client.infer)["[GET]/etab/search/:search"][number] | undefined
   >(
     formMetadata?.etablissement?.libelle && uai
       ? {

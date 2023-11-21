@@ -7,16 +7,16 @@ import { z } from "zod";
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
-import { importDataEtablissements } from "./modules/data/usecases/importDataEtablissements/importDataEtablissements.usecase";
-import { importDataFormations } from "./modules/data/usecases/importDataFormations/importDataFormations.usecase";
-import { importDispositifs } from "./modules/data/usecases/importDispositifs/importDispositifs.usecase";
-import { importFamillesMetiers } from "./modules/data/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
-import { importFormations } from "./modules/data/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
-import { importIndicateursAcademie } from "./modules/data/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
-import { importIndicateursRegion } from "./modules/data/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
-import { importNiveauxDiplome } from "./modules/data/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
-import { importRawFile } from "./modules/data/usecases/importRawFile/importRawFile.usecase";
-import { importLieuxGeographiques } from "./modules/data/usecases/importRegions/importLieuxGeographiques.usecase";
+import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
+import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
+import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
+import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
+import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importIndicateursAcademie } from "./modules/import/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
+import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
+import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
+import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
+import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();

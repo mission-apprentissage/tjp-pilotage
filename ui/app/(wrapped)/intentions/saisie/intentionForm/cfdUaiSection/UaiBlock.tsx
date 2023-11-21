@@ -1,8 +1,8 @@
 import { Box, FormControl, FormLabel, LightMode } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../../api.client";
+import { client } from "@/api.client";
+
 import { UaiAutocomplete } from "../../components/UaiAutocomplete";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -12,9 +12,11 @@ export const UaiBlock = ({
   setUaiInfo,
 }: {
   active: boolean;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   setUaiInfo: (
-    uaiInfo: ApiType<typeof api.searchEtab>[number] | undefined
+    uaiInfo:
+      | (typeof client.infer)["[GET]/etab/search/:search"][number]
+      | undefined
   ) => void;
 }) => {
   const {

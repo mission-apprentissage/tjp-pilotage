@@ -11,15 +11,15 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../api.client";
+import { client } from "@/api.client";
+
 import { CodeDepartementFilterContext } from "../../../layoutClient";
 
 export function PanoramaSelection({
   departementsOptions,
 }: {
-  departementsOptions: ApiType<typeof api.getDepartements>;
+  departementsOptions: (typeof client.infer)["[GET]/departements"];
 }) {
   const router = useRouter();
   const { codeDepartementFilter, setCodeDepartementFilter } = useContext(

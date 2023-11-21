@@ -17,16 +17,14 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { ApiType } from "shared";
 
 import { usePermission } from "@/utils/security/usePermission";
 
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableFooter } from "../../../../components/TableFooter";
@@ -68,14 +66,16 @@ const DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-} satisfies ExportColumns<ApiType<typeof api.getDemandes>["demandes"][number]>;
+} satisfies ExportColumns<
+  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
+>;
 
-export type Query = Parameters<typeof api.getDemandes>[0]["query"];
+export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
 export type Filters = Pick<Query, "status">;
 export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
-const fetchDemandes = async (query: Query) => api.getDemandes({ query }).call();
+// const fetchDemandes = async (query: Query) => api.getDemandes({ query }).call();
 
 export const PageClient = () => {
   const router = useRouter();
@@ -116,21 +116,20 @@ export const PageClient = () => {
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
-  const { data, isLoading } = useQuery({
-    keepPreviousData: true,
-    staleTime: 0,
-    queryKey: ["demandes", filters, order, page],
-    queryFn: () =>
-      fetchDemandes({
+  const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
+    {
+      query: {
         ...filters,
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
-      }),
-  });
+      },
+    },
+    { keepPreviousData: true, staleTime: 0 }
+  );
 
   const nouvelleCompensation = (
-    demandeCompensee: ApiType<typeof api.getDemandes>["demandes"][0]
+    demandeCompensee: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
   ) => {
     router.push(
       createParametrizedUrl(`${location.pathname}/new`, {
@@ -229,7 +228,7 @@ export const PageClient = () => {
                   <Tbody>
                     {data?.demandes.map(
                       (
-                        demande: ApiType<typeof api.getDemandes>["demandes"][0]
+                        demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
                       ) => (
                         <Tr
                           height={"60px"}
@@ -368,11 +367,9 @@ export const PageClient = () => {
                 pl="4"
                 onExport={async () => {
                   trackEvent("demandes:export");
-                  const data = await api
-                    .getDemandes({
-                      query: { ...filters, ...order, limit: 10000000 },
-                    })
-                    .call();
+                  const data = await client.ref("[GET]/demandes").query({
+                    query: { ...filters, ...order, limit: 10000000 },
+                  });
 
                   downloadCsv(
                     "export_demandes.csv",

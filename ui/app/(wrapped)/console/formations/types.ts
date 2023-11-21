@@ -1,7 +1,5 @@
-import { ApiType } from "shared";
-
-import { api } from "@/api.client";
-export type Query = Parameters<typeof api.getFormations>[0]["query"];
+import { client } from "@/api.client";
+export type Query = (typeof client.inferArgs)["[GET]/formations"]["query"];
 
 export type Filters = Pick<
   Query,
@@ -21,7 +19,8 @@ export type Filters = Pick<
 
 export type Order = Pick<Query, "order" | "orderBy">;
 
-export type Line = ApiType<typeof api.getFormations>["formations"][number];
+export type Line =
+  (typeof client.infer)["[GET]/formations"]["formations"][number];
 
 export type LineId = {
   codeDispositif?: string;

@@ -11,9 +11,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { Cadran } from "../../../../../components/Cadran";
 import { TableCadran } from "../../../../../components/TableCadran";
 import { FormationTooltipContent } from "./FormationTooltipContent";
@@ -34,7 +34,7 @@ export const CadranSection = ({
   codeNiveauDiplome,
   rentreeScolaire,
 }: {
-  cadranFormations?: ApiType<typeof api.getEtablissement>["formations"];
+  cadranFormations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
@@ -52,7 +52,7 @@ export const CadranSection = ({
         (
           item
         ): item is RequiredFields<
-          ApiType<typeof api.getEtablissement>["formations"][number],
+          (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number],
           "tauxInsertion6mois" | "tauxPoursuiteEtudes"
         > =>
           item.tauxInsertion6mois !== undefined &&

@@ -1,13 +1,10 @@
-import { ApiType } from "shared";
+import { client } from "../../../../api.client";
 
-import { api } from "../../../../api.client";
-
-export type StatsDemandesQuery = Parameters<
-  typeof api.getRestitutionIntentionsStats
->[0]["query"];
+export type StatsIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/intentions/stats"]["query"];
 
 export type Filters = Pick<
-  StatsDemandesQuery,
+  StatsIntentionsQuery,
   | "codeRegion"
   | "codeAcademie"
   | "codeDepartement"
@@ -28,16 +25,14 @@ export type Filters = Pick<
   | "compensation"
 >;
 
-export type Order = Pick<StatsDemandesQuery, "order" | "orderBy">;
+export type Order = Pick<StatsIntentionsQuery, "order" | "orderBy">;
 
-export type StatsDemandes = ApiType<typeof api.getRestitutionIntentionsStats>;
+export type StatsIntentions = (typeof client.infer)["[GET]/intentions/stats"];
 
 export type IndicateurType = "insertion" | "poursuite";
 
-export type CountStatsDemandesQuery = Parameters<
-  typeof api.countRestitutionIntentionsStats
->[0]["query"];
+export type CountStatsIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/intentions/stats/count"]["query"];
 
-export type CountStatsDemandes = ApiType<
-  typeof api.countRestitutionIntentionsStats
->;
+export type CountStatsIntentions =
+  (typeof client.infer)["[GET]/intentions/stats/count"];
