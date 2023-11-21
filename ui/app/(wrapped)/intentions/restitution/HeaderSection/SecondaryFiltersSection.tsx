@@ -6,7 +6,7 @@ import {
   getTypeDemandeLabel,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
-import { Filters, StatsDemandes } from "../types";
+import { Filters, StatsIntentions } from "../types";
 
 export const SecondaryFiltersSection = ({
   activeFilters,
@@ -17,7 +17,7 @@ export const SecondaryFiltersSection = ({
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   filterTracker: (filterName: keyof Filters) => () => void;
-  data?: StatsDemandes;
+  data?: StatsIntentions;
 }) => {
   const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
     if (motifLabel === "autre") return "Autre";

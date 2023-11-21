@@ -8,7 +8,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 
-import { client } from "../../../../../api.client";
+import { CountStatsIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 
 const CountCard = ({
   label,
@@ -82,7 +82,7 @@ const CountCard = ({
 export const CountersSection = ({
   countData,
 }: {
-  countData?: (typeof client.infer)["[GET]/intentions/stats/count"];
+  countData?: CountStatsIntentions;
 }) => {
   return (
     <>
