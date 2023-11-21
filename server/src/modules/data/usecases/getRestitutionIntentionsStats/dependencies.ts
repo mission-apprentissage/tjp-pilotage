@@ -15,12 +15,8 @@ import {
 } from "../../../utils/isIntentionVisible";
 import { nbEtablissementFormationRegion } from "../../utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
-import {
-  selectTauxInsertion6mois,
-} from "../../utils/tauxInsertion6mois";
-import {
-  selectTauxPoursuite,
-} from "../../utils/tauxPoursuite";
+import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
 
 const findRestitutionIntentionsStatsInDB = async ({
@@ -667,10 +663,10 @@ const findFiltersInDb = async ({
         ]),
         motif
           ? eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              motif.map(
+                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              )
             )
-          )
           : sql`false`,
       ]);
     })

@@ -33,7 +33,7 @@ const FormationSchema = z.object({
       libelle: z.string().optional(),
     })
     .optional(),
-})
+});
 
 export const getDataForPanoramaRegionSchema = {
   querystring: z.object({

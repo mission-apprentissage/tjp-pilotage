@@ -22,7 +22,6 @@ export const getRegionStats = async ({
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
-
   const informationsRegion = await kdb
     .selectFrom("region")
     .where("codeRegion", "=", codeRegion)

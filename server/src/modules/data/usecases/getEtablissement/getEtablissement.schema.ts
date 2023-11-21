@@ -1,10 +1,5 @@
 import { z } from "zod";
 
-
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
 const FormationSchema = z.object({
   cfd: z.string(),
   codeNiveauDiplome: z.string(),
