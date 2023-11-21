@@ -11,15 +11,14 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 
 export function PanoramaSelection({
   regionOptions,
 }: {
-  regionOptions: ApiType<typeof api.getRegions>;
+  regionOptions: (typeof client.infer)["[GET]/regions"];
 }) {
   const router = useRouter();
   const { codeRegionFilter, setCodeRegionFilter } = useContext(

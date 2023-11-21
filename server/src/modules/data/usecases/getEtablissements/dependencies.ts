@@ -3,15 +3,15 @@ import { ExpressionBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
-import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { notHistorique } from "../../queries/utils/notHistorique";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { selectTauxPression } from "../../queries/utils/tauxPression";
-import { selectTauxRemplissage } from "../../queries/utils/tauxRemplissage";
+import { capaciteAnnee } from "../../utils/capaciteAnnee";
+import { effectifAnnee } from "../../utils/effectifAnnee";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistorique } from "../../utils/notHistorique";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import { selectTauxPression } from "../../utils/tauxPression";
+import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
 const findEtablissementsInDb = async ({
   offset = 0,

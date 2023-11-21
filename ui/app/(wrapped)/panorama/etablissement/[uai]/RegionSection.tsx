@@ -1,12 +1,11 @@
 import { Box, Container, Heading, HStack, Text } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
 
 export const RegionSection = ({
   regionsStats,
 }: {
-  regionsStats?: ApiType<typeof api.getRegionStats>;
+  regionsStats?: (typeof client.infer)["[GET]/region/:codeRegion"];
 }) => {
   const formatedLibelleRegion = (libelleRegion: string): string => {
     const voyelles = "aeiiîouAEIÎOU";

@@ -7,9 +7,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../../api.client";
+import { client } from "@/api.client";
+
 import { IntentionForms } from "../defaultFormValues";
 
 export const DispositifBlock = ({
@@ -17,7 +17,7 @@ export const DispositifBlock = ({
   options,
 }: {
   active: boolean;
-  options?: ApiType<typeof api.searchDiplome>[number]["dispositifs"];
+  options?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"];
 }) => {
   const {
     formState: { errors },

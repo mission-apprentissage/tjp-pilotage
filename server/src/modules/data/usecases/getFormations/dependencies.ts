@@ -3,14 +3,14 @@ import { ExpressionBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { capaciteAnnee } from "../../queries/utils/capaciteAnnee";
-import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../queries/utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
+import { capaciteAnnee } from "../../utils/capaciteAnnee";
+import { effectifAnnee } from "../../utils/effectifAnnee";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../../utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 const findFormationsInDb = async ({
   offset = 0,
@@ -178,24 +178,24 @@ const findFormationsInDb = async ({
         cmpr("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations
           ? not(
-              exists(
-                selectFrom("formationEtablissement as fe")
-                  .select("cfd")
-                  .distinct()
-                  .innerJoin(
-                    "indicateurEntree",
-                    "id",
-                    "formationEtablissementId"
-                  )
-                  .where("rentreeScolaire", "in", rentreeScolaire)
-                  .whereRef(
-                    "fe.dispositifId",
-                    "=",
-                    "formationEtablissement.dispositifId"
-                  )
-                  .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
-              )
+            exists(
+              selectFrom("formationEtablissement as fe")
+                .select("cfd")
+                .distinct()
+                .innerJoin(
+                  "indicateurEntree",
+                  "id",
+                  "formationEtablissementId"
+                )
+                .where("rentreeScolaire", "in", rentreeScolaire)
+                .whereRef(
+                  "fe.dispositifId",
+                  "=",
+                  "formationEtablissement.dispositifId"
+                )
+                .whereRef("fe.cfd", "=", "formationEtablissement.cfd")
             )
+          )
           : sql`false`,
       ])
     )

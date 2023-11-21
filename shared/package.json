@@ -8,9 +8,10 @@
   "license": "MIT",
   "private": true,
   "dependencies": {
+    "@http-wizard/core": "^1.3.20",
     "@sinclair/typebox": "^0.25.21",
     "injecti": "^1.0.5",
-    "typebox-client": "^1.0.20"
+    "server": "*"
   },
   "devDependencies": {
     "axios": "1.3.5"

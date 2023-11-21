@@ -2,14 +2,15 @@ import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
+import { ZodError } from "zod";
 
 import { config } from "../config/config";
 import { logger, loggerContextPlugin } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
-import { registerFormationModule } from "./modules/data/index";
-import { registerIntentionsModule } from "./modules/intentions/index";
-import { server } from "./server";
+import { registerFormationModule } from "./modules/data";
+import { registerIntentionsModule } from "./modules/intentions";
+import { Server, server } from "./server";
 server.register(fastifyCors, {});
 
 server.register(fastifySwagger, {
@@ -32,6 +33,15 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, _, reply) => {
+  if ("details" in error && error.details instanceof ZodError) {
+    logger.error(error.message, {
+      error,
+      details: error.details.errors,
+    });
+    reply.status(500).send({ error: "internal error", statusCode: 500 });
+    return;
+  }
+
   if (Boom.isBoom(error)) {
     reply
       .status(error.output.statusCode)
@@ -44,6 +54,8 @@ server.setErrorHandler((error, _, reply) => {
 
   if (!error.statusCode || error.statusCode >= 500) {
     logger.error(error.message, { error });
+    reply.status(500).send({ error: "internal error", statusCode: 500 });
+    return;
   }
 
   if (error.statusCode && error.statusCode < 500) {
@@ -73,14 +85,19 @@ process.on("uncaughtExceptionMonitor", (error, origin) => {
 server.addHook("onRequest", extractUserInRequest);
 server.register(loggerContextPlugin);
 
-server.register(
-  async (instance) => {
-    registerCoreModule({ server: instance });
-    registerFormationModule({ server: instance });
-    registerIntentionsModule({ server: instance });
-  },
-  { prefix: "/api" }
-);
+const registerRoutes = (instance: Server) => {
+  return {
+    ...registerCoreModule({ server: instance }),
+    ...registerFormationModule({ server: instance }),
+    ...registerIntentionsModule({ server: instance }),
+  };
+};
+
+export type Router = ReturnType<typeof registerRoutes>;
+
+server.register(async (instance: Server) => registerRoutes(instance), {
+  prefix: "/api",
+});
 
 const cb = (error: Error | null) => {
   if (error) {

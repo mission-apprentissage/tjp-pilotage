@@ -1,8 +1,7 @@
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 
 export const UaiAutocomplete = ({
   name,
@@ -15,7 +14,9 @@ export const UaiAutocomplete = ({
   defaultValue?: { value: string; label?: string; commune?: string };
   active?: boolean;
   inError: boolean;
-  onChange: (value?: ApiType<typeof api.searchEtab>[number]) => void;
+  onChange: (
+    value?: (typeof client.infer)["[GET]/etab/search/:search"][number]
+  ) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -39,11 +40,13 @@ export const UaiAutocomplete = ({
         defaultValue &&
         ({
           ...defaultValue,
-        } as ApiType<typeof api.searchEtab>[0])
+        } as (typeof client.infer)["[GET]/etab/search/:search"][0])
       }
       loadOptions={(inputValue: string) => {
         if (inputValue.length >= 3)
-          return api.searchEtab({ params: { search: inputValue } }).call();
+          return client
+            .ref("[GET]/etab/search/:search")
+            .query({ params: { search: inputValue } });
       }}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3

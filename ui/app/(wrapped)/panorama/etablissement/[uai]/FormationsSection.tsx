@@ -12,9 +12,8 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -43,7 +42,7 @@ export const FormationsSection = ({
   isLoading,
   rentreeScolaire,
 }: {
-  formations?: ApiType<typeof api.getEtablissement>["formations"];
+  formations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
   isLoading: boolean;
   rentreeScolaire?: string;
 }) => {
@@ -73,9 +72,7 @@ export const FormationsSection = ({
               </Thead>
               <Tbody>
                 {formations?.map((formation) => (
-                  <Tr
-                    key={`${formation.codeFormationDiplome}_${formation.dispositifId}`}
-                  >
+                  <Tr key={`${formation.cfd}_${formation.dispositifId}`}>
                     <Td>{formation.libelleDiplome}</Td>
                     <Td>{formation.libelleNiveauDiplome}</Td>
                     <Td isNumeric>{formation.effectif}</Td>

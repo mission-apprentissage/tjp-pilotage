@@ -9,45 +9,45 @@ const getEtablissementsFactory =
       findFiltersInDb: dependencies.findFiltersInDb,
     }
   ) =>
-  async (activeFilters: {
-    offset?: number;
-    limit?: number;
-    codeRegion?: string[];
-    codeAcademie?: string[];
-    codeDepartement?: string[];
-    codeDiplome?: string[];
-    codeDispositif?: string[];
-    commune?: string[];
-    cfd?: string[];
-    cfdFamille?: string[];
-    uai?: string[];
-    secteur?: string[];
-    orderBy?: { order: "asc" | "desc"; column: string };
-  }) => {
-    const [{ etablissements, count }, filters, statsSortie] = await Promise.all(
-      [
-        deps.findEtablissementsInDb(activeFilters),
-        deps.findFiltersInDb(activeFilters),
-        getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
-      ]
-    );
+    async (activeFilters: {
+      offset?: number;
+      limit?: number;
+      codeRegion?: string[];
+      codeAcademie?: string[];
+      codeDepartement?: string[];
+      codeDiplome?: string[];
+      codeDispositif?: string[];
+      commune?: string[];
+      cfd?: string[];
+      cfdFamille?: string[];
+      uai?: string[];
+      secteur?: string[];
+      orderBy?: { order: "asc" | "desc"; column: string };
+    }) => {
+      const [{ etablissements, count }, filters, statsSortie] = await Promise.all(
+        [
+          deps.findEtablissementsInDb(activeFilters),
+          deps.findFiltersInDb(activeFilters),
+          getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
+        ]
+      );
 
-    return {
-      count,
-      filters,
-      etablissements: etablissements.map((etablissement) => ({
-        ...etablissement,
-        positionQuadrant:
-          statsSortie && statsSortie[etablissement.codeRegion ?? ""]
-            ? getPositionQuadrant(
+      return {
+        count,
+        filters,
+        etablissements: etablissements.map((etablissement) => ({
+          ...etablissement,
+          positionQuadrant:
+            statsSortie && statsSortie[etablissement.codeRegion ?? ""]
+              ? getPositionQuadrant(
                 etablissement,
                 statsSortie[etablissement.codeRegion ?? ""][
-                  etablissement.codeNiveauDiplome ?? ""
+                etablissement.codeNiveauDiplome ?? ""
                 ] || {}
               )
-            : "Hors quadrant",
-      })),
+              : "Hors quadrant",
+        })),
+      };
     };
-  };
 
 export const getEtablissements = getEtablissementsFactory();

@@ -2,16 +2,16 @@ import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
-import { effectifAnnee } from "../../queries/utils/effectifAnnee";
-import { hasContinuum } from "../../queries/utils/hasContinuum";
-import { notHistorique } from "../../queries/utils/notHistorique";
-import { withTauxDevenirFavorableReg } from "../../queries/utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../queries/utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../queries/utils/tauxPoursuite";
-import { selectTauxPression } from "../../queries/utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../queries/utils/tauxRemplissage";
 import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
+import { effectifAnnee } from "../../utils/effectifAnnee";
+import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistorique } from "../../utils/notHistorique";
+import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import { selectTauxPression } from "../../utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 const getEtablissementInDb = async ({
   uai,
@@ -88,7 +88,7 @@ const getEtablissementInDb = async ({
               )
           )
           .select((sb) => [
-            "formationEtablissement.cfd as codeFormationDiplome",
+            "formationEtablissement.cfd as cfd",
             "formationEtablissement.dispositifId",
             "libelleDispositif",
             "formation.codeNiveauDiplome",

@@ -16,7 +16,7 @@ import { useRouter } from "next/navigation";
 import { useForm } from "react-hook-form";
 
 import { passwordRegex } from "../../../../../shared/utils/passwordRegex";
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 
 export const ActivateAccountForm = ({
   activationToken,
@@ -40,7 +40,9 @@ export const ActivateAccountForm = ({
     isLoading,
   } = useMutation({
     mutationFn: handleSubmit(async (values) => {
-      await api.activateUser({ body: { ...values, activationToken } }).call();
+      await client
+        .ref("[POST]/auth/activate")
+        .query({ body: { ...values, activationToken } });
       router.replace("/auth/activer-compte/confirmation");
     }),
   });

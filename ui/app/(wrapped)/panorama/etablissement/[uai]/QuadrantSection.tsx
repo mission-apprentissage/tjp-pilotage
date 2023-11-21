@@ -13,9 +13,9 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { Quadrant } from "../../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../../components/TableQuadrant";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
@@ -46,8 +46,8 @@ export const QuadrantSection = ({
   order,
   handleOrder,
 }: {
-  quadrantFormations?: ApiType<typeof api.getEtablissement>["formations"];
   isLoading: boolean;
+  quadrantFormations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
@@ -67,7 +67,7 @@ export const QuadrantSection = ({
         (
           item
         ): item is RequiredFields<
-          ApiType<typeof api.getEtablissement>["formations"][number],
+          (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number],
           "tauxInsertion" | "tauxPoursuite"
         > =>
           item.tauxInsertion !== undefined &&
@@ -110,7 +110,7 @@ export const QuadrantSection = ({
                   })),
                   {
                     libelleDiplome: "Formation",
-                    codeFormationDiplome: "CFD",
+                    cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
@@ -154,9 +154,7 @@ export const QuadrantSection = ({
                     tauxInsertion: formation.tauxInsertion,
                     tauxPoursuite: formation.tauxPoursuite,
                   }))}
-                  itemId={(item) =>
-                    item.codeFormationDiplome + item.dispositifId
-                  }
+                  itemId={(item) => item.cfd + item.dispositifId}
                   effectifSizes={effectifSizes}
                 />
               ) : (

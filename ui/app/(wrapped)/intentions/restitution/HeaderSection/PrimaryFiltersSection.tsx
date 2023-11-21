@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../../components/Multiselect";
-import { Filters, StatsDemandes } from "../types";
+import { Filters, StatsIntentions } from "../types";
 
 export const PrimaryFiltersSection = ({
   activeFilters,
@@ -21,7 +21,7 @@ export const PrimaryFiltersSection = ({
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   filterTracker: (filterName: keyof Filters) => () => void;
   isLoading: boolean;
-  data?: StatsDemandes;
+  data?: StatsIntentions;
 }) => {
   return (
     <>

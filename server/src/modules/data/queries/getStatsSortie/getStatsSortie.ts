@@ -1,7 +1,7 @@
 import { kdb } from "../../../../db/db";
-import { notHistoriqueIndicateurRegionSortie } from "../utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../utils/tauxPoursuite";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
+import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
 const getStatsSortieBase = ({
   codeRegion,

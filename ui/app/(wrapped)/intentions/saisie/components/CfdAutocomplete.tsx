@@ -1,9 +1,8 @@
 import { Flex, Tag } from "@chakra-ui/react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 
 export const cfdRegex = /^[0-9]{8}$/;
 
@@ -18,7 +17,9 @@ export const CfdAutocompleteInput = ({
   defaultValue?: { value: string; label: string };
   active?: boolean;
   inError: boolean;
-  onChange: (value?: ApiType<typeof api.searchDiplome>[number]) => void;
+  onChange: (
+    value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]
+  ) => void;
 }) => {
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
@@ -46,11 +47,13 @@ export const CfdAutocompleteInput = ({
           isFCIL: false,
           dateFermeture: "",
           dispositifs: [],
-        } as ApiType<typeof api.searchDiplome>[0])
+        } as (typeof client.infer)["[GET]/diplome/search/:search"][number])
       }
       loadOptions={(search) => {
         if (search.length >= 3)
-          return api.searchDiplome({ params: { search } }).call();
+          return client
+            .ref("[GET]/diplome/search/:search")
+            .query({ params: { search } });
       }}
       formatOptionLabel={(option) => {
         return (

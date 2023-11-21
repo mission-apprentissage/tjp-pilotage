@@ -1,6 +1,5 @@
-import { ApiType } from "shared";
+import { client } from "@/api.client";
 
-import { api } from "../../../../api.client";
 import { ExportColumns } from "../../../../utils/downloadCsv";
 
 export const STATS_DEMANDES_COLUMNS = {
@@ -48,5 +47,5 @@ export const STATS_DEMANDES_COLUMNS = {
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
 } satisfies ExportColumns<
-  ApiType<typeof api.getRestitutionIntentionsStats>["demandes"][number]
+  (typeof client.infer)["[GET]/intentions/stats"]["demandes"][number]
 >;

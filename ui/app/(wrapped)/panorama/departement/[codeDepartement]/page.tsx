@@ -1,10 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
@@ -69,38 +69,41 @@ export default function Panorama({
     router.push(`/panorama/departement/${codeDepartement}`);
   };
 
-  const { data: departementsOptions } = useQuery(
-    ["departements"],
-    api.getDepartements({}).call,
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
+  const { data: departementsOptions } = client
+    .ref("[GET]/departements")
+    .useQuery(
+      {},
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const { data: stats } = useQuery(
-    ["departement", codeDepartement, filters],
-    api.getDepartementStats({
-      params: { codeDepartement },
-      query: { ...filters },
-    }).call,
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
-
-  const { data, isLoading } = useQuery(
-    ["formationForPanorama", codeDepartement, order, filters],
-    api.getDataForPanoramaDepartement({
-      query: {
-        codeDepartement,
-        ...order,
-        ...filters,
+  const { data: stats } = client
+    .ref("[GET]/departement/:codeDepartement")
+    .useQuery(
+      {
+        params: { codeDepartement },
+        query: { ...filters },
       },
-    }).call,
-    { keepPreviousData: true, staleTime: 10000000 }
-  );
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
+
+  const { data, isLoading } = client
+    .ref("[GET]/panorama/stats/departement")
+    .useQuery(
+      {
+        query: {
+          codeDepartement,
+          ...order,
+          ...filters,
+        },
+      },
+      { keepPreviousData: true, staleTime: 10000000 }
+    );
 
   return (
     <>

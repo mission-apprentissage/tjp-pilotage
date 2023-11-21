@@ -1,34 +1,24 @@
-import { ApiType } from "shared";
-
-import { api } from "@/api.client";
+import { client } from "@/api.client";
 
 export type QueryPanoramaFormation =
-  | Parameters<typeof api.getDataForPanoramaRegion>[0]["query"]
-  | Parameters<typeof api.getDataForPanoramaDepartement>[0]["query"];
-export type QueryPanoramaEtablissement = Parameters<
-  typeof api.getEtablissement
->[0]["query"];
+  | (typeof client.inferArgs)["[GET]/panorama/stats/region"]["query"]
+  | (typeof client.inferArgs)["[GET]/panorama/stats/departement"]["query"];
+export type QueryPanoramaEtablissement = (typeof client.inferArgs)["[GET]/etablissement/:uai"]["query"];
 
-export type PanoramaFormationRegion = ApiType<
-  typeof api.getDataForPanoramaRegion
->["formations"][number];
-export type PanoramaFormationsRegion = ApiType<
-  typeof api.getDataForPanoramaRegion
->["formations"];
+export type PanoramaFormationRegion =
+  (typeof client.infer)["[GET]/panorama/stats/region"]["formations"][number];
+export type PanoramaFormationsRegion =
+  (typeof client.infer)["[GET]/panorama/stats/region"]["formations"];
 
-export type PanoramaFormationDepartement = ApiType<
-  typeof api.getDataForPanoramaDepartement
->["formations"][number];
-export type PanoramaFormationsDepartement = ApiType<
-  typeof api.getDataForPanoramaDepartement
->["formations"];
+export type PanoramaFormationDepartement =
+  (typeof client.infer)["[GET]/panorama/stats/departement"]["formations"][number];
+export type PanoramaFormationsDepartement =
+  (typeof client.infer)["[GET]/panorama/stats/departement"]["formations"];
 
-export type PanoramaFormationEtablissement = ApiType<
-  typeof api.getEtablissement
->["formations"][number];
-export type PanoramaFormationsEtablissement = ApiType<
-  typeof api.getEtablissement
->["formations"];
+export type PanoramaFormationEtablissement =
+  (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number];
+export type PanoramaFormationsEtablissement =
+  (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
 
 export type PanoramaFormation =
   | PanoramaFormationRegion
@@ -38,10 +28,10 @@ export type PanoramaFormations =
   | PanoramaFormationsRegion
   | PanoramaFormationsDepartement;
 
-export type StatsFormationsRegion = ApiType<typeof api.getRegionStats>;
-export type StatsFormationsDepartement = ApiType<
-  typeof api.getDepartementStats
->;
+export type StatsFormationsRegion =
+  (typeof client.infer)["[GET]/region/:codeRegion"];
+export type StatsFormationsDepartement =
+  (typeof client.infer)["[GET]/departement/:codeDepartement"];
 export type StatsFormations =
   | StatsFormationsRegion
   | StatsFormationsDepartement;

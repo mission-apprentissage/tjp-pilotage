@@ -1,10 +1,9 @@
 import { Box, Divider, Fade, Flex, Heading } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 
+import { client } from "@/api.client";
 import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/typeDemandeSection/MotifField";
 
-import { api } from "../../../../../../api.client";
 import {
   getTypeDemandeExemple,
   getTypeDemandeLabel,
@@ -20,7 +19,7 @@ export const TypeDemandeSection = ({
   formMetadata,
   disabled,
 }: {
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   disabled?: boolean;
 }) => {
   const { watch } = useFormContext<IntentionForms>();

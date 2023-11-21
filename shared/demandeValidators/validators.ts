@@ -1,8 +1,10 @@
-import { Static } from "@sinclair/typebox";
+import { Args, ZodTypeProvider } from "@http-wizard/core";
+import { Router } from "server";
 
-import { intentionsSchemas } from "../client/intentions/intentions.schema";
-
-type Demande = Static<typeof intentionsSchemas.submitDemande.body>["demande"];
+type Demande = Args<
+  Router["[POST]/demande/submit"]["schema"],
+  ZodTypeProvider
+>["body"]["demande"];
 
 export const isTypeFermeture = (typeDemande: string) =>
   ["fermeture"].includes(typeDemande);
