@@ -1,4 +1,5 @@
-import { client } from "../../../../api.client";
+import { client } from "@/api.client";
+
 import { PanoramaSelection } from "./PanoramaSelection";
 
 export const revalidate = 0;

@@ -6,9 +6,9 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
+import { client } from "@/api.client";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { api, client } from "../../../../api.client";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../utils/downloadCsv";
@@ -174,11 +174,9 @@ export default () => {
           pl="4"
           onExport={async () => {
             trackEvent("restitution-demandes:export");
-            const data = await api
-              .getRestitutionIntentionsStats({
-                query: { ...filters, ...order, limit: 10000000 },
-              })
-              .call();
+            const data = await client.ref("[GET]/intentions/stats").query({
+              query: { ...filters, ...order, limit: 10000000 },
+            });
             downloadCsv(
               "demandes_stats_export.csv",
               data.demandes.map((demande) => ({

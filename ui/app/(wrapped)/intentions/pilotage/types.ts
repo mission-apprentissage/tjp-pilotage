@@ -1,14 +1,10 @@
-import { ApiType } from "shared";
+import { client } from "@/api.client";
 
-import { api } from "../../../../api.client";
+export type PilotageTransformationStatsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-transformation/stats"]["query"];
 
-export type PilotageTransformationStatsQuery = Parameters<
-  typeof api.getTransformationStats
->[0]["query"];
-
-export type PilotageTransformationStats = ApiType<
-  typeof api.getTransformationStats
->;
+export type PilotageTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/stats"];
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
   "rentreeScolaire" | "filiere" | "codeNiveauDiplome"
@@ -26,13 +22,11 @@ export type TerritoiresFilters = {
   departements?: string;
 };
 
-export type FormationsTransformationStatsQuery = Parameters<
-  typeof api.getFormationsTransformationStats
->[0]["query"];
+export type FormationsTransformationStatsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-transformation/formations"]["query"];
 
-export type FormationsTransformationStats = ApiType<
-  typeof api.getFormationsTransformationStats
->;
+export type FormationsTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/formations"];
 
 export type OrderFormationsTransformationStats = Pick<
   FormationsTransformationStatsQuery,

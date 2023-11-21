@@ -1,16 +1,15 @@
 "use client";
 import { Box, Text } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
+import { client } from "@/api.client";
 import { GraphWrapper } from "@/components/GraphWrapper";
 
-import { api } from "../../../../../api.client";
 import { InfoBlock } from "../../../../../components/InfoBlock";
 
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation: ApiType<typeof api.getEtablissement>["formations"][number];
+  formation: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number];
 }) => (
   <Box bg="white" fontSize="xs">
     <InfoBlock

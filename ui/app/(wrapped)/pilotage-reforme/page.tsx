@@ -1,13 +1,13 @@
 "use client";
 
 import { Box, Container, SimpleGrid } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 
-import { api } from "../../../api.client";
+import { client } from "@/api.client";
+
 import { createParametrizedUrl } from "../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../utils/security/withAuth";
 import { CartoSection } from "./components/CartoSection";
@@ -68,28 +68,34 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     });
   };
 
-  const { data, isLoading: isLoading } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["pilotageReforme", filters],
-    queryFn: api.getPilotageReformeStats({
-      query: {
-        ...filters,
+  const { data, isLoading: isLoading } = client
+    .ref("[GET]/pilotage-reforme/stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+        },
       },
-    }).call,
-  });
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const { data: dataRegions, isLoading: isLoadingRegions } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["pilotageReformeRegions", filters, order],
-    queryFn: api.getPilotageReformeStatsRegions({
-      query: {
-        ...filters,
-        ...order,
+  const { data: dataRegions, isLoading: isLoadingRegions } = client
+    .ref("[GET]/pilotage-reforme/stats/regions")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          ...order,
+        },
       },
-    }).call,
-  });
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   const isFiltered = filters.codeRegion;
 

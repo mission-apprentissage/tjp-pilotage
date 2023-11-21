@@ -16,7 +16,6 @@ import {
   useRef,
   useState,
 } from "react";
-import { z } from "zod";
 
 import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
 
@@ -31,7 +30,6 @@ const useTracking = () => {
         (typeof localStorage !== "undefined" &&
           localStorage.getItem("notracking") === "true"))
   );
-  console.log(z);
   useEffect(() => {
     if (param === "reset") {
       localStorage.removeItem("notracking");

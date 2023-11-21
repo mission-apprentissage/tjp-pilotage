@@ -1,10 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { CadranSection } from "../../components/CadranSection";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
@@ -26,32 +26,29 @@ export default function Panorama({
   const [codeNiveauDiplome, setCodeNiveauDiplome] = useState<string[]>();
   const [libelleFiliere, setLibelleFiliere] = useState<string[]>();
 
-  const { data: regionOptions } = useQuery(
-    ["regions"],
-    api.getRegions({}).call,
+  const { data: regionOptions } = client.ref("[GET]/regions").useQuery(
+    {},
     {
       keepPreviousData: true,
       staleTime: 10000000,
     }
   );
 
-  const { data: stats } = useQuery(
-    ["region", codeRegion, codeNiveauDiplome],
-    api.getRegionStats({
+  const { data: stats } = client.ref("[GET]/region/:codeRegion").useQuery(
+    {
       params: { codeRegion },
       query: { codeDiplome: codeNiveauDiplome },
-    }).call,
+    },
     {
       keepPreviousData: true,
       staleTime: 10000000,
     }
   );
 
-  const { data } = useQuery(
-    ["formationForPanorama", { codeRegion }],
-    api.getDataForPanoramaRegion({
+  const { data } = client.ref("[GET]/panorama/stats/region").useQuery(
+    {
       query: { codeRegion },
-    }).call,
+    },
     { keepPreviousData: true, staleTime: 10000000 }
   );
 
