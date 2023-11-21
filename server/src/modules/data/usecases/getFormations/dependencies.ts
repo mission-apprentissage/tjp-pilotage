@@ -6,6 +6,13 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistorique } from "../../utils/notHistorique";
+import {
+  notPerimetreIJAcademie,
+  notPerimetreIJDepartement,
+  notPerimetreIJEtablissement,
+  notPerimetreIJRegion,
+} from "../../utils/notPerimetreIJ";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -168,18 +175,16 @@ const findFormationsInDb = async ({
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
     ])
-    .where(
-      "codeFormationDiplome",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
-    .where(({ or, cmpr, selectFrom, exists, not }) =>
-      or([
-        cmpr("indicateurEntree.rentreeScolaire", "is not", null),
+    .where(notHistorique)
+    .where(notPerimetreIJEtablissement)
+    .where((eb) =>
+      eb.or([
+        eb("indicateurEntree.rentreeScolaire", "is not", null),
         withEmptyFormations
-          ? not(
-              exists(
-                selectFrom("formationEtablissement as fe")
+          ? eb.not(
+              eb.exists(
+                eb
+                  .selectFrom("formationEtablissement as fe")
                   .select("cfd")
                   .distinct()
                   .innerJoin(
@@ -352,68 +357,70 @@ const findFiltersInDb = async ({
 
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
-    return eb.cmpr("academie.codeAcademie", "in", codeAcademie);
+    return eb("academie.codeAcademie", "in", codeAcademie);
   };
   const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
     if (!codeDepartement) return sql<true>`true`;
-    return eb.cmpr("departement.codeDepartement", "in", codeDepartement);
+    return eb("departement.codeDepartement", "in", codeDepartement);
   };
 
   const inCommune = (eb: ExpressionBuilder<DB, "etablissement">) => {
     if (!commune) return sql<true>`true`;
-    return eb.cmpr("etablissement.commune", "in", commune);
+    return eb("etablissement.commune", "in", commune);
   };
 
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<true>`true`;
-    return eb.cmpr("region.codeRegion", "in", codeRegion);
+    return eb("region.codeRegion", "in", codeRegion);
   };
 
   const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille);
+    return eb("familleMetier.cfdFamille", "in", cfdFamille);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!cfd) return sql<true>`true`;
-    return eb.cmpr("formation.codeFormationDiplome", "in", cfd);
+    return eb("formation.codeFormationDiplome", "in", cfd);
   };
 
   const inCodeDiplome = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!codeDiplome) return sql<true>`true`;
-    return eb.cmpr("formation.codeNiveauDiplome", "in", codeDiplome);
+    return eb("formation.codeNiveauDiplome", "in", codeDiplome);
   };
 
   const inCodeDispositif = (
     eb: ExpressionBuilder<DB, "formationEtablissement">
   ) => {
     if (!codeDispositif) return sql<true>`true`;
-    return eb.cmpr("formationEtablissement.dispositifId", "in", codeDispositif);
+    return eb("formationEtablissement.dispositifId", "in", codeDispositif);
   };
 
   const inCPC = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!CPC) return sql<true>`true`;
-    return eb.cmpr("formation.CPC", "in", CPC);
+    return eb("formation.CPC", "in", CPC);
   };
 
   const inCPCSecteur = (eb: ExpressionBuilder<DB, "formation">) => {
     if (!CPCSecteur) return sql<true>`true`;
-    return eb.cmpr("formation.CPCSecteur", "in", CPCSecteur);
+    return eb("formation.CPCSecteur", "in", CPCSecteur);
   };
 
   const regions = await base
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
+    .where(notPerimetreIJRegion)
     .execute();
 
   const academies = await base
     .select(["academie.libelle as label", "academie.codeAcademie as value"])
     .where("academie.codeAcademie", "is not", null)
+    .where(notPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
         codeAcademie
-          ? eb.cmpr("academie.codeAcademie", "in", codeAcademie)
+          ? eb("academie.codeAcademie", "in", codeAcademie)
           : sql`false`,
       ]);
     })
@@ -425,11 +432,12 @@ const findFiltersInDb = async ({
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)
+    .where(notPerimetreIJDepartement)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
         codeDepartement
-          ? eb.cmpr("departement.codeDepartement", "in", codeDepartement)
+          ? eb("departement.codeDepartement", "in", codeDepartement)
           : sql`false`,
       ]);
     })
@@ -444,7 +452,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
-        commune ? eb.cmpr("etablissement.commune", "in", commune) : sql`false`,
+        commune ? eb("etablissement.commune", "in", commune) : sql`false`,
       ]);
     })
     .execute();
@@ -459,7 +467,7 @@ const findFiltersInDb = async ({
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDispositif(eb)]),
         codeDiplome
-          ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
           : sql`false`,
       ]);
     })
@@ -475,7 +483,7 @@ const findFiltersInDb = async ({
       return eb.or([
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDiplome(eb)]),
         codeDiplome
-          ? eb.cmpr("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
+          ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
           : sql`false`,
       ]);
     })
@@ -491,7 +499,7 @@ const findFiltersInDb = async ({
       return eb.or([
         eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
         cfdFamille
-          ? eb.cmpr("familleMetier.cfdFamille", "in", cfdFamille)
+          ? eb("familleMetier.cfdFamille", "in", cfdFamille)
           : sql`false`,
       ]);
     })
@@ -507,7 +515,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
-        cfd ? eb.cmpr("formation.codeFormationDiplome", "in", cfd) : sql`false`,
+        cfd ? eb("formation.codeFormationDiplome", "in", cfd) : sql`false`,
       ]);
     })
     .execute();
@@ -518,7 +526,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([]),
-        CPC ? eb.cmpr("formation.CPC", "in", CPC) : sql`false`,
+        CPC ? eb("formation.CPC", "in", CPC) : sql`false`,
       ]);
     })
     .execute();
@@ -529,9 +537,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCPC(eb)]),
-        CPCSecteur
-          ? eb.cmpr("formation.CPCSecteur", "in", CPCSecteur)
-          : sql`false`,
+        CPCSecteur ? eb("formation.CPCSecteur", "in", CPCSecteur) : sql`false`,
       ]);
     })
     .execute();
@@ -546,7 +552,7 @@ const findFiltersInDb = async ({
       return eb.or([
         eb.and([inCPC(eb), inCPCSecteur(eb)]),
         CPCSousSecteur
-          ? eb.cmpr("formation.CPCSousSecteur", "in", CPCSousSecteur)
+          ? eb("formation.CPCSousSecteur", "in", CPCSousSecteur)
           : sql`false`,
       ]);
     })
