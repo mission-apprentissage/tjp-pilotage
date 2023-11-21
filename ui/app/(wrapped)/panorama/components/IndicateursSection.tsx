@@ -129,7 +129,9 @@ export const IndicateursSection = ({
               }
             />
             <StatCard
-              label="Taux de remplissage dans votre région"
+              label={`Taux de remplissage dans votre ${
+                typeTerritoire === "region" ? "région" : "département"
+              }`}
               value={
                 stats?.tauxRemplissage ? `${stats.tauxRemplissage}%` : undefined
               }
