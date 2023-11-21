@@ -1,15 +1,13 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import qs from "qs";
 
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 
-export type Query = Parameters<typeof api.getDemandes>[0]["query"];
+export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
 export type Filters = Pick<Query, "status">;
-const fetchCountDemandes = async () => api.countDemandes({}).call();
 
 export const MenuIntention = ({
   isRecapView = false,
@@ -30,12 +28,13 @@ export const MenuIntention = ({
       ? searchParams.filters?.status[0]
       : "";
 
-  const { data: countDemandes } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["countDemandes"],
-    queryFn: fetchCountDemandes,
-  });
+  const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
+    {},
+    {
+      keepPreviousData: true,
+      staleTime: 10000000,
+    }
+  );
 
   return (
     <Flex direction="column" pr={4} minW={250}>

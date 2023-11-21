@@ -1,10 +1,10 @@
 "use client";
 
-import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
@@ -69,38 +69,37 @@ export default function Panorama({
     router.push(`/panorama/region/${codeRegion}`);
   };
 
-  const { data: regionOptions } = useQuery(
-    ["regions"],
-    api.getRegions({}).call,
+  const { data: regionOptions } = client.ref("[GET]/regions").useQuery(
+    {},
     {
       keepPreviousData: true,
       staleTime: 10000000,
     }
   );
 
-  const { data: stats } = useQuery(
-    ["region", codeRegion, filters],
-    api.getRegionStats({
+  const { data: stats } = client.ref("[GET]/region/:codeRegion").useQuery(
+    {
       params: { codeRegion },
       query: { ...filters },
-    }).call,
+    },
     {
       keepPreviousData: true,
       staleTime: 10000000,
     }
   );
 
-  const { data, isLoading } = useQuery(
-    ["formationForPanorama", codeRegion, order, filters],
-    api.getDataForPanoramaRegion({
-      query: {
-        codeRegion,
-        ...order,
-        ...filters,
+  const { data, isLoading } = client
+    .ref("[GET]/panorama/stats/region")
+    .useQuery(
+      {
+        query: {
+          codeRegion,
+          ...order,
+          ...filters,
+        },
       },
-    }).call,
-    { keepPreviousData: true, staleTime: 10000000 }
-  );
+      { keepPreviousData: true, staleTime: 10000000 }
+    );
 
   return (
     <>

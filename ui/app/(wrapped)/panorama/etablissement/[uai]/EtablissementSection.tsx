@@ -11,9 +11,9 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { UaiForm } from "../UaiForm";
 
@@ -62,7 +62,7 @@ export const EtablissementSection = ({
   onUaiChanged,
 }: {
   uai: string;
-  etablissement?: ApiType<typeof api.getEtablissement>;
+  etablissement?: (typeof client.infer)["[GET]/etablissement/:uai"];
   onUaiChanged: (codeRegion: string) => void;
 }) => {
   return (

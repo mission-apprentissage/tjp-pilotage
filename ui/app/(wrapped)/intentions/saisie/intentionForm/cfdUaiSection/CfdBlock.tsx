@@ -6,9 +6,9 @@ import {
   LightMode,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../../api.client";
+import { client } from "@/api.client";
+
 import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -19,10 +19,10 @@ export const CfdBlock = ({
   active,
 }: {
   setDispositifs: (
-    info?: ApiType<typeof api.searchDiplome>[number]["dispositifs"]
+    info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
   ) => void;
   setIsFCIL: (isFcil: boolean) => void;
-  formMetaData?: ApiType<typeof api.getDemande>["metadata"];
+  formMetaData?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   active: boolean;
 }) => {
   const {

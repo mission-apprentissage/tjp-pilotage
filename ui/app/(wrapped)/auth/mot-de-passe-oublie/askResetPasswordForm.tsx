@@ -12,13 +12,12 @@ import {
   Input,
   Text,
 } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { useContext, useEffect } from "react";
 import { useForm } from "react-hook-form";
 import { emailRegex } from "shared";
 
-import { api } from "../../../../api.client";
+import { client } from "../../../../api.client";
 import { AuthContext } from "../authContext";
 
 export const ForgottenPasswordForm = () => {
@@ -37,12 +36,12 @@ export const ForgottenPasswordForm = () => {
     mutateAsync: login,
     isLoading,
     isError,
-  } = useMutation({
-    mutationFn: handleSubmit(async ({ email }: { email: string }) => {
-      await api.sendResetPassword({ body: { email } }).call();
+  } = client.ref("[POST]/auth/send-reset-password").useMutation({
+    onSuccess: () => {
       router.replace("/auth/mot-de-passe-oublie/confirmation");
-    }),
+    },
   });
+
   const { auth } = useContext(AuthContext);
 
   useEffect(() => {
@@ -52,7 +51,11 @@ export const ForgottenPasswordForm = () => {
   return (
     <Box flex="1">
       <Card boxShadow="md" maxW="360px" mt="20" width="100%" mx="auto">
-        <CardBody p="6" as="form" onSubmit={login}>
+        <CardBody
+          p="6"
+          as="form"
+          onSubmit={handleSubmit((v) => login({ body: v }))}
+        >
           <Heading fontWeight="light" mb="6" textAlign="center" fontSize="2xl">
             Mot de passe oublié
           </Heading>

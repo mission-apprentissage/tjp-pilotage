@@ -6,14 +6,14 @@ import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 export const [getEtablissement] = inject(
-  { getEtablissementInD: dependencies.getEtablissementInDb },
+  { getEtablissementInDb: dependencies.getEtablissementInDb },
   (deps) =>
     async (activeFilters: {
       uai: string;
       orderBy?: { column: string; order: "asc" | "desc" };
     }) => {
       const [etablissement, statsSortie] = await Promise.all([
-        deps.getEtablissementInD(activeFilters),
+        deps.getEtablissementInDb(activeFilters),
         getStatsSortieParRegions({}),
       ]);
 

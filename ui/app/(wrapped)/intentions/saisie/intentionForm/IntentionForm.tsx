@@ -1,19 +1,17 @@
 "use client";
 
 import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
-import { useMutation } from "@tanstack/react-query";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { ApiType } from "shared";
 
 import {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 import { Breadcrumb } from "../../../../../components/Breadcrumb";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
@@ -27,7 +25,7 @@ export const IntentionForm = ({
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
-  formMetadata?: ApiType<typeof api.getDemande>["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
 }) => {
   const { push } = useRouter();
   const pathname = usePathname();
@@ -45,10 +43,9 @@ export const IntentionForm = ({
     isLoading: isSubmittingDemande,
     mutateAsync: submitDemande,
     isSuccess: isDemandeSuccess,
-  } = useMutation({
-    mutationFn: (forms: IntentionForms) =>
-      api.submitDemande({ body: { demande: { id: formId, ...forms } } }).call(),
+  } = client.ref("[POST]/demande/submit").useMutation({
     onSuccess: () => push("/intentions/saisie"),
+    //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
       setErrors(errors);
@@ -59,12 +56,9 @@ export const IntentionForm = ({
     isLoading: isSubmittingDraft,
     mutateAsync: submitDraft,
     isSuccess: isDraftSuccess,
-  } = useMutation({
-    mutationFn: (forms: IntentionForms) =>
-      api
-        .submitDraftDemande({ body: { demande: { id: formId, ...forms } } })
-        .call(),
+  } = client.ref("[POST]/demande/draft").useMutation({
     onSuccess: () => push("/intentions/saisie"),
+    //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
       setErrors(errors);
@@ -116,7 +110,9 @@ export const IntentionForm = ({
           bg="blueecume.925"
           as="form"
           noValidate
-          onSubmit={handleSubmit((values) => submitDemande(values))}
+          onSubmit={handleSubmit((values) =>
+            submitDemande({ body: { demande: { id: formId, ...values } } })
+          )}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
             <Breadcrumb
@@ -162,7 +158,11 @@ export const IntentionForm = ({
                         isDisabled={disabled || isActionsDisabled}
                         isLoading={isSubmittingDraft}
                         variant="secondary"
-                        onClick={handleSubmit((values) => submitDraft(values))}
+                        onClick={handleSubmit((values) =>
+                          submitDraft({
+                            body: { demande: { id: formId, ...values } },
+                          })
+                        )}
                       >
                         Enregistrer le projet de demande
                       </Button>

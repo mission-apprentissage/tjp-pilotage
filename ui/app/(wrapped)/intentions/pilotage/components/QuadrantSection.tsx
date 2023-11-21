@@ -17,7 +17,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { useQuery } from "@tanstack/react-query";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
@@ -26,7 +25,7 @@ import { useMemo, useState } from "react";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 
-import { api } from "../../../../../api.client";
+import { client } from "../../../../../api.client";
 import { Quadrant } from "../../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../../components/TableQuadrant";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
@@ -88,17 +87,20 @@ export const QuadrantSection = ({
     codeDepartement: scope?.type === "departements" ? scope.value : undefined,
   };
 
-  const { data: { formations, stats } = {} } = useQuery({
-    keepPreviousData: true,
-    staleTime: 10000000,
-    queryKey: ["getformationsTransformationStats", mergedFilters, order],
-    queryFn: api.getFormationsTransformationStats({
-      query: {
-        ...mergedFilters,
-        ...order,
+  const { data: { formations, stats } = {} } = client
+    .ref("[GET]/pilotage-transformation/formations")
+    .useQuery(
+      {
+        query: {
+          ...mergedFilters,
+          ...order,
+        },
       },
-    }).call,
-  });
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   const formation = useMemo(
     () => formations?.find((item) => item.cfd === currentCfd),

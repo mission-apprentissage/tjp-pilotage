@@ -1,4 +1,4 @@
-import { serverApi } from "../../../../api.client";
+import { client } from "../../../../api.client";
 import { ActivateAccountError } from "./ActivateAccountError";
 import { ActivateAccountForm } from "./ActivateAccountForm";
 
@@ -8,11 +8,9 @@ export default async function ({
   searchParams: { activationToken: string };
 }) {
   try {
-    await serverApi
-      .checkActivationToken({
-        query: { activationToken },
-      })
-      .call();
+    await client.ref("[GET]/auth/check-activation-token").query({
+      query: { activationToken },
+    });
 
     return (
       <div>

@@ -3,7 +3,7 @@ import "./globals.css";
 import { Metadata } from "next";
 import { headers } from "next/headers";
 
-import { serverApi } from "../api.client";
+import { client } from "../api.client";
 import RootLayoutClient from "./layoutClient";
 
 export const metadata: Metadata = {
@@ -15,7 +15,9 @@ export const metadata: Metadata = {
 const fetchAuth = async () => {
   const headersList = Object.fromEntries(headers().entries());
   try {
-    return await serverApi.whoAmI({}, { headers: headersList }).call();
+    return await client
+      .ref("[GET]/auth/whoAmI")
+      .query({}, { headers: headersList });
   } catch (e) {
     return undefined;
   }

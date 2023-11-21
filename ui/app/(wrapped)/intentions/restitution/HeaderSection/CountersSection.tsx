@@ -7,9 +7,8 @@ import {
   Img,
   Text,
 } from "@chakra-ui/react";
-import { ApiType } from "shared";
 
-import { api } from "../../../../../api.client";
+import { CountStatsIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 
 const CountCard = ({
   label,
@@ -83,7 +82,7 @@ const CountCard = ({
 export const CountersSection = ({
   countData,
 }: {
-  countData?: ApiType<typeof api.countRestitutionIntentionsStats>;
+  countData?: CountStatsIntentions;
 }) => {
   return (
     <>

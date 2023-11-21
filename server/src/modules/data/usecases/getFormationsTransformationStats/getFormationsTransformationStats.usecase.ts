@@ -1,13 +1,15 @@
-import { inject } from "injecti";
-
 import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { getFormationsTransformationStatsQuery } from "./getFormationsStatsQuery.dep";
-import { getRegionStats } from "./getRegionStats.dep";
+import { dependencies } from "./dependencies";
 
-export const [getFormationsTransformationStats] = inject(
-  { getFormationsTransformationStatsQuery, getRegionStats },
-  (deps) =>
+const getFormationsTransformationStatsFactory =
+  (
+    deps = {
+      getFormationsTransformationStatsQuery:
+        dependencies.getFormationsTransformationStatsQuery,
+      getRegionStats: dependencies.getRegionStats,
+    }
+  ) =>
     async (activeFilters: {
       status?: "draft" | "submitted";
       type?: "fermeture" | "ouverture";
@@ -33,5 +35,6 @@ export const [getFormationsTransformationStats] = inject(
           positionQuadrant: getPositionQuadrant(formation, statsSortie),
         })),
       };
-    }
-);
+    };
+export const getFormationsTransformationStats =
+  getFormationsTransformationStatsFactory();
