@@ -173,18 +173,19 @@ const getTransformationStatsFactory =
     filiere?: string[];
     orderBy?: { column: string; order: "asc" | "desc" };
   }) => {
-    const resultDraft = await deps
-      .getTransformationStatsQuery({
-        ...activeFilters,
-        status: "draft",
-      })
-      .then((result) => formatResult(result, activeFilters.orderBy));
+    const resultDraft = await deps.getTransformationStatsQuery({
+      ...activeFilters,
+      status: "draft",
+    });
+    // .then((result) => formatResult(result, activeFilters.orderBy));
+
     const resultSubmitted = await deps
       .getTransformationStatsQuery({
         ...activeFilters,
         status: "submitted",
       })
       .then((result) => formatResult(result, activeFilters.orderBy));
+
     const resultAll = await deps
       .getTransformationStatsQuery({
         ...activeFilters,
