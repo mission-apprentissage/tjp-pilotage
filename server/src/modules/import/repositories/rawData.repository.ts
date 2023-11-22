@@ -1,5 +1,6 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
+import { Attractivite_capacite_BTS } from "../fileTypes/Attractivite_capacite_BTS";
 import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../fileTypes/Cab-nbre_division_effectifs_par_etab_mefst11";
 import { Decrochage_academique } from "../fileTypes/Decrochage_academique";
 import { Decrochage_regional } from "../fileTypes/Decrochage_regional";
@@ -25,6 +26,7 @@ type LineTypes = {
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
+  attractivite_capacite_BTS: Attractivite_capacite_BTS;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   decrochage_regional: Decrochage_regional;

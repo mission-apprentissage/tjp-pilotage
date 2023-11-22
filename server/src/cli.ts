@@ -140,6 +140,7 @@ cli
     const actions = {
       regroupements: () => getImport("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022"]),
+      ...getImports("attractivite_capacite_BTS", ["2021", "2022"]),
       ...getImports("decrochage_regional", ["2020"]),
       ...getImports("decrochage_academique", ["2020"]),
       ...getImports("Cab-nbre_division_effectifs_par_etab_mefst11", [
