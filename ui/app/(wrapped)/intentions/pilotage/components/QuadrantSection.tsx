@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { client } from "../../../../../api.client";
 import { Quadrant } from "../../../../../components/Quadrant";
@@ -410,8 +411,20 @@ export const QuadrantSection = ({
                   value={filters.tauxPression ?? ""}
                 >
                   <Radio value="">Tous</Radio>
-                  <Radio value="eleve">Élevé</Radio>
-                  <Radio value="faible">Bas</Radio>
+                  <Radio value="eleve">
+                    Élevé
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                    />
+                  </Radio>
+                  <Radio value="faible">
+                    Bas
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                    />
+                  </Radio>
                 </RadioGroup>
               </FormControl>
               <FormControl mb="6">
