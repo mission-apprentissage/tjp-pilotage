@@ -6,7 +6,6 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistorique } from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -175,7 +174,11 @@ const findFormationsInDb = async ({
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
     ])
-    .where(notHistorique)
+    .where(
+      "codeFormationDiplome",
+      "not in",
+      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    )
     .where(notPerimetreIJEtablissement)
     .where((eb) =>
       eb.or([
