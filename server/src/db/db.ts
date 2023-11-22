@@ -1,9 +1,11 @@
 import { Kysely, PostgresDialect } from "kysely";
-import { Pool } from "pg";
+import { Pool, types } from "pg";
 
 import { config } from "../../config/config";
 import { logger } from "../logger";
 import { DB } from "./schema";
+
+types.setTypeParser(types.builtins.INT8, (val) => parseInt(val));
 
 const pool = new Pool({
   connectionString: config.PILOTAGE_POSTGRES_URI,
