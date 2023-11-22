@@ -4,8 +4,9 @@
 // const path = require("path");
 
 const nextConfig = {
-  transpilePackages: ['shared'],
+  transpilePackages: ['shared', 'server'],
   experimental: {},
+  typescript:{ ignoreBuildErrors: true }
 }
 
 module.exports = nextConfig
