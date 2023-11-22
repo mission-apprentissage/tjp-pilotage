@@ -55,7 +55,7 @@ export const getFormationSchema = {
     libelleFiliere: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
-    withEmptyFormations: z.boolean().optional(),
+    withEmptyFormations: z.coerce.boolean().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
   }),
