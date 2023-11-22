@@ -4,43 +4,47 @@ import { DB } from "../../../db/schema";
 
 const seuil = 20;
 
-export const selectDenominateurPoursuiteAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
-  SUM(
-    case when
-    ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null
-    then ${sql.table(indicateurSortieAlias)}."effectifSortie"
-    end
-  )`;
-
-export const selectTauxPoursuiteAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
-    case when
-    ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)} >= ${seuil}
-    then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
-    / ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)})
-    end
-  `;
-
 export const selectDenominateurPoursuite = (
   indicateurSortieAlias: string
 ) => sql<number>`
-  case when
-  ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null
-  then ${sql.table(indicateurSortieAlias)}."effectifSortie"
-  end`;
+    CASE WHEN ${sql.table(
+      indicateurSortieAlias
+    )}."nbPoursuiteEtudes" IS NOT NULL
+    THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"::FLOAT
+    END`;
 
 export const selectTauxPoursuite = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when
-    ${selectDenominateurPoursuite(indicateurSortieAlias)} >= ${seuil}
-    then (100 * ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
-    / ${selectDenominateurPoursuite(indicateurSortieAlias)})
-    end
-  `;
+    CASE WHEN ${selectDenominateurPoursuite(indicateurSortieAlias)} >= ${seuil}
+    THEN ROUND((100 * ${sql.table(
+      indicateurSortieAlias
+    )}."nbPoursuiteEtudes"::FLOAT
+    / ${selectDenominateurPoursuite(indicateurSortieAlias)})::NUMERIC, 2)
+    END`;
+
+export const selectDenominateurPoursuiteAgg = (
+  indicateurSortieAlias: string
+) => sql<number>`
+      SUM(
+        CASE WHEN ${sql.table(
+          indicateurSortieAlias
+        )}."nbPoursuiteEtudes" IS NOT NULL
+        THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"
+        END
+      )::FLOAT`;
+
+export const selectTauxPoursuiteAgg = (
+  indicateurSortieAlias: string
+) => sql<number>`
+    CASE WHEN ${selectDenominateurPoursuiteAgg(
+      indicateurSortieAlias
+    )} >= ${seuil}
+    THEN ROUND((100 * SUM(${sql.table(
+      indicateurSortieAlias
+    )}."nbPoursuiteEtudes")
+      / ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)})::NUMERIC, 2)
+    END`;
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 
