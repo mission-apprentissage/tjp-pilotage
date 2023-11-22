@@ -5,13 +5,17 @@ import {
   AnneeEnseignement,
 } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 import { getIndicateursAffelnet } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
+import { getIndicateursParcoursSup } from "../getIndicateursParcoursSup/getIndicateursParcoursSup.step";
 import { createIndicateurEntree } from "./createIndicateurEntree.dep";
 import { findFamilleMetier } from "./findFamilleMetier";
+
+const isBTS = (cfd: string) => cfd.substring(0, 3) === "320";
 
 export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
   {
     createIndicateurEntree,
     getIndicateursAffelnet,
+    getIndicateursParcoursSup,
     findFamilleMetier,
   },
   (deps) => {
@@ -38,12 +42,19 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
 
       const anneeDebut = isSpecialite ? 1 : anneeDebutConstate;
 
-      const { capacites, premiersVoeux } = await deps.getIndicateursAffelnet({
-        anneesDispositif,
-        uai,
-        anneeDebut,
-        rentreeScolaire,
-      });
+      const { capacites, premiersVoeux } = isBTS(cfd)
+        ? await deps.getIndicateursParcoursSup({
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          })
+        : await deps.getIndicateursAffelnet({
+            anneesDispositif,
+            uai,
+            anneeDebut,
+            rentreeScolaire,
+          });
 
       const indicateurEntree = toIndicateurEntree({
         anneesEnseignement,

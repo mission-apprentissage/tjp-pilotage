@@ -10,7 +10,7 @@ export const [importRawFile, importRawFileFactory] = inject(
   { createRawDatas, deleteRawData },
   (deps) =>
     async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
-      console.log(`Import des lignes de fichier`);
+      process.stdout.write(`Import des lignes du fichier ${type}...\n`);
 
       await deps.deleteRawData({ type });
 
@@ -20,14 +20,16 @@ export const [importRawFile, importRawFileFactory] = inject(
         getStreamParser(),
         new Writable({
           final: (callback) => {
-            console.log("import successfull");
+            console.log(
+              `Import du fichier ${type} réussi (${count} lignes ajoutées)\n`
+            );
             callback();
           },
           objectMode: true,
           write: async (line, _, callback) => {
             await deps.createRawDatas({ data: [{ type, data: line }] });
             count++;
-            console.log(`Added line ${count}`);
+            process.stdout.write(`Ajout de ${count} lignes\r`);
             callback();
           },
         })
