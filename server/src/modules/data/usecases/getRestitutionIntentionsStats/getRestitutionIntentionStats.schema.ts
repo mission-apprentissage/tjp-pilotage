@@ -52,6 +52,7 @@ const StatsDemandesItem = z.object({
   positionCadran: z.string().optional(),
   tauxInsertionMoyen: z.coerce.number().optional(),
   tauxPoursuiteMoyen: z.coerce.number().optional(),
+  voie: z.string().optional(),
 });
 
 export const getRestitutionIntentionsStatsSchema = {
@@ -79,6 +80,7 @@ export const getRestitutionIntentionsStatsSchema = {
     orderBy: StatsDemandesItem.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
+    voie: z.enum(["scolaire", "apprentissage"]).optional(),
   }),
   response: {
     200: z.object({
@@ -102,6 +104,7 @@ export const getRestitutionIntentionsStatsSchema = {
         amiCMAs: z.array(OptionSchema),
         colorations: z.array(OptionSchema),
         compensations: z.array(OptionSchema),
+        voie: z.array(OptionSchema),
       }),
       demandes: z.array(StatsDemandesItem),
       count: z.coerce.number(),
