@@ -4,43 +4,47 @@ import { DB } from "../../../db/schema";
 
 const seuil = 20;
 
-export const selectDenominateurInsertion6moisAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
-    SUM(
-      case when
-      ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
-      then ${sql.table(indicateurSortieAlias)}."nbSortants"
-      end
-    )`;
-
-export const selectTauxInsertion6moisAgg = (
-  indicateurSortieAlias: string
-) => sql<number>`
-      case when
-      ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)} >= ${seuil}
-      then (100 * SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
-      / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})
-      end
-    `;
-
 export const selectDenominateurInsertion6mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when
-    ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
-    then ${sql.table(indicateurSortieAlias)}."nbSortants"
-    end`;
+    CASE WHEN ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" IS NOT NULL
+    THEN ${sql.table(indicateurSortieAlias)}."nbSortants"::FLOAT
+    END`;
 
 export const selectTauxInsertion6mois = (
   indicateurSortieAlias: string
 ) => sql<number>`
-          case when
-          ${selectDenominateurInsertion6mois(indicateurSortieAlias)} >= ${seuil}
-          then (100 * ${sql.table(indicateurSortieAlias)}."nbInsertion6mois"
-          / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})
-          end
-        `;
+    CASE WHEN ${selectDenominateurInsertion6mois(
+      indicateurSortieAlias
+    )} >= ${seuil}
+    THEN ROUND((100 * ${sql.table(
+      indicateurSortieAlias
+    )}."nbInsertion6mois"::FLOAT
+    / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})::NUMERIC, 2)
+    END`;
+
+export const selectDenominateurInsertion6moisAgg = (
+  indicateurSortieAlias: string
+) => sql<number>`
+    SUM(
+      CASE WHEN ${sql.table(
+        indicateurSortieAlias
+      )}."nbInsertion6mois" IS NOT NULL
+      THEN ${sql.table(indicateurSortieAlias)}."nbSortants"
+      END
+    )::FLOAT`;
+
+export const selectTauxInsertion6moisAgg = (
+  indicateurSortieAlias: string
+) => sql<number>`
+    CASE WHEN ${selectDenominateurInsertion6moisAgg(
+      indicateurSortieAlias
+    )} >= ${seuil}
+    THEN ROUND((100 * SUM(${sql.table(
+      indicateurSortieAlias
+    )}."nbInsertion6mois")
+    / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})::NUMERIC,2)
+    END`;
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 export function withInsertionReg<EB extends ExpressionBuilder<DB, never>>({

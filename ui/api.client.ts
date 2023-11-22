@@ -3,7 +3,6 @@ import { createQueryClient } from "@http-wizard/react-query";
 import axios from "axios";
 import type { Router } from "server";
 
-
 export const client = createQueryClient<Router, ZodTypeProvider>({
   instance: axios.create({
     baseURL:
