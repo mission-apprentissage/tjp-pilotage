@@ -53,4 +53,7 @@ export const config = {
     chanel: env.get("PILOTAGE_SLACK_CHANEL").asString(),
   },
   env: env.get("PILOTAGE_ENV").required().asString(),
+  sql: {
+    logLevel: env.get("PILOTAGE_SQL_LOG_LEVEL").asString(),
+  },
 };
