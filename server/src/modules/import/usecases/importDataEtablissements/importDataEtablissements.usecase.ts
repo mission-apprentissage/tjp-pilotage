@@ -13,6 +13,8 @@ export const [importDataEtablissements] = inject(
     findDepartement,
   },
   (deps) => async () => {
+    let errorCount = 0;
+    console.log("Import des dataEtablissement");
     await streamIt(
       (offset) =>
         deps.findRawDatas({ type: "lyceesACCE", offset, limit: 10000 }),
@@ -34,20 +36,27 @@ export const [importDataEtablissements] = inject(
             libelle: lyceeACCE.appellation_officielle,
             adresse: lyceeACCE.adresse_uai,
             commune: lyceeACCE.commune_libe,
-            codePostal: lyceeACCE.code_postal_uai,
+            codePostal:
+              lyceeACCE.code_postal_uai?.length <= 5
+                ? lyceeACCE.code_postal_uai
+                : undefined,
             secteur: lyceeACCE.secteur_public_prive,
             codeMinistereTutuelle: lyceeACCE.ministere_tutelle,
             typeUai: lyceeACCE.type_uai as DB["dataEtablissement"]["typeUai"],
           });
         } catch (e) {
           console.log(e);
+          errorCount++;
         }
 
-        console.info(
-          `${count}: dataEtablissement added ${lyceeACCE.numero_uai}`
+        process.stdout.write(
+          `\r${count} dataEtablissement ajoutés ou mis à jour`
         );
       },
       { parallel: 20 }
+    );
+    process.stdout.write(
+      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
     );
   }
 );

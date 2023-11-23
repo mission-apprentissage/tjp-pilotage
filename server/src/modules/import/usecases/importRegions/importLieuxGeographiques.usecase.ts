@@ -31,7 +31,7 @@ export const importLieuxGeographiquesFactory =
       }
     );
 
-    console.log("Lieux géographiques ajoutés ou mis à jour");
+    console.log("Lieux géographiques ajoutés ou mis à jour\n");
   };
 
 export const importLieuxGeographiques = importLieuxGeographiquesFactory({});
