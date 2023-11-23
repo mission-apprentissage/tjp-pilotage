@@ -22,8 +22,8 @@ export const FormationLineSchema = z.object({
   effectif3: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
-  tauxInsertion6mois: z.coerce.number().optional(),
-  tauxPoursuiteEtudes: z.coerce.number().optional(),
+  tauxInsertion: z.coerce.number().optional(),
+  tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
   CPC: z.string().optional(),
   CPCSecteur: z.string().optional(),
@@ -35,7 +35,7 @@ export const FormationLineSchema = z.object({
       libelle: z.string().optional(),
     })
     .optional(),
-  positionCadran: z.string().optional(),
+  positionQuadrant: z.string().optional(),
 });
 
 export const getFormationSchema = {
@@ -55,7 +55,7 @@ export const getFormationSchema = {
     libelleFiliere: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
-    withEmptyFormations: z.boolean().optional(),
+    withEmptyFormations: z.coerce.boolean().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
   }),
@@ -94,8 +94,8 @@ export const getFormationSchema = {
           effectif3: z.coerce.number().optional(),
           tauxRemplissage: z.coerce.number().optional(),
           tauxPression: z.coerce.number().optional(),
-          tauxInsertion6mois: z.coerce.number().optional(),
-          tauxPoursuiteEtudes: z.coerce.number().optional(),
+          tauxInsertion: z.coerce.number().optional(),
+          tauxPoursuite: z.coerce.number().optional(),
           tauxDevenirFavorable: z.coerce.number().optional(),
           CPC: z.string().optional(),
           CPCSecteur: z.string().optional(),
@@ -107,7 +107,7 @@ export const getFormationSchema = {
               libelle: z.string().optional(),
             })
             .optional(),
-          positionCadran: z.string().optional(),
+          positionQuadrant: z.string().optional(),
         })
       ),
     }),

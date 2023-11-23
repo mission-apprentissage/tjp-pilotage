@@ -22,7 +22,7 @@ const Loader = () => (
     <Table variant="striped" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          <Tr key={i} bg={"#f5f5f5"}>
+          <Tr key={i} bg={"grey.975"}>
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
             </Td>
@@ -125,6 +125,7 @@ export const VueTauxTransformationSection = ({
                   cursor="pointer"
                   pb="4"
                   width="20%"
+                  whiteSpace={"normal"}
                   onClick={() => handleOrder("placesTransformees")}
                 >
                   <OrderIcon {...order} column="placesTransformees" />
@@ -135,6 +136,18 @@ export const VueTauxTransformationSection = ({
                   cursor="pointer"
                   pb="4"
                   width="20%"
+                  whiteSpace={"normal"}
+                  onClick={() => handleOrder("effectif")}
+                >
+                  <OrderIcon {...order} column="effectif" />
+                  Effectif en entrée
+                </Th>
+                <Th
+                  isNumeric
+                  cursor="pointer"
+                  pb="4"
+                  width="20%"
+                  whiteSpace={"normal"}
                   onClick={() => handleOrder("tauxTransformation")}
                 >
                   <OrderIcon {...order} column="tauxTransformation" />
@@ -147,7 +160,7 @@ export const VueTauxTransformationSection = ({
                 {Object.values(data?.all?.regions ?? []).map((region) => {
                   const trBgColor =
                     region.codeRegion === codeRegion
-                      ? "blue.main !important"
+                      ? "blueecume.400_hover !important"
                       : "";
 
                   const tdBgColor =
@@ -168,7 +181,9 @@ export const VueTauxTransformationSection = ({
                     region.codeRegion === codeRegion ? "white" : "inherit";
 
                   const color =
-                    region.codeRegion === codeRegion ? "inherit" : "#000091";
+                    region.codeRegion === codeRegion
+                      ? "inherit"
+                      : "bluefrance.113";
 
                   return (
                     <Fragment key={`${region.codeRegion}_${region.libelle}`}>
@@ -181,10 +196,10 @@ export const VueTauxTransformationSection = ({
                           {region.libelle}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.placesOuvertesScolaire +
-                            region.placesOuvertesApprentissage +
-                            region.placesFermeesScolaire +
-                            region.placesFermeesApprentissage}
+                          {region.placesTransformees}
+                        </Td>
+                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                          {region.effectif}
                         </Td>
                         <Td
                           isNumeric

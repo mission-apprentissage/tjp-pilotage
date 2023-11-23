@@ -72,17 +72,12 @@ export const EtablissementLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxInsertion6mois}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxPoursuiteEtudes}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
+      <Td>{line.positionQuadrant}</Td>
       <Td textAlign="center">
         <GraphWrapper
           continuum={line.continuum}
@@ -104,7 +99,7 @@ export const EtablissementLineContent = ({
 };
 
 export const EtablissementLineLoader = () => (
-  <Tr bg={"#f5f5f5"}>
+  <Tr bg={"grey.975"}>
     {new Array(17).fill(0).map((_, i) => (
       <Td key={i}>
         <Skeleton opacity={0.3} height="16px" />
@@ -114,7 +109,7 @@ export const EtablissementLineLoader = () => (
 );
 
 export const EtablissementLinePlaceholder = () => (
-  <Tr bg={"#f5f5f5"}>
+  <Tr bg={"grey.975"}>
     <EtablissementLineContent line={{}} />
   </Tr>
 );

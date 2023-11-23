@@ -1,13 +1,11 @@
 "use client";
 
-import { DeleteIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
-import { ConfirmationDelete } from "@/app/(wrapped)/intentions/saisie/components/ConfirmationDelete";
 import {
   IntentionForms,
   PartialIntentionForms,
@@ -67,16 +65,8 @@ export const IntentionForm = ({
     },
   });
 
-  const {
-    isLoading: isDeleting,
-    mutateAsync: deleteDemande,
-    isSuccess: isDeleteSuccess,
-  } = client.ref("[DELETE]/demande/:id").useMutation({
-    onSuccess: () => push("/intentions/saisie"),
-  });
-
-  const isSubmitting = isSubmittingDraft || isSubmittingDemande || isDeleting;
-  const isSuccess = isDraftSuccess || isDeleteSuccess || isDemandeSuccess;
+  const isSubmitting = isSubmittingDraft || isSubmittingDemande;
+  const isSuccess = isDraftSuccess || isDemandeSuccess;
   const isActionsDisabled = isSuccess || isSubmitting;
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
@@ -117,7 +107,7 @@ export const IntentionForm = ({
       <FormProvider {...form}>
         <Box
           flex={1}
-          bg="blue.faded"
+          bg="blueecume.925"
           as="form"
           noValidate
           onSubmit={handleSubmit((values) =>
@@ -163,27 +153,6 @@ export const IntentionForm = ({
                 formMetadata={formMetadata}
                 footerActions={
                   <>
-                    {formId && (
-                      <ConfirmationDelete
-                        onConfirm={() =>
-                          deleteDemande({ params: { id: formId } })
-                        }
-                        Trigger={({ onClick }) => (
-                          <Button
-                            onClick={onClick}
-                            color="red"
-                            borderColor="red"
-                            mr="auto"
-                            isDisabled={disabled || isActionsDisabled}
-                            isLoading={isDeleting}
-                            variant="secondary"
-                            leftIcon={<DeleteIcon />}
-                          >
-                            Supprimer la demande
-                          </Button>
-                        )}
-                      />
-                    )}
                     <Box justifyContent={"center"}>
                       <Button
                         isDisabled={disabled || isActionsDisabled}

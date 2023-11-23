@@ -36,7 +36,7 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
       as="section"
       pb="12"
       pt="6"
-      bg="#F9F8F6"
+      bg="grey.975"
       maxWidth={"container.xl"}
     >
       <Flex align="center" direction="column">

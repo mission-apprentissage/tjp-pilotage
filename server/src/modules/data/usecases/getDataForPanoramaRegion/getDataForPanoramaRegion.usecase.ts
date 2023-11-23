@@ -1,15 +1,33 @@
-import { inject } from "injecti";
+import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+import { dependencies } from "./dependencies";
 
-import { queryFormationsRegion } from "./dependencies";
-
-export const [getDataForPanoramaRegion] = inject(
-  { queryFormationsRegion },
-  (deps) =>
-    async ({ codeRegion }: { codeRegion: string }) => {
-      const formations = await deps.queryFormationsRegion({ codeRegion });
-
-      return {
-        formations,
-      };
+export const getDataForPanoramaRegionFactory =
+  (
+    deps = {
+      getFormationsRegion: dependencies.getFormationsRegion,
+      getFilters: dependencies.getFilters,
     }
-);
+  ) =>
+  async (activeFilters: {
+    codeRegion: string;
+    codeNiveauDiplome?: string[];
+    libelleFiliere?: string[];
+    orderBy?: { column: string; order: "asc" | "desc" };
+  }) => {
+    const [formations, filters, statsSortie] = await Promise.all([
+      deps.getFormationsRegion(activeFilters),
+      deps.getFilters(activeFilters),
+      getStatsSortie(activeFilters),
+    ]);
+
+    return {
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+      })),
+      filters,
+    };
+  };
+
+export const getDataForPanoramaRegion = getDataForPanoramaRegionFactory();

@@ -1,4 +1,4 @@
-import { SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
+import { DownloadIcon, SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -19,15 +19,18 @@ import {
   SliderMark,
   SliderThumb,
   SliderTrack,
+  Spinner,
   Stack,
   Text,
   VStack,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
-import { Cadran } from "../../../../components/Cadran";
-import { TableCadran } from "../../../../components/TableCadran";
-import { PanoramaFormations } from "../types";
+import { Quadrant } from "../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../components/TableQuadrant";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { downloadCsv } from "../../../../utils/downloadCsv";
+import { Order, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 const effectifSizes = [
@@ -56,29 +59,15 @@ type Tendances = {
 
 const filterFormations = ({
   effectifMin,
-  codeNiveauDiplome,
-  libelleFiliere,
-  cadranFormations,
+  quadrantFormations,
   tendances,
 }: {
   effectifMin: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
   tendances: Tendances;
 }) =>
-  cadranFormations
+  quadrantFormations
     ?.filter((item) => {
-      if (
-        libelleFiliere?.length &&
-        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
-      )
-        return false;
-      if (
-        codeNiveauDiplome?.length &&
-        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
-      )
-        return false;
       return item.effectif && item.effectif >= effectifMin;
     })
     .filter((item) => {
@@ -86,26 +75,26 @@ const filterFormations = ({
       if (tendances["insertion_hausse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois > item.tauxInsertion6moisPrecedent;
+          item.tauxInsertionPrecedent !== undefined &&
+          item.tauxInsertion > item.tauxInsertionPrecedent;
       }
       if (tendances["insertion_baisse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxInsertion6moisPrecedent !== undefined &&
-          item.tauxInsertion6mois < item.tauxInsertion6moisPrecedent;
+          item.tauxInsertionPrecedent !== undefined &&
+          item.tauxInsertion < item.tauxInsertionPrecedent;
       }
       if (tendances["poursuite_hausse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes > item.tauxPoursuiteEtudesPrecedent;
+          item.tauxPoursuitePrecedent !== undefined &&
+          item.tauxPoursuite > item.tauxPoursuitePrecedent;
       }
       if (tendances["poursuite_baisse"] === true) {
         mustBeReturned =
           mustBeReturned &&
-          item.tauxPoursuiteEtudesPrecedent !== undefined &&
-          item.tauxPoursuiteEtudes < item.tauxPoursuiteEtudesPrecedent;
+          item.tauxPoursuitePrecedent !== undefined &&
+          item.tauxPoursuite < item.tauxPoursuitePrecedent;
       }
       if (tendances["effectif_hausse"] === true) {
         mustBeReturned =
@@ -136,18 +125,26 @@ const filterFormations = ({
       return mustBeReturned;
     });
 
-export const CadranSection = ({
-  cadranFormations,
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
+
+export const QuadrantSection = ({
+  quadrantFormations,
+  isLoading,
   meanPoursuite,
   meanInsertion,
-  codeNiveauDiplome,
-  libelleFiliere,
+  order,
+  handleOrder,
 }: {
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
+  isLoading: boolean;
   meanPoursuite?: number;
   meanInsertion?: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
+  order?: Partial<Order>;
+  handleOrder: (column: Order["orderBy"]) => void;
 }) => {
   const [effectifMin, setEffectifMin] = useState(0);
   const tendancesDefaultValue = {
@@ -162,29 +159,21 @@ export const CadranSection = ({
   };
 
   const [tendances, setTendances] = useState<Tendances>(tendancesDefaultValue);
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
 
   const filteredFormations = useMemo(
     () =>
       filterFormations({
         effectifMin,
-        codeNiveauDiplome,
-        cadranFormations,
+        quadrantFormations,
         tendances,
-        libelleFiliere,
       }),
-    [
-      effectifMin,
-      codeNiveauDiplome,
-      cadranFormations,
-      tendances,
-      libelleFiliere,
-    ]
+    [effectifMin, quadrantFormations, tendances]
   );
 
   const handleOppositesTendances = (value: boolean, name: keyof Tendances) => {
@@ -320,6 +309,12 @@ export const CadranSection = ({
                 value={tendances["forte_pression"]}
                 changeHandle={handleCheckboxCardChange}
                 icon={<TendanceHausseIcon color="info.525" />}
+                tooltip={
+                  <TooltipIcon
+                    ml="1"
+                    label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                  />
+                }
               />
               <CheckboxCard
                 label="Faible taux de pression"
@@ -327,6 +322,12 @@ export const CadranSection = ({
                 value={tendances["faible_pression"]}
                 changeHandle={handleCheckboxCardChange}
                 icon={<TendanceBaisseIcon color="info.525" />}
+                tooltip={
+                  <TooltipIcon
+                    ml="1"
+                    label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                  />
+                }
               />
             </SimpleGrid>
             <CheckboxCard
@@ -344,7 +345,38 @@ export const CadranSection = ({
             <Flex>
               <Button onClick={() => toggleTypeVue()} variant="solid">
                 <ViewIcon mr={2}></ViewIcon>
-                {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+                {`Passer en vue ${
+                  typeVue === "quadrant" ? "tableau" : "quadrant"
+                }`}
+              </Button>
+              <Button
+                ml="2"
+                aria-label="csv"
+                variant="solid"
+                isDisabled={
+                  !filteredFormations || filteredFormations.length === 0
+                }
+                onClick={async () => {
+                  if (!filteredFormations) return;
+                  downloadCsv(
+                    "formations_panorama.csv",
+                    filteredFormations.map((formation) => ({
+                      ...formation,
+                    })),
+                    {
+                      libelleDiplome: "Formation",
+                      codeFormationDiplome: "CFD",
+                      libelleDispositif: "Dispositif",
+                      tauxInsertion: "Taux d'emploi",
+                      tauxPoursuite: "Taux de poursuite",
+                      tauxPression: "Taux de pression",
+                      positionQuadrant: "Position dans le quadrant",
+                    }
+                  );
+                }}
+              >
+                <DownloadIcon mr="2" />
+                Exporter en csv
               </Button>
             </Flex>
             <Flex alignItems={"flex-end"}>
@@ -362,15 +394,20 @@ export const CadranSection = ({
           </Flex>
           <AspectRatio ratio={1} mt={2}>
             <>
-              {filteredFormations &&
-                (typeVue === "cadran" ? (
-                  <Cadran
+              {isLoading ? (
+                <Loader />
+              ) : filteredFormations &&
+                filteredFormations.length &&
+                meanInsertion &&
+                meanPoursuite ? (
+                typeVue === "quadrant" ? (
+                  <Quadrant
                     meanPoursuite={meanPoursuite}
                     meanInsertion={meanInsertion}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion6mois,
-                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                      tauxInsertion: formation.tauxInsertion,
+                      tauxPoursuite: formation.tauxPoursuite,
                     }))}
                     TooltipContent={FormationTooltipContent}
                     itemId={(item) =>
@@ -380,14 +417,25 @@ export const CadranSection = ({
                     effectifSizes={effectifSizes}
                   />
                 ) : (
-                  <TableCadran
+                  <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion6mois,
-                      tauxPoursuite: formation.tauxPoursuiteEtudes,
+                      tauxInsertion: formation.tauxInsertion,
+                      tauxPoursuite: formation.tauxPoursuite,
                     }))}
+                    order={order}
+                    handleOrder={(column?: string) =>
+                      handleOrder(column as Order["orderBy"])
+                    }
                   />
-                ))}
+                )
+              ) : (
+                <Flex>
+                  <Text>
+                    Aucune donnée à afficher pour les filtres sélectionnés
+                  </Text>
+                </Flex>
+              )}
               {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
             </>
           </AspectRatio>
@@ -410,6 +458,7 @@ const CheckboxCard = chakra(
     icon,
     changeHandle,
     className,
+    tooltip,
   }: {
     label: string;
     name: keyof Tendances | "none";
@@ -417,6 +466,7 @@ const CheckboxCard = chakra(
     icon: ReactNode;
     changeHandle: (value: boolean, name: keyof Tendances | "none") => void;
     className?: string;
+    tooltip?: ReactNode;
   }) => (
     <Flex className={className} border="1px solid" borderColor="grey.900">
       <Checkbox
@@ -427,6 +477,7 @@ const CheckboxCard = chakra(
         onChange={(e) => changeHandle(e.target.checked, name)}
       >
         {label}
+        {tooltip}
       </Checkbox>
       <Center bg="grey.950" p="4">
         {icon}

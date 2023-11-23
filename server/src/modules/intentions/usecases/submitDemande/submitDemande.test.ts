@@ -88,7 +88,7 @@ describe("submitDemande usecase", () => {
         user: {
           codeRegion: "other",
           id: "user-id",
-          role: "expert_region",
+          role: "pilote_region",
         },
         demande: {
           ...demande,

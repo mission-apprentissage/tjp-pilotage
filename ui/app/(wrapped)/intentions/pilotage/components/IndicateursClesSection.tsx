@@ -139,7 +139,7 @@ const Delta = ({ delta }: { delta: number | null }) => {
   }
 
   return (
-    <Flex fontSize={12} color={"#96A6D8"}>
+    <Flex fontSize={12} color={"blueecume.400_active"}>
       {deltaIcon}
       <Flex ms="auto">
         <DrapeauFrancaisIcon mt={1.5} mx={1} />
@@ -359,7 +359,7 @@ export const IndicateursClesSection = ({
                           </Text>
                         </Flex>
                         <Flex flexDirection="column" gap={2}>
-                          <Text fontSize={14} color={"blue.main"}>
+                          <Text fontSize={14} color={"blueecume.400_hover"}>
                             (CALCULÉ SUR LES DEMANDES VALIDÉES)
                           </Text>
                           <ProgressBar
@@ -406,7 +406,7 @@ export const IndicateursClesSection = ({
                           </Text>
                         </Flex>
                         <Flex flexDirection="column" gap={2}>
-                          <Text fontSize={14} color={"blue.main"}>
+                          <Text fontSize={14} color={"blueecume.400_hover"}>
                             (CALCULÉ SUR LES PROJETS DE DEMANDE)
                           </Text>
                           <ProgressBar

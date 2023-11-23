@@ -23,6 +23,7 @@ export type Filters = Pick<
   | "secteur"
   | "cfdFamille"
   | "compensation"
+  | "voie"
 >;
 
 export type Order = Pick<StatsIntentionsQuery, "order" | "orderBy">;

@@ -44,7 +44,7 @@ const NavLink = chakra(
         color="bluefrance.113"
         borderBottomWidth={3}
         borderColor={isActive ? "bluefrance.113" : "transparent"}
-        _hover={{ textDecoration: "unset", bg: "blue.faded" }}
+        _hover={{ textDecoration: "unset", bg: "blueecume.925" }}
       >
         {children}
       </Link>
@@ -81,7 +81,7 @@ const NavMenuLink = chakra(
         m="0"
         color="bluefrance.113"
         bg={isActive ? "grey.1000_hover" : "inherit"}
-        _hover={{ textDecoration: "unset", bg: "blue.faded" }}
+        _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
       >
         {children}
       </Link>
@@ -116,7 +116,7 @@ const NavMenuButton = chakra(
         color="bluefrance.113"
         borderBottomWidth={3}
         borderColor={isActive ? "bluefrance.113" : "transparent"}
-        _hover={{ textDecoration: "unset", bg: "blue.faded" }}
+        _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
         as={Button}
         rightIcon={<ChevronDownIcon />}
       >

@@ -1,4 +1,7 @@
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getRestitutionIntentionsStatsFactory =
@@ -32,19 +35,31 @@ const getRestitutionIntentionsStatsFactory =
       order: "asc" | "desc";
       column: string;
     };
+    voie?: "scolaire" | "apprentissage";
   }) => {
-    const [{ count, demandes }, filters] = await Promise.all([
-      findRestitutionIntentionsStatsInDB({
-        ...activeFilters,
-        millesimeSortie: "2020_2021",
-      }),
+    const [{ count, demandes }, filters, statsSortie] = await Promise.all([
+      findRestitutionIntentionsStatsInDB(activeFilters),
       findFiltersInDb(activeFilters),
+      getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
     ]);
 
     return {
       count,
       filters,
-      demandes,
+      demandes: demandes?.map((demande) =>
+        cleanNull({
+          ...demande,
+          positionQuadrant:
+            statsSortie && statsSortie[demande.codeRegion ?? ""]
+              ? getPositionQuadrant(
+                  demande,
+                  statsSortie[demande.codeRegion ?? ""][
+                    demande.codeNiveauDiplome ?? ""
+                  ] || {}
+                )
+              : "Hors quadrant",
+        })
+      ),
     };
   };
 

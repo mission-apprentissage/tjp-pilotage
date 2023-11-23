@@ -24,10 +24,11 @@ import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { client } from "../../../../../api.client";
-import { Cadran } from "../../../../../components/Cadran";
-import { TableCadran } from "../../../../../components/TableCadran";
+import { Quadrant } from "../../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../../components/TableQuadrant";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { downloadCsv } from "../../../../../utils/downloadCsv";
 import { useStateParams } from "../../../../../utils/useFilters";
@@ -38,7 +39,7 @@ import {
   Scope,
 } from "../types";
 
-export const CadranSection = ({
+export const QuadrantSection = ({
   scope,
   parentFilters,
   scopeFilters,
@@ -51,11 +52,11 @@ export const CadranSection = ({
   scopeFilters?: PilotageTransformationStats["filters"];
 }) => {
   const trackEvent = usePlausible();
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
 
   const [filters, setFilters] = useStateParams({
@@ -120,7 +121,7 @@ export const CadranSection = ({
   const handleOrder = (
     column: OrderFormationsTransformationStats["orderBy"]
   ) => {
-    trackEvent("tableau-cadran-intentions:ordre", {
+    trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
     });
     if (order?.orderBy !== column) {
@@ -152,7 +153,9 @@ export const CadranSection = ({
             </Heading>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
-              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+              {`Passer en vue ${
+                typeVue === "quadrant" ? "tableau" : "quadrant"
+              }`}
             </Button>
             <Button
               ml="6"
@@ -188,11 +191,12 @@ export const CadranSection = ({
                   })),
                   {
                     libelleDiplome: "Formation",
+                    cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
                     tauxPression: "Taux de pression",
-                    positionCadran: "Position dans le cadran",
+                    positionQuadrant: "Position dans le quadrant",
                     libelleRegion: "Région",
                     libelleAcademie: "Académie",
                     libelleDepartement: "Département",
@@ -206,7 +210,7 @@ export const CadranSection = ({
             <Select
               ml="6"
               variant="newInput"
-              bg="blue.main"
+              bg="blueecume.400_hover"
               color="white"
               maxW={250}
               value={filters.type ?? ""}
@@ -229,7 +233,7 @@ export const CadranSection = ({
             </Select>
           </Flex>
           <Flex mt="4">
-            <Box p="4" w="300px" bg="#F3F5FC" mr="6">
+            <Box p="4" w="300px" bg="blueecume.975" mr="6">
               <Heading size="sm" mb="6">
                 DÉTAILS SUR LA FORMATION
               </Heading>
@@ -353,16 +357,14 @@ export const CadranSection = ({
               <AspectRatio flex={1} ratio={1}>
                 <>
                   {formations &&
-                    (typeVue === "cadran" ? (
-                      <Cadran
+                    (typeVue === "quadrant" ? (
+                      <Quadrant
                         onClick={({ cfd }) => setFormationId(cfd)}
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         itemId={(item) => item.cfd + item.dispositifId}
                         data={formations?.map((item) => ({
                           ...item,
-                          tauxInsertion6mois: item.tauxInsertion,
-                          tauxPoursuiteEtudes: item.tauxPoursuite,
                           effectif: item.differencePlaces,
                         }))}
                         itemColor={(item) =>
@@ -376,7 +378,7 @@ export const CadranSection = ({
                         ]}
                       />
                     ) : (
-                      <TableCadran
+                      <TableQuadrant
                         formations={formations}
                         handleClick={setFormationId}
                         currentCfd={currentCfd}
@@ -392,7 +394,7 @@ export const CadranSection = ({
                 </>
               </AspectRatio>
             </Box>
-            <Box p="4" ml="6" bg="#F3F5FC" w="200px">
+            <Box p="4" ml="6" bg="blueecume.975" w="200px">
               <Heading size="sm" mb="6">
                 FILTRES
               </Heading>
@@ -409,8 +411,20 @@ export const CadranSection = ({
                   value={filters.tauxPression ?? ""}
                 >
                   <Radio value="">Tous</Radio>
-                  <Radio value="eleve">Élevé</Radio>
-                  <Radio value="faible">Bas</Radio>
+                  <Radio value="eleve">
+                    Élevé
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est supérieur ou égal à 1.3"
+                    />
+                  </Radio>
+                  <Radio value="faible">
+                    Bas
+                    <TooltipIcon
+                      ml="3"
+                      label="Formations pour lesquelles le taux de pression est inférieur à 0.7"
+                    />
+                  </Radio>
                 </RadioGroup>
               </FormControl>
               <FormControl mb="6">

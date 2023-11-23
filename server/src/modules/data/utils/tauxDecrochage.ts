@@ -5,42 +5,42 @@ const seuil = 20;
 export const selectDenominateurDecrochage = (
   indicateurRegionAlias: string
 ) => sql<number>`
-    case when
-    ${sql.table(indicateurRegionAlias)}."nbDecrocheurs" is not null
-    then ${sql.table(indicateurRegionAlias)}."effectifDecrochage"
-    end`;
+    CASE WHEN
+    ${sql.table(indicateurRegionAlias)}."nbDecrocheurs" IS NOT NULL
+    THEN ${sql.table(indicateurRegionAlias)}."effectifDecrochage"
+    END`;
 
 export const selectTauxDecrochage = (
   indicateurRegionAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${selectDenominateurDecrochage(indicateurRegionAlias)} >= ${seuil}
-    then ${sql.table(indicateurRegionAlias)}."tauxDecrochage"
-    end`;
+    THEN ${sql.table(indicateurRegionAlias)}."tauxDecrochage"
+    END`;
 
 export const selectDenominateurDecrochageAgg = (
   indicateurRegionAlias: string
 ) => sql<number>`
     SUM(
-      case when
-      ${sql.table(indicateurRegionAlias)}."nbDecrocheurs" is not null
-      then ${sql.table(indicateurRegionAlias)}."effectifDecrochage"
-      end
+      CASE WHEN
+      ${sql.table(indicateurRegionAlias)}."nbDecrocheurs" IS NOT NULL
+      THEN ${sql.table(indicateurRegionAlias)}."effectifDecrochage"
+      END
     )`;
 
 export const selectTauxDecrochageAgg = (
   indicateurRegionAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${selectDenominateurDecrochageAgg(indicateurRegionAlias)} >= ${seuil}
-    then ROUND(AVG(${sql.table(indicateurRegionAlias)}."tauxDecrochage"))
-    end`;
+    THEN ROUND(AVG(${sql.table(indicateurRegionAlias)}."tauxDecrochage"))
+    END`;
 
 export const selectTauxDecrochageNatAgg = (
   indicateurRegionAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${selectDenominateurDecrochageAgg(indicateurRegionAlias)} >= ${seuil}
-    then (100 * SUM(${sql.table(indicateurRegionAlias)}."nbDecrocheurs")
+    THEN (100 * SUM(${sql.table(indicateurRegionAlias)}."nbDecrocheurs")
     / ${selectDenominateurDecrochageAgg(indicateurRegionAlias)})
-    end`;
+    END`;
