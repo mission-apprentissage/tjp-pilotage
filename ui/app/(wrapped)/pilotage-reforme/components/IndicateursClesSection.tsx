@@ -211,6 +211,7 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
     </svg>
   </Icon>
 );
+
 const Delta = ({
   delta,
   isNational = false,
@@ -230,20 +231,20 @@ const Delta = ({
             boxSize={4}
             color={"redmarianne.472"}
           />
-          <Text>{`${delta} pts`}</Text>
+          <Text>{`${Math.round(delta)} pts`}</Text>
         </Flex>
       );
     else if (delta === 0)
       deltaIcon = (
         <Flex>
-          <Text>{`+${delta} pts`}</Text>
+          <Text>{`+${Math.round(delta)} pts`}</Text>
         </Flex>
       );
     else
       deltaIcon = (
         <Flex>
           <TriangleUpIcon mt={1} me={2} boxSize={4} color={"success.850"} />
-          <Text>{`+${delta} pts`}</Text>
+          <Text>{`+${Math.round(delta)} pts`}</Text>
         </Flex>
       );
   } else {
@@ -348,11 +349,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return data?.anneeN.filtered.insertion;
+        return Math.round(data?.anneeN.filtered.insertion ?? 0);
       case "poursuite":
-        return data?.anneeN.filtered.poursuite;
+        return Math.round(data?.anneeN.filtered.poursuite ?? 0);
       default:
-        return data?.anneeN.filtered.insertion;
+        return Math.round(data?.anneeN.filtered.insertion ?? 0);
     }
   };
 

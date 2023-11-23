@@ -151,10 +151,10 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.insertion} %
+                            {Math.round(region.insertion ?? 0)} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.poursuite} %
+                            {Math.round(region.poursuite ?? 0)} %
                           </Td>
                         </Tr>
                       </Fragment>

@@ -48,7 +48,7 @@ export const BarGraph = function <
           color: "inherit",
         },
         textStyle: {
-          color: "blueecume.400_active",
+          color: "inherit",
         },
         itemGap: 25,
       },
