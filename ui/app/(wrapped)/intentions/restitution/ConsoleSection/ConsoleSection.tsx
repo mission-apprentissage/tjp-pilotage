@@ -220,7 +220,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale"
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th
@@ -236,7 +236,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale."
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th
@@ -252,7 +252,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.devenirFavorable}
                   <TooltipIcon
                     ml="2"
-                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale"
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th

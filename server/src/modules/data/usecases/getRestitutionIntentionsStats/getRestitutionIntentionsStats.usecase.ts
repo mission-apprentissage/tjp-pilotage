@@ -35,6 +35,7 @@ const getRestitutionIntentionsStatsFactory =
       order: "asc" | "desc";
       column: string;
     };
+    voie?: "scolaire" | "apprentissage";
   }) => {
     const [{ count, demandes }, filters, statsSortie] = await Promise.all([
       findRestitutionIntentionsStatsInDB(activeFilters),
