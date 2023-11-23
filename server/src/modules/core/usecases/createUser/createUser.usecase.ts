@@ -56,7 +56,6 @@ export const [createUser, createUserFactory] = inject(
             pilote: "activate_account_pilote",
             pilote_region: "activate_account_region",
             gestionnaire_region: "activate_account_region",
-            expert_region: "activate_account_region",
           } as const
         )[role] ?? ("activate_account" as const);
 
