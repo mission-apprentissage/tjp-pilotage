@@ -125,7 +125,9 @@ export const IndicateursSection = ({
             <StatCard
               label="Taux poursuite étude dans votre région"
               value={
-                stats?.tauxPoursuite ? `${stats.tauxPoursuite}%` : undefined
+                stats?.tauxPoursuite
+                  ? `${Math.round(stats.tauxPoursuite)}%`
+                  : undefined
               }
             />
             <StatCard
@@ -133,13 +135,17 @@ export const IndicateursSection = ({
                 typeTerritoire === "region" ? "région" : "département"
               }`}
               value={
-                stats?.tauxRemplissage ? `${stats.tauxRemplissage}%` : undefined
+                stats?.tauxRemplissage
+                  ? `${Math.round(stats.tauxRemplissage)}%`
+                  : undefined
               }
             />
             <StatCard
               label="Taux d'emploi à 6 mois dans votre région"
               value={
-                stats?.tauxInsertion ? `${stats.tauxInsertion}%` : undefined
+                stats?.tauxInsertion
+                  ? `${Math.round(stats.tauxInsertion)}%`
+                  : undefined
               }
             />
             <StatCard
