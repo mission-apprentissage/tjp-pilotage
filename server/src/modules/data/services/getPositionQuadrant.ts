@@ -18,19 +18,19 @@ export const getPositionQuadrant = (
 
   const tauxInsertion =
     typeof formation.tauxInsertion === "string"
-      ? parseInt(formation.tauxInsertion)
+      ? parseFloat(formation.tauxInsertion)
       : formation.tauxInsertion;
   const tauxPoursuite =
     typeof formation.tauxPoursuite === "string"
-      ? parseInt(formation.tauxPoursuite)
+      ? parseFloat(formation.tauxPoursuite)
       : formation.tauxPoursuite;
   const tauxInsertionMoyen =
     typeof moyenne.tauxInsertion === "string"
-      ? parseInt(moyenne.tauxInsertion)
+      ? parseFloat(moyenne.tauxInsertion)
       : moyenne.tauxInsertion;
   const tauxPoursuiteMoyen =
     typeof moyenne.tauxPoursuite === "string"
-      ? parseInt(moyenne.tauxPoursuite)
+      ? parseFloat(moyenne.tauxPoursuite)
       : moyenne.tauxPoursuite;
 
   if (
