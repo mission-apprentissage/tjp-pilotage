@@ -90,6 +90,7 @@ const formatResult = (
         Math.round(
           (result[0]?.national.transformes / effectifNational || 0) * 10000
         ) / 100,
+      effectif: effectifNational || 0,
     },
     regions: _.chain(result)
       .groupBy((item) => item.region.codeRegion)
@@ -101,6 +102,7 @@ const formatResult = (
             (items[0].region.transforme /
               effectifsRegions[items[0].region.codeRegion ?? ""] || 0) * 10000
           ) / 100,
+        effectif: effectifsRegions[items[0].region.codeRegion ?? ""] || 0,
       }))
       .orderBy(
         (item) => {
@@ -123,6 +125,7 @@ const formatResult = (
               effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0) *
               10000
           ) / 100,
+        effectif: effectifsAcademie[items[0].academie.codeAcademie ?? ""] || 0,
       }))
       .orderBy(
         (item) => {
@@ -146,6 +149,9 @@ const formatResult = (
                 items[0].departement.codeDepartement ?? ""
               ] || 0) * 10000
           ) / 100,
+        effectif:
+          effectifsDepartements[items[0].departement.codeDepartement ?? ""] ||
+          0,
       }))
       .orderBy(
         (item) => {

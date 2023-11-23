@@ -7,7 +7,7 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
-import { CadranSection } from "@/app/(wrapped)/intentions/pilotage/components/CadranSection";
+import { QuadrantSection } from "@/app/(wrapped)/intentions/pilotage/components/QuadrantSection";
 
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { withAuth } from "../../../../utils/security/withAuth";
@@ -137,7 +137,7 @@ export default withAuth(
     };
 
     return (
-      <Container maxWidth={"100%"} bg="blue.faded">
+      <Container maxWidth={"100%"} bg="blueecume.950">
         <Container maxWidth={"container.xl"} py="4">
           <FiltersSection
             activeTerritoiresFilters={territoiresFilters}
@@ -168,7 +168,7 @@ export default withAuth(
               />
             </SimpleGrid>
             <Box mt={14}>
-              <CadranSection
+              <QuadrantSection
                 scope={scope}
                 parentFilters={filters}
                 scopeFilters={data?.filters}

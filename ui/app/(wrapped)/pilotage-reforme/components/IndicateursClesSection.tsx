@@ -59,7 +59,12 @@ const DeltaIcon = ({
     if (delta < 0)
       deltaIcon = (
         <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleDownIcon mt={1} me={"auto"} boxSize={4} color={"#D85766"} />
+          <TriangleDownIcon
+            mt={1}
+            me={"auto"}
+            boxSize={4}
+            color={"pilotage.red"}
+          />
           {children}
         </Flex>
       );
@@ -67,13 +72,23 @@ const DeltaIcon = ({
     else
       deltaIcon = (
         <Flex {...props} width="50%" justifyContent={"end"}>
-          <TriangleUpIcon mt={1} me={"auto"} boxSize={4} color={"#81DC6F"} />
+          <TriangleUpIcon
+            mt={1}
+            me={"auto"}
+            boxSize={4}
+            color={"success.850"}
+          />
           {children}
         </Flex>
       );
   } else {
     deltaIcon = (
-      <Flex {...props} width="50%" justifyContent={"end"} color={"#96A6D8"}>
+      <Flex
+        {...props}
+        width="50%"
+        justifyContent={"end"}
+        color={"blueecume.400_active"}
+      >
         -
       </Flex>
     );
@@ -93,7 +108,7 @@ const IndicateurCompare = ({
     <>
       <Text
         px={8}
-        color={"#5770BE"}
+        color={"blueecume.400_hover"}
         width={"40%"}
         textAlign="end"
         whiteSpace={"nowrap"}
@@ -103,7 +118,7 @@ const IndicateurCompare = ({
       <DeltaIcon
         delta={(indicateuranneeN || 0) - (indicateuranneeNMoins1 || 0)}
       >
-        <Text color={"#96A6D8"} whiteSpace={"nowrap"}>
+        <Text color={"blueecume.400_active"} whiteSpace={"nowrap"}>
           {indicateuranneeNMoins1 ? `${indicateuranneeNMoins1} / N-1` : "-"}
         </Text>
       </DeltaIcon>
@@ -124,7 +139,11 @@ const IndicateurEffectifLine = ({
 }) => (
   <>
     <SimpleGrid spacing={3} columns={[2]} p={2} fontWeight={700}>
-      <Text align="start" textTransform={"uppercase"} color={"#96A6D8"}>
+      <Text
+        align="start"
+        textTransform={"uppercase"}
+        color={"blueecume.400_active"}
+      >
         {label}
       </Text>
       <Flex justifyContent={"end"}>
@@ -192,6 +211,7 @@ const DrapeauFrancaisIcon = ({ ...props }) => (
     </svg>
   </Icon>
 );
+
 const Delta = ({
   delta,
   isNational = false,
@@ -205,21 +225,26 @@ const Delta = ({
     if (delta < 0)
       deltaIcon = (
         <Flex>
-          <TriangleDownIcon mt={1} me={2} boxSize={4} color={"#D85766"} />
-          <Text>{`${delta} pts`}</Text>
+          <TriangleDownIcon
+            mt={1}
+            me={2}
+            boxSize={4}
+            color={"redmarianne.472"}
+          />
+          <Text>{`${Math.round(delta)} pts`}</Text>
         </Flex>
       );
     else if (delta === 0)
       deltaIcon = (
         <Flex>
-          <Text>{`+${delta} pts`}</Text>
+          <Text>{`+${Math.round(delta)} pts`}</Text>
         </Flex>
       );
     else
       deltaIcon = (
         <Flex>
-          <TriangleUpIcon mt={1} me={2} boxSize={4} color={"#81DC6F"} />
-          <Text>{`+${delta} pts`}</Text>
+          <TriangleUpIcon mt={1} me={2} boxSize={4} color={"success.850"} />
+          <Text>{`+${Math.round(delta)} pts`}</Text>
         </Flex>
       );
   } else {
@@ -227,7 +252,7 @@ const Delta = ({
   }
 
   return (
-    <Flex fontSize={12} color={"#96A6D8"}>
+    <Flex fontSize={12} color={"blueecume.400_active"}>
       {deltaIcon}
       <Flex ms="auto">
         {isNational && <DrapeauFrancaisIcon mt={1.5} mx={1} />}
@@ -324,11 +349,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return data?.anneeN.filtered.insertion;
+        return Math.round(data?.anneeN.filtered.insertion ?? 0);
       case "poursuite":
-        return data?.anneeN.filtered.poursuite;
+        return Math.round(data?.anneeN.filtered.poursuite ?? 0);
       default:
-        return data?.anneeN.filtered.insertion;
+        return Math.round(data?.anneeN.filtered.insertion ?? 0);
     }
   };
 
@@ -345,12 +370,12 @@ const StatCard = ({
           mr="4"
           flex={1}
           textTransform={"uppercase"}
-          color={"#000091"}
+          color={"bluefrance.113"}
           fontWeight={700}
         >
           {label}
         </Box>
-        <Box fontWeight="bold" fontSize="40" color={"#000091"}>
+        <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
           {getValue(type) ? (
             `${getValue(type)} %`
           ) : (

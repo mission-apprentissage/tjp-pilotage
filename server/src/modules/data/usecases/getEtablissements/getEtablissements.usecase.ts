@@ -1,3 +1,5 @@
+import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getEtablissementsFactory =
@@ -22,15 +24,29 @@ const getEtablissementsFactory =
     secteur?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
-    const [{ etablissements, count }, filters] = await Promise.all([
-      deps.findEtablissementsInDb(activeFilters),
-      deps.findFiltersInDb(activeFilters),
-    ]);
+    const [{ etablissements, count }, filters, statsSortie] = await Promise.all(
+      [
+        deps.findEtablissementsInDb(activeFilters),
+        deps.findFiltersInDb(activeFilters),
+        getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
+      ]
+    );
 
     return {
       count,
       filters,
-      etablissements,
+      etablissements: etablissements.map((etablissement) => ({
+        ...etablissement,
+        positionQuadrant:
+          statsSortie && statsSortie[etablissement.codeRegion ?? ""]
+            ? getPositionQuadrant(
+                etablissement,
+                statsSortie[etablissement.codeRegion ?? ""][
+                  etablissement.codeNiveauDiplome ?? ""
+                ] || {}
+              )
+            : "Hors quadrant",
+      })),
     };
   };
 

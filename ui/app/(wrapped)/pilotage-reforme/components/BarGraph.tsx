@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
@@ -26,6 +26,8 @@ export const BarGraph = function <
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const bf113 = useToken("colors", "bluefrance.113");
+  const be850 = useToken("colors", "blueecume.850_active");
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
@@ -46,7 +48,7 @@ export const BarGraph = function <
           color: "inherit",
         },
         textStyle: {
-          color: "#96A6D8",
+          color: "inherit",
         },
         itemGap: 25,
       },
@@ -57,7 +59,7 @@ export const BarGraph = function <
           graphData?.anneeN.libelleAnnee,
         ],
         axisLabel: {
-          color: "#000091",
+          color: bf113,
           fontWeight: 700,
         },
       },
@@ -65,7 +67,7 @@ export const BarGraph = function <
         type: "value",
         axisLabel: {
           formatter: "{value} %",
-          color: "#000091",
+          color: bf113,
           fontWeight: 700,
         },
         splitNumber: 3,
@@ -82,7 +84,7 @@ export const BarGraph = function <
                 graphData?.anneeN.nationale ?? 0,
               ],
               type: "bar",
-              color: "#000091",
+              color: bf113,
               barMaxWidth: 50,
               itemStyle: {
                 borderRadius: [15, 15, 0, 0],
@@ -97,7 +99,7 @@ export const BarGraph = function <
                   ]
                 : [],
               type: "bar",
-              color: "#0974F6",
+              color: be850,
               barMaxWidth: 50,
               itemStyle: {
                 borderRadius: [15, 15, 0, 0],
@@ -112,7 +114,7 @@ export const BarGraph = function <
                 graphData?.anneeN.nationale ?? 0,
               ],
               type: "bar",
-              color: "#000091",
+              color: bf113,
               barMaxWidth: 50,
               itemStyle: {
                 borderRadius: [15, 15, 0, 0],

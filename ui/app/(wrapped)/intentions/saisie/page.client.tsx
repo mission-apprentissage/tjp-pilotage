@@ -57,6 +57,7 @@ const DEMANDES_COLUMNS = {
   codeRegion: "Code Region",
   codeAcademie: "Code Académie",
   createdAt: "Date de création",
+  updatedAt: "Date de dernière modification",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
   compensationDispositifId: "Dispositif compensé",
@@ -223,6 +224,13 @@ export const PageClient = () => {
                         <OrderIcon {...order} column="createdAt" />
                         {DEMANDES_COLUMNS.createdAt}
                       </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("updatedAt")}
+                      >
+                        <OrderIcon {...order} column="updatedAt" />
+                        {DEMANDES_COLUMNS.updatedAt}
+                      </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
@@ -356,6 +364,9 @@ export const PageClient = () => {
                           </Td>
                           <Td>
                             {new Date(demande.createdAt).toLocaleString()}
+                          </Td>
+                          <Td>
+                            {new Date(demande.updatedAt).toLocaleString()}
                           </Td>
                         </Tr>
                       )

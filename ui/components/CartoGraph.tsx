@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import _ from "lodash";
@@ -23,6 +23,29 @@ export const CartoGraph = ({
   customColorPalette?: string[];
   handleClick?: (dataCode: string | undefined) => void;
 }) => {
+  const colorPalette = useMemo(
+    () =>
+      customColorPalette
+        ? customColorPalette
+        : objectif === "bas"
+        ? [
+            useToken("colors", "pinkmacaron.950"),
+            useToken("colors", "pinkmacaron.925"),
+            useToken("colors", "pinkmacaron.850"),
+            useToken("colors", "pinkmacaron.689"),
+          ]
+        : [
+            useToken("colors", "blueecume.925"),
+            useToken("colors", "blueecume.675_hover"),
+            useToken("colors", "blueecume.400_hover"),
+            useToken("colors", "bluefrance.113"),
+          ],
+    [customColorPalette, objectif]
+  );
+
+  const bluefrance525 = useToken("colors", "bluefrance.525");
+  const bluefrance113 = useToken("colors", "bluefrance.113");
+
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -92,11 +115,7 @@ export const CartoGraph = ({
     const max = Math.max(...removeMax(data));
     const diff = max - min;
 
-    const colorRange = customColorPalette
-      ? customColorPalette
-      : objectif === "bas"
-      ? ["#FEE9E6", "#FDDFDA", "#FCC0B4", "#E18B76"]
-      : ["#D5DBEF", "#ABB8DE", "#5770BE", "#000091"];
+    const colorRange = colorPalette;
 
     const piecesStep = customPiecesSteps
       ? customPiecesSteps
@@ -168,7 +187,7 @@ export const CartoGraph = ({
           emphasis: {
             label: {
               show: false,
-              color: "#000091",
+              color: bluefrance113,
               fontWeight: 600,
               fontSize: 14,
               fontFamily: "Marianne, Arial",
@@ -179,7 +198,7 @@ export const CartoGraph = ({
             },
             itemStyle: {
               areaColor: "inherit",
-              borderColor: "#6a6af4",
+              borderColor: bluefrance525,
               borderWidth: 1,
             },
           },
@@ -187,7 +206,7 @@ export const CartoGraph = ({
           select: {
             disabled: false,
             label: {
-              color: "#000091",
+              color: bluefrance113,
               fontWeight: 600,
               fontSize: 14,
               fontFamily: "Marianne, Arial",
@@ -198,13 +217,13 @@ export const CartoGraph = ({
             },
             itemStyle: {
               areaColor: "white",
-              borderColor: "#000091",
+              borderColor: bluefrance113,
             },
           },
           nameProperty: getNameProperty(),
           nameMap: getNameMap(),
           itemStyle: {
-            borderColor: "#FFF",
+            borderColor: "white",
           },
           data: graphData,
         },

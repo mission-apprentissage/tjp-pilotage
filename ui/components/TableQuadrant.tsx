@@ -22,11 +22,12 @@ type Formation = {
   tauxPoursuite?: number;
   tauxInsertion?: number;
   tauxPression?: number;
-  positionCadran?: string;
+  positionQuadrant?: string;
   cfd?: string;
+  continuum?: { cfd: string; libelle?: string };
 };
 
-export const TableCadran = ({
+export const TableQuadrant = ({
   formations,
   handleOrder,
   handleClick,
@@ -49,12 +50,12 @@ export const TableCadran = ({
 
   const getTrBgColor = (formation: Formation) => {
     if (currentCfd && formation.cfd === currentCfd)
-      return "blue.main !important";
-    switch (formation.positionCadran) {
+      return "blueecume.400_hover !important";
+    switch (formation.positionQuadrant) {
       case "Q1":
-        return "#C8F6D6";
+        return "green.submitted";
       case "Q4":
-        return "#ffe2e1";
+        return "redmarianne.925";
       default:
         return "inherit";
     }
@@ -69,7 +70,7 @@ export const TableCadran = ({
       >
         <Table variant="simple" size={"sm"} mb={"auto"}>
           <Thead
-            bgColor="#96A6D8"
+            bgColor="blueecume.400_active"
             h="12"
             position="sticky"
             top="0"
@@ -78,6 +79,7 @@ export const TableCadran = ({
           >
             <Tr>
               <Th
+                px="2"
                 maxW="40%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
@@ -89,10 +91,12 @@ export const TableCadran = ({
                 FORMATION
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxPression")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPression" />}
                 TX PRESSION
@@ -110,22 +114,34 @@ export const TableCadran = ({
                 />
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxInsertion")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxInsertion" />}
                 TX EMPLOI
+                <TooltipIcon
+                  ml="1"
+                  label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                />
               </Th>
               <Th
+                px="2"
                 maxW="20%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
                 onClick={() => handleOrder && handleOrder("tauxPoursuite")}
+                textAlign={"center"}
               >
                 {handleOrder && <OrderIcon {...order} column="tauxPoursuite" />}
                 TX POURSUITE
+                <TooltipIcon
+                  ml="1"
+                  label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                />
               </Th>
             </Tr>
           </Thead>
@@ -154,10 +170,18 @@ export const TableCadran = ({
                   </TableBadge>
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="130px" value={formation.tauxInsertion} />
+                  <GraphWrapper
+                    maxW="120px"
+                    value={formation.tauxInsertion}
+                    continuum={formation.continuum}
+                  />
                 </Td>
                 <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper maxW="130px" value={formation.tauxPoursuite} />
+                  <GraphWrapper
+                    maxW="120px"
+                    value={formation.tauxPoursuite}
+                    continuum={formation.continuum}
+                  />
                 </Td>
               </Tr>
             ))}

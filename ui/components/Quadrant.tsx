@@ -10,6 +10,7 @@ import {
   PopoverTrigger,
   useOutsideClick,
   usePopper,
+  useToken,
 } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
@@ -23,7 +24,7 @@ import {
   useState,
 } from "react";
 
-const cadranLabelStyle = {
+const quadrantLabelStyle = {
   show: true,
   distance: 14,
   fontSize: 14,
@@ -31,12 +32,12 @@ const cadranLabelStyle = {
   fontWeight: "bold",
 } as const;
 
-export const Cadran = function <
+export const Quadrant = function <
   F extends {
     effectif?: number;
     tauxPoursuite: number;
     tauxInsertion: number;
-    positionCadran?: string;
+    positionQuadrant?: string;
   },
 >({
   className,
@@ -63,6 +64,9 @@ export const Cadran = function <
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const greenColor = useToken("colors", "green.submitted");
+  const redColor = useToken("colors", "redmarianne.925");
 
   const popperInstance = usePopper({
     modifiers: [
@@ -104,13 +108,13 @@ export const Cadran = function <
     }));
   }, [data]);
 
-  const repartitionCadrans = useMemo(() => {
+  const repartitionsQuadrants = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
     return {
-      q1: data.filter((item) => item.positionCadran === "Q1").length,
-      q2: data.filter((item) => item.positionCadran === "Q2").length,
-      q3: data.filter((item) => item.positionCadran === "Q3").length,
-      q4: data.filter((item) => item.positionCadran === "Q4").length,
+      q1: data.filter((item) => item.positionQuadrant === "Q1").length,
+      q2: data.filter((item) => item.positionQuadrant === "Q2").length,
+      q3: data.filter((item) => item.positionQuadrant === "Q3").length,
+      q4: data.filter((item) => item.positionQuadrant === "Q4").length,
     };
   }, [data, meanInsertion, meanPoursuite]);
 
@@ -216,10 +220,10 @@ export const Cadran = function <
                     [
                       {
                         coord: [0, 0],
-                        itemStyle: { color: "#ffe2e1" },
-                        name: `Q4 - ${repartitionCadrans?.q4} formations`,
+                        itemStyle: { color: redColor },
+                        name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideBottomLeft",
                         },
                       },
@@ -228,10 +232,10 @@ export const Cadran = function <
                     [
                       {
                         coord: [meanPoursuite, meanInsertion],
-                        itemStyle: { color: "#C8F6D6" },
-                        name: `Q1 - ${repartitionCadrans?.q1} formations`,
+                        itemStyle: { color: greenColor },
+                        name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideTopRight",
                         },
                       },
@@ -241,9 +245,9 @@ export const Cadran = function <
                       {
                         coord: [0, meanInsertion],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
-                        name: `Q2 - ${repartitionCadrans?.q2} formations`,
+                        name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideTopLeft",
                         },
                       },
@@ -253,9 +257,9 @@ export const Cadran = function <
                       {
                         coord: [meanPoursuite, 0],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
-                        name: `Q3 - ${repartitionCadrans?.q3} formations`,
+                        name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
                         label: {
-                          ...cadranLabelStyle,
+                          ...quadrantLabelStyle,
                           position: "insideBottomRight",
                         },
                       },
@@ -312,25 +316,25 @@ export const Cadran = function <
         bottom="0"
       ></Box>
 
-      <Box position="absolute" right="0" top="10px" left="0" bottom="0">
-        {InfoTootipContent && (
+      {InfoTootipContent && (
+        <Box position={"absolute"} top="10px" bottom="0" right="-20px">
           <InfoTooltip>
             <InfoTootipContent />
           </InfoTooltip>
-        )}
+        </Box>
+      )}
 
-        {displayedDetail && TooltipContent && (
-          <FormationTooltipWrapper
-            ref={popperInstance.popperRef}
-            clickOutside={() => setDisplayedDetail(undefined)}
-            {...popperInstance.getPopperProps()}
-          >
-            {TooltipContent && displayedDetail && (
-              <TooltipContent formation={displayedDetail?.formation} />
-            )}
-          </FormationTooltipWrapper>
-        )}
-      </Box>
+      {displayedDetail && TooltipContent && (
+        <FormationTooltipWrapper
+          ref={popperInstance.popperRef}
+          clickOutside={() => setDisplayedDetail(undefined)}
+          {...popperInstance.getPopperProps()}
+        >
+          {TooltipContent && displayedDetail && (
+            <TooltipContent formation={displayedDetail?.formation} />
+          )}
+        </FormationTooltipWrapper>
+      )}
     </Box>
   );
 };

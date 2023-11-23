@@ -27,7 +27,7 @@ export const CartoSection = ({
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
-      value: region[indicateur] ?? 0,
+      value: Math.round(region[indicateur] ?? 0),
     };
   });
 

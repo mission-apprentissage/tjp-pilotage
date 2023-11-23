@@ -17,8 +17,8 @@ import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
-  tauxInsertion6mois: "Emploi",
-  tauxPoursuiteEtudes: "Poursuite",
+  tauxInsertion: "Emploi",
+  tauxPoursuite: "Poursuite",
   tauxDecrochage: "Décrochage",
   tauxTransformation: "Transformation",
 };
@@ -28,7 +28,7 @@ const Loader = () => (
     <Table variant="striped" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          <Tr key={i} bg={"#f5f5f5"}>
+          <Tr key={i} bg={"grey.975"}>
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
             </Td>
@@ -103,7 +103,7 @@ export const VueRegionAcademieSection = ({
                     onClick={() => handleOrder("insertion")}
                   >
                     <OrderIcon {...order} column="insertion" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion6mois}
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxInsertion}
                   </Th>
                   <Th
                     isNumeric
@@ -113,7 +113,7 @@ export const VueRegionAcademieSection = ({
                     onClick={() => handleOrder("poursuite")}
                   >
                     <OrderIcon {...order} column="poursuite" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuiteEtudes}
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
                   </Th>
                 </Tr>
               </Thead>
@@ -122,7 +122,7 @@ export const VueRegionAcademieSection = ({
                   {data?.statsRegions.map((region) => {
                     const trBgColor =
                       region.codeRegion === codeRegion
-                        ? "blue.main !important"
+                        ? "blueecume.400_hover !important"
                         : "";
 
                     const tdBgColor =
@@ -134,7 +134,9 @@ export const VueRegionAcademieSection = ({
                       region.codeRegion === codeRegion ? "white" : "inherit";
 
                     const color =
-                      region.codeRegion === codeRegion ? "inherit" : "#000091";
+                      region.codeRegion === codeRegion
+                        ? "inherit"
+                        : "bluefrance.113";
 
                     return (
                       <Fragment
@@ -149,10 +151,10 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.insertion} %
+                            {Math.round(region.insertion ?? 0)} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {region.poursuite} %
+                            {Math.round(region.poursuite ?? 0)} %
                           </Td>
                         </Tr>
                       </Fragment>
