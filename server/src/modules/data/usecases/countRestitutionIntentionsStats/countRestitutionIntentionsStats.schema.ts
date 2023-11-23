@@ -47,6 +47,7 @@ const StatsDemandesItem = z.object({
   positionQuadrant: z.string().optional(),
   tauxInsertionMoyen: z.coerce.number().optional(),
   tauxPoursuiteMoyen: z.coerce.number().optional(),
+  voie: z.string().optional(),
 });
 
 const CountCapaciteStatsDemandesSchema = z.object({
@@ -79,6 +80,7 @@ export const countRestitutionIntentionsStatsSchema = {
     positionQuadrant: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: StatsDemandesItem.keyof().optional(),
+    voie: z.enum(["scolaire", "apprentissage"]).optional(),
   }),
   response: {
     200: z.object({
