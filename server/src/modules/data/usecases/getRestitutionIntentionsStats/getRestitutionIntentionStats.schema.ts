@@ -76,11 +76,11 @@ export const getRestitutionIntentionsStatsSchema = {
     secteur: z.string().optional(),
     compensation: z.string().optional(),
     positionQuadrant: z.string().optional(),
+    voie: z.enum(["scolaire", "apprentissage"]).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: StatsDemandesItem.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
-    voie: z.enum(["scolaire", "apprentissage"]).optional(),
   }),
   response: {
     200: z.object({
