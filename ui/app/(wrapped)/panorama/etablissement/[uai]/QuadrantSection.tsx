@@ -1,12 +1,14 @@
-import { ViewIcon } from "@chakra-ui/icons";
+import { DownloadIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
   Button,
+  Center,
   Container,
   Flex,
   Heading,
   Skeleton,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -14,8 +16,10 @@ import { useMemo, useState } from "react";
 
 import { client } from "@/api.client";
 
-import { Cadran } from "../../../../../components/Cadran";
-import { TableCadran } from "../../../../../components/TableCadran";
+import { Quadrant } from "../../../../../components/Quadrant";
+import { TableQuadrant } from "../../../../../components/TableQuadrant";
+import { downloadCsv } from "../../../../../utils/downloadCsv";
+import { OrderPanoramaEtablissement } from "../../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 type RequiredFields<T, F extends keyof T> = T & Required<Pick<T, F>>;
@@ -27,40 +31,51 @@ const effectifSizes = [
   { max: 100, size: 40 },
 ];
 
-export const CadranSection = ({
-  cadranFormations,
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
+export const QuadrantSection = ({
+  quadrantFormations,
+  isLoading,
   meanPoursuite,
   meanInsertion,
   codeNiveauDiplome,
   rentreeScolaire,
+  order,
+  handleOrder,
 }: {
-  cadranFormations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
+  isLoading: boolean;
+  quadrantFormations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
+  order?: Partial<OrderPanoramaEtablissement>;
+  handleOrder: (column: OrderPanoramaEtablissement["orderBy"]) => void;
 }) => {
-  const [typeVue, setTypeVue] = useState<"cadran" | "tableau">("cadran");
+  const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
   const toggleTypeVue = () => {
-    if (typeVue === "cadran") setTypeVue("tableau");
-    else setTypeVue("cadran");
+    if (typeVue === "quadrant") setTypeVue("tableau");
+    else setTypeVue("quadrant");
   };
   const filteredFormations = useMemo(
     () =>
-      cadranFormations?.filter(
+      quadrantFormations?.filter(
         (
           item
         ): item is RequiredFields<
           (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number],
-          "tauxInsertion6mois" | "tauxPoursuiteEtudes"
+          "tauxInsertion" | "tauxPoursuite"
         > =>
-          item.tauxInsertion6mois !== undefined &&
-          item.tauxPoursuiteEtudes !== undefined &&
+          item.tauxInsertion !== undefined &&
+          item.tauxPoursuite !== undefined &&
           (!codeNiveauDiplome?.length ||
             codeNiveauDiplome.includes(item.codeNiveauDiplome))
       ),
-    [codeNiveauDiplome, cadranFormations]
+    [codeNiveauDiplome, quadrantFormations]
   );
 
   return (
@@ -78,7 +93,35 @@ export const CadranSection = ({
           <Flex>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
-              {`Passer en vue ${typeVue === "cadran" ? "tableau" : "cadran"}`}
+              {`Passer en vue ${
+                typeVue === "quadrant" ? "tableau" : "quadrant"
+              }`}
+            </Button>
+            <Button
+              ml="2"
+              aria-label="csv"
+              variant="solid"
+              onClick={async () => {
+                if (!filteredFormations) return;
+                downloadCsv(
+                  "formations_panorama.csv",
+                  filteredFormations.map((formation) => ({
+                    ...formation,
+                  })),
+                  {
+                    libelleDiplome: "Formation",
+                    cfd: "CFD",
+                    libelleDispositif: "Dispositif",
+                    tauxInsertion: "Taux d'emploi",
+                    tauxPoursuite: "Taux de poursuite",
+                    tauxPression: "Taux de pression",
+                    positionQuadrant: "Position dans le quadrant",
+                  }
+                );
+              }}
+            >
+              <DownloadIcon mr="2" />
+              Exporter en csv
             </Button>
           </Flex>
           <Flex alignItems={"flex-end"}>
@@ -96,30 +139,38 @@ export const CadranSection = ({
         </Flex>
         <AspectRatio ratio={1} mt={2}>
           <>
-            {filteredFormations &&
-              (typeVue === "cadran" ? (
-                <Cadran
+            {isLoading ? (
+              <Loader />
+            ) : (
+              filteredFormations &&
+              (typeVue === "quadrant" ? (
+                <Quadrant
                   meanPoursuite={meanPoursuite}
                   meanInsertion={meanInsertion}
                   TooltipContent={FormationTooltipContent}
                   InfoTootipContent={InfoTooltipContent}
                   data={filteredFormations.map((formation) => ({
                     ...formation,
-                    tauxInsertion: formation.tauxInsertion6mois,
-                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    tauxInsertion: formation.tauxInsertion,
+                    tauxPoursuite: formation.tauxPoursuite,
                   }))}
                   itemId={(item) => item.cfd + item.dispositifId}
                   effectifSizes={effectifSizes}
                 />
               ) : (
-                <TableCadran
+                <TableQuadrant
                   formations={filteredFormations.map((formation) => ({
                     ...formation,
-                    tauxInsertion: formation.tauxInsertion6mois,
-                    tauxPoursuite: formation.tauxPoursuiteEtudes,
+                    tauxInsertion: formation.tauxInsertion,
+                    tauxPoursuite: formation.tauxPoursuite,
                   }))}
+                  order={order}
+                  handleOrder={(column?: string) =>
+                    handleOrder(column as OrderPanoramaEtablissement["orderBy"])
+                  }
                 />
-              ))}
+              ))
+            )}
             {!filteredFormations && <Skeleton opacity="0.3" height="100%" />}
           </>
         </AspectRatio>

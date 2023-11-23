@@ -1,3 +1,5 @@
+import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getFormationsTransformationStatsFactory =
@@ -8,7 +10,7 @@ const getFormationsTransformationStatsFactory =
       getRegionStats: dependencies.getRegionStats,
     }
   ) =>
-  async (filters: {
+  async (activeFilters: {
     status?: "draft" | "submitted";
     type?: "fermeture" | "ouverture";
     rentreeScolaire?: string;
@@ -19,16 +21,20 @@ const getFormationsTransformationStatsFactory =
     codeNiveauDiplome?: string[];
     filiere?: string[];
     orderBy?: { column: string; order: "asc" | "desc" };
+    positionQuadrant?: string;
   }) => {
-    const [stats, formations] = await Promise.all([
-      deps.getRegionStats({
-        ...filters,
-        millesimeSortie: "2020_2021",
-      }),
-      deps.getFormationsTransformationStatsQuery(filters),
+    const [formations, statsSortie] = await Promise.all([
+      deps.getFormationsTransformationStatsQuery(activeFilters),
+      getStatsSortie(activeFilters),
     ]);
-    return { stats, formations };
-  };
 
+    return {
+      stats: statsSortie,
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+      })),
+    };
+  };
 export const getFormationsTransformationStats =
   getFormationsTransformationStatsFactory();

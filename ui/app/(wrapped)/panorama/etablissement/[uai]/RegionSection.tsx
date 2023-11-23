@@ -28,15 +28,27 @@ export const RegionSection = ({
           {formatedLibelleRegion(regionsStats?.libelleRegion ?? "votre région")}
         </Heading>
         <StatCard
-          value={regionsStats?.tauxRemplissage}
+          value={
+            regionsStats?.tauxRemplissage
+              ? `${Math.round(regionsStats.tauxRemplissage)}%`
+              : undefined
+          }
           label="Taux de remplissage dans la région"
         />
         <StatCard
-          value={regionsStats?.tauxPoursuiteEtudes}
+          value={
+            regionsStats?.tauxPoursuite
+              ? `${Math.round(regionsStats.tauxPoursuite)}%`
+              : undefined
+          }
           label="Taux de poursuite d’étude dans la région"
         />
         <StatCard
-          value={regionsStats?.tauxInsertion6mois}
+          value={
+            regionsStats?.tauxInsertion
+              ? `${Math.round(regionsStats.tauxInsertion)}%`
+              : undefined
+          }
           label="Taux d’emploi à 6 mois dans la région"
         />
       </HStack>
@@ -44,7 +56,7 @@ export const RegionSection = ({
   );
 };
 
-const StatCard = ({ value, label }: { value?: number; label: string }) => {
+const StatCard = ({ value, label }: { value?: string; label: string }) => {
   return (
     <Box
       p="4"
@@ -54,7 +66,7 @@ const StatCard = ({ value, label }: { value?: number; label: string }) => {
       maxWidth={240}
     >
       <Text fontSize="lg" fontWeight="bold">
-        {value !== undefined ? `${value}%` : "-"}
+        {value ?? "-"}
       </Text>
       <Text>{label}</Text>
     </Box>

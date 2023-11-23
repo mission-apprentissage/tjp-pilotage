@@ -5,7 +5,6 @@ import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
-import { withPositionCadran } from "../../utils/positionCadran";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
   selectTauxInsertion6moisAgg,
@@ -70,6 +69,7 @@ const getFormationsTransformationStatsQuery = ({
   status,
   type,
   rentreeScolaire = "2024",
+  millesimeSortie = "2020_2021",
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -81,6 +81,7 @@ const getFormationsTransformationStatsQuery = ({
   status?: "draft" | "submitted";
   type?: "fermeture" | "ouverture";
   rentreeScolaire?: string;
+  millesimeSortie?: string;
   codeRegion?: string;
   codeAcademie?: string;
   codeDepartement?: string;
@@ -120,14 +121,14 @@ const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withInsertionReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -140,21 +141,11 @@ const getFormationsTransformationStatsQuery = ({
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
-      withPositionCadran({
-        eb,
-        millesimeSortie: "2020_2021",
-        cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
-        codeRegionRef: "dataEtablissement.codeRegion",
-        codeNiveauDiplomeRef: codeNiveauDiplome
-          ? "dataFormation.codeNiveauDiplome"
-          : undefined,
-      }).as("positionCadran"),
       selectNbDemandes(eb).as("nbDemandes"),
       selectNbEtablissements(eb).as("nbEtablissements"),
       sql<number>`ABS(${eb.fn.sum(selectDifferencePlaces(eb, type))})`.as(
@@ -165,7 +156,7 @@ const getFormationsTransformationStatsQuery = ({
       eb.fn.sum<number>(selectPlacesTransformees(eb)).as("placesTransformees"),
       hasContinuum({
         eb,
-        millesimeSortie: "2020_2021",
+        millesimeSortie,
         cfdRef: "demande.cfd",
         dispositifIdRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
@@ -188,7 +179,7 @@ const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withInsertionReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
@@ -200,7 +191,7 @@ const getFormationsTransformationStatsQuery = ({
       (eb) =>
         withPoursuiteReg({
           eb,
-          millesimeSortie: "2020_2021",
+          millesimeSortie,
           cfdRef: "demande.cfd",
           dispositifIdRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",

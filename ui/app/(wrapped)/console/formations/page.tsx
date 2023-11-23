@@ -48,8 +48,8 @@ const FORMATIONS_COLUMNS = {
   effectif3: "Année 3",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
-  tauxInsertion6mois: "Tx d'emploi 6 mois régional",
-  tauxPoursuiteEtudes: "Tx de poursuite d'études régional",
+  tauxInsertion: "Tx d'emploi 6 mois régional",
+  tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
@@ -60,7 +60,7 @@ const FORMATIONS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
-  positionCadran: "Position dans le cadran",
+  positionQuadrant: "Position dans le quadrant",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
@@ -418,10 +418,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxInsertion6mois")}
+                  onClick={() => handleOrder("tauxInsertion")}
                 >
-                  <OrderIcon {...order} column="tauxInsertion6mois" />
-                  {FORMATIONS_COLUMNS.tauxInsertion6mois}
+                  <OrderIcon {...order} column="tauxInsertion" />
+                  {FORMATIONS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
@@ -429,10 +429,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxPoursuiteEtudes")}
+                  onClick={() => handleOrder("tauxPoursuite")}
                 >
-                  <OrderIcon {...order} column="tauxPoursuiteEtudes" />
-                  {FORMATIONS_COLUMNS.tauxPoursuiteEtudes}
+                  <OrderIcon {...order} column="tauxPoursuite" />
+                  {FORMATIONS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
@@ -446,7 +446,7 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
-                    label="Part des jeunes en emploi ou en poursuite d’étude."
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
                   />
                 </Th>
                 <Th
@@ -492,7 +492,13 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleFiliere" />
                   {FORMATIONS_COLUMNS.libelleFiliere}
                 </Th>
-                <Th>{FORMATIONS_COLUMNS.positionCadran}</Th>
+                <Th>
+                  {FORMATIONS_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                  />
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
@@ -525,7 +531,7 @@ export default function Formations() {
                           historique.map((historiqueLine) => (
                             <Tr
                               key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
-                              bg={"#f5f5f5"}
+                              bg={"grey.975"}
                             >
                               <FormationLineContent line={historiqueLine} />
                             </Tr>

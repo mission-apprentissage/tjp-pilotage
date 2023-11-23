@@ -40,10 +40,10 @@ export const STATS_DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  insertion: "Tx d'emploi à 6 mois régional",
-  poursuite: "Tx de poursuite d'études régional",
+  tauxInsertion: "Tx d'emploi à 6 mois régional",
+  tauxPoursuite: "Tx de poursuite d'études régional",
   devenirFavorable: "Tx de devenir favorable régional",
-  positionCadran: "Position dans le cadran",
+  positionQuadrant: "Position dans le quadrant",
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
 } satisfies ExportColumns<

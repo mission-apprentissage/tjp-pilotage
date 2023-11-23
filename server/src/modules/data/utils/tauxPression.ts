@@ -24,56 +24,56 @@ export const selectDenominateurPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
   SUM(
-    case when
+    CASE WHEN
     ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
-    )} is not null
-    then ${capaciteAnnee(
+    )} IS NOT NULL
+    THEN ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )}
-    end
+    END
   )`;
 
 export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
-    then round(100 * SUM(${premierVoeuxAnnee(
+    THEN ROUND(100 * SUM(${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )})
     / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})
-    end
+    END
   `;
 
 export const selectDenominateurPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
-    )} is not null
-    then ${capaciteAnnee(
+    )} IS NOT NULL
+    THEN ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )}
-    end`;
+    END`;
 
 export const selectTauxPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when
+    CASE WHEN
     ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
-    then (100 * ${premierVoeuxAnnee(
+    THEN (100 * ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )}
     / ${selectDenominateurPression(indicateurEntreeAlias)})
-    end
+    END
   `;
 
 export const selectTauxPressionParFormationEtParRegionDemande = ({

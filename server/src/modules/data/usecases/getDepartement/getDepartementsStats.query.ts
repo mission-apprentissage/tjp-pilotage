@@ -2,7 +2,10 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
-import { notHistorique } from "../../utils/notHistorique";
+import {
+  notHistorique,
+  notHistoriqueIndicateurRegionSortie,
+} from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -10,15 +13,21 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 export const getDepartementsStats = async ({
   codeDepartement,
-  codeDiplome,
+  codeNiveauDiplome,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeDepartement: string;
-  codeDiplome?: string[];
+  codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
+  const informationsDepartement = await kdb
+    .selectFrom("departement")
+    .where("codeDepartement", "=", codeDepartement)
+    .select(["codeRegion", "libelle as libelleDepartement"])
+    .executeTakeFirstOrThrow();
+
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
@@ -31,10 +40,11 @@ export const getDepartementsStats = async ({
       "departement.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
+    .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
@@ -45,14 +55,10 @@ export const getDepartementsStats = async ({
       )
     )
     .select([
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
-      ),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuiteEtudes"
-      ),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
@@ -61,14 +67,12 @@ export const getDepartementsStats = async ({
       "formation.codeFormationDiplome",
       "formationEtablissement.cfd"
     )
-    .innerJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+    .leftJoin("indicateurEntree", (join) =>
+      join.onRef(
+        "formationEtablissement.id",
+        "=",
+        "indicateurEntree.formationEtablissementId"
+      )
     )
     .innerJoin(
       "etablissement",
@@ -82,10 +86,11 @@ export const getDepartementsStats = async ({
       "etablissement.codeDepartement"
     )
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where(notHistorique)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",
       "departement.libelle as libelleDepartement",
@@ -99,7 +104,7 @@ export const getDepartementsStats = async ({
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
     .groupBy(["departement.libelle", "departement.codeRegion"])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
-  return { ...stats, ...statsSortie };
+  return { ...informationsDepartement, ...stats, ...statsSortie };
 };

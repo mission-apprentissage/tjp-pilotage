@@ -7,46 +7,49 @@ const seuil = 20;
 export const selectDenominateurDevenirFavorable = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when
-    ${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes" is not null
-    and ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
-    then ${sql.table(indicateurSortieAlias)}."effectifSortie"
-    end`;
+    CASE WHEN ${sql.table(
+      indicateurSortieAlias
+    )}."nbPoursuiteEtudes" IS NOT NULL
+    AND ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" IS NOT NULL
+    THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"::FLOAT
+    END`;
 
 export const selectTauxDevenirFavorable = (
   indicateurSortieAlias: string
 ) => sql<number>`
-    case when
-    ${selectDenominateurDevenirFavorable(indicateurSortieAlias)} >= ${seuil}
-    then (100 *
-      (${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
+    CASE WHEN ${selectDenominateurDevenirFavorable(
+      indicateurSortieAlias
+    )} >= ${seuil}
+    THEN ROUND((100 * (${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
       + ${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
-    / ${selectDenominateurDevenirFavorable(indicateurSortieAlias)})
-    end`;
+    / ${selectDenominateurDevenirFavorable(indicateurSortieAlias)})::NUMERIC,2)
+    END`;
 
 export const selectDenominateurDevenirFavorableAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
     SUM(
-      case when ${sql.table(
+      CASE WHEN ${sql.table(
         indicateurSortieAlias
-      )}."nbPoursuiteEtudes" is not null
-      and ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" is not null
-      then ${sql.table(indicateurSortieAlias)}."effectifSortie"
-      end
-    )`;
+      )}."nbPoursuiteEtudes" IS NOT NULL
+      AND ${sql.table(indicateurSortieAlias)}."nbInsertion6mois" IS NOT NULL
+      THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"
+      END
+    )::FLOAT`;
 
 export const selectTauxDevenirFavorableAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
-      case when
-      ${selectDenominateurDevenirFavorableAgg(
+      CASE WHEN ${selectDenominateurDevenirFavorableAgg(
         indicateurSortieAlias
       )} >= ${seuil}
-      then (100 * (SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
-      + SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois"))
-      / ${selectDenominateurDevenirFavorableAgg(indicateurSortieAlias)})
-      end
+      THEN ROUND((100 *
+        (SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
+        + SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois"))
+      / ${selectDenominateurDevenirFavorableAgg(
+        indicateurSortieAlias
+      )})::NUMERIC,2)
+      END
     `;
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];

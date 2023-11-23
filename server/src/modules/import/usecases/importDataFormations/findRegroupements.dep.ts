@@ -13,9 +13,7 @@ export const findRegroupements = async ({
       .where("type", "=", "regroupements")
       .where((eb) => {
         return eb.or(
-          mefstats.map((mefstat) =>
-            eb.cmpr("data", "@>", { MEF_STAT_11: mefstat })
-          )
+          mefstats.map((mefstat) => eb("data", "@>", { MEF_STAT_11: mefstat }))
         );
       })
       .executeTakeFirst()

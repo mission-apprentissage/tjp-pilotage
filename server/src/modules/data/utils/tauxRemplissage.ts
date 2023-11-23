@@ -6,45 +6,43 @@ import { effectifAnnee } from "./effectifAnnee";
 export const selectNumerateurRemplissage = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-case when 
-${capaciteAnnee({ alias: indicateurEntreeAlias })} is not null 
-then ${effectifAnnee({ alias: indicateurEntreeAlias })}
-end`;
+    CASE WHEN
+    ${capaciteAnnee({ alias: indicateurEntreeAlias })} IS NOT NULL
+    THEN ${effectifAnnee({ alias: indicateurEntreeAlias })}::FLOAT
+    END`;
 
 export const selectDenominateurRemplissageAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-  SUM(
-    case when 
-    ${effectifAnnee({ alias: indicateurEntreeAlias })} is not null 
-    then ${capaciteAnnee({ alias: indicateurEntreeAlias })}
-    end
-  )`;
+    SUM(
+      CASE WHEN
+      ${effectifAnnee({ alias: indicateurEntreeAlias })} IS NOT NULL
+      THEN ${capaciteAnnee({ alias: indicateurEntreeAlias })}::FLOAT
+      END
+    )`;
 
 export const selectTauxRemplissageAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when 
+    CASE WHEN
     ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)} >= 0
-    then (100 * SUM(${selectNumerateurRemplissage(indicateurEntreeAlias)}) 
-    / ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)})
-    end
-  `;
+    THEN ROUND((100 * SUM(${selectNumerateurRemplissage(indicateurEntreeAlias)})
+    / ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)})::NUMERIC,2)
+    END  `;
 
 export const selectDenominateurRemplissage = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-case when 
-${effectifAnnee({ alias: indicateurEntreeAlias })} is not null 
-then ${capaciteAnnee({ alias: indicateurEntreeAlias })}
-end`;
+    CASE WHEN
+    ${effectifAnnee({ alias: indicateurEntreeAlias })} IS NOT NULL
+    THEN ${capaciteAnnee({ alias: indicateurEntreeAlias })}::FLOAT
+    END`;
 
 export const selectTauxRemplissage = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    case when 
+    CASE WHEN
     ${selectDenominateurRemplissage(indicateurEntreeAlias)} >= 0
-    then (100 * ${effectifAnnee({ alias: indicateurEntreeAlias })}
-    / ${selectDenominateurRemplissage(indicateurEntreeAlias)})
-    end
-  `;
+    THEN ROUND((100 * ${effectifAnnee({ alias: indicateurEntreeAlias })}
+    / ${selectDenominateurRemplissage(indicateurEntreeAlias)})::NUMERIC,2)
+    END`;

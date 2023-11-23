@@ -83,16 +83,10 @@ export const FormationLineContent = ({
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxInsertion6mois}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
       </Td>
       <Td>
-        <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxPoursuiteEtudes}
-        />
+        <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
       <Td textAlign="center">
         <GraphWrapper
@@ -107,13 +101,13 @@ export const FormationLineContent = ({
       <Td>{line.CPCSecteur ?? "-"}</Td>
       <Td>{line.CPCSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
-      <Td>{line.positionCadran}</Td>
+      <Td>{line.positionQuadrant}</Td>
     </>
   );
 };
 
 export const FormationLineLoader = () => (
-  <Tr bg={"#f5f5f5"}>
+  <Tr bg={"grey.975"}>
     {new Array(17).fill(0).map((_, i) => (
       <Td key={i}>
         <Skeleton opacity={0.3} height="16px" />
@@ -123,7 +117,7 @@ export const FormationLineLoader = () => (
 );
 
 export const FormationLinePlaceholder = () => (
-  <Tr bg={"#f5f5f5"}>
+  <Tr bg={"grey.975"}>
     <FormationLineContent line={{}} />
   </Tr>
 );
