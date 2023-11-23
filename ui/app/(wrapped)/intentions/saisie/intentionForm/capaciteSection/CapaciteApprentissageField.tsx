@@ -37,7 +37,9 @@ export const CapaciteApprentissageField = chakra(
     const [typeDemande, motif] = watch(["typeDemande", "motif"]);
     const ouverture = isTypeOuverture(typeDemande);
     const fermeture = isTypeFermeture(typeDemande);
-    const isTransfertApprentissage = motif.includes("transfert_apprentissage");
+    const isTransfertApprentissage =
+      motif?.includes("transfert_apprentissage") ?? false;
+
     if (fermeture && !isTransfertApprentissage) return <></>;
 
     return (

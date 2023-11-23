@@ -51,6 +51,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   offset = 0,
   limit = 20,
   orderBy = { order: "desc", column: "createdAt" },
+  voie,
 }: {
   status?: "draft" | "submitted";
   codeRegion?: string[];
@@ -75,6 +76,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   offset?: number;
   limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
+  voie?: "scolaire" | "apprentissage";
 }) => {
   const demandes = await kdb
     .selectFrom("demande")
@@ -289,6 +291,27 @@ const findRestitutionIntentionsStatsInDB = async ({
     })
     .$call((eb) => {
       if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (voie === "apprentissage") {
+        return eb.where(
+          ({ eb: ebw }) =>
+            sql<boolean>`abs(${ebw.ref(
+              "demande.capaciteApprentissage"
+            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+        );
+      }
+
+      if (voie === "scolaire") {
+        return eb.where(
+          ({ eb: ebw }) =>
+            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
+              "demande.capaciteScolaireActuelle"
+            )}) > 1`
+        );
+      }
+
       return eb;
     })
     .$call((q) => {
@@ -955,6 +978,16 @@ const findFiltersInDb = async ({
       {
         label: "Validée",
         value: "submitted",
+      },
+    ],
+    voie: [
+      {
+        label: "Scolaire",
+        value: "scolaire",
+      },
+      {
+        label: "Apprentissage",
+        value: "apprentissage",
       },
     ],
   };

@@ -90,19 +90,21 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Dispositif</FormLabel>
-            <Multiselect
-              onClose={filterTracker("dispositif")}
+            <FormLabel>Voie</FormLabel>
+            <Select
               width={"48"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("dispositif", selected)}
-              options={data?.filters.dispositifs}
-              value={activeFilters.dispositif ?? []}
-              disabled={data?.filters.dispositifs.length === 0}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              placeholder="TOUTES"
             >
-              TOUS ({data?.filters.dispositifs.length ?? 0})
-            </Multiselect>
+              {data?.filters.voie?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Secteur d'activité</FormLabel>
