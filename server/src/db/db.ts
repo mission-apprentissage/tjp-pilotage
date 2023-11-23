@@ -22,4 +22,16 @@ pool.on("error", (error) => {
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),
+  log: (event) => {
+    if (event.level === config.sql.logLevel) {
+      console.log(`\n====================================\n`);
+      console.log(event.query.sql);
+      console.log({
+        parameters: event.query.parameters
+          .map((p, index) => `$${index + 1} = ${p}`)
+          .join(", "),
+      });
+      console.log({ duration: event.queryDurationMillis });
+    }
+  },
 });
