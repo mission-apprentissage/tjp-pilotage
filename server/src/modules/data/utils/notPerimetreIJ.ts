@@ -53,29 +53,33 @@ export const notPerimetreIJIndicateurRegionSortie = (
 export const notPerimetreIJEtablissement = (
   eb: ExpressionBuilder<DB, "etablissement">
 ) => {
-  return eb.and([
-    eb("etablissement.codeRegion", "not in", ["00", "99"]),
-    eb("etablissement.codeAcademie", "not in", [
-      "00",
-      "40",
-      "41",
-      "42",
-      "44",
-      "54",
-      "61",
-      "62",
-      "63",
-      "66",
-      "67",
-      "91",
-      "99",
-    ]),
-    eb("etablissement.codeDepartement", "not in", [
-      "986",
-      "975",
-      "988",
-      "987",
-      "990",
-    ]),
-  ]);
+  return eb
+    .and([
+      eb("etablissement.codeRegion", "not in", ["00", "99"]),
+      eb("etablissement.codeAcademie", "not in", [
+        "00",
+        "40",
+        "41",
+        "42",
+        "44",
+        "54",
+        "61",
+        "62",
+        "63",
+        "66",
+        "67",
+        "91",
+        "99",
+      ]),
+      eb("etablissement.codeDepartement", "not in", [
+        "986",
+        "975",
+        "988",
+        "987",
+        "990",
+      ]),
+    ])
+    .or("etablissement.codeRegion", "is", null)
+    .or("etablissement.codeAcademie", "is", null)
+    .or("etablissement.codeDepartement", "is", null);
 };
