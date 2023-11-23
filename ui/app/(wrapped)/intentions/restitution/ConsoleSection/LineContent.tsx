@@ -57,10 +57,10 @@ export const LineContent = ({
       <Td isNumeric>{demande.differenceCapaciteScolaire ?? 0}</Td>
       <Td isNumeric>{demande.differenceCapaciteApprentissage ?? 0}</Td>
       <Td textAlign="center">
-        <GraphWrapper value={demande.insertion} />
+        <GraphWrapper value={demande.tauxInsertion} />
       </Td>
       <Td textAlign="center">
-        <GraphWrapper value={demande.poursuite} />
+        <GraphWrapper value={demande.tauxPoursuite} />
       </Td>
       <Td textAlign="center">
         <GraphWrapper value={demande.devenirFavorable} />
@@ -83,7 +83,7 @@ export const LineContent = ({
       <Td minW={600} maxW={600} textOverflow={"ellipsis"} isTruncated={true}>
         {demande.commentaire}
       </Td>
-      <Td>{demande.positionCadran}</Td>
+      <Td>{demande.positionQuadrant}</Td>
       <Td>{demande.id}</Td>
     </>
   );

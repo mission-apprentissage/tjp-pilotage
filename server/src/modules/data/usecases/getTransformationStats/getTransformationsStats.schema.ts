@@ -22,6 +22,7 @@ const ScopedStatsTransfoSchema = z.object({
   ratioOuverture: z.coerce.number(),
   ratioFermeture: z.coerce.number(),
   tauxTransformation: z.coerce.number(),
+  effectif: z.coerce.number(),
 });
 
 const StatsTransfoSchema = z.object({

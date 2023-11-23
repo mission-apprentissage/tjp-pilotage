@@ -2,32 +2,19 @@ import { Container, Flex } from "@chakra-ui/react";
 
 import { Multiselect } from "@/components/Multiselect";
 
-import { PanoramaFormations } from "../types";
+import { FiltersPanoramaFormation } from "../types";
 export const FiltersSection = ({
-  formations,
-  onLibelleFiliereChanged,
-  libelleFiliere,
+  handleFilters,
+  activeFilters,
+  libelleFiliereOptions,
 }: {
-  formations?: PanoramaFormations;
-  onLibelleFiliereChanged?: (diplome: string[]) => void;
-  libelleFiliere?: string[];
+  handleFilters: (
+    type: keyof FiltersPanoramaFormation,
+    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
+  ) => void;
+  activeFilters: Partial<FiltersPanoramaFormation>;
+  libelleFiliereOptions?: { value: string; label: string }[];
 }) => {
-  const libelleFiliereOptions = Object.values(
-    formations?.reduce(
-      (acc, cur) => {
-        if (!cur.libelleFiliere) return acc;
-        return {
-          ...acc,
-          [cur.libelleFiliere]: {
-            value: cur.libelleFiliere,
-            label: cur.libelleFiliere as string,
-          },
-        };
-      },
-      {} as Record<string, { value: string; label: string }>
-    ) ?? {}
-  );
-
   return (
     <Container
       py="4"
@@ -41,10 +28,10 @@ export const FiltersSection = ({
     >
       <Flex justify="flex-end">
         <Multiselect
-          onChange={onLibelleFiliereChanged}
+          onChange={(selected) => handleFilters("libelleFiliere", selected)}
           width={250}
           options={libelleFiliereOptions}
-          value={libelleFiliere ?? []}
+          value={activeFilters.libelleFiliere ?? []}
           ml="2"
         >
           Secteur d’activité

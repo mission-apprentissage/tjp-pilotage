@@ -13,15 +13,21 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 export const getRegionStats = async ({
   codeRegion,
-  codeDiplome,
+  codeNiveauDiplome,
   rentreeScolaire = "2022",
   millesimeSortie = "2020_2021",
 }: {
   codeRegion: string;
-  codeDiplome?: string[];
+  codeNiveauDiplome?: string[];
   rentreeScolaire?: string;
   millesimeSortie?: string;
 }) => {
+  const informationsRegion = await kdb
+    .selectFrom("region")
+    .where("codeRegion", "=", codeRegion)
+    .select(["codeRegion", "libelleRegion"])
+    .executeTakeFirstOrThrow();
+
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
@@ -30,21 +36,17 @@ export const getRegionStats = async ({
       "indicateurRegionSortie.cfd"
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
-    .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
-    })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .$call((q) => {
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+    })
     .select([
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
-        "tauxInsertion6mois"
-      ),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as(
-        "tauxPoursuiteEtudes"
-      ),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
   const stats = await kdb
     .selectFrom("formationEtablissement")
@@ -53,14 +55,12 @@ export const getRegionStats = async ({
       "formation.codeFormationDiplome",
       "formationEtablissement.cfd"
     )
-    .innerJoin("indicateurEntree", (join) =>
-      join
-        .onRef(
-          "formationEtablissement.id",
-          "=",
-          "indicateurEntree.formationEtablissementId"
-        )
-        .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
+    .leftJoin("indicateurEntree", (join) =>
+      join.onRef(
+        "formationEtablissement.id",
+        "=",
+        "indicateurEntree.formationEtablissementId"
+      )
     )
     .innerJoin(
       "etablissement",
@@ -68,10 +68,11 @@ export const getRegionStats = async ({
       "etablissement.UAI"
     )
     .where("etablissement.codeRegion", "=", codeRegion)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
-      if (!codeDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeDiplome);
+      if (!codeNiveauDiplome?.length) return q;
+      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
     })
     .where(notHistorique)
     .select([
@@ -86,7 +87,11 @@ export const getRegionStats = async ({
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
     .groupBy("region.libelleRegion")
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
 
-  return { ...stats, ...statsSortie };
+  return {
+    ...informationsRegion,
+    ...stats,
+    ...statsSortie,
+  };
 };

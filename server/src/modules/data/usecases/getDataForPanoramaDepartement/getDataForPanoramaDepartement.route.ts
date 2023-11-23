@@ -16,12 +16,10 @@ export const getDataForPanoramaDepartementRoute = ({
     server.route({
       ...props,
       handler: async (request, response) => {
-        const q = request.query;
-        if (!("codeDepartement" in q)) {
-          q;
-        }
+        const { order, orderBy, ...filters } = request.query;
         const stats = await getDataForPanoramaDepartement({
-          ...request.query,
+          ...filters,
+          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
         response.status(200).send(stats);
       },

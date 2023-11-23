@@ -1,5 +1,6 @@
 import {
   Box,
+  Center,
   Container,
   Divider,
   Flex,
@@ -8,6 +9,7 @@ import {
   PopoverCloseButton,
   PopoverContent,
   PopoverTrigger,
+  Spinner,
   Text,
   VStack,
 } from "@chakra-ui/react";
@@ -17,30 +19,24 @@ import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { PanoramaFormation, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
+const Loader = () => (
+  <Center height="100%" width="100%">
+    <Spinner size="xl" />
+  </Center>
+);
+
 export const TopFlopSection = ({
-  cadranFormations,
-  codeNiveauDiplome,
-  libelleFiliere,
+  quadrantFormations,
+  isLoading,
 }: {
-  cadranFormations?: PanoramaFormations;
+  quadrantFormations?: PanoramaFormations;
   meanPoursuite?: number;
   meanInsertion?: number;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
+  isLoading: boolean;
 }) => {
   const topFlopFormations = useMemo(() => {
-    if (!cadranFormations) return;
-    const filtered = cadranFormations.filter((item) => {
-      if (
-        libelleFiliere?.length &&
-        (!item.libelleFiliere || !libelleFiliere.includes(item.libelleFiliere))
-      )
-        return false;
-      if (
-        codeNiveauDiplome?.length &&
-        !codeNiveauDiplome.includes(item.codeNiveauDiplome)
-      )
-        return false;
+    if (!quadrantFormations) return;
+    const filtered = quadrantFormations.filter((item) => {
       return item.dispositifId && !["253", "240"].includes(item.dispositifId);
     });
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
@@ -49,12 +45,11 @@ export const TopFlopSection = ({
       .sort((a, b) =>
         a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
       );
-
     const top = sorted.slice().slice(0, Math.ceil(nbTopFlop));
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
-  }, [cadranFormations, codeNiveauDiplome, libelleFiliere]);
+  }, [quadrantFormations]);
 
   return (
     <Container as="section" py="6" maxWidth={"container.xl"}>
@@ -67,8 +62,14 @@ export const TopFlopSection = ({
           formations à examiner
         </Text>
       </Box>
-      {topFlopFormations && (
+      {isLoading ? (
+        <Loader></Loader>
+      ) : topFlopFormations && quadrantFormations?.length ? (
         <TopFlopChart topFlopFormations={topFlopFormations} />
+      ) : (
+        <Center mt={20}>
+          <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
+        </Center>
       )}
     </Container>
   );
@@ -80,14 +81,14 @@ const TopFlopChart = ({
   topFlopFormations: { top: PanoramaFormations; flop: PanoramaFormations };
 }) => {
   return (
-    <Box bg="#F9F8F6" p="8" mt="4">
+    <Box bg="grey.975" p="8" mt="4">
       <Flex justify={"flex-end"}>
         <Text mb="4" color="grey" fontSize="sm">
           Taux de devenir favorable
         </Text>
         <TooltipIcon
           ml="2"
-          label="Part des jeunes en emploi ou en poursuite d’étude"
+          label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
         />
       </Flex>
       <VStack alignItems="stretch" spacing="1">
@@ -106,9 +107,9 @@ const TopFlopChart = ({
           .reverse()
           .map((item) => (
             <TopItem
-              key={`${item.codeFormationDiplome}_${item.dispositifId}`}
+              key={`${item.codeFormationDiplome}_${item.dispositifId}_`}
               formation={item}
-              color={"#666666"}
+              color={"grey.425"}
               value={item.tauxDevenirFavorable}
             />
           ))}
@@ -120,7 +121,7 @@ const TopFlopChart = ({
 const TopItem = ({
   formation,
   value,
-  color = "#8585F6",
+  color = "bluefrance.625",
 }: {
   formation: PanoramaFormation;
   value: number;

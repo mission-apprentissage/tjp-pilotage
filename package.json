@@ -48,12 +48,6 @@
     "semantic-release-slack-bot": "3.5.2",
     "typescript": "5.0.2"
   },
-  "prettier": {
-    "printWidth": 80,
-    "bracketSpacing": true,
-    "trailingComma": "es5",
-    "arrowParens": "always"
-  },
   "husky": {
     "hooks": {
       "pre-commit": "./git-hooks/preventSensibleFilesCommit.sh && lint-staged",

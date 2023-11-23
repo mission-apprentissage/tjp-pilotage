@@ -211,32 +211,32 @@ export const ConsoleSection = ({
                   textAlign="center"
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("insertion")}
+                  onClick={() => handleOrder("tauxInsertion")}
                   minW={200}
                   maxW={200}
                   whiteSpace="normal"
                 >
-                  <OrderIcon {...order} column="insertion" />
-                  {STATS_DEMANDES_COLUMNS.insertion}
+                  <OrderIcon {...order} column="tauxInsertion" />
+                  {STATS_DEMANDES_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale"
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th
                   textAlign="center"
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("poursuite")}
+                  onClick={() => handleOrder("tauxPoursuite")}
                   minW={250}
                   maxW={250}
                   whiteSpace="normal"
                 >
-                  <OrderIcon {...order} column="poursuite" />
-                  {STATS_DEMANDES_COLUMNS.poursuite}
+                  <OrderIcon {...order} column="tauxPoursuite" />
+                  {STATS_DEMANDES_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale."
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th
@@ -252,7 +252,7 @@ export const ConsoleSection = ({
                   {STATS_DEMANDES_COLUMNS.devenirFavorable}
                   <TooltipIcon
                     ml="2"
-                    label="Part des jeunes en emploi ou en poursuite d’étude pour cette formation à l'échelle régionale"
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
                   />
                 </Th>
                 <Th
@@ -303,7 +303,13 @@ export const ConsoleSection = ({
                   <OrderIcon {...order} column="commentaire" />
                   {STATS_DEMANDES_COLUMNS.commentaire}
                 </Th>
-                <Th pb={4}>{STATS_DEMANDES_COLUMNS.positionCadran}</Th>
+                <Th pb={4}>
+                  {STATS_DEMANDES_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                  />
+                </Th>
                 <Th
                   cursor="pointer"
                   pb="4"
@@ -320,7 +326,7 @@ export const ConsoleSection = ({
                   (demande: StatsIntentions["demandes"][0]) => {
                     return (
                       <Fragment key={`${demande.id}`}>
-                        <Tr h="12" _hover={{ bg: "blue.faded" }}>
+                        <Tr h="12" _hover={{ bg: "blueecume.925" }}>
                           <LineContent demande={demande} />
                         </Tr>
                       </Fragment>

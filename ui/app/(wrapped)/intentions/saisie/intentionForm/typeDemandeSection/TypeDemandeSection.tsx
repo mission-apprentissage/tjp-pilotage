@@ -45,11 +45,11 @@ export const TypeDemandeSection = ({
       </Flex>
       {isTypeCompensation(typeDemande) && (
         <Flex
-          bg="blue.faded"
+          bg="blueecume.925"
           mb="6"
           p="6"
           align="flex-start"
-          boxShadow="0 0 0 2px #000091"
+          boxShadow="0 0 0 2px bluefrance.113"
         >
           <Box flexDirection={"column"} flex="2" maxW="752px">
             <CompensationSection

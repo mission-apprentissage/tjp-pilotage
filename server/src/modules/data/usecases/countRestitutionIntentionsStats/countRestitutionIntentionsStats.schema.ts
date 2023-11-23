@@ -44,7 +44,7 @@ const StatsDemandesItem = z.object({
   devenirFavorable: z.coerce.number().optional(),
   pression: z.coerce.number().optional(),
   nbEtablissement: z.coerce.number().optional(),
-  positionCadran: z.string().optional(),
+  positionQuadrant: z.string().optional(),
   tauxInsertionMoyen: z.coerce.number().optional(),
   tauxPoursuiteMoyen: z.coerce.number().optional(),
 });
@@ -76,7 +76,7 @@ export const countRestitutionIntentionsStatsSchema = {
     amiCMA: z.string().optional(),
     secteur: z.string().optional(),
     compensation: z.string().optional(),
-    positionCadran: z.string().optional(),
+    positionQuadrant: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: StatsDemandesItem.keyof().optional(),
   }),

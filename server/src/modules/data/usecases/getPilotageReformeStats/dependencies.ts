@@ -2,10 +2,8 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import {
-  getMillesimeFromRentreeScolaire,
-  getRentreeScolaire,
-} from "../../services/formatMillesime";
+import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
+import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,

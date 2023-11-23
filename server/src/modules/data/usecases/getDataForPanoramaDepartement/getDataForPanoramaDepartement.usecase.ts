@@ -1,17 +1,39 @@
-import { inject } from "injecti";
+import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
+import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+import { dependencies } from "./dependencies";
 
-import { queryFormationsDepartement } from "./dependencies";
-
-export const [getDataForPanoramaDepartement] = inject(
-  { queryFormationsDepartement },
-  (deps) =>
-    async ({ codeDepartement }: { codeDepartement: string }) => {
-      const formations = await deps.queryFormationsDepartement({
-        codeDepartement,
-      });
-
-      return {
-        formations,
-      };
+export const getDataForPanoramaDepartementFactory =
+  (
+    deps = {
+      getFormationsDepartement: dependencies.getFormationsDepartement,
+      getFilters: dependencies.getFilters,
     }
-);
+  ) =>
+  async (activeFilters: {
+    codeDepartement: string;
+    codeNiveauDiplome?: string[];
+    libelleFiliere?: string[];
+    orderBy?: { column: string; order: "asc" | "desc" };
+  }) => {
+    const [formations, { diplomes, filieres }, statsSortie] = await Promise.all(
+      [
+        deps.getFormationsDepartement(activeFilters),
+        deps.getFilters(activeFilters),
+        getStatsSortie(activeFilters),
+      ]
+    );
+
+    return {
+      formations: formations.map((formation) => ({
+        ...formation,
+        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+      })),
+      filters: {
+        diplomes,
+        filieres,
+      },
+    };
+  };
+
+export const getDataForPanoramaDepartement =
+  getDataForPanoramaDepartementFactory();

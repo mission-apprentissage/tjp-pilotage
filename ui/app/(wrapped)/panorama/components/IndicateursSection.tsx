@@ -16,7 +16,7 @@ import {
 } from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../components/Multiselect";
-import { PanoramaFormations, StatsFormations } from "../types";
+import { FiltersPanoramaFormation, StatsFormations } from "../types";
 
 const StatCard = ({
   label,
@@ -50,36 +50,24 @@ export const IndicateursSection = ({
   onCodeChanged,
   options,
   stats,
-  codeDiplome,
-  onDiplomeChanged,
-  formations,
+  handleFilters,
+  activeFilters,
+  diplomeOptions,
   typeTerritoire = "region",
 }: {
-  onDiplomeChanged?: (diplome: string[]) => void;
-  codeDiplome?: string[];
   code?: string;
   onCodeChanged: (code: string) => void;
+  handleFilters: (
+    type: keyof FiltersPanoramaFormation,
+    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
+  ) => void;
+  activeFilters: Partial<FiltersPanoramaFormation>;
   options?: { label: string; value: string }[];
   stats?: StatsFormations;
-  formations?: PanoramaFormations;
+  diplomeOptions?: { value: string; label: string }[];
   typeTerritoire?: "region" | "departement";
 }) => {
   const labelRegion = options?.find((item) => item.value === code)?.label;
-
-  const diplomeOptions = Object.values(
-    formations?.reduce(
-      (acc, cur) => {
-        return {
-          ...acc,
-          [cur.codeNiveauDiplome]: {
-            value: cur.codeNiveauDiplome,
-            label: cur.libelleNiveauDiplome as string,
-          },
-        };
-      },
-      {} as Record<string, { value: string; label: string }>
-    ) ?? {}
-  );
 
   return (
     <Container
@@ -87,7 +75,7 @@ export const IndicateursSection = ({
       as="section"
       pb="12"
       pt="6"
-      bg="#F9F8F6"
+      bg="grey.975"
       maxWidth={"container.xl"}
     >
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
@@ -110,10 +98,12 @@ export const IndicateursSection = ({
             </Select>
             <FormLabel mt="4">Diplôme</FormLabel>
             <Multiselect
-              onChange={onDiplomeChanged}
+              onChange={(selected) =>
+                handleFilters("codeNiveauDiplome", selected)
+              }
               width="100%"
               options={diplomeOptions}
-              value={codeDiplome ?? []}
+              value={activeFilters.codeNiveauDiplome ?? []}
               size="md"
             >
               Diplôme
@@ -135,22 +125,26 @@ export const IndicateursSection = ({
             <StatCard
               label="Taux poursuite étude dans votre région"
               value={
-                stats?.tauxPoursuiteEtudes
-                  ? `${stats.tauxPoursuiteEtudes}%`
+                stats?.tauxPoursuite
+                  ? `${Math.round(stats.tauxPoursuite)}%`
                   : undefined
               }
             />
             <StatCard
-              label="Taux de remplissage dans votre région"
+              label={`Taux de remplissage dans votre ${
+                typeTerritoire === "region" ? "région" : "département"
+              }`}
               value={
-                stats?.tauxRemplissage ? `${stats.tauxRemplissage}%` : undefined
+                stats?.tauxRemplissage
+                  ? `${Math.round(stats.tauxRemplissage)}%`
+                  : undefined
               }
             />
             <StatCard
               label="Taux d'emploi à 6 mois dans votre région"
               value={
-                stats?.tauxInsertion6mois
-                  ? `${stats.tauxInsertion6mois}%`
+                stats?.tauxInsertion
+                  ? `${Math.round(stats.tauxInsertion)}%`
                   : undefined
               }
             />
@@ -164,7 +158,7 @@ export const IndicateursSection = ({
               label={`Effectif en entrée dans votre ${
                 typeTerritoire === "region" ? "région" : "département"
               }`}
-              value={stats?.effectif ?? "-"}
+              value={stats?.effectif ? stats.effectif : "-"}
             />
           </SimpleGrid>
         </Box>

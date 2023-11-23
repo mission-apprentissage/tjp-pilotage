@@ -53,7 +53,7 @@ export const Header = () => {
         <HStack as={Link} spacing={10} align="center" href="/">
           <Img height="70px" src="/logo_gouvernement.svg" />
           <Heading as={"h1"} size={"md"}>
-            Orion, pilotage de la carte des formations
+            Orion, outil d’aide à la transformation de la carte des formations
           </Heading>
         </HStack>
         <Box ml="auto">

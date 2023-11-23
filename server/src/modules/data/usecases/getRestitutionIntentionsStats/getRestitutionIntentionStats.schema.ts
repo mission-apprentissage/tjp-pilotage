@@ -44,14 +44,15 @@ const StatsDemandesItem = z.object({
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
-  insertion: z.coerce.number().optional(),
-  poursuite: z.coerce.number().optional(),
+  tauxInsertion: z.coerce.number().optional(),
+  tauxPoursuite: z.coerce.number().optional(),
   devenirFavorable: z.coerce.number().optional(),
   pression: z.coerce.number().optional(),
   nbEtablissement: z.coerce.number().optional(),
-  positionCadran: z.string().optional(),
+  positionQuadrant: z.string().optional(),
   tauxInsertionMoyen: z.coerce.number().optional(),
   tauxPoursuiteMoyen: z.coerce.number().optional(),
+  voie: z.string().optional(),
 });
 
 export const getRestitutionIntentionsStatsSchema = {
@@ -74,11 +75,12 @@ export const getRestitutionIntentionsStatsSchema = {
     amiCMA: z.string().optional(),
     secteur: z.string().optional(),
     compensation: z.string().optional(),
-    positionCadran: z.string().optional(),
+    positionQuadrant: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: StatsDemandesItem.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
+    voie: z.enum(["scolaire", "apprentissage"]).optional(),
   }),
   response: {
     200: z.object({
@@ -102,6 +104,7 @@ export const getRestitutionIntentionsStatsSchema = {
         amiCMAs: z.array(OptionSchema),
         colorations: z.array(OptionSchema),
         compensations: z.array(OptionSchema),
+        voie: z.array(OptionSchema),
       }),
       demandes: z.array(StatsDemandesItem),
       count: z.coerce.number(),

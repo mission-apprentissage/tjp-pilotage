@@ -4,7 +4,7 @@ import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoram
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
-import { getEtablissementRoute } from "./usecases/getEtablissement/etablissements.routes";
+import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
 import { getEtablissementsRoutes } from "./usecases/getEtablissements/getEtablissements.routes";
 import { getFormationsRoute } from "./usecases/getFormations/formations.routes";
 import { getFormationsTransformationsRoute } from "./usecases/getFormationsTransformationStats/getFormationsTransformations.route";
