@@ -1,9 +1,9 @@
 import { z } from "zod";
 
 const CountCapaciteStatsDemandesSchema = z.object({
-  total: z.number(),
-  scolaire: z.number(),
-  apprentissage: z.number(),
+  total: z.number().optional(),
+  scolaire: z.number().optional(),
+  apprentissage: z.number().optional(),
   coloration: z.number().optional(),
 });
 

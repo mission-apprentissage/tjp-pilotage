@@ -20,9 +20,9 @@ const CountCard = ({
   icon: string;
   subLabel?: string;
   value?: {
-    total: number;
-    scolaire: number;
-    apprentissage: number;
+    total?: number;
+    scolaire?: number;
+    apprentissage?: number;
     coloration?: number;
   };
 }) => (
