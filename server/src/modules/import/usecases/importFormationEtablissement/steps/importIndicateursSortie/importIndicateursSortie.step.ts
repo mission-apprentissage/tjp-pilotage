@@ -3,7 +3,6 @@ import { Insertable } from "kysely";
 
 import { DB } from "../../../../../../db/schema";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
-import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 import { logger } from "../../importLogger";
 import { createIndicateurSortie } from "./createIndicateurSortie.dep";
 import { getUaiData } from "./getUaiData.dep";
@@ -13,28 +12,27 @@ const toIndicateurSorties = ({
   ijData,
   formationEtablissementId,
   millesime,
-  anneesDispositif,
+  mefstat,
 }: {
   uai: string;
   ijData: R | undefined;
-  anneesDispositif: AnneeDispositif[];
+  mefstat: string;
   formationEtablissementId: string;
   millesime: string;
 }): Insertable<DB["indicateurSortie"]> | undefined => {
-  const mefstatLastYear = anneesDispositif[anneesDispositif.length - 1].mefstat;
   const type = "depp_mefstat";
 
   const log = {
     uai,
     millesime,
-    mefstat: mefstatLastYear,
+    mefstat,
   };
   if (!ijData) {
     logger.log({ type, log: { ...log, status: "missing_uai" } });
     return;
   }
 
-  const mefData = ijData.meftstats?.[mefstatLastYear];
+  const mefData = ijData.meftstats[mefstat];
 
   if (!mefData) {
     logger.log({ type, log: { ...log, status: "missing_mefstat" } });
@@ -63,18 +61,18 @@ export const [importIndicateurSortie] = inject(
       uai,
       formationEtablissementId,
       millesime,
-      anneesDispositif,
+      mefstat,
     }: {
       uai: string;
       formationEtablissementId: string;
       millesime: string;
-      anneesDispositif: AnneeDispositif[];
+      mefstat: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
       const indicateurSortie = toIndicateurSorties({
         ijData,
         millesime,
-        anneesDispositif,
+        mefstat,
         uai,
         formationEtablissementId,
       });

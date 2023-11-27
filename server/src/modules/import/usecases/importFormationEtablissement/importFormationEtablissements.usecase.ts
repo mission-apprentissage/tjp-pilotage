@@ -47,7 +47,7 @@ export const [importFormations] = inject(
           await importFormationEtablissements(cfd, { fetchIj });
           if (!formation) return;
         },
-        { parallel: 30 }
+        { parallel: 20 }
       );
       // logger.write();
     };
@@ -74,12 +74,21 @@ export const [importFormationEtablissements] = inject(
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
-        const { dispositifId, anneesDispositif } = cfdDispositif;
+        const { dispositifId, anneesDispositif, dureeDispositif } =
+          cfdDispositif;
+
+        // console.log(cfd);
+        if (cfd === "50020003") {
+          console.log("sdf", anneesDispositif, dureeDispositif, dispositifId);
+        }
+
+        const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
+        if (!lastMefstat) continue;
 
         await deps.importIndicateursRegionSortie({
           cfd,
           dispositifId,
-          mefstat: anneesDispositif[anneesDispositif.length - 1].mefstat,
+          mefstat: lastMefstat,
         });
 
         for (const rentreeScolaire of RENTREES_SCOLAIRES) {
@@ -99,10 +108,7 @@ export const [importFormationEtablissements] = inject(
 
               await deps.importEtablissement({ uai });
               for (const millesime of MILLESIMES_IJ) {
-                await deps.importIndicateurEtablissement({
-                  uai,
-                  millesime,
-                });
+                await deps.importIndicateurEtablissement({ uai, millesime });
               }
               processedUais.push(uai);
             }
@@ -129,7 +135,7 @@ export const [importFormationEtablissements] = inject(
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurSortie({
                 uai,
-                anneesDispositif,
+                mefstat: lastMefstat,
                 formationEtablissementId: formationEtablissement.id,
                 millesime,
               });
