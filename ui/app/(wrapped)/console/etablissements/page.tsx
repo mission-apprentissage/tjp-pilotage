@@ -55,6 +55,8 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
+  tauxInsertionEtablissement: "Tx d'emploi 6 mois",
+  tauxPoursuiteEtablissement: "Tx de poursuite d'études",
   positionQuadrant: "Positionnement dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   valeurAjoutee: "Valeur ajoutée",
@@ -518,6 +520,28 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="tauxPoursuite" />
                   {ETABLISSEMENTS_COLUMNS.tauxPoursuite}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxInsertionEtablissement")}
+                >
+                  <OrderIcon {...order} column="tauxInsertionEtablissement" />
+                  {ETABLISSEMENTS_COLUMNS.tauxInsertionEtablissement}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPoursuiteEtablissement")}
+                >
+                  <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtablissement}
                   <TooltipIcon
                     ml="1"
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
