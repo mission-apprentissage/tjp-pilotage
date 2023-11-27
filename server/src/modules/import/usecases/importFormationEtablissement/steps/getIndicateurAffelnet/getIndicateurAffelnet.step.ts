@@ -11,8 +11,20 @@ const findAttractiviteCapaciteHorsBTS = async ({
   mefstat: string;
   uai: string;
   rentreeScolaire: string;
-}) =>
-  rawDataRepository.findRawDatas({
+}) => {
+  if (
+    await rawDataRepository.findRawData({
+      type: "lyceesACCE",
+      filter: {
+        secteur_public_prive: "PR",
+        numero_uai: uai,
+      },
+    })
+  ) {
+    return [];
+  }
+
+  return rawDataRepository.findRawDatas({
     type: "attractivite_capacite",
     year: rentreeScolaire,
     filter: {
@@ -23,6 +35,7 @@ const findAttractiviteCapaciteHorsBTS = async ({
     },
     limit: 2,
   });
+};
 
 export const [getIndicateursAffelnet] = inject(
   { findAttractiviteCapaciteHorsBTS },
@@ -47,20 +60,32 @@ export const [getIndicateursAffelnet] = inject(
         uai,
         rentreeScolaire,
       });
-      if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };
+      if (lines.length === 0) {
+        return { capacites: [], premiersVoeux: [] };
+      }
 
       const {
         "Capacité  carte scolaire": rawCapacite,
         "Demandes vœux 1": rawPremierVoeux,
-      } = lines[0];
+      } = lines.reduce(
+        (sum, line) => {
+          sum["Capacité  carte scolaire"] += parseInt(
+            line["Capacité  carte scolaire"]
+          );
+          sum["Demandes vœux 1"] += parseInt(line["Demandes vœux 1"]);
+          return sum;
+        },
+        {
+          "Capacité  carte scolaire": 0,
+          "Demandes vœux 1": 0,
+        }
+      );
 
       const capacite =
-        rawCapacite && rawCapacite !== "0" && rawCapacite !== "999"
-          ? parseInt(rawCapacite)
+        rawCapacite && rawCapacite >= 5 && rawCapacite <= 100
+          ? rawCapacite
           : undefined;
-      const premiersVoeux = rawPremierVoeux
-        ? parseInt(rawPremierVoeux)
-        : undefined;
+      const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;
 
       return {
         capacites:
