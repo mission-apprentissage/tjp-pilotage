@@ -39,7 +39,7 @@ CFD;Commission professionnelle consultative;Secteur;Sous-secteur;Niveau;Code dip
 45022501;CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Matériaux;Niveau 4;450-22501 S;Brevet professionnel;Mise en œuvre des caoutchoucs et des élastomères thermoplastiques;1002;03/09/1997;1998;
 45022709;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-22709 S;Brevet professionnel;Monteur en installations du génie climatique et sanitaire;32241;14/03/2014;2016;
 45023315;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur;Niveau 4;450-23315 S;Brevet professionnel;Peintre applicateur de revêtements;32235;13/05/2016;2018;
-;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;;Brevet professionnel;Tailleur de pierres monuments historiques;;01/01/1945;1946;
+45023201;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 4;450-23201 S;Brevet professionnel;Tailleur de pierres monuments historiques;;01/01/1945;1946;
 45022002;CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 4;450-22002 R;Brevet professionnel;Techniques de laboratoire de recherche option A - biologie;1172;12/01/1999;2000;
 32025001;CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25001 P;Brevet de technicien supérieur;Assistance technique d'ingénieur;1029;30/07/1998;1999;
 32022207;CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22207 R;Brevet de technicien supérieur;Bio analyses et contrôle;2705;25/06/2004;2006;
@@ -417,7 +417,7 @@ CFD;Commission professionnelle consultative;Secteur;Sous-secteur;Niveau;Code dip
 50024321;CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24321 S;Certificat d'aptitude professionnelle;Sellier harnacheur;19292;29/04/2014;2016;
 50022430;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du feu;Niveau 3;500-22430 V;Certificat d'aptitude professionnelle;Souffleur de verre option verrerie scientifique;6603;12/05/2009;2011;
 50023311;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Environnement;Niveau 3;500-23311 V;Certificat d'aptitude professionnelle;Staffeur ornemaniste;36427;05/03/1993;1995;
-50023220;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;450-23201 S;Certificat d'aptitude professionnelle;Tailleur de pierre;16129;06/02/2013;2015;
+50023220;CPC Construction;Secteur Bâtiment, travaux publics, matériaux de construction;Sous-secteur Gros-oeuvre et travaux publics;Niveau 3;500-23220 S;Certificat d'aptitude professionnelle;Tailleur de pierre;16129;06/02/2013;2015;
 50023435;CPC Arts, spectacles et médias;Secteur Arts appliqués;Sous-secteur Arts du bois;Niveau 3;500-23435 S;Certificat d'aptitude professionnelle;Tonnellerie;679;28/07/1993;1994;
 50024319;CPC Arts, spectacles et médias;Secteur Métiers de la mode et industries connexes;Sous-secteur;Niveau 3;500-24319 S;Certificat d'aptitude professionnelle;Vêtement de peau;453;21/08/1998;2000;
 32132207;CPC Arts, spectacles et médias;Secteur Communication graphique et audiovisuel;Sous-secteur;Niveau 5;321-32207 V;Diplôme des métiers d'art;Arts graphiques option : illustration;827;30/07/1998;2000;

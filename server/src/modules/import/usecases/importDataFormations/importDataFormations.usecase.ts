@@ -88,7 +88,7 @@ export const [importDataFormations] = inject(
 
         const dispositifs = await deps.getCfdDispositifs({ cfd });
         const mefstats = dispositifs.flatMap((dispositif) =>
-          dispositif.anneesDispositif.map((item) => item.mefstat)
+          Object.values(dispositif.anneesDispositif).map((item) => item.mefstat)
         );
         const regroupement = await deps.findRegroupements({ mefstats });
 
