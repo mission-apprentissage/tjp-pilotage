@@ -26,7 +26,7 @@ import {
 } from "./types";
 
 export default withAuth(
-  "restitution-intentions/lecture",
+  "pilotage-intentions/lecture",
   function PilotageIntentions() {
     const router = useRouter();
     const queryParams = useSearchParams();
