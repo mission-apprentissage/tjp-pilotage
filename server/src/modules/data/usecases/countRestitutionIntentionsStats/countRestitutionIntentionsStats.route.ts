@@ -17,7 +17,7 @@ export const countRestitutionIntentionsStatsRoute = ({
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
+      preHandler: hasPermissionHandler("restitution-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
