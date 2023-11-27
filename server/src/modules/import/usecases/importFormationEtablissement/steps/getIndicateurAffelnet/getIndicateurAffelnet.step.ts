@@ -41,7 +41,6 @@ export const [getIndicateursAffelnet] = inject(
   { findAttractiviteCapaciteHorsBTS },
   (deps) =>
     async ({
-      //dispositifRentrees,
       anneesDispositif,
       uai,
       anneeDebut,
