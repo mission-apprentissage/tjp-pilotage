@@ -15,7 +15,10 @@ import {
 } from "../../utils/notPerimetreIJ";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import {
+  selectTauxPoursuite,
+  withPoursuiteReg,
+} from "../../utils/tauxPoursuite";
 import { selectTauxPression } from "../../utils/tauxPression";
 import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
@@ -91,6 +94,11 @@ const findEtablissementsInDb = async ({
         )
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
+    .leftJoin(
+      "indicateurSortie",
+      "indicateurSortie.formationEtablissementId",
+      "formationEtablissement.id"
+    )
     .innerJoin(
       "etablissement",
       "etablissement.UAI",
@@ -142,6 +150,8 @@ const findEtablissementsInDb = async ({
         "capacite3"
       ),
       selectTauxPression("indicateurEntree").as("tauxPression"),
+      selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
+      selectTauxPoursuite("indicateurSortie").as("tauxInsertionEtablissement"),
     ])
     .select([
       (eb) =>
@@ -242,6 +252,8 @@ const findEtablissementsInDb = async ({
       "libelleOfficielFamille",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
+      "indicateurSortie.formationEtablissementId",
+      "indicateurSortie.millesimeSortie",
       "formationEtablissement.id",
       "dispositifId",
       "libelleDispositif",

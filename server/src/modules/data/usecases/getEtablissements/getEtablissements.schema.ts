@@ -28,6 +28,8 @@ const EtablissementLineSchema = z.object({
   tauxPression: z.coerce.number().optional(),
   tauxRemplissage: z.coerce.number().optional(),
   tauxPoursuite: z.coerce.number().optional(),
+  tauxPoursuiteEtablissement: z.coerce.number().optional(),
+  tauxInsertionEtablissement: z.coerce.number().optional(),
   tauxInsertion: z.coerce.number().optional(),
   positionQuadrant: z.string().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),

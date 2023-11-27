@@ -77,6 +77,18 @@ export const EtablissementLineContent = ({
       <Td>
         <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
+      <Td>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxInsertionEtablissement}
+        />
+      </Td>
+      <Td>
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxPoursuiteEtablissement}
+        />
+      </Td>
       <Td>{line.positionQuadrant}</Td>
       <Td textAlign="center">
         <GraphWrapper
