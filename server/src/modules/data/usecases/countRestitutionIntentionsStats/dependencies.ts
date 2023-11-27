@@ -2,6 +2,7 @@ import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
   countFermetures,
@@ -33,6 +34,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   uai,
   compensation,
   user,
+  voie,
 }: {
   status?: "draft" | "submitted";
   codeRegion?: string[];
@@ -53,6 +55,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   uai?: string[];
   compensation?: string;
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+  voie?: "scolaire" | "apprentissage";
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
@@ -249,8 +252,30 @@ const countRestitutionIntentionsStatsInDB = async ({
       if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
       return eb;
     })
+    .$call((eb) => {
+      if (voie === "apprentissage") {
+        return eb.where(
+          ({ eb: ebw }) =>
+            sql<boolean>`abs(${ebw.ref(
+              "demande.capaciteApprentissage"
+            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+        );
+      }
+
+      if (voie === "scolaire") {
+        return eb.where(
+          ({ eb: ebw }) =>
+            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
+              "demande.capaciteScolaireActuelle"
+            )}) > 1`
+        );
+      }
+
+      return eb;
+    })
     .where(isIntentionVisible({ user }))
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrow()
+    .then(cleanNull);
 
   return countDemandes;
 };

@@ -25,6 +25,7 @@ const countRestitutionIntentionsStatsFactory =
     uai?: string[];
     compensation?: string;
     user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+    voie?: "scolaire" | "apprentissage";
   }) => {
     const countStatsDemandesPromise =
       countRestitutionIntentionsStatsInDB(activeFilters);

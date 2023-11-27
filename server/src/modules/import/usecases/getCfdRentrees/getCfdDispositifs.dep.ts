@@ -3,6 +3,11 @@ import _ from "lodash";
 
 import { findNMefs } from "./findNMefs.dep";
 
+type AnneesDispositif = Record<
+  string,
+  { mefstat: string; libelleDispositif: string; annee: number }
+>;
+
 export const [getCfdDispositifs] = inject(
   { findNMefs },
   (deps) =>
@@ -16,11 +21,17 @@ export const [getCfdDispositifs] = inject(
           cfd,
           dispositifId: key,
           dureeDispositif: parseInt(nMef[0].DUREE_DISPOSITIF) ?? undefined,
-          anneesDispositif: nMef.map((item) => ({
-            mefstat: item.MEF_STAT_11,
-            libelleDispositif: item.LIBELLE_LONG,
-            annee: parseInt(item.ANNEE_DISPOSITIF) ?? undefined,
-          })),
+          anneesDispositif: nMef.reduce<AnneesDispositif>((acc, item) => {
+            const annee = parseInt(item.ANNEE_DISPOSITIF) - 1;
+            return {
+              ...acc,
+              [annee]: {
+                mefstat: item.MEF_STAT_11,
+                libelleDispositif: item.LIBELLE_LONG,
+                annee,
+              },
+            };
+          }, {}),
         }))
         .value();
       return dispositifs;
