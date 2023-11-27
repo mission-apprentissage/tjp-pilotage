@@ -196,6 +196,8 @@ export const QuadrantSection = ({
                     tauxInsertion: "Taux d'emploi",
                     tauxPoursuite: "Taux de poursuite",
                     tauxPression: "Taux de pression",
+                    placesOuvertes: "Places ouvertes",
+                    placesFermees: "Places fermées",
                     positionQuadrant: "Position dans le quadrant",
                     libelleRegion: "Région",
                     libelleAcademie: "Académie",

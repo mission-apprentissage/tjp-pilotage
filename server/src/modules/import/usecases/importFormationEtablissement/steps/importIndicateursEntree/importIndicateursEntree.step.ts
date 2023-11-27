@@ -30,7 +30,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
     }: {
       formationEtablissementId: string;
       anneesEnseignement: AnneeEnseignement[];
-      anneesDispositif: AnneeDispositif[];
+      anneesDispositif: Record<string, AnneeDispositif>;
       anneeDebutConstate: number;
       cfd: string;
       rentreeScolaire: string;
