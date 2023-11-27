@@ -29,13 +29,12 @@ export const [getIndicateursParcoursSup] = inject(
   },
   (deps) =>
     async ({
-      //dispositifRentrees,
       anneesDispositif,
       uai,
       anneeDebut,
       rentreeScolaire,
     }: {
-      anneesDispositif: AnneeDispositif[];
+      anneesDispositif: Record<string, AnneeDispositif>;
       uai: string;
       anneeDebut: number;
       rentreeScolaire: string;
