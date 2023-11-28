@@ -1,6 +1,6 @@
 import { RawBuilder, sql } from "kysely";
 
-export const effectifAnnee = ({
+export const premiersVoeuxAnnee = ({
   annee,
   alias: indicateurEntreeAlias,
 }: {
@@ -14,7 +14,7 @@ export const effectifAnnee = ({
   NULLIF(
     jsonb_extract_path(${sql.table(
       indicateurEntreeAlias
-    )}."effectifs",${processedAnnee}),
+    )}."premiersVoeux",${processedAnnee}),
     'null'
   )::INT`;
 };
