@@ -32,11 +32,6 @@ const getEtablissementsFactory =
       ]
     );
 
-    console.log(
-      etablissements[7].tauxPoursuiteEtablissement,
-      typeof etablissements[7].tauxPoursuiteEtablissement
-    );
-
     return {
       count,
       filters,

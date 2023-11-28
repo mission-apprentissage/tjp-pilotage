@@ -55,10 +55,13 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
   tauxPoursuite: "Tx de poursuite d'études régional",
-  tauxInsertionEtablissement: "Tx d'emploi 6 mois",
-  tauxPoursuiteEtablissement: "Tx de poursuite d'études",
   positionQuadrant: "Positionnement dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  tauxInsertionEtablissement: "Tx d'emploi 6 mois de l'offre de formation",
+  tauxPoursuiteEtablissement:
+    "Tx de poursuite d'études de l'offre de formation",
+  tauxDevenirFavorableEtablissement:
+    "Tx de devenir favorable de l'offre de formation",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
   UAI: "UAI",
@@ -525,6 +528,24 @@ export default function Etablissements() {
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
                   />
                 </Th>
+                <Th>
+                  {ETABLISSEMENTS_COLUMNS.positionQuadrant}
+                  <TooltipIcon
+                    ml="1"
+                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxDevenirFavorable")}
+                >
+                  <OrderIcon {...order} column="tauxDevenirFavorable" />
+                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorable}
+                  <TooltipIcon
+                    ml="1"
+                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                  />
+                </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxInsertionEtablissement")}
@@ -547,22 +568,20 @@ export default function Etablissements() {
                     label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
                   />
                 </Th>
-                <Th>
-                  {ETABLISSEMENTS_COLUMNS.positionQuadrant}
-                  <TooltipIcon
-                    ml="1"
-                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
-                  />
-                </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("tauxDevenirFavorable")}
+                  onClick={() =>
+                    handleOrder("tauxDevenirFavorableEtablissement")
+                  }
                 >
-                  <OrderIcon {...order} column="tauxDevenirFavorable" />
-                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorable}
+                  <OrderIcon
+                    {...order}
+                    column="tauxDevenirFavorableEtablissement"
+                  />
+                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorableEtablissement}
                   <TooltipIcon
                     ml="1"
-                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
                   />
                 </Th>
                 <Th

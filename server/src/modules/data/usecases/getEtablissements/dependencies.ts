@@ -14,7 +14,10 @@ import {
   notPerimetreIJEtablissement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
-import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
+import {
+  selectTauxDevenirFavorableAgg,
+  withTauxDevenirFavorableReg,
+} from "../../utils/tauxDevenirFavorable";
 import {
   selectTauxInsertion6mois,
   withInsertionReg,
@@ -98,10 +101,14 @@ const findEtablissementsInDb = async ({
         )
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
-    .leftJoin(
-      "indicateurSortie",
-      "indicateurSortie.formationEtablissementId",
-      "formationEtablissement.id"
+    .leftJoin("indicateurSortie", (join) =>
+      join
+        .onRef(
+          "indicateurSortie.formationEtablissementId",
+          "=",
+          "formationEtablissement.id"
+        )
+        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
     )
     .innerJoin(
       "etablissement",
@@ -158,26 +165,29 @@ const findEtablissementsInDb = async ({
       selectTauxInsertion6mois("indicateurSortie").as(
         "tauxInsertionEtablissement"
       ),
-      (eb) =>
-        eb
-          .selectFrom("dataFormation")
-          .select((eb1) =>
-            eb1
-              .case()
-              .when("indicateurSortie.cfdContinuum", "is not", null)
-              .then(
-                jsonBuildObject({
-                  cfd: eb1.ref("indicateurSortie.cfdContinuum"),
-                  libelle: eb1.ref("dataFormation.libelle"),
-                })
-              )
-              .end()
-              .as("temp")
-          )
-          .whereRef("dataFormation.cfd", "=", "indicateurSortie.cfdContinuum")
-          .limit(1)
-          .as("continuumEtablissement"),
+      selectTauxDevenirFavorableAgg("indicateurSortie").as(
+        "tauxDevenirFavorableEtablissement"
+      ),
     ])
+    .leftJoin(
+      "dataFormation as dataFormationContinuum",
+      "dataFormationContinuum.cfd",
+      "indicateurSortie.cfdContinuum"
+    )
+    .select((eb) =>
+      eb
+        .case()
+        .when("indicateurSortie.cfdContinuum", "is not", null)
+        .then(
+          jsonBuildObject({
+            cfd: eb.ref("indicateurSortie.cfdContinuum"),
+            libelle: eb.ref("dataFormationContinuum.libelle"),
+          })
+        )
+        .end()
+        .as("continuumEtablissement")
+    )
+    .$narrowType<{ continuumEtablissement: { cfd: string; libelle: string } }>()
     .select([
       (eb) =>
         hasContinuum({
@@ -279,6 +289,7 @@ const findEtablissementsInDb = async ({
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",
       "indicateurSortie.millesimeSortie",
+      "dataFormationContinuum.libelle",
       "formationEtablissement.id",
       "dispositifId",
       "libelleDispositif",
