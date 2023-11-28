@@ -17,9 +17,7 @@ export const selectTauxPoursuite = (
   indicateurSortieAlias: string
 ) => sql<number>`
     CASE WHEN ${selectDenominateurPoursuite(indicateurSortieAlias)} >= ${seuil}
-    THEN ROUND((100 * ${sql.table(
-      indicateurSortieAlias
-    )}."nbPoursuiteEtudes"::FLOAT
+    THEN ROUND((${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"::FLOAT
     / ${selectDenominateurPoursuite(indicateurSortieAlias)})::NUMERIC, 2)
     END`;
 
@@ -40,9 +38,7 @@ export const selectTauxPoursuiteAgg = (
     CASE WHEN ${selectDenominateurPoursuiteAgg(
       indicateurSortieAlias
     )} >= ${seuil}
-    THEN ROUND((100 * SUM(${sql.table(
-      indicateurSortieAlias
-    )}."nbPoursuiteEtudes")
+    THEN ROUND((SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
       / ${selectDenominateurPoursuiteAgg(indicateurSortieAlias)})::NUMERIC, 2)
     END`;
 

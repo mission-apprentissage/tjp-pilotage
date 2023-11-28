@@ -30,7 +30,7 @@ export const RegionSection = ({
         <StatCard
           value={
             regionsStats?.tauxRemplissage
-              ? `${Math.round(regionsStats.tauxRemplissage)}%`
+              ? `${Math.round(regionsStats.tauxRemplissage * 100)}%`
               : undefined
           }
           label="Taux de remplissage dans la région"
@@ -38,7 +38,7 @@ export const RegionSection = ({
         <StatCard
           value={
             regionsStats?.tauxPoursuite
-              ? `${Math.round(regionsStats.tauxPoursuite)}%`
+              ? `${Math.round(regionsStats.tauxPoursuite * 100)}%`
               : undefined
           }
           label="Taux de poursuite d’étude dans la région"
@@ -46,7 +46,7 @@ export const RegionSection = ({
         <StatCard
           value={
             regionsStats?.tauxInsertion
-              ? `${Math.round(regionsStats.tauxInsertion)}%`
+              ? `${Math.round(regionsStats.tauxInsertion * 100)}%`
               : undefined
           }
           label="Taux d’emploi à 6 mois dans la région"

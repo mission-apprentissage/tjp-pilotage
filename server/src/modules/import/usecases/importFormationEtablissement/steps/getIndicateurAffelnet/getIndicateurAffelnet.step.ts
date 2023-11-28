@@ -33,7 +33,6 @@ const findAttractiviteCapaciteHorsBTS = async ({
       "Statut  Offre de formation": "ST",
       "Voeu de recensement  O/N": "N",
     },
-    limit: 2,
   });
 };
 

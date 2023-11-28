@@ -57,24 +57,22 @@ export const EtablissementLineContent = ({
       <Td isNumeric>{line.effectif2 ?? "-"}</Td>
       <Td isNumeric>{line.effectif3 ?? "-"}</Td>
       <Td isNumeric>{line.capacite ?? "-"}</Td>
-      <Td isNumeric>
+      <Td textAlign={"center"}>
         <TableBadge
           sx={getTauxPressionStyle(
-            line.tauxPression !== undefined
-              ? line.tauxPression / 100
-              : undefined
+            line.tauxPression !== undefined ? line.tauxPression : undefined
           )}
         >
-          {line.tauxPression !== undefined ? line.tauxPression / 100 : "-"}
+          {line.tauxPression !== undefined ? line.tauxPression : "-"}
         </TableBadge>
       </Td>
-      <Td isNumeric>
+      <Td textAlign={"center"}>
         <GraphWrapper value={line.tauxRemplissage} />
       </Td>
-      <Td>
+      <Td textAlign={"center"}>
         <GraphWrapper continuum={line.continuum} value={line.tauxInsertion} />
       </Td>
-      <Td>
+      <Td textAlign={"center"}>
         <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
       <Td>{line.positionQuadrant}</Td>

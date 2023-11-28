@@ -24,13 +24,13 @@ export const EvolutionIndicateursClesSection = ({
   const graphData = {
     anneeN: {
       libelleAnnee: "2021",
-      filtered: data?.anneeN.filtered[indicateur],
-      nationale: data?.anneeN.nationale[indicateur],
+      filtered: (data?.anneeN.filtered[indicateur] ?? 0) * 100,
+      nationale: (data?.anneeN.nationale[indicateur] ?? 0) * 100,
     },
     anneeNMoins1: {
       libelleAnnee: "2020",
-      filtered: data?.anneeNMoins1.filtered[indicateur],
-      nationale: data?.anneeNMoins1.nationale[indicateur],
+      filtered: (data?.anneeNMoins1.filtered[indicateur] ?? 0) * 100,
+      nationale: (data?.anneeNMoins1.nationale[indicateur] ?? 0) * 100,
     },
   };
 

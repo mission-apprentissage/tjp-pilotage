@@ -8,7 +8,7 @@ const capaciteAnnee = (
 ) => {
   return sql`NULLIF((jsonb_extract_path(${sql.table(
     indicateurEntreeAlias
-  )}."capacites",${annee})), 'null')::INT`;
+  )}."capacites",${annee})), 'null')::FLOAT`;
 };
 
 const premierVoeuxAnnee = (
@@ -17,15 +17,14 @@ const premierVoeuxAnnee = (
 ) => {
   return sql`NULLIF((jsonb_extract_path(${sql.table(
     indicateurEntreeAlias
-  )}."premiersVoeux",${annee})), 'null')::INT`;
+  )}."premiersVoeux",${annee})), 'null')::FLOAT`;
 };
 
 export const selectDenominateurPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
   SUM(
-    CASE WHEN
-    ${premierVoeuxAnnee(
+    CASE WHEN ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )} IS NOT NULL
@@ -39,21 +38,19 @@ export const selectDenominateurPressionAgg = (
 export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    CASE WHEN
-    ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
-    THEN ROUND(100 * SUM(${premierVoeuxAnnee(
+    CASE WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
+    THEN ROUND((SUM(${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )})
-    / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})
+    / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})::NUMERIC, 2)
     END
   `;
 
 export const selectDenominateurPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    CASE WHEN
-    ${capaciteAnnee(
+    CASE WHEN ${capaciteAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )} IS NOT NULL
@@ -66,13 +63,13 @@ export const selectDenominateurPression = (
 export const selectTauxPression = (
   indicateurEntreeAlias: string
 ) => sql<number>`
-    CASE WHEN
-    ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
-    THEN (100 * ${premierVoeuxAnnee(
-      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-      indicateurEntreeAlias
-    )}
-    / ${selectDenominateurPression(indicateurEntreeAlias)})
+    CASE WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
+    THEN ROUND((
+      ${premierVoeuxAnnee(
+        sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+        indicateurEntreeAlias
+      )}
+    / ${selectDenominateurPression(indicateurEntreeAlias)})::NUMERIC, 2)
     END
   `;
 
