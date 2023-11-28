@@ -44,6 +44,12 @@ const EtablissementLineSchema = z.object({
       libelle: z.string().optional(),
     })
     .optional(),
+  continuumEtablissement: z
+    .object({
+      cfd: z.string(),
+      libelle: z.string().optional(),
+    })
+    .optional(),
 });
 
 export const getEtablissementsSchema = {

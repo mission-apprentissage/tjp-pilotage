@@ -1,4 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -14,7 +15,10 @@ import {
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../utils/tauxInsertion6mois";
+import {
+  selectTauxInsertion6mois,
+  withInsertionReg,
+} from "../../utils/tauxInsertion6mois";
 import {
   selectTauxPoursuite,
   withPoursuiteReg,
@@ -151,7 +155,28 @@ const findEtablissementsInDb = async ({
       ),
       selectTauxPression("indicateurEntree").as("tauxPression"),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
-      selectTauxPoursuite("indicateurSortie").as("tauxInsertionEtablissement"),
+      selectTauxInsertion6mois("indicateurSortie").as(
+        "tauxInsertionEtablissement"
+      ),
+      (eb) =>
+        eb
+          .selectFrom("dataFormation")
+          .select((eb1) =>
+            eb1
+              .case()
+              .when("indicateurSortie.cfdContinuum", "is not", null)
+              .then(
+                jsonBuildObject({
+                  cfd: eb1.ref("indicateurSortie.cfdContinuum"),
+                  libelle: eb1.ref("dataFormation.libelle"),
+                })
+              )
+              .end()
+              .as("temp")
+          )
+          .whereRef("dataFormation.cfd", "=", "indicateurSortie.cfdContinuum")
+          .limit(1)
+          .as("continuumEtablissement"),
     ])
     .select([
       (eb) =>
