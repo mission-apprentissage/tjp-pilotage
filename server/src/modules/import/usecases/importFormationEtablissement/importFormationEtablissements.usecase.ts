@@ -28,7 +28,6 @@ export const [importFormations] = inject(
     fetchIjReg,
   },
   (deps) => {
-    console.log("start");
     return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
       logger.reset();
       if (fetchIj) await deps.fetchIjReg();
