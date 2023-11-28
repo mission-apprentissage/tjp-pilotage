@@ -77,6 +77,13 @@ export const EtablissementLineContent = ({
       <Td>
         <GraphWrapper continuum={line.continuum} value={line.tauxPoursuite} />
       </Td>
+      <Td>{line.positionQuadrant}</Td>
+      <Td textAlign="center">
+        <GraphWrapper
+          continuum={line.continuum}
+          value={line.tauxDevenirFavorable}
+        />
+      </Td>
       <Td>
         <GraphWrapper
           continuum={line.continuumEtablissement}
@@ -89,11 +96,10 @@ export const EtablissementLineContent = ({
           value={line.tauxPoursuiteEtablissement}
         />
       </Td>
-      <Td>{line.positionQuadrant}</Td>
       <Td textAlign="center">
         <GraphWrapper
-          continuum={line.continuum}
-          value={line.tauxDevenirFavorable}
+          continuum={line.continuumEtablissement}
+          value={line.tauxDevenirFavorableEtablissement}
         />
       </Td>
       <Td>{line.valeurAjoutee ?? "-"} </Td>
