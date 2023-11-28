@@ -117,3 +117,6 @@ src/**/*.css.map
 
 
 next.config.js
+
+# GeoJSON files
+fond_carte_*.json

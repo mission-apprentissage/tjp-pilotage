@@ -312,9 +312,7 @@ export const QuadrantSection = ({
                     mb="4"
                     label="Taux de pression"
                     value={
-                      formation.tauxPression
-                        ? formation?.tauxPression / 100
-                        : "-"
+                      formation.tauxPression ? formation?.tauxPression : "-"
                     }
                   />
                   <Text mb="1" fontWeight="medium">
@@ -362,15 +360,19 @@ export const QuadrantSection = ({
                     (typeVue === "quadrant" ? (
                       <Quadrant
                         onClick={({ cfd }) => setFormationId(cfd)}
-                        meanInsertion={stats?.tauxInsertion}
-                        meanPoursuite={stats?.tauxPoursuite}
-                        itemId={(item) => item.cfd + item.dispositifId}
-                        data={formations?.map((item) => ({
-                          ...item,
-                          effectif: item.differencePlaces,
+                        meanInsertion={(stats?.tauxInsertion ?? 0) * 100}
+                        meanPoursuite={(stats?.tauxPoursuite ?? 0) * 100}
+                        itemId={(formation) =>
+                          formation.cfd + formation.dispositifId
+                        }
+                        data={formations?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.differencePlaces,
+                          tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
+                          tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                         }))}
-                        itemColor={(item) =>
-                          item.cfd === currentCfd ? "#fd3b4cb5" : undefined
+                        itemColor={(formation) =>
+                          formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
                         }
                         effectifSizes={[
                           { max: 15, size: 6 },

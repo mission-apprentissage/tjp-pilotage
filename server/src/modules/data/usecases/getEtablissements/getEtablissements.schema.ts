@@ -20,6 +20,7 @@ const EtablissementLineSchema = z.object({
   libelleDispositif: z.string().optional(),
   libelleNiveauDiplome: z.string().optional(),
   anneeDebut: z.coerce.number().optional(),
+  premiersVoeux: z.coerce.number().optional(),
   capacite: z.coerce.number().optional(),
   effectif: z.coerce.number().optional(),
   effectif1: z.coerce.number().optional(),
