@@ -160,12 +160,12 @@ export const TableQuadrant = ({
                   <TableBadge
                     sx={getTauxPressionStyle(
                       formation.tauxPression !== undefined
-                        ? formation.tauxPression / 100
+                        ? formation.tauxPression
                         : undefined
                     )}
                   >
                     {formation.tauxPression !== undefined
-                      ? formation.tauxPression / 100
+                      ? formation.tauxPression
                       : "-"}
                   </TableBadge>
                 </Td>

@@ -30,7 +30,7 @@ export const FormationTooltipContent = ({
     <InfoBlock
       mb="2"
       label="Taux de pression de l'établissement:"
-      value={formation.tauxPression ? formation?.tauxPression / 100 : "-"}
+      value={formation.tauxPression ? formation?.tauxPression : "-"}
     />
     <Text mb="1" fontWeight="medium">
       Taux d'emploi régional :

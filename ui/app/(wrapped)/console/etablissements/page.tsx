@@ -51,6 +51,7 @@ const ETABLISSEMENTS_COLUMNS = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   capacite: "Capacité",
+  premiersVoeux: "Nb de premiers voeux",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
@@ -61,6 +62,7 @@ const ETABLISSEMENTS_COLUMNS = {
   secteur: "Secteur",
   UAI: "UAI",
   libelleDispositif: "Dispositif",
+  dispositifId: "DispositifId",
   libelleOfficielFamille: "Famille de métiers",
   codeFormationDiplome: "CodeDiplome",
   CPC: "CPC",
@@ -471,7 +473,6 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.capacite}
                 </Th>
                 <Th
-                  isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("tauxPression")}
                 >

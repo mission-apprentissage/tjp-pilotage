@@ -151,11 +151,11 @@ const TopItem = ({
               px="2"
               pr="1"
               height={"24px"}
-              width={`${value}%`}
+              width={`${value * 100}%`}
               fontSize={11}
               whiteSpace="nowrap"
             >
-              {`${formation.tauxDevenirFavorable.toFixed(0)}%`}
+              {`${(formation.tauxDevenirFavorable * 100).toFixed()}%`}
             </Flex>
           </PopoverTrigger>
         </Box>

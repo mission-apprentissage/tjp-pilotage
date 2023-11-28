@@ -68,10 +68,10 @@ export const LineContent = ({
       <Td textAlign="center">
         <TableBadge
           sx={getTauxPressionStyle(
-            demande.pression !== undefined ? demande.pression / 100 : undefined
+            demande.pression !== undefined ? demande.pression : undefined
           )}
         >
-          {demande.pression !== undefined ? demande.pression / 100 : "-"}
+          {demande.pression !== undefined ? demande.pression : "-"}
         </TableBadge>
       </Td>
       <Td minW={300} maxW={300} whiteSpace="normal">

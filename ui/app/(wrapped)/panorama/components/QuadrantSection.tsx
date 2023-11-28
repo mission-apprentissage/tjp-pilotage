@@ -402,16 +402,16 @@ export const QuadrantSection = ({
                 meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
-                    meanPoursuite={meanPoursuite}
-                    meanInsertion={meanInsertion}
+                    meanInsertion={(meanPoursuite ?? 0) * 100}
+                    meanPoursuite={(meanInsertion ?? 0) * 100}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion,
-                      tauxPoursuite: formation.tauxPoursuite,
+                      tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
+                      tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                     }))}
                     TooltipContent={FormationTooltipContent}
-                    itemId={(item) =>
-                      item.codeFormationDiplome + item.dispositifId
+                    itemId={(formation) =>
+                      formation.codeFormationDiplome + formation.dispositifId
                     }
                     InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}

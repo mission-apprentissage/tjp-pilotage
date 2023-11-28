@@ -126,7 +126,7 @@ export const IndicateursSection = ({
               label="Taux poursuite étude dans votre région"
               value={
                 stats?.tauxPoursuite
-                  ? `${Math.round(stats.tauxPoursuite)}%`
+                  ? `${Math.round(stats.tauxPoursuite * 100)}%`
                   : undefined
               }
             />
@@ -136,7 +136,7 @@ export const IndicateursSection = ({
               }`}
               value={
                 stats?.tauxRemplissage
-                  ? `${Math.round(stats.tauxRemplissage)}%`
+                  ? `${Math.round(stats.tauxRemplissage * 100)}%`
                   : undefined
               }
             />
@@ -144,7 +144,7 @@ export const IndicateursSection = ({
               label="Taux d'emploi à 6 mois dans votre région"
               value={
                 stats?.tauxInsertion
-                  ? `${Math.round(stats.tauxInsertion)}%`
+                  ? `${Math.round(stats.tauxInsertion * 100)}%`
                   : undefined
               }
             />
