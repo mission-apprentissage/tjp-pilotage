@@ -36,7 +36,6 @@ export const countDemandes = async ({
       )`.as("submitted")
     )
     .where(isDemandeSelectable({ user }))
-    .where("demande.id", "=", "none")
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
