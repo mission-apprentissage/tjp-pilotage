@@ -64,78 +64,127 @@ const countRestitutionIntentionsStatsInDB = async ({
     .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(${countOuvertures(eb)} + ${countFermetures(
-          eb
-        )})`,
-        scolaire: sql<number>`SUM(${countOuverturesSco(
-          eb
-        )} + ${countFermeturesSco(eb)})`,
-        apprentissage: sql<number>`SUM(${countOuverturesApprentissage(
-          eb
-        )} + ${countFermeturesApprentissage(eb)})`,
+        total: sql<number>`
+        COALESCE(
+          SUM(
+            ${countOuvertures(eb)} +
+            ${countFermetures(eb)}
+          ),
+          0
+        )`,
+        scolaire: sql<number>`
+        COALESCE(
+          SUM(
+            ${countOuverturesSco(eb)} +
+            ${countFermeturesSco(eb)}
+          ),
+          0
+        )`,
+        apprentissage: sql<number>`
+        COALESCE(
+          SUM(
+            ${countOuverturesApprentissage(eb)} +
+            ${countFermeturesApprentissage(eb)}
+          ),
+          0
+        )`,
       }).as("total")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(${countOuvertures(eb)})`,
-        scolaire: sql<number>`SUM(${countOuverturesSco(eb)})`,
-        apprentissage: sql<number>`SUM(${countOuverturesApprentissage(eb)})`,
+        total: sql<number>`COALESCE(SUM(${countOuvertures(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countOuverturesSco(eb)}),0)`,
+        apprentissage: sql<number>`COALESCE(
+          SUM(${countOuverturesApprentissage(eb)}),0
+        )`,
       }).as("ouvertures")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(${countFermetures(eb)})`,
-        scolaire: sql<number>`SUM(${countFermeturesSco(eb)})`,
-        apprentissage: sql<number>`SUM(${countFermeturesApprentissage(eb)})`,
+        total: sql<number>`COALESCE(SUM(${countFermetures(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(SUM(${countFermeturesSco(eb)}),0)`,
+        apprentissage: sql<number>`COALESCE(
+          SUM(${countFermeturesApprentissage(eb)}),0
+        )`,
       }).as("fermetures")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(
-      CASE WHEN
-      ${eb.ref("demande.amiCma")} = true
-      THEN ${countOuvertures(eb)}
-      ELSE 0
-      END
-    )`,
-        scolaire: sql<number>`SUM(
-      CASE WHEN
-      ${eb.ref("demande.amiCma")} = true
-      THEN ${countOuverturesSco(eb)}
-      ELSE 0
-      END
-    )`,
-        apprentissage: sql<number>`SUM(
-      CASE WHEN
-      ${eb.ref("demande.amiCma")} = true
-      THEN ${countOuverturesApprentissage(eb)}
-      ELSE 0
-      END
-    )`,
+        total: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref("demande.amiCma")} = true
+            THEN ${countOuvertures(eb)}
+            ELSE 0
+            END
+          ),
+          0
+        )`,
+        scolaire: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref("demande.amiCma")} = true
+            THEN ${countOuverturesSco(eb)}
+            ELSE 0
+            END
+          ),
+          0
+        )`,
+        apprentissage: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref("demande.amiCma")} = true
+            THEN ${countOuverturesApprentissage(eb)}
+            ELSE 0
+            END
+          ),
+          0
+        )`,
       }).as("amiCMAs")
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countOuvertures(eb)}
-          ELSE 0
-          END
+        total: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref(
+              "dataFormation.codeNiveauDiplome"
+            )} IN ('381', '481', '581')
+            THEN ${countOuvertures(eb)}
+            ELSE 0
+            END
+          ),
+          0
         )`,
-        scolaire: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countOuverturesSco(eb)}
-          ELSE 0
-          END
+        scolaire: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref(
+              "dataFormation.codeNiveauDiplome"
+            )} IN ('381', '481', '581')
+            THEN ${countOuverturesSco(eb)}
+            ELSE 0
+            END
+          ),
+          0
         )`,
-        apprentissage: sql<number>`SUM(
-          CASE WHEN
-          ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('381', '481', '581')
-          THEN ${countOuverturesApprentissage(eb)}
-          ELSE 0
-          END
+        apprentissage: sql<number>`
+        COALESCE(
+          SUM(
+            CASE WHEN
+            ${eb.ref(
+              "dataFormation.codeNiveauDiplome"
+            )} IN ('381', '481', '581')
+            THEN ${countOuverturesApprentissage(eb)}
+            ELSE 0
+            END
+          ),
+          0
         )`,
       }).as("FCILs")
     )
@@ -256,18 +305,20 @@ const countRestitutionIntentionsStatsInDB = async ({
       if (voie === "apprentissage") {
         return eb.where(
           ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
+            sql<boolean>`ABS(
+              ${ebw.ref("demande.capaciteApprentissage")} -
+              ${ebw.ref("demande.capaciteApprentissageActuelle")}
+            ) > 1`
         );
       }
 
       if (voie === "scolaire") {
         return eb.where(
           ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
+            sql<boolean>`ABS(
+              ${ebw.ref("demande.capaciteScolaire")} -
+              ${ebw.ref("demande.capaciteScolaireActuelle")}
+            ) > 1`
         );
       }
 
