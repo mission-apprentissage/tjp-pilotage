@@ -74,6 +74,8 @@ const ETABLISSEMENTS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
+  dispositifId: "Code dispositif",
+  codeRegion: "Code Région",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
 >;

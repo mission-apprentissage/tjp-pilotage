@@ -12,6 +12,7 @@ const EtablissementLineSchema = z.object({
   secteur: z.string().optional(),
   commune: z.string().optional(),
   departement: z.string().optional(),
+  codeRegion: z.string().optional(),
   codeFormationDiplome: z.string(),
   libelleDiplome: z.string(),
   codeNiveauDiplome: z.string(),
