@@ -57,11 +57,12 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Positionnement dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement: "Tx d'emploi 6 mois de l'offre de formation",
+  tauxInsertionEtablissement:
+    "Tx d'emploi 6 mois de la formation dans l'établissement",
   tauxPoursuiteEtablissement:
-    "Tx de poursuite d'études de l'offre de formation",
+    "Tx de poursuite d'études de la formation dans l'établissement",
   tauxDevenirFavorableEtablissement:
-    "Tx de devenir favorable de l'offre de formation",
+    "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
   UAI: "UAI",
