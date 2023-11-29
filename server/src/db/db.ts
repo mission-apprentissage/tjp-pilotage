@@ -6,6 +6,11 @@ import { logger } from "../logger";
 import { DB } from "./schema";
 
 types.setTypeParser(types.builtins.INT8, (val) => parseInt(val));
+types.setTypeParser(types.builtins.INT4, (val) => parseInt(val));
+types.setTypeParser(types.builtins.INT2, (val) => parseInt(val));
+types.setTypeParser(types.builtins.FLOAT4, (val) => parseFloat(val));
+types.setTypeParser(types.builtins.FLOAT8, (val) => parseFloat(val));
+types.setTypeParser(types.builtins.NUMERIC, (val) => parseFloat(val));
 
 const pool = new Pool({
   connectionString: config.PILOTAGE_POSTGRES_URI,
