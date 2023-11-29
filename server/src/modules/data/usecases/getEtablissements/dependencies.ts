@@ -125,6 +125,11 @@ const findEtablissementsInDb = async ({
       "departement.codeDepartement",
       "etablissement.codeDepartement"
     )
+    .leftJoin(
+      "dataFormation as dataFormationContinuum",
+      "dataFormationContinuum.cfd",
+      "indicateurSortie.cfdContinuum"
+    )
     .selectAll("etablissement")
     .selectAll("formation")
     .select([
@@ -169,11 +174,6 @@ const findEtablissementsInDb = async ({
         "tauxDevenirFavorableEtablissement"
       ),
     ])
-    .leftJoin(
-      "dataFormation as dataFormationContinuum",
-      "dataFormationContinuum.cfd",
-      "indicateurSortie.cfdContinuum"
-    )
     .select((eb) =>
       eb
         .case()
