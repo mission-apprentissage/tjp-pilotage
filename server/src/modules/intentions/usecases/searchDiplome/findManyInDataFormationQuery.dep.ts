@@ -24,7 +24,6 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd",
       "familleMetier.cfdSpecialite"
     )
-    // .where("dataFormation.cfd", "not in", ["48120001", "48130001"])
     .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
       "420",
       "430",
