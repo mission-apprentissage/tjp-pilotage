@@ -84,7 +84,6 @@ export const findManyInDataFormationQuery = async ({
       ).as("dispositifs")
     )
     .select((eb) => [
-      sql`LEFT(${"dataFormation.cfd"}, 3)`.as("toto"),
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
