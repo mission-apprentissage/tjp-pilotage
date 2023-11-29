@@ -24,6 +24,11 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd",
       "familleMetier.cfdSpecialite"
     )
+    // .where("dataFormation.cfd", "not in", ["48120001", "48130001"])
+    .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
+      "420",
+      "430",
+    ])
     .where((eb) =>
       eb.and([
         eb.and(
@@ -80,6 +85,7 @@ export const findManyInDataFormationQuery = async ({
       ).as("dispositifs")
     )
     .select((eb) => [
+      sql`LEFT(${"dataFormation.cfd"}, 3)`.as("toto"),
       "dataFormation.cfd as value",
       sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
@@ -103,6 +109,8 @@ export const findManyInDataFormationQuery = async ({
     .limit(20)
     .execute()
     .then(cleanNull);
+
+  console.log(formations[0].toto);
 
   return formations;
 };
