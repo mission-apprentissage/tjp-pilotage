@@ -17,7 +17,6 @@ export const getEtablissementsRoutes = ({ server }: { server: Server }) => {
           ...rest,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
-        etablissements.etablissements[0].continuumEtablissement;
         response.status(200).send(etablissements);
       },
     });
