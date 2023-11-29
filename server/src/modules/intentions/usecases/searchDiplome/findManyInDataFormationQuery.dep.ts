@@ -109,7 +109,6 @@ export const findManyInDataFormationQuery = async ({
     .execute()
     .then(cleanNull);
 
-  console.log(formations[0].toto);
 
   return formations;
 };
