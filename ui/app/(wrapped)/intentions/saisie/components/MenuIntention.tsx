@@ -22,11 +22,7 @@ export const MenuIntention = ({
   } = qs.parse(queryParams.toString());
 
   const status =
-    searchParams.filters === undefined
-      ? "none"
-      : searchParams.filters?.status
-      ? searchParams.filters?.status[0]
-      : "";
+    searchParams.filters === undefined ? "none" : searchParams.filters?.status;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
     {},
@@ -54,7 +50,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions"
+          href="/intentions/saisie"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
@@ -69,7 +65,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status][0]=submitted"
+          href="/intentions/saisie?filters[status]=submitted"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -88,7 +84,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status][0]=draft"
+          href="/intentions/saisie?filters[status]=draft"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
