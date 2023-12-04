@@ -57,6 +57,8 @@ export const QuadrantSection = ({
 }) => {
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
+  const [currentCfd, setFormationId] = useState<string | undefined>();
+
   const toggleTypeVue = () => {
     if (typeVue === "quadrant") setTypeVue("tableau");
     else setTypeVue("quadrant");
@@ -155,6 +157,9 @@ export const QuadrantSection = ({
                     tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                   }))}
                   itemId={(item) => item.cfd + item.dispositifId}
+                  itemColor={(formation) =>
+                    formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
+                  }
                   effectifSizes={effectifSizes}
                 />
               ) : (
@@ -168,6 +173,8 @@ export const QuadrantSection = ({
                   handleOrder={(column?: string) =>
                     handleOrder(column as OrderPanoramaEtablissement["orderBy"])
                   }
+                  handleClick={setFormationId}
+                  currentCfd={currentCfd}
                 />
               ))
             )}
