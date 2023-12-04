@@ -58,6 +58,12 @@ const ETABLISSEMENTS_COLUMNS = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   positionQuadrant: "Positionnement dans le quadrant",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
+  tauxInsertionEtablissement:
+    "Tx d'emploi 6 mois de la formation dans l'établissement",
+  tauxPoursuiteEtablissement:
+    "Tx de poursuite d'études de la formation dans l'établissement",
+  tauxDevenirFavorableEtablissement:
+    "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
   UAI: "UAI",
@@ -71,6 +77,8 @@ const ETABLISSEMENTS_COLUMNS = {
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
+  dispositifId: "Code dispositif",
+  codeRegion: "Code Région",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
 >;
@@ -540,6 +548,44 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxInsertionEtablissement")}
+                >
+                  <OrderIcon {...order} column="tauxInsertionEtablissement" />
+                  {ETABLISSEMENTS_COLUMNS.tauxInsertionEtablissement}
+                  <TooltipIcon
+                    ml="1"
+                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("tauxPoursuiteEtablissement")}
+                >
+                  <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
+                  {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtablissement}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  />
+                </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() =>
+                    handleOrder("tauxDevenirFavorableEtablissement")
+                  }
+                >
+                  <OrderIcon
+                    {...order}
+                    column="tauxDevenirFavorableEtablissement"
+                  />
+                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorableEtablissement}
+                  <TooltipIcon
+                    ml="1"
+                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
                   />
                 </Th>
                 <Th

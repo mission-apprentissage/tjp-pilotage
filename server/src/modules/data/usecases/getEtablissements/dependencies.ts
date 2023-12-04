@@ -1,4 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
+import { jsonBuildObject } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -14,9 +15,18 @@ import {
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
 import { premiersVoeuxAnnee } from "../../utils/premiersVoeuxAnnee";
-import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../utils/tauxPoursuite";
+import {
+  selectTauxDevenirFavorableAgg,
+  withTauxDevenirFavorableReg,
+} from "../../utils/tauxDevenirFavorable";
+import {
+  selectTauxInsertion6mois,
+  withInsertionReg,
+} from "../../utils/tauxInsertion6mois";
+import {
+  selectTauxPoursuite,
+  withPoursuiteReg,
+} from "../../utils/tauxPoursuite";
 import { selectTauxPression } from "../../utils/tauxPression";
 import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
@@ -92,6 +102,15 @@ const findEtablissementsInDb = async ({
         )
         .on("indicateurEntree.rentreeScolaire", "in", rentreeScolaire)
     )
+    .leftJoin("indicateurSortie", (join) =>
+      join
+        .onRef(
+          "indicateurSortie.formationEtablissementId",
+          "=",
+          "formationEtablissement.id"
+        )
+        .on("indicateurSortie.millesimeSortie", "=", millesimeSortie)
+    )
     .innerJoin(
       "etablissement",
       "etablissement.UAI",
@@ -106,6 +125,11 @@ const findEtablissementsInDb = async ({
       "departement",
       "departement.codeDepartement",
       "etablissement.codeDepartement"
+    )
+    .leftJoin(
+      "dataFormation as dataFormationContinuum",
+      "dataFormationContinuum.cfd",
+      "indicateurSortie.cfdContinuum"
     )
     .selectAll("etablissement")
     .selectAll("formation")
@@ -144,7 +168,28 @@ const findEtablissementsInDb = async ({
       ),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
       selectTauxPression("indicateurEntree").as("tauxPression"),
+      selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
+      selectTauxInsertion6mois("indicateurSortie").as(
+        "tauxInsertionEtablissement"
+      ),
+      selectTauxDevenirFavorableAgg("indicateurSortie").as(
+        "tauxDevenirFavorableEtablissement"
+      ),
     ])
+    .select((eb) =>
+      eb
+        .case()
+        .when("indicateurSortie.cfdContinuum", "is not", null)
+        .then(
+          jsonBuildObject({
+            cfd: eb.ref("indicateurSortie.cfdContinuum"),
+            libelle: eb.ref("dataFormationContinuum.libelle"),
+          })
+        )
+        .end()
+        .as("continuumEtablissement")
+    )
+    .$narrowType<{ continuumEtablissement: { cfd: string; libelle: string } }>()
     .select([
       (eb) =>
         hasContinuum({
@@ -244,6 +289,9 @@ const findEtablissementsInDb = async ({
       "libelleOfficielFamille",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
+      "indicateurSortie.formationEtablissementId",
+      "indicateurSortie.millesimeSortie",
+      "dataFormationContinuum.libelle",
       "formationEtablissement.id",
       "dispositifId",
       "libelleDispositif",
