@@ -12,6 +12,7 @@ const EtablissementLineSchema = z.object({
   secteur: z.string().optional(),
   commune: z.string().optional(),
   departement: z.string().optional(),
+  codeRegion: z.string().optional(),
   codeFormationDiplome: z.string(),
   libelleDiplome: z.string(),
   codeNiveauDiplome: z.string(),
@@ -32,12 +33,21 @@ const EtablissementLineSchema = z.object({
   tauxInsertion: z.coerce.number().optional(),
   positionQuadrant: z.string().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
+  tauxPoursuiteEtablissement: z.number().optional(),
+  tauxInsertionEtablissement: z.number().optional(),
+  tauxDevenirFavorableEtablissement: z.number().optional(),
   valeurAjoutee: z.coerce.number().optional(),
   CPC: z.string().optional(),
   CPCSecteur: z.string().optional(),
   CPCSousSecteur: z.string().optional(),
   libelleFiliere: z.string().optional(),
   continuum: z
+    .object({
+      cfd: z.string(),
+      libelle: z.string().optional(),
+    })
+    .optional(),
+  continuumEtablissement: z
     .object({
       cfd: z.string(),
       libelle: z.string().optional(),

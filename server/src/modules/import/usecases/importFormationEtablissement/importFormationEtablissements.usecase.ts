@@ -74,13 +74,7 @@ export const [importFormationEtablissements] = inject(
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
-        const { dispositifId, anneesDispositif, dureeDispositif } =
-          cfdDispositif;
-
-        // console.log(cfd);
-        if (cfd === "50020003") {
-          console.log("sdf", anneesDispositif, dureeDispositif, dispositifId);
-        }
+        const { dispositifId, anneesDispositif } = cfdDispositif;
 
         const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
         if (!lastMefstat) continue;
@@ -138,6 +132,8 @@ export const [importFormationEtablissements] = inject(
                 mefstat: lastMefstat,
                 formationEtablissementId: formationEtablissement.id,
                 millesime,
+                cfd,
+                dispositifId,
               });
             }
           }

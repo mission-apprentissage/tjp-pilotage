@@ -24,6 +24,10 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.cfd",
       "familleMetier.cfdSpecialite"
     )
+    .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
+      "420",
+      "430",
+    ])
     .where((eb) =>
       eb.and([
         eb.and(
@@ -103,6 +107,7 @@ export const findManyInDataFormationQuery = async ({
     .limit(20)
     .execute()
     .then(cleanNull);
+
 
   return formations;
 };
