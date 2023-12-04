@@ -12,26 +12,21 @@ export const getDataForPanoramaDepartementFactory =
   async (activeFilters: {
     codeDepartement: string;
     codeNiveauDiplome?: string[];
-    libelleFiliere?: string[];
+    filiere?: string[];
     orderBy?: { column: string; order: "asc" | "desc" };
   }) => {
-    const [formations, { diplomes, filieres }, statsSortie] = await Promise.all(
-      [
-        deps.getFormationsDepartement(activeFilters),
-        deps.getFilters(activeFilters),
-        getStatsSortie(activeFilters),
-      ]
-    );
+    const [formations, filters, statsSortie] = await Promise.all([
+      deps.getFormationsDepartement(activeFilters),
+      deps.getFilters(activeFilters),
+      getStatsSortie(activeFilters),
+    ]);
 
     return {
       formations: formations.map((formation) => ({
         ...formation,
         positionQuadrant: getPositionQuadrant(formation, statsSortie),
       })),
-      filters: {
-        diplomes,
-        filieres,
-      },
+      filters,
     };
   };
 

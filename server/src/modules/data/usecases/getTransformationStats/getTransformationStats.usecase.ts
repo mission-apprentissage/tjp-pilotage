@@ -306,7 +306,7 @@ const getTransformationStatsFactory =
   async (activeFilters: {
     rentreeScolaire?: string;
     codeNiveauDiplome?: string[];
-    filiere?: string[];
+    CPCSecteur?: string[];
     orderBy?: { column: string; order: "asc" | "desc" };
   }) => {
     const resultDraft = await deps

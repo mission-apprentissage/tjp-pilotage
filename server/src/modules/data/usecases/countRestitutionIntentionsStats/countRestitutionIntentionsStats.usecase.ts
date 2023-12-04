@@ -14,7 +14,7 @@ const countRestitutionIntentionsStatsFactory =
     cfd?: string[];
     codeNiveauDiplome?: string[];
     dispositif?: string[];
-    filiere?: string[];
+    CPCSecteur?: string[];
     coloration?: string;
     amiCMA?: string;
     secteur?: string;
