@@ -223,7 +223,8 @@ export const getFilters = async ({
       return eb.where("etablissement.codeDepartement", "=", codeDepartement);
     })
     .distinct()
-    .$castTo<{ label: string; value: string }>();
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc");
 
   const diplomes = await filtersBase
     .select([

@@ -57,6 +57,7 @@ export const getTransformationStatsSchema = {
   querystring: z.object({
     rentreeScolaire: z.string().optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),
+    CPCSecteur: z.array(z.string()).optional(),
     filiere: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: ScopedStatsTransfoSchema.keyof().optional(),
@@ -71,6 +72,7 @@ export const getTransformationStatsSchema = {
         regions: z.array(OptionSchema),
         academies: z.array(OptionSchema),
         departements: z.array(OptionSchema),
+        CPCSecteurs: z.array(OptionSchema),
         filieres: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),

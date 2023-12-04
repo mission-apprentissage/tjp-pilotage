@@ -108,12 +108,18 @@ export const [importDataFormations] = inject(
             rncp: diplomeProfessionnel?.["Code RNCP"]
               ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
               : undefined,
-            cpc: diplomeProfessionnel?.[
-              "Commission professionnelle consultative"
-            ],
-            cpcSecteur: diplomeProfessionnel?.Secteur,
-            cpcSousSecteur: diplomeProfessionnel?.["Sous-secteur"],
-            libelleFiliere: regroupement,
+            cpc:
+              diplomeProfessionnel?.["Commission professionnelle consultative"]
+                ?.replace("CPC", "")
+                .trim() || "(VIDE)",
+            cpcSecteur:
+              diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
+              "(VIDE)",
+            cpcSousSecteur:
+              diplomeProfessionnel?.["Sous-secteur"]
+                ?.replace("Sous-secteur", "")
+                .trim() || "(VIDE)",
+            libelleFiliere: regroupement || "(VIDE)",
             codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
             dateOuverture: nFormationDiplome.DATE_OUVERTURE
               ? DateTime.fromFormat(
