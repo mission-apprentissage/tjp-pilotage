@@ -68,7 +68,6 @@ const ETABLISSEMENTS_COLUMNS = {
   secteur: "Secteur",
   UAI: "UAI",
   libelleDispositif: "Dispositif",
-  dispositifId: "DispositifId",
   libelleOfficielFamille: "Famille de métiers",
   codeFormationDiplome: "CodeDiplome",
   CPC: "CPC",
