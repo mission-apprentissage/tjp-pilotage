@@ -38,6 +38,7 @@ const DemandesItem = z.object({
   capaciteApprentissageColoree: z.coerce.number().optional(),
   codeRegion: z.string(),
   codeAcademie: z.string().optional(),
+  userName: z.string().optional(),
 });
 
 export const getDemandesSchema = {

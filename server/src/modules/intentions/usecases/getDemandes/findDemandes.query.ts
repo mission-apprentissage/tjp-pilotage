@@ -29,8 +29,13 @@ export const findDemandes = async ({
       "dataEtablissement.codeDepartement"
     )
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin("user", "user.id", "demande.createurId")
     .selectAll("demande")
     .select((eb) => [
+      sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+        "user.lastname"
+      )})`.as("userName"),
+      "user.lastname as nomCreateur",
       "dataFormation.libelle as libelleDiplome",
       "dataEtablissement.libelle as libelleEtablissement",
       "departement.libelle as libelleDepartement",

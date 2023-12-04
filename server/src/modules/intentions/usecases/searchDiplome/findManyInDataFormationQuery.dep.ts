@@ -108,6 +108,5 @@ export const findManyInDataFormationQuery = async ({
     .execute()
     .then(cleanNull);
 
-
   return formations;
 };
