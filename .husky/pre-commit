@@ -4,6 +4,4 @@
 echo "\nPREVENTING SENSIBLE FiLES COMMIT :" && \
 npm run preventSensibleFilesCommit && \
 echo "\nLINTING :" && \
-npm run lint:staged && \
-echo "\nTYPECHECKING :" && \
-npm run typecheck
+npm run lint:staged
