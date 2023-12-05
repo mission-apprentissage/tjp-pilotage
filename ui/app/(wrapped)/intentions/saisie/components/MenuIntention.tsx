@@ -95,6 +95,23 @@ export const MenuIntention = ({
             Projets de demandes
           </Text>
         </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href="/intentions/saisie?filters[status]=refused"
+          width={"100%"}
+          iconSpacing={"auto"}
+          rightIcon={
+            <Text fontWeight={"normal"}>{countDemandes?.refused}</Text>
+          }
+        >
+          <Text
+            fontWeight={isRecapView && status === "refused" ? "bold" : "normal"}
+          >
+            Demandes refusées
+          </Text>
+        </Button>
 
         <Button
           variant="ghost"

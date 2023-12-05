@@ -8,17 +8,23 @@ import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
 
 export const findDemandes = async ({
   status,
+  search,
   user,
   offset = 0,
   limit = 20,
   orderBy = { order: "desc", column: "createdAt" },
 }: {
-  status?: "draft" | "submitted";
+  status?: "draft" | "submitted" | "refused";
+  search?: string;
   user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   offset?: number;
   limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
+
+  const cleanSearch = search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
+  const search_array = cleanSearch.split(" ") ?? [];
+
   const demandes = await kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -57,6 +63,32 @@ export const findDemandes = async ({
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "=", status);
+      return eb;
+    })
+    .$call((eb) => {
+      if (search) return eb.where((eb) => eb.and(
+        search_array.map((search_word) =>
+          eb(
+            sql`concat(
+                  unaccent(${eb.ref("demande.id")}),
+                  ' ',
+                  unaccent(${eb.ref("dataFormation.libelle")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelle")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelle")}),
+                  ' ',
+                  unaccent(${eb.ref("user.firstname")}),
+                  ' ',
+                  unaccent(${eb.ref("user.lastname")})
+                )`,
+            "ilike",
+            `%${search_word
+              .normalize("NFD")
+              .replace(/[\u0300-\u036f]/g, "")}%`
+          )
+        ))
+      );
       return eb;
     })
     .$call((q) => {

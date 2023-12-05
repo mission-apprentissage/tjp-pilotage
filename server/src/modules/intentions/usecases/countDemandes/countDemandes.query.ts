@@ -35,6 +35,17 @@ export const countDemandes = async ({
         0
       )`.as("submitted")
     )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.status")} = 'refused'
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as("refused")
+    )
     .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
