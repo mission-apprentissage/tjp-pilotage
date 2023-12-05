@@ -50,7 +50,7 @@
     "shared": "*",
     "stream-transform": "^3.2.2",
     "ts-node": "^10.9.1",
-    "tsup": "^6.5.0",
+    "tsup": "^8.0.1",
     "uglify-js": "^3.17.4",
     "uuid": "^9.0.1",
     "winston": "^3.10.0",

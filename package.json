@@ -9,16 +9,16 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^5.49.0",
     "@typescript-eslint/parser": "^5.49.0",
-    "eslint": "8.54.0",
-    "eslint-config-next": "13.0.1",
+    "eslint": "8.55.0",
+    "eslint-config-next": "14.0.3",
     "eslint-import-resolver-typescript": "^3.5.2",
-    "eslint-plugin-import": "^2.26.0",
-    "eslint-plugin-jsx-a11y": "6.5.1",
-    "eslint-plugin-mocha": "10.1.0",
-    "eslint-plugin-node": "11.1.0",
-    "eslint-plugin-react": "^7.32.2",
+    "eslint-plugin-import": "^2.29.0",
+    "eslint-plugin-jsx-a11y": "6.8.0",
+    "eslint-plugin-mocha": "10.2.0",
+    "eslint-plugin-n": "^16.3.1",
+    "eslint-plugin-react": "^7.33.2",
     "eslint-plugin-simple-import-sort": "^10.0.0",
-    "eslint-plugin-unused-imports": "^2.0.0",
+    "eslint-plugin-unused-imports": "^3.0.0",
     "global": "4.4.0"
   },
   "scripts": {
@@ -28,7 +28,10 @@
     "prettier:fix": "prettier --write ./ui ./server ./shared",
     "prettier:check": "prettier --check ./ui ./server ./shared",
     "npm:release": "semantic-release",
-    "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release"
+    "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release",
+    "prepare": "husky install",
+    "commitlint": "commitlint --config ./config/commitlint.config.js --edit $1",
+    "preventSensibleFilesCommit": "./git-hooks/preventSensibleFilesCommit.sh"
   },
   "workspaces": [
     "ui",
@@ -38,21 +41,15 @@
   "devDependencies": {
     "@commitlint/cli": "18.4.3",
     "@commitlint/config-conventional": "18.4.3",
-    "@semantic-release/changelog": "6.0.1",
+    "@semantic-release/changelog": "6.0.3",
     "@semantic-release/exec": "6.0.3",
     "@semantic-release/git": "10.0.1",
-    "husky": "4.3.8",
-    "lint-staged": "11.2.6",
+    "husky": "^8.0.0",
+    "lint-staged": "15.2.0",
     "prettier": "3.0.3",
-    "semantic-release": "19.0.5",
-    "semantic-release-slack-bot": "3.5.2",
+    "semantic-release": "22.0.9",
+    "semantic-release-slack-bot": "4.0.2",
     "typescript": "5.0.2"
-  },
-  "husky": {
-    "hooks": {
-      "pre-commit": "./git-hooks/preventSensibleFilesCommit.sh && lint-staged",
-      "commit-msg": "[[ -n $HUSKY_BYPASS ]] || commitlint --config ./config/commitlint.config.js -E HUSKY_GIT_PARAMS"
-    }
   },
   "lint-staged": {
     "*.{ts,js,tsx}": [
