@@ -57,6 +57,8 @@ export const QuadrantSection = ({
 }) => {
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
+  const [currentCfd, setFormationId] = useState<string | undefined>();
+
   const toggleTypeVue = () => {
     if (typeVue === "quadrant") setTypeVue("tableau");
     else setTypeVue("quadrant");
@@ -145,16 +147,19 @@ export const QuadrantSection = ({
               filteredFormations &&
               (typeVue === "quadrant" ? (
                 <Quadrant
-                  meanPoursuite={meanPoursuite}
-                  meanInsertion={meanInsertion}
+                  meanPoursuite={(meanPoursuite ?? 0) * 100}
+                  meanInsertion={(meanInsertion ?? 0) * 100}
                   TooltipContent={FormationTooltipContent}
                   InfoTootipContent={InfoTooltipContent}
                   data={filteredFormations.map((formation) => ({
                     ...formation,
-                    tauxInsertion: formation.tauxInsertion,
-                    tauxPoursuite: formation.tauxPoursuite,
+                    tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
+                    tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                   }))}
                   itemId={(item) => item.cfd + item.dispositifId}
+                  itemColor={(formation) =>
+                    formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
+                  }
                   effectifSizes={effectifSizes}
                 />
               ) : (
@@ -168,6 +173,8 @@ export const QuadrantSection = ({
                   handleOrder={(column?: string) =>
                     handleOrder(column as OrderPanoramaEtablissement["orderBy"])
                   }
+                  handleClick={setFormationId}
+                  currentCfd={currentCfd}
                 />
               ))
             )}

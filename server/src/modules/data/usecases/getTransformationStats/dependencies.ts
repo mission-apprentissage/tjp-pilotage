@@ -93,11 +93,13 @@ const getTransformationStatsQuery = ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
+  CPCSecteur,
   filiere,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
+  CPCSecteur?: string[];
   filiere?: string[];
 }) =>
   kdb
@@ -221,6 +223,11 @@ const getTransformationStatsQuery = ({
       return eb;
     })
     .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
       if (filiere)
         return eb.where("dataFormation.libelleFiliere", "in", filiere);
       return eb;
@@ -245,11 +252,13 @@ const getFiltersQuery = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
+  CPCSecteur,
   filiere,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
+  CPCSecteur?: string[];
   filiere?: string[];
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -266,6 +275,11 @@ const getFiltersQuery = async ({
   const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!codeNiveauDiplome) return sql<true>`true`;
     return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+  };
+
+  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!CPCSecteur) return sql<true>`true`;
+    return eb("dataFormation.cpcSecteur", "in", CPCSecteur);
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -323,6 +337,22 @@ const getFiltersQuery = async ({
     .where("departement.codeDepartement", "is not", null)
     .execute();
 
+  const CPCSecteurs = await base
+    .select([
+      "dataFormation.cpcSecteur as label",
+      "dataFormation.cpcSecteur as value",
+    ])
+    .where("dataFormation.cpcSecteur", "is not", null)
+    .where((eb) =>
+      eb.and([
+        inStatus(eb),
+        inRentreeScolaire(eb),
+        inCodeNiveauDiplome(eb),
+        inFiliere(eb),
+      ])
+    )
+    .execute();
+
   const filieres = await base
     .select([
       "dataFormation.libelleFiliere as label",
@@ -330,7 +360,12 @@ const getFiltersQuery = async ({
     ])
     .where("dataFormation.libelleFiliere", "is not", null)
     .where((eb) =>
-      eb.and([inStatus(eb), inRentreeScolaire(eb), inCodeNiveauDiplome(eb)])
+      eb.and([
+        inStatus(eb),
+        inRentreeScolaire(eb),
+        inCodeNiveauDiplome(eb),
+        inCPCSecteur(eb),
+      ])
     )
     .execute();
 
@@ -340,7 +375,14 @@ const getFiltersQuery = async ({
       "niveauDiplome.codeNiveauDiplome as value",
     ])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
-    .where((eb) => eb.and([inStatus(eb), inRentreeScolaire(eb), inFiliere(eb)]))
+    .where((eb) =>
+      eb.and([
+        inStatus(eb),
+        inRentreeScolaire(eb),
+        inCPCSecteur(eb),
+        inFiliere(eb),
+      ])
+    )
     .execute();
 
   return {
@@ -348,6 +390,7 @@ const getFiltersQuery = async ({
     regions: regions.map(cleanNull),
     academies: academies.map(cleanNull),
     departements: departements.map(cleanNull),
+    CPCSecteurs: CPCSecteurs.map(cleanNull),
     filieres: filieres.map(cleanNull),
     diplomes: diplomes.map(cleanNull),
   };

@@ -23,7 +23,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
-  filiere,
+  CPCSecteur,
   coloration,
   amiCMA,
   secteur,
@@ -44,7 +44,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
-  filiere?: string[];
+  CPCSecteur?: string[];
   coloration?: string;
   amiCMA?: string;
   secteur?: string;
@@ -262,8 +262,8 @@ const countRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
       return eb;
     })
     .$call((eb) => {

@@ -1,3 +1,4 @@
+import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 
 export type ExportColumns<T extends object> = {
@@ -20,8 +21,13 @@ export function downloadCsv<D extends object>(
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
       label: label as string,
-      value,
+      value: value.replace(".", ","),
     })),
+    formatters: {
+      number: numberFormatter({
+        separator: ",",
+      }),
+    },
     delimiter: ";",
   });
   const csv = parser.parse(data);

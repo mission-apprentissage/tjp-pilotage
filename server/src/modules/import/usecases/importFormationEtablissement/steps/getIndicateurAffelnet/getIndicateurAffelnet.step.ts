@@ -3,7 +3,7 @@ import { inject } from "injecti";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 import { AnneeDispositif } from "../../../getCfdRentrees/getCfdRentrees.usecase";
 
-const findAttractiviteCapacite = async ({
+const findAttractiviteCapaciteHorsBTS = async ({
   mefstat,
   uai,
   rentreeScolaire,
@@ -12,6 +12,18 @@ const findAttractiviteCapacite = async ({
   uai: string;
   rentreeScolaire: string;
 }) => {
+  if (
+    await rawDataRepository.findRawData({
+      type: "lyceesACCE",
+      filter: {
+        secteur_public_prive: "PR",
+        numero_uai: uai,
+      },
+    })
+  ) {
+    return [];
+  }
+
   return rawDataRepository.findRawDatas({
     type: "attractivite_capacite",
     year: rentreeScolaire,
@@ -21,15 +33,13 @@ const findAttractiviteCapacite = async ({
       "Statut  Offre de formation": "ST",
       "Voeu de recensement  O/N": "N",
     },
-    limit: 2,
   });
 };
 
 export const [getIndicateursAffelnet] = inject(
-  { findAttractiviteCapacite },
+  { findAttractiviteCapaciteHorsBTS },
   (deps) =>
     async ({
-      //dispositifRentrees,
       anneesDispositif,
       uai,
       anneeDebut,
@@ -43,25 +53,37 @@ export const [getIndicateursAffelnet] = inject(
       capacites: (number | null)[];
       premiersVoeux: (number | null)[];
     }> => {
-      const lines = await deps.findAttractiviteCapacite({
+      const lines = await deps.findAttractiviteCapaciteHorsBTS({
         mefstat: anneesDispositif[anneeDebut].mefstat,
         uai,
         rentreeScolaire,
       });
-      if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };
+      if (lines.length === 0) {
+        return { capacites: [], premiersVoeux: [] };
+      }
 
       const {
         "Capacité  carte scolaire": rawCapacite,
         "Demandes vœux 1": rawPremierVoeux,
-      } = lines[0];
+      } = lines.reduce(
+        (sum, line) => {
+          sum["Capacité  carte scolaire"] += parseInt(
+            line["Capacité  carte scolaire"]
+          );
+          sum["Demandes vœux 1"] += parseInt(line["Demandes vœux 1"]);
+          return sum;
+        },
+        {
+          "Capacité  carte scolaire": 0,
+          "Demandes vœux 1": 0,
+        }
+      );
 
       const capacite =
-        rawCapacite && rawCapacite !== "0" && rawCapacite !== "999"
-          ? parseInt(rawCapacite)
+        rawCapacite && rawCapacite >= 5 && rawCapacite <= 100
+          ? rawCapacite
           : undefined;
-      const premiersVoeux = rawPremierVoeux
-        ? parseInt(rawPremierVoeux)
-        : undefined;
+      const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;
 
       return {
         capacites:

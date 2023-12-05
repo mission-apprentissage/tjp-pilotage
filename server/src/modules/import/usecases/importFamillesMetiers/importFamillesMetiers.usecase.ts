@@ -40,7 +40,7 @@ export const importFamillesMetiersFactory =
     );
 
     process.stdout.write(
-      `\r${count} familles de métiers ajoutées ou mises à jour\n`
+      `\r${count} familles de métiers ajoutées ou mises à jour\n\n`
     );
   };
 

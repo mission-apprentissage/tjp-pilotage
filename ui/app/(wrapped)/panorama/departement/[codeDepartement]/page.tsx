@@ -117,7 +117,11 @@ export default function Panorama({
         diplomeOptions={data?.filters.diplomes}
         typeTerritoire="departement"
       />
-      <FiltersSection activeFilters={filters} handleFilters={handleFilters} />
+      <FiltersSection
+        activeFilters={filters}
+        handleFilters={handleFilters}
+        libelleFiliereOptions={data?.filters.filieres}
+      />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
         meanPoursuite={stats?.tauxPoursuite}

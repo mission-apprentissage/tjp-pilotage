@@ -18,6 +18,7 @@ const getRestitutionIntentionsStatsFactory =
     cfd?: string[];
     codeNiveauDiplome?: string[];
     dispositif?: string[];
+    CPCSecteur?: string[];
     filiere?: string[];
     coloration?: string;
     amiCMA?: string;

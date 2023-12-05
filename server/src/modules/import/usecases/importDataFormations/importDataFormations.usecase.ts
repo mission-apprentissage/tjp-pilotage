@@ -72,6 +72,8 @@ export const [importDataFormations] = inject(
     findSpecialite,
   },
   (deps) => async () => {
+    console.log("Import des dataFormation");
+    let errorCount = 0;
     await streamIt(
       (offset) =>
         rawDataRepository.findRawDatas({
@@ -95,45 +97,60 @@ export const [importDataFormations] = inject(
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
         const isSpecialite = !!(await deps.findSpecialite(cfd));
 
-        await deps.createDataFormation({
-          cfd,
-          libelle:
-            diplomeProfessionnel?.[
-              "Intitulé de la spécialité (et options)"
-            ]?.replace(/"/g, "") ||
-            formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
-          rncp: diplomeProfessionnel?.["Code RNCP"]
-            ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
-            : undefined,
-          cpc: diplomeProfessionnel?.[
-            "Commission professionnelle consultative"
-          ],
-          cpcSecteur: diplomeProfessionnel?.Secteur,
-          cpcSousSecteur: diplomeProfessionnel?.["Sous-secteur"],
-          libelleFiliere: regroupement,
-          codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
-          dateOuverture: nFormationDiplome.DATE_OUVERTURE
-            ? DateTime.fromFormat(
-                nFormationDiplome.DATE_OUVERTURE,
-                "dd/LL/yyyy"
-              ).toJSDate()
-            : undefined,
-          dateFermeture: nFormationDiplome.DATE_FERMETURE
-            ? DateTime.fromFormat(
-                nFormationDiplome.DATE_FERMETURE,
-                "dd/LL/yyyy"
-              ).toJSDate()
-            : undefined,
-          typeFamille: is2ndeCommune
-            ? "2nde_commune"
-            : isSpecialite
-            ? "specialite"
-            : undefined,
-        });
-
-        console.log(`${count}: dataFormation added ${cfd}`);
+        try {
+          await deps.createDataFormation({
+            cfd,
+            libelle:
+              diplomeProfessionnel?.[
+                "Intitulé de la spécialité (et options)"
+              ]?.replace(/"/g, "") ||
+              formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
+            rncp: diplomeProfessionnel?.["Code RNCP"]
+              ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
+              : undefined,
+            cpc:
+              diplomeProfessionnel?.["Commission professionnelle consultative"]
+                ?.replace("CPC", "")
+                .trim() || "(VIDE)",
+            cpcSecteur:
+              diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
+              "(VIDE)",
+            cpcSousSecteur:
+              diplomeProfessionnel?.["Sous-secteur"]
+                ?.replace("Sous-secteur", "")
+                .trim() || "(VIDE)",
+            libelleFiliere: regroupement || "(VIDE)",
+            codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
+            dateOuverture: nFormationDiplome.DATE_OUVERTURE
+              ? DateTime.fromFormat(
+                  nFormationDiplome.DATE_OUVERTURE,
+                  "dd/LL/yyyy"
+                ).toJSDate()
+              : undefined,
+            dateFermeture: nFormationDiplome.DATE_FERMETURE
+              ? DateTime.fromFormat(
+                  nFormationDiplome.DATE_FERMETURE,
+                  "dd/LL/yyyy"
+                ).toJSDate()
+              : undefined,
+            typeFamille: is2ndeCommune
+              ? "2nde_commune"
+              : isSpecialite
+              ? "specialite"
+              : undefined,
+          });
+        } catch (e) {
+          console.log(e);
+          errorCount++;
+        }
+        process.stdout.write(
+          `\r${count} dataFormation ajoutées ou mises à jour`
+        );
       },
       { parallel: 20 }
+    );
+    process.stdout.write(
+      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}`
     );
   }
 );

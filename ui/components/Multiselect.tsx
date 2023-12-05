@@ -1,5 +1,5 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, RepeatIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,6 +10,7 @@ import {
   MenuButton,
   MenuList,
   Portal,
+  Text,
 } from "@chakra-ui/react";
 import {
   ChangeEventHandler,
@@ -230,7 +231,7 @@ export const Multiselect = chakra(
         </MenuButton>
         <Portal>
           <MenuList zIndex={3} maxWidth={450} pt="0">
-            <Box borderBottom="1px solid" borderBottomColor="grey.900">
+            <Flex borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}
                 placeholder="Rechercher dans la liste"
@@ -242,7 +243,26 @@ export const Multiselect = chakra(
                 py="2"
                 variant="unstyled"
               />
-            </Box>
+              <Button
+                onClick={() => {
+                  stateValue.current = new Map();
+                  onChange?.(Array.from(new Map().keys()));
+                }}
+                bgColor={"transparent"}
+              >
+                {map.size > 0 && (
+                  <Text
+                    fontSize={12}
+                    fontWeight={"normal"}
+                    color="bluefrance.113"
+                    p={2}
+                  >
+                    <RepeatIcon ml={1} mr={1} verticalAlign={"bottom"} />
+                    Tout décocher
+                  </Text>
+                )}
+              </Button>
+            </Flex>
             <Flex
               direction="column"
               ref={ref}
