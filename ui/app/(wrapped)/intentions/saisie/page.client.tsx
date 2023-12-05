@@ -1,6 +1,11 @@
 "use client";
 
-import { LinkIcon, WarningTwoIcon } from "@chakra-ui/icons";
+import {
+  DownloadIcon,
+  LinkIcon,
+  Search2Icon,
+  WarningTwoIcon,
+} from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -8,6 +13,7 @@ import {
   Center,
   Container,
   Flex,
+  Input,
   Table,
   TableContainer,
   Tag,
@@ -23,11 +29,11 @@ import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
+import { useState } from "react";
 
 import { usePermission } from "@/utils/security/usePermission";
 
 import { client } from "../../../../api.client";
-import { Breadcrumb } from "../../../../components/Breadcrumb";
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TableFooter } from "../../../../components/TableFooter";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
@@ -59,7 +65,7 @@ const DEMANDES_COLUMNS = {
   codeRegion: "Code Region",
   codeAcademie: "Code Académie",
   createdAt: "Date de création",
-  updatedAt: "Date de dernière modification",
+  updatedAt: "Dernière modification",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
   compensationDispositifId: "Dispositif compensé",
@@ -69,7 +75,7 @@ const DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  userName: "Créateur",
+  userName: "Auteur",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/demandes"]["demandes"][number]
 >;
@@ -80,17 +86,44 @@ export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
 
+const TagDemande = ({ status }: { status: string }) => {
+  switch (status) {
+    case "draft":
+      return (
+        <Tag size="sm" colorScheme={"orange"}>
+          Projet de demande
+        </Tag>
+      );
+    case "submitted":
+      return (
+        <Tag size="sm" colorScheme={"green"}>
+          Demande validée
+        </Tag>
+      );
+    case "refused":
+      return (
+        <Tag size="sm" colorScheme={"red"}>
+          Demande refusée
+        </Tag>
+      );
+    default:
+      return <></>;
+  }
+};
+
 export const PageClient = () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    search?: string;
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString());
 
   const setSearchParams = (params: {
     filters?: typeof filters;
+    search?: typeof search;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -116,6 +149,7 @@ export const PageClient = () => {
   };
 
   const filters = searchParams.filters ?? {};
+  const search = searchParams.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
@@ -123,6 +157,7 @@ export const PageClient = () => {
     {
       query: {
         ...filters,
+        search,
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
@@ -143,6 +178,12 @@ export const PageClient = () => {
   };
 
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
+
+  const [searchDemande, setSearchDemande] = useState<string>(search);
+
+  const onClickSearchDemande = () => {
+    setSearchParams({ search: searchDemande });
+  };
 
   const getAvatarBgColor = (userName: string) => {
     const colors = [
@@ -168,23 +209,60 @@ export const PageClient = () => {
 
   return (
     <>
-      <Container maxW="container.xl" py="4">
-        <Breadcrumb
-          ml={4}
-          pages={[
-            { title: "Accueil", to: "/" },
-            {
-              title: "Recueil des demandes",
-              to: "/intentions/saisie",
-              active: true,
-            },
-          ]}
-        />
-      </Container>
-      <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0}>
+      <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0} py={4}>
         <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
-        <Box borderLeft="solid 1px" borderColor="gray.100" height="100%" />
+        <Box
+          borderLeft="solid 1px"
+          borderColor="gray.100"
+          height="100%"
+          mr={4}
+        />
         <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
+          <Flex flexDirection={"row"} justifyContent={"space-between"}>
+            <Flex>
+              <Input
+                type="text"
+                placeholder="Rechercher par diplôme, établissement, numéro,..."
+                w="sm"
+                mr={2}
+                value={searchDemande}
+                onChange={(e) => setSearchDemande(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") onClickSearchDemande();
+                }}
+              />
+              <Button
+                bgColor={"bluefrance.113"}
+                size={"md"}
+                onClick={() => onClickSearchDemande()}
+              >
+                <Search2Icon color="white" />
+              </Button>
+            </Flex>
+            <Flex>
+              <Button
+                mr="auto"
+                size="md"
+                variant="ghost"
+                color={"bluefrance.113"}
+                onClick={async () => {
+                  trackEvent("demandes:export");
+                  const data = await client.ref("[GET]/demandes").query({
+                    query: { ...filters, search, ...order, limit: 10000000 },
+                  });
+
+                  downloadCsv(
+                    "export_demandes.csv",
+                    data.demandes,
+                    DEMANDES_COLUMNS
+                  );
+                }}
+              >
+                <DownloadIcon mr="2" />
+                Exporter en CSV
+              </Button>
+            </Flex>
+          </Flex>
           {data?.demandes.length ? (
             <>
               <TableContainer overflowY="auto" flex={1}>
@@ -248,18 +326,18 @@ export const PageClient = () => {
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("updatedAt")}
-                      >
-                        <OrderIcon {...order} column="updatedAt" />
-                        {DEMANDES_COLUMNS.updatedAt}
-                      </Th>
-                      <Th
-                        cursor="pointer"
                         onClick={() => handleOrder("userName")}
                         w="15"
                       >
                         <OrderIcon {...order} column="userName" />
                         {DEMANDES_COLUMNS.userName}
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("updatedAt")}
+                      >
+                        <OrderIcon {...order} column="updatedAt" />
+                        {DEMANDES_COLUMNS.updatedAt}
                       </Th>
                     </Tr>
                   </Thead>
@@ -382,21 +460,10 @@ export const PageClient = () => {
                             )}
                           </Td>
                           <Td align="center" w={0}>
-                            {demande.status === "draft" ? (
-                              <Tag size="sm" colorScheme={"orange"}>
-                                Projet de demande
-                              </Tag>
-                            ) : (
-                              <Tag size="sm" colorScheme={"green"}>
-                                Demande validée
-                              </Tag>
-                            )}
+                            <TagDemande status={demande.status} />
                           </Td>
                           <Td>
                             {new Date(demande.createdAt).toLocaleString()}
-                          </Td>
-                          <Td textAlign={"center"}>
-                            {new Date(demande.updatedAt).toLocaleString()}
                           </Td>
                           <Td w="15" textAlign={"center"}>
                             <Tooltip label={demande.userName}>
@@ -411,6 +478,9 @@ export const PageClient = () => {
                               />
                             </Tooltip>
                           </Td>
+                          <Td textAlign={"center"}>
+                            {new Date(demande.updatedAt).toLocaleString()}
+                          </Td>
                         </Tr>
                       )
                     )}
@@ -419,18 +489,6 @@ export const PageClient = () => {
               </TableContainer>
               <TableFooter
                 pl="4"
-                onExport={async () => {
-                  trackEvent("demandes:export");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: { ...filters, ...order, limit: 10000000 },
-                  });
-
-                  downloadCsv(
-                    "export_demandes.csv",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
                 page={page}
                 pageSize={PAGE_SIZE}
                 count={data?.count}
@@ -440,7 +498,7 @@ export const PageClient = () => {
           ) : (
             <Center mt={12}>
               <Flex flexDirection={"column"}>
-                <Text fontSize={"2xl"}>Pas encore de demande à afficher</Text>
+                <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                 {hasPermissionEnvoi && (
                   <Button
                     variant="createButton"

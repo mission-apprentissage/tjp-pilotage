@@ -15,13 +15,11 @@ export const getDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { order, orderBy, ...filters } = request.query;
+        const { order, orderBy, search, ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
-
-        console.log(filters);
-
         const result = await findDemandes({
           ...filters,
+          search,
           user: request.user,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
