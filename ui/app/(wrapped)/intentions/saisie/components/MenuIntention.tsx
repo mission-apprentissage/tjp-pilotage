@@ -28,7 +28,7 @@ export const MenuIntention = ({
     {},
     {
       keepPreviousData: true,
-      staleTime: 10000000,
+      staleTime: 0,
     }
   );
 

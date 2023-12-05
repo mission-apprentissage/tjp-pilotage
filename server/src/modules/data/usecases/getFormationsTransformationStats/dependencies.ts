@@ -257,6 +257,7 @@ const getFormationsTransformationStatsQuery = ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
+    .where("demande.status", "!=", "refused")
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
     .then(cleanNull);

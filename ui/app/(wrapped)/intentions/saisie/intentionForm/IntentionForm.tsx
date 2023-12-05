@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -102,6 +103,8 @@ export const IntentionForm = ({
     setStep(2);
   };
 
+  const statusComponentRef = useRef<HTMLDivElement>(null);
+
   return (
     <>
       <FormProvider {...form}>
@@ -145,42 +148,42 @@ export const IntentionForm = ({
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
+              statusComponentRef={statusComponentRef}
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
                 disabled={disabled}
                 errors={errors}
                 formMetadata={formMetadata}
+                defaultValues={defaultValues}
                 footerActions={
                   <>
-                    <Box justifyContent={"center"}>
+                    <Box justifyContent={"center"} ref={statusComponentRef}>
                       <Button
-                        isDisabled={disabled || isActionsDisabled}
+                        isDisabled={
+                          disabled ||
+                          isActionsDisabled ||
+                          !form.formState.isDirty
+                        }
                         isLoading={isSubmittingDraft}
-                        variant="secondary"
+                        variant="primary"
                         onClick={handleSubmit((values) =>
-                          submitDraft({
-                            body: { demande: { id: formId, ...values } },
-                          })
+                          defaultValues
+                            ? submitDemande({
+                                body: { demande: { id: formId, ...values } },
+                              })
+                            : submitDraft({
+                                body: { demande: { id: formId, ...values } },
+                              })
                         )}
+                        leftIcon={<CheckIcon />}
                       >
-                        Enregistrer le projet de demande
+                        {defaultValues
+                          ? "Sauvegarder les modifications"
+                          : "Enregistrer le projet de demande"}
                       </Button>
                       <Text fontSize={"xs"} mt="1" align={"center"}>
                         (Phase d'enregistrement du 02 au 16 octobre)
-                      </Text>
-                    </Box>
-                    <Box justifyContent={"center"}>
-                      <Button
-                        isDisabled={disabled || isActionsDisabled}
-                        isLoading={isSubmittingDemande}
-                        variant="primary"
-                        type="submit"
-                      >
-                        Valider la demande définitive
-                      </Button>
-                      <Text fontSize={"xs"} mt="1" align={"center"}>
-                        Pour soumission au vote du Conseil Régional
                       </Text>
                     </Box>
                   </>

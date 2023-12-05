@@ -38,6 +38,7 @@ type Demande = {
   capaciteApprentissage?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissageColoree?: number;
+  status: "draft" | "submitted" | "refused";
 };
 
 const validateDemande = (demande: Demande) => {
@@ -103,7 +104,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
-        demande.typeDemande === "ouverture_compensation"
+          demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 
@@ -141,7 +142,6 @@ export const [submitDemande, submitDemandeFactory] = inject(
         ...demandeData,
         id: currentDemande?.id ?? generateId(),
         createurId: currentDemande?.createurId ?? user.id,
-        status: "submitted",
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),

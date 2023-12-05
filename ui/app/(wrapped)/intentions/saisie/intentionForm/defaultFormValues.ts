@@ -27,4 +27,5 @@ export type IntentionForms = {
   compensationCfd?: string;
   compensationDispositifId?: string;
   compensationRentreeScolaire?: number;
+  status: "draft" | "submitted" | "refused";
 };
