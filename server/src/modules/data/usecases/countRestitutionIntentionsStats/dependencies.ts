@@ -152,8 +152,8 @@ const countRestitutionIntentionsStatsInDB = async ({
           SUM(
             CASE WHEN
             ${eb.ref(
-              "dataFormation.codeNiveauDiplome"
-            )} IN ('381', '481', '581')
+          "dataFormation.codeNiveauDiplome"
+        )} IN ('381', '481', '581')
             THEN ${countOuvertures(eb)}
             ELSE 0
             END
@@ -165,8 +165,8 @@ const countRestitutionIntentionsStatsInDB = async ({
           SUM(
             CASE WHEN
             ${eb.ref(
-              "dataFormation.codeNiveauDiplome"
-            )} IN ('381', '481', '581')
+          "dataFormation.codeNiveauDiplome"
+        )} IN ('381', '481', '581')
             THEN ${countOuverturesSco(eb)}
             ELSE 0
             END
@@ -178,8 +178,8 @@ const countRestitutionIntentionsStatsInDB = async ({
           SUM(
             CASE WHEN
             ${eb.ref(
-              "dataFormation.codeNiveauDiplome"
-            )} IN ('381', '481', '581')
+          "dataFormation.codeNiveauDiplome"
+        )} IN ('381', '481', '581')
             THEN ${countOuverturesApprentissage(eb)}
             ELSE 0
             END
@@ -324,6 +324,7 @@ const countRestitutionIntentionsStatsInDB = async ({
 
       return eb;
     })
+    .where("demande.status", "!=", "refused")
     .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
