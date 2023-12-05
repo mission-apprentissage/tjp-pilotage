@@ -17663,6 +17663,7 @@ __metadata:
     "@emotion/styled": ^11.10.6
     "@http-wizard/core": ^1.3.16
     "@http-wizard/react-query": ^1.3.16
+    "@json2csv/formatters": ^7.0.3
     "@json2csv/plainjs": ^7.0.3
     "@tanstack/react-query": ^4.29.3
     "@types/node": 18.11.18

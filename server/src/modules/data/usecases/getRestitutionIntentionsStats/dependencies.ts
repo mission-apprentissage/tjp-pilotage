@@ -28,6 +28,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
+  CPCSecteur,
   filiere,
   coloration,
   amiCMA,
@@ -53,6 +54,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
+  CPCSecteur?: string[];
   filiere?: string[];
   coloration?: string;
   amiCMA?: string;
@@ -222,6 +224,11 @@ const findRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
       if (filiere)
         return eb.where("dataFormation.libelleFiliere", "in", filiere);
       return eb;
@@ -317,6 +324,7 @@ const findFiltersInDb = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
+  CPCSecteur,
   filiere,
   coloration,
   amiCMA,
@@ -337,6 +345,7 @@ const findFiltersInDb = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
+  CPCSecteur?: string[];
   filiere?: string[];
   coloration?: string;
   amiCMA?: string;
@@ -391,6 +400,11 @@ const findFiltersInDb = async ({
   const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!codeNiveauDiplome) return sql<true>`true`;
     return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+  };
+
+  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!CPCSecteur) return sql<true>`true`;
+    return eb("dataFormation.cpcSecteur", "in", CPCSecteur);
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -550,6 +564,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -582,6 +597,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -614,6 +630,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -645,6 +662,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -677,6 +695,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -715,6 +734,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -749,6 +769,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -788,6 +809,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -820,6 +842,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inCPCSecteur(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -829,6 +852,41 @@ const findFiltersInDb = async ({
         ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
+          : sql`false`,
+      ]);
+    })
+    .execute();
+
+  const CPCSecteursFilters = await filtersBase
+    .select([
+      "dataFormation.cpcSecteur as label",
+      "dataFormation.cpcSecteur as value",
+    ])
+    .where("dataFormation.cpcSecteur", "is not", null)
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inCommune(eb),
+          inEtablissement(eb),
+          inRentreeScolaire(eb),
+          inMotifDemande(eb),
+          inTypeDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inCodeDispositif(eb),
+          inFiliere(eb),
+          inFamilleMetier(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+          inCompensation(eb),
+          inStatus(eb),
+        ]),
+        CPCSecteur
+          ? eb("dataFormation.cpcSecteur", "in", CPCSecteur)
           : sql`false`,
       ]);
     })
@@ -854,6 +912,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
+          inCPCSecteur(eb),
           inFamilleMetier(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -861,8 +920,8 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        filiere
-          ? eb("dataFormation.libelleFiliere", "in", filiere)
+        CPCSecteur
+          ? eb("dataFormation.libelleFiliere", "in", CPCSecteur)
           : sql`false`,
       ]);
     })
@@ -877,6 +936,7 @@ const findFiltersInDb = async ({
     diplomes: (await diplomesFilters).map(cleanNull),
     formations: (await formationsFilters).map(cleanNull),
     familles: (await famillesFilters).map(cleanNull),
+    CPCSecteurs: (await CPCSecteursFilters).map(cleanNull),
     filieres: (await filieresFilters).map(cleanNull),
     departements: (await departementsFilters).map(cleanNull),
     academies: (await academiesFilters).map(cleanNull),

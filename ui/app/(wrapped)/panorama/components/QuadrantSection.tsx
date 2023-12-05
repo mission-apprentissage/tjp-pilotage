@@ -161,11 +161,12 @@ export const QuadrantSection = ({
   const [tendances, setTendances] = useState<Tendances>(tendancesDefaultValue);
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
+  const [currentCfd, setFormationId] = useState<string | undefined>();
+
   const toggleTypeVue = () => {
     if (typeVue === "quadrant") setTypeVue("tableau");
     else setTypeVue("quadrant");
   };
-
   const filteredFormations = useMemo(
     () =>
       filterFormations({
@@ -402,16 +403,25 @@ export const QuadrantSection = ({
                 meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
-                    meanPoursuite={meanPoursuite}
-                    meanInsertion={meanInsertion}
+                    onClick={({ codeFormationDiplome }) =>
+                      setFormationId(codeFormationDiplome)
+                    }
+                    meanInsertion={(meanPoursuite ?? 0) * 100}
+                    meanPoursuite={(meanInsertion ?? 0) * 100}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion,
-                      tauxPoursuite: formation.tauxPoursuite,
+                      codeFormationDiplome: formation.codeFormationDiplome,
+                      tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
+                      tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                     }))}
                     TooltipContent={FormationTooltipContent}
-                    itemId={(item) =>
-                      item.codeFormationDiplome + item.dispositifId
+                    itemId={(formation) =>
+                      formation.codeFormationDiplome + formation.dispositifId
+                    }
+                    itemColor={(formation) =>
+                      formation.codeFormationDiplome === currentCfd
+                        ? "#fd3b4cb5"
+                        : undefined
                     }
                     InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}
@@ -420,9 +430,10 @@ export const QuadrantSection = ({
                   <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
-                      tauxInsertion: formation.tauxInsertion,
-                      tauxPoursuite: formation.tauxPoursuite,
+                      cfd: formation.codeFormationDiplome,
                     }))}
+                    handleClick={setFormationId}
+                    currentCfd={currentCfd}
                     order={order}
                     handleOrder={(column?: string) =>
                       handleOrder(column as Order["orderBy"])

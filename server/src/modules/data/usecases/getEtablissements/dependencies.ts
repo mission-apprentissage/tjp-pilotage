@@ -14,6 +14,7 @@ import {
   notPerimetreIJEtablissement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
+import { premiersVoeuxAnnee } from "../../utils/premiersVoeuxAnnee";
 import {
   selectTauxDevenirFavorableAgg,
   withTauxDevenirFavorableReg,
@@ -165,6 +166,7 @@ const findEtablissementsInDb = async ({
       capaciteAnnee({ alias: "indicateurEntree", annee: sql`'2'` }).as(
         "capacite3"
       ),
+      premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
       selectTauxPression("indicateurEntree").as("tauxPression"),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
       selectTauxInsertion6mois("indicateurSortie").as(

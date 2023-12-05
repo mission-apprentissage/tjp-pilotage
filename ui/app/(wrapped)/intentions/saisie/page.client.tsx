@@ -2,6 +2,7 @@
 
 import { LinkIcon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Center,
@@ -15,6 +16,7 @@ import {
   Text,
   Th,
   Thead,
+  Tooltip,
   Tr,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
@@ -67,6 +69,7 @@ const DEMANDES_COLUMNS = {
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
   capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  userName: "Créateur",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/demandes"]["demandes"][number]
 >;
@@ -76,7 +79,6 @@ export type Filters = Pick<Query, "status">;
 export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
-// const fetchDemandes = async (query: Query) => api.getDemandes({ query }).call();
 
 export const PageClient = () => {
   const router = useRouter();
@@ -142,6 +144,26 @@ export const PageClient = () => {
 
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
+  const getAvatarBgColor = (userName: string) => {
+    const colors = [
+      "#958b62",
+      "#91ae4f",
+      "#169b62",
+      "#466964",
+      "#00Ac8c",
+      "#5770be",
+      "#484d7a",
+      "#ff8d7e",
+      "#ffc29e",
+      "#ffe800",
+      "#fdcf41",
+      "#ff9940",
+      "#e18b63",
+      "#ff6f4c",
+      "#8586F6",
+    ];
+    return colors[userName.charCodeAt(1) % colors.length];
+  };
   if (isLoading) return <IntentionSpinner />;
 
   return (
@@ -230,6 +252,14 @@ export const PageClient = () => {
                       >
                         <OrderIcon {...order} column="updatedAt" />
                         {DEMANDES_COLUMNS.updatedAt}
+                      </Th>
+                      <Th
+                        cursor="pointer"
+                        onClick={() => handleOrder("userName")}
+                        w="15"
+                      >
+                        <OrderIcon {...order} column="userName" />
+                        {DEMANDES_COLUMNS.userName}
                       </Th>
                     </Tr>
                   </Thead>
@@ -365,8 +395,21 @@ export const PageClient = () => {
                           <Td>
                             {new Date(demande.createdAt).toLocaleString()}
                           </Td>
-                          <Td>
+                          <Td textAlign={"center"}>
                             {new Date(demande.updatedAt).toLocaleString()}
+                          </Td>
+                          <Td w="15" textAlign={"center"}>
+                            <Tooltip label={demande.userName}>
+                              <Avatar
+                                name={demande.userName}
+                                colorScheme={getAvatarBgColor(
+                                  demande.userName ?? ""
+                                )}
+                                bg={getAvatarBgColor(demande.userName ?? "")}
+                                color={"white"}
+                                position={"unset"}
+                              />
+                            </Tooltip>
                           </Td>
                         </Tr>
                       )

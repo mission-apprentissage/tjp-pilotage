@@ -386,9 +386,9 @@ export default function Formations() {
                   <TooltipIcon ml="1" label="Nb d'élèves" />
                 </Th>
                 <Th
-                  isNumeric
                   cursor="pointer"
                   onClick={() => handleOrder("tauxPression")}
+                  textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxPression" />
                   {FORMATIONS_COLUMNS.tauxPression}
@@ -408,6 +408,7 @@ export default function Formations() {
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxRemplissage")}
+                  textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
                   {FORMATIONS_COLUMNS.tauxRemplissage}
@@ -419,6 +420,7 @@ export default function Formations() {
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxInsertion")}
+                  textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxInsertion" />
                   {FORMATIONS_COLUMNS.tauxInsertion}
@@ -430,6 +432,7 @@ export default function Formations() {
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxPoursuite")}
+                  textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxPoursuite" />
                   {FORMATIONS_COLUMNS.tauxPoursuite}
@@ -441,6 +444,7 @@ export default function Formations() {
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxDevenirFavorable")}
+                  textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxDevenirFavorable" />
                   {FORMATIONS_COLUMNS.tauxDevenirFavorable}

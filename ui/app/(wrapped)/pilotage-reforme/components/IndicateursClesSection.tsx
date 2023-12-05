@@ -281,8 +281,9 @@ const StatCard = ({
           data?.anneeNMoins1.filtered.insertion
         )
           return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.filtered.insertion
+            (data?.anneeN.filtered.insertion -
+              data?.anneeNMoins1.filtered.insertion) *
+            100
           );
         return null;
       case "poursuite":
@@ -291,8 +292,9 @@ const StatCard = ({
           data?.anneeNMoins1.filtered.poursuite
         )
           return (
-            data?.anneeN.filtered.poursuite -
-            data?.anneeNMoins1.filtered.poursuite
+            (data?.anneeN.filtered.poursuite -
+              data?.anneeNMoins1.filtered.poursuite) *
+            100
           );
         return null;
       default:
@@ -301,8 +303,9 @@ const StatCard = ({
           data?.anneeNMoins1.filtered.insertion
         ) {
           return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.filtered.insertion
+            (data?.anneeN.filtered.insertion -
+              data?.anneeNMoins1.filtered.insertion) *
+            100
           );
         }
         return null;
@@ -349,11 +352,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return Math.round(data?.anneeN.filtered.insertion ?? 0);
+        return Math.round((data?.anneeN.filtered.insertion ?? 0) * 100);
       case "poursuite":
-        return Math.round(data?.anneeN.filtered.poursuite ?? 0);
+        return Math.round((data?.anneeN.filtered.poursuite ?? 0) * 100);
       default:
-        return Math.round(data?.anneeN.filtered.insertion ?? 0);
+        return Math.round((data?.anneeN.filtered.insertion ?? 0) * 100);
     }
   };
 
