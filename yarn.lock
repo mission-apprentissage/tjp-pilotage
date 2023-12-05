@@ -10047,7 +10047,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"husky@npm:latest":
+"husky@npm:^8.0.0":
   version: 8.0.3
   resolution: "husky@npm:8.0.3"
   bin:
@@ -18141,7 +18141,7 @@ __metadata:
     eslint-plugin-simple-import-sort: ^10.0.0
     eslint-plugin-unused-imports: ^3.0.0
     global: 4.4.0
-    husky: latest
+    husky: ^8.0.0
     lint-staged: 15.2.0
     prettier: 3.0.3
     semantic-release: 22.0.9
