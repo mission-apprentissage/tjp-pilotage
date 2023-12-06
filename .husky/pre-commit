@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "\nPREVENTING SENSIBLE FiLES COMMIT :" && \
-yarn preventSensibleFilesCommit && \
+npm run preventSensibleFilesCommit && \
 echo "\nLINTING :" && \
-yarn lint:staged
+npm run lint:staged

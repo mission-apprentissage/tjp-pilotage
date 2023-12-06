@@ -2,6 +2,6 @@
 . "$(dirname -- "$0")/_/husky.sh"
 
 echo "\nTYPECHECKING :" && \
-yarn typecheck && \
+npm run typecheck && \
 echo "\nLINTING :" && \
-yarn lint
+npm run lint
