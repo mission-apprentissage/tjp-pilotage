@@ -148,7 +148,7 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.status ?? ""}
               onChange={(e) => handleFilters("status", e.target.value)}
-              placeholder="Projet / validée"
+              placeholder="TOUS (3)"
             >
               {data?.filters.statuts?.map((option) => (
                 <option key={option.value} value={option.value}>
