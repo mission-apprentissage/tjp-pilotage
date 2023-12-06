@@ -38,6 +38,7 @@ type Demande = {
   capaciteApprentissage?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissageColoree?: number;
+  status: "draft" | "submitted" | "refused";
 };
 
 const validateDemande = (demande: Demande) => {

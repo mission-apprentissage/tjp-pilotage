@@ -65,7 +65,13 @@ describe("submitDemande usecase", () => {
     const submitDemande = submitDemandeFactory(deps);
 
     await expect(() =>
-      submitDemande({ user: gestionnaire, demande: demande })
+      submitDemande({
+        user: gestionnaire,
+        demande: {
+          ...demande,
+          status: "submitted",
+        },
+      })
     ).rejects.toThrowError("Code uai non valide");
   });
 
@@ -76,7 +82,13 @@ describe("submitDemande usecase", () => {
     });
 
     await expect(() =>
-      submitDemande({ user: gestionnaire, demande: demande })
+      submitDemande({
+        user: gestionnaire,
+        demande: {
+          ...demande,
+          status: "submitted",
+        },
+      })
     ).rejects.toThrowError("Code diplome non valide");
   });
 
@@ -94,6 +106,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           mixte: true,
           capaciteApprentissage: undefined,
+          status: "submitted",
         },
       })
     ).rejects.toThrowError("Forbidden");
@@ -112,6 +125,7 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
+        status: "draft",
         id: undefined,
       },
     });
@@ -137,7 +151,10 @@ describe("submitDemande usecase", () => {
 
     await submitDemande({
       user: gestionnaire,
-      demande: demande,
+      demande: {
+        ...demande,
+        status: "submitted",
+      },
     });
     expect(deps.createDemandeQuery).toBeCalledWith(
       expect.objectContaining({

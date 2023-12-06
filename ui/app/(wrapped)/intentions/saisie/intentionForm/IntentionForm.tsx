@@ -152,10 +152,10 @@ export const IntentionForm = ({
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
+                formId={formId}
                 disabled={disabled}
                 errors={errors}
                 formMetadata={formMetadata}
-                defaultValues={defaultValues}
                 footerActions={
                   <>
                     <Box justifyContent={"center"} ref={statusComponentRef}>
@@ -168,7 +168,7 @@ export const IntentionForm = ({
                         isLoading={isSubmittingDraft}
                         variant="primary"
                         onClick={handleSubmit((values) =>
-                          defaultValues
+                          formId
                             ? submitDemande({
                                 body: { demande: { id: formId, ...values } },
                               })
@@ -178,7 +178,7 @@ export const IntentionForm = ({
                         )}
                         leftIcon={<CheckIcon />}
                       >
-                        {defaultValues
+                        {formId
                           ? "Sauvegarder les modifications"
                           : "Enregistrer le projet de demande"}
                       </Button>

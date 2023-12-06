@@ -21,8 +21,8 @@ export const findDemandes = async ({
   limit?: number;
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
-
-  const cleanSearch = search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
+  const cleanSearch =
+    search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
   const search_array = cleanSearch.split(" ") ?? [];
 
   const demandes = await kdb
@@ -66,10 +66,12 @@ export const findDemandes = async ({
       return eb;
     })
     .$call((eb) => {
-      if (search) return eb.where((eb) => eb.and(
-        search_array.map((search_word) =>
-          eb(
-            sql`concat(
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
                   unaccent(${eb.ref("demande.id")}),
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelle")}),
@@ -82,13 +84,14 @@ export const findDemandes = async ({
                   ' ',
                   unaccent(${eb.ref("user.lastname")})
                 )`,
-            "ilike",
-            `%${search_word
-              .normalize("NFD")
-              .replace(/[\u0300-\u036f]/g, "")}%`
+                "ilike",
+                `%${search_word
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, "")}%`
+              )
+            )
           )
-        ))
-      );
+        );
       return eb;
     })
     .$call((q) => {
