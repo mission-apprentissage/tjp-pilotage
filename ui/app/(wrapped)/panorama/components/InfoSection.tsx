@@ -81,6 +81,7 @@ const InfoCard = ({
                       href={href}
                       key={href}
                       target="_blank"
+                      rel="noreferrer"
                     >
                       {label}
                     </MenuItem>
@@ -96,6 +97,7 @@ const InfoCard = ({
                 as={Link}
                 href={links.href}
                 target="_blank"
+                rel="noreferrer"
               >
                 Accéder à l'information
               </Button>
