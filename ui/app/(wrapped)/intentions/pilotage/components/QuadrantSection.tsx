@@ -285,6 +285,7 @@ export const QuadrantSection = ({
                       fontSize="xs"
                       as={NextLink}
                       target="_blank"
+                      rel="noreferrer"
                       href={createParametrizedUrl("/intentions/restitution", {
                         filters: {
                           rentreeScolaire: "2024",
