@@ -61,6 +61,7 @@ const FORMATIONS_COLUMNS = {
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
+  dispositifId: "Code dispositif",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
