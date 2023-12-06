@@ -1,8 +1,10 @@
 import { Permission, PERMISSIONS } from "./permissions";
 
+// eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type KeyOfUnion<T> = T extends any ? keyof T : never;
 
 type KOfUnion<T> = {
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 

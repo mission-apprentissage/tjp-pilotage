@@ -1,5 +1,4 @@
-import { extendBaseTheme } from "@chakra-ui/react";
-import chakraTheme from "@chakra-ui/theme";
+import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";

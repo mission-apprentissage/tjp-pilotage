@@ -104,7 +104,7 @@ export default function RootLayoutClient({
   const containerRef = useRef<HTMLDivElement>(null);
   const scrollPosition = useRef<number>(0);
 
-  // @ts-ignore
+  // eslint-disable-next-line  @typescript-eslint/no-explicit-any
   const handleScrolling = (e: any) => {
     scrollPosition.current = e.target.scrollTop;
   };
