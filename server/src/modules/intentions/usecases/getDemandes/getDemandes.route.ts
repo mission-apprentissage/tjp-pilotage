@@ -18,8 +18,6 @@ export const getDemandesRoute = (server: Server) => {
         const { order, orderBy, ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
 
-        console.log(filters);
-
         const result = await findDemandes({
           ...filters,
           user: request.user,
