@@ -3,7 +3,7 @@ import jwt from "jsonwebtoken";
 import { redirectDneFactory } from "./redirectDne.usecase";
 
 describe("redirectDne usecase", () => {
-  it("should throw an error if there is no code_verifier", async () => {
+  it("should throw an error if there is no valid code_verifier", async () => {
     const redirectDne = redirectDneFactory({
       getDneClient: jest.fn().mockResolvedValue({
         callbackParams: jest.fn(),
@@ -11,15 +11,15 @@ describe("redirectDne usecase", () => {
         userinfo: jest.fn().mockResolvedValue({ email: "user@test.test" }),
       }),
       createUserInDB: jest.fn(),
-      authJwtSecret: "sdf",
-      codeVerifierJwtSecret: "sdf",
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue({ email: "salut" }),
     });
 
     await expect(() =>
       redirectDne({
-        codeVerifierJwt: jwt.sign({}, "sdf"),
-        url: "localhost?code=sdf",
+        codeVerifierJwt: jwt.sign({}, "codeVerifierJwtSecret"),
+        url: "localhost?code=mycode",
       })
     ).rejects.toThrow();
   });
@@ -38,16 +38,19 @@ describe("redirectDne usecase", () => {
         userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
       }),
       createUserInDB: jest.fn(),
-      authJwtSecret: "sdf",
-      codeVerifierJwtSecret: "sdf",
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue(undefined),
     };
     const redirectDne = redirectDneFactory(deps);
 
     await expect(() =>
       redirectDne({
-        codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "sdf"),
-        url: "localhost?code=sdf",
+        codeVerifierJwt: jwt.sign(
+          { code_verifier: "code_verifier" },
+          "codeVerifierJwtSecret"
+        ),
+        url: "localhost?code=mycode",
       })
     ).rejects.toThrow();
   });
@@ -71,7 +74,7 @@ describe("redirectDne usecase", () => {
         { code_verifier: "code_verifier" },
         "codeVerifierJwtSecret"
       ),
-      url: "localhost?code=sdf",
+      url: "localhost?code=mycode",
     });
     expect(deps.createUserInDB).toBeCalledTimes(0);
     expect(result).toMatchObject({
@@ -93,15 +96,18 @@ describe("redirectDne usecase", () => {
         userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
       }),
       createUserInDB: jest.fn(),
-      authJwtSecret: "sdf",
-      codeVerifierJwtSecret: "sdf",
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue(undefined),
     };
     const redirectDne = redirectDneFactory(deps);
 
     const result = await redirectDne({
-      codeVerifierJwt: jwt.sign({ code_verifier: "code_verifier" }, "sdf"),
-      url: "localhost?code=sdf",
+      codeVerifierJwt: jwt.sign(
+        { code_verifier: "code_verifier" },
+        "codeVerifierJwtSecret"
+      ),
+      url: "localhost?code=mycode",
     });
     expect(deps.createUserInDB).toHaveBeenCalledWith({
       user: {
