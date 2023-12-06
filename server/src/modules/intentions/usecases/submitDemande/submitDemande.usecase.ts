@@ -104,7 +104,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       const compensationRentreeScolaire =
         demande.typeDemande === "augmentation_compensation" ||
-          demande.typeDemande === "ouverture_compensation"
+        demande.typeDemande === "ouverture_compensation"
           ? demande.rentreeScolaire
           : undefined;
 

@@ -706,10 +706,10 @@ const findFiltersInDb = async ({
         ]),
         motif
           ? eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              motif.map(
+                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
+              )
             )
-          )
           : sql`false`,
       ]);
     })

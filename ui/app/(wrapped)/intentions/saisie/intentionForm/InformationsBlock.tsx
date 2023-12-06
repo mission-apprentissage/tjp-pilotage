@@ -1,4 +1,4 @@
-import { DeleteIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
   Alert,
   AlertDescription,
@@ -8,36 +8,55 @@ import {
   Button,
   Divider,
   Flex,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Select,
   Text,
   UnorderedList,
+  useDisclosure,
 } from "@chakra-ui/react";
+import { useMutation } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { client } from "@/api.client";
-import {
-  IntentionForms,
-  PartialIntentionForms,
-} from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
+  formId,
   disabled,
   errors,
-  defaultValues,
   formMetadata,
   footerActions,
 }: {
+  formId?: string;
   disabled: boolean;
   errors?: Record<string, string>;
-  defaultValues: PartialIntentionForms;
   formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   footerActions: ReactNode;
 }) => {
-  const { control } = useFormContext<IntentionForms>();
+  const { push } = useRouter();
+  const { control, setValue } = useFormContext<IntentionForms>();
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
+    mutationFn: async () => {
+      if (!formId) return;
+      await client
+        .ref("[DELETE]/demande/:id")
+        .query({ params: { id: formId } });
+    },
+    onSuccess: () => push("/intentions"),
+  });
 
   return (
     <>
@@ -62,13 +81,13 @@ export const InformationsBlock = ({
             </Box>
           </Alert>
         )}
-        {!defaultValues && footerActions && (
+        {!formId && footerActions && (
           <Flex justify="flex-end" mt="12" mb="4" gap={6}>
             {footerActions}
           </Flex>
         )}
       </Box>
-      {defaultValues && (
+      {formId && (
         <>
           <Box bg="white" p="6" mt="6" borderRadius={6}>
             <Text fontSize={20} mb={4} fontWeight={700}>
@@ -94,9 +113,56 @@ export const InformationsBlock = ({
                 leftIcon={<DeleteIcon />}
                 variant="ghost"
                 color="bluefrance.113"
+                onClick={onOpen}
+                isDisabled={disabled}
               >
                 Supprimer la demande
               </Button>
+              <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+                <ModalOverlay />
+                <ModalContent p="4">
+                  <ModalCloseButton title="Fermer" />
+                  <ModalHeader>
+                    <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+                    Confirmer la suppression de la demande
+                  </ModalHeader>
+                  <ModalBody>
+                    <Text mb={4}>
+                      Cette action est irréversible, elle supprime
+                      définitivement la demande et l’ensemble des données
+                      associées. Il est conseillé de réserver cette action à une
+                      erreur de saisie ou un doublon.
+                    </Text>
+                    <Text>
+                      Si vous souhaitez refuser la demande, vous pouvez la
+                      conserver et modifier son statut en “Demande refusée”.
+                    </Text>
+                  </ModalBody>
+
+                  <ModalFooter>
+                    <Button
+                      colorScheme="blue"
+                      mr={3}
+                      onClick={() => {
+                        setValue("status", "refused");
+                        onClose();
+                      }}
+                      variant={"secondary"}
+                    >
+                      Passer en "Demande refusée"
+                    </Button>
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        deleteDemande();
+                      }}
+                      isLoading={isDeleting}
+                    >
+                      Supprimer définitivement
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
 
               {footerActions && <Flex>{footerActions}</Flex>}
             </Flex>
