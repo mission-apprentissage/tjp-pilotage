@@ -296,7 +296,6 @@ const findRestitutionIntentionsStatsInDB = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .where("demande.status", "!=", "refused")
     .where(isIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
@@ -1001,6 +1000,10 @@ const findFiltersInDb = async ({
       {
         label: "Validée",
         value: "submitted",
+      },
+      {
+        label: "Refusée",
+        value: "refused",
       },
     ],
     voie: [

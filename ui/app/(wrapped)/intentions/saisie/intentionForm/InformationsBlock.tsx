@@ -15,7 +15,6 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Select,
   Text,
   UnorderedList,
   useDisclosure,
@@ -23,12 +22,13 @@ import {
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 
 import { client } from "@/api.client";
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
+import { StatusBlock } from "./statutSection/StatusBlock";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
@@ -45,7 +45,7 @@ export const InformationsBlock = ({
   footerActions: ReactNode;
 }) => {
   const { push } = useRouter();
-  const { control, setValue } = useFormContext<IntentionForms>();
+  const { setValue } = useFormContext<IntentionForms>();
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
@@ -89,24 +89,7 @@ export const InformationsBlock = ({
       </Box>
       {formId && (
         <>
-          <Box bg="white" p="6" mt="6" borderRadius={6}>
-            <Text fontSize={20} mb={4} fontWeight={700}>
-              Statut de la demande
-            </Text>
-            <Divider mb={4} />
-            <Controller
-              name="status"
-              control={control}
-              rules={{ required: "Le type de demande est obligatoire." }}
-              render={({ field: { onChange, name, value } }) => (
-                <Select w="xs" onChange={onChange} name={name} value={value}>
-                  <option value="draft">Projet de demande</option>
-                  <option value="submitted">Validée</option>
-                  <option value="refused">Refusée</option>
-                </Select>
-              )}
-            />
-          </Box>
+          <StatusBlock disabled={disabled} />
           <Box bg="white" p="6" mt="6" borderRadius={6}>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button

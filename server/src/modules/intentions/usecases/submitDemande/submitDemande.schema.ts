@@ -29,6 +29,8 @@ export const submitDemandeSchema = {
       capaciteApprentissage: z.coerce.number().optional(),
       capaciteApprentissageColoree: z.coerce.number().optional(),
       status: z.enum(["draft", "submitted", "refused"]),
+      motifRefus: z.array(z.string()).optional(),
+      autreMotifRefus: z.string().optional(),
     }),
   }),
   response: {
