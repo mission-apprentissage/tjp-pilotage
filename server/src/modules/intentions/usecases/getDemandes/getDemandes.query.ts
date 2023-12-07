@@ -4,7 +4,10 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
+import {
+  isDemandeNotDeleted,
+  isDemandeSelectable,
+} from "../../../utils/isDemandeSelectable";
 
 export const findDemandes = async ({
   status,
@@ -101,6 +104,7 @@ export const findDemandes = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
+    .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)

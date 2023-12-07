@@ -12,6 +12,7 @@ import {
   countOuverturesApprentissage,
   countOuverturesSco,
 } from "../../../utils/countCapacite";
+import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 
 const countRestitutionIntentionsStatsInDB = async ({
@@ -322,6 +323,7 @@ const countRestitutionIntentionsStatsInDB = async ({
 
       return eb;
     })
+    .where(isDemandeNotDeleted)
     .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);

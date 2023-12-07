@@ -3,7 +3,7 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { findDemandes } from "./findDemandes.query";
+import { findDemandes } from "./getDemandes.query";
 import { getDemandesSchema } from "./getDemandes.schema";
 
 export const getDemandesRoute = (server: Server) => {

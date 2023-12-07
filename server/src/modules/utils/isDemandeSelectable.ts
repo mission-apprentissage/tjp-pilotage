@@ -49,3 +49,10 @@ const getDemandeSelectableFilters = (
 
   return { filter, draftFilter };
 };
+
+export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
+  eb("status", "!=", "deleted");
+
+export const isDemandeNotDeletedOrRefused = (
+  eb: ExpressionBuilder<DB, "demande">
+) => eb("status", "not in", ["deleted", "refused"]);
