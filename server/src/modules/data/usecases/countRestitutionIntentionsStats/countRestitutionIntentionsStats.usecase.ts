@@ -6,7 +6,7 @@ const countRestitutionIntentionsStatsFactory =
     countRestitutionIntentionsStatsInDB = dependencies.countRestitutionIntentionsStatsInDB,
   }) =>
   async (activeFilters: {
-    status?: "draft" | "submitted" | "refused";
+    status?: ("draft" | "submitted" | "refused")[];
     codeRegion?: string[];
     rentreeScolaire?: string;
     typeDemande?: string[];
@@ -14,7 +14,7 @@ const countRestitutionIntentionsStatsFactory =
     cfd?: string[];
     codeNiveauDiplome?: string[];
     dispositif?: string[];
-    CPCSecteur?: string[];
+    CPC?: string[];
     coloration?: string;
     amiCMA?: string;
     secteur?: string;

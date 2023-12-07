@@ -10,7 +10,7 @@ const getRestitutionIntentionsStatsFactory =
     findFiltersInDb = dependencies.findFiltersInDb,
   }) =>
   async (activeFilters: {
-    status?: "draft" | "submitted" | "refused";
+    status?: ("draft" | "submitted" | "refused")[];
     codeRegion?: string[];
     rentreeScolaire?: string;
     typeDemande?: string[];
@@ -18,7 +18,7 @@ const getRestitutionIntentionsStatsFactory =
     cfd?: string[];
     codeNiveauDiplome?: string[];
     dispositif?: string[];
-    CPCSecteur?: string[];
+    CPC?: string[];
     filiere?: string[];
     coloration?: string;
     amiCMA?: string;

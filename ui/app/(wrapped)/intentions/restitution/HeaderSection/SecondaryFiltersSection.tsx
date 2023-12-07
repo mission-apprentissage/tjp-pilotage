@@ -90,23 +90,6 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
-            <Select
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.voie ?? ""}
-              onChange={(e) => handleFilters("voie", e.target.value)}
-              placeholder="TOUTES"
-            >
-              {data?.filters.voie?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Box>
-          <Box justifyContent={"start"}>
             <FormLabel>Secteur d'activité</FormLabel>
             <Multiselect
               onClose={filterTracker("filiere")}
@@ -120,6 +103,22 @@ export const SecondaryFiltersSection = ({
               hasDefaultValue={false}
             >
               TOUS ({data?.filters.filieres.length ?? 0})
+            </Multiselect>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>CPC</FormLabel>
+            <Multiselect
+              onClose={filterTracker("CPC")}
+              width={"48"}
+              size="md"
+              variant={"newInput"}
+              onChange={(selected) => handleFilters("CPC", selected)}
+              options={data?.filters.CPCs}
+              value={activeFilters.CPC ?? []}
+              disabled={data?.filters.CPCs.length === 0}
+              hasDefaultValue={false}
+            >
+              TOUS ({data?.filters.CPCs.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -142,20 +141,19 @@ export const SecondaryFiltersSection = ({
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
             <FormLabel>Statut</FormLabel>
-            <Select
+            <Multiselect
+              onClose={filterTracker("status")}
               width={"48"}
               size="md"
               variant={"newInput"}
-              value={activeFilters.status ?? ""}
-              onChange={(e) => handleFilters("status", e.target.value)}
-              placeholder="TOUS (3)"
+              onChange={(selected) => handleFilters("status", selected)}
+              options={data?.filters.statuts}
+              value={activeFilters.status ?? []}
+              disabled={data?.filters.statuts.length === 0}
+              hasDefaultValue={false}
             >
-              {data?.filters.statuts?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
+              TOUS ({data?.filters.statuts.length ?? 0})
+            </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Type de demande</FormLabel>
@@ -180,23 +178,6 @@ export const SecondaryFiltersSection = ({
             >
               TOUS ({data?.filters.typesDemande.length ?? 0})
             </Multiselect>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>Compensation</FormLabel>
-            <Select
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.compensation ?? ""}
-              onChange={(e) => handleFilters("compensation", e.target.value)}
-              placeholder="Oui / non"
-            >
-              {data?.filters.compensations?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Motif(s)</FormLabel>
@@ -228,6 +209,9 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
               onChange={(e) => handleFilters("coloration", e.target.value)}
+              borderBottomColor={
+                activeFilters.coloration != undefined ? "info.525" : ""
+              }
               placeholder="Oui / non"
             >
               {data?.filters.colorations?.map((option) => (
@@ -245,6 +229,9 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
               onChange={(e) => handleFilters("amiCMA", e.target.value)}
+              borderBottomColor={
+                activeFilters.amiCMA != undefined ? "info.525" : ""
+              }
               placeholder="Oui / non"
             >
               {data?.filters.amiCMAs?.map((option) => (
@@ -262,9 +249,32 @@ export const SecondaryFiltersSection = ({
               variant={"newInput"}
               value={activeFilters.secteur ?? ""}
               onChange={(e) => handleFilters("secteur", e.target.value)}
+              borderBottomColor={
+                activeFilters.secteur != undefined ? "info.525" : ""
+              }
               placeholder="Public / privé"
             >
               {data?.filters.secteurs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Voie</FormLabel>
+            <Select
+              width={"48"}
+              size="md"
+              variant={"newInput"}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              borderBottomColor={
+                activeFilters.voie != undefined ? "info.525" : ""
+              }
+              placeholder="TOUTES"
+            >
+              {data?.filters.voie?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>

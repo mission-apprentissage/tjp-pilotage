@@ -63,6 +63,11 @@ export const PrimaryFiltersSection = ({
                       onChange={(e) =>
                         handleFilters("rentreeScolaire", e.target.value)
                       }
+                      borderBottomColor={
+                        activeFilters.rentreeScolaire != undefined
+                          ? "info.525"
+                          : ""
+                      }
                       placeholder="TOUTES"
                     >
                       {data?.filters.rentreesScolaires?.map((option) => (
