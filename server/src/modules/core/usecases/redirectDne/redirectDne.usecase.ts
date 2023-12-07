@@ -5,6 +5,7 @@ import { UserinfoResponse } from "openid-client";
 import { config } from "../../../../../config/config";
 import { getDneClient } from "../../services/dneClient/dneClient";
 import { createUserInDB } from "./createUser.dep";
+import { findEtablissement } from "./findEtablissement.dep";
 import { findUserQuery } from "./findUserQuery.dep";
 
 type ExtraUserInfo = { FrEduFonctAdm: string; FrEduRne: [string] };
@@ -39,6 +40,7 @@ export const [redirectDne, redirectDneFactory] = inject(
     getDneClient,
     findUserQuery,
     createUserInDB,
+    findEtablissement,
   },
   (deps) =>
     async ({
@@ -74,12 +76,17 @@ export const [redirectDne, redirectDneFactory] = inject(
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) throw new Error("missing user info");
 
+      const etablissement =
+        attributes.uais &&
+        (await deps.findEtablissement({ uais: attributes.uais }));
+
       await deps.createUserInDB({
         user: {
           ...user,
           email,
           firstname: userinfo.given_name,
           lastname: userinfo.family_name,
+          codeRegion: etablissement?.codeRegion,
           ...attributes,
         },
       });
