@@ -249,7 +249,13 @@ export const PageClient = () => {
           height="100%"
           mr={4}
         />
-        <Flex flex={1} flexDirection="column" overflow="hidden" minHeight={0}>
+        <Flex
+          flex={1}
+          flexDirection="column"
+          overflow="visible"
+          minHeight={0}
+          minW={0}
+        >
           <Flex flexDirection={"row"} justifyContent={"space-between"}>
             <Flex>
               <Input
