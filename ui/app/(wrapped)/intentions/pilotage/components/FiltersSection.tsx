@@ -59,6 +59,11 @@ export const FiltersSection = ({
                 size="md"
                 variant="newInput"
                 value={activeTerritoiresFilters.regions ?? ""}
+                borderBottomColor={
+                  activeTerritoiresFilters.regions != undefined
+                    ? "info.525"
+                    : ""
+                }
                 onChange={(e) =>
                   handleTerritoiresFilters(
                     "regions",
@@ -82,6 +87,11 @@ export const FiltersSection = ({
                 size="md"
                 variant="newInput"
                 value={activeTerritoiresFilters.academies ?? ""}
+                borderBottomColor={
+                  activeTerritoiresFilters.academies != undefined
+                    ? "info.525"
+                    : ""
+                }
                 onChange={(e) =>
                   handleTerritoiresFilters(
                     "academies",
@@ -105,6 +115,11 @@ export const FiltersSection = ({
                 size="md"
                 variant="newInput"
                 value={activeTerritoiresFilters.departements ?? ""}
+                borderBottomColor={
+                  activeTerritoiresFilters.departements != undefined
+                    ? "info.525"
+                    : ""
+                }
                 onChange={(e) =>
                   handleTerritoiresFilters(
                     "departements",
@@ -138,6 +153,22 @@ export const FiltersSection = ({
                 disabled={data?.filters.diplomes.length === 0}
               >
                 TOUS ({data?.filters.diplomes.length ?? 0})
+              </Multiselect>
+            </Box>
+            <Box justifyContent={"start"}>
+              <FormLabel>CPC</FormLabel>
+              <Multiselect
+                onClose={filterTracker("CPC")}
+                width={"72"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("CPC", selected)}
+                options={data?.filters.CPCs}
+                value={activeFilters.CPC ?? []}
+                disabled={data?.filters.CPCs.length === 0}
+                hasDefaultValue={false}
+              >
+                TOUS ({data?.filters.CPCs.length ?? 0})
               </Multiselect>
             </Box>
             <Box justifyContent={"start"}>

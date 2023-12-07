@@ -28,7 +28,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
-  CPCSecteur,
+  CPC,
   filiere,
   coloration,
   amiCMA,
@@ -46,7 +46,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   orderBy = { order: "desc", column: "createdAt" },
   voie,
 }: {
-  status?: "draft" | "submitted" | "refused";
+  status?: ("draft" | "submitted" | "refused")[];
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];
@@ -54,7 +54,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
-  CPCSecteur?: string[];
+  CPC?: string[];
   filiere?: string[];
   coloration?: string;
   amiCMA?: string;
@@ -151,8 +151,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       ),
     ])
     .$call((eb) => {
-      if (status && status != undefined)
-        return eb.where("demande.status", "=", status);
+      if (status) return eb.where("demande.status", "in", status);
       return eb;
     })
     .$call((eb) => {
@@ -224,8 +223,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (CPCSecteur)
-        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
     .$call((eb) => {
@@ -324,7 +322,7 @@ const findFiltersInDb = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
-  CPCSecteur,
+  CPC,
   filiere,
   coloration,
   amiCMA,
@@ -337,7 +335,7 @@ const findFiltersInDb = async ({
   compensation,
   user,
 }: {
-  status?: "draft" | "submitted" | "refused";
+  status?: ("draft" | "submitted" | "refused")[];
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];
@@ -345,7 +343,7 @@ const findFiltersInDb = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
-  CPCSecteur?: string[];
+  CPC?: string[];
   filiere?: string[];
   coloration?: string;
   amiCMA?: string;
@@ -402,9 +400,9 @@ const findFiltersInDb = async ({
     return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
-  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!CPCSecteur) return sql<true>`true`;
-    return eb("dataFormation.cpcSecteur", "in", CPCSecteur);
+  const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!CPC) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", CPC);
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -466,8 +464,8 @@ const findFiltersInDb = async ({
   };
 
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!status || status == undefined) return sql<true>`true`;
-    return eb("demande.status", "=", status);
+    if (!status) return sql<true>`true`;
+    return eb("demande.status", "in", status);
   };
 
   const geoFiltersBase = kdb
@@ -564,7 +562,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -597,7 +595,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -630,7 +628,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -662,7 +660,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -695,7 +693,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -734,7 +732,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -769,7 +767,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -809,7 +807,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inFamilleMetier(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -842,7 +840,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFiliere(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -857,12 +855,9 @@ const findFiltersInDb = async ({
     })
     .execute();
 
-  const CPCSecteursFilters = await filtersBase
-    .select([
-      "dataFormation.cpcSecteur as label",
-      "dataFormation.cpcSecteur as value",
-    ])
-    .where("dataFormation.cpcSecteur", "is not", null)
+  const CPCFilters = await filtersBase
+    .select(["dataFormation.cpc as label", "dataFormation.cpc as value"])
+    .where("dataFormation.cpc", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([
@@ -885,9 +880,7 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        CPCSecteur
-          ? eb("dataFormation.cpcSecteur", "in", CPCSecteur)
-          : sql`false`,
+        CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql`false`,
       ]);
     })
     .execute();
@@ -912,7 +905,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
-          inCPCSecteur(eb),
+          inCPC(eb),
           inFamilleMetier(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -920,9 +913,7 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        CPCSecteur
-          ? eb("dataFormation.libelleFiliere", "in", CPCSecteur)
-          : sql`false`,
+        CPC ? eb("dataFormation.libelleFiliere", "in", CPC) : sql`false`,
       ]);
     })
     .execute();
@@ -936,22 +927,12 @@ const findFiltersInDb = async ({
     diplomes: (await diplomesFilters).map(cleanNull),
     formations: (await formationsFilters).map(cleanNull),
     familles: (await famillesFilters).map(cleanNull),
-    CPCSecteurs: (await CPCSecteursFilters).map(cleanNull),
+    CPCs: (await CPCFilters).map(cleanNull),
     filieres: (await filieresFilters).map(cleanNull),
     departements: (await departementsFilters).map(cleanNull),
     academies: (await academiesFilters).map(cleanNull),
     communes: (await communesFilters).map(cleanNull),
     etablissements: (await etablissementsFilters).map(cleanNull),
-    status: [
-      {
-        label: "Brouillon",
-        value: "draft",
-      },
-      {
-        label: "Validée",
-        value: "submitted",
-      },
-    ],
     secteurs: [
       {
         label: "Public",
