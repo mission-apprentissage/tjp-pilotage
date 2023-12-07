@@ -47,6 +47,7 @@ const demande = {
   capaciteApprentissageActuelle: 15,
   capaciteApprentissageColoree: 2,
   commentaire: "mon commentaire",
+  motifRefus: undefined,
 };
 
 const gestionnaire = {
@@ -89,7 +90,26 @@ describe("submitDemande usecase", () => {
           status: "submitted",
         },
       })
-    ).rejects.toThrowError("Code diplome non valide");
+    ).rejects.toThrowError("Donnée incorrectes");
+  });
+
+  it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
+    const submitDemande = submitDemandeFactory(valideDeps);
+
+    await expect(() =>
+      submitDemande({
+        user: {
+          codeRegion: "other",
+          id: "user-id",
+          role: "pilote_region",
+        },
+        demande: {
+          ...demande,
+          status: "refused",
+          motifRefus: undefined,
+        },
+      })
+    ).rejects.toThrowError("Le champ 'motif refus' est obligatoire");
   });
 
   it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {

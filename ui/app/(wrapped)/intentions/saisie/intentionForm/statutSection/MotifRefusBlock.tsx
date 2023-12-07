@@ -3,6 +3,7 @@ import {
   Checkbox,
   CheckboxGroup,
   Collapse,
+  FormControl,
   FormErrorMessage,
   FormLabel,
   Stack,
@@ -57,43 +58,49 @@ export const MotifRefusBlock = chakra(
     if (!typeDemande) return <></>;
 
     return (
-      <Collapse in={visible} unmountOnExit className={className}>
-        <FormLabel mb={2}>
-          Merci de préciser le(s) motif(s) de votre refus :
-        </FormLabel>
-        <Controller
-          name="motifRefus"
-          shouldUnregister
-          disabled={disabled}
-          control={control}
-          rules={{ required: "Le motif de refus est obligatoire" }}
-          render={({
-            field: { onChange, value, onBlur, ref, name, disabled },
-          }) => {
-            return (
-              <CheckboxGroup onChange={onChange} value={value}>
-                <Stack spacing={[3]}>
-                  {getMotifOptions(typeDemande).map(({ value, label }) => (
-                    <Checkbox
-                      ref={ref}
-                      disabled={disabled}
-                      name={name}
-                      isRequired={false}
-                      key={value}
-                      onBlur={onBlur}
-                      value={value}
-                    >
-                      {label}
-                    </Checkbox>
-                  ))}
-                </Stack>
-              </CheckboxGroup>
-            );
-          }}
-        />
-        {errors.motifRefus && (
-          <FormErrorMessage>{errors.motifRefus?.message}</FormErrorMessage>
-        )}
+      <Collapse in={visible} unmountOnExit>
+        <FormControl
+          className={className}
+          isInvalid={!!errors.motifRefus}
+          isRequired
+        >
+          <FormLabel mb={2}>
+            Merci de préciser le(s) motif(s) de votre refus :
+          </FormLabel>
+          <Controller
+            name="motifRefus"
+            shouldUnregister
+            disabled={disabled}
+            control={control}
+            rules={{ required: "Le motif de refus est obligatoire" }}
+            render={({
+              field: { onChange, value, onBlur, ref, name, disabled },
+            }) => {
+              return (
+                <CheckboxGroup onChange={onChange} value={value}>
+                  <Stack spacing={[3]}>
+                    {getMotifOptions(typeDemande).map(({ value, label }) => (
+                      <Checkbox
+                        ref={ref}
+                        disabled={disabled}
+                        name={name}
+                        isRequired={false}
+                        key={value}
+                        onBlur={onBlur}
+                        value={value}
+                      >
+                        {label}
+                      </Checkbox>
+                    ))}
+                  </Stack>
+                </CheckboxGroup>
+              );
+            }}
+          />
+          {errors.motifRefus && (
+            <FormErrorMessage>{errors.motifRefus?.message}</FormErrorMessage>
+          )}
+        </FormControl>
       </Collapse>
     );
   }

@@ -24,12 +24,13 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -119,6 +120,7 @@ export const PageClient = () => {
     search?: string;
     order?: Partial<Order>;
     page?: string;
+    action?: "draft" | "submitted" | "refused";
   } = qs.parse(queryParams.toString());
 
   const setSearchParams = (params: {
@@ -126,6 +128,7 @@ export const PageClient = () => {
     search?: typeof search;
     order?: typeof order;
     page?: typeof page;
+    action?: typeof action;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -152,6 +155,29 @@ export const PageClient = () => {
   const search = searchParams.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const action = searchParams.action;
+
+  const toast = useToast();
+  const toastId = "action-demande-toast";
+
+  useEffect(() => {
+    const toastMessage =
+      action === "draft"
+        ? "Projet de demande enregistré"
+        : action === "submitted"
+        ? "Demande validée"
+        : "Demande refusée";
+    !toast.isActive(toastId) &&
+      toast({
+        id: toastId,
+        title: `${toastMessage} avec succès`,
+        position: "top-right",
+        status: "success",
+        variant: "left-accent",
+        isClosable: true,
+        size: "md",
+      });
+  }, [action]);
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
     {
