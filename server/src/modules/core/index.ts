@@ -21,7 +21,6 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...resetPasswordRoute(server),
     ...sendResetPasswordRoute(server),
     ...whoAmIRoute(server),
-    // ...dne_connectRoute(server),
     ...getDneAuthorizationUrlRoute(server),
     ...redirectDneRoute(server),
   };
