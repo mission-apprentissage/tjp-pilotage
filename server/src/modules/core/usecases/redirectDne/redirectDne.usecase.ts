@@ -13,7 +13,7 @@ const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
   if (userInfo.FrEduFonctAdm === "DIR") {
     return {
       role: "perdir",
-      // uai: userInfo.FrEduRne[0].split("$")[0],
+      uais: userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? null,
     };
   }
 };
@@ -71,21 +71,12 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       const user = await deps.findUserQuery(email);
 
-      if (user) {
-        return {
-          token: jwt.sign({ email }, deps.authJwtSecret, {
-            issuer: "orion",
-            expiresIn: "7d",
-          }),
-        };
-      }
-
       const attributes = getUserRoleAttributes(userinfo);
-
       if (!attributes) throw new Error("missing user info");
 
       await deps.createUserInDB({
         user: {
+          ...user,
           email,
           firstname: userinfo.given_name,
           lastname: userinfo.family_name,
