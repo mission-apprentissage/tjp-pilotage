@@ -163,15 +163,20 @@ export const PageClient = () => {
   useEffect(() => {
     const toastMessage =
       action === "draft"
-        ? "Projet de demande enregistré"
+        ? "Projet de demande enregistré avec succès"
         : action === "submitted"
-        ? "Demande validée"
-        : "Demande refusée";
+        ? "Demande validée avec succès"
+        : action === "refused"
+        ? "Demande refusée avec succès"
+        : action === "deleted"
+        ? "Demande supprimée avec succès"
+        : null;
     !toast.isActive(toastId) &&
       action &&
+      toastMessage &&
       toast({
         id: toastId,
-        title: `${toastMessage} avec succès`,
+        title: toastMessage,
         position: "top-right",
         status: "success",
         variant: "left-accent",
