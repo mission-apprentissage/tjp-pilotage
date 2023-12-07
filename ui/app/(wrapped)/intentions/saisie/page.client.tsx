@@ -536,7 +536,7 @@ export const PageClient = () => {
                     variant="createButton"
                     size={"lg"}
                     as={NextLink}
-                    href="/intentions/new"
+                    href="/intentions/saisie/new"
                     px={3}
                     mt={12}
                     mx={"auto"}
