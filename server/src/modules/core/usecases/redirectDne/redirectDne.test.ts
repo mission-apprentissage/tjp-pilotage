@@ -55,12 +55,19 @@ describe("redirectDne usecase", () => {
     ).rejects.toThrow();
   });
 
-  it("should return an Authorization token if the user exist", async () => {
+  it("should return an Authorization token if the user exist and upsert the existing user", async () => {
+    const ssoUserInfo = {
+      email: "user@test.test",
+      given_name: "firstname",
+      family_name: "lastname",
+      FrEduFonctAdm: "DIR",
+      FrEduRne: ["code-uai$rest"],
+    };
     const deps = {
       getDneClient: jest.fn().mockResolvedValue({
         callbackParams: jest.fn(),
         callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
-        userinfo: jest.fn().mockResolvedValue({ email: "user@test.test" }),
+        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
       }),
       createUserInDB: jest.fn(),
       authJwtSecret: "authJwtSecret",
@@ -76,7 +83,15 @@ describe("redirectDne usecase", () => {
       ),
       url: "localhost?code=mycode",
     });
-    expect(deps.createUserInDB).toBeCalledTimes(0);
+    expect(deps.createUserInDB).toHaveBeenCalledWith({
+      user: expect.objectContaining({
+        email: ssoUserInfo.email,
+        firstname: ssoUserInfo.given_name,
+        lastname: ssoUserInfo.family_name,
+        role: "perdir",
+        uais: ["code-uai"],
+      }),
+    });
     expect(result).toMatchObject({
       token: expect.stringMatching(""),
     });
@@ -88,6 +103,7 @@ describe("redirectDne usecase", () => {
       given_name: "firstname",
       family_name: "lastname",
       FrEduFonctAdm: "DIR",
+      FrEduRne: ["code-uai$rest"],
     };
     const deps = {
       getDneClient: jest.fn().mockResolvedValue({
@@ -110,12 +126,13 @@ describe("redirectDne usecase", () => {
       url: "localhost?code=mycode",
     });
     expect(deps.createUserInDB).toHaveBeenCalledWith({
-      user: {
+      user: expect.objectContaining({
         email: ssoUserInfo.email,
         firstname: ssoUserInfo.given_name,
         lastname: ssoUserInfo.family_name,
         role: "perdir",
-      },
+        uais: ["code-uai"],
+      }),
     });
     expect(result).toMatchObject({
       token: expect.stringMatching(""),
