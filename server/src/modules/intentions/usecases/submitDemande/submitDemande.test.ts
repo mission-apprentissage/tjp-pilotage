@@ -155,7 +155,7 @@ describe("submitDemande usecase", () => {
         codeRegion: "75",
         codeAcademie: "06",
         createurId: "user-id",
-        status: "submitted",
+        status: "draft",
         id: expect.stringMatching(".+"),
       })
     );
