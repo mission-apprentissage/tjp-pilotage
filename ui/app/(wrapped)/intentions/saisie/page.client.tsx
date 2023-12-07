@@ -168,6 +168,7 @@ export const PageClient = () => {
         ? "Demande validée"
         : "Demande refusée";
     !toast.isActive(toastId) &&
+      action &&
       toast({
         id: toastId,
         title: `${toastMessage} avec succès`,

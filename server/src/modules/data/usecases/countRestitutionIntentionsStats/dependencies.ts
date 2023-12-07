@@ -36,7 +36,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   user,
   voie,
 }: {
-  status?: "draft" | "submitted";
+  status?: "draft" | "submitted" | "refused";
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];

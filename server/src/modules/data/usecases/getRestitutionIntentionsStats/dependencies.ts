@@ -46,7 +46,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   orderBy = { order: "desc", column: "createdAt" },
   voie,
 }: {
-  status?: "draft" | "submitted";
+  status?: "draft" | "submitted" | "refused";
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];
@@ -337,7 +337,7 @@ const findFiltersInDb = async ({
   compensation,
   user,
 }: {
-  status?: "draft" | "submitted";
+  status?: "draft" | "submitted" | "refused";
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];
