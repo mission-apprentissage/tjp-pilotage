@@ -16,7 +16,7 @@ export const countRestitutionIntentionsStatsSchema = {
     rentreeScolaire: z.string().optional(),
     typeDemande: z.array(z.string()).optional(),
     motif: z.array(z.string()).optional(),
-    status: z.enum(["draft", "submitted"]).optional(),
+    status: z.enum(["draft", "submitted", "refused"]).optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),
     cfd: z.array(z.string()).optional(),
     dispositif: z.array(z.string()).optional(),

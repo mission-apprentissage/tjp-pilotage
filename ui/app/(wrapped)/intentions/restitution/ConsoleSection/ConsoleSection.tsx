@@ -10,6 +10,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
 import { OrderIcon } from "../../../../../components/OrderIcon";
@@ -67,6 +68,7 @@ export const ConsoleSection = ({
   order: Order;
   handleOrder: (column: Order["orderBy"]) => void;
 }) => {
+  const router = useRouter();
   return (
     <Flex
       borderRadius={4}
@@ -326,7 +328,14 @@ export const ConsoleSection = ({
                   (demande: StatsIntentions["demandes"][0]) => {
                     return (
                       <Fragment key={`${demande.id}`}>
-                        <Tr h="12" _hover={{ bg: "blueecume.925" }}>
+                        <Tr
+                          h="12"
+                          _hover={{ bg: "blueecume.925" }}
+                          cursor={"pointer"}
+                          onClick={() =>
+                            router.push(`/intentions/saisie/${demande.id}`)
+                          }
+                        >
                           <LineContent demande={demande} />
                         </Tr>
                       </Fragment>
