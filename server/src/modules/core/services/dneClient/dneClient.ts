@@ -7,13 +7,6 @@ export const getDneClient = async () => {
     "https://hub-oidc.orion.education.fr/.well-known/openid-configuration"
   );
 
-  if (
-    !config.dne.clientId ||
-    !config.dne.clientSecret ||
-    !config.dne.redirectUri
-  )
-    throw "missing config";
-
   const client = new pdsIssuer.Client({
     client_id: config.dne.clientId,
     client_secret: config.dne.clientSecret,
