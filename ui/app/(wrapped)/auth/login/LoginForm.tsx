@@ -109,10 +109,14 @@ export const LoginForm = () => {
               Se connecter
             </Button>
           </Flex>
-          <Divider mt="6" mb="6" />
-          <Button width="100%" as={NextLink} href={url ?? "#"}>
-            Accéder au portail de l'éducation nationale
-          </Button>
+          {false && (
+            <>
+              <Divider mt="6" mb="6" />
+              <Button width="100%" as={NextLink} href={url ?? "#"}>
+                Accéder au portail de l'éducation nationale
+              </Button>
+            </>
+          )}
         </CardBody>
       </Card>
       <Text mt="4" textAlign="center">
