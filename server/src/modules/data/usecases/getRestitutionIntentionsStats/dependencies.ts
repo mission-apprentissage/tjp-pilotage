@@ -9,6 +9,7 @@ import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
 } from "../../../utils/countCapacite";
+import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import {
   isIntentionVisible,
   isRegionVisible,
@@ -294,6 +295,7 @@ const findRestitutionIntentionsStatsInDB = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
+    .where(isDemandeNotDeleted)
     .where(isIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)

@@ -8,7 +8,10 @@ import {
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
+import {
+  isDemandeNotDeleted,
+  isDemandeSelectable,
+} from "../../../utils/isDemandeSelectable";
 
 export const findDemande = async ({
   id,
@@ -136,6 +139,7 @@ export const findDemande = async ({
         ),
       }).as("metadata"),
     ])
+    .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .where("id", "=", id)
     .orderBy("createdAt", "asc")

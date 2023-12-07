@@ -36,7 +36,7 @@ export const submitDemandeSchema = {
   response: {
     200: z.object({
       id: z.string(),
-      status: z.enum(["draft", "submitted", "refused"]),
+      status: z.enum(["draft", "submitted", "refused", "deleted"]),
     }),
   },
 };

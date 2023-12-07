@@ -4,6 +4,7 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 
 const selectPlacesTransformees =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
@@ -244,7 +245,7 @@ const getTransformationStatsQuery = ({
       if (!status) return q;
       return q.where("demande.status", "=", status);
     })
-    .where("demande.status", "!=", "refused")
+    .where(isDemandeNotDeletedOrRefused)
     .execute()
     .then(cleanNull);
 
