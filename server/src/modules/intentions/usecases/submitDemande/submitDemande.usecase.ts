@@ -39,6 +39,8 @@ type Demande = {
   capaciteApprentissageActuelle?: number;
   capaciteApprentissageColoree?: number;
   status: "draft" | "submitted" | "refused";
+  motifRefus?: string[];
+  autreMotifRefus?: string;
 };
 
 const validateDemande = (demande: Demande) => {
@@ -49,6 +51,21 @@ const validateDemande = (demande: Demande) => {
     errors = { ...errors, [key]: error };
   }
   return Object.keys(errors).length ? errors : undefined;
+};
+
+const logDemande = (demande?: { status: string }) => {
+  if (!demande) return;
+  switch (demande.status) {
+    case "draft":
+      logger.info("Projet de demande enregistré", { demande: demande });
+      break;
+    case "submitted":
+      logger.info("Demande validée", { demande: demande });
+      break;
+    case "refused":
+      logger.info("Demande refusée", { demande: demande });
+      break;
+  }
 };
 
 export const [submitDemande, submitDemandeFactory] = inject(
@@ -147,7 +164,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         updatedAt: new Date(),
       });
 
-      logger.info("Demande envoyée", { demande: created });
+      logDemande(created);
       return created;
     }
 );

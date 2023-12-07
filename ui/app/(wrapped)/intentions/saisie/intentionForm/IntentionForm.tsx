@@ -41,11 +41,11 @@ export const IntentionForm = ({
   const [errors, setErrors] = useState<Record<string, string>>();
 
   const {
-    isLoading: isSubmittingDemande,
+    isLoading: isSubmitting,
     mutateAsync: submitDemande,
-    isSuccess: isDemandeSuccess,
+    isSuccess: isSuccess,
   } = client.ref("[POST]/demande/submit").useMutation({
-    onSuccess: () => push("/intentions/saisie"),
+    onSuccess: (body) => push(`/intentions/saisie?action=${body.status}`),
     //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
@@ -53,21 +53,6 @@ export const IntentionForm = ({
     },
   });
 
-  const {
-    isLoading: isSubmittingDraft,
-    mutateAsync: submitDraft,
-    isSuccess: isDraftSuccess,
-  } = client.ref("[POST]/demande/draft").useMutation({
-    onSuccess: () => push("/intentions/saisie"),
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setErrors(errors);
-    },
-  });
-
-  const isSubmitting = isSubmittingDraft || isSubmittingDemande;
-  const isSuccess = isDraftSuccess || isDemandeSuccess;
   const isActionsDisabled = isSuccess || isSubmitting;
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
@@ -165,16 +150,18 @@ export const IntentionForm = ({
                           isActionsDisabled ||
                           !form.formState.isDirty
                         }
-                        isLoading={isSubmittingDraft}
+                        isLoading={isSubmitting}
                         variant="primary"
                         onClick={handleSubmit((values) =>
-                          formId
-                            ? submitDemande({
-                                body: { demande: { id: formId, ...values } },
-                              })
-                            : submitDraft({
-                                body: { demande: { id: formId, ...values } },
-                              })
+                          submitDemande({
+                            body: {
+                              demande: {
+                                id: formId,
+                                ...values,
+                                status: formId ? values.status : "draft",
+                              },
+                            },
+                          })
                         )}
                         leftIcon={<CheckIcon />}
                       >

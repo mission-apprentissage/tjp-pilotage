@@ -34,6 +34,9 @@ export const submitDemandeSchema = {
     }),
   }),
   response: {
-    200: z.object({ id: z.string() }),
+    200: z.object({
+      id: z.string(),
+      status: z.enum(["draft", "submitted", "refused"]),
+    }),
   },
 };
