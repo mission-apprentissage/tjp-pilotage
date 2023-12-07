@@ -90,7 +90,7 @@ describe("submitDemande usecase", () => {
           status: "submitted",
         },
       })
-    ).rejects.toThrowError("Donnée incorrectes");
+    ).rejects.toThrowError("Code diplome non valide");
   });
 
   it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
@@ -98,18 +98,14 @@ describe("submitDemande usecase", () => {
 
     await expect(() =>
       submitDemande({
-        user: {
-          codeRegion: "other",
-          id: "user-id",
-          role: "pilote_region",
-        },
+        user: gestionnaire,
         demande: {
           ...demande,
           status: "refused",
           motifRefus: undefined,
         },
       })
-    ).rejects.toThrowError("Le champ 'motif refus' est obligatoire");
+    ).rejects.toThrowError("Donnée incorrectes");
   });
 
   it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {

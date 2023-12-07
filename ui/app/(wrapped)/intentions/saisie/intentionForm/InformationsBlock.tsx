@@ -47,15 +47,14 @@ export const InformationsBlock = ({
   const { push } = useRouter();
   const { setValue } = useFormContext<IntentionForms>();
   const { isOpen, onOpen, onClose } = useDisclosure();
-
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
     mutationFn: async () => {
       if (!formId) return;
       await client
         .ref("[DELETE]/demande/:id")
-        .query({ params: { id: formId } });
+        .query({ params: { id: formId } })
+        .then(() => push("/intentions/saisie?action=deleted"));
     },
-    onSuccess: () => push("/intentions"),
   });
 
   return (
