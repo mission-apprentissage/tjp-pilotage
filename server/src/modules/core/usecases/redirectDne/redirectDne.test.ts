@@ -14,6 +14,7 @@ describe("redirectDne usecase", () => {
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue({ email: "salut" }),
+      findEtablissement: jest.fn(),
     });
 
     await expect(() =>
@@ -41,6 +42,7 @@ describe("redirectDne usecase", () => {
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest.fn(),
     };
     const redirectDne = redirectDneFactory(deps);
 
@@ -73,6 +75,9 @@ describe("redirectDne usecase", () => {
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue({ email: "email@test.test" }),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ UAI: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
@@ -90,6 +95,7 @@ describe("redirectDne usecase", () => {
         lastname: ssoUserInfo.family_name,
         role: "perdir",
         uais: ["code-uai"],
+        codeRegion: "75",
       }),
     });
     expect(result).toMatchObject({
@@ -115,6 +121,9 @@ describe("redirectDne usecase", () => {
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
       findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ UAI: "monuai", codeRegion: "75" }),
     };
     const redirectDne = redirectDneFactory(deps);
 
@@ -132,6 +141,7 @@ describe("redirectDne usecase", () => {
         lastname: ssoUserInfo.family_name,
         role: "perdir",
         uais: ["code-uai"],
+        codeRegion: "75",
       }),
     });
     expect(result).toMatchObject({

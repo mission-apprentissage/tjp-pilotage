@@ -35,7 +35,7 @@ export const redirectDneRoute = (server: Server) => {
           response.header("set-cookie", cookies).redirect(302, "/").send();
         } catch (error) {
           logger.error("echec dne redirect", { error: error as Error });
-          response.redirect(302, "/login").send();
+          response.redirect(302, "/auth/login").send();
         }
       },
     });
