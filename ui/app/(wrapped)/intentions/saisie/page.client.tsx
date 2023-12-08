@@ -62,7 +62,7 @@ const DEMANDES_COLUMNS = {
   amiCma: "AMI/CMA ?",
   poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
-  status: "Status",
+  status: "Statut",
   codeRegion: "Code Region",
   codeAcademie: "Code Académie",
   createdAt: "Date de création",
