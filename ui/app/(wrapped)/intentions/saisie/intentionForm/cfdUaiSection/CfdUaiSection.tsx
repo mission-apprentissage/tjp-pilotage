@@ -7,6 +7,8 @@ import {
   Divider,
   Flex,
   Heading,
+  IconButton,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
@@ -20,16 +22,47 @@ import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
+const TagDemande = ({ status }: { status?: string }) => {
+  switch (status) {
+    case "draft":
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Projet de demande
+        </Tag>
+      );
+    case "submitted":
+      return (
+        <Tag size="md" colorScheme={"green"} ml={4}>
+          Demande validée
+        </Tag>
+      );
+    case "refused":
+      return (
+        <Tag size="md" colorScheme={"red"} ml={4}>
+          Demande refusée
+        </Tag>
+      );
+    default:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Projet de demande
+        </Tag>
+      );
+  }
+};
+
 export const CfdUaiSection = ({
   formId,
   active,
   disabled,
+  defaultValues,
   formMetadata,
   onEditUaiCfdSection,
   isFCIL,
   setIsFCIL,
   submitCFDUAISection,
   isCFDUaiSectionValid,
+  statusComponentRef,
 }: {
   formId?: string;
   active: boolean;
@@ -41,6 +74,7 @@ export const CfdUaiSection = ({
   setIsFCIL: (isFcil: boolean) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<IntentionForms>) => boolean;
+  statusComponentRef?: React.RefObject<HTMLDivElement>;
 }) => {
   const { watch, getValues } = useFormContext<IntentionForms>();
 
@@ -71,6 +105,10 @@ export const CfdUaiSection = ({
     }).unsubscribe;
   });
 
+  const anchorToStatus = () => {
+    statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
+  };
+
   return (
     <DarkMode>
       <Box
@@ -81,16 +119,16 @@ export const CfdUaiSection = ({
       >
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
-          {!disabled && (
-            <Button
+          <TagDemande status={defaultValues.status} />
+          {defaultValues && (
+            <IconButton
+              icon={<EditIcon />}
               visibility={active ? "collapse" : "visible"}
-              ml="auto"
+              ml={2}
               aria-label="Editer"
-              onClick={onEditUaiCfdSection}
-              leftIcon={<EditIcon />}
-            >
-              Modifier
-            </Button>
+              variant={"ghost"}
+              onClick={() => anchorToStatus()}
+            />
           )}
         </Heading>
         <Divider pt="4" mb="4" />
@@ -111,7 +149,23 @@ export const CfdUaiSection = ({
                 setUaiInfo={setUaiInfo}
               />
             </Box>
-            <Flex minH={16} mt={"auto"} align="flex-end">
+            <Flex
+              minH={16}
+              mt={"auto"}
+              align="flex-end"
+              justifyContent={"space-between"}
+            >
+              {!disabled && (
+                <Button
+                  visibility={active ? "collapse" : "visible"}
+                  mr="auto"
+                  aria-label="Editer"
+                  onClick={onEditUaiCfdSection}
+                  leftIcon={<EditIcon />}
+                >
+                  Modifier
+                </Button>
+              )}
               {active && (
                 <Button
                   isDisabled={isSubmitDisabled}

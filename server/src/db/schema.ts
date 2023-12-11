@@ -119,7 +119,7 @@ export interface Demande {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  status: "draft" | "submitted";
+  status: "deleted" | "draft" | "refused" | "submitted";
   codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
@@ -137,6 +137,8 @@ export interface Demande {
   compensationRentreeScolaire: number | null;
   updatedAt: Timestamp;
   libelleFCIL: string | null;
+  motifRefus: string[] | null;
+  autreMotifRefus: string | null;
 }
 
 export interface Departement {

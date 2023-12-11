@@ -47,6 +47,7 @@ const demande = {
   capaciteApprentissageActuelle: 15,
   capaciteApprentissageColoree: 2,
   commentaire: "mon commentaire",
+  motifRefus: undefined,
 };
 
 const gestionnaire = {
@@ -65,7 +66,13 @@ describe("submitDemande usecase", () => {
     const submitDemande = submitDemandeFactory(deps);
 
     await expect(() =>
-      submitDemande({ user: gestionnaire, demande: demande })
+      submitDemande({
+        user: gestionnaire,
+        demande: {
+          ...demande,
+          status: "submitted",
+        },
+      })
     ).rejects.toThrowError("Code uai non valide");
   });
 
@@ -76,8 +83,29 @@ describe("submitDemande usecase", () => {
     });
 
     await expect(() =>
-      submitDemande({ user: gestionnaire, demande: demande })
+      submitDemande({
+        user: gestionnaire,
+        demande: {
+          ...demande,
+          status: "submitted",
+        },
+      })
     ).rejects.toThrowError("Code diplome non valide");
+  });
+
+  it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
+    const submitDemande = submitDemandeFactory(valideDeps);
+
+    await expect(() =>
+      submitDemande({
+        user: gestionnaire,
+        demande: {
+          ...demande,
+          status: "refused",
+          motifRefus: undefined,
+        },
+      })
+    ).rejects.toThrowError("Donnée incorrectes");
   });
 
   it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {
@@ -94,6 +122,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           mixte: true,
           capaciteApprentissage: undefined,
+          status: "submitted",
         },
       })
     ).rejects.toThrowError("Forbidden");
@@ -112,6 +141,7 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
+        status: "draft",
         id: undefined,
       },
     });
@@ -121,7 +151,7 @@ describe("submitDemande usecase", () => {
         codeRegion: "75",
         codeAcademie: "06",
         createurId: "user-id",
-        status: "submitted",
+        status: "draft",
         id: expect.stringMatching(".+"),
       })
     );
@@ -137,7 +167,10 @@ describe("submitDemande usecase", () => {
 
     await submitDemande({
       user: gestionnaire,
-      demande: demande,
+      demande: {
+        ...demande,
+        status: "submitted",
+      },
     });
     expect(deps.createDemandeQuery).toBeCalledWith(
       expect.objectContaining({

@@ -136,6 +136,7 @@ export const CartoSection = ({
                 bg={"grey.150"}
                 onChange={(e) => handleIndicateurChange(e.target.value)}
                 value={indicateur}
+                borderBottomColor={indicateur != undefined ? "info.525" : ""}
               >
                 {indicateurOptions.map((option) => (
                   <option key={option.value} value={option.value}>

@@ -43,7 +43,8 @@ const DemandesItem = z.object({
 
 export const getDemandesSchema = {
   querystring: z.object({
-    status: z.enum(["draft", "submitted"]).optional(),
+    status: z.enum(["draft", "submitted", "refused"]).optional(),
+    search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: DemandesItem.keyof().optional(),
     offset: z.coerce.number().optional(),

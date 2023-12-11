@@ -68,12 +68,19 @@ export default () => {
   const [rentreeScolaireFilter, setRentreeScolaireFilter] =
     useState<string>("2024");
 
+  const [statutFilter, setStatutFilter] = useState<
+    ("draft" | "submitted" | "refused")[] | undefined
+  >(["draft", "submitted"]);
+
   useEffect(() => {
     if (codeRegionFilter != "") {
       filters.codeRegion = [codeRegionFilter];
     }
     if (rentreeScolaireFilter != "") {
       filters.rentreeScolaire = rentreeScolaireFilter;
+    }
+    if (statutFilter != undefined) {
+      filters.status = statutFilter;
     }
     setSearchParams({ filters: filters });
   }, []);
@@ -108,6 +115,8 @@ export default () => {
     }
     if (type === "rentreeScolaire" && value != null)
       setRentreeScolaireFilter(value[0] ?? "");
+    if (type === "status" && value != null)
+      setStatutFilter([value[0] as "draft" | "submitted" | "refused"]);
   };
 
   const handleFilters = (
