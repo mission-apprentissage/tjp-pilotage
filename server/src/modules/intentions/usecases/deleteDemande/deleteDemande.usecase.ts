@@ -26,7 +26,7 @@ export const deleteDemandeFactory =
     });
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteDemandeQuery(demande.id);
-    logger.info("demande supprimée", { id, demande });
+    logger.info("Demande supprimée", { id, demande: demande });
   };
 
 export const deleteDemande = deleteDemandeFactory();

@@ -3,7 +3,10 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
+import {
+  isDemandeNotDeleted,
+  isDemandeSelectable,
+} from "../../../utils/isDemandeSelectable";
 
 export const countDemandes = async ({
   user,
@@ -35,6 +38,18 @@ export const countDemandes = async ({
         0
       )`.as("submitted")
     )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("demande.status")} = 'refused'
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as("refused")
+    )
+    .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);

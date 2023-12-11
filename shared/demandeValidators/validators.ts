@@ -41,7 +41,7 @@ export const demandeValidators: Record<
     }
   },
   autreMotif: (demande) => {
-    if (demande.motif?.includes("autre_motif") && !demande.autreMotif) {
+    if (demande.motif?.includes("autre") && !demande.autreMotif) {
       return "Le champ 'autre motif' est obligatoire";
     }
   },
@@ -291,5 +291,15 @@ export const demandeValidators: Record<
       return "L'établissement de compensation est obligatoire";
     if (!demande.compensationRentreeScolaire)
       return "La rentrée scolaire de compensation est obligatoire";
+  },
+  motifRefus: (demande) => {
+    if (demande.status === "refused" && !demande.motifRefus?.length) {
+      return "Le champ 'motif refus' est obligatoire";
+    }
+  },
+  autreMotifRefus: (demande) => {
+    if (demande.motifRefus?.includes("autre") && !demande.autreMotifRefus) {
+      return "Le champ 'autre motif refus' est obligatoire";
+    }
   },
 };

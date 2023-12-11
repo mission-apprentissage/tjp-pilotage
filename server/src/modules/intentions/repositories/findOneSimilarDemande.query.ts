@@ -1,5 +1,6 @@
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { isDemandeNotDeleted } from "../../utils/isDemandeSelectable";
 
 export const findOneSimilarDemande = ({
   cfd,
@@ -32,5 +33,6 @@ export const findOneSimilarDemande = ({
       return q.where("id", "!=", notId);
     })
     .limit(1)
+    .where(isDemandeNotDeleted)
     .executeTakeFirst()
     .then(cleanNull);

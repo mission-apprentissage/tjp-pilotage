@@ -1,5 +1,6 @@
 "use client";
 
+import { CheckIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
@@ -40,11 +41,11 @@ export const IntentionForm = ({
   const [errors, setErrors] = useState<Record<string, string>>();
 
   const {
-    isLoading: isSubmittingDemande,
+    isLoading: isSubmitting,
     mutateAsync: submitDemande,
-    isSuccess: isDemandeSuccess,
+    isSuccess: isSuccess,
   } = client.ref("[POST]/demande/submit").useMutation({
-    onSuccess: () => push("/intentions/saisie"),
+    onSuccess: (body) => push(`/intentions/saisie?action=${body.status}`),
     //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
@@ -52,21 +53,6 @@ export const IntentionForm = ({
     },
   });
 
-  const {
-    isLoading: isSubmittingDraft,
-    mutateAsync: submitDraft,
-    isSuccess: isDraftSuccess,
-  } = client.ref("[POST]/demande/draft").useMutation({
-    onSuccess: () => push("/intentions/saisie"),
-    //@ts-ignore
-    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-      const errors = e.response?.data.errors;
-      setErrors(errors);
-    },
-  });
-
-  const isSubmitting = isSubmittingDraft || isSubmittingDemande;
-  const isSuccess = isDraftSuccess || isDemandeSuccess;
   const isActionsDisabled = isSuccess || isSubmitting;
 
   const [isFCIL, setIsFCIL] = useState<boolean>(
@@ -101,6 +87,8 @@ export const IntentionForm = ({
       }, 500);
     setStep(2);
   };
+
+  const statusComponentRef = useRef<HTMLDivElement>(null);
 
   return (
     <>
@@ -145,42 +133,44 @@ export const IntentionForm = ({
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
+              statusComponentRef={statusComponentRef}
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
+                formId={formId}
                 disabled={disabled}
                 errors={errors}
                 formMetadata={formMetadata}
                 footerActions={
                   <>
-                    <Box justifyContent={"center"}>
+                    <Box justifyContent={"center"} ref={statusComponentRef}>
                       <Button
-                        isDisabled={disabled || isActionsDisabled}
-                        isLoading={isSubmittingDraft}
-                        variant="secondary"
+                        isDisabled={
+                          disabled ||
+                          isActionsDisabled ||
+                          !form.formState.isDirty
+                        }
+                        isLoading={isSubmitting}
+                        variant="primary"
                         onClick={handleSubmit((values) =>
-                          submitDraft({
-                            body: { demande: { id: formId, ...values } },
+                          submitDemande({
+                            body: {
+                              demande: {
+                                id: formId,
+                                ...values,
+                                status: formId ? values.status : "draft",
+                              },
+                            },
                           })
                         )}
+                        leftIcon={<CheckIcon />}
                       >
-                        Enregistrer le projet de demande
+                        {formId
+                          ? "Sauvegarder les modifications"
+                          : "Enregistrer le projet de demande"}
                       </Button>
                       <Text fontSize={"xs"} mt="1" align={"center"}>
                         (Phase d'enregistrement du 02 au 16 octobre)
-                      </Text>
-                    </Box>
-                    <Box justifyContent={"center"}>
-                      <Button
-                        isDisabled={disabled || isActionsDisabled}
-                        isLoading={isSubmittingDemande}
-                        variant="primary"
-                        type="submit"
-                      >
-                        Valider la demande définitive
-                      </Button>
-                      <Text fontSize={"xs"} mt="1" align={"center"}>
-                        Pour soumission au vote du Conseil Régional
                       </Text>
                     </Box>
                   </>

@@ -3,7 +3,7 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { findDemandes } from "./findDemandes.query";
+import { findDemandes } from "./getDemandes.query";
 import { getDemandesSchema } from "./getDemandes.schema";
 
 export const getDemandesRoute = (server: Server) => {
@@ -15,11 +15,11 @@ export const getDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { order, orderBy, ...filters } = request.query;
+        const { order, orderBy, search, ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
-
         const result = await findDemandes({
           ...filters,
+          search,
           user: request.user,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
