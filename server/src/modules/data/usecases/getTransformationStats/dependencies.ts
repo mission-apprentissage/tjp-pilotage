@@ -4,7 +4,6 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
-import { Scope } from "./getTransformationsStats.schema";
 
 const selectPlacesTransformees = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
@@ -68,6 +67,22 @@ const selectNbDemandes = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
 ) => eb.fn.count<number>("demande.id");
 
+const base = kdb
+  .selectFrom("demande")
+  .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+  .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+  .leftJoin(
+    "academie",
+    "academie.codeAcademie",
+    "dataEtablissement.codeAcademie"
+  )
+  .leftJoin(
+    "departement",
+    "departement.codeDepartement",
+    "dataEtablissement.codeDepartement"
+  )
+  .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd");
+
 export const getDataScoped = async ({
   status,
   rentreeScolaire = "2024",
@@ -81,23 +96,9 @@ export const getDataScoped = async ({
   codeNiveauDiplome?: string[];
   CPC?: string[];
   filiere?: string[];
-  scope: Scope;
+  scope: "national" | "region" | "departement" | "academie";
 }) => {
-  return await kdb
-    .selectFrom("demande")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+  return await base
     .select((eb) => [
       selectNbDemandes(eb).as("countDemande"),
       selectPlacesTransformees(eb).as("transformes"),
@@ -108,31 +109,18 @@ export const getDataScoped = async ({
       selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       scope === "national"
-        ? sql<string>`'national'`.as("code")
+        ? sql`''`.as("code")
         : eb
             .ref(
               (
                 {
-                  regions: "dataEtablissement.codeRegion",
-                  academies: "dataEtablissement.codeAcademie",
-                  departements: "dataEtablissement.codeDepartement",
+                  region: "region.codeRegion",
+                  academie: "academie.codeAcademie",
+                  departement: "departement.codeDepartement",
                 } as const
               )[scope]
             )
             .as("code"),
-      scope === "national"
-        ? sql<string>`'National'`.as("libelle")
-        : eb
-            .ref(
-              (
-                {
-                  regions: "region.libelleRegion",
-                  academies: "academie.libelle",
-                  departements: "departement.libelle",
-                } as const
-              )[scope]
-            )
-            .as("libelle"),
     ])
     .$call((eb) => {
       if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
@@ -187,8 +175,239 @@ export const getDataScoped = async ({
       }
     })
     .where(isDemandeNotDeletedOrRefused)
+    .$call((q) => {
+      switch (scope) {
+        case "national":
+          return q;
+        case "region":
+          return q.groupBy([
+            "dataEtablissement.codeRegion",
+            "region.libelleRegion",
+          ]);
+        case "academie":
+          return q.groupBy([
+            "dataEtablissement.codeAcademie",
+            "academie.libelle",
+          ]);
+        case "departement":
+          return q.groupBy([
+            "dataEtablissement.codeDepartement",
+            "departement.libelle",
+          ]);
+      }
+    })
+    .executeTakeFirstOrThrow()
+    .then(cleanNull);
+};
+
+const getTransformationStatsQuery = async ({
+  status,
+  rentreeScolaire = "2024",
+  codeNiveauDiplome,
+  CPCSecteur,
+  filiere,
+}: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPCSecteur?: string[];
+  filiere?: string[];
+}) => {
+  const national = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .executeTakeFirstOrThrow()
+    .then(cleanNull);
+
+  const region = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeRegion as code",
+      "region.libelleRegion",
+      "region.libelleRegion as libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeRegion", "region.libelleRegion"])
     .execute()
     .then(cleanNull);
+
+  const academie = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeAcademie",
+      "academie.libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeAcademie", "academie.libelle"])
+    .execute()
+    .then(cleanNull);
+
+  const departement = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeDepartement",
+      "departement.libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeDepartement", "departement.libelle"])
+    .execute()
+    .then(cleanNull);
+  console.log(national, region, academie, departement);
+  return { national, region, academie, departement };
 };
 
 const getFiltersQuery = async ({
@@ -332,6 +551,7 @@ const getFiltersQuery = async ({
 };
 
 export const dependencies = {
+  getTransformationStatsQuery,
   getFiltersQuery,
   getDataScoped,
 };
