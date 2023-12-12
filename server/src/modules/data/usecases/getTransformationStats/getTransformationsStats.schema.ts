@@ -25,43 +25,30 @@ const ScopedStatsTransfoSchema = z.object({
   effectif: z.coerce.number(),
 });
 
-const StatsTransfoSchema = z.object({
-  national: ScopedStatsTransfoSchema,
-  regions: z.record(
-    z.string(),
-    ScopedStatsTransfoSchema.merge(
-      z.object({
-        codeRegion: z.string().optional(),
-      })
-    )
-  ),
-  academies: z.record(
-    z.string(),
-    ScopedStatsTransfoSchema.merge(
-      z.object({
-        codeAcademie: z.string().optional(),
-      })
-    )
-  ),
-  departements: z.record(
-    z.string(),
-    ScopedStatsTransfoSchema.merge(
-      z.object({
-        codeDepartement: z.string().optional(),
-      })
-    )
-  ),
+const StatsTransfoSchema = z.record(
+  z.string(),
+  ScopedStatsTransfoSchema.extend({
+    code: z.string().optional(),
+    libelle: z.string().optional(),
+  })
+);
+
+const QuerySchema = z.object({
+  rentreeScolaire: z.string().optional(),
+  codeNiveauDiplome: z.array(z.string()).optional(),
+  CPC: z.array(z.string()).optional(),
+  filiere: z.array(z.string()).optional(),
+  order: z.enum(["asc", "desc"]).optional(),
+  orderBy: ScopedStatsTransfoSchema.keyof().optional(),
+  scope: z
+    .enum(["national", "region", "academie", "departement"])
+    .default("national"),
 });
 
+export type QuerySchema = z.infer<typeof QuerySchema>;
+
 export const getTransformationStatsSchema = {
-  querystring: z.object({
-    rentreeScolaire: z.string().optional(),
-    codeNiveauDiplome: z.array(z.string()).optional(),
-    CPC: z.array(z.string()).optional(),
-    filiere: z.array(z.string()).optional(),
-    order: z.enum(["asc", "desc"]).optional(),
-    orderBy: ScopedStatsTransfoSchema.keyof().optional(),
-  }),
+  querystring: QuerySchema,
   response: {
     200: z.object({
       submitted: StatsTransfoSchema,

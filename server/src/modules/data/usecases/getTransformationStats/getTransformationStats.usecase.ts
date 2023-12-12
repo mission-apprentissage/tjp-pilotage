@@ -1,12 +1,11 @@
 import _ from "lodash";
 
 import { dependencies } from "./dependencies";
+import { QuerySchema } from "./getTransformationsStats.schema";
 
-type DataTerritoire = Awaited<
-  ReturnType<typeof dependencies.getTransformationStatsQuery>
->["region" | "academie" | "departement"][number];
+type DataScoped = Awaited<ReturnType<typeof dependencies.getDataScoped>>[0];
 
-const formatTerritoire = (item: DataTerritoire) => ({
+const formatDataScoped = (item: DataScoped) => ({
   ...item,
   countDemande: item.countDemande || 0,
   placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
@@ -42,168 +41,67 @@ const formatTerritoire = (item: DataTerritoire) => ({
 });
 
 const formatResult = (
-  result: Awaited<ReturnType<typeof dependencies.getTransformationStatsQuery>>,
-  orderBy?: { column: string; order: "asc" | "desc" }
+  result: Awaited<ReturnType<typeof dependencies.getDataScoped>>,
+  order: "asc" | "desc" = "asc",
+  orderBy?: string
 ) => {
-  return {
-    national: {
-      ...result?.national,
-      countDemande: result?.national.countDemande || 0,
-      placesOuvertesScolaire: result?.national.placesOuvertesScolaire || 0,
-      placesOuvertesApprentissage:
-        result?.national.placesOuvertesApprentissage || 0,
-      placesOuvertes:
-        result?.national.placesOuvertesScolaire +
-          result?.national.placesOuvertesApprentissage || 0,
-      placesFermeesScolaire: result?.national.placesFermeesScolaire || 0,
-      placesFermeesApprentissage:
-        result?.national.placesFermeesApprentissage || 0,
-      placesFermees:
-        result?.national.placesFermeesScolaire +
-          result?.national.placesFermeesApprentissage || 0,
-      ratioFermeture:
-        Math.round(
-          ((result?.national.placesFermeesScolaire +
-            result?.national.placesFermeesApprentissage) /
-            (result?.national.placesOuvertesScolaire +
-              result?.national.placesOuvertesApprentissage +
-              result?.national.placesFermeesScolaire +
-              result?.national.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
-      ratioOuverture:
-        Math.round(
-          ((result?.national.placesOuvertesScolaire +
-            result?.national.placesOuvertesApprentissage) /
-            (result?.national.placesOuvertesScolaire +
-              result?.national.placesOuvertesApprentissage +
-              result?.national.placesFermeesScolaire +
-              result?.national.placesFermeesApprentissage) || 0) * 10000
-        ) / 100,
-      differenceCapaciteScolaire:
-        result?.national.differenceCapaciteScolaire || 0,
-      differenceCapaciteApprentissage:
-        result?.national.differenceCapaciteApprentissage || 0,
-      placesTransformees:
-        result?.national.differenceCapaciteScolaire +
-          result?.national.differenceCapaciteApprentissage || 0,
+  return _.chain(result)
+    .map((item) => ({
+      ...formatDataScoped(item),
+      code: item.code,
+      key: `_${item.code}`,
       tauxTransformation:
         Math.round(
-          (result?.national.transformes / effectifNational || 0) * 10000
+          (item.transformes / effectifsRegions[item.code ?? ""] || 0) * 10000
         ) / 100,
-      effectif: effectifNational || 0,
-    },
-    regions: _.chain(result.region)
-      .groupBy((item) => item.codeRegion)
-      .mapValues((items) => ({
-        ...formatTerritoire(items[0]),
-        code: `_${items[0].codeRegion}`,
-        tauxTransformation:
-          Math.round(
-            (items[0].transformes /
-              effectifsRegions[items[0].codeRegion ?? ""] || 0) * 10000
-          ) / 100,
-        effectif: effectifsRegions[items[0].codeRegion ?? ""] || 0,
-      }))
-      .orderBy(
-        (item) => {
-          if (orderBy && orderBy.column)
-            return item[orderBy.column as keyof typeof item];
-          return item.libelle;
-        },
-        orderBy?.order ?? "asc"
-      )
-      .keyBy("code")
-      .value(),
-    academies: _.chain(result.academie)
-      .groupBy((item) => item.codeAcademie)
-      .mapValues((items) => ({
-        ...formatTerritoire(items[0]),
-        code: `_${items[0].codeAcademie}`,
-        tauxTransformation:
-          Math.round(
-            (items[0].transformes /
-              effectifsAcademie[items[0].codeAcademie ?? ""] || 0) * 10000
-          ) / 100,
-        effectif: effectifsAcademie[items[0].codeAcademie ?? ""] || 0,
-      }))
-      .orderBy(
-        (item) => {
-          if (orderBy && orderBy.column)
-            return item[orderBy.column as keyof typeof item];
-          return item.libelle;
-        },
-        orderBy?.order ?? "asc"
-      )
-      .keyBy("code")
-      .value(),
-    departements: _.chain(result.departement)
-      .groupBy((item) => item.codeDepartement)
-      .mapValues((items) => ({
-        ...formatTerritoire(items[0]),
-        code: `_${items[0].codeDepartement}`,
-        tauxTransformation:
-          Math.round(
-            (items[0].transformes /
-              effectifsDepartements[items[0].codeDepartement ?? ""] || 0) *
-              10000
-          ) / 100,
-        effectif: effectifsDepartements[items[0].codeDepartement ?? ""] || 0,
-      }))
-      .orderBy(
-        (item) => {
-          if (orderBy && orderBy.column)
-            return item[orderBy.column as keyof typeof item];
-          return item.libelle;
-        },
-        orderBy?.order ?? "asc"
-      )
-      .keyBy("code")
-      .value(),
-  };
+      effectif: effectifsRegions[item.code ?? ""] || 0,
+    }))
+    .orderBy((item) => {
+      if (orderBy) return item[orderBy as keyof typeof item];
+      return item.libelle;
+    }, order)
+    .keyBy("key")
+    .value();
 };
 
 const getTransformationStatsFactory =
   (
     deps = {
-      getTransformationStatsQuery: dependencies.getTransformationStatsQuery,
       getFiltersQuery: dependencies.getFiltersQuery,
       getDataScoped: dependencies.getDataScoped,
     }
   ) =>
-  async (activeFilters: {
-    rentreeScolaire?: string;
-    codeNiveauDiplome?: string[];
-    CPC?: string[];
-    orderBy?: { column: string; order: "asc" | "desc" };
-  }) => {
-    const resultNational = await deps.getDataScoped({ scope });
-    const resultDraft = await deps
-      .getTransformationStatsQuery({
-        ...activeFilters,
-        status: "draft",
-      })
-      .then((result) => formatResult(result, activeFilters.orderBy));
-
-    const resultSubmitted = await deps
-      .getTransformationStatsQuery({
-        ...activeFilters,
-        status: "submitted",
-      })
-      .then((result) => formatResult(result, activeFilters.orderBy));
-
-    const resultAll = await deps
-      .getTransformationStatsQuery({
-        ...activeFilters,
-      })
-      .then((result) => formatResult(result, activeFilters.orderBy));
+  async (activeFilters: QuerySchema) => {
+    const [draft, submitted, all] = (
+      await Promise.all([
+        deps.getDataScoped({
+          ...activeFilters,
+          status: "draft",
+          scope: activeFilters.scope,
+        }),
+        deps.getDataScoped({
+          ...activeFilters,
+          status: "submitted",
+          scope: activeFilters.scope,
+        }),
+        deps.getDataScoped({
+          ...activeFilters,
+          scope: activeFilters.scope,
+        }),
+      ])
+    ).map((result) =>
+      formatResult(result, activeFilters.order, activeFilters.orderBy)
+    );
 
     const filters = await deps.getFiltersQuery(activeFilters);
 
+    console.log({ all });
+
     return {
-      submitted: resultSubmitted,
-      draft: resultDraft,
-      all: resultAll,
-      filters: filters,
+      submitted,
+      draft,
+      all,
+      filters,
     };
   };
 
