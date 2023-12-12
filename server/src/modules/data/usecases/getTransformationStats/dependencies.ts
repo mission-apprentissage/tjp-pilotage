@@ -1,218 +1,126 @@
-import { AnyColumnWithTable, ExpressionBuilder, sql } from "kysely";
-import { jsonBuildObject } from "kysely/helpers/postgres";
+import { ExpressionBuilder, sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 
-const selectPlacesTransformees =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .sum<number>(
-        sql`ABS(
+const selectPlacesTransformees = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  eb.fn.sum<number>(
+    sql`ABS(
         ${eb.ref("demande.capaciteScolaire")}
         -${eb.ref("demande.capaciteScolaireActuelle")})
         +GREATEST(${eb.ref("demande.capaciteApprentissage")}
         -${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`
-      )
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
-
-const selectDifferenceScolaire =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    sql<number>`
-${eb.fn
-  .sum("demande.capaciteScolaire")
-  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
+  );
+const selectDifferenceScolaire = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  sql<number>`
+${eb.fn.sum("demande.capaciteScolaire")}
 -
-${eb.fn
-  .sum("demande.capaciteScolaireActuelle")
-  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
+${eb.fn.sum("demande.capaciteScolaireActuelle")}`;
 
-const selectDifferenceApprentissage =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    sql<number>`
-${eb.fn
-  .sum("demande.capaciteApprentissage")
-  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}
+const selectDifferenceApprentissage = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  sql<number>`
+${eb.fn.sum("demande.capaciteApprentissage")}
 -
-${eb.fn
-  .sum("demande.capaciteApprentissageActuelle")
-  .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob))}`;
+${eb.fn.sum("demande.capaciteApprentissageActuelle")}`;
 
-const selectPlacesOuvertesScolaire =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .sum<number>(
-        sql`GREATEST(${eb.ref("demande.capaciteScolaire")}
+const selectPlacesOuvertesScolaire = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  eb.fn.sum<number>(
+    sql`GREATEST(${eb.ref("demande.capaciteScolaire")}
         - ${eb.ref("demande.capaciteScolaireActuelle")}, 0)`
-      )
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+  );
 
-const selectPlacesFermeesScolaire =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .sum<number>(
-        sql`GREATEST(${eb.ref("demande.capaciteScolaireActuelle")}
+const selectPlacesFermeesScolaire = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  eb.fn.sum<number>(
+    sql`GREATEST(${eb.ref("demande.capaciteScolaireActuelle")}
       - ${eb.ref("demande.capaciteScolaire")}, 0)`
-      )
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+  );
 
-const selectPlacesOuvertesApprentissage =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .sum<number>(
-        sql`GREATEST(${eb.ref("demande.capaciteApprentissage")}
+const selectPlacesOuvertesApprentissage = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  eb.fn.sum<number>(
+    sql`GREATEST(${eb.ref("demande.capaciteApprentissage")}
       - ${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`
-      )
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+  );
 
-const selectPlacesFermeesApprentissage =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .sum<number>(
-        sql`GREATEST(${eb.ref("demande.capaciteApprentissageActuelle")}
+const selectPlacesFermeesApprentissage = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) =>
+  eb.fn.sum<number>(
+    sql`GREATEST(${eb.ref("demande.capaciteApprentissageActuelle")}
     - ${eb.ref("demande.capaciteApprentissage")}, 0)`
-      )
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+  );
 
-const selectNbDemandes =
-  (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
-  (partitionBy?: AnyColumnWithTable<DB, "dataEtablissement">) =>
-    eb.fn
-      .count<number>("demande.id")
-      .over((ob) => (partitionBy ? ob.partitionBy(partitionBy) : ob));
+const selectNbDemandes = (
+  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+) => eb.fn.count<number>("demande.id");
 
-const getTransformationStatsQuery = ({
+const base = kdb
+  .selectFrom("demande")
+  .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+  .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+  .leftJoin(
+    "academie",
+    "academie.codeAcademie",
+    "dataEtablissement.codeAcademie"
+  )
+  .leftJoin(
+    "departement",
+    "departement.codeDepartement",
+    "dataEtablissement.codeDepartement"
+  )
+  .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd");
+
+export const getDataScoped = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
   CPC,
   filiere,
+  scope,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
   filiere?: string[];
-}) =>
-  kdb
-    .selectFrom("demande")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .distinctOn(["dataEtablissement.codeDepartement"])
+  scope: "national" | "region" | "departement" | "academie";
+}) => {
+  return await base
     .select((eb) => [
-      selectNbDemandes(eb)().as("nbDemandesNational"),
-      selectPlacesTransformees(eb)().as("transformeNational"),
-      selectDifferenceScolaire(eb)().as("differenceScolaireNational"),
-      jsonBuildObject({
-        countDemande: selectNbDemandes(eb)(),
-        transformes: selectPlacesTransformees(eb)(),
-        differenceCapaciteScolaire: selectDifferenceScolaire(eb)(),
-        differenceCapaciteApprentissage: selectDifferenceApprentissage(eb)(),
-        placesOuvertesScolaire: selectPlacesOuvertesScolaire(eb)(),
-        placesFermeesScolaire: selectPlacesFermeesScolaire(eb)(),
-        placesOuvertesApprentissage: selectPlacesOuvertesApprentissage(eb)(),
-        placesFermeesApprentissage: selectPlacesFermeesApprentissage(eb)(),
-      }).as("national"),
-      jsonBuildObject({
-        countDemande: selectNbDemandes(eb)("dataEtablissement.codeRegion"),
-        transforme: selectPlacesTransformees(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        differenceCapaciteScolaire: selectDifferenceScolaire(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        differenceCapaciteApprentissage: selectDifferenceApprentissage(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        placesOuvertesScolaire: selectPlacesOuvertesScolaire(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        placesFermeesScolaire: selectPlacesFermeesScolaire(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        placesOuvertesApprentissage: selectPlacesOuvertesApprentissage(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        placesFermeesApprentissage: selectPlacesFermeesApprentissage(eb)(
-          "dataEtablissement.codeRegion"
-        ),
-        codeRegion: eb.ref("dataEtablissement.codeRegion"),
-        libelle: eb.ref("region.libelleRegion"),
-      }).as("region"),
-      jsonBuildObject({
-        countDemande: selectNbDemandes(eb)("dataEtablissement.codeAcademie"),
-        transforme: selectPlacesTransformees(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        differenceCapaciteScolaire: selectDifferenceScolaire(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        differenceCapaciteApprentissage: selectDifferenceApprentissage(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        placesOuvertesScolaire: selectPlacesOuvertesScolaire(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        placesFermeesScolaire: selectPlacesFermeesScolaire(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        placesOuvertesApprentissage: selectPlacesOuvertesApprentissage(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        placesFermeesApprentissage: selectPlacesFermeesApprentissage(eb)(
-          "dataEtablissement.codeAcademie"
-        ),
-        codeAcademie: eb.ref("academie.codeAcademie"),
-        libelle: eb.ref("academie.libelle"),
-      }).as("academie"),
-      jsonBuildObject({
-        countDemande: selectNbDemandes(eb)("dataEtablissement.codeDepartement"),
-        transforme: selectPlacesTransformees(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        differenceCapaciteScolaire: selectDifferenceScolaire(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        differenceCapaciteApprentissage: selectDifferenceApprentissage(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        placesOuvertesScolaire: selectPlacesOuvertesScolaire(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        placesFermeesScolaire: selectPlacesFermeesScolaire(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        placesOuvertesApprentissage: selectPlacesOuvertesApprentissage(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        placesFermeesApprentissage: selectPlacesFermeesApprentissage(eb)(
-          "dataEtablissement.codeDepartement"
-        ),
-        codeDepartement: eb.ref("dataEtablissement.codeDepartement"),
-        libelle: eb.ref("departement.libelle"),
-        libelleAcademie: eb.ref("academie.libelle"),
-        libelleRegion: eb.ref("region.libelleRegion"),
-      }).as("departement"),
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      scope === "national"
+        ? sql`''`.as("code")
+        : eb
+            .ref(
+              (
+                {
+                  region: "region.codeRegion",
+                  academie: "academie.codeAcademie",
+                  departement: "departement.codeDepartement",
+                } as const
+              )[scope]
+            )
+            .as("code"),
     ])
     .$call((eb) => {
       if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
@@ -245,9 +153,244 @@ const getTransformationStatsQuery = ({
       if (!status) return q;
       return q.where("demande.status", "=", status);
     })
+<<<<<<< Updated upstream
     .where(isDemandeNotDeletedOrRefused)
+=======
+    .$call((q) => {
+      switch (scope) {
+        case "national":
+          return q;
+        case "region":
+          return q.groupBy([
+            "dataEtablissement.codeRegion",
+            "region.libelleRegion",
+          ]);
+        case "academie":
+          return q.groupBy([
+            "dataEtablissement.codeAcademie",
+            "academie.libelle",
+          ]);
+        case "departement":
+          return q.groupBy([
+            "dataEtablissement.codeDepartement",
+            "departement.libelle",
+          ]);
+      }
+    })
+    .executeTakeFirstOrThrow()
+    .then(cleanNull);
+};
+
+const getTransformationStatsQuery = async ({
+  status,
+  rentreeScolaire = "2024",
+  codeNiveauDiplome,
+  CPCSecteur,
+  filiere,
+}: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPCSecteur?: string[];
+  filiere?: string[];
+}) => {
+  const national = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .executeTakeFirstOrThrow()
+    .then(cleanNull);
+
+  const region = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeRegion as code",
+      "region.libelleRegion",
+      "region.libelleRegion as libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeRegion", "region.libelleRegion"])
+>>>>>>> Stashed changes
     .execute()
     .then(cleanNull);
+
+  const academie = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeAcademie",
+      "academie.libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeAcademie", "academie.libelle"])
+    .execute()
+    .then(cleanNull);
+
+  const departement = await base
+    .select((eb) => [
+      selectNbDemandes(eb).as("countDemande"),
+      selectPlacesTransformees(eb).as("transformes"),
+      selectDifferenceScolaire(eb).as("differenceCapaciteScolaire"),
+      selectDifferenceApprentissage(eb).as("differenceCapaciteApprentissage"),
+      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
+      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
+      "dataEtablissement.codeDepartement",
+      "departement.libelle",
+    ])
+    .$call((eb) => {
+      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (CPCSecteur)
+        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!status) return q;
+      return q.where("demande.status", "=", status);
+    })
+    .groupBy(["dataEtablissement.codeDepartement", "departement.libelle"])
+    .execute()
+    .then(cleanNull);
+  console.log(national, region, academie, departement);
+  return { national, region, academie, departement };
+};
 
 const getFiltersQuery = async ({
   status,
@@ -392,4 +535,5 @@ const getFiltersQuery = async ({
 export const dependencies = {
   getTransformationStatsQuery,
   getFiltersQuery,
+  getDataScoped,
 };
