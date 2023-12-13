@@ -11,11 +11,16 @@ import {
   Tr,
   useToken,
 } from "@chakra-ui/react";
-import { Fragment } from "react";
 
-import { Legend } from "../../../../../components/Legend";
-import { OrderIcon } from "../../../../../components/OrderIcon";
-import { Order, PilotageTransformationStats } from "../types";
+import { client } from "@/api.client";
+import { Legend } from "@/components/Legend";
+import { OrderIcon } from "@/components/OrderIcon";
+import {
+  Filters,
+  Order,
+  PilotageTauxTransformationStats,
+  SelectedScope,
+} from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -48,18 +53,22 @@ const Loader = () => (
   </TableContainer>
 );
 
-export const VueTauxTransformationSection = ({
-  data,
+export const ScopedTable = ({
   isLoading,
-  codeRegion,
-  order,
+  title,
+  data,
   handleOrder,
+  order,
+  scopeColumnTitle,
+  scope,
 }: {
-  data?: PilotageTransformationStats;
   isLoading: boolean;
-  codeRegion?: string;
-  order: Order;
+  title: string;
+  scopeColumnTitle: string;
+  data: PilotageTauxTransformationStats | undefined;
   handleOrder: (column: Order["orderBy"]) => void;
+  order: Partial<Order>;
+  scope: SelectedScope;
 }) => {
   const customPalette = [
     useToken("colors", "pilotage.red !important"),
@@ -95,7 +104,7 @@ export const VueTauxTransformationSection = ({
         color={"bluefrance.113"}
         mb="5"
       >
-        Nombre de places transformées et taux de transformation régional
+        {title}
       </Text>
       {isLoading ? (
         <Loader />
@@ -117,7 +126,7 @@ export const VueTauxTransformationSection = ({
                   onClick={() => handleOrder("libelle")}
                 >
                   <OrderIcon {...order} column="libelle" />
-                  Région
+                  {scopeColumnTitle}
                 </Th>
                 <Th
                   isNumeric
@@ -155,69 +164,121 @@ export const VueTauxTransformationSection = ({
               </Tr>
             </Thead>
             <Tbody>
-              <Fragment>
-                {Object.values(data?.all?.regions ?? []).map((region) => {
-                  const trBgColor =
-                    region.codeRegion === codeRegion
-                      ? "blueecume.400_hover !important"
-                      : "";
+              {Object.values(data ?? []).map((territoire) => {
+                const trBgColor =
+                  territoire.code === scope.value
+                    ? "blueecume.400_hover !important"
+                    : "";
 
-                  const tdBgColor =
-                    region.codeRegion === codeRegion
-                      ? "inherit !important"
-                      : "";
+                const tdBgColor =
+                  territoire.code === scope.value ? "inherit !important" : "";
 
-                  const getTdBgColor = (indicateur: number) => {
-                    if (indicateur <= 1) return customPalette[0];
-                    if (indicateur <= 2) return customPalette[1];
-                    if (indicateur <= 4) return customPalette[2];
-                    if (indicateur <= 5) return customPalette[3];
-                    if (indicateur <= 6) return customPalette[4];
-                    if (indicateur > 6) return customPalette[5];
-                  };
+                const getTdBgColor = (indicateur: number) => {
+                  if (indicateur <= 1) return customPalette[0];
+                  if (indicateur <= 2) return customPalette[1];
+                  if (indicateur <= 4) return customPalette[2];
+                  if (indicateur <= 5) return customPalette[3];
+                  if (indicateur <= 6) return customPalette[4];
+                  if (indicateur > 6) return customPalette[5];
+                };
 
-                  const trColor =
-                    region.codeRegion === codeRegion ? "white" : "inherit";
+                const trColor =
+                  territoire.code === scope.value ? "white" : "inherit";
 
-                  const color =
-                    region.codeRegion === codeRegion
-                      ? "inherit"
-                      : "bluefrance.113";
+                const color =
+                  territoire.code === scope.value
+                    ? "inherit"
+                    : "bluefrance.113";
 
-                  return (
-                    <Fragment key={`${region.codeRegion}_${region.libelle}`}>
-                      <Tr
-                        backgroundColor={trBgColor}
-                        color={trColor}
-                        fontWeight="700"
-                      >
-                        <Td backgroundColor={tdBgColor} color={color}>
-                          {region.libelle}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.placesTransformees}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.effectif}
-                        </Td>
-                        <Td
-                          isNumeric
-                          backgroundColor={getTdBgColor(
-                            region.tauxTransformation
-                          )}
-                        >
-                          {region.tauxTransformation}%
-                        </Td>
-                      </Tr>
-                    </Fragment>
-                  );
-                })}
-              </Fragment>
+                return (
+                  <Tr
+                    backgroundColor={trBgColor}
+                    color={trColor}
+                    fontWeight="700"
+                    key={`${territoire.code}_${territoire.libelle}`}
+                  >
+                    <Td backgroundColor={tdBgColor} color={color}>
+                      {territoire.libelle}
+                    </Td>
+                    <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                      {territoire.placesTransformees}
+                    </Td>
+                    <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                      {territoire.effectif}
+                    </Td>
+                    <Td
+                      isNumeric
+                      backgroundColor={getTdBgColor(
+                        territoire.tauxTransformation
+                      )}
+                    >
+                      {territoire.tauxTransformation}%
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
           <Legend elements={legendElements} />
         </TableContainer>
       )}
     </Flex>
+  );
+};
+
+export const VueTauxTransformationSection = ({
+  order,
+  handleOrder,
+  filters,
+  scope,
+}: {
+  handleOrder: (column: Order["orderBy"]) => void;
+  filters: Partial<Filters>;
+  order: Partial<Order>;
+  scope: SelectedScope;
+}) => {
+  const { data, isLoading } = client
+    .ref("[GET]/pilotage-transformation/get-scoped-taux-transformations")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          scope: scope.type,
+        },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
+
+  return (
+    <ScopedTable
+      isLoading={isLoading}
+      data={data}
+      title={
+        {
+          national:
+            "Nombre de places transformées et taux de transformation régional",
+          regions:
+            "Nombre de places transformées et taux de transformation régional",
+          academies:
+            "Nombre de places transformées et taux de transformation académique",
+          departements:
+            "Nombre de places transformées et taux de transformation départemental",
+        }[scope.type]
+      }
+      order={order}
+      handleOrder={handleOrder}
+      scope={scope}
+      scopeColumnTitle={
+        {
+          national: "Région",
+          regions: "Région",
+          academies: "Académie",
+          departements: "Département",
+        }[scope.type]
+      }
+    />
   );
 };

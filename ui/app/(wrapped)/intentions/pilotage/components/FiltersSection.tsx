@@ -3,30 +3,26 @@ import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
 import { Multiselect } from "../../../../../components/Multiselect";
 import {
   Filters,
-  PilotageTransformationStats,
-  TerritoiresFilters,
+  PilotageTransformationStatsByScope,
+  SelectedScope,
 } from "../types";
 
 export const FiltersSection = ({
-  activeTerritoiresFilters,
-  handleTerritoiresFilters,
   activeFilters,
   handleFilters,
   filterTracker,
   isLoading,
   data,
+  scope,
+  setScope,
 }: {
-  activeTerritoiresFilters: TerritoiresFilters;
-  handleTerritoiresFilters: (
-    type: keyof TerritoiresFilters,
-    value: TerritoiresFilters[keyof TerritoiresFilters],
-    label?: string
-  ) => void;
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
   filterTracker: (filterName: keyof Filters) => () => void;
   isLoading: boolean;
-  data?: PilotageTransformationStats;
+  data?: PilotageTransformationStatsByScope;
+  scope: SelectedScope;
+  setScope: (scope: SelectedScope) => void;
 }) => {
   return (
     <>
@@ -58,18 +54,10 @@ export const FiltersSection = ({
                 width={[null, null, "72"]}
                 size="md"
                 variant="newInput"
-                value={activeTerritoiresFilters.regions ?? ""}
-                borderBottomColor={
-                  activeTerritoiresFilters.regions != undefined
-                    ? "info.525"
-                    : ""
-                }
+                value={scope.type === "regions" ? scope.value : ""}
+                borderBottomColor={scope.type === "regions" ? "info.525" : ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters(
-                    "regions",
-                    e.target.value,
-                    e.target[e.target.selectedIndex].textContent ?? ""
-                  )
+                  setScope({ type: "regions", value: e.target.value })
                 }
                 placeholder="TOUTES"
               >
@@ -86,18 +74,10 @@ export const FiltersSection = ({
                 width={"72"}
                 size="md"
                 variant="newInput"
-                value={activeTerritoiresFilters.academies ?? ""}
-                borderBottomColor={
-                  activeTerritoiresFilters.academies != undefined
-                    ? "info.525"
-                    : ""
-                }
+                value={scope.type === "academies" ? scope.value : ""}
+                borderBottomColor={scope.type === "academies" ? "info.525" : ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters(
-                    "academies",
-                    e.target.value,
-                    e.target[e.target.selectedIndex].textContent ?? ""
-                  )
+                  setScope({ type: "academies", value: e.target.value })
                 }
                 placeholder="TOUTES"
               >
@@ -114,18 +94,10 @@ export const FiltersSection = ({
                 width={"72"}
                 size="md"
                 variant="newInput"
-                value={activeTerritoiresFilters.departements ?? ""}
-                borderBottomColor={
-                  activeTerritoiresFilters.departements != undefined
-                    ? "info.525"
-                    : ""
-                }
+                value={scope.type === "departements" ? scope.value : ""}
+                borderBottomColor={scope.type === "academies" ? "info.525" : ""}
                 onChange={(e) =>
-                  handleTerritoiresFilters(
-                    "departements",
-                    e.target.value,
-                    e.target[e.target.selectedIndex].textContent ?? ""
-                  )
+                  setScope({ type: "departements", value: e.target.value })
                 }
                 placeholder="TOUS"
               >
@@ -153,11 +125,11 @@ export const FiltersSection = ({
                 onChange={(selected) =>
                   handleFilters("codeNiveauDiplome", selected)
                 }
-                options={data?.filters.diplomes}
+                options={data?.filters?.diplomes ?? []}
                 value={activeFilters.codeNiveauDiplome ?? []}
-                disabled={data?.filters.diplomes.length === 0}
+                disabled={!data?.filters?.diplomes?.length}
               >
-                TOUS ({data?.filters.diplomes.length ?? 0})
+                TOUS ({data?.filters?.diplomes?.length ?? 0})
               </Multiselect>
             </Box>
             <Box justifyContent={"start"}>
@@ -168,12 +140,12 @@ export const FiltersSection = ({
                 size="md"
                 variant={"newInput"}
                 onChange={(selected) => handleFilters("CPC", selected)}
-                options={data?.filters.CPCs}
+                options={data?.filters?.CPCs}
                 value={activeFilters.CPC ?? []}
-                disabled={data?.filters.CPCs.length === 0}
+                disabled={!data?.filters?.CPCs?.length}
                 hasDefaultValue={false}
               >
-                TOUS ({data?.filters.CPCs.length ?? 0})
+                TOUS ({data?.filters?.CPCs?.length ?? 0})
               </Multiselect>
             </Box>
             <Box justifyContent={"start"}>
@@ -184,12 +156,12 @@ export const FiltersSection = ({
                 size="md"
                 variant={"newInput"}
                 onChange={(selected) => handleFilters("filiere", selected)}
-                options={data?.filters.filieres}
+                options={data?.filters?.filieres ?? []}
                 value={activeFilters.filiere ?? []}
-                disabled={data?.filters.filieres.length === 0}
+                disabled={!data?.filters?.filieres?.length}
                 hasDefaultValue={false}
               >
-                TOUS ({data?.filters.filieres.length ?? 0})
+                TOUS ({data?.filters?.filieres?.length ?? 0})
               </Multiselect>
             </Box>
           </Flex>

@@ -1,3 +1,4 @@
+import { client } from "@/api.client";
 import {
   Box,
   Flex,
@@ -8,27 +9,11 @@ import {
   Text,
   useToken,
 } from "@chakra-ui/react";
-import { useState } from "react";
-
+import { useCallback, useState } from "react";
 import { CartoGraph } from "../../../../../components/CartoGraph";
-import {
-  IndicateurType,
-  PilotageTransformationStats,
-  Scope,
-  TerritoiresFilters,
-} from "../types";
+import { Filters, IndicateurType, Order, Scope, SelectedScope } from "../types";
 
-export const CartoSection = ({
-  data,
-  isLoading,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
-  territoiresFilters,
-  handleTerritoiresFilters,
-}: {
-  data?: PilotageTransformationStats;
-  isLoading: boolean;
+type Props = {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: {
@@ -36,13 +21,26 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
-  territoiresFilters: Partial<TerritoiresFilters>;
-  handleTerritoiresFilters: (
-    type: keyof TerritoiresFilters,
-    value: TerritoiresFilters[keyof TerritoiresFilters]
-  ) => void;
-}) => {
-  const [cartoScope, setCartoScope] = useState<Scope>("regions");
+  filters: Partial<Filters>;
+  resetScope: VoidFunction;
+  order: Partial<Order>;
+  scope: SelectedScope;
+  setScope: (scope: SelectedScope) => void;
+};
+
+export const CartoSection = ({
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
+  filters,
+  order,
+  scope,
+  setScope,
+  resetScope,
+}: Props) => {
+  const [cartoScope, setCartoScope] = useState<Scope>(
+    scope.type === "national" ? "regions" : scope.type
+  );
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -87,28 +85,44 @@ export const CartoSection = ({
     }
   };
 
-  const getGraphData = () => {
-    if (cartoScope && data?.all[cartoScope])
-      return Object.values(data?.all[cartoScope]).map((territoire) => ({
-        name: territoire.libelle,
-        parentName: territoire.libelleAcademie,
-        value: territoire[indicateur] ?? 0,
-      }));
-    return [];
-  };
+  const { data, isLoading } = client
+    .ref("[GET]/pilotage-transformation/stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          ...order,
+          scope: cartoScope,
+        },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const handleClickOnTerritoire = (code: string | undefined) => {
-    if (
-      cartoScope &&
-      territoiresFilters[cartoScope] &&
-      territoiresFilters[cartoScope] === code
-    )
-      handleTerritoiresFilters(
-        cartoScope as keyof TerritoiresFilters,
-        undefined
-      );
-    else handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
-  };
+  const getGraphData = useCallback(() => {
+    if (!data) {
+      return [];
+    }
+
+    return Object.values(data.all).map((territoire) => ({
+      name: territoire.libelle,
+      parentName: territoire.libelleAcademie,
+      value: territoire[indicateur] ?? 0,
+    }));
+  }, [scope, data]);
+
+  const handleClickOnTerritoire = useCallback(
+    (code: string | undefined) => {
+      if (scope.type === cartoScope && scope.value === code) {
+        resetScope();
+      } else {
+        setScope({ type: cartoScope, value: code! });
+      }
+    },
+    [setScope, cartoScope]
+  );
 
   return (
     <Box

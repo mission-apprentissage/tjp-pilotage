@@ -4,6 +4,7 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
+import { Scope } from "./getTransformationsStats.schema";
 
 const selectPlacesTransformees = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
@@ -80,7 +81,7 @@ export const getDataScoped = async ({
   codeNiveauDiplome?: string[];
   CPC?: string[];
   filiere?: string[];
-  scope: "national" | "region" | "departement" | "academie";
+  scope: Scope;
 }) => {
   return await kdb
     .selectFrom("demande")
@@ -112,9 +113,9 @@ export const getDataScoped = async ({
             .ref(
               (
                 {
-                  region: "dataEtablissement.codeRegion",
-                  academie: "academie.codeAcademie",
-                  departement: "departement.codeDepartement",
+                  regions: "dataEtablissement.codeRegion",
+                  academies: "dataEtablissement.codeAcademie",
+                  departements: "dataEtablissement.codeDepartement",
                 } as const
               )[scope]
             )
@@ -125,9 +126,9 @@ export const getDataScoped = async ({
             .ref(
               (
                 {
-                  region: "region.libelleRegion",
-                  academie: "academie.libelle",
-                  departement: "departement.libelle",
+                  regions: "region.libelleRegion",
+                  academies: "academie.libelle",
+                  departements: "departement.libelle",
                 } as const
               )[scope]
             )
@@ -168,17 +169,17 @@ export const getDataScoped = async ({
       switch (scope) {
         case "national":
           return q;
-        case "region":
+        case "regions":
           return q.groupBy([
             "dataEtablissement.codeRegion",
             "region.libelleRegion",
           ]);
-        case "academie":
+        case "academies":
           return q.groupBy([
             "dataEtablissement.codeAcademie",
             "academie.libelle",
           ]);
-        case "departement":
+        case "departements":
           return q.groupBy([
             "dataEtablissement.codeDepartement",
             "departement.libelle",

@@ -5,21 +5,52 @@ export type PilotageTransformationStatsQuery =
 
 export type PilotageTransformationStats =
   (typeof client.infer)["[GET]/pilotage-transformation/stats"];
+
+export type PilotageTauxTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/get-scoped-taux-transformations"];
+
+export type PilotageTransformationsStatsDatas = Omit<
+  PilotageTransformationStats,
+  "filters"
+>;
+
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
   "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
 >;
 
+export type PilotageTransformationStatsByScope = {
+  [K in Scope]?: PilotageTransformationsStatsDatas;
+} & {
+  filters?: PilotageTransformationStats["filters"];
+};
+
 export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
-export type Scope = "regions" | "academies" | "departements" | undefined;
+export type Scope = "regions" | "academies" | "departements" | "national";
+export type SelectedScope = {
+  type: Scope;
+  value: string;
+};
+export type Status = "submitted" | "draft" | "all";
+export type Indicateur =
+  | "tauxTransformation"
+  | "countDemande"
+  | "differenceCapaciteScolaire"
+  | "differenceCapaciteApprentissage"
+  | "placesOuvertesScolaire"
+  | "placesFermeesScolaire"
+  | "placesOuvertesApprentissage"
+  | "placesFermeesApprentissage"
+  | "placesOuvertes"
+  | "placesFermees"
+  | "ratioFermeture"
+  | "ratioOuverture";
 
 export type TerritoiresFilters = {
-  regions?: string;
-  academies?: string;
-  departements?: string;
+  [K in Scope]?: string;
 };
 
 export type FormationsTransformationStatsQuery =
