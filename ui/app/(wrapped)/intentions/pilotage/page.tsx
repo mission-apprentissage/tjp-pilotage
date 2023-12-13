@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -137,7 +137,7 @@ export default withAuth(
     };
 
     return (
-      <Container maxWidth={"100%"} bg="blueecume.950">
+      <Box bg="blueecume.950">
         <Container maxWidth={"container.xl"} py="4">
           <FiltersSection
             activeTerritoiresFilters={territoiresFilters}
@@ -149,8 +149,8 @@ export default withAuth(
             data={data}
           />
           <Box>
-            <SimpleGrid spacing={8} columns={[2]} mt={8}>
-              <Box>
+            <Flex gap={8} mt={10} flexDirection={["column", null, "row"]}>
+              <Box flex={1}>
                 <IndicateursClesSection
                   data={data}
                   isLoading={isLoading}
@@ -166,15 +166,20 @@ export default withAuth(
                 territoiresFilters={territoiresFilters}
                 handleTerritoiresFilters={handleTerritoiresFilters}
               />
-            </SimpleGrid>
-            <Box mt={14}>
+            </Flex>
+            <Box mt={14} display={["none", null, "block"]}>
               <QuadrantSection
                 scope={scope}
                 parentFilters={filters}
                 scopeFilters={data?.filters}
               />
             </Box>
-            <SimpleGrid spacing={5} columns={[2]} mt={14}>
+            <Flex
+              gap={5}
+              flexDirection={["column", null, "row"]}
+              mt={14}
+              mb={20}
+            >
               <VueTauxTransformationSection
                 data={data}
                 isLoading={isLoading}
@@ -189,10 +194,10 @@ export default withAuth(
                 order={order}
                 handleOrder={handleOrder}
               />
-            </SimpleGrid>
+            </Flex>
           </Box>
         </Container>
-      </Container>
+      </Box>
     );
   }
 );
