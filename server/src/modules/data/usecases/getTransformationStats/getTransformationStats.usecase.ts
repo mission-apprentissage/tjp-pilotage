@@ -1,7 +1,7 @@
 import _ from "lodash";
 
 import { dependencies } from "./dependencies";
-import { QuerySchema } from "./getTransformationsStats.schema";
+import { QuerySchema, Scope } from "./getTransformationsStats.schema";
 
 type DataScoped = Awaited<ReturnType<typeof dependencies.getDataScoped>>[0];
 
@@ -40,7 +40,28 @@ const formatDataScoped = (item: DataScoped) => ({
       item.placesFermeesScolaire || 0,
 });
 
+const getEffectif = (scope: Scope, value: string) => {
+  if (scope === "national") {
+    return effectifNational;
+  }
+
+  if (scope === "academies") {
+    return effectifsAcademie[value];
+  }
+
+  if (scope === "departements") {
+    return effectifsDepartements[value];
+  }
+
+  if (scope === "regions") {
+    return effectifsRegions[value];
+  }
+
+  return 0;
+};
+
 const formatResult = (
+  scope: Scope,
   result: Awaited<ReturnType<typeof dependencies.getDataScoped>>,
   order: "asc" | "desc" = "asc",
   orderBy?: string
@@ -52,9 +73,9 @@ const formatResult = (
       key: `_${item.code}`,
       tauxTransformation:
         Math.round(
-          (item.transformes / effectifsRegions[item.code ?? ""] || 0) * 10000
+          (item.transformes / getEffectif(scope, item.code ?? "") || 0) * 10000
         ) / 100,
-      effectif: effectifsRegions[item.code ?? ""] || 0,
+      effectif: getEffectif(scope, item.code ?? "") || 0,
     }))
     .orderBy((item) => {
       if (orderBy) return item[orderBy as keyof typeof item];
@@ -90,12 +111,15 @@ const getTransformationStatsFactory =
         }),
       ])
     ).map((result) =>
-      formatResult(result, activeFilters.order, activeFilters.orderBy)
+      formatResult(
+        activeFilters.scope,
+        result,
+        activeFilters.order,
+        activeFilters.orderBy
+      )
     );
 
     const filters = await deps.getFiltersQuery(activeFilters);
-
-    console.log({ all });
 
     return {
       submitted,
