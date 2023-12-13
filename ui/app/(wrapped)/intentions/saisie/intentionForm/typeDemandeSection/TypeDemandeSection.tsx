@@ -33,11 +33,17 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider pt="4" mb="4" />
       <RentreeScolaireField disabled={disabled} mb="6" maxW="752px" />
-      <Flex align="flex-start">
+      <Flex align="flex-start" flexDir={["column", null, "row"]}>
         <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
         <Fade in={typeDemande != undefined}>
           {typeDemande && (
-            <InfoBox flex="1" mt="10" ml="6" maxW="440px">
+            <InfoBox
+              flex="1"
+              mt={[null, null, "10"]}
+              ml={[null, null, "6"]}
+              mb={[6, null, 0]}
+              maxW="440px"
+            >
               {getTypeDemandeExemple(typeDemande)}
             </InfoBox>
           )}

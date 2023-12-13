@@ -414,7 +414,7 @@ const StatCard = ({
 };
 
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
-  <Flex direction={"column"}>
+  <Flex direction={"column"} w="100%">
     <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
       INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2021
     </Text>
