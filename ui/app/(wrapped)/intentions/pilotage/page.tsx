@@ -1,4 +1,5 @@
 import { GuardPermission } from "@/utils/security/GuardPermission";
+
 import { PilotageIntentionsClient } from "./client";
 
 export default () => {
