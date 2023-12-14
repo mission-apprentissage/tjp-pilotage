@@ -4,6 +4,7 @@ import { jsonBuildObject } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 
 const selectPlacesTransformees =
   (eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">) =>
@@ -93,13 +94,13 @@ const getTransformationStatsQuery = ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
-  CPCSecteur,
+  CPC,
   filiere,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
-  CPCSecteur?: string[];
+  CPC?: string[];
   filiere?: string[];
 }) =>
   kdb
@@ -223,8 +224,7 @@ const getTransformationStatsQuery = ({
       return eb;
     })
     .$call((eb) => {
-      if (CPCSecteur)
-        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
     .$call((eb) => {
@@ -245,6 +245,7 @@ const getTransformationStatsQuery = ({
       if (!status) return q;
       return q.where("demande.status", "=", status);
     })
+    .where(isDemandeNotDeletedOrRefused)
     .execute()
     .then(cleanNull);
 
@@ -252,13 +253,13 @@ const getFiltersQuery = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
-  CPCSecteur,
+  CPC,
   filiere,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
-  CPCSecteur?: string[];
+  CPC?: string[];
   filiere?: string[];
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -277,9 +278,9 @@ const getFiltersQuery = async ({
     return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
-  const inCPCSecteur = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!CPCSecteur) return sql<true>`true`;
-    return eb("dataFormation.cpcSecteur", "in", CPCSecteur);
+  const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!CPC) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", CPC);
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -311,7 +312,7 @@ const getFiltersQuery = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const rentreesScolaires = await base
+  const rentreesScolairesFilters = await base
     .select([
       "demande.rentreeScolaire as value",
       "demande.rentreeScolaire as label",
@@ -319,17 +320,17 @@ const getFiltersQuery = async ({
     .where("demande.rentreeScolaire", "is not", null)
     .execute();
 
-  const regions = await base
+  const regionsFilters = await base
     .select(["region.codeRegion as value", "region.libelleRegion as label"])
     .where("region.codeRegion", "is not", null)
     .execute();
 
-  const academies = await base
+  const academiesFilters = await base
     .select(["academie.codeAcademie as value", "academie.libelle as label"])
     .where("academie.codeAcademie", "is not", null)
     .execute();
 
-  const departements = await base
+  const departementsFilters = await base
     .select([
       "departement.codeDepartement as value",
       "departement.libelle as label",
@@ -337,12 +338,9 @@ const getFiltersQuery = async ({
     .where("departement.codeDepartement", "is not", null)
     .execute();
 
-  const CPCSecteurs = await base
-    .select([
-      "dataFormation.cpcSecteur as label",
-      "dataFormation.cpcSecteur as value",
-    ])
-    .where("dataFormation.cpcSecteur", "is not", null)
+  const CPCFilters = await base
+    .select(["dataFormation.cpc as label", "dataFormation.cpc as value"])
+    .where("dataFormation.cpc", "is not", null)
     .where((eb) =>
       eb.and([
         inStatus(eb),
@@ -353,7 +351,7 @@ const getFiltersQuery = async ({
     )
     .execute();
 
-  const filieres = await base
+  const filieresFilters = await base
     .select([
       "dataFormation.libelleFiliere as label",
       "dataFormation.libelleFiliere as value",
@@ -364,35 +362,30 @@ const getFiltersQuery = async ({
         inStatus(eb),
         inRentreeScolaire(eb),
         inCodeNiveauDiplome(eb),
-        inCPCSecteur(eb),
+        inCPC(eb),
       ])
     )
     .execute();
 
-  const diplomes = await base
+  const diplomesFilters = await base
     .select([
       "niveauDiplome.libelleNiveauDiplome as label",
       "niveauDiplome.codeNiveauDiplome as value",
     ])
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) =>
-      eb.and([
-        inStatus(eb),
-        inRentreeScolaire(eb),
-        inCPCSecteur(eb),
-        inFiliere(eb),
-      ])
+      eb.and([inStatus(eb), inRentreeScolaire(eb), inCPC(eb), inFiliere(eb)])
     )
     .execute();
 
   return {
-    rentreesScolaires: rentreesScolaires.map(cleanNull),
-    regions: regions.map(cleanNull),
-    academies: academies.map(cleanNull),
-    departements: departements.map(cleanNull),
-    CPCSecteurs: CPCSecteurs.map(cleanNull),
-    filieres: filieres.map(cleanNull),
-    diplomes: diplomes.map(cleanNull),
+    rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
+    regions: regionsFilters.map(cleanNull),
+    academies: academiesFilters.map(cleanNull),
+    departements: departementsFilters.map(cleanNull),
+    CPCs: CPCFilters.map(cleanNull),
+    filieres: filieresFilters.map(cleanNull),
+    diplomes: diplomesFilters.map(cleanNull),
   };
 };
 

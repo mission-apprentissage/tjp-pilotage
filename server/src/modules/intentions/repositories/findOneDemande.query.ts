@@ -1,5 +1,6 @@
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
+import { isDemandeNotDeleted } from "../../utils/isDemandeSelectable";
 
 export const findOneDemande = async (id: string) => {
   return cleanNull(
@@ -7,6 +8,7 @@ export const findOneDemande = async (id: string) => {
       .selectFrom("demande")
       .selectAll()
       .where("id", "=", id)
+      .where(isDemandeNotDeleted)
       .executeTakeFirst()
   );
 };

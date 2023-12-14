@@ -7,7 +7,7 @@ export type PilotageTransformationStats =
   (typeof client.infer)["[GET]/pilotage-transformation/stats"];
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
-  "rentreeScolaire" | "CPCSecteur" | "filiere" | "codeNiveauDiplome"
+  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
 >;
 
 export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;

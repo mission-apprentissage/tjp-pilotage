@@ -12,6 +12,7 @@ import {
   countOuverturesApprentissage,
   countOuverturesSco,
 } from "../../../utils/countCapacite";
+import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 
 const countRestitutionIntentionsStatsInDB = async ({
@@ -23,7 +24,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   cfd,
   codeNiveauDiplome,
   dispositif,
-  CPCSecteur,
+  CPC,
   coloration,
   amiCMA,
   secteur,
@@ -36,7 +37,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   user,
   voie,
 }: {
-  status?: "draft" | "submitted";
+  status?: ("draft" | "submitted" | "refused")[];
   codeRegion?: string[];
   rentreeScolaire?: string;
   typeDemande?: string[];
@@ -44,7 +45,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   cfd?: string[];
   codeNiveauDiplome?: string[];
   dispositif?: string[];
-  CPCSecteur?: string[];
+  CPC?: string[];
   coloration?: string;
   amiCMA?: string;
   secteur?: string;
@@ -189,8 +190,7 @@ const countRestitutionIntentionsStatsInDB = async ({
       }).as("FCILs")
     )
     .$call((eb) => {
-      if (status && status != undefined)
-        return eb.where("demande.status", "=", status);
+      if (status) return eb.where("demande.status", "in", status);
       return eb;
     })
     .$call((eb) => {
@@ -262,8 +262,7 @@ const countRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (CPCSecteur)
-        return eb.where("dataFormation.cpcSecteur", "in", CPCSecteur);
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
     })
     .$call((eb) => {
@@ -324,6 +323,7 @@ const countRestitutionIntentionsStatsInDB = async ({
 
       return eb;
     })
+    .where(isDemandeNotDeleted)
     .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);

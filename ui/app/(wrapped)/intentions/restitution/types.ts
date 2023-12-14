@@ -16,7 +16,7 @@ export type Filters = Pick<
   | "status"
   | "cfd"
   | "filiere"
-  | "CPCSecteur"
+  | "CPC"
   | "coloration"
   | "amiCMA"
   | "codeNiveauDiplome"

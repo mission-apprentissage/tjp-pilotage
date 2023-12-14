@@ -4,7 +4,7 @@ import { getPermissionScope, guardScope } from "shared";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { findDemande } from "./findDemande.query";
+import { findDemande } from "./getDemande.query";
 import { getDemandeSchema } from "./getDemande.schema";
 
 export const getDemandeRoute = (server: Server) => {
@@ -20,6 +20,7 @@ export const getDemandeRoute = (server: Server) => {
         if (!user) throw Boom.forbidden();
         const demande = await findDemande({ id: request.params.id, user });
         if (!demande) return response.status(404).send();
+        if (demande.status === "deleted") throw Boom.forbidden();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
         const canEdit = guardScope(scope?.default, {
@@ -28,7 +29,11 @@ export const getDemandeRoute = (server: Server) => {
           national: () => true,
         });
 
-        response.status(200).send({ ...demande, canEdit });
+        response.status(200).send({
+          ...demande,
+          status: demande.status,
+          canEdit,
+        });
       },
     });
   });
