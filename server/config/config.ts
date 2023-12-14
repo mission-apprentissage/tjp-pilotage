@@ -37,6 +37,12 @@ export const config = {
       .asString(),
   },
   dne: {
+    url: env
+      .get("PILOTAGE_DNE_URL")
+      .default(
+        "https://hub-oidc.orion.education.fr/.well-known/openid-configuration"
+      )
+      .asString(),
     codeVerifierJwt: env
       .get("PILOTAGE_DNE_CODE_VERIFIER_JWT_SECRET")
       .required()
