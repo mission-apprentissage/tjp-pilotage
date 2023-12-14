@@ -1,8 +1,6 @@
 import {
   AspectRatio,
   Box,
-  Card,
-  CardBody,
   Center,
   Flex,
   FormControl,
@@ -17,33 +15,6 @@ import {
 import { Multiselect } from "../../../../components/Multiselect";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
 import { StatCard } from "./StatCard";
-
-const StatCardf = ({
-  label,
-  value,
-  color = "inherit",
-}: {
-  label: string;
-  value?: string | number;
-  color?: string;
-}) => (
-  <Card>
-    <CardBody
-      color={color}
-      py="2"
-      px="3"
-      alignItems={"flex-start"}
-      display={"flex"}
-      gap={[2, null, 4]}
-      flexDir={["column", null, "row"]}
-    >
-      <Box flex={1}>{label}</Box>
-      <Box fontWeight="bold" fontSize="2xl">
-        {value ?? "-"}
-      </Box>
-    </CardBody>
-  </Card>
-);
 
 export const IndicateursSection = ({
   code,
