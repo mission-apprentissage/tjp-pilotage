@@ -2,6 +2,7 @@ import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
+import { jsonSchemaTransform } from "fastify-type-provider-zod";
 import { ZodError } from "zod";
 
 import { config } from "../config/config";
@@ -11,6 +12,7 @@ import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data";
 import { registerIntentionsModule } from "./modules/intentions";
 import { Server, server } from "./server";
+
 server.register(fastifyCors, {});
 
 server.register(fastifySwagger, {
@@ -22,6 +24,7 @@ server.register(fastifySwagger, {
     consumes: ["application/json"],
     produces: ["application/json"],
   },
+  transform: jsonSchemaTransform,
 });
 
 server.register(fastifySwaggerUi, {
