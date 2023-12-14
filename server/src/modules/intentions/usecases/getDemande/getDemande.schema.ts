@@ -32,7 +32,7 @@ const MetadataSchema = z.object({
 const DemandeSchema = z.object({
   id: z.string(),
   createdAt: z.string(),
-  status: z.string(),
+  status: z.enum(["draft", "submitted", "refused"]).optional(),
   uai: z.string(),
   cfd: z.string(),
   dispositifId: z.string(),
@@ -57,6 +57,8 @@ const DemandeSchema = z.object({
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
+  motifRefus: z.array(z.string()).optional(),
+  autreMotifRefus: z.string().optional(),
 });
 
 export const getDemandeSchema = {

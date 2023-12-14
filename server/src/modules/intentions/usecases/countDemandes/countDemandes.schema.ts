@@ -6,6 +6,7 @@ export const countDemandesSchema = {
       total: z.number(),
       draft: z.number(),
       submitted: z.number(),
+      refused: z.number(),
     }),
   },
 };

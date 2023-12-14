@@ -30,7 +30,7 @@ export const TableFooter = chakra(
             Exporter en CSV
           </Button>
         )}
-        <Box mr="4">
+        <Box mr="4" ml="auto">
           {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
           {count}
         </Box>

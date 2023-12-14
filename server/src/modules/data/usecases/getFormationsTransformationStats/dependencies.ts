@@ -3,6 +3,7 @@ import { ExpressionBuilder, sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
@@ -257,6 +258,7 @@ const getFormationsTransformationStatsQuery = ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
+    .where(isDemandeNotDeletedOrRefused)
     .orderBy("tauxDevenirFavorable", "desc")
     .execute()
     .then(cleanNull);

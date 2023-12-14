@@ -7,12 +7,10 @@ import { getEtabRoute } from "./usecases/getEtab/getEtab.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { searchEtabRoute } from "./usecases/searchEtab/searchEtab.route";
 import { submitDemandeRoute } from "./usecases/submitDemande/submitDemande.route";
-import { submitDraftDemandeRoute } from "./usecases/submitDraftDemande/submitDraftDemande.route";
 
 export const registerIntentionsModule = ({ server }: { server: Server }) => {
   return {
     ...submitDemandeRoute({ server }),
-    ...submitDraftDemandeRoute(server),
     ...getDemandeRoute(server),
     ...getDemandesRoute(server),
     ...countDemandesRoute(server),
