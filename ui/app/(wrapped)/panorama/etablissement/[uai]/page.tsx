@@ -61,7 +61,7 @@ export default function Panorama({
     data: etablissement,
     isError,
     isLoading,
-  } = client.ref("[GET]/etablissement/:uai").useQuery(
+  } = client.ref("[GET]/panorama/stats/etablissement/:uai").useQuery(
     {
       query: {
         uai,
@@ -78,6 +78,10 @@ export default function Panorama({
     },
     { keepPreviousData: true, staleTime: 10000000, enabled: !!etablissement }
   );
+
+  // const { data: defaultEtablissementSearchValues } = client
+  //   .ref("[GET]/etablissement/:uai")
+  //   .useQuery({ params: { uai: uai } }, { cacheTime: 0, staleTime: 0 });
 
   const diplomeOptions = Object.values(
     etablissement?.formations.reduce(

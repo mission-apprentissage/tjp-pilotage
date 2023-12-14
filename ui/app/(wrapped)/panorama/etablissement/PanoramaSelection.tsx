@@ -40,7 +40,11 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
       maxWidth={"container.xl"}
     >
       <Flex align="center" direction="column">
-        <UaiForm defaultUai={uaiFilter} onUaiChanged={handleSubmit} />
+        <UaiForm
+          uai={uaiFilter}
+          onUaiChanged={handleSubmit}
+          inError={!!wrongUai}
+        />
         <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
           <Img src="/graphs_statistics.png" objectFit="contain" />
         </AspectRatio>
