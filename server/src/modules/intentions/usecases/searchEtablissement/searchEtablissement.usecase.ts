@@ -2,18 +2,21 @@ import { inject } from "injecti";
 
 import { findManyInDataEtablissementsQuery } from "./findManyInDataEtablissementQuery.dep";
 
-export const [searchEtab] = inject(
+export const [searchEtablissement] = inject(
   { findManyInDataEtablissementsQuery },
   (deps) =>
     async ({
       search,
+      filtered,
       user,
     }: {
       search: string;
+      filtered?: boolean;
       user?: { codeRegion?: string };
     }) => {
       const etablissements = await deps.findManyInDataEtablissementsQuery({
         search,
+        filtered,
         codeRegion: user?.codeRegion,
       });
       const suggestions = etablissements.map((etablissement) => ({

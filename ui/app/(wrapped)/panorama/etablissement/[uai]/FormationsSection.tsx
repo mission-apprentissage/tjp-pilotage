@@ -42,7 +42,7 @@ export const FormationsSection = ({
   isLoading,
   rentreeScolaire,
 }: {
-  formations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
+  formations?: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"];
   isLoading: boolean;
   rentreeScolaire?: string;
 }) => {
