@@ -209,14 +209,12 @@ const StatCard = ({
   className,
   children,
   icon,
-  minH = "2xs",
 }: {
   label: string;
   tooltip?: ReactNode;
   className?: string;
   children: ReactNode;
   icon?: string;
-  minH?: string;
 }) => {
   return (
     <Card className={className} p={0} height="100%">
@@ -514,7 +512,7 @@ export const IndicateursClesSection = ({
                 </StatCard>
               </GridItem>
               <GridItem colSpan={[3, null, 1]}>
-                <StatCard label="ratio des fermetures" minH="52">
+                <StatCard label="ratio des fermetures">
                   <Flex flexDirection={"column"}>
                     <Flex
                       fontSize="40px"
