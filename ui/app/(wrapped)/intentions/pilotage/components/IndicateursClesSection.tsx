@@ -433,11 +433,7 @@ export const IndicateursClesSection = ({
                 </GridItem>
               )}
               <GridItem colSpan={[3, null, 1]}>
-                <StatCard
-                  label="places ouvertes"
-                  icon="places_ouvertes"
-                  minH="52"
-                >
+                <StatCard label="places ouvertes" icon="places_ouvertes">
                   <Flex flexDirection={"column"} gap={3}>
                     <Flex>
                       <Text
@@ -473,11 +469,7 @@ export const IndicateursClesSection = ({
                 </StatCard>
               </GridItem>
               <GridItem colSpan={[3, null, 1]}>
-                <StatCard
-                  label="places fermées"
-                  icon="places_fermees"
-                  minH="52"
-                >
+                <StatCard label="places fermées" icon="places_fermees">
                   <Flex flexDirection={"column"} gap={3}>
                     <Flex>
                       <Text
