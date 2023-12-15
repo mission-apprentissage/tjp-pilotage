@@ -23,15 +23,13 @@ export const getDataForPanoramaEtablissementFactory =
       etablissement &&
       cleanNull({
         ...etablissement,
-        formations: etablissement?.formations?.map((formation) =>
-          cleanNull({
-            ...formation,
-            positionQuadrant: getPositionQuadrant(
-              formation,
-              statsSortie[etablissement.codeRegion ?? ""] || {}
-            ),
-          })
-        ),
+        formations: etablissement?.formations?.map((formation) => ({
+          ...formation,
+          positionQuadrant: getPositionQuadrant(
+            formation,
+            statsSortie[etablissement.codeRegion ?? ""] || {}
+          ),
+        })),
       })
     );
   };
