@@ -31,8 +31,8 @@ export const getStats = async ({
     return kdb
       .selectFrom("formationEtablissement")
       .leftJoin(
-        "formation",
-        "formation.codeFormationDiplome",
+        "formationView",
+        "formationView.cfd",
         "formationEtablissement.cfd"
       )
       .innerJoin("indicateurEntree", (join) =>
@@ -59,7 +59,11 @@ export const getStats = async ({
       })
       .$call((q) => {
         if (!codeNiveauDiplome?.length) return q;
-        return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        return q.where(
+          "formationView.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
       })
       .where(notHistorique)
       .select([
@@ -86,8 +90,8 @@ export const getStats = async ({
     kdb
       .selectFrom("indicateurRegionSortie")
       .leftJoin(
-        "formation",
-        "formation.codeFormationDiplome",
+        "formationView",
+        "formationView.cfd",
         "indicateurRegionSortie.cfd"
       )
       .$call((q) => {
@@ -96,7 +100,11 @@ export const getStats = async ({
       })
       .$call((q) => {
         if (!codeNiveauDiplome?.length) return q;
-        return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        return q.where(
+          "formationView.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
       })
       .$call((q) =>
         q.where(
@@ -139,16 +147,16 @@ export const getStats = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .leftJoin(
       "etablissement",
@@ -157,7 +165,7 @@ const findFiltersInDb = async () => {
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(
-      "codeFormationDiplome",
+      "cfd",
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )

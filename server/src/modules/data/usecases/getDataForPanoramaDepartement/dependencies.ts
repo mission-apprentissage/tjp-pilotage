@@ -29,16 +29,16 @@ export const getFormationsDepartement = async ({
   orderBy?: { column: string; order: "asc" | "desc" };
 }) =>
   kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .leftJoin(
       "dispositif",
@@ -72,22 +72,26 @@ export const getFormationsDepartement = async ({
     .where("etablissement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeNiveauDiplome) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .$call((q) => {
       if (!libelleFiliere) return q;
-      return q.where("formation.libelleFiliere", "in", libelleFiliere);
+      return q.where("formationView.libelleFiliere", "in", libelleFiliere);
     })
     .select((eb) => [
-      "codeFormationDiplome",
+      "formationView.cfd",
       "formationEtablissement.dispositifId",
       "libelleDispositif",
       "libelleNiveauDiplome",
-      "formation.codeNiveauDiplome",
-      "formation.libelleFiliere",
-      "formation.CPC",
-      "formation.CPCSecteur",
-      "formation.CPCSousSecteur",
+      "formationView.codeNiveauDiplome",
+      "formationView.libelleFiliere",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
@@ -96,9 +100,11 @@ export const getFormationsDepartement = async ({
       sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
         "effectifPrecedent"
       ),
-      sql<string>`CONCAT(${eb.ref("formation.libelleDiplome")},' (',${eb.ref(
-        "niveauDiplome.libelleNiveauDiplome"
-      )}, ')')`.as("libelleDiplome"),
+      sql<string>`CONCAT(${eb.ref(
+        "formationView.libelleFormation"
+      )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
+        "libelleFormation"
+      ),
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       (eb) =>
         withInsertionReg({
@@ -180,7 +186,8 @@ export const getFormationsDepartement = async ({
     )
     .groupBy([
       "formationEtablissement.cfd",
-      "formation.id",
+      "formationView.id",
+      "formationView.cfd",
       "formationEtablissement.dispositifId",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
@@ -192,7 +199,7 @@ export const getFormationsDepartement = async ({
         sql`${sql.raw(orderBy.order)} NULLS LAST`
       );
     })
-    .orderBy("libelleDiplome", "asc")
+    .orderBy("libelleFormation", "asc")
     .execute()
     .then(cleanNull);
 
@@ -204,14 +211,14 @@ export const getFilters = async ({
   const filtersBase = kdb
     .selectFrom("niveauDiplome")
     .leftJoin(
-      "formation",
-      "formation.codeNiveauDiplome",
+      "formationView",
+      "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "etablissement",
@@ -231,15 +238,15 @@ export const getFilters = async ({
       "niveauDiplome.codeNiveauDiplome as value",
       "niveauDiplome.libelleNiveauDiplome as label",
     ])
-    .where("formation.codeNiveauDiplome", "is not", null)
+    .where("formationView.codeNiveauDiplome", "is not", null)
     .execute();
 
   const filieres = await filtersBase
     .select([
-      "formation.libelleFiliere as label",
-      "formation.libelleFiliere as value",
+      "formationView.libelleFiliere as label",
+      "formationView.libelleFiliere as value",
     ])
-    .where("formation.libelleFiliere", "is not", null)
+    .where("formationView.libelleFiliere", "is not", null)
     .execute();
 
   return {

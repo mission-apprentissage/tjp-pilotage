@@ -12,9 +12,9 @@ export const getFormationsRoute = ({ server }: { server: Server }) => {
     server.route({
       ...props,
       handler: async (request, response) => {
-        const { order, orderBy, ...rest } = request.query;
+        const { order, orderBy, ...filters } = request.query;
         const formations = await getFormations({
-          ...rest,
+          ...filters,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
         response.status(200).send(formations);

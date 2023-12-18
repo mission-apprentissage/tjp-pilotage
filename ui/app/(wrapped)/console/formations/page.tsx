@@ -41,7 +41,7 @@ const PAGE_SIZE = 30;
 const FORMATIONS_COLUMNS = {
   rentreeScolaire: "RS",
   libelleNiveauDiplome: "Diplôme",
-  libelleDiplome: "Formation",
+  libelleFormation: "Formation",
   nbEtablissement: "Nb Etab",
   effectif1: "Année 1",
   effectif2: "Année 2",
@@ -53,10 +53,10 @@ const FORMATIONS_COLUMNS = {
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
   libelleOfficielFamille: "	Famille de métiers",
-  codeFormationDiplome: "Code diplôme",
-  CPC: "CPC",
-  CPCSecteur: "CPCSecteur",
-  CPCSousSecteur: "CPCSousSecteur",
+  cfd: "Code formation diplôme",
+  cpc: "CPC",
+  cpcSecteur: "CPC Secteur",
+  cpcSousSecteur: "CPC Sous Secteur",
   libelleFiliere: "Secteur d’activité",
   "continuum.libelle": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
@@ -276,29 +276,29 @@ export default function Formations() {
           Formation
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPC")}
+          onClose={filterTracker("cpc")}
           width="52"
-          onChange={(selected) => handleFilters("CPC", selected)}
-          options={data?.filters.CPCs}
-          value={filters.CPC ?? []}
+          onChange={(selected) => handleFilters("cpc", selected)}
+          options={data?.filters.cpcs}
+          value={filters.cpc ?? []}
         >
           CPC
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPCSecteur")}
+          onClose={filterTracker("cpcSecteur")}
           width="52"
-          onChange={(selected) => handleFilters("CPCSecteur", selected)}
-          options={data?.filters.CPCSecteurs}
-          value={filters.CPCSecteur ?? []}
+          onChange={(selected) => handleFilters("cpcSecteur", selected)}
+          options={data?.filters.cpcSecteurs}
+          value={filters.cpcSecteur ?? []}
         >
           CPC Secteur
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPCSousSecteur")}
+          onClose={filterTracker("cpcSousSecteur")}
           width="52"
-          onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
-          options={data?.filters.CPCSousSecteurs}
-          value={filters.CPCSousSecteur ?? []}
+          onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
+          options={data?.filters.cpcSousSecteurs}
+          value={filters.cpcSousSecteur ?? []}
         >
           CPC Sous Secteur
         </Multiselect>
@@ -346,10 +346,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleDiplome")}
+                  onClick={() => handleOrder("libelleFormation")}
                 >
-                  <OrderIcon {...order} column="libelleDiplome" />
-                  {FORMATIONS_COLUMNS.libelleDiplome}
+                  <OrderIcon {...order} column="libelleFormation" />
+                  {FORMATIONS_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   isNumeric
@@ -468,27 +468,24 @@ export default function Formations() {
                   <OrderIcon {...order} column="libelleOfficielFamille" />
                   {FORMATIONS_COLUMNS.libelleOfficielFamille}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("codeFormationDiplome")}
-                >
-                  <OrderIcon {...order} column="codeFormationDiplome" />
-                  {FORMATIONS_COLUMNS.codeFormationDiplome}
+                <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
+                  <OrderIcon {...order} column="cfd" />
+                  {FORMATIONS_COLUMNS.cfd}
                 </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
-                  <OrderIcon {...order} column="CPC" />
-                  {FORMATIONS_COLUMNS.CPC}
+                <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
+                  <OrderIcon {...order} column="cpc" />
+                  {FORMATIONS_COLUMNS.cpc}
                 </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
-                  <OrderIcon {...order} column="CPCSecteur" />
-                  {FORMATIONS_COLUMNS.CPCSecteur}
+                <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
+                  <OrderIcon {...order} column="cpcSecteur" />
+                  {FORMATIONS_COLUMNS.cpcSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("CPCSousSecteur")}
+                  onClick={() => handleOrder("cpcSousSecteur")}
                 >
-                  <OrderIcon {...order} column="CPCSousSecteur" />
-                  {FORMATIONS_COLUMNS.CPCSousSecteur}
+                  <OrderIcon {...order} column="cpcSousSecteur" />
+                  {FORMATIONS_COLUMNS.cpcSousSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
@@ -508,34 +505,32 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Fragment
-                  key={`${line.codeFormationDiplome}_${line.dispositifId}`}
-                >
+                <Fragment key={`${line.cfd}_${line.dispositifId}`}>
                   <Tr h="12">
                     <FormationLineContent
                       filters={filters}
                       defaultRentreeScolaire="2022"
                       line={line}
                       expended={
-                        historiqueId?.cfd === line.codeFormationDiplome &&
+                        historiqueId?.cfd === line.cfd &&
                         historiqueId.codeDispositif === line.dispositifId
                       }
                       onClickExpend={() =>
                         setHistoriqueId({
-                          cfd: line.codeFormationDiplome,
+                          cfd: line.cfd,
                           codeDispositif: line.dispositifId,
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
-                  {historiqueId?.cfd === line.codeFormationDiplome &&
+                  {historiqueId?.cfd === line.cfd &&
                     historiqueId.codeDispositif === line.dispositifId && (
                       <>
                         {historique &&
                           historique.map((historiqueLine) => (
                             <Tr
-                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              key={`${historiqueLine.cfd}_${historiqueLine.dispositifId}`}
                               bg={"grey.975"}
                             >
                               <FormationLineContent line={historiqueLine} />

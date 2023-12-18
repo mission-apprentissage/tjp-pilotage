@@ -19,8 +19,8 @@ const getStatsRegions = async ({
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .leftJoin(
@@ -35,7 +35,11 @@ const getStatsRegions = async ({
     )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .$call((q) => {
       if (!rentreeScolaire?.length) return q;
@@ -68,14 +72,14 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .where(
-      "codeFormationDiplome",
+      "cfd",
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )

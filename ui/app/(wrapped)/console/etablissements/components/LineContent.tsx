@@ -50,7 +50,7 @@ export const EtablissementLineContent = ({
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
-        {line.libelleDiplome ?? "-"}
+        {line.libelleFormation ?? "-"}
       </Td>
 
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>
@@ -105,10 +105,10 @@ export const EtablissementLineContent = ({
       <Td>{line.UAI ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-      <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>{line.CPC ?? "-"}</Td>
-      <Td>{line.CPCSecteur ?? "-"}</Td>
-      <Td>{line.CPCSousSecteur ?? "-"}</Td>
+      <Td>{line.cfd ?? "-"}</Td>
+      <Td>{line.cpc ?? "-"}</Td>
+      <Td>{line.cpcSecteur ?? "-"}</Td>
+      <Td>{line.cpcSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
     </>
   );

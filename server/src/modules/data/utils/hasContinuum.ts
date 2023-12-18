@@ -1,7 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 
@@ -22,8 +22,8 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
     eb
       .selectFrom("indicateurRegionSortie as subIRS")
       .leftJoin(
-        "formation as subFormation",
-        "subFormation.codeFormationDiplome",
+        "formationView as subFormation",
+        "subFormation.cfd",
         "subIRS.cfdContinuum"
       )
       .whereRef("subIRS.cfd", "=", cfdRef)
@@ -37,11 +37,11 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
       .where("subIRS.cfdContinuum", "is not", null)
       .select("subIRS.cfdContinuum as cfd")
       .$narrowType<{ cfd: string }>()
-      .select("subFormation.libelleDiplome as libelle")
+      .select("subFormation.libelleFormation as libelle")
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",
-        "subFormation.libelleDiplome",
+        "subFormation.libelleFormation",
       ])
       .limit(1)
   );

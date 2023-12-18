@@ -365,8 +365,8 @@ export const QuadrantSection = ({
                       ...formation,
                     })),
                     {
-                      libelleDiplome: "Formation",
-                      codeFormationDiplome: "CFD",
+                      libelleFormation: "Formation",
+                      cfd: "CFD",
                       libelleDispositif: "Dispositif",
                       tauxInsertion: "Taux d'emploi",
                       tauxPoursuite: "Taux de poursuite",
@@ -403,25 +403,21 @@ export const QuadrantSection = ({
                 meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
-                    onClick={({ codeFormationDiplome }) =>
-                      setFormationId(codeFormationDiplome)
-                    }
+                    onClick={({ cfd }) => setFormationId(cfd)}
                     meanInsertion={(meanPoursuite ?? 0) * 100}
                     meanPoursuite={(meanInsertion ?? 0) * 100}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
-                      codeFormationDiplome: formation.codeFormationDiplome,
+                      cfd: formation.cfd,
                       tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
                       tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                     }))}
                     TooltipContent={FormationTooltipContent}
                     itemId={(formation) =>
-                      formation.codeFormationDiplome + formation.dispositifId
+                      formation.cfd + formation.dispositifId
                     }
                     itemColor={(formation) =>
-                      formation.codeFormationDiplome === currentCfd
-                        ? "#fd3b4cb5"
-                        : undefined
+                      formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
                     }
                     InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}
@@ -430,7 +426,6 @@ export const QuadrantSection = ({
                   <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
-                      cfd: formation.codeFormationDiplome,
                     }))}
                     handleClick={setFormationId}
                     currentCfd={currentCfd}

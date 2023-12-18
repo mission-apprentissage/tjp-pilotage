@@ -94,7 +94,7 @@ const TopFlopChart = ({
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
-            key={`${item.codeFormationDiplome}_${item.dispositifId}`}
+            key={`${item.cfd}_${item.dispositifId}`}
             formation={item}
             value={item.tauxDevenirFavorable}
           />
@@ -107,7 +107,7 @@ const TopFlopChart = ({
           .reverse()
           .map((item) => (
             <TopItem
-              key={`${item.codeFormationDiplome}_${item.dispositifId}_`}
+              key={`${item.cfd}_${item.dispositifId}_`}
               formation={item}
               color={"grey.425"}
               value={item.tauxDevenirFavorable}
@@ -137,7 +137,7 @@ const TopItem = ({
           overflow="hidden"
           whiteSpace="nowrap"
         >
-          {formation.libelleDiplome}
+          {formation.libelleFormation}
         </Box>
         <Box flex={1}>
           <PopoverTrigger>
