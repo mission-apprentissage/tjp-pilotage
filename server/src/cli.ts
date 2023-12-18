@@ -7,6 +7,7 @@ import { z } from "zod";
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
+import { importConstatRentree } from "./modules/import/usecases/importConstatRentree/importConstatRentree.usecase";
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
@@ -178,6 +179,7 @@ cli
       importFamillesMetiers,
       importDataEtablissements,
       importDataFormations,
+      importConstatRentree,
     };
 
     if (usecaseName) {
