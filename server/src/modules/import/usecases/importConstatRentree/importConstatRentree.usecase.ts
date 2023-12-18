@@ -3,12 +3,12 @@ import { inject } from "injecti";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { RENTREES_SCOLAIRES } from "../importFormationEtablissement/domain/millesimes";
-import { createDataConstatsRentree } from "./createDataContastRentree.dep";
+import { createConstatRentree } from "./createConstatRentree.dep";
 import { findNMef } from "./findNMef.dep";
 
 export const [importConstatRentree] = inject(
   {
-    createDataConstatsRentree,
+    createConstatRentree,
     findNMef,
     findRawDatas: rawDataRepository.findRawDatas,
   },
@@ -32,7 +32,7 @@ export const [importConstatRentree] = inject(
             mefstat: constatRentreeLine["Mef Bcp 11"],
           });
 
-          const datas = {
+          const constatRentree = {
             uai: constatRentreeLine["Numéro d'établissement"],
             mefstat11: constatRentreeLine["Mef Bcp 11"],
             effectifs: Number(constatRentreeLine["Nombre d'élèves"] ?? "0"),
@@ -42,7 +42,7 @@ export const [importConstatRentree] = inject(
           };
 
           try {
-            await deps.createDataConstatsRentree(datas);
+            await deps.createConstatRentree(constatRentree);
 
             process.stdout.write(
               `\r${count} constat de rentrée ajoutés ou mis à jour`
@@ -50,7 +50,7 @@ export const [importConstatRentree] = inject(
           } catch (error) {
             console.log(
               `An error occured while importing datas`,
-              JSON.stringify(datas, null, 2)
+              JSON.stringify(constatRentree, null, 2)
             );
             console.error(error);
             errorCount++;
