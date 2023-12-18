@@ -5,6 +5,7 @@ import { Box, Container, SimpleGrid } from "@chakra-ui/react";
 import { CartoSection } from "./components/CartoSection";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
+import { VueOuverturesFermeturesSection } from "./components/VueOuverturesFermeturesSection";
 import { VueTauxTransformationSection } from "./components/VueTauxTransformationSection";
 import { usePilotageIntentionsHook } from "./hook";
 
@@ -13,6 +14,7 @@ export const PilotageIntentionsClient = () => {
     filters,
     isLoading,
     data,
+    scopedStats,
     scope,
     setScope,
     resetScope,
@@ -67,18 +69,19 @@ export const PilotageIntentionsClient = () => {
           </Box> */}
           <SimpleGrid spacing={5} columns={[2]} mt={14}>
             <VueTauxTransformationSection
-              filters={filters}
-              order={order}
-              handleOrder={handleOrder}
+              data={scopedStats}
               scope={scope}
-            />
-            {/* <VueOuverturesFermeturesSection
-              data={data}
-              isLoading={isLoading}
-              codeRegion={territoiresFilters.regions}
               order={order}
+              isLoading={isLoading}
               handleOrder={handleOrder}
-            /> */}
+            />
+            <VueOuverturesFermeturesSection
+              data={scopedStats}
+              scope={scope}
+              order={order}
+              isLoading={isLoading}
+              handleOrder={handleOrder}
+            />
           </SimpleGrid>
         </Box>
       </Container>

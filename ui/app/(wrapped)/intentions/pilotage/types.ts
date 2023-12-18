@@ -6,8 +6,11 @@ export type PilotageTransformationStatsQuery =
 export type PilotageTransformationStats =
   (typeof client.infer)["[GET]/pilotage-transformation/stats"];
 
-export type PilotageTauxTransformationStats =
-  (typeof client.infer)["[GET]/pilotage-transformation/get-scoped-taux-transformations"];
+export type ScopedTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/get-scoped-transformations-stats"];
+
+export type ScopedTransformationStatsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-transformation/get-scoped-transformations-stats"]["query"];
 
 export type PilotageTransformationsStatsDatas = Omit<
   PilotageTransformationStats,
@@ -16,6 +19,11 @@ export type PilotageTransformationsStatsDatas = Omit<
 
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
+  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
+>;
+
+export type ScopedFilters = Pick<
+  ScopedTransformationStatsQuery,
   "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
 >;
 
