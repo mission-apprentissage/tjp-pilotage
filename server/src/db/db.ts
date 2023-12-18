@@ -27,8 +27,8 @@ pool.on("error", (error) => {
   } catch (e) {}
 });
 
+// gestion du typage des vues matérialisée inspirée de https://github.com/RobinBlomberg/kysely-codegen/issues/72
 export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
-  // or you can make all props non-nullable
   formationView: {
     [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<
       DBSchema["formationNonMaterializedView"][K]
