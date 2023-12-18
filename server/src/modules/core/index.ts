@@ -1,6 +1,9 @@
 import { Server } from "../../server";
 import { activateUserRoute } from "./usecases/activateUser/activateUser.route";
 import { checkActivationTokenRoute } from "./usecases/checkActivationToken/checkActivationToken.route";
+import { createUserRoute } from "./usecases/createUser/createUser.route";
+import { editUserRoute } from "./usecases/editUser/editUser.route";
+import { getUsersRoute } from "./usecases/getUsers/getUsers.route";
 import { homeRoute } from "./usecases/home/home.route";
 import { loginRoute } from "./usecases/login/login.route";
 import { logoutRoute } from "./usecases/logout/logout.route";
@@ -19,6 +22,9 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...resetPasswordRoute(server),
     ...sendResetPasswordRoute(server),
     ...whoAmIRoute(server),
+    ...getUsersRoute(server),
+    ...editUserRoute(server),
+    ...createUserRoute(server),
   };
 };
 
