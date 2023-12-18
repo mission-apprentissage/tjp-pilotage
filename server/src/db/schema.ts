@@ -297,6 +297,7 @@ export interface User {
   createdAt: Generated<Timestamp | null>;
   role: string | null;
   codeRegion: string | null;
+  uais: string[] | null;
 }
 
 export interface DB {
