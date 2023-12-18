@@ -12,10 +12,9 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
-
 import { Legend } from "../../../../../components/Legend";
 import { OrderIcon } from "../../../../../components/OrderIcon";
-import { Order, PilotageTransformationStats } from "../types";
+import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -48,47 +47,23 @@ const Loader = () => (
   </TableContainer>
 );
 
-export const VueOuverturesFermeturesSection = ({
-  data,
+const ScopedTable = ({
   isLoading,
-  codeRegion,
-  order,
   handleOrder,
+  order,
+  data,
+  scope,
+  title,
+  columnTitle,
 }: {
-  data?: PilotageTransformationStats;
+  data?: ScopedTransformationStats;
+  order: Partial<Order>;
   isLoading: boolean;
-  codeRegion?: string;
-  order: Order;
   handleOrder: (column: Order["orderBy"]) => void;
+  scope: SelectedScope;
+  title: string;
+  columnTitle: string;
 }) => {
-  const getNombrePlace = (
-    type: "ouverture" | "fermeture",
-    region: PilotageTransformationStats["all"]["regions"][string]
-  ): number => {
-    return type === "ouverture"
-      ? region.placesOuvertesScolaire + region.placesOuvertesApprentissage
-      : region.placesFermeesScolaire + region.placesFermeesApprentissage;
-  };
-
-  const getRatio = (
-    type: "ouverture" | "fermeture",
-    region: PilotageTransformationStats["all"]["regions"][string]
-  ): string => {
-    return type === "ouverture"
-      ? (
-          (getNombrePlace("ouverture", region) /
-            (getNombrePlace("ouverture", region) +
-              getNombrePlace("fermeture", region))) *
-          100
-        ).toFixed(2)
-      : (
-          (getNombrePlace("fermeture", region) /
-            (getNombrePlace("ouverture", region) +
-              getNombrePlace("fermeture", region))) *
-          100
-        ).toFixed(2);
-  };
-
   const legendElements = [
     { label: "< 33%", color: useToken("colors", "pilotage.red") },
   ];
@@ -109,7 +84,7 @@ export const VueOuverturesFermeturesSection = ({
         color={"bluefrance.113"}
         mb="5"
       >
-        Ratio des ouvertures et fermetures par région
+        {title}
       </Text>
       {isLoading ? (
         <Loader />
@@ -131,7 +106,7 @@ export const VueOuverturesFermeturesSection = ({
                   onClick={() => handleOrder("libelle")}
                 >
                   <OrderIcon {...order} column="libelle" />
-                  Région
+                  {columnTitle}
                 </Th>
                 <Th
                   isNumeric
@@ -181,53 +156,51 @@ export const VueOuverturesFermeturesSection = ({
             </Thead>
             <Tbody>
               <Fragment>
-                {Object.values(data?.all?.regions ?? []).map((region) => {
+                {Object.values(data ?? []).map((territoire) => {
                   const trBgColor =
-                    region.codeRegion === codeRegion
+                    territoire.code === scope.value
                       ? "blueecume.400_hover !important"
                       : "";
 
                   const tdBgColor =
-                    region.codeRegion === codeRegion
-                      ? "inherit !important"
-                      : "";
+                    territoire.code === scope.value ? "inherit !important" : "";
 
                   const trColor =
-                    region.codeRegion === codeRegion ? "white" : "inherit";
+                    territoire.code === scope.value ? "white" : "inherit";
 
                   const color =
-                    region.codeRegion === codeRegion
+                    territoire.code === scope.value
                       ? "inherit"
                       : "bluefrance.113";
 
                   return (
-                    <Fragment key={`${region.codeRegion}_${region.libelle}`}>
+                    <Fragment key={`${territoire.code}_${territoire.libelle}`}>
                       <Tr
                         backgroundColor={trBgColor}
                         color={trColor}
                         fontWeight="700"
                       >
                         <Td backgroundColor={tdBgColor} color={color}>
-                          {region.libelle}
+                          {territoire.libelle}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getNombrePlace("fermeture", region)}
+                          {territoire.placesOuvertes}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getNombrePlace("ouverture", region)}
+                          {territoire.placesFermees}
                         </Td>
                         <Td
                           isNumeric
                           backgroundColor={
-                            parseFloat(getRatio("fermeture", region)) < 30
+                            territoire.ratioFermeture < 30
                               ? "pilotage.red !important"
                               : "inherit"
                           }
                         >
-                          {getRatio("fermeture", region)}%
+                          {territoire.ratioFermeture}%
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getRatio("ouverture", region)}%
+                          {territoire.ratioOuverture}%
                         </Td>
                       </Tr>
                     </Fragment>
@@ -242,3 +215,34 @@ export const VueOuverturesFermeturesSection = ({
     </Flex>
   );
 };
+
+const getTitle = (scope: SelectedScope) =>
+  ({
+    national: "Ratio des ouvertures et fermetures par région",
+    regions: "Ratio des ouvertures et fermetures par région",
+    academies: "Ratio des ouvertures et fermetures par académies",
+    departements: "Ratio des ouvertures et fermetures par départements",
+  })[scope.type];
+
+const getColumnTitle = (scope: SelectedScope) =>
+  ({
+    national: "Région",
+    regions: "Région",
+    academies: "Académie",
+    departements: "Département",
+  })[scope.type];
+
+export const VueOuverturesFermeturesSection = (props: {
+  data?: ScopedTransformationStats;
+  scope: SelectedScope;
+  isLoading: boolean;
+  codeRegion?: string;
+  order: Order;
+  handleOrder: (column: Order["orderBy"]) => void;
+}) => (
+  <ScopedTable
+    {...props}
+    title={getTitle(props.scope)}
+    columnTitle={getColumnTitle(props.scope)}
+  />
+);

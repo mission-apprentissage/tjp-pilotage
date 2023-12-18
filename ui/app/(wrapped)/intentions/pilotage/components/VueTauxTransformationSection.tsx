@@ -12,15 +12,9 @@ import {
   useToken,
 } from "@chakra-ui/react";
 
-import { client } from "@/api.client";
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
-import {
-  Filters,
-  Order,
-  PilotageTauxTransformationStats,
-  SelectedScope,
-} from "../types";
+import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -65,7 +59,7 @@ export const ScopedTable = ({
   isLoading: boolean;
   title: string;
   scopeColumnTitle: string;
-  data: PilotageTauxTransformationStats | undefined;
+  data: ScopedTransformationStats | undefined;
   handleOrder: (column: Order["orderBy"]) => void;
   order: Partial<Order>;
   scope: SelectedScope;
@@ -226,59 +220,35 @@ export const ScopedTable = ({
   );
 };
 
-export const VueTauxTransformationSection = ({
-  order,
-  handleOrder,
-  filters,
-  scope,
-}: {
+const getTitle = (scope: SelectedScope) =>
+  ({
+    national:
+      "Nombre de places transformées et taux de transformation régional",
+    regions: "Nombre de places transformées et taux de transformation régional",
+    academies:
+      "Nombre de places transformées et taux de transformation académique",
+    departements:
+      "Nombre de places transformées et taux de transformation départemental",
+  })[scope.type];
+
+const getColumnTitle = (scope: SelectedScope) =>
+  ({
+    national: "Région",
+    regions: "Région",
+    academies: "Académie",
+    departements: "Département",
+  })[scope.type];
+
+export const VueTauxTransformationSection = (props: {
   handleOrder: (column: Order["orderBy"]) => void;
-  filters: Partial<Filters>;
   order: Partial<Order>;
   scope: SelectedScope;
-}) => {
-  const { data, isLoading } = client
-    .ref("[GET]/pilotage-transformation/get-scoped-taux-transformations")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          scope: scope.type,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
-  return (
-    <ScopedTable
-      isLoading={isLoading}
-      data={data}
-      title={
-        {
-          national:
-            "Nombre de places transformées et taux de transformation régional",
-          regions:
-            "Nombre de places transformées et taux de transformation régional",
-          academies:
-            "Nombre de places transformées et taux de transformation académique",
-          departements:
-            "Nombre de places transformées et taux de transformation départemental",
-        }[scope.type]
-      }
-      order={order}
-      handleOrder={handleOrder}
-      scope={scope}
-      scopeColumnTitle={
-        {
-          national: "Région",
-          regions: "Région",
-          academies: "Académie",
-          departements: "Département",
-        }[scope.type]
-      }
-    />
-  );
-};
+  data: ScopedTransformationStats | undefined;
+  isLoading: boolean;
+}) => (
+  <ScopedTable
+    {...props}
+    title={getTitle(props.scope)}
+    scopeColumnTitle={getColumnTitle(props.scope)}
+  />
+);
