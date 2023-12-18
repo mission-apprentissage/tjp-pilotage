@@ -1,4 +1,5 @@
 import { inject } from "injecti";
+
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { RENTREES_SCOLAIRES } from "../importFormationEtablissement/domain/millesimes";
@@ -27,24 +28,30 @@ export const [importConstatRentree] = inject(
             year: rentreeScolaire,
           }),
         async (constatRentreeLine, count) => {
-          try {
-            const nMef = await findNMef({
-              mefstat: constatRentreeLine["Mef Bcp 11"],
-            });
+          const nMef = await findNMef({
+            mefstat: constatRentreeLine["Mef Bcp 11"],
+          });
 
-            await deps.createDataConstatsRentree({
-              uai: constatRentreeLine["Numéro d'établissement"],
-              mefstat11: constatRentreeLine["Mef Bcp 11"],
-              effectifs: constatRentreeLine["Nombre d'élèves"],
-              cfd: nMef.FORMATION_DIPLOME,
-              anneeDispositif: Number(nMef.ANNEE_DISPOSITIF),
-              rentreeScolaire,
-            });
+          const datas = {
+            uai: constatRentreeLine["Numéro d'établissement"],
+            mefstat11: constatRentreeLine["Mef Bcp 11"],
+            effectifs: Number(constatRentreeLine["Nombre d'élèves"] ?? "0"),
+            cfd: nMef.FORMATION_DIPLOME,
+            anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
+            rentreeScolaire,
+          };
+
+          try {
+            await deps.createDataConstatsRentree(datas);
 
             process.stdout.write(
               `\r${count} constat de rentrée ajoutés ou mis à jour`
             );
           } catch (error) {
+            console.log(
+              `An error occured while importing datas`,
+              JSON.stringify(datas, null, 2)
+            );
             console.error(error);
             errorCount++;
           }
