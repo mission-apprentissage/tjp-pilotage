@@ -4,6 +4,7 @@ import {
   Button,
   Card,
   CardBody,
+  Divider,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -31,6 +32,8 @@ export const LoginForm = () => {
     defaultValues: { email: "", password: "" },
     mode: "onBlur",
   });
+
+  const { data: { url } = {} } = client.ref("[GET]/dne_url").useQuery({});
 
   const {
     mutateAsync: login,
@@ -106,6 +109,14 @@ export const LoginForm = () => {
               Se connecter
             </Button>
           </Flex>
+          {false && (
+            <>
+              <Divider mt="6" mb="6" />
+              <Button width="100%" as={NextLink} href={url ?? "#"}>
+                Accéder au portail de l'éducation nationale
+              </Button>
+            </>
+          )}
         </CardBody>
       </Card>
       <Text mt="4" textAlign="center">
