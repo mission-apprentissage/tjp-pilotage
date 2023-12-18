@@ -46,7 +46,7 @@ export const FormationLineContent = ({
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
-        {line.libelleDiplome ?? "-"}
+        {line.libelleFormation ?? "-"}
       </Td>
       <Td isNumeric>
         <Link
@@ -55,7 +55,6 @@ export const FormationLineContent = ({
           href={createParametrizedUrl("/console/etablissements", {
             filters: {
               ...filters,
-              cfd: [line.codeFormationDiplome],
               codeDispositif: line.dispositifId
                 ? [line.dispositifId]
                 : undefined,
@@ -94,10 +93,10 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
       <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-      <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>{line.CPC ?? "-"}</Td>
-      <Td>{line.CPCSecteur ?? "-"}</Td>
-      <Td>{line.CPCSousSecteur ?? "-"}</Td>
+      <Td>{line.cfd ?? "-"}</Td>
+      <Td>{line.cpc ?? "-"}</Td>
+      <Td>{line.cpcSecteur ?? "-"}</Td>
+      <Td>{line.cpcSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
       <Td>{line.positionQuadrant}</Td>
     </>

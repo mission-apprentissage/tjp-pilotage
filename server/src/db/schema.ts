@@ -148,6 +148,10 @@ export interface Departement {
   codeRegion: string;
 }
 
+export interface DiplomeProfessionnel {
+  cfd: string;
+}
+
 export interface Dispositif {
   codeDispositif: string;
   codeNiveauDiplome: string;
@@ -208,6 +212,20 @@ export interface FormationEtablissement {
 export interface FormationHistorique {
   codeFormationDiplome: string;
   ancienCFD: string;
+}
+
+export interface FormationNonMaterializedView {
+  id: string | null;
+  cfd: string | null;
+  rncp: number | null;
+  libelleFormation: string | null;
+  codeNiveauDiplome: string | null;
+  dateOuverture: Timestamp | null;
+  dateFermeture: Timestamp | null;
+  cpc: string | null;
+  cpcSecteur: string | null;
+  cpcSousSecteur: string | null;
+  libelleFiliere: string | null;
 }
 
 export interface IndicateurAcademie {
@@ -305,12 +323,14 @@ export interface DB {
   dataFormation: DataFormation;
   demande: Demande;
   departement: Departement;
+  diplomeProfessionnel: DiplomeProfessionnel;
   dispositif: Dispositif;
   etablissement: Etablissement;
   familleMetier: FamilleMetier;
   formation: Formation;
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
+  formationNonMaterializedView: FormationNonMaterializedView;
   indicateurAcademie: IndicateurAcademie;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;

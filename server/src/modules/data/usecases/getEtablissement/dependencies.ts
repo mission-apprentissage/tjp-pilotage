@@ -55,8 +55,8 @@ const getEtablissementInDb = async ({
               .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
           )
           .innerJoin(
-            "formation",
-            "formation.codeFormationDiplome",
+            "formationView",
+            "formationView.cfd",
             "formationEtablissement.cfd"
           )
           .innerJoin(
@@ -67,7 +67,7 @@ const getEtablissementInDb = async ({
           .leftJoin(
             "niveauDiplome",
             "niveauDiplome.codeNiveauDiplome",
-            "formation.codeNiveauDiplome"
+            "formationView.codeNiveauDiplome"
           )
           .leftJoin(
             "dispositif",
@@ -91,17 +91,13 @@ const getEtablissementInDb = async ({
             "formationEtablissement.cfd as cfd",
             "formationEtablissement.dispositifId",
             "libelleDispositif",
-            "formation.codeNiveauDiplome",
+            "formationView.codeNiveauDiplome",
             "libelleNiveauDiplome",
-            "formation.libelleFiliere",
-            "formation.CPC",
-            "formation.CPCSecteur",
             sql<string>`CONCAT(${sb.ref(
-              "formation.libelleDiplome"
+              "formationView.libelleFormation"
             )},' (',${sb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
-              "libelleDiplome"
+              "libelleFormation"
             ),
-            "formation.CPCSousSecteur",
             sql<number>`COUNT(e."UAI")`.as("nbEtablissement"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
             sql<number>`SUM(${effectifAnnee({
@@ -191,9 +187,9 @@ const getEtablissementInDb = async ({
           .where(notHistorique)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
-            "formation.id",
-            "formation.libelleDiplome",
-            "formation.libelleFiliere",
+            "formationView.id",
+            "formationView.libelleFormation",
+            "formationView.libelleFiliere",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
@@ -201,7 +197,7 @@ const getEtablissementInDb = async ({
             "indicateurEntree.premiersVoeux",
             "indicateurEntree.anneeDebut",
             "indicateurEntree.rentreeScolaire",
-            "formation.codeNiveauDiplome",
+            "formationView.codeNiveauDiplome",
             "libelleNiveauDiplome",
             "libelleDispositif",
           ])
@@ -212,7 +208,7 @@ const getEtablissementInDb = async ({
               sql`${sql.raw(orderBy.order)} NULLS LAST`
             );
           })
-          .orderBy("libelleDiplome", "asc")
+          .orderBy("libelleFormation", "asc")
       ).as("formations")
     )
     .where("etablissement.UAI", "=", uai)

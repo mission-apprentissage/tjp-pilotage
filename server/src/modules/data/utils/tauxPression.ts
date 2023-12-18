@@ -1,6 +1,6 @@
 import { ExpressionBuilder, RawBuilder, sql } from "kysely";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,
@@ -87,16 +87,12 @@ export const selectTauxPressionParFormationEtParRegionDemande = ({
       )
     )
     .innerJoin("region", "region.codeRegion", "pressionDetails.codeRegion")
-    .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
-      "pressionDetails.codeFormationDiplome"
-    )
+    .innerJoin("formationView", "formationView.cfd", "pressionDetails.cfd")
     .whereRef("region.codeRegion", "=", "demande.codeRegion")
-    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .whereRef("formationView.cfd", "=", "demande.cfd")
     .select(["pressionDetails.pression as pression"])
     .groupBy([
-      "pressionDetails.codeFormationDiplome",
+      "pressionDetails.cfd",
       "pressionDetails.codeRegion",
       "pressionDetails.pression",
       "region.codeRegion",
@@ -111,11 +107,11 @@ export const tauxPressionFormationRegional = ({
   rentreeScolaire?: string;
 }) => {
   return eb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "etablissement",
@@ -128,7 +124,7 @@ export const tauxPressionFormationRegional = ({
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
     )
-    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .whereRef("formationView.cfd", "=", "demande.cfd")
     .whereRef(
       "formationEtablissement.dispositifId",
       "=",
@@ -139,10 +135,10 @@ export const tauxPressionFormationRegional = ({
     .select([
       selectTauxPressionAgg("indicateurEntree").as("pression"),
       "region.codeRegion",
-      "formation.codeFormationDiplome",
+      "formationView.cfd",
     ])
     .groupBy([
-      "formation.codeFormationDiplome",
+      "formationView.cfd",
       "formationEtablissement.dispositifId",
       "region.codeRegion",
     ]);

@@ -111,7 +111,7 @@ export const QuadrantSection = ({
                     ...formation,
                   })),
                   {
-                    libelleDiplome: "Formation",
+                    libelleFormation: "Formation",
                     cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",

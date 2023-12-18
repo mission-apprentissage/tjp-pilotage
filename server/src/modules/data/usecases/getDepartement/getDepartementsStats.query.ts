@@ -31,8 +31,8 @@ export const getDepartementsStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .leftJoin(
@@ -44,7 +44,11 @@ export const getDepartementsStats = async ({
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
@@ -63,8 +67,8 @@ export const getDepartementsStats = async ({
   const stats = await kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "formationEtablissement.cfd"
     )
     .leftJoin("indicateurEntree", (join) =>
@@ -87,7 +91,11 @@ export const getDepartementsStats = async ({
     )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .where(notHistorique)
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)

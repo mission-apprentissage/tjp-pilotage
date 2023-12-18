@@ -18,7 +18,7 @@ import { TableBadge } from "./TableBadge";
 import { TooltipIcon } from "./TooltipIcon";
 
 type Formation = {
-  libelleDiplome?: string;
+  libelleFormation?: string;
   tauxPoursuite?: number;
   tauxInsertion?: number;
   tauxPression?: number;
@@ -154,7 +154,7 @@ export const TableQuadrant = ({
                 cursor={handleClick ? "pointer" : "default"}
               >
                 <Td whiteSpace="normal" color={getTdColor(formation)}>
-                  {formation.libelleDiplome}
+                  {formation.libelleFormation}
                 </Td>
                 <Td textAlign={"center"} color={getTdColor(formation)}>
                   <TableBadge
