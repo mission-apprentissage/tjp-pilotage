@@ -46,6 +46,7 @@ describe("extractUserInRequest usecase", () => {
         firstname: "firstname",
         lastname: "lastname",
         codeRegion: undefined,
+        uais: undefined,
       }),
     });
 
