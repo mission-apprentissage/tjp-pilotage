@@ -24,6 +24,15 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface ConstatRentree {
+  rentreeScolaire: string | null;
+  mefstat11: string | null;
+  uai: string | null;
+  effectifs: Json | null;
+  anneeDispositif: number | null;
+  cfd: string | null;
+}
+
 export interface DataEtablissement {
   uai: string;
   libelle: string | null;
@@ -36,59 +45,7 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
@@ -302,6 +259,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;
