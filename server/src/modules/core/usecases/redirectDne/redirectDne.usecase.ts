@@ -80,6 +80,8 @@ export const [redirectDne, redirectDneFactory] = inject(
         attributes.uais &&
         (await deps.findEtablissement({ uais: attributes.uais }));
 
+      if (!etablissement?.codeRegion) throw new Error("missing codeRegion");
+
       await deps.createUserInDB({
         user: {
           ...user,

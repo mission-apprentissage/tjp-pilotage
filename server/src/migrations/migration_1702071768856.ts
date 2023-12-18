@@ -5,6 +5,7 @@ export const up = async (db: Kysely<unknown>) => {
     .alterTable("user")
     .addColumn("uais", sql`varchar(8)[]`)
     .execute();
+  await db.schema.createView("user").materialized();
 };
 
 export const down = async (db: Kysely<unknown>) => {
