@@ -66,8 +66,8 @@ export const CreateUser = ({
   });
 
   const onSubmit = (
-    values: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
-  ) => createUser({ body: values });
+    v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
+  ) => createUser({ body: { ...v, codeRegion: v.codeRegion || null } });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -131,11 +131,7 @@ export const CreateUser = ({
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
-            <Select
-              {...register("codeRegion", {
-                required: "Veuillez saisir un code région",
-              })}
-            >
+            <Select {...register("codeRegion")}>
               {regions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}

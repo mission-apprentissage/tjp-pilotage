@@ -73,7 +73,10 @@ export const EditUser = ({
       <ModalContent
         as="form"
         onSubmit={handleSubmit((v) =>
-          updateUser({ body: v, params: { userId: user?.id } })
+          updateUser({
+            body: { ...v, codeRegion: v.codeRegion || null },
+            params: { userId: user?.id },
+          })
         )}
       >
         <ModalHeader>Éditer un utilisateur</ModalHeader>
@@ -134,11 +137,8 @@ export const EditUser = ({
           </FormControl>
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
-            <Select
-              {...register("codeRegion", {
-                required: "Veuillez saisir un code région",
-              })}
-            >
+            <Select {...register("codeRegion")}>
+              <option value="">Aucune</option>
               {regions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}
