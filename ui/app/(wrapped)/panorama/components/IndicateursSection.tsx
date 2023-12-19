@@ -1,10 +1,7 @@
 import {
   AspectRatio,
   Box,
-  Card,
-  CardBody,
   Center,
-  Container,
   Flex,
   FormControl,
   FormLabel,
@@ -17,33 +14,7 @@ import {
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
-
-const StatCard = ({
-  label,
-  value,
-  color = "inherit",
-}: {
-  label: string;
-  value?: string | number;
-  color?: string;
-}) => (
-  <Card>
-    <CardBody
-      color={color}
-      py="2"
-      px="3"
-      alignItems={"center"}
-      display={"flex"}
-    >
-      <Box mr="4" flex={1}>
-        {label}
-      </Box>
-      <Box fontWeight="bold" fontSize="2xl">
-        {value ?? "-"}
-      </Box>
-    </CardBody>
-  </Card>
-);
+import { StatCard } from "./StatCard";
 
 export const IndicateursSection = ({
   code,
@@ -70,11 +41,12 @@ export const IndicateursSection = ({
   const labelRegion = options?.find((item) => item.value === code)?.label;
 
   return (
-    <Container
-      px="8"
+    <Box
+      px={[4, null, 8]}
+      mx={[-4, null, 0]}
       as="section"
-      pb="12"
-      pt="6"
+      pb={[8, null, 12]}
+      pt={[0, null, 6]}
       bg="grey.975"
       maxWidth={"container.xl"}
     >
@@ -163,6 +135,6 @@ export const IndicateursSection = ({
           </SimpleGrid>
         </Box>
       </Stack>
-    </Container>
+    </Box>
   );
 };
