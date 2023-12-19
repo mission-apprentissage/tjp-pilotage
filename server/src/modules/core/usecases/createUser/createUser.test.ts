@@ -5,7 +5,7 @@ const user = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
-  role: "pilote",
+  role: "admin",
 } as const;
 
 describe("createUser usecase", () => {
