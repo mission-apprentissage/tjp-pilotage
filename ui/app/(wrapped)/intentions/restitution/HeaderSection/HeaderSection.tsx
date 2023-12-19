@@ -54,7 +54,7 @@ export const HeaderSection = ({
       <Loader />
     ) : (
       <Flex gap={8} flexDirection={"column"}>
-        <Flex gap={4}>
+        <Flex gap={4} flexDir={["column", null, "row"]}>
           <PrimaryFiltersSection
             activeFilters={activeFilters}
             handleFilters={handleFilters}
@@ -62,9 +62,7 @@ export const HeaderSection = ({
             isLoading={isLoading}
             data={data}
           />
-          <Flex flexDirection={"row"} gap={4} overflowY={"auto"} pb={2}>
-            <CountersSection countData={countData} />
-          </Flex>
+          <CountersSection countData={countData} />
         </Flex>
         <SecondaryFiltersSection
           activeFilters={activeFilters}

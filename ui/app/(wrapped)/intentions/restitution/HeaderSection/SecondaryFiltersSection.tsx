@@ -24,7 +24,7 @@ export const SecondaryFiltersSection = ({
     return getMotifLabel(motifLabel as MotifLabel);
   };
   return (
-    <Box borderRadius={4} mb={8}>
+    <Box borderRadius={4} mb={8} display={["none", null, "block"]}>
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>

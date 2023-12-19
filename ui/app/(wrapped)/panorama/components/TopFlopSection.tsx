@@ -1,7 +1,6 @@
 import {
   Box,
   Center,
-  Container,
   Divider,
   Flex,
   Heading,
@@ -52,8 +51,8 @@ export const TopFlopSection = ({
   }, [quadrantFormations]);
 
   return (
-    <Container as="section" py="6" maxWidth={"container.xl"}>
-      <Box ml="6" mb={4}>
+    <Box as="section" py="6" maxWidth={"container.xl"}>
+      <Box ml={[null, null, "6"]} mb={4}>
         <Heading fontWeight={"hairline"} maxWidth={250} as="h2" mb="4">
           Examiner les formations
         </Heading>
@@ -71,7 +70,7 @@ export const TopFlopSection = ({
           <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
         </Center>
       )}
-    </Container>
+    </Box>
   );
 };
 

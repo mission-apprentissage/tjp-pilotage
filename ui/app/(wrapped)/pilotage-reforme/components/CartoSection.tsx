@@ -39,12 +39,12 @@ export const CartoSection = ({
 
   return (
     <Box
+      flex={1}
       borderRadius={4}
       border={"1px solid"}
       borderColor="grey.900"
       bg="white"
       p={3}
-      height={"601"}
       mt={12}
     >
       {isLoading ? (
