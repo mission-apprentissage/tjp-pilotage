@@ -57,9 +57,13 @@ function RadioCard({
       opacity={disabled ? "0.5" : "1"}
     >
       <Flex mb="3">
-        <Img height={"20px"} src={`/icons/${value}.svg`} />
+        <Img
+          me={2}
+          display={["none", null, "unset"]}
+          height={"20px"}
+          src={`/icons/${value}.svg`}
+        />
         <Text
-          ms={2}
           fontWeight="bold"
           fontSize="lg"
           color="bluefrance.113"
@@ -104,7 +108,7 @@ export const TypeDemandeField = chakra(
           render={({ field: { onChange, ref, name, onBlur, value } }) => (
             <RadioGroup
               as={SimpleGrid}
-              columns={3}
+              columns={[2, null, 3]}
               spacing={4}
               ref={ref}
               name={name}

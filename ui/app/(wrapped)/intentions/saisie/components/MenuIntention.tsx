@@ -33,7 +33,7 @@ export const MenuIntention = ({
   );
 
   return (
-    <Flex direction="column" pr={4} minW={250}>
+    <Flex direction="column" pr={[null, null, 4]} minW={250}>
       <Button
         isDisabled={!hasPermissionEnvoi}
         mb="4"

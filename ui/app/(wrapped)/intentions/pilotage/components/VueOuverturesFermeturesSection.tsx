@@ -100,7 +100,6 @@ export const VueOuverturesFermeturesSection = ({
       border={"1px solid"}
       borderColor="grey.900"
       p={4}
-      mb={36}
       bg="white"
     >
       <Text

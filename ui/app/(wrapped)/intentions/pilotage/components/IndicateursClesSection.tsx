@@ -9,7 +9,6 @@ import {
   Grid,
   GridItem,
   Img,
-  SimpleGrid,
   Skeleton,
   Text,
 } from "@chakra-ui/react";
@@ -20,50 +19,42 @@ import { PilotageTransformationStats, Scope } from "../types";
 
 const Loader = () => {
   return (
-    <>
-      <Box mt={12}>
-        <Flex mt={8} height={"168px"}>
-          <Grid gap={5} templateColumns="repeat(3, 1fr)" width="100%">
-            <GridItem colSpan={2}>
-              <Flex flexDirection={"column"} gap={5}>
-                <Card height={"2xs"}>
-                  <CardBody py="2" px="3">
-                    <Skeleton opacity={0.3} height={"100%"} />
-                  </CardBody>
-                </Card>
-                <SimpleGrid spacing={5} columns={[2]}>
-                  <Card height={"3xs"}>
-                    <CardBody py="2" px="3">
-                      <Skeleton opacity={0.3} height={"100%"} />
-                    </CardBody>
-                  </Card>
-
-                  <Card height={"3xs"}>
-                    <CardBody py="2" px="3">
-                      <Skeleton opacity={0.3} height={"100%"} />
-                    </CardBody>
-                  </Card>
-                </SimpleGrid>
-              </Flex>
-            </GridItem>
-            <GridItem>
-              <Flex flexDirection={"column"} gap={5}>
-                <Card height={"2xs"}>
-                  <CardBody py="2" px="3">
-                    <Skeleton opacity={0.3} height={"100%"} />
-                  </CardBody>
-                </Card>
-                <Card height={"3xs"}>
-                  <CardBody py="2" px="3">
-                    <Skeleton opacity={0.3} height={"100%"} />
-                  </CardBody>
-                </Card>
-              </Flex>
-            </GridItem>
-          </Grid>
-        </Flex>
-      </Box>
-    </>
+    <Box mt={12}>
+      <Flex mt={8}>
+        <Grid gap={5} templateColumns="repeat(3, 1fr)" width="100%">
+          <GridItem colSpan={3}>
+            <Flex flexDirection={"column"} gap={5}>
+              <Card>
+                <CardBody py="2" px="3">
+                  <Skeleton opacity={0.3} height={"56"} />
+                </CardBody>
+              </Card>
+            </Flex>
+          </GridItem>
+          <GridItem>
+            <Card>
+              <CardBody py="2" px="3">
+                <Skeleton opacity={0.3} height={"48"} />
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem>
+            <Card>
+              <CardBody py="2" px="3">
+                <Skeleton opacity={0.3} height={"48"} />
+              </CardBody>
+            </Card>
+          </GridItem>
+          <GridItem>
+            <Card>
+              <CardBody py="2" px="3">
+                <Skeleton opacity={0.3} height={"48"} />
+              </CardBody>
+            </Card>
+          </GridItem>
+        </Grid>
+      </Flex>
+    </Box>
   );
 };
 
@@ -218,20 +209,18 @@ const StatCard = ({
   className,
   children,
   icon,
-  minH = "2xs",
 }: {
   label: string;
   tooltip?: ReactNode;
   className?: string;
   children: ReactNode;
   icon?: string;
-  minH?: string;
 }) => {
   return (
-    <Card className={className} minH={minH} p={0}>
+    <Card className={className} p={0} height="100%">
       <CardHeader p={4} pb={1}>
         <Flex>
-          {icon && <Img alt="" h="20px" src={`/icons/${icon}.svg`} me={2} />}
+          {icon && <Img alt="" w="16px" src={`/icons/${icon}.svg`} me={2} />}
           <Text
             color="bluefrance.113"
             fontSize={"14px"}
@@ -243,7 +232,7 @@ const StatCard = ({
           {tooltip}
         </Flex>
       </CardHeader>
-      <CardBody py="2" px="3" minH="3">
+      <CardBody pt="2" px="3" minH="3">
         {children}
       </CardBody>
     </Card>
@@ -326,220 +315,196 @@ export const IndicateursClesSection = ({
             </Text>
             <Grid gap={5} templateColumns={"repeat(3,1fr)"} mt={3}>
               <GridItem colSpan={scope && scope.type && scope.value ? 2 : 3}>
-                <Flex flexDirection={"column"} h="2xs" gap={5}>
-                  <StatCard
-                    label="taux de transformation"
-                    tooltip={
-                      <TooltipIcon
-                        ms={1}
-                        mt={1}
-                        label="Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation (constat de rentrée 2022)."
-                      />
-                    }
-                  >
-                    <Flex justifyContent={"space-between"}>
-                      <Flex
-                        flexDirection={"column"}
-                        gap={2}
-                        width={
-                          scope && scope.type && scope.value ? "unset" : "50%"
-                        }
-                        px={scope && scope.type && scope.value ? 2 : 4}
-                      >
-                        <Flex>
-                          <Text
-                            fontSize="40px"
-                            fontWeight="800"
-                            color="bluefrance.113"
-                          >
-                            {`${getScopedData(
-                              "submitted",
-                              "tauxTransformation"
-                            )} %`}
-                          </Text>
-                        </Flex>
-                        <Flex flexDirection="column" gap={2}>
-                          <Text fontSize={14} color={"blueecume.400_hover"}>
-                            (CALCULÉ SUR LES DEMANDES VALIDÉES)
-                          </Text>
-                          <ProgressBar
-                            percentage={
-                              (getScopedData(
-                                "submitted",
-                                "tauxTransformation"
-                              ) /
-                                6) *
-                              100
-                            }
-                          />
-                          <Text>
-                            {`
-                            ${(
-                              (getScopedData(
-                                "submitted",
-                                "tauxTransformation"
-                              ) /
-                                6) *
-                              100
-                            ).toFixed(0)}% de l'objectif`}
-                          </Text>
-                        </Flex>
+                <StatCard
+                  label="taux de transformation"
+                  tooltip={
+                    <TooltipIcon
+                      ms={1}
+                      mt={1}
+                      label="Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation (constat de rentrée 2022)."
+                    />
+                  }
+                >
+                  <Flex justifyContent={"space-between"}>
+                    <Flex
+                      flexDirection={"column"}
+                      gap={2}
+                      width={
+                        scope && scope.type && scope.value ? "unset" : "50%"
+                      }
+                      px={scope && scope.type && scope.value ? 2 : 4}
+                    >
+                      <Flex>
+                        <Text
+                          fontSize="40px"
+                          fontWeight="800"
+                          color="bluefrance.113"
+                        >
+                          {`${getScopedData(
+                            "submitted",
+                            "tauxTransformation"
+                          )} %`}
+                        </Text>
                       </Flex>
-                      <Flex
-                        flexDirection={"column"}
-                        gap={2}
-                        width={
-                          scope && scope.type && scope.value ? "unset" : "50%"
-                        }
-                        px={scope && scope.type && scope.value ? 2 : 4}
-                      >
-                        <Flex>
-                          <Text
-                            fontSize="40px"
-                            fontWeight="800"
-                            color="bluefrance.113"
-                          >
-                            {`${getScopedData(
-                              "draft",
-                              "tauxTransformation"
-                            )} %`}
-                          </Text>
-                        </Flex>
-                        <Flex flexDirection="column" gap={2}>
-                          <Text fontSize={14} color={"blueecume.400_hover"}>
-                            (CALCULÉ SUR LES PROJETS DE DEMANDE)
-                          </Text>
-                          <ProgressBar
-                            percentage={
-                              (getScopedData("draft", "tauxTransformation") /
-                                6) *
-                              100
-                            }
-                          />
-                          <Text>
-                            {`
+                      <Flex flexDirection="column" gap={2}>
+                        <Text fontSize={14} color={"blueecume.400_hover"}>
+                          (CALCULÉ SUR LES DEMANDES VALIDÉES)
+                        </Text>
+                        <ProgressBar
+                          percentage={
+                            (getScopedData("submitted", "tauxTransformation") /
+                              6) *
+                            100
+                          }
+                        />
+                        <Text>
+                          {`
                             ${(
-                              (getScopedData("draft", "tauxTransformation") /
+                              (getScopedData(
+                                "submitted",
+                                "tauxTransformation"
+                              ) /
                                 6) *
                               100
                             ).toFixed(0)}% de l'objectif`}
-                          </Text>
-                        </Flex>
+                        </Text>
                       </Flex>
                     </Flex>
-                  </StatCard>
-                </Flex>
+                    <Flex
+                      flexDirection={"column"}
+                      gap={2}
+                      width={
+                        scope && scope.type && scope.value ? "unset" : "50%"
+                      }
+                      px={scope && scope.type && scope.value ? 2 : 4}
+                    >
+                      <Flex>
+                        <Text
+                          fontSize="40px"
+                          fontWeight="800"
+                          color="bluefrance.113"
+                        >
+                          {`${getScopedData("draft", "tauxTransformation")} %`}
+                        </Text>
+                      </Flex>
+                      <Flex flexDirection="column" gap={2}>
+                        <Text fontSize={14} color={"blueecume.400_hover"}>
+                          (CALCULÉ SUR LES PROJETS DE DEMANDE)
+                        </Text>
+                        <ProgressBar
+                          percentage={
+                            (getScopedData("draft", "tauxTransformation") / 6) *
+                            100
+                          }
+                        />
+                        <Text>
+                          {`
+                            ${(
+                              (getScopedData("draft", "tauxTransformation") /
+                                6) *
+                              100
+                            ).toFixed(0)}% de l'objectif`}
+                        </Text>
+                      </Flex>
+                    </Flex>
+                  </Flex>
+                </StatCard>
               </GridItem>
               {scope && scope.type && scope.value && (
                 <GridItem h="100%">
-                  <Flex flexDirection={"column"} gap={5}>
-                    <Flex minH="2xs">
-                      <StatCard label="écart vs. moyenne nationale">
-                        <Text
-                          fontSize="40px"
-                          fontWeight="800"
-                          color={
-                            getScopedData("all", "tauxTransformation") -
-                              getNationalData("all", "tauxTransformation") >=
-                            0
-                              ? "pilotage.green.3"
-                              : "orange.warning"
-                          }
-                        >
-                          {`${(
-                            getScopedData("all", "tauxTransformation") -
-                            getNationalData("all", "tauxTransformation")
-                          ).toFixed(1)} pts`}
-                        </Text>
-                      </StatCard>
-                    </Flex>
-                  </Flex>
+                  <StatCard label="écart vs. moyenne nationale">
+                    <Text
+                      fontSize="40px"
+                      fontWeight="800"
+                      color={
+                        getScopedData("all", "tauxTransformation") -
+                          getNationalData("all", "tauxTransformation") >=
+                        0
+                          ? "pilotage.green.3"
+                          : "orange.warning"
+                      }
+                    >
+                      {`${(
+                        getScopedData("all", "tauxTransformation") -
+                        getNationalData("all", "tauxTransformation")
+                      ).toFixed(1)} pts`}
+                    </Text>
+                  </StatCard>
                 </GridItem>
               )}
-              <GridItem colSpan={2}>
-                <SimpleGrid spacing={5} columns={[2]}>
-                  <StatCard
-                    label="places ouvertes"
-                    icon="places_ouvertes"
-                    minH="52"
-                  >
-                    <Flex flexDirection={"column"} gap={3}>
-                      <Flex>
-                        <Text
-                          fontSize="40px"
-                          fontWeight="800"
-                          color="bluefrance.113"
-                        >
-                          {getScopedData("all", "placesOuvertesScolaire") +
-                            getScopedData("all", "placesOuvertesApprentissage")}
-                        </Text>
-                      </Flex>
-                      <ProgressBar
-                        percentage={
-                          (getScopedData("submitted", "placesOuvertes") /
-                            getScopedData("all", "placesOuvertes")) *
-                          100
-                        }
-                        leftLabel="Validées"
-                        rightLabel={getScopedData(
-                          "submitted",
-                          "placesOuvertes"
-                        )}
-                        colorScheme="green.submitted"
-                      />
-                      <ProgressBar
-                        percentage={
-                          (getScopedData("draft", "placesOuvertes") /
-                            getScopedData("all", "placesOuvertes")) *
-                          100
-                        }
-                        leftLabel="En projet"
-                        rightLabel={getScopedData("draft", "placesOuvertes")}
-                        colorScheme="orange.draft"
-                      />
+              <GridItem colSpan={[3, null, 1]}>
+                <StatCard label="places ouvertes" icon="places_ouvertes">
+                  <Flex flexDirection={"column"} gap={3}>
+                    <Flex>
+                      <Text
+                        fontSize="40px"
+                        fontWeight="800"
+                        color="bluefrance.113"
+                      >
+                        {getScopedData("all", "placesOuvertesScolaire") +
+                          getScopedData("all", "placesOuvertesApprentissage")}
+                      </Text>
                     </Flex>
-                  </StatCard>
-                  <StatCard
-                    label="places fermées"
-                    icon="places_fermees"
-                    minH="52"
-                  >
-                    <Flex flexDirection={"column"} gap={3}>
-                      <Flex>
-                        <Text
-                          fontSize="40px"
-                          fontWeight="800"
-                          color="bluefrance.113"
-                        >
-                          {getScopedData("all", "placesFermees")}
-                        </Text>
-                      </Flex>
-                      <ProgressBar
-                        percentage={
-                          (getScopedData("submitted", "placesFermees") /
-                            getScopedData("all", "placesFermees")) *
-                          100
-                        }
-                        leftLabel="Validées"
-                        rightLabel={getScopedData("submitted", "placesFermees")}
-                        colorScheme="green.submitted"
-                      />
-                      <ProgressBar
-                        percentage={
-                          (getScopedData("draft", "placesFermees") /
-                            getScopedData("all", "placesFermees")) *
-                          100
-                        }
-                        leftLabel="En projet"
-                        rightLabel={getScopedData("draft", "placesFermees")}
-                        colorScheme="orange.draft"
-                      />
-                    </Flex>
-                  </StatCard>
-                </SimpleGrid>
+                    <ProgressBar
+                      percentage={
+                        (getScopedData("submitted", "placesOuvertes") /
+                          getScopedData("all", "placesOuvertes")) *
+                        100
+                      }
+                      leftLabel="Validées"
+                      rightLabel={getScopedData("submitted", "placesOuvertes")}
+                      colorScheme="green.submitted"
+                    />
+                    <ProgressBar
+                      percentage={
+                        (getScopedData("draft", "placesOuvertes") /
+                          getScopedData("all", "placesOuvertes")) *
+                        100
+                      }
+                      leftLabel="En projet"
+                      rightLabel={getScopedData("draft", "placesOuvertes")}
+                      colorScheme="orange.draft"
+                    />
+                  </Flex>
+                </StatCard>
               </GridItem>
-              <GridItem>
-                <StatCard label="ratio des fermetures" minH="52">
+              <GridItem colSpan={[3, null, 1]}>
+                <StatCard label="places fermées" icon="places_fermees">
+                  <Flex flexDirection={"column"} gap={3}>
+                    <Flex>
+                      <Text
+                        fontSize="40px"
+                        fontWeight="800"
+                        color="bluefrance.113"
+                      >
+                        {getScopedData("all", "placesFermees")}
+                      </Text>
+                    </Flex>
+                    <ProgressBar
+                      percentage={
+                        (getScopedData("submitted", "placesFermees") /
+                          getScopedData("all", "placesFermees")) *
+                        100
+                      }
+                      leftLabel="Validées"
+                      rightLabel={getScopedData("submitted", "placesFermees")}
+                      colorScheme="green.submitted"
+                    />
+                    <ProgressBar
+                      percentage={
+                        (getScopedData("draft", "placesFermees") /
+                          getScopedData("all", "placesFermees")) *
+                        100
+                      }
+                      leftLabel="En projet"
+                      rightLabel={getScopedData("draft", "placesFermees")}
+                      colorScheme="orange.draft"
+                    />
+                  </Flex>
+                </StatCard>
+              </GridItem>
+              <GridItem colSpan={[3, null, 1]}>
+                <StatCard label="ratio des fermetures">
                   <Flex flexDirection={"column"}>
                     <Flex
                       fontSize="40px"

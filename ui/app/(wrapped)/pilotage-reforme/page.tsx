@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex, SimpleGrid } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -120,53 +120,48 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   };
 
   return (
-    <Container maxWidth={"100%"} bg="blueecume.925">
-      <Container maxWidth={"container.xl"} py="4">
-        <FiltersSection
-          activeFilters={filters}
-          handleFilters={handleFilters}
-          filterTracker={filterTracker}
-          isLoading={isLoading}
-          data={data}
-        ></FiltersSection>
-        <Box>
-          <SimpleGrid spacing={8} columns={[2]} mt={8}>
-            <Box>
-              <IndicateursClesSection
-                data={data}
-                isLoading={isLoading}
-              ></IndicateursClesSection>
-              <EvolutionIndicateursClesSection
-                data={data}
-                isLoading={isLoading}
-                isFiltered={isFiltered}
-                codeRegion={filters.codeRegion}
-                indicateur={indicateur}
-                handleIndicateurChange={handleIndicateurChange}
-                indicateurOptions={indicateurOptions}
-              ></EvolutionIndicateursClesSection>
-            </Box>
-            <CartoSection
-              data={dataRegions}
-              isLoading={isLoadingRegions}
+    <Container maxWidth={"container.xl"} bg="blueecume.925" py="4">
+      <FiltersSection
+        activeFilters={filters}
+        handleFilters={handleFilters}
+        filterTracker={filterTracker}
+        isLoading={isLoading}
+        data={data}
+      />
+      <Box>
+        <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
+          <Box flex={1}>
+            <IndicateursClesSection data={data} isLoading={isLoading} />
+            <EvolutionIndicateursClesSection
+              data={data}
+              isLoading={isLoading}
+              isFiltered={isFiltered}
+              codeRegion={filters.codeRegion}
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
-              activeFilters={filters}
-              handleFilters={handleFilters}
-            ></CartoSection>
-          </SimpleGrid>
-          <SimpleGrid spacing={5} columns={[1]} mt={14}>
-            <VueRegionAcademieSection
-              data={dataRegions}
-              order={order}
-              isLoading={isLoadingRegions}
-              handleOrder={handleOrder}
-              codeRegion={filters.codeRegion}
-            ></VueRegionAcademieSection>
-          </SimpleGrid>
-        </Box>
-      </Container>
+            />
+          </Box>
+          <CartoSection
+            data={dataRegions}
+            isLoading={isLoadingRegions}
+            indicateur={indicateur}
+            handleIndicateurChange={handleIndicateurChange}
+            indicateurOptions={indicateurOptions}
+            activeFilters={filters}
+            handleFilters={handleFilters}
+          ></CartoSection>
+        </Flex>
+        <SimpleGrid spacing={5} columns={[1]} mt={14}>
+          <VueRegionAcademieSection
+            data={dataRegions}
+            order={order}
+            isLoading={isLoadingRegions}
+            handleOrder={handleOrder}
+            codeRegion={filters.codeRegion}
+          ></VueRegionAcademieSection>
+        </SimpleGrid>
+      </Box>
     </Container>
   );
 });
