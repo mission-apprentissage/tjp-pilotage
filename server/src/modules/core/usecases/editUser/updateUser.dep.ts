@@ -10,5 +10,9 @@ export const updateUser = async ({
   userId: string;
   data: Insertable<DB["user"]>;
 }) => {
-  await kdb.updateTable("user").set(data).where("id", "=", userId).execute();
+  await kdb
+    .updateTable("user")
+    .set({ ...data })
+    .where("id", "=", userId)
+    .execute();
 };
