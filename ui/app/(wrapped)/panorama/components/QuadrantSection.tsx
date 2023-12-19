@@ -113,13 +113,13 @@ const filterFormations = ({
         mustBeReturned =
           mustBeReturned &&
           item.tauxPression !== undefined &&
-          item.tauxPression >= 130;
+          item.tauxPression >= 1.3;
       }
       if (tendances["faible_pression"] === true) {
         mustBeReturned =
           mustBeReturned &&
           item.tauxPression !== undefined &&
-          item.tauxPression < 70;
+          item.tauxPression < 0.7;
       }
       return mustBeReturned;
     });
