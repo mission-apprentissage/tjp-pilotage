@@ -16,7 +16,7 @@ export const [importConstatRentree] = inject(
     let errorCount = 0;
     for (const rentreeScolaire of RENTREES_SCOLAIRES) {
       console.log(
-        `Import du constat rentrée de l'année scolaire ${rentreeScolaire}`
+        `Import du constat de rentrée de l'année scolaire ${rentreeScolaire}`
       );
 
       await streamIt(
@@ -45,11 +45,11 @@ export const [importConstatRentree] = inject(
             await deps.createConstatRentree(constatRentree);
 
             process.stdout.write(
-              `\r${count} constat de rentrée ajoutés ou mis à jour`
+              `\r${count} constatRentree ajoutés ou mis à jour`
             );
           } catch (error) {
             console.log(
-              `An error occured while importing datas`,
+              `An error occured while importing data`,
               JSON.stringify(constatRentree, null, 2)
             );
             console.error(error);
