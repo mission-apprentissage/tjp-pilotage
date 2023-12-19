@@ -1,5 +1,6 @@
 import { inject } from "injecti";
-
+import { Insertable } from "kysely";
+import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { RENTREES_SCOLAIRES } from "../importFormationEtablissement/domain/millesimes";
@@ -32,10 +33,10 @@ export const [importConstatRentree] = inject(
             mefstat: constatRentreeLine["Mef Bcp 11"],
           });
 
-          const constatRentree = {
+          const constatRentree: Insertable<DB["constatRentree"]> = {
             uai: constatRentreeLine["Numéro d'établissement"],
             mefstat11: constatRentreeLine["Mef Bcp 11"],
-            effectifs: Number(constatRentreeLine["Nombre d'élèves"] ?? "0"),
+            effectif: Number(constatRentreeLine["Nombre d'élèves"] ?? "0"),
             cfd: nMef.FORMATION_DIPLOME,
             anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
             rentreeScolaire,
