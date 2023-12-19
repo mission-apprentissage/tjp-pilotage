@@ -4,9 +4,9 @@ import { z } from "zod";
 const BodySchema = z.object({
   firstname: z.string().min(1),
   lastname: z.string().min(1),
-  email: z.string().min(1),
+  email: z.string().email(),
   role: z.enum(Object.keys(PERMISSIONS) as [Role]),
-  codeRegion: z.string().min(1).nullable(),
+  codeRegion: z.string().min(1).optional(),
 });
 
 export type BodySchema = z.infer<typeof BodySchema>;

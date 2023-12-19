@@ -5,8 +5,8 @@ const user = {
   firstname: "firstname",
   lastname: "lastname",
   password: "password",
-  role: "role",
-};
+  role: "pilote",
+} as const;
 
 describe("createUser usecase", () => {
   it("should throw an error is the user already exist", async () => {
