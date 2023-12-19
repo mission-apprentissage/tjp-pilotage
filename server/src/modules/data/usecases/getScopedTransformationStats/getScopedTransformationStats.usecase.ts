@@ -75,6 +75,8 @@ const getScopedTransformationStatsFactory =
         results.push(...(await deps.getRegionDatas(activeFilters)));
     }
 
+    console.log({ results });
+
     return formatResult(
       activeFilters.scope,
       results,

@@ -116,6 +116,9 @@ export const getAcademieDatas = async ({
 
       return join;
     })
+    .leftJoin("constatRentree", (join) =>
+      join.onRef("dataEtablissement.uai", "=", "constatRentree.uai")
+    )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
@@ -124,6 +127,7 @@ export const getAcademieDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("academie.codeAcademie").as("code"),
       eb.ref("academie.libelle").as("libelle"),
+      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
     ])
     .$call((q) => q.groupBy(["academie.codeAcademie", "academie.libelle"]))
     .$call((eb) => {
@@ -136,6 +140,8 @@ export const getAcademieDatas = async ({
       return eb;
     })
     .where(isDemandeNotDeletedOrRefused)
+    .where("constatRentree.rentreeScolaire", "=", "2022")
+    .where("constatRentree.anneeDispositif", "=", 1)
     .execute()
     .then(cleanNull);
 };
@@ -155,7 +161,6 @@ export const getRegionDatas = async ({
   filiere?: string[];
   scope: Scope;
 }) => {
-  console.log("Get Regions Data");
   return await kdb
     .selectFrom("region")
     .leftJoin(
@@ -197,6 +202,9 @@ export const getRegionDatas = async ({
 
       return join;
     })
+    .leftJoin("constatRentree", (join) =>
+      join.onRef("dataEtablissement.uai", "=", "constatRentree.uai")
+    )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
@@ -205,6 +213,7 @@ export const getRegionDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("region.codeRegion").as("code"),
       eb.ref("region.libelleRegion").as("libelle"),
+      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
     ])
     .$call((q) => q.groupBy(["region.codeRegion", "region.libelleRegion"]))
     .$call((eb) => {
@@ -217,6 +226,8 @@ export const getRegionDatas = async ({
       return eb;
     })
     .where(isDemandeNotDeletedOrRefused)
+    .where("constatRentree.rentreeScolaire", "=", "2022")
+    .where("constatRentree.anneeDispositif", "=", 1)
     .execute()
     .then(cleanNull);
 };
@@ -277,6 +288,12 @@ export const getDepartementDatas = async ({
 
       return join;
     })
+    .leftJoin("constatRentree", (join) =>
+      join
+        .onRef("dataEtablissement.uai", "=", "constatRentree.uai")
+        .on("constatRentree.rentreeScolaire", "=", "2022")
+        .on("constatRentree.anneeDispositif", "=", 1)
+    )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
@@ -285,6 +302,7 @@ export const getDepartementDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("departement.codeDepartement").as("code"),
       eb.ref("departement.libelle").as("libelle"),
+      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
     ])
     .$call((q) =>
       q.groupBy(["departement.codeDepartement", "departement.libelle"])
