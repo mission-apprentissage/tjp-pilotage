@@ -1,4 +1,4 @@
-import { Box, useToken } from "@chakra-ui/react";
+import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import _ from "lodash";
@@ -283,17 +283,9 @@ export const CartoGraph = ({
   }, [option, graphData]);
 
   return (
-    <Box position="relative" overflow="visible !important">
-      <Box
-        ref={containerRef}
-        position="absolute"
-        right="0"
-        top="0"
-        left="0"
-        bottom="0"
-        height={"540"}
-      ></Box>
-    </Box>
+    <AspectRatio ratio={1}>
+      <Box ref={containerRef} w="100%" height="100%" />
+    </AspectRatio>
   );
 };
 

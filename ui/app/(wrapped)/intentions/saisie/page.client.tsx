@@ -241,9 +241,17 @@ export const PageClient = () => {
 
   return (
     <>
-      <Container maxWidth="100%" flex={1} display={"flex"} minHeight={0} py={4}>
+      <Container
+        maxWidth="100%"
+        flex={1}
+        flexDirection={["column", null, "row"]}
+        display={"flex"}
+        minHeight={0}
+        py={4}
+      >
         <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
         <Box
+          display={["none", null, "unset"]}
           borderLeft="solid 1px"
           borderColor="gray.100"
           height="100%"
@@ -256,7 +264,10 @@ export const PageClient = () => {
           minHeight={0}
           minW={0}
         >
-          <Flex flexDirection={"row"} justifyContent={"space-between"}>
+          <Flex
+            flexDirection={["column", null, "row"]}
+            justifyContent={"space-between"}
+          >
             <Flex>
               <Input
                 type="text"
@@ -277,29 +288,27 @@ export const PageClient = () => {
                 <Search2Icon color="white" />
               </Button>
             </Flex>
-            <Flex>
-              <Button
-                mr="auto"
-                size="md"
-                variant="ghost"
-                color={"bluefrance.113"}
-                onClick={async () => {
-                  trackEvent("demandes:export");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: { ...filters, search, ...order, limit: 10000000 },
-                  });
+            <Button
+              mr="auto"
+              size="md"
+              variant="ghost"
+              color={"bluefrance.113"}
+              onClick={async () => {
+                trackEvent("demandes:export");
+                const data = await client.ref("[GET]/demandes").query({
+                  query: { ...filters, search, ...order, limit: 10000000 },
+                });
 
-                  downloadCsv(
-                    "export_demandes.csv",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
-              >
-                <DownloadIcon mr="2" />
-                Exporter en CSV
-              </Button>
-            </Flex>
+                downloadCsv(
+                  "export_demandes.csv",
+                  data.demandes,
+                  DEMANDES_COLUMNS
+                );
+              }}
+            >
+              <DownloadIcon mr="2" />
+              Exporter en CSV
+            </Button>
           </Flex>
           {data?.demandes.length ? (
             <>

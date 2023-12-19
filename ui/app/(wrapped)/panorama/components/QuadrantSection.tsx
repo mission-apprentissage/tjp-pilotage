@@ -6,7 +6,6 @@ import {
   Center,
   chakra,
   Checkbox,
-  Container,
   createIcon,
   Flex,
   FormControl,
@@ -114,13 +113,13 @@ const filterFormations = ({
         mustBeReturned =
           mustBeReturned &&
           item.tauxPression !== undefined &&
-          item.tauxPression >= 130;
+          item.tauxPression >= 1.3;
       }
       if (tendances["faible_pression"] === true) {
         mustBeReturned =
           mustBeReturned &&
           item.tauxPression !== undefined &&
-          item.tauxPression < 70;
+          item.tauxPression < 0.7;
       }
       return mustBeReturned;
     });
@@ -218,14 +217,14 @@ export const QuadrantSection = ({
   };
 
   return (
-    <Container as="section" py="6" mt="6" maxWidth={"container.xl"}>
+    <Box as="section" py="6" mt="6" maxWidth={"container.xl"}>
       <Stack direction={["column", "row"]} spacing="10">
         <Box flex={1}>
           <Heading
             fontWeight={"hairline"}
             maxWidth={250}
             as="h2"
-            ml="6"
+            ml={[null, null, "6"]}
             mb={12}
           >
             Analyse des formations
@@ -342,7 +341,7 @@ export const QuadrantSection = ({
           </FormControl>
         </Box>
         <Box flex={1}>
-          <Flex justify="space-between">
+          <Flex justify="space-between" flexDir={["column", null, "row"]}>
             <Flex>
               <Button onClick={() => toggleTypeVue()} variant="solid">
                 <ViewIcon mr={2}></ViewIcon>
@@ -380,7 +379,7 @@ export const QuadrantSection = ({
                 Exporter en csv
               </Button>
             </Flex>
-            <Flex alignItems={"flex-end"}>
+            <Flex alignItems={"flex-end"} justify="flex-end" gap={2}>
               <Text color="grey" fontSize="sm" textAlign="left">
                 {filteredFormations?.length ?? "-"} certifications
               </Text>
@@ -452,7 +451,7 @@ export const QuadrantSection = ({
           </Text>
         </Box>
       </Stack>
-    </Container>
+    </Box>
   );
 };
 

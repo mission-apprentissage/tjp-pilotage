@@ -4,7 +4,6 @@ import {
   Box,
   Button,
   Center,
-  Container,
   Flex,
   Heading,
   Skeleton,
@@ -81,8 +80,8 @@ export const QuadrantSection = ({
   );
 
   return (
-    <Container as="section" py="6" mt="8" maxWidth={"container.xl"}>
-      <Box pl="8" maxW={500} mb="6">
+    <Box as="section" py="6" mt="8" maxWidth={"container.xl"}>
+      <Box pl={[null, null, "8"]} maxW={500} mb="6">
         <Heading fontWeight={"hairline"} as="h2">
           Indicateurs régionaux de vos formations
         </Heading>
@@ -90,8 +89,8 @@ export const QuadrantSection = ({
           Rentrée scolaire {rentreeScolaire ?? "-"}
         </Text>
       </Box>
-      <Box px="16" maxW={800} m="auto">
-        <Flex justify="space-between">
+      <Box px={[null, null, "16"]} maxW={800} m="auto">
+        <Flex justify="space-between" flexDir={["column", null, "row"]} gap={2}>
           <Flex>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
@@ -126,7 +125,7 @@ export const QuadrantSection = ({
               Exporter en csv
             </Button>
           </Flex>
-          <Flex alignItems={"flex-end"}>
+          <Flex alignItems={"flex-end"} justify="flex-end">
             <Text color="grey" fontSize="sm" textAlign="left">
               {filteredFormations?.length ?? "-"} certifications
             </Text>
@@ -187,7 +186,7 @@ export const QuadrantSection = ({
           pour des raisons statistiques
         </Text>
       </Box>
-    </Container>
+    </Box>
   );
 };
 
