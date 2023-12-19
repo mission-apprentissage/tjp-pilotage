@@ -18,36 +18,66 @@ import {
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
-import { EditUser } from "@/app/(wrapped)/users/EditUser";
+import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { useStateParams } from "@/utils/useFilters";
 
-import { client } from "../../../api.client";
-import { GuardPermission } from "../../../utils/security/GuardPermission";
+import { client } from "../../../../api.client";
+import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
+import { GuardPermission } from "../../../../utils/security/GuardPermission";
 import { CreateUser } from "./CreateUser";
+
+const Columns = {
+  email: "Email",
+  firstname: "Prénom",
+  lastname: "Nom",
+  role: "Rôle",
+  codeRegion: "Code région",
+  uais: "Uais",
+  createdAt: "Ajouté le",
+} satisfies ExportColumns<
+  (typeof client.infer)["[GET]/users"]["users"][number]
+>;
 
 export default () => {
   const [filters, setFilters] = useStateParams<{
     page: number;
     search?: string;
-    order?: { orderBy: string; order: "asc" | "desc" };
+    order?: "asc" | "desc";
+    orderBy?: keyof typeof Columns;
   }>({ defaultValues: { page: 0 } });
 
+  const order = { order: filters.order, orderBy: filters.orderBy };
+  const [search, setSearch] = useState(filters.search);
+
+  const handleOrder = (column: Exclude<typeof filters.orderBy, undefined>) => {
+    if (order?.orderBy !== column) {
+      setFilters({ ...filters, order: "desc", orderBy: column });
+      return;
+    }
+    setFilters({
+      ...filters,
+      order: order?.order === "asc" ? "desc" : "asc",
+      orderBy: column,
+    });
+  };
+
   const { data } = client.ref("[GET]/users").useQuery({
-    query: { search: filters.search, limit: 30, offset: filters.page * 30 },
+    query: {
+      ...filters,
+      search: filters.search,
+      limit: 10,
+      offset: filters.page * 10,
+    },
   });
 
-  const order = filters.order;
-
-  const { isOpen, onOpen, onClose } = useDisclosure();
   const [userId, setUserId] = useState<string>();
   const user = useMemo(
     () => data?.users.find(({ id }) => id === userId),
     [data, userId]
   );
-
-  const [search, setSearch] = useState(filters.search);
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
     <GuardPermission permission="users/lecture">
@@ -93,26 +123,33 @@ export default () => {
                 bg="white"
               >
                 <Tr>
-                  <Th cursor="pointer" onClick={() => {}}>
-                    <OrderIcon {...order} column="libelleDiplome" />
-                    email
+                  <Th cursor="pointer" onClick={() => handleOrder("email")}>
+                    <OrderIcon {...order} column="email" />
+                    {Columns.email}
                   </Th>
-                  <Th cursor="pointer" onClick={() => {}}>
-                    <OrderIcon {...order} column="libelleEtablissement" />
-                    firstname
+                  <Th cursor="pointer" onClick={() => handleOrder("firstname")}>
+                    <OrderIcon {...order} column="firstname" />
+                    {Columns.firstname}
                   </Th>
-                  <Th cursor="pointer" onClick={() => {}}>
-                    <OrderIcon {...order} column="libelleDepartement" />
-                    lastname
+                  <Th cursor="pointer" onClick={() => handleOrder("lastname")}>
+                    <OrderIcon {...order} column="lastname" />
+                    {Columns.lastname}
                   </Th>
-                  <Th cursor="pointer" onClick={() => {}}>
-                    <OrderIcon {...order} column="typeDemande" />
-                    role
+                  <Th cursor="pointer" onClick={() => handleOrder("role")}>
+                    <OrderIcon {...order} column="role" />
+                    {Columns.role}
                   </Th>
-                  <Th>Code Région</Th>
-                  <Th cursor="pointer" onClick={() => {}}>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("codeRegion")}
+                  >
+                    <OrderIcon {...order} column="codeRegion" />
+                    {Columns.codeRegion}
+                  </Th>
+                  <Th>{Columns.uais}</Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
                     <OrderIcon {...order} column="createdAt" />
-                    Ajouté le
+                    {Columns.createdAt}
                   </Th>
                   <Th isNumeric>actions</Th>
                 </Tr>
@@ -126,12 +163,14 @@ export default () => {
                     <Td>{user.role}</Td>
 
                     <Td>{user.codeRegion}</Td>
+                    <Td>{user.uais}</Td>
                     <Td>
                       {user.createdAt &&
                         new Date(user.createdAt).toLocaleString()}
                     </Td>
                     <Td isNumeric>
                       <IconButton
+                        variant="ghost"
                         onClick={() => {
                           setUserId(user.id);
                           onOpen();
@@ -145,15 +184,26 @@ export default () => {
                 ))}
               </Tbody>
             </Table>
+            {!data.users.length && (
+              <Box p={6} textAlign="center" color="gray">
+                Aucunes données
+              </Box>
+            )}
           </TableContainer>
           <TableFooter
             pl="4"
             page={filters.page}
-            pageSize={30}
+            pageSize={10}
             count={data.count}
             onPageChange={(newPage) =>
               setFilters({ ...filters, page: newPage })
             }
+            onExport={async () => {
+              const data = await client.ref("[GET]/users").query({
+                query: { ...filters, ...order, limit: 1000000 },
+              });
+              downloadCsv("users_export.csv", data.users, Columns);
+            }}
           />
           {user && <EditUser isOpen={isOpen} onClose={onClose} user={user} />}
           {!user && <CreateUser isOpen={isOpen} onClose={onClose} />}

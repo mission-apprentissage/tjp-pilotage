@@ -21,24 +21,21 @@ import { useForm } from "react-hook-form";
 import { PERMISSIONS } from "shared";
 import { z } from "zod";
 
-import { client } from "../../../api.client";
+import { client } from "../../../../api.client";
 
-export const EditUser = ({
+export const CreateUser = ({
   isOpen,
   onClose,
-  user,
 }: {
   isOpen: boolean;
   onClose: () => void;
-  user: (typeof client.infer)["[GET]/users"]["users"][number];
 }) => {
   const {
     register,
     formState: { errors },
-    reset,
     handleSubmit,
-  } = useForm<(typeof client.inferArgs)["[PUT]/users/:userId"]["body"]>({
-    shouldUseNativeValidation: false,
+    reset,
+  } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
     defaultValues: {
       email: "",
       codeRegion: "",
@@ -48,41 +45,41 @@ export const EditUser = ({
     },
   });
 
-  useEffect(() => {
-    reset(user, { keepDefaultValues: true });
-  }, [isOpen, reset]);
+  useEffect(
+    () => reset(undefined, { keepDefaultValues: true }),
+    [isOpen, reset]
+  );
 
   const { data: regions } = client.ref("[GET]/regions").useQuery({});
 
   const queryClient = useQueryClient();
 
   const {
-    mutate: updateUser,
+    mutate: createUser,
     isLoading,
     isError,
-  } = client.ref("[PUT]/users/:userId").useMutation({
+  } = client.ref("[POST]/users/:userId").useMutation({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/users"]);
       onClose();
     },
   });
 
+  const onSubmit = (
+    values: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
+  ) => createUser({ body: values });
+
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent
-        as="form"
-        onSubmit={handleSubmit((v) =>
-          updateUser({ body: v, params: { userId: user?.id } })
-        )}
-      >
-        <ModalHeader>Éditer un utilisateur</ModalHeader>
+      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
+        <ModalHeader>Ajouter un utilisateur</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl mb="4" isInvalid={!!errors.email}>
             <FormLabel>Email</FormLabel>
             <Input
-              type="email"
+              // type="email"
               {...register("email", {
                 validate: (v) =>
                   z.string().email().safeParse(v).success ||
