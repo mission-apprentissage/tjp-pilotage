@@ -20,13 +20,7 @@ export const FiltersSection = ({
     <>
       {isLoading ? (
         <Box height={24}>
-          <Skeleton
-            opacity="0.3"
-            width="100%"
-            height={"100%"}
-            py={4}
-            px={8}
-          ></Skeleton>
+          <Skeleton opacity="0.3" width="100%" height={"100%"} py={4} px={8} />
         </Box>
       ) : (
         <Box borderRadius={4}>
@@ -35,7 +29,7 @@ export const FiltersSection = ({
               <FormLabel>Niveau de diplôme</FormLabel>
               <Multiselect
                 onClose={filterTracker("codeNiveauDiplome")}
-                width="52"
+                width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
                 onChange={(selected) =>
@@ -50,7 +44,7 @@ export const FiltersSection = ({
             <Box justifyContent={"start"}>
               <FormLabel>Régions</FormLabel>
               <Select
-                width={"72"}
+                width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
                 value={activeFilters.codeRegion ?? ""}

@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardBody,
-  Container,
   Flex,
   Heading,
   Img,
@@ -108,7 +107,7 @@ const InfoCard = ({
               </Text>
             )}
           </Flex>
-          <Img width="160px" src={img} objectFit="contain" />
+          <Img width={["70px", null, "160px"]} src={img} objectFit="contain" />
         </Flex>
       </CardBody>
     </Card>
@@ -128,8 +127,8 @@ export const InfoSection = ({
 
   return (
     <>
-      <Container as="section" pt="6" maxWidth={"container.xl"}>
-        <Box ml="6" mb="4">
+      <Box as="section" pt="6" maxWidth={"container.xl"}>
+        <Box ml={[null, null, "6"]} mb="4">
           <Heading fontWeight={"hairline"} maxWidth={250} as="h2" mb="4">
             Anticiper les besoins
           </Heading>
@@ -140,9 +139,9 @@ export const InfoSection = ({
             analyses.
           </Box>
         </Box>
-      </Container>
+      </Box>
 
-      <Container pb={12} mt={2} as="section" maxWidth={"container.xl"}>
+      <Box pb={12} mt={2} as="section" maxWidth={"container.xl"}>
         <SimpleGrid spacing={3} columns={[1, null, 2]}>
           <InfoCard
             title="Projection métiers 2030"
@@ -172,7 +171,7 @@ export const InfoSection = ({
             sourceText="* Source: Pole Emploi"
           />
         </SimpleGrid>
-      </Container>
+      </Box>
     </>
   );
 };

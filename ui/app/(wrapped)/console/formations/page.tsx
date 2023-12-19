@@ -184,7 +184,7 @@ export default function Formations() {
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Select
           placeholder="Toutes les régions"
-          width="52"
+          width="12rem"
           variant="input"
           size="sm"
           onChange={(e) => {
@@ -210,9 +210,10 @@ export default function Formations() {
           ))}
         </Select>
         <Multiselect
+          display={["none", null, "flex"]}
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeAcademie")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
           value={filters.codeAcademie ?? []}
@@ -220,9 +221,10 @@ export default function Formations() {
           Académie
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeDepartement")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
           value={filters.codeDepartement ?? []}
@@ -230,9 +232,10 @@ export default function Formations() {
           Département
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           disabled={!filters.codeRegion}
           onClose={filterTracker("commune")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
           value={filters.commune ?? []}
@@ -240,8 +243,9 @@ export default function Formations() {
           Commune
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("codeDiplome")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
           value={filters.codeDiplome ?? []}
@@ -249,8 +253,9 @@ export default function Formations() {
           Diplôme
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("codeDispositif")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDispositif", selected)}
           options={data?.filters.dispositifs}
           value={filters.codeDispositif ?? []}
@@ -258,8 +263,9 @@ export default function Formations() {
           Dispositif
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("cfdFamille")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
           value={filters.cfdFamille ?? []}
@@ -268,7 +274,7 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cfd")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
           value={filters.cfd ?? []}
@@ -276,8 +282,9 @@ export default function Formations() {
           Formation
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("CPC")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("CPC", selected)}
           options={data?.filters.CPCs}
           value={filters.CPC ?? []}
@@ -285,8 +292,9 @@ export default function Formations() {
           CPC
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("CPCSecteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("CPCSecteur", selected)}
           options={data?.filters.CPCSecteurs}
           value={filters.CPCSecteur ?? []}
@@ -294,8 +302,9 @@ export default function Formations() {
           CPC Secteur
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("CPCSousSecteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
           options={data?.filters.CPCSousSecteurs}
           value={filters.CPCSousSecteur ?? []}
@@ -303,8 +312,9 @@ export default function Formations() {
           CPC Sous Secteur
         </Multiselect>
         <Multiselect
+          display={["none", null, "flex"]}
           onClose={filterTracker("libelleFiliere")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("libelleFiliere", selected)}
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}

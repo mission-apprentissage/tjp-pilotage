@@ -1,4 +1,4 @@
-import { Box, Container, Heading, HStack, Text } from "@chakra-ui/react";
+import { Box, Heading, Stack, Text } from "@chakra-ui/react";
 
 import { client } from "@/api.client";
 
@@ -15,13 +15,17 @@ export const RegionSection = ({
   };
 
   return (
-    <Container as="section" py="6" mt="12" maxWidth={"container.xl"}>
-      <HStack justify="flex-end" align="center">
+    <Box as="section" py="6" mt="12" maxWidth={"container.xl"}>
+      <Stack
+        justify="flex-end"
+        flexDir={["column", null, "row"]}
+        align={[null, null, "center"]}
+      >
         <Heading
           fontWeight={"hairline"}
           maxWidth={300}
           as="h2"
-          ml="6"
+          ml={[null, null, "6"]}
           mr="auto"
         >
           Chiffres clefs{" "}
@@ -51,8 +55,8 @@ export const RegionSection = ({
           }
           label="Taux d’emploi à 6 mois dans la région"
         />
-      </HStack>
-    </Container>
+      </Stack>
+    </Box>
   );
 };
 
@@ -63,7 +67,7 @@ const StatCard = ({ value, label }: { value?: string; label: string }) => {
       bg="grey.975"
       borderBottom="2px solid"
       borderBottomColor="bluefrance.113"
-      maxWidth={240}
+      maxWidth={[null, null, 240]}
     >
       <Text fontSize="lg" fontWeight="bold">
         {value ?? "-"}

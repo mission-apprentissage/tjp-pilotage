@@ -53,7 +53,10 @@ export const Header = () => {
         <HStack as={Link} spacing={10} align="center" href="/">
           <Img height="70px" src="/logo_gouvernement.svg" />
           <Heading as={"h1"} size={"md"}>
-            Orion, outil d’aide à la transformation de la carte des formations
+            Orion
+            <Box as="span" display={["none", null, "unset"]}>
+              , outil d’aide à la transformation de la carte des formations
+            </Box>
           </Heading>
         </HStack>
         <Box ml="auto">
@@ -79,7 +82,10 @@ export const Header = () => {
                 color="bluefrance.113"
                 variant="ghost"
               >
-                Bienvenue, {auth.user.email}
+                <Box as="span" display={["none", null, "unset"]}>
+                  Bienvenue,{" "}
+                </Box>
+                {auth.user.email}
                 <ChevronDownIcon ml="2" />
               </MenuButton>
               <MenuList>
@@ -91,7 +97,7 @@ export const Header = () => {
           )}
         </Box>
       </Flex>
-      <Container maxWidth={"container.xl"}>
+      <Container maxWidth={"container.xl"} px={0}>
         <Nav />
       </Container>
     </VStack>
