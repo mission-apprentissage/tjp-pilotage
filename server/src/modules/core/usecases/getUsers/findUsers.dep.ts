@@ -8,10 +8,12 @@ export const findUsers = async ({
   offset,
   limit,
   search,
+  orderBy,
 }: {
   offset: number;
   limit: number;
   search?: string;
+  orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
   const users = await kdb
     .selectFrom("user")
@@ -26,6 +28,13 @@ export const findUsers = async ({
     .$narrowType<{ role: Role }>()
     .offset(offset)
     .limit(limit)
+    .$call((q) => {
+      if (!orderBy) return q;
+      return q.orderBy(
+        sql.ref(orderBy.column),
+        sql`${sql.raw(orderBy.order)} NULLS LAST`
+      );
+    })
     .orderBy("createdAt", "desc")
     .execute()
     .then(cleanNull);

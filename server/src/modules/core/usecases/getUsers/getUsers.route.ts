@@ -14,7 +14,11 @@ export const getUsersRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("users/lecture"),
       handler: async (request, response) => {
-        const users = await getUsers(request.query);
+        const { order, orderBy, ...rest } = request.query;
+        const users = await getUsers({
+          ...rest,
+          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+        });
         response.code(200).send(users);
       },
     });
