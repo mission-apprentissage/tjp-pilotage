@@ -67,7 +67,7 @@ export const CreateUser = ({
 
   const onSubmit = (
     v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
-  ) => createUser({ body: { ...v, codeRegion: v.codeRegion || null } });
+  ) => createUser({ body: v });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -79,7 +79,6 @@ export const CreateUser = ({
           <FormControl mb="4" isInvalid={!!errors.email}>
             <FormLabel>Email</FormLabel>
             <Input
-              // type="email"
               {...register("email", {
                 validate: (v) =>
                   z.string().email().safeParse(v).success ||
