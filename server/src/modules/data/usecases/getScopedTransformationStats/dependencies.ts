@@ -119,6 +119,37 @@ export const getAcademieDatas = async ({
     .leftJoin("constatRentree", (join) =>
       join.onRef("dataEtablissement.uai", "=", "constatRentree.uai")
     )
+    .leftJoin(
+      (eb) =>
+        eb
+          .selectFrom("academie")
+          .leftJoin(
+            "dataEtablissement",
+            "dataEtablissement.codeAcademie",
+            "academie.codeAcademie"
+          )
+          .leftJoin(
+            "constatRentree",
+            "constatRentree.uai",
+            "dataEtablissement.uai"
+          )
+          .select((es) => [
+            es.ref("academie.codeAcademie").as("codeAcademie"),
+            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
+              "effectif"
+            ),
+          ])
+          .where("constatRentree.rentreeScolaire", "=", "2022")
+          .where("constatRentree.anneeDispositif", "=", 1)
+          .groupBy("academie.codeAcademie")
+          .as("effectifsParAcademie"),
+      (join) =>
+        join.onRef(
+          "effectifsParAcademie.codeAcademie",
+          "=",
+          "academie.codeAcademie"
+        )
+    )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
@@ -127,9 +158,15 @@ export const getAcademieDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("academie.codeAcademie").as("code"),
       eb.ref("academie.libelle").as("libelle"),
-      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
+      eb.ref("effectifsParAcademie.effectif").as("effectif"),
     ])
-    .$call((q) => q.groupBy(["academie.codeAcademie", "academie.libelle"]))
+    .$call((q) =>
+      q.groupBy([
+        "academie.codeAcademie",
+        "academie.libelle",
+        "effectifsParAcademie.effectif",
+      ])
+    )
     .$call((eb) => {
       if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
@@ -202,8 +239,32 @@ export const getRegionDatas = async ({
 
       return join;
     })
-    .leftJoin("constatRentree", (join) =>
-      join.onRef("dataEtablissement.uai", "=", "constatRentree.uai")
+    .leftJoin(
+      (eb) =>
+        eb
+          .selectFrom("region")
+          .leftJoin(
+            "dataEtablissement",
+            "dataEtablissement.codeRegion",
+            "region.codeRegion"
+          )
+          .leftJoin(
+            "constatRentree",
+            "constatRentree.uai",
+            "dataEtablissement.uai"
+          )
+          .select((es) => [
+            es.ref("region.codeRegion").as("codeRegion"),
+            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
+              "effectif"
+            ),
+          ])
+          .where("constatRentree.rentreeScolaire", "=", "2022")
+          .where("constatRentree.anneeDispositif", "=", 1)
+          .groupBy("region.codeRegion")
+          .as("effectifsParRegion"),
+      (join) =>
+        join.onRef("effectifsParRegion.codeRegion", "=", "region.codeRegion")
     )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
@@ -213,9 +274,15 @@ export const getRegionDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("region.codeRegion").as("code"),
       eb.ref("region.libelleRegion").as("libelle"),
-      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
+      eb.ref("effectifsParRegion.effectif").as("effectif"),
     ])
-    .$call((q) => q.groupBy(["region.codeRegion", "region.libelleRegion"]))
+    .$call((q) =>
+      q.groupBy([
+        "region.codeRegion",
+        "region.libelleRegion",
+        "effectifsParRegion.effectif",
+      ])
+    )
     .$call((eb) => {
       if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
       return eb;
@@ -226,8 +293,6 @@ export const getRegionDatas = async ({
       return eb;
     })
     .where(isDemandeNotDeletedOrRefused)
-    .where("constatRentree.rentreeScolaire", "=", "2022")
-    .where("constatRentree.anneeDispositif", "=", 1)
     .execute()
     .then(cleanNull);
 };
@@ -288,11 +353,36 @@ export const getDepartementDatas = async ({
 
       return join;
     })
-    .leftJoin("constatRentree", (join) =>
-      join
-        .onRef("dataEtablissement.uai", "=", "constatRentree.uai")
-        .on("constatRentree.rentreeScolaire", "=", "2022")
-        .on("constatRentree.anneeDispositif", "=", 1)
+    .leftJoin(
+      (eb) =>
+        eb
+          .selectFrom("departement")
+          .leftJoin(
+            "dataEtablissement",
+            "dataEtablissement.codeDepartement",
+            "departement.codeDepartement"
+          )
+          .leftJoin(
+            "constatRentree",
+            "constatRentree.uai",
+            "dataEtablissement.uai"
+          )
+          .select((es) => [
+            es.ref("departement.codeDepartement").as("codeDepartement"),
+            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
+              "effectif"
+            ),
+          ])
+          .where("constatRentree.rentreeScolaire", "=", "2022")
+          .where("constatRentree.anneeDispositif", "=", 1)
+          .groupBy("departement.codeDepartement")
+          .as("effectifsParDepartement"),
+      (join) =>
+        join.onRef(
+          "effectifsParDepartement.codeDepartement",
+          "=",
+          "departement.codeDepartement"
+        )
     )
     .select((eb) => [
       selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
@@ -302,10 +392,14 @@ export const getDepartementDatas = async ({
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("departement.codeDepartement").as("code"),
       eb.ref("departement.libelle").as("libelle"),
-      sql<number>`SUM(${eb.ref("constatRentree.effectifs")})`.as("effectifs"),
+      eb.ref("effectifsParDepartement.effectif").as("effectif"),
     ])
     .$call((q) =>
-      q.groupBy(["departement.codeDepartement", "departement.libelle"])
+      q.groupBy([
+        "departement.codeDepartement",
+        "departement.libelle",
+        "effectifsParDepartement.effectif",
+      ])
     )
     .$call((eb) => {
       if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
