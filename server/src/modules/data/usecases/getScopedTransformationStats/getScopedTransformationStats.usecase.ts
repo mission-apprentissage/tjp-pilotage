@@ -1,10 +1,20 @@
 import _ from "lodash";
 
 import { GetScopedTransformationStatsType, dependencies } from "./dependencies";
-import { QuerySchema, Scope } from "./getScopedTransformationStats.schema";
+import { QuerySchema } from "./getScopedTransformationStats.schema";
+
+const getTauxTransformation = (
+  transformes: number,
+  effectif: number | undefined
+) => {
+  if (!effectif) {
+    return undefined;
+  }
+
+  return Math.round((transformes / (effectif || 0)) * 10000) / 100;
+};
 
 const formatResult = (
-  scope: Scope,
   result: GetScopedTransformationStatsType,
   order: "asc" | "desc" = "asc",
   orderBy?: string
@@ -42,8 +52,11 @@ const formatResult = (
               item.placesFermeesScolaire +
               item.placesFermeesApprentissage) || 0) * 10000
         ) / 100,
-      tauxTransformation: 0,
-      effectif: 0,
+      tauxTransformation: getTauxTransformation(
+        item.transformes,
+        item.effectif
+      ),
+      effectif: item.effectif,
     }))
     .orderBy((item) => {
       if (orderBy) return item[orderBy as keyof typeof item];
@@ -75,14 +88,7 @@ const getScopedTransformationStatsFactory =
         results.push(...(await deps.getRegionDatas(activeFilters)));
     }
 
-    console.log({ results });
-
-    return formatResult(
-      activeFilters.scope,
-      results,
-      activeFilters.order,
-      activeFilters.orderBy
-    );
+    return formatResult(results, activeFilters.order, activeFilters.orderBy);
   };
 
 export const getScopedTransformationStats =
