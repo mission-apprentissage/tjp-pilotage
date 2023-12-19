@@ -43,19 +43,19 @@ export const FiltersSection = ({
       ) : (
         <Box borderRadius={4}>
           <Flex justifyContent={"start"} gap={8} py={3}>
-            <Box justifyContent={"start"}>
+            <Box justifyContent={"start"} flex={[1, null, "unset"]}>
               <FormLabel>Rentrée scolaire</FormLabel>
-              <Select width={"72"} size="md" variant="newInput">
+              <Select width={[null, null, "72"]} size="md" variant="newInput">
                 <option>2024</option>
                 <option disabled>2025</option>
                 <option disabled>2026</option>
                 <option disabled>2027</option>
               </Select>
             </Box>
-            <Box justifyContent={"start"}>
+            <Box justifyContent={"start"} flex={[1, null, "unset"]}>
               <FormLabel>Région</FormLabel>
               <Select
-                width={"72"}
+                width={[null, null, "72"]}
                 size="md"
                 variant="newInput"
                 value={activeTerritoiresFilters.regions ?? ""}
@@ -80,7 +80,7 @@ export const FiltersSection = ({
                 ))}
               </Select>
             </Box>
-            <Box justifyContent={"start"}>
+            <Box justifyContent={"start"} display={["none", null, "block"]}>
               <FormLabel>Académie</FormLabel>
               <Select
                 width={"72"}
@@ -108,7 +108,7 @@ export const FiltersSection = ({
                 ))}
               </Select>
             </Box>
-            <Box justifyContent={"start"}>
+            <Box justifyContent={"start"} display={["none", null, "block"]}>
               <FormLabel>Département</FormLabel>
               <Select
                 width={"72"}
@@ -137,7 +137,12 @@ export const FiltersSection = ({
               </Select>
             </Box>
           </Flex>
-          <Flex justifyContent={"start"} gap={8} py={3}>
+          <Flex
+            justifyContent={"start"}
+            gap={8}
+            py={3}
+            display={["none", null, "flex"]}
+          >
             <Box justifyContent={"start"}>
               <FormLabel>Diplôme</FormLabel>
               <Multiselect

@@ -310,7 +310,7 @@ export const Quadrant = function <
       <Box
         ref={containerRef}
         position="absolute"
-        right="-15px"
+        right="0"
         top="0"
         left="0"
         bottom="0"

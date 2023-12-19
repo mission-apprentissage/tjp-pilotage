@@ -36,6 +36,21 @@ export const config = {
       .required()
       .asString(),
   },
+  dne: {
+    url: env
+      .get("PILOTAGE_DNE_URL")
+      .default(
+        "https://hub-oidc.orion.education.fr/.well-known/openid-configuration"
+      )
+      .asString(),
+    codeVerifierJwt: env
+      .get("PILOTAGE_DNE_CODE_VERIFIER_JWT_SECRET")
+      .required()
+      .asString(),
+    clientId: env.get("PILOTAGE_DNE_CLIENT_ID").required().asString(),
+    clientSecret: env.get("PILOTAGE_DNE_CLIENT_SECRET").required().asString(),
+    redirectUri: env.get("PILOTAGE_DNE_REDIRECT_URI").required().asString(),
+  },
   smtp: {
     host: env.get("PILOTAGE_SMTP_HOST").required().asString(),
     port: env.get("PILOTAGE_SMTP_PORT").required().asString(),
