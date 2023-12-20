@@ -222,7 +222,7 @@ const Delta = ({
   let deltaIcon;
 
   if (delta != null) {
-    if (delta < 0)
+    if (Math.round(delta) < 0)
       deltaIcon = (
         <Flex>
           <TriangleDownIcon
@@ -234,7 +234,7 @@ const Delta = ({
           <Text>{`${Math.round(delta)} pts`}</Text>
         </Flex>
       );
-    else if (delta === 0)
+    else if (Math.round(delta) === 0)
       deltaIcon = (
         <Flex>
           <Text>{`+${Math.round(delta)} pts`}</Text>
@@ -322,8 +322,9 @@ const StatCard = ({
           data?.anneeNMoins1.nationale.insertion
         )
           return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.nationale.insertion
+            (data?.anneeN.filtered.insertion -
+              data?.anneeNMoins1.nationale.insertion) *
+            100
           );
         return null;
       case "poursuite":
@@ -332,8 +333,9 @@ const StatCard = ({
           data?.anneeNMoins1.nationale.poursuite
         )
           return (
-            data?.anneeN.filtered.poursuite -
-            data?.anneeNMoins1.nationale.poursuite
+            (data?.anneeN.filtered.poursuite -
+              data?.anneeNMoins1.nationale.poursuite) *
+            100
           );
         return null;
       default:
@@ -342,8 +344,9 @@ const StatCard = ({
           data?.anneeNMoins1.nationale.insertion
         )
           return (
-            data?.anneeN.filtered.insertion -
-            data?.anneeNMoins1.nationale.insertion
+            (data?.anneeN.filtered.insertion -
+              data?.anneeNMoins1.nationale.insertion) *
+            100
           );
         return null;
     }
