@@ -3,7 +3,11 @@
     name: mna
     state: present
 
-- include: _create-sudoers.yml
+- name: _create-sudoers.yml
+  ansible.builtin.include_tasks: _create-sudoers.yml
   loop: "{{habilitations}}"
   loop_control:
     loop_var: habilitation
+  args:
+    apply:
+      become: yes

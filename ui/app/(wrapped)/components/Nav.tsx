@@ -187,6 +187,11 @@ export const Nav = () => {
           Pilotage de la réforme
         </NavLink>
       )}
+      {hasPermission(auth?.user.role, "users/lecture") && (
+        <NavLink href="/admin/users" segment="admin/users">
+          Utilisateurs
+        </NavLink>
+      )}
     </Flex>
   );
 };
