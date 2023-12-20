@@ -5,6 +5,7 @@ import { emailRegex } from "shared";
 
 import { config } from "../../../../../config/config";
 import { shootTemplate } from "../../services/mailer/mailer";
+import { BodySchema } from "./createUser.schema";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
 
@@ -15,19 +16,7 @@ export const [createUser, createUserFactory] = inject(
     shootTemplate,
   },
   (deps) =>
-    async ({
-      email,
-      firstname,
-      lastname,
-      role,
-      codeRegion,
-    }: {
-      email: string;
-      firstname?: string;
-      lastname?: string;
-      role: string;
-      codeRegion?: string;
-    }) => {
+    async ({ email, firstname, lastname, role, codeRegion }: BodySchema) => {
       if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
 
       const formattedEmail = email.toLowerCase();
@@ -53,9 +42,11 @@ export const [createUser, createUserFactory] = inject(
       const template =
         (
           {
+            admin: "activate_account",
             pilote: "activate_account_pilote",
             pilote_region: "activate_account_region",
             gestionnaire_region: "activate_account_region",
+            perdir: "activate_account",
           } as const
         )[role] ?? ("activate_account" as const);
 
