@@ -94,8 +94,8 @@ export const BarGraph = function <
               name: libelleRegion?.toUpperCase() ?? "",
               data: isFiltered
                 ? [
-                    graphData?.anneeNMoins1.filtered ?? 0,
-                    graphData?.anneeN.filtered ?? 0,
+                    graphData?.anneeNMoins1.filtered?.toFixed(0) ?? 0,
+                    graphData?.anneeN.filtered?.toFixed(0) ?? 0,
                   ]
                 : [],
               type: "bar",
@@ -110,8 +110,8 @@ export const BarGraph = function <
             {
               name: "NATIONAL",
               data: [
-                graphData?.anneeNMoins1.nationale ?? 0,
-                graphData?.anneeN.nationale ?? 0,
+                graphData?.anneeNMoins1.nationale?.toFixed(0) ?? 0,
+                graphData?.anneeN.nationale?.toFixed(0) ?? 0,
               ],
               type: "bar",
               color: bf113,

@@ -2,6 +2,7 @@ import { program as cli } from "commander";
 import { parse } from "csv-parse/sync";
 import fs, { writeFileSync } from "fs";
 import _ from "lodash";
+import { PERMISSIONS, Role } from "shared";
 import { z } from "zod";
 
 import { basepath } from "./basepath";
@@ -67,7 +68,7 @@ cli
           firstname: z.string(),
           lastname: z.string(),
           email: z.string(),
-          role: z.string(),
+          role: z.enum(Object.keys(PERMISSIONS) as [Role]),
           codeRegion: z
             .string()
             .optional()
@@ -103,7 +104,7 @@ cli
       email: string;
       firstname: string;
       lastname: string;
-      role: string;
+      role: Role;
       codeRegion?: string;
     }) => {
       await createUser(options);
