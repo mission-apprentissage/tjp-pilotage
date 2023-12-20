@@ -21,9 +21,18 @@ export const findUsers = async ({
     .select(kdb.fn.count<number>("id").over().as("count"))
     .where((w) => {
       if (!search) return sql`true`;
-      return w("email", "ilike", `%${search}%`)
-        .or("firstname", "ilike", `%${search}%`)
-        .or("lastname", "ilike", `%${search}%`);
+      const search_array = search.split(" ");
+      return w.and(
+        search_array.map((search_word) =>
+          w(
+            sql`concat(unaccent(${w.ref("user.email")}),
+                ' ',${w.ref("user.firstname")},
+                ' ',${w.ref("user.lastname")})`,
+            "ilike",
+            `%${search_word.normalize("NFD").replace(/[\u0300-\u036f]/g, "")}%`
+          )
+        )
+      );
     })
     .$narrowType<{ role: Role }>()
     .offset(offset)
