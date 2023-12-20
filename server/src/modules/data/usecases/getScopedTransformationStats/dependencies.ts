@@ -75,6 +75,7 @@ export const getAcademieDatas = async ({
   filiere?: string[];
   scope: Scope;
 }) => {
+  console.log("Region");
   return await kdb
     .selectFrom("academie")
     .leftJoin(
@@ -283,15 +284,6 @@ export const getRegionDatas = async ({
         "effectifsParRegion.effectif",
       ])
     )
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filiere);
-      return eb;
-    })
     .where(isDemandeNotDeletedOrRefused)
     .execute()
     .then(cleanNull);
@@ -375,6 +367,19 @@ export const getDepartementDatas = async ({
           ])
           .where("constatRentree.rentreeScolaire", "=", "2022")
           .where("constatRentree.anneeDispositif", "=", 1)
+          .$call((eb) => {
+            if (codeNiveauDiplome)
+              eb = eb.where(
+                "dataFormation.codeNiveauDiplome",
+                "in",
+                codeNiveauDiplome
+              );
+
+            if (CPC) {
+              eb = eb.where("dataFormation.cpc", "in", CPC);
+            }
+            return eb;
+          })
           .groupBy("departement.codeDepartement")
           .as("effectifsParDepartement"),
       (join) =>
@@ -401,18 +406,54 @@ export const getDepartementDatas = async ({
         "effectifsParDepartement.effectif",
       ])
     )
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filiere);
-      return eb;
-    })
     .where(isDemandeNotDeletedOrRefused)
     .execute()
     .then(cleanNull);
+};
+
+const getScopedData = async ({
+  status,
+  rentreeScolaire = "2024",
+  codeNiveauDiplome,
+  CPC,
+  filiere,
+  scope,
+}: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  filiere?: string[];
+  scope: Scope;
+}) => {
+  switch (scope) {
+    case "academies":
+      return await getAcademieData({
+        status,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        filiere,
+      });
+
+    case "departements":
+      return await getDepartementData({
+        status,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        filiere,
+      });
+    case "regions":
+    default:
+      return await getRegionData({
+        status,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        filiere,
+      });
+  }
 };
 
 export type GetScopedTransformationStatsType = Awaited<
