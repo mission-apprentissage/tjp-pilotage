@@ -75,6 +75,7 @@ const getScopedTransformationStatsFactory =
     }
   ) =>
   async (activeFilters: QuerySchema) => {
+    console.log("activeFilters", activeFilters);
     const results: GetScopedTransformationStatsType = [];
 
     switch (activeFilters.scope) {
