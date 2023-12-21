@@ -9,6 +9,10 @@ import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
+import {
+  notSecondeCommune,
+  notSecondeCommuneIndicateurRegionSortie,
+} from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
@@ -66,6 +70,7 @@ export const getStats = async ({
         );
       })
       .where(notHistorique)
+      .where(notSecondeCommune)
       .select([
         sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
           "nbFormations"
@@ -114,6 +119,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
+      .where(notSecondeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),

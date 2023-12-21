@@ -5,6 +5,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { notSecondeCommuneIndicateurRegionSortie } from "../../utils/notSecondeCommune";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
   selectTauxInsertion6moisAgg,
@@ -315,6 +316,7 @@ const getRegionStats = async ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notSecondeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),

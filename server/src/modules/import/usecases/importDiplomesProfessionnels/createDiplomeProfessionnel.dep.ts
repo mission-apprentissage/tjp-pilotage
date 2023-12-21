@@ -1,7 +1,6 @@
 import { Insertable } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 
 export const createDiplomeProfessionnel = async (
   diplomeProfessionnel: Insertable<DB["diplomeProfessionnel"]>

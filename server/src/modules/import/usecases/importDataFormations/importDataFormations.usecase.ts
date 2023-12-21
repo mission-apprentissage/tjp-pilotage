@@ -150,7 +150,7 @@ export const [importDataFormations] = inject(
       { parallel: 20 }
     );
     process.stdout.write(
-      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}`
+      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
     );
   }
 );

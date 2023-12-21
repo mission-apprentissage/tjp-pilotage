@@ -43,7 +43,7 @@ export const [importDiplomesProfessionnels] = inject(
       { parallel: 20 }
     ).then(() => {
       process.stdout.write(
-        `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)\n` : "\n"}`
+        `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`
       );
       refreshFormationMaterializedView();
       console.log(`\rformationView refreshed`);

@@ -5,6 +5,7 @@ import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
+import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { logger } from "./importLogger";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
@@ -24,6 +25,7 @@ export const [importFormations] = inject(
     importFormation,
     importFormationHistorique,
     findDiplomesProfessionnels,
+    findFamillesMetiers,
     fetchIJ,
     fetchIjReg,
   },
@@ -49,6 +51,18 @@ export const [importFormations] = inject(
         },
         { parallel: 20 }
       );
+
+      await streamIt(
+        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
+        async (item, count) => {
+          const cfd = item.cfd;
+          console.log("cfd famille", cfd, count);
+          if (!cfd) return;
+          await importFormationEtablissements(cfd, { fetchIj });
+        },
+        { parallel: 20 }
+      );
+
       // logger.write();
     };
   }

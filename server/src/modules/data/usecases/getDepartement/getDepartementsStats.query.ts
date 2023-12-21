@@ -6,6 +6,10 @@ import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
+import {
+  notSecondeCommune,
+  notSecondeCommuneIndicateurRegionSortie,
+} from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -40,6 +44,7 @@ export const getDepartementsStats = async ({
       "departement.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
+    .where(notSecondeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
@@ -98,6 +103,7 @@ export const getDepartementsStats = async ({
       );
     })
     .where(notHistorique)
+    .where(notSecondeCommune)
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",

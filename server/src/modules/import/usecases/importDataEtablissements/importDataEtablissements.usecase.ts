@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { DB } from "../../../../db/schema";
+import { DB } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { createDataEtablissement } from "./createDataEtablissement.dep";
