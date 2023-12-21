@@ -205,8 +205,10 @@ export default () => {
               downloadCsv("users_export.csv", data.users, Columns);
             }}
           />
-          {user && <EditUser isOpen={isOpen} onClose={onClose} user={user} />}
-          {!user && <CreateUser isOpen={isOpen} onClose={onClose} />}
+          {user && isOpen && (
+            <EditUser isOpen={isOpen} onClose={onClose} user={user} />
+          )}
+          {!user && isOpen && <CreateUser isOpen={isOpen} onClose={onClose} />}
         </>
       )}
     </GuardPermission>
