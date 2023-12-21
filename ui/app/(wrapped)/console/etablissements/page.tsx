@@ -66,17 +66,17 @@ const ETABLISSEMENTS_COLUMNS = {
     "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
-  UAI: "UAI",
+  uai: "UAI",
   libelleDispositif: "Dispositif",
-  libelleOfficielFamille: "Famille de métiers",
+  libelleFamille: "Famille de métiers",
   cfd: "Code formation diplôme",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   cpcSousSecteur: "CPC Sous Secteur",
   libelleFiliere: "Secteur d’activité",
-  "continuum.libelle": "Diplôme historique",
+  "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
-  dispositifId: "Code dispositif",
+  codeDispositif: "Code dispositif",
   codeRegion: "Code Région",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
@@ -110,7 +110,7 @@ type Order = Pick<Query, "order" | "orderBy">;
 type LineId = {
   codeDispositif?: string;
   cfd: string;
-  UAI: string;
+  uai: string;
 };
 
 const PAGE_SIZE = 30;
@@ -225,7 +225,7 @@ export default function Etablissements() {
             codeDispositif: historiqueId?.codeDispositif
               ? [historiqueId?.codeDispositif]
               : undefined,
-            uai: [historiqueId.UAI],
+            uai: [historiqueId.uai],
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
@@ -603,9 +603,9 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="secteur" />
                   {ETABLISSEMENTS_COLUMNS.secteur}
                 </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("UAI")}>
-                  <OrderIcon {...order} column="UAI" />
-                  {ETABLISSEMENTS_COLUMNS.UAI}
+                <Th cursor="pointer" onClick={() => handleOrder("uai")}>
+                  <OrderIcon {...order} column="uai" />
+                  {ETABLISSEMENTS_COLUMNS.uai}
                 </Th>
                 <Th
                   cursor="pointer"
@@ -616,10 +616,10 @@ export default function Etablissements() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleOfficielFamille")}
+                  onClick={() => handleOrder("libelleFamille")}
                 >
-                  <OrderIcon {...order} column="libelleOfficielFamille" />
-                  {ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}
+                  <OrderIcon {...order} column="libelleFamille" />
+                  {ETABLISSEMENTS_COLUMNS.libelleFamille}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
                   <OrderIcon {...order} column="cfd" />
@@ -651,34 +651,36 @@ export default function Etablissements() {
             </Thead>
             <Tbody>
               {data?.etablissements.map((line) => (
-                <Fragment key={`${line.UAI}_${line.dispositifId}_${line.cfd}`}>
+                <Fragment
+                  key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}
+                >
                   <Tr h="12">
                     <EtablissementLineContent
                       line={line}
                       defaultRentreeScolaire="2022"
                       expended={
                         historiqueId?.cfd === line.cfd &&
-                        historiqueId.codeDispositif === line.dispositifId &&
-                        historiqueId.UAI === line.UAI
+                        historiqueId.codeDispositif === line.codeDispositif &&
+                        historiqueId.uai === line.uai
                       }
                       onClickExpend={() =>
                         setHistoriqueId({
                           cfd: line.cfd,
-                          codeDispositif: line.dispositifId,
-                          UAI: line.UAI,
+                          codeDispositif: line.codeDispositif,
+                          uai: line.uai,
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
                   {historiqueId?.cfd === line.cfd &&
-                    historiqueId.codeDispositif === line.dispositifId &&
-                    historiqueId.UAI === line.UAI && (
+                    historiqueId.codeDispositif === line.codeDispositif &&
+                    historiqueId.uai === line.uai && (
                       <>
                         {historique &&
                           historique.map((historiqueLine) => (
                             <Tr
-                              key={`${historiqueLine.cfd}_${historiqueLine.dispositifId}`}
+                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                               bg={"grey.975"}
                             >
                               <EtablissementLineContent line={historiqueLine} />

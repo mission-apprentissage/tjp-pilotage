@@ -55,8 +55,8 @@ export const FormationLineContent = ({
           href={createParametrizedUrl("/console/etablissements", {
             filters: {
               ...filters,
-              codeDispositif: line.dispositifId
-                ? [line.dispositifId]
+              codeDispositif: line.codeDispositif
+                ? [line.codeDispositif]
                 : undefined,
             },
           })}
@@ -92,7 +92,7 @@ export const FormationLineContent = ({
         />
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
-      <Td>{line.libelleOfficielFamille ?? "-"}</Td>
+      <Td>{line.libelleFamille ?? "-"}</Td>
       <Td>{line.cfd ?? "-"}</Td>
       <Td>{line.cpc ?? "-"}</Td>
       <Td>{line.cpcSecteur ?? "-"}</Td>

@@ -413,7 +413,7 @@ export const QuadrantSection = ({
                     }))}
                     TooltipContent={FormationTooltipContent}
                     itemId={(formation) =>
-                      formation.cfd + formation.dispositifId
+                      formation.cfd + formation.codeDispositif
                     }
                     itemColor={(formation) =>
                       formation.cfd === currentCfd ? "#fd3b4cb5" : undefined

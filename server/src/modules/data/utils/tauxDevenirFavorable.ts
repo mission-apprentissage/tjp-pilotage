@@ -60,19 +60,19 @@ export function withTauxDevenirFavorableReg<
   eb,
   millesimeSortie,
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   millesimeSortie: string;
   cfdRef: EbRef<EB>;
-  dispositifIdRef: EbRef<EB>;
+  codeDispositifRef: EbRef<EB>;
   codeRegionRef: EbRef<EB>;
 }) {
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
     .whereRef("subIRS.cfd", "=", cfdRef)
-    .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
+    .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .whereRef(
       "subIRS.codeRegion",

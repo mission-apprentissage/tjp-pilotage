@@ -16,7 +16,7 @@ export const findManyInDataEtablissementsQuery = async ({
     .selectFrom("dataEtablissement")
     .select([
       "dataEtablissement.uai",
-      "dataEtablissement.libelle",
+      "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune",
     ])
     .where((eb) =>
@@ -35,7 +35,9 @@ export const findManyInDataEtablissementsQuery = async ({
           eb.and(
             search_array.map((search_word) =>
               eb(
-                sql`concat(unaccent(${eb.ref("dataEtablissement.libelle")}),
+                sql`concat(unaccent(${eb.ref(
+                  "dataEtablissement.libelleEtablissement"
+                )}),
                   ' ',${eb.ref("dataEtablissement.commune")})`,
                 "ilike",
                 `%${search_word

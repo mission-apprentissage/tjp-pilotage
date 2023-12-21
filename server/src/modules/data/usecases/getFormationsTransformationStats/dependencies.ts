@@ -114,36 +114,36 @@ const getFormationsTransformationStatsQuery = ({
       "dataEtablissement.codeDepartement"
     )
     .select((eb) => [
-      "dataFormation.libelle as libelleDiplome",
+      "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",
-      "demande.dispositifId",
+      "demande.dispositifId as codeDispositif",
       (eb) =>
         withInsertionReg({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPoursuite"),
       withTauxPressionReg({
         eb,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
@@ -158,7 +158,7 @@ const getFormationsTransformationStatsQuery = ({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
     ])
@@ -181,7 +181,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -193,7 +193,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -206,7 +206,7 @@ const getFormationsTransformationStatsQuery = ({
           withTauxPressionReg({
             eb,
             cfdRef: "demande.cfd",
-            dispositifIdRef: "demande.dispositifId",
+            codeDispositifRef: "demande.dispositifId",
             codeRegionRef: "dataEtablissement.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
@@ -231,7 +231,7 @@ const getFormationsTransformationStatsQuery = ({
       "dataFormation.cfd",
       "demande.dispositifId",
       "dispositif.libelleDispositif",
-      "dataFormation.libelle",
+      "dataFormation.libelleFormation",
       ...partition,
     ])
     .$call((q) => {

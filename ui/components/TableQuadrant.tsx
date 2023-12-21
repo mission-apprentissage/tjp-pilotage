@@ -24,7 +24,7 @@ type Formation = {
   tauxPression?: number;
   positionQuadrant?: string;
   cfd?: string;
-  continuum?: { cfd: string; libelle?: string };
+  continuum?: { cfd: string; libelleFormation?: string };
 };
 
 export const TableQuadrant = ({
@@ -83,10 +83,10 @@ export const TableQuadrant = ({
                 maxW="40%"
                 color="white"
                 cursor={handleOrder ? "pointer" : "default"}
-                onClick={() => handleOrder && handleOrder("libelleDiplome")}
+                onClick={() => handleOrder && handleOrder("libelleFormation")}
               >
                 {handleOrder && (
-                  <OrderIcon {...order} column="libelleDiplome" />
+                  <OrderIcon {...order} column="libelleFormation" />
                 )}
                 FORMATION
               </Th>

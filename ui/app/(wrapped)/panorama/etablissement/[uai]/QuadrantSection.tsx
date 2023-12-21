@@ -155,7 +155,7 @@ export const QuadrantSection = ({
                     tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
                     tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                   }))}
-                  itemId={(item) => item.cfd + item.dispositifId}
+                  itemId={(item) => item.cfd + item.codeDispositif}
                   itemColor={(formation) =>
                     formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
                   }

@@ -149,13 +149,13 @@ type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
 export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, never>>({
   eb,
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   codeRegion?: string | "ref";
   cfdRef: EbRef<EB>;
-  dispositifIdRef: EbRef<EB>;
+  codeDispositifRef: EbRef<EB>;
   codeRegionRef: EbRef<EB>;
 }) => {
   return eb
@@ -167,7 +167,7 @@ export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, never>>({
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
     .whereRef("subFE.cfd", "=", cfdRef)
-    .whereRef("subFE.dispositifId", "=", dispositifIdRef)
+    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
     .whereRef(
       "subEtab.codeRegion",
       "=",

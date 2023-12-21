@@ -100,7 +100,7 @@ export const [importDataFormations] = inject(
         try {
           await deps.createDataFormation({
             cfd,
-            libelle:
+            libelleFormation:
               diplomeProfessionnel?.[
                 "Intitulé de la spécialité (et options)"
               ]?.replace(/"/g, "") ||
@@ -155,5 +155,5 @@ export const [importDataFormations] = inject(
   }
 );
 
-const formatLibelle = (libelle: string) =>
-  libelle && _.capitalize(libelle).replace(/ \(.*\)/, "");
+const formatLibelle = (libelleFormation: string) =>
+  libelleFormation && _.capitalize(libelleFormation).replace(/ \(.*\)/, "");

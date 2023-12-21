@@ -85,7 +85,7 @@ export const getFormationsRegion = async ({
     .select((eb) => [
       "formationView.cfd",
       "formationView.codeNiveauDiplome",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.dispositifId as codeDispositif",
       "libelleDispositif",
       "libelleNiveauDiplome",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
@@ -107,7 +107,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertionPrecedent"),
       (eb) =>
@@ -115,7 +115,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuitePrecedent"),
       (eb) =>
@@ -123,7 +123,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertion"),
       (eb) =>
@@ -131,7 +131,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuite"),
       (eb) =>
@@ -139,7 +139,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -147,7 +147,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
@@ -162,7 +162,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
@@ -174,7 +174,7 @@ export const getFormationsRegion = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",

@@ -25,7 +25,7 @@ export const getDepartementsStats = async ({
   const informationsDepartement = await kdb
     .selectFrom("departement")
     .where("codeDepartement", "=", codeDepartement)
-    .select(["codeRegion", "libelle as libelleDepartement"])
+    .select(["codeRegion", "libelleDepartement"])
     .executeTakeFirstOrThrow();
 
   const statsSortie = await kdb
@@ -101,7 +101,7 @@ export const getDepartementsStats = async ({
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",
-      "departement.libelle as libelleDepartement",
+      "departement.libelleDepartement",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
       ),
@@ -111,7 +111,7 @@ export const getDepartementsStats = async ({
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy(["departement.libelle", "departement.codeRegion"])
+    .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
     .executeTakeFirst();
 
   return { ...informationsDepartement, ...stats, ...statsSortie };

@@ -106,8 +106,7 @@ const findFormationsInDb = async ({
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "libelleOfficielFamille",
-      "dispositifId",
+      "libelleOfficielFamille as libelleFamille",
       "libelleDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
@@ -150,28 +149,28 @@ const findFormationsInDb = async ({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("continuum"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxPoursuite"),
       withInsertionReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxInsertion"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        dispositifIdRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
     ])
@@ -217,7 +216,7 @@ const findFormationsInDb = async ({
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "formationEtablissement.dispositifId",
-      "familleMetier.libelleOfficielFamille",
+      "libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .$call((q) => {
@@ -419,7 +418,10 @@ const findFiltersInDb = async ({
     .execute();
 
   const academies = await base
-    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .select([
+      "academie.libelleAcademie as label",
+      "academie.codeAcademie as value",
+    ])
     .where("academie.codeAcademie", "is not", null)
     .where(notPerimetreIJAcademie)
     .where((eb) => {
@@ -434,7 +436,7 @@ const findFiltersInDb = async ({
 
   const departements = await base
     .select([
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)

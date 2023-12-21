@@ -7,19 +7,23 @@ export const up = async (db: Kysely<unknown>) => {
     .addPrimaryKeyConstraint("diplomeProfessionnel_pkey", ["cfd"])
     .execute();
 
-  // await db.executeQuery(
-  //   sql`
-  //     CREATE EXTENSION "uuid-ossp"
-  //     SCHEMA "public"
-  //     VERSION "1.1";
-  //   `.compile(db)
-  // );
-
   await db.schema
     .createView("formationNonMaterializedView")
     .as(
       sql`
-      select uuid_generate_v4() as id, df."cfd", df."rncp", df."libelle" as "libelleFormation", df."codeNiveauDiplome", df."dateOuverture", df."dateFermeture", df."cpc", df."cpcSecteur", df."cpcSousSecteur", df."libelleFiliere", df."typeFamille"
+      select
+        uuid_generate_v4() as id,
+        df."cfd",
+        df."rncp",
+        df."libelle" as "libelleFormation",
+        df."codeNiveauDiplome",
+        df."dateOuverture",
+        df."dateFermeture",
+        df."cpc",
+        df."cpcSecteur",
+        df."cpcSousSecteur",
+        df."libelleFiliere",
+        df."typeFamille"
       from "dataFormation" df
       inner join
       (
@@ -39,7 +43,18 @@ export const up = async (db: Kysely<unknown>) => {
     .createView("formationView")
     .as(
       sql`
-      select uuid_generate_v4() as id, df."cfd", df."rncp", df."libelle" as "libelleFormation", df."codeNiveauDiplome", df."dateOuverture", df."dateFermeture", df."cpc", df."cpcSecteur", df."cpcSousSecteur", df."libelleFiliere", df."typeFamille"
+      select uuid_generate_v4() as id,
+        df."cfd",
+        df."rncp",
+        df."libelle" as "libelleFormation",
+        df."codeNiveauDiplome",
+        df."dateOuverture",
+        df."dateFermeture",
+        df."cpc",
+        df."cpcSecteur",
+        df."cpcSousSecteur",
+        df."libelleFiliere",
+        df."typeFamille"
       from "dataFormation" df
       inner join
       (

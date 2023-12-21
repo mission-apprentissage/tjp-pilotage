@@ -52,16 +52,16 @@ const FORMATIONS_COLUMNS = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
-  libelleOfficielFamille: "	Famille de métiers",
+  libelleFamille: "	Famille de métiers",
   cfd: "Code formation diplôme",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   cpcSousSecteur: "CPC Sous Secteur",
   libelleFiliere: "Secteur d’activité",
-  "continuum.libelle": "Diplôme historique",
+  "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
-  dispositifId: "Code dispositif",
+  codeDispositif: "Code dispositif",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
@@ -473,10 +473,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleOfficielFamille")}
+                  onClick={() => handleOrder("libelleFamille")}
                 >
-                  <OrderIcon {...order} column="libelleOfficielFamille" />
-                  {FORMATIONS_COLUMNS.libelleOfficielFamille}
+                  <OrderIcon {...order} column="libelleFamille" />
+                  {FORMATIONS_COLUMNS.libelleFamille}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
                   <OrderIcon {...order} column="cfd" />
@@ -515,7 +515,7 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Fragment key={`${line.cfd}_${line.dispositifId}`}>
+                <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
                       filters={filters}
@@ -523,24 +523,24 @@ export default function Formations() {
                       line={line}
                       expended={
                         historiqueId?.cfd === line.cfd &&
-                        historiqueId.codeDispositif === line.dispositifId
+                        historiqueId.codeDispositif === line.codeDispositif
                       }
                       onClickExpend={() =>
                         setHistoriqueId({
                           cfd: line.cfd,
-                          codeDispositif: line.dispositifId,
+                          codeDispositif: line.codeDispositif,
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
                   {historiqueId?.cfd === line.cfd &&
-                    historiqueId.codeDispositif === line.dispositifId && (
+                    historiqueId.codeDispositif === line.codeDispositif && (
                       <>
                         {historique &&
                           historique.map((historiqueLine) => (
                             <Tr
-                              key={`${historiqueLine.cfd}_${historiqueLine.dispositifId}`}
+                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                               bg={"grey.975"}
                             >
                               <FormationLineContent line={historiqueLine} />

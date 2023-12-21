@@ -10,8 +10,8 @@ export const FormationLineSchema = z.object({
   libelleFormation: z.string(),
   rentreeScolaire: z.string().optional(),
   codeNiveauDiplome: z.string(),
-  libelleOfficielFamille: z.string().optional(),
-  dispositifId: z.string().optional(),
+  libelleFamille: z.string().optional(),
+  codeDispositif: z.string().optional(),
   libelleDispositif: z.string().optional(),
   libelleNiveauDiplome: z.string().optional(),
   nbEtablissement: z.coerce.number().optional(),
@@ -32,7 +32,7 @@ export const FormationLineSchema = z.object({
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
   positionQuadrant: z.string().optional(),

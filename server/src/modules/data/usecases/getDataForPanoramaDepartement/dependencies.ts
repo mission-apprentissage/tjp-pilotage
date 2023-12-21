@@ -84,14 +84,10 @@ export const getFormationsDepartement = async ({
     })
     .select((eb) => [
       "formationView.cfd",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.dispositifId as codeDispositif",
       "libelleDispositif",
       "libelleNiveauDiplome",
       "formationView.codeNiveauDiplome",
-      "formationView.libelleFiliere",
-      "formationView.cpc",
-      "formationView.cpcSecteur",
-      "formationView.cpcSousSecteur",
       sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
@@ -111,7 +107,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertionPrecedent"),
       (eb) =>
@@ -119,7 +115,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuitePrecedent"),
       (eb) =>
@@ -127,7 +123,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertion"),
       (eb) =>
@@ -135,7 +131,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuite"),
       (eb) =>
@@ -143,7 +139,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -151,7 +147,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
@@ -166,7 +162,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
@@ -178,7 +174,7 @@ export const getFormationsDepartement = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
@@ -188,6 +184,8 @@ export const getFormationsDepartement = async ({
       "formationEtablissement.cfd",
       "formationView.id",
       "formationView.cfd",
+      "formationView.libelleFormation",
+      "formationView.codeNiveauDiplome",
       "formationEtablissement.dispositifId",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",

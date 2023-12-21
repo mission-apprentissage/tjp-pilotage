@@ -7,7 +7,7 @@ const OptionSchema = z.object({
 
 const EtablissementLineSchema = z.object({
   libelleEtablissement: z.string().optional(),
-  UAI: z.string(),
+  uai: z.string(),
   rentreeScolaire: z.string().optional(),
   secteur: z.string().optional(),
   commune: z.string().optional(),
@@ -16,8 +16,8 @@ const EtablissementLineSchema = z.object({
   cfd: z.string(),
   libelleFormation: z.string(),
   codeNiveauDiplome: z.string(),
-  libelleOfficielFamille: z.string().optional(),
-  dispositifId: z.string().optional(),
+  libelleFamille: z.string().optional(),
+  codeDispositif: z.string().optional(),
   libelleDispositif: z.string().optional(),
   libelleNiveauDiplome: z.string().optional(),
   anneeDebut: z.coerce.number().optional(),
@@ -44,13 +44,13 @@ const EtablissementLineSchema = z.object({
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
   continuumEtablissement: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
 });

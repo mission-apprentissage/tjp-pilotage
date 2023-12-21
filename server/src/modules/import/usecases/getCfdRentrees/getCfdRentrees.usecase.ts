@@ -24,11 +24,11 @@ export const [getCfdRentrees] = inject(
   (deps) =>
     async ({
       cfd,
-      dispositifId,
+      codeDispositif,
       year,
     }: {
       cfd: string;
-      dispositifId: string;
+      codeDispositif: string;
       year: string;
     }): Promise<
       | {
@@ -43,7 +43,7 @@ export const [getCfdRentrees] = inject(
     > => {
       const dispositifs = await deps.getCfdDispositifs({ cfd });
       const dispositif = dispositifs.find(
-        (item) => item.dispositifId === dispositifId
+        (item) => item.codeDispositif === codeDispositif
       );
 
       if (!dispositif) return;
@@ -73,7 +73,7 @@ export const [getCfdRentrees] = inject(
           uai,
           cfd,
           voie: "scolaire" as const,
-          dispositifId: dispositif.dispositifId,
+          codeDispositif: dispositif.codeDispositif,
           anneeDebutConstate,
           anneesEnseignement: Object.values(dispositif.anneesDispositif).reduce(
             (acc, anneeDispositif) => {
