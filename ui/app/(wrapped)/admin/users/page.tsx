@@ -2,6 +2,7 @@
 
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import {
+  Avatar,
   Box,
   Button,
   Flex,
@@ -116,13 +117,13 @@ export default () => {
               gap="0"
             >
               <Thead
-                zIndex={1}
                 position="sticky"
                 top="0"
                 boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
                 bg="white"
               >
                 <Tr>
+                  <Th w={0} />
                   <Th cursor="pointer" onClick={() => handleOrder("email")}>
                     <OrderIcon {...order} column="email" />
                     {Columns.email}
@@ -157,6 +158,12 @@ export default () => {
               <Tbody>
                 {data?.users.map((user) => (
                   <Tr height={"60px"} key={user.id} whiteSpace={"pre"}>
+                    <Td>
+                      <Avatar
+                        name={`${user.firstname} ${user.lastname}`}
+                        position={"unset"}
+                      />
+                    </Td>
                     <Td>{user.email}</Td>
                     <Td>{user.firstname}</Td>
                     <Td>{user.lastname}</Td>
@@ -170,6 +177,7 @@ export default () => {
                     </Td>
                     <Td isNumeric>
                       <IconButton
+                        position="unset"
                         variant="ghost"
                         onClick={() => {
                           setUserId(user.id);
@@ -205,8 +213,10 @@ export default () => {
               downloadCsv("users_export.csv", data.users, Columns);
             }}
           />
-          {user && <EditUser isOpen={isOpen} onClose={onClose} user={user} />}
-          {!user && <CreateUser isOpen={isOpen} onClose={onClose} />}
+          {user && isOpen && (
+            <EditUser isOpen={isOpen} onClose={onClose} user={user} />
+          )}
+          {!user && isOpen && <CreateUser isOpen={isOpen} onClose={onClose} />}
         </>
       )}
     </GuardPermission>
