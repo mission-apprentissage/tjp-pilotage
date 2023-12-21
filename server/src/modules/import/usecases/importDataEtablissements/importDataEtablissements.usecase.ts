@@ -33,7 +33,7 @@ export const [importDataEtablissements] = inject(
             codeAcademie: departement?.codeAcademie,
             codeRegion: departement?.codeRegion,
             codeDepartement,
-            libelle: lyceeACCE.appellation_officielle,
+            libelleEtablissement: lyceeACCE.appellation_officielle,
             adresse: lyceeACCE.adresse_uai,
             commune: lyceeACCE.commune_libe,
             codePostal:

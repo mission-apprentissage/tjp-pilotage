@@ -16,14 +16,14 @@ export const [importIndicateurSortie] = inject(
       millesime,
       mefstat,
       cfd,
-      dispositifId,
+      codeDispositif,
     }: {
       uai: string;
       formationEtablissementId: string;
       millesime: string;
       mefstat: string;
       cfd: string;
-      dispositifId: string;
+      codeDispositif: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
       const mefData = ijData?.meftstats[mefstat];
@@ -31,7 +31,7 @@ export const [importIndicateurSortie] = inject(
       if (!mefData) {
         const continuumData = await getContinuumData({
           cfd,
-          dispositifId,
+          codeDispositif,
           uai,
           millesimeSortie: millesime,
         });
@@ -70,12 +70,12 @@ const [getContinuumData] = inject(
   (deps) =>
     async ({
       cfd,
-      dispositifId,
+      codeDispositif,
       uai,
       millesimeSortie,
     }: {
       cfd: string;
-      dispositifId: string;
+      codeDispositif: string;
       uai: string;
       millesimeSortie: string;
     }) => {
@@ -89,7 +89,7 @@ const [getContinuumData] = inject(
 
       return await deps.findIndicateurSortie({
         cfd: cfdContinuum,
-        dispositifId,
+        codeDispositif,
         uai,
         millesimeSortie,
       });

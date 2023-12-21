@@ -190,7 +190,7 @@ export const QuadrantSection = ({
                         : undefined,
                   })),
                   {
-                    libelleDiplome: "Formation",
+                    libelleFormation: "Formation",
                     cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
@@ -251,7 +251,7 @@ export const QuadrantSection = ({
                     textBg="white"
                     mb="4"
                     label="Formation concernée"
-                    value={formation?.libelleDiplome}
+                    value={formation?.libelleFormation}
                   />
                   <InfoBlock
                     textBg="white"
@@ -290,7 +290,7 @@ export const QuadrantSection = ({
                         filters: {
                           rentreeScolaire: "2024",
                           cfd: [formation.cfd],
-                          codeDispositif: [formation.dispositifId],
+                          codeDispositif: [formation.codeDispositif],
                           typeDemande: filters.type
                             ? filters.type === "ouverture"
                               ? [
@@ -364,7 +364,7 @@ export const QuadrantSection = ({
                         meanInsertion={(stats?.tauxInsertion ?? 0) * 100}
                         meanPoursuite={(stats?.tauxPoursuite ?? 0) * 100}
                         itemId={(formation) =>
-                          formation.cfd + formation.dispositifId
+                          formation.cfd + formation.codeDispositif
                         }
                         data={formations?.map((formation) => ({
                           ...formation,

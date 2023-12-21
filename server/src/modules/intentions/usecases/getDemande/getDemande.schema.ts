@@ -2,14 +2,14 @@ import { z } from "zod";
 
 const EtablissementMetadataSchema = z
   .object({
-    libelle: z.string().optional(),
+    libelleEtablissement: z.string().optional(),
     commune: z.string().optional(),
   })
   .optional();
 
 const FormationMetadataSchema = z
   .object({
-    libelle: z.string().optional(),
+    libelleFormation: z.string().optional(),
     isFCIL: z.boolean().optional(),
     dispositifs: z
       .array(
@@ -35,13 +35,13 @@ const DemandeSchema = z.object({
   status: z.enum(["draft", "submitted", "refused"]).optional(),
   uai: z.string(),
   cfd: z.string(),
-  dispositifId: z.string(),
+  codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
   rentreeScolaire: z.coerce.number(),
   typeDemande: z.string(),
   compensationUai: z.string().optional(),
   compensationCfd: z.string().optional(),
-  compensationDispositifId: z.string().optional(),
+  compensationCodeDispositif: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
   motif: z.array(z.string()),
   autreMotif: z.string().optional(),

@@ -183,7 +183,7 @@ const getTransformationStatsQuery = ({
           "dataEtablissement.codeAcademie"
         ),
         codeAcademie: eb.ref("academie.codeAcademie"),
-        libelle: eb.ref("academie.libelle"),
+        libelle: eb.ref("academie.libelleAcademie"),
       }).as("academie"),
       jsonBuildObject({
         countDemande: selectNbDemandes(eb)("dataEtablissement.codeDepartement"),
@@ -209,8 +209,8 @@ const getTransformationStatsQuery = ({
           "dataEtablissement.codeDepartement"
         ),
         codeDepartement: eb.ref("dataEtablissement.codeDepartement"),
-        libelle: eb.ref("departement.libelle"),
-        libelleAcademie: eb.ref("academie.libelle"),
+        libelle: eb.ref("departement.libelleDepartement"),
+        libelleAcademie: eb.ref("academie.libelleAcademie"),
         libelleRegion: eb.ref("region.libelleRegion"),
       }).as("departement"),
     ])
@@ -326,14 +326,17 @@ const getFiltersQuery = async ({
     .execute();
 
   const academiesFilters = await base
-    .select(["academie.codeAcademie as value", "academie.libelle as label"])
+    .select([
+      "academie.codeAcademie as value",
+      "academie.libelleAcademie as label",
+    ])
     .where("academie.codeAcademie", "is not", null)
     .execute();
 
   const departementsFilters = await base
     .select([
       "departement.codeDepartement as value",
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
     ])
     .where("departement.codeDepartement", "is not", null)
     .execute();

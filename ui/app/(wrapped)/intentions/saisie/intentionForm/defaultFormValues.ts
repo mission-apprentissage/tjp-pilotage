@@ -5,7 +5,7 @@ export type PartialIntentionForms = Partial<IntentionForms>;
 export type IntentionForms = {
   uai: string;
   cfd: string;
-  dispositifId: string;
+  codeDispositif: string;
   libelleFCIL?: string;
   typeDemande: string;
   motif: string[];
@@ -25,7 +25,7 @@ export type IntentionForms = {
   capaciteApprentissageColoree?: number;
   compensationUai?: string;
   compensationCfd?: string;
-  compensationDispositifId?: string;
+  compensationCodeDispositif?: string;
   compensationRentreeScolaire?: number;
   status: "draft" | "submitted" | "refused";
   motifRefus?: string[];

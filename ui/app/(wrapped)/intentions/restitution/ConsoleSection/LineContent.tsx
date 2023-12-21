@@ -42,7 +42,7 @@ export const LineContent = ({
       </Td>
       <Td>{demande.niveauDiplome}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
-        {demande.libelleDiplome}
+        {demande.libelleFormation}
       </Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
         {demande.libelleEtablissement}

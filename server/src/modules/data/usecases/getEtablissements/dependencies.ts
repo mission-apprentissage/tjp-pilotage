@@ -38,7 +38,7 @@ const findEtablissementsInDb = async ({
   codeAcademie,
   codeDepartement,
   codeDiplome,
-  codeDispositif,
+  dispositifId,
   commune,
   cfd,
   cfdFamille,
@@ -58,7 +58,7 @@ const findEtablissementsInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  codeDispositif?: string[];
+  dispositifId?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
@@ -136,10 +136,10 @@ const findEtablissementsInDb = async ({
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "departement.libelle as departement",
+      "departement.libelleDepartement as departement",
       "etablissement.codeRegion",
-      "etablissement.UAI",
-      "libelleOfficielFamille",
+      "etablissement.UAI as uai",
+      "libelleOfficielFamille as libelleFamille",
       "libelleDispositif",
       "dispositifId",
       "libelleNiveauDiplome",
@@ -184,20 +184,22 @@ const findEtablissementsInDb = async ({
         .then(
           jsonBuildObject({
             cfd: eb.ref("indicateurSortie.cfdContinuum"),
-            libelle: eb.ref("dataFormationContinuum.libelle"),
+            libelleFormation: eb.ref("dataFormationContinuum.libelleFormation"),
           })
         )
         .end()
         .as("continuumEtablissement")
     )
-    .$narrowType<{ continuumEtablissement: { cfd: string; libelle: string } }>()
+    .$narrowType<{
+      continuumEtablissement: { cfd: string; libelleFormation: string };
+    }>()
     .select([
       (eb) =>
         hasContinuum({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -205,7 +207,7 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuite"),
       (eb) =>
@@ -213,7 +215,7 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertion"),
       (eb) =>
@@ -221,7 +223,7 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
@@ -246,8 +248,8 @@ const findEtablissementsInDb = async ({
       return q.where("etablissement.commune", "in", commune);
     })
     .$call((q) => {
-      if (!codeDispositif) return q;
-      return q.where("dispositif.codeDispositif", "in", codeDispositif);
+      if (!dispositifId) return q;
+      return q.where("dispositif.codeDispositif", "in", dispositifId);
     })
     .$call((q) => {
       if (!codeDiplome) return q;
@@ -290,16 +292,15 @@ const findEtablissementsInDb = async ({
       "formationView.codeNiveauDiplome",
       "etablissement.id",
       "departement.codeDepartement",
-      "libelleOfficielFamille",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",
       "indicateurSortie.millesimeSortie",
-      "dataFormationContinuum.libelle",
+      "dataFormationContinuum.libelleFormation",
       "formationEtablissement.id",
       "dispositifId",
       "libelleDispositif",
-      "libelleOfficielFamille",
+      "libelleFamille",
       "libelleNiveauDiplome",
       "indicateurEtablissement.UAI",
       "indicateurEtablissement.millesime",
@@ -331,7 +332,7 @@ const findFiltersInDb = async ({
   commune,
   cfdFamille,
   codeDiplome,
-  codeDispositif,
+  dispositifId,
   cfd,
   uai,
   cpc,
@@ -344,7 +345,7 @@ const findFiltersInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  codeDispositif?: string[];
+  dispositifId?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
@@ -440,8 +441,8 @@ const findFiltersInDb = async ({
   const inCodeDispositif = (
     eb: ExpressionBuilder<DB, "formationEtablissement">
   ) => {
-    if (!codeDispositif) return sql<true>`true`;
-    return eb("formationEtablissement.dispositifId", "in", codeDispositif);
+    if (!dispositifId) return sql<true>`true`;
+    return eb("formationEtablissement.dispositifId", "in", dispositifId);
   };
 
   const inCpc = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -461,7 +462,10 @@ const findFiltersInDb = async ({
     .execute();
 
   const academies = await base
-    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .select([
+      "academie.libelleAcademie as label",
+      "academie.codeAcademie as value",
+    ])
     .where("academie.codeAcademie", "is not", null)
     .where(notPerimetreIJAcademie)
     .where((eb) => {
@@ -476,7 +480,7 @@ const findFiltersInDb = async ({
 
   const departements = await base
     .select([
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)

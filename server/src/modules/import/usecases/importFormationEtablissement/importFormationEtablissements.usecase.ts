@@ -74,14 +74,14 @@ export const [importFormationEtablissements] = inject(
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
-        const { dispositifId, anneesDispositif } = cfdDispositif;
+        const { codeDispositif, anneesDispositif } = cfdDispositif;
 
         const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
         if (!lastMefstat) continue;
 
         await deps.importIndicateursRegionSortie({
           cfd,
-          dispositifId,
+          dispositifId: codeDispositif,
           mefstat: lastMefstat,
         });
 
@@ -89,7 +89,7 @@ export const [importFormationEtablissements] = inject(
           const { enseignements, anneeDebutConstate } =
             (await deps.getCfdRentrees({
               cfd,
-              dispositifId,
+              codeDispositif,
               year: rentreeScolaire,
             })) ?? {};
 
@@ -112,7 +112,7 @@ export const [importFormationEtablissements] = inject(
               await deps.createFormationEtablissement({
                 UAI: uai,
                 cfd,
-                dispositifId,
+                dispositifId: codeDispositif,
                 voie,
               });
 
@@ -133,7 +133,7 @@ export const [importFormationEtablissements] = inject(
                 formationEtablissementId: formationEtablissement.id,
                 millesime,
                 cfd,
-                dispositifId,
+                codeDispositif,
               });
             }
           }

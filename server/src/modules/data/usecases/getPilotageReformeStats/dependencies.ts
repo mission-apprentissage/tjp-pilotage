@@ -165,7 +165,7 @@ const findFiltersInDb = async () => {
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(
-      "cfd",
+      "formationView.cfd",
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )

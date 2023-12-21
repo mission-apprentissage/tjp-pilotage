@@ -102,9 +102,9 @@ export const EtablissementLineContent = ({
       </Td>
       <Td>{line.valeurAjoutee ?? "-"} </Td>
       <Td>{line.secteur ?? "-"} </Td>
-      <Td>{line.UAI ?? "-"} </Td>
+      <Td>{line.uai ?? "-"} </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
-      <Td>{line.libelleOfficielFamille ?? "-"}</Td>
+      <Td>{line.libelleFamille ?? "-"}</Td>
       <Td>{line.cfd ?? "-"}</Td>
       <Td>{line.cpc ?? "-"}</Td>
       <Td>{line.cpcSecteur ?? "-"}</Td>

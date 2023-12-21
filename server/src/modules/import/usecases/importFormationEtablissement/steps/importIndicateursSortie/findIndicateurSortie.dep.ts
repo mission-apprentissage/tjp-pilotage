@@ -3,12 +3,12 @@ import { cleanNull } from "../../../../../../utils/noNull";
 
 export const findIndicateurSortie = ({
   cfd,
-  dispositifId,
+  codeDispositif,
   uai,
   millesimeSortie,
 }: {
   cfd: string;
-  dispositifId: string;
+  codeDispositif: string;
   uai: string;
   millesimeSortie: string;
 }) =>
@@ -22,7 +22,7 @@ export const findIndicateurSortie = ({
     .selectAll("indicateurSortie")
     .select("formationEtablissement.cfd")
     .where("cfd", "=", cfd)
-    .where("dispositifId", "=", dispositifId)
+    .where("dispositifId", "=", codeDispositif)
     .where("UAI", "=", uai)
     .where("millesimeSortie", "=", millesimeSortie)
     .executeTakeFirst()

@@ -9,13 +9,13 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
   eb,
   millesimeSortie,
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   millesimeSortie: string;
   cfdRef: EbRef<EB>;
-  dispositifIdRef: EbRef<EB>;
+  codeDispositifRef: EbRef<EB>;
   codeRegionRef: EbRef<EB>;
 }) {
   return jsonObjectFrom(
@@ -27,7 +27,7 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
         "subIRS.cfdContinuum"
       )
       .whereRef("subIRS.cfd", "=", cfdRef)
-      .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
+      .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
       .whereRef(
         "subIRS.codeRegion",
         "=",
@@ -37,7 +37,7 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
       .where("subIRS.cfdContinuum", "is not", null)
       .select("subIRS.cfdContinuum as cfd")
       .$narrowType<{ cfd: string }>()
-      .select("subFormation.libelleFormation as libelle")
+      .select("subFormation.libelleFormation")
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",

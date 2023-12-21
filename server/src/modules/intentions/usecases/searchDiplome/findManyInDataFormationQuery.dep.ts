@@ -34,7 +34,7 @@ export const findManyInDataFormationQuery = async ({
           search_array.map((search_word) =>
             eb(
               sql`concat(
-                  unaccent(${eb.ref("dataFormation.libelle")}),
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("dataFormation.cfd")}),
                   ' ',
@@ -85,7 +85,7 @@ export const findManyInDataFormationQuery = async ({
     )
     .select((eb) => [
       "dataFormation.cfd as value",
-      sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
+      sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
       ' (',${eb.ref("dataFormation.cfd")},')')`.as("label"),
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(

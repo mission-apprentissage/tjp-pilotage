@@ -46,8 +46,8 @@ import { MenuIntention } from "./components/MenuIntention";
 const DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
-  libelleDiplome: "Diplôme",
-  dispositifId: "DispositifId",
+  libelleFormation: "Diplôme",
+  codeDispositif: "Code dispositif",
   libelleDispositif: "Dispositif",
   libelleFCIL: "Libellé de la FCIL",
   uai: "UAI",
@@ -69,7 +69,7 @@ const DEMANDES_COLUMNS = {
   updatedAt: "Dernière modification",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
-  compensationDispositifId: "Dispositif compensé",
+  compensationCodeDispositif: "Dispositif compensé",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
   capaciteScolaireColoree: "Capacité scolaire coloree",
@@ -330,10 +330,10 @@ export const PageClient = () => {
                       <Th>n° demande</Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("libelleDiplome")}
+                        onClick={() => handleOrder("libelleFormation")}
                       >
-                        <OrderIcon {...order} column="libelleDiplome" />
-                        {DEMANDES_COLUMNS.libelleDiplome}
+                        <OrderIcon {...order} column="libelleFormation" />
+                        {DEMANDES_COLUMNS.libelleFormation}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -410,7 +410,7 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.libelleDiplome}
+                              {demande.libelleFormation}
                             </Text>
                           </Td>
                           <Td>
@@ -447,7 +447,7 @@ export const PageClient = () => {
                           </Td>
                           <Td>
                             {demande.compensationCfd &&
-                            demande.compensationDispositifId &&
+                            demande.compensationCodeDispositif &&
                             demande.compensationUai ? (
                               demande.idCompensation ? (
                                 <Button

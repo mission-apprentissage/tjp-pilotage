@@ -10,7 +10,7 @@ const FormationSchema = z.object({
   libelleFormation: z.string(),
   codeNiveauDiplome: z.string(),
   libelleNiveauDiplome: z.string().optional(),
-  dispositifId: z.string().optional(),
+  codeDispositif: z.string().optional(),
   libelleDispositif: z.string().optional(),
   nbEtablissement: z.coerce.number(),
   effectif: z.coerce.number().optional(),
@@ -23,11 +23,10 @@ const FormationSchema = z.object({
   tauxPoursuitePrecedent: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number(),
   positionQuadrant: z.string().optional(),
-  libelleFiliere: z.string().optional(),
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
 });

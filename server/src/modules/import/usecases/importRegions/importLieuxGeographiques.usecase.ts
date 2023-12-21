@@ -52,7 +52,7 @@ const createAcademieFromLine = (
   return {
     codeAcademie: data.codeAcademie,
     codeRegion: data.codeRegion,
-    libelle: data.libelleAcademie,
+    libelleAcademie: data.libelleAcademie,
   };
 };
 
@@ -63,7 +63,7 @@ const createDepartementFromLine = (
   return {
     codeRegion: data.codeRegion,
     codeAcademie: data.codeAcademie,
-    libelle: data.libelleDepartement,
+    libelleDepartement: data.libelleDepartement,
     codeDepartement: data.codeDepartement,
   };
 };

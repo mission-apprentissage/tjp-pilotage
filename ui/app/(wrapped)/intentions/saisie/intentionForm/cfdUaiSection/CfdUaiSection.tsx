@@ -88,9 +88,9 @@ export const CfdUaiSection = ({
   const [uaiInfo, setUaiInfo] = useState<
     (typeof client.infer)["[GET]/etab/search/:search"][number] | undefined
   >(
-    formMetadata?.etablissement?.libelle && uai
+    formMetadata?.etablissement?.libelleEtablissement && uai
       ? {
-          label: formMetadata?.etablissement.libelle,
+          label: formMetadata?.etablissement.libelleEtablissement,
           value: uai,
           commune: formMetadata?.etablissement.commune,
         }

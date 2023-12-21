@@ -79,7 +79,7 @@ const findFiltersInDb = async () => {
       "formationView.codeNiveauDiplome"
     )
     .where(
-      "cfd",
+      "formationView.cfd",
       "not in",
       sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
     )
