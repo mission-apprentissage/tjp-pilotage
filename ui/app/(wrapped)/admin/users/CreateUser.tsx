@@ -36,6 +36,7 @@ export const CreateUser = ({
     handleSubmit,
     reset,
   } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
+    shouldUseNativeValidation: false,
     defaultValues: {
       email: "",
       codeRegion: "",
@@ -72,7 +73,7 @@ export const CreateUser = ({
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
+      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
         <ModalHeader>Ajouter un utilisateur</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -128,7 +129,7 @@ export const CreateUser = ({
               <FormErrorMessage>{errors.role.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired>
+          <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
               <option value="">Aucune</option>
