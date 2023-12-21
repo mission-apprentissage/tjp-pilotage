@@ -1,8 +1,7 @@
 import { AnyColumnWithTable, ExpressionBuilder, sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 

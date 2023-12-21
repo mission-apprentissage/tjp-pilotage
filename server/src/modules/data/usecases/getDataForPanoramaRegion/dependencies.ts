@@ -7,6 +7,7 @@ import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire"
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notHistorique } from "../../utils/notHistorique";
+import { notSecondeCommune } from "../../utils/notSecondeCommune";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -69,6 +70,7 @@ export const getFormationsRegion = async ({
         )
     )
     .where(notHistorique)
+    .where(notSecondeCommune)
     .where("etablissement.codeRegion", "=", codeRegion)
     .$call((q) => {
       if (!codeNiveauDiplome) return q;

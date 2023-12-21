@@ -1,5 +1,6 @@
 import { kdb } from "../../../../db/db";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { notSecondeCommune } from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
@@ -54,6 +55,7 @@ const getStatsSortieBase = ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notSecondeCommune)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),

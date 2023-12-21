@@ -6,6 +6,10 @@ import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
+import {
+  notSecondeCommune,
+  notSecondeCommuneIndicateurRegionSortie,
+} from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -37,6 +41,7 @@ export const getRegionStats = async ({
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notSecondeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
@@ -83,6 +88,7 @@ export const getRegionStats = async ({
       );
     })
     .where(notHistorique)
+    .where(notSecondeCommune)
     .select([
       "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(

@@ -1,7 +1,20 @@
 import { kdb } from "../../../../../../db/db";
 import { cleanNull } from "../../../../../../utils/noNull";
 
-export const findFamilleMetier = async ({
+export const findSecondeCommune = async ({
+  cfdFamille,
+}: {
+  cfdFamille: string;
+}) => {
+  const result = await kdb
+    .selectFrom("familleMetier")
+    .selectAll("familleMetier")
+    .where("cfdFamille", "=", cfdFamille)
+    .executeTakeFirst();
+  return result && cleanNull(result);
+};
+
+export const findSpecialite = async ({
   cfdSpecialite,
 }: {
   cfdSpecialite: string;

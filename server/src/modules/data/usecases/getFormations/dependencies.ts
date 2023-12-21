@@ -249,7 +249,15 @@ const findFormationsInDb = async ({
     })
     .$call((q) => {
       if (!cfdFamille) return q;
-      return q.where("familleMetier.cfdFamille", "in", cfdFamille);
+      return q.where((w) =>
+        w.or([
+          w("familleMetier.cfdFamille", "in", cfdFamille),
+          w.and([
+            w("formationView.typeFamille", "=", "2nde_commune"),
+            w("formationView.cfd", "in", cfdFamille),
+          ]),
+        ])
+      );
     })
     .$call((q) => {
       if (!cpc) return q;
