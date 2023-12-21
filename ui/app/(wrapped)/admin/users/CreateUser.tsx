@@ -36,6 +36,7 @@ export const CreateUser = ({
     handleSubmit,
     reset,
   } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
+    shouldUseNativeValidation: false,
     defaultValues: {
       email: "",
       codeRegion: "",
@@ -67,16 +68,16 @@ export const CreateUser = ({
 
   const onSubmit = (
     v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
-  ) => createUser({ body: v });
+  ) => createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
       <ModalOverlay />
-      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)}>
+      <ModalContent as="form" onSubmit={handleSubmit(onSubmit)} noValidate>
         <ModalHeader>Ajouter un utilisateur</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl mb="4" isInvalid={!!errors.email}>
+          <FormControl mb="4" isInvalid={!!errors.email} isRequired>
             <FormLabel>Email</FormLabel>
             <Input
               {...register("email", {
@@ -89,7 +90,7 @@ export const CreateUser = ({
               <FormErrorMessage>{errors.email.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.firstname}>
+          <FormControl mb="4" isInvalid={!!errors.firstname} isRequired>
             <FormLabel>Prénom</FormLabel>
             <Input
               {...register("firstname", {
@@ -100,7 +101,7 @@ export const CreateUser = ({
               <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.lastname}>
+          <FormControl mb="4" isInvalid={!!errors.lastname} isRequired>
             <FormLabel>Nom</FormLabel>
             <Input
               {...register("lastname", {
@@ -111,7 +112,7 @@ export const CreateUser = ({
               <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.role}>
+          <FormControl mb="4" isInvalid={!!errors.role} isRequired>
             <FormLabel>Role</FormLabel>
             <Select
               {...register("role", {
@@ -131,6 +132,7 @@ export const CreateUser = ({
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
+              <option value="">Aucune</option>
               {regions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}

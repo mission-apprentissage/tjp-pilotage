@@ -82,7 +82,7 @@ export const EditUser = ({
         <ModalHeader>Éditer un utilisateur</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <FormControl mb="4" isInvalid={!!errors.email}>
+          <FormControl mb="4" isInvalid={!!errors.email} isRequired>
             <FormLabel>Email</FormLabel>
             <Input
               type="email"
@@ -96,7 +96,7 @@ export const EditUser = ({
               <FormErrorMessage>{errors.email.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.firstname}>
+          <FormControl mb="4" isInvalid={!!errors.firstname} isRequired>
             <FormLabel>Prénom</FormLabel>
             <Input
               {...register("firstname", {
@@ -107,7 +107,7 @@ export const EditUser = ({
               <FormErrorMessage>{errors.firstname.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.lastname}>
+          <FormControl mb="4" isInvalid={!!errors.lastname} isRequired>
             <FormLabel>Nom</FormLabel>
             <Input
               {...register("lastname", {
@@ -118,7 +118,7 @@ export const EditUser = ({
               <FormErrorMessage>{errors.lastname.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.role}>
+          <FormControl mb="4" isInvalid={!!errors.role} isRequired>
             <FormLabel>Role</FormLabel>
             <Select
               {...register("role", {
