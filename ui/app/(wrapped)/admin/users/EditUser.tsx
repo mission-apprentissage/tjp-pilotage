@@ -135,7 +135,7 @@ export const EditUser = ({
               <FormErrorMessage>{errors.role.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.codeRegion} isRequired>
+          <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
               <option value="">Aucune</option>
