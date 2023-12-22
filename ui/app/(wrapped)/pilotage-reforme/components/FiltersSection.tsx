@@ -47,8 +47,14 @@ export const FiltersSection = ({
                 width={["12rem", null, "72"]}
                 size="md"
                 variant="newInput"
+                borderBottomColor={
+                  activeFilters.codeRegion != undefined ? "info.525" : ""
+                }
                 value={activeFilters.codeRegion ?? ""}
-                onChange={(e) => handleFilters("codeRegion", e.target.value)}
+                onChange={(e) => {
+                  handleFilters("codeRegion", e.target.value);
+                  filterTracker("codeRegion");
+                }}
                 placeholder="TOUTES"
               >
                 {data?.filters.regions?.map((option) => (
