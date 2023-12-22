@@ -9,7 +9,7 @@ import { InfoBlock } from "../../../../../components/InfoBlock";
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number];
+  formation: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"][number];
 }) => (
   <Box bg="white" fontSize="xs">
     <InfoBlock

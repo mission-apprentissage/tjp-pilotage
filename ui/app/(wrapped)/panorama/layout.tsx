@@ -68,7 +68,7 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
               Département
             </Tab>
             <Tab as={Link} href="/panorama/etablissement">
-              Etablissement
+              Établissement
             </Tab>
           </TabList>
           <TabPanels

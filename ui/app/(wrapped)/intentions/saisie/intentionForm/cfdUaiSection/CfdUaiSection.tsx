@@ -86,7 +86,8 @@ export const CfdUaiSection = ({
   const uai = watch("uai");
 
   const [uaiInfo, setUaiInfo] = useState<
-    (typeof client.infer)["[GET]/etab/search/:search"][number] | undefined
+    | (typeof client.infer)["[GET]/etablissement/search/:search"][number]
+    | undefined
   >(
     formMetadata?.etablissement?.libelleEtablissement && uai
       ? {

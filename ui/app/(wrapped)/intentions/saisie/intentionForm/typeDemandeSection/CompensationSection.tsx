@@ -15,7 +15,7 @@ import { client } from "../../../../../../api.client";
 import { CfdAutocompleteInput } from "../../components/CfdAutocomplete";
 import { UaiAutocomplete } from "../../components/UaiAutocomplete";
 
-type Etablissement = (typeof client.infer)["[GET]/api/etab/:uai"];
+type Etablissement = (typeof client.infer)["[GET]/etablissement/:uai"];
 
 export const CompensationSection = ({
   disabled,
@@ -47,7 +47,7 @@ export const CompensationSection = ({
   );
 
   const { data, isLoading } = client
-    .ref("[GET]/api/etab/:uai")
+    .ref("[GET]/etablissement/:uai")
     .useQuery({ params: { uai: getValues("uai") } }, { cacheTime: 0 });
 
   const getSameEtabDefaultValue = (): Etablissement => {

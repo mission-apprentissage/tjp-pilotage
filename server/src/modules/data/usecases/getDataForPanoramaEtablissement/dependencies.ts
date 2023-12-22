@@ -14,7 +14,7 @@ import { withPoursuiteReg } from "../../utils/tauxPoursuite";
 import { selectTauxPression } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
-const getEtablissementInDb = async ({
+const getFormationsEtablissement = async ({
   uai,
   millesimeSortie = "2020_2021",
   rentreeScolaire = "2022",
@@ -227,5 +227,5 @@ const getEtablissementInDb = async ({
 };
 
 export const dependencies = {
-  getEtablissementInDb,
+  getFormationsEtablissement,
 };
