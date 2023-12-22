@@ -1,8 +1,11 @@
 import { z } from "zod";
 
-export const searchEtabSchema = {
+export const searchEtablissementSchema = {
   params: z.object({
     search: z.string(),
+  }),
+  querystring: z.object({
+    filtered: z.coerce.boolean().optional(),
   }),
   response: {
     200: z.array(

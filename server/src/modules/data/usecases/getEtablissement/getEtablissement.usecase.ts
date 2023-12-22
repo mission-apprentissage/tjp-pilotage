@@ -1,36 +1,22 @@
 import { inject } from "injecti";
 
-import { cleanNull } from "../../../../utils/noNull";
-import { getStatsSortieParRegions } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies } from "./dependencies";
+import { findOneDataEtablissement } from "../../repositories/findOneDataEtablissement.query";
 
 export const [getEtablissement] = inject(
-  { getEtablissementInDb: dependencies.getEtablissementInDb },
+  { findOneDataEtablissement },
   (deps) =>
-    async (activeFilters: {
-      uai: string;
-      orderBy?: { column: string; order: "asc" | "desc" };
-    }) => {
-      const [etablissement, statsSortie] = await Promise.all([
-        deps.getEtablissementInDb(activeFilters),
-        getStatsSortieParRegions({}),
-      ]);
+    async ({ uai }: { uai: string }) => {
+      const etablissement = await deps.findOneDataEtablissement({
+        uai,
+      });
 
-      return (
-        etablissement &&
-        cleanNull({
-          ...etablissement,
-          formations: etablissement?.formations?.map((formation) =>
-            cleanNull({
-              ...formation,
-              positionQuadrant: getPositionQuadrant(
-                formation,
-                statsSortie[etablissement.codeRegion ?? ""] || {}
-              ),
-            })
-          ),
-        })
-      );
+      return {
+        value: etablissement?.uai ?? uai,
+        label:
+          etablissement?.libelleEtablissement &&
+          etablissement?.commune &&
+          `${etablissement.libelleEtablissement} - ${etablissement.commune}`,
+        commune: etablissement?.commune,
+      };
     }
 );

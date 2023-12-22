@@ -24,7 +24,7 @@ export const EtablissementSection = ({
   onUaiChanged,
 }: {
   uai: string;
-  etablissement?: (typeof client.infer)["[GET]/etablissement/:uai"];
+  etablissement?: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"];
   onUaiChanged: (codeRegion: string) => void;
 }) => {
   return (
@@ -40,7 +40,7 @@ export const EtablissementSection = ({
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
           <Box maxW="300px">
-            <UaiForm defaultUai={uai} onUaiChanged={onUaiChanged} />
+            <UaiForm uai={uai} onUaiChanged={onUaiChanged} inError={false} />
           </Box>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />
