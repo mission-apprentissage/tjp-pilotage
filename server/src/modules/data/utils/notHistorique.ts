@@ -12,6 +12,16 @@ export const notHistorique = (
   );
 };
 
+export const notHistoriqueFormation = (
+  eb: ExpressionBuilder<DB, "formationView">
+) => {
+  return eb(
+    "formationView.cfd",
+    "not in",
+    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+  );
+};
+
 export const notHistoriqueIndicateurRegionSortie = (
   eb: ExpressionBuilder<DB, "indicateurRegionSortie">
 ) => {

@@ -81,16 +81,18 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("formationEtablissement")
     .dropConstraint("fk_formation")
+    .ifExists()
     .execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema
-    .alterTable("formationEtablissement")
-    .addForeignKeyConstraint("fk_formation", ["cfd"], "formation", [
-      "codeFormationDiplome",
-    ])
-    .execute();
+  // TODO: handle adding back the constraint
+  // await db.schema
+  //   .alterTable("formationEtablissement")
+  //   .addForeignKeyConstraint("fk_formation", ["cfd"], "formation", [
+  //     "codeFormationDiplome",
+  //   ])
+  //   .execute();
 
   await db.schema.dropView("formationView").materialized().execute();
 

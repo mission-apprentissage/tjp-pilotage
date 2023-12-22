@@ -13,7 +13,6 @@ import {
   notPerimetreIJEtablissement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
-import { notSecondeCommune } from "../../utils/notSecondeCommune";
 import { premiersVoeuxAnnee } from "../../utils/premiersVoeuxAnnee";
 import {
   selectTauxDevenirFavorableAgg,
@@ -293,7 +292,6 @@ const findEtablissementsInDb = async ({
       return q.where("formationView.libelleFiliere", "in", libelleFiliere);
     })
     .where(notHistorique)
-    .where(notSecondeCommune)
     .where(notPerimetreIJEtablissement)
     .groupBy([
       "formationView.id",

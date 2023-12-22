@@ -3,7 +3,10 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
-import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import {
+  notHistoriqueFormation,
+  notHistoriqueIndicateurRegionSortie,
+} from "../../utils/notHistorique";
 import { notSecondeCommuneIndicateurRegionSortie } from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -80,11 +83,7 @@ const findFiltersInDb = async () => {
       "niveauDiplome.codeNiveauDiplome",
       "formationView.codeNiveauDiplome"
     )
-    .where(
-      "formationView.cfd",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
+    .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>();
 
