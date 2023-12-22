@@ -3,9 +3,8 @@ import { countDemandesRoute } from "./usecases/countDemandes/countDemandes.route
 import { deleteDemandeRoute } from "./usecases/deleteDemande/deleteDemande.route";
 import { getDemandeRoute } from "./usecases/getDemande/getDemande.route";
 import { getDemandesRoute } from "./usecases/getDemandes/getDemandes.route";
-import { getEtabRoute } from "./usecases/getEtab/getEtab.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
-import { searchEtabRoute } from "./usecases/searchEtab/searchEtab.route";
+import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
 import { submitDemandeRoute } from "./usecases/submitDemande/submitDemande.route";
 
 export const registerIntentionsModule = ({ server }: { server: Server }) => {
@@ -15,8 +14,7 @@ export const registerIntentionsModule = ({ server }: { server: Server }) => {
     ...getDemandesRoute(server),
     ...countDemandesRoute(server),
     ...deleteDemandeRoute(server),
-    ...getEtabRoute(server),
-    ...searchEtabRoute(server),
+    ...searchEtablissementRoute(server),
     ...searchDiplomeRoute(server),
   };
 };

@@ -4,7 +4,7 @@ export type QueryPanoramaFormation =
   | (typeof client.inferArgs)["[GET]/panorama/stats/region"]["query"]
   | (typeof client.inferArgs)["[GET]/panorama/stats/departement"]["query"];
 export type QueryPanoramaEtablissement =
-  (typeof client.inferArgs)["[GET]/etablissement/:uai"]["query"];
+  (typeof client.inferArgs)["[GET]/panorama/stats/etablissement/:uai"]["query"];
 
 export type PanoramaFormationRegion =
   (typeof client.infer)["[GET]/panorama/stats/region"]["formations"][number];
@@ -17,9 +17,9 @@ export type PanoramaFormationsDepartement =
   (typeof client.infer)["[GET]/panorama/stats/departement"]["formations"];
 
 export type PanoramaFormationEtablissement =
-  (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number];
+  (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"][number];
 export type PanoramaFormationsEtablissement =
-  (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
+  (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"];
 
 export type PanoramaFormation =
   | PanoramaFormationRegion

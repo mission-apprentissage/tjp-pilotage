@@ -46,7 +46,7 @@ export const QuadrantSection = ({
   handleOrder,
 }: {
   isLoading: boolean;
-  quadrantFormations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
+  quadrantFormations?: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"];
   meanPoursuite?: number;
   meanInsertion?: number;
   codeNiveauDiplome?: string[];
@@ -68,7 +68,7 @@ export const QuadrantSection = ({
         (
           item
         ): item is RequiredFields<
-          (typeof client.infer)["[GET]/etablissement/:uai"]["formations"][number],
+          (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"][number],
           "tauxInsertion" | "tauxPoursuite"
         > =>
           item.tauxInsertion !== undefined &&
