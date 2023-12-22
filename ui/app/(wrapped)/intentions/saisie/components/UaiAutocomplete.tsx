@@ -15,7 +15,7 @@ export const UaiAutocomplete = ({
   active?: boolean;
   inError: boolean;
   onChange: (
-    value?: (typeof client.infer)["[GET]/etab/search/:search"][number]
+    value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]
   ) => void;
 }) => {
   const selectStyle = {
@@ -40,13 +40,13 @@ export const UaiAutocomplete = ({
         defaultValue &&
         ({
           ...defaultValue,
-        } as (typeof client.infer)["[GET]/etab/search/:search"][0])
+        } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
       }
       loadOptions={(inputValue: string) => {
         if (inputValue.length >= 3)
           return client
-            .ref("[GET]/etab/search/:search")
-            .query({ params: { search: inputValue } });
+            .ref("[GET]/etablissement/search/:search")
+            .query({ params: { search: inputValue }, query: {} });
       }}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3
