@@ -5,6 +5,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notHistoriqueFormation } from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -174,12 +175,8 @@ const findFormationsInDb = async ({
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
     ])
-    .where(
-      "formationView.cfd",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
     .where(notPerimetreIJEtablissement)
+    .where(notHistoriqueFormation)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
@@ -359,11 +356,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where(
-      "formationView.cfd",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
+    .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

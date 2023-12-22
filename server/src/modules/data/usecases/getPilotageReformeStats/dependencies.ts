@@ -7,6 +7,7 @@ import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,
+  notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import {
@@ -170,11 +171,7 @@ const findFiltersInDb = async () => {
       "formationEtablissement.UAI"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .where(
-      "formationView.cfd",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
-    )
+    .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

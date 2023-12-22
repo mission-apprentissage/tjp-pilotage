@@ -109,7 +109,7 @@ export default function Formations() {
         ...filters,
       },
     },
-    { keepPreviousData: true, staleTime: 10000000 }
+    { staleTime: 10000000 }
   );
 
   const trackEvent = usePlausible();

@@ -14,7 +14,7 @@
     "build": "tsup src/index.ts",
     "typecheck": "tsc",
     "cli": "ts-node -T src/cli.ts ",
-    "kysely": "npx kysely-codegen --schema public --out-file=./src/db/db.ts --dialect postgres",
+    "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres",
     "test": "jest"
   },
   "dependencies": {
