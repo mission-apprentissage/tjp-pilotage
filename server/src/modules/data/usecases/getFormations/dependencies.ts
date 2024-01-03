@@ -22,7 +22,7 @@ const findFormationsInDb = async ({
   offset = 0,
   limit = 20,
   rentreeScolaire = ["2022"],
-  millesimeSortie = "2020_2021",
+  millesimeSortie = "2021_2022",
   codeRegion,
   codeAcademie,
   codeDepartement,
