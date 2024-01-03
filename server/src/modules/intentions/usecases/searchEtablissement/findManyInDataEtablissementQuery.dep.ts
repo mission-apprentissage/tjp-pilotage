@@ -51,7 +51,7 @@ export const findManyInDataEtablissementsQuery = async ({
     )
     .$call((q) => {
       if (!codeRegion) return q;
-      return q.where("codeRegion", "=", codeRegion);
+      return q.where("dataEtablissement.codeRegion", "=", codeRegion);
     })
     .$call((q) => {
       if (!filtered) return q;
