@@ -109,6 +109,7 @@ const findFormationsInDb = async ({
       sql<number>`COUNT(*) OVER()`.as("count"),
       "libelleOfficielFamille as libelleFamille",
       "libelleDispositif",
+      "codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       sql<number>`COUNT("indicateurEntree"."rentreeScolaire")
@@ -212,6 +213,7 @@ const findFormationsInDb = async ({
       "formationView.codeNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
+      "dispositif.codeDispositif",
       "formationEtablissement.dispositifId",
       "libelleFamille",
       "niveauDiplome.libelleNiveauDiplome",
@@ -380,9 +382,17 @@ const findFiltersInDb = async ({
     return eb("region.codeRegion", "in", codeRegion);
   };
 
-  const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
+  const inCfdFamille = (
+    eb: ExpressionBuilder<DB, "familleMetier" | "formationView">
+  ) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb("familleMetier.cfdFamille", "in", cfdFamille);
+    return eb.or([
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+      eb.and([
+        eb("formationView.typeFamille", "=", "2nde_commune"),
+        eb("formationView.cfd", "in", cfdFamille),
+      ]),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -402,12 +412,12 @@ const findFiltersInDb = async ({
     return eb("formationEtablissement.dispositifId", "in", codeDispositif);
   };
 
-  const incpc = (eb: ExpressionBuilder<DB, "formationView">) => {
+  const inCpc = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!cpc) return sql<true>`true`;
     return eb("formationView.cpc", "in", cpc);
   };
 
-  const incpcSecteur = (eb: ExpressionBuilder<DB, "formationView">) => {
+  const inCpcSecteur = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!cpcSecteur) return sql<true>`true`;
     return eb("formationView.cpcSecteur", "in", cpcSecteur);
   };
@@ -548,7 +558,7 @@ const findFiltersInDb = async ({
     .where("formationView.cpcSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([incpc(eb)]),
+        eb.and([inCpc(eb)]),
         cpcSecteur
           ? eb("formationView.cpcSecteur", "in", cpcSecteur)
           : sql`false`,
@@ -564,7 +574,7 @@ const findFiltersInDb = async ({
     .where("formationView.cpcSousSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([incpc(eb), incpcSecteur(eb)]),
+        eb.and([inCpc(eb), inCpcSecteur(eb)]),
         cpcSousSecteur
           ? eb("formationView.cpcSousSecteur", "in", cpcSousSecteur)
           : sql`false`,
