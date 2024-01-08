@@ -1,13 +1,17 @@
 import { ExpressionBuilder, sql } from "kysely";
+
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
+import {
+  notPerimetreIJAcademie,
+  notPerimetreIJDepartement,
+  notPerimetreIJRegion,
+} from "../../utils/notPerimetreIJ";
 import { Scope } from "./getScopedTransformationStats.schema";
 
-const selectPlacesTransformees = (
-  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
-) =>
+const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.coalesce(
     eb.fn.sum<number>(
       sql`ABS(
@@ -19,9 +23,7 @@ const selectPlacesTransformees = (
     sql`0`
   );
 
-const selectPlacesOuvertesScolaire = (
-  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
-) =>
+const selectPlacesOuvertesScolaire = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.coalesce(
     eb.fn.sum<number>(
       sql`GREATEST(${eb.ref("demande.capaciteScolaire")}
@@ -30,9 +32,7 @@ const selectPlacesOuvertesScolaire = (
     sql`0`
   );
 
-const selectPlacesFermeesScolaire = (
-  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
-) =>
+const selectPlacesFermeesScolaire = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.coalesce(
     eb.fn.sum<number>(
       sql`GREATEST(${eb.ref("demande.capaciteScolaireActuelle")}
@@ -42,7 +42,7 @@ const selectPlacesFermeesScolaire = (
   );
 
 const selectPlacesOuvertesApprentissage = (
-  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+  eb: ExpressionBuilder<DB, "demande">
 ) =>
   eb.fn.coalesce(
     eb.fn.sum<number>(
@@ -53,360 +53,288 @@ const selectPlacesOuvertesApprentissage = (
   );
 
 const selectPlacesFermeesApprentissage = (
-  eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
+  eb: ExpressionBuilder<DB, "demande">
 ) =>
   eb.fn.sum<number>(
     sql`GREATEST(${eb.ref("demande.capaciteApprentissageActuelle")}
       - ${eb.ref("demande.capaciteApprentissage")}, 0)`
   );
 
-export const getAcademieDatas = async ({
-  status,
-  rentreeScolaire = "2024",
-  codeNiveauDiplome,
-  CPC,
-  filiere,
-  scope,
-}: {
-  status?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  filiere?: string[];
-  scope: Scope;
-}) => {
-  console.log("Region");
-  return await kdb
-    .selectFrom("academie")
-    .leftJoin(
-      "dataEtablissement",
-      "dataEtablissement.codeAcademie",
-      "academie.codeAcademie"
-    )
-    .leftJoin("demande", (join) => {
-      join = join.onRef("demande.uai", "=", "dataEtablissement.uai");
+const genericOnConstatRentree =
+  ({
+    codeNiveauDiplome,
+    CPC,
+    filiere,
+  }: {
+    codeNiveauDiplome?: string[];
+    CPC?: string[];
+    filiere?: string[];
+  }) =>
+  (eb: ExpressionBuilder<DB, never>) =>
+    eb
+      .selectFrom("constatRentree")
+      .leftJoin(
+        "dataEtablissement",
+        "dataEtablissement.uai",
+        "constatRentree.uai"
+      )
+      .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+      .where("constatRentree.rentreeScolaire", "=", "2022")
+      .where("constatRentree.anneeDispositif", "=", 1)
+      .$call((eb) => {
+        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+        return eb;
+      })
+      .$call((eb) => {
+        if (filiere)
+          return eb.where("dataFormation.libelleFiliere", "in", filiere);
+        return eb;
+      })
+      .$call((eb) => {
+        if (codeNiveauDiplome)
+          return eb.where(
+            "dataFormation.codeNiveauDiplome",
+            "in",
+            codeNiveauDiplome
+          );
+        return eb;
+      });
 
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire)) {
-        join = join.on(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
-      }
-
-      if (status) {
-        join = join.on("demande.status", "=", status);
-      }
-
-      return join;
-    })
-    .leftJoin("dataFormation", (join) => {
-      join = join.onRef("dataFormation.cfd", "=", "demande.cfd");
-
-      if (filiere) {
-        join = join.on("dataFormation.libelleFiliere", "in", filiere);
-      }
-
-      if (codeNiveauDiplome) {
-        join = join.on(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      }
-
-      return join;
-    })
-    .leftJoin("constatRentree", (join) =>
-      join.onRef("dataEtablissement.uai", "=", "constatRentree.uai")
-    )
-    .leftJoin(
-      (eb) =>
-        eb
-          .selectFrom("academie")
-          .leftJoin(
-            "dataEtablissement",
-            "dataEtablissement.codeAcademie",
-            "academie.codeAcademie"
-          )
-          .leftJoin(
-            "constatRentree",
-            "constatRentree.uai",
-            "dataEtablissement.uai"
-          )
-          .select((es) => [
-            es.ref("academie.codeAcademie").as("codeAcademie"),
-            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
-              "effectif"
-            ),
-          ])
-          .where("constatRentree.rentreeScolaire", "=", "2022")
-          .where("constatRentree.anneeDispositif", "=", 1)
-          .groupBy("academie.codeAcademie")
-          .as("effectifsParAcademie"),
-      (join) =>
-        join.onRef(
-          "effectifsParAcademie.codeAcademie",
-          "=",
-          "academie.codeAcademie"
-        )
-    )
-    .select((eb) => [
-      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
-      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
-      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
-      selectPlacesTransformees(eb).as("transformes"),
-      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
-      eb.ref("academie.codeAcademie").as("code"),
-      eb.ref("academie.libelle").as("libelle"),
-      eb.ref("effectifsParAcademie.effectif").as("effectif"),
-    ])
-    .$call((q) =>
-      q.groupBy([
-        "academie.codeAcademie",
-        "academie.libelle",
-        "effectifsParAcademie.effectif",
+const genericOnDemandes =
+  ({
+    status,
+    rentreeScolaire = "2024",
+    codeNiveauDiplome,
+    CPC,
+    filiere,
+  }: {
+    status?: "draft" | "submitted";
+    rentreeScolaire?: string;
+    codeNiveauDiplome?: string[];
+    CPC?: string[];
+    filiere?: string[];
+  }) =>
+  (eb: ExpressionBuilder<DB, never>) =>
+    eb
+      .selectFrom("demande")
+      .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+      .select((es) => [
+        selectPlacesOuvertesScolaire(es).as("placesOuvertesScolaire"),
+        selectPlacesFermeesScolaire(es).as("placesFermeesScolaire"),
+        selectPlacesOuvertesApprentissage(es).as("placesOuvertesApprentissage"),
+        selectPlacesTransformees(es).as("transformes"),
+        selectPlacesFermeesApprentissage(es).as("placesFermeesApprentissage"),
       ])
-    )
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filiere);
-      return eb;
-    })
-    .where(isDemandeNotDeletedOrRefused)
-    .where("constatRentree.rentreeScolaire", "=", "2022")
-    .where("constatRentree.anneeDispositif", "=", 1)
-    .execute()
-    .then(cleanNull);
-};
+      .where(isDemandeNotDeletedOrRefused)
+      .$call((eb) => {
+        if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+          return eb.where(
+            "demande.rentreeScolaire",
+            "=",
+            parseInt(rentreeScolaire)
+          );
+        return eb;
+      })
+      .$call((eb) => {
+        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+        return eb;
+      })
+      .$call((eb) => {
+        if (filiere)
+          return eb.where("dataFormation.libelleFiliere", "in", filiere);
+        return eb;
+      })
+      .$call((eb) => {
+        if (codeNiveauDiplome)
+          return eb.where(
+            "dataFormation.codeNiveauDiplome",
+            "in",
+            codeNiveauDiplome
+          );
+        return eb;
+      })
+      .$call((q) => {
+        if (!status) return q;
+        return q.where("demande.status", "=", status);
+      });
 
-export const getRegionDatas = async ({
-  status,
-  rentreeScolaire = "2024",
-  codeNiveauDiplome,
-  CPC,
-  filiere,
-  scope,
-}: {
+export const getRegionDatas = async (filters: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
   filiere?: string[];
-  scope: Scope;
 }) => {
-  return await kdb
+  return kdb
     .selectFrom("region")
     .leftJoin(
-      "dataEtablissement",
-      "dataEtablissement.codeRegion",
-      "region.codeRegion"
+      (eb) =>
+        genericOnDemandes(filters)(eb)
+          .select((es) => [es.ref("demande.codeRegion").as("codeRegion")])
+          .groupBy(["demande.codeRegion"])
+          .as("demandes"),
+      (join) => join.onRef("demandes.codeRegion", "=", "region.codeRegion")
     )
-    .leftJoin("demande", (join) => {
-      join = join.onRef("demande.uai", "=", "dataEtablissement.uai");
-
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire)) {
-        join = join.on(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
-      }
-
-      if (status) {
-        join = join.on("demande.status", "=", status);
-      }
-
-      return join;
-    })
-    .leftJoin("dataFormation", (join) => {
-      join = join.onRef("dataFormation.cfd", "=", "demande.cfd");
-
-      if (filiere) {
-        join = join.on("dataFormation.libelleFiliere", "in", filiere);
-      }
-
-      if (codeNiveauDiplome) {
-        join = join.on(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      }
-
-      return join;
-    })
     .leftJoin(
       (eb) =>
-        eb
-          .selectFrom("region")
-          .leftJoin(
-            "dataEtablissement",
-            "dataEtablissement.codeRegion",
-            "region.codeRegion"
-          )
-          .leftJoin(
-            "constatRentree",
-            "constatRentree.uai",
-            "dataEtablissement.uai"
-          )
+        genericOnConstatRentree(filters)(eb)
           .select((es) => [
-            es.ref("region.codeRegion").as("codeRegion"),
+            es.ref("dataEtablissement.codeRegion").as("codeRegion"),
             sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
               "effectif"
             ),
           ])
-          .where("constatRentree.rentreeScolaire", "=", "2022")
-          .where("constatRentree.anneeDispositif", "=", 1)
-          .groupBy("region.codeRegion")
-          .as("effectifsParRegion"),
-      (join) =>
-        join.onRef("effectifsParRegion.codeRegion", "=", "region.codeRegion")
+          .groupBy(["dataEtablissement.codeRegion"])
+          .as("effectifs"),
+      (join) => join.onRef("effectifs.codeRegion", "=", "region.codeRegion")
     )
     .select((eb) => [
-      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
-      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
-      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
-      selectPlacesTransformees(eb).as("transformes"),
-      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("region.codeRegion").as("code"),
       eb.ref("region.libelleRegion").as("libelle"),
-      eb.ref("effectifsParRegion.effectif").as("effectif"),
+      eb.ref("effectifs.effectif").as("effectif"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
+        "placesOuvertesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
+        "placesFermeesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesApprentissage"
+      )}, 0)`.as("placesOuvertesApprentissage"),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesFermeesApprentissage"
+      )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
+        "transformes"
+      ),
     ])
-    .$call((q) =>
-      q.groupBy([
-        "region.codeRegion",
-        "region.libelleRegion",
-        "effectifsParRegion.effectif",
-      ])
-    )
-    .where(isDemandeNotDeletedOrRefused)
+    .where(notPerimetreIJRegion)
     .execute()
     .then(cleanNull);
 };
 
-export const getDepartementDatas = async ({
-  status,
-  rentreeScolaire = "2024",
-  codeNiveauDiplome,
-  CPC,
-  filiere,
-  scope,
-}: {
+export const getAcademieDatas = async (filters: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
   filiere?: string[];
-  scope: Scope;
 }) => {
-  return await kdb
-    .selectFrom("departement")
-    .leftJoin(
-      "dataEtablissement",
-      "dataEtablissement.codeDepartement",
-      "departement.codeDepartement"
-    )
-    .leftJoin("demande", (join) => {
-      join = join.onRef("demande.uai", "=", "dataEtablissement.uai");
-
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire)) {
-        join = join.on(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
-      }
-
-      if (status) {
-        join = join.on("demande.status", "=", status);
-      }
-
-      return join;
-    })
-    .leftJoin("dataFormation", (join) => {
-      join = join.onRef("dataFormation.cfd", "=", "demande.cfd");
-
-      if (filiere) {
-        join = join.on("dataFormation.libelleFiliere", "in", filiere);
-      }
-
-      if (codeNiveauDiplome) {
-        join = join.on(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      }
-
-      return join;
-    })
+  return kdb
+    .selectFrom("academie")
     .leftJoin(
       (eb) =>
-        eb
-          .selectFrom("departement")
-          .leftJoin(
-            "dataEtablissement",
-            "dataEtablissement.codeDepartement",
-            "departement.codeDepartement"
-          )
-          .leftJoin(
-            "constatRentree",
-            "constatRentree.uai",
-            "dataEtablissement.uai"
-          )
+        genericOnDemandes(filters)(eb)
+          .select((es) => [es.ref("demande.codeAcademie").as("codeAcademie")])
+          .groupBy(["demande.codeAcademie"])
+          .as("demandes"),
+      (join) =>
+        join.onRef("demandes.codeAcademie", "=", "academie.codeAcademie")
+    )
+    .leftJoin(
+      (eb) =>
+        genericOnConstatRentree(filters)(eb)
           .select((es) => [
-            es.ref("departement.codeDepartement").as("codeDepartement"),
+            es.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
             sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
               "effectif"
             ),
           ])
-          .where("constatRentree.rentreeScolaire", "=", "2022")
-          .where("constatRentree.anneeDispositif", "=", 1)
-          .$call((eb) => {
-            if (codeNiveauDiplome)
-              eb = eb.where(
-                "dataFormation.codeNiveauDiplome",
-                "in",
-                codeNiveauDiplome
-              );
+          .groupBy(["dataEtablissement.codeAcademie"])
+          .as("effectifs"),
+      (join) =>
+        join.onRef("effectifs.codeAcademie", "=", "academie.codeAcademie")
+    )
+    .select((eb) => [
+      eb.ref("academie.codeAcademie").as("code"),
+      eb.ref("academie.libelle").as("libelle"),
+      eb.ref("effectifs.effectif").as("effectif"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
+        "placesOuvertesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
+        "placesFermeesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesApprentissage"
+      )}, 0)`.as("placesOuvertesApprentissage"),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesFermeesApprentissage"
+      )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
+        "transformes"
+      ),
+    ])
+    .where(notPerimetreIJAcademie)
+    .execute()
+    .then(cleanNull);
+};
 
-            if (CPC) {
-              eb = eb.where("dataFormation.cpc", "in", CPC);
-            }
-            return eb;
-          })
-          .groupBy("departement.codeDepartement")
-          .as("effectifsParDepartement"),
+export const getDepartementDatas = async (filters: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  filiere?: string[];
+}) => {
+  return kdb
+    .selectFrom("departement")
+    .leftJoin(
+      (eb) =>
+        genericOnDemandes(filters)(eb)
+          .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+          .select((es) => [
+            es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
+          ])
+          .groupBy(["dataEtablissement.codeDepartement"])
+          .as("demandes"),
       (join) =>
         join.onRef(
-          "effectifsParDepartement.codeDepartement",
+          "demandes.codeDepartement",
+          "=",
+
+          "departement.codeDepartement"
+        )
+    )
+    .leftJoin(
+      (eb) =>
+        genericOnConstatRentree(filters)(eb)
+          .select((es) => [
+            es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
+            sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
+              "effectif"
+            ),
+          ])
+          .groupBy(["dataEtablissement.codeDepartement"])
+          .as("effectifs"),
+      (join) =>
+        join.onRef(
+          "effectifs.codeDepartement",
           "=",
           "departement.codeDepartement"
         )
     )
     .select((eb) => [
-      selectPlacesOuvertesScolaire(eb).as("placesOuvertesScolaire"),
-      selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
-      selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
-      selectPlacesTransformees(eb).as("transformes"),
-      selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
       eb.ref("departement.codeDepartement").as("code"),
       eb.ref("departement.libelle").as("libelle"),
-      eb.ref("effectifsParDepartement.effectif").as("effectif"),
+      eb.ref("effectifs.effectif").as("effectif"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
+        "placesOuvertesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
+        "placesFermeesScolaire"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesApprentissage"
+      )}, 0)`.as("placesOuvertesApprentissage"),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesFermeesApprentissage"
+      )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
+        "transformes"
+      ),
     ])
-    .$call((q) =>
-      q.groupBy([
-        "departement.codeDepartement",
-        "departement.libelle",
-        "effectifsParDepartement.effectif",
-      ])
-    )
-    .where(isDemandeNotDeletedOrRefused)
+    .where(notPerimetreIJDepartement)
     .execute()
     .then(cleanNull);
 };
@@ -428,7 +356,7 @@ const getScopedData = async ({
 }) => {
   switch (scope) {
     case "academies":
-      return await getAcademieData({
+      return getAcademieDatas({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -437,7 +365,7 @@ const getScopedData = async ({
       });
 
     case "departements":
-      return await getDepartementData({
+      return getDepartementDatas({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -446,7 +374,7 @@ const getScopedData = async ({
       });
     case "regions":
     default:
-      return await getRegionData({
+      return getRegionDatas({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -457,11 +385,9 @@ const getScopedData = async ({
 };
 
 export type GetScopedTransformationStatsType = Awaited<
-  ReturnType<typeof getRegionDatas>
+  ReturnType<typeof getScopedData>
 >;
 
 export const dependencies = {
-  getAcademieDatas,
-  getRegionDatas,
-  getDepartementDatas,
+  getScopedData,
 };

@@ -18,8 +18,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import _ from "lodash";
-import { usePlausible } from "next-plausible";
 import NextLink from "next/link";
+import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
@@ -36,7 +36,7 @@ import {
   Filters,
   OrderFormationsTransformationStats,
   PilotageTransformationStats,
-  Scope,
+  SelectedScope,
 } from "../types";
 
 export const QuadrantSection = ({
@@ -44,10 +44,7 @@ export const QuadrantSection = ({
   parentFilters,
   scopeFilters,
 }: {
-  scope?: {
-    type: Scope;
-    value: string | undefined;
-  };
+  scope?: SelectedScope;
   parentFilters: Partial<Filters>;
   scopeFilters?: PilotageTransformationStats["filters"];
 }) => {
@@ -77,9 +74,9 @@ export const QuadrantSection = ({
   const order = filters.order;
 
   const [currentCfd, setFormationId] = useState<string | undefined>();
-
+  const { ...otherFilters } = parentFilters;
   const mergedFilters = {
-    ...parentFilters,
+    ...otherFilters,
     tauxPression: filters.tauxPression,
     status: filters.status,
     type: filters.type,
@@ -293,12 +290,7 @@ export const QuadrantSection = ({
                           codeDispositif: [formation.dispositifId],
                           typeDemande: filters.type
                             ? filters.type === "ouverture"
-                              ? [
-                                  "ouverture",
-                                  "ouverture_compensation",
-                                  "augmentation",
-                                  "augmentation_compensation",
-                                ]
+                              ? ["ouverture_nette", "ouverture_compensation"]
                               : ["fermeture", "diminution"]
                             : undefined,
                         },

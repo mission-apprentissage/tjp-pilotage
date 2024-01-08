@@ -1,11 +1,39 @@
-import { Box, Flex, FormLabel, Select, Skeleton } from "@chakra-ui/react";
+import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../../components/Multiselect";
 import {
   Filters,
-  PilotageTransformationStatsByScope,
+  FiltersEvents,
+  PilotageTransformationStats,
+  Scope,
   SelectedScope,
 } from "../types";
+
+const Loader = () => (
+  <Box height={48}>
+    <Skeleton
+      opacity="0.3"
+      width="100%"
+      height={"100%"}
+      py={4}
+      px={8}
+    ></Skeleton>
+  </Box>
+);
+
+const generateEventFromScope = (
+  scope: Scope
+): "codeRegion" | "codeDepartement" | "codeAcademie" => {
+  switch (scope) {
+    case "departements":
+      return "codeDepartement";
+    case "academies":
+      return "codeAcademie";
+    case "regions":
+    default:
+      return "codeRegion";
+  }
+};
 
 export const FiltersSection = ({
   activeFilters,
@@ -14,159 +42,185 @@ export const FiltersSection = ({
   isLoading,
   data,
   scope,
-  setScope,
 }: {
-  activeFilters: Filters;
-  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
+  activeFilters: Partial<Filters>;
+  handleFilters: (filter: Partial<Filters>) => void;
+  filterTracker: (filterName: FiltersEvents) => () => void;
   isLoading: boolean;
-  data?: PilotageTransformationStatsByScope;
+  data?: PilotageTransformationStats;
   scope: SelectedScope;
-  setScope: (scope: SelectedScope) => void;
 }) => {
+  if (isLoading) {
+    return <Loader />;
+  }
+
   return (
-    <>
-      {isLoading ? (
-        <Box height={48}>
-          <Skeleton
-            opacity="0.3"
-            width="100%"
-            height={"100%"}
-            py={4}
-            px={8}
-          ></Skeleton>
-        </Box>
-      ) : (
-        <Box borderRadius={4}>
-          <Flex justifyContent={"start"} gap={8} py={3}>
-            <Box justifyContent={"start"} flex={[1, null, "unset"]}>
-              <FormLabel>Rentrée scolaire</FormLabel>
-              <Select width={[null, null, "72"]} size="md" variant="newInput">
-                <option>2024</option>
-                <option disabled>2025</option>
-                <option disabled>2026</option>
-                <option disabled>2027</option>
-              </Select>
-            </Box>
-            <Box justifyContent={"start"} flex={[1, null, "unset"]}>
-              <FormLabel>Région</FormLabel>
-              <Select
-                width={[null, null, "72"]}
-                size="md"
-                variant="newInput"
-                value={scope.type === "regions" ? scope.value : ""}
-                borderBottomColor={scope.type === "regions" ? "info.525" : ""}
-                onChange={(e) =>
-                  setScope({ type: "regions", value: e.target.value })
-                }
-                placeholder="TOUTES"
-              >
-                {data?.filters?.regions?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-            <Box justifyContent={"start"} display={["none", null, "block"]}>
-              <FormLabel>Académie</FormLabel>
-              <Select
-                width={"72"}
-                size="md"
-                variant="newInput"
-                value={scope.type === "academies" ? scope.value : ""}
-                borderBottomColor={scope.type === "academies" ? "info.525" : ""}
-                onChange={(e) =>
-                  setScope({ type: "academies", value: e.target.value })
-                }
-                placeholder="TOUTES"
-              >
-                {data?.filters?.academies?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-            <Box justifyContent={"start"} display={["none", null, "block"]}>
-              <FormLabel>Département</FormLabel>
-              <Select
-                width={"72"}
-                size="md"
-                variant="newInput"
-                value={scope.type === "departements" ? scope.value : ""}
-                borderBottomColor={scope.type === "academies" ? "info.525" : ""}
-                onChange={(e) =>
-                  setScope({ type: "departements", value: e.target.value })
-                }
-                placeholder="TOUS"
-              >
-                {data?.filters?.departements?.map((option) => (
-                  <option key={option.value} value={option.value}>
-                    {option.label}
-                  </option>
-                ))}
-              </Select>
-            </Box>
-          </Flex>
-          <Flex
-            justifyContent={"start"}
-            gap={8}
-            py={3}
-            display={["none", null, "flex"]}
+    <Box borderRadius={4}>
+      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
+        <Box flex={[1, null, "unset"]}>
+          <FormLabel>Granularité</FormLabel>
+          <Select
+            width={["100%", null, "100%"]}
+            size="md"
+            variant="newInput"
+            value={scope.type}
+            onChange={(e) => {
+              filterTracker(generateEventFromScope(e.target.value as Scope));
+              handleFilters({
+                scope: e.target.value as Scope,
+                code: undefined,
+              });
+            }}
           >
-            <Box justifyContent={"start"}>
-              <FormLabel>Diplôme</FormLabel>
-              <Multiselect
-                onClose={filterTracker("codeNiveauDiplome")}
-                width={"72"}
-                size="md"
-                variant={"newInput"}
-                onChange={(selected) =>
-                  handleFilters("codeNiveauDiplome", selected)
-                }
-                options={data?.filters?.diplomes ?? []}
-                value={activeFilters.codeNiveauDiplome ?? []}
-                disabled={!data?.filters?.diplomes?.length}
-              >
-                TOUS ({data?.filters?.diplomes?.length ?? 0})
-              </Multiselect>
-            </Box>
-            <Box justifyContent={"start"}>
-              <FormLabel>CPC</FormLabel>
-              <Multiselect
-                onClose={filterTracker("CPC")}
-                width={"72"}
-                size="md"
-                variant={"newInput"}
-                onChange={(selected) => handleFilters("CPC", selected)}
-                options={data?.filters?.CPCs}
-                value={activeFilters.CPC ?? []}
-                disabled={!data?.filters?.CPCs?.length}
-                hasDefaultValue={false}
-              >
-                TOUS ({data?.filters?.CPCs?.length ?? 0})
-              </Multiselect>
-            </Box>
-            <Box justifyContent={"start"}>
-              <FormLabel>Secteur d'activité</FormLabel>
-              <Multiselect
-                onClose={filterTracker("filiere")}
-                width={"72"}
-                size="md"
-                variant={"newInput"}
-                onChange={(selected) => handleFilters("filiere", selected)}
-                options={data?.filters?.filieres ?? []}
-                value={activeFilters.filiere ?? []}
-                disabled={!data?.filters?.filieres?.length}
-                hasDefaultValue={false}
-              >
-                TOUS ({data?.filters?.filieres?.length ?? 0})
-              </Multiselect>
-            </Box>
-          </Flex>
+            <option key={"regions"} value={"regions"}>
+              Régions
+            </option>
+            <option key={"academies"} value={"academies"}>
+              Academies
+            </option>
+            <option key={"departements"} value={"departements"}>
+              Departements
+            </option>
+          </Select>
         </Box>
-      )}
-    </>
+
+        <Box display={["none", null, "block"]}>
+          <FormLabel>Région</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={
+              scope.type === "regions" && scope?.value ? scope.value ?? "" : ""
+            }
+            borderBottomColor={scope.type === "regions" ? "info.525" : ""}
+            onChange={(e) => {
+              filterTracker("codeRegion");
+              handleFilters({ scope: "regions", code: e.target.value });
+            }}
+            placeholder="Choisir une région"
+          >
+            {data?.filters?.regions?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+
+        <Box display={["none", null, "block"]}>
+          <FormLabel>Académie</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={
+              scope.type === "academies" && scope?.value
+                ? scope.value ?? ""
+                : ""
+            }
+            borderBottomColor={scope.type === "academies" ? "info.525" : ""}
+            onChange={(e) => {
+              filterTracker("codeAcademie");
+              handleFilters({ scope: "academies", code: e.target.value });
+            }}
+            placeholder="Choisir une académie"
+          >
+            {data?.filters?.academies?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+
+        <Box display={["none", null, "block"]}>
+          <FormLabel>Département</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={
+              scope.type === "departements" && scope?.value ? scope.value : ""
+            }
+            borderBottomColor={scope.type === "academies" ? "info.525" : ""}
+            onChange={(e) => {
+              filterTracker("codeDepartement");
+              handleFilters({
+                scope: "departements",
+                code: e.target.value,
+              });
+            }}
+            placeholder="Choisir un département"
+          >
+            {data?.filters?.departements?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+      </SimpleGrid>
+      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
+        <Box flex={[1, null, "unset"]}>
+          <FormLabel>Rentrée scolaire</FormLabel>
+          <Select width={"100%"} size="md" variant="newInput">
+            <option>2024</option>
+            <option disabled>2025</option>
+            <option disabled>2026</option>
+            <option disabled>2027</option>
+          </Select>
+        </Box>
+        <Box display={["none", null, "block"]}>
+          <FormLabel>Diplôme</FormLabel>
+          <Multiselect
+            onClose={filterTracker("codeNiveauDiplome")}
+            width={"100%"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) =>
+              handleFilters({ codeNiveauDiplome: selected })
+            }
+            options={data?.filters?.diplomes ?? []}
+            value={activeFilters.codeNiveauDiplome ?? []}
+            disabled={!data?.filters?.diplomes?.length}
+          >
+            TOUS ({data?.filters?.diplomes?.length ?? 0})
+          </Multiselect>
+        </Box>
+        <Box display={["none", null, "block"]}>
+          <FormLabel>CPC</FormLabel>
+          <Multiselect
+            onClose={filterTracker("CPC")}
+            width={"100%"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) => handleFilters({ CPC: selected })}
+            options={data?.filters?.CPCs}
+            value={activeFilters.CPC ?? []}
+            disabled={!data?.filters?.CPCs?.length}
+            hasDefaultValue={false}
+          >
+            TOUS ({data?.filters?.CPCs?.length ?? 0})
+          </Multiselect>
+        </Box>
+        <Box display={["none", null, "block"]}>
+          <FormLabel>Secteur d'activité</FormLabel>
+          <Multiselect
+            onClose={filterTracker("filiere")}
+            width={"100%"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) => handleFilters({ filiere: selected })}
+            options={data?.filters?.filieres ?? []}
+            value={activeFilters.filiere ?? []}
+            disabled={!data?.filters?.filieres?.length}
+            hasDefaultValue={false}
+          >
+            TOUS ({data?.filters?.filieres?.length ?? 0})
+          </Multiselect>
+        </Box>
+      </SimpleGrid>
+    </Box>
   );
 };

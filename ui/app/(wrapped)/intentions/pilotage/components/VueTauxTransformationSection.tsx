@@ -11,9 +11,12 @@ import {
   Tr,
   useToken,
 } from "@chakra-ui/react";
+import { useCallback } from "react";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
+
+import { displayPercentage } from "../../../../../utils/displayPercent";
 import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
 const Loader = () => (
@@ -82,6 +85,21 @@ export const ScopedTable = ({
     { label: "> 6%", color: customPalette[5] },
   ];
 
+  const getTdBgColor = useCallback(
+    (indicateur: number | undefined) => {
+      if (typeof indicateur === "undefined") {
+        return undefined;
+      }
+      if (indicateur <= 1) return customPalette[0];
+      if (indicateur <= 2) return customPalette[1];
+      if (indicateur <= 4) return customPalette[2];
+      if (indicateur <= 5) return customPalette[3];
+      if (indicateur <= 6) return customPalette[4];
+      if (indicateur > 6) return customPalette[5];
+    },
+    [customPalette]
+  );
+
   return (
     <Flex
       flexDirection={"column"}
@@ -90,6 +108,7 @@ export const ScopedTable = ({
       borderColor="grey.900"
       p={4}
       bg="white"
+      maxH={"750px"}
     >
       <Text
         fontSize={14}
@@ -103,7 +122,7 @@ export const ScopedTable = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <TableContainer flex={1} position="relative">
+        <TableContainer flex={1} position="relative" overflowY={"auto"}>
           <Table variant="striped" size={"sm"}>
             <Thead
               position="sticky"
@@ -167,15 +186,6 @@ export const ScopedTable = ({
                 const tdBgColor =
                   territoire.code === scope.value ? "inherit !important" : "";
 
-                const getTdBgColor = (indicateur: number) => {
-                  if (indicateur <= 1) return customPalette[0];
-                  if (indicateur <= 2) return customPalette[1];
-                  if (indicateur <= 4) return customPalette[2];
-                  if (indicateur <= 5) return customPalette[3];
-                  if (indicateur <= 6) return customPalette[4];
-                  if (indicateur > 6) return customPalette[5];
-                };
-
                 const trColor =
                   territoire.code === scope.value ? "white" : "inherit";
 
@@ -183,6 +193,11 @@ export const ScopedTable = ({
                   territoire.code === scope.value
                     ? "inherit"
                     : "bluefrance.113";
+
+                const tauxTransformation =
+                  typeof territoire.tauxTransformation === "undefined"
+                    ? "-"
+                    : displayPercentage(territoire.tauxTransformation / 100);
 
                 return (
                   <Tr
@@ -205,17 +220,18 @@ export const ScopedTable = ({
                       backgroundColor={getTdBgColor(
                         territoire.tauxTransformation
                       )}
+                      color={"black"}
                     >
-                      {territoire.tauxTransformation}%
+                      {tauxTransformation}
                     </Td>
                   </Tr>
                 );
               })}
             </Tbody>
           </Table>
-          <Legend elements={legendElements} />
         </TableContainer>
       )}
+      <Legend elements={legendElements} />
     </Flex>
   );
 };

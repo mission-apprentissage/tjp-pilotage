@@ -12,9 +12,13 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
+
 import { Legend } from "../../../../../components/Legend";
 import { OrderIcon } from "../../../../../components/OrderIcon";
+import { displayPercentage } from "../../../../../utils/displayPercent";
 import { Order, ScopedTransformationStats, SelectedScope } from "../types";
+
+const SEUIL_RATIO_FERMETURE = 33;
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -65,7 +69,10 @@ const ScopedTable = ({
   columnTitle: string;
 }) => {
   const legendElements = [
-    { label: "< 33%", color: useToken("colors", "pilotage.red") },
+    {
+      label: `< ${SEUIL_RATIO_FERMETURE}%`,
+      color: useToken("colors", "pilotage.red"),
+    },
   ];
 
   return (
@@ -76,6 +83,8 @@ const ScopedTable = ({
       borderColor="grey.900"
       p={4}
       bg="white"
+      maxH={"750px"}
+      overflowY={"auto"}
     >
       <Text
         fontSize={14}
@@ -89,7 +98,7 @@ const ScopedTable = ({
       {isLoading ? (
         <Loader />
       ) : (
-        <TableContainer flex={1} position="relative">
+        <TableContainer flex={1} position="relative" overflowY={"auto"}>
           <Table variant="striped" size={"sm"}>
             <Thead
               position="sticky"
@@ -184,23 +193,28 @@ const ScopedTable = ({
                           {territoire.libelle}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {territoire.placesOuvertes}
+                          {territoire.placesFermees}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {territoire.placesFermees}
+                          {territoire.placesOuvertes}
                         </Td>
                         <Td
                           isNumeric
                           backgroundColor={
-                            territoire.ratioFermeture < 30
+                            territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
                               ? "pilotage.red !important"
                               : "inherit"
                           }
+                          color={
+                            territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
+                              ? "black"
+                              : "inherit"
+                          }
                         >
-                          {territoire.ratioFermeture}%
+                          {displayPercentage(territoire.ratioFermeture / 100)}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {territoire.ratioOuverture}%
+                          {displayPercentage(territoire.ratioOuverture / 100)}
                         </Td>
                       </Tr>
                     </Fragment>
@@ -220,8 +234,8 @@ const getTitle = (scope: SelectedScope) =>
   ({
     national: "Ratio des ouvertures et fermetures par région",
     regions: "Ratio des ouvertures et fermetures par région",
-    academies: "Ratio des ouvertures et fermetures par académies",
-    departements: "Ratio des ouvertures et fermetures par départements",
+    academies: "Ratio des ouvertures et fermetures par académie",
+    departements: "Ratio des ouvertures et fermetures par département",
   })[scope.type];
 
 const getColumnTitle = (scope: SelectedScope) =>
