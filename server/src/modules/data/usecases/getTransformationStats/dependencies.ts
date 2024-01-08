@@ -4,6 +4,11 @@ import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
+import {
+  notPerimetreIJAcademie,
+  notPerimetreIJDepartement,
+  notPerimetreIJRegion,
+} from "../../utils/notPerimetreIJ";
 import { Scope } from "./getTransformationsStats.schema";
 
 const selectPlacesTransformees = (
@@ -262,22 +267,40 @@ const getFiltersQuery = async ({
     .where("demande.rentreeScolaire", "is not", null)
     .execute();
 
-  const regionsFilters = await base
-    .select(["region.codeRegion as value", "region.libelleRegion as label"])
+  const regionsFilters = await kdb
+    .selectFrom("region")
+    .select((eb) => [
+      eb.ref("region.codeRegion").as("value"),
+      eb.ref("region.libelleRegion").as("label"),
+    ])
     .where("region.codeRegion", "is not", null)
+    .where(notPerimetreIJRegion)
+    .distinct()
+    .orderBy("label", "asc")
     .execute();
 
-  const academiesFilters = await base
-    .select(["academie.codeAcademie as value", "academie.libelle as label"])
+  const academiesFilters = await kdb
+    .selectFrom("academie")
+    .select((eb) => [
+      eb.ref("academie.codeAcademie").as("value"),
+      eb.ref("academie.libelle").as("label"),
+    ])
     .where("academie.codeAcademie", "is not", null)
+    .where(notPerimetreIJAcademie)
+    .distinct()
+    .orderBy("label", "asc")
     .execute();
 
-  const departementsFilters = await base
-    .select([
-      "departement.codeDepartement as value",
-      "departement.libelle as label",
+  const departementsFilters = await kdb
+    .selectFrom("departement")
+    .select((eb) => [
+      eb.ref("departement.codeDepartement").as("value"),
+      eb.ref("departement.libelle").as("label"),
     ])
     .where("departement.codeDepartement", "is not", null)
+    .where(notPerimetreIJDepartement)
+    .distinct()
+    .orderBy("label", "asc")
     .execute();
 
   const CPCFilters = await base

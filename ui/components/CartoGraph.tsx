@@ -7,6 +7,36 @@ import { useLayoutEffect, useMemo, useRef } from "react";
 import CarteFranceAcademies from "../public/fond_carte_academies.json";
 import CarteFranceDepartements from "../public/fond_carte_departements.json";
 import CarteFranceRegions from "../public/fond_carte_regions.json";
+import { displayPercentage } from "../utils/displayPercent";
+
+const useColorPalette = (
+  customColorPalette?: string[],
+  objectif?: "haut" | "bas"
+) => {
+  const lowColorPalette = [
+    useToken("colors", "pinkmacaron.950"),
+    useToken("colors", "pinkmacaron.925"),
+    useToken("colors", "pinkmacaron.850"),
+    useToken("colors", "pinkmacaron.689"),
+  ];
+
+  const defaultColorPalette = [
+    useToken("colors", "blueecume.925"),
+    useToken("colors", "blueecume.675_hover"),
+    useToken("colors", "blueecume.400_hover"),
+    useToken("colors", "bluefrance.113"),
+  ];
+
+  if (customColorPalette) {
+    return customColorPalette;
+  }
+
+  if (objectif === "bas") {
+    return lowColorPalette;
+  }
+
+  return defaultColorPalette;
+};
 
 export const CartoGraph = ({
   graphData,
@@ -23,29 +53,9 @@ export const CartoGraph = ({
   customColorPalette?: string[];
   handleClick?: (dataCode: string | undefined) => void;
 }) => {
-  const colorPalette = useMemo(
-    () =>
-      customColorPalette
-        ? customColorPalette
-        : objectif === "bas"
-        ? [
-            useToken("colors", "pinkmacaron.950"),
-            useToken("colors", "pinkmacaron.925"),
-            useToken("colors", "pinkmacaron.850"),
-            useToken("colors", "pinkmacaron.689"),
-          ]
-        : [
-            useToken("colors", "blueecume.925"),
-            useToken("colors", "blueecume.675_hover"),
-            useToken("colors", "blueecume.400_hover"),
-            useToken("colors", "bluefrance.113"),
-          ],
-    [customColorPalette, objectif]
-  );
-
+  const colorPalette = useColorPalette(customColorPalette, objectif);
   const bluefrance525 = useToken("colors", "bluefrance.525");
   const bluefrance113 = useToken("colors", "bluefrance.113");
-
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -145,13 +155,15 @@ export const CartoGraph = ({
         transitionDuration: 0.2,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
-          if (params.data && params.data?.value) {
+          if (params.data) {
             if (params.data.parentName) {
               return `${params.name} : ${params.data?.value}%
                   <br>
                   (<span style="font-style:italic">${params.data.parentName}</span>)`;
             }
-            return `${params.name} : ${params.data?.value}%`;
+            return `${params.name} : ${displayPercentage(
+              params.data?.value / 100
+            )}`;
           }
           return `Aucune donnée disponible pour ${params.name}`;
         },
@@ -229,7 +241,7 @@ export const CartoGraph = ({
         },
       ],
     }),
-    [graphData]
+    [graphData, scope, getNameMap, getNameProperty]
   );
 
   const handleClickOnSeries = (name: string) => {
@@ -280,7 +292,13 @@ export const CartoGraph = ({
         handleClickOnBlankSpace(chartRef.current);
       }
     });
-  }, [option, graphData]);
+  }, [
+    option,
+    graphData,
+    chartRef,
+    handleClickOnSeries,
+    handleClickOnBlankSpace,
+  ]);
 
   return (
     <AspectRatio ratio={1}>

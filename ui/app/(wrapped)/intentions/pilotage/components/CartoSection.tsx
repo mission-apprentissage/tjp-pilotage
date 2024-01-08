@@ -1,17 +1,10 @@
+import { Box, Flex, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
+import { useCallback } from "react";
+
 import { client } from "@/api.client";
-import {
-  Box,
-  Flex,
-  Radio,
-  RadioGroup,
-  Select,
-  Skeleton,
-  Text,
-  useToken,
-} from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+
 import { CartoGraph } from "../../../../../components/CartoGraph";
-import { Filters, IndicateurType, Order, Scope, SelectedScope } from "../types";
+import { Filters, IndicateurType, Order, SelectedScope } from "../types";
 
 type Props = {
   indicateur: IndicateurType;
@@ -22,10 +15,9 @@ type Props = {
     isDefault: boolean;
   }[];
   filters: Partial<Filters>;
-  resetScope: VoidFunction;
   order: Partial<Order>;
   scope: SelectedScope;
-  setScope: (scope: SelectedScope) => void;
+  handleFilters: (filters: Partial<Filters>) => void;
 };
 
 export const CartoSection = ({
@@ -35,12 +27,8 @@ export const CartoSection = ({
   filters,
   order,
   scope,
-  setScope,
-  resetScope,
+  handleFilters,
 }: Props) => {
-  const [cartoScope, setCartoScope] = useState<Scope>(
-    scope.type === "national" ? "regions" : scope.type
-  );
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -92,7 +80,7 @@ export const CartoSection = ({
         query: {
           ...filters,
           ...order,
-          scope: cartoScope,
+          scope: scope.type === "national" ? "regions" : scope.type,
         },
       },
       {
@@ -114,14 +102,12 @@ export const CartoSection = ({
   }, [scope, data]);
 
   const handleClickOnTerritoire = useCallback(
-    (code: string | undefined) => {
-      if (scope.type === cartoScope && scope.value === code) {
-        resetScope();
-      } else {
-        setScope({ type: cartoScope, value: code! });
-      }
-    },
-    [setScope, cartoScope]
+    (code: string | undefined) =>
+      handleFilters({
+        scope: scope.type,
+        code: scope.value === code ? undefined : code,
+      }),
+    [handleFilters, scope]
   );
 
   return (
@@ -142,7 +128,7 @@ export const CartoSection = ({
             <Text color={"bluefrance.113"} fontWeight={700}>
               VISUALISATION TERRITORIALE
             </Text>
-            <Flex flexDirection={"column"}>
+            <Flex flexDirection={"column"} position={"relative"} zIndex={100}>
               <Select
                 width="64"
                 size="sm"
@@ -150,7 +136,9 @@ export const CartoSection = ({
                 bg={"grey.150"}
                 onChange={(e) => handleIndicateurChange(e.target.value)}
                 value={indicateur}
-                borderBottomColor={indicateur != undefined ? "info.525" : ""}
+                borderBottomColor={
+                  typeof indicateur !== "undefined" ? "info.525" : ""
+                }
               >
                 {indicateurOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -158,45 +146,12 @@ export const CartoSection = ({
                   </option>
                 ))}
               </Select>
-              <RadioGroup
-                mt="3"
-                ms="auto"
-                justifyContent={"end"}
-                onChange={(value) => setCartoScope(value as Scope)}
-                defaultChecked
-                defaultValue={cartoScope}
-                zIndex={"dropdown"}
-              >
-                <Flex flexDirection={"column"}>
-                  <Radio
-                    value="regions"
-                    isChecked={cartoScope === "regions"}
-                    defaultChecked={cartoScope === "regions"}
-                  >
-                    Régions
-                  </Radio>
-                  <Radio
-                    value="academies"
-                    isChecked={cartoScope === "academies"}
-                    defaultChecked={cartoScope === "academies"}
-                  >
-                    Académies
-                  </Radio>
-                  <Radio
-                    value="departements"
-                    isChecked={cartoScope === "departements"}
-                    defaultChecked={cartoScope === "departements"}
-                  >
-                    Départements
-                  </Radio>
-                </Flex>
-              </RadioGroup>
             </Flex>
           </Flex>
           <Box mt={"-20"}>
             <CartoGraph
               graphData={getGraphData()}
-              scope={cartoScope}
+              scope={scope.type}
               customPiecesSteps={getCustomPieces()}
               customColorPalette={getCustomPalette()}
               handleClick={handleClickOnTerritoire}

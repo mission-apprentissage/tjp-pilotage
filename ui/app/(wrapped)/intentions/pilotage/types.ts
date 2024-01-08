@@ -19,12 +19,20 @@ export type PilotageTransformationsStatsDatas = Omit<
 
 export type Filters = Pick<
   PilotageTransformationStatsQuery,
-  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
->;
+  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
+> & {
+  code?: string;
+};
+
+export type FiltersEvents =
+  | keyof Filters
+  | "codeRegion"
+  | "codeAcademie"
+  | "codeDepartement";
 
 export type ScopedFilters = Pick<
   ScopedTransformationStatsQuery,
-  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome"
+  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
 >;
 
 export type PilotageTransformationStatsByScope = {
@@ -40,7 +48,7 @@ export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 export type Scope = "regions" | "academies" | "departements" | "national";
 export type SelectedScope = {
   type: Scope;
-  value: string;
+  value?: string;
 };
 export type Status = "submitted" | "draft" | "all";
 export type Indicateur =

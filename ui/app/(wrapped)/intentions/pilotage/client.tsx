@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, SimpleGrid } from "@chakra-ui/react";
+import { Box, Container, Flex } from "@chakra-ui/react";
 
 import { CartoSection } from "./components/CartoSection";
 import { FiltersSection } from "./components/FiltersSection";
@@ -14,11 +14,9 @@ export const PilotageIntentionsClient = () => {
   const {
     filters,
     isLoading,
-    data,
+    datas,
     scopedStats,
     scope,
-    setScope,
-    resetScope,
     indicateur,
     indicateurOptions,
     order,
@@ -29,24 +27,25 @@ export const PilotageIntentionsClient = () => {
   } = usePilotageIntentionsHook();
 
   return (
-    <Container maxWidth={"100%"} bg="blueecume.950">
+    <Box bg="blueecume.950">
       <Container maxWidth={"container.xl"} py="4">
         <FiltersSection
           activeFilters={filters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
           isLoading={isLoading}
-          data={data}
+          data={datas}
           scope={scope}
-          setScope={setScope}
         />
         <Box>
-          <SimpleGrid spacing={8} columns={[2]} mt={8}>
-            <Box>
+          <Flex gap={8} mt={10} flexDirection={["column", null, "row"]}>
+            <Box flex={1}>
               <IndicateursClesSection
-                data={data}
+                data={datas}
                 isLoading={isLoading}
                 scope={scope}
+                filters={filters}
+                order={order}
               />
             </Box>
             <CartoSection
@@ -56,19 +55,17 @@ export const PilotageIntentionsClient = () => {
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
               scope={scope}
-              setScope={setScope}
-              resetScope={resetScope}
-              key={`${scope.type}-${scope.value}`}
+              handleFilters={handleFilters}
             />
-          </SimpleGrid>
-          <Box mt={14}>
+          </Flex>
+          <Box mt={14} display={["none", null, "block"]}>
             <QuadrantSection
               scope={scope}
               parentFilters={filters}
-              scopeFilters={data?.filters}
+              scopeFilters={datas?.filters}
             />
           </Box>
-          <SimpleGrid spacing={5} columns={[2]} mt={14}>
+          <Flex gap={5} flexDirection={["column", null, "row"]} mt={14} mb={20}>
             <VueTauxTransformationSection
               data={scopedStats}
               scope={scope}
@@ -83,9 +80,9 @@ export const PilotageIntentionsClient = () => {
               isLoading={isLoading}
               handleOrder={handleOrder}
             />
-          </SimpleGrid>
+          </Flex>
         </Box>
       </Container>
-    </Container>
+    </Box>
   );
 };

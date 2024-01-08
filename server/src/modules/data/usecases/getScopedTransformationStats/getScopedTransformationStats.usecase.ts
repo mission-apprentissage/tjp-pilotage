@@ -1,17 +1,19 @@
 import _ from "lodash";
 
-import { GetScopedTransformationStatsType, dependencies } from "./dependencies";
+import { dependencies, GetScopedTransformationStatsType } from "./dependencies";
 import { QuerySchema } from "./getScopedTransformationStats.schema";
 
-const getTauxTransformation = (
+const formatTauxTransformation = (
   transformes: number,
   effectif: number | undefined
 ) => {
-  if (!effectif) {
+  if (typeof effectif === "undefined") {
     return undefined;
   }
 
-  return Math.round((transformes / (effectif || 0)) * 10000) / 100;
+  if (effectif === 0) return 0;
+
+  return Math.round((transformes / effectif) * 10000) / 100;
 };
 
 const formatResult = (
@@ -34,25 +36,22 @@ const formatResult = (
       placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
       placesOuvertes:
         item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
-      placesFermees:
-        item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
+      placesFermees: item.placesFermeesScolaire || 0,
       ratioOuverture:
         Math.round(
           ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
+              item.placesFermeesScolaire) || 0) * 10000
         ) / 100,
       ratioFermeture:
         Math.round(
-          ((item.placesFermeesScolaire + item.placesFermeesApprentissage) /
+          (item.placesFermeesScolaire /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire +
-              item.placesFermeesApprentissage) || 0) * 10000
+              item.placesFermeesScolaire) || 0) * 10000
         ) / 100,
-      tauxTransformation: getTauxTransformation(
+      tauxTransformation: formatTauxTransformation(
         item.transformes,
         item.effectif
       ),
@@ -69,26 +68,12 @@ const formatResult = (
 const getScopedTransformationStatsFactory =
   (
     deps = {
-      getAcademieDatas: dependencies.getAcademieDatas,
-      getRegionDatas: dependencies.getRegionDatas,
-      getDepartementDatas: dependencies.getDepartementDatas,
+      getScopedData: dependencies.getScopedData,
     }
   ) =>
   async (activeFilters: QuerySchema) => {
     console.log("activeFilters", activeFilters);
-    const results: GetScopedTransformationStatsType = [];
-
-    switch (activeFilters.scope) {
-      case "departements":
-        results.push(...(await deps.getDepartementDatas(activeFilters)));
-        break;
-      case "academies":
-        results.push(...(await deps.getAcademieDatas(activeFilters)));
-        break;
-      default:
-        results.push(...(await deps.getRegionDatas(activeFilters)));
-    }
-
+    const results = await deps.getScopedData({ ...activeFilters });
     return formatResult(results, activeFilters.order, activeFilters.orderBy);
   };
 

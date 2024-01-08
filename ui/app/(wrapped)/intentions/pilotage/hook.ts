@@ -1,118 +1,59 @@
 import { usePlausible } from "next-plausible";
-import { useRouter, useSearchParams } from "next/navigation";
-import qs from "qs";
-import { useCallback, useEffect, useState } from "react";
+import { useCallback, useState } from "react";
 
 import { client } from "@/api.client";
 
-import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
+import { useStateParams } from "../../../../utils/useFilters";
 import {
   Filters,
+  FiltersEvents,
   IndicateurType,
   Order,
-  PilotageTransformationStatsByScope,
   SelectedScope,
 } from "./types";
 
 export const usePilotageIntentionsHook = () => {
-  const router = useRouter();
-  const queryParams = useSearchParams();
-  const searchParams: {
-    filters?: Partial<Filters>;
-    order?: Partial<Order>;
-  } = qs.parse(queryParams.toString());
-
-  const filters = searchParams.filters ?? {};
-  const order = searchParams.order ?? { order: "asc" };
-
-  const [globalDatas, setGlobalDatas] =
-    useState<PilotageTransformationStatsByScope>();
-  const [scope, setScope] = useState<SelectedScope>({
-    type: "national",
-    value: "national",
-  });
   const [indicateur, setIndicateur] =
     useState<IndicateurType>("tauxTransformation");
-
-  const setSearchParams = (params: {
-    filters?: typeof filters;
-    order?: typeof order;
-  }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
-  };
+  const [filters, setFilters] = useStateParams<Partial<Filters>>({
+    defaultValues: {
+      scope: "regions",
+    },
+  });
+  const [order, setOrder] = useStateParams<Partial<Order>>({
+    prefix: "ord",
+    defaultValues: {
+      order: "asc",
+    },
+  });
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("pilotage-intentions:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
-      return;
-    }
-    setSearchParams({
-      order: {
+      setOrder({ order: "asc", orderBy: column });
+    } else {
+      setOrder({
         order: order?.order === "asc" ? "desc" : "asc",
         orderBy: column,
-      },
-    });
+      });
+    }
   };
 
   const trackEvent = usePlausible();
-  const filterTracker = (filterName: keyof Filters) => () => {
+  const filterTracker = (filterName: FiltersEvents) => () => {
     trackEvent("pilotage-intentions:filtre", {
       props: { filter_name: filterName },
     });
   };
 
-  const handleFilters = (
-    type: keyof Filters,
-    value: Filters[keyof Filters]
-  ) => {
-    setSearchParams({
-      filters: { ...filters, [type]: value },
-    });
-  };
-
-  const { data: scopedData, isLoading: isLoadingScopedData } = client
+  const { data: datas, isLoading } = client
     .ref("[GET]/pilotage-transformation/stats")
     .useQuery(
       {
         query: {
           ...filters,
           ...order,
-          scope: scope?.type ?? "national",
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
-  const { data: nationalData, isLoading: isLoadingNationalData } = client
-    .ref("[GET]/pilotage-transformation/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          ...order,
-          scope: "national",
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
-  const { data: visualScopeData, isLoading: isLoadingVisualScopeData } = client
-    .ref("[GET]/pilotage-transformation/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          ...order,
-          scope: scope?.type ?? "national",
+          scope: filters?.scope ?? "national",
         },
       },
       {
@@ -131,7 +72,7 @@ export const usePilotageIntentionsHook = () => {
         query: {
           ...filters,
           ...order,
-          scope: scope?.type ?? "national",
+          scope: filters?.scope ?? "national",
         },
       },
       {
@@ -139,37 +80,6 @@ export const usePilotageIntentionsHook = () => {
         staleTime: 10000000,
       }
     );
-
-  useEffect(() => {
-    if (scopedData) {
-      const { filters: scopedFilters, ...datas } = scopedData;
-      setGlobalDatas((prev) => ({
-        ...prev,
-        [scope.type]: datas,
-        filters: scopedFilters,
-      }));
-    }
-  }, [scopedData]);
-
-  useEffect(() => {
-    if (visualScopeData) {
-      const { filters, ...datas } = visualScopeData;
-      setGlobalDatas((prev) => ({
-        ...prev,
-        [scope?.type]: datas,
-      }));
-    }
-  }, [scopedData]);
-
-  useEffect(() => {
-    if (visualScopeData) {
-      const { filters, ...datas } = visualScopeData;
-      setGlobalDatas((prev) => ({
-        ...prev,
-        [scope?.type]: datas,
-      }));
-    }
-  }, [visualScopeData]);
 
   const indicateurOptions = [
     {
@@ -191,29 +101,24 @@ export const usePilotageIntentionsHook = () => {
     [setIndicateur]
   );
 
-  const resetScope = useCallback(() => {
-    setScope({
-      type: "national",
-      value: "national",
-    });
-  }, [setScope]);
-
-  console.log(`Scope: ${scope.type}, Code: ${scope.value}`);
+  const handleFilters = useCallback(
+    (additionalFilters: Partial<Filters>) =>
+      setFilters({ ...filters, ...additionalFilters }),
+    [setFilters]
+  );
 
   return {
-    data: globalDatas,
+    datas,
     indicateur,
     indicateurOptions,
     handleIndicateurChange,
     filters,
     handleFilters,
     filterTracker,
-    scope,
-    setScope,
+    scope: { type: filters?.scope, value: filters?.code } as SelectedScope,
     order,
     handleOrder,
-    isLoading: isLoadingScopedData && isLoadingScopedTransformationsStats,
-    resetScope,
+    isLoading: isLoading || isLoadingScopedTransformationsStats,
     scopedStats: scopedTransformationsStats,
   };
 };
