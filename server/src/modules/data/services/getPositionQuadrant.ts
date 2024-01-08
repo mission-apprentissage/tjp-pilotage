@@ -1,11 +1,11 @@
 export const getPositionQuadrant = (
   formation: {
-    tauxInsertion?: string | number;
-    tauxPoursuite?: string | number;
+    tauxInsertion?: number;
+    tauxPoursuite?: number;
   },
   moyenne?: {
-    tauxInsertion?: string | number;
-    tauxPoursuite?: string | number;
+    tauxInsertion?: number;
+    tauxPoursuite?: number;
   }
 ): string => {
   if (
@@ -16,22 +16,10 @@ export const getPositionQuadrant = (
   )
     return "Hors quadrant";
 
-  const tauxInsertion =
-    typeof formation.tauxInsertion === "string"
-      ? parseFloat(formation.tauxInsertion)
-      : formation.tauxInsertion;
-  const tauxPoursuite =
-    typeof formation.tauxPoursuite === "string"
-      ? parseFloat(formation.tauxPoursuite)
-      : formation.tauxPoursuite;
-  const tauxInsertionMoyen =
-    typeof moyenne.tauxInsertion === "string"
-      ? parseFloat(moyenne.tauxInsertion)
-      : moyenne.tauxInsertion;
-  const tauxPoursuiteMoyen =
-    typeof moyenne.tauxPoursuite === "string"
-      ? parseFloat(moyenne.tauxPoursuite)
-      : moyenne.tauxPoursuite;
+  const tauxInsertion = formation.tauxInsertion;
+  const tauxPoursuite = formation.tauxPoursuite;
+  const tauxInsertionMoyen = moyenne.tauxInsertion;
+  const tauxPoursuiteMoyen = moyenne.tauxPoursuite;
 
   if (
     tauxInsertion >= tauxInsertionMoyen &&
