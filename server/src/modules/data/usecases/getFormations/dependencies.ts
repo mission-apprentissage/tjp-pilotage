@@ -345,11 +345,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formationView.cfd"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",

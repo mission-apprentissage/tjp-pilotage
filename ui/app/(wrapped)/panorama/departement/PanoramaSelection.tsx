@@ -52,6 +52,7 @@ export function PanoramaSelection({
           <Select
             onChange={(e) => onCodeDepartementChanged(e.target.value)}
             variant="input"
+            autoFocus={true}
           >
             <option key="-" value="">
               -

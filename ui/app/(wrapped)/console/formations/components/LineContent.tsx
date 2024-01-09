@@ -1,7 +1,17 @@
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, IconButton, Link, Skeleton, Td, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Link,
+  Skeleton,
+  Tag,
+  Td,
+  Tr,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
+import { ReactNode } from "react";
 
 import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
@@ -24,6 +34,20 @@ export const FormationLineContent = ({
   expended?: boolean;
   filters?: Filters;
 }) => {
+  const format2ndeCommuneLibelle = (libelleFormation?: string): ReactNode => (
+    <Flex>
+      {libelleFormation?.indexOf(" 2nde commune") != -1
+        ? libelleFormation?.substring(
+            0,
+            libelleFormation?.indexOf(" 2nde commune")
+          )
+        : libelleFormation}
+      <Tag colorScheme={"blue"} size={"sm"} ms={2}>
+        2nde commune
+      </Tag>
+    </Flex>
+  );
+
   return (
     <>
       <Td pr="0" py="1">
@@ -45,8 +69,15 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
-        {line.libelleFormation ?? "-"}
+      <Td
+        minW={300}
+        whiteSpace={line.typeFamille === "2nde_commune" ? undefined : "normal"}
+      >
+        <>
+          {line.typeFamille === "2nde_commune"
+            ? format2ndeCommuneLibelle(line.libelleFormation)
+            : line.libelleFormation ?? "-"}
+        </>
       </Td>
       <Td isNumeric>
         <Link
