@@ -211,7 +211,7 @@ const getFormationsTransformationStatsQuery = ({
             codeRegionRef: "dataEtablissement.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
-        tauxPression === "eleve" ? 130 : 70
+        tauxPression === "eleve" ? 1.3 : 0.7
       );
     })
     .$narrowType<{ tauxPoursuite: number; tauxInsertion: number }>()

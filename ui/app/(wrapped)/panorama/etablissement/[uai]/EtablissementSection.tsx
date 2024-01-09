@@ -1,10 +1,7 @@
 import {
   AspectRatio,
   Box,
-  Card,
-  CardBody,
   Center,
-  Container,
   Flex,
   Img,
   SimpleGrid,
@@ -14,43 +11,8 @@ import {
 
 import { client } from "@/api.client";
 
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { StatCard } from "../../components/StatCard";
 import { UaiForm } from "../UaiForm";
-
-const StatCard = ({
-  label,
-  value,
-  isValeurAjoutee = false,
-  color = "inherit",
-}: {
-  label: string;
-  value?: string | number;
-  isValeurAjoutee?: boolean;
-  color?: string;
-}) => (
-  <Card>
-    <CardBody
-      color={color}
-      py="2"
-      px="3"
-      alignItems={"center"}
-      display={"flex"}
-    >
-      <Box mr="4" flex={1}>
-        {label}
-        {isValeurAjoutee && (
-          <TooltipIcon
-            ml="3"
-            label="Capacité de l’établissement à insérer, en prenant en compte le profil social des élèves et le taux de chômage de la zone d’emploi, comparativement au taux de référence d’établissements similaires."
-          />
-        )}
-      </Box>
-      <Box fontWeight="bold" fontSize="2xl">
-        {value ?? "-"}
-      </Box>
-    </CardBody>
-  </Card>
-);
 
 const getSign = (value: number) => {
   return value >= 0 ? "+" : "";
@@ -62,12 +24,13 @@ export const EtablissementSection = ({
   onUaiChanged,
 }: {
   uai: string;
-  etablissement?: (typeof client.infer)["[GET]/etablissement/:uai"];
+  etablissement?: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"];
   onUaiChanged: (codeRegion: string) => void;
 }) => {
   return (
-    <Container
-      px="8"
+    <Box
+      px={[4, null, "8"]}
+      mx={[-4, null, 0]}
       as="section"
       pb="12"
       pt="6"
@@ -77,7 +40,7 @@ export const EtablissementSection = ({
       <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
         <Flex direction="column" align="center" flex={1}>
           <Box maxW="300px">
-            <UaiForm defaultUai={uai} onUaiChanged={onUaiChanged} />
+            <UaiForm uai={uai} onUaiChanged={onUaiChanged} inError={false} />
           </Box>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />
@@ -121,6 +84,6 @@ export const EtablissementSection = ({
           </SimpleGrid>
         </Box>
       </Stack>
-    </Container>
+    </Box>
   );
 };

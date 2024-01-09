@@ -5,9 +5,11 @@ import { cleanNull } from "../../../../utils/noNull";
 
 export const findManyInDataEtablissementsQuery = async ({
   search,
+  filtered,
   codeRegion,
 }: {
   search: string;
+  filtered?: boolean;
   codeRegion?: string;
 }) => {
   const search_array = search.split(" ");
@@ -49,7 +51,15 @@ export const findManyInDataEtablissementsQuery = async ({
     )
     .$call((q) => {
       if (!codeRegion) return q;
-      return q.where("codeRegion", "=", codeRegion);
+      return q.where("dataEtablissement.codeRegion", "=", codeRegion);
+    })
+    .$call((q) => {
+      if (!filtered) return q;
+      return q.innerJoin(
+        "etablissement",
+        "etablissement.UAI",
+        "dataEtablissement.uai"
+      );
     })
     .limit(20)
     .execute();
