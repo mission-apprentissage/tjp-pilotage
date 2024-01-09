@@ -44,6 +44,10 @@ const getFormationsFactory =
           formation,
           statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
         ),
+        libelleFamille:
+          formation.typeFamille === "2nde_commune"
+            ? formation.libelleFamilleSC
+            : formation.libelleFamille,
       })),
     };
   };

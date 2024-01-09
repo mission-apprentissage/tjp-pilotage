@@ -75,6 +75,11 @@ const findFormationsInDb = async ({
       "formationView.cfd"
     )
     .leftJoin(
+      "familleMetier as familleMetierSC",
+      "familleMetierSC.cfdFamille",
+      "formationView.cfd"
+    )
+    .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
       "formationView.codeNiveauDiplome"
@@ -106,8 +111,10 @@ const findFormationsInDb = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
+      "formationView.typeFamille",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "libelleOfficielFamille as libelleFamille",
+      "familleMetier.libelleOfficielFamille as libelleFamille",
+      "familleMetierSC.libelleOfficielFamille as libelleFamilleSC",
       "libelleDispositif",
       "codeDispositif",
       "libelleNiveauDiplome",
@@ -211,11 +218,13 @@ const findFormationsInDb = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
+      "formationView.typeFamille",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId",
       "libelleFamille",
+      "libelleFamilleSC",
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .$call((q) => {
