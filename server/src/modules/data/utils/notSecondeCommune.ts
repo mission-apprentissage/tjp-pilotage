@@ -29,3 +29,10 @@ export const notSecondeCommuneIndicateurRegionSortie = (
     sql`(SELECT DISTINCT "cfdFamille" FROM "familleMetier")`
   );
 };
+
+export const notSpecialite = (eb: ExpressionBuilder<DB, "formationView">) => {
+  return eb.or([
+    eb("formationView.typeFamille", "<>", "specialite"),
+    eb("formationView.typeFamille", "is", null),
+  ]);
+};

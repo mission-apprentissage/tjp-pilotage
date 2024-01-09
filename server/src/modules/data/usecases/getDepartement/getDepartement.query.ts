@@ -7,15 +7,15 @@ import {
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import {
-  notSecondeCommune,
   notSecondeCommuneIndicateurRegionSortie,
+  notSpecialite,
 } from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
-export const getDepartementsStats = async ({
+export const getDepartementStats = async ({
   codeDepartement,
   codeNiveauDiplome,
   rentreeScolaire = "2022",
@@ -103,7 +103,7 @@ export const getDepartementsStats = async ({
       );
     })
     .where(notHistorique)
-    .where(notSecondeCommune)
+    .where(notSpecialite)
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",
