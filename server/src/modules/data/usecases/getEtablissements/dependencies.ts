@@ -88,6 +88,11 @@ const findEtablissementsInDb = async ({
       "formationView.cfd"
     )
     .leftJoin(
+      "familleMetier as familleMetierSC",
+      "familleMetierSC.cfdFamille",
+      "formationView.cfd"
+    )
+    .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
       "formationView.codeNiveauDiplome"
@@ -139,7 +144,9 @@ const findEtablissementsInDb = async ({
       "departement.libelleDepartement as departement",
       "etablissement.codeRegion",
       "etablissement.UAI as uai",
-      "libelleOfficielFamille as libelleFamille",
+      "formationView.typeFamille",
+      "familleMetier.libelleOfficielFamille as libelleFamille",
+      "familleMetierSC.libelleOfficielFamille as libelleFamilleSC",
       "libelleDispositif",
       "dispositifId",
       "libelleNiveauDiplome",
@@ -298,6 +305,7 @@ const findEtablissementsInDb = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
+      "formationView.typeFamille",
       "etablissement.id",
       "departement.codeDepartement",
       "indicateurEntree.rentreeScolaire",
@@ -309,6 +317,7 @@ const findEtablissementsInDb = async ({
       "dispositifId",
       "libelleDispositif",
       "libelleFamille",
+      "libelleFamilleSC",
       "libelleNiveauDiplome",
       "indicateurEtablissement.UAI",
       "indicateurEtablissement.millesime",
