@@ -1,4 +1,4 @@
-import { ExpressionBuilder, RawBuilder, sql } from "kysely";
+import { ExpressionBuilder, expressionBuilder, RawBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/schema";
 
@@ -148,10 +148,13 @@ export const tauxPressionFormationRegional = ({
     ]);
 };
 
-type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
+type EbRef<EB extends ExpressionBuilder<DB, keyof DB>> = Parameters<
+  EB["ref"]
+>[0];
 
-export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, never>>({
-  eb,
+export const withTauxPressionReg = <
+  EB extends ExpressionBuilder<DB, "demande" | "dataEtablissement">,
+>({
   cfdRef,
   dispositifIdRef,
   codeRegionRef,
@@ -162,6 +165,7 @@ export const withTauxPressionReg = <EB extends ExpressionBuilder<DB, never>>({
   dispositifIdRef: EbRef<EB>;
   codeRegionRef: EbRef<EB>;
 }) => {
+  const eb = expressionBuilder<DB, keyof DB>();
   return eb
     .selectFrom("formationEtablissement as subFE")
     .innerJoin("indicateurEntree as subIE", (join) =>

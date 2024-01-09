@@ -12,7 +12,7 @@ export const isIntentionVisible =
     return eb.and([
       filter.codeRegion
         ? eb("demande.codeRegion", "=", filter.codeRegion)
-        : sql`true`,
+        : sql<boolean>`true`,
     ]);
   };
 
@@ -23,7 +23,7 @@ export const isRegionVisible =
     return eb.and([
       filter.codeRegion
         ? eb("region.codeRegion", "=", filter.codeRegion)
-        : sql`true`,
+        : sql<boolean>`true`,
     ]);
   };
 
