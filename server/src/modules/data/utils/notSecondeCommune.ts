@@ -36,3 +36,23 @@ export const notSpecialite = (eb: ExpressionBuilder<DB, "formationView">) => {
     eb("formationView.typeFamille", "is", null),
   ]);
 };
+
+export const notSpecialiteFormationEtablissement = (
+  eb: ExpressionBuilder<DB, "formationEtablissement">
+) => {
+  return eb(
+    "formationEtablissement.cfd",
+    "not in",
+    sql`(SELECT DISTINCT "cfdSpecialite" FROM "familleMetier")`
+  );
+};
+
+export const notSpecialiteIndicateurRegionSortie = (
+  eb: ExpressionBuilder<DB, "indicateurRegionSortie">
+) => {
+  return eb(
+    "indicateurRegionSortie.cfd",
+    "not in",
+    sql`(SELECT DISTINCT "cfdSpecialite" FROM "familleMetier")`
+  );
+};
