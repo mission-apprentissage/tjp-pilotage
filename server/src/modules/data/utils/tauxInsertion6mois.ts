@@ -61,7 +61,7 @@ export function withInsertionReg<
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
-    .whereRef("subIRS.cfd" as const, "=", eb.ref(cfdRef))
+    .whereRef("subIRS.cfd", "=", eb.ref(cfdRef))
     .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .whereRef(

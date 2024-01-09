@@ -1,4 +1,4 @@
-import { Migrator, sql } from "kysely";
+import { Migrator } from "kysely";
 
 import { kdb } from "../db/db";
 import { migrations } from "./index";
@@ -26,24 +26,6 @@ export const migrateDownDB = async () => {
 export async function migrateToLatest(keepAlive?: boolean) {
   const migrator = makeMigrator();
 
-  const knownMigrations = await migrator.getMigrations();
-
-  const dbMigrations = await sql<{
-    name: string;
-    timestamp: string;
-  }>`SELECT * FROM kysely_migration;`.execute(kdb);
-
-  const toDelete = dbMigrations.rows.filter(
-    (migration) => !knownMigrations.some(({ name }) => name === migration.name)
-  );
-
-  if (toDelete.length) {
-    console.log(`warning: unknown past migrations`, toDelete);
-    await sql`DELETE FROM kysely_migration where name in (${sql.join(
-      toDelete.map((item) => item.name)
-    )})`.execute(kdb);
-  }
-
   const { error, results } = await migrator.migrateToLatest();
 
   results?.forEach((it) => {
@@ -56,18 +38,6 @@ export async function migrateToLatest(keepAlive?: boolean) {
 
   if (!results?.length) {
     console.log("already up to date !");
-  }
-
-  for (const migration of toDelete) {
-    try {
-      await sql`INSERT INTO kysely_migration (name,timestamp) values (${migration.name},${migration.timestamp})`.execute(
-        kdb
-      );
-    } catch (e) {
-      console.error(
-        `failed to reinsert (${migration.name}, ${migration.timestamp})`
-      );
-    }
   }
 
   if (error) {
