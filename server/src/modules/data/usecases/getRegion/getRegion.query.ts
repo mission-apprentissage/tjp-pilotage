@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
@@ -30,7 +31,10 @@ export const getRegionStats = async ({
     .selectFrom("region")
     .where("codeRegion", "=", codeRegion)
     .select(["codeRegion", "libelleRegion"])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.badRequest(`Code région invalide : ${codeRegion}`);
+    });
 
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
