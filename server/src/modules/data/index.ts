@@ -1,6 +1,7 @@
 import { Server } from "../../server";
 import { countRestitutionIntentionsStatsRoute } from "./usecases/countRestitutionIntentionsStats/countRestitutionIntentionsStats.route";
 import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.route";
+import { getDataForPanoramaEtablissementRoute } from "./usecases/getDataForPanoramaEtablissement/getDataForPanoramaEtablissement.route";
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
@@ -14,12 +15,14 @@ import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
 import { getRestitutionIntentionsStatsRoute } from "./usecases/getRestitutionIntentionsStats/getRestitutionIntentionStats.route";
 import { getTransformationsStatsRoutes } from "./usecases/getTransformationStats/getTransformationsStats.route";
+import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
   return {
     ...getFormationsRoute({ server }),
+    ...getEtablissementRoute(server),
     ...getEtablissementsRoutes({ server }),
-    ...getEtablissementRoute({ server }),
+    ...getDataForPanoramaEtablissementRoute({ server }),
     ...getDepartementRoute({ server }),
     ...getDepartementsRoute({ server }),
     ...getDataForPanoramaDepartementRoute({ server }),
@@ -32,5 +35,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...countRestitutionIntentionsStatsRoute({ server }),
     ...getPilotageReformeStatsRoute({ server }),
     ...getPilotageReformeStatsRegionsRoute({ server }),
+    ...searchEtablissementRoute(server),
   };
 };

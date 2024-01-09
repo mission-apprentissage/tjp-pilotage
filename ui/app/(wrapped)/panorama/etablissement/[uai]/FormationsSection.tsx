@@ -1,6 +1,5 @@
 import {
   Box,
-  Container,
   Heading,
   Skeleton,
   Table,
@@ -42,14 +41,14 @@ export const FormationsSection = ({
   isLoading,
   rentreeScolaire,
 }: {
-  formations?: (typeof client.infer)["[GET]/etablissement/:uai"]["formations"];
+  formations?: (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"];
   isLoading: boolean;
   rentreeScolaire?: string;
 }) => {
   return (
-    <Container as="section" py="6" mt="6" mb="4" maxWidth={"container.xl"}>
+    <Box as="section" py="6" mt="6" mb="4" maxWidth={"container.xl"}>
       <Box>
-        <Box pl="8" maxW={400} mb="8">
+        <Box pl={[null, null, "8"]} maxW={400} mb="8">
           <Heading fontWeight={"hairline"} as="h2">
             Toutes les formations de votre établissement
           </Heading>
@@ -61,7 +60,7 @@ export const FormationsSection = ({
         {isLoading ? (
           <Loader />
         ) : (
-          <TableContainer px="8">
+          <TableContainer px={[null, null, "8"]}>
             <Table variant="striped" size="sm">
               <Thead>
                 <Tr>
@@ -83,6 +82,6 @@ export const FormationsSection = ({
           </TableContainer>
         )}
       </Box>
-    </Container>
+    </Box>
   );
 };

@@ -26,7 +26,7 @@ const CountCard = ({
     coloration?: number;
   };
 }) => (
-  <Card minW="52" bgColor="white" borderRadius={5}>
+  <Card minW={[null, null, "52"]} flex={1} bgColor="white" borderRadius={5}>
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
         <Flex>
@@ -85,29 +85,39 @@ export const CountersSection = ({
   countData?: CountStatsIntentions;
 }) => {
   return (
-    <>
-      <CountCard
-        label="Places ouvertes"
-        value={countData?.ouvertures}
-        icon={"places_ouvertes"}
-      />
-      <CountCard
-        label="Places fermées"
-        icon={"places_fermees"}
-        value={countData?.fermetures}
-      />
-      <CountCard
-        label="AMI / CMA"
-        icon={"places_ami-cma"}
-        subLabel="Places ouvertes"
-        value={countData?.amiCMAs}
-      />
-      <CountCard
-        label="FCIL"
-        icon={"places_fcil"}
-        subLabel="Places ouvertes"
-        value={countData?.FCILs}
-      />
-    </>
+    <Flex
+      flexDirection={"row"}
+      gap={4}
+      overflowY={"auto"}
+      pb={2}
+      flexWrap={["wrap", null, "nowrap"]}
+    >
+      <Flex gap={4} width="100%">
+        <CountCard
+          label="Places ouvertes"
+          value={countData?.ouvertures}
+          icon={"places_ouvertes"}
+        />
+        <CountCard
+          label="Places fermées"
+          icon={"places_fermees"}
+          value={countData?.fermetures}
+        />
+      </Flex>
+      <Flex gap={4} width="100%">
+        <CountCard
+          label="AMI / CMA"
+          icon={"places_ami-cma"}
+          subLabel="Places ouvertes"
+          value={countData?.amiCMAs}
+        />
+        <CountCard
+          label="FCIL"
+          icon={"places_fcil"}
+          subLabel="Places ouvertes"
+          value={countData?.FCILs}
+        />
+      </Flex>
+    </Flex>
   );
 };

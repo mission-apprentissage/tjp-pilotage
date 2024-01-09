@@ -40,7 +40,8 @@ const NavLink = chakra(
         as={NextLink}
         href={href}
         fontSize={14}
-        p={4}
+        px={[2, null, 4]}
+        py={[2, null, 4]}
         color="bluefrance.113"
         borderBottomWidth={3}
         borderColor={isActive ? "bluefrance.113" : "transparent"}
@@ -109,7 +110,8 @@ const NavMenuButton = chakra(
         variant={"unstyled"}
         fontSize={14}
         fontWeight="normal"
-        p={4}
+        px={[2, null, 4]}
+        py={[2, null, 4]}
         borderRadius="unset"
         bg="unset"
         height="100%"
@@ -130,7 +132,7 @@ export const Nav = () => {
   const { auth } = useAuth();
 
   return (
-    <Flex align="center">
+    <Flex align="center" flexWrap="wrap">
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
@@ -183,6 +185,11 @@ export const Nav = () => {
       {hasPermission(auth?.user.role, "pilotage_reforme/lecture") && (
         <NavLink href="/pilotage-reforme" segment="pilotage-reforme">
           Pilotage de la réforme
+        </NavLink>
+      )}
+      {hasPermission(auth?.user.role, "users/lecture") && (
+        <NavLink href="/admin/users" segment="admin/users">
+          Utilisateurs
         </NavLink>
       )}
     </Flex>
