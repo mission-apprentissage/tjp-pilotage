@@ -73,7 +73,7 @@ export default function Formations() {
     filters?: Partial<Filters>;
     order?: Partial<Order>;
     page?: string;
-  } = qs.parse(queryParams.toString());
+  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: {
     filters?: typeof filters;
