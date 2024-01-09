@@ -34,7 +34,6 @@ export const UaiForm = ({
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (
           <AsyncSelect
-            autoFocus={true}
             instanceId={"panorama-etablissement-uai"}
             styles={{
               ...selectStyle,

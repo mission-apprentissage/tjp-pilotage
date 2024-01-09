@@ -31,3 +31,12 @@ export const notHistoriqueIndicateurRegionSortie = (
     sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
   );
 };
+
+export const notHistoriqueCoExistence = (
+  eb: ExpressionBuilder<DB, "formationView">
+) => {
+  return eb.and([
+    eb("formationView.dateFermeture", "is not", null),
+    eb("formationView.dateFermeture", "<", sql`NOW()`),
+  ]);
+};
