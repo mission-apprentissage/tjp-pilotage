@@ -7,8 +7,8 @@ import {
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import {
-  notSecondeCommune,
   notSecondeCommuneIndicateurRegionSortie,
+  notSpecialite,
 } from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -88,7 +88,7 @@ export const getRegionStats = async ({
       );
     })
     .where(notHistorique)
-    .where(notSecondeCommune)
+    .where(notSpecialite)
     .select([
       "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
