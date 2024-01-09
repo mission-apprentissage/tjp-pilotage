@@ -52,10 +52,6 @@ export const selectTauxDevenirFavorableAgg = (
       END
     `;
 
-type EbRef<EB extends ExpressionBuilder<DB, keyof DB>> = Parameters<
-  EB["ref"]
->[0];
-
 export function withTauxDevenirFavorableReg<
   EB extends
     | ExpressionBuilder<DB, "formationEtablissement" | "etablissement">
@@ -68,9 +64,9 @@ export function withTauxDevenirFavorableReg<
 }: {
   eb: EB;
   millesimeSortie: string;
-  cfdRef: EbRef<EB>;
-  dispositifIdRef: EbRef<EB>;
-  codeRegionRef: EbRef<EB>;
+  cfdRef: Parameters<EB["ref"]>[0];
+  dispositifIdRef: Parameters<EB["ref"]>[0];
+  codeRegionRef: Parameters<EB["ref"]>[0];
 }) {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
