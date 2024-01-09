@@ -1,4 +1,4 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { ExpressionBuilder } from "kysely";
 
 import { DB } from "../../../db/schema";
 
@@ -8,7 +8,7 @@ export const notHistorique = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
   );
 };
 
@@ -18,6 +18,6 @@ export const notHistoriqueIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
   );
 };
