@@ -6,6 +6,7 @@ import { migrations } from "./index";
 const makeMigrator = () => {
   return new Migrator({
     db: kdb,
+    allowUnorderedMigrations: true,
     provider: { getMigrations: async () => migrations },
   });
 };
