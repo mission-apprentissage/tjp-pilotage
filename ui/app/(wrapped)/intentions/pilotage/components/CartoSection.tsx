@@ -98,6 +98,7 @@ export const CartoSection = ({
       name: territoire.libelle,
       parentName: territoire.libelleAcademie,
       value: territoire[indicateur] ?? 0,
+      code: territoire.code,
     }));
   }, [scope, data]);
 
@@ -155,6 +156,7 @@ export const CartoSection = ({
               customPiecesSteps={getCustomPieces()}
               customColorPalette={getCustomPalette()}
               handleClick={handleClickOnTerritoire}
+              selectedScope={scope}
             />
           </Box>
         </Box>

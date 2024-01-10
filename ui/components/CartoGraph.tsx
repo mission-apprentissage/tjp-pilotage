@@ -2,8 +2,9 @@ import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import _ from "lodash";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
 
+import { SelectedScope } from "../app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "../public/fond_carte_academies.json";
 import CarteFranceDepartements from "../public/fond_carte_departements.json";
 import CarteFranceRegions from "../public/fond_carte_regions.json";
@@ -45,13 +46,20 @@ export const CartoGraph = ({
   customPiecesSteps,
   customColorPalette,
   handleClick,
+  selectedScope,
 }: {
-  graphData?: { name?: string; parentName?: string; value: number }[];
+  graphData?: {
+    name?: string;
+    parentName?: string;
+    value: number;
+    code?: string;
+  }[];
   scope?: "national" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
   handleClick?: (dataCode: string | undefined) => void;
+  selectedScope?: SelectedScope;
 }) => {
   const colorPalette = useColorPalette(customColorPalette, objectif);
   const bluefrance525 = useToken("colors", "bluefrance.525");
@@ -299,6 +307,21 @@ export const CartoGraph = ({
     handleClickOnSeries,
     handleClickOnBlankSpace,
   ]);
+
+  useEffect(() => {
+    if (selectedScope?.value) {
+      const selectedIndex = graphData?.findIndex(
+        (data) => data.code === selectedScope.value
+      );
+
+      if (selectedIndex !== -1) {
+        chartRef.current?.dispatchAction({
+          type: "select",
+          dataIndex: selectedIndex,
+        });
+      }
+    }
+  }, [selectedScope, chartRef]);
 
   return (
     <AspectRatio ratio={1}>
