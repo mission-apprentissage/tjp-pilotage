@@ -11290,10 +11290,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"kysely@npm:0.26.0":
-  version: 0.26.0
-  resolution: "kysely@npm:0.26.0"
-  checksum: 87da7abf0a6cef1203178b6e933679ba0f4cb6a9343a03c400d468ea54ce1629243659712e85065ac6c3c96de38e394744cd265968fe2e2a8a714ccbf3b4bf80
+"kysely@npm:0.27.2":
+  version: 0.27.2
+  resolution: "kysely@npm:0.27.2"
+  checksum: 099dc32e3a0d1c86f2a3bb43cc7657ced0b4b83c7fba42c2fcd309a9316b01673ec1b2d9fbbcd5f90367f4a6583a8be01f55cf819e613310c7f4632059e2b687
   languageName: node
   linkType: hard
 
@@ -16050,7 +16050,7 @@ __metadata:
     fastify-type-provider-zod: ^1.1.9
     jest: ^29.7.0
     jsonwebtoken: 9.0.2
-    kysely: 0.26.0
+    kysely: 0.27.2
     kysely-codegen: ^0.10.0
     lodash: ^4.17.21
     luxon: 2.5.2
