@@ -14,8 +14,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
@@ -491,7 +491,7 @@ export default function Etablissements() {
                       <>
                         <Box>
                           Le ratio entre le nombre de premiers voeux et la
-                          capacité de la l'offre de formation.
+                          capacité de l'offre de formation.
                         </Box>
                         <TauxPressionScale />
                       </>
