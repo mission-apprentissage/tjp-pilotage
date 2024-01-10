@@ -28,7 +28,7 @@ export interface ConstatRentree {
   rentreeScolaire: string | null;
   mefstat11: string | null;
   uai: string | null;
-  effectifs: number | null;
+  effectif: number | null;
   anneeDispositif: number | null;
   cfd: string | null;
 }

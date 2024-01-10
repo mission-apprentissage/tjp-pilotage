@@ -11,9 +11,7 @@ export const createConstatRentree = async (
     .values(constatRentree)
     .onConflict((oc) =>
       oc
-        .column("uai")
-        .column("mefstat11")
-        .column("rentreeScolaire")
+        .columns(["uai", "mefstat11", "rentreeScolaire"])
         .doUpdateSet(constatRentree)
     )
     .execute();
