@@ -156,10 +156,12 @@ const findFiltersInDb = async () => {
       "formationEtablissement.UAI"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .where(
-      "codeFormationDiplome",
-      "not in",
-      sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    .where((eb) =>
+      eb(
+        "codeFormationDiplome",
+        "not in",
+        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+      )
     )
     .distinct()
     .$castTo<{ label: string; value: string }>()
