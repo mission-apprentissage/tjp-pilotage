@@ -1,4 +1,4 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -70,8 +70,8 @@ const genericOnConstatRentree =
     CPC?: string[];
     filiere?: string[];
   }) =>
-  (eb: ExpressionBuilder<DB, never>) =>
-    eb
+  () => {
+    return expressionBuilder<DB, keyof DB>()
       .selectFrom("constatRentree")
       .leftJoin(
         "dataEtablissement",
@@ -99,6 +99,7 @@ const genericOnConstatRentree =
           );
         return eb;
       });
+  };
 
 const genericOnDemandes =
   ({
@@ -114,7 +115,7 @@ const genericOnDemandes =
     CPC?: string[];
     filiere?: string[];
   }) =>
-  (eb: ExpressionBuilder<DB, never>) =>
+  (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
       .selectFrom("demande")
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -176,8 +177,8 @@ export const getRegionDatas = async (filters: {
       (join) => join.onRef("demandes.codeRegion", "=", "region.codeRegion")
     )
     .leftJoin(
-      (eb) =>
-        genericOnConstatRentree(filters)(eb)
+      () =>
+        genericOnConstatRentree(filters)()
           .select((es) => [
             es.ref("dataEtablissement.codeRegion").as("codeRegion"),
             sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
@@ -232,8 +233,8 @@ export const getAcademieDatas = async (filters: {
         join.onRef("demandes.codeAcademie", "=", "academie.codeAcademie")
     )
     .leftJoin(
-      (eb) =>
-        genericOnConstatRentree(filters)(eb)
+      () =>
+        genericOnConstatRentree(filters)()
           .select((es) => [
             es.ref("dataEtablissement.codeAcademie").as("codeAcademie"),
             sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
@@ -297,8 +298,8 @@ export const getDepartementDatas = async (filters: {
         )
     )
     .leftJoin(
-      (eb) =>
-        genericOnConstatRentree(filters)(eb)
+      () =>
+        genericOnConstatRentree(filters)()
           .select((es) => [
             es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
             sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as(
