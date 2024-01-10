@@ -45,7 +45,7 @@ export const FormationTooltipContent = ({
         value={formation.tauxInsertion / 100}
       />
       <Text mb="1" fontWeight="medium">
-        Taux de pousuite d'études régional :
+        Taux de poursuite d'études régional :
       </Text>
       <GraphWrapper
         w="100%"
