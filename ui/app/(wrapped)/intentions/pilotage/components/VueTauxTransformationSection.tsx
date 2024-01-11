@@ -238,7 +238,7 @@ export const ScopedTable = ({
 
 const getTitle = (scope: SelectedScope) =>
   ({
-    national:
+    nationals:
       "Nombre de places transformées et taux de transformation régional",
     regions: "Nombre de places transformées et taux de transformation régional",
     academies:
@@ -249,7 +249,7 @@ const getTitle = (scope: SelectedScope) =>
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
-    national: "Région",
+    nationals: "Région",
     regions: "Région",
     academies: "Académie",
     departements: "Département",

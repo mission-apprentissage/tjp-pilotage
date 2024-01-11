@@ -45,7 +45,8 @@ export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
-export type Scope = "regions" | "academies" | "departements" | "national";
+export type Scope = "regions" | "academies" | "departements" | "nationals";
+
 export type SelectedScope = {
   type: Scope;
   value?: string;

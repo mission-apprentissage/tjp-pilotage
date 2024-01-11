@@ -72,7 +72,6 @@ const getScopedTransformationStatsFactory =
     }
   ) =>
   async (activeFilters: QuerySchema) => {
-    console.log("activeFilters", activeFilters);
     const results = await deps.getScopedData({ ...activeFilters });
     return formatResult(results, activeFilters.order, activeFilters.orderBy);
   };

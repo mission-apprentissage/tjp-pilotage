@@ -41,23 +41,16 @@ const formatDataScoped = (item: DataScoped) => ({
 });
 
 const getEffectif = (scope: Scope, value: string) => {
-  if (scope === "national") {
-    return effectifNational;
+  switch (scope) {
+    case "regions":
+      return effectifsRegions[value];
+    case "academies":
+      return effectifsAcademie[value];
+    case "departements":
+      return effectifsDepartements[value];
+    default:
+      return effectifNational;
   }
-
-  if (scope === "academies") {
-    return effectifsAcademie[value];
-  }
-
-  if (scope === "departements") {
-    return effectifsDepartements[value];
-  }
-
-  if (scope === "regions") {
-    return effectifsRegions[value];
-  }
-
-  return 0;
 };
 
 const formatResult = (
@@ -93,6 +86,8 @@ const getTransformationStatsFactory =
     }
   ) =>
   async (activeFilters: QuerySchema) => {
+    console.log(`getTransformationStats Scope: ${activeFilters.scope}`);
+
     const [draft, submitted, all] = (
       await Promise.all([
         deps.getDataScoped({

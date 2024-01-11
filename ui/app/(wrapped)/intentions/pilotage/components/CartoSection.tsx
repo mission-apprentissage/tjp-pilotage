@@ -80,7 +80,7 @@ export const CartoSection = ({
         query: {
           ...filters,
           ...order,
-          scope: scope.type === "national" ? "regions" : scope.type,
+          scope: scope.type === "nationals" ? "regions" : scope.type,
         },
       },
       {

@@ -232,7 +232,7 @@ const ScopedTable = ({
 
 const getTitle = (scope: SelectedScope) =>
   ({
-    national: "Ratio des ouvertures et fermetures par région",
+    nationals: "Ratio des ouvertures et fermetures par région",
     regions: "Ratio des ouvertures et fermetures par région",
     academies: "Ratio des ouvertures et fermetures par académie",
     departements: "Ratio des ouvertures et fermetures par département",
@@ -240,7 +240,7 @@ const getTitle = (scope: SelectedScope) =>
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
-    national: "Région",
+    nationals: "Région",
     regions: "Région",
     academies: "Académie",
     departements: "Département",

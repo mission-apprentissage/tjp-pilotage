@@ -18,8 +18,8 @@ import {
   Text,
 } from "@chakra-ui/react";
 import _ from "lodash";
-import { usePlausible } from "next-plausible";
 import NextLink from "next/link";
+import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";

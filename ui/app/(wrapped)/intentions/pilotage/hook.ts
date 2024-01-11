@@ -53,7 +53,7 @@ export const usePilotageIntentionsHook = () => {
         query: {
           ...filters,
           ...order,
-          scope: filters?.scope ?? "national",
+          scope: filters.scope!,
         },
       },
       {
@@ -72,7 +72,7 @@ export const usePilotageIntentionsHook = () => {
         query: {
           ...filters,
           ...order,
-          scope: filters?.scope ?? "national",
+          scope: filters.scope!,
         },
       },
       {
