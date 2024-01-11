@@ -8,6 +8,16 @@ import CarteFranceAcademies from "../public/fond_carte_academies.json";
 import CarteFranceDepartements from "../public/fond_carte_departements.json";
 import CarteFranceRegions from "../public/fond_carte_regions.json";
 
+interface CartoGraphProps {
+  graphData?: { name?: string; parentName?: string; value: number }[];
+  scope?: "national" | "regions" | "academies" | "departements";
+  objectif?: "haut" | "bas";
+  customPiecesSteps?: number[][];
+  customColorPalette?: string[];
+  handleClick?: (dataCode: string | undefined) => void;
+  codeRegionSelectionne?: string;
+}
+
 export const CartoGraph = ({
   graphData,
   scope = "regions",
@@ -15,14 +25,8 @@ export const CartoGraph = ({
   customPiecesSteps,
   customColorPalette,
   handleClick,
-}: {
-  graphData?: { name?: string; parentName?: string; value: number }[];
-  scope?: "national" | "regions" | "academies" | "departements";
-  objectif?: "haut" | "bas";
-  customPiecesSteps?: number[][];
-  customColorPalette?: string[];
-  handleClick?: (dataCode: string | undefined) => void;
-}) => {
+  codeRegionSelectionne,
+}: CartoGraphProps) => {
   const colorPalette = useMemo(
     () =>
       customColorPalette
@@ -266,6 +270,23 @@ export const CartoGraph = ({
     }
   };
 
+  const selectRegion = (codeRegion: string) => {
+    if (!chartRef.current) return;
+
+    const regionLabelKey = Object.keys(REGIONS_LABEL_MAPPING).find(
+      (region) => region === codeRegion
+    ) as unknown as keyof typeof REGIONS_LABEL_MAPPING | undefined;
+
+    if (regionLabelKey) {
+      const regionLabel = REGIONS_LABEL_MAPPING[regionLabelKey];
+
+      chartRef.current.dispatchAction({
+        type: "select",
+        dataIndex: graphData?.findIndex((data) => data.name == regionLabel),
+      });
+    }
+  };
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
@@ -280,7 +301,11 @@ export const CartoGraph = ({
         handleClickOnBlankSpace(chartRef.current);
       }
     });
-  }, [option, graphData]);
+
+    if (codeRegionSelectionne) {
+      selectRegion(codeRegionSelectionne);
+    }
+  }, [option, graphData, codeRegionSelectionne]);
 
   return (
     <AspectRatio ratio={1}>
