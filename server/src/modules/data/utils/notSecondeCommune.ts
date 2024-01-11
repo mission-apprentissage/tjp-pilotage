@@ -1,4 +1,4 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { ExpressionBuilder } from "kysely";
 
 import { DB } from "../../../db/db";
 
@@ -8,7 +8,7 @@ export const notSecondeCommuneFormationEtablissement = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    sql`(SELECT DISTINCT "cfdFamille" FROM "familleMetier")`
+    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
   );
 };
 export const notSecondeCommune = (
@@ -26,7 +26,7 @@ export const notSecondeCommuneIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    sql`(SELECT DISTINCT "cfdFamille" FROM "familleMetier")`
+    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
   );
 };
 
@@ -43,7 +43,7 @@ export const notSpecialiteFormationEtablissement = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    sql`(SELECT DISTINCT "cfdSpecialite" FROM "familleMetier")`
+    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
   );
 };
 
@@ -53,6 +53,6 @@ export const notSpecialiteIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    sql`(SELECT DISTINCT "cfdSpecialite" FROM "familleMetier")`
+    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
   );
 };

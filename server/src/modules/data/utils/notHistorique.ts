@@ -1,6 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/db";
+import { getDateRentreeScolaire } from "../services/getRentreeScolaire";
 
 export const notHistorique = (
   eb: ExpressionBuilder<DB, "formationEtablissement">
@@ -8,7 +9,7 @@ export const notHistorique = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
   );
 };
 
@@ -18,7 +19,7 @@ export const notHistoriqueFormation = (
   return eb(
     "formationView.cfd",
     "not in",
-    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
   );
 };
 
@@ -28,15 +29,68 @@ export const notHistoriqueIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
   );
 };
 
 export const notHistoriqueCoExistence = (
-  eb: ExpressionBuilder<DB, "formationView">
+  eb: ExpressionBuilder<DB, "formationView">,
+  rentreeScolaire: string
 ) => {
-  return eb.and([
-    eb("formationView.dateFermeture", "is not", null),
-    eb("formationView.dateFermeture", "<", sql`NOW()`),
+  return eb.or([
+    eb("formationView.dateFermeture", "is", null),
+    eb(
+      "formationView.dateFermeture",
+      ">",
+      sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`
+    ),
   ]);
+};
+
+export const notHistoriqueCoExistenceFormationEtablissement = (
+  eb: ExpressionBuilder<DB, "formationEtablissement">,
+  rentreeScolaire: string
+) => {
+  return eb(
+    "formationEtablissement.cfd",
+    "not in",
+    eb
+      .selectFrom("formationView")
+      .distinct()
+      .select("cfd")
+      .where((eb) =>
+        eb.and([
+          eb("formationView.dateFermeture", "is not", null),
+          eb(
+            "formationView.dateFermeture",
+            "<=",
+            sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`
+          ),
+        ])
+      )
+  );
+};
+
+export const notHistoriqueCoExistenceIndicateurRegionSortie = (
+  eb: ExpressionBuilder<DB, "indicateurRegionSortie">,
+  rentreeScolaire: string
+) => {
+  return eb(
+    "indicateurRegionSortie.cfd",
+    "not in",
+    eb
+      .selectFrom("formationView")
+      .distinct()
+      .select("cfd")
+      .where((eb) =>
+        eb.and([
+          eb("formationView.dateFermeture", "is not", null),
+          eb(
+            "formationView.dateFermeture",
+            "<=",
+            sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`
+          ),
+        ])
+      )
+  );
 };

@@ -496,7 +496,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb)]),
         codeDepartement
           ? eb("departement.codeDepartement", "in", codeDepartement)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -523,7 +523,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb)]),
         codeAcademie
           ? eb("academie.codeAcademie", "in", codeAcademie)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -574,7 +574,9 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        commune ? eb("dataEtablissement.commune", "in", commune) : sql`false`,
+        commune
+          ? eb("dataEtablissement.commune", "in", commune)
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -607,7 +609,7 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        uai ? eb("dataEtablissement.uai", "in", uai) : sql`false`,
+        uai ? eb("dataEtablissement.uai", "in", uai) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -642,7 +644,7 @@ const findFiltersInDb = async ({
         ]),
         rentreeScolaire && !Number.isNaN(rentreeScolaire)
           ? eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire))
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -672,7 +674,9 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        typeDemande ? eb("demande.typeDemande", "in", typeDemande) : sql`false`,
+        typeDemande
+          ? eb("demande.typeDemande", "in", typeDemande)
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -711,7 +715,7 @@ const findFiltersInDb = async ({
                 (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
               )
             )
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -746,7 +750,7 @@ const findFiltersInDb = async ({
         ]),
         dispositif
           ? eb("dispositif.codeDispositif", "in", dispositif)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -781,7 +785,7 @@ const findFiltersInDb = async ({
         ]),
         codeNiveauDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -819,7 +823,7 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        cfd ? eb("dataFormation.cfd", "in", cfd) : sql`false`,
+        cfd ? eb("dataFormation.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -854,7 +858,7 @@ const findFiltersInDb = async ({
         ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -884,7 +888,7 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql`false`,
+        CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -917,7 +921,9 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        CPC ? eb("dataFormation.libelleFiliere", "in", CPC) : sql`false`,
+        CPC
+          ? eb("dataFormation.libelleFiliere", "in", CPC)
+          : sql<boolean>`false`,
       ]);
     })
     .execute();

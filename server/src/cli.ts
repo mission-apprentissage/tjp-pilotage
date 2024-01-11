@@ -155,6 +155,7 @@ cli
       ...getImports("nDispositifFormation_"),
       ...getImports("departements_academies_regions"),
       ...getImports("familleMetiers"),
+      ...getImports("optionsBTS"),
       ...getImports("diplomesProfessionnels"),
       ...getImports("nFormationDiplome_"),
       ...getImports("lyceesACCE"),

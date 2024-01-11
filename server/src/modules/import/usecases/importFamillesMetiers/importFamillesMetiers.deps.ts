@@ -9,9 +9,7 @@ export const createFamillesMetiers = async (
   kdb
     .insertInto("familleMetier")
     .values(famillesMetier)
-    .onConflict((oc) =>
-      oc.column("mefStat11Specialite").doUpdateSet(famillesMetier)
-    )
+    .onConflict((oc) => oc.column("cfdSpecialite").doUpdateSet(famillesMetier))
     .execute();
 
 const findNMef = async ({

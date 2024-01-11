@@ -6,7 +6,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistorique } from "../../utils/notHistorique";
+import { notHistoriqueCoExistence } from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -298,8 +298,8 @@ const findEtablissementsInDb = async ({
       if (!libelleFiliere) return q;
       return q.where("formationView.libelleFiliere", "in", libelleFiliere);
     })
-    .where(notHistorique)
     .where(notPerimetreIJEtablissement)
+    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
     .groupBy([
       "formationView.id",
       "formationView.cfd",
@@ -416,7 +416,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where(notHistorique)
+    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -490,7 +490,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb), inCodeDepartement(eb), inCommune(eb)]),
         codeAcademie
           ? eb("academie.codeAcademie", "in", codeAcademie)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -507,7 +507,7 @@ const findFiltersInDb = async ({
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCommune(eb)]),
         codeDepartement
           ? eb("departement.codeDepartement", "in", codeDepartement)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -521,7 +521,9 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb), inCodeAcademie(eb), inCodeDepartement(eb)]),
-        commune ? eb("etablissement.commune", "in", commune) : sql`false`,
+        commune
+          ? eb("etablissement.commune", "in", commune)
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -540,7 +542,7 @@ const findFiltersInDb = async ({
           inCodeDepartement(eb),
           inCommune(eb),
         ]),
-        uai ? eb("etablissement.UAI", "in", uai) : sql`false`,
+        uai ? eb("etablissement.UAI", "in", uai) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -556,7 +558,7 @@ const findFiltersInDb = async ({
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDispositif(eb)]),
         codeDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -572,7 +574,7 @@ const findFiltersInDb = async ({
         eb.and([inCfdFamille(eb), inCfd(eb), inCodeDiplome(eb)]),
         codeDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeDiplome)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -588,7 +590,7 @@ const findFiltersInDb = async ({
         eb.and([inCfd(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -603,7 +605,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
-        cfd ? eb("formationView.cfd", "in", cfd) : sql`false`,
+        cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -614,7 +616,7 @@ const findFiltersInDb = async ({
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
-        cpc ? eb("formationView.cpc", "in", cpc) : sql`false`,
+        cpc ? eb("formationView.cpc", "in", cpc) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -630,7 +632,7 @@ const findFiltersInDb = async ({
         eb.and([inCpc(eb)]),
         cpcSecteur
           ? eb("formationView.cpcSecteur", "in", cpcSecteur)
-          : sql`false`,
+          : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -646,7 +648,7 @@ const findFiltersInDb = async ({
         eb.and([inCpc(eb), inCpcSecteur(eb)]),
         cpcSousSecteur
           ? eb("formationView.cpcSousSecteur", "in", cpcSousSecteur)
-          : sql`false`,
+          : sql<boolean>`false`,
       ])
     )
     .execute();
@@ -662,7 +664,7 @@ const findFiltersInDb = async ({
         eb.and([]),
         libelleFiliere
           ? eb("formationView.libelleFiliere", "in", libelleFiliere)
-          : sql`false`,
+          : sql<boolean>`false`,
       ])
     )
     .execute();

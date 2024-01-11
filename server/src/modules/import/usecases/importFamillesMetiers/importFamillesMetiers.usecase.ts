@@ -6,41 +6,64 @@ export const importFamillesMetiersFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     createFamillesMetiers = importFamillesMetiersDeps.createFamillesMetiers,
-    findNMef = importFamillesMetiersDeps.findNMef,
   }) =>
   async () => {
     console.log(`Import des familles de métiers`);
 
-    let count = 0;
+    let countFamillesMetier = 0;
     await streamIt(
-      (count) =>
-        findRawDatas({ type: "familleMetiers", offset: count, limit: 20 }),
+      (countFamillesMetier) =>
+        findRawDatas({
+          type: "familleMetiers",
+          offset: countFamillesMetier,
+          limit: 20,
+        }),
       async (item) => {
-        const nMefFamille = await findNMef({
-          mefstat: item["MEFSTAT11 2NDE PRO"],
-        });
-        const nMefSpecialite = await findNMef({
-          mefstat: item["MEFSTAT11 TLEPRO"],
-        });
-
         const data = {
           libelleOfficielFamille: item.FAMILLE,
-          cfdFamille: nMefFamille.FORMATION_DIPLOME,
-          cfdSpecialite: nMefSpecialite.FORMATION_DIPLOME,
+          cfdFamille: item.CFD_COMMUN,
+          cfdSpecialite: item.CFD_SPECIALITE,
           libelleOfficielSpecialite: item.SPECIALITE,
-          mefStat11Famille: item["MEFSTAT11 2NDE PRO"],
-          mefStat11Specialite: item["MEFSTAT11 TLEPRO"],
           codeMinistereTutelle: item.CODE_MINISTERE_TUTELLE,
         };
 
-        count++;
-        process.stdout.write(`\r${count}`);
+        countFamillesMetier++;
+        process.stdout.write(`\r${countFamillesMetier}`);
         await createFamillesMetiers(data);
       }
     );
 
     process.stdout.write(
-      `\r${count} familles de métiers ajoutées ou mises à jour\n\n`
+      `\r${countFamillesMetier} familles de métiers ajoutées ou mises à jour\n\n`
+    );
+
+    console.log(`Import des options BTS`);
+
+    let countOptionsBTS = 0;
+    await streamIt(
+      (countOptionsBTS) =>
+        findRawDatas({
+          type: "optionsBTS",
+          offset: countOptionsBTS,
+          limit: 20,
+        }),
+      async (item) => {
+        const data = {
+          libelleOfficielFamille: item.FAMILLE,
+          cfdFamille: item.CFD_COMMUN,
+          cfdSpecialite: item.CFD_SPECIALITE,
+          libelleOfficielSpecialite: item.SPECIALITE,
+          codeMinistereTutelle: item.CODE_MINISTERE_TUTELLE,
+        };
+
+        countOptionsBTS++;
+        process.stdout.write(`\r${countOptionsBTS}`);
+        await createFamillesMetiers(data);
+      }
+    );
+
+    process.stdout.write(
+      `\r${countOptionsBTS} options de BTS ajoutées ou mises à jour\n\n`
     );
   };
 

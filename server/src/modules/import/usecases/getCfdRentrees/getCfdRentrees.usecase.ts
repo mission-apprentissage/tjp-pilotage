@@ -60,10 +60,6 @@ export const [getCfdRentrees] = inject(
         )
       );
 
-      const anneeDebutConstate = anneesDispositifAvecConstats.find((nMef) =>
-        nMef.constats.some((constat) => constat)
-      )?.annee;
-
       const enseignements = await _.chain(anneesDispositifAvecConstats)
         .map(({ constats }) => constats)
         .flatMap()
@@ -74,7 +70,6 @@ export const [getCfdRentrees] = inject(
           cfd,
           voie: "scolaire" as const,
           codeDispositif: dispositif.codeDispositif,
-          anneeDebutConstate,
           anneesEnseignement: Object.values(dispositif.anneesDispositif).reduce(
             (acc, anneeDispositif) => {
               const constat = annees.find(
@@ -101,7 +96,6 @@ export const [getCfdRentrees] = inject(
         .value();
 
       return {
-        anneeDebutConstate,
         enseignements,
       };
     }

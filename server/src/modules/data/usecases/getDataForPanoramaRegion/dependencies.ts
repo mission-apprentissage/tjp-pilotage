@@ -6,7 +6,7 @@ import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistorique } from "../../utils/notHistorique";
+import { notHistoriqueCoExistence } from "../../utils/notHistorique";
 import { notSecondeCommune } from "../../utils/notSecondeCommune";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
@@ -69,7 +69,7 @@ export const getFormationsRegion = async ({
           getRentreeScolairePrecedente(rentreeScolaire)
         )
     )
-    .where(notHistorique)
+    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire))
     .where(notSecondeCommune)
     .where("etablissement.codeRegion", "=", codeRegion)
     .$call((q) => {

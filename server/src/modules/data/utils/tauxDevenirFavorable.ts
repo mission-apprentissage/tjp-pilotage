@@ -1,4 +1,4 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/db";
 
@@ -52,12 +52,11 @@ export const selectTauxDevenirFavorableAgg = (
       END
     `;
 
-type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
-
 export function withTauxDevenirFavorableReg<
-  EB extends ExpressionBuilder<DB, never>,
+  EB extends
+    | ExpressionBuilder<DB, "formationEtablissement" | "etablissement">
+    | ExpressionBuilder<DB, "demande" | "dataEtablissement">,
 >({
-  eb,
   millesimeSortie,
   cfdRef,
   codeDispositifRef,
@@ -65,10 +64,11 @@ export function withTauxDevenirFavorableReg<
 }: {
   eb: EB;
   millesimeSortie: string;
-  cfdRef: EbRef<EB>;
-  codeDispositifRef: EbRef<EB>;
-  codeRegionRef: EbRef<EB>;
+  cfdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
+  codeRegionRef: Parameters<EB["ref"]>[0];
 }) {
+  const eb = expressionBuilder<DB, keyof DB>();
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
     .whereRef("subIRS.cfd", "=", cfdRef)

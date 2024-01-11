@@ -5,15 +5,8 @@ import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
-import {
-  notHistorique,
-  notHistoriqueFormation,
-  notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
-import {
-  notSecondeCommune,
-  notSecondeCommuneIndicateurRegionSortie,
-} from "../../utils/notSecondeCommune";
+import { notHistorique, notHistoriqueFormation, notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { notSecondeCommune, notSecondeCommuneIndicateurRegionSortie } from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 

@@ -94,8 +94,15 @@ export const [importDataFormations] = inject(
         );
         const regroupement = await deps.findRegroupements({ mefstats });
 
+        const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
         const isSpecialite = !!(await deps.findSpecialite(cfd));
+
+        const getTypeFamille = () => {
+          if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
+          if (isSpecialite) return isBTS ? "option" : "specialite";
+          return undefined;
+        };
 
         try {
           await deps.createDataFormation({
@@ -133,11 +140,7 @@ export const [importDataFormations] = inject(
                   "dd/LL/yyyy"
                 ).toJSDate()
               : undefined,
-            typeFamille: is2ndeCommune
-              ? "2nde_commune"
-              : isSpecialite
-              ? "specialite"
-              : undefined,
+            typeFamille: getTypeFamille(),
           });
         } catch (e) {
           console.log(e);
