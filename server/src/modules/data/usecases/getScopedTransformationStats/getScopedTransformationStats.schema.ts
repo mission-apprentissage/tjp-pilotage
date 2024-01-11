@@ -4,7 +4,7 @@ export const ScopeEnum = z.enum([
   "regions",
   "academies",
   "departements",
-  "national",
+  "nationals",
 ]);
 
 export type Scope = z.infer<typeof ScopeEnum>;
@@ -45,7 +45,7 @@ const QuerySchema = z.object({
   })
     .keyof()
     .optional(),
-  scope: ScopeEnum.default("national"),
+  scope: ScopeEnum.default(ScopeEnum.Enum.nationals),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;

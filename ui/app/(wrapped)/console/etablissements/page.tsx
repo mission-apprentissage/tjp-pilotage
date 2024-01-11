@@ -14,8 +14,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { usePlausible } from "next-plausible";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";

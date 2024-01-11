@@ -24,7 +24,7 @@ import {
   SelectedScope,
   Status,
 } from "../types";
-import { isTerritoireSelected } from "../utils/is-territoire-selected";
+import { isTerritoireSelected } from "../utils/isTerritoireSelected";
 
 const Loader = () => (
   <Box mt={12}>
@@ -299,7 +299,7 @@ export const IndicateursClesSection = ({
         query: {
           ...filters,
           ...order,
-          scope: "national",
+          scope: "nationals",
         },
       },
       {
@@ -312,7 +312,7 @@ export const IndicateursClesSection = ({
     () =>
       scope?.value
         ? generateGetScopedData(scope.value, data)
-        : generateGetScopedData("national", nationalStats),
+        : generateGetScopedData("nationals", nationalStats),
     [generateGetScopedData, data, scope, nationalStats]
   );
 
@@ -320,12 +320,12 @@ export const IndicateursClesSection = ({
     () =>
       scope?.value
         ? generatePercentageDataOr(scope.value, data, "-")
-        : generatePercentageDataOr("national", nationalStats, "-"),
+        : generatePercentageDataOr("nationals", nationalStats, "-"),
     [generatePercentageDataOr, data, scope, nationalStats]
   );
 
   const getNationalData = useMemo(
-    () => generateGetScopedData("national", nationalStats),
+    () => generateGetScopedData("nationals", nationalStats),
     [generateGetScopedData, nationalStats]
   );
 

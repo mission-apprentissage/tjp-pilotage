@@ -54,7 +54,7 @@ export const CartoGraph = ({
     value: number;
     code?: string;
   }[];
-  scope?: "national" | "regions" | "academies" | "departements";
+  scope?: "nationals" | "regions" | "academies" | "departements";
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];

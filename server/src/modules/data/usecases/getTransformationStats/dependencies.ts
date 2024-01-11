@@ -73,7 +73,7 @@ const selectNbDemandes = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
 ) => eb.fn.count<number>("demande.id");
 
-export const getDataScoped = async ({
+const getDataScoped = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
@@ -88,7 +88,7 @@ export const getDataScoped = async ({
   filiere?: string[];
   scope: Scope;
 }) => {
-  return await kdb
+  return kdb
     .selectFrom("demande")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
@@ -112,7 +112,7 @@ export const getDataScoped = async ({
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
       selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
-      scope === "national"
+      scope === "nationals"
         ? sql<string>`'national'`.as("code")
         : eb
             .ref(
@@ -125,7 +125,7 @@ export const getDataScoped = async ({
               )[scope]
             )
             .as("code"),
-      scope === "national"
+      scope === "nationals"
         ? sql<string>`'National'`.as("libelle")
         : eb
             .ref(
@@ -172,7 +172,7 @@ export const getDataScoped = async ({
     })
     .$call((q) => {
       switch (scope) {
-        case "national":
+        case "nationals":
           return q;
         case "regions":
           return q.groupBy([
