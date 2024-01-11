@@ -13,6 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
+import { ScopeEnum } from "shared";
 
 import { client } from "../../../../../api.client";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
@@ -299,7 +300,7 @@ export const IndicateursClesSection = ({
         query: {
           ...filters,
           ...order,
-          scope: "nationals",
+          scope: ScopeEnum.national,
         },
       },
       {
@@ -312,7 +313,7 @@ export const IndicateursClesSection = ({
     () =>
       scope?.value
         ? generateGetScopedData(scope.value, data)
-        : generateGetScopedData("nationals", nationalStats),
+        : generateGetScopedData(ScopeEnum.national, nationalStats),
     [generateGetScopedData, data, scope, nationalStats]
   );
 
@@ -320,12 +321,12 @@ export const IndicateursClesSection = ({
     () =>
       scope?.value
         ? generatePercentageDataOr(scope.value, data, "-")
-        : generatePercentageDataOr("nationals", nationalStats, "-"),
+        : generatePercentageDataOr(ScopeEnum.national, nationalStats, "-"),
     [generatePercentageDataOr, data, scope, nationalStats]
   );
 
   const getNationalData = useMemo(
-    () => generateGetScopedData("nationals", nationalStats),
+    () => generateGetScopedData(ScopeEnum.national, nationalStats),
     [generateGetScopedData, nationalStats]
   );
 

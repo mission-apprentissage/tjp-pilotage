@@ -2,7 +2,14 @@ import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import _ from "lodash";
-import { useEffect, useLayoutEffect, useMemo, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
+import { Scope, ScopeEnum } from "shared";
 
 import { SelectedScope } from "../app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "../public/fond_carte_academies.json";
@@ -41,7 +48,7 @@ const useColorPalette = (
 
 export const CartoGraph = ({
   graphData,
-  scope = "regions",
+  scope = ScopeEnum.region,
   objectif = "haut",
   customPiecesSteps,
   customColorPalette,
@@ -54,7 +61,7 @@ export const CartoGraph = ({
     value: number;
     code?: string;
   }[];
-  scope?: "nationals" | "regions" | "academies" | "departements";
+  scope?: Scope;
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
@@ -69,11 +76,11 @@ export const CartoGraph = ({
 
   const getGeoMap = () => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
-      case "academies":
+      case ScopeEnum.academie:
         return JSON.parse(JSON.stringify(CarteFranceAcademies));
-      case "departements":
+      case ScopeEnum.departement:
         return JSON.parse(JSON.stringify(CarteFranceDepartements));
       default:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
@@ -82,11 +89,11 @@ export const CartoGraph = ({
 
   const getNameProperty = (): string => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return "reg";
-      case "academies":
+      case ScopeEnum.academie:
         return "code_academie";
-      case "departements":
+      case ScopeEnum.departement:
         return "dep";
       default:
         return "reg";
@@ -95,11 +102,11 @@ export const CartoGraph = ({
 
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return REGIONS_LABEL_MAPPING;
-      case "academies":
+      case ScopeEnum.academie:
         return ACADEMIES_LABEL_MAPPING;
-      case "departements":
+      case ScopeEnum.departement:
         return DEPARTEMENTS_LABEL_MAPPING;
       default:
         return REGIONS_LABEL_MAPPING;
@@ -255,17 +262,17 @@ export const CartoGraph = ({
   const handleClickOnSeries = (name: string) => {
     if (handleClick)
       switch (scope) {
-        case "regions":
+        case ScopeEnum.region:
           handleClick(
             _.findKey(REGIONS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case "academies":
+        case ScopeEnum.academie:
           handleClick(
             _.findKey(ACADEMIES_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case "departements":
+        case ScopeEnum.departement:
           handleClick(
             _.findKey(DEPARTEMENTS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
@@ -273,16 +280,19 @@ export const CartoGraph = ({
       }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickOnBlankSpace = (chartInstance: any) => {
+  const unSelectAll = useCallback(() => {
+    chartRef.current?.dispatchAction({
+      type: "unselect",
+      dataIndex: new Array(graphData?.length ?? 0)
+        .fill(0)
+        .map((_, index) => index),
+    });
+  }, [chartRef, graphData]);
+
+  const handleClickOnBlankSpace = () => {
     if (handleClick) {
       handleClick(undefined);
-      chartInstance.dispatchAction({
-        type: "unselect",
-        dataIndex: new Array(graphData?.length ?? 0)
-          .fill(0)
-          .map((_, index) => index),
-      });
+      unSelectAll();
     }
   };
 
@@ -297,7 +307,7 @@ export const CartoGraph = ({
     });
     chartRef.current.getZr().on("click", (event) => {
       if (!event.target) {
-        handleClickOnBlankSpace(chartRef.current);
+        handleClickOnBlankSpace();
       }
     });
   }, [
@@ -310,16 +320,18 @@ export const CartoGraph = ({
 
   useEffect(() => {
     if (selectedScope?.value) {
-      const selectedIndex = graphData?.findIndex(
+      const currentIndex = graphData?.findIndex(
         (data) => data.code === selectedScope.value
       );
 
-      if (selectedIndex !== -1) {
+      if (currentIndex !== -1) {
         chartRef.current?.dispatchAction({
           type: "select",
-          dataIndex: selectedIndex,
+          dataIndex: currentIndex,
         });
       }
+    } else {
+      unSelectAll();
     }
   }, [selectedScope, chartRef]);
 

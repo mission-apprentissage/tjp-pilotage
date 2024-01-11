@@ -1,5 +1,6 @@
 import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
+import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
 
@@ -17,7 +18,7 @@ export const usePilotageIntentionsHook = () => {
     useState<IndicateurType>("tauxTransformation");
   const [filters, setFilters] = useStateParams<Partial<Filters>>({
     defaultValues: {
-      scope: "regions",
+      scope: ScopeEnum.region,
     },
   });
   const [order, setOrder] = useStateParams<Partial<Order>>({

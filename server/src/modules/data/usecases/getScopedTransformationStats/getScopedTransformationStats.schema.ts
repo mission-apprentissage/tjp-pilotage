@@ -1,13 +1,6 @@
+import { ScopeEnum } from "shared";
+import { scope } from "shared/enum/scopeEnum";
 import { z } from "zod";
-
-export const ScopeEnum = z.enum([
-  "regions",
-  "academies",
-  "departements",
-  "nationals",
-]);
-
-export type Scope = z.infer<typeof ScopeEnum>;
 
 const ScopedStatsTransfoSchema = z.object({
   key: z.string(),
@@ -45,7 +38,7 @@ const QuerySchema = z.object({
   })
     .keyof()
     .optional(),
-  scope: ScopeEnum.default(ScopeEnum.Enum.nationals),
+  scope: scope.default(ScopeEnum.national),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;

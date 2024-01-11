@@ -12,6 +12,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useCallback } from "react";
+import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -238,21 +239,22 @@ export const ScopedTable = ({
 
 const getTitle = (scope: SelectedScope) =>
   ({
-    nationals:
+    [ScopeEnum.national]:
       "Nombre de places transformées et taux de transformation régional",
-    regions: "Nombre de places transformées et taux de transformation régional",
-    academies:
+    [ScopeEnum.region]:
+      "Nombre de places transformées et taux de transformation régional",
+    [ScopeEnum.academie]:
       "Nombre de places transformées et taux de transformation académique",
-    departements:
+    [ScopeEnum.departement]:
       "Nombre de places transformées et taux de transformation départemental",
   })[scope.type];
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
-    nationals: "Région",
-    regions: "Région",
-    academies: "Académie",
-    departements: "Département",
+    [ScopeEnum.national]: "Région",
+    [ScopeEnum.region]: "Région",
+    [ScopeEnum.academie]: "Académie",
+    [ScopeEnum.departement]: "Département",
   })[scope.type];
 
 export const VueTauxTransformationSection = (props: {

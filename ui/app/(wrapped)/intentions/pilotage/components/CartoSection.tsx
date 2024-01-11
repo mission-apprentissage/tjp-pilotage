@@ -1,5 +1,6 @@
 import { Box, Flex, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
 import { useCallback } from "react";
+import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
 
@@ -80,7 +81,8 @@ export const CartoSection = ({
         query: {
           ...filters,
           ...order,
-          scope: scope.type === "nationals" ? "regions" : scope.type,
+          scope:
+            scope.type === ScopeEnum.national ? ScopeEnum.region : scope.type,
         },
       },
       {

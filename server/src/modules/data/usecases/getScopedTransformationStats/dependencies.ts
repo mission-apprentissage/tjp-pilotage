@@ -1,4 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
+import { Scope, ScopeEnum } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -9,7 +10,6 @@ import {
   notPerimetreIJDepartement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
-import { Scope } from "./getScopedTransformationStats.schema";
 
 const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.coalesce(
@@ -356,7 +356,7 @@ const getScopedData = async ({
   scope: Scope;
 }) => {
   switch (scope) {
-    case "academies":
+    case ScopeEnum.academie:
       return getAcademieDatas({
         status,
         rentreeScolaire,
@@ -365,7 +365,7 @@ const getScopedData = async ({
         filiere,
       });
 
-    case "departements":
+    case ScopeEnum.departement:
       return getDepartementDatas({
         status,
         rentreeScolaire,
@@ -373,7 +373,7 @@ const getScopedData = async ({
         CPC,
         filiere,
       });
-    case "regions":
+    case ScopeEnum.region:
     default:
       return getRegionDatas({
         status,
