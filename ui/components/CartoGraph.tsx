@@ -257,16 +257,20 @@ export const CartoGraph = ({
       }
   };
 
+  const unSelectAll = () => {
+    chartRef.current?.dispatchAction({
+      type: "unselect",
+      dataIndex: new Array(graphData?.length ?? 0)
+        .fill(0)
+        .map((_, index) => index),
+    });
+  };
+
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickOnBlankSpace = (chartInstance: any) => {
+  const handleClickOnBlankSpace = () => {
     if (handleClick) {
       handleClick(undefined);
-      chartInstance.dispatchAction({
-        type: "unselect",
-        dataIndex: new Array(graphData?.length ?? 0)
-          .fill(0)
-          .map((_, index) => index),
-      });
+      unSelectAll();
     }
   };
 
@@ -284,6 +288,8 @@ export const CartoGraph = ({
         type: "select",
         dataIndex: graphData?.findIndex((data) => data.name == regionLabel),
       });
+    } else {
+      unSelectAll();
     }
   };
 
@@ -298,12 +304,14 @@ export const CartoGraph = ({
     });
     chartRef.current.getZr().on("click", (event) => {
       if (!event.target) {
-        handleClickOnBlankSpace(chartRef.current);
+        handleClickOnBlankSpace();
       }
     });
 
     if (codeRegionSelectionne) {
       selectRegion(codeRegionSelectionne);
+    } else {
+      unSelectAll();
     }
   }, [option, graphData, codeRegionSelectionne]);
 
