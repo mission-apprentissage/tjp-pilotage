@@ -1,3 +1,5 @@
+import { ScopeEnum } from "shared";
+import { scope } from "shared/enum/scopeEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -33,15 +35,6 @@ const StatsTransfoSchema = z.record(
   })
 );
 
-export const ScopeEnum = z.enum([
-  "regions",
-  "academies",
-  "departements",
-  "nationals",
-]);
-
-export type Scope = z.infer<typeof ScopeEnum>;
-
 const QuerySchema = z.object({
   rentreeScolaire: z.string().optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
@@ -61,7 +54,7 @@ const QuerySchema = z.object({
   })
     .keyof()
     .optional(),
-  scope: ScopeEnum.default("nationals"),
+  scope: scope.default(ScopeEnum.national),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;

@@ -1,3 +1,5 @@
+import { Scope } from "shared";
+
 import { client } from "@/api.client";
 
 export type PilotageTransformationStatsQuery =
@@ -44,8 +46,6 @@ export type PilotageTransformationStatsByScope = {
 export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
-
-export type Scope = "regions" | "academies" | "departements" | "nationals";
 
 export type SelectedScope = {
   type: Scope;

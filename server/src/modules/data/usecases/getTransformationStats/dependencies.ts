@@ -1,4 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
+import { Scope, ScopeEnum } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -9,7 +10,6 @@ import {
   notPerimetreIJDepartement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
-import { Scope } from "./getTransformationsStats.schema";
 
 const selectPlacesTransformees = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
@@ -73,6 +73,67 @@ const selectNbDemandes = (
   eb: ExpressionBuilder<DB, "demande" | "dataEtablissement">
 ) => eb.fn.count<number>("demande.id");
 
+const getEffectif = async ({
+  codeNiveauDiplome,
+  CPC,
+  filiere,
+  scope,
+}: {
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  filiere?: string[];
+  scope: Scope;
+}) => {
+  return kdb
+    .selectFrom("constatRentree")
+    .leftJoin(
+      "dataEtablissement",
+      "dataEtablissement.uai",
+      "constatRentree.uai"
+    )
+    .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+    .where("constatRentree.rentreeScolaire", "=", "2022")
+    .where("constatRentree.anneeDispositif", "=", 1)
+    .$call((eb) => {
+      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
+    })
+    .select((es) => [
+      scope === ScopeEnum.national
+        ? sql<string>`'national'`.as("code")
+        : es
+            .ref(
+              (
+                {
+                  [ScopeEnum.region]: "dataEtablissement.codeRegion",
+                  [ScopeEnum.academie]: "dataEtablissement.codeAcademie",
+                  [ScopeEnum.departement]: "dataEtablissement.codeDepartement",
+                  [ScopeEnum.national]: "dataEtablissement.codeRegion",
+                } as const
+              )[scope]
+            )
+            .as("code"),
+      sql<number>`SUM(${es.ref("constatRentree.effectif")})`.as("effectif"),
+    ])
+    .groupBy(["code"])
+    .execute()
+    .then(cleanNull);
+};
+
 const getDataScoped = async ({
   status,
   rentreeScolaire = "2024",
@@ -88,6 +149,7 @@ const getDataScoped = async ({
   filiere?: string[];
   scope: Scope;
 }) => {
+  console.log(`getDataScoped Scope: ${scope}`);
   return kdb
     .selectFrom("demande")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -112,28 +174,28 @@ const getDataScoped = async ({
       selectPlacesFermeesScolaire(eb).as("placesFermeesScolaire"),
       selectPlacesOuvertesApprentissage(eb).as("placesOuvertesApprentissage"),
       selectPlacesFermeesApprentissage(eb).as("placesFermeesApprentissage"),
-      scope === "nationals"
+      scope === ScopeEnum.national
         ? sql<string>`'national'`.as("code")
         : eb
             .ref(
               (
                 {
-                  regions: "dataEtablissement.codeRegion",
-                  academies: "dataEtablissement.codeAcademie",
-                  departements: "dataEtablissement.codeDepartement",
+                  [ScopeEnum.region]: "dataEtablissement.codeRegion",
+                  [ScopeEnum.academie]: "dataEtablissement.codeAcademie",
+                  [ScopeEnum.departement]: "dataEtablissement.codeDepartement",
                 } as const
               )[scope]
             )
             .as("code"),
-      scope === "nationals"
+      scope === ScopeEnum.national
         ? sql<string>`'National'`.as("libelle")
         : eb
             .ref(
               (
                 {
-                  regions: "region.libelleRegion",
-                  academies: "academie.libelle",
-                  departements: "departement.libelle",
+                  [ScopeEnum.region]: "region.libelleRegion",
+                  [ScopeEnum.academie]: "academie.libelle",
+                  [ScopeEnum.departement]: "departement.libelle",
                 } as const
               )[scope]
             )
@@ -172,23 +234,23 @@ const getDataScoped = async ({
     })
     .$call((q) => {
       switch (scope) {
-        case "nationals":
-          return q;
-        case "regions":
+        case ScopeEnum.region:
           return q.groupBy([
             "dataEtablissement.codeRegion",
             "region.libelleRegion",
           ]);
-        case "academies":
+        case ScopeEnum.academie:
           return q.groupBy([
             "dataEtablissement.codeAcademie",
             "academie.libelle",
           ]);
-        case "departements":
+        case ScopeEnum.departement:
           return q.groupBy([
             "dataEtablissement.codeDepartement",
             "departement.libelle",
           ]);
+        default:
+          return q;
       }
     })
     .where(isDemandeNotDeletedOrRefused)
@@ -210,7 +272,7 @@ const getFiltersQuery = async ({
   filiere?: string[];
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!status || status == undefined) return sql<true>`true`;
+    if (!status || status === undefined) return sql<true>`true`;
     return eb("demande.status", "=", status);
   };
 
@@ -357,4 +419,5 @@ const getFiltersQuery = async ({
 export const dependencies = {
   getFiltersQuery,
   getDataScoped,
+  getEffectif,
 };

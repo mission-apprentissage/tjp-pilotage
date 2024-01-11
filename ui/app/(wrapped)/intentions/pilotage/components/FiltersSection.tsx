@@ -1,11 +1,11 @@
 import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
+import { Scope, ScopeEnum } from "shared";
 
 import { Multiselect } from "../../../../../components/Multiselect";
 import {
   Filters,
   FiltersEvents,
   PilotageTransformationStats,
-  Scope,
   SelectedScope,
 } from "../types";
 
@@ -25,11 +25,11 @@ const generateEventFromScope = (
   scope: Scope
 ): "codeRegion" | "codeDepartement" | "codeAcademie" => {
   switch (scope) {
-    case "departements":
+    case ScopeEnum.departement:
       return "codeDepartement";
-    case "academies":
+    case ScopeEnum.academie:
       return "codeAcademie";
-    case "regions":
+    case ScopeEnum.region:
     default:
       return "codeRegion";
   }
@@ -72,13 +72,13 @@ export const FiltersSection = ({
               });
             }}
           >
-            <option key={"regions"} value={"regions"}>
+            <option key={ScopeEnum.region} value={ScopeEnum.region}>
               Régions
             </option>
-            <option key={"academies"} value={"academies"}>
+            <option key={ScopeEnum.academie} value={ScopeEnum.academie}>
               Academies
             </option>
-            <option key={"departements"} value={"departements"}>
+            <option key={ScopeEnum.departement} value={ScopeEnum.departement}>
               Departements
             </option>
           </Select>
@@ -91,12 +91,16 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === "regions" && scope?.value ? scope.value ?? "" : ""
+              scope.type === ScopeEnum.region && scope?.value
+                ? scope.value ?? ""
+                : ""
             }
-            borderBottomColor={scope.type === "regions" ? "info.525" : ""}
+            borderBottomColor={
+              scope.type === ScopeEnum.region ? "info.525" : ""
+            }
             onChange={(e) => {
               filterTracker("codeRegion");
-              handleFilters({ scope: "regions", code: e.target.value });
+              handleFilters({ scope: ScopeEnum.region, code: e.target.value });
             }}
             placeholder="Choisir une région"
           >
@@ -115,14 +119,19 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === "academies" && scope?.value
+              scope.type === ScopeEnum.academie && scope?.value
                 ? scope.value ?? ""
                 : ""
             }
-            borderBottomColor={scope.type === "academies" ? "info.525" : ""}
+            borderBottomColor={
+              scope.type === ScopeEnum.academie ? "info.525" : ""
+            }
             onChange={(e) => {
               filterTracker("codeAcademie");
-              handleFilters({ scope: "academies", code: e.target.value });
+              handleFilters({
+                scope: ScopeEnum.academie,
+                code: e.target.value,
+              });
             }}
             placeholder="Choisir une académie"
           >
@@ -141,13 +150,17 @@ export const FiltersSection = ({
             size="md"
             variant="newInput"
             value={
-              scope.type === "departements" && scope?.value ? scope.value : ""
+              scope.type === ScopeEnum.departement && scope?.value
+                ? scope.value
+                : ""
             }
-            borderBottomColor={scope.type === "academies" ? "info.525" : ""}
+            borderBottomColor={
+              scope.type === ScopeEnum.departement ? "info.525" : ""
+            }
             onChange={(e) => {
               filterTracker("codeDepartement");
               handleFilters({
-                scope: "departements",
+                scope: ScopeEnum.departement,
                 code: e.target.value,
               });
             }}

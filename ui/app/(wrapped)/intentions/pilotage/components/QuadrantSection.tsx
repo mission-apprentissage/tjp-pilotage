@@ -21,6 +21,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
+import { ScopeEnum } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -80,9 +81,10 @@ export const QuadrantSection = ({
     tauxPression: filters.tauxPression,
     status: filters.status,
     type: filters.type,
-    codeRegion: scope?.type === "regions" ? scope.value : undefined,
-    codeAcademie: scope?.type === "academies" ? scope.value : undefined,
-    codeDepartement: scope?.type === "departements" ? scope.value : undefined,
+    codeRegion: scope?.type === ScopeEnum.region ? scope.value : undefined,
+    codeAcademie: scope?.type === ScopeEnum.academie ? scope.value : undefined,
+    codeDepartement:
+      scope?.type === ScopeEnum.departement ? scope.value : undefined,
   };
 
   const { data: { formations, stats } = {} } = client
@@ -165,21 +167,21 @@ export const QuadrantSection = ({
                   formations.map((formation) => ({
                     ...formation,
                     libelleRegion:
-                      scope?.type === "regions"
+                      scope?.type === ScopeEnum.region
                         ? getLibelleTerritoire(
                             scopeFilters?.regions,
                             scope.value
                           )
                         : undefined,
                     libelleAcademie:
-                      scope?.type === "academies"
+                      scope?.type === ScopeEnum.academie
                         ? getLibelleTerritoire(
                             scopeFilters?.academies,
                             scope.value
                           )
                         : undefined,
                     libelleDepartement:
-                      scope?.type === "departements"
+                      scope?.type === ScopeEnum.departement
                         ? getLibelleTerritoire(
                             scopeFilters?.departements,
                             scope.value

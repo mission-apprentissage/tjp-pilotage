@@ -12,6 +12,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
+import { ScopeEnum } from "shared";
 
 import { Legend } from "../../../../../components/Legend";
 import { OrderIcon } from "../../../../../components/OrderIcon";
@@ -232,18 +233,19 @@ const ScopedTable = ({
 
 const getTitle = (scope: SelectedScope) =>
   ({
-    nationals: "Ratio des ouvertures et fermetures par région",
-    regions: "Ratio des ouvertures et fermetures par région",
-    academies: "Ratio des ouvertures et fermetures par académie",
-    departements: "Ratio des ouvertures et fermetures par département",
+    [ScopeEnum.national]: "Ratio des ouvertures et fermetures par région",
+    [ScopeEnum.region]: "Ratio des ouvertures et fermetures par région",
+    [ScopeEnum.academie]: "Ratio des ouvertures et fermetures par académie",
+    [ScopeEnum.departement]:
+      "Ratio des ouvertures et fermetures par département",
   })[scope.type];
 
 const getColumnTitle = (scope: SelectedScope) =>
   ({
-    nationals: "Région",
-    regions: "Région",
-    academies: "Académie",
-    departements: "Département",
+    [ScopeEnum.national]: "Région",
+    [ScopeEnum.region]: "Région",
+    [ScopeEnum.academie]: "Académie",
+    [ScopeEnum.departement]: "Département",
   })[scope.type];
 
 export const VueOuverturesFermeturesSection = (props: {
