@@ -14,16 +14,16 @@ export const isDemandeSelectable =
         eb("status", "=", "draft"),
         draftFilter.userId
           ? eb("demande.createurId", "=", draftFilter.userId)
-          : sql`true`,
+          : sql<boolean>`true`,
         draftFilter.codeRegion
           ? eb("demande.codeRegion", "=", draftFilter.codeRegion)
-          : sql`true`,
+          : sql<boolean>`true`,
       ]),
       eb.and([
         eb("status", "!=", "draft"),
         filter.codeRegion
           ? eb("demande.codeRegion", "=", filter.codeRegion)
-          : sql`true`,
+          : sql<boolean>`true`,
       ]),
     ]);
   };

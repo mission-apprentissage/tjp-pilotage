@@ -62,8 +62,6 @@ export const [importFormations] = inject(
         },
         { parallel: 20 }
       );
-
-      // logger.write();
     };
   }
 );
@@ -100,7 +98,7 @@ export const [importFormationEtablissements] = inject(
         });
 
         for (const rentreeScolaire of RENTREES_SCOLAIRES) {
-          const { enseignements, anneeDebutConstate } =
+          const { enseignements } =
             (await deps.getCfdRentrees({
               cfd,
               codeDispositif,
@@ -135,7 +133,6 @@ export const [importFormationEtablissements] = inject(
               rentreeScolaire,
               cfd,
               uai,
-              anneeDebutConstate: anneeDebutConstate ?? 0,
               anneesEnseignement,
               anneesDispositif,
             });

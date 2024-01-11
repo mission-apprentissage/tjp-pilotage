@@ -54,7 +54,7 @@ export const [getIndicateursAffelnet] = inject(
       premiersVoeux: (number | null)[];
     }> => {
       const lines = await deps.findAttractiviteCapaciteHorsBTS({
-        mefstat: anneesDispositif[anneeDebut].mefstat,
+        mefstat: anneesDispositif[anneeDebut]?.mefstat ?? "",
         uai,
         rentreeScolaire,
       });

@@ -17,3 +17,21 @@ export const findSpecialite = async (cfd: string) => {
     .limit(1)
     .executeTakeFirst();
 };
+
+export const find1ereCommune = async (cfd: string) => {
+  return await kdb
+    .selectFrom("familleMetier")
+    .where("cfdFamille", "=", cfd)
+    .selectAll()
+    .limit(1)
+    .executeTakeFirst();
+};
+
+export const findOption = async (cfd: string) => {
+  return await kdb
+    .selectFrom("familleMetier")
+    .where("cfdSpecialite", "=", cfd)
+    .selectAll()
+    .limit(1)
+    .executeTakeFirst();
+};

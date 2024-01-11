@@ -7,7 +7,8 @@ import {
 import { getIndicateursAffelnet } from "../getIndicateurAffelnet/getIndicateurAffelnet.step";
 import { getIndicateursParcoursSup } from "../getIndicateursParcoursSup/getIndicateursParcoursSup.step";
 import { createIndicateurEntree } from "./createIndicateurEntree.dep";
-import { findSecondeCommune, findSpecialite } from "./findFamilleMetier";
+import { findAnneeCommune, findSpecialite } from "./findFamilleMetier";
+import { findHistorique } from "./findHistorique";
 
 const isBTS = (cfd: string) => cfd.substring(0, 3) === "320";
 
@@ -16,8 +17,9 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
     createIndicateurEntree,
     getIndicateursAffelnet,
     getIndicateursParcoursSup,
-    findSecondeCommune,
+    findAnneeCommune,
     findSpecialite,
+    findHistorique,
   },
   (deps) => {
     return async ({
@@ -25,31 +27,21 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       anneesEnseignement,
       anneesDispositif,
       cfd,
-      anneeDebutConstate,
       rentreeScolaire,
       uai,
     }: {
       formationEtablissementId: string;
       anneesEnseignement: AnneeEnseignement[];
       anneesDispositif: Record<string, AnneeDispositif>;
-      anneeDebutConstate: number;
       cfd: string;
       rentreeScolaire: string;
       uai: string;
     }) => {
-      const isSecondeCommune = await deps.findSecondeCommune({
-        cfdFamille: cfd,
-      });
-
       const isSpecialite = await deps.findSpecialite({
         cfdSpecialite: cfd,
       });
 
-      const anneeDebut = isSecondeCommune
-        ? 0
-        : isSpecialite
-        ? 1
-        : anneeDebutConstate;
+      const anneeDebut = isSpecialite ? 1 : 0;
 
       const { capacites, premiersVoeux } = isBTS(cfd)
         ? await deps.getIndicateursParcoursSup({

@@ -1,12 +1,13 @@
-import { ExpressionBuilder, sql } from "kysely";
+import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { DB } from "../../../db/db";
 
-type EbRef<EB extends ExpressionBuilder<DB, never>> = Parameters<EB["ref"]>[0];
-
-export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
-  eb,
+export function hasContinuum<
+  EB extends
+    | ExpressionBuilder<DB, "formationEtablissement" | "etablissement">
+    | ExpressionBuilder<DB, "demande" | "dataEtablissement">,
+>({
   millesimeSortie,
   cfdRef,
   codeDispositifRef,
@@ -14,10 +15,11 @@ export function hasContinuum<EB extends ExpressionBuilder<DB, never>>({
 }: {
   eb: EB;
   millesimeSortie: string;
-  cfdRef: EbRef<EB>;
-  codeDispositifRef: EbRef<EB>;
-  codeRegionRef: EbRef<EB>;
+  cfdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
+  codeRegionRef: Parameters<EB["ref"]>[0];
 }) {
+  const eb = expressionBuilder<DB, keyof DB>();
   return jsonObjectFrom(
     eb
       .selectFrom("indicateurRegionSortie as subIRS")

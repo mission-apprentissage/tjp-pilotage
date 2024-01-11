@@ -64,7 +64,7 @@ export const getDepartementStats = async ({
       eb(
         "indicateurRegionSortie.cfd",
         "not in",
-        sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
       )
     )
     .select([

@@ -11,3 +11,6 @@ export const getRentreeScolaire = ({
   rentreeScolaire: string;
   offset: number;
 }): string => `${+rentreeScolaire - offset}`;
+
+export const getDateRentreeScolaire = (rentreeScolaire: string): string =>
+  `${rentreeScolaire}-09-01`;
