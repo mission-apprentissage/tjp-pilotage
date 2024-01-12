@@ -8,6 +8,7 @@ import {
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import {
+  notSecondeCommune,
   notSecondeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notSecondeCommune";
@@ -73,7 +74,7 @@ export const getDepartementStats = async ({
     ])
     .executeTakeFirst();
 
-  const stats = await kdb
+  const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
       "formationView",
@@ -92,7 +93,6 @@ export const getDepartementStats = async ({
       "formationEtablissement.UAI",
       "etablissement.UAI"
     )
-    .where("etablissement.codeDepartement", "=", codeDepartement)
     .innerJoin(
       "departement",
       "departement.codeDepartement",
@@ -107,14 +107,23 @@ export const getDepartementStats = async ({
       );
     })
     .where(notHistorique)
+    .where("etablissement.codeDepartement", "=", codeDepartement)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire);
+
+  const nbFormations = await baseStatsEntree
+    .where(notSecondeCommune)
+    .select(
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+        "nbFormations"
+      )
+    )
+    .executeTakeFirst();
+
+  const statsEntree = await baseStatsEntree
     .where(notSpecialite)
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
       "departement.codeRegion",
       "departement.libelleDepartement",
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
-        "nbFormations"
-      ),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
 
@@ -124,5 +133,10 @@ export const getDepartementStats = async ({
     .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
     .executeTakeFirst();
 
-  return { ...informationsDepartement, ...stats, ...statsSortie };
+  return {
+    ...informationsDepartement,
+    ...statsEntree,
+    ...nbFormations,
+    ...statsSortie,
+  };
 };

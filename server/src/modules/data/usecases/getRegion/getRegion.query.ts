@@ -8,6 +8,7 @@ import {
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import {
+  notSecondeCommune,
   notSecondeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notSecondeCommune";
@@ -61,7 +62,7 @@ export const getRegionStats = async ({
     ])
     .executeTakeFirst();
 
-  const stats = await kdb
+  const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
       "formationView",
@@ -91,13 +92,21 @@ export const getRegionStats = async ({
         codeNiveauDiplome
       );
     })
-    .where(notHistorique)
-    .where(notSpecialite)
+    .where(notHistorique);
+
+  const nbFormations = await baseStatsEntree
+    .where(notSecondeCommune)
     .select([
-      "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
       ),
+    ])
+    .executeTakeFirst();
+
+  const statsEntree = await baseStatsEntree
+    .where(notSpecialite)
+    .select([
+      "region.libelleRegion",
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
 
@@ -109,7 +118,8 @@ export const getRegionStats = async ({
 
   return {
     ...informationsRegion,
-    ...stats,
+    ...statsEntree,
+    ...nbFormations,
     ...statsSortie,
   };
 };
