@@ -8,7 +8,7 @@ export const notSecondeCommuneFormationEtablissement = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
+    eb.selectFrom("familleMetier").distinct().select("cfdFamille")
   );
 };
 export const notSecondeCommune = (
@@ -26,7 +26,7 @@ export const notSecondeCommuneIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
+    eb.selectFrom("familleMetier").distinct().select("cfdFamille")
   );
 };
 
