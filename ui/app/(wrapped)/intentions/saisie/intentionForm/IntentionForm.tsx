@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon } from "@chakra-ui/icons";
-import { Box, Button, Collapse, Container, Text } from "@chakra-ui/react";
+import { Box, Button, Collapse, Container } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -169,9 +169,6 @@ export const IntentionForm = ({
                           ? "Sauvegarder les modifications"
                           : "Enregistrer le projet de demande"}
                       </Button>
-                      <Text fontSize={"xs"} mt="1" align={"center"}>
-                        (Phase d'enregistrement du 02 au 16 octobre)
-                      </Text>
                     </Box>
                   </>
                 }
