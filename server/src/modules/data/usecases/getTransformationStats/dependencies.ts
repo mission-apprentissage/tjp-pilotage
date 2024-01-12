@@ -134,7 +134,7 @@ const getEffectif = async ({
     .then(cleanNull);
 };
 
-const getDataScoped = async ({
+const getScopedData = async ({
   status,
   rentreeScolaire = "2024",
   codeNiveauDiplome,
@@ -149,7 +149,6 @@ const getDataScoped = async ({
   filiere?: string[];
   scope: Scope;
 }) => {
-  console.log(`getDataScoped Scope: ${scope}`);
   return kdb
     .selectFrom("demande")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -418,6 +417,6 @@ const getFiltersQuery = async ({
 
 export const dependencies = {
   getFiltersQuery,
-  getDataScoped,
+  getScopedData,
   getEffectif,
 };

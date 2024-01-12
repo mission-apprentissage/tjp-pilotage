@@ -3,7 +3,7 @@ import _ from "lodash";
 import { dependencies } from "./dependencies";
 import { QuerySchema } from "./getTransformationsStats.schema";
 
-type DataScoped = Awaited<ReturnType<typeof dependencies.getDataScoped>>[0];
+type DataScoped = Awaited<ReturnType<typeof dependencies.getScopedData>>[0];
 
 const formatDataScoped = (item: DataScoped) => ({
   ...item,
@@ -47,12 +47,11 @@ const getEffectif = (
   if (!code) {
     return 0;
   }
-
   return effectifs.find((item) => item.code === code)?.effectif || 0;
 };
 
 const formatResult = (
-  result: Awaited<ReturnType<typeof dependencies.getDataScoped>>,
+  result: Awaited<ReturnType<typeof dependencies.getScopedData>>,
   effectifs: Awaited<ReturnType<typeof dependencies.getEffectif>>,
   order: "asc" | "desc" = "asc",
   orderBy?: string
@@ -80,7 +79,7 @@ const getTransformationStatsFactory =
   (
     deps = {
       getFiltersQuery: dependencies.getFiltersQuery,
-      getDataScoped: dependencies.getDataScoped,
+      getScopedData: dependencies.getScopedData,
       getEffectif: dependencies.getEffectif,
     }
   ) =>
@@ -88,17 +87,17 @@ const getTransformationStatsFactory =
     const [effectifs, filters, draft, submitted, all] = await Promise.all([
       deps.getEffectif({ ...activeFilters }),
       deps.getFiltersQuery(activeFilters),
-      deps.getDataScoped({
+      deps.getScopedData({
         ...activeFilters,
         status: "draft",
         scope: activeFilters.scope,
       }),
-      deps.getDataScoped({
+      deps.getScopedData({
         ...activeFilters,
         status: "submitted",
         scope: activeFilters.scope,
       }),
-      deps.getDataScoped({
+      deps.getScopedData({
         ...activeFilters,
         scope: activeFilters.scope,
       }),
