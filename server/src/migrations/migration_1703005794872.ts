@@ -46,26 +46,6 @@ export const up = async (db: Kysely<unknown>) => {
 
 export const down = async (db: Kysely<unknown>) => {
   await db.schema
-    .alterTable("demande")
-    .renameColumn("compensationCodeDispositif", "compensationDispositifId")
-    .execute();
-
-  await db.schema
-    .alterTable("demande")
-    .renameColumn("codeDispositif", "dispositifId")
-    .execute();
-
-  await db.schema
-    .alterTable("indicateurRegionSortie")
-    .renameColumn("codeDispositif", "dispositifId")
-    .execute();
-
-  await db.schema
-    .alterTable("indicateurEtablissement")
-    .renameColumn("uai", "UAI")
-    .execute();
-
-  await db.schema
     .alterTable("indicateurEntree")
     .addColumn("nbPremiersVoeux", "integer")
     .addColumn("effectifEntree", "integer")
