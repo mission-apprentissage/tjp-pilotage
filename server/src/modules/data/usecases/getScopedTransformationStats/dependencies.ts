@@ -159,7 +159,7 @@ const genericOnDemandes =
         return q.where("demande.status", "=", status);
       });
 
-export const getRegionDatas = async (filters: {
+const getRegionData = async (filters: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
@@ -214,7 +214,7 @@ export const getRegionDatas = async (filters: {
     .then(cleanNull);
 };
 
-export const getAcademieDatas = async (filters: {
+const getAcademieData = async (filters: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
@@ -271,7 +271,7 @@ export const getAcademieDatas = async (filters: {
     .then(cleanNull);
 };
 
-export const getDepartementDatas = async (filters: {
+const getDepartementData = async (filters: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
@@ -357,7 +357,7 @@ const getScopedData = async ({
 }) => {
   switch (scope) {
     case ScopeEnum.academie:
-      return getAcademieDatas({
+      return getAcademieData({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -366,7 +366,7 @@ const getScopedData = async ({
       });
 
     case ScopeEnum.departement:
-      return getDepartementDatas({
+      return getDepartementData({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -375,7 +375,7 @@ const getScopedData = async ({
       });
     case ScopeEnum.region:
     default:
-      return getRegionDatas({
+      return getRegionData({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
