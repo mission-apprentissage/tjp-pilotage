@@ -14,8 +14,9 @@ const StatsSchema = z.object({
 });
 
 const StatsAnneeSchema = z.object({
+  annee: z.number(),
   nationale: StatsSchema,
-  filtered: StatsSchema,
+  scoped: StatsSchema,
 });
 
 const FiltersSchema = z.object({
@@ -31,8 +32,7 @@ export const getPilotageReformeStatsSchema = {
         regions: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),
-      anneeN: StatsAnneeSchema,
-      anneeNMoins1: StatsAnneeSchema,
+      annees: z.array(StatsAnneeSchema),
     }),
   },
 };
