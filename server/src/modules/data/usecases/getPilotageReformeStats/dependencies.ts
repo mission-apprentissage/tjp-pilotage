@@ -5,8 +5,15 @@ import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
-import { notHistorique, notHistoriqueFormation, notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
-import { notSecondeCommune, notSecondeCommuneIndicateurRegionSortie } from "../../utils/notSecondeCommune";
+import {
+  notAnneeCommune,
+  notAnneeCommuneIndicateurRegionSortie,
+} from "../../utils/notAnneeCommune";
+import {
+  notHistorique,
+  notHistoriqueFormation,
+  notHistoriqueIndicateurRegionSortie,
+} from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
@@ -64,7 +71,7 @@ export const getStats = async ({
         );
       })
       .where(notHistorique)
-      .where(notSecondeCommune)
+      .where(notAnneeCommune)
       .select([
         sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
           "nbFormations"
@@ -113,7 +120,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
-      .where(notSecondeCommuneIndicateurRegionSortie)
+      .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),

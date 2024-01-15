@@ -4,8 +4,8 @@ import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
-import { notSecondeCommuneIndicateurRegionSortie } from "../../utils/notSecondeCommune";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
   selectTauxInsertion6moisAgg,
@@ -316,7 +316,7 @@ const getRegionStats = async ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where(notSecondeCommuneIndicateurRegionSortie)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
