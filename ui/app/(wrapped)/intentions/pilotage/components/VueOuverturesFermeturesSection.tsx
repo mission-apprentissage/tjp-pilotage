@@ -12,10 +12,14 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { Fragment } from "react";
+import { ScopeEnum } from "shared";
 
 import { Legend } from "../../../../../components/Legend";
 import { OrderIcon } from "../../../../../components/OrderIcon";
-import { Order, PilotageTransformationStats } from "../types";
+import { displayPercentage } from "../../../../../utils/displayPercent";
+import { Order, ScopedTransformationStats, SelectedScope } from "../types";
+
+const SEUIL_RATIO_FERMETURE = 33;
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -48,49 +52,28 @@ const Loader = () => (
   </TableContainer>
 );
 
-export const VueOuverturesFermeturesSection = ({
-  data,
+const ScopedTable = ({
   isLoading,
-  codeRegion,
-  order,
   handleOrder,
+  order,
+  data,
+  scope,
+  title,
+  columnTitle,
 }: {
-  data?: PilotageTransformationStats;
+  data?: ScopedTransformationStats;
+  order: Partial<Order>;
   isLoading: boolean;
-  codeRegion?: string;
-  order: Order;
   handleOrder: (column: Order["orderBy"]) => void;
+  scope: SelectedScope;
+  title: string;
+  columnTitle: string;
 }) => {
-  const getNombrePlace = (
-    type: "ouverture" | "fermeture",
-    region: PilotageTransformationStats["all"]["regions"][string]
-  ): number => {
-    return type === "ouverture"
-      ? region.placesOuvertesScolaire + region.placesOuvertesApprentissage
-      : region.placesFermeesScolaire + region.placesFermeesApprentissage;
-  };
-
-  const getRatio = (
-    type: "ouverture" | "fermeture",
-    region: PilotageTransformationStats["all"]["regions"][string]
-  ): string => {
-    return type === "ouverture"
-      ? (
-          (getNombrePlace("ouverture", region) /
-            (getNombrePlace("ouverture", region) +
-              getNombrePlace("fermeture", region))) *
-          100
-        ).toFixed(2)
-      : (
-          (getNombrePlace("fermeture", region) /
-            (getNombrePlace("ouverture", region) +
-              getNombrePlace("fermeture", region))) *
-          100
-        ).toFixed(2);
-  };
-
   const legendElements = [
-    { label: "< 33%", color: useToken("colors", "pilotage.red") },
+    {
+      label: `< ${SEUIL_RATIO_FERMETURE}%`,
+      color: useToken("colors", "pilotage.red"),
+    },
   ];
 
   return (
@@ -101,6 +84,8 @@ export const VueOuverturesFermeturesSection = ({
       borderColor="grey.900"
       p={4}
       bg="white"
+      maxH={"750px"}
+      overflowY={"auto"}
     >
       <Text
         fontSize={14}
@@ -109,12 +94,12 @@ export const VueOuverturesFermeturesSection = ({
         color={"bluefrance.113"}
         mb="5"
       >
-        Ratio des ouvertures et fermetures par région
+        {title}
       </Text>
       {isLoading ? (
         <Loader />
       ) : (
-        <TableContainer flex={1} position="relative">
+        <TableContainer flex={1} position="relative" overflowY={"auto"}>
           <Table variant="striped" size={"sm"}>
             <Thead
               position="sticky"
@@ -131,7 +116,7 @@ export const VueOuverturesFermeturesSection = ({
                   onClick={() => handleOrder("libelle")}
                 >
                   <OrderIcon {...order} column="libelle" />
-                  Région
+                  {columnTitle}
                 </Th>
                 <Th
                   isNumeric
@@ -181,53 +166,56 @@ export const VueOuverturesFermeturesSection = ({
             </Thead>
             <Tbody>
               <Fragment>
-                {Object.values(data?.all?.regions ?? []).map((region) => {
+                {Object.values(data ?? []).map((territoire) => {
                   const trBgColor =
-                    region.codeRegion === codeRegion
+                    territoire.code === scope.value
                       ? "blueecume.400_hover !important"
                       : "";
 
                   const tdBgColor =
-                    region.codeRegion === codeRegion
-                      ? "inherit !important"
-                      : "";
+                    territoire.code === scope.value ? "inherit !important" : "";
 
                   const trColor =
-                    region.codeRegion === codeRegion ? "white" : "inherit";
+                    territoire.code === scope.value ? "white" : "inherit";
 
                   const color =
-                    region.codeRegion === codeRegion
+                    territoire.code === scope.value
                       ? "inherit"
                       : "bluefrance.113";
 
                   return (
-                    <Fragment key={`${region.codeRegion}_${region.libelle}`}>
+                    <Fragment key={`${territoire.code}_${territoire.libelle}`}>
                       <Tr
                         backgroundColor={trBgColor}
                         color={trColor}
                         fontWeight="700"
                       >
                         <Td backgroundColor={tdBgColor} color={color}>
-                          {region.libelle}
+                          {territoire.libelle}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getNombrePlace("fermeture", region)}
+                          {territoire.placesFermees}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getNombrePlace("ouverture", region)}
+                          {territoire.placesOuvertes}
                         </Td>
                         <Td
                           isNumeric
                           backgroundColor={
-                            parseFloat(getRatio("fermeture", region)) < 30
+                            territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
                               ? "pilotage.red !important"
                               : "inherit"
                           }
+                          color={
+                            territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
+                              ? "black"
+                              : "inherit"
+                          }
                         >
-                          {getRatio("fermeture", region)}%
+                          {displayPercentage(territoire.ratioFermeture / 100)}
                         </Td>
                         <Td isNumeric backgroundColor={tdBgColor}>
-                          {getRatio("ouverture", region)}%
+                          {displayPercentage(territoire.ratioOuverture / 100)}
                         </Td>
                       </Tr>
                     </Fragment>
@@ -242,3 +230,35 @@ export const VueOuverturesFermeturesSection = ({
     </Flex>
   );
 };
+
+const getTitle = (scope: SelectedScope) =>
+  ({
+    [ScopeEnum.national]: "Ratio des ouvertures et fermetures par région",
+    [ScopeEnum.region]: "Ratio des ouvertures et fermetures par région",
+    [ScopeEnum.academie]: "Ratio des ouvertures et fermetures par académie",
+    [ScopeEnum.departement]:
+      "Ratio des ouvertures et fermetures par département",
+  })[scope.type];
+
+const getColumnTitle = (scope: SelectedScope) =>
+  ({
+    [ScopeEnum.national]: "Région",
+    [ScopeEnum.region]: "Région",
+    [ScopeEnum.academie]: "Académie",
+    [ScopeEnum.departement]: "Département",
+  })[scope.type];
+
+export const VueOuverturesFermeturesSection = (props: {
+  data?: ScopedTransformationStats;
+  scope: SelectedScope;
+  isLoading: boolean;
+  codeRegion?: string;
+  order: Order;
+  handleOrder: (column: Order["orderBy"]) => void;
+}) => (
+  <ScopedTable
+    {...props}
+    title={getTitle(props.scope)}
+    columnTitle={getColumnTitle(props.scope)}
+  />
+);
