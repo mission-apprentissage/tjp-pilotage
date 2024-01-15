@@ -2,20 +2,16 @@ import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
-export const BarGraph = function <
-  F extends {
-    anneeN: {
-      libelleAnnee: string;
-      filtered?: number;
-      nationale?: number;
-    };
-    anneeNMoins1: {
-      libelleAnnee: string;
-      filtered?: number;
-      nationale?: number;
-    };
-  },
->({
+export type BarGraphData = {
+  [key: string]: {
+    annee: string;
+    libelleAnnee: string;
+    filtered?: number;
+    nationale?: number;
+  };
+};
+
+export const BarGraph = function <F extends BarGraphData>({
   graphData,
   isFiltered,
   libelleRegion,
@@ -28,6 +24,35 @@ export const BarGraph = function <
   const containerRef = useRef<HTMLDivElement>(null);
   const bf113 = useToken("colors", "bluefrance.113");
   const be850 = useToken("colors", "blueecume.850_active");
+
+  const getXAxisData = () => {
+    if (graphData !== undefined) {
+      return Object.keys(graphData).map(
+        (annee) => graphData[annee].libelleAnnee
+      );
+    }
+    return [];
+  };
+
+  const getNationalSerieData = () => {
+    if (graphData !== undefined) {
+      return Object.keys(graphData).map(
+        (annee) => graphData[annee].nationale ?? 0
+      );
+    }
+
+    return [];
+  };
+
+  const getFilteredSerieData = () => {
+    if (isFiltered && graphData !== undefined) {
+      return Object.keys(graphData).map(
+        (annee) => graphData[annee].filtered?.toFixed(0) ?? 0
+      );
+    }
+
+    return [];
+  };
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
@@ -54,10 +79,7 @@ export const BarGraph = function <
       },
       xAxis: {
         type: "category",
-        data: [
-          graphData?.anneeNMoins1.libelleAnnee,
-          graphData?.anneeN.libelleAnnee,
-        ],
+        data: getXAxisData(),
         axisLabel: {
           color: bf113,
           fontWeight: 700,
@@ -79,10 +101,7 @@ export const BarGraph = function <
         ? [
             {
               name: "NATIONAL",
-              data: [
-                graphData?.anneeNMoins1.nationale ?? 0,
-                graphData?.anneeN.nationale ?? 0,
-              ],
+              data: getNationalSerieData(),
               type: "bar",
               color: bf113,
               barMaxWidth: 50,
@@ -92,12 +111,7 @@ export const BarGraph = function <
             },
             {
               name: libelleRegion?.toUpperCase() ?? "",
-              data: isFiltered
-                ? [
-                    graphData?.anneeNMoins1.filtered?.toFixed(0) ?? 0,
-                    graphData?.anneeN.filtered?.toFixed(0) ?? 0,
-                  ]
-                : [],
+              data: getFilteredSerieData(),
               type: "bar",
               color: be850,
               barMaxWidth: 50,
@@ -109,10 +123,7 @@ export const BarGraph = function <
         : [
             {
               name: "NATIONAL",
-              data: [
-                graphData?.anneeNMoins1.nationale?.toFixed(0) ?? 0,
-                graphData?.anneeN.nationale?.toFixed(0) ?? 0,
-              ],
+              data: getNationalSerieData(),
               type: "bar",
               color: bf113,
               barMaxWidth: 50,

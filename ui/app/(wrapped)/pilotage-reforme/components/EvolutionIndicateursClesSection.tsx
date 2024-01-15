@@ -2,7 +2,7 @@ import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
 import { IndicateurType, PilotageReformeStats } from "../types";
-import { BarGraph } from "./BarGraph";
+import { BarGraph, BarGraphData } from "./BarGraph";
 
 export const EvolutionIndicateursClesSection = ({
   data,
@@ -21,18 +21,16 @@ export const EvolutionIndicateursClesSection = ({
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: { label: string; value: string; isDefault: boolean }[];
 }) => {
-  const graphData = {
-    anneeN: {
-      libelleAnnee: "2021",
-      filtered: (data?.anneeN.filtered[indicateur] ?? 0) * 100,
-      nationale: (data?.anneeN.nationale[indicateur] ?? 0) * 100,
-    },
-    anneeNMoins1: {
-      libelleAnnee: "2020",
-      filtered: (data?.anneeNMoins1.filtered[indicateur] ?? 0) * 100,
-      nationale: (data?.anneeNMoins1.nationale[indicateur] ?? 0) * 100,
-    },
-  };
+  const graphData: BarGraphData = {};
+
+  data?.annees.forEach((anneeData) => {
+    graphData[anneeData.annee.toString()] = {
+      annee: anneeData.annee.toString(),
+      libelleAnnee: anneeData.annee.toString(),
+      filtered: (anneeData.scoped[indicateur] ?? 0) * 100,
+      nationale: (anneeData.nationale[indicateur] ?? 0) * 100,
+    };
+  });
 
   const getLibelleRegion = (
     regions?: Array<{ label: string; value: string }>,
