@@ -2,7 +2,7 @@ import { ExpressionBuilder } from "kysely";
 
 import { DB } from "../../../db/db";
 
-export const notSecondeCommuneFormationEtablissement = (
+export const notAnneeCommuneFormationEtablissement = (
   eb: ExpressionBuilder<DB, "formationEtablissement">
 ) => {
   return eb(
@@ -11,16 +11,17 @@ export const notSecondeCommuneFormationEtablissement = (
     eb.selectFrom("familleMetier").distinct().select("cfdFamille")
   );
 };
-export const notSecondeCommune = (
-  eb: ExpressionBuilder<DB, "formationView">
-) => {
+export const notAnneeCommune = (eb: ExpressionBuilder<DB, "formationView">) => {
   return eb.or([
-    eb("formationView.typeFamille", "<>", "2nde_commune"),
+    eb.and([
+      eb("formationView.typeFamille", "<>", "2nde_commune"),
+      eb("formationView.typeFamille", "<>", "1ere_commune"),
+    ]),
     eb("formationView.typeFamille", "is", null),
   ]);
 };
 
-export const notSecondeCommuneIndicateurRegionSortie = (
+export const notAnneeCommuneIndicateurRegionSortie = (
   eb: ExpressionBuilder<DB, "indicateurRegionSortie">
 ) => {
   return eb(

@@ -4,14 +4,14 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
+  notAnneeCommune,
+  notAnneeCommuneIndicateurRegionSortie,
+  notSpecialite,
+} from "../../utils/notAnneeCommune";
+import {
   notHistorique,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
-import {
-  notSecondeCommune,
-  notSecondeCommuneIndicateurRegionSortie,
-  notSpecialite,
-} from "../../utils/notSecondeCommune";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -46,7 +46,7 @@ export const getRegionStats = async ({
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where(notSecondeCommuneIndicateurRegionSortie)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
@@ -95,7 +95,7 @@ export const getRegionStats = async ({
     .where(notHistorique);
 
   const nbFormations = await baseStatsEntree
-    .where(notSecondeCommune)
+    .where(notAnneeCommune)
     .select([
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"

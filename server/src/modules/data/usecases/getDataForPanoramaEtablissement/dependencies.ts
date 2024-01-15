@@ -6,8 +6,8 @@ import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import { notHistoriqueCoExistence } from "../../utils/notHistorique";
-import { notSecondeCommune } from "../../utils/notSecondeCommune";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -186,7 +186,7 @@ const getFormationsEtablissement = async ({
             null
           )
           .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire))
-          .where(notSecondeCommune)
+          .where(notAnneeCommune)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
             "formationView.id",
