@@ -151,3 +151,6 @@ sdk/lib
 
 # Local History for Visual Studio Code
 .history/
+
+.scannerwork/
+sonar.sh
