@@ -29,6 +29,7 @@ export const STATS_DEMANDES_COLUMNS = {
   codeDepartement: "CodeDepartement",
   libelleDepartement: "Département",
   createdAt: "Date de création",
+  updatedAt: "Date de dernière modification",
   compensationCfd: "CFD compensé",
   compensationCodeDispositif: "Dispositif compensé",
   compensationUai: "UAI compensé",

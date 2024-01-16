@@ -39,11 +39,14 @@ export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     CASE WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
-    THEN ROUND((SUM(${premierVoeuxAnnee(
-      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-      indicateurEntreeAlias
-    )})
-    / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})::NUMERIC, 2)
+    THEN ROUND(
+      (
+        SUM(${premierVoeuxAnnee(
+          sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+          indicateurEntreeAlias
+        )})
+      / ${selectDenominateurPressionAgg(indicateurEntreeAlias)}
+      )::NUMERIC, 2)
     END
   `;
 

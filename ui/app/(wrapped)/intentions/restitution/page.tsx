@@ -190,7 +190,20 @@ export default () => {
               "demandes_stats_export.csv",
               data.demandes.map((demande) => ({
                 ...demande,
-                pression: demande.pression ? demande.pression / 100 : undefined,
+                createdAt: new Date(demande.createdAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
+                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
               })),
               STATS_DEMANDES_COLUMNS
             );
