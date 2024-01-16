@@ -491,7 +491,7 @@ export default function Etablissements() {
                       <>
                         <Box>
                           Le ratio entre le nombre de premiers voeux et la
-                          capacité de la l'offre de formation.
+                          capacité de l'offre de formation.
                         </Box>
                         <TauxPressionScale />
                       </>

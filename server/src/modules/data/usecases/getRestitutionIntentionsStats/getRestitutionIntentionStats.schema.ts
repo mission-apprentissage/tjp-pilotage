@@ -33,6 +33,7 @@ const StatsDemandesItem = z.object({
   codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
   createdAt: z.string(),
+  updatedAt: z.string(),
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),
   compensationUai: z.string().optional(),

@@ -21,6 +21,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
+import { ScopeEnum } from "shared";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
@@ -36,7 +37,7 @@ import {
   Filters,
   OrderFormationsTransformationStats,
   PilotageTransformationStats,
-  Scope,
+  SelectedScope,
 } from "../types";
 
 export const QuadrantSection = ({
@@ -44,10 +45,7 @@ export const QuadrantSection = ({
   parentFilters,
   scopeFilters,
 }: {
-  scope?: {
-    type: Scope;
-    value: string | undefined;
-  };
+  scope?: SelectedScope;
   parentFilters: Partial<Filters>;
   scopeFilters?: PilotageTransformationStats["filters"];
 }) => {
@@ -77,15 +75,16 @@ export const QuadrantSection = ({
   const order = filters.order;
 
   const [currentCfd, setFormationId] = useState<string | undefined>();
-
+  const { ...otherFilters } = parentFilters;
   const mergedFilters = {
-    ...parentFilters,
+    ...otherFilters,
     tauxPression: filters.tauxPression,
     status: filters.status,
     type: filters.type,
-    codeRegion: scope?.type === "regions" ? scope.value : undefined,
-    codeAcademie: scope?.type === "academies" ? scope.value : undefined,
-    codeDepartement: scope?.type === "departements" ? scope.value : undefined,
+    codeRegion: scope?.type === ScopeEnum.region ? scope.value : undefined,
+    codeAcademie: scope?.type === ScopeEnum.academie ? scope.value : undefined,
+    codeDepartement:
+      scope?.type === ScopeEnum.departement ? scope.value : undefined,
   };
 
   const { data: { formations, stats } = {} } = client
@@ -168,21 +167,21 @@ export const QuadrantSection = ({
                   formations.map((formation) => ({
                     ...formation,
                     libelleRegion:
-                      scope?.type === "regions"
+                      scope?.type === ScopeEnum.region
                         ? getLibelleTerritoire(
                             scopeFilters?.regions,
                             scope.value
                           )
                         : undefined,
                     libelleAcademie:
-                      scope?.type === "academies"
+                      scope?.type === ScopeEnum.academie
                         ? getLibelleTerritoire(
                             scopeFilters?.academies,
                             scope.value
                           )
                         : undefined,
                     libelleDepartement:
-                      scope?.type === "departements"
+                      scope?.type === ScopeEnum.departement
                         ? getLibelleTerritoire(
                             scopeFilters?.departements,
                             scope.value
@@ -293,12 +292,7 @@ export const QuadrantSection = ({
                           codeDispositif: [formation.codeDispositif],
                           typeDemande: filters.type
                             ? filters.type === "ouverture"
-                              ? [
-                                  "ouverture",
-                                  "ouverture_compensation",
-                                  "augmentation",
-                                  "augmentation_compensation",
-                                ]
+                              ? ["ouverture_nette", "ouverture_compensation"]
                               : ["fermeture", "diminution"]
                             : undefined,
                         },
@@ -326,7 +320,7 @@ export const QuadrantSection = ({
                     value={formation.tauxInsertion}
                   />
                   <Text mb="1" fontWeight="medium">
-                    Taux de pousuite d'études régional
+                    Taux de poursuite d'études régional
                   </Text>
                   <GraphWrapper
                     w="100%"
