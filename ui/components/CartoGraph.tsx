@@ -2,60 +2,85 @@ import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { EChartsOption } from "echarts";
 import _ from "lodash";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import {
+  useCallback,
+  useEffect,
+  useLayoutEffect,
+  useMemo,
+  useRef,
+} from "react";
+import { Scope, ScopeEnum } from "shared";
 
+import { SelectedScope } from "../app/(wrapped)/intentions/pilotage/types";
 import CarteFranceAcademies from "../public/fond_carte_academies.json";
 import CarteFranceDepartements from "../public/fond_carte_departements.json";
 import CarteFranceRegions from "../public/fond_carte_regions.json";
+import { displayPercentage } from "../utils/displayPercent";
+
+const useColorPalette = (
+  customColorPalette?: string[],
+  objectif?: "haut" | "bas"
+) => {
+  const lowColorPalette = [
+    useToken("colors", "pinkmacaron.950"),
+    useToken("colors", "pinkmacaron.925"),
+    useToken("colors", "pinkmacaron.850"),
+    useToken("colors", "pinkmacaron.689"),
+  ];
+
+  const defaultColorPalette = [
+    useToken("colors", "blueecume.925"),
+    useToken("colors", "blueecume.675_hover"),
+    useToken("colors", "blueecume.400_hover"),
+    useToken("colors", "bluefrance.113"),
+  ];
+
+  if (customColorPalette) {
+    return customColorPalette;
+  }
+
+  if (objectif === "bas") {
+    return lowColorPalette;
+  }
+
+  return defaultColorPalette;
+};
 
 export const CartoGraph = ({
   graphData,
-  scope = "regions",
+  scope = ScopeEnum.region,
   objectif = "haut",
   customPiecesSteps,
   customColorPalette,
   handleClick,
+  selectedScope,
 }: {
-  graphData?: { name?: string; parentName?: string; value: number }[];
-  scope?: "national" | "regions" | "academies" | "departements";
+  graphData?: {
+    name?: string;
+    parentName?: string;
+    value: number;
+    code?: string;
+  }[];
+  scope?: Scope;
   objectif?: "haut" | "bas";
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
   handleClick?: (dataCode: string | undefined) => void;
+  selectedScope?: SelectedScope;
 }) => {
-  const colorPalette = useMemo(
-    () =>
-      customColorPalette
-        ? customColorPalette
-        : objectif === "bas"
-        ? [
-            useToken("colors", "pinkmacaron.950"),
-            useToken("colors", "pinkmacaron.925"),
-            useToken("colors", "pinkmacaron.850"),
-            useToken("colors", "pinkmacaron.689"),
-          ]
-        : [
-            useToken("colors", "blueecume.925"),
-            useToken("colors", "blueecume.675_hover"),
-            useToken("colors", "blueecume.400_hover"),
-            useToken("colors", "bluefrance.113"),
-          ],
-    [customColorPalette, objectif]
-  );
-
+  const colorPalette = useColorPalette(customColorPalette, objectif);
   const bluefrance525 = useToken("colors", "bluefrance.525");
   const bluefrance113 = useToken("colors", "bluefrance.113");
-
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
   const getGeoMap = () => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
-      case "academies":
+      case ScopeEnum.academie:
         return JSON.parse(JSON.stringify(CarteFranceAcademies));
-      case "departements":
+      case ScopeEnum.departement:
         return JSON.parse(JSON.stringify(CarteFranceDepartements));
       default:
         return JSON.parse(JSON.stringify(CarteFranceRegions));
@@ -64,11 +89,11 @@ export const CartoGraph = ({
 
   const getNameProperty = (): string => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return "reg";
-      case "academies":
+      case ScopeEnum.academie:
         return "code_academie";
-      case "departements":
+      case ScopeEnum.departement:
         return "dep";
       default:
         return "reg";
@@ -77,11 +102,11 @@ export const CartoGraph = ({
 
   const getNameMap = (): Record<string, string> => {
     switch (scope) {
-      case "regions":
+      case ScopeEnum.region:
         return REGIONS_LABEL_MAPPING;
-      case "academies":
+      case ScopeEnum.academie:
         return ACADEMIES_LABEL_MAPPING;
-      case "departements":
+      case ScopeEnum.departement:
         return DEPARTEMENTS_LABEL_MAPPING;
       default:
         return REGIONS_LABEL_MAPPING;
@@ -145,13 +170,15 @@ export const CartoGraph = ({
         transitionDuration: 0.2,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
-          if (params.data && params.data?.value) {
+          if (params.data) {
             if (params.data.parentName) {
               return `${params.name} : ${params.data?.value}%
                   <br>
                   (<span style="font-style:italic">${params.data.parentName}</span>)`;
             }
-            return `${params.name} : ${params.data?.value}%`;
+            return `${params.name} : ${displayPercentage(
+              params.data?.value / 100
+            )}`;
           }
           return `Aucune donnée disponible pour ${params.name}`;
         },
@@ -229,23 +256,23 @@ export const CartoGraph = ({
         },
       ],
     }),
-    [graphData]
+    [graphData, scope, getNameMap, getNameProperty]
   );
 
   const handleClickOnSeries = (name: string) => {
     if (handleClick)
       switch (scope) {
-        case "regions":
+        case ScopeEnum.region:
           handleClick(
             _.findKey(REGIONS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case "academies":
+        case ScopeEnum.academie:
           handleClick(
             _.findKey(ACADEMIES_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
           break;
-        case "departements":
+        case ScopeEnum.departement:
           handleClick(
             _.findKey(DEPARTEMENTS_LABEL_MAPPING, _.partial(_.isEqual, name))
           );
@@ -253,16 +280,19 @@ export const CartoGraph = ({
       }
   };
 
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const handleClickOnBlankSpace = (chartInstance: any) => {
+  const unSelectAll = useCallback(() => {
+    chartRef.current?.dispatchAction({
+      type: "unselect",
+      dataIndex: new Array(graphData?.length ?? 0)
+        .fill(0)
+        .map((_, index) => index),
+    });
+  }, [chartRef, graphData]);
+
+  const handleClickOnBlankSpace = () => {
     if (handleClick) {
       handleClick(undefined);
-      chartInstance.dispatchAction({
-        type: "unselect",
-        dataIndex: new Array(graphData?.length ?? 0)
-          .fill(0)
-          .map((_, index) => index),
-      });
+      unSelectAll();
     }
   };
 
@@ -277,10 +307,33 @@ export const CartoGraph = ({
     });
     chartRef.current.getZr().on("click", (event) => {
       if (!event.target) {
-        handleClickOnBlankSpace(chartRef.current);
+        handleClickOnBlankSpace();
       }
     });
-  }, [option, graphData]);
+  }, [
+    option,
+    graphData,
+    chartRef,
+    handleClickOnSeries,
+    handleClickOnBlankSpace,
+  ]);
+
+  useEffect(() => {
+    if (selectedScope?.value) {
+      const currentIndex = graphData?.findIndex(
+        (data) => data.code === selectedScope.value
+      );
+
+      if (currentIndex !== -1) {
+        chartRef.current?.dispatchAction({
+          type: "select",
+          dataIndex: currentIndex,
+        });
+      }
+    } else {
+      unSelectAll();
+    }
+  }, [selectedScope, chartRef]);
 
   return (
     <AspectRatio ratio={1}>

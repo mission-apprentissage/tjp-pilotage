@@ -11,11 +11,14 @@ import {
   Tr,
   useToken,
 } from "@chakra-ui/react";
-import { Fragment } from "react";
+import { useCallback } from "react";
+import { ScopeEnum } from "shared";
 
-import { Legend } from "../../../../../components/Legend";
-import { OrderIcon } from "../../../../../components/OrderIcon";
-import { Order, PilotageTransformationStats } from "../types";
+import { Legend } from "@/components/Legend";
+import { OrderIcon } from "@/components/OrderIcon";
+
+import { displayPercentage } from "../../../../../utils/displayPercent";
+import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -48,18 +51,22 @@ const Loader = () => (
   </TableContainer>
 );
 
-export const VueTauxTransformationSection = ({
-  data,
+export const ScopedTable = ({
   isLoading,
-  codeRegion,
-  order,
+  title,
+  data,
   handleOrder,
+  order,
+  scopeColumnTitle,
+  scope,
 }: {
-  data?: PilotageTransformationStats;
   isLoading: boolean;
-  codeRegion?: string;
-  order: Order;
+  title: string;
+  scopeColumnTitle: string;
+  data: ScopedTransformationStats | undefined;
   handleOrder: (column: Order["orderBy"]) => void;
+  order: Partial<Order>;
+  scope: SelectedScope;
 }) => {
   const customPalette = [
     useToken("colors", "pilotage.red !important"),
@@ -79,6 +86,21 @@ export const VueTauxTransformationSection = ({
     { label: "> 6%", color: customPalette[5] },
   ];
 
+  const getTdBgColor = useCallback(
+    (indicateur: number | undefined) => {
+      if (typeof indicateur === "undefined") {
+        return undefined;
+      }
+      if (indicateur <= 1) return customPalette[0];
+      if (indicateur <= 2) return customPalette[1];
+      if (indicateur <= 4) return customPalette[2];
+      if (indicateur <= 5) return customPalette[3];
+      if (indicateur <= 6) return customPalette[4];
+      if (indicateur > 6) return customPalette[5];
+    },
+    [customPalette]
+  );
+
   return (
     <Flex
       flexDirection={"column"}
@@ -87,6 +109,7 @@ export const VueTauxTransformationSection = ({
       borderColor="grey.900"
       p={4}
       bg="white"
+      maxH={"750px"}
     >
       <Text
         fontSize={14}
@@ -95,12 +118,12 @@ export const VueTauxTransformationSection = ({
         color={"bluefrance.113"}
         mb="5"
       >
-        Nombre de places transformées et taux de transformation régional
+        {title}
       </Text>
       {isLoading ? (
         <Loader />
       ) : (
-        <TableContainer flex={1} position="relative">
+        <TableContainer flex={1} position="relative" overflowY={"auto"}>
           <Table variant="striped" size={"sm"}>
             <Thead
               position="sticky"
@@ -117,7 +140,7 @@ export const VueTauxTransformationSection = ({
                   onClick={() => handleOrder("libelle")}
                 >
                   <OrderIcon {...order} column="libelle" />
-                  Région
+                  {scopeColumnTitle}
                 </Th>
                 <Th
                   isNumeric
@@ -155,69 +178,95 @@ export const VueTauxTransformationSection = ({
               </Tr>
             </Thead>
             <Tbody>
-              <Fragment>
-                {Object.values(data?.all?.regions ?? []).map((region) => {
-                  const trBgColor =
-                    region.codeRegion === codeRegion
-                      ? "blueecume.400_hover !important"
-                      : "";
+              {Object.values(data ?? []).map((territoire) => {
+                const trBgColor =
+                  territoire.code === scope.value
+                    ? "blueecume.400_hover !important"
+                    : "";
 
-                  const tdBgColor =
-                    region.codeRegion === codeRegion
-                      ? "inherit !important"
-                      : "";
+                const tdBgColor =
+                  territoire.code === scope.value ? "inherit !important" : "";
 
-                  const getTdBgColor = (indicateur: number) => {
-                    if (indicateur <= 1) return customPalette[0];
-                    if (indicateur <= 2) return customPalette[1];
-                    if (indicateur <= 4) return customPalette[2];
-                    if (indicateur <= 5) return customPalette[3];
-                    if (indicateur <= 6) return customPalette[4];
-                    if (indicateur > 6) return customPalette[5];
-                  };
+                const trColor =
+                  territoire.code === scope.value ? "white" : "inherit";
 
-                  const trColor =
-                    region.codeRegion === codeRegion ? "white" : "inherit";
+                const color =
+                  territoire.code === scope.value
+                    ? "inherit"
+                    : "bluefrance.113";
 
-                  const color =
-                    region.codeRegion === codeRegion
-                      ? "inherit"
-                      : "bluefrance.113";
+                const tauxTransformation =
+                  typeof territoire.tauxTransformation === "undefined"
+                    ? "-"
+                    : displayPercentage(territoire.tauxTransformation / 100);
 
-                  return (
-                    <Fragment key={`${region.codeRegion}_${region.libelle}`}>
-                      <Tr
-                        backgroundColor={trBgColor}
-                        color={trColor}
-                        fontWeight="700"
-                      >
-                        <Td backgroundColor={tdBgColor} color={color}>
-                          {region.libelle}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.placesTransformees}
-                        </Td>
-                        <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                          {region.effectif}
-                        </Td>
-                        <Td
-                          isNumeric
-                          backgroundColor={getTdBgColor(
-                            region.tauxTransformation
-                          )}
-                        >
-                          {region.tauxTransformation}%
-                        </Td>
-                      </Tr>
-                    </Fragment>
-                  );
-                })}
-              </Fragment>
+                return (
+                  <Tr
+                    backgroundColor={trBgColor}
+                    color={trColor}
+                    fontWeight="700"
+                    key={`${territoire.code}_${territoire.libelle}`}
+                  >
+                    <Td backgroundColor={tdBgColor} color={color}>
+                      {territoire.libelle}
+                    </Td>
+                    <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                      {territoire.placesTransformees}
+                    </Td>
+                    <Td isNumeric backgroundColor={tdBgColor} color={color}>
+                      {territoire.effectif}
+                    </Td>
+                    <Td
+                      isNumeric
+                      backgroundColor={getTdBgColor(
+                        territoire.tauxTransformation
+                      )}
+                      color={"black"}
+                    >
+                      {tauxTransformation}
+                    </Td>
+                  </Tr>
+                );
+              })}
             </Tbody>
           </Table>
-          <Legend elements={legendElements} />
         </TableContainer>
       )}
+      <Legend elements={legendElements} />
     </Flex>
   );
 };
+
+const getTitle = (scope: SelectedScope) =>
+  ({
+    [ScopeEnum.national]:
+      "Nombre de places transformées et taux de transformation régional",
+    [ScopeEnum.region]:
+      "Nombre de places transformées et taux de transformation régional",
+    [ScopeEnum.academie]:
+      "Nombre de places transformées et taux de transformation académique",
+    [ScopeEnum.departement]:
+      "Nombre de places transformées et taux de transformation départemental",
+  })[scope.type];
+
+const getColumnTitle = (scope: SelectedScope) =>
+  ({
+    [ScopeEnum.national]: "Région",
+    [ScopeEnum.region]: "Région",
+    [ScopeEnum.academie]: "Académie",
+    [ScopeEnum.departement]: "Département",
+  })[scope.type];
+
+export const VueTauxTransformationSection = (props: {
+  handleOrder: (column: Order["orderBy"]) => void;
+  order: Partial<Order>;
+  scope: SelectedScope;
+  data: ScopedTransformationStats | undefined;
+  isLoading: boolean;
+}) => (
+  <ScopedTable
+    {...props}
+    title={getTitle(props.scope)}
+    scopeColumnTitle={getColumnTitle(props.scope)}
+  />
+);

@@ -405,8 +405,8 @@ export const QuadrantSection = ({
                     onClick={({ codeFormationDiplome }) =>
                       setFormationId(codeFormationDiplome)
                     }
-                    meanInsertion={(meanPoursuite ?? 0) * 100}
-                    meanPoursuite={(meanInsertion ?? 0) * 100}
+                    meanInsertion={(meanInsertion ?? 0) * 100}
+                    meanPoursuite={(meanPoursuite ?? 0) * 100}
                     data={filteredFormations.map((formation) => ({
                       ...formation,
                       codeFormationDiplome: formation.codeFormationDiplome,
