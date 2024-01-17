@@ -18,13 +18,17 @@ import { TypeDemandeField } from "./TypeDemandeField";
 export const TypeDemandeSection = ({
   formMetadata,
   disabled,
+  formId,
 }: {
   formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   disabled?: boolean;
+  formId?: string;
 }) => {
-  const { watch } = useFormContext<IntentionForms>();
+  const { watch, getValues } = useFormContext<IntentionForms>();
 
   const [typeDemande] = watch(["typeDemande"]);
+  const isRentreeScolaireDisabled =
+    disabled || (!!getValues("rentreeScolaire") && !!formId);
 
   return (
     <>
@@ -32,7 +36,11 @@ export const TypeDemandeSection = ({
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <RentreeScolaireField disabled={disabled} mb="6" maxW="752px" />
+      <RentreeScolaireField
+        disabled={isRentreeScolaireDisabled}
+        mb="6"
+        maxW="752px"
+      />
       <Flex align="flex-start" flexDir={["column", null, "row"]}>
         <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
         <Fade in={typeDemande != undefined}>
