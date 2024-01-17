@@ -44,7 +44,7 @@ export const notSpecialiteFormationEtablissement = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
+    eb.selectFrom("familleMetier").distinct().select("cfd")
   );
 };
 
@@ -54,6 +54,6 @@ export const notSpecialiteIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    eb.selectFrom("familleMetier").distinct().select("cfdSpecialite")
+    eb.selectFrom("familleMetier").distinct().select("cfd")
   );
 };

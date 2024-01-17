@@ -69,16 +69,7 @@ const findFormationsInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "familleMetier as familleMetierSC",
-      "familleMetierSC.cfdFamille",
-      "formationView.cfd"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -113,8 +104,7 @@ const findFormationsInDb = async ({
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "familleMetier.libelleOfficielFamille as libelleFamille",
-      "familleMetierSC.libelleOfficielFamille as libelleFamilleSC",
+      "familleMetier.libelleFamille",
       "libelleDispositif",
       "codeDispositif",
       "libelleNiveauDiplome",
@@ -224,7 +214,6 @@ const findFormationsInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId",
       "libelleFamille",
-      "libelleFamilleSC",
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .$call((q) => {
@@ -347,7 +336,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -393,13 +382,7 @@ const findFiltersInDb = async ({
     eb: ExpressionBuilder<DB, "familleMetier" | "formationView">
   ) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.or([
-      eb("familleMetier.cfdFamille", "in", cfdFamille),
-      eb.and([
-        eb("formationView.typeFamille", "=", "2nde_commune"),
-        eb("formationView.cfd", "in", cfdFamille),
-      ]),
-    ]);
+    return eb.or([eb("familleMetier.cfdFamille", "in", cfdFamille)]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -519,7 +502,7 @@ const findFiltersInDb = async ({
 
   const familles = await base
     .select([
-      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)

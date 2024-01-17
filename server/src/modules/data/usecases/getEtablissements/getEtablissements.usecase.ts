@@ -46,10 +46,6 @@ const getEtablissementsFactory =
                 ] || {}
               )
             : "Hors quadrant",
-        libelleFamille:
-          etablissement.typeFamille === "2nde_commune"
-            ? etablissement.libelleFamilleSC
-            : etablissement.libelleFamille,
       })),
     };
   };

@@ -38,7 +38,7 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       uai: string;
     }) => {
       const isSpecialite = await deps.findSpecialite({
-        cfdSpecialite: cfd,
+        cfd,
       });
 
       const anneeDebut = isSpecialite ? 1 : 0;

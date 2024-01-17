@@ -6,9 +6,10 @@ export const importFamillesMetiersFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     createFamillesMetiers = importFamillesMetiersDeps.createFamillesMetiers,
+    findFamillesMetiers = importFamillesMetiersDeps.findFamillesMetiers,
   }) =>
   async () => {
-    console.log(`Import des familles de métiers`);
+    console.log(`Import des spécialité de familles de métiers`);
 
     let countFamillesMetier = 0;
     await streamIt(
@@ -20,10 +21,9 @@ export const importFamillesMetiersFactory =
         }),
       async (item) => {
         const data = {
-          libelleOfficielFamille: item.FAMILLE,
+          libelleFamille: item.FAMILLE,
           cfdFamille: item.CFD_COMMUN,
-          cfdSpecialite: item.CFD_SPECIALITE,
-          libelleOfficielSpecialite: item.SPECIALITE,
+          cfd: item.CFD_SPECIALITE,
           codeMinistereTutelle: item.CODE_MINISTERE_TUTELLE,
         };
 
@@ -49,10 +49,9 @@ export const importFamillesMetiersFactory =
         }),
       async (item) => {
         const data = {
-          libelleOfficielFamille: item.FAMILLE,
+          libelleFamille: item.FAMILLE,
           cfdFamille: item.CFD_COMMUN,
-          cfdSpecialite: item.CFD_SPECIALITE,
-          libelleOfficielSpecialite: item.SPECIALITE,
+          cfd: item.CFD_SPECIALITE,
           codeMinistereTutelle: item.CODE_MINISTERE_TUTELLE,
         };
 
@@ -64,6 +63,32 @@ export const importFamillesMetiersFactory =
 
     process.stdout.write(
       `\r${countOptionsBTS} options de BTS ajoutées ou mises à jour\n\n`
+    );
+
+    console.log(`Import des années communes`);
+
+    let countOptionsAnneeCommune = 0;
+    await streamIt(
+      (countOptionsAnneeCommune) =>
+        findFamillesMetiers({
+          offset: countOptionsAnneeCommune,
+          limit: 20,
+        }),
+      async (familleMetier) => {
+        const data = {
+          libelleFamille: familleMetier.libelleFamille,
+          cfdFamille: familleMetier.cfdFamille,
+          cfd: familleMetier.cfdFamille,
+          codeMinistereTutelle: familleMetier.codeMinistereTutelle,
+        };
+        countOptionsAnneeCommune++;
+        process.stdout.write(`\r${countOptionsAnneeCommune}`);
+        await createFamillesMetiers(data);
+      }
+    );
+
+    process.stdout.write(
+      `\r${countOptionsAnneeCommune} années communes ajoutées ou mises à jour\n\n`
     );
   };
 

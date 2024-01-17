@@ -187,11 +187,10 @@ export interface Etablissement {
 
 export interface FamilleMetier {
   id: Generated<string>;
-  libelleOfficielFamille: string;
-  libelleOfficielSpecialite: string;
+  libelleFamille: string;
   codeMinistereTutelle: string;
   cfdFamille: string;
-  cfdSpecialite: string;
+  cfd: string;
 }
 
 export interface Formation {

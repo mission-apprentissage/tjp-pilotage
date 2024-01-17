@@ -82,16 +82,7 @@ const findEtablissementsInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "familleMetier as familleMetierSC",
-      "familleMetierSC.cfdFamille",
-      "formationView.cfd"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -145,8 +136,7 @@ const findEtablissementsInDb = async ({
       "etablissement.codeRegion",
       "etablissement.UAI as uai",
       "formationView.typeFamille",
-      "familleMetier.libelleOfficielFamille as libelleFamille",
-      "familleMetierSC.libelleOfficielFamille as libelleFamilleSC",
+      "familleMetier.libelleFamille",
       "libelleDispositif",
       "dispositifId",
       "libelleNiveauDiplome",
@@ -317,7 +307,6 @@ const findEtablissementsInDb = async ({
       "dispositifId",
       "libelleDispositif",
       "libelleFamille",
-      "libelleFamilleSC",
       "libelleNiveauDiplome",
       "indicateurEtablissement.UAI",
       "indicateurEtablissement.millesime",
@@ -394,11 +383,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formationView.cfd"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -581,7 +566,7 @@ const findFiltersInDb = async ({
 
   const familles = await base
     .select([
-      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
