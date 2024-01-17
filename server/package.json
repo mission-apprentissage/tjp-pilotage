@@ -10,6 +10,7 @@
   "scripts": {
     "start": "node --enable-source-maps dist/index.js",
     "dev": "tsup src/index.ts --watch . --watch ../shared --onSuccess 'yarn run copyPublic && yarn run start'",
+    "dev:debug": "tsup src/index.ts --watch . --watch ../shared --onSuccess 'yarn run copyPublic && yarn run start -- --inspect'",
     "copyPublic": "cp -a public/. dist",
     "build": "tsup src/index.ts",
     "typecheck": "tsc",
