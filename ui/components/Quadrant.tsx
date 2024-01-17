@@ -103,10 +103,18 @@ export const Quadrant = function <
 
   const series = useMemo(() => {
     return data.map((formation) => ({
-      value: [formation.tauxPoursuite, formation.tauxInsertion],
+      value: [formation.tauxPoursuite * 100, formation.tauxInsertion * 100],
       name: itemId(formation),
     }));
   }, [data]);
+
+  const moyennes = useMemo(
+    () => ({
+      insertion: meanInsertion ? meanInsertion * 100 : undefined,
+      poursuite: meanPoursuite ? meanPoursuite * 100 : undefined,
+    }),
+    [meanPoursuite, meanInsertion]
+  );
 
   const repartitionsQuadrants = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
@@ -207,12 +215,12 @@ export const Quadrant = function <
             symbol: ["none", "arrow"],
             animation: false,
             data: [
-              ...(meanPoursuite ? [{ xAxis: meanPoursuite }] : []),
-              ...(meanInsertion ? [{ yAxis: meanInsertion }] : []),
+              ...(moyennes.poursuite ? [{ xAxis: moyennes.poursuite }] : []),
+              ...(moyennes.insertion ? [{ yAxis: moyennes.insertion }] : []),
             ],
           },
           markArea:
-            meanPoursuite && meanInsertion
+            moyennes.poursuite && moyennes.insertion
               ? {
                   silent: true,
                   animation: false,
@@ -227,11 +235,11 @@ export const Quadrant = function <
                           position: "insideBottomLeft",
                         },
                       },
-                      { coord: [meanPoursuite, meanInsertion] },
+                      { coord: [moyennes.poursuite, moyennes.insertion] },
                     ],
                     [
                       {
-                        coord: [meanPoursuite, meanInsertion],
+                        coord: [moyennes.poursuite, moyennes.insertion],
                         itemStyle: { color: greenColor },
                         name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
@@ -243,7 +251,7 @@ export const Quadrant = function <
                     ],
                     [
                       {
-                        coord: [0, meanInsertion],
+                        coord: [0, moyennes.insertion],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
                         name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
                         label: {
@@ -251,11 +259,11 @@ export const Quadrant = function <
                           position: "insideTopLeft",
                         },
                       },
-                      { coord: [meanPoursuite, 100] },
+                      { coord: [moyennes.poursuite, 100] },
                     ],
                     [
                       {
-                        coord: [meanPoursuite, 0],
+                        coord: [moyennes.poursuite, 0],
                         itemStyle: { color: "rgba(0,0,0,0.04)" },
                         name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
                         label: {
@@ -263,7 +271,7 @@ export const Quadrant = function <
                           position: "insideBottomRight",
                         },
                       },
-                      { coord: [100, meanInsertion] },
+                      { coord: [100, moyennes.insertion] },
                     ],
                   ],
                 }
@@ -271,7 +279,7 @@ export const Quadrant = function <
         },
       ],
     }),
-    [data, meanPoursuite, meanInsertion, itemColor, itemId]
+    [data, moyennes, itemColor, itemId]
   );
 
   useLayoutEffect(() => {
