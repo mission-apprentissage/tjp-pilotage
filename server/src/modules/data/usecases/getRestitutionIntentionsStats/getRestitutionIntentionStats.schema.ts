@@ -35,7 +35,7 @@ const StatsDemandesItem = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   compensationCfd: z.string().optional(),
-  compensationCodeDispositif: z.string().optional(),
+  compensationDispositifId: z.string().optional(),
   compensationUai: z.string().optional(),
   differenceCapaciteScolaire: z.coerce.number().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),

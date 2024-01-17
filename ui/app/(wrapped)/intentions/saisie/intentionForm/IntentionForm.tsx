@@ -61,12 +61,12 @@ export const IntentionForm = ({
 
   const isCFDUaiSectionValid = ({
     cfd,
-    codeDispositif,
+    dispositifId,
     libelleFCIL,
     uai,
   }: Partial<IntentionForms>): boolean => {
-    if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
-    return !!(cfd && codeDispositif && uai);
+    if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
+    return !!(cfd && dispositifId && uai);
   };
 
   const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);

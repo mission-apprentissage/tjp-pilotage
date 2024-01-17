@@ -31,7 +31,7 @@ export const STATS_DEMANDES_COLUMNS = {
   createdAt: "Date de création",
   updatedAt: "Date de dernière modification",
   compensationCfd: "CFD compensé",
-  compensationCodeDispositif: "Dispositif compensé",
+  compensationDispositifId: "Dispositif compensé",
   compensationUai: "UAI compensé",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
