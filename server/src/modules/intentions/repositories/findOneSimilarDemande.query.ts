@@ -5,14 +5,14 @@ import { isDemandeNotDeleted } from "../../utils/isDemandeSelectable";
 export const findOneSimilarDemande = ({
   cfd,
   uai,
-  codeDispositif,
+  dispositifId,
   libelleFCIL,
   rentreeScolaire,
   notId,
 }: {
   cfd: string;
   uai: string;
-  codeDispositif: string;
+  dispositifId: string;
   libelleFCIL?: string;
   rentreeScolaire: number;
   notId?: string;
@@ -22,7 +22,7 @@ export const findOneSimilarDemande = ({
     .selectAll()
     .where("cfd", "=", cfd)
     .where("uai", "=", uai)
-    .where("dispositifId", "=", codeDispositif)
+    .where("dispositifId", "=", dispositifId)
     .$call((q) => {
       if (!libelleFCIL) return q;
       return q.where("libelleFCIL", "=", libelleFCIL);

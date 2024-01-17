@@ -17,10 +17,10 @@ type Demande = {
   uai: string;
   typeDemande: string;
   cfd: string;
-  codeDispositif: string;
+  dispositifId: string;
   libelleFCIL?: string;
   compensationCfd?: string;
-  compensationCodeDispositif?: string;
+  compensationDispositifId?: string;
   compensationUai?: string;
   compensationRentreeScolaire?: number;
   motif: string[];
@@ -135,7 +135,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         autreMotif: null,
         commentaire: null,
         compensationCfd: null,
-        compensationCodeDispositif: null,
+        compensationDispositifId: null,
         compensationUai: null,
         capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,

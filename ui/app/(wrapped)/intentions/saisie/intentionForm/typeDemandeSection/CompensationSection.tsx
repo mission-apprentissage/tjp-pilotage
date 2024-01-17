@@ -40,7 +40,7 @@ export const CompensationSection = ({
         if (!typeDemande || isTypeCompensation(typeDemande)) return;
 
         setValue("compensationCfd", undefined);
-        setValue("compensationCodeDispositif", undefined);
+        setValue("compensationDispositifId", undefined);
         setValue("compensationUai", undefined);
         setValue("compensationRentreeScolaire", undefined);
       }).unsubscribe
@@ -106,7 +106,7 @@ export const CompensationSection = ({
                     : undefined
                 }
                 onChange={(selected) => {
-                  if (!selected) setValue("compensationCodeDispositif", "");
+                  if (!selected) setValue("compensationDispositifId", "");
                   onChange(selected?.value);
                   setDispositifsCompensation(selected?.dispositifs);
                 }}
@@ -123,13 +123,13 @@ export const CompensationSection = ({
       <FormControl
         mb="4"
         w="100%"
-        isInvalid={!!errors.compensationCodeDispositif}
+        isInvalid={!!errors.compensationDispositifId}
         isRequired
         onSubmit={handleSubmit(() => {})}
       >
         <FormLabel>Dispositif</FormLabel>
         <Controller
-          name="compensationCodeDispositif"
+          name="compensationDispositifId"
           disabled={disabled}
           control={control}
           shouldUnregister
@@ -157,9 +157,9 @@ export const CompensationSection = ({
           )}
         />
 
-        {errors.compensationCodeDispositif && (
+        {errors.compensationDispositifId && (
           <FormErrorMessage>
-            {errors.compensationCodeDispositif.message}
+            {errors.compensationDispositifId.message}
           </FormErrorMessage>
         )}
       </FormControl>

@@ -30,7 +30,7 @@ const demande = {
   uai: "demande-uai",
   cfd: "demande-cfd",
   createurId: "user-id",
-  codeDispositif: "codeDispositif",
+  dispositifId: "dispositifId",
   rentreeScolaire: 2025,
   typeDemande: "augmentation",
   motif: ["autre"],

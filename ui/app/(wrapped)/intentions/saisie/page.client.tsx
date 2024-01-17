@@ -47,7 +47,7 @@ const DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
   libelleFormation: "Diplôme",
-  codeDispositif: "Code dispositif",
+  dispositifId: "Code dispositif",
   libelleDispositif: "Dispositif",
   libelleFCIL: "Libellé de la FCIL",
   uai: "UAI",
@@ -69,7 +69,7 @@ const DEMANDES_COLUMNS = {
   updatedAt: "Dernière modification",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
-  compensationCodeDispositif: "Dispositif compensé",
+  compensationDispositifId: "Dispositif compensé",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
   capaciteScolaireColoree: "Capacité scolaire coloree",
@@ -447,7 +447,7 @@ export const PageClient = () => {
                           </Td>
                           <Td>
                             {demande.compensationCfd &&
-                            demande.compensationCodeDispositif &&
+                            demande.compensationDispositifId &&
                             demande.compensationUai ? (
                               demande.idCompensation ? (
                                 <Button

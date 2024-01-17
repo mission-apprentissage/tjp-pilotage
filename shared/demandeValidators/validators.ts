@@ -285,7 +285,7 @@ export const demandeValidators: Record<
     if (!isTypeCompensation(demande.typeDemande)) return;
     if (!demande.compensationCfd)
       return "Le diplôme de compensation est obligatoire";
-    if (!demande.compensationCodeDispositif)
+    if (!demande.compensationDispositifId)
       return "Le dispositif de compensation est obligatoire";
     if (!demande.compensationUai)
       return "L'établissement de compensation est obligatoire";

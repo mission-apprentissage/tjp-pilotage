@@ -27,7 +27,7 @@ export default () => {
             disabled={false}
             defaultValues={{
               cfd: data?.compensationCfd,
-              codeDispositif: data?.compensationCodeDispositif,
+              dispositifId: data?.compensationDispositifId,
               uai: data?.compensationUai,
               rentreeScolaire: data?.compensationRentreeScolaire,
             }}
