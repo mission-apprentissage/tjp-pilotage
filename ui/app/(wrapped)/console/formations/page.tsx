@@ -518,7 +518,6 @@ export default function Formations() {
                 <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
-                      filters={filters}
                       defaultRentreeScolaire="2022"
                       line={line}
                       expended={

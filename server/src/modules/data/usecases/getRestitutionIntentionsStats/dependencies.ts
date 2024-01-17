@@ -88,7 +88,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       "academie.codeAcademie",
       "dataEtablissement.codeAcademie"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -539,7 +539,7 @@ const findFiltersInDb = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .distinct()
@@ -830,7 +830,7 @@ const findFiltersInDb = async ({
 
   const famillesFilters = await filtersBase
     .select([
-      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)

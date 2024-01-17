@@ -18,21 +18,19 @@ import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { Filters, Line } from "../types";
+import { Line } from "../types";
 export const FormationLineContent = ({
   line,
   defaultRentreeScolaire,
   onClickExpend,
   onClickCollapse,
   expended = false,
-  filters,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
-  filters?: Filters;
 }) => {
   const format2ndeCommuneLibelle = (libelleFormation?: string): ReactNode => (
     <Flex>
@@ -85,7 +83,7 @@ export const FormationLineContent = ({
           as={NextLink}
           href={createParametrizedUrl("/console/etablissements", {
             filters: {
-              ...filters,
+              cfd: [line.cfd],
               codeDispositif: line.codeDispositif
                 ? [line.codeDispositif]
                 : undefined,

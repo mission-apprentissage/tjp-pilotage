@@ -14,15 +14,11 @@ export const findAnneeCommune = async ({
   return result && cleanNull(result);
 };
 
-export const findSpecialite = async ({
-  cfdSpecialite,
-}: {
-  cfdSpecialite: string;
-}) => {
+export const findSpecialite = async ({ cfd }: { cfd: string }) => {
   const result = await kdb
     .selectFrom("familleMetier")
     .selectAll()
-    .where("cfdSpecialite", "=", cfdSpecialite)
+    .where("cfd", "=", cfd)
     .executeTakeFirst();
   return result && cleanNull(result);
 };

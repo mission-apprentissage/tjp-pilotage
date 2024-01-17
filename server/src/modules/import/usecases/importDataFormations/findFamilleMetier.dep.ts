@@ -12,7 +12,7 @@ export const find2ndeCommune = async (cfd: string) => {
 export const findSpecialite = async (cfd: string) => {
   return await kdb
     .selectFrom("familleMetier")
-    .where("cfdSpecialite", "=", cfd)
+    .where("cfd", "=", cfd)
     .selectAll()
     .limit(1)
     .executeTakeFirst();
@@ -30,7 +30,7 @@ export const find1ereCommune = async (cfd: string) => {
 export const findOption = async (cfd: string) => {
   return await kdb
     .selectFrom("familleMetier")
-    .where("cfdSpecialite", "=", cfd)
+    .where("cfd", "=", cfd)
     .selectAll()
     .limit(1)
     .executeTakeFirst();

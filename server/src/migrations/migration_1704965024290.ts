@@ -120,7 +120,9 @@ export const down = async (db: Kysely<unknown>) => {
 
   await db.schema.dropView("formationNonMaterializedView").execute();
 
-  await db.executeQuery(sql`TRUNCATE TABLE "dataFormation" CASCADE;`.compile(db));
+  await db.executeQuery(
+    sql`TRUNCATE TABLE "dataFormation" CASCADE;`.compile(db)
+  );
 
   await db.executeQuery(
     sql`
