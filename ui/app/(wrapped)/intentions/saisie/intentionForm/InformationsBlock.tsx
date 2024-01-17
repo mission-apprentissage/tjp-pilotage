@@ -60,7 +60,11 @@ export const InformationsBlock = ({
   return (
     <>
       <Box bg="white" p="6" mt="6" mb="6" borderRadius={6}>
-        <TypeDemandeSection disabled={disabled} formMetadata={formMetadata} />
+        <TypeDemandeSection
+          disabled={disabled}
+          formMetadata={formMetadata}
+          formId={formId}
+        />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <CapaciteSection disabled={disabled} />

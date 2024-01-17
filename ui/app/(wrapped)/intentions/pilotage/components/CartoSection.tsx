@@ -1,34 +1,13 @@
-import {
-  Box,
-  Flex,
-  Radio,
-  RadioGroup,
-  Select,
-  Skeleton,
-  Text,
-  useToken,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { Box, Flex, Select, Skeleton, Text, useToken } from "@chakra-ui/react";
+import { useCallback } from "react";
+import { ScopeEnum } from "shared";
+
+import { client } from "@/api.client";
 
 import { CartoGraph } from "../../../../../components/CartoGraph";
-import {
-  IndicateurType,
-  PilotageTransformationStats,
-  Scope,
-  TerritoiresFilters,
-} from "../types";
+import { Filters, IndicateurType, Order, SelectedScope } from "../types";
 
-export const CartoSection = ({
-  data,
-  isLoading,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
-  territoiresFilters,
-  handleTerritoiresFilters,
-}: {
-  data?: PilotageTransformationStats;
-  isLoading: boolean;
+type Props = {
   indicateur: IndicateurType;
   handleIndicateurChange: (indicateur: string) => void;
   indicateurOptions: {
@@ -36,13 +15,21 @@ export const CartoSection = ({
     value: string;
     isDefault: boolean;
   }[];
-  territoiresFilters: Partial<TerritoiresFilters>;
-  handleTerritoiresFilters: (
-    type: keyof TerritoiresFilters,
-    value: TerritoiresFilters[keyof TerritoiresFilters]
-  ) => void;
-}) => {
-  const [cartoScope, setCartoScope] = useState<Scope>("regions");
+  filters: Partial<Filters>;
+  order: Partial<Order>;
+  scope: SelectedScope;
+  handleFilters: (filters: Partial<Filters>) => void;
+};
+
+export const CartoSection = ({
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
+  filters,
+  order,
+  scope,
+  handleFilters,
+}: Props) => {
   const customPalette = [
     useToken("colors", "pilotage.red"),
     useToken("colors", "pilotage.orange"),
@@ -87,28 +74,44 @@ export const CartoSection = ({
     }
   };
 
-  const getGraphData = () => {
-    if (cartoScope && data?.all[cartoScope])
-      return Object.values(data?.all[cartoScope]).map((territoire) => ({
-        name: territoire.libelle,
-        parentName: territoire.libelleAcademie,
-        value: territoire[indicateur] ?? 0,
-      }));
-    return [];
-  };
+  const { data, isLoading } = client
+    .ref("[GET]/pilotage-transformation/stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          ...order,
+          scope:
+            scope.type === ScopeEnum.national ? ScopeEnum.region : scope.type,
+        },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
-  const handleClickOnTerritoire = (code: string | undefined) => {
-    if (
-      cartoScope &&
-      territoiresFilters[cartoScope] &&
-      territoiresFilters[cartoScope] === code
-    )
-      handleTerritoiresFilters(
-        cartoScope as keyof TerritoiresFilters,
-        undefined
-      );
-    else handleTerritoiresFilters(cartoScope as keyof TerritoiresFilters, code);
-  };
+  const getGraphData = useCallback(() => {
+    if (!data) {
+      return [];
+    }
+
+    return Object.values(data.all).map((territoire) => ({
+      name: territoire.libelle,
+      parentName: territoire.libelleAcademie,
+      value: territoire[indicateur] ?? 0,
+      code: territoire.code,
+    }));
+  }, [scope, data]);
+
+  const handleClickOnTerritoire = useCallback(
+    (code: string | undefined) =>
+      handleFilters({
+        scope: scope.type,
+        code: scope.value === code ? undefined : code,
+      }),
+    [handleFilters, scope]
+  );
 
   return (
     <Box
@@ -128,7 +131,7 @@ export const CartoSection = ({
             <Text color={"bluefrance.113"} fontWeight={700}>
               VISUALISATION TERRITORIALE
             </Text>
-            <Flex flexDirection={"column"}>
+            <Flex flexDirection={"column"} position={"relative"} zIndex={100}>
               <Select
                 width="64"
                 size="sm"
@@ -136,7 +139,9 @@ export const CartoSection = ({
                 bg={"grey.150"}
                 onChange={(e) => handleIndicateurChange(e.target.value)}
                 value={indicateur}
-                borderBottomColor={indicateur != undefined ? "info.525" : ""}
+                borderBottomColor={
+                  typeof indicateur !== "undefined" ? "info.525" : ""
+                }
               >
                 {indicateurOptions.map((option) => (
                   <option key={option.value} value={option.value}>
@@ -144,48 +149,16 @@ export const CartoSection = ({
                   </option>
                 ))}
               </Select>
-              <RadioGroup
-                mt="3"
-                ms="auto"
-                justifyContent={"end"}
-                onChange={(value) => setCartoScope(value as Scope)}
-                defaultChecked
-                defaultValue={cartoScope}
-                zIndex={"dropdown"}
-              >
-                <Flex flexDirection={"column"}>
-                  <Radio
-                    value="regions"
-                    isChecked={cartoScope === "regions"}
-                    defaultChecked={cartoScope === "regions"}
-                  >
-                    Régions
-                  </Radio>
-                  <Radio
-                    value="academies"
-                    isChecked={cartoScope === "academies"}
-                    defaultChecked={cartoScope === "academies"}
-                  >
-                    Académies
-                  </Radio>
-                  <Radio
-                    value="departements"
-                    isChecked={cartoScope === "departements"}
-                    defaultChecked={cartoScope === "departements"}
-                  >
-                    Départements
-                  </Radio>
-                </Flex>
-              </RadioGroup>
             </Flex>
           </Flex>
           <Box mt={"-20"}>
             <CartoGraph
               graphData={getGraphData()}
-              scope={cartoScope}
+              scope={scope.type}
               customPiecesSteps={getCustomPieces()}
               customColorPalette={getCustomPalette()}
               handleClick={handleClickOnTerritoire}
+              selectedScope={scope}
             />
           </Box>
         </Box>

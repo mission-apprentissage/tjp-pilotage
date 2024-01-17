@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
@@ -27,7 +28,10 @@ export const getDepartementsStats = async ({
     .selectFrom("departement")
     .where("codeDepartement", "=", codeDepartement)
     .select(["codeRegion", "libelle as libelleDepartement"])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.badRequest(`Code département invalide : ${codeDepartement}`);
+    });
 
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
@@ -52,7 +56,7 @@ export const getDepartementsStats = async ({
       eb(
         "indicateurRegionSortie.cfd",
         "not in",
-        sql`(SELECT DISTINCT "ancienCFD" FROM "formationHistorique")`
+        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
       )
     )
     .select([

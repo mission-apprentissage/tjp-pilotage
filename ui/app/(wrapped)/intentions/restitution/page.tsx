@@ -45,7 +45,7 @@ export default () => {
     filters?: Partial<Filters>;
     order?: Partial<Order>;
     page?: string;
-  } = qs.parse(queryParams.toString());
+  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
