@@ -34,7 +34,7 @@ const Columns = {
   firstname: "Prénom",
   lastname: "Nom",
   role: "Rôle",
-  codeRegion: "Code région",
+  libelleRegion: "Région",
   uais: "Uais",
   createdAt: "Ajouté le",
 } satisfies ExportColumns<
@@ -142,10 +142,10 @@ export default () => {
                   </Th>
                   <Th
                     cursor="pointer"
-                    onClick={() => handleOrder("codeRegion")}
+                    onClick={() => handleOrder("libelleRegion")}
                   >
-                    <OrderIcon {...order} column="codeRegion" />
-                    {Columns.codeRegion}
+                    <OrderIcon {...order} column="libelleRegion" />
+                    {Columns.libelleRegion}
                   </Th>
                   <Th>{Columns.uais}</Th>
                   <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
@@ -169,7 +169,7 @@ export default () => {
                     <Td>{user.lastname}</Td>
                     <Td>{user.role}</Td>
 
-                    <Td>{user.codeRegion}</Td>
+                    <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
                     <Td>
                       {user.createdAt &&
