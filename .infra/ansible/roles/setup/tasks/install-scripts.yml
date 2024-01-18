@@ -29,13 +29,18 @@
     state: absent
     regexp: "mna"
 
-- shell: ls /opt/pilotage/*.sh
-  register: nopasswd_script_files
+# - name: Création du répertoire pilotage
+#   ansible.builtin.file:
+#     path: /opt/pilotage/
+#     state: directory
 
-- name: Ajout des scripts en NOPASSWD pour le groupe 'mna'
-  lineinfile:
-    dest: /etc/sudoers
-    state: present
-    regexp: "{{item}}"
-    line: "%mna        ALL=(ALL)       NOPASSWD: {{item}}"
-  with_items: "{{ nopasswd_script_files.stdout_lines }}"
+# - shell: ls /opt/pilotage/*.sh
+#   register: nopasswd_script_files
+
+# - name: Ajout des scripts en NOPASSWD pour le groupe 'mna'
+#   lineinfile:
+#     dest: /etc/sudoers
+#     state: present
+#     regexp: "{{item}}"
+#     line: "%mna        ALL=(ALL)       NOPASSWD: {{item}}"
+#   with_items: "{{ nopasswd_script_files.stdout_lines }}"
