@@ -53,6 +53,7 @@ const EtablissementLineSchema = z.object({
       libelleFormation: z.string().optional(),
     })
     .optional(),
+  typeFamille: z.string().optional(),
 });
 
 export const getEtablissementsSchema = {

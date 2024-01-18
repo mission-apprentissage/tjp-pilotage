@@ -46,6 +46,20 @@ export const FormationLineContent = ({
     </Flex>
   );
 
+  const format1ereCommuneLibelle = (libelleFormation?: string): ReactNode => (
+    <Flex>
+      {libelleFormation?.indexOf(" 1ere annee commune") != -1
+        ? libelleFormation?.substring(
+            0,
+            libelleFormation?.indexOf(" 1ere annee commune")
+          )
+        : libelleFormation}
+      <Tag colorScheme={"blue"} size={"sm"} ms={2}>
+        1ère commune
+      </Tag>
+    </Flex>
+  );
+
   return (
     <>
       <Td pr="0" py="1">
@@ -74,6 +88,8 @@ export const FormationLineContent = ({
         <>
           {line.typeFamille === "2nde_commune"
             ? format2ndeCommuneLibelle(line.libelleFormation)
+            : line.typeFamille === "1ere_commune"
+            ? format1ereCommuneLibelle(line.libelleFormation)
             : line.libelleFormation ?? "-"}
         </>
       </Td>
