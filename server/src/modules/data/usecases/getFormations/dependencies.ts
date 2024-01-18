@@ -282,8 +282,8 @@ const findFormationsInDb = async ({
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .orderBy("libelleDispositif", "asc")
-    .orderBy("nbEtablissement", "asc")
     .orderBy("formationView.cfd", "asc")
+    .orderBy("nbEtablissement", "asc")
     .offset(offset)
     .limit(limit);
 
