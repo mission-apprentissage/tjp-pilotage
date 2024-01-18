@@ -13,7 +13,7 @@ function clean() {
   fi
 
   cd "${ANSIBLE_DIR}"
-  ansible-playbook -i env.ini --limit "${ENV_FILTER}" "${ansible_pass[@]}" clean.yml "$@"
+  ansible-playbook -i env.ini --limit "${ENV_FILTER}" clean.yml "$@" --ask-become-pass
   cd -
 }
 

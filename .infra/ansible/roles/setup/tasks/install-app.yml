@@ -6,6 +6,11 @@
     accept_hostkey: yes
     dest: /opt/pilotage/repository
 
+- name: Création du répertoire 'overrides'
+  file:
+    path: /opt/pilotage/.overrides
+    state: directory
+
 - name: Création des répertoires 'overrides'
   file:
     path: "/opt/pilotage/.overrides/{{ item.path }}/"
