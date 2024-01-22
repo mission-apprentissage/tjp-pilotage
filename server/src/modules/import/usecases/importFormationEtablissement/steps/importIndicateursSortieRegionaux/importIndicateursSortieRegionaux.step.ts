@@ -3,6 +3,7 @@ import { inject } from "injecti";
 import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 import { inserJeunesApi } from "../../../../services/inserJeunesApi/inserJeunes.api";
+import { MILLESIMES_IJ_REG } from "../../domain/millesimes";
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
 import { findAnciennesFormation } from "./findAnciennesFormation.dep";
 import { findIndicateurRegionSortie } from "./findIndicateurRegionSortie.dep";
@@ -25,7 +26,7 @@ export const [importIndicateursRegionSortie] = inject(
       mefstat: string;
     }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
-        for (const millesimeSortie of ["2019_2020", "2020_2021"]) {
+        for (const millesimeSortie of MILLESIMES_IJ_REG) {
           const data = await deps.findRawData({
             type: "ij_reg",
             filter: { millesime: millesimeSortie, codeRegion },

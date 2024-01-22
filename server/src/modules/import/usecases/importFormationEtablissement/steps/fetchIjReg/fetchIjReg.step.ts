@@ -3,6 +3,7 @@ import { inject } from "injecti";
 import { kdb } from "../../../../../../db/db";
 import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
 import { getRegionData } from "../../../../services/inserJeunesApi/inserJeunes.api";
+import { MILLESIMES_IJ_REG } from "../../domain/millesimes";
 import { cacheIjReg } from "./cacheIjReg.dep";
 
 const clearIjCache = async ({
@@ -25,7 +26,7 @@ export const [fetchIjReg] = inject(
     for (const [codeRegionIj, codeRegion] of Object.entries(
       regionAcademiqueMapping
     )) {
-      const promises = ["2019_2020", "2020_2021"].map(async (millesime) => {
+      const promises = MILLESIMES_IJ_REG.map(async (millesime) => {
         const data = await deps.getRegionData({
           codeRegionIj,
           millesime,
