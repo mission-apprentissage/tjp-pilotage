@@ -33,7 +33,26 @@ export const notHistoriqueIndicateurRegionSortie = (
   );
 };
 
-export const notHistoriqueCoExistence = (
+export const isHistoriqueCoExistant = (
+  eb: ExpressionBuilder<DB, "formationView">,
+  rentreeScolaire: string
+) => {
+  return sql<boolean>`${eb.and([
+    eb(
+      "formationView.cfd",
+      "in",
+      eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+    ),
+    eb("formationView.dateFermeture", "is not", null),
+    eb(
+      "formationView.dateFermeture",
+      ">",
+      sql<Date>`${getDateRentreeScolaire(rentreeScolaire)}`
+    ),
+  ])}`;
+};
+
+export const notHistoriqueUnlessCoExistant = (
   eb: ExpressionBuilder<DB, "formationView">,
   rentreeScolaire: string
 ) => {
@@ -47,7 +66,7 @@ export const notHistoriqueCoExistence = (
   ]);
 };
 
-export const notHistoriqueCoExistenceFormationEtablissement = (
+export const notHistoriqueUnlessCoExistantFormationEtablissement = (
   eb: ExpressionBuilder<DB, "formationEtablissement">,
   rentreeScolaire: string
 ) => {
@@ -71,7 +90,7 @@ export const notHistoriqueCoExistenceFormationEtablissement = (
   );
 };
 
-export const notHistoriqueCoExistenceIndicateurRegionSortie = (
+export const notHistoriqueUnlessCoExistantIndicateurRegionSortie = (
   eb: ExpressionBuilder<DB, "indicateurRegionSortie">,
   rentreeScolaire: string
 ) => {

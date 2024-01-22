@@ -6,7 +6,10 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistoriqueCoExistence } from "../../utils/notHistorique";
+import {
+  isHistoriqueCoExistant,
+  notHistoriqueUnlessCoExistant,
+} from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -126,8 +129,13 @@ const findEtablissementsInDb = async ({
       "dataFormationContinuum.cfd",
       "indicateurSortie.cfdContinuum"
     )
+    .leftJoin(
+      "formationHistorique",
+      "formationHistorique.ancienCFD",
+      "formationView.cfd"
+    )
     .selectAll("etablissement")
-    .select([
+    .select((eb) => [
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
@@ -173,6 +181,10 @@ const findEtablissementsInDb = async ({
       selectTauxDevenirFavorableAgg("indicateurSortie").as(
         "tauxDevenirFavorableEtablissement"
       ),
+      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
+        "isHistoriqueCoExistant"
+      ),
+      "formationHistorique.codeFormationDiplome as formationRenovee",
     ])
     .select((eb) =>
       eb
@@ -289,13 +301,15 @@ const findEtablissementsInDb = async ({
       return q.where("formationView.libelleFiliere", "in", libelleFiliere);
     })
     .where(notPerimetreIJEtablissement)
-    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .groupBy([
       "formationView.id",
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
+      "formationView.dateFermeture",
+      "formationHistorique.codeFormationDiplome",
       "etablissement.id",
       "departement.codeDepartement",
       "indicateurEntree.rentreeScolaire",
@@ -401,7 +415,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

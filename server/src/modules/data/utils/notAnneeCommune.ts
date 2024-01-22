@@ -33,7 +33,10 @@ export const notAnneeCommuneIndicateurRegionSortie = (
 
 export const notSpecialite = (eb: ExpressionBuilder<DB, "formationView">) => {
   return eb.or([
-    eb("formationView.typeFamille", "<>", "specialite"),
+    eb.and([
+      eb("formationView.typeFamille", "<>", "specialite"),
+      eb("formationView.typeFamille", "<>", "option"),
+    ]),
     eb("formationView.typeFamille", "is", null),
   ]);
 };

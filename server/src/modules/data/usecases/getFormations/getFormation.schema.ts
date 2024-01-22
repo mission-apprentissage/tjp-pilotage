@@ -37,6 +37,8 @@ export const FormationLineSchema = z.object({
     .optional(),
   positionQuadrant: z.string().optional(),
   typeFamille: z.string().optional(),
+  isHistoriqueCoExistant: z.coerce.boolean().optional(),
+  formationRenovee: z.string().optional(),
 });
 
 export const getFormationSchema = {
