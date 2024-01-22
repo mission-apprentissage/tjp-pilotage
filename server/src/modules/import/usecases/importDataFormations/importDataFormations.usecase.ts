@@ -36,7 +36,7 @@ type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
   "Code diplôme": string;
 };
 
-const isCompleteDiplomePorfessionelLine = (
+const isCompleteDiplomeProfessionelLine = (
   diplomeProfessionnelLine: DiplomeProfessionnelLine
 ): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
   !!diplomeProfessionnelLine["Code diplôme"];
@@ -58,7 +58,7 @@ const formatDiplomeProfessionel = (
       (val) => _.isString(val) && val.trim() !== ""
     ),
   };
-  if (!isCompleteDiplomePorfessionelLine(overridedLine)) return;
+  if (!isCompleteDiplomeProfessionelLine(overridedLine)) return;
   return overridedLine;
 };
 
