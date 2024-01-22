@@ -5,7 +5,10 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistoriqueCoExistence } from "../../utils/notHistorique";
+import {
+  isHistoriqueCoExistant,
+  notHistoriqueUnlessCoExistant,
+} from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -98,6 +101,11 @@ const findFormationsInDb = async ({
       "etablissement.UAI",
       "formationEtablissement.UAI"
     )
+    .leftJoin(
+      "formationHistorique",
+      "formationHistorique.ancienCFD",
+      "formationView.cfd"
+    )
     .select([
       "formationView.cfd",
       "formationView.libelleFormation",
@@ -172,9 +180,13 @@ const findFormationsInDb = async ({
         codeDispositifRef: "formationEtablissement.dispositifId",
         codeRegionRef: "etablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
+      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
+        "isHistoriqueCoExistant"
+      ),
+      "formationHistorique.codeFormationDiplome as formationRenovee",
     ])
     .where(notPerimetreIJEtablissement)
-    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
@@ -209,6 +221,8 @@ const findFormationsInDb = async ({
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
+      "formationView.dateFermeture",
+      "formationHistorique.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "dispositif.codeDispositif",
@@ -354,7 +368,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where((eb) => notHistoriqueCoExistence(eb, rentreeScolaire[0]))
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -501,8 +515,10 @@ const findFiltersInDb = async ({
     .execute();
 
   const familles = await base
-    .select([
-      "familleMetier.libelleFamille as label",
+    .select((eb) => [
+      sql<string>`CONCAT(${eb.ref(
+        "familleMetier.libelleFamille"
+      )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)

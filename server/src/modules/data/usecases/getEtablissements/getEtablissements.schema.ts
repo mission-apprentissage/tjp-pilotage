@@ -54,6 +54,8 @@ const EtablissementLineSchema = z.object({
     })
     .optional(),
   typeFamille: z.string().optional(),
+  isHistoriqueCoExistant: z.coerce.boolean().optional(),
+  formationRenovee: z.string().optional(),
 });
 
 export const getEtablissementsSchema = {

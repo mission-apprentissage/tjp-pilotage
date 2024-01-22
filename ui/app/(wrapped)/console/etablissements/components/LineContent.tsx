@@ -1,9 +1,20 @@
 "use client";
 import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Flex, IconButton, Skeleton, Tag, Td, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Link,
+  Skeleton,
+  Tag,
+  Td,
+  Tr,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import { ReactNode } from "react";
 
 import { TableBadge } from "@/components/TableBadge";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
@@ -78,11 +89,29 @@ export const EtablissementLineContent = ({
       <Td>{line.departement ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
-        {line.typeFamille === "2nde_commune"
-          ? format2ndeCommuneLibelle(line.libelleFormation)
-          : line.typeFamille === "1ere_commune"
-          ? format1ereCommuneLibelle(line.libelleFormation)
-          : line.libelleFormation ?? "-"}
+        <Flex>
+          {line.typeFamille === "2nde_commune"
+            ? format2ndeCommuneLibelle(line.libelleFormation)
+            : line.typeFamille === "1ere_commune"
+            ? format1ereCommuneLibelle(line.libelleFormation)
+            : line.libelleFormation ?? "-"}
+          {line.formationRenovee && (
+            <Flex ms={2}>
+              <Link
+                variant="text"
+                ms={2}
+                as={NextLink}
+                href={createParametrizedUrl("/console/etablissements", {
+                  filters: {
+                    cfd: [line.formationRenovee],
+                  },
+                })}
+              >
+                Formation rénovée
+              </Link>
+            </Flex>
+          )}
+        </Flex>
       </Td>
 
       <Td isNumeric>{line.effectif1 ?? "-"}</Td>

@@ -33,7 +33,7 @@ export const FormationLineContent = ({
   expended?: boolean;
 }) => {
   const format2ndeCommuneLibelle = (libelleFormation?: string): ReactNode => (
-    <Flex>
+    <>
       {libelleFormation?.indexOf(" 2nde commune") != -1
         ? libelleFormation?.substring(
             0,
@@ -43,11 +43,11 @@ export const FormationLineContent = ({
       <Tag colorScheme={"blue"} size={"sm"} ms={2}>
         2nde commune
       </Tag>
-    </Flex>
+    </>
   );
 
   const format1ereCommuneLibelle = (libelleFormation?: string): ReactNode => (
-    <Flex>
+    <>
       {libelleFormation?.indexOf(" 1ere annee commune") != -1
         ? libelleFormation?.substring(
             0,
@@ -57,7 +57,7 @@ export const FormationLineContent = ({
       <Tag colorScheme={"blue"} size={"sm"} ms={2}>
         1ère commune
       </Tag>
-    </Flex>
+    </>
   );
 
   return (
@@ -83,15 +83,36 @@ export const FormationLineContent = ({
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
       <Td
         minW={300}
-        whiteSpace={line.typeFamille === "2nde_commune" ? undefined : "normal"}
+        whiteSpace={
+          line.typeFamille === "2nde_commune" ||
+          line.typeFamille === "1ere_commune"
+            ? undefined
+            : "normal"
+        }
       >
-        <>
+        <Flex>
           {line.typeFamille === "2nde_commune"
             ? format2ndeCommuneLibelle(line.libelleFormation)
             : line.typeFamille === "1ere_commune"
             ? format1ereCommuneLibelle(line.libelleFormation)
             : line.libelleFormation ?? "-"}
-        </>
+          {line.formationRenovee && (
+            <Flex ms={2}>
+              <Link
+                variant="text"
+                ms={2}
+                as={NextLink}
+                href={createParametrizedUrl("/console/formations", {
+                  filters: {
+                    cfd: [line.formationRenovee],
+                  },
+                })}
+              >
+                Formation rénovée
+              </Link>
+            </Flex>
+          )}
+        </Flex>
       </Td>
       <Td isNumeric>
         <Link
