@@ -46,15 +46,7 @@ const useColorPalette = (
   return defaultColorPalette;
 };
 
-export const CartoGraph = ({
-  graphData,
-  scope = ScopeEnum.region,
-  objectif = "haut",
-  customPiecesSteps,
-  customColorPalette,
-  handleClick,
-  selectedScope,
-}: {
+interface CartoGraphProps {
   graphData?: {
     name?: string;
     parentName?: string;
@@ -66,8 +58,20 @@ export const CartoGraph = ({
   customPiecesSteps?: number[][];
   customColorPalette?: string[];
   handleClick?: (dataCode: string | undefined) => void;
+  codeRegionSelectionne?: string;
   selectedScope?: SelectedScope;
-}) => {
+}
+
+export const CartoGraph = ({
+  graphData,
+  scope = ScopeEnum.region,
+  objectif = "haut",
+  customPiecesSteps,
+  customColorPalette,
+  handleClick,
+  selectedScope,
+  codeRegionSelectionne,
+}: CartoGraphProps) => {
   const colorPalette = useColorPalette(customColorPalette, objectif);
   const bluefrance525 = useToken("colors", "bluefrance.525");
   const bluefrance113 = useToken("colors", "bluefrance.113");
@@ -296,6 +300,25 @@ export const CartoGraph = ({
     }
   };
 
+  const selectRegion = (codeRegion: string) => {
+    if (!chartRef.current) return;
+
+    const regionLabelKey = Object.keys(REGIONS_LABEL_MAPPING).find(
+      (region) => region === codeRegion
+    ) as unknown as keyof typeof REGIONS_LABEL_MAPPING | undefined;
+
+    if (regionLabelKey) {
+      const regionLabel = REGIONS_LABEL_MAPPING[regionLabelKey];
+
+      chartRef.current.dispatchAction({
+        type: "select",
+        dataIndex: graphData?.findIndex((data) => data.name == regionLabel),
+      });
+    } else {
+      unSelectAll();
+    }
+  };
+
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!chartRef.current) {
@@ -310,9 +333,15 @@ export const CartoGraph = ({
         handleClickOnBlankSpace();
       }
     });
+    if (codeRegionSelectionne) {
+      selectRegion(codeRegionSelectionne);
+    } else {
+      unSelectAll();
+    }
   }, [
     option,
     graphData,
+    codeRegionSelectionne,
     chartRef,
     handleClickOnSeries,
     handleClickOnBlankSpace,
