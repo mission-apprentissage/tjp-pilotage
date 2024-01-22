@@ -20,7 +20,7 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
       if (!decoded) return;
 
       const user = await deps.findUserQuery({ email: decoded.email });
-      if (!user) return;
+      if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;
     } catch (e) {
       return;
