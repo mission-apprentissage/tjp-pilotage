@@ -1,6 +1,6 @@
 import { Kysely } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<never>) => {
   await db.schema
     .createTable("indicateurRegion")
     .addColumn("codeRegion", "varchar(2)", (c) =>

@@ -1,6 +1,6 @@
 import { Kysely, sql } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<never>) => {
   await db.executeQuery(sql`CREATE EXTENSION "unaccent";`.compile(db));
   await db.schema
     .alterTable("demande")
@@ -24,7 +24,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<never>) => {
   await db.executeQuery(sql`DROP EXTENSION "unaccent";`.compile(db));
   await db.schema
     .alterTable("demande")

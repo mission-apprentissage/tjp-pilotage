@@ -24,8 +24,8 @@ import * as migration_1702568086990 from "./migration_1702568086990";
 import * as migration_1705916396650 from "./migration_1705916396650";
 
 type Migration = {
-  up: (db: Kysely<unknown>) => Promise<void>;
-  down: (db: Kysely<unknown>) => Promise<void>;
+  up: (db: Kysely<never>) => Promise<void>;
+  down: (db: Kysely<never>) => Promise<void>;
 };
 
 type Migrations = Record<string, Migration>;

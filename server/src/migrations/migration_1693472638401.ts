@@ -1,6 +1,6 @@
 import { Kysely, sql } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<never>) => {
   await db.executeQuery(
     sql`
     CREATE EXTENSION "uuid-ossp"

@@ -8,7 +8,7 @@ export const up = async (db: Kysely<never>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<never>) => {
   await db.schema
     .alterTable("user")
     .dropColumn("enabled")

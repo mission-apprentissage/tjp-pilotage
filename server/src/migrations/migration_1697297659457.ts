@@ -1,6 +1,6 @@
 import { Kysely } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<never>) => {
   await db.schema
     .alterTable("dataFormation")
     .alterColumn("libelle", (c) => c.setNotNull())
@@ -20,7 +20,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<never>) => {
   await db.schema
     .alterTable("dataFormation")
     .alterColumn("libelle", (c) => c.dropNotNull())
