@@ -10,6 +10,7 @@ export const whoAmISchema = {
           email: z.string(),
           role: z.enum(Object.keys(PERMISSIONS) as [Role]).optional(),
           codeRegion: z.string().optional(),
+          uais: z.array(z.string()).optional(),
         }),
       })
       .optional(),

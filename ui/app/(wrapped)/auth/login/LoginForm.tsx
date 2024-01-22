@@ -52,7 +52,12 @@ export const LoginForm = () => {
   const router = useRouter();
 
   useEffect(() => {
-    if (auth) router.replace("/");
+    if (auth)
+      router.replace(
+        auth.user.role === "perdir" && auth.user.uais?.[0]
+          ? `/panorama/etablissement/${auth.user.uais?.[0]}`
+          : "/"
+      );
   }, [auth]);
 
   return (
