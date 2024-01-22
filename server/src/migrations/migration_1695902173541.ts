@@ -1,4 +1,4 @@
-/* eslint-disable-file @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kysely } from "kysely";
 
 export const up = async (db: Kysely<any>) => {
