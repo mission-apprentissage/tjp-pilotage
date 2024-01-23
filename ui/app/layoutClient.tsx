@@ -4,12 +4,12 @@ import "react-notion-x/src/styles.css";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
+import { useSearchParams } from "next/navigation";
 import {
-  createContext,
   Dispatch,
   SetStateAction,
+  createContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -24,6 +24,7 @@ import {
   Changelog,
   ChangelogContext,
 } from "./(wrapped)/changelog/changelogContext";
+import { GlossaireProvider } from "./contexts/glossaireContext";
 
 interface RootLayoutClientProps {
   children: React.ReactNode;
@@ -141,19 +142,21 @@ export default function RootLayoutClient({
                   <CodeRegionFilterContext.Provider
                     value={codeRegionFilterValue}
                   >
-                    <ChangelogContext.Provider
-                      value={{ changelog, setChangelog }}
-                    >
-                      <Flex
-                        direction="column"
-                        height="100vh"
-                        overflow="auto"
-                        ref={containerRef}
-                        onScroll={handleScrolling}
+                    <GlossaireProvider>
+                      <ChangelogContext.Provider
+                        value={{ changelog, setChangelog }}
                       >
-                        {children}
-                      </Flex>
-                    </ChangelogContext.Provider>
+                        <Flex
+                          direction="column"
+                          height="100vh"
+                          overflow="auto"
+                          ref={containerRef}
+                          onScroll={handleScrolling}
+                        >
+                          {children}
+                        </Flex>
+                      </ChangelogContext.Provider>
+                    </GlossaireProvider>
                   </CodeRegionFilterContext.Provider>
                 </UaiFilterContext.Provider>
               </AuthContext.Provider>
