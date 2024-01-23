@@ -16,6 +16,7 @@ import { ReactNode } from "react";
 import { hasPermission } from "shared";
 
 import { useAuth } from "@/utils/security/useAuth";
+import { Glossaire } from "./glossaire/Glossaire";
 
 const NavLink = chakra(
   ({
@@ -132,7 +133,7 @@ export const Nav = () => {
   const { auth } = useAuth();
 
   return (
-    <Flex align="center" flexWrap="wrap">
+    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
@@ -192,6 +193,7 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
+      <Glossaire />
     </Flex>
   );
 };
