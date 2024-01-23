@@ -1,7 +1,7 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
-import { Attractivite_capacite_BTS } from "../fileTypes/Attractivite_capacite_BTS";
-import { Cab_bre_division_effectifs_par_etab_mefst11 } from "../fileTypes/Cab-nbre_division_effectifs_par_etab_mefst11";
+import { BTS_Attractivite_capacite } from "../fileTypes/BTS_Attractivite_capacite";
+import { Constat } from "../fileTypes/Constat";
 import { Decrochage_academique } from "../fileTypes/Decrochage_academique";
 import { Decrochage_regional } from "../fileTypes/Decrochage_regional";
 import { Departements_academies_regions } from "../fileTypes/Departements_academies_regions";
@@ -23,12 +23,12 @@ type LineTypes = {
   optionsBTS: OptionsBTSLine;
   lyceesACCE: LyceesACCELine;
   nMef: NMefLine;
-  "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
+  constat: Constat;
   departements_academies_regions: Departements_academies_regions;
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
-  attractivite_capacite_BTS: Attractivite_capacite_BTS;
+  BTS_Attractivite_capacite: BTS_Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   decrochage_regional: Decrochage_regional;

@@ -3,6 +3,7 @@ import { ExpressionBuilder, sql } from "kysely";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
+import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
@@ -26,7 +27,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 const findFormationsInDb = async ({
   offset = 0,
   limit = 20,
-  rentreeScolaire = ["2022"],
+  rentreeScolaire = [CURRENT_RENTREE],
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,

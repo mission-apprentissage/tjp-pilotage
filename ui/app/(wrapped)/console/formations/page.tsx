@@ -20,6 +20,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { CURRENT_RENTREE } from "server/src/modules/import/domain/CURRENT_RENTREE";
 
 import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
@@ -549,7 +550,7 @@ export default function Formations() {
                 <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
-                      defaultRentreeScolaire="2022"
+                      defaultRentreeScolaire={CURRENT_RENTREE}
                       line={line}
                       expended={
                         historiqueId?.cfd === line.cfd &&

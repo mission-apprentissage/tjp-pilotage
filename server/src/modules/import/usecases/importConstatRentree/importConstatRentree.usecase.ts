@@ -24,38 +24,48 @@ export const [importConstatRentree] = inject(
       await streamIt(
         (offset) =>
           deps.findRawDatas({
-            type: "Cab-nbre_division_effectifs_par_etab_mefst11",
+            type: "constat",
             offset,
             limit: 10000,
             year: rentreeScolaire,
           }),
         async (constatRentreeLine, count) => {
-          const nMef = await findNMef({
-            mefstat: constatRentreeLine["Mef Bcp 11"],
-          });
+          const mefStat11 = constatRentreeLine["Mef Bcp 11"];
 
-          const constatRentree: Insertable<DB["constatRentree"]> = {
-            uai: constatRentreeLine["Numéro d'établissement"],
-            mefstat11: constatRentreeLine["Mef Bcp 11"],
-            effectif: Number(constatRentreeLine["Nombre d'élèves"] ?? "0"),
-            cfd: nMef.FORMATION_DIPLOME,
-            anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
-            rentreeScolaire,
-          };
+          if (mefStat11) {
+            const nMef = await findNMef({
+              mefstat: constatRentreeLine["Mef Bcp 11"],
+            });
 
-          try {
-            await deps.createConstatRentree(constatRentree);
-
-            process.stdout.write(
-              `\r${count} constat de rentrée ajoutés ou mis à jour`
-            );
-          } catch (error) {
-            console.log(
-              `An error occured while importing datas`,
-              JSON.stringify(constatRentree, null, 2)
-            );
-            console.error(error);
-            errorCount++;
+            const uai = constatRentreeLine["UAI"];
+          
+            if (!uai) {
+              throw new Error(`Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`)
+            }
+  
+            const constatRentree: Insertable<DB["constatRentree"]> = {
+              uai: constatRentreeLine["UAI"],
+              mefstat11: constatRentreeLine["Mef Bcp 11"],
+              effectif: Number(constatRentreeLine["Nombre d'élèves : Total"] ?? "0"),
+              cfd: nMef.FORMATION_DIPLOME,
+              anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
+              rentreeScolaire,
+            };
+  
+            try {
+              await deps.createConstatRentree(constatRentree);
+  
+              process.stdout.write(
+                `\r${count} constat de rentrée ajoutés ou mis à jour`
+              );
+            } catch (error) {
+              console.log(
+                `An error occured while importing datas`,
+                JSON.stringify(constatRentree, null, 2)
+              );
+              console.error(error);
+              errorCount++;
+            }
           }
         },
         { parallel: 20 }

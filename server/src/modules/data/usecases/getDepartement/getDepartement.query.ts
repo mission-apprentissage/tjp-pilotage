@@ -3,6 +3,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
+import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notAnneeCommune,
@@ -18,7 +19,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 export const getDepartementStats = async ({
   codeDepartement,
   codeNiveauDiplome,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
   millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeDepartement: string;
