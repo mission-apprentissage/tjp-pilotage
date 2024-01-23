@@ -16,10 +16,10 @@ export const getPositionQuadrant = (
     return "-";
 
   if (
-    !formation.tauxInsertion ||
-    !formation.tauxPoursuite ||
-    !moyenne?.tauxInsertion ||
-    !moyenne.tauxPoursuite
+    formation.tauxInsertion === undefined ||
+    formation.tauxPoursuite === undefined ||
+    moyenne?.tauxInsertion === undefined ||
+    moyenne.tauxPoursuite === undefined
   )
     return "Hors quadrant";
 
