@@ -178,7 +178,7 @@ export const ScopedTable = ({
               </Tr>
             </Thead>
             <Tbody>
-              {Object.values(data ?? []).map((territoire) => {
+              {Object.values(data?.all ?? []).map((territoire) => {
                 const trBgColor =
                   territoire.code === scope.value
                     ? "blueecume.400_hover !important"
@@ -214,7 +214,7 @@ export const ScopedTable = ({
                       {territoire.placesTransformees}
                     </Td>
                     <Td isNumeric backgroundColor={tdBgColor} color={color}>
-                      {territoire.effectif}
+                      {territoire.effectif ?? "-"}
                     </Td>
                     <Td
                       isNumeric

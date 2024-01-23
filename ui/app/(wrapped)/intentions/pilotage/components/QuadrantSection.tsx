@@ -36,7 +36,7 @@ import { useStateParams } from "../../../../../utils/useFilters";
 import {
   Filters,
   OrderFormationsTransformationStats,
-  PilotageTransformationStats,
+  ScopedTransformationStats,
   SelectedScope,
 } from "../types";
 
@@ -47,7 +47,7 @@ export const QuadrantSection = ({
 }: {
   scope?: SelectedScope;
   parentFilters: Partial<Filters>;
-  scopeFilters?: PilotageTransformationStats["filters"];
+  scopeFilters?: ScopedTransformationStats["filters"];
 }) => {
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
