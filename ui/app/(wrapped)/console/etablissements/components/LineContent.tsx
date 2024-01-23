@@ -1,11 +1,23 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, Flex, IconButton, Skeleton, Tag, Td, Tr } from "@chakra-ui/react";
+import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Link,
+  Skeleton,
+  Tag,
+  Td,
+  Text,
+  Tr,
+} from "@chakra-ui/react";
+import NextLink from "next/link";
 import { ReactNode } from "react";
 
 import { TableBadge } from "@/components/TableBadge";
 
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
+import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { Line } from "../page";
 
@@ -84,35 +96,35 @@ export const EtablissementLineContent = ({
             : line.typeFamille === "1ere_commune"
             ? format1ereCommuneLibelle(line.libelleFormation)
             : line.libelleFormation ?? "-"}
-          {/*
-
-          En stand by en attendant appui UX
-
           {line.formationRenovee && (
             <Flex
               ms={2}
+              mt={"auto"}
               width={"fit-content"}
               h={"1.5rem"}
               whiteSpace={"nowrap"}
             >
-              <Tag size="sm">
-                <Link
-                  variant="text"
-                  as={NextLink}
-                  href={createParametrizedUrl("/console/etablissements", {
-                    filters: {
-                      cfd: [line.formationRenovee],
-                    },
-                  })}
-                >
-                  <Flex my="auto">
-                    <SunIcon mr={2} boxSize={"14px"} />
-                    <Text fontSize={"11px"}>FORMATION RÉNOVÉE</Text>
-                  </Flex>
-                </Link>
-              </Tag>
+              <Link
+                variant="text"
+                as={NextLink}
+                href={createParametrizedUrl("/console/etablissements", {
+                  filters: {
+                    cfd: [line.formationRenovee],
+                  },
+                })}
+                color="bluefrance.113"
+              >
+                <Flex my="auto">
+                  <Text fontSize={"11px"}>Voir la formation rénovée</Text>
+                  <ArrowForwardIcon
+                    ml={1}
+                    boxSize={"14px"}
+                    verticalAlign={"baseline"}
+                  />
+                </Flex>
+              </Link>
             </Flex>
-          )} */}
+          )}
         </Flex>
       </Td>
 
