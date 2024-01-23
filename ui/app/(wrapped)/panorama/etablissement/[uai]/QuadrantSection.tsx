@@ -146,15 +146,11 @@ export const QuadrantSection = ({
               filteredFormations &&
               (typeVue === "quadrant" ? (
                 <Quadrant
-                  meanPoursuite={(meanPoursuite ?? 0) * 100}
-                  meanInsertion={(meanInsertion ?? 0) * 100}
+                  meanPoursuite={meanPoursuite}
+                  meanInsertion={meanInsertion}
                   TooltipContent={FormationTooltipContent}
                   InfoTootipContent={InfoTooltipContent}
-                  data={filteredFormations.map((formation) => ({
-                    ...formation,
-                    tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
-                    tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
-                  }))}
+                  data={filteredFormations}
                   itemId={(item) => item.cfd + item.codeDispositif}
                   itemColor={(formation) =>
                     formation.cfd === currentCfd ? "#fd3b4cb5" : undefined

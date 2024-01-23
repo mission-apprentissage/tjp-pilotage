@@ -4,11 +4,13 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("formationHistorique")
     .dropConstraint("fk_formation")
+    .ifExists()
     .execute();
 
   await db.schema
     .alterTable("formationHistorique")
     .dropConstraint("fk_formation2")
+    .ifExists()
     .execute();
 };
 

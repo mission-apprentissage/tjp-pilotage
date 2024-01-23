@@ -355,16 +355,14 @@ export const QuadrantSection = ({
                     (typeVue === "quadrant" ? (
                       <Quadrant
                         onClick={({ cfd }) => setFormationId(cfd)}
-                        meanInsertion={(stats?.tauxInsertion ?? 0) * 100}
-                        meanPoursuite={(stats?.tauxPoursuite ?? 0) * 100}
+                        meanInsertion={stats?.tauxInsertion}
+                        meanPoursuite={stats?.tauxPoursuite}
                         itemId={(formation) =>
                           formation.cfd + formation.codeDispositif
                         }
                         data={formations?.map((formation) => ({
                           ...formation,
                           effectif: formation.differencePlaces,
-                          tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
-                          tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
                         }))}
                         itemColor={(formation) =>
                           formation.cfd === currentCfd ? "#fd3b4cb5" : undefined

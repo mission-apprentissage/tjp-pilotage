@@ -320,6 +320,8 @@ export interface User {
   role: string | null;
   codeRegion: string | null;
   uais: string[] | null;
+  enabled: Generated<boolean>;
+  sub: string | null;
 }
 
 export interface DB {

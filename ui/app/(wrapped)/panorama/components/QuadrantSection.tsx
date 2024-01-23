@@ -403,14 +403,9 @@ export const QuadrantSection = ({
                 typeVue === "quadrant" ? (
                   <Quadrant
                     onClick={({ cfd }) => setFormationId(cfd)}
-                    meanInsertion={(meanInsertion ?? 0) * 100}
-                    meanPoursuite={(meanPoursuite ?? 0) * 100}
-                    data={filteredFormations.map((formation) => ({
-                      ...formation,
-                      cfd: formation.cfd,
-                      tauxInsertion: (formation.tauxInsertion ?? 0) * 100,
-                      tauxPoursuite: (formation.tauxPoursuite ?? 0) * 100,
-                    }))}
+                    meanInsertion={meanInsertion}
+                    meanPoursuite={meanPoursuite}
+                    data={filteredFormations}
                     TooltipContent={FormationTooltipContent}
                     itemId={(formation) =>
                       formation.cfd + formation.codeDispositif

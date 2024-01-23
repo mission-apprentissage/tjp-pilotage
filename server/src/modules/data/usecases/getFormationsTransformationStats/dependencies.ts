@@ -2,6 +2,7 @@ import { ExpressionBuilder, sql } from "kysely";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
@@ -70,7 +71,7 @@ const getFormationsTransformationStatsQuery = ({
   status,
   type,
   rentreeScolaire = "2024",
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
@@ -269,7 +270,7 @@ const getRegionStats = async ({
   codeAcademie,
   codeDepartement,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string;
   codeAcademie?: string;

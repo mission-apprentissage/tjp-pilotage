@@ -2,6 +2,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
@@ -17,7 +18,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 export const getFormationsRegion = async ({
   codeRegion,
   rentreeScolaire = "2022",
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeNiveauDiplome,
   libelleFiliere,
   orderBy,

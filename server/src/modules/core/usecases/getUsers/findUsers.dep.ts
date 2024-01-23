@@ -17,11 +17,7 @@ export const findUsers = async ({
 }) => {
   const users = await kdb
     .selectFrom("user")
-    .leftJoin(
-      "region",
-      "region.codeRegion",
-      "user.codeRegion"
-    )
+    .leftJoin("region", "region.codeRegion", "user.codeRegion")
     .selectAll()
     .select(kdb.fn.count<number>("id").over().as("count"))
     .where((w) => {

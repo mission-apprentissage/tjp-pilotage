@@ -2,6 +2,7 @@ import { ExpressionBuilder, sql } from "kysely";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
@@ -25,7 +26,7 @@ const findFormationsInDb = async ({
   offset = 0,
   limit = 20,
   rentreeScolaire = ["2022"],
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,

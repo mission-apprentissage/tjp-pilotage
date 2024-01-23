@@ -9,7 +9,7 @@ function import_recipients() {
   IFS=', ' read -r -a keys <<<"${RECIPIENTS_KEYS:-""}"
 
   for key in "${keys[@]}"; do
-    gpg --recv-keys "${key}"
+    gpg --keyserver keyserver.ubuntu.com --recv-keys "${key}"
   done
 }
 

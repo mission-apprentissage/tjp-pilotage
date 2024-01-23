@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
+
 import { Kysely } from "kysely";
 
 import * as migration_1693472638401 from "./migration_1693472638401";
@@ -26,11 +28,12 @@ import * as migration_1703005794872 from "./migration_1703005794872";
 import * as migration_1703164478576 from "./migration_1703164478576";
 import * as migration_1704965024290 from "./migration_1704965024290";
 import * as migration_1705490277250 from "./migration_1705490277250";
+import * as migration_1705916396650 from "./migration_1705916396650";
 import * as migration_1705941490069 from "./migration_1705941490069";
 
 type Migration = {
-  up: (db: Kysely<unknown>) => Promise<void>;
-  down: (db: Kysely<unknown>) => Promise<void>;
+  up: (db: Kysely<any>) => Promise<void>;
+  down: (db: Kysely<any>) => Promise<void>;
 };
 
 type Migrations = Record<string, Migration>;
@@ -62,5 +65,6 @@ export const migrations: Migrations = {
   migration_1703164478576,
   migration_1704965024290,
   migration_1705490277250,
+  migration_1705916396650,
   migration_1705941490069,
 };
