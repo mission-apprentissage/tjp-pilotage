@@ -58,11 +58,13 @@ export const [importFormations] = inject(
           const cfd = item.cfd;
           console.log("cfd famille", cfd, count);
           if (!cfd) return;
+          const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
             await importFormationEtablissements(ancienCfd, { fetchIj });
           }
           await importFormationEtablissements(cfd, { fetchIj });
+          if (!formation) return;
         },
         { parallel: 20 }
       );

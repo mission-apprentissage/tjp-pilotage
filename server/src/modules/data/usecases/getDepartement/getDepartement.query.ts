@@ -8,10 +8,7 @@ import {
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
-import {
-  notHistorique,
-  notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -98,6 +95,8 @@ export const getDepartementStats = async ({
       "departement.codeDepartement",
       "etablissement.codeDepartement"
     )
+    .where("etablissement.codeDepartement", "=", codeDepartement)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where(
@@ -105,10 +104,7 @@ export const getDepartementStats = async ({
         "in",
         codeNiveauDiplome
       );
-    })
-    .where(notHistorique)
-    .where("etablissement.codeDepartement", "=", codeDepartement)
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire);
+    });
 
   const nbFormations = await baseStatsEntree
     .where(notAnneeCommune)

@@ -40,8 +40,11 @@ export const [importIndicateurEntree, importIndicateurEntreeFactory] = inject(
       const isSpecialite = await deps.findSpecialite({
         cfd,
       });
+      const isAnneeCommune = await deps.findAnneeCommune({
+        cfdFamille: cfd,
+      });
 
-      const anneeDebut = isSpecialite ? 1 : 0;
+      const anneeDebut = isSpecialite && !isAnneeCommune ? 1 : 0;
 
       const { capacites, premiersVoeux } = isBTS(cfd)
         ? await deps.getIndicateursParcoursSup({
