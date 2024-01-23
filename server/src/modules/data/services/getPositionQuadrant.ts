@@ -2,12 +2,19 @@ export const getPositionQuadrant = (
   formation: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
+    typeFamille?: string;
   },
   moyenne?: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
   }
 ): string => {
+  if (
+    formation.typeFamille === "2nde_commune" ||
+    formation.typeFamille === "1ere_commune"
+  )
+    return "-";
+
   if (
     !formation.tauxInsertion ||
     !formation.tauxPoursuite ||
