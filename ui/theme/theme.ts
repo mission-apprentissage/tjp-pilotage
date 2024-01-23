@@ -1,4 +1,4 @@
-import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
+import { theme as chakraTheme, extendBaseTheme } from "@chakra-ui/react";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
@@ -22,6 +22,9 @@ export const themeDefinition = {
         fontSize: `14px`,
         fontFamily: "Marianne, Arial",
         background: "white",
+      },
+      ".react-markdown> *:not(:last-child)": {
+        marginBottom: "24px",
       },
     },
   },
