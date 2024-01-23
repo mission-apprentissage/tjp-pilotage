@@ -19,6 +19,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import { CURRENT_RENTREE } from "server/src/modules/import/domain/CURRENT_RENTREE";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -660,7 +661,7 @@ export default function Etablissements() {
                   <Tr h="12">
                     <EtablissementLineContent
                       line={line}
-                      defaultRentreeScolaire="2022"
+                      defaultRentreeScolaire={CURRENT_RENTREE}
                       expended={
                         historiqueId?.cfd === line.codeFormationDiplome &&
                         historiqueId.codeDispositif === line.dispositifId &&

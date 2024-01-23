@@ -1,6 +1,7 @@
 import { ExpressionBuilder, expressionBuilder, RawBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/schema";
+import { CURRENT_RENTREE } from "../../import/domain/CURRENT_RENTREE";
 
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,
@@ -75,7 +76,7 @@ export const selectTauxPression = (
 
 export const selectTauxPressionParFormationEtParRegionDemande = ({
   eb,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
   rentreeScolaire?: string;
@@ -105,7 +106,7 @@ export const selectTauxPressionParFormationEtParRegionDemande = ({
 
 export const tauxPressionFormationRegional = ({
   eb,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
   rentreeScolaire?: string;
@@ -167,7 +168,7 @@ export const withTauxPressionReg = <
     .innerJoin("indicateurEntree as subIE", (join) =>
       join
         .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-        .on("subIE.rentreeScolaire", "=", "2022")
+        .on("subIE.rentreeScolaire", "=", CURRENT_RENTREE)
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
     .whereRef("subFE.cfd", "=", cfdRef)

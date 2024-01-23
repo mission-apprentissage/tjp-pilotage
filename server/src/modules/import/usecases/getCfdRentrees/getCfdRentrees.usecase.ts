@@ -67,7 +67,7 @@ export const [getCfdRentrees] = inject(
       const enseignements = await _.chain(anneesDispositifAvecConstats)
         .map(({ constats }) => constats)
         .flatMap()
-        .groupBy((v) => v["Numéro d'établissement"])
+        .groupBy((v) => v["UAI"])
         .entries()
         .map(([uai, annees]) => ({
           uai,
@@ -84,7 +84,7 @@ export const [getCfdRentrees] = inject(
                 libelle: anneeDispositif.libelleDispositif,
                 mefstat: anneeDispositif.mefstat,
                 effectif: constat
-                  ? parseInt(constat?.["Nombre d'élèves"])
+                  ? parseInt(constat?.["Nombre d'élèves : Total"] ?? "0")
                   : undefined,
                 constatee: !!constat,
               };
