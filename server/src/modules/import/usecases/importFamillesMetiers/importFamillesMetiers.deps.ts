@@ -13,7 +13,6 @@ const findFamillesMetiers = async ({
   kdb
     .selectFrom("familleMetier")
     .select(["cfdFamille", "libelleFamille", "codeMinistereTutelle"])
-    .groupBy(["cfdFamille", "libelleFamille", "codeMinistereTutelle"])
     .distinct()
     .offset(offset)
     .$call((q) => {
