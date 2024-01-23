@@ -13,7 +13,7 @@ const findAttractiviteCapaciteBTS = async ({
   rentreeScolaire: string;
 }) =>
   rawDataRepository.findRawDatas({
-    type: "attractivite_capacite_BTS",
+    type: "BTS_Attractivite_capacite",
     year: rentreeScolaire,
     filter: {
       "MEFSTAT11 rectifié": mefstat,

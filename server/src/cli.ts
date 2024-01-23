@@ -121,7 +121,7 @@ cli
         type: year ? `${type}_${year}` : type,
         fileStream: fs.createReadStream(
           year
-            ? `${basepath}/files/${year}/${type}.csv`
+            ? `${basepath}/files/${year}/${type}_${year}.csv`
             : `${basepath}/files/${type}.csv`,
           "utf8"
         ),
@@ -142,14 +142,15 @@ cli
 
     const actions = {
       regroupements: () => getImport("regroupements"),
-      ...getImports("attractivite_capacite", ["2021", "2022"]),
-      ...getImports("attractivite_capacite_BTS", ["2021", "2022"]),
+      ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
+      ...getImports("BTS_attractivite_capacite", ["2021", "2022", "2023"]),
       ...getImports("decrochage_regional", ["2020"]),
       ...getImports("decrochage_academique", ["2020"]),
-      ...getImports("Cab-nbre_division_effectifs_par_etab_mefst11", [
+      ...getImports("constat", [
         "2020",
         "2021",
         "2022",
+        "2023"
       ]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
