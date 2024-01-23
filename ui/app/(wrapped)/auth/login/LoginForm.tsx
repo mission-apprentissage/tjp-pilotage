@@ -114,7 +114,7 @@ export const LoginForm = () => {
               Se connecter
             </Button>
           </Flex>
-          {true && (
+          {false && (
             <>
               <Divider mt="6" mb="6" />
               <Button width="100%" as={NextLink} href={url ?? "#"}>
