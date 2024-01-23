@@ -11,6 +11,7 @@ import { migrateToLatest } from "./migrations/migrate";
 import { registerChangelogModule } from "./modules/changelog";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data";
+import { registerGlossaireModule } from "./modules/glossaire";
 import { registerIntentionsModule } from "./modules/intentions";
 import { Server, server } from "./server";
 
@@ -94,7 +95,8 @@ const registerRoutes = (instance: Server) => {
     ...registerCoreModule({ server: instance }),
     ...registerFormationModule({ server: instance }),
     ...registerIntentionsModule({ server: instance }),
-    ...registerChangelogModule({ server: instance })
+    ...registerChangelogModule({ server: instance }),
+    ...registerGlossaireModule({ server: instance }),
   };
 };
 
