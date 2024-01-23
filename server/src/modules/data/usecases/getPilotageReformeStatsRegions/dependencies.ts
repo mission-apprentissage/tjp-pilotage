@@ -2,6 +2,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
@@ -14,7 +15,7 @@ const getStatsRegions = async ({
   codeNiveauDiplome?: string[];
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
-  const rentreeScolaire = "2022";
+  const rentreeScolaire = CURRENT_RENTREE;
 
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")

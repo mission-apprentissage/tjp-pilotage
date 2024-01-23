@@ -4,6 +4,7 @@ import { Scope, ScopeEnum } from "shared";
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
+import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import {
   notPerimetreIJAcademie,
@@ -79,7 +80,7 @@ const genericOnConstatRentree =
         "constatRentree.uai"
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
-      .where("constatRentree.rentreeScolaire", "=", "2022")
+      .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
       .where("constatRentree.anneeDispositif", "=", 1)
       .$call((eb) => {
         if (CPC) return eb.where("dataFormation.cpc", "in", CPC);

@@ -3,6 +3,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
+import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
@@ -17,7 +18,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 const getFormationsEtablissement = async ({
   uai,
   millesimeSortie = CURRENT_IJ_MILLESIME,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
   orderBy,
 }: {
   uai: string;
