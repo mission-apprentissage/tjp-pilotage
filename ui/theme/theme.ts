@@ -30,6 +30,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       525: "#0078f3",
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
+      950: "E8EDFF",
+      "950_hover": "#c2d1ff",
+      "950_active": "#a9bfff",
     },
     blue: {
       main: "#5770BE",

@@ -81,37 +81,43 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td
-        minW={300}
-        whiteSpace={
-          line.typeFamille === "2nde_commune" ||
-          line.typeFamille === "1ere_commune"
-            ? undefined
-            : "normal"
-        }
-      >
+      <Td minW={450} whiteSpace={"normal"}>
         <Flex>
           {line.typeFamille === "2nde_commune"
             ? format2ndeCommuneLibelle(line.libelleFormation)
             : line.typeFamille === "1ere_commune"
             ? format1ereCommuneLibelle(line.libelleFormation)
             : line.libelleFormation ?? "-"}
+          {/*
+
+          En stand by en attendant appui UX
+
+
           {line.formationRenovee && (
-            <Flex ms={2}>
-              <Link
-                variant="text"
-                ms={2}
-                as={NextLink}
-                href={createParametrizedUrl("/console/formations", {
-                  filters: {
-                    cfd: [line.formationRenovee],
-                  },
-                })}
-              >
-                Formation rénovée
-              </Link>
+            <Flex
+              ms={2}
+              width={"fit-content"}
+              h={"1.5rem"}
+              whiteSpace={"nowrap"}
+            >
+              <Tag size="sm">
+                <Link
+                  variant="text"
+                  as={NextLink}
+                  href={createParametrizedUrl("/console/formations", {
+                    filters: {
+                      cfd: [line.formationRenovee],
+                    },
+                  })}
+                >
+                  <Flex my="auto">
+                    <SunIcon mr={2} boxSize={"14px"} />
+                    <Text fontSize={"11px"}>FORMATION RÉNOVÉE</Text>
+                  </Flex>
+                </Link>
+              </Tag>
             </Flex>
-          )}
+          )} */}
         </Flex>
       </Td>
       <Td isNumeric>
