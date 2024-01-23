@@ -4,6 +4,7 @@ import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -40,7 +41,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   uai,
   compensation,
   user,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
   offset = 0,
   limit = 20,
   orderBy = { order: "desc", column: "createdAt" },

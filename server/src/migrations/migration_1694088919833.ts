@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kysely, sql } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<any>) => {
   await db.schema
     .createType("typeUai")
     .asEnum([
@@ -102,7 +103,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<any>) => {
   await db.schema.dropTable("dataEtablissement").execute();
   await db.schema.dropTable("dataFormation").execute();
   await db.schema.dropType("typeUai").execute();

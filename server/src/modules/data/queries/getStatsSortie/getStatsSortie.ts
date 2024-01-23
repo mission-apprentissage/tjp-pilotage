@@ -1,4 +1,5 @@
 import { kdb } from "../../../../db/db";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
@@ -8,7 +9,7 @@ const getStatsSortieBase = ({
   codeRegion,
   codeDepartement,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
   codeDepartement?: string | string[];
@@ -68,7 +69,7 @@ const getStatsSortieBase = ({
 export const getStatsSortieParNiveauDiplome = async ({
   codeRegion,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string[];
   millesimeSortie?: string;
@@ -98,7 +99,7 @@ export const getStatsSortieParNiveauDiplome = async ({
 export const getStatsSortieParRegionsEtNiveauDiplome = async ({
   codeRegion,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
   codeNiveauDiplome?: string[];
@@ -139,7 +140,7 @@ export const getStatsSortieParRegions = async ({
   codeRegion,
   codeDepartement,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
   codeDepartement?: string | string[];
@@ -172,7 +173,7 @@ export const getStatsSortie = async ({
   codeRegion,
   codeDepartement,
   codeNiveauDiplome,
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
   codeDepartement?: string | string[];

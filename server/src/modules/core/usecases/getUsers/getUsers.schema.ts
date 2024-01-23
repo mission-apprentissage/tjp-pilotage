@@ -11,6 +11,7 @@ const UserSchema = z.object({
   libelleRegion: z.string().optional(),
   createdAt: z.string().optional(),
   uais: z.array(z.string()).optional(),
+  enabled: z.boolean(),
 });
 
 export const getUsersSchema = {
