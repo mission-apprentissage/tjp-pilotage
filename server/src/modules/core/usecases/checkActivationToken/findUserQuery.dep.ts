@@ -5,6 +5,7 @@ export const findUserQuery = async ({ email }: { email: string }) => {
   const user = await kdb
     .selectFrom("user")
     .where("user.email", "=", email)
+    .where("user.enabled", "=", true)
     .select(["email", "password"])
     .executeTakeFirst();
 

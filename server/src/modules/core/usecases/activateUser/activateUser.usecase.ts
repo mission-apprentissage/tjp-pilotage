@@ -5,11 +5,11 @@ import { passwordRegex } from "shared/utils/passwordRegex";
 
 import { config } from "../../../../../config/config";
 import { hashPassword } from "../../utils/passwordUtils";
-import { setPasswordQuery } from "./setPasswordQuery.dep";
+import { updateUserQuery } from "./updateUserQuery.dep";
 
 export const [activateUser, activateUserFactory] = inject(
   {
-    setPasswordQuery,
+    updateUserQuery: updateUserQuery,
     jwtSecret: config.auth.activationJwtSecret,
   },
   (deps) =>
@@ -44,6 +44,6 @@ export const [activateUser, activateUserFactory] = inject(
       }
 
       const hashedPassword = hashPassword(password);
-      await deps.setPasswordQuery({ email, password: hashedPassword });
+      await deps.updateUserQuery({ email, password: hashedPassword });
     }
 );

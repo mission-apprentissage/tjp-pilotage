@@ -30,6 +30,7 @@ export const [createUser, createUserFactory] = inject(
         lastname,
         role,
         codeRegion,
+        enabled: true,
       });
       const activationToken = jwt.sign(
         { email: formattedEmail },
