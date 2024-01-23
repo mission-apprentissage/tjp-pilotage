@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kysely } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<any>) => {
   await db.schema
     .alterTable("dataFormation")
     .alterColumn("libelle", (c) => c.setNotNull())
@@ -20,7 +21,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<any>) => {
   await db.schema
     .alterTable("dataFormation")
     .alterColumn("libelle", (c) => c.dropNotNull())

@@ -12,7 +12,7 @@ const activationToken = jwt.sign({ email: "test@test.fr" }, jwtSecret, {
 describe("activateUser usecase", () => {
   it("should throw an exception if the token is missing", async () => {
     const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
+      updateUserQuery: async () => {},
       jwtSecret,
     });
 
@@ -27,7 +27,7 @@ describe("activateUser usecase", () => {
 
   it("should throw an exception if the token is invalid", async () => {
     const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
+      updateUserQuery: async () => {},
       jwtSecret,
     });
 
@@ -42,7 +42,7 @@ describe("activateUser usecase", () => {
 
   it("should throw an exception if passwords are different", async () => {
     const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
+      updateUserQuery: async () => {},
       jwtSecret,
     });
 
@@ -57,7 +57,7 @@ describe("activateUser usecase", () => {
 
   it("should throw an exception if password is unsafe", async () => {
     const activateUser = activateUserFactory({
-      setPasswordQuery: async () => {},
+      updateUserQuery: async () => {},
       jwtSecret,
     });
 
@@ -72,7 +72,7 @@ describe("activateUser usecase", () => {
 
   it("should set password", async () => {
     const deps = {
-      setPasswordQuery: jest.fn(async () => {}),
+      updateUserQuery: jest.fn(async () => {}),
       jwtSecret,
     };
 
@@ -83,7 +83,7 @@ describe("activateUser usecase", () => {
       repeatPassword: correctPassword,
       activationToken,
     });
-    await expect(deps.setPasswordQuery).toBeCalledWith(
+    await expect(deps.updateUserQuery).toBeCalledWith(
       expect.objectContaining({
         email: "test@test.fr",
       })

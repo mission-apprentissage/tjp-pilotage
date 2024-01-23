@@ -3,6 +3,7 @@ import jwt from "jsonwebtoken";
 import { UserinfoResponse } from "openid-client";
 
 import { config } from "../../../../../config/config";
+import { logger } from "../../../../logger";
 import { getDneClient } from "../../services/dneClient/dneClient";
 import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
@@ -72,6 +73,7 @@ export const [redirectDne, redirectDneFactory] = inject(
       if (!email) throw new Error("missing user email");
 
       const user = await deps.findUserQuery(email);
+      if (user && !user.enabled) throw new Error("user not enabled");
 
       const attributes = getUserRoleAttributes(userinfo);
       if (!attributes) throw new Error("missing user info");
@@ -82,15 +84,21 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       if (!etablissement?.codeRegion) throw new Error("missing codeRegion");
 
-      await deps.createUserInDB({
-        user: {
-          ...user,
-          email,
-          firstname: userinfo.given_name,
-          lastname: userinfo.family_name,
-          codeRegion: etablissement?.codeRegion,
-          ...attributes,
-        },
+      const userToInsert = {
+        ...user,
+        email,
+        firstname: userinfo.given_name,
+        lastname: userinfo.family_name,
+        sub: userinfo.sub,
+        codeRegion: etablissement?.codeRegion,
+        enabled: true,
+        ...attributes,
+      };
+      await deps.createUserInDB({ user: userToInsert });
+
+      logger.info(`Nouvel utilisateur DNE`, {
+        user: userToInsert,
+        password: undefined,
       });
 
       const authorizationToken = jwt.sign({ email }, deps.authJwtSecret, {

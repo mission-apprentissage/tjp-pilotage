@@ -2,6 +2,7 @@ import {
   Alert,
   AlertDescription,
   Button,
+  Checkbox,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -45,6 +46,7 @@ export const EditUser = ({
       firstname: "",
       lastname: "",
       role: "gestionnaire_region",
+      enabled: true,
     },
   });
 
@@ -147,6 +149,14 @@ export const EditUser = ({
             </Select>
             {!!errors.codeRegion && (
               <FormErrorMessage>{errors.codeRegion.message}</FormErrorMessage>
+            )}
+          </FormControl>
+          <FormControl mb="4" isInvalid={!!errors.enabled}>
+            <Checkbox {...register("enabled")} isRequired={false}>
+              Compte actif
+            </Checkbox>
+            {!!errors.enabled && (
+              <FormErrorMessage>{errors.enabled.message}</FormErrorMessage>
             )}
           </FormControl>
           {isError && (

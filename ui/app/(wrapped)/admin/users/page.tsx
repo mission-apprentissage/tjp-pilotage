@@ -3,6 +3,7 @@
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Flex,
@@ -34,6 +35,7 @@ const Columns = {
   firstname: "Prénom",
   lastname: "Nom",
   role: "Rôle",
+  enabled: "Statut",
   libelleRegion: "Région",
   uais: "Uais",
   createdAt: "Ajouté le",
@@ -140,6 +142,10 @@ export default () => {
                     <OrderIcon {...order} column="role" />
                     {Columns.role}
                   </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("enabled")}>
+                    <OrderIcon {...order} column="enabled" />
+                    {Columns.enabled}
+                  </Th>
                   <Th
                     cursor="pointer"
                     onClick={() => handleOrder("libelleRegion")}
@@ -168,7 +174,13 @@ export default () => {
                     <Td>{user.firstname}</Td>
                     <Td>{user.lastname}</Td>
                     <Td>{user.role}</Td>
-
+                    <Td>
+                      {user.enabled ? (
+                        <Badge colorScheme="green">Actif</Badge>
+                      ) : (
+                        <Badge colorScheme="red">Désactivé</Badge>
+                      )}
+                    </Td>
                     <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
                     <Td>
