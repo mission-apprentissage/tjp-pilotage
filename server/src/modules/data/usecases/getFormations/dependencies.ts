@@ -351,7 +351,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -517,9 +517,12 @@ const findFiltersInDb = async ({
 
   const familles = await base
     .select((eb) => [
-      sql<string>`CONCAT(${eb.ref(
-        "familleMetier.libelleFamille"
-      )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
+      sql<string>`CONCAT(
+        ${eb.ref("familleMetier.libelleFamille")},
+        ' (',
+        ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
+        ')'
+      )`.as("label"),
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
