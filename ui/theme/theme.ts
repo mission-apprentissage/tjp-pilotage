@@ -1,4 +1,4 @@
-import { theme as chakraTheme, extendBaseTheme } from "@chakra-ui/react";
+import { extendBaseTheme,theme as chakraTheme } from "@chakra-ui/react";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
@@ -128,6 +128,7 @@ export const themeDefinition = {
       525: "#7b7b7b",
       "525_hover": "#a6a6a6",
       "525_active": "#bababa",
+      625: "#929292",
     },
     warning: {
       525: "#d64d00",

@@ -1,4 +1,5 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+
 import { GlossaireEntryIndicator } from "../../getGlossaireEntry/getGlossaireEntry.schema";
 import { PROPERTIES } from "./properties";
 

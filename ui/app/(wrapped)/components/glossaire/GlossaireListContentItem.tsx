@@ -1,6 +1,8 @@
 import { Badge, Box, Text, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { GlossaireEntryWithKey } from "./types";
+
+import { GlossaireIcon } from "./GlossaireIcon";
+import { GlossaireEntryContent } from "./types";
 
 const highlightText = (text?: string, highlight?: string) => {
   if (!text) {
@@ -31,22 +33,14 @@ export const GlossaireListContentItem = ({
   searchValue,
   selectEntry,
 }: {
-  entry: GlossaireEntryWithKey;
+  entry: GlossaireEntryContent;
   searchValue: string;
   selectEntry: (id: string) => void;
 }) => {
-  const [blue, yellow, purple, gray, red, brown, green, pink, orange] =
-    useToken("colors", [
-      "blue",
-      "yellow",
-      "purple",
-      "gray",
-      "red",
-      "brown",
-      "green",
-      "pink",
-      "orange",
-    ]);
+  const [blue, yellow, purple, gray, red, green, pink, orange] = useToken(
+    "colors",
+    ["blue", "yellow", "purple", "gray", "red", "green", "pink", "orange"]
+  );
 
   return (
     <Box
@@ -61,37 +55,34 @@ export const GlossaireListContentItem = ({
       onClick={() => selectEntry(entry.id)}
     >
       <Box display={"flex"}>
-        <Icon
-          icon={entry.icon!}
-          height={"24px"}
-          width={"24px"}
-          style={{ marginRight: "12px" }}
-        />
+        <GlossaireIcon icon={entry.icon!} size={"24px"} marginRight={"12px"} />
         <Text fontSize={"lg"}>{highlightText(entry.title, searchValue)}</Text>
       </Box>
       <Box display={"flex"}>
-        <Badge
-          colorScheme={
-            {
-              blue,
-              yellow,
-              purple,
-              gray,
-              red,
-              brown,
-              green,
-              pink,
-              orange,
-            }[entry.indicator?.color!]
-          }
-          variant="subtle"
-          mr="12px"
-          display="flex"
-          alignItems={"center"}
-          style={{ borderRadius: "0.25rem", padding: "0 0.5rem" }}
-        >
-          {entry.indicator?.name}
-        </Badge>
+        {entry.indicator?.name && (
+          <Badge
+            colorScheme={
+              {
+                blue,
+                yellow,
+                purple,
+                gray,
+                red,
+                brown: blue,
+                green,
+                pink,
+                orange,
+              }[entry.indicator?.color]
+            }
+            variant="subtle"
+            mr="12px"
+            display="flex"
+            alignItems={"center"}
+            style={{ borderRadius: "0.25rem", padding: "0 0.5rem" }}
+          >
+            {entry.indicator?.name}
+          </Badge>
+        )}
         <Icon icon={"ri:arrow-right-s-line"} height={"24px"} />
       </Box>
     </Box>

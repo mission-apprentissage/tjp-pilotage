@@ -4,12 +4,12 @@ import "react-notion-x/src/styles.css";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import PlausibleProvider from "next-plausible";
 import { useSearchParams } from "next/navigation";
+import PlausibleProvider from "next-plausible";
 import {
+  createContext,
   Dispatch,
   SetStateAction,
-  createContext,
   useEffect,
   useLayoutEffect,
   useMemo,
