@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kysely, sql } from "kysely";
 
 // Méthode issue de https://blog.yo1.dog/updating-enum-values-in-postgresql-the-safe-and-easy-way/
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<any>) => {
   await db.executeQuery(
     sql`
       ALTER TYPE "demandeStatus" RENAME TO "demandeStatus_old";
@@ -16,7 +17,7 @@ export const up = async (db: Kysely<unknown>) => {
   );
 };
 
-export const down = async (db: Kysely<unknown>) => {
+export const down = async (db: Kysely<any>) => {
   await db.executeQuery(
     sql`
       ALTER TYPE "demandeStatus" RENAME TO "demandeStatus_old";

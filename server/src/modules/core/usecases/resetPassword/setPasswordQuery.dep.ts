@@ -10,6 +10,7 @@ export const setPasswordQuery = async ({
   await kdb
     .updateTable("user")
     .where("user.email", "=", email)
+    .where("user.enabled", "=", true)
     .set({ password })
     .execute();
 };

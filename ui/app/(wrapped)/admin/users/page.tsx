@@ -3,6 +3,7 @@
 import { AddIcon, EditIcon } from "@chakra-ui/icons";
 import {
   Avatar,
+  Badge,
   Box,
   Button,
   Flex,
@@ -34,7 +35,8 @@ const Columns = {
   firstname: "Prénom",
   lastname: "Nom",
   role: "Rôle",
-  codeRegion: "Code région",
+  enabled: "Statut",
+  libelleRegion: "Région",
   uais: "Uais",
   createdAt: "Ajouté le",
 } satisfies ExportColumns<
@@ -140,12 +142,16 @@ export default () => {
                     <OrderIcon {...order} column="role" />
                     {Columns.role}
                   </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("enabled")}>
+                    <OrderIcon {...order} column="enabled" />
+                    {Columns.enabled}
+                  </Th>
                   <Th
                     cursor="pointer"
-                    onClick={() => handleOrder("codeRegion")}
+                    onClick={() => handleOrder("libelleRegion")}
                   >
-                    <OrderIcon {...order} column="codeRegion" />
-                    {Columns.codeRegion}
+                    <OrderIcon {...order} column="libelleRegion" />
+                    {Columns.libelleRegion}
                   </Th>
                   <Th>{Columns.uais}</Th>
                   <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
@@ -168,8 +174,14 @@ export default () => {
                     <Td>{user.firstname}</Td>
                     <Td>{user.lastname}</Td>
                     <Td>{user.role}</Td>
-
-                    <Td>{user.codeRegion}</Td>
+                    <Td>
+                      {user.enabled ? (
+                        <Badge colorScheme="green">Actif</Badge>
+                      ) : (
+                        <Badge colorScheme="red">Désactivé</Badge>
+                      )}
+                    </Td>
+                    <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
                     <Td>
                       {user.createdAt &&

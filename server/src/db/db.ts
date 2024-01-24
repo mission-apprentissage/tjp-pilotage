@@ -32,7 +32,12 @@ export const kdb = new Kysely<DB>({
   log: (event) => {
     if (event.level === config.sql.logLevel) {
       console.log(`\n====================================\n`);
-      console.log(event.query.sql);
+      console.log(
+        replaceQueryPlaceholders(
+          event.query.sql,
+          event.query.parameters as string[]
+        )
+      );
       console.log({
         parameters: event.query.parameters
           .map((p, index) => `$${index + 1} = ${p}`)
@@ -42,3 +47,16 @@ export const kdb = new Kysely<DB>({
     }
   },
 });
+
+function replaceQueryPlaceholders(query: string, values: string[]): string {
+  let modifiedQuery = query;
+
+  // Replace each placeholder with the corresponding value from the array
+  values.forEach((value, index) => {
+    // The placeholder in the query will be like $1, $2, etc.
+    const placeholder = `$${index + 1}`;
+    modifiedQuery = modifiedQuery.replace(placeholder, `'${value}'`);
+  });
+
+  return modifiedQuery;
+}

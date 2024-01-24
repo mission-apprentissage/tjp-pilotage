@@ -42,15 +42,15 @@ export const FormationTooltipContent = ({
         mb="2"
         w="100%"
         continuum={formation.continuum}
-        value={formation.tauxInsertion / 100}
+        value={formation.tauxInsertion}
       />
       <Text mb="1" fontWeight="medium">
-        Taux de pousuite d'études régional :
+        Taux de poursuite d'études régional :
       </Text>
       <GraphWrapper
         w="100%"
         continuum={formation.continuum}
-        value={formation.tauxPoursuite / 100}
+        value={formation.tauxPoursuite}
       />
     </Box>
   );

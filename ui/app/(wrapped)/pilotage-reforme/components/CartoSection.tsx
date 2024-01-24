@@ -3,15 +3,7 @@ import { Box, Flex, Select, Skeleton, Text } from "@chakra-ui/react";
 import { CartoGraph } from "../../../../components/CartoGraph";
 import { Filters, IndicateurType, PilotageReformeStatsRegion } from "../types";
 
-export const CartoSection = ({
-  data,
-  isLoading,
-  indicateur,
-  handleIndicateurChange,
-  indicateurOptions,
-  activeFilters,
-  handleFilters,
-}: {
+interface CartoSelectionProps {
   data?: PilotageReformeStatsRegion;
   isLoading: boolean;
   indicateur: IndicateurType;
@@ -23,7 +15,17 @@ export const CartoSection = ({
   }[];
   activeFilters: Filters;
   handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-}) => {
+}
+
+export const CartoSection = ({
+  data,
+  isLoading,
+  indicateur,
+  handleIndicateurChange,
+  indicateurOptions,
+  activeFilters,
+  handleFilters,
+}: CartoSelectionProps) => {
   const graphData = data?.statsRegions.map((region) => {
     return {
       name: region.libelleRegion,
@@ -70,7 +72,11 @@ export const CartoSection = ({
               ))}
             </Select>
           </Flex>
-          <CartoGraph graphData={graphData} handleClick={handleClickOnRegion} />
+          <CartoGraph
+            graphData={graphData}
+            handleClick={handleClickOnRegion}
+            codeRegionSelectionne={activeFilters.codeRegion}
+          />
         </Box>
       )}
     </Box>

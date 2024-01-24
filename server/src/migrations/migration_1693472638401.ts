@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Kysely, sql } from "kysely";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<any>) => {
   await db.executeQuery(
     sql`
     CREATE EXTENSION "uuid-ossp"

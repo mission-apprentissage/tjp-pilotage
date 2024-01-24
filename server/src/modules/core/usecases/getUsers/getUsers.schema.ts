@@ -8,8 +8,10 @@ const UserSchema = z.object({
   email: z.string(),
   role: z.enum(Object.keys(PERMISSIONS) as [Role]).optional(),
   codeRegion: z.string().optional(),
+  libelleRegion: z.string().optional(),
   createdAt: z.string().optional(),
   uais: z.array(z.string()).optional(),
+  enabled: z.boolean(),
 });
 
 export const getUsersSchema = {

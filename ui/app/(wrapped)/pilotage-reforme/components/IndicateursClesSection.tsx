@@ -161,18 +161,18 @@ const IndicateursEffectif = ({ data }: { data?: PilotageReformeStats }) => (
   <Box flex={1}>
     <IndicateurEffectifLine
       label="effectif"
-      indicateuranneeN={data?.anneeN.filtered.effectif}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.effectif}
+      indicateuranneeN={data?.annees[0].scoped.effectif}
+      indicateuranneeNMoins1={data?.annees[1].scoped.effectif}
     />
     <IndicateurEffectifLine
       label="nombre d'établissements"
-      indicateuranneeN={data?.anneeN.filtered.nbEtablissements}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbEtablissements}
+      indicateuranneeN={data?.annees[0].scoped.nbEtablissements}
+      indicateuranneeNMoins1={data?.annees[1].scoped.nbEtablissements}
     />
     <IndicateurEffectifLine
       label="nombre de formations"
-      indicateuranneeN={data?.anneeN.filtered.nbFormations}
-      indicateuranneeNMoins1={data?.anneeNMoins1.filtered.nbFormations}
+      indicateuranneeN={data?.annees[0].scoped.nbFormations}
+      indicateuranneeNMoins1={data?.annees[1].scoped.nbFormations}
       isLastLine={true}
     />
   </Box>
@@ -277,34 +277,34 @@ const StatCard = ({
     switch (type) {
       case "insertion":
         if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.filtered.insertion
+          data?.annees[0].scoped.insertion &&
+          data?.annees[1].scoped.insertion
         )
           return (
-            (data?.anneeN.filtered.insertion -
-              data?.anneeNMoins1.filtered.insertion) *
+            (data?.annees[0].scoped.insertion -
+              data?.annees[1].scoped.insertion) *
             100
           );
         return null;
       case "poursuite":
         if (
-          data?.anneeN.filtered.poursuite &&
-          data?.anneeNMoins1.filtered.poursuite
+          data?.annees[0].scoped.poursuite &&
+          data?.annees[1].scoped.poursuite
         )
           return (
-            (data?.anneeN.filtered.poursuite -
-              data?.anneeNMoins1.filtered.poursuite) *
+            (data?.annees[0].scoped.poursuite -
+              data?.annees[1].scoped.poursuite) *
             100
           );
         return null;
       default:
         if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.filtered.insertion
+          data?.annees[0].scoped.insertion &&
+          data?.annees[1].scoped.insertion
         ) {
           return (
-            (data?.anneeN.filtered.insertion -
-              data?.anneeNMoins1.filtered.insertion) *
+            (data?.annees[0].scoped.insertion -
+              data?.annees[1].scoped.insertion) *
             100
           );
         }
@@ -318,34 +318,34 @@ const StatCard = ({
     switch (type) {
       case "insertion":
         if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.nationale.insertion
+          data?.annees[0].scoped.insertion &&
+          data?.annees[1].nationale.insertion
         )
           return (
-            (data?.anneeN.filtered.insertion -
-              data?.anneeNMoins1.nationale.insertion) *
+            (data?.annees[0].scoped.insertion -
+              data?.annees[1].nationale.insertion) *
             100
           );
         return null;
       case "poursuite":
         if (
-          data?.anneeN.filtered.poursuite &&
-          data?.anneeNMoins1.nationale.poursuite
+          data?.annees[0].scoped.poursuite &&
+          data?.annees[1].nationale.poursuite
         )
           return (
-            (data?.anneeN.filtered.poursuite -
-              data?.anneeNMoins1.nationale.poursuite) *
+            (data?.annees[0].scoped.poursuite -
+              data?.annees[1].nationale.poursuite) *
             100
           );
         return null;
       default:
         if (
-          data?.anneeN.filtered.insertion &&
-          data?.anneeNMoins1.nationale.insertion
+          data?.annees[0].scoped.insertion &&
+          data?.annees[1].nationale.insertion
         )
           return (
-            (data?.anneeN.filtered.insertion -
-              data?.anneeNMoins1.nationale.insertion) *
+            (data?.annees[0].scoped.insertion -
+              data?.annees[1].nationale.insertion) *
             100
           );
         return null;
@@ -355,11 +355,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return Math.round((data?.anneeN.filtered.insertion ?? 0) * 100);
+        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
       case "poursuite":
-        return Math.round((data?.anneeN.filtered.poursuite ?? 0) * 100);
+        return Math.round((data?.annees[0].scoped.poursuite ?? 0) * 100);
       default:
-        return Math.round((data?.anneeN.filtered.insertion ?? 0) * 100);
+        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
     }
   };
 
@@ -419,7 +419,7 @@ const StatCard = ({
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
   <Flex direction={"column"} w="100%">
     <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2021
+      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2022
     </Text>
     <SimpleGrid spacing={3} columns={[2]} mt={4}>
       <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
