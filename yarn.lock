@@ -4226,19 +4226,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*, @types/node@npm:>=12, @types/node@npm:>=12.0.0, @types/node@npm:>=18.0.0":
+"@types/node@npm:*, @types/node@npm:>=12, @types/node@npm:>=12.0.0, @types/node@npm:>=18.0.0, @types/node@npm:^20.11.6":
   version: 20.11.6
   resolution: "@types/node@npm:20.11.6"
   dependencies:
     undici-types: ~5.26.4
   checksum: 54b3739f42d9c2266fd724d8ecbf50bc64eb0563343b65a6ea874a51a7fc8bb4793bf3a1b2222e40e3b7bd62cf5af5609899bf1a3de8b69748dcac65e63e8bdc
-  languageName: node
-  linkType: hard
-
-"@types/node@npm:18.11.18":
-  version: 18.11.18
-  resolution: "@types/node@npm:18.11.18"
-  checksum: 03f17f9480f8d775c8a72da5ea7e9383db5f6d85aa5fefde90dd953a1449bd5e4ffde376f139da4f3744b4c83942166d2a7603969a6f8ea826edfb16e6e3b49d
   languageName: node
   linkType: hard
 
@@ -4316,7 +4309,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/qs@npm:*, @types/qs@npm:^6.9.7":
+"@types/qs@npm:*, @types/qs@npm:^6.9.11, @types/qs@npm:^6.9.7":
   version: 6.9.11
   resolution: "@types/qs@npm:6.9.11"
   checksum: 620ca1628bf3da65662c54ed6ebb120b18a3da477d0bfcc872b696685a9bb1893c3c92b53a1190a8f54d52eaddb6af8b2157755699ac83164604329935e8a7f2
@@ -4330,12 +4323,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react-dom@npm:18.2.17":
-  version: 18.2.17
-  resolution: "@types/react-dom@npm:18.2.17"
+"@types/react-dom@npm:^18.2.18":
+  version: 18.2.18
+  resolution: "@types/react-dom@npm:18.2.18"
   dependencies:
     "@types/react": "*"
-  checksum: 7a4e704ed4be6e0c3ccd8a22ff69386fe548304bf4db090513f42e059ff4c65f7a427790320051524d6578a2e4c9667bb7a80a4c989b72361c019fbe851d9385
+  checksum: 8e3da404c980e2b2a76da3852f812ea6d8b9d0e7f5923fbaf3bfbbbfa1d59116ff91c129de8f68e9b7668a67ae34484fe9df74d5a7518cf8591ec07a0c4dad57
   languageName: node
   linkType: hard
 
@@ -4348,7 +4341,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:*":
+"@types/react@npm:*, @types/react@npm:^18.2.48":
   version: 18.2.48
   resolution: "@types/react@npm:18.2.48"
   dependencies:
@@ -4356,17 +4349,6 @@ __metadata:
     "@types/scheduler": "*"
     csstype: ^3.0.2
   checksum: c9ca43ed2995389b7e09492c24e6f911a8439bb8276dd17cc66a2fbebbf0b42daf7b2ad177043256533607c2ca644d7d928fdfce37a67af1f8646d2bac988900
-  languageName: node
-  linkType: hard
-
-"@types/react@npm:18.2.42":
-  version: 18.2.42
-  resolution: "@types/react@npm:18.2.42"
-  dependencies:
-    "@types/prop-types": "*"
-    "@types/scheduler": "*"
-    csstype: ^3.0.2
-  checksum: d2019afdf48303a3a598a97cc9dd2284e3c04b369e791f6ba3c33232b7f8645daff97b093a19f8b3ce75ac8a261b47552cb4513226ab16d843eb9443b0f91844
   languageName: node
   linkType: hard
 
@@ -16367,9 +16349,9 @@ __metadata:
   linkType: hard
 
 "spdx-exceptions@npm:^2.1.0":
-  version: 2.3.0
-  resolution: "spdx-exceptions@npm:2.3.0"
-  checksum: cb69a26fa3b46305637123cd37c85f75610e8c477b6476fa7354eb67c08128d159f1d36715f19be6f9daf4b680337deb8c65acdcae7f2608ba51931540687ac0
+  version: 2.4.0
+  resolution: "spdx-exceptions@npm:2.4.0"
+  checksum: b1b650a8d94424473bf9629cf972c86a91c03cccc260f5c901bce0e4b92d831627fec28c9e0a1e9c34c5ebad0a12cf2eab887bec088e0a862abb9d720c2fd0a1
   languageName: node
   linkType: hard
 
@@ -17528,10 +17510,10 @@ __metadata:
     "@json2csv/formatters": ^7.0.4
     "@json2csv/plainjs": ^7.0.4
     "@tanstack/react-query": ^4.29.3
-    "@types/node": 18.11.18
-    "@types/qs": ^6.9.7
-    "@types/react": 18.2.42
-    "@types/react-dom": 18.2.17
+    "@types/node": ^20.11.6
+    "@types/qs": ^6.9.11
+    "@types/react": ^18.2.48
+    "@types/react-dom": ^18.2.18
     axios: 1.6.2
     echarts: ^5.4.2
     framer-motion: ^10.9.1
