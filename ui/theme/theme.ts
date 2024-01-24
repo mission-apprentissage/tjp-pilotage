@@ -15,7 +15,7 @@ import { tooltipTheme } from "@/theme/Tooltip.theme";
 
 import { buttonTheme } from "./Button.theme";
 
-export const theme = extendBaseTheme(chakraTheme, {
+export const themeDefinition = {
   styles: {
     global: {
       "html, body": {
@@ -168,4 +168,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Tag: tagTheme,
     Checkbox: checkboxTheme,
   },
-});
+}
+
+export const theme = extendBaseTheme(chakraTheme, themeDefinition);
