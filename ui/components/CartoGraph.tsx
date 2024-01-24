@@ -174,7 +174,7 @@ export const CartoGraph = ({
         transitionDuration: 0.2,
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
         formatter: (params: any) => {
-          if (params.data && params.data.value != undefined) {
+          if (params?.data?.value !== undefined) {
             if (params.data.parentName) {
               return `${params.name} : ${params.data?.value}%
                   <br>

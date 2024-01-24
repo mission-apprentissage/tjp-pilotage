@@ -3,12 +3,14 @@
 import {
   Box,
   Center,
+  Checkbox,
   Flex,
   Select,
   Spinner,
   Table,
   TableContainer,
   Tbody,
+  Text,
   Th,
   Thead,
   Tr,
@@ -71,12 +73,14 @@ export default function Formations() {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: {
     filters?: typeof filters;
+    withAnneeCommune?: typeof withAnneeCommune;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -86,6 +90,7 @@ export default function Formations() {
   };
 
   const filters = searchParams.filters ?? {};
+  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
@@ -96,7 +101,7 @@ export default function Formations() {
   useEffect(() => {
     if (codeRegionFilter != "") {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
@@ -107,6 +112,7 @@ export default function Formations() {
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
         ...filters,
+        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
     { staleTime: 10000000, keepPreviousData: true }
@@ -144,6 +150,13 @@ export default function Formations() {
     setSearchParams({
       page: 0,
       filters: { ...filters, [type]: value },
+      withAnneeCommune,
+    });
+  };
+
+  const handleToggleShowAnneeCommune = (value: string) => {
+    setSearchParams({
+      withAnneeCommune: value,
     });
   };
 
@@ -321,6 +334,24 @@ export default function Formations() {
         >
           Secteur d’activité
         </Multiselect>
+        <Flex w="24rem" mr="3">
+          <Checkbox
+            size="lg"
+            variant="accessible"
+            onChange={(event) => {
+              console.log(event.target.checked);
+              handleToggleShowAnneeCommune(
+                event.target.checked.toString() ?? "false"
+              );
+            }}
+            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            whiteSpace={"nowrap"}
+          >
+            <Text fontSize={"14px"}>
+              Afficher les secondes et premières communes
+            </Text>
+          </Checkbox>
+        </Flex>
       </Flex>
 
       <Flex direction="column" flex={1} position="relative" minH="0">

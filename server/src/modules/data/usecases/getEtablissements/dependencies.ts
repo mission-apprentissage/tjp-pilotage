@@ -7,6 +7,7 @@ import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIM
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
   notHistoriqueUnlessCoExistant,
@@ -53,6 +54,7 @@ const findEtablissementsInDb = async ({
   cpcSecteur,
   cpcSousSecteur,
   libelleFiliere,
+  withAnneeCommune,
 }: {
   offset?: number;
   limit?: number;
@@ -72,6 +74,7 @@ const findEtablissementsInDb = async ({
   cpcSecteur?: string[];
   cpcSousSecteur?: string[];
   libelleFiliere?: string[];
+  withAnneeCommune?: string;
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
@@ -237,6 +240,11 @@ const findEtablissementsInDb = async ({
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
+    .$call((q) => {
+      if (!withAnneeCommune || withAnneeCommune === "false")
+        return q.where(notAnneeCommune);
+      return q;
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);

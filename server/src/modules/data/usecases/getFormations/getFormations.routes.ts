@@ -1,7 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
-import { getFormationSchema } from "./getFormation.schema";
+import { getFormationSchema } from "./getFormations.schema";
 import { getFormations } from "./getFormations.usecase";
 
 export const getFormationsRoute = ({ server }: { server: Server }) => {
