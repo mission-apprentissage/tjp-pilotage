@@ -28,7 +28,7 @@ type LineTypes = {
   nNiveauFormationDiplome_: NNiveauFormationDiplome;
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
-  BTS_Attractivite_capacite: BTS_Attractivite_capacite;
+  BTS_attractivite_capacite: BTS_Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   decrochage_regional: Decrochage_regional;
