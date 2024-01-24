@@ -1,4 +1,3 @@
-import { client } from "@/api.client";
 import {
   Alert,
   AlertDescription,
@@ -7,17 +6,35 @@ import {
   Box,
   Flex,
   Heading,
-  Image,
   ListItem,
   SkeletonCircle,
   SkeletonText,
   UnorderedList,
   useToken,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
-import ReactMarkdown from "react-markdown";
-import { isValidUrl } from "shared/utils/isValidUrl";
+import ReactMarkdown, { Components } from "react-markdown";
+
+import { client } from "@/api.client";
+
+import { GlossaireIcon } from "./GlossaireIcon";
+
+const chakraRendererTheme: Components = {
+  ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
+  li: ({ children }) => <ListItem>{children}</ListItem>,
+  blockquote: ({ children }) => (
+    <blockquote
+      style={{
+        borderLeft: "4px solid #6a6af4",
+        padding: "16px 32px",
+        marginBottom: "24px",
+        backgroundColor: "#F6F6F6",
+      }}
+    >
+      {children}
+    </blockquote>
+  ),
+};
 
 const RenderGlossaireEntrySkeleton = () => {
   return (
@@ -52,8 +69,6 @@ const useGlossaireEntryContentHook = (id: string) => {
       }
     );
 
-  console.log({ data });
-
   return {
     isLoading,
     isError,
@@ -62,42 +77,11 @@ const useGlossaireEntryContentHook = (id: string) => {
   };
 };
 
-const RenderIcon = ({ icon }: { icon: string }) => {
-  if (isValidUrl(icon)) {
-    return (
-      <Image
-        boxSize="32px"
-        objectFit="cover"
-        src={icon}
-        alt="Icon du glossaire"
-        marginRight={"8px"}
-      />
-    );
-  }
-
-  return (
-    <Icon
-      icon={icon}
-      height={"32px"}
-      width={"32px"}
-      style={{ marginRight: "8px" }}
-    />
-  );
-};
-
 export const GlossaireEntryContent = ({ id }: { id: string }) => {
-  const [blue, yellow, purple, gray, red, brown, green, pink, orange] =
-    useToken("colors", [
-      "blue",
-      "yellow",
-      "purple",
-      "gray",
-      "red",
-      "brown",
-      "green",
-      "pink",
-      "orange",
-    ]);
+  const [blue, yellow, purple, gray, red, green, pink, orange] = useToken(
+    "colors",
+    ["blue", "yellow", "purple", "gray", "red", "green", "pink", "orange"]
+  );
   const { entry, isLoading, isError, error } = useGlossaireEntryContentHook(id);
 
   if (isLoading) {
@@ -126,7 +110,9 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         marginBottom={"24px"}
       >
         <Flex direction="row" justifyContent={"start"} alignItems={"center"}>
-          {entry?.icon && <RenderIcon icon={entry.icon} />}
+          {entry?.icon && (
+            <GlossaireIcon icon={entry.icon} size="32px" marginRight="8px" />
+          )}
           {entry?.title && (
             <Heading as="h6" size="lg" color="bluefrance.113">
               {entry?.title}
@@ -142,7 +128,7 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
                 purple,
                 gray,
                 red,
-                brown,
+                brown: blue,
                 green,
                 pink,
                 orange,
@@ -158,28 +144,12 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         )}
       </Flex>
       <ReactMarkdown
-        components={ChakraUIRenderer({
-          ul: ({ children }) => (
-            <UnorderedList mb={"24px"}>{children}</UnorderedList>
-          ),
-          li: ({ children }) => <ListItem>{children}</ListItem>,
-          blockquote: ({ children }) => (
-            <blockquote
-              style={{
-                borderLeft: "4px solid #6a6af4",
-                padding: "16px 32px",
-                marginBottom: "24px",
-                backgroundColor: "#F6F6F6",
-              }}
-            >
-              {children}
-            </blockquote>
-          ),
-        })}
-        children={(entry?.content ?? "").replace(/\n/g, "  \n")}
+        components={ChakraUIRenderer(chakraRendererTheme)}
         className={"react-markdown"}
         skipHtml
-      />
+      >
+        {entry?.content ?? ""}
+      </ReactMarkdown>
     </Box>
   );
 };

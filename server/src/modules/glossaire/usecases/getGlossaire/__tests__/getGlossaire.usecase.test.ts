@@ -2,11 +2,10 @@ import {
   PageObjectResponse,
   QueryDatabaseResponse,
 } from "@notionhq/client/build/src/api-endpoints";
+
 import { config } from "../../../../../../config/config";
-import {
-  GLOSSAIRE_COLUMNS,
-  mapNotionDatabaseRowToGlossaireEntry,
-} from "../dependencies";
+import { PROPERTIES } from "../../utils/properties/properties";
+import { mapNotionDatabaseRowToGlossaireEntry } from "../dependencies";
 import { GlossaireEntry } from "../getGlossaire.schema";
 import { getGlossaireFactory } from "../getGlossaire.usecase";
 
@@ -72,7 +71,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         archived: false,
         properties: {
-          [GLOSSAIRE_COLUMNS.INDICATOR]: {
+          [PROPERTIES.INDICATEUR]: {
             id: "Z%5ExZ",
             type: "select",
             select: {
@@ -81,7 +80,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
               color: "yellow",
             },
           },
-          [GLOSSAIRE_COLUMNS.STATUS]: {
+          [PROPERTIES.STATUT]: {
             id: "uI%7Dc",
             type: "select",
             select: {
@@ -90,7 +89,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
               color: "orange",
             },
           },
-          [GLOSSAIRE_COLUMNS.TITLE]: {
+          [PROPERTIES.TITRE]: {
             id: "title",
             type: "title",
             title: [
@@ -141,12 +140,12 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         archived: false,
         properties: {
-          [GLOSSAIRE_COLUMNS.INDICATOR]: {
+          [PROPERTIES.INDICATEUR]: {
             id: "Z%5ExZ",
             type: "select",
             select: null,
           },
-          [GLOSSAIRE_COLUMNS.STATUS]: {
+          [PROPERTIES.STATUT]: {
             id: "uI%7Dc",
             type: "select",
             select: {
@@ -155,7 +154,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
               color: "purple",
             },
           },
-          [GLOSSAIRE_COLUMNS.TITLE]: {
+          [PROPERTIES.TITRE]: {
             id: "title",
             type: "title",
             title: [

@@ -1,7 +1,8 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { createContext, useCallback, useContext, useState } from "react";
+
 import {
-  GLOSSAIRE_ENTRIES,
+  GLOSSAIRE_ENTRIES_KEYS,
   GlossaireEntryKey,
 } from "../(wrapped)/components/glossaire/GlossaireEntries";
 
@@ -27,9 +28,12 @@ export function GlossaireProvider({ children }: { children: React.ReactNode }) {
   }, [onClose, setSelectedEntry]);
 
   const onOpenCallback = useCallback(
-    (key: string | undefined) => {
-      const id = GLOSSAIRE_ENTRIES.find((e) => e.key === key)?.id;
-      setSelectedEntry(id);
+    (key: GlossaireEntryKey | undefined) => {
+      if (key && key in GLOSSAIRE_ENTRIES_KEYS) {
+        setSelectedEntry(GLOSSAIRE_ENTRIES_KEYS[key]);
+      } else {
+        setSelectedEntry(undefined);
+      }
       onOpen();
     },
     [setSelectedEntry, onOpen]

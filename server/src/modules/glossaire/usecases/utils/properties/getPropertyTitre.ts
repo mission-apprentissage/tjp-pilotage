@@ -1,4 +1,5 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+
 import { PROPERTIES } from "./properties";
 
 export const getPropertyTitre = (
