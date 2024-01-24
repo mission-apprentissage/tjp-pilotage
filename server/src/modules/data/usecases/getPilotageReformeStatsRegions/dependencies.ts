@@ -1,8 +1,8 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
-import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
 import {

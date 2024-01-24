@@ -1,9 +1,10 @@
 import { inject } from "injecti";
+import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
 import { getRegionData } from "../../../../services/inserJeunesApi/inserJeunes.api";
-import { MILLESIMES_IJ_REG } from "../../domain/millesimes";
 import { cacheIjReg, clearIjRegCache } from "./cacheIjReg.dep";
+
 
 export const [fetchIjReg] = inject(
   { getRegionData, cacheIjReg, clearIjRegCache },

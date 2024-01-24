@@ -21,7 +21,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
-import { CURRENT_RENTREE } from "server/src/modules/import/domain/CURRENT_RENTREE";
+import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -243,7 +243,9 @@ export default function Etablissements() {
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
-            rentreeScolaire: ["2021", "2020"],
+            rentreeScolaire: RENTREES_SCOLAIRES.filter(
+              (rentree) => rentree !== CURRENT_RENTREE
+            ),
           },
         })
       ).etablissements;

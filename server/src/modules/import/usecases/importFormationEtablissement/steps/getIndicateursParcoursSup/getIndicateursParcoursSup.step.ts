@@ -13,10 +13,10 @@ const findAttractiviteCapaciteBTS = async ({
   rentreeScolaire: string;
 }) =>
   rawDataRepository.findRawDatas({
-    type: "BTS_Attractivite_capacite",
+    type: "BTS_attractivite_capacite",
     year: rentreeScolaire,
     filter: {
-      "MEFSTAT11 rectifié": mefstat,
+      "MEFSTAT11": mefstat,
       UAI: uai,
       STATUT: "Scolaire",
     },
@@ -47,6 +47,7 @@ export const [getIndicateursParcoursSup] = inject(
         uai,
         rentreeScolaire,
       });
+
       if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };
 
       const {
