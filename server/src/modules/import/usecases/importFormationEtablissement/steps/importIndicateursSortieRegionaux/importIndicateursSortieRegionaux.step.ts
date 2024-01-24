@@ -1,9 +1,9 @@
 import { inject } from "injecti";
+import { MILLESIMES_IJ_REG } from "shared";
 
 import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
 import { rawDataRepository } from "../../../../repositories/rawData.repository";
 import { inserJeunesApi } from "../../../../services/inserJeunesApi/inserJeunes.api";
-import { MILLESIMES_IJ_REG } from "../../domain/millesimes";
 import { createIndicateurRegionSortie } from "./createIndicateurRegionSortie.dep";
 import { findAnciennesFormation } from "./findAnciennesFormation.dep";
 import { findIndicateurRegionSortie } from "./findIndicateurRegionSortie.dep";

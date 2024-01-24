@@ -1,11 +1,10 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
-import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";

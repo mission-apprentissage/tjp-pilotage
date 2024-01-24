@@ -1,7 +1,7 @@
 import { ExpressionBuilder, expressionBuilder, RawBuilder, sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import { DB } from "../../../db/schema";
-import { CURRENT_RENTREE } from "../../import/domain/CURRENT_RENTREE";
 
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,

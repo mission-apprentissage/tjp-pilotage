@@ -1,8 +1,8 @@
 import { inject } from "injecti";
+import { MILLESIMES_IJ } from "shared";
 
 import { kdb } from "../../../../../../db/db";
 import { getUaiData } from "../../../../services/inserJeunesApi/inserJeunes.api";
-import { MILLESIMES_IJ } from "../../domain/millesimes";
 import { cacheIj } from "./cacheIJ.dep";
 
 const clearIjCache = async ({ uai }: { uai: string }) => {
