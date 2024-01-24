@@ -1,4 +1,5 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+
 import { getPageIcon } from "../utils/getPageIcon";
 import { getPropertyIndicateur } from "../utils/properties/getPropertyIndicateur";
 import { getPropertyStatut } from "../utils/properties/getPropertyStatut";
