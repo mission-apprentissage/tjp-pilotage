@@ -16,6 +16,7 @@ import { ReactNode } from "react";
 import { hasPermission } from "shared";
 
 import { useAuth } from "@/utils/security/useAuth";
+
 import { Glossaire } from "./glossaire/Glossaire";
 
 const NavLink = chakra(

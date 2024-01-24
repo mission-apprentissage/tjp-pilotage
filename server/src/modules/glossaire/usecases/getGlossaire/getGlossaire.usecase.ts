@@ -1,6 +1,8 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
+
 import { config } from "../../../../../config/config";
 import * as notion from "../../services/notion/notion";
+import { PROPERTIES } from "../utils/properties/properties";
 import { dependencies } from "./dependencies";
 
 export const getGlossaireFactory =
@@ -9,17 +11,26 @@ export const getGlossaireFactory =
       getDatabaseRows: notion.getDatabaseRows,
       mapNotionDatabaseRowToGlossaireEntry:
         dependencies.mapNotionDatabaseRowToGlossaireEntry,
-      config: config,
+      config,
     }
   ) =>
   async (dbId: string = deps.config.notion.dbGlossaireId) => {
-    const database = await deps.getDatabaseRows(dbId);
+    const filters: Record<string, unknown> = {
+      property: PROPERTIES.STATUT,
+      select: {
+        equals: "validé",
+      },
+    };
+
+    const database = await deps.getDatabaseRows(dbId, filters);
 
     const entries = deps.mapNotionDatabaseRowToGlossaireEntry(
       database.results as PageObjectResponse[]
     );
 
-    return entries;
+    return entries.sort((a, b) =>
+      (a?.title ?? "").localeCompare(b?.title ?? "")
+    );
   };
 
 export const getGlossaire = getGlossaireFactory();

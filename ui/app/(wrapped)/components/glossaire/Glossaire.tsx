@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
+
 import { useGlossaireContext } from "../../../contexts/glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
