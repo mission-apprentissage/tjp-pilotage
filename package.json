@@ -30,9 +30,12 @@
     "npm:release": "semantic-release",
     "npm:release:local": "CI=true LOCAL_RELEASE=true semantic-release",
     "prepare": "husky install",
-    "typecheck": "yarn --cwd server typecheck && yarn --cwd ui typecheck",
+    "typecheck": "yarn workspace server typecheck && yarn workspace ui typecheck",
     "commitlint": "commitlint --config ./config/commitlint.config.js --edit $1",
-    "preventSensibleFilesCommit": "./git-hooks/preventSensibleFilesCommit.sh"
+    "preventSensibleFilesCommit": "./git-hooks/preventSensibleFilesCommit.sh",
+    "ui:dev": "yarn workspace ui dev",
+    "server:dev": "yarn workspace server dev",
+    "dev": "yarn ui:dev & yarn server:dev"
   },
   "workspaces": [
     "ui",

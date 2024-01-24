@@ -24,6 +24,15 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface ConstatRentree {
+  rentreeScolaire: string | null;
+  mefstat11: string | null;
+  uai: string | null;
+  effectif: number | null;
+  anneeDispositif: number | null;
+  cfd: string | null;
+}
+
 export interface DataEtablissement {
   uai: string;
   libelle: string | null;
@@ -246,10 +255,13 @@ export interface User {
   role: string | null;
   codeRegion: string | null;
   uais: string[] | null;
+  enabled: Generated<boolean>;
+  sub: string | null;
 }
 
 export interface DB {
   academie: Academie;
+  constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;

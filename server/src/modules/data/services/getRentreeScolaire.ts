@@ -10,4 +10,4 @@ export const getRentreeScolaire = ({
 }: {
   rentreeScolaire: string;
   offset: number;
-}): string => `${+rentreeScolaire - offset}`;
+}): string => `${+rentreeScolaire + offset}`;

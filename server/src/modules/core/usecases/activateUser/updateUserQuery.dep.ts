@@ -1,6 +1,6 @@
 import { kdb } from "../../../../db/db";
 
-export const setPasswordQuery = async ({
+export const updateUserQuery = async ({
   email,
   password,
 }: {
@@ -10,6 +10,6 @@ export const setPasswordQuery = async ({
   await kdb
     .updateTable("user")
     .where("user.email", "=", email)
-    .set({ password })
+    .set({ password, enabled: true })
     .execute();
 };

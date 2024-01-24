@@ -18,11 +18,7 @@ export const getTransformationsStatsRoutes = ({
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const { order, orderBy, ...filters } = request.query;
-        const stats = await getTransformationStats({
-          ...filters,
-          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
-        });
+        const stats = await getTransformationStats(request.query);
         response.status(200).send(stats);
       },
     });

@@ -12,6 +12,33 @@ import {
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
+
+const getRentreesScolaires = async () => {
+  return await kdb
+    .selectFrom("indicateurEntree")
+    .select("rentreeScolaire")
+    .distinct()
+    .orderBy("rentreeScolaire", "desc")
+    .execute()
+    .then(rentreesScolaireArray =>
+      rentreesScolaireArray
+        .map(rentreeScolaire => rentreeScolaire.rentreeScolaire)
+    )
+}
+
+const getMillesimesSortie = async () => {
+  return await kdb
+    .selectFrom("indicateurRegionSortie")
+    .select("millesimeSortie")
+    .distinct()
+    .orderBy("millesimeSortie", "desc")
+    .execute()
+    .then(millesimesSortieArray =>
+      millesimesSortieArray
+        .map(millesimeSortie => millesimeSortie.millesimeSortie)
+    )
+}
+
 export const getStats = async ({
   codeRegion,
   codeNiveauDiplome,
@@ -19,13 +46,16 @@ export const getStats = async ({
   codeRegion?: string;
   codeNiveauDiplome?: string[];
 }) => {
-  const rentreeScolaire = "2022";
+
+  const rentreesScolaires = await getRentreesScolaires()
+  const rentreeScolaire =  rentreesScolaires[0]
+  const millesimesSortie = await getMillesimesSortie()
 
   const selectStatsEffectif = ({
-    isFiltered = false,
+    isScoped = false,
     annee = 0,
   }: {
-    isFiltered: boolean;
+    isScoped: boolean;
     annee: number;
   }) => {
     return kdb
@@ -54,7 +84,7 @@ export const getStats = async ({
         "formationEtablissement.UAI"
       )
       .$call((q) => {
-        if (!isFiltered || !codeRegion) return q;
+        if (!isScoped || !codeRegion) return q;
         return q.where("etablissement.codeRegion", "=", codeRegion);
       })
       .$call((q) => {
@@ -77,10 +107,10 @@ export const getStats = async ({
   };
 
   const selectStatsSortie = ({
-    isFiltered = false,
+    isScoped = false,
     annee = 0,
   }: {
-    isFiltered: boolean;
+    isScoped: boolean;
     annee: number;
   }) =>
     kdb
@@ -91,7 +121,7 @@ export const getStats = async ({
         "indicateurRegionSortie.cfd"
       )
       .$call((q) => {
-        if (!isFiltered || !codeRegion) return q;
+        if (!isScoped || !codeRegion) return q;
         return q.where("indicateurRegionSortie.codeRegion", "=", codeRegion);
       })
       .$call((q) => {
@@ -113,27 +143,29 @@ export const getStats = async ({
       ])
       .executeTakeFirstOrThrow();
 
+  const getStatsAnnee = async (millesimeSortie: string) => {
+    // millesimeSortie est au format 2000_2001
+    const finDanneeScolaireMillesime = parseInt(millesimeSortie.split('_')[1])
+    const rentree = parseInt(rentreeScolaire)
+    const offset = finDanneeScolaireMillesime - rentree
+
+    return {
+      annee: finDanneeScolaireMillesime,
+      scoped: {
+        ...(await selectStatsEffectif({ isScoped: true, annee: offset })),
+        ...(await selectStatsSortie({ isScoped: true, annee: offset + 1 })),
+      },
+      nationale: {
+        ...(await selectStatsEffectif({ isScoped: false, annee: offset })),
+        ...(await selectStatsSortie({ isScoped: false, annee: offset + 1 })),
+      },
+    }
+  }
+
+  const annees = await Promise.all(millesimesSortie.map(millesimeSortie => getStatsAnnee(millesimeSortie)))
+
   return {
-    anneeN: {
-      filtered: {
-        ...(await selectStatsEffectif({ isFiltered: true, annee: 0 })),
-        ...(await selectStatsSortie({ isFiltered: true, annee: 0 })),
-      },
-      nationale: {
-        ...(await selectStatsEffectif({ isFiltered: false, annee: 0 })),
-        ...(await selectStatsSortie({ isFiltered: false, annee: 0 })),
-      },
-    },
-    anneeNMoins1: {
-      filtered: {
-        ...(await selectStatsEffectif({ isFiltered: true, annee: -1 })),
-        ...(await selectStatsSortie({ isFiltered: true, annee: -1 })),
-      },
-      nationale: {
-        ...(await selectStatsEffectif({ isFiltered: false, annee: -1 })),
-        ...(await selectStatsSortie({ isFiltered: false, annee: -1 })),
-      },
-    },
+    annees
   };
 };
 

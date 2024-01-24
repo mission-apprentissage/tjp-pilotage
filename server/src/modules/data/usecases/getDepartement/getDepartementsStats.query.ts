@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
+import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notHistorique,
@@ -16,7 +17,7 @@ export const getDepartementsStats = async ({
   codeDepartement,
   codeNiveauDiplome,
   rentreeScolaire = "2022",
-  millesimeSortie = "2020_2021",
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeDepartement: string;
   codeNiveauDiplome?: string[];

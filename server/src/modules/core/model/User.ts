@@ -5,4 +5,5 @@ export type RequestUser = {
   id: string;
   role?: Role;
   codeRegion?: string;
+  uais?: string[];
 };
