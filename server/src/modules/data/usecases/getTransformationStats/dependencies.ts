@@ -1,10 +1,9 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { Scope, ScopeEnum } from "shared";
+import { CURRENT_RENTREE,Scope, ScopeEnum } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { CURRENT_RENTREE } from "../../../import/domain/CURRENT_RENTREE";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import {
   notPerimetreIJAcademie,

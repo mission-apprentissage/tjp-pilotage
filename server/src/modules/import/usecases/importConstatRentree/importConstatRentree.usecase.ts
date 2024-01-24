@@ -1,10 +1,10 @@
 import { inject } from "injecti";
 import { Insertable } from "kysely";
+import { RENTREES_SCOLAIRES } from "shared";
 
 import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
-import { RENTREES_SCOLAIRES } from "../importFormationEtablissement/domain/millesimes";
 import { createConstatRentree } from "./createConstatRentree.dep";
 import { findNMef } from "./findNMef.dep";
 

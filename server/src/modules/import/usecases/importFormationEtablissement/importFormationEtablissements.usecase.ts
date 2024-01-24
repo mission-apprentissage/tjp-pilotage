@@ -1,9 +1,9 @@
 import { inject } from "injecti";
+import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
 import { streamIt } from "../../utils/streamIt";
 import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
-import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { logger } from "./importLogger";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";

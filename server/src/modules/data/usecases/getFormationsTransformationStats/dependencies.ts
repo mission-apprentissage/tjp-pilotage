@@ -1,9 +1,9 @@
 import { ExpressionBuilder, sql } from "kysely";
+import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
 import { cleanNull } from "../../../../utils/noNull";
-import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";

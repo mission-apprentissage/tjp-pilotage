@@ -1,9 +1,9 @@
 import { inject } from "injecti";
+import { MILLESIMES_IJ_REG } from "shared";
 
 import { kdb } from "../../../../../../db/db";
 import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapping";
 import { getRegionData } from "../../../../services/inserJeunesApi/inserJeunes.api";
-import { MILLESIMES_IJ_REG } from "../../domain/millesimes";
 import { cacheIjReg } from "./cacheIjReg.dep";
 
 const clearIjCache = async ({
