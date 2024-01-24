@@ -75,6 +75,7 @@ export const getEtablissementsSchema = {
     cpcSecteur: z.array(z.string()).optional(),
     cpcSousSecteur: z.array(z.string()).optional(),
     libelleFiliere: z.array(z.string()).optional(),
+    withAnneeCommune: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: EtablissementLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),

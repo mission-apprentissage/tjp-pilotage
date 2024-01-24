@@ -59,6 +59,7 @@ export const getFormationSchema = {
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     withEmptyFormations: z.coerce.boolean().optional(),
+    withAnneeCommune: z.string().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
   }),

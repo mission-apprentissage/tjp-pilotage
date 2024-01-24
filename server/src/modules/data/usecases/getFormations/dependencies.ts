@@ -6,6 +6,7 @@ import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIM
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
   notHistoriqueUnlessCoExistant,
@@ -37,6 +38,7 @@ const findFormationsInDb = async ({
   cfdFamille,
   orderBy,
   withEmptyFormations = true,
+  withAnneeCommune,
   cpc,
   cpcSecteur,
   cpcSousSecteur,
@@ -56,6 +58,7 @@ const findFormationsInDb = async ({
   cfdFamille?: string[];
   orderBy?: { column: string; order: "asc" | "desc" };
   withEmptyFormations?: boolean;
+  withAnneeCommune?: string;
   cpc?: string[];
   cpcSecteur?: string[];
   cpcSousSecteur?: string[];
@@ -286,6 +289,11 @@ const findFormationsInDb = async ({
     .$call((q) => {
       if (!libelleFiliere) return q;
       return q.where("formationView.libelleFiliere", "in", libelleFiliere);
+    })
+    .$call((q) => {
+      if (!withAnneeCommune || withAnneeCommune === "false")
+        return q.where(notAnneeCommune);
+      return q;
     })
     .$call((q) => {
       if (!orderBy) return q;

@@ -3,12 +3,14 @@
 import {
   Box,
   Center,
+  Checkbox,
   Flex,
   Select,
   Spinner,
   Table,
   TableContainer,
   Tbody,
+  Text,
   Th,
   Thead,
   Tr,
@@ -120,11 +122,13 @@ export default function Etablissements() {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const setSearchParams = (params: {
     filters?: typeof filters;
+    withAnneeCommune?: typeof withAnneeCommune;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -134,6 +138,7 @@ export default function Etablissements() {
   };
 
   const filters = searchParams.filters ?? {};
+  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
@@ -146,11 +151,11 @@ export default function Etablissements() {
   useEffect(() => {
     if (codeRegionFilter != "") {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
     if (uaiFilter != "") {
       filters.uai = [uaiFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
@@ -161,6 +166,7 @@ export default function Etablissements() {
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
+        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
     { keepPreviousData: true, staleTime: 10000000 }
@@ -200,7 +206,14 @@ export default function Etablissements() {
       setSearchParams({
         page: 0,
         filters: { ...filters, [type]: value },
+        withAnneeCommune,
       });
+    });
+  };
+
+  const handleToggleShowAnneeCommune = (value: string) => {
+    setSearchParams({
+      withAnneeCommune: value,
     });
   };
 
@@ -241,7 +254,7 @@ export default function Etablissements() {
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Select
           placeholder="Toutes les régions"
-          width="52"
+          width="12rem"
           variant="input"
           size="sm"
           onChange={(e) => {
@@ -269,7 +282,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeAcademie")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
           value={filters.codeAcademie ?? []}
@@ -279,7 +292,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeDepartement")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
           value={filters.codeDepartement ?? []}
@@ -289,7 +302,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("commune")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
           value={filters.commune ?? []}
@@ -298,7 +311,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("uai")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
           value={filters.uai ?? []}
@@ -307,7 +320,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("secteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("secteur", selected)}
           options={[
             { label: "PR", value: "PR" },
@@ -319,7 +332,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("codeDiplome")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
           value={filters.codeDiplome ?? []}
@@ -328,7 +341,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("codeDispositif")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDispositif", selected)}
           options={data?.filters.dispositifs}
           value={filters.codeDispositif ?? []}
@@ -337,7 +350,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cfdFamille")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
           value={filters.cfdFamille ?? []}
@@ -346,7 +359,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cfd")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
           value={filters.cfd ?? []}
@@ -355,7 +368,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cpc")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cpc", selected)}
           options={data?.filters.cpcs}
           value={filters.cpc ?? []}
@@ -364,7 +377,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cpcSecteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cpcSecteur", selected)}
           options={data?.filters.cpcSecteurs}
           value={filters.cpcSecteur ?? []}
@@ -373,7 +386,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cpcSousSecteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
           options={data?.filters.cpcSousSecteurs}
           value={filters.cpcSousSecteur ?? []}
@@ -382,15 +395,31 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("libelleFiliere")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("libelleFiliere", selected)}
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
           Secteur d’activité
         </Multiselect>
+        <Flex w="24rem" mr="3">
+          <Checkbox
+            size="lg"
+            onChange={(event) => {
+              console.log(event.target.checked);
+              handleToggleShowAnneeCommune(
+                event.target.checked.toString() ?? "false"
+              );
+            }}
+            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            whiteSpace={"nowrap"}
+          >
+            <Text fontSize={"14px"}>
+              Afficher les secondes et premières communes
+            </Text>
+          </Checkbox>
+        </Flex>
       </Flex>
-
       <Flex direction="column" flex={1} position="relative" minH="0">
         {isFetching && (
           <Center
