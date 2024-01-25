@@ -29,7 +29,7 @@ export default function Home() {
   const nombreEtablissements = 2958;
   const nombreEleves = 627100;
   const tauxDInsertion = 37;
-  const nombrePlacesDeFormation = 8000;
+  const nombrePlacesDeFormation = 6000;
 
   const { auth } = useAuth();
 
@@ -196,7 +196,7 @@ export default function Home() {
                 from={0}
                 to={nombrePlacesDeFormation}
                 NumberLabel={({ number }) => <>{`+ ${number}`}</>}
-                subtitle="place de formation par rapport à 2022"
+                subtitle="places de formations prévues en 2024 par rapport à 2023"
                 animateOnViewportEnter
                 duration={1000}
               />
