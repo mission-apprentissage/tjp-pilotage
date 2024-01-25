@@ -2,7 +2,7 @@ import { inject } from "injecti";
 import { Insertable, Selectable } from "kysely";
 import { DateTime } from "luxon";
 
-import { DB } from "../../../../../../db/schema";
+import { DB } from "../../../../../../db/db";
 import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
 import { createEtablissement } from "./createEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";

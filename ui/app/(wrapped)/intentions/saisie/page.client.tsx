@@ -46,8 +46,8 @@ import { MenuIntention } from "./components/MenuIntention";
 const DEMANDES_COLUMNS = {
   id: "id",
   cfd: "CFD",
-  libelleDiplome: "Diplôme",
-  dispositifId: "DispositifId",
+  libelleFormation: "Diplôme",
+  dispositifId: "Code dispositif",
   libelleDispositif: "Dispositif",
   libelleFCIL: "Libellé de la FCIL",
   uai: "UAI",
@@ -330,10 +330,10 @@ export const PageClient = () => {
                       <Th>n° demande</Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("libelleDiplome")}
+                        onClick={() => handleOrder("libelleFormation")}
                       >
-                        <OrderIcon {...order} column="libelleDiplome" />
-                        {DEMANDES_COLUMNS.libelleDiplome}
+                        <OrderIcon {...order} column="libelleFormation" />
+                        {DEMANDES_COLUMNS.libelleFormation}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -410,7 +410,7 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.libelleDiplome}
+                              {demande.libelleFormation}
                             </Text>
                           </Td>
                           <Td>

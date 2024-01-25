@@ -110,7 +110,7 @@ export const QuadrantSection = ({
                     ...formation,
                   })),
                   {
-                    libelleDiplome: "Formation",
+                    libelleFormation: "Formation",
                     cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
@@ -151,7 +151,7 @@ export const QuadrantSection = ({
                   TooltipContent={FormationTooltipContent}
                   InfoTootipContent={InfoTooltipContent}
                   data={filteredFormations}
-                  itemId={(item) => item.cfd + item.dispositifId}
+                  itemId={(item) => item.cfd + item.codeDispositif}
                   itemColor={(formation) =>
                     formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
                   }

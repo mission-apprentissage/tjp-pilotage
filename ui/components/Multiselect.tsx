@@ -21,6 +21,7 @@ import {
   useState,
 } from "react";
 import { unstable_batchedUpdates } from "react-dom";
+import removeAccents from "remove-accents";
 
 const ButtonContent = ({
   selected,
@@ -181,8 +182,12 @@ export const Multiselect = chakra(
       return search
         ? preparedOptions.filter(
             (item) =>
-              item.label?.toLowerCase().includes(search.toLowerCase()) ||
-              item.value?.toLowerCase().includes(search.toLowerCase())
+              removeAccents(item.label?.toLowerCase()).includes(
+                removeAccents(search.toLowerCase())
+              ) ||
+              removeAccents(item.value?.toLowerCase()).includes(
+                removeAccents(search.toLowerCase())
+              )
           )
         : preparedOptions;
     };

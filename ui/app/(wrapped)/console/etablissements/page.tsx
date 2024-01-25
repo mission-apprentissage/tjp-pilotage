@@ -3,12 +3,14 @@
 import {
   Box,
   Center,
+  Checkbox,
   Flex,
   Select,
   Spinner,
   Table,
   TableContainer,
   Tbody,
+  Text,
   Th,
   Thead,
   Tr,
@@ -46,7 +48,7 @@ const ETABLISSEMENTS_COLUMNS = {
   commune: "Commune",
   departement: "Département",
   libelleNiveauDiplome: "Diplome",
-  libelleDiplome: "Formation",
+  libelleFormation: "Formation",
   effectif1: "Année 1",
   effectif2: "Année 2",
   effectif3: "Année 3",
@@ -66,17 +68,17 @@ const ETABLISSEMENTS_COLUMNS = {
     "Tx de devenir favorable de la formation dans l'établissement",
   valeurAjoutee: "Valeur ajoutée",
   secteur: "Secteur",
-  UAI: "UAI",
+  uai: "UAI",
   libelleDispositif: "Dispositif",
-  libelleOfficielFamille: "Famille de métiers",
-  codeFormationDiplome: "CodeDiplome",
-  CPC: "CPC",
-  CPCSecteur: "CPCSecteur",
-  CPCSousSecteur: "CPCSousSecteur",
+  libelleFamille: "Famille de métiers",
+  cfd: "Code formation diplôme",
+  cpc: "CPC",
+  cpcSecteur: "CPC Secteur",
+  cpcSousSecteur: "CPC Sous Secteur",
   libelleFiliere: "Secteur d’activité",
-  "continuum.libelle": "Diplôme historique",
+  "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
-  dispositifId: "Code dispositif",
+  codeDispositif: "Code dispositif",
   codeRegion: "Code Région",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
@@ -98,9 +100,9 @@ type Filters = Pick<
   | "commune"
   | "uai"
   | "secteur"
-  | "CPC"
-  | "CPCSecteur"
-  | "CPCSousSecteur"
+  | "cpc"
+  | "cpcSecteur"
+  | "cpcSousSecteur"
   | "libelleFiliere"
   | "codeDispositif"
 >;
@@ -110,7 +112,7 @@ type Order = Pick<Query, "order" | "orderBy">;
 type LineId = {
   codeDispositif?: string;
   cfd: string;
-  UAI: string;
+  uai: string;
 };
 
 const PAGE_SIZE = 30;
@@ -120,11 +122,13 @@ export default function Etablissements() {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const setSearchParams = (params: {
     filters?: typeof filters;
+    withAnneeCommune?: typeof withAnneeCommune;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -134,6 +138,7 @@ export default function Etablissements() {
   };
 
   const filters = searchParams.filters ?? {};
+  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
@@ -146,11 +151,11 @@ export default function Etablissements() {
   useEffect(() => {
     if (codeRegionFilter != "") {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
     if (uaiFilter != "") {
       filters.uai = [uaiFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
@@ -161,6 +166,7 @@ export default function Etablissements() {
         ...order,
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
+        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
     { keepPreviousData: true, staleTime: 10000000 }
@@ -200,7 +206,14 @@ export default function Etablissements() {
       setSearchParams({
         page: 0,
         filters: { ...filters, [type]: value },
+        withAnneeCommune,
       });
+    });
+  };
+
+  const handleToggleShowAnneeCommune = (value: string) => {
+    setSearchParams({
+      withAnneeCommune: value,
     });
   };
 
@@ -225,7 +238,7 @@ export default function Etablissements() {
             codeDispositif: historiqueId?.codeDispositif
               ? [historiqueId?.codeDispositif]
               : undefined,
-            uai: [historiqueId.UAI],
+            uai: [historiqueId.uai],
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
@@ -241,7 +254,7 @@ export default function Etablissements() {
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
         <Select
           placeholder="Toutes les régions"
-          width="52"
+          width="12rem"
           variant="input"
           size="sm"
           onChange={(e) => {
@@ -269,7 +282,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeAcademie")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeAcademie", selected)}
           options={data?.filters.academies}
           value={filters.codeAcademie ?? []}
@@ -279,7 +292,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("codeDepartement")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDepartement", selected)}
           options={data?.filters.departements}
           value={filters.codeDepartement ?? []}
@@ -289,7 +302,7 @@ export default function Etablissements() {
         <Multiselect
           disabled={!filters.codeRegion}
           onClose={filterTracker("commune")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("commune", selected)}
           options={data?.filters.communes}
           value={filters.commune ?? []}
@@ -298,7 +311,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("uai")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("uai", selected)}
           options={data?.filters.etablissements}
           value={filters.uai ?? []}
@@ -307,7 +320,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("secteur")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("secteur", selected)}
           options={[
             { label: "PR", value: "PR" },
@@ -319,7 +332,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("codeDiplome")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDiplome", selected)}
           options={data?.filters.diplomes}
           value={filters.codeDiplome ?? []}
@@ -328,7 +341,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("codeDispositif")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("codeDispositif", selected)}
           options={data?.filters.dispositifs}
           value={filters.codeDispositif ?? []}
@@ -337,7 +350,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cfdFamille")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfdFamille", selected)}
           options={data?.filters.familles}
           value={filters.cfdFamille ?? []}
@@ -346,7 +359,7 @@ export default function Etablissements() {
         </Multiselect>
         <Multiselect
           onClose={filterTracker("cfd")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("cfd", selected)}
           options={data?.filters.formations}
           value={filters.cfd ?? []}
@@ -354,43 +367,59 @@ export default function Etablissements() {
           Formation
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPC")}
-          width="52"
-          onChange={(selected) => handleFilters("CPC", selected)}
-          options={data?.filters.CPCs}
-          value={filters.CPC ?? []}
+          onClose={filterTracker("cpc")}
+          width="12rem"
+          onChange={(selected) => handleFilters("cpc", selected)}
+          options={data?.filters.cpcs}
+          value={filters.cpc ?? []}
         >
           CPC
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPCSecteur")}
-          width="52"
-          onChange={(selected) => handleFilters("CPCSecteur", selected)}
-          options={data?.filters.CPCSecteurs}
-          value={filters.CPCSecteur ?? []}
+          onClose={filterTracker("cpcSecteur")}
+          width="12rem"
+          onChange={(selected) => handleFilters("cpcSecteur", selected)}
+          options={data?.filters.cpcSecteurs}
+          value={filters.cpcSecteur ?? []}
         >
           CPC Secteur
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("CPCSousSecteur")}
-          width="52"
-          onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
-          options={data?.filters.CPCSousSecteurs}
-          value={filters.CPCSousSecteur ?? []}
+          onClose={filterTracker("cpcSousSecteur")}
+          width="12rem"
+          onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
+          options={data?.filters.cpcSousSecteurs}
+          value={filters.cpcSousSecteur ?? []}
         >
           CPC Sous Secteur
         </Multiselect>
         <Multiselect
           onClose={filterTracker("libelleFiliere")}
-          width="52"
+          width="12rem"
           onChange={(selected) => handleFilters("libelleFiliere", selected)}
           options={data?.filters.libelleFilieres}
           value={filters.libelleFiliere ?? []}
         >
           Secteur d’activité
         </Multiselect>
+        <Flex w="24rem" mr="3">
+          <Checkbox
+            size="lg"
+            onChange={(event) => {
+              console.log(event.target.checked);
+              handleToggleShowAnneeCommune(
+                event.target.checked.toString() ?? "false"
+              );
+            }}
+            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            whiteSpace={"nowrap"}
+          >
+            <Text fontSize={"14px"}>
+              Afficher les secondes et premières communes
+            </Text>
+          </Checkbox>
+        </Flex>
       </Flex>
-
       <Flex direction="column" flex={1} position="relative" minH="0">
         {isFetching && (
           <Center
@@ -439,10 +468,10 @@ export default function Etablissements() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleDiplome")}
+                  onClick={() => handleOrder("libelleFormation")}
                 >
-                  <OrderIcon {...order} column="libelleDiplome" />
-                  {ETABLISSEMENTS_COLUMNS.libelleDiplome}
+                  <OrderIcon {...order} column="libelleFormation" />
+                  {ETABLISSEMENTS_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   isNumeric
@@ -603,9 +632,9 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="secteur" />
                   {ETABLISSEMENTS_COLUMNS.secteur}
                 </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("UAI")}>
-                  <OrderIcon {...order} column="UAI" />
-                  {ETABLISSEMENTS_COLUMNS.UAI}
+                <Th cursor="pointer" onClick={() => handleOrder("uai")}>
+                  <OrderIcon {...order} column="uai" />
+                  {ETABLISSEMENTS_COLUMNS.uai}
                 </Th>
                 <Th
                   cursor="pointer"
@@ -616,32 +645,29 @@ export default function Etablissements() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleOfficielFamille")}
+                  onClick={() => handleOrder("libelleFamille")}
                 >
-                  <OrderIcon {...order} column="libelleOfficielFamille" />
-                  {ETABLISSEMENTS_COLUMNS.libelleOfficielFamille}
+                  <OrderIcon {...order} column="libelleFamille" />
+                  {ETABLISSEMENTS_COLUMNS.libelleFamille}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
+                  <OrderIcon {...order} column="cfd" />
+                  {ETABLISSEMENTS_COLUMNS.cfd}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
+                  <OrderIcon {...order} column="cpc" />
+                  {ETABLISSEMENTS_COLUMNS.cpc}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
+                  <OrderIcon {...order} column="cpcSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.cpcSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("codeFormationDiplome")}
+                  onClick={() => handleOrder("cpcSousSecteur")}
                 >
-                  <OrderIcon {...order} column="codeFormationDiplome" />
-                  {ETABLISSEMENTS_COLUMNS.codeFormationDiplome}
-                </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
-                  <OrderIcon {...order} column="CPC" />
-                  {ETABLISSEMENTS_COLUMNS.CPC}
-                </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
-                  <OrderIcon {...order} column="CPCSecteur" />
-                  {ETABLISSEMENTS_COLUMNS.CPCSecteur}
-                </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("CPCSousSecteur")}
-                >
-                  <OrderIcon {...order} column="CPCSousSecteur" />
-                  {ETABLISSEMENTS_COLUMNS.CPCSousSecteur}
+                  <OrderIcon {...order} column="cpcSousSecteur" />
+                  {ETABLISSEMENTS_COLUMNS.cpcSousSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
@@ -655,35 +681,35 @@ export default function Etablissements() {
             <Tbody>
               {data?.etablissements.map((line) => (
                 <Fragment
-                  key={`${line.UAI}_${line.dispositifId}_${line.codeFormationDiplome}`}
+                  key={`${line.uai}_${line.codeDispositif}_${line.cfd}`}
                 >
                   <Tr h="12">
                     <EtablissementLineContent
                       line={line}
                       defaultRentreeScolaire="2022"
                       expended={
-                        historiqueId?.cfd === line.codeFormationDiplome &&
-                        historiqueId.codeDispositif === line.dispositifId &&
-                        historiqueId.UAI === line.UAI
+                        historiqueId?.cfd === line.cfd &&
+                        historiqueId.codeDispositif === line.codeDispositif &&
+                        historiqueId.uai === line.uai
                       }
                       onClickExpend={() =>
                         setHistoriqueId({
-                          cfd: line.codeFormationDiplome,
-                          codeDispositif: line.dispositifId,
-                          UAI: line.UAI,
+                          cfd: line.cfd,
+                          codeDispositif: line.codeDispositif,
+                          uai: line.uai,
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
-                  {historiqueId?.cfd === line.codeFormationDiplome &&
-                    historiqueId.codeDispositif === line.dispositifId &&
-                    historiqueId.UAI === line.UAI && (
+                  {historiqueId?.cfd === line.cfd &&
+                    historiqueId.codeDispositif === line.codeDispositif &&
+                    historiqueId.uai === line.uai && (
                       <>
                         {historique &&
                           historique.map((historiqueLine) => (
                             <Tr
-                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                               bg={"grey.975"}
                             >
                               <EtablissementLineContent line={historiqueLine} />

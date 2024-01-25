@@ -2,10 +2,17 @@ import { ScopeEnum } from "shared";
 import { scope } from "shared/enum/scopeEnum";
 import { z } from "zod";
 
+const OptionSchema = z.object({
+  label: z.coerce.string(),
+  value: z.coerce.string(),
+});
+
 const ScopedStatsTransfoSchema = z.object({
   key: z.string(),
   libelle: z.string(),
+  libelleAcademie: z.string().optional(),
   code: z.string(),
+  countDemande: z.coerce.number(),
   effectif: z.number().optional(),
   placesTransformees: z.number(),
   tauxTransformation: z.number().optional(),
@@ -54,6 +61,19 @@ const StatsTransfoSchema = z.record(
 export const getScopedTransformationStatsSchema = {
   querystring: QuerySchema,
   response: {
-    200: StatsTransfoSchema,
+    200: z.object({
+      draft: StatsTransfoSchema,
+      submitted: StatsTransfoSchema,
+      all: StatsTransfoSchema,
+      filters: z.object({
+        rentreesScolaires: z.array(OptionSchema),
+        regions: z.array(OptionSchema),
+        academies: z.array(OptionSchema),
+        departements: z.array(OptionSchema),
+        CPCs: z.array(OptionSchema),
+        filieres: z.array(OptionSchema),
+        diplomes: z.array(OptionSchema),
+      }),
+    }),
   },
 };

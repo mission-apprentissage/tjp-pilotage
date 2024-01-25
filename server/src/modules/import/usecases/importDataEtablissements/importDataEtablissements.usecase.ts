@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { DB } from "../../../../db/schema";
+import { DB } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 import { streamIt } from "../../utils/streamIt";
 import { createDataEtablissement } from "./createDataEtablissement.dep";
@@ -33,7 +33,7 @@ export const [importDataEtablissements] = inject(
             codeAcademie: departement?.codeAcademie,
             codeRegion: departement?.codeRegion,
             codeDepartement,
-            libelle: lyceeACCE.appellation_officielle,
+            libelleEtablissement: lyceeACCE.appellation_officielle,
             adresse: lyceeACCE.adresse_uai,
             commune: lyceeACCE.commune_libe,
             codePostal:

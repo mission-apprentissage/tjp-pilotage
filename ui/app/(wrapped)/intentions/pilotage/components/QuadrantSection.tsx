@@ -36,7 +36,7 @@ import { useStateParams } from "../../../../../utils/useFilters";
 import {
   Filters,
   OrderFormationsTransformationStats,
-  PilotageTransformationStats,
+  ScopedTransformationStats,
   SelectedScope,
 } from "../types";
 
@@ -47,7 +47,7 @@ export const QuadrantSection = ({
 }: {
   scope?: SelectedScope;
   parentFilters: Partial<Filters>;
-  scopeFilters?: PilotageTransformationStats["filters"];
+  scopeFilters?: ScopedTransformationStats["filters"];
 }) => {
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
@@ -189,7 +189,7 @@ export const QuadrantSection = ({
                         : undefined,
                   })),
                   {
-                    libelleDiplome: "Formation",
+                    libelleFormation: "Formation",
                     cfd: "CFD",
                     libelleDispositif: "Dispositif",
                     tauxInsertion: "Taux d'emploi",
@@ -250,7 +250,7 @@ export const QuadrantSection = ({
                     textBg="white"
                     mb="4"
                     label="Formation concernée"
-                    value={formation?.libelleDiplome}
+                    value={formation?.libelleFormation}
                   />
                   <InfoBlock
                     textBg="white"
@@ -289,7 +289,7 @@ export const QuadrantSection = ({
                         filters: {
                           rentreeScolaire: "2024",
                           cfd: [formation.cfd],
-                          codeDispositif: [formation.dispositifId],
+                          codeDispositif: [formation.codeDispositif],
                           typeDemande: filters.type
                             ? filters.type === "ouverture"
                               ? ["ouverture_nette", "ouverture_compensation"]
@@ -358,7 +358,7 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         itemId={(formation) =>
-                          formation.cfd + formation.dispositifId
+                          formation.cfd + formation.codeDispositif
                         }
                         data={formations?.map((formation) => ({
                           ...formation,

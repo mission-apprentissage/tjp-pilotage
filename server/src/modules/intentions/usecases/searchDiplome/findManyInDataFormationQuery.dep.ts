@@ -19,11 +19,7 @@ export const findManyInDataFormationQuery = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
-    .leftJoin(
-      "familleMetier",
-      "dataFormation.cfd",
-      "familleMetier.cfdSpecialite"
-    )
+    .leftJoin("familleMetier", "dataFormation.cfd", "familleMetier.cfd")
     .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
       "420",
       "430",
@@ -34,7 +30,7 @@ export const findManyInDataFormationQuery = async ({
           search_array.map((search_word) =>
             eb(
               sql`concat(
-                  unaccent(${eb.ref("dataFormation.libelle")}),
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("dataFormation.cfd")}),
                   ' ',
@@ -42,11 +38,9 @@ export const findManyInDataFormationQuery = async ({
                   ' ',
                   unaccent(${eb.ref("familleMetier.cfdFamille")}),
                   ' ',
-                  unaccent(${eb.ref("familleMetier.cfdSpecialite")}),
+                  unaccent(${eb.ref("familleMetier.cfd")}),
                   ' ',
-                  unaccent(${eb.ref("familleMetier.libelleOfficielFamille")}),
-                  ' ',
-                  unaccent(${eb.ref("familleMetier.libelleOfficielSpecialite")})
+                  unaccent(${eb.ref("familleMetier.libelleFamille")})
                 )`,
               "ilike",
               `%${search_word
@@ -85,7 +79,7 @@ export const findManyInDataFormationQuery = async ({
     )
     .select((eb) => [
       "dataFormation.cfd as value",
-      sql<string>`CONCAT(${eb.ref("dataFormation.libelle")},
+      sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
       ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')',
       ' (',${eb.ref("dataFormation.cfd")},')')`.as("label"),
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(

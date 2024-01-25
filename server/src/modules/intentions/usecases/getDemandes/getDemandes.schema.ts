@@ -3,7 +3,7 @@ import { z } from "zod";
 const DemandesItem = z.object({
   id: z.string(),
   cfd: z.string().optional(),
-  libelleDiplome: z.string().optional(),
+  libelleFormation: z.string().optional(),
   libelleEtablissement: z.string().optional(),
   libelleDepartement: z.string().optional(),
   libelleDispositif: z.string().optional(),

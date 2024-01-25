@@ -12,6 +12,7 @@ import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
+import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
 import { R } from "../services/inserJeunesApi/formatUaiData";
 
@@ -19,6 +20,7 @@ type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
   nFormationDiplome_: NFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
+  optionsBTS: OptionsBTSLine;
   lyceesACCE: LyceesACCELine;
   nMef: NMefLine;
   "Cab-nbre_division_effectifs_par_etab_mefst11": Cab_bre_division_effectifs_par_etab_mefst11;
