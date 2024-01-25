@@ -73,13 +73,18 @@ export default () => {
   >(["draft", "submitted"]);
 
   useEffect(() => {
-    if (codeRegionFilter != "") {
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeRegionFilter !== ""
+    ) {
       filters.codeRegion = [codeRegionFilter];
     }
-    if (rentreeScolaireFilter != "") {
+    if (rentreeScolaireFilter !== "") {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
-    if (statutFilter != undefined) {
+    if (statutFilter !== undefined) {
       filters.status = statutFilter;
     }
     setSearchParams({ filters: filters });
