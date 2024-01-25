@@ -1,7 +1,7 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 export function hasContinuum<
   EB extends
@@ -10,13 +10,13 @@ export function hasContinuum<
 >({
   millesimeSortie,
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   millesimeSortie: string;
   cfdRef: Parameters<EB["ref"]>[0];
-  dispositifIdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
   codeRegionRef: Parameters<EB["ref"]>[0];
 }) {
   const eb = expressionBuilder<DB, keyof DB>();
@@ -24,12 +24,12 @@ export function hasContinuum<
     eb
       .selectFrom("indicateurRegionSortie as subIRS")
       .leftJoin(
-        "formation as subFormation",
-        "subFormation.codeFormationDiplome",
+        "formationView as subFormation",
+        "subFormation.cfd",
         "subIRS.cfdContinuum"
       )
       .whereRef("subIRS.cfd", "=", cfdRef)
-      .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
+      .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
       .whereRef(
         "subIRS.codeRegion",
         "=",
@@ -39,11 +39,11 @@ export function hasContinuum<
       .where("subIRS.cfdContinuum", "is not", null)
       .select("subIRS.cfdContinuum as cfd")
       .$narrowType<{ cfd: string }>()
-      .select("subFormation.libelleDiplome as libelle")
+      .select("subFormation.libelleFormation")
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",
-        "subFormation.libelleDiplome",
+        "subFormation.libelleFormation",
       ])
       .limit(1)
   );

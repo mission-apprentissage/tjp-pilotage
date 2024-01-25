@@ -16,7 +16,7 @@ export const getDepartements = () => {
     )
     .select([
       "departement.codeDepartement as value",
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
     ])
     .where("departement.codeDepartement", "is not", null)
     .where(notPerimetreIJDepartement)

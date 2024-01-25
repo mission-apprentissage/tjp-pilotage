@@ -6,12 +6,16 @@ import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
+  notAnneeCommune,
+  notAnneeCommuneIndicateurRegionSortie,
+} from "../../utils/notAnneeCommune";
+import {
   notHistorique,
+  notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
-
 
 const getRentreesScolaires = async () => {
   return await kdb
@@ -20,11 +24,12 @@ const getRentreesScolaires = async () => {
     .distinct()
     .orderBy("rentreeScolaire", "desc")
     .execute()
-    .then(rentreesScolaireArray =>
-      rentreesScolaireArray
-        .map(rentreeScolaire => rentreeScolaire.rentreeScolaire)
-    )
-}
+    .then((rentreesScolaireArray) =>
+      rentreesScolaireArray.map(
+        (rentreeScolaire) => rentreeScolaire.rentreeScolaire
+      )
+    );
+};
 
 const getMillesimesSortie = async () => {
   return await kdb
@@ -33,11 +38,12 @@ const getMillesimesSortie = async () => {
     .distinct()
     .orderBy("millesimeSortie", "desc")
     .execute()
-    .then(millesimesSortieArray =>
-      millesimesSortieArray
-        .map(millesimeSortie => millesimeSortie.millesimeSortie)
-    )
-}
+    .then((millesimesSortieArray) =>
+      millesimesSortieArray.map(
+        (millesimeSortie) => millesimeSortie.millesimeSortie
+      )
+    );
+};
 
 export const getStats = async ({
   codeRegion,
@@ -46,10 +52,9 @@ export const getStats = async ({
   codeRegion?: string;
   codeNiveauDiplome?: string[];
 }) => {
-
-  const rentreesScolaires = await getRentreesScolaires()
-  const rentreeScolaire =  rentreesScolaires[0]
-  const millesimesSortie = await getMillesimesSortie()
+  const rentreesScolaires = await getRentreesScolaires();
+  const rentreeScolaire = rentreesScolaires[0];
+  const millesimesSortie = await getMillesimesSortie();
 
   const selectStatsEffectif = ({
     isScoped = false,
@@ -61,8 +66,8 @@ export const getStats = async ({
     return kdb
       .selectFrom("formationEtablissement")
       .leftJoin(
-        "formation",
-        "formation.codeFormationDiplome",
+        "formationView",
+        "formationView.cfd",
         "formationEtablissement.cfd"
       )
       .innerJoin("indicateurEntree", (join) =>
@@ -89,9 +94,14 @@ export const getStats = async ({
       })
       .$call((q) => {
         if (!codeNiveauDiplome?.length) return q;
-        return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        return q.where(
+          "formationView.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
       })
       .where(notHistorique)
+      .where(notAnneeCommune)
       .select([
         sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
           "nbFormations"
@@ -116,8 +126,8 @@ export const getStats = async ({
     kdb
       .selectFrom("indicateurRegionSortie")
       .leftJoin(
-        "formation",
-        "formation.codeFormationDiplome",
+        "formationView",
+        "formationView.cfd",
         "indicateurRegionSortie.cfd"
       )
       .$call((q) => {
@@ -126,7 +136,11 @@ export const getStats = async ({
       })
       .$call((q) => {
         if (!codeNiveauDiplome?.length) return q;
-        return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+        return q.where(
+          "formationView.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
       })
       .$call((q) =>
         q.where(
@@ -136,6 +150,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
+      .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
         selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
@@ -145,9 +160,9 @@ export const getStats = async ({
 
   const getStatsAnnee = async (millesimeSortie: string) => {
     // millesimeSortie est au format 2000_2001
-    const finDanneeScolaireMillesime = parseInt(millesimeSortie.split('_')[1])
-    const rentree = parseInt(rentreeScolaire)
-    const offset = finDanneeScolaireMillesime - rentree
+    const finDanneeScolaireMillesime = parseInt(millesimeSortie.split("_")[1]);
+    const rentree = parseInt(rentreeScolaire);
+    const offset = finDanneeScolaireMillesime - rentree;
 
     return {
       annee: finDanneeScolaireMillesime,
@@ -159,28 +174,30 @@ export const getStats = async ({
         ...(await selectStatsEffectif({ isScoped: false, annee: offset })),
         ...(await selectStatsSortie({ isScoped: false, annee: offset + 1 })),
       },
-    }
-  }
+    };
+  };
 
-  const annees = await Promise.all(millesimesSortie.map(millesimeSortie => getStatsAnnee(millesimeSortie)))
+  const annees = await Promise.all(
+    millesimesSortie.map((millesimeSortie) => getStatsAnnee(millesimeSortie))
+  );
 
   return {
-    annees
+    annees,
   };
 };
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .leftJoin(
       "etablissement",
@@ -188,13 +205,7 @@ const findFiltersInDb = async () => {
       "formationEtablissement.UAI"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
-    .where((eb) =>
-      eb(
-        "codeFormationDiplome",
-        "not in",
-        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
-      )
-    )
+    .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");

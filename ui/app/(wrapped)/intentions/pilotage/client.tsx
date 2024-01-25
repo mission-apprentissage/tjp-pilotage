@@ -14,7 +14,6 @@ export const PilotageIntentionsClient = () => {
   const {
     filters,
     isLoading,
-    datas,
     scopedStats,
     scope,
     indicateur,
@@ -34,14 +33,14 @@ export const PilotageIntentionsClient = () => {
           handleFilters={handleFilters}
           filterTracker={filterTracker}
           isLoading={isLoading}
-          data={datas}
+          data={scopedStats}
           scope={scope}
         />
         <Box>
           <Flex gap={8} mt={10} flexDirection={["column", null, "row"]}>
             <Box flex={1}>
               <IndicateursClesSection
-                data={datas}
+                data={scopedStats}
                 isLoading={isLoading}
                 scope={scope}
                 filters={filters}
@@ -62,7 +61,7 @@ export const PilotageIntentionsClient = () => {
             <QuadrantSection
               scope={scope}
               parentFilters={filters}
-              scopeFilters={datas?.filters}
+              scopeFilters={scopedStats?.filters}
             />
           </Box>
           <Flex gap={5} flexDirection={["column", null, "row"]} mt={14} mb={20}>

@@ -5,15 +5,17 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
-  notHistorique,
-  notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
+  notAnneeCommune,
+  notAnneeCommuneIndicateurRegionSortie,
+  notSpecialite,
+} from "../../utils/notAnneeCommune";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
-export const getDepartementsStats = async ({
+export const getDepartementStats = async ({
   codeDepartement,
   codeNiveauDiplome,
   rentreeScolaire = CURRENT_RENTREE,
@@ -27,7 +29,7 @@ export const getDepartementsStats = async ({
   const informationsDepartement = await kdb
     .selectFrom("departement")
     .where("codeDepartement", "=", codeDepartement)
-    .select(["codeRegion", "libelle as libelleDepartement"])
+    .select(["codeRegion", "libelleDepartement"])
     .executeTakeFirstOrThrow()
     .catch(() => {
       throw Boom.badRequest(`Code département invalide : ${codeDepartement}`);
@@ -36,8 +38,8 @@ export const getDepartementsStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .leftJoin(
@@ -45,11 +47,16 @@ export const getDepartementsStats = async ({
       "departement.codeRegion",
       "indicateurRegionSortie.codeRegion"
     )
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where((eb) =>
@@ -65,11 +72,11 @@ export const getDepartementsStats = async ({
     ])
     .executeTakeFirst();
 
-  const stats = await kdb
+  const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "formationEtablissement.cfd"
     )
     .leftJoin("indicateurEntree", (join) =>
@@ -84,32 +91,49 @@ export const getDepartementsStats = async ({
       "formationEtablissement.UAI",
       "etablissement.UAI"
     )
-    .where("etablissement.codeDepartement", "=", codeDepartement)
     .innerJoin(
       "departement",
       "departement.codeDepartement",
       "etablissement.codeDepartement"
     )
+    .where("etablissement.codeDepartement", "=", codeDepartement)
+    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
-    })
-    .where(notHistorique)
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    .select([
-      "departement.codeRegion",
-      "departement.libelle as libelleDepartement",
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
+    });
+
+  const nbFormations = await baseStatsEntree
+    .where(notAnneeCommune)
+    .select(
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
-      ),
+      )
+    )
+    .executeTakeFirst();
+
+  const statsEntree = await baseStatsEntree
+    .where(notSpecialite)
+    .select([
+      "departement.codeRegion",
+      "departement.libelleDepartement",
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
 
       selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy(["departement.libelle", "departement.codeRegion"])
+    .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
     .executeTakeFirst();
 
-  return { ...informationsDepartement, ...stats, ...statsSortie };
+  return {
+    ...informationsDepartement,
+    ...statsEntree,
+    ...nbFormations,
+    ...statsSortie,
+  };
 };

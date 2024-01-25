@@ -17,14 +17,14 @@ export const [importFormation] = inject(
       const formation = {
         codeFormationDiplome: dataFormation.cfd,
         rncp: dataFormation.rncp,
-        libelleDiplome: dataFormation.libelle ?? "",
+        libelleFormation: dataFormation.libelleFormation ?? "",
         codeNiveauDiplome: dataFormation.codeNiveauDiplome,
         dateOuverture: dataFormation.dateOuverture,
         dateFermeture: dataFormation.dateFermeture,
         libelleFiliere: dataFormation.libelleFiliere,
         CPC: dataFormation.cpc,
-        CPCSecteur: dataFormation.cpcSecteur,
-        CPCSousSecteur: dataFormation.cpcSousSecteur,
+        cpcSecteur: dataFormation.cpcSecteur,
+        cpcSousSecteur: dataFormation.cpcSousSecteur,
       };
       await deps.createFormation(formation);
       return formation;

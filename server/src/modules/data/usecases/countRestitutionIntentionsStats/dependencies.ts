@@ -62,7 +62,7 @@ const countRestitutionIntentionsStatsInDB = async ({
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`

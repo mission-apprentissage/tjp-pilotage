@@ -21,7 +21,7 @@ import {
   Filters,
   Indicateur,
   Order,
-  PilotageTransformationStats,
+  ScopedTransformationStats,
   SelectedScope,
   Status,
 } from "../types";
@@ -250,11 +250,15 @@ const StatCard = ({
 
 function generatePercentageDataOr(
   code: string,
-  data?: PilotageTransformationStats,
+  data?: ScopedTransformationStats,
   or: string = "-"
 ) {
   return (status: Status, indicateur: Indicateur): string => {
-    if (typeof data?.[status]?.[`_${code}`]?.[indicateur] === "undefined") {
+    if (
+      typeof data?.[status]?.[`_${code}`]?.[indicateur] === "undefined" ||
+      (indicateur === "tauxTransformation" &&
+        data?.[status]?.[`_${code}`].effectif === 0)
+    ) {
       return or;
     }
 
@@ -269,10 +273,7 @@ function generatePercentageDataOr(
   };
 }
 
-function generateGetScopedData(
-  code: string,
-  data?: PilotageTransformationStats
-) {
+function generateGetScopedData(code: string, data?: ScopedTransformationStats) {
   return (status: Status, indicateur: Indicateur): number => {
     return Number.parseFloat(
       (data?.[status]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
@@ -287,14 +288,14 @@ export const IndicateursClesSection = ({
   filters,
   order,
 }: {
-  data?: PilotageTransformationStats;
+  data?: ScopedTransformationStats;
   isLoading: boolean;
   scope: SelectedScope;
   filters: Partial<Filters>;
   order: Partial<Order>;
 }) => {
   const { data: nationalStats, isLoading: isLoadingNationalStats } = client
-    .ref("[GET]/pilotage-transformation/stats")
+    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
     .useQuery(
       {
         query: {

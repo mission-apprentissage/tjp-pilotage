@@ -50,10 +50,10 @@ export const CfdBlock = ({
                 name={name}
                 inError={errors.cfd ? true : false}
                 defaultValue={
-                  value && formMetaData?.formation?.libelle
+                  value && formMetaData?.formation?.libelleFormation
                     ? {
                         value,
-                        label: formMetaData?.formation?.libelle,
+                        label: formMetaData?.formation?.libelleFormation,
                       }
                     : undefined
                 }

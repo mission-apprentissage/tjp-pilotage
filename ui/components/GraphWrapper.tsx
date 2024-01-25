@@ -10,7 +10,7 @@ export const GraphWrapper = chakra(
     className,
   }: {
     value?: number;
-    continuum?: { cfd: string; libelle?: string };
+    continuum?: { cfd: string; libelleFormation?: string };
     className?: string;
   }) => (
     <Flex

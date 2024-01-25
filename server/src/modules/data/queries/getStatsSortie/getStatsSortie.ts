@@ -1,6 +1,7 @@
 import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { kdb } from "../../../../db/db";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -19,8 +20,8 @@ const getStatsSortieBase = ({
   const statsSortie = kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .where((w) => {
@@ -49,9 +50,14 @@ const getStatsSortieBase = ({
     })
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notAnneeCommune)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
@@ -75,8 +81,8 @@ export const getStatsSortieParNiveauDiplome = async ({
     codeNiveauDiplome,
     millesimeSortie,
   })
-    .select(["formation.codeNiveauDiplome"])
-    .groupBy("formation.codeNiveauDiplome")
+    .select(["formationView.codeNiveauDiplome"])
+    .groupBy("formationView.codeNiveauDiplome")
     .execute();
 
   return statsSortie.reduce(
@@ -107,11 +113,11 @@ export const getStatsSortieParRegionsEtNiveauDiplome = async ({
   })
     .select([
       "indicateurRegionSortie.codeRegion",
-      "formation.codeNiveauDiplome",
+      "formationView.codeNiveauDiplome",
     ])
     .groupBy([
       "indicateurRegionSortie.codeRegion",
-      "formation.codeNiveauDiplome",
+      "formationView.codeNiveauDiplome",
     ])
     .execute();
 

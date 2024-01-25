@@ -101,6 +101,9 @@ const genericOnConstatRentree =
       });
   };
 
+const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
+  eb.fn.count<number>("demande.id");
+
 const genericOnDemandes =
   ({
     status,
@@ -125,6 +128,7 @@ const genericOnDemandes =
         selectPlacesOuvertesApprentissage(es).as("placesOuvertesApprentissage"),
         selectPlacesTransformees(es).as("transformes"),
         selectPlacesFermeesApprentissage(es).as("placesFermeesApprentissage"),
+        selectNbDemandes(es).as("countDemande"),
       ])
       .where(isDemandeNotDeletedOrRefused)
       .$call((eb) => {
@@ -158,6 +162,65 @@ const genericOnDemandes =
         if (!status) return q;
         return q.where("demande.status", "=", status);
       });
+
+const getNationalData = async (filters: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  filiere?: string[];
+}) => {
+  return kdb
+    .selectFrom("demande")
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .select((es) => [
+      selectPlacesOuvertesScolaire(es).as("placesOuvertesScolaire"),
+      selectPlacesFermeesScolaire(es).as("placesFermeesScolaire"),
+      selectPlacesOuvertesApprentissage(es).as("placesOuvertesApprentissage"),
+      selectPlacesTransformees(es).as("transformes"),
+      selectPlacesFermeesApprentissage(es).as("placesFermeesApprentissage"),
+      selectNbDemandes(es).as("countDemande"),
+      genericOnConstatRentree(filters)()
+        .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
+        .as("effectif"),
+      sql<string>`'national'`.as("code"),
+      sql<string>`'national'`.as("libelle"),
+    ])
+    .where(isDemandeNotDeletedOrRefused)
+    .$call((eb) => {
+      if (filters.rentreeScolaire && !Number.isNaN(filters.rentreeScolaire))
+        return eb.where(
+          "demande.rentreeScolaire",
+          "=",
+          parseInt(filters.rentreeScolaire)
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.CPC) return eb.where("dataFormation.cpc", "in", filters.CPC);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.filiere)
+        return eb.where("dataFormation.libelleFiliere", "in", filters.filiere);
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          filters.codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((q) => {
+      if (!filters.status) return q;
+      return q.where("demande.status", "=", filters.status);
+    })
+    .execute()
+    .then(cleanNull);
+};
 
 const getRegionData = async (filters: {
   status?: "draft" | "submitted";
@@ -208,6 +271,9 @@ const getRegionData = async (filters: {
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
       ),
+      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
+        "countDemande"
+      ),
     ])
     .where(notPerimetreIJRegion)
     .execute()
@@ -248,7 +314,7 @@ const getAcademieData = async (filters: {
     )
     .select((eb) => [
       eb.ref("academie.codeAcademie").as("code"),
-      eb.ref("academie.libelle").as("libelle"),
+      eb.ref("academie.libelleAcademie").as("libelle"),
       eb.ref("effectifs.effectif").as("effectif"),
       sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
         "placesOuvertesScolaire"
@@ -264,6 +330,9 @@ const getAcademieData = async (filters: {
       )}, 0)`.as("placesFermeesApprentissage"),
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
+      ),
+      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
+        "countDemande"
       ),
     ])
     .where(notPerimetreIJAcademie)
@@ -315,9 +384,11 @@ const getDepartementData = async (filters: {
           "departement.codeDepartement"
         )
     )
+    .leftJoin("academie", "academie.codeAcademie", "departement.codeAcademie")
     .select((eb) => [
       eb.ref("departement.codeDepartement").as("code"),
-      eb.ref("departement.libelle").as("libelle"),
+      eb.ref("departement.libelleDepartement").as("libelle"),
+      eb.ref("academie.libelleAcademie").as("libelleAcademie"),
       eb.ref("effectifs.effectif").as("effectif"),
       sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
         "placesOuvertesScolaire"
@@ -333,6 +404,9 @@ const getDepartementData = async (filters: {
       )}, 0)`.as("placesFermeesApprentissage"),
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
+      ),
+      sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
+        "countDemande"
       ),
     ])
     .where(notPerimetreIJDepartement)
@@ -374,8 +448,16 @@ const getScopedData = async ({
         filiere,
       });
     case ScopeEnum.region:
-    default:
       return getRegionData({
+        status,
+        rentreeScolaire,
+        codeNiveauDiplome,
+        CPC,
+        filiere,
+      });
+    case ScopeEnum.national:
+    default:
+      return getNationalData({
         status,
         rentreeScolaire,
         codeNiveauDiplome,
@@ -385,10 +467,169 @@ const getScopedData = async ({
   }
 };
 
+const getFiltersQuery = async ({
+  status,
+  rentreeScolaire = "2024",
+  codeNiveauDiplome,
+  CPC,
+  filiere,
+}: {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  filiere?: string[];
+}) => {
+  const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
+    if (!status || status === undefined) return sql<true>`true`;
+    return eb("demande.status", "=", status);
+  };
+
+  const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
+    if (!rentreeScolaire || Number.isNaN(rentreeScolaire))
+      return sql<true>`true`;
+    return eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
+  };
+
+  const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!codeNiveauDiplome) return sql<true>`true`;
+    return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+  };
+
+  const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!CPC) return sql<true>`true`;
+    return eb("dataFormation.cpc", "in", CPC);
+  };
+
+  const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!filiere) return sql<true>`true`;
+    return eb("dataFormation.libelleFiliere", "in", filiere);
+  };
+
+  const base = kdb
+    .selectFrom("demande")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .innerJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .innerJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNiveauDiplome"
+    )
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc");
+
+  const rentreesScolairesFilters = await base
+    .select([
+      "demande.rentreeScolaire as value",
+      "demande.rentreeScolaire as label",
+    ])
+    .where("demande.rentreeScolaire", "is not", null)
+    .execute();
+
+  const regionsFilters = await kdb
+    .selectFrom("region")
+    .select((eb) => [
+      eb.ref("region.codeRegion").as("value"),
+      eb.ref("region.libelleRegion").as("label"),
+    ])
+    .where("region.codeRegion", "is not", null)
+    .where(notPerimetreIJRegion)
+    .distinct()
+    .orderBy("label", "asc")
+    .execute();
+
+  const academiesFilters = await base
+    .select([
+      "academie.codeAcademie as value",
+      "academie.libelleAcademie as label",
+    ])
+    .select((eb) => [
+      eb.ref("academie.codeAcademie").as("value"),
+      eb.ref("academie.libelleAcademie").as("label"),
+    ])
+    .where("academie.codeAcademie", "is not", null)
+    .where(notPerimetreIJAcademie)
+    .orderBy("label", "asc")
+    .execute();
+
+  const departementsFilters = await base
+    .select([
+      "departement.codeDepartement as value",
+      "departement.libelleDepartement as label",
+    ])
+    .where("departement.codeDepartement", "is not", null)
+    .where(notPerimetreIJDepartement)
+    .orderBy("label", "asc")
+    .execute();
+
+  const CPCFilters = await base
+    .select(["dataFormation.cpc as label", "dataFormation.cpc as value"])
+    .where("dataFormation.cpc", "is not", null)
+    .where((eb) =>
+      eb.and([
+        inStatus(eb),
+        inRentreeScolaire(eb),
+        inCodeNiveauDiplome(eb),
+        inFiliere(eb),
+      ])
+    )
+    .execute();
+
+  const filieresFilters = await base
+    .select([
+      "dataFormation.libelleFiliere as label",
+      "dataFormation.libelleFiliere as value",
+    ])
+    .where("dataFormation.libelleFiliere", "is not", null)
+    .where((eb) =>
+      eb.and([
+        inStatus(eb),
+        inRentreeScolaire(eb),
+        inCodeNiveauDiplome(eb),
+        inCPC(eb),
+      ])
+    )
+    .execute();
+
+  const diplomesFilters = await base
+    .select([
+      "niveauDiplome.libelleNiveauDiplome as label",
+      "niveauDiplome.codeNiveauDiplome as value",
+    ])
+    .where("niveauDiplome.codeNiveauDiplome", "is not", null)
+    .where((eb) =>
+      eb.and([inStatus(eb), inRentreeScolaire(eb), inCPC(eb), inFiliere(eb)])
+    )
+    .execute();
+
+  return {
+    rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
+    regions: regionsFilters.map(cleanNull),
+    academies: academiesFilters.map(cleanNull),
+    departements: departementsFilters.map(cleanNull),
+    CPCs: CPCFilters.map(cleanNull),
+    filieres: filieresFilters.map(cleanNull),
+    diplomes: diplomesFilters.map(cleanNull),
+  };
+};
+
 export type GetScopedTransformationStatsType = Awaited<
   ReturnType<typeof getScopedData>
 >;
 
 export const dependencies = {
   getScopedData,
+  getFiltersQuery,
 };

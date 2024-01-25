@@ -2,8 +2,7 @@ import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
@@ -90,7 +89,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       "academie.codeAcademie",
       "dataEtablissement.codeAcademie"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -111,15 +110,15 @@ const findRestitutionIntentionsStatsInDB = async ({
     .select((eb) => [
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "dataFormation.libelle as libelleDiplome",
+      "dataFormation.libelleFormation",
       "dataFormation.libelleFiliere as libelleFiliere",
-      "dataEtablissement.libelle as libelleEtablissement",
+      "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
-      "dispositif.libelleDispositif as libelleDispositif",
+      "dispositif.libelleDispositif",
       "region.libelleRegion as libelleRegion",
-      "departement.libelle as libelleDepartement",
+      "departement.libelleDepartement",
       "departement.codeDepartement as codeDepartement",
-      "academie.libelle as libelleAcademie",
+      "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
@@ -488,11 +487,11 @@ const findFiltersInDb = async ({
 
   const departementsFilters = geoFiltersBase
     .select([
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)
-    .where("departement.libelle", "is not", null)
+    .where("departement.libelleDepartement", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCodeRegion(eb)]),
@@ -504,7 +503,10 @@ const findFiltersInDb = async ({
     .execute();
 
   const academiesFilters = geoFiltersBase
-    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .select([
+      "academie.libelleAcademie as label",
+      "academie.codeAcademie as value",
+    ])
     .where("academie.codeAcademie", "is not", null)
     .where("academie.codeAcademie", "not in", [
       "00",
@@ -538,7 +540,7 @@ const findFiltersInDb = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdSpecialite", "demande.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .distinct()
@@ -582,10 +584,10 @@ const findFiltersInDb = async ({
 
   const etablissementsFilters = filtersBase
     .select([
-      "dataEtablissement.libelle as label",
+      "dataEtablissement.libelleEtablissement as label",
       "dataEtablissement.uai as value",
     ])
-    .where("dataEtablissement.libelle", "is not", null)
+    .where("dataEtablissement.libelleEtablissement", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([
@@ -792,7 +794,7 @@ const findFiltersInDb = async ({
   const formationsFilters = await filtersBase
     .select((eb) => [
       sql`CONCAT(
-      ${eb.ref("dataFormation.libelle")},
+      ${eb.ref("dataFormation.libelleFormation")},
       ' (',
       ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
       ')'
@@ -829,7 +831,7 @@ const findFiltersInDb = async ({
 
   const famillesFilters = await filtersBase
     .select([
-      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)

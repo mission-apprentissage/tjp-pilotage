@@ -21,12 +21,13 @@ const getFormationsFactory =
     cfd?: string[];
     rentreeScolaire?: string[];
     cfdFamille?: string[];
-    CPC?: string[];
-    CPCSecteur?: string[];
-    CPCSousSecteur?: string[];
+    cpc?: string[];
+    cpcSecteur?: string[];
+    cpcSousSecteur?: string[];
     libelleFiliere?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
     withEmptyFormations?: boolean;
+    withAnneeCommune?: string;
     positionQuadrant?: string;
   }) => {
     const [{ formations, count }, filters, statsSortie] = await Promise.all([

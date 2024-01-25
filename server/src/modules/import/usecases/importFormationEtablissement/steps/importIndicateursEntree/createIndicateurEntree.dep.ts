@@ -1,7 +1,7 @@
 import { Insertable } from "kysely";
 
-import { kdb } from "../../../../../../db/db";
-import { DB, JsonValue } from "../../../../../../db/schema";
+import { DB, kdb } from "../../../../../../db/db";
+import { JsonValue } from "../../../../../../db/schema";
 
 export const createIndicateurEntree = async (
   indicateurEntree: Omit<

@@ -13,7 +13,9 @@ describe("redirectDne usecase", () => {
       createUserInDB: jest.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue({ email: "salut" }),
+      findUserQuery: jest
+        .fn()
+        .mockResolvedValue({ email: "salut", enabled: true }),
       findEtablissement: jest.fn(),
     });
 
@@ -107,7 +109,9 @@ describe("redirectDne usecase", () => {
       createUserInDB: jest.fn(),
       authJwtSecret: "authJwtSecret",
       codeVerifierJwtSecret: "codeVerifierJwtSecret",
-      findUserQuery: jest.fn().mockResolvedValue({ email: "email@test.test" }),
+      findUserQuery: jest
+        .fn()
+        .mockResolvedValue({ email: "email@test.test", enabled: true }),
       findEtablissement: jest
         .fn()
         .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),

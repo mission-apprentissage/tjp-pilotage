@@ -2,13 +2,16 @@ import { ExpressionBuilder, sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistorique } from "../../utils/notHistorique";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
+import {
+  isHistoriqueCoExistant,
+  notHistoriqueUnlessCoExistant,
+} from "../../utils/notHistorique";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -40,17 +43,18 @@ const findEtablissementsInDb = async ({
   codeAcademie,
   codeDepartement,
   codeDiplome,
-  codeDispositif,
+  dispositifId,
   commune,
   cfd,
   cfdFamille,
   orderBy,
   uai,
   secteur,
-  CPC,
-  CPCSecteur,
-  CPCSousSecteur,
+  cpc,
+  cpcSecteur,
+  cpcSousSecteur,
   libelleFiliere,
+  withAnneeCommune,
 }: {
   offset?: number;
   limit?: number;
@@ -60,39 +64,36 @@ const findEtablissementsInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  codeDispositif?: string[];
+  dispositifId?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
   uai?: string[];
   secteur?: string[];
-  CPC?: string[];
-  CPCSecteur?: string[];
-  CPCSousSecteur?: string[];
+  cpc?: string[];
+  cpcSecteur?: string[];
+  cpcSousSecteur?: string[];
   libelleFiliere?: string[];
+  withAnneeCommune?: string;
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formation.codeFormationDiplome"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .innerJoin("indicateurEntree", (join) =>
       join
@@ -132,14 +133,22 @@ const findEtablissementsInDb = async ({
       "dataFormationContinuum.cfd",
       "indicateurSortie.cfdContinuum"
     )
+    .leftJoin(
+      "formationHistorique",
+      "formationHistorique.ancienCFD",
+      "formationView.cfd"
+    )
     .selectAll("etablissement")
-    .selectAll("formation")
-    .select([
+    .select((eb) => [
+      "formationView.cfd",
+      "formationView.libelleFormation",
+      "formationView.codeNiveauDiplome",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "departement.libelle as departement",
+      "departement.libelleDepartement as departement",
       "etablissement.codeRegion",
-      "etablissement.UAI",
-      "libelleOfficielFamille",
+      "etablissement.UAI as uai",
+      "formationView.typeFamille",
+      "familleMetier.libelleFamille",
       "libelleDispositif",
       "dispositifId",
       "libelleNiveauDiplome",
@@ -176,6 +185,10 @@ const findEtablissementsInDb = async ({
       selectTauxDevenirFavorableAgg("indicateurSortie").as(
         "tauxDevenirFavorableEtablissement"
       ),
+      isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
+        "isHistoriqueCoExistant"
+      ),
+      "formationHistorique.codeFormationDiplome as formationRenovee",
     ])
     .select((eb) =>
       eb
@@ -184,20 +197,22 @@ const findEtablissementsInDb = async ({
         .then(
           jsonBuildObject({
             cfd: eb.ref("indicateurSortie.cfdContinuum"),
-            libelle: eb.ref("dataFormationContinuum.libelle"),
+            libelleFormation: eb.ref("dataFormationContinuum.libelleFormation"),
           })
         )
         .end()
         .as("continuumEtablissement")
     )
-    .$narrowType<{ continuumEtablissement: { cfd: string; libelle: string } }>()
+    .$narrowType<{
+      continuumEtablissement: { cfd: string; libelleFormation: string };
+    }>()
     .select([
       (eb) =>
         hasContinuum({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -205,7 +220,7 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuite"),
       (eb) =>
@@ -213,7 +228,7 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertion"),
       (eb) =>
@@ -221,10 +236,15 @@ const findEtablissementsInDb = async ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          dispositifIdRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.dispositifId",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
+    .$call((q) => {
+      if (!withAnneeCommune || withAnneeCommune === "false")
+        return q.where(notAnneeCommune);
+      return q;
+    })
     .$call((q) => {
       if (!codeRegion) return q;
       return q.where("etablissement.codeRegion", "in", codeRegion);
@@ -239,15 +259,15 @@ const findEtablissementsInDb = async ({
     })
     .$call((q) => {
       if (!cfd) return q;
-      return q.where("formation.codeFormationDiplome", "in", cfd);
+      return q.where("formationView.cfd", "in", cfd);
     })
     .$call((q) => {
       if (!commune) return q;
       return q.where("etablissement.commune", "in", commune);
     })
     .$call((q) => {
-      if (!codeDispositif) return q;
-      return q.where("dispositif.codeDispositif", "in", codeDispositif);
+      if (!dispositifId) return q;
+      return q.where("dispositif.codeDispositif", "in", dispositifId);
     })
     .$call((q) => {
       if (!codeDiplome) return q;
@@ -255,7 +275,15 @@ const findEtablissementsInDb = async ({
     })
     .$call((q) => {
       if (!cfdFamille) return q;
-      return q.where("familleMetier.cfdFamille", "in", cfdFamille);
+      return q.where((w) =>
+        w.or([
+          w("familleMetier.cfdFamille", "in", cfdFamille),
+          w.and([
+            w("formationView.typeFamille", "=", "2nde_commune"),
+            w("formationView.cfd", "in", cfdFamille),
+          ]),
+        ])
+      );
     })
     .$call((q) => {
       if (!uai) return q;
@@ -266,37 +294,42 @@ const findEtablissementsInDb = async ({
       return q.where("etablissement.secteur", "in", secteur);
     })
     .$call((q) => {
-      if (!CPC) return q;
-      return q.where("formation.CPC", "in", CPC);
+      if (!cpc) return q;
+      return q.where("formationView.cpc", "in", cpc);
     })
     .$call((q) => {
-      if (!CPCSecteur) return q;
-      return q.where("formation.CPCSecteur", "in", CPCSecteur);
+      if (!cpcSecteur) return q;
+      return q.where("formationView.cpcSecteur", "in", cpcSecteur);
     })
     .$call((q) => {
-      if (!CPCSousSecteur) return q;
-      return q.where("formation.CPCSousSecteur", "in", CPCSousSecteur);
+      if (!cpcSousSecteur) return q;
+      return q.where("formationView.cpcSousSecteur", "in", cpcSousSecteur);
     })
     .$call((q) => {
       if (!libelleFiliere) return q;
-      return q.where("formation.libelleFiliere", "in", libelleFiliere);
+      return q.where("formationView.libelleFiliere", "in", libelleFiliere);
     })
-    .where(notHistorique)
     .where(notPerimetreIJEtablissement)
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .groupBy([
-      "formation.id",
+      "formationView.id",
+      "formationView.cfd",
+      "formationView.libelleFormation",
+      "formationView.codeNiveauDiplome",
+      "formationView.typeFamille",
+      "formationView.dateFermeture",
+      "formationHistorique.codeFormationDiplome",
       "etablissement.id",
       "departement.codeDepartement",
-      "libelleOfficielFamille",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",
       "indicateurSortie.millesimeSortie",
-      "dataFormationContinuum.libelle",
+      "dataFormationContinuum.libelleFormation",
       "formationEtablissement.id",
       "dispositifId",
       "libelleDispositif",
-      "libelleOfficielFamille",
+      "libelleFamille",
       "libelleNiveauDiplome",
       "indicateurEtablissement.UAI",
       "indicateurEtablissement.millesime",
@@ -309,7 +342,7 @@ const findEtablissementsInDb = async ({
       );
     })
     .orderBy("etablissement.libelleEtablissement", "asc")
-    .orderBy("formation.libelleDiplome", "asc")
+    .orderBy("formationView.libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
     .offset(offset)
     .limit(limit)
@@ -328,12 +361,12 @@ const findFiltersInDb = async ({
   commune,
   cfdFamille,
   codeDiplome,
-  codeDispositif,
+  dispositifId,
   cfd,
   uai,
-  CPC,
-  CPCSecteur,
-  CPCSousSecteur,
+  cpc,
+  cpcSecteur,
+  cpcSousSecteur,
   libelleFiliere,
   rentreeScolaire = [CURRENT_RENTREE],
 }: {
@@ -341,23 +374,23 @@ const findFiltersInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  codeDispositif?: string[];
+  dispositifId?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
   uai?: string[];
-  CPC?: string[];
-  CPCSecteur?: string[];
-  CPCSousSecteur?: string[];
+  cpc?: string[];
+  cpcSecteur?: string[];
+  cpcSousSecteur?: string[];
   libelleFiliere?: string[];
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .innerJoin("indicateurEntree", (join) =>
       join
@@ -373,15 +406,11 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin(
-      "familleMetier",
-      "familleMetier.cfdSpecialite",
-      "formation.codeFormationDiplome"
-    )
+    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
     .leftJoin(
       "etablissement",
@@ -395,7 +424,7 @@ const findFiltersInDb = async ({
       "etablissement.codeDepartement"
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
-    .where(notHistorique)
+    .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -424,31 +453,31 @@ const findFiltersInDb = async ({
     return eb("familleMetier.cfdFamille", "in", cfdFamille);
   };
 
-  const inCfd = (eb: ExpressionBuilder<DB, "formation">) => {
+  const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!cfd) return sql<true>`true`;
-    return eb("formation.codeFormationDiplome", "in", cfd);
+    return eb("formationView.cfd", "in", cfd);
   };
 
-  const inCodeDiplome = (eb: ExpressionBuilder<DB, "formation">) => {
+  const inCodeDiplome = (eb: ExpressionBuilder<DB, "formationView">) => {
     if (!codeDiplome) return sql<true>`true`;
-    return eb("formation.codeNiveauDiplome", "in", codeDiplome);
+    return eb("formationView.codeNiveauDiplome", "in", codeDiplome);
   };
 
   const inCodeDispositif = (
     eb: ExpressionBuilder<DB, "formationEtablissement">
   ) => {
-    if (!codeDispositif) return sql<true>`true`;
-    return eb("formationEtablissement.dispositifId", "in", codeDispositif);
+    if (!dispositifId) return sql<true>`true`;
+    return eb("formationEtablissement.dispositifId", "in", dispositifId);
   };
 
-  const inCPC = (eb: ExpressionBuilder<DB, "formation">) => {
-    if (!CPC) return sql<true>`true`;
-    return eb("formation.CPC", "in", CPC);
+  const inCpc = (eb: ExpressionBuilder<DB, "formationView">) => {
+    if (!cpc) return sql<true>`true`;
+    return eb("formationView.cpc", "in", cpc);
   };
 
-  const inCPCSecteur = (eb: ExpressionBuilder<DB, "formation">) => {
-    if (!CPCSecteur) return sql<true>`true`;
-    return eb("formation.CPCSecteur", "in", CPCSecteur);
+  const inCpcSecteur = (eb: ExpressionBuilder<DB, "formationView">) => {
+    if (!cpcSecteur) return sql<true>`true`;
+    return eb("formationView.cpcSecteur", "in", cpcSecteur);
   };
 
   const regions = await base
@@ -458,7 +487,10 @@ const findFiltersInDb = async ({
     .execute();
 
   const academies = await base
-    .select(["academie.libelle as label", "academie.codeAcademie as value"])
+    .select([
+      "academie.libelleAcademie as label",
+      "academie.codeAcademie as value",
+    ])
     .where("academie.codeAcademie", "is not", null)
     .where(notPerimetreIJAcademie)
     .where((eb) => {
@@ -473,7 +505,7 @@ const findFiltersInDb = async ({
 
   const departements = await base
     .select([
-      "departement.libelle as label",
+      "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
     ])
     .where("departement.codeDepartement", "is not", null)
@@ -557,7 +589,7 @@ const findFiltersInDb = async ({
 
   const familles = await base
     .select([
-      "familleMetier.libelleOfficielFamille as label",
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
@@ -573,56 +605,57 @@ const findFiltersInDb = async ({
 
   const formations = await base
     .select([
-      sql`CONCAT("formation"."libelleDiplome", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
+      sql`CONCAT("formationView"."libelleFormation", ' (', "niveauDiplome"."libelleNiveauDiplome", ')')
       `.as("label"),
-      "formation.codeFormationDiplome as value",
+      "formationView.cfd as value",
     ])
-    .where("formation.codeFormationDiplome", "is not", null)
+    .where("formationView.cfd", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb), inCodeDispositif(eb)]),
-        cfd
-          ? eb("formation.codeFormationDiplome", "in", cfd)
-          : sql<boolean>`false`,
+        cfd ? eb("formationView.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
-  const CPCs = await base
-    .select(["formation.CPC as label", "formation.CPC as value"])
-    .where("formation.CPC", "is not", null)
+  const cpcs = await base
+    .select(["formationView.cpc as label", "formationView.cpc as value"])
+    .where("formationView.cpc", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([inCfdFamille(eb), inCodeDiplome(eb)]),
-        CPC ? eb("formation.CPC", "in", CPC) : sql<boolean>`false`,
+        cpc ? eb("formationView.cpc", "in", cpc) : sql<boolean>`false`,
       ]);
     })
     .execute();
 
-  const CPCSecteurs = await base
-    .select(["formation.CPCSecteur as label", "formation.CPCSecteur as value"])
-    .where("formation.CPCSecteur", "is not", null)
+  const cpcSecteurs = await base
+    .select([
+      "formationView.cpcSecteur as label",
+      "formationView.cpcSecteur as value",
+    ])
+    .where("formationView.cpcSecteur", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCPC(eb)]),
-        CPCSecteur
-          ? eb("formation.CPCSecteur", "in", CPCSecteur)
+        eb.and([inCpc(eb)]),
+        cpcSecteur
+          ? eb("formationView.cpcSecteur", "in", cpcSecteur)
           : sql<boolean>`false`,
       ]);
     })
     .execute();
 
-  const CPCSousSecteurs = await base
+  const cpcSousSecteurs = await base
     .select([
-      "formation.CPCSousSecteur as label",
-      "formation.CPCSousSecteur as value",
+      "formationView.cpcSousSecteur as label",
+      "formationView.cpcSousSecteur as value",
     ])
-    .where("formation.CPCSousSecteur", "is not", null)
+    .where("formationView.cpcSousSecteur", "is not", null)
     .where((eb) =>
       eb.or([
-        eb.and([inCPC(eb), inCPCSecteur(eb)]),
-        CPCSousSecteur
-          ? eb("formation.CPCSousSecteur", "in", CPCSousSecteur)
+        eb.and([inCpc(eb), inCpcSecteur(eb)]),
+        cpcSousSecteur
+          ? eb("formationView.cpcSousSecteur", "in", cpcSousSecteur)
           : sql<boolean>`false`,
       ])
     )
@@ -630,15 +663,15 @@ const findFiltersInDb = async ({
 
   const libelleFilieres = await base
     .select([
-      "formation.libelleFiliere as label",
-      "formation.libelleFiliere as value",
+      "formationView.libelleFiliere as label",
+      "formationView.libelleFiliere as value",
     ])
-    .where("formation.libelleFiliere", "is not", null)
+    .where("formationView.libelleFiliere", "is not", null)
     .where((eb) =>
       eb.or([
         eb.and([]),
         libelleFiliere
-          ? eb("formation.libelleFiliere", "in", libelleFiliere)
+          ? eb("formationView.libelleFiliere", "in", libelleFiliere)
           : sql<boolean>`false`,
       ])
     )
@@ -654,9 +687,9 @@ const findFiltersInDb = async ({
     dispositifs: dispositifs.map(cleanNull),
     familles: familles.map(cleanNull),
     formations: formations.map(cleanNull),
-    CPCs: CPCs.map(cleanNull),
-    CPCSecteurs: CPCSecteurs.map(cleanNull),
-    CPCSousSecteurs: CPCSousSecteurs.map(cleanNull),
+    cpcs: cpcs.map(cleanNull),
+    cpcSecteurs: cpcSecteurs.map(cleanNull),
+    cpcSousSecteurs: cpcSousSecteurs.map(cleanNull),
     libelleFilieres: libelleFilieres.map(cleanNull),
   };
 };

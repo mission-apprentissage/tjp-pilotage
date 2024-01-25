@@ -19,7 +19,7 @@ import { OrderIcon } from "../../../../../components/OrderIcon";
 import { displayPercentage } from "../../../../../utils/displayPercent";
 import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
-const SEUIL_RATIO_FERMETURE = 33;
+const SEUIL_RATIO_FERMETURE: number = 33;
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -166,7 +166,7 @@ const ScopedTable = ({
             </Thead>
             <Tbody>
               <Fragment>
-                {Object.values(data ?? []).map((territoire) => {
+                {Object.values(data?.all ?? []).map((territoire) => {
                   const trBgColor =
                     territoire.code === scope.value
                       ? "blueecume.400_hover !important"
@@ -204,7 +204,7 @@ const ScopedTable = ({
                           backgroundColor={
                             territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
                               ? "pilotage.red !important"
-                              : "inherit"
+                              : trBgColor
                           }
                           color={
                             territoire.ratioFermeture < SEUIL_RATIO_FERMETURE
