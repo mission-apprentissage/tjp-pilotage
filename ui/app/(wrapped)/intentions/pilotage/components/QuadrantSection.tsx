@@ -40,6 +40,50 @@ import {
   SelectedScope,
 } from "../types";
 
+const generateRestitutionUrl = (
+  cfd: string,
+  dispositifId?: string,
+  scope?: SelectedScope,
+  filters?: {
+    tauxPression?: "faible" | "eleve";
+    status?: "draft" | "submitted";
+    type?: "ouverture" | "fermeture";
+    order?: Partial<OrderFormationsTransformationStats>;
+  }
+) => {
+  const urlFilters: Record<string, unknown> = {
+    rentreeScolaire: "2024",
+    cfd: [cfd],
+    codeDispositif: [dispositifId],
+  };
+
+  if (filters?.type) {
+    if (filters.type === "ouverture") {
+      urlFilters.typeDemande = ["ouverture_nette", "ouverture_compensation"];
+    } else {
+      urlFilters.typeDemande = ["fermeture", "diminution"];
+    }
+  }
+
+  if (scope?.value !== undefined) {
+    if (scope?.type === "region") {
+      urlFilters.codeRegion = [scope.value];
+    }
+
+    if (scope?.type === "academie") {
+      urlFilters.codeAcademie = [scope.value];
+    }
+
+    if (scope?.type === "departement") {
+      urlFilters.codeDepartement = [scope.value];
+    }
+  }
+
+  return createParametrizedUrl("/intentions/restitution", {
+    filters: urlFilters,
+  });
+};
+
 export const QuadrantSection = ({
   scope,
   parentFilters,
@@ -285,18 +329,12 @@ export const QuadrantSection = ({
                       as={NextLink}
                       target="_blank"
                       rel="noreferrer"
-                      href={createParametrizedUrl("/intentions/restitution", {
-                        filters: {
-                          rentreeScolaire: "2024",
-                          cfd: [formation.cfd],
-                          codeDispositif: [formation.codeDispositif],
-                          typeDemande: filters.type
-                            ? filters.type === "ouverture"
-                              ? ["ouverture_nette", "ouverture_compensation"]
-                              : ["fermeture", "diminution"]
-                            : undefined,
-                        },
-                      })}
+                      href={generateRestitutionUrl(
+                        formation.cfd,
+                        formation?.codeDispositif,
+                        scope,
+                        filters
+                      )}
                     >
                       Voir la liste des demandes
                     </Link>
