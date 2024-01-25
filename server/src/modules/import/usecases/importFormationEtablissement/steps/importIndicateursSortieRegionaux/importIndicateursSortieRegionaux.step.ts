@@ -98,7 +98,7 @@ const [getContinuumData] = inject(
 
       return await deps.findIndicateurRegionSortie({
         cfd: cfdContinuum,
-        dispositifId,
+        codeDispositif: dispositifId,
         codeRegion,
         millesimeSortie,
       });

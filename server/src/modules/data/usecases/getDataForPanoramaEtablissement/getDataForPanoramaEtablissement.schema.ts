@@ -3,8 +3,8 @@ import { z } from "zod";
 const FormationSchema = z.object({
   cfd: z.string(),
   codeNiveauDiplome: z.string(),
-  libelleDiplome: z.string(),
-  dispositifId: z.string().optional(),
+  libelleFormation: z.string(),
+  codeDispositif: z.string().optional(),
   libelleDispositif: z.string().optional(),
   libelleNiveauDiplome: z.string().optional(),
   effectif: z.coerce.number().optional(),

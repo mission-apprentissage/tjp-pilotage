@@ -2,14 +2,14 @@ import { z } from "zod";
 
 const EtablissementMetadataSchema = z
   .object({
-    libelle: z.string().optional(),
+    libelleEtablissement: z.string().optional(),
     commune: z.string().optional(),
   })
   .optional();
 
 const FormationMetadataSchema = z
   .object({
-    libelle: z.string().optional(),
+    libelleFormation: z.string().optional(),
     isFCIL: z.boolean().optional(),
     dispositifs: z
       .array(

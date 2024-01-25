@@ -5,8 +5,8 @@ import { ExportColumns } from "../../../../utils/downloadCsv";
 export const STATS_DEMANDES_COLUMNS = {
   id: "N° demande",
   cfd: "CFD",
-  libelleDiplome: "Formation",
-  dispositifId: "DispositifId",
+  libelleFormation: "Formation",
+  codeDispositif: "Code Dispositif",
   libelleDispositif: "Dispositif",
   niveauDiplome: "Diplôme",
   uai: "UAI",
@@ -29,6 +29,7 @@ export const STATS_DEMANDES_COLUMNS = {
   codeDepartement: "CodeDepartement",
   libelleDepartement: "Département",
   createdAt: "Date de création",
+  updatedAt: "Date de dernière modification",
   compensationCfd: "CFD compensé",
   compensationDispositifId: "Dispositif compensé",
   compensationUai: "UAI compensé",

@@ -1,29 +1,66 @@
 "use client";
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import { Box, IconButton, Link, Skeleton, Td, Tr } from "@chakra-ui/react";
+import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
+import {
+  Box,
+  Flex,
+  IconButton,
+  Link,
+  Skeleton,
+  Tag,
+  Td,
+  Text,
+  Tr,
+} from "@chakra-ui/react";
 import NextLink from "next/link";
+import { ReactNode } from "react";
 
 import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { Filters, Line } from "../types";
+import { Line } from "../types";
 export const FormationLineContent = ({
   line,
   defaultRentreeScolaire,
   onClickExpend,
   onClickCollapse,
   expended = false,
-  filters,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
-  filters?: Filters;
 }) => {
+  const format2ndeCommuneLibelle = (libelleFormation?: string): ReactNode => (
+    <>
+      {libelleFormation?.indexOf(" 2nde commune") != -1
+        ? libelleFormation?.substring(
+            0,
+            libelleFormation?.indexOf(" 2nde commune")
+          )
+        : libelleFormation}
+      <Tag colorScheme={"blue"} size={"sm"} ms={2}>
+        2nde commune
+      </Tag>
+    </>
+  );
+
+  const format1ereCommuneLibelle = (libelleFormation?: string): ReactNode => (
+    <>
+      {libelleFormation?.indexOf(" 1ere annee commune") != -1
+        ? libelleFormation?.substring(
+            0,
+            libelleFormation?.indexOf(" 1ere annee commune")
+          )
+        : libelleFormation}
+      <Tag colorScheme={"blue"} size={"sm"} ms={2}>
+        1ère commune
+      </Tag>
+    </>
+  );
+
   return (
     <>
       <Td pr="0" py="1">
@@ -45,8 +82,43 @@ export const FormationLineContent = ({
       </Td>
       <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
       <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
-        {line.libelleDiplome ?? "-"}
+      <Td minW={450} whiteSpace={"normal"}>
+        <Flex>
+          {line.typeFamille === "2nde_commune"
+            ? format2ndeCommuneLibelle(line.libelleFormation)
+            : line.typeFamille === "1ere_commune"
+            ? format1ereCommuneLibelle(line.libelleFormation)
+            : line.libelleFormation ?? "-"}
+          {line.formationRenovee && (
+            <Flex
+              ms={2}
+              mt={"auto"}
+              width={"fit-content"}
+              h={"1.5rem"}
+              whiteSpace={"nowrap"}
+            >
+              <Link
+                variant="text"
+                as={NextLink}
+                href={createParametrizedUrl("/console/formations", {
+                  filters: {
+                    cfd: [line.formationRenovee],
+                  },
+                })}
+                color="bluefrance.113"
+              >
+                <Flex my="auto">
+                  <Text fontSize={"11px"}>Voir la formation rénovée</Text>
+                  <ArrowForwardIcon
+                    ml={1}
+                    boxSize={"14px"}
+                    verticalAlign={"baseline"}
+                  />
+                </Flex>
+              </Link>
+            </Flex>
+          )}
+        </Flex>
       </Td>
       <Td isNumeric>
         <Link
@@ -54,10 +126,9 @@ export const FormationLineContent = ({
           as={NextLink}
           href={createParametrizedUrl("/console/etablissements", {
             filters: {
-              ...filters,
-              cfd: [line.codeFormationDiplome],
-              codeDispositif: line.dispositifId
-                ? [line.dispositifId]
+              cfd: [line.cfd],
+              codeDispositif: line.codeDispositif
+                ? [line.codeDispositif]
                 : undefined,
             },
           })}
@@ -93,11 +164,11 @@ export const FormationLineContent = ({
         />
       </Td>
       <Td>{line.libelleDispositif ?? "-"}</Td>
-      <Td>{line.libelleOfficielFamille ?? "-"}</Td>
-      <Td>{line.codeFormationDiplome ?? "-"}</Td>
-      <Td>{line.CPC ?? "-"}</Td>
-      <Td>{line.CPCSecteur ?? "-"}</Td>
-      <Td>{line.CPCSousSecteur ?? "-"}</Td>
+      <Td>{line.libelleFamille ?? "-"}</Td>
+      <Td>{line.cfd ?? "-"}</Td>
+      <Td>{line.cpc ?? "-"}</Td>
+      <Td>{line.cpcSecteur ?? "-"}</Td>
+      <Td>{line.cpcSousSecteur ?? "-"}</Td>
       <Td>{line.libelleFiliere ?? "-"}</Td>
       <Td>{line.positionQuadrant}</Td>
     </>

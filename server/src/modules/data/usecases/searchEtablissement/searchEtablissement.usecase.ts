@@ -22,9 +22,9 @@ export const [searchEtablissement] = inject(
       const suggestions = etablissements.map((etablissement) => ({
         value: etablissement.uai,
         label:
-          etablissement.libelle &&
+          etablissement.libelleEtablissement &&
           etablissement.commune &&
-          `${etablissement.libelle} - ${etablissement.commune}`,
+          `${etablissement.libelleEtablissement} - ${etablissement.commune}`,
         commune: etablissement.commune,
       }));
       return suggestions;

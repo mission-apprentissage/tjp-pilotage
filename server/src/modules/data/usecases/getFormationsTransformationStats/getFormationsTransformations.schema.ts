@@ -1,12 +1,12 @@
 import { z } from "zod";
 
 const FormationTransformationStatsSchema = z.object({
-  libelleDiplome: z.string().optional(),
+  libelleFormation: z.string().optional(),
   libelleDispositif: z.string().optional(),
   tauxInsertion: z.coerce.number(),
   tauxPoursuite: z.coerce.number(),
   tauxPression: z.coerce.number().optional(),
-  dispositifId: z.string().optional(),
+  codeDispositif: z.string().optional(),
   cfd: z.string(),
   nbDemandes: z.coerce.number(),
   nbEtablissements: z.coerce.number(),
@@ -18,7 +18,7 @@ const FormationTransformationStatsSchema = z.object({
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
 });

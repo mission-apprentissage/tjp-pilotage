@@ -12,9 +12,9 @@ export const getEtablissementsRoutes = ({ server }: { server: Server }) => {
     server.route({
       ...props,
       handler: async (request, response) => {
-        const { order, orderBy, ...rest } = request.query;
+        const { order, orderBy, ...filters } = request.query;
         const etablissements = await getEtablissements({
-          ...rest,
+          ...filters,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
         response.status(200).send(etablissements);

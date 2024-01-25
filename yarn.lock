@@ -15321,6 +15321,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"remove-accents@npm:^0.5.0":
+  version: 0.5.0
+  resolution: "remove-accents@npm:0.5.0"
+  checksum: 7045b37015acb03df406d21f9cbe93c3fcf2034189f5d2e33b1dace9c7d6bdcd839929905ced21a5d76c58553557e1a42651930728702312a5774179d5b9147b
+  languageName: node
+  linkType: hard
+
 "remove-trailing-separator@npm:^1.0.1":
   version: 1.1.0
   resolution: "remove-trailing-separator@npm:1.1.0"
@@ -17526,6 +17533,7 @@ __metadata:
     react-hook-form: ^7.47.0
     react-notion-x: ^6.16.0
     react-select: ^5.8.0
+    remove-accents: ^0.5.0
     server: "*"
     shared: "*"
     typescript: 5.0.2

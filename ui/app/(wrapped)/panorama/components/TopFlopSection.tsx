@@ -36,7 +36,9 @@ export const TopFlopSection = ({
   const topFlopFormations = useMemo(() => {
     if (!quadrantFormations) return;
     const filtered = quadrantFormations.filter((item) => {
-      return item.dispositifId && !["253", "240"].includes(item.dispositifId);
+      return (
+        item.codeDispositif && !["253", "240"].includes(item.codeDispositif)
+      );
     });
     const nbTopFlop = Math.min(filtered.length, 20) / 2;
     const sorted = filtered
@@ -93,7 +95,7 @@ const TopFlopChart = ({
       <VStack alignItems="stretch" spacing="1">
         {topFlopFormations.top.map((item) => (
           <TopItem
-            key={`${item.codeFormationDiplome}_${item.dispositifId}`}
+            key={`${item.cfd}_${item.codeDispositif}`}
             formation={item}
             value={item.tauxDevenirFavorable}
           />
@@ -106,7 +108,7 @@ const TopFlopChart = ({
           .reverse()
           .map((item) => (
             <TopItem
-              key={`${item.codeFormationDiplome}_${item.dispositifId}_`}
+              key={`${item.cfd}_${item.codeDispositif}_`}
               formation={item}
               color={"grey.425"}
               value={item.tauxDevenirFavorable}
@@ -136,7 +138,7 @@ const TopItem = ({
           overflow="hidden"
           whiteSpace="nowrap"
         >
-          {formation.libelleDiplome}
+          {formation.libelleFormation}
         </Box>
         <Box flex={1}>
           <PopoverTrigger>

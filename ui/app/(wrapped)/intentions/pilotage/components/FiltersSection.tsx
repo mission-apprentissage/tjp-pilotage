@@ -5,7 +5,7 @@ import { Multiselect } from "../../../../../components/Multiselect";
 import {
   Filters,
   FiltersEvents,
-  PilotageTransformationStats,
+  ScopedTransformationStats,
   SelectedScope,
 } from "../types";
 
@@ -47,7 +47,7 @@ export const FiltersSection = ({
   handleFilters: (filter: Partial<Filters>) => void;
   filterTracker: (filterName: FiltersEvents) => () => void;
   isLoading: boolean;
-  data?: PilotageTransformationStats;
+  data?: ScopedTransformationStats;
   scope: SelectedScope;
 }) => {
   if (isLoading) {
@@ -76,10 +76,10 @@ export const FiltersSection = ({
               Régions
             </option>
             <option key={ScopeEnum.academie} value={ScopeEnum.academie}>
-              Academies
+              Académies
             </option>
             <option key={ScopeEnum.departement} value={ScopeEnum.departement}>
-              Departements
+              Départements
             </option>
           </Select>
         </Box>

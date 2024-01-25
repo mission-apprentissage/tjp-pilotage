@@ -20,7 +20,7 @@ export type Timestamp = ColumnType<Date, Date | string, Date | string>;
 
 export interface Academie {
   codeAcademie: string;
-  libelle: string;
+  libelleAcademie: string;
   codeRegion: string;
 }
 
@@ -35,7 +35,7 @@ export interface ConstatRentree {
 
 export interface DataEtablissement {
   uai: string;
-  libelle: string | null;
+  libelleEtablissement: string | null;
   commune: string | null;
   siret: string | null;
   adresse: string | null;
@@ -45,13 +45,65 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
+  typeUai:
+    | "1ORD"
+    | "9999"
+    | "ADLE"
+    | "AGRI"
+    | "AIDE"
+    | "APPL"
+    | "CDES"
+    | "CDP"
+    | "CFA"
+    | "CFIS"
+    | "CFPA"
+    | "CLG"
+    | "CNED"
+    | "CONT"
+    | "CSAV"
+    | "DIV"
+    | "EFE"
+    | "EME"
+    | "EREA"
+    | "ERPD"
+    | "ETRA"
+    | "EUR"
+    | "EXP"
+    | "FORP"
+    | "GRET"
+    | "HOSP"
+    | "IEN"
+    | "ING"
+    | "IO"
+    | "IUFM"
+    | "JS"
+    | "LP"
+    | "LYC"
+    | "ONIS"
+    | "OUS"
+    | "PBAC"
+    | "PRES"
+    | "PRSU"
+    | "RECH"
+    | "RECT"
+    | "SDEN"
+    | "SEP"
+    | "SERV"
+    | "SES"
+    | "SET"
+    | "SGT"
+    | "SMUT"
+    | "SOC"
+    | "SPEC"
+    | "SSEF"
+    | "TSGE"
+    | "UNIV";
 }
 
 export interface DataFormation {
   cfd: string;
   rncp: number | null;
-  libelle: string;
+  libelleFormation: string;
   codeNiveauDiplome: string;
   cpc: string | null;
   cpcSecteur: string | null;
@@ -59,7 +111,7 @@ export interface DataFormation {
   libelleFiliere: string | null;
   dateOuverture: Timestamp | null;
   dateFermeture: Timestamp | null;
-  typeFamille: "2nde_commune" | "specialite" | null;
+  typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
 }
 
 export interface Demande {
@@ -100,9 +152,13 @@ export interface Demande {
 
 export interface Departement {
   codeDepartement: string;
-  libelle: string;
+  libelleDepartement: string;
   codeAcademie: string;
   codeRegion: string;
+}
+
+export interface DiplomeProfessionnel {
+  cfd: string;
 }
 
 export interface Dispositif {
@@ -131,26 +187,23 @@ export interface Etablissement {
 
 export interface FamilleMetier {
   id: Generated<string>;
-  libelleOfficielFamille: string;
-  libelleOfficielSpecialite: string;
+  libelleFamille: string;
   codeMinistereTutelle: string;
-  mefStat11Famille: string;
-  mefStat11Specialite: string;
   cfdFamille: string;
-  cfdSpecialite: string;
+  cfd: string;
 }
 
 export interface Formation {
   id: Generated<string>;
   codeFormationDiplome: string;
   rncp: number | null;
-  libelleDiplome: string;
+  libelleFormation: string;
   codeNiveauDiplome: string;
   dateOuverture: Timestamp;
   dateFermeture: Timestamp | null;
   CPC: string | null;
-  CPCSecteur: string | null;
-  CPCSousSecteur: string | null;
+  cpcSecteur: string | null;
+  cpcSousSecteur: string | null;
   libelleFiliere: string | null;
 }
 
@@ -167,6 +220,21 @@ export interface FormationHistorique {
   ancienCFD: string;
 }
 
+export interface FormationNonMaterializedView {
+  id: string | null;
+  cfd: string | null;
+  rncp: number | null;
+  libelleFormation: string | null;
+  codeNiveauDiplome: string | null;
+  dateOuverture: Timestamp | null;
+  dateFermeture: Timestamp | null;
+  cpc: string | null;
+  cpcSecteur: string | null;
+  cpcSousSecteur: string | null;
+  libelleFiliere: string | null;
+  typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
+}
+
 export interface IndicateurAcademie {
   codeAcademie: string;
   rentreeScolaire: string;
@@ -178,9 +246,6 @@ export interface IndicateurAcademie {
 export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
-  capacite: number | null;
-  effectifEntree: number | null;
-  nbPremiersVoeux: number | null;
   effectifs: Json | null;
   anneeDebut: number | null;
   capacites: Json | null;
@@ -266,12 +331,14 @@ export interface DB {
   dataFormation: DataFormation;
   demande: Demande;
   departement: Departement;
+  diplomeProfessionnel: DiplomeProfessionnel;
   dispositif: Dispositif;
   etablissement: Etablissement;
   familleMetier: FamilleMetier;
   formation: Formation;
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
+  formationNonMaterializedView: FormationNonMaterializedView;
   indicateurAcademie: IndicateurAcademie;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;

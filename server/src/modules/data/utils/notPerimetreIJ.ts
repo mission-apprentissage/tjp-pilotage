@@ -1,6 +1,6 @@
 import { ExpressionBuilder } from "kysely";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 export const notPerimetreIJRegion = (eb: ExpressionBuilder<DB, "region">) => {
   return eb("region.codeRegion", "not in", ["00", "99"]);

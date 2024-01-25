@@ -118,10 +118,10 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("libelleDiplome")}
+                  onClick={() => handleOrder("libelleFormation")}
                 >
-                  <OrderIcon {...order} column="libelleDiplome" />
-                  {STATS_DEMANDES_COLUMNS.libelleDiplome}
+                  <OrderIcon {...order} column="libelleFormation" />
+                  {STATS_DEMANDES_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   cursor="pointer"

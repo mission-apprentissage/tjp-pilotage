@@ -2,7 +2,7 @@ import Boom from "@hapi/boom";
 import { ExpressionBuilder, sql } from "kysely";
 import { getPermissionScope } from "shared";
 
-import { DB } from "../../db/schema";
+import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
 
 export const isIntentionVisible =

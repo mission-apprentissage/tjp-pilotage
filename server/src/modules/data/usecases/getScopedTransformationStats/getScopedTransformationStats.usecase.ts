@@ -23,6 +23,7 @@ const formatResult = (
 ) => {
   return _.chain(result)
     .map((item) => ({
+      ...item,
       key: `_${item.code}`,
       libelle: item.libelle,
       code: item.code,
@@ -69,11 +70,35 @@ const getScopedTransformationStatsFactory =
   (
     deps = {
       getScopedData: dependencies.getScopedData,
+      getFiltersQuery: dependencies.getFiltersQuery,
     }
   ) =>
   async (activeFilters: QuerySchema) => {
-    const results = await deps.getScopedData({ ...activeFilters });
-    return formatResult(results, activeFilters.order, activeFilters.orderBy);
+    const [filters, draft, submitted, all] = await Promise.all([
+      deps.getFiltersQuery(activeFilters),
+      deps.getScopedData({
+        ...activeFilters,
+        status: "draft",
+      }),
+      deps.getScopedData({
+        ...activeFilters,
+        status: "submitted",
+      }),
+      deps.getScopedData({
+        ...activeFilters,
+      }),
+    ]);
+
+    return {
+      draft: formatResult(draft, activeFilters.order, activeFilters.orderBy),
+      submitted: formatResult(
+        submitted,
+        activeFilters.order,
+        activeFilters.orderBy
+      ),
+      all: formatResult(all, activeFilters.order, activeFilters.orderBy),
+      filters,
+    };
   };
 
 export const getScopedTransformationStats =

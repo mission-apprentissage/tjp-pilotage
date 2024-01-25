@@ -43,7 +43,7 @@ export const [getIndicateursParcoursSup] = inject(
       premiersVoeux: (number | null)[];
     }> => {
       const lines = await deps.findAttractiviteCapaciteBTS({
-        mefstat: anneesDispositif[anneeDebut].mefstat,
+        mefstat: anneesDispositif[anneeDebut]?.mefstat ?? "",
         uai,
         rentreeScolaire,
       });

@@ -22,6 +22,7 @@ const getEtablissementsFactory =
     cfdFamille?: string[];
     uai?: string[];
     secteur?: string[];
+    withAnneeCommune?: string;
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
     const [{ etablissements, count }, filters, statsSortie] = await Promise.all(

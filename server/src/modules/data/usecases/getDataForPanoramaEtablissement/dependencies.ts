@@ -7,7 +7,8 @@ import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notHistorique } from "../../utils/notHistorique";
+import { notAnneeCommune } from "../../utils/notAnneeCommune";
+import { notHistoriqueUnlessCoExistant } from "../../utils/notHistorique";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -56,8 +57,8 @@ const getFormationsEtablissement = async ({
               .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
           )
           .innerJoin(
-            "formation",
-            "formation.codeFormationDiplome",
+            "formationView",
+            "formationView.cfd",
             "formationEtablissement.cfd"
           )
           .innerJoin(
@@ -68,7 +69,7 @@ const getFormationsEtablissement = async ({
           .leftJoin(
             "niveauDiplome",
             "niveauDiplome.codeNiveauDiplome",
-            "formation.codeNiveauDiplome"
+            "formationView.codeNiveauDiplome"
           )
           .leftJoin(
             "dispositif",
@@ -90,19 +91,15 @@ const getFormationsEtablissement = async ({
           )
           .select((sb) => [
             "formationEtablissement.cfd as cfd",
-            "formationEtablissement.dispositifId",
+            "formationEtablissement.dispositifId as codeDispositif",
             "libelleDispositif",
-            "formation.codeNiveauDiplome",
+            "formationView.codeNiveauDiplome",
             "libelleNiveauDiplome",
-            "formation.libelleFiliere",
-            "formation.CPC",
-            "formation.CPCSecteur",
             sql<string>`CONCAT(${sb.ref(
-              "formation.libelleDiplome"
+              "formationView.libelleFormation"
             )},' (',${sb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
-              "libelleDiplome"
+              "libelleFormation"
             ),
-            "formation.CPCSousSecteur",
             sql<number>`COUNT(e."UAI")`.as("nbEtablissement"),
             selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
             sql<number>`SUM(${effectifAnnee({
@@ -119,7 +116,7 @@ const getFormationsEtablissement = async ({
                 eb,
                 millesimeSortie,
                 cfdRef: "formationEtablissement.cfd",
-                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeDispositifRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }).as("continuum"),
             (eb) =>
@@ -127,7 +124,7 @@ const getFormationsEtablissement = async ({
                 eb,
                 millesimeSortie: getMillesimePrecedent(millesimeSortie),
                 cfdRef: "formationEtablissement.cfd",
-                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeDispositifRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }).as("tauxInsertionPrecedent"),
             (eb) =>
@@ -135,28 +132,28 @@ const getFormationsEtablissement = async ({
                 eb,
                 millesimeSortie: getMillesimePrecedent(millesimeSortie),
                 cfdRef: "formationEtablissement.cfd",
-                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeDispositifRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }).as("tauxPoursuitePrecedent"),
             withInsertionReg({
               eb,
               millesimeSortie,
               cfdRef: "formationEtablissement.cfd",
-              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeDispositifRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxInsertion"),
             withPoursuiteReg({
               eb,
               millesimeSortie,
               cfdRef: "formationEtablissement.cfd",
-              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeDispositifRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxPoursuite"),
             withTauxDevenirFavorableReg({
               eb,
               millesimeSortie,
               cfdRef: "formationEtablissement.cfd",
-              dispositifIdRef: "formationEtablissement.dispositifId",
+              codeDispositifRef: "formationEtablissement.dispositifId",
               codeRegionRef: "etablissement.codeRegion",
             }).as("tauxDevenirFavorable"),
           ])
@@ -171,7 +168,7 @@ const getFormationsEtablissement = async ({
                 eb,
                 millesimeSortie,
                 cfdRef: "formationEtablissement.cfd",
-                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeDispositifRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }),
             "is not",
@@ -183,18 +180,19 @@ const getFormationsEtablissement = async ({
                 eb,
                 millesimeSortie,
                 cfdRef: "formationEtablissement.cfd",
-                dispositifIdRef: "formationEtablissement.dispositifId",
+                codeDispositifRef: "formationEtablissement.dispositifId",
                 codeRegionRef: "etablissement.codeRegion",
               }),
             "is not",
             null
           )
-          .where(notHistorique)
+          .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
+          .where(notAnneeCommune)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
-            "formation.id",
-            "formation.libelleDiplome",
-            "formation.libelleFiliere",
+            "formationView.id",
+            "formationView.libelleFormation",
+            "formationView.libelleFiliere",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
@@ -202,7 +200,7 @@ const getFormationsEtablissement = async ({
             "indicateurEntree.premiersVoeux",
             "indicateurEntree.anneeDebut",
             "indicateurEntree.rentreeScolaire",
-            "formation.codeNiveauDiplome",
+            "formationView.codeNiveauDiplome",
             "libelleNiveauDiplome",
             "libelleDispositif",
           ])
@@ -213,7 +211,7 @@ const getFormationsEtablissement = async ({
               sql`${sql.raw(orderBy.order)} NULLS LAST`
             );
           })
-          .orderBy("libelleDiplome", "asc")
+          .orderBy("libelleFormation", "asc")
       ).as("formations")
     )
     .where("etablissement.UAI", "=", uai)
