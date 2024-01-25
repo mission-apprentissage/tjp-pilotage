@@ -187,6 +187,13 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
 
     fixture.thenEntriesShouldBe([
       {
+        id: "id-page-2",
+        title: "Famille de Métiers",
+        indicator: undefined,
+        icon: "❓",
+        status: "à ajouter ?",
+      },
+      {
         id: "id-page-1",
         title: "Quadrant (Q1 à Q4)",
         indicator: {
@@ -195,13 +202,6 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         icon: "url-to-icon",
         status: "à valider",
-      },
-      {
-        id: "id-page-2",
-        title: "Famille de Métiers",
-        indicator: undefined,
-        icon: "❓",
-        status: "à ajouter ?",
       },
     ]);
   });
