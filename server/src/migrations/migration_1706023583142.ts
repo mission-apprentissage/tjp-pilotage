@@ -9,6 +9,7 @@ const tables = [
   "dataEtablissement",
   "dataFormation",
   "formation",
+  "diplomeProfessionnel",
   "formationHistorique",
   "constatRentree",
   "familleMetier",
