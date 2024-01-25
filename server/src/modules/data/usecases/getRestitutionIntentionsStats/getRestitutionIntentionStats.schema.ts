@@ -8,8 +8,8 @@ const OptionSchema = z.object({
 const StatsDemandesItem = z.object({
   id: z.string(),
   cfd: z.string().optional(),
-  libelleDiplome: z.string().optional(),
-  dispositifId: z.string().optional(),
+  libelleFormation: z.string().optional(),
+  codeDispositif: z.string().optional(),
   libelleDispositif: z.string().optional(),
   niveauDiplome: z.string().optional(),
   uai: z.string().optional(),
@@ -33,6 +33,7 @@ const StatsDemandesItem = z.object({
   codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
   createdAt: z.string(),
+  updatedAt: z.string(),
   compensationCfd: z.string().optional(),
   compensationDispositifId: z.string().optional(),
   compensationUai: z.string().optional(),

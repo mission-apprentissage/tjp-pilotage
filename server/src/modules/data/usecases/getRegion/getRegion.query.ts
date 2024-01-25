@@ -5,9 +5,11 @@ import { kdb } from "../../../../db/db";
 import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
-  notHistorique,
-  notHistoriqueIndicateurRegionSortie,
-} from "../../utils/notHistorique";
+  notAnneeCommune,
+  notAnneeCommuneIndicateurRegionSortie,
+  notSpecialite,
+} from "../../utils/notAnneeCommune";
+import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -36,16 +38,21 @@ export const getRegionStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
@@ -53,11 +60,11 @@ export const getRegionStats = async ({
     ])
     .executeTakeFirst();
 
-  const stats = await kdb
+  const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "formationEtablissement.cfd"
     )
     .leftJoin("indicateurEntree", (join) =>
@@ -77,14 +84,26 @@ export const getRegionStats = async ({
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
-    })
-    .where(notHistorique)
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
+    });
+
+  const nbFormations = await baseStatsEntree
+    .where(notAnneeCommune)
     .select([
-      "region.libelleRegion",
       sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
         "nbFormations"
       ),
+    ])
+    .executeTakeFirst();
+
+  const statsEntree = await baseStatsEntree
+    .where(notSpecialite)
+    .select([
+      "region.libelleRegion",
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
 
@@ -96,7 +115,8 @@ export const getRegionStats = async ({
 
   return {
     ...informationsRegion,
-    ...stats,
+    ...statsEntree,
+    ...nbFormations,
     ...statsSortie,
   };
 };

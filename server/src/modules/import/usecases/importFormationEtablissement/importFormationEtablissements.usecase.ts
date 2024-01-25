@@ -5,6 +5,7 @@ import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "./domain/millesimes";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
+import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { logger } from "./importLogger";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
@@ -24,6 +25,7 @@ export const [importFormations] = inject(
     importFormation,
     importFormationHistorique,
     findDiplomesProfessionnels,
+    findFamillesMetiers,
     fetchIJ,
     fetchIjReg,
   },
@@ -49,7 +51,23 @@ export const [importFormations] = inject(
         },
         { parallel: 20 }
       );
-      // logger.write();
+
+      await streamIt(
+        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
+        async (item, count) => {
+          const cfd = item.cfd;
+          console.log("cfd famille", cfd, count);
+          if (!cfd) return;
+          const formation = await deps.importFormation({ cfd });
+          const ancienCfds = await deps.importFormationHistorique({ cfd });
+          for (const ancienCfd of ancienCfds ?? []) {
+            await importFormationEtablissements(ancienCfd, { fetchIj });
+          }
+          await importFormationEtablissements(cfd, { fetchIj });
+          if (!formation) return;
+        },
+        { parallel: 20 }
+      );
     };
   }
 );
@@ -74,22 +92,22 @@ export const [importFormationEtablissements] = inject(
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
-        const { dispositifId, anneesDispositif } = cfdDispositif;
+        const { codeDispositif, anneesDispositif } = cfdDispositif;
 
         const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
         if (!lastMefstat) continue;
 
         await deps.importIndicateursRegionSortie({
           cfd,
-          dispositifId,
+          dispositifId: codeDispositif,
           mefstat: lastMefstat,
         });
 
         for (const rentreeScolaire of RENTREES_SCOLAIRES) {
-          const { enseignements, anneeDebutConstate } =
+          const { enseignements } =
             (await deps.getCfdRentrees({
               cfd,
-              dispositifId,
+              codeDispositif,
               year: rentreeScolaire,
             })) ?? {};
 
@@ -112,7 +130,7 @@ export const [importFormationEtablissements] = inject(
               await deps.createFormationEtablissement({
                 UAI: uai,
                 cfd,
-                dispositifId,
+                dispositifId: codeDispositif,
                 voie,
               });
 
@@ -121,7 +139,6 @@ export const [importFormationEtablissements] = inject(
               rentreeScolaire,
               cfd,
               uai,
-              anneeDebutConstate: anneeDebutConstate ?? 0,
               anneesEnseignement,
               anneesDispositif,
             });
@@ -133,7 +150,7 @@ export const [importFormationEtablissements] = inject(
                 formationEtablissementId: formationEtablissement.id,
                 millesime,
                 cfd,
-                dispositifId,
+                codeDispositif,
               });
             }
           }

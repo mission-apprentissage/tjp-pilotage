@@ -39,9 +39,9 @@ export const UaiBlock = ({
                 active={active}
                 inError={!!errors.uai}
                 defaultValue={
-                  formMetadata?.etablissement?.libelle && value
+                  formMetadata?.etablissement?.libelleEtablissement && value
                     ? {
-                        label: formMetadata?.etablissement.libelle,
+                        label: formMetadata?.etablissement.libelleEtablissement,
                         value: value,
                         commune: formMetadata?.etablissement.commune,
                       }

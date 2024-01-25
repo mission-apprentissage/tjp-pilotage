@@ -36,7 +36,7 @@ type CompleteDiplomePorfessionelLine = DiplomeProfessionnelLine & {
   "Code diplôme": string;
 };
 
-const isCompleteDiplomePorfessionelLine = (
+const isCompleteDiplomeProfessionelLine = (
   diplomeProfessionnelLine: DiplomeProfessionnelLine
 ): diplomeProfessionnelLine is CompleteDiplomePorfessionelLine =>
   !!diplomeProfessionnelLine["Code diplôme"];
@@ -58,7 +58,7 @@ const formatDiplomeProfessionel = (
       (val) => _.isString(val) && val.trim() !== ""
     ),
   };
-  if (!isCompleteDiplomePorfessionelLine(overridedLine)) return;
+  if (!isCompleteDiplomeProfessionelLine(overridedLine)) return;
   return overridedLine;
 };
 
@@ -94,13 +94,20 @@ export const [importDataFormations] = inject(
         );
         const regroupement = await deps.findRegroupements({ mefstats });
 
+        const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
         const isSpecialite = !!(await deps.findSpecialite(cfd));
+
+        const getTypeFamille = () => {
+          if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
+          if (isSpecialite) return isBTS ? "option" : "specialite";
+          return undefined;
+        };
 
         try {
           await deps.createDataFormation({
             cfd,
-            libelle:
+            libelleFormation:
               diplomeProfessionnel?.[
                 "Intitulé de la spécialité (et options)"
               ]?.replace(/"/g, "") ||
@@ -133,11 +140,7 @@ export const [importDataFormations] = inject(
                   "dd/LL/yyyy"
                 ).toJSDate()
               : undefined,
-            typeFamille: is2ndeCommune
-              ? "2nde_commune"
-              : isSpecialite
-              ? "specialite"
-              : undefined,
+            typeFamille: getTypeFamille(),
           });
         } catch (e) {
           console.log(e);
@@ -150,10 +153,10 @@ export const [importDataFormations] = inject(
       { parallel: 20 }
     );
     process.stdout.write(
-      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}`
+      `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`
     );
   }
 );
 
-const formatLibelle = (libelle: string) =>
-  libelle && _.capitalize(libelle).replace(/ \(.*\)/, "");
+const formatLibelle = (libelleFormation: string) =>
+  libelleFormation && _.capitalize(libelleFormation).replace(/ \(.*\)/, "");

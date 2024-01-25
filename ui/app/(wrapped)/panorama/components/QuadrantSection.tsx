@@ -364,8 +364,8 @@ export const QuadrantSection = ({
                       ...formation,
                     })),
                     {
-                      libelleDiplome: "Formation",
-                      codeFormationDiplome: "CFD",
+                      libelleFormation: "Formation",
+                      cfd: "CFD",
                       libelleDispositif: "Dispositif",
                       tauxInsertion: "Taux d'emploi",
                       tauxPoursuite: "Taux de poursuite",
@@ -402,20 +402,16 @@ export const QuadrantSection = ({
                 meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
-                    onClick={({ codeFormationDiplome }) =>
-                      setFormationId(codeFormationDiplome)
-                    }
+                    onClick={({ cfd }) => setFormationId(cfd)}
                     meanInsertion={meanInsertion}
                     meanPoursuite={meanPoursuite}
                     data={filteredFormations}
                     TooltipContent={FormationTooltipContent}
                     itemId={(formation) =>
-                      formation.codeFormationDiplome + formation.dispositifId
+                      formation.cfd + formation.codeDispositif
                     }
                     itemColor={(formation) =>
-                      formation.codeFormationDiplome === currentCfd
-                        ? "#fd3b4cb5"
-                        : undefined
+                      formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
                     }
                     InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}
@@ -424,7 +420,6 @@ export const QuadrantSection = ({
                   <TableQuadrant
                     formations={filteredFormations.map((formation) => ({
                       ...formation,
-                      cfd: formation.codeFormationDiplome,
                     }))}
                     handleClick={setFormationId}
                     currentCfd={currentCfd}

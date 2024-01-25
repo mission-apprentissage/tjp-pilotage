@@ -13,9 +13,9 @@ export const [getEtablissement] = inject(
       return {
         value: etablissement?.uai ?? uai,
         label:
-          etablissement?.libelle &&
+          etablissement?.libelleEtablissement &&
           etablissement?.commune &&
-          `${etablissement.libelle} - ${etablissement.commune}`,
+          `${etablissement.libelleEtablissement} - ${etablissement.commune}`,
         commune: etablissement?.commune,
       };
     }

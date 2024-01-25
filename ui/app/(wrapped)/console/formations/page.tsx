@@ -3,12 +3,14 @@
 import {
   Box,
   Center,
+  Checkbox,
   Flex,
   Select,
   Spinner,
   Table,
   TableContainer,
   Tbody,
+  Text,
   Th,
   Thead,
   Tr,
@@ -41,7 +43,7 @@ const PAGE_SIZE = 30;
 const FORMATIONS_COLUMNS = {
   rentreeScolaire: "RS",
   libelleNiveauDiplome: "Diplôme",
-  libelleDiplome: "Formation",
+  libelleFormation: "Formation",
   nbEtablissement: "Nb Etab",
   effectif1: "Année 1",
   effectif2: "Année 2",
@@ -52,16 +54,16 @@ const FORMATIONS_COLUMNS = {
   tauxPoursuite: "Tx de poursuite d'études régional",
   tauxDevenirFavorable: "Tx de devenir favorable régional",
   libelleDispositif: "Dispositif",
-  libelleOfficielFamille: "	Famille de métiers",
-  codeFormationDiplome: "Code diplôme",
-  CPC: "CPC",
-  CPCSecteur: "CPCSecteur",
-  CPCSousSecteur: "CPCSousSecteur",
+  libelleFamille: "	Famille de métiers",
+  cfd: "Code formation diplôme",
+  cpc: "CPC",
+  cpcSecteur: "CPC Secteur",
+  cpcSousSecteur: "CPC Sous Secteur",
   libelleFiliere: "Secteur d’activité",
-  "continuum.libelle": "Diplôme historique",
+  "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
-  dispositifId: "Code dispositif",
+  codeDispositif: "Code dispositif",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
@@ -71,12 +73,14 @@ export default function Formations() {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    withAnneeCommune?: string;
     order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const setSearchParams = (params: {
     filters?: typeof filters;
+    withAnneeCommune?: typeof withAnneeCommune;
     order?: typeof order;
     page?: typeof page;
   }) => {
@@ -86,6 +90,7 @@ export default function Formations() {
   };
 
   const filters = searchParams.filters ?? {};
+  const withAnneeCommune = searchParams.withAnneeCommune ?? "true";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
@@ -96,7 +101,7 @@ export default function Formations() {
   useEffect(() => {
     if (codeRegionFilter != "") {
       filters.codeRegion = [codeRegionFilter];
-      setSearchParams({ filters: filters });
+      setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
@@ -107,9 +112,10 @@ export default function Formations() {
         offset: page * PAGE_SIZE,
         limit: PAGE_SIZE,
         ...filters,
+        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
-    { keepPreviousData: true, staleTime: 10000000 }
+    { staleTime: 10000000, keepPreviousData: true }
   );
 
   const trackEvent = usePlausible();
@@ -144,6 +150,13 @@ export default function Formations() {
     setSearchParams({
       page: 0,
       filters: { ...filters, [type]: value },
+      withAnneeCommune,
+    });
+  };
+
+  const handleToggleShowAnneeCommune = (value: string) => {
+    setSearchParams({
+      withAnneeCommune: value,
     });
   };
 
@@ -283,31 +296,31 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          onClose={filterTracker("CPC")}
           width="12rem"
-          onChange={(selected) => handleFilters("CPC", selected)}
-          options={data?.filters.CPCs}
-          value={filters.CPC ?? []}
+          onClose={filterTracker("cpc")}
+          onChange={(selected) => handleFilters("cpc", selected)}
+          options={data?.filters.cpcs}
+          value={filters.cpc ?? []}
         >
           CPC
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          onClose={filterTracker("CPCSecteur")}
           width="12rem"
-          onChange={(selected) => handleFilters("CPCSecteur", selected)}
-          options={data?.filters.CPCSecteurs}
-          value={filters.CPCSecteur ?? []}
+          onClose={filterTracker("cpcSecteur")}
+          onChange={(selected) => handleFilters("cpcSecteur", selected)}
+          options={data?.filters.cpcSecteurs}
+          value={filters.cpcSecteur ?? []}
         >
           CPC Secteur
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          onClose={filterTracker("CPCSousSecteur")}
           width="12rem"
-          onChange={(selected) => handleFilters("CPCSousSecteur", selected)}
-          options={data?.filters.CPCSousSecteurs}
-          value={filters.CPCSousSecteur ?? []}
+          onClose={filterTracker("cpcSousSecteur")}
+          onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
+          options={data?.filters.cpcSousSecteurs}
+          value={filters.cpcSousSecteur ?? []}
         >
           CPC Sous Secteur
         </Multiselect>
@@ -321,6 +334,24 @@ export default function Formations() {
         >
           Secteur d’activité
         </Multiselect>
+        <Flex w="24rem" mr="3">
+          <Checkbox
+            size="lg"
+            variant="accessible"
+            onChange={(event) => {
+              console.log(event.target.checked);
+              handleToggleShowAnneeCommune(
+                event.target.checked.toString() ?? "false"
+              );
+            }}
+            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            whiteSpace={"nowrap"}
+          >
+            <Text fontSize={"14px"}>
+              Afficher les secondes et premières communes
+            </Text>
+          </Checkbox>
+        </Flex>
       </Flex>
 
       <Flex direction="column" flex={1} position="relative" minH="0">
@@ -356,10 +387,10 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleDiplome")}
+                  onClick={() => handleOrder("libelleFormation")}
                 >
-                  <OrderIcon {...order} column="libelleDiplome" />
-                  {FORMATIONS_COLUMNS.libelleDiplome}
+                  <OrderIcon {...order} column="libelleFormation" />
+                  {FORMATIONS_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   isNumeric
@@ -473,32 +504,29 @@ export default function Formations() {
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("libelleOfficielFamille")}
+                  onClick={() => handleOrder("libelleFamille")}
                 >
-                  <OrderIcon {...order} column="libelleOfficielFamille" />
-                  {FORMATIONS_COLUMNS.libelleOfficielFamille}
+                  <OrderIcon {...order} column="libelleFamille" />
+                  {FORMATIONS_COLUMNS.libelleFamille}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
+                  <OrderIcon {...order} column="cfd" />
+                  {FORMATIONS_COLUMNS.cfd}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
+                  <OrderIcon {...order} column="cpc" />
+                  {FORMATIONS_COLUMNS.cpc}
+                </Th>
+                <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
+                  <OrderIcon {...order} column="cpcSecteur" />
+                  {FORMATIONS_COLUMNS.cpcSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
-                  onClick={() => handleOrder("codeFormationDiplome")}
+                  onClick={() => handleOrder("cpcSousSecteur")}
                 >
-                  <OrderIcon {...order} column="codeFormationDiplome" />
-                  {FORMATIONS_COLUMNS.codeFormationDiplome}
-                </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPC")}>
-                  <OrderIcon {...order} column="CPC" />
-                  {FORMATIONS_COLUMNS.CPC}
-                </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("CPCSecteur")}>
-                  <OrderIcon {...order} column="CPCSecteur" />
-                  {FORMATIONS_COLUMNS.CPCSecteur}
-                </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("CPCSousSecteur")}
-                >
-                  <OrderIcon {...order} column="CPCSousSecteur" />
-                  {FORMATIONS_COLUMNS.CPCSousSecteur}
+                  <OrderIcon {...order} column="cpcSousSecteur" />
+                  {FORMATIONS_COLUMNS.cpcSousSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
@@ -518,34 +546,31 @@ export default function Formations() {
             </Thead>
             <Tbody>
               {data?.formations.map((line) => (
-                <Fragment
-                  key={`${line.codeFormationDiplome}_${line.dispositifId}`}
-                >
+                <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
-                      filters={filters}
                       defaultRentreeScolaire="2022"
                       line={line}
                       expended={
-                        historiqueId?.cfd === line.codeFormationDiplome &&
-                        historiqueId.codeDispositif === line.dispositifId
+                        historiqueId?.cfd === line.cfd &&
+                        historiqueId.codeDispositif === line.codeDispositif
                       }
                       onClickExpend={() =>
                         setHistoriqueId({
-                          cfd: line.codeFormationDiplome,
-                          codeDispositif: line.dispositifId,
+                          cfd: line.cfd,
+                          codeDispositif: line.codeDispositif,
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
                     />
                   </Tr>
-                  {historiqueId?.cfd === line.codeFormationDiplome &&
-                    historiqueId.codeDispositif === line.dispositifId && (
+                  {historiqueId?.cfd === line.cfd &&
+                    historiqueId.codeDispositif === line.codeDispositif && (
                       <>
                         {historique &&
                           historique.map((historiqueLine) => (
                             <Tr
-                              key={`${historiqueLine.codeFormationDiplome}_${historiqueLine.dispositifId}`}
+                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                               bg={"grey.975"}
                             >
                               <FormationLineContent line={historiqueLine} />

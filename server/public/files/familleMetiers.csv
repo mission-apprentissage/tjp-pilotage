@@ -1,79 +1,91 @@
-FAMILLE;SPECIALITE;MEFSTAT11 2NDE PRO;MEFSTAT11 TLEPRO;CODE_MINISTERE_TUTELLE
-Métiers de la construction durable, du bâtiment et des travaux publics;Travaux publics;23810020006;23830023102;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Technicien du bâtiment (organisation et réalisation du gros œuvre);23810020006;23830023203;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti (option A Maçonnerie);23810020006;23830023205;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti, option B Charpente;23810020006;23830023206;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti, option C Couverture;23810020006;23830023207;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Menuiserie aluminium-verre;23810020006;23830023303;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Aménagement et finitions du bâtiment;23810020006;23830023304;06
-Métiers de la construction durable, du bâtiment et des travaux publics;Ouvrages du bâtiment : métallerie;23810020006;23830025406;06
-Métiers de la gestion administrative, du transport et de la logistique;Assistance à la gestion des organisations et de leurs activités (AGOrA);23810030003;23830030004;06
-Métiers de la gestion administrative, du transport et de la logistique;Logistique;23810030003;23830031106;06
-Métiers de la gestion administrative, du transport et de la logistique;Organisation de transport de marchandises;23810030003;23830031114;06
-Métiers de la relation client;Métiers du commerce et de la vente option A Animation et gestion de l'espace commercial;23810031211;23830031213;06
-Métiers de la relation client;Métiers du commerce et de la vente option B Prospection-clientèle et valorisation de l'offre commerciale;23810031211;23830031214;06
-Métiers de la relation client;Métiers de l'accueil;23810031211;23830031212;06
-Métiers des industries graphiques et de la communication;Façonnage de produits imprimés, routage;23810032210;23830032206;06
-Métiers des industries graphiques et de la communication;Réalisation de produits imprimés et plurimédia : option A productions graphiques;23810032210;23830032207;06
-Métiers des industries graphiques et de la communication;Réalisation de produits imprimés et plurimédia : option B productions imprimées;23810032210;23830032208;06
-Métiers des études et de la modélisation numérique du bâtiment;Technicien d'études du bâtiment : option A : Études et économie ;23810023007;23830023004;06
-Métiers des études et de la modélisation numérique du bâtiment;Technicien d'études du bâtiment : option B : Assistant en architecture;23810023007;23830023005;06
-Métiers des études et de la modélisation numérique du bâtiment;Technicien géomètre-topographe;23810023007;23830023103;06
-Métiers de l'alimentation;Boucher-charcutier-traiteur;23810022107;23830022104;06
-Métiers de l'alimentation;Boulanger-pâtissier;23810022107;23830022105;06
-Métiers de l'alimentation;Poissonnier-écailler-traiteur;23810022107;23830031209;06
-Métiers de la beauté et du bien-être;Esthétique cosmétique parfumerie;23810033605;23830033606;06
-Métiers de la beauté et du bien-être;Coiffure;23810033605;23830033604;06
-Métiers de l'aéronautique;Aéronautique option Avionique;23810025307;23830025302;06
-Métiers de l'aéronautique;Aéronautique option Système;23810025307;23830025303;06
-Métiers de l'aéronautique;Aéronautique option Structure;23810025307;23830025304;06
-Métiers de l'aéronautique;Aviation générale;23810025307;23830025305;06
-Métiers de l'hôtellerie-restauration;Cuisine;23810033404;23830022106;06
-Métiers de l'hôtellerie-restauration;Commercialisation et services en restauration;23810033404;23830033403;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Fonderie;23810020103;23830022303;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Microtechniques;23810020103;23830025006;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien modeleur;23810020103;23830025108;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en chaudronnerie industrielle;23810020103;23830025411;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Traitement des matériaux;23810020103;23830022302;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en réalisation de produits mécaniques option réalisation et suivi de production;23810020103;23830025014;06
-Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en réalisation de produits mécaniques option réalisation et maintenance des outillages;23810020103;23830025013;06
-Métiers du numérique et des transitions énergétiques;Installateur en chauffage climatisation et énergies renouvelables;23810020008;23830022707;06
-Métiers du numérique et des transitions énergétiques;Maintenance et efficacité énergétique;23810020008;23830022706;06
-Métiers du numérique et des transitions énergétiques;Métiers du froid et des énergies renouvelables;23810020008;23830025517;06
-Métiers du numérique et des transitions énergétiques;Métiers de l'électricité et de ses environnement connectés;23810020008;23830025510;06
-Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option A sûreté et sécurité des infrastructures, de l'habitat et du tertiaire;23810020008;23830025513;06
-Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option B audiovisuels, réseau et équipement domestiques;23810020008;23830025514;06
-Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option C réseaux informatiques et systèmes communicants;23810020008;23830025515;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option A – voitures particulières;23810025222;23830025214;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option B – véhicules de transport routier;23810025222;23830025215;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option C – motocycles;23810025222;23830025216;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option A – matériels agricoles;23810025222;23830025219;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option B – matériels de construction et manutention;23810025222;23830025220;06
-Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option C – matériels d'espaces vert;23810025222;23830025221;06
-Métiers du pilotage et de la maintenance des installations automatisées;Pilote de ligne de production;23810020104;23830020102;06
-Métiers du pilotage et de la maintenance des installations automatisées;Procédés de la chimie, de l'eau et des papiers-cartons;23810020104;23830022004;06
-Métiers du pilotage et de la maintenance des installations automatisées;Technicien de scierie;23810020104;23830023406;06
-Métiers du pilotage et de la maintenance des installations automatisées;Maintenance des systèmes de productions connectés;23810020104;23830025012;06
-Métiers de l'agencement, de la menuiserie et de l'ameublement;Technicien menuisier agenceur;23810023409;23830023405;06
-Métiers de l'agencement, de la menuiserie et de l'ameublement;Technicien de fabrication bois et matériaux associés;23810023409;23830023407;06
-Métiers de l'agencement, de la menuiserie et de l'ameublement;Étude et réalisation d'agencement;23810023409;23830023408;06
-Métiers de la mer;Conduite et gestion des entreprises maritimes commerce/plaisance professionnelle, option voile;23810020007;23830031112;28
-Métiers de la mer;Conduite et gestion des entreprises maritimes commerce/plaisance professionnelle, option yacht;23810020007;23830031113;28
-Métiers de la mer;Conduite et gestion des entreprises maritimes pêche;23810020007;23820021304;28
-Métiers de la mer;Électromécanicien de marine;23810020007;23830025010;28
-Métiers de la mer;Polyvalent navigant pont/machine;23810020007;23830025011;28
-Métiers de l'alimentation-bio-industrie-laboratoire;Laboratoire contrôle qualité;23811022104;23831022105;03
-Métiers de l'alimentation-bio-industrie-laboratoire;Production en industries pharmaceutiques, alimentaires et cosmétiques (ex-Bio-industries de transformation);23811022104;23830022003;03
-Métiers de la nature - jardin - paysage - forêt;Aménagements paysagers;23811021404;23831021405;03
-Métiers de la nature - jardin - paysage - forêt;Forêt;23811021404;23831021303;03
-Métiers de la nature - jardin - paysage - forêt;Gestion des milieux naturels et de la faune;23811021404;23831021302;03
-Métiers des productions;Agroéquipement;23811021112;23831021001;03
-Métiers des productions;Conduite de productions horticoles;23811021112;23831021114;03
-Métiers des productions;Conduite de productions aquacoles;23811021112;23831021204;03
-Métiers des productions;Conduite et gestion de l'entreprise agricole;23811021112;23831021004;03
-Métiers des productions;Conduite et gestion de l'entreprise hippique;23811021112;23831021211;03
-Métiers des productions;Conduite et gestion de l'entreprise vitivinicole;23811021112;23831021113;03
-Métiers des productions;Conduite et gestion d'une entreprise du secteur canin et félin;23811021112;23831021210;03
-Métiers du conseil vente;Technicien conseil vente en alimentation;23811022103;23831022108;03
-Métiers du conseil vente;Technicien conseil vente en animalerie;23811022103;23831021203;03
-Métiers du conseil vente;Technicien conseil vente univers jardinerie;23811022103;23831021407;03
+﻿FAMILLE;SPECIALITE;MEFSTAT11_COMMUN;CFD_COMMUN;MEFSTAT11_SPECIALITE;CFD_SPECIALITE;CODE_MINISTERE_TUTELLE
+Métiers de la construction durable, du bâtiment et des travaux publics;Travaux publics;23810020006;40020006;23830023102;40023102;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti, option C Couverture;23810020006;40020006;23830023207;40023207;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti, option B Charpente;23810020006;40020006;23830023206;40023206;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Interventions sur le patrimoine bâti (option A Maçonnerie);23810020006;40020006;23830023205;40023205;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Technicien du bâtiment (organisation et réalisation du gros œuvre);23810020006;40020006;23830023203;40023203;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Menuiserie aluminium-verre;23810020006;40020006;23830023303;40023303;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Ouvrages du bâtiment : métallerie;23810020006;40020006;23830025406;40025406;06
+Métiers de la construction durable, du bâtiment et des travaux publics;Aménagement et finitions du bâtiment;23810020006;40020006;23830023304;40023304;06
+Métiers du conseil vente;Technicien conseil vente en alimentation;23811022103;40322103;23831022108;40322108;03
+Métiers du conseil vente;Technicien conseil vente univers jardinerie;23811022103;40322103;23831021407;40321407;03
+Métiers du conseil vente;Technicien conseil vente en animalerie;23811022103;40322103;23831021203;40321203;03
+Métiers de l'alimentation-bio-industrie-laboratoire;Production en industries pharmaceutiques, alimentaires et cosmétiques (ex-Bio-industries de transformation);23811022104;40322104;23830022003;40022003;03
+Métiers de l'alimentation-bio-industrie-laboratoire;Laboratoire contrôle qualité;23811022104;40322104;23831022105;40322105;03
+Métiers des productions;Conduite de productions aquacoles;23811021112;40321112;23831021204;40321204;03
+Métiers des productions;Conduite et gestion de l'entreprise vitivinicole;23811021112;40321112;23831021113;40321113;03
+Métiers des productions;Conduite et gestion de l'entreprise agricole;23811021112;40321112;23831021004;40321004;03
+Métiers des productions;Agroéquipement;23811021112;40321112;23831021001;40321001;03
+Métiers des productions;Conduite et gestion d'une entreprise du secteur canin et félin;23811021112;40321112;23831021210;40321210;03
+Métiers des productions;Conduite et gestion de l'entreprise hippique;23811021112;40321112;23831021211;40321211;03
+Métiers des productions;Conduite de productions horticoles;23811021112;40321112;23831021114;40321114;03
+Métiers de la nature - jardin - paysage - forêt;Aménagements paysagers;23811021404;40321404;23831021405;40321405;03
+Métiers de la nature - jardin - paysage - forêt;Gestion des milieux naturels et de la faune;23811021404;40321404;23831021302;40321302;03
+Métiers de la nature - jardin - paysage - forêt;Forêt;23811021404;40321404;23831021303;40321303;03
+Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option C – motocycles;23810025222;40025222;23830025216;40025216;06
+Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option B – véhicules de transport routier;23810025222;40025222;23830025215;40025215;06
+Métiers de la maintenance des matériels et des véhicules;Maintenance des véhicules : option A – voitures particulières;23810025222;40025222;23830025214;40025214;06
+Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option C – matériels d'espaces vert;23810025222;40025222;23830025221;40025221;06
+Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option B – matériels de construction et manutention;23810025222;40025222;23830025220;40025220;06
+Métiers de la maintenance des matériels et des véhicules;Maintenance des matériels : option A – matériels agricoles;23810025222;40025222;23830025219;40025219;06
+Métiers de la beauté et du bien-être;Esthétique cosmétique parfumerie;23810033605;40033605;23830033606;40033606;06
+Métiers de la beauté et du bien-être;Coiffure;23810033605;40033605;23830033604;40033604;06
+Métiers de l'aéronautique;Aviation générale;23810025307;40025307;23830025305;40025305;06
+Métiers de l'aéronautique;Aéronautique option Système;23810025307;40025307;23830025303;40025303;06
+Métiers de l'aéronautique;Aéronautique option Structure;23810025307;40025307;23830025304;40025304;06
+Métiers de l'aéronautique;Aéronautique option Avionique;23810025307;40025307;23830025302;40025302;06
+Métiers de l'agencement, de la menuiserie et de l'ameublement;Étude et réalisation d'agencement;23810023409;40023409;23830023408;40023408;06
+Métiers de l'agencement, de la menuiserie et de l'ameublement;Technicien menuisier agenceur;23810023409;40023409;23830023405;40023405;06
+Métiers de l'agencement, de la menuiserie et de l'ameublement;Technicien de fabrication bois et matériaux associés;23810023409;40023409;23830023407;40023407;06
+Métiers de l'alimentation;Poissonnier-écailler-traiteur;23810022107;40022107;23830031209;40031209;06
+Métiers de l'alimentation;Boucher-charcutier-traiteur;23810022107;40022107;23830022104;40022104;06
+Métiers de l'alimentation;Boulanger-pâtissier;23810022107;40022107;23830022105;40022105;06
+Métiers de la mer;Conduite et gestion des entreprises maritimes pêche;23810020007;40020007;23820021304;40021304;28
+Métiers de la mer;Conduite et gestion des entreprises maritimes commerce/plaisance professionnelle, option yacht;23810020007;40020007;23830031113;40031113;28
+Métiers de la mer;Conduite et gestion des entreprises maritimes commerce/plaisance professionnelle, option voile;23810020007;40020007;23830031112;40031112;28
+Métiers de la mer;Électromécanicien de marine;23810020007;40020007;23830025010;40025010;28
+Métiers de la mer;Polyvalent navigant pont/machine;23810020007;40020007;23830025011;40025011;28
+Métiers de la réalisation d'ensembles mécaniques et industriels;Traitement des matériaux;23810020103;40020103;23830022302;40022302;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en chaudronnerie industrielle;23810020103;40020103;23830025411;40025411;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en réalisation de produits mécaniques option réalisation et suivi de production;23810020103;40020103;23830025014;40025014;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien en réalisation de produits mécaniques option réalisation et maintenance des outillages;23810020103;40020103;23830025013;40025013;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Technicien modeleur;23810020103;40020103;23830025108;40025108;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Microtechniques;23810020103;40020103;23830025006;40025006;06
+Métiers de la réalisation d'ensembles mécaniques et industriels;Fonderie;23810020103;40020103;23830022303;40022303;06
+Métiers de l'hôtellerie-restauration;Cuisine;23810033404;40033404;23830022106;40022106;06
+Métiers de l'hôtellerie-restauration;Commercialisation et services en restauration;23810033404;40033404;23830033403;40033403;06
+Métiers des études et de la modélisation numérique du bâtiment;Technicien d'études du bâtiment : option B : Assistant en architecture;23810023007;40023007;23830023005;40023005;06
+Métiers des études et de la modélisation numérique du bâtiment;Technicien d'études du bâtiment : option A : Études et économie;23810023007;40023007;23830023004;40023004;06
+Métiers des études et de la modélisation numérique du bâtiment;Technicien géomètre-topographe;23810023007;40023007;23830023103;40023103;06
+Métiers des industries graphiques et de la communication;Façonnage de produits imprimés, routage;23810032210;40032210;23830032206;40032206;06
+Métiers des industries graphiques et de la communication;Réalisation de produits imprimés et plurimédia : option A productions graphiques;23810032210;40032210;23830032207;40032207;06
+Métiers des industries graphiques et de la communication;Réalisation de produits imprimés et plurimédia : option B productions imprimées;23810032210;40032210;23830032208;40032208;06
+Métiers du pilotage et de la maintenance des installations automatisées;Maintenance des systèmes de productions connectés;23810020104;40020104;23830025012;40025012;06
+Métiers du pilotage et de la maintenance des installations automatisées;Procédés de la chimie, de l'eau et des papiers-cartons;23810020104;40020104;23830022004;40022004;06
+Métiers du pilotage et de la maintenance des installations automatisées;Pilote de ligne de production;23810020104;40020104;23830020102;40020102;06
+Métiers du pilotage et de la maintenance des installations automatisées;Technicien de scierie;23810020104;40020104;23830023406;40023406;06
+Métiers de la relation client;Métiers du commerce et de la vente option B Prospection-clientèle et valorisation de l'offre commerciale;23810031211;40031211;23830031214;40031214;06
+Métiers de la relation client;Métiers du commerce et de la vente option A Animation et gestion de l'espace commercial;23810031211;40031211;23830031213;40031213;06
+Métiers de la relation client;Métiers de l'accueil;23810031211;40031211;23830031212;40031212;06
+Métiers de la gestion administrative, du transport et de la logistique;Logistique;23810030003;40030003;23830031106;40031106;06
+Métiers de la gestion administrative, du transport et de la logistique;Organisation de transport de marchandises;23810030003;40030003;23830031114;40031114;06
+Métiers de la gestion administrative, du transport et de la logistique;Assistance à la gestion des organisations et de leurs activités (AGOrA);23810030003;40030003;23830030004;40030004;06
+Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option C réseaux informatiques et systèmes communicants;23810020008;40020008;23830025515;40025515;06
+Métiers du numérique et des transitions énergétiques;Métiers de l'électricité et de ses environnement connectés;23810020008;40020008;23830025510;40025510;06
+Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option A sûreté et sécurité des infrastructures, de l'habitat et du tertiaire;23810020008;40020008;23830025513;40025513;06
+Métiers du numérique et des transitions énergétiques;Métiers du froid et des énergies renouvelables;23810020008;40020008;23830025517;40025517;06
+Métiers du numérique et des transitions énergétiques;Maintenance et efficacité énergétique;23810020008;40020008;23830022706;40022706;06
+Métiers du numérique et des transitions énergétiques;Installateur en chauffage climatisation et énergies renouvelables;23810020008;40020008;23830022707;40022707;06
+Métiers du numérique et des transitions énergétiques;Systèmes numériques : Option B audiovisuels, réseau et équipement domestiques;23810020008;40020008;23830025514;40025514;06
+Métiers du cuir;Métiers du cuir option chaussures;23810024304;40024304;23820024301;40024301;06
+Métiers du cuir;Métiers du cuir option maroquinerie;23810024304;40024304;23820024302;40024302;06
+Métiers du cuir;Métiers du cuir option sellerie garnissage;23810024304;40024304;23820024303;40024303;06
+Métiers de l'entretien des textiles;Métiers de l'entretien des textiles option A : blanchisserie;23810024004;40024004;23820024005;40024005;06
+Métiers de l'entretien des textiles;Métiers de l'entretien des textiles option B : pressing;23810024004;40024004;23820024006;40024006;06
+Artisanat et métiers d'art;Artisanat et métiers d'art option verrerie scientifique et technique;23810022404;40022404;23820022402;40022402;06
+Artisanat et métiers d'art;Artisanat et métiers d'art option métiers de l'enseigne et de la signalétique;23810022404;40022404;23820022403;40022403;06
+Artisanat et métiers d'art;Artisanat et métiers d'art option communication visuelle pluri-media;23810022404;40022404;23820032303;40032303;06
+Artisanat et métiers d'art;Artisanat et métiers d'art option marchandisage visuel;23810022404;40022404;23820023003;40023003;06
+Artisanat et métiers d'art;Artisanat et métiers d'art option tapisserie d'ameublement;23810022404;40022404;23820024202;40024202;06
+Artisanat et métiers d'art - facteur d'orgues;Artisanat et métiers d'art - facteur d'orgues option organier;23810022307;40022307;23820022308;40022308;06
+Artisanat et métiers d'art - facteur d'orgues;Artisanat et métiers d'art - facteur d'orgues option tuyautier;23810022307;40022307;23820022309;40022309;06

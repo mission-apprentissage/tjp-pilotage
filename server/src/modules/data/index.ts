@@ -7,7 +7,7 @@ import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.ro
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
 import { getEtablissementsRoutes } from "./usecases/getEtablissements/getEtablissements.routes";
-import { getFormationsRoute } from "./usecases/getFormations/formations.routes";
+import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
 import { getFormationsTransformationsRoute } from "./usecases/getFormationsTransformationStats/getFormationsTransformations.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
@@ -15,7 +15,6 @@ import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
 import { getRestitutionIntentionsStatsRoute } from "./usecases/getRestitutionIntentionsStats/getRestitutionIntentionStats.route";
 import { getScopedTransformationStatsRoute } from "./usecases/getScopedTransformationStats/getScopedTransformationStats.route";
-import { getTransformationsStatsRoutes } from "./usecases/getTransformationStats/getTransformationsStats.route";
 import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
@@ -31,7 +30,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...getRegionRoute({ server }),
     ...getRegionsRoute({ server }),
     ...getFormationsTransformationsRoute({ server }),
-    ...getTransformationsStatsRoutes({ server }),
     ...getRestitutionIntentionsStatsRoute({ server }),
     ...countRestitutionIntentionsStatsRoute({ server }),
     ...getPilotageReformeStatsRoute({ server }),
