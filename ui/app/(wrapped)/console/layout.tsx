@@ -64,7 +64,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               filters: keepedFilters,
             })}
           >
-            Par formations
+            Par formation
           </Tab>
           <Tab
             as={Link}
@@ -72,7 +72,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
               filters: keepedFilters,
             })}
           >
-            Par établissements
+            Par établissement
           </Tab>
         </TabList>
         <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">

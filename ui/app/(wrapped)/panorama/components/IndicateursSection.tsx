@@ -61,6 +61,7 @@ export const IndicateursSection = ({
               onChange={(e) => onCodeChanged(e.target.value)}
               variant="input"
               value={code}
+              autoFocus={true}
             >
               {options?.map((option) => (
                 <option key={option.value} value={option.value}>

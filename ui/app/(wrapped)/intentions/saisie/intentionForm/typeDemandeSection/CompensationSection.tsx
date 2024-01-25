@@ -55,9 +55,9 @@ export const CompensationSection = ({
   };
 
   const getUaiDefaultValue = (value?: string): Etablissement => {
-    if (formMetadata?.etablissementCompensation?.libelle && value)
+    if (formMetadata?.etablissementCompensation?.libelleEtablissement && value)
       return {
-        label: formMetadata?.etablissementCompensation.libelle,
+        label: formMetadata?.etablissementCompensation.libelleEtablissement,
         value: value,
         commune: formMetadata?.etablissementCompensation.commune,
       };
@@ -65,7 +65,7 @@ export const CompensationSection = ({
   };
 
   useEffect(() => {
-    if (!formMetadata?.etablissementCompensation?.libelle)
+    if (!formMetadata?.etablissementCompensation?.libelleEtablissement)
       setValue("compensationUai", getValues("uai"));
   }, []);
 
@@ -97,10 +97,11 @@ export const CompensationSection = ({
                 active={!disabled}
                 inError={errors.compensationCfd ? true : false}
                 defaultValue={
-                  value && formMetadata?.formationCompensation?.libelle
+                  value && formMetadata?.formationCompensation?.libelleFormation
                     ? {
                         value,
-                        label: formMetadata?.formationCompensation?.libelle,
+                        label:
+                          formMetadata?.formationCompensation?.libelleFormation,
                       }
                     : undefined
                 }

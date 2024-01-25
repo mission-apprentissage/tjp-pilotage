@@ -1,8 +1,7 @@
 import { Insertable } from "kysely";
 import _ from "lodash";
 
-import { kdb } from "../../../../../../db/db";
-import { DB } from "../../../../../../db/schema";
+import { DB, kdb } from "../../../../../../db/db";
 
 export const createFormationHistorique = async (
   ancienneFormation: Insertable<DB["formation"]> & {

@@ -1,7 +1,18 @@
+const PREMIERE_COMMUNE = "1ere_commune";
+const SECONDE_COMMUNE = "2nde_commune";
+
+const Q1 = "Q1";
+const Q2 = "Q2";
+const Q3 = "Q3";
+const Q4 = "Q4";
+const HORS_QUADRANT = "Hors quadrant";
+const UNDEFINED_QUADRANT = "-";
+
 export const getPositionQuadrant = (
   formation: {
     tauxInsertion?: number;
     tauxPoursuite?: number;
+    typeFamille?: string;
   },
   moyenne?: {
     tauxInsertion?: number;
@@ -9,12 +20,18 @@ export const getPositionQuadrant = (
   }
 ): string => {
   if (
-    !formation.tauxInsertion ||
-    !formation.tauxPoursuite ||
-    !moyenne?.tauxInsertion ||
-    !moyenne.tauxPoursuite
+    formation.typeFamille === PREMIERE_COMMUNE ||
+    formation.typeFamille === SECONDE_COMMUNE
   )
-    return "Hors quadrant";
+    return UNDEFINED_QUADRANT;
+
+  if (
+    formation.tauxInsertion === undefined ||
+    formation.tauxPoursuite === undefined ||
+    moyenne?.tauxInsertion === undefined ||
+    moyenne?.tauxPoursuite === undefined
+  )
+    return HORS_QUADRANT;
 
   const tauxInsertion = formation.tauxInsertion;
   const tauxPoursuite = formation.tauxPoursuite;
@@ -25,23 +42,23 @@ export const getPositionQuadrant = (
     tauxInsertion >= tauxInsertionMoyen &&
     tauxPoursuite >= tauxPoursuiteMoyen
   ) {
-    return "Q1";
+    return Q1;
   } else if (
     tauxInsertion >= tauxInsertionMoyen &&
     tauxPoursuite < tauxPoursuiteMoyen
   ) {
-    return "Q2";
+    return Q2;
   } else if (
     tauxInsertion < tauxInsertionMoyen &&
     tauxPoursuite >= tauxPoursuiteMoyen
   ) {
-    return "Q3";
+    return Q3;
   } else if (
     tauxInsertion < tauxInsertionMoyen &&
     tauxPoursuite < tauxPoursuiteMoyen
   ) {
-    return "Q4";
-  } else return "Hors quadrant";
+    return Q4;
+  } else return HORS_QUADRANT;
 };
 
 export const filterPositionQuadrant = (

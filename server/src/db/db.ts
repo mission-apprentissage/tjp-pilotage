@@ -3,7 +3,7 @@ import { Pool, types } from "pg";
 
 import { config } from "../../config/config";
 import { logger } from "../logger";
-import { DB } from "./schema";
+import { DB as DBSchema } from "./schema";
 
 types.setTypeParser(types.builtins.INT8, (val) => parseInt(val));
 types.setTypeParser(types.builtins.INT4, (val) => parseInt(val));
@@ -26,6 +26,15 @@ pool.on("error", (error) => {
     // eslint-disable-next-line no-empty
   } catch (e) {}
 });
+
+// gestion du typage des vues matérialisée inspirée de https://github.com/RobinBlomberg/kysely-codegen/issues/72
+export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
+  formationView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<
+      DBSchema["formationNonMaterializedView"][K]
+    >;
+  };
+}
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),

@@ -50,14 +50,14 @@ export const [importFormationHistorique] = inject(
         const ancienneFormation = {
           nouveauCFD: cfd,
           codeFormationDiplome: ancienCfd,
-          libelleDiplome: dataFormation.libelle,
+          libelleFormation: dataFormation.libelleFormation,
           codeNiveauDiplome: dataFormation.codeNiveauDiplome,
           dateOuverture: dataFormation.dateOuverture,
           dateFermeture: dataFormation.dateFermeture,
           libelleFiliere: dataFormation.libelleFiliere,
           CPC: dataFormation.cpc,
-          CPCSecteur: dataFormation.cpcSecteur,
-          CPCSousSecteur: dataFormation.cpcSousSecteur,
+          cpcSecteur: dataFormation.cpcSecteur,
+          cpcSousSecteur: dataFormation.cpcSousSecteur,
         };
 
         if (isOldFormation(ancienneFormation.dateFermeture)) continue;

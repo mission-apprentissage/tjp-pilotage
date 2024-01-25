@@ -10,9 +10,9 @@ export type Filters = Pick<
   | "codeDiplome"
   | "codeRegion"
   | "commune"
-  | "CPC"
-  | "CPCSecteur"
-  | "CPCSousSecteur"
+  | "cpc"
+  | "cpcSecteur"
+  | "cpcSousSecteur"
   | "libelleFiliere"
   | "codeDispositif"
 >;

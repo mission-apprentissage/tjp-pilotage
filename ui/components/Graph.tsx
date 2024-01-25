@@ -13,7 +13,7 @@ export const Graph = memo(
     }: {
       value: number;
       className?: string;
-      continuum?: { cfd: string; libelle?: string };
+      continuum?: { cfd: string; libelleFormation?: string };
     }) => (
       <Tooltip
         isDisabled={!continuum}
@@ -25,7 +25,7 @@ export const Graph = memo(
             Données manquantes sur cette formation, le taux affiché est celui de
             la formation historique :<br />
             <Text mt="1" fontStyle="italic">
-              {continuum?.libelle}
+              {continuum?.libelleFormation}
             </Text>
           </>
         }

@@ -2,6 +2,7 @@ import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
+import { checkboxTheme } from "@/theme/Checkbox.theme";
 import { formStyle } from "@/theme/Label.theme";
 import { linkTheme } from "@/theme/Link.theme";
 import { radioTheme } from "@/theme/radio.theme";
@@ -30,6 +31,9 @@ export const theme = extendBaseTheme(chakraTheme, {
       525: "#0078f3",
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
+      950: "E8EDFF",
+      "950_hover": "#c2d1ff",
+      "950_active": "#a9bfff",
     },
     blue: {
       main: "#5770BE",
@@ -162,5 +166,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Link: linkTheme,
     Form: formStyle,
     Tag: tagTheme,
+    Checkbox: checkboxTheme,
   },
 });

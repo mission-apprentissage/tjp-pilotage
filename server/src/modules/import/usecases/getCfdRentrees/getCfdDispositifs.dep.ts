@@ -19,7 +19,7 @@ export const [getCfdDispositifs] = inject(
         .entries()
         .map(([key, nMef]) => ({
           cfd,
-          dispositifId: key,
+          codeDispositif: key,
           dureeDispositif: parseInt(nMef[0].DUREE_DISPOSITIF) ?? undefined,
           anneesDispositif: nMef.reduce<AnneesDispositif>((acc, item) => {
             const annee = parseInt(item.ANNEE_DISPOSITIF) - 1;

@@ -62,7 +62,7 @@ export const CartoSection = ({
           [2, 4],
           [4, 5],
           [5, 6],
-          [6, 100],
+          [6, 10000],
         ];
       case "ratioFermeture":
         return [
@@ -75,7 +75,7 @@ export const CartoSection = ({
   };
 
   const { data, isLoading } = client
-    .ref("[GET]/pilotage-transformation/stats")
+    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
     .useQuery(
       {
         query: {
@@ -96,10 +96,13 @@ export const CartoSection = ({
       return [];
     }
 
-    return Object.values(data.all).map((territoire) => ({
+    return Object.values(data?.all).map((territoire) => ({
       name: territoire.libelle,
       parentName: territoire.libelleAcademie,
-      value: territoire[indicateur] ?? 0,
+      value:
+        territoire.effectif || indicateur != "tauxTransformation"
+          ? territoire[indicateur] ?? 0
+          : undefined,
       code: territoire.code,
     }));
   }, [scope, data]);

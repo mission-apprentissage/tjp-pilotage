@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 import { Insertable } from "kysely";
 
-import { DB } from "../../../../../../db/schema";
+import { DB } from "../../../../../../db/db";
 import { R } from "../../../../services/inserJeunesApi/formatUaiData";
 import { getUaiData } from "./getUaiData.dep";
 import { upsertIndicateurEtablissement } from "./upsertIndicateurEtablissement.dep";

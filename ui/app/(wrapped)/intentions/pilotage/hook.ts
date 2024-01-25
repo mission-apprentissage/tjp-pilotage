@@ -47,22 +47,6 @@ export const usePilotageIntentionsHook = () => {
     });
   };
 
-  const { data: datas, isLoading } = client
-    .ref("[GET]/pilotage-transformation/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          ...order,
-          scope: filters.scope!,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
   const {
     data: scopedTransformationsStats,
     isLoading: isLoadingScopedTransformationsStats,
@@ -109,7 +93,6 @@ export const usePilotageIntentionsHook = () => {
   );
 
   return {
-    datas,
     indicateur,
     indicateurOptions,
     handleIndicateurChange,
@@ -119,7 +102,7 @@ export const usePilotageIntentionsHook = () => {
     scope: { type: filters?.scope, value: filters?.code } as SelectedScope,
     order,
     handleOrder,
-    isLoading: isLoading || isLoadingScopedTransformationsStats,
+    isLoading: isLoadingScopedTransformationsStats,
     scopedStats: scopedTransformationsStats,
   };
 };

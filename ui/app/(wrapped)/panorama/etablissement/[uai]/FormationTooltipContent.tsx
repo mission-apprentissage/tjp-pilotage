@@ -15,7 +15,7 @@ export const FormationTooltipContent = ({
     <InfoBlock
       mb="2"
       label="Formation concernée:"
-      value={formation.libelleDiplome}
+      value={formation.libelleFormation}
     />
     <InfoBlock
       mb="2"
