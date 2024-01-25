@@ -1,6 +1,6 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 const seuil = 20;
 
@@ -59,20 +59,20 @@ export function withTauxDevenirFavorableReg<
 >({
   millesimeSortie,
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   millesimeSortie: string;
   cfdRef: Parameters<EB["ref"]>[0];
-  dispositifIdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
   codeRegionRef: Parameters<EB["ref"]>[0];
 }) {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
     .selectFrom("indicateurRegionSortie as subIRS")
     .whereRef("subIRS.cfd", "=", cfdRef)
-    .whereRef("subIRS.dispositifId", "=", dispositifIdRef)
+    .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
     .whereRef(
       "subIRS.codeRegion",

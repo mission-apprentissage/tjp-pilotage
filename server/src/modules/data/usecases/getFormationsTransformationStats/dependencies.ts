@@ -1,11 +1,11 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_IJ_MILLESIME } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
@@ -116,36 +116,36 @@ const getFormationsTransformationStatsQuery = ({
       "dataEtablissement.codeDepartement"
     )
     .select((eb) => [
-      "dataFormation.libelle as libelleDiplome",
+      "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",
-      "demande.dispositifId",
+      "demande.dispositifId as codeDispositif",
       (eb) =>
         withInsertionReg({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPoursuite"),
       withTauxPressionReg({
         eb,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
@@ -160,7 +160,7 @@ const getFormationsTransformationStatsQuery = ({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        dispositifIdRef: "demande.dispositifId",
+        codeDispositifRef: "demande.dispositifId",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
     ])
@@ -183,7 +183,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -195,7 +195,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          dispositifIdRef: "demande.dispositifId",
+          codeDispositifRef: "demande.dispositifId",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -208,7 +208,7 @@ const getFormationsTransformationStatsQuery = ({
           withTauxPressionReg({
             eb,
             cfdRef: "demande.cfd",
-            dispositifIdRef: "demande.dispositifId",
+            codeDispositifRef: "demande.dispositifId",
             codeRegionRef: "dataEtablissement.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
@@ -233,7 +233,7 @@ const getFormationsTransformationStatsQuery = ({
       "dataFormation.cfd",
       "demande.dispositifId",
       "dispositif.libelleDispositif",
-      "dataFormation.libelle",
+      "dataFormation.libelleFormation",
       ...partition,
     ])
     .$call((q) => {
@@ -281,8 +281,8 @@ const getRegionStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .where((w) => {
@@ -310,9 +310,14 @@ const getRegionStats = async ({
     })
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),

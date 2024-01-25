@@ -2,25 +2,19 @@ import { Scope } from "shared";
 
 import { client } from "@/api.client";
 
-export type PilotageTransformationStatsQuery =
-  (typeof client.inferArgs)["[GET]/pilotage-transformation/stats"]["query"];
-
-export type PilotageTransformationStats =
-  (typeof client.infer)["[GET]/pilotage-transformation/stats"];
-
 export type ScopedTransformationStats =
   (typeof client.infer)["[GET]/pilotage-transformation/get-scoped-transformations-stats"];
 
 export type ScopedTransformationStatsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-transformation/get-scoped-transformations-stats"]["query"];
 
-export type PilotageTransformationsStatsDatas = Omit<
-  PilotageTransformationStats,
+export type ScopedTransformationStatsData = Omit<
+  ScopedTransformationStats,
   "filters"
 >;
 
 export type Filters = Pick<
-  PilotageTransformationStatsQuery,
+  ScopedTransformationStatsQuery,
   "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
 > & {
   code?: string;
@@ -37,13 +31,13 @@ export type ScopedFilters = Pick<
   "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
 >;
 
-export type PilotageTransformationStatsByScope = {
-  [K in Scope]?: PilotageTransformationsStatsDatas;
+export type ScopedPilotageTransformationStatsByScope = {
+  [K in Scope]?: ScopedTransformationStatsData;
 } & {
-  filters?: PilotageTransformationStats["filters"];
+  filters?: ScopedTransformationStats["filters"];
 };
 
-export type Order = Pick<PilotageTransformationStatsQuery, "order" | "orderBy">;
+export type Order = Pick<ScopedTransformationStatsQuery, "order" | "orderBy">;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
@@ -55,8 +49,6 @@ export type Status = "submitted" | "draft" | "all";
 export type Indicateur =
   | "tauxTransformation"
   | "countDemande"
-  | "differenceCapaciteScolaire"
-  | "differenceCapaciteApprentissage"
   | "placesOuvertesScolaire"
   | "placesFermeesScolaire"
   | "placesOuvertesApprentissage"

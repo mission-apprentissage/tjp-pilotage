@@ -42,13 +42,13 @@ export const findDemande = async ({
             )
             .select((ebDataFormation) => [
               sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelle"
+                "dataFormation.libelleFormation"
               )},
               ' (',${ebDataFormation.ref(
                 "niveauDiplome.libelleNiveauDiplome"
               )},')',
               ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelle"
+                "libelleFormation"
               ),
               sql<boolean>`${ebDataFormation(
                 "dataFormation.codeNiveauDiplome",
@@ -98,13 +98,13 @@ export const findDemande = async ({
             )
             .select((ebDataFormation) => [
               sql<string>`CONCAT(${ebDataFormation.ref(
-                "dataFormation.libelle"
+                "dataFormation.libelleFormation"
               )},
               ' (',${ebDataFormation.ref(
                 "niveauDiplome.libelleNiveauDiplome"
               )},')',
               ' (',${ebDataFormation.ref("dataFormation.cfd")},')')`.as(
-                "libelle"
+                "libelleFormation"
               ),
               sql<boolean>`${ebDataFormation(
                 "dataFormation.codeNiveauDiplome",
@@ -146,7 +146,7 @@ export const findDemande = async ({
     .limit(1)
     .executeTakeFirst();
 
-  const dispositifId =
+  const codeDispositif =
     demande?.dispositifId &&
     demande.metadata.formation?.dispositifs.find(
       (item) => item.codeDispositif === demande?.dispositifId
@@ -168,7 +168,7 @@ export const findDemande = async ({
         ),
       }),
       createdAt: demande.createdAt?.toISOString(),
-      dispositifId,
+      codeDispositif,
     })
   );
 };

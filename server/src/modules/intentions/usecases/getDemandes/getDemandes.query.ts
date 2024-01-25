@@ -45,9 +45,9 @@ export const findDemandes = async ({
         "user.lastname"
       )})`.as("userName"),
       "user.lastname as nomCreateur",
-      "dataFormation.libelle as libelleDiplome",
-      "dataEtablissement.libelle as libelleEtablissement",
-      "departement.libelle as libelleDepartement",
+      "dataFormation.libelleFormation",
+      "dataEtablissement.libelleEtablissement",
+      "departement.libelleDepartement",
       "dispositif.libelleDispositif as libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(
@@ -77,11 +77,11 @@ export const findDemandes = async ({
                 sql`concat(
                   unaccent(${eb.ref("demande.id")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.libelle")}),
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("departement.libelle")}),
+                  unaccent(${eb.ref("departement.libelleDepartement")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelle")}),
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
                   ' ',
                   unaccent(${eb.ref("user.firstname")}),
                   ' ',

@@ -21,7 +21,11 @@ export const migrateDownDB = async () => {
       console.error(`failed to execute migration "${it.migrationName}"`);
     }
   });
-  console.log(error);
+  if (error) {
+    console.error("failed to migrate down");
+    console.error(error);
+    process.exit(1);
+  }
 };
 
 export async function migrateToLatest(keepAlive?: boolean) {

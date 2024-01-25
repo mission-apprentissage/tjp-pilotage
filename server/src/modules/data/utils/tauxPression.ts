@@ -1,7 +1,7 @@
 import { ExpressionBuilder, expressionBuilder, RawBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { DB } from "../../../db/schema";
+import { DB } from "../../../db/db";
 
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,
@@ -40,11 +40,14 @@ export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     CASE WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
-    THEN ROUND((SUM(${premierVoeuxAnnee(
-      sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-      indicateurEntreeAlias
-    )})
-    / ${selectDenominateurPressionAgg(indicateurEntreeAlias)})::NUMERIC, 2)
+    THEN ROUND(
+      (
+        SUM(${premierVoeuxAnnee(
+          sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+          indicateurEntreeAlias
+        )})
+      / ${selectDenominateurPressionAgg(indicateurEntreeAlias)}
+      )::NUMERIC, 2)
     END
   `;
 
@@ -88,16 +91,12 @@ export const selectTauxPressionParFormationEtParRegionDemande = ({
       )
     )
     .innerJoin("region", "region.codeRegion", "pressionDetails.codeRegion")
-    .innerJoin(
-      "formation",
-      "formation.codeFormationDiplome",
-      "pressionDetails.codeFormationDiplome"
-    )
+    .innerJoin("formationView", "formationView.cfd", "pressionDetails.cfd")
     .whereRef("region.codeRegion", "=", "demande.codeRegion")
-    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .whereRef("formationView.cfd", "=", "demande.cfd")
     .select(["pressionDetails.pression as pression"])
     .groupBy([
-      "pressionDetails.codeFormationDiplome",
+      "pressionDetails.cfd",
       "pressionDetails.codeRegion",
       "pressionDetails.pression",
       "region.codeRegion",
@@ -112,11 +111,11 @@ export const tauxPressionFormationRegional = ({
   rentreeScolaire?: string;
 }) => {
   return eb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
-      "formation.codeFormationDiplome"
+      "formationView.cfd"
     )
     .leftJoin(
       "etablissement",
@@ -129,7 +128,7 @@ export const tauxPressionFormationRegional = ({
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
     )
-    .whereRef("formation.codeFormationDiplome", "=", "demande.cfd")
+    .whereRef("formationView.cfd", "=", "demande.cfd")
     .whereRef(
       "formationEtablissement.dispositifId",
       "=",
@@ -140,10 +139,10 @@ export const tauxPressionFormationRegional = ({
     .select([
       selectTauxPressionAgg("indicateurEntree").as("pression"),
       "region.codeRegion",
-      "formation.codeFormationDiplome",
+      "formationView.cfd",
     ])
     .groupBy([
-      "formation.codeFormationDiplome",
+      "formationView.cfd",
       "formationEtablissement.dispositifId",
       "region.codeRegion",
     ]);
@@ -153,13 +152,13 @@ export const withTauxPressionReg = <
   EB extends ExpressionBuilder<DB, "demande" | "dataEtablissement">,
 >({
   cfdRef,
-  dispositifIdRef,
+  codeDispositifRef,
   codeRegionRef,
 }: {
   eb: EB;
   codeRegion?: string | "ref";
   cfdRef: Parameters<EB["ref"]>[0];
-  dispositifIdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
   codeRegionRef: Parameters<EB["ref"]>[0];
 }) => {
   const eb = expressionBuilder<DB, keyof DB>();
@@ -172,7 +171,7 @@ export const withTauxPressionReg = <
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
     .whereRef("subFE.cfd", "=", cfdRef)
-    .whereRef("subFE.dispositifId", "=", dispositifIdRef)
+    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
     .whereRef(
       "subEtab.codeRegion",
       "=",

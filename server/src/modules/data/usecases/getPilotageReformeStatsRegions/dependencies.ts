@@ -4,7 +4,11 @@ import { CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
-import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
+import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
+import {
+  notHistoriqueFormation,
+  notHistoriqueIndicateurRegionSortie,
+} from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
@@ -20,8 +24,8 @@ const getStatsRegions = async ({
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formation",
-      "formation.codeFormationDiplome",
+      "formationView",
+      "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .leftJoin(
@@ -36,7 +40,11 @@ const getStatsRegions = async ({
     )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
-      return q.where("formation.codeNiveauDiplome", "in", codeNiveauDiplome);
+      return q.where(
+        "formationView.codeNiveauDiplome",
+        "in",
+        codeNiveauDiplome
+      );
     })
     .$call((q) => {
       if (!rentreeScolaire?.length) return q;
@@ -47,6 +55,7 @@ const getStatsRegions = async ({
       );
     })
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([
       "indicateurRegionSortie.codeRegion",
@@ -69,19 +78,13 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formation")
+    .selectFrom("formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "formation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
-    .where((eb) =>
-      eb(
-        "codeFormationDiplome",
-        "not in",
-        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
-      )
-    )
+    .where(notHistoriqueFormation)
     .distinct()
     .$castTo<{ label: string; value: string }>();
 

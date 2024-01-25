@@ -1,15 +1,24 @@
 import { kdb } from "../../../../../../db/db";
 import { cleanNull } from "../../../../../../utils/noNull";
 
-export const findFamilleMetier = async ({
-  cfdSpecialite,
+export const findAnneeCommune = async ({
+  cfdFamille,
 }: {
-  cfdSpecialite: string;
+  cfdFamille: string;
 }) => {
   const result = await kdb
     .selectFrom("familleMetier")
-    .selectAll("familleMetier")
-    .where("cfdSpecialite", "=", cfdSpecialite)
+    .selectAll()
+    .where("cfdFamille", "=", cfdFamille)
+    .executeTakeFirst();
+  return result && cleanNull(result);
+};
+
+export const findSpecialite = async ({ cfd }: { cfd: string }) => {
+  const result = await kdb
+    .selectFrom("familleMetier")
+    .selectAll()
+    .where("cfd", "=", cfd)
     .executeTakeFirst();
   return result && cleanNull(result);
 };
