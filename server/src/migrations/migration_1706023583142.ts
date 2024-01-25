@@ -31,7 +31,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("date", "timestamptz", (c) => c.defaultTo(sql`NOW()`))
     .addColumn("tableName", "text")
     .addColumn("operation", "text")
-    .addColumn("who", "text", (c) => c.defaultTo(sql`current_user`))
+    .addColumn("user", "text", (c) => c.defaultTo(sql`current_user`))
     .addColumn("newVal", "jsonb")
     .addColumn("oldVal", "jsonb")
     .execute();
