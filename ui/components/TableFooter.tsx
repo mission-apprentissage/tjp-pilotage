@@ -1,5 +1,44 @@
 import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon } from "@chakra-ui/icons";
-import { Box, Button, chakra, Flex, IconButton } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  chakra,
+  Flex,
+  IconButton,
+  Spinner,
+} from "@chakra-ui/react";
+import { useCallback, useState } from "react";
+
+const ExportButton = ({ onExport }: { onExport?: () => Promise<void> }) => {
+  const [loading, setIsLoading] = useState<boolean>(false);
+
+  const handleExport = useCallback(async () => {
+    if (onExport && !loading) {
+      setIsLoading(true);
+      await onExport();
+      setIsLoading(false);
+    }
+  }, [onExport, setIsLoading, loading]);
+
+  if (!onExport) return null;
+
+  if (loading) {
+    return (
+      <Button mr="auto" size="sm" variant="ghost" disabled={true}>
+        <Spinner mr="2" size="sm" />
+        Export en cours...
+      </Button>
+    );
+  }
+
+  return (
+    <Button onClick={handleExport} mr="auto" size="sm" variant="ghost">
+      <DownloadIcon mr="2" />
+      Exporter en CSV
+    </Button>
+  );
+};
+
 export const TableFooter = chakra(
   ({
     pageSize,
@@ -13,7 +52,7 @@ export const TableFooter = chakra(
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    onExport?: () => void;
+    onExport?: () => Promise<void>;
     className?: string;
   }) => {
     return (
@@ -24,12 +63,7 @@ export const TableFooter = chakra(
         py="1.5"
         className={className}
       >
-        {onExport && (
-          <Button onClick={onExport} mr="auto" size="sm" variant="ghost">
-            <DownloadIcon mr="2" />
-            Exporter en CSV
-          </Button>
-        )}
+        <ExportButton onExport={onExport} />
         <Box mr="4" ml="auto">
           {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
           {count}
