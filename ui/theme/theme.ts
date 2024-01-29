@@ -137,6 +137,7 @@ export const themeDefinition = {
     },
     orange: {
       draft: "#FEEBCA",
+      dark: "#716043",
       warning: "#FF6F4C",
     },
     green: {

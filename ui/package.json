@@ -20,6 +20,7 @@
     "@iconify/react": "^4.1.1",
     "@json2csv/formatters": "^7.0.4",
     "@json2csv/plainjs": "^7.0.4",
+    "@notionhq/client": "^2.2.14",
     "@tanstack/react-query": "^4.29.3",
     "axios": "1.6.2",
     "echarts": "^5.4.2",

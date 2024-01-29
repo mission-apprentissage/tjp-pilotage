@@ -8,6 +8,7 @@ import { ZodError } from "zod";
 import { config } from "../config/config";
 import { logger, loggerContextPlugin } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
+import { registerChangelogModule } from "./modules/changelog";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { registerFormationModule } from "./modules/data";
 import { registerIntentionsModule } from "./modules/intentions";
@@ -93,6 +94,7 @@ const registerRoutes = (instance: Server) => {
     ...registerCoreModule({ server: instance }),
     ...registerFormationModule({ server: instance }),
     ...registerIntentionsModule({ server: instance }),
+    ...registerChangelogModule({ server: instance })
   };
 };
 

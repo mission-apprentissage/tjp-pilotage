@@ -1,3 +1,5 @@
+"use client";
+
 import {
   Box,
   HStack,
@@ -118,6 +120,11 @@ export default function LandingFooter() {
           <Box>
             <Link as={NextLink} href="/cgu">
               Mentions légales
+            </Link>
+          </Box>
+          <Box>
+            <Link as={NextLink} href="/changelog">
+              Journal des mises à jour
             </Link>
           </Box>
         </HStack>
