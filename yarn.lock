@@ -2991,6 +2991,16 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@notionhq/client@npm:^2.2.14":
+  version: 2.2.14
+  resolution: "@notionhq/client@npm:2.2.14"
+  dependencies:
+    "@types/node-fetch": ^2.5.10
+    node-fetch: ^2.6.1
+  checksum: 5f53e595c62798fdc25a6cb9fead47a49bfc6c8213656771693b2cb2e93fe3180ca0134714560ceed051916cbb2943e2a48737280be9091882a50a1e60a2d446
+  languageName: node
+  linkType: hard
+
 "@npmcli/agent@npm:^2.0.0":
   version: 2.2.0
   resolution: "@npmcli/agent@npm:2.2.0"
@@ -4223,6 +4233,16 @@ __metadata:
   dependencies:
     "@types/mjml-core": "*"
   checksum: 097b46f6d79c02c6d17681d5722bd476f7df7418666673d187824c30994847cd2909bdb0351a878b0690ff5e7bf096a9216e12910c82cba9b88a4ce1b45d803b
+  languageName: node
+  linkType: hard
+
+"@types/node-fetch@npm:^2.5.10":
+  version: 2.6.11
+  resolution: "@types/node-fetch@npm:2.6.11"
+  dependencies:
+    "@types/node": "*"
+    form-data: ^4.0.0
+  checksum: 180e4d44c432839bdf8a25251ef8c47d51e37355ddd78c64695225de8bc5dc2b50b7bb855956d471c026bb84bd7295688a0960085e7158cbbba803053492568b
   languageName: node
   linkType: hard
 
@@ -13039,7 +13059,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.0":
+"node-fetch@npm:^2.3.0, node-fetch@npm:^2.6.0, node-fetch@npm:^2.6.1":
   version: 2.7.0
   resolution: "node-fetch@npm:2.7.0"
   dependencies:
@@ -15940,6 +15960,7 @@ __metadata:
     mjml: ^4.14.1
     nodemailer: ^6.9.4
     nodemailer-html-to-text: ^3.2.0
+    notion-types: ^6.16.0
     openid-client: ^5.6.1
     pg: ^8.9.0
     qs: ^6.11.1
@@ -17516,6 +17537,7 @@ __metadata:
     "@iconify/react": ^4.1.1
     "@json2csv/formatters": ^7.0.4
     "@json2csv/plainjs": ^7.0.4
+    "@notionhq/client": ^2.2.14
     "@tanstack/react-query": ^4.29.3
     "@types/node": ^20.11.6
     "@types/qs": ^6.9.11
