@@ -117,7 +117,7 @@ export const GlossaireListContent = ({
           spacing={0}
           cursor={"pointer"}
         >
-          {entries.map((entry) => (
+          {(entries ?? []).map((entry) => (
             <GlossaireListContentItem
               key={entry.id}
               entry={entry}

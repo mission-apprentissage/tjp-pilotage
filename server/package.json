@@ -44,6 +44,7 @@
     "lodash": "^4.17.21",
     "luxon": "2.5.2",
     "mjml": "^4.14.1",
+    "node-cache": "^5.1.2",
     "nodemailer": "^6.9.4",
     "nodemailer-html-to-text": "^3.2.0",
     "notion-to-md": "^3.1.1",
