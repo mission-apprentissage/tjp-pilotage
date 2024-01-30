@@ -367,7 +367,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -413,7 +413,10 @@ const findFiltersInDb = async ({
     eb: ExpressionBuilder<DB, "familleMetier" | "formationView">
   ) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.or([eb("familleMetier.cfdFamille", "in", cfdFamille)]);
+    return eb.or([
+      eb("familleMetier.cfd", "in", cfdFamille),
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {

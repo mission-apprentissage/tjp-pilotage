@@ -414,7 +414,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -458,7 +458,10 @@ const findFiltersInDb = async ({
 
   const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb("familleMetier.cfdFamille", "in", cfdFamille);
+    return eb.or([
+      eb("familleMetier.cfd", "in", cfdFamille),
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -596,8 +599,13 @@ const findFiltersInDb = async ({
     .execute();
 
   const familles = await base
-    .select([
-      "familleMetier.libelleFamille as label",
+    .select((eb) => [
+      sql<string>`CONCAT(
+        ${eb.ref("familleMetier.libelleFamille")},
+        ' (',
+        ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
+        ')'
+      )`.as("label"),
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
