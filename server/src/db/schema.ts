@@ -45,59 +45,7 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
@@ -159,6 +107,7 @@ export interface Departement {
 
 export interface DiplomeProfessionnel {
   cfd: string;
+  voie: string | null;
 }
 
 export interface Dispositif {
@@ -211,7 +160,7 @@ export interface FormationEtablissement {
   id: Generated<string>;
   cfd: string;
   UAI: string;
-  dispositifId: string;
+  dispositifId: string | null;
   voie: string;
 }
 
@@ -233,6 +182,7 @@ export interface FormationNonMaterializedView {
   cpcSousSecteur: string | null;
   libelleFiliere: string | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
+  voie: string | null;
 }
 
 export interface IndicateurAcademie {
@@ -268,7 +218,7 @@ export interface IndicateurRegion {
 
 export interface IndicateurRegionSortie {
   cfd: string;
-  dispositifId: string;
+  dispositifId: string | null;
   codeRegion: string;
   voie: string;
   millesimeSortie: string;

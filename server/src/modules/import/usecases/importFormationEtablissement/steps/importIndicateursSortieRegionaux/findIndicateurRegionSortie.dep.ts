@@ -8,7 +8,7 @@ export const findIndicateurRegionSortie = ({
   millesimeSortie,
 }: {
   cfd: string;
-  codeDispositif: string;
+  codeDispositif: string | null;
   codeRegion: string;
   millesimeSortie: string;
 }) =>
@@ -16,7 +16,10 @@ export const findIndicateurRegionSortie = ({
     .selectFrom("indicateurRegionSortie")
     .selectAll()
     .where("cfd", "=", cfd)
-    .where("dispositifId", "=", codeDispositif)
+    .$call((eb) => {
+      if (!codeDispositif) return eb.where("dispositifId", "is", null);
+      return eb.where("dispositifId", "=", codeDispositif);
+    })
     .where("codeRegion", "=", codeRegion)
     .where("millesimeSortie", "=", millesimeSortie)
     .executeTakeFirst()

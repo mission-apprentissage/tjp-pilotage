@@ -8,6 +8,8 @@ export const createDiplomeProfessionnel = async (
   await kdb
     .insertInto("diplomeProfessionnel")
     .values(diplomeProfessionnel)
-    .onConflict((oc) => oc.column("cfd").doUpdateSet(diplomeProfessionnel))
+    .onConflict((oc) =>
+      oc.columns(["cfd", "voie"]).doUpdateSet(diplomeProfessionnel)
+    )
     .execute();
 };

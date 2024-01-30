@@ -61,6 +61,56 @@ export const [importIndicateurSortie] = inject(
   }
 );
 
+export const [importIndicateurSortieApprentissage] = inject(
+  { createIndicateurSortie, getUaiData },
+  (deps) => {
+    return async ({
+      uai,
+      formationEtablissementId,
+      millesime,
+      cfd,
+    }: {
+      uai: string;
+      formationEtablissementId: string;
+      millesime: string;
+      cfd: string;
+    }) => {
+      const ijData = await deps.getUaiData({ millesime, uai });
+      const mefData = ijData?.meftstats[cfd];
+
+      if (!mefData) {
+        const continuumData = await getContinuumData({
+          cfd,
+          codeDispositif: null,
+          uai,
+          millesimeSortie: millesime,
+        });
+        if (!continuumData) return;
+
+        await deps.createIndicateurSortie({
+          ..._.omit(continuumData, ["cfd"]),
+          formationEtablissementId,
+          cfdContinuum: continuumData.cfd,
+        });
+        return;
+      }
+
+      const indicateurSortie = {
+        formationEtablissementId,
+        nbInsertion6mois: mefData?.nb_en_emploi_6_mois,
+        nbInsertion12mois: mefData.nb_en_emploi_12_mois,
+        nbInsertion24mois: mefData?.nb_en_emploi_24_mois,
+        effectifSortie: mefData?.nb_annee_term,
+        nbPoursuiteEtudes: mefData?.nb_poursuite_etudes,
+        nbSortants: mefData?.nb_sortant,
+        millesimeSortie: millesime,
+      };
+
+      await deps.createIndicateurSortie(indicateurSortie);
+    };
+  }
+);
+
 const [getContinuumData] = inject(
   {
     findIndicateurSortie,
@@ -75,7 +125,7 @@ const [getContinuumData] = inject(
       millesimeSortie,
     }: {
       cfd: string;
-      codeDispositif: string;
+      codeDispositif: string | null;
       uai: string;
       millesimeSortie: string;
     }) => {

@@ -1,14 +1,32 @@
 import { inject } from "injecti";
 
 import { DiplomeProfessionnelLine } from "../../fileTypes/DiplomesProfessionnels";
+import { Offres_apprentissages } from "../../fileTypes/Offres_apprentissages";
 import { streamIt } from "../../utils/streamIt";
-import { findDiplomesProfessionnels } from "../importFormationEtablissement/findDiplomesProfessionnels.dep";
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
+import { findDiplomesProfessionnels } from "./findDiplomeProfessionnel.dep";
+import { findOffresApprentissages } from "./findOffresApprentissages";
 import { refreshFormationMaterializedView } from "./refreshFormationView.dep";
 
-const formatCFD = (line: DiplomeProfessionnelLine) => {
+const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
   if (!line["Code diplôme"]) return;
   const cfd = line["Code diplôme"].replace("-", "").slice(0, 8);
+
+  if (isNaN(parseInt(cfd))) return;
+  return cfd;
+};
+
+const formatCFDOffreApprentissage = (line: Offres_apprentissages) => {
+  if (
+    !line[
+      "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"
+    ]
+  )
+    return;
+  const cfd =
+    line[
+      "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"
+    ];
 
   if (isNaN(parseInt(cfd))) return;
   return cfd;
@@ -17,6 +35,7 @@ const formatCFD = (line: DiplomeProfessionnelLine) => {
 export const [importDiplomesProfessionnels] = inject(
   {
     findDiplomesProfessionnels,
+    findOffresApprentissages,
     createDiplomeProfessionnel,
     refreshFormationMaterializedView,
   },
@@ -26,18 +45,45 @@ export const [importDiplomesProfessionnels] = inject(
     await streamIt(
       (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
       async (diplomeProfessionnel, count) => {
-        const cfd = formatCFD(diplomeProfessionnel);
+        const cfd = formatCFDDiplomeProfessionnel(diplomeProfessionnel);
         if (!cfd) return;
         try {
           await deps.createDiplomeProfessionnel({
             cfd,
+            voie: "scolaire",
           });
         } catch (e) {
           console.log(e);
           errorCount++;
         }
         process.stdout.write(
-          `\r${count} diplomeProfessionnel ajoutés ou mis à jour`
+          `\r${count} diplomeProfessionnel (scolaire) ajoutés ou mis à jour`
+        );
+      },
+      { parallel: 20 }
+    ).then(() => {
+      process.stdout.write(
+        `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`
+      );
+    });
+    console.log("Import des diplomeProfessionnel (apprentissage)");
+    errorCount = 0;
+    await streamIt(
+      (count) => deps.findOffresApprentissages({ offset: count, limit: 60 }),
+      async (offreApprentissage, count) => {
+        const cfd = formatCFDOffreApprentissage(offreApprentissage);
+        if (!cfd) return;
+        try {
+          await deps.createDiplomeProfessionnel({
+            cfd,
+            voie: "apprentissage",
+          });
+        } catch (e) {
+          console.log(e);
+          errorCount++;
+        }
+        process.stdout.write(
+          `\r${count} diplomeProfessionnel (apprentissage) ajoutés ou mis à jour`
         );
       },
       { parallel: 20 }

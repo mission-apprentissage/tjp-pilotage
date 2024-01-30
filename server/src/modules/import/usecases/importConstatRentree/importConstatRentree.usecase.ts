@@ -38,11 +38,11 @@ export const [importConstatRentree] = inject(
             });
 
             const uai = constatRentreeLine["UAI"];
-          
+
             if (!uai) {
               throw new Error(`Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`)
             }
-  
+
             const constatRentree: Insertable<DB["constatRentree"]> = {
               uai: constatRentreeLine["UAI"],
               mefstat11: constatRentreeLine["Mef Bcp 11"],
@@ -51,16 +51,16 @@ export const [importConstatRentree] = inject(
               anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
               rentreeScolaire,
             };
-  
+
             try {
               await deps.createConstatRentree(constatRentree);
-  
+
               process.stdout.write(
                 `\r${count} constat de rentrée ajoutés ou mis à jour`
               );
             } catch (error) {
               console.log(
-                `An error occured while importing datas`,
+                `An error occured while importing data`,
                 JSON.stringify(constatRentree, null, 2)
               );
               console.error(error);
