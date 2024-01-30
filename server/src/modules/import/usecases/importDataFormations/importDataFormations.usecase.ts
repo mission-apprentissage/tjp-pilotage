@@ -147,7 +147,85 @@ export const [importDataFormations] = inject(
           errorCount++;
         }
         process.stdout.write(
-          `\r${count} dataFormation ajoutées ou mises à jour`
+          `\r${count} dataFormation (scolaire) ajoutées ou mises à jour`
+        );
+      },
+      { parallel: 20 }
+    );
+    await streamIt(
+      (offset) =>
+        rawDataRepository.findRawDatas({
+          type: "vFormationDiplome_",
+          offset,
+          limit: 1000,
+        }),
+      async (vFormationDiplome, count) => {
+        const cfd = vFormationDiplome.FORMATION_DIPLOME;
+
+        const diplomeProfessionnel = await deps
+          .findDiplomeProfessionnel({ cfd })
+          .then(formatDiplomeProfessionel);
+
+        const dispositifs = await deps.getCfdDispositifs({ cfd });
+        const mefstats = dispositifs.flatMap((dispositif) =>
+          Object.values(dispositif.anneesDispositif).map((item) => item.mefstat)
+        );
+        const regroupement = await deps.findRegroupements({ mefstats });
+
+        const isBTS = cfd.slice(0, 3) === "320";
+        const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
+        const isSpecialite = !!(await deps.findSpecialite(cfd));
+
+        const getTypeFamille = () => {
+          if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
+          if (isSpecialite) return isBTS ? "option" : "specialite";
+          return undefined;
+        };
+
+        try {
+          await deps.createDataFormation({
+            cfd,
+            libelleFormation:
+              diplomeProfessionnel?.[
+                "Intitulé de la spécialité (et options)"
+              ]?.replace(/"/g, "") ||
+              formatLibelle(vFormationDiplome.LIBELLE_LONG_200),
+            rncp: diplomeProfessionnel?.["Code RNCP"]
+              ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
+              : undefined,
+            cpc:
+              diplomeProfessionnel?.["Commission professionnelle consultative"]
+                ?.replace("CPC", "")
+                .trim() || "(VIDE)",
+            cpcSecteur:
+              diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
+              "(VIDE)",
+            cpcSousSecteur:
+              diplomeProfessionnel?.["Sous-secteur"]
+                ?.replace("Sous-secteur", "")
+                .trim() || "(VIDE)",
+            libelleFiliere: regroupement || "(VIDE)",
+            codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
+            dateOuverture: vFormationDiplome.DATE_OUVERTURE
+              ? DateTime.fromFormat(
+                  vFormationDiplome.DATE_OUVERTURE,
+                  "dd/LL/yyyy"
+                ).toJSDate()
+              : undefined,
+            dateFermeture: vFormationDiplome.DATE_FERMETURE
+              ? DateTime.fromFormat(
+                  vFormationDiplome.DATE_FERMETURE,
+                  "dd/LL/yyyy"
+                ).toJSDate()
+              : undefined,
+            typeFamille: getTypeFamille(),
+          });
+        } catch (e) {
+          console.log(e);
+          errorCount++;
+        }
+        process.stdout.write(
+          `\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`
         );
       },
       { parallel: 20 }
@@ -160,3 +238,72 @@ export const [importDataFormations] = inject(
 
 const formatLibelle = (libelleFormation: string) =>
   libelleFormation && _.capitalize(libelleFormation).replace(/ \(.*\)/, "");
+
+// const importFormationDiplome = inject(
+//   {
+//     findDiplomeProfessionnel,
+//     findRegroupements,
+//     createDataFormation,
+//     getCfdDispositifs,
+//     find2ndeCommune,
+//     findSpecialite,
+//   },
+//   (deps) =>
+//     async (
+//       line: NFormationDiplomeLine | VFormationDiplomeLine,
+//       count: number
+//     ) => {
+//       const cfd = line.FORMATION_DIPLOME;
+
+//       const diplomeProfessionnel = await deps
+//         .findDiplomeProfessionnel({ cfd })
+//         .then(formatDiplomeProfessionel);
+
+//       const dispositifs = await deps.getCfdDispositifs({ cfd });
+//       const mefstats = dispositifs.flatMap((dispositif) =>
+//         Object.values(dispositif.anneesDispositif).map((item) => item.mefstat)
+//       );
+//       const regroupement = await deps.findRegroupements({ mefstats });
+
+//       const isBTS = cfd.slice(0, 3) === "320";
+//       const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
+//       const isSpecialite = !!(await deps.findSpecialite(cfd));
+
+//       const getTypeFamille = () => {
+//         if (is2ndeCommune) return isBTS ? "1ere_commune" : "2nde_commune";
+//         if (isSpecialite) return isBTS ? "option" : "specialite";
+//         return undefined;
+//       };
+
+//       await deps.createDataFormation({
+//         cfd,
+//         libelleFormation:
+//           diplomeProfessionnel?.[
+//             "Intitulé de la spécialité (et options)"
+//           ]?.replace(/"/g, "") || formatLibelle(line.LIBELLE_LONG_200),
+//         rncp: diplomeProfessionnel?.["Code RNCP"]
+//           ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
+//           : undefined,
+//         cpc:
+//           diplomeProfessionnel?.["Commission professionnelle consultative"]
+//             ?.replace("CPC", "")
+//             .trim() || "(VIDE)",
+//         cpcSecteur:
+//           diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
+//           "(VIDE)",
+//         cpcSousSecteur:
+//           diplomeProfessionnel?.["Sous-secteur"]
+//             ?.replace("Sous-secteur", "")
+//             .trim() || "(VIDE)",
+//         libelleFiliere: regroupement || "(VIDE)",
+//         codeNiveauDiplome: line.FORMATION_DIPLOME.slice(0, 3),
+//         dateOuverture: line.DATE_OUVERTURE
+//           ? DateTime.fromFormat(line.DATE_OUVERTURE, "dd/LL/yyyy").toJSDate()
+//           : undefined,
+//         dateFermeture: line.DATE_FERMETURE
+//           ? DateTime.fromFormat(line.DATE_FERMETURE, "dd/LL/yyyy").toJSDate()
+//           : undefined,
+//         typeFamille: getTypeFamille(),
+//       });
+//     }
+// );
