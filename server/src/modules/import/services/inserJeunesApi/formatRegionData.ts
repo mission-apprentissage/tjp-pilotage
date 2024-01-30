@@ -29,7 +29,11 @@ export const formatRegionData = (rawData: any): IjRegionData => {
       cur: {
         id_mesure: string;
         valeur_mesure: number;
-        dimensions: { id_mefstat11?: string; ensemble?: string }[];
+        dimensions: {
+          id_mefstat11?: string;
+          id_formation_apprentissage?: string;
+          ensemble?: string;
+        }[];
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
@@ -41,29 +45,30 @@ export const formatRegionData = (rawData: any): IjRegionData => {
         } as const
       )[filiere];
 
-      if (voie === "scolaire") {
-        const ensemble = cur.dimensions[0].ensemble;
-        const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const ensemble = cur.dimensions[0].ensemble;
+      const mefstat11 =
+        voie === "scolaire"
+          ? cur.dimensions[0].id_mefstat11
+          : cur.dimensions[0].id_formation_apprentissage;
 
-        if (ensemble) {
-          return acc;
-        }
+      if (ensemble) {
+        return acc;
+      }
 
-        if (mefstat11) {
-          return {
-            ...acc,
-            meftstats: {
-              ...acc.meftstats,
-              [mefstat11]: {
-                ...acc.meftstats[mefstat11],
-                [voie]: {
-                  ...acc.meftstats[mefstat11]?.[voie],
-                  [cur.id_mesure]: cur.valeur_mesure,
-                },
+      if (mefstat11) {
+        return {
+          ...acc,
+          meftstats: {
+            ...acc.meftstats,
+            [mefstat11]: {
+              ...acc.meftstats[mefstat11],
+              [voie]: {
+                ...acc.meftstats[mefstat11]?.[voie],
+                [cur.id_mesure]: cur.valeur_mesure,
               },
             },
-          };
-        }
+          },
+        };
       }
       return acc;
     },

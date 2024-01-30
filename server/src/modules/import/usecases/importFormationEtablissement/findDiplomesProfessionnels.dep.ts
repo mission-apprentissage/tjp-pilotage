@@ -1,4 +1,5 @@
-import { rawDataRepository } from "../../repositories/rawData.repository";
+import { kdb } from "../../../../db/db";
+import { cleanNull } from "../../../../utils/noNull";
 
 export const findDiplomesProfessionnels = ({
   offset,
@@ -7,9 +8,14 @@ export const findDiplomesProfessionnels = ({
   offset: number;
   limit: number;
 }) => {
-  return rawDataRepository.findRawDatas({
-    type: "diplomesProfessionnels",
-    offset,
-    limit,
-  });
+  return kdb
+    .selectFrom("diplomeProfessionnel")
+    .selectAll()
+    .offset(offset)
+    .$call((q) => {
+      if (!limit) return q;
+      return q.limit(limit);
+    })
+    .execute()
+    .then(cleanNull);
 };
