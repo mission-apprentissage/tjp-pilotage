@@ -43,7 +43,7 @@ const findEtablissementsInDb = async ({
   codeAcademie,
   codeDepartement,
   codeDiplome,
-  dispositifId,
+  codeDispositif,
   commune,
   cfd,
   cfdFamille,
@@ -64,7 +64,7 @@ const findEtablissementsInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  dispositifId?: string[];
+  codeDispositif?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
@@ -270,8 +270,8 @@ const findEtablissementsInDb = async ({
       return q.where("etablissement.commune", "in", commune);
     })
     .$call((q) => {
-      if (!dispositifId) return q;
-      return q.where("dispositif.codeDispositif", "in", dispositifId);
+      if (!codeDispositif) return q;
+      return q.where("dispositif.codeDispositif", "in", codeDispositif);
     })
     .$call((q) => {
       if (!codeDiplome) return q;
