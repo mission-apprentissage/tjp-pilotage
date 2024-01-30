@@ -535,13 +535,8 @@ const findFiltersInDb = async ({
     .execute();
 
   const familles = await base
-    .select((eb) => [
-      sql<string>`CONCAT(
-        ${eb.ref("familleMetier.libelleFamille")},
-        ' (',
-        ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
-        ')'
-      )`.as("label"),
+    .select([
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
