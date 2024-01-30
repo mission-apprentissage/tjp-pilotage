@@ -7,18 +7,18 @@ import {
   IconButton,
   Spinner,
 } from "@chakra-ui/react";
-import { useCallback, useState } from "react";
+import { useState } from "react";
 
 const ExportButton = ({ onExport }: { onExport?: () => Promise<void> }) => {
   const [loading, setIsLoading] = useState<boolean>(false);
 
-  const handleExport = useCallback(async () => {
+  const handleExport = async () => {
     if (onExport && !loading) {
       setIsLoading(true);
       await onExport();
       setIsLoading(false);
     }
-  }, [onExport, setIsLoading, loading]);
+  };
 
   if (!onExport) return null;
 
