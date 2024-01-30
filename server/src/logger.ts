@@ -1,10 +1,7 @@
 import { AsyncLocalStorage } from "async_hooks";
 import { randomUUID } from "crypto";
-import { HookHandlerDoneFunction } from "fastify";
-import {
-  FastifyReplyType,
-  FastifyRequestType,
-} from "fastify/types/type-provider";
+import { FastifyRequest, HookHandlerDoneFunction } from "fastify";
+import { FastifyReplyType } from "fastify/types/type-provider";
 import fp from "fastify-plugin";
 import winston from "winston";
 import Transport from "winston-transport";
@@ -100,15 +97,17 @@ const getContext = () =>
   (asyncLocalStorage.getStore() ?? {}) as {
     userId?: string;
     requestId: string;
+    requestUrl: string;
   };
 
 export const logger = {
   info: (msg: string, details?: object) => {
     const logOrigin = getLogOrigin();
-    const { userId, requestId } = getContext();
+    const { userId, requestId, requestUrl } = getContext();
     winstonLogger.info(msg, {
       userId,
       requestId,
+      requestUrl,
       details,
       logOrigin,
     });
@@ -119,10 +118,11 @@ export const logger = {
     { error, ...details }: { error: Error } & Record<string, any>
   ) => {
     const logOrigin = getLogOrigin();
-    const { userId, requestId } = getContext();
+    const { userId, requestId, requestUrl } = getContext();
     winstonLogger.error(msg, {
       userId,
       requestId,
+      requestUrl,
       details,
       error: {
         name: error.name,
@@ -144,7 +144,7 @@ export const loggerContextPlugin = fp(
     instance.addHook(
       "onRequest",
       (
-        req: FastifyRequestType,
+        req: FastifyRequest,
         res: FastifyReplyType,
         done: HookHandlerDoneFunction
       ) => {
@@ -152,6 +152,7 @@ export const loggerContextPlugin = fp(
           {
             userId: req.user?.id,
             requestId: randomUUID().slice(0, 13).replace("-", ""),
+            requestUrl: req.url,
           },
           () => done()
         );
