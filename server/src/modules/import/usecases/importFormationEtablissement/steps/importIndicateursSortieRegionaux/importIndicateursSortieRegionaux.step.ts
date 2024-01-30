@@ -70,6 +70,59 @@ export const [importIndicateursRegionSortie] = inject(
     }
 );
 
+export const [importIndicateursRegionSortieApprentissage] = inject(
+  {
+    createIndicateurRegionSortie,
+    findRawData: rawDataRepository.findRawData,
+    getRegionData: inserJeunesApi.getRegionData,
+  },
+  (deps) =>
+    async ({ cfd }: { cfd: string }) => {
+      for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
+        for (const millesimeSortie of MILLESIMES_IJ_REG) {
+          const data = await deps.findRawData({
+            type: "ij_reg",
+            filter: { millesime: millesimeSortie, codeRegion },
+          });
+          const mefstatData = data?.meftstats[cfd];
+
+          if (!mefstatData) {
+            const continuumData = await getContinuumData({
+              cfd,
+              dispositifId: null,
+              codeRegion,
+              millesimeSortie,
+            });
+
+            if (!continuumData) continue;
+            await deps.createIndicateurRegionSortie({
+              ...continuumData,
+              cfd,
+              cfdContinuum: continuumData.cfd,
+            });
+            continue;
+          }
+
+          await deps.createIndicateurRegionSortie({
+            cfd,
+            dispositifId: null,
+            voie: "apprentissage",
+            codeRegion,
+            millesimeSortie,
+            effectifSortie: mefstatData.scolaire?.nb_annee_term ?? null,
+            nbSortants: mefstatData.scolaire?.nb_sortant ?? null,
+            nbPoursuiteEtudes:
+              mefstatData.scolaire?.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: mefstatData.scolaire?.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois:
+              mefstatData.scolaire?.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois:
+              mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
+          });
+        }
+    }
+);
+
 const [getContinuumData] = inject(
   {
     findIndicateurRegionSortie,
@@ -84,7 +137,7 @@ const [getContinuumData] = inject(
       millesimeSortie,
     }: {
       cfd: string;
-      dispositifId: string;
+      dispositifId: string | null;
       codeRegion: string;
       millesimeSortie: string;
     }) => {

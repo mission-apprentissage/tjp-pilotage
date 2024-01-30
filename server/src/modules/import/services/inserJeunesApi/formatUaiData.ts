@@ -26,11 +26,27 @@ export const formatUaiData = (rawData: any): R => {
       cur: {
         id_mesure: string;
         valeur_mesure: number;
-        dimensions: { id_mefstat11?: string; ensemble?: string }[];
+        dimensions: {
+          id_mefstat11?: string;
+          id_formation_apprentissage?: string;
+          ensemble?: string;
+        }[];
+        filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
+      const filiere = cur.filiere;
+      const voie = (
+        {
+          voie_pro_sco_educ_nat: "scolaire",
+          apprentissage: "apprentissage",
+        } as const
+      )[filiere];
+
       const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const mefstat11 =
+        voie === "scolaire"
+          ? cur.dimensions[0].id_mefstat11
+          : cur.dimensions[0].id_formation_apprentissage;
 
       if (ensemble) {
         return {

@@ -65,7 +65,7 @@ const findFormationsInDb = async ({
   libelleFiliere?: string[];
 } = {}) => {
   const query = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
@@ -348,7 +348,7 @@ const findFiltersInDb = async ({
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",

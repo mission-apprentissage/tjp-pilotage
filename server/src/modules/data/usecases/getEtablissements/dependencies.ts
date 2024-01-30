@@ -78,7 +78,7 @@ const findEtablissementsInDb = async ({
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
@@ -386,7 +386,7 @@ const findFiltersInDb = async ({
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
