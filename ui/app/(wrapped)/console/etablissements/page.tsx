@@ -732,7 +732,12 @@ export default function Etablissements() {
       <TableFooter
         onExport={async () => {
           const data = await client.ref("[GET]/etablissements").query({
-            query: { ...filters, ...order, limit: 10000000 },
+            query: {
+              ...filters,
+              ...order,
+              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+              limit: 10000000,
+            },
           });
           trackEvent("etablissements:export");
           downloadCsv(
