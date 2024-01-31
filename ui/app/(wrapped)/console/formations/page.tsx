@@ -593,9 +593,14 @@ export default function Formations() {
       <TableFooter
         onExport={async () => {
           trackEvent("formations:export");
-          const data = await client
-            .ref("[GET]/formations")
-            .query({ query: { ...filters, ...order, limit: 1000000 } });
+          const data = await client.ref("[GET]/formations").query({
+            query: {
+              ...filters,
+              ...order,
+              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+              limit: 1000000,
+            },
+          });
           downloadCsv(
             "formations_export.csv",
             data.formations,
