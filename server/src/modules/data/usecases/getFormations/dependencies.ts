@@ -115,6 +115,10 @@ const findFormationsInDb = async ({
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
@@ -226,6 +230,10 @@ const findFormationsInDb = async ({
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
       "formationView.dateFermeture",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       "formationHistorique.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
@@ -359,7 +367,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -405,7 +413,10 @@ const findFiltersInDb = async ({
     eb: ExpressionBuilder<DB, "familleMetier" | "formationView">
   ) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.or([eb("familleMetier.cfdFamille", "in", cfdFamille)]);
+    return eb.or([
+      eb("familleMetier.cfd", "in", cfdFamille),
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -524,13 +535,8 @@ const findFiltersInDb = async ({
     .execute();
 
   const familles = await base
-    .select((eb) => [
-      sql<string>`CONCAT(
-        ${eb.ref("familleMetier.libelleFamille")},
-        ' (',
-        ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
-        ')'
-      )`.as("label"),
+    .select([
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)
