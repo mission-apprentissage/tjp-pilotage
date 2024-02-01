@@ -1,3 +1,4 @@
+import * as Sentry from "@sentry/node";
 import cookie from "cookie";
 import { FastifyRequest } from "fastify";
 import { inject } from "injecti";
@@ -20,6 +21,12 @@ export const [extractUserInRequest, extractUserInRequestFactory] = inject(
       if (!decoded) return;
 
       const user = await deps.findUserQuery({ email: decoded.email });
+
+      if (user?.id) {
+        Sentry.setUser({ id: user.id });
+        Sentry.setTag("role", user?.role);
+      }
+
       if (!user?.enabled) return;
       request.user = cleanNull(user) as RequestUser;
     } catch (e) {

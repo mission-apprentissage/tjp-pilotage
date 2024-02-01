@@ -1,0 +1,38 @@
+import { ENV } from "shared";
+import { EnvEnum } from "shared/enum/envEnum";
+
+export interface PublicConfig {
+  sentry_dsn: string;
+  sentry_enabled: boolean;
+  baseUrl: string;
+  host: string;
+  env: ENV;
+  plausible: {
+    domain: string;
+  };
+  serverUrl: string;
+  appContainerUrl: string;
+}
+
+function getConfig(): PublicConfig {
+  const url = new URL(process.env.NEXT_PUBLIC_BASE_URL!);
+
+  return {
+    sentry_dsn: process.env.NEXT_PUBLIC_SENTRY_DSN!,
+    sentry_enabled: getEnv() !== EnvEnum.dev,
+    env: getEnv(),
+    host: url.hostname,
+    baseUrl: url.toString(),
+    plausible: {
+      domain: url.hostname,
+    },
+    serverUrl: process.env.NEXT_PUBLIC_SERVER_URL!,
+    appContainerUrl: process.env.NEXT_PUBLIC_APP_CONTAINER_URL!,
+  };
+}
+
+function getEnv(): ENV {
+  return ENV.parse(process.env.NEXT_PUBLIC_ENV);
+}
+
+export const publicConfig: PublicConfig = getConfig();
