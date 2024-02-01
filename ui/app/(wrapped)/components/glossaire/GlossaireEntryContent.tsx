@@ -6,6 +6,7 @@ import {
   Box,
   Flex,
   Heading,
+  Link,
   ListItem,
   SkeletonCircle,
   SkeletonText,
@@ -17,7 +18,20 @@ import ReactMarkdown, { Components } from "react-markdown";
 
 import { client } from "@/api.client";
 
+import { useGlossaireContext } from "../../../contexts/glossaireContext";
 import { GlossaireIcon } from "./GlossaireIcon";
+
+const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;
+
+function isNotionId(href?: string): boolean {
+  return notionIdHrefRegex.test(href ?? "");
+}
+
+function convertToNotionPageId(id: string | undefined): string {
+  return (id ?? "")
+    .replace("/", "")
+    .replace(/^(.{8})(.{4})(.{4})(.{4})(.{12})$/, "$1-$2-$3-$4-$5");
+}
 
 const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
@@ -34,6 +48,26 @@ const chakraRendererTheme: Components = {
       {children}
     </blockquote>
   ),
+  a: ({ children, href }) => {
+    const { setSelectedEntry } = useGlossaireContext();
+    if (isNotionId(href)) {
+      return (
+        <Link
+          onClick={() => setSelectedEntry(convertToNotionPageId(href))}
+          color="bluefrance.113"
+          textDecor={"underline"}
+        >
+          {children}
+        </Link>
+      );
+    }
+
+    return (
+      <Link href={href} color="bluefrance.113" textDecor={"underline"}>
+        {children}
+      </Link>
+    );
+  },
 };
 
 const RenderGlossaireEntrySkeleton = () => {
