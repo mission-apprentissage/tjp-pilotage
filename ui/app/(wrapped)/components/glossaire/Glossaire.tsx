@@ -10,6 +10,8 @@ import {
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
+import { DoubleArrowLeft } from "../../../../components/icons/DoubleArrowLeft";
+import { DoubleArrowRight } from "../../../../components/icons/DoubleArrowRight";
 import { useGlossaireContext } from "../../../contexts/glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
@@ -32,10 +34,9 @@ export const Glossaire = () => {
     <Box display={"flex"} flexGrow={"1"} justifyContent={"end"}>
       <Button
         variant={"secondary"}
-        leftIcon={
-          <Icon icon="ri:arrow-left-double-fill" color="" height={24} />
-        }
+        leftIcon={<DoubleArrowLeft height={24} width={24} />}
         onClick={() => onOpen()}
+        color="bluefrance.113"
       >
         Glossaire
       </Button>
@@ -56,7 +57,7 @@ export const Glossaire = () => {
               <Button
                 variant={"unstyled"}
                 color="bluefrance.113"
-                rightIcon={<Icon icon="ri:arrow-right-double-line" />}
+                rightIcon={<DoubleArrowRight />}
                 onClick={onClose}
                 display="flex"
               >
