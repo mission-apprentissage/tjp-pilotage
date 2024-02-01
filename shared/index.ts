@@ -1,4 +1,5 @@
 export { demandeValidators } from "./demandeValidators/validators";
+export { ENV } from "./enum/envEnum";
 export { ScopeEnum, type Scope } from "./enum/scopeEnum";
 export { VoieEnum, type Voie } from "./enum/voieEnum";
 export * from "./security/permissions";
