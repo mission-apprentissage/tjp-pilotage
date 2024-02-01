@@ -22,6 +22,8 @@
     "@json2csv/formatters": "^7.0.6",
     "@json2csv/plainjs": "^7.0.6",
     "@notionhq/client": "^2.2.14",
+    "@sentry/integrations": "^7.99.0",
+    "@sentry/nextjs": "^7.99.0",
     "@tanstack/react-query": "^4.29.3",
     "axios": "1.6.8",
     "chakra-dayzed-datepicker": "^0.2.10",
