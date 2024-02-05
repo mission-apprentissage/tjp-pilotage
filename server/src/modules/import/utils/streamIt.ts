@@ -4,7 +4,8 @@ import { pipeline } from "stream/promises";
 export const streamIt = <T>(
   load: (count: number) => Promise<T[]>,
   write: (chunk: T, writeCount: number) => Promise<void>,
-  { parallel = 1 } = {}
+  { parallel = 1 } = {},
+  onFinal?: () => Promise<void>
 ) => {
   let count = 0;
 
@@ -38,6 +39,10 @@ export const streamIt = <T>(
 
       callback();
     },
+    final: async (callback) => {
+      await onFinal?.();
+      callback();
+    }
   });
 
   return pipeline(readable, writable);

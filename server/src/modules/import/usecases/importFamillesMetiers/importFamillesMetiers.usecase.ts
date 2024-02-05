@@ -30,7 +30,8 @@ export const importFamillesMetiersFactory =
         countFamillesMetier++;
         process.stdout.write(`\r${countFamillesMetier}`);
         await createFamillesMetiers(data);
-      }
+      },
+      { parallel: 20 }
     );
 
     process.stdout.write(
@@ -58,7 +59,8 @@ export const importFamillesMetiersFactory =
         countOptionsBTS++;
         process.stdout.write(`\r${countOptionsBTS}`);
         await createFamillesMetiers(data);
-      }
+      },
+      { parallel: 20 }
     );
 
     process.stdout.write(
@@ -85,7 +87,8 @@ export const importFamillesMetiersFactory =
         countOptionsAnneeCommune++;
         process.stdout.write(`\r${countOptionsAnneeCommune}`);
         await createFamillesMetiers(data);
-      }
+      },
+      { parallel: 20 }
     );
 
     process.stdout.write(
