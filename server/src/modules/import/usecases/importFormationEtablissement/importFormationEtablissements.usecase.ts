@@ -51,7 +51,6 @@ export const [importFormations] = inject(
           if (!cfd) return;
           const ancienCfds = await deps.importFormationHistorique({
             cfd,
-            voie,
           });
           for (const ancienCfd of ancienCfds ?? []) {
             await importFormationEtablissements({
@@ -130,7 +129,7 @@ export const [importFormationEtablissements] = inject(
               UAI: uai,
               cfd,
               dispositifId: null,
-              voie: "apprentissage",
+              voie,
             });
 
           for (const millesime of MILLESIMES_IJ) {
@@ -178,8 +177,6 @@ export const [importFormationEtablissements] = inject(
               }
               processedUais.push(uai);
             }
-            if (voie !== "scolaire") continue;
-
             const formationEtablissement =
               await deps.createFormationEtablissement({
                 UAI: uai,
@@ -213,53 +210,3 @@ export const [importFormationEtablissements] = inject(
     };
   }
 );
-
-// const importFormationEtablissemenScolaire = inject(
-//   {
-//     createFormationEtablissement,
-//     importEtablissement,
-//     importIndicateurEtablissement,
-//     importIndicateurEntree,
-//     importIndicateurSortie,
-//     getCfdRentrees,
-//     getCfdDispositifs,
-//     fetchIJ,
-//     importIndicateursRegionSortie,
-//     findUAIsApprentissage,
-//   },
-//   (deps) => {
-//     return async ({
-//       cfd,
-//       fetchIj = true,
-//     }: {
-//       cfd: string;
-//       fetchIj?: boolean;
-//     }) => {
-
-//   }
-// );
-
-// export const importFormationEtablissementApprentissage = inject(
-//   {
-//     createFormationEtablissement,
-//     importEtablissement,
-//     importIndicateurEtablissement,
-//     importIndicateurEntree,
-//     importIndicateurSortieApprentissage,
-//     getCfdRentrees,
-//     getCfdDispositifs,
-//     fetchIJ,
-//     importIndicateursRegionSortieApprentissage,
-//     findUAIsApprentissage,
-//   },
-//   (deps) => {
-//     return async ({
-//       cfd,
-//       fetchIj = true,
-//     }: {
-//       cfd: string;
-//       fetchIj?: boolean;
-//     }) => {
-
-//   }
-// );

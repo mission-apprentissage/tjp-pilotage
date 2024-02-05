@@ -39,18 +39,3 @@ export const findOffresApprentissages = async ({
 
   return items.map((item) => item.data as Offres_apprentissages);
 };
-
-// .selectFrom("rawData")
-// .select(
-//   sql<string>`data->>'Code du diplome ou du titre suivant la nomenclature de l''Education nationale (CodeEN)'`.as(
-//     "cfd"
-//   )
-// )
-// .distinct()
-// .where("type", "=", "offres_apprentissage")
-// .offset(offset)
-// .$call((q) => {
-//   if (!limit) return q;
-//   return q.limit(limit);
-// })
-// .execute();

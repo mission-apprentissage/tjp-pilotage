@@ -13,6 +13,7 @@ import { importDataEtablissements } from "./modules/import/usecases/importDataEt
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
+import { importDonneesIJ } from "./modules/import/usecases/importDonneesIJ/importDonneesIJ.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIndicateursAcademie } from "./modules/import/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
@@ -191,6 +192,13 @@ cli
         await usecase();
       }
     }
+  });
+
+cli
+  .command("importDonneesIJ")
+  .argument("[reset]", "if true, reset the file and refetch all", true)
+  .action(async (resetOption: boolean | string) => {
+    await importDonneesIJ(resetOption);
   });
 
 cli

@@ -56,15 +56,12 @@ export const [importIndicateursRegionSortie] = inject(
             voie: "scolaire",
             codeRegion,
             millesimeSortie,
-            effectifSortie: mefstatData.scolaire?.nb_annee_term ?? null,
-            nbSortants: mefstatData.scolaire?.nb_sortant ?? null,
-            nbPoursuiteEtudes:
-              mefstatData.scolaire?.nb_poursuite_etudes ?? null,
-            nbInsertion6mois: mefstatData.scolaire?.nb_en_emploi_6_mois ?? null,
-            nbInsertion12mois:
-              mefstatData.scolaire?.nb_en_emploi_12_mois ?? null,
-            nbInsertion24mois:
-              mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
+            effectifSortie: mefstatData.nb_annee_term ?? null,
+            nbSortants: mefstatData.nb_sortant ?? null,
+            nbPoursuiteEtudes: mefstatData.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: mefstatData.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois: mefstatData.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois: mefstatData.nb_en_emploi_24_mois ?? null,
           });
         }
     }
@@ -109,15 +106,12 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             voie: "apprentissage",
             codeRegion,
             millesimeSortie,
-            effectifSortie: mefstatData.scolaire?.nb_annee_term ?? null,
-            nbSortants: mefstatData.scolaire?.nb_sortant ?? null,
-            nbPoursuiteEtudes:
-              mefstatData.scolaire?.nb_poursuite_etudes ?? null,
-            nbInsertion6mois: mefstatData.scolaire?.nb_en_emploi_6_mois ?? null,
-            nbInsertion12mois:
-              mefstatData.scolaire?.nb_en_emploi_12_mois ?? null,
-            nbInsertion24mois:
-              mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
+            effectifSortie: mefstatData.nb_annee_term ?? null,
+            nbSortants: mefstatData.nb_sortant ?? null,
+            nbPoursuiteEtudes: mefstatData.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: mefstatData.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois: mefstatData.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois: mefstatData.nb_en_emploi_24_mois ?? null,
           });
         }
     }
