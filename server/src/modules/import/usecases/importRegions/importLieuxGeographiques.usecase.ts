@@ -10,9 +10,9 @@ import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 
 export const [importLieuxGeographiques, importLieuxGeographiquesFactory] = inject(
   {
-    region: batchCreate(importRegionsDeps.createRegions),
-    academie: batchCreate(importRegionsDeps.createAcademies),
-    departement: batchCreate(importRegionsDeps.createDepartements),
+    region: batchCreate(importRegionsDeps.createRegions, 20, false),
+    academie: batchCreate(importRegionsDeps.createAcademies, 20, false),
+    departement: batchCreate(importRegionsDeps.createDepartements, 20, false),
     findDepartementAcademieRegions: importRegionsDeps.findDepartementAcademieRegions,
   },
   (deps) => async () => {

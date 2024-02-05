@@ -18,9 +18,12 @@ export default function batchCreate<T>(
 ) {
   const BATCH: T[] = []
 
-  async function create({ data }: { data: T }) {
+  async function create({ data, uniqueKey }: { data: T, uniqueKey?: string }) {
     if (!allowDuplicates) {
-      const index = BATCH.findIndex(d => _.isEqual(d, data))
+      const index = BATCH.findIndex(d => {
+        if (uniqueKey) return _.isEqual(d[uniqueKey], data[uniqueKey])
+        return _.isEqual(d, data)
+      })
       if (index !== -1) {
         BATCH[index] = data
       } else {

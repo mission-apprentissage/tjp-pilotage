@@ -2,13 +2,14 @@ import { inject } from "injecti";
 
 import { DB } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
+import batchCreate from "../../utils/batchCreate";
 import { streamIt } from "../../utils/streamIt";
 import { createDataEtablissement } from "./createDataEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
 
 export const [importDataEtablissements] = inject(
   {
-    createDataEtablissement,
+    dataEtablissement: batchCreate(createDataEtablissement, 20),
     findRawDatas: rawDataRepository.findRawDatas,
     findDepartement,
   },
@@ -27,23 +28,26 @@ export const [importDataEtablissements] = inject(
           codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
         try {
-          await deps.createDataEtablissement({
-            uai: lyceeACCE.numero_uai,
-            siret: lyceeACCE.numero_siren_siret_uai,
-            codeAcademie: departement?.codeAcademie,
-            codeRegion: departement?.codeRegion,
-            codeDepartement,
-            libelleEtablissement: lyceeACCE.appellation_officielle,
-            adresse: lyceeACCE.adresse_uai,
-            commune: lyceeACCE.commune_libe,
-            codePostal:
-              lyceeACCE.code_postal_uai?.length <= 5
-                ? lyceeACCE.code_postal_uai
-                : undefined,
-            secteur: lyceeACCE.secteur_public_prive,
-            codeMinistereTutuelle: lyceeACCE.ministere_tutelle,
-            typeUai: lyceeACCE.type_uai as DB["dataEtablissement"]["typeUai"],
-          });
+          await deps.dataEtablissement.create({
+            data: {
+              uai: lyceeACCE.numero_uai,
+              siret: lyceeACCE.numero_siren_siret_uai,
+              codeAcademie: departement?.codeAcademie,
+              codeRegion: departement?.codeRegion,
+              codeDepartement,
+              libelleEtablissement: lyceeACCE.appellation_officielle,
+              adresse: lyceeACCE.adresse_uai,
+              commune: lyceeACCE.commune_libe,
+              codePostal:
+                lyceeACCE.code_postal_uai?.length <= 5
+                  ? lyceeACCE.code_postal_uai
+                  : undefined,
+              secteur: lyceeACCE.secteur_public_prive,
+              codeMinistereTutuelle: lyceeACCE.ministere_tutelle,
+              typeUai: lyceeACCE.type_uai as DB["dataEtablissement"]["typeUai"],
+            }
+          }
+        );
         } catch (e) {
           console.log(e);
           errorCount++;
@@ -53,7 +57,10 @@ export const [importDataEtablissements] = inject(
           `\r${count} dataEtablissement ajoutés ou mis à jour`
         );
       },
-      { parallel: 20 }
+      { parallel: 20 },
+      async () => {
+        await deps.dataEtablissement.flush();
+      }
     );
     process.stdout.write(
       `${errorCount > 0 ? `(avec ${errorCount} erreurs)` : ""}\n\n`

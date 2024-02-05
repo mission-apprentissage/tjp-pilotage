@@ -1,4 +1,7 @@
+import { inject } from "injecti";
+
 import { NNiveauFormationDiplome } from "../../fileTypes/NNiveauFormationDiplome";
+import batchCreate from "../../utils/batchCreate";
 import { streamIt } from "../../utils/streamIt";
 import { dependencies } from "./dependencies";
 
@@ -13,20 +16,22 @@ const toNiveauDiplome = ({
   };
 };
 
-export const importNiveauxDiplomeFactory =
-  ({
-    findNNiveauDiplomes = dependencies.findNNiveauDiplomes,
-    createNiveauDiplome = dependencies.createNiveauDiplome,
-  }) =>
-  async () => {
+export const [importNiveauxDiplome, importNiveauxDiplomeFactory] =
+  inject({
+    findNNiveauDiplomes: dependencies.findNNiveauDiplomes,
+    niveauDiplome: batchCreate(dependencies.createNiveauDiplome, 20, false),
+  },
+  (deps) => async () => {
     await streamIt(
-      (count) => findNNiveauDiplomes({ offset: count, limit: 30 }),
+      (count) => deps.findNNiveauDiplomes({ offset: count, limit: 30 }),
       async (nNiveauDiplome) => {
         const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
-        await createNiveauDiplome(niveauDiplome);
+        await deps.niveauDiplome.create({ data: niveauDiplome });
       },
-      { parallel: 20 }
+      { parallel: 20 },
+      async () => {
+        await deps.niveauDiplome.flush();
+      }
     );
-  };
-
-export const importNiveauxDiplome = importNiveauxDiplomeFactory({});
+  }
+);

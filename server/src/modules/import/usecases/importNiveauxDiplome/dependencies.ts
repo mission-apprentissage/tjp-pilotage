@@ -17,15 +17,14 @@ const findNNiveauDiplomes = async ({
   });
 };
 
-const createNiveauDiplome = async (
-  niveauDiplome: Insertable<DB["niveauDiplome"]>
-) => {
+const createNiveauDiplome = async ({
+  data
+}: { 
+  data: Array<Insertable<DB["niveauDiplome"]>>
+}) => {
   await kdb
     .insertInto("niveauDiplome")
-    .values(niveauDiplome)
-    .onConflict((oc) =>
-      oc.column("codeNiveauDiplome").doUpdateSet(niveauDiplome)
-    )
+    .values(data)
     .execute();
 };
 
