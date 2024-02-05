@@ -13,6 +13,9 @@ export const [importIndicateursRegion] = inject(
   (deps) => async () => {
     const regions = await deps.findRegionsQuery();
     for (const { codeRegion } of regions) {
+      /**
+       * Ajout des indicateurs sur le décrochage scolaire
+       */
       for (const rentreeScolaire of ["2020"]) {
         const line = await deps.findRawData({
           type: `decrochage_regional`,
@@ -45,6 +48,22 @@ export const [importIndicateursRegion] = inject(
           rentreeScolaire,
           ...decrochage,
         });
+      }
+
+      /**
+       * Ajout des indicateurs sur le taux de chomage regionnal
+       */
+      for (const rentreeScolaire of ["2020", "2021", "2022"]) {
+        const line = await deps.findRawData({
+          type: `chomage_regional_INSEE`,
+          filter: { codeRegion, rentreeScolaire },
+        });
+
+        await deps.upsertRegionQuery({
+          codeRegion,
+          rentreeScolaire,
+          tauxChomage: line?.tauxChomage ? parseFloat(line?.tauxChomage.replace(',', '.')) : null
+        })
       }
     }
   }
