@@ -7,7 +7,7 @@ import { formatUaiData } from "./formatUaiData";
 const instance = axios.create({
   baseURL: "https://www.inserjeunes.education.gouv.fr/api/v1.0",
   responseType: "json",
-  timeout: 20000,
+  timeout: 20000
 });
 
 export const login = async () => {
@@ -15,7 +15,7 @@ export const login = async () => {
     headers: {
       username: config.PILOTAGE_INSERJEUNES_USERNAME,
       password: config.PILOTAGE_INSERJEUNES_PASSWORD,
-    },
+    }
   });
   const { access_token: token } = response.data;
   return token;
