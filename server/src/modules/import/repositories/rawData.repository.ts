@@ -1,6 +1,7 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
 import { BTS_Attractivite_capacite } from "../fileTypes/BTS_Attractivite_capacite";
+import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
 import { Decrochage_academique } from "../fileTypes/Decrochage_academique";
 import { Decrochage_regional } from "../fileTypes/Decrochage_regional";
@@ -33,6 +34,7 @@ type LineTypes = {
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   decrochage_regional: Decrochage_regional;
   decrochage_academique: Decrochage_academique;
+  chomage_regional_INSEE: Chomage_regional_INSEE
 };
 
 const findRawData = async <T extends keyof LineTypes>({

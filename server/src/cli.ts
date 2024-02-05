@@ -163,6 +163,7 @@ cli
       ...getImports("diplomesProfessionnels"),
       ...getImports("nFormationDiplome_"),
       ...getImports("lyceesACCE"),
+      ...getImports("chomage_regional_INSEE")
     };
 
     if (filename) {
