@@ -78,7 +78,7 @@ const findEtablissementsInDb = async ({
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
-    .selectFrom("formationScolaireView as formationView")
+    .selectFrom("formationApprentissageView as formationView")
     .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",

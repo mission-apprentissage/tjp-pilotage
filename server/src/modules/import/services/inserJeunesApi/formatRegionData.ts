@@ -1,23 +1,25 @@
+enum Keys {
+  cfds = "cfds",
+  meftstats = "meftstats",
+}
+
 export type IjRegionData = {
-  meftstats: Record<
+  [k in Keys]: Record<
     string,
-    Record<
-      "scolaire" | "apprentissage",
-      {
-        nb_annee_term: number;
-        nb_en_emploi_12_mois: number;
-        nb_en_emploi_18_mois: number;
-        nb_en_emploi_24_mois: number;
-        nb_en_emploi_6_mois: number;
-        nb_poursuite_etudes: number;
-        nb_sortant: number;
-        taux_emploi_12_mois: number;
-        taux_emploi_18_mois: number;
-        taux_emploi_24_mois: number;
-        taux_emploi_6_mois: number;
-        taux_poursuite_etudes: number;
-      }
-    >
+    {
+      nb_annee_term: number;
+      nb_en_emploi_12_mois: number;
+      nb_en_emploi_18_mois: number;
+      nb_en_emploi_24_mois: number;
+      nb_en_emploi_6_mois: number;
+      nb_poursuite_etudes: number;
+      nb_sortant: number;
+      taux_emploi_12_mois: number;
+      taux_emploi_18_mois: number;
+      taux_emploi_24_mois: number;
+      taux_emploi_6_mois: number;
+      taux_poursuite_etudes: number;
+    }
   >;
 };
 
@@ -37,19 +39,9 @@ export const formatRegionData = (rawData: any): IjRegionData => {
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
-      const filiere = cur.filiere;
-      const voie = (
-        {
-          voie_pro_sco_educ_nat: "scolaire",
-          apprentissage: "apprentissage",
-        } as const
-      )[filiere];
-
       const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 =
-        voie === "scolaire"
-          ? cur.dimensions[0].id_mefstat11
-          : cur.dimensions[0].id_formation_apprentissage;
+      const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const cfd = cur.dimensions[0].id_formation_apprentissage;
 
       if (ensemble) {
         return acc;
@@ -62,16 +54,26 @@ export const formatRegionData = (rawData: any): IjRegionData => {
             ...acc.meftstats,
             [mefstat11]: {
               ...acc.meftstats[mefstat11],
-              [voie]: {
-                ...acc.meftstats[mefstat11]?.[voie],
-                [cur.id_mesure]: cur.valeur_mesure,
-              },
+              [cur.id_mesure]: cur.valeur_mesure,
+            },
+          },
+        };
+      }
+
+      if (cfd) {
+        return {
+          ...acc,
+          cfds: {
+            ...acc.cfds,
+            [cfd]: {
+              ...acc.cfds[cfd],
+              [cur.id_mesure]: cur.valeur_mesure,
             },
           },
         };
       }
       return acc;
     },
-    { meftstats: {} } as IjRegionData
+    { meftstats: {}, cfds: {} } as IjRegionData
   );
 };

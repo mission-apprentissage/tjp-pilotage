@@ -1,5 +1,10 @@
+enum Keys {
+  cfds = "cfds",
+  meftstats = "meftstats",
+}
+
 export type R = {
-  meftstats: Record<
+  [k in Keys]: Record<
     string,
     {
       nb_annee_term: number;
@@ -28,25 +33,15 @@ export const formatUaiData = (rawData: any): R => {
         valeur_mesure: number;
         dimensions: {
           id_mefstat11?: string;
-          id_formation_apprentissage?: string;
           ensemble?: string;
+          id_formation_apprentissage?: string;
         }[];
-        filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
-      const filiere = cur.filiere;
-      const voie = (
-        {
-          voie_pro_sco_educ_nat: "scolaire",
-          apprentissage: "apprentissage",
-        } as const
-      )[filiere];
-
       const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 =
-        voie === "scolaire"
-          ? cur.dimensions[0].id_mefstat11
-          : cur.dimensions[0].id_formation_apprentissage;
+      const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const id_formation_apprentissage =
+        cur.dimensions[0].id_formation_apprentissage;
 
       if (ensemble) {
         return {
@@ -70,8 +65,21 @@ export const formatUaiData = (rawData: any): R => {
           },
         };
       }
+
+      if (id_formation_apprentissage) {
+        return {
+          ...acc,
+          cfds: {
+            ...acc.cfds,
+            [id_formation_apprentissage]: {
+              ...acc.cfds[id_formation_apprentissage],
+              [cur.id_mesure]: cur.valeur_mesure,
+            },
+          },
+        };
+      }
       return acc;
     },
-    { meftstats: {} } as R
+    { meftstats: {}, cfds: {} } as R
   );
 };
