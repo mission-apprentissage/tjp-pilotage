@@ -168,22 +168,26 @@ export const getChangelogFactory =
       })) ?? []
 
       entry.show = result.properties["A afficher"].checkbox
-      entry.description = result.properties["Description"].rich_text?.[0].plain_text ?? ""
+      entry.description = result.properties["Description"].rich_text?.[0]?.plain_text ?? ""
       entry.deployed = result.properties["En Prod ?"].checkbox
 
       if (result.properties.Date.type === "rich_text") {
-        entry.date = {
-          type: "string",
-          value: result.properties.Date.rich_text?.[0].plain_text ?? ''
+          entry.date = {
+            type: result.properties.Date.rich_text?.[0]?.type === "mention" ? "date" : "string",
+            value: result.properties.Date.rich_text?.[0]?.plain_text ?? ''
+          }
         }
-      } else {
-        entry.date = {
-          type: "date",
-          value: result.properties.Date.rich_text?.[0].plain_text ? new Date(result.properties.Date.rich_text?.[0].plain_text).valueOf() : Date.now()
-        }
-      }
 
       changelog.push(entry as ChangelogEntry)
+    })
+  
+    changelog.sort((a , b) => {
+      if (a.date.type === "date" && b.date.type === "date") {
+        return new Date(b.date.value).getTime() - new Date(a.date.value).getTime()
+      }
+
+
+      return 0
     })
 
     return changelog
