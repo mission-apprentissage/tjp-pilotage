@@ -19,11 +19,16 @@ export const Card = ({ children, icon, link, title, linkHref }: CardProps) => {
         width="64px"
         height="64px"
         borderRadius="120px"
-        backgroundColor="#F5F5FE"
+        backgroundColor={themeDefinition.colors.bluefrance[975]}
       >
         {icon}
       </Box>
-      <Heading as="h3" color="#000091" fontSize="20px" fontWeight={700}>
+      <Heading
+        as="h3"
+        color={themeDefinition.colors.bluefrance[113]}
+        fontSize="20px"
+        fontWeight={700}
+      >
         {title}
       </Heading>
       {children}

@@ -46,8 +46,8 @@ export default function Home() {
             <VStack as="header" textAlign="center" spacing="8px">
               <Tag
                 size="sm"
-                backgroundColor="#E8EDFF"
-                color="#0063CB"
+                backgroundColor={themeDefinition.colors.info[950]}
+                color={themeDefinition.colors.info.text}
                 fontWeight={700}
               >
                 <HStack alignItems="center" spacing="4px">

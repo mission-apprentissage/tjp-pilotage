@@ -1,5 +1,7 @@
 import { Box, Heading } from "@chakra-ui/react";
 
+import { themeDefinition } from "../../../theme/theme";
+
 interface EditorialTitleProps {
   children: React.ReactNode;
 }
@@ -12,7 +14,7 @@ export const EditorialTitle = ({ children }: EditorialTitleProps) => {
       </Heading>
       <hr
         style={{
-          backgroundColor: "#DDDDDD",
+          backgroundColor: themeDefinition.colors.grey[900],
           width: "48px",
           margin: "24px auto 0",
           display: "block",

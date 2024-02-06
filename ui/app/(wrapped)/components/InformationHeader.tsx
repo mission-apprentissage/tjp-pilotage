@@ -3,6 +3,7 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useEffect, useState } from "react";
 
+import { themeDefinition } from "../../../theme/theme";
 import { useChangelog } from "../changelog/useChangelog";
 
 const LOCAL_STORAGE_KEY = "closedChangelogEntries";
@@ -37,8 +38,8 @@ export const InformationHeader = () => {
     <VStack>
       {filteredChangelog.map((changelogEntry) => (
         <Box
-          backgroundColor="#E8EDFF"
-          color="#0063CB"
+          backgroundColor={themeDefinition.colors.info[950]}
+          color={themeDefinition.colors.info.text}
           width="100%"
           paddingY="12px"
           key={`${changelogEntry.title}`}
