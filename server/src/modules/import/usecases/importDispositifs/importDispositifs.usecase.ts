@@ -18,7 +18,6 @@ export const [importDispositifs] = inject(dependencies, (deps) => async () => {
     async (item) => {
       const dispositif = toDispositif(item);
       await deps.createDispositif(dispositif);
-    },
-    { parallel: 20 }
+    }
   );
 });

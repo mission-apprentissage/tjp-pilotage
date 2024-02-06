@@ -1,11 +1,9 @@
 import { kdb } from "../../../../db/db";
 
-type RawData = { type: string, data: JSON }
-
 export const createRawDatas = async ({
   data,
 }: {
-  data: Array<RawData>;
+  data: { type: string; data: JSON }[];
 }) => {
   return await kdb
     .insertInto("rawData")

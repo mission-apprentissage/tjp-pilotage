@@ -3,49 +3,29 @@ import { Insertable } from "kysely";
 import { DB, kdb } from "../../../../db/db";
 import { rawDataRepository } from "../../repositories/rawData.repository";
 
-const createRegions = async ({ data }: { data: Array<Insertable<DB["region"]>> }) => {
+const createRegion = async (region: Insertable<DB["region"]>) => {
   await kdb
     .insertInto("region")
-    .values(data)
-    .onConflict((oc) => 
-      oc.column("codeRegion").doUpdateSet(eb => ({
-        libelleRegion: eb.ref("excluded.codeRegion"),
-        codeRegion: eb.ref("excluded.codeRegion")
-      }))
-    )
+    .values(region)
+    .onConflict((oc) => oc.column("codeRegion").doUpdateSet(region))
     .execute();
 };
 
-const createAcademies = async ({ data }: { data: Array<Insertable<DB["academie"]>> }) => {
+const createAcademie = async (academie: Insertable<DB["academie"]>) => {
   await kdb
     .insertInto("academie")
-    .values(data)
-    .onConflict((oc) => 
-      oc.column("codeAcademie").doUpdateSet(eb => {
-        return {
-          codeRegion: eb.ref("excluded.codeRegion"),
-          codeAcademie: eb.ref("excluded.codeAcademie"),
-          libelleAcademie: eb.ref("excluded.libelleAcademie")
-        }
-      })
-    )
+    .values(academie)
+    .onConflict((oc) => oc.column("codeAcademie").doUpdateSet(academie))
     .execute();
 };
 
-const createDepartements = async (
-  { data }: { data: Array<Insertable<DB["departement"]>> }
+const createDepartement = async (
+  departement: Insertable<DB["departement"]>
 ) => {
   await kdb
     .insertInto("departement")
-    .values(data)
-    .onConflict((oc) => 
-      oc.column("codeDepartement").doUpdateSet(eb => ({
-        codeRegion: eb.ref("excluded.codeRegion"),
-        codeAcademie: eb.ref("excluded.codeAcademie"),
-        codeDepartement: eb.ref("excluded.codeDepartement"),
-        libelleDepartement: eb.ref("excluded.libelleDepartement")
-      }))
-    )
+    .values(departement)
+    .onConflict((oc) => oc.column("codeDepartement").doUpdateSet(departement))
     .execute();
 };
 
@@ -63,8 +43,8 @@ const findDepartementAcademieRegions = async ({
   });
 
 export const importRegionsDeps = {
-  createRegions,
-  createAcademies,
-  createDepartements,
+  createRegion,
+  createAcademie,
+  createDepartement,
   findDepartementAcademieRegions,
 };
