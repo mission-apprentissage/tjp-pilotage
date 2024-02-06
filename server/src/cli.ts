@@ -17,7 +17,6 @@ import { importDispositifs } from "./modules/import/usecases/importDispositifs/i
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
-import { importIndicateursAcademie } from "./modules/import/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
@@ -188,7 +187,8 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
-      refreshFormationMaterializedView
+      refreshFormationMaterializedView,
+      importIndicateursRegion,
     };
 
     if (usecaseName) {
@@ -208,9 +208,8 @@ cli
 
 cli
   .command("importFormations")
+  .argument("[fetchIj]", "if true, refetch the ij data", true)
   .action(async () => {
-    await importIndicateursAcademie();
-    await importIndicateursRegion();
     await importFormations();
   });
 

@@ -19,7 +19,6 @@ const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
   tauxInsertion: "Emploi",
   tauxPoursuite: "Poursuite",
-  tauxDecrochage: "Décrochage",
   tauxTransformation: "Transformation",
 };
 

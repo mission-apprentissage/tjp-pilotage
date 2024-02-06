@@ -3,8 +3,6 @@ import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
 import { BTS_Attractivite_capacite } from "../fileTypes/BTS_Attractivite_capacite";
 import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
-import { Decrochage_academique } from "../fileTypes/Decrochage_academique";
-import { Decrochage_regional } from "../fileTypes/Decrochage_regional";
 import { Departements_academies_regions } from "../fileTypes/Departements_academies_regions";
 import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
@@ -32,8 +30,6 @@ type LineTypes = {
   BTS_attractivite_capacite: BTS_Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
-  decrochage_regional: Decrochage_regional;
-  decrochage_academique: Decrochage_academique;
   chomage_regional_INSEE: Chomage_regional_INSEE
 };
 
