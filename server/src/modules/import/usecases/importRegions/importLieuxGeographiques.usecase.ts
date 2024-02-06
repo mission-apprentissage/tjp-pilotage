@@ -1,40 +1,48 @@
+import { inject } from "injecti";
 import { Insertable } from "kysely";
 
 import { DB } from "../../../../db/db";
 import { Departements_academies_regions } from "../../fileTypes/Departements_academies_regions";
+import batchCreate from "../../utils/batchCreate";
 import { streamIt } from "../../utils/streamIt";
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 
-export const importLieuxGeographiquesFactory =
-  ({
-    createRegion = importRegionsDeps.createRegion,
-    createAcademie = importRegionsDeps.createAcademie,
-    createDepartement = importRegionsDeps.createDepartement,
-    findDepartementAcademieRegions = importRegionsDeps.findDepartementAcademieRegions,
-  }) =>
-  async () => {
+
+export const [importLieuxGeographiques, importLieuxGeographiquesFactory] = inject(
+  {
+    region: batchCreate(importRegionsDeps.createRegions),
+    academie: batchCreate(importRegionsDeps.createAcademies),
+    departement: batchCreate(importRegionsDeps.createDepartements),
+    findDepartementAcademieRegions: importRegionsDeps.findDepartementAcademieRegions,
+  },
+  (deps) => async () => {
     console.log(`Import des regions`);
 
     await streamIt(
-      (count) => findDepartementAcademieRegions({ offset: count, limit: 20 }),
+      (count) => deps.findDepartementAcademieRegions({ offset: count, limit: 20 }),
       async (item) => {
         const region = createRegionFromLine(item);
-        await createRegion(region);
+        await deps.region.create({ data: region });
 
         const academie = createAcademieFromLine(item);
         if (!academie) return;
-        await createAcademie(academie);
+        await deps.academie.create({ data: academie });
 
         const departement = createDepartementFromLine(item);
         if (!departement) return;
-        await createDepartement(departement);
+        await deps.departement.create({ data: departement });
+      },
+      { parallel: 20 },
+      async () => {
+        await deps.academie.flush();
+        await deps.departement.flush();
+        await deps.region.flush();
       }
     );
 
     console.log("Lieux géographiques ajoutés ou mis à jour\n");
-  };
-
-export const importLieuxGeographiques = importLieuxGeographiquesFactory({});
+  }
+)
 
 const createRegionFromLine = (
   data: Departements_academies_regions
