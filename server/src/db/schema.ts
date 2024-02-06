@@ -193,14 +193,6 @@ export interface FormationNonMaterializedView {
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
 }
 
-export interface IndicateurAcademie {
-  codeAcademie: string;
-  rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
-}
-
 export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
@@ -219,9 +211,6 @@ export interface IndicateurEtablissement {
 export interface IndicateurRegion {
   codeRegion: string;
   rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
   tauxChomage: number | null;
 }
 
@@ -299,7 +288,6 @@ export interface DB {
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
-  indicateurAcademie: IndicateurAcademie;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurRegion: IndicateurRegion;

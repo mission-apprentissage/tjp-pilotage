@@ -32,6 +32,8 @@ import * as migration_1705916396650 from "./migration_1705916396650";
 import * as migration_1705941490069 from "./migration_1705941490069";
 import * as migration_1706023583142 from "./migration_1706023583142";
 import * as migration_1707148829899 from "./migration_1707148829899";
+import * as migration_1707151090753 from "./migration_1707151090753";
+import * as migration_1707151766621 from "./migration_1707151766621";
 import * as migration_1707730282233 from "./migration_1707730282233";
 
 type Migration = {
@@ -72,5 +74,7 @@ export const migrations: Migrations = {
   migration_1705941490069,
   migration_1706023583142,
   migration_1707730282233,
-  migration_1707148829899
+  migration_1707148829899,
+  migration_1707151090753,
+  migration_1707151766621
 };
