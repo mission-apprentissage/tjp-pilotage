@@ -106,9 +106,11 @@ export const QuadrantSection = ({
                 if (!filteredFormations) return;
                 downloadCsv(
                   "formations_panorama.csv",
-                  filteredFormations.map((formation) => ({
-                    ...formation,
-                  })),
+                  filteredFormations
+                    .filter((formation) => formation.effectif)
+                    .map((formation) => ({
+                      ...formation,
+                    })),
                   {
                     libelleFormation: "Formation",
                     cfd: "CFD",
@@ -127,7 +129,9 @@ export const QuadrantSection = ({
           </Flex>
           <Flex alignItems={"flex-end"} justify="flex-end">
             <Text color="grey" fontSize="sm" textAlign="left">
-              {filteredFormations?.length ?? "-"} certifications
+              {filteredFormations?.filter((formation) => formation.effectif)
+                .length ?? "-"}{" "}
+              certifications
             </Text>
             <Text ml="2" color="grey" fontSize="sm" textAlign="right">
               {filteredFormations?.reduce(

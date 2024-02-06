@@ -316,7 +316,7 @@ export default function Etablissements() {
           options={data?.filters.etablissements}
           value={filters.uai ?? []}
         >
-          Etablissement
+          Établissement
         </Multiselect>
         <Multiselect
           onClose={filterTracker("secteur")}

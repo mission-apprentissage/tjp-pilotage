@@ -22,6 +22,7 @@ type Formation = {
   tauxPoursuite?: number;
   tauxInsertion?: number;
   tauxPression?: number;
+  effectif?: number;
   positionQuadrant?: string;
   cfd?: string;
   continuum?: { cfd: string; libelleFormation?: string };
@@ -146,45 +147,47 @@ export const TableQuadrant = ({
             </Tr>
           </Thead>
           <Tbody>
-            {formations.map((formation, index) => (
-              <Tr
-                key={`${formation.cfd}-${index}`}
-                bgColor={getTrBgColor(formation)}
-                onClick={() => handleClick && handleClick(formation.cfd)}
-                cursor={handleClick ? "pointer" : "default"}
-              >
-                <Td whiteSpace="normal" color={getTdColor(formation)}>
-                  {formation.libelleFormation}
-                </Td>
-                <Td textAlign={"center"} color={getTdColor(formation)}>
-                  <TableBadge
-                    sx={getTauxPressionStyle(
-                      formation.tauxPression !== undefined
+            {formations
+              .filter((formation) => formation.effectif)
+              .map((formation, index) => (
+                <Tr
+                  key={`${formation.cfd}-${index}`}
+                  bgColor={getTrBgColor(formation)}
+                  onClick={() => handleClick && handleClick(formation.cfd)}
+                  cursor={handleClick ? "pointer" : "default"}
+                >
+                  <Td whiteSpace="normal" color={getTdColor(formation)}>
+                    {formation.libelleFormation}
+                  </Td>
+                  <Td textAlign={"center"} color={getTdColor(formation)}>
+                    <TableBadge
+                      sx={getTauxPressionStyle(
+                        formation.tauxPression !== undefined
+                          ? formation.tauxPression
+                          : undefined
+                      )}
+                    >
+                      {formation.tauxPression !== undefined
                         ? formation.tauxPression
-                        : undefined
-                    )}
-                  >
-                    {formation.tauxPression !== undefined
-                      ? formation.tauxPression
-                      : "-"}
-                  </TableBadge>
-                </Td>
-                <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper
-                    maxW="120px"
-                    value={formation.tauxInsertion}
-                    continuum={formation.continuum}
-                  />
-                </Td>
-                <Td color={getTdColor(formation)} maxW="20%">
-                  <GraphWrapper
-                    maxW="120px"
-                    value={formation.tauxPoursuite}
-                    continuum={formation.continuum}
-                  />
-                </Td>
-              </Tr>
-            ))}
+                        : "-"}
+                    </TableBadge>
+                  </Td>
+                  <Td color={getTdColor(formation)} maxW="20%">
+                    <GraphWrapper
+                      maxW="120px"
+                      value={formation.tauxInsertion}
+                      continuum={formation.continuum}
+                    />
+                  </Td>
+                  <Td color={getTdColor(formation)} maxW="20%">
+                    <GraphWrapper
+                      maxW="120px"
+                      value={formation.tauxPoursuite}
+                      continuum={formation.continuum}
+                    />
+                  </Td>
+                </Tr>
+              ))}
           </Tbody>
         </Table>
       </TableContainer>

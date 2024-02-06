@@ -7,8 +7,6 @@ import { getMillesimePrecedent } from "../../services/getMillesime";
 import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
-import { notAnneeCommune } from "../../utils/notAnneeCommune";
-import { notHistoriqueUnlessCoExistant } from "../../utils/notHistorique";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -94,6 +92,7 @@ const getFormationsEtablissement = async ({
             "formationEtablissement.dispositifId as codeDispositif",
             "libelleDispositif",
             "formationView.codeNiveauDiplome",
+            "formationView.typeFamille",
             "libelleNiveauDiplome",
             sql<string>`CONCAT(${sb.ref(
               "formationView.libelleFormation"
@@ -162,37 +161,43 @@ const getFormationsEtablissement = async ({
             tauxPoursuite: number;
             tauxDevenirFavorable: number;
           }>()
-          .having(
-            (eb) =>
-              withInsertionReg({
-                eb,
-                millesimeSortie,
-                cfdRef: "formationEtablissement.cfd",
-                codeDispositifRef: "formationEtablissement.dispositifId",
-                codeRegionRef: "etablissement.codeRegion",
-              }),
-            "is not",
-            null
-          )
-          .having(
-            (eb) =>
-              withPoursuiteReg({
-                eb,
-                millesimeSortie,
-                cfdRef: "formationEtablissement.cfd",
-                codeDispositifRef: "formationEtablissement.dispositifId",
-                codeRegionRef: "etablissement.codeRegion",
-              }),
-            "is not",
-            null
-          )
-          .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire))
-          .where(notAnneeCommune)
+          // .having(
+          //   (eb) =>
+          //     withInsertionReg({
+          //       eb,
+          //       millesimeSortie,
+          //       cfdRef: "formationEtablissement.cfd",
+          //       codeDispositifRef: "formationEtablissement.dispositifId",
+          //       codeRegionRef: "etablissement.codeRegion",
+          //     }),
+          //   "is not",
+          //   null
+          // )
+          // .having(
+          //   (eb) =>
+          //     withPoursuiteReg({
+          //       eb,
+          //       millesimeSortie,
+          //       cfdRef: "formationEtablissement.cfd",
+          //       codeDispositifRef: "formationEtablissement.dispositifId",
+          //       codeRegionRef: "etablissement.codeRegion",
+          //     }),
+          //   "is not",
+          //   null
+          // )
+          // .where((eb) =>
+          //   notHistoriqueUnlessCoExistantFormationEtablissement(
+          //     eb,
+          //     rentreeScolaire
+          //   )
+          // )
+          // .where(notAnneeCommuneFormationEtablissement)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
             "formationView.id",
             "formationView.libelleFormation",
             "formationView.libelleFiliere",
+            "formationView.typeFamille",
             "formationEtablissement.cfd",
             "formationEtablissement.dispositifId",
             "indicateurEntree.effectifs",
