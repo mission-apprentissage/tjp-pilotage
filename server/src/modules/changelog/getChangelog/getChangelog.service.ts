@@ -42,7 +42,7 @@ const getDatabaseRowsFactory = (
 ) =>
   withNotionErrorHandling(async (databaseId: string) =>
     deps.client.databases.query({
-      database_id: databaseId
+      database_id: databaseId,
     })
   );
 

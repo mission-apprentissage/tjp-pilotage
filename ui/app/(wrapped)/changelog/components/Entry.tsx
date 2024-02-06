@@ -10,12 +10,33 @@ interface EntryProps {
 // This is to ensure each react list element has a unique ID
 let entry = 0;
 
-export default function Entry({ changelogEntry }: EntryProps) {
+const mois = [
+  "Jan.",
+  "Fev.",
+  "Mars",
+  "Avril",
+  "Mai",
+  "Juin",
+  "Juil.",
+  "Aout",
+  "Sept.",
+  "Oct.",
+  "Nov.",
+  "Dec.",
+];
+function generateDateString(str: string): string {
+  const date = new Date(str);
+  const day = date.getDate();
+  const month = mois[date.getMonth()];
+  const year = date.getFullYear();
+
+  return `${day} ${month} ${year}`;
+}
   entry++;
   return (
     <Grid width="100%" templateColumns="20% 1fr">
       <GridItem>
-        <HStack>
+        <HStack alignItems="start">
           <Text paddingRight="6px">🚧</Text>
           <Text as="h2" fontWeight={700} fontSize="16px">
             {changelogEntry.title}
