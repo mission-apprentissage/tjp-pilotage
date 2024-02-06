@@ -2,7 +2,7 @@ import { NotionAPI } from "notion-client";
 
 import { Doc } from "@/app/_components/NotionDoc";
 
-import LandingFooter from "../components/LandingFooter";
+import { LandingFooter } from "../components/LandingFooter";
 
 export const revalidate = 60;
 
