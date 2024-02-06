@@ -4,7 +4,7 @@ interface EditorialTitleProps {
   children: React.ReactNode;
 }
 
-export default function EditorialTitle({ children }: EditorialTitleProps) {
+export const EditorialTitle = ({ children }: EditorialTitleProps) => {
   return (
     <Box>
       <Heading fontSize="20px" as="h3" fontWeight={700} textAlign="center">
@@ -20,4 +20,4 @@ export default function EditorialTitle({ children }: EditorialTitleProps) {
       />
     </Box>
   );
-}
+};

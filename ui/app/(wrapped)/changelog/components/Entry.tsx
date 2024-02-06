@@ -24,14 +24,16 @@ const mois = [
   "Nov.",
   "Dec.",
 ];
-function generateDateString(str: string): string {
+const generateDateString = (str: string) => {
   const date = new Date(str);
   const day = date.getDate();
   const month = mois[date.getMonth()];
   const year = date.getFullYear();
 
   return `${day} ${month} ${year}`;
-}
+};
+
+export const Entry = ({ changelogEntry }: EntryProps) => {
   entry++;
   return (
     <Grid width="100%" templateColumns="20% 1fr">
@@ -64,7 +66,10 @@ function generateDateString(str: string): string {
               </Tag>
             ))}
             <Text color={themeDefinition.colors.grey["425_hover"]}>
-              {changelogEntry.date.value}
+              {changelogEntry.date.type === "string" &&
+                changelogEntry.date.value}
+              {changelogEntry.date.type === "date" &&
+                generateDateString(changelogEntry.date.value)}
             </Text>
           </HStack>
           <Text fontSize="16px" fontWeight={400}>
@@ -74,4 +79,4 @@ function generateDateString(str: string): string {
       </GridItem>
     </Grid>
   );
-}
+};

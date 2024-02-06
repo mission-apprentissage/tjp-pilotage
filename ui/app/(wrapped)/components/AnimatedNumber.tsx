@@ -16,7 +16,7 @@ interface AnimatedNumberProps {
  * @param number Any number you want to format with a space each 3 digits.
  * @returns Number formatted with a space every 3 digits.
  */
-function formatNumber(number: number) {
+const formatNumber = (number: number) => {
   const numberText = "" + number;
   return numberText
     .split("")
@@ -25,16 +25,16 @@ function formatNumber(number: number) {
         (numberText.length - i) % 3 === 0 && i != 0 ? p + " " + c : p + c,
       ""
     );
-}
+};
 
-export default function AnimatedNumber({
+export const AnimatedNumber = ({
   subtitle,
   from,
   to,
   animateOnViewportEnter,
   duration = 2000,
   NumberLabel,
-}: AnimatedNumberProps) {
+}: AnimatedNumberProps) => {
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref);
   const animationFrame = useRef<number | null>(null);
@@ -94,4 +94,4 @@ export default function AnimatedNumber({
       <Text fontSize="14px">{subtitle}</Text>
     </VStack>
   );
-}
+};

@@ -20,7 +20,7 @@ interface LinkWithIconProps {
   href: string;
 }
 
-function LinkWithIcon({ children, href }: LinkWithIconProps) {
+const LinkWithIcon = ({ children, href }: LinkWithIconProps) => {
   return (
     <Link as={NextLink} href={href}>
       <HStack as="span" spacing="2px" display="inline-flex">
@@ -29,9 +29,9 @@ function LinkWithIcon({ children, href }: LinkWithIconProps) {
       </HStack>
     </Link>
   );
-}
+};
 
-export default function LandingFooter() {
+export const LandingFooter = () => {
   return (
     <VStack
       borderTop="1px"
@@ -142,4 +142,4 @@ export default function LandingFooter() {
       </Stack>
     </VStack>
   );
-}
+};

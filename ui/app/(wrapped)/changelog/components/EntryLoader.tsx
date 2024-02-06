@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 
 // This is to ensure each react list element has a unique ID
-export default function EntryLoader() {
+export const EntryLoader = () => {
   return (
     <Grid width="100%" templateColumns="20% 1fr">
       <GridItem>
@@ -24,4 +24,4 @@ export default function EntryLoader() {
       </GridItem>
     </Grid>
   );
-}
+};

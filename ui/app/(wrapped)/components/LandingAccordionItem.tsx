@@ -10,15 +10,15 @@ import { Icon } from "@iconify/react";
 
 import { themeDefinition } from "../../../theme/theme";
 
-interface CustomAccordionItemProps {
+interface LandingAccordionItemProps {
   children: React.ReactNode;
   label: string;
 }
 
-export default function CustomAccordionItem({
+export const LandingAccordionItem = ({
   label,
   children,
-}: CustomAccordionItemProps) {
+}: LandingAccordionItemProps) => {
   return (
     <AccordionItem
       border="1px"
@@ -54,4 +54,4 @@ export default function CustomAccordionItem({
       )}
     </AccordionItem>
   );
-}
+};

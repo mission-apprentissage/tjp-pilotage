@@ -11,7 +11,7 @@ interface HeroProps {
 const blue = "250,251,255";
 const white = "255,255,255";
 
-export default function Hero({ children, variant = "blue" }: HeroProps) {
+export const Hero = ({ children, variant = "blue" }: HeroProps) => {
   const maskStyle = useBreakpointValue<CSSProperties>({
     base: {
       mask: `url(/pattern.svg)`,
@@ -66,4 +66,4 @@ export default function Hero({ children, variant = "blue" }: HeroProps) {
       </Box>
     </Box>
   );
-}
+};

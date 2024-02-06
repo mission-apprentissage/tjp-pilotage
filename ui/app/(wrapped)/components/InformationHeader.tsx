@@ -7,7 +7,7 @@ import { useChangelog } from "../changelog/useChangelog";
 
 const LOCAL_STORAGE_KEY = "closedChangelogEntries";
 
-export default function InformationHeader() {
+export const InformationHeader = () => {
   const [closedEntries, setClosedEntries] = useState<Array<string>>(
     JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]")
   );
@@ -98,4 +98,4 @@ export default function InformationHeader() {
       ))}
     </VStack>
   );
-}
+};
