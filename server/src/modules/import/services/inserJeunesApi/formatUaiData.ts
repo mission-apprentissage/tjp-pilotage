@@ -1,5 +1,5 @@
 export type R = {
-  meftstats: Record<
+  mefstats: Record<
     string,
     {
       nb_annee_term: number;
@@ -45,10 +45,10 @@ export const formatUaiData = (rawData: any): R => {
       if (mefstat11) {
         return {
           ...acc,
-          meftstats: {
-            ...acc.meftstats,
+          mefstats: {
+            ...acc.mefstats,
             [mefstat11]: {
-              ...acc.meftstats[mefstat11],
+              ...acc.mefstats[mefstat11],
               [cur.id_mesure]: cur.valeur_mesure,
             },
           },
@@ -56,6 +56,6 @@ export const formatUaiData = (rawData: any): R => {
       }
       return acc;
     },
-    { meftstats: {} } as R
+    { mefstats: {} } as R
   );
 };

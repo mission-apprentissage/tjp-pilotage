@@ -25,6 +25,12 @@ instance.interceptors.response.use(undefined, async (err) => {
   const { config, response } = err;
 
   if (config.retried || ![500, 401, undefined].includes(response?.status)) {
+    if (
+      response?.status === 400 &&
+      response?.data?.msg === "UAI incorrect ou agricole"
+    ) {
+      console.log("[ERROR] UAI incorrect ou agricole :", config.url);
+    }
     return Promise.reject(err);
   }
 
