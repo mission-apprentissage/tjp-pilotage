@@ -17,3 +17,17 @@ export const cacheIjReg = async ({
     })
     .execute();
 };
+
+export const clearIjRegCache = async ({
+  codeRegion,
+  millesime,
+}: {
+  codeRegion: string;
+  millesime: string;
+}) => {
+  await kdb
+    .deleteFrom("rawData")
+    .where("type", "=", "ij_reg")
+    .where("data", "@>", { codeRegion, millesime })
+    .execute();
+};

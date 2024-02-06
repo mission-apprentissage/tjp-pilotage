@@ -32,7 +32,7 @@ export const [importFormations] = inject(
   (deps) => {
     return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
       logger.reset();
-      if (fetchIj) await deps.fetchIjReg();
+      // if (fetchIj) await deps.fetchIjReg();
 
       await streamIt(
         (count) =>
