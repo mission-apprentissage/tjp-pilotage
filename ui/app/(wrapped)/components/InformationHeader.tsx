@@ -10,7 +10,11 @@ const LOCAL_STORAGE_KEY = "closedChangelogEntries";
 
 export const InformationHeader = () => {
   const [closedEntries, setClosedEntries] = useState<Array<string>>(
-    JSON.parse(localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]")
+    JSON.parse(
+      typeof localStorage !== "undefined"
+        ? localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]"
+        : "[]"
+    )
   );
   const { changelog } = useChangelog();
 
