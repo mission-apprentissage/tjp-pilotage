@@ -1,6 +1,7 @@
 import { kdb } from "../../../db/db";
 import { Attractivite_capacite } from "../fileTypes/Attractivite_capacite";
 import { BTS_Attractivite_capacite } from "../fileTypes/BTS_Attractivite_capacite";
+import { Chomage_departemental_INSEE } from "../fileTypes/Chomage_departemental_INSEE";
 import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
 import { Departements_academies_regions } from "../fileTypes/Departements_academies_regions";
@@ -30,7 +31,8 @@ type LineTypes = {
   BTS_attractivite_capacite: BTS_Attractivite_capacite;
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
-  chomage_regional_INSEE: Chomage_regional_INSEE
+  chomage_regional_INSEE: Chomage_regional_INSEE;
+  chomage_departemental_INSEE: Chomage_departemental_INSEE
 };
 
 const findRawData = async <T extends keyof LineTypes>({
