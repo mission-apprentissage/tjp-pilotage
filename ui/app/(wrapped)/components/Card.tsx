@@ -12,13 +12,7 @@ interface CardProps {
   linkHref: string;
 }
 
-export default function Card({
-  children,
-  icon,
-  link,
-  title,
-  linkHref,
-}: CardProps) {
+export const Card = ({ children, icon, link, title, linkHref }: CardProps) => {
   return (
     <VStack spacing="8px" alignItems="start" maxWidth="400px" padding="24px">
       <Box
@@ -48,4 +42,4 @@ export default function Card({
       </Link>
     </VStack>
   );
-}
+};

@@ -18,12 +18,12 @@ import { Icon } from "@iconify/react";
 
 import { themeDefinition } from "../../theme/theme";
 import { useAuth } from "../../utils/security/useAuth";
-import AnimatedNumber from "./components/AnimatedNumber";
-import Card from "./components/Card";
-import EditorialTitle from "./components/EditorialTitle";
-import Hero from "./components/Hero";
-import LandingAccordionItem from "./components/LandingAccordionItem";
-import LandingFooter from "./components/LandingFooter";
+import { AnimatedNumber } from "./components/AnimatedNumber";
+import { Card } from "./components/Card";
+import { EditorialTitle } from "./components/EditorialTitle";
+import { Hero } from "./components/Hero";
+import { LandingAccordionItem } from "./components/LandingAccordionItem";
+import { LandingFooter } from "./components/LandingFooter";
 
 export default function Home() {
   const nombreEtablissements = 2958;

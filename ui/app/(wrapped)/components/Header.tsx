@@ -24,7 +24,7 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
-import InformationHeader from "./InformationHeader";
+import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = () => {

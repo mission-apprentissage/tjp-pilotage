@@ -2,10 +2,10 @@
 
 import { Container, Text, VStack } from "@chakra-ui/react";
 
-import EditorialTitle from "../components/EditorialTitle";
-import LandingFooter from "../components/LandingFooter";
-import Entry from "./components/Entry";
-import EntryLoader from "./components/EntryLoader";
+import { EditorialTitle } from "../components/EditorialTitle";
+import { LandingFooter } from "../components/LandingFooter";
+import { Entry } from "./components/Entry";
+import { EntryLoader } from "./components/EntryLoader";
 import { useChangelog } from "./useChangelog";
 
 export default function Changelog() {
@@ -45,7 +45,7 @@ export default function Changelog() {
                     changelogEntry={changelogEntry}
                   />
                 ))}
-              {updates.length === 0 && !isLoading !== undefined && (
+              {updates.length === 0 && !isLoading && (
                 <Text>Aucune donnée de mise à jour disponible.</Text>
               )}
             </VStack>
@@ -62,7 +62,7 @@ export default function Changelog() {
                     changelogEntry={changelogEntry}
                   />
                 ))}
-              {incoming.length === 0 && !isLoading !== undefined && (
+              {incoming.length === 0 && !isLoading && (
                 <Text>Aucune donnée de mise à jour disponible.</Text>
               )}
             </VStack>
