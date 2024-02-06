@@ -193,6 +193,12 @@ export interface FormationNonMaterializedView {
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
 }
 
+export interface IndicateurDepartement {
+  codeDepartement: string;
+  rentreeScolaire: string;
+  tauxChomage: number | null;
+}
+
 export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
@@ -288,6 +294,7 @@ export interface DB {
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
+  indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurRegion: IndicateurRegion;
