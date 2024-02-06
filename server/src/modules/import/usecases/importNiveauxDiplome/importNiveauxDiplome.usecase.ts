@@ -24,8 +24,7 @@ export const importNiveauxDiplomeFactory =
       async (nNiveauDiplome) => {
         const niveauDiplome = toNiveauDiplome({ nNiveauDiplome });
         await createNiveauDiplome(niveauDiplome);
-      },
-      { parallel: 20 }
+      }
     );
   };
 
