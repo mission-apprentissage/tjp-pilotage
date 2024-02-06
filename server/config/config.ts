@@ -71,4 +71,8 @@ export const config = {
   sql: {
     logLevel: env.get("PILOTAGE_SQL_LOG_LEVEL").asString(),
   },
+  notion: {
+    token: env.get("NOTION_TOKEN").required().asString(),
+    dbChangelogId: env.get("NOTION_DB_CHANGELOG_ID").required().asString(),
+  },
 };
