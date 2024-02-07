@@ -18,9 +18,7 @@ export const format2ndeCommuneLibelle = (
   libelleFormation?: string
 ): ReactNode => (
   <>
-    {libelleFormation?.indexOf(" 2nde commune") != -1
-      ? libelleFormation?.replace(" 2nde commune", "")
-      : libelleFormation}
+    {libelleFormation?.replace(" 2nde commune", "")}
     <Tag colorScheme={"blue"} size={"sm"} ms={2}>
       2nde commune
     </Tag>
@@ -31,9 +29,7 @@ export const format1ereCommuneLibelle = (
   libelleFormation?: string
 ): ReactNode => (
   <>
-    {libelleFormation?.indexOf(" 1ere annee commune") != -1
-      ? libelleFormation?.replace(" 1ere annee commune", "")
-      : libelleFormation}
+    {libelleFormation?.replace(" 1ere annee commune", "")}
     <Tag colorScheme={"blue"} size={"sm"} ms={2}>
       1ère commune
     </Tag>

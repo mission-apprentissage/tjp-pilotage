@@ -381,9 +381,7 @@ export const QuadrantSection = ({
             </Flex>
             <Flex alignItems={"flex-end"} justify="flex-end" gap={2}>
               <Text color="grey" fontSize="sm" textAlign="left">
-                {filteredFormations?.filter((formation) => formation.effectif)
-                  .length ?? "-"}{" "}
-                certifications
+                {filteredFormations?.length ?? "-"} certifications
               </Text>
               <Text ml="2" color="grey" fontSize="sm" textAlign="right">
                 {filteredFormations?.reduce(

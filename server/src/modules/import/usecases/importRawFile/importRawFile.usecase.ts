@@ -23,8 +23,6 @@ export const [importRawFile, importRawFileFactory] = inject(
         fileStream,
         getStreamParser(),
         new Writable({
-          // final: async (callback) => {
-          // await deps.batch.flush();
           final: (callback) => {
             console.log(
               `Import du fichier ${type} réussi (${count} lignes ajoutées)\n`

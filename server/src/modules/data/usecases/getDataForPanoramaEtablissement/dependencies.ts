@@ -161,37 +161,6 @@ const getFormationsEtablissement = async ({
             tauxPoursuite: number;
             tauxDevenirFavorable: number;
           }>()
-          // .having(
-          //   (eb) =>
-          //     withInsertionReg({
-          //       eb,
-          //       millesimeSortie,
-          //       cfdRef: "formationEtablissement.cfd",
-          //       codeDispositifRef: "formationEtablissement.dispositifId",
-          //       codeRegionRef: "etablissement.codeRegion",
-          //     }),
-          //   "is not",
-          //   null
-          // )
-          // .having(
-          //   (eb) =>
-          //     withPoursuiteReg({
-          //       eb,
-          //       millesimeSortie,
-          //       cfdRef: "formationEtablissement.cfd",
-          //       codeDispositifRef: "formationEtablissement.dispositifId",
-          //       codeRegionRef: "etablissement.codeRegion",
-          //     }),
-          //   "is not",
-          //   null
-          // )
-          // .where((eb) =>
-          //   notHistoriqueUnlessCoExistantFormationEtablissement(
-          //     eb,
-          //     rentreeScolaire
-          //   )
-          // )
-          // .where(notAnneeCommuneFormationEtablissement)
           .whereRef("formationEtablissement.UAI", "=", "etablissement.UAI")
           .groupBy([
             "formationView.id",

@@ -71,6 +71,8 @@ export const QuadrantSection = ({
           (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"][number],
           "tauxInsertion" | "tauxPoursuite"
         > =>
+          item.effectif !== undefined &&
+          item.effectif > 0 &&
           item.tauxInsertion !== undefined &&
           item.tauxPoursuite !== undefined &&
           (!codeNiveauDiplome?.length ||
@@ -129,9 +131,7 @@ export const QuadrantSection = ({
           </Flex>
           <Flex alignItems={"flex-end"} justify="flex-end">
             <Text color="grey" fontSize="sm" textAlign="left">
-              {filteredFormations?.filter((formation) => formation.effectif)
-                .length ?? "-"}{" "}
-              certifications
+              {filteredFormations?.length ?? "-"} certifications
             </Text>
             <Text ml="2" color="grey" fontSize="sm" textAlign="right">
               {filteredFormations?.reduce(
