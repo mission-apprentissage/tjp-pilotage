@@ -108,11 +108,9 @@ export const QuadrantSection = ({
                 if (!filteredFormations) return;
                 downloadCsv(
                   "formations_panorama.csv",
-                  filteredFormations
-                    .filter((formation) => formation.effectif)
-                    .map((formation) => ({
-                      ...formation,
-                    })),
+                  filteredFormations.map((formation) => ({
+                    ...formation,
+                  })),
                   {
                     libelleFormation: "Formation",
                     cfd: "CFD",
