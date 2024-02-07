@@ -1,8 +1,8 @@
 import _ from "lodash";
 
-const DEFAULT_BATCH_SIZE = 10000
+const DEFAULT_BATCH_SIZE = 10000;
 
-type CreateFunction<D> = ({ data }: { data: Array<D> }) => unknown
+type CreateFunction<D> = ({ data }: { data: Array<D> }) => unknown;
 
 /**
  * Memory batch factory from a createCallback.
@@ -16,35 +16,35 @@ export default function batchCreate<T>(
   batchSize: number = DEFAULT_BATCH_SIZE,
   allowDuplicates: boolean = false
 ) {
-  const BATCH: T[] = []
+  const BATCH: T[] = [];
 
   async function create({ data }: { data: T }) {
     if (allowDuplicates) {
-      BATCH.push(data)
+      BATCH.push(data);
     } else {
-      const index = BATCH.findIndex(d => _.isEqual(d, data))
+      const index = BATCH.findIndex((d) => _.isEqual(d, data));
       if (index !== -1) {
-        BATCH[index] = data
+        BATCH[index] = data;
       } else {
-        BATCH.push(data)
+        BATCH.push(data);
       }
     }
-  
+
     if (BATCH.length >= batchSize) {
-      await createCallback({ data: BATCH })
-      BATCH.length = 0
+      await createCallback({ data: BATCH });
+      BATCH.length = 0;
     }
   }
 
   async function flush() {
     if (BATCH.length > 0) {
-      await createCallback({ data: BATCH })
-      BATCH.length = 0
+      await createCallback({ data: BATCH });
+      BATCH.length = 0;
     }
   }
 
   return {
     create,
-    flush
-  }
+    flush,
+  };
 }

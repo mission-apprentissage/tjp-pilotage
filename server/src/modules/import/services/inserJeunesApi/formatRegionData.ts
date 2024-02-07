@@ -1,5 +1,5 @@
 export type IjRegionData = {
-  meftstats: Record<
+  mefstats: Record<
     string,
     Record<
       "scolaire" | "apprentissage",
@@ -52,12 +52,12 @@ export const formatRegionData = (rawData: any): IjRegionData => {
         if (mefstat11) {
           return {
             ...acc,
-            meftstats: {
-              ...acc.meftstats,
+            mefstats: {
+              ...acc.mefstats,
               [mefstat11]: {
-                ...acc.meftstats[mefstat11],
+                ...acc.mefstats[mefstat11],
                 [voie]: {
-                  ...acc.meftstats[mefstat11]?.[voie],
+                  ...acc.mefstats[mefstat11]?.[voie],
                   [cur.id_mesure]: cur.valeur_mesure,
                 },
               },
@@ -67,6 +67,6 @@ export const formatRegionData = (rawData: any): IjRegionData => {
       }
       return acc;
     },
-    { meftstats: {} } as IjRegionData
+    { mefstats: {} } as IjRegionData
   );
 };
