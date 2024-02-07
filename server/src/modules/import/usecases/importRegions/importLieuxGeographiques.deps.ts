@@ -9,7 +9,7 @@ const createRegions = async ({ data }: { data: Array<Insertable<DB["region"]>> }
     .values(data)
     .onConflict((oc) => 
       oc.column("codeRegion").doUpdateSet(eb => ({
-        libelleRegion: eb.ref("excluded.codeRegion"),
+        libelleRegion: eb.ref("excluded.libelleRegion"),
         codeRegion: eb.ref("excluded.codeRegion")
       }))
     )
