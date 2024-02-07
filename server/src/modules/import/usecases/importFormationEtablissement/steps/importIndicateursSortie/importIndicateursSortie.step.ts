@@ -26,7 +26,7 @@ export const [importIndicateurSortie] = inject(
       codeDispositif: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
-      const mefData = ijData?.meftstats[mefstat];
+      const mefData = ijData?.mefstats[mefstat];
 
       if (!mefData) {
         const continuumData = await getContinuumData({

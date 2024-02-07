@@ -71,6 +71,8 @@ export const QuadrantSection = ({
           (typeof client.infer)["[GET]/panorama/stats/etablissement/:uai"]["formations"][number],
           "tauxInsertion" | "tauxPoursuite"
         > =>
+          item.effectif !== undefined &&
+          item.effectif > 0 &&
           item.tauxInsertion !== undefined &&
           item.tauxPoursuite !== undefined &&
           (!codeNiveauDiplome?.length ||
