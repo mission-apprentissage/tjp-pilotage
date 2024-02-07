@@ -36,9 +36,19 @@ const generateDateString = (str: string) => {
 export const Entry = ({ changelogEntry }: EntryProps) => {
   entry++;
   return (
-    <Grid width="100%" templateColumns="20% 1fr">
+    <Grid
+      width="100%"
+      templateColumns={{
+        base: "1fr",
+        lg: "20% 1fr",
+      }}
+      templateRows={{
+        base: "auto 1fr",
+        lg: "1fr",
+      }}
+    >
       <GridItem>
-        <HStack alignItems="start">
+        <HStack alignItems="start" paddingBottom="16px" paddingRight="16px">
           <Text paddingRight="6px">🚧</Text>
           <Text as="h2" fontWeight={700} fontSize="16px">
             {changelogEntry.title}
