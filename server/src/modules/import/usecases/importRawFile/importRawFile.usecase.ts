@@ -9,7 +9,7 @@ import { deleteRawData } from "./deleteRawData.dep";
 
 export const [importRawFile, importRawFileFactory] = inject(
   {
-    batch: batchCreate(createRawDatas),
+    batch: batchCreate(createRawDatas, 10000, true),
     deleteRawData
   },
   (deps) =>

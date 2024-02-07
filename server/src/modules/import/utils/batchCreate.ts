@@ -1,6 +1,6 @@
 import _ from "lodash";
 
-const DEFAULT_BATCH_SIZE = 1000
+const DEFAULT_BATCH_SIZE = 10000
 
 type CreateFunction<D> = ({ data }: { data: Array<D> }) => unknown
 
@@ -19,13 +19,15 @@ export default function batchCreate<T>(
   const BATCH: T[] = []
 
   async function create({ data }: { data: T }) {
-    if (!allowDuplicates) {
+    if (allowDuplicates) {
+      BATCH.push(data)
+    } else {
       const index = BATCH.findIndex(d => _.isEqual(d, data))
       if (index !== -1) {
         BATCH[index] = data
+      } else {
+        BATCH.push(data)
       }
-    } else {
-      BATCH.push(data)
     }
   
     if (BATCH.length >= batchSize) {
@@ -35,7 +37,7 @@ export default function batchCreate<T>(
   }
 
   async function flush() {
-    if (BATCH.length) {
+    if (BATCH.length > 0) {
       await createCallback({ data: BATCH })
       BATCH.length = 0
     }
