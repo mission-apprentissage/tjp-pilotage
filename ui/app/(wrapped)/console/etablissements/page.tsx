@@ -170,7 +170,7 @@ export default function Etablissements() {
         withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
-    { keepPreviousData: true, staleTime: 10000000 }
+    { keepPreviousData: false }
   );
 
   const trackEvent = usePlausible();
