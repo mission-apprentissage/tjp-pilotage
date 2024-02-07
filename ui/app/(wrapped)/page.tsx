@@ -26,10 +26,10 @@ import { LandingAccordionItem } from "./components/LandingAccordionItem";
 import { LandingFooter } from "./components/LandingFooter";
 
 export default function Home() {
-  const nombreEtablissements = 2958;
-  const nombreEleves = 627100;
-  const tauxDInsertion = 37;
-  const nombrePlacesDeFormation = 6000;
+  const nombreEtablissements = 2966;
+  const nombreEleves = 802987;
+  const tauxDInsertion = 42;
+  const nombrePlacesDeFormation = 3670;
 
   const { auth } = useAuth();
 

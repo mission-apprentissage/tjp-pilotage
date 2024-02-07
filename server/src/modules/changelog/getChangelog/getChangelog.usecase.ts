@@ -154,7 +154,7 @@ export const getChangelogFactory =
     database.results?.forEach((result) => {
       const entry: Partial<ChangelogEntry> = {}
 
-      entry.title = result.properties["Mise à jour"].title?.[0].plain_text ?? ""
+      entry.title = result.properties["Mise à jour"].title?.[0]?.plain_text ?? ""
       
       if (!entry.title) {
         return;
