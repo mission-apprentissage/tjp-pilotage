@@ -15,7 +15,7 @@ import { tooltipTheme } from "@/theme/Tooltip.theme";
 
 import { buttonTheme } from "./Button.theme";
 
-export const theme = extendBaseTheme(chakraTheme, {
+export const themeDefinition = {
   styles: {
     global: {
       "html, body": {
@@ -31,7 +31,8 @@ export const theme = extendBaseTheme(chakraTheme, {
       525: "#0078f3",
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
-      950: "E8EDFF",
+      "text": "#0063CB",
+      950: "#E8EDFF",
       "950_hover": "#c2d1ff",
       "950_active": "#a9bfff",
     },
@@ -137,6 +138,7 @@ export const theme = extendBaseTheme(chakraTheme, {
     },
     orange: {
       draft: "#FEEBCA",
+      dark: "#716043",
       warning: "#FF6F4C",
     },
     green: {
@@ -168,4 +170,6 @@ export const theme = extendBaseTheme(chakraTheme, {
     Tag: tagTheme,
     Checkbox: checkboxTheme,
   },
-});
+}
+
+export const theme = extendBaseTheme(chakraTheme, themeDefinition);

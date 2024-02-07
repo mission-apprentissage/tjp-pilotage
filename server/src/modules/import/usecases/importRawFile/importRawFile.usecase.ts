@@ -2,12 +2,16 @@ import { inject } from "injecti";
 import { Readable, Writable } from "stream";
 import { pipeline } from "stream/promises";
 
+import batchCreate from "../../utils/batchCreate";
 import { getStreamParser } from "../../utils/parse";
 import { createRawDatas } from "./createRawDatas.dep";
 import { deleteRawData } from "./deleteRawData.dep";
 
 export const [importRawFile, importRawFileFactory] = inject(
-  { createRawDatas, deleteRawData },
+  {
+    batch: batchCreate(createRawDatas, 10000, true),
+    deleteRawData
+  },
   (deps) =>
     async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
       process.stdout.write(`Import des lignes du fichier ${type}...\n`);
@@ -43,7 +47,8 @@ export const [importRawFile, importRawFileFactory] = inject(
         fileStream,
         getStreamParser(),
         new Writable({
-          final: (callback) => {
+          final: async (callback) => {
+            await deps.batch.flush();
             console.log(
               `Import du fichier ${type} réussi (${count} lignes ajoutées)\n`
             );
@@ -51,7 +56,7 @@ export const [importRawFile, importRawFileFactory] = inject(
           },
           objectMode: true,
           write: async (line, _, callback) => {
-            await deps.createRawDatas({ data: [{ type, data: line }] });
+            await deps.batch.create({ data: { data: line, type } });
             count++;
             process.stdout.write(`Ajout de ${count} lignes\r`);
             callback();

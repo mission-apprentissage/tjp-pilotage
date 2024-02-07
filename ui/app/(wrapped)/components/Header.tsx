@@ -24,6 +24,7 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
+import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
 export const Header = () => {
@@ -36,71 +37,74 @@ export const Header = () => {
     queryClient.clear();
   };
   return (
-    <VStack
-      zIndex={1}
-      spacing="0"
-      divider={
-        <Box
-          width="100%"
-          borderBottom="1px solid"
-          borderBottomColor="grey.900"
-        />
-      }
-      align={"start"}
-      boxShadow="0 2px 3px rgba(0,0,18,0.16)"
-    >
-      <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
-        <HStack as={Link} spacing={10} align="center" href="/">
-          <Img height="70px" src="/logo_gouvernement.svg" />
-          <Heading as={"h1"} size={"md"}>
-            Orion
-            <Box as="span" display={["none", null, "unset"]}>
-              , outil d’aide à la transformation de la carte des formations
-            </Box>
-          </Heading>
-        </HStack>
-        <Box ml="auto">
-          {!auth && (
-            <Button
-              fontWeight="light"
-              as={NextLink}
-              ml="auto"
-              color="bluefrance.113"
-              href="/auth/login"
-              variant="ghost"
-            >
-              <LoginIcon mr="2" />
-              Se connecter
-            </Button>
-          )}
-          {!!auth && (
-            <Menu isLazy autoSelect={false} placement="bottom-end" id={"1"}>
-              <MenuButton
-                ml="auto"
-                as={Button}
+    <>
+      <VStack
+        zIndex={1}
+        spacing="0"
+        divider={
+          <Box
+            width="100%"
+            borderBottom="1px solid"
+            borderBottomColor="grey.900"
+          />
+        }
+        align={"start"}
+        boxShadow="0 2px 3px rgba(0,0,18,0.16)"
+      >
+        <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
+          <HStack as={Link} spacing={10} align="center" href="/">
+            <Img height="70px" src="/logo_gouvernement.svg" />
+            <Heading as={"h1"} size={"md"}>
+              Orion
+              <Box as="span" display={["none", null, "unset"]}>
+                , outil d’aide à la transformation de la carte des formations
+              </Box>
+            </Heading>
+          </HStack>
+          <Box ml="auto">
+            {!auth && (
+              <Button
                 fontWeight="light"
+                as={NextLink}
+                ml="auto"
                 color="bluefrance.113"
+                href="/auth/login"
                 variant="ghost"
               >
-                <Box as="span" display={["none", null, "unset"]}>
-                  Bienvenue,{" "}
-                </Box>
-                {auth.user.email}
-                <ChevronDownIcon ml="2" />
-              </MenuButton>
-              <MenuList>
-                <MenuItem onClick={logout} icon={<LoginIcon />}>
-                  Se déconnecter
-                </MenuItem>
-              </MenuList>
-            </Menu>
-          )}
-        </Box>
-      </Flex>
-      <Container maxWidth={"container.xl"} px={0}>
-        <Nav />
-      </Container>
-    </VStack>
+                <LoginIcon mr="2" />
+                Se connecter
+              </Button>
+            )}
+            {!!auth && (
+              <Menu isLazy autoSelect={false} placement="bottom-end">
+                <MenuButton
+                  ml="auto"
+                  as={Button}
+                  fontWeight="light"
+                  color="bluefrance.113"
+                  variant="ghost"
+                >
+                  <Box as="span" display={["none", null, "unset"]}>
+                    Bienvenue,{" "}
+                  </Box>
+                  {auth.user.email}
+                  <ChevronDownIcon ml="2" />
+                </MenuButton>
+                <MenuList>
+                  <MenuItem onClick={logout} icon={<LoginIcon />}>
+                    Se déconnecter
+                  </MenuItem>
+                </MenuList>
+              </Menu>
+            )}
+          </Box>
+        </Flex>
+        <Container maxWidth={"container.xl"} px={0}>
+          <Nav />
+        </Container>
+      </VStack>
+      <InformationHeader />
+    </>
   );
 };
 
