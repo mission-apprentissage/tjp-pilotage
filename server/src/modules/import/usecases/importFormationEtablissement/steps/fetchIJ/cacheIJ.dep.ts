@@ -14,3 +14,17 @@ export const cacheIj = async ({
     .values({ type: "ij", data: JSON.stringify({ ...data, uai, millesime }) })
     .execute();
 };
+
+export const clearIjCache = async ({
+  uai,
+  millesime,
+}: {
+  uai: string;
+  millesime: string;
+}) => {
+  await kdb
+    .deleteFrom("rawData")
+    .where("type", "=", "ij")
+    .where("data", "@>", { uai, millesime })
+    .execute();
+};

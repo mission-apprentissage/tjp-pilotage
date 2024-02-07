@@ -10,7 +10,7 @@ import { deleteRawData } from "./deleteRawData.dep";
 export const [importRawFile, importRawFileFactory] = inject(
   {
     batch: batchCreate(createRawDatas, 10000, true),
-    deleteRawData
+    deleteRawData,
   },
   (deps) =>
     async ({ fileStream, type }: { fileStream: Readable; type: string }) => {
