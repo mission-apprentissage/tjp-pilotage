@@ -17,6 +17,7 @@ const FormationSchema = z.object({
   CPCSecteur: z.string().optional(),
   CPCSousSecteur: z.string().optional(),
   libelleFiliere: z.string().optional(),
+  typeFamille: z.string().optional(),
   continuum: z
     .object({
       cfd: z.string(),

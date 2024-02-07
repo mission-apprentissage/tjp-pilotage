@@ -27,11 +27,11 @@ export const [importIndicateursRegionSortie] = inject(
     }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of MILLESIMES_IJ_REG) {
-          const data = await deps.findRawData({
+          const ijRegData = await deps.findRawData({
             type: "ij_reg",
             filter: { millesime: millesimeSortie, codeRegion },
           });
-          const mefstatData = data?.meftstats[mefstat];
+          const mefstatData = ijRegData?.mefstats[mefstat];
 
           if (!mefstatData) {
             const continuumData = await getContinuumData({

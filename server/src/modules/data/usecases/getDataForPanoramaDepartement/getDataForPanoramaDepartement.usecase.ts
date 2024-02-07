@@ -7,6 +7,8 @@ export const getDataForPanoramaDepartementFactory =
     deps = {
       getFormationsDepartement: dependencies.getFormationsDepartement,
       getFilters: dependencies.getFilters,
+      getStatsSortie,
+      getPositionQuadrant,
     }
   ) =>
   async (activeFilters: {
@@ -18,13 +20,13 @@ export const getDataForPanoramaDepartementFactory =
     const [formations, filters, statsSortie] = await Promise.all([
       deps.getFormationsDepartement(activeFilters),
       deps.getFilters(activeFilters),
-      getStatsSortie(activeFilters),
+      deps.getStatsSortie(activeFilters),
     ]);
 
     return {
       formations: formations.map((formation) => ({
         ...formation,
-        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+        positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),
       })),
       filters,
     };

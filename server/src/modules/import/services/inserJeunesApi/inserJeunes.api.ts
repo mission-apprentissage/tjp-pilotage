@@ -25,6 +25,8 @@ instance.interceptors.response.use(undefined, async (err) => {
   const { config, response } = err;
 
   if (config.retried || ![500, 401, undefined].includes(response?.status)) {
+    if (response?.status === 400)
+      console.log(`[ERROR] ${response?.data?.msg} : ${config.url}`);
     return Promise.reject(err);
   }
 
