@@ -23,9 +23,29 @@ const fetchAuth = async () => {
   }
 };
 
-export default async ({ children }: { children: React.ReactNode }) => {
-  const auth = await fetchAuth();
-  return (
-    <RootLayoutClient auth={auth || undefined}>{children}</RootLayoutClient>
-  );
+const fetchChangelog = async () => {
+  const headersList = Object.fromEntries(headers().entries());
+  try {
+    return await client
+      .ref("[GET]/changelog")
+      .query({}, { headers: headersList });
+  } catch (e) {
+    return undefined;
+  }
 };
+
+interface LayoutProps {
+  children: React.ReactNode;
+}
+
+async function Layout({ children }: LayoutProps) {
+  const auth = await fetchAuth();
+  const changelog = await fetchChangelog();
+  return (
+    <RootLayoutClient auth={auth || undefined} changelog={changelog || []}>
+      {children}
+    </RootLayoutClient>
+  );
+}
+
+export default Layout;
