@@ -80,8 +80,13 @@ export const [getIndicateursAffelnet] = inject(
         }
       );
 
+      /**
+       * On met ici rawCapacite < 500 puisque parfois, lorsque la capacité n'est pas disponible
+       * elle est renseignée à un nombre arbitraire très élevé (900, 999, 1000, ...) dans le CSV
+       * source.
+       */
       const capacite =
-        rawCapacite && rawCapacite >= 5 && rawCapacite <= 100
+        rawCapacite && rawCapacite >= 5 && rawCapacite <= 500
           ? rawCapacite
           : undefined;
       const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;
