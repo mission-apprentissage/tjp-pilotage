@@ -25,7 +25,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
   const tabIndex = getTabIndex(segment);
   const queryParams = useSearchParams();
   const filters = qs.parse(queryParams.toString())?.["filters"];
-  const keepedFilters = Object.fromEntries(
+  const keptFilters = Object.fromEntries(
     Object.entries(filters ?? {}).filter(([filter]) =>
       ["codeRegion"].includes(filter)
     )
@@ -61,7 +61,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Tab
             as={Link}
             href={createParametrizedUrl("/console/formations", {
-              filters: keepedFilters,
+              filters: keptFilters,
             })}
           >
             Par formation
@@ -69,7 +69,7 @@ export default function Layout({ children }: { children: React.ReactNode }) {
           <Tab
             as={Link}
             href={createParametrizedUrl("/console/etablissements", {
-              filters: keepedFilters,
+              filters: keptFilters,
             })}
           >
             Par établissement
