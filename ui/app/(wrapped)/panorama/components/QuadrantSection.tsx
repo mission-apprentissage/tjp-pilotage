@@ -418,9 +418,7 @@ export const QuadrantSection = ({
                   />
                 ) : (
                   <TableQuadrant
-                    formations={filteredFormations.map((formation) => ({
-                      ...formation,
-                    }))}
+                    formations={filteredFormations}
                     handleClick={setFormationId}
                     currentCfd={currentCfd}
                     order={order}
