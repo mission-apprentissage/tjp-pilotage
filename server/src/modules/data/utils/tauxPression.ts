@@ -3,6 +3,8 @@ import { CURRENT_RENTREE } from "shared";
 
 import { DB } from "../../../db/db";
 
+const CODE_NIVEAU_DIPLOME_DES_BTS: string = "320";
+
 const capaciteAnnee = (
   annee: RawBuilder<unknown>,
   indicateurEntreeAlias: string
@@ -37,9 +39,14 @@ export const selectDenominateurPressionAgg = (
   )`;
 
 export const selectTauxPressionAgg = (
-  indicateurEntreeAlias: string
+  indicateurEntreeAlias: string,
+  codeNiveauDiplomeAlias: string
 ) => sql<number>`
-    CASE WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
+    CASE
+    WHEN ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(
+      CODE_NIVEAU_DIPLOME_DES_BTS
+    )}' THEN NULL
+    WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
     THEN ROUND(
       (
         SUM(${premierVoeuxAnnee(
@@ -65,15 +72,22 @@ export const selectDenominateurPression = (
     END`;
 
 export const selectTauxPression = (
-  indicateurEntreeAlias: string
+  indicateurEntreeAlias: string,
+  codeNiveauDiplomeTableAlias: string
 ) => sql<number>`
-    CASE WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
-    THEN ROUND((
-      ${premierVoeuxAnnee(
-        sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-        indicateurEntreeAlias
-      )}
-    / ${selectDenominateurPression(indicateurEntreeAlias)})::NUMERIC, 2)
+    CASE
+      WHEN ${sql.table(
+        codeNiveauDiplomeTableAlias
+      )}."codeNiveauDiplome" = '${sql.raw(
+        CODE_NIVEAU_DIPLOME_DES_BTS
+      )}' THEN NULL
+      WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
+      THEN ROUND((
+        ${premierVoeuxAnnee(
+          sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+          indicateurEntreeAlias
+        )}
+      / ${selectDenominateurPression(indicateurEntreeAlias)})::NUMERIC, 2)
     END
   `;
 
@@ -137,12 +151,13 @@ export const tauxPressionFormationRegional = ({
     .whereRef("region.codeRegion", "=", "demande.codeRegion")
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
-      selectTauxPressionAgg("indicateurEntree").as("pression"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as("pression"),
       "region.codeRegion",
       "formationView.cfd",
     ])
     .groupBy([
       "formationView.cfd",
+      "formationView.codeNiveauDiplome",
       "formationEtablissement.dispositifId",
       "region.codeRegion",
     ]);
@@ -170,6 +185,7 @@ export const withTauxPressionReg = <
         .on("subIE.rentreeScolaire", "=", CURRENT_RENTREE)
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
     .whereRef("subFE.cfd", "=", cfdRef)
     .whereRef("subFE.dispositifId", "=", codeDispositifRef)
     .whereRef(
@@ -177,6 +193,6 @@ export const withTauxPressionReg = <
       "=",
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
-    .select([selectTauxPressionAgg("subIE").as("s")])
-    .groupBy(["cfd", "dispositifId"]);
+    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
 };

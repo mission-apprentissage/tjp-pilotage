@@ -123,11 +123,16 @@ export const getDepartementStats = async ({
       "departement.libelleDepartement",
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
-
-      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as(
+        "tauxPression"
+      ),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
+    .groupBy([
+      "departement.libelleDepartement",
+      "departement.codeRegion",
+      "formationView.codeNiveauDiplome",
+    ])
     .executeTakeFirst();
 
   return {
