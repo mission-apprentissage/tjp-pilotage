@@ -5,7 +5,7 @@ const OptionSchema = z.object({
   value: z.coerce.string(),
 });
 
-const EtablissementLineSchema = z.object({
+const FormationEtablissementLineSchema = z.object({
   libelleEtablissement: z.string().optional(),
   uai: z.string(),
   rentreeScolaire: z.string().optional(),
@@ -58,7 +58,7 @@ const EtablissementLineSchema = z.object({
   formationRenovee: z.string().optional(),
 });
 
-export const getEtablissementsSchema = {
+export const getFormationEtablissementsSchema = {
   querystring: z.object({
     cfd: z.array(z.string()).optional(),
     codeRegion: z.array(z.string()).optional(),
@@ -77,7 +77,7 @@ export const getEtablissementsSchema = {
     libelleFiliere: z.array(z.string()).optional(),
     withAnneeCommune: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
-    orderBy: EtablissementLineSchema.keyof().optional(),
+    orderBy: FormationEtablissementLineSchema.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
   }),
@@ -99,7 +99,7 @@ export const getEtablissementsSchema = {
         cpcSousSecteurs: z.array(OptionSchema),
         libelleFilieres: z.array(OptionSchema),
       }),
-      etablissements: z.array(EtablissementLineSchema),
+      etablissements: z.array(FormationEtablissementLineSchema),
     }),
   },
 };

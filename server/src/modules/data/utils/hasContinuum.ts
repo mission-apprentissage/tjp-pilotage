@@ -23,8 +23,8 @@ export function hasContinuum<
   return jsonObjectFrom(
     eb
       .selectFrom("indicateurRegionSortie as subIRS")
-      .leftJoin(
-        "formationView as subFormation",
+      .innerJoin(
+        "dataFormation as subFormation",
         "subFormation.cfd",
         "subIRS.cfdContinuum"
       )
