@@ -106,11 +106,12 @@ export const getRegionStats = async ({
       "region.libelleRegion",
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
       `.as("effectif"),
-
-      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as(
+        "tauxPression"
+      ),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy("region.libelleRegion")
+    .groupBy(["region.libelleRegion", "formationView.codeNiveauDiplome"])
     .executeTakeFirst();
 
   return {
