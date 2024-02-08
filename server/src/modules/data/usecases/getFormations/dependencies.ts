@@ -17,6 +17,7 @@ import {
   notPerimetreIJEtablissement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
+import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -195,6 +196,7 @@ const findFormationsInDb = async ({
     ])
     .where(notPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
@@ -339,7 +341,7 @@ const findFiltersInDb = async ({
   cpcSecteur,
   cpcSousSecteur,
   libelleFiliere,
-  rentreeScolaire = ["2022"],
+  rentreeScolaire = [CURRENT_RENTREE],
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -386,6 +388,7 @@ const findFiltersInDb = async ({
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
