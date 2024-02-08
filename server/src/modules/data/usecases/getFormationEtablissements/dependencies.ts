@@ -34,7 +34,7 @@ import {
 import { selectTauxPression } from "../../utils/tauxPression";
 import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
-const findEtablissementsInDb = async ({
+const findFormationEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
   rentreeScolaire = ["2022"],
@@ -154,7 +154,7 @@ const findEtablissementsInDb = async ({
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
       "libelleDispositif",
-      "dispositifId",
+      "dispositifId as codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
@@ -706,6 +706,6 @@ const findFiltersInDb = async ({
 };
 
 export const dependencies = {
-  findEtablissementsInDb,
+  findFormationEtablissementsInDb,
   findFiltersInDb,
 };
