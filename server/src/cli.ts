@@ -12,6 +12,7 @@ import { importConstatRentree } from "./modules/import/usecases/importConstatRen
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
+import { refreshFormationMaterializedView } from "./modules/import/usecases/importDiplomesProfessionnels/refreshFormationView.dep";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -143,7 +144,7 @@ cli
     const actions = {
       regroupements: () => getImport("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
-      ...getImports("BTS_attractivite_capacite", ["2021", "2022", "2023"]),
+      ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
       ...getImports("decrochage_regional", ["2020"]),
       ...getImports("decrochage_academique", ["2020"]),
       ...getImports("constat", [
@@ -185,6 +186,7 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
+      refreshFormationMaterializedView
     };
 
     if (usecaseName) {
