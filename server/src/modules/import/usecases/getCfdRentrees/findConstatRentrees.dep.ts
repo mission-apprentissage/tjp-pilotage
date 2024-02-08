@@ -26,7 +26,7 @@ export const findConstatRentrees = async ({
         join.onRef(
           "dataEtablissement.uai",
           "=",
-          sql`"data"->>'Numéro d''établissement'`
+          sql`"data"->>'UAI'`
         )
       )
       .where("dataEtablissement.codeRegion", "not in", ["00", "99"])
