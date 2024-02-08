@@ -163,7 +163,7 @@ export default function Home() {
         <Box paddingY="64px">
           <VStack spacing="48px">
             <EditorialTitle>
-              La voie professionnelle initiale en 2023
+              La voie professionnelle initiale en chiffres
             </EditorialTitle>
             <Stack
               alignItems="start"
