@@ -12,6 +12,7 @@ import { importConstatRentree } from "./modules/import/usecases/importConstatRen
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
+import { refreshFormationMaterializedView } from "./modules/import/usecases/importDiplomesProfessionnels/refreshFormationView.dep";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -121,7 +122,7 @@ cli
         type: year ? `${type}_${year}` : type,
         fileStream: fs.createReadStream(
           year
-            ? `${basepath}/files/${year}/${type}.csv`
+            ? `${basepath}/files/${year}/${type}_${year}.csv`
             : `${basepath}/files/${type}.csv`,
           "utf8"
         ),
@@ -142,14 +143,15 @@ cli
 
     const actions = {
       regroupements: () => getImport("regroupements"),
-      ...getImports("attractivite_capacite", ["2021", "2022"]),
-      ...getImports("attractivite_capacite_BTS", ["2021", "2022"]),
+      ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
+      ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
       ...getImports("decrochage_regional", ["2020"]),
       ...getImports("decrochage_academique", ["2020"]),
-      ...getImports("Cab-nbre_division_effectifs_par_etab_mefst11", [
+      ...getImports("constat", [
         "2020",
         "2021",
         "2022",
+        "2023"
       ]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
@@ -184,6 +186,7 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
+      refreshFormationMaterializedView
     };
 
     if (usecaseName) {

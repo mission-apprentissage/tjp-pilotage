@@ -20,6 +20,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
+import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
@@ -184,7 +185,9 @@ export default function Formations() {
             limit: 2,
             order: "desc",
             orderBy: "rentreeScolaire",
-            rentreeScolaire: ["2021", "2020"],
+            rentreeScolaire: RENTREES_SCOLAIRES.filter(
+              (rentree) => rentree != CURRENT_RENTREE
+            ),
             withEmptyFormations: false,
           },
         })
@@ -549,7 +552,7 @@ export default function Formations() {
                 <Fragment key={`${line.cfd}_${line.codeDispositif}`}>
                   <Tr h="12">
                     <FormationLineContent
-                      defaultRentreeScolaire="2022"
+                      defaultRentreeScolaire={CURRENT_RENTREE}
                       line={line}
                       expended={
                         historiqueId?.cfd === line.cfd &&
