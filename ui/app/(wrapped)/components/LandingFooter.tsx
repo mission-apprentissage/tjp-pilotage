@@ -127,6 +127,11 @@ export const LandingFooter = () => {
               Journal des mises à jour
             </Link>
           </Box>
+          <Box>
+            <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
+              Nous contacter : orion@inserjeunes.beta.gouv.fr
+            </Link>
+          </Box>
         </HStack>
         <Box width="100%">
           <Text color={themeDefinition.colors.grey[425]} fontSize="12px">
