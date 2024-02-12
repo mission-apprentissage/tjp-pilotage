@@ -16675,7 +16675,6 @@ __metadata:
     nodemailer: ^6.9.4
     nodemailer-html-to-text: ^3.2.0
     notion-to-md: ^3.1.1
-    notion-types: ^6.16.0
     openid-client: ^5.6.1
     pg: ^8.9.0
     qs: ^6.11.1

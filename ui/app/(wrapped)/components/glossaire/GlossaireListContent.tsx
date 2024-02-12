@@ -47,7 +47,7 @@ const useGetGlossaireList = () => {
           entry?.title?.toLowerCase().includes(searchValue.toLowerCase().trim())
       )
     );
-  }, [searchValue]);
+  }, [searchValue, data]);
 
   useEffect(() => {
     setEntries(data ?? []);

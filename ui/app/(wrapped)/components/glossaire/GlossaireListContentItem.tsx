@@ -1,4 +1,4 @@
-import { Badge, Box, Text, useToken } from "@chakra-ui/react";
+import { Badge, Flex, Text, useToken } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
 import { GlossaireIcon } from "./GlossaireIcon";
@@ -43,9 +43,8 @@ export const GlossaireListContentItem = ({
   );
 
   return (
-    <Box
+    <Flex
       key={entry.id}
-      display={"flex"}
       justifyContent={"space-between"}
       alignItems={"center"}
       color={"bluefrance.113"}
@@ -54,11 +53,11 @@ export const GlossaireListContentItem = ({
       width={"100%"}
       onClick={() => selectEntry(entry.id)}
     >
-      <Box display={"flex"}>
+      <Flex>
         <GlossaireIcon icon={entry.icon!} size={"24px"} marginRight={"12px"} />
         <Text fontSize={"lg"}>{highlightText(entry.title, searchValue)}</Text>
-      </Box>
-      <Box display={"flex"}>
+      </Flex>
+      <Flex>
         {entry.indicator?.name && (
           <Badge
             colorScheme={
@@ -84,7 +83,7 @@ export const GlossaireListContentItem = ({
           </Badge>
         )}
         <Icon icon={"ri:arrow-right-s-line"} height={"24px"} />
-      </Box>
-    </Box>
+      </Flex>
+    </Flex>
   );
 };

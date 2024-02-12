@@ -1,6 +1,12 @@
 import { useDisclosure } from "@chakra-ui/hooks";
 import { usePlausible } from "next-plausible";
-import { createContext, useCallback, useContext, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useMemo,
+  useState,
+} from "react";
 
 import {
   GLOSSAIRE_ENTRIES_KEYS,
@@ -43,16 +49,19 @@ export function GlossaireProvider({ children }: { children: React.ReactNode }) {
     [setSelectedEntry, onOpen]
   );
 
+  const value = useMemo(
+    () => ({
+      isOpen,
+      selectedEntry,
+      onOpen: onOpenCallback,
+      onClose: onCloseCallback,
+      setSelectedEntry,
+    }),
+    [isOpen, selectedEntry, onOpenCallback, onCloseCallback, setSelectedEntry]
+  );
+
   return (
-    <GlossaireContext.Provider
-      value={{
-        isOpen,
-        selectedEntry,
-        onOpen: onOpenCallback,
-        onClose: onCloseCallback,
-        setSelectedEntry,
-      }}
-    >
+    <GlossaireContext.Provider value={value}>
       {children}
     </GlossaireContext.Provider>
   );
