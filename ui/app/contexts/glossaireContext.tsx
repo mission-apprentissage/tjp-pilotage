@@ -11,7 +11,7 @@ import {
 import {
   GLOSSAIRE_ENTRIES_KEYS,
   GlossaireEntryKey,
-} from "../(wrapped)/components/glossaire/GlossaireEntries";
+} from "../(wrapped)/glossaire/GlossaireEntries";
 
 type GlossaireContextType = {
   isOpen: boolean;
