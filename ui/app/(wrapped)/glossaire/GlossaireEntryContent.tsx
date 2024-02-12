@@ -18,7 +18,7 @@ import ReactMarkdown, { Components } from "react-markdown";
 
 import { client } from "@/api.client";
 
-import { useGlossaireContext } from "../../../contexts/glossaireContext";
+import { useGlossaireContext } from "../../contexts/glossaireContext";
 import { GlossaireIcon } from "./GlossaireIcon";
 
 const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;

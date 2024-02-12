@@ -28,9 +28,7 @@ export const getGlossaireFactory =
       database.results as PageObjectResponse[]
     );
 
-    return entries.sort((a, b) =>
-      (a?.title ?? "").localeCompare(b?.title ?? "")
-    );
+    return entries.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
   };
 
 export const getGlossaire = getGlossaireFactory();
