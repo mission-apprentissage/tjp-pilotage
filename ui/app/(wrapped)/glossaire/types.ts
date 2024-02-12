@@ -1,4 +1,4 @@
-import { client } from "../../../../api.client";
+import { client } from "../../../api.client";
 
 export type GlossaireEntryWithKey =
   (typeof client.infer)["[GET]/glossaire"][0] & {

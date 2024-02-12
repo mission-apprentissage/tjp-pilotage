@@ -4,4 +4,5 @@ export const PROPERTIES = {
   SLUG: "Slug",
   ICONE: "Icone",
   STATUT: "statut",
+  ORDRE: "Ordre",
 };
