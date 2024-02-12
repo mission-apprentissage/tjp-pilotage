@@ -11,6 +11,7 @@ export const entrySchema = z.object({
   indicator: entryIndicatorSchema.optional(),
   status: z.string().optional(),
   icon: z.string().optional(),
+  order: z.number().optional(),
 });
 
 export type GlossaireEntryIndicator = z.infer<typeof entryIndicatorSchema>;

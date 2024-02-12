@@ -10,9 +10,9 @@ import {
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
-import { DoubleArrowLeft } from "../../../../components/icons/DoubleArrowLeft";
-import { DoubleArrowRight } from "../../../../components/icons/DoubleArrowRight";
-import { useGlossaireContext } from "../../../contexts/glossaireContext";
+import { DoubleArrowLeft } from "../../../components/icons/DoubleArrowLeft";
+import { DoubleArrowRight } from "../../../components/icons/DoubleArrowRight";
+import { useGlossaireContext } from "../../contexts/glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
 
@@ -37,6 +37,7 @@ export const Glossaire = () => {
         leftIcon={<DoubleArrowLeft height={24} width={24} />}
         onClick={() => onOpen()}
         color="bluefrance.113"
+        fontSize={"medium"}
       >
         Glossaire
       </Button>

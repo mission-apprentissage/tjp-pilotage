@@ -13,7 +13,7 @@ import {
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
-import { client } from "../../../../api.client";
+import { client } from "../../../api.client";
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
 import { GlossaireEntry } from "./types";
 

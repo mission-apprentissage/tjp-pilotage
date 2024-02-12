@@ -89,6 +89,11 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
               color: "orange",
             },
           },
+          [PROPERTIES.ORDRE]: {
+            id: "%5CYjf",
+            type: "number",
+            number: 10,
+          },
           [PROPERTIES.TITRE]: {
             id: "title",
             type: "title",
@@ -154,6 +159,11 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
               color: "purple",
             },
           },
+          [PROPERTIES.ORDRE]: {
+            id: "%5CYjf",
+            type: "number",
+            number: 2,
+          },
           [PROPERTIES.TITRE]: {
             id: "title",
             type: "title",
@@ -192,6 +202,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         indicator: undefined,
         icon: "❓",
         status: "à ajouter ?",
+        order: 2,
       },
       {
         id: "id-page-1",
@@ -202,6 +213,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         icon: "url-to-icon",
         status: "à valider",
+        order: 10,
       },
     ]);
   });
