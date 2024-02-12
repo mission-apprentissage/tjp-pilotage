@@ -27,7 +27,12 @@ export const [importDiplomesProfessionnels] = inject(
       (count) => deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
       async (diplomeProfessionnel, count) => {
         const cfd = formatCFD(diplomeProfessionnel);
-        if (!cfd) return;
+
+        if (!cfd) {
+          console.log("\n--\nIl manque le CFD pour ce diplome professionnel : ", JSON.stringify(diplomeProfessionnel),"\n--\n")
+          return;
+        }
+
         try {
           await deps.createDiplomeProfessionnel({
             cfd,
@@ -45,8 +50,6 @@ export const [importDiplomesProfessionnels] = inject(
       process.stdout.write(
         `${errorCount > 0 ? `\n(avec ${errorCount} erreurs)` : ""}\n\n`
       );
-      refreshFormationMaterializedView();
-      console.log(`\rformationView refreshed`);
     });
   }
 );
