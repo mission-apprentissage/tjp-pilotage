@@ -4,19 +4,20 @@ import { ReactNode } from "react";
 export const formatAnneeCommuneLibelle = (formation: {
   libelleFormation?: string;
   typeFamille?: string;
-}) => (
-  <>
-    {formation.typeFamille === "2nde_commune"
-      ? format2ndeCommuneLibelle(formation.libelleFormation)
-      : formation.typeFamille === "1ere_commune"
-      ? format1ereCommuneLibelle(formation.libelleFormation)
-      : formation.typeFamille === "specialite"
-      ? formatSpecialiteLibelle(formation.libelleFormation)
-      : formation.typeFamille === "option"
-      ? formatOptionLibelle(formation.libelleFormation)
-      : formation.libelleFormation ?? "-"}
-  </>
-);
+}) => {
+  switch (formation.typeFamille) {
+    case "2nde_commune":
+      return format2ndeCommuneLibelle(formation.libelleFormation);
+    case "1ere_commune":
+      return format1ereCommuneLibelle(formation.libelleFormation);
+    case "specialite":
+      return formatSpecialiteLibelle(formation.libelleFormation);
+    case "option":
+      return formatOptionLibelle(formation.libelleFormation);
+    default:
+      return formation.libelleFormation ?? "-";
+  }
+};
 
 export const format2ndeCommuneLibelle = (
   libelleFormation?: string
