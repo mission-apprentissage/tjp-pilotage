@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
-import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
   notAnneeCommune,
@@ -18,7 +18,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 export const getRegionStats = async ({
   codeRegion,
   codeNiveauDiplome,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
   millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion: string;

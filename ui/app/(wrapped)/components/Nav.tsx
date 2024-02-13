@@ -19,6 +19,8 @@ import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
+import { Glossaire } from "../glossaire/Glossaire";
+
 const NavLink = chakra(
   ({
     children,
@@ -135,7 +137,7 @@ export const Nav = () => {
   const { uaiFilter } = useContext(UaiFilterContext);
 
   return (
-    <Flex align="center" flexWrap="wrap">
+    <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
@@ -207,6 +209,7 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
+      <Glossaire />
     </Flex>
   );
 };
