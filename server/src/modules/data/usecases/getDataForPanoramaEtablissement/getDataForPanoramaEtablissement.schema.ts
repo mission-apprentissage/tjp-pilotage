@@ -21,7 +21,7 @@ const FormationSchema = z.object({
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
 });
