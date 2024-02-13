@@ -13,13 +13,14 @@ import {
 import { Fragment } from "react";
 
 import { OrderIcon } from "../../../../components/OrderIcon";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
   libelleRegion: "Région",
   tauxInsertion: "Emploi",
   tauxPoursuite: "Poursuite",
-  tauxTransformation: "Transformation",
+  tauxChomage: "Taux de chômage",
 };
 
 const Loader = () => (
@@ -99,6 +100,16 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
+                    onClick={() => handleOrder("poursuite")}
+                  >
+                    <OrderIcon {...order} column="poursuite" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
+                  </Th>
+                  <Th
+                    isNumeric
+                    cursor="pointer"
+                    pb="4"
+                    width="20%"
                     onClick={() => handleOrder("insertion")}
                   >
                     <OrderIcon {...order} column="insertion" />
@@ -109,10 +120,11 @@ export const VueRegionAcademieSection = ({
                     cursor="pointer"
                     pb="4"
                     width="20%"
-                    onClick={() => handleOrder("poursuite")}
+                    onClick={() => handleOrder("tauxChomage")}
                   >
-                    <OrderIcon {...order} column="poursuite" />
-                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxPoursuite}
+                    <OrderIcon {...order} column="tauxChomage" />
+                    {PILOTAGE_REFORME_STATS_REGIONS_COLUMNS.tauxChomage}
+                    <TooltipIcon ml="1" label="T4 2022" />
                   </Th>
                 </Tr>
               </Thead>
@@ -150,10 +162,13 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
+                            {Math.round((region.poursuite ?? 0) * 100)} %
+                          </Td>
+                          <Td isNumeric backgroundColor={tdBgColor}>
                             {Math.round((region.insertion ?? 0) * 100)} %
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {Math.round((region.poursuite ?? 0) * 100)} %
+                            {region.tauxChomage ?? "-"} %
                           </Td>
                         </Tr>
                       </Fragment>

@@ -7,6 +7,7 @@ const OptionSchema = z.object({
 const StatsRegionLineSchema = z.object({
   codeRegion: z.string(),
   libelleRegion: z.string().optional(),
+  tauxChomage: z.number().optional(),
   poursuite: z.coerce.number().optional(),
   insertion: z.coerce.number().optional(),
 });
