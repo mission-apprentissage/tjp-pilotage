@@ -1,10 +1,10 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { CURRENT_IJ_MILLESIME } from "../../../import/domain/CURRENT_IJ_MILLESIME";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -145,9 +145,9 @@ const findRestitutionIntentionsStatsInDB = async ({
       ),
       selectTauxPressionParFormationEtParRegionDemande({
         eb,
-        rentreeScolaire: "2022",
+        rentreeScolaire: CURRENT_RENTREE,
       }).as("pression"),
-      nbEtablissementFormationRegion({ eb, rentreeScolaire: "2022" }).as(
+      nbEtablissementFormationRegion({ eb, rentreeScolaire: CURRENT_RENTREE }).as(
         "nbEtablissement"
       ),
     ])

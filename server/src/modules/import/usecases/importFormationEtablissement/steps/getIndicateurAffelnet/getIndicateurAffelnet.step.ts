@@ -30,8 +30,8 @@ const findAttractiviteCapaciteHorsBTS = async ({
     filter: {
       "MEF STAT 11": mefstat,
       "Etablissement d'accueil": uai,
-      "Statut  Offre de formation": "ST",
-      "Voeu de recensement  O/N": "N",
+      "Statut Offre de formation": "ST",
+      "Voeu de recensement O/N": "N",
     },
   });
 };
@@ -58,29 +58,35 @@ export const [getIndicateursAffelnet] = inject(
         uai,
         rentreeScolaire,
       });
+
       if (lines.length === 0) {
         return { capacites: [], premiersVoeux: [] };
       }
 
       const {
-        "Capacité  carte scolaire": rawCapacite,
+        "Capacité carte scolaire": rawCapacite,
         "Demandes vœux 1": rawPremierVoeux,
       } = lines.reduce(
         (sum, line) => {
-          sum["Capacité  carte scolaire"] += parseInt(
-            line["Capacité  carte scolaire"]
+          sum["Capacité carte scolaire"] += parseInt(
+            line["Capacité carte scolaire"]
           );
           sum["Demandes vœux 1"] += parseInt(line["Demandes vœux 1"]);
           return sum;
         },
         {
-          "Capacité  carte scolaire": 0,
+          "Capacité carte scolaire": 0,
           "Demandes vœux 1": 0,
         }
       );
 
+      /**
+       * On met ici rawCapacite < 500 puisque parfois, lorsque la capacité n'est pas disponible
+       * elle est renseignée à un nombre arbitraire très élevé (900, 999, 1000, ...) dans le CSV
+       * source.
+       */
       const capacite =
-        rawCapacite && rawCapacite >= 5 && rawCapacite <= 100
+        rawCapacite && rawCapacite >= 5 && rawCapacite <= 500
           ? rawCapacite
           : undefined;
       const premiersVoeux = rawPremierVoeux ? rawPremierVoeux : undefined;

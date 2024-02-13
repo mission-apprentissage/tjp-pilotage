@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -18,7 +19,7 @@ const getStatsRegions = async ({
   codeNiveauDiplome?: string[];
   orderBy?: { order: "asc" | "desc"; column: string };
 }) => {
-  const rentreeScolaire = "2022";
+  const rentreeScolaire = CURRENT_RENTREE;
 
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
