@@ -64,22 +64,17 @@ export const EtablissementSection = ({
                   ? `${getSign(etablissement.valeurAjoutee)}${
                       etablissement.valeurAjoutee
                     }`
-                  : undefined
+                  : "-"
               }
               isValeurAjoutee
             />
             <StatCard
               label="Nombre de formations"
-              value={etablissement?.formations.length ?? "-"}
+              value={etablissement?.nbFormations ?? "-"}
             />
             <StatCard
               label="Effectif d'entrée"
-              value={
-                etablissement?.formations.reduce(
-                  (acc, cur) => acc + (cur.effectif ?? 0),
-                  0
-                ) ?? "-"
-              }
+              value={etablissement?.effectif ?? "-"}
             />
           </SimpleGrid>
         </Box>

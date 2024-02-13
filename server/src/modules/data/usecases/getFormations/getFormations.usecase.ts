@@ -1,3 +1,4 @@
+import { getFormationsRenoveesRentreeScolaire } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
@@ -7,6 +8,8 @@ const getFormationsFactory =
     deps = {
       findFormationsInDb: dependencies.findFormationsInDb,
       findFiltersInDb: dependencies.findFiltersInDb,
+      getStatsSortieParNiveauDiplome,
+      getFormationsRenoveesRentreeScolaire,
     }
   ) =>
   async (activeFilters: {
@@ -30,10 +33,16 @@ const getFormationsFactory =
     withAnneeCommune?: string;
     positionQuadrant?: string;
   }) => {
-    const [{ formations, count }, filters, statsSortie] = await Promise.all([
+    const [
+      { formations, count },
+      filters,
+      statsSortie,
+      formationsRenoveesEnseignees,
+    ] = await Promise.all([
       deps.findFormationsInDb(activeFilters),
       deps.findFiltersInDb(activeFilters),
-      getStatsSortieParNiveauDiplome(activeFilters),
+      deps.getStatsSortieParNiveauDiplome(activeFilters),
+      deps.getFormationsRenoveesRentreeScolaire(activeFilters),
     ]);
 
     return {
@@ -41,6 +50,11 @@ const getFormationsFactory =
       filters,
       formations: formations.map((formation) => ({
         ...formation,
+        formationRenovee: formationsRenoveesEnseignees.includes(
+          formation.formationRenovee ?? ""
+        )
+          ? formation.formationRenovee
+          : undefined,
         positionQuadrant: getPositionQuadrant(
           formation,
           statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}

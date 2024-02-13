@@ -12,9 +12,11 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, useContext } from "react";
 import { hasPermission } from "shared";
 
+import { UaiFilterContext } from "@/app/layoutClient";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
 import { Glossaire } from "../glossaire/Glossaire";
@@ -132,6 +134,7 @@ const NavMenuButton = chakra(
 
 export const Nav = () => {
   const { auth } = useAuth();
+  const { uaiFilter } = useContext(UaiFilterContext);
 
   return (
     <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
@@ -141,7 +144,19 @@ export const Nav = () => {
       <NavLink mr="4" href="/panorama" segment="panorama">
         Panorama
       </NavLink>
-      <NavLink mr="4" href="/console/formations" segment="console">
+      <NavLink
+        mr="4"
+        href={
+          uaiFilter
+            ? createParametrizedUrl("/console/etablissements", {
+                filters: {
+                  uai: [uaiFilter],
+                },
+              })
+            : "/console/formations"
+        }
+        segment="console"
+      >
         Console
       </NavLink>
       {hasPermission(auth?.user.role, "intentions/lecture") && (

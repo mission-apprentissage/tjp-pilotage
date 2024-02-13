@@ -1,19 +1,23 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
-import { getEtablissementsSchema } from "./getEtablissements.schema";
-import { getEtablissements } from "./getEtablissements.usecase";
+import { getFormationEtablissementsSchema } from "./getFormationEtablissements.schema";
+import { getFormationEtablissements } from "./getFormationEtablissements.usecase";
 
-export const getEtablissementsRoutes = ({ server }: { server: Server }) => {
+export const getFormationEtablissementsRoutes = ({
+  server,
+}: {
+  server: Server;
+}) => {
   return createRoute("/etablissements", {
     method: "GET",
-    schema: getEtablissementsSchema,
+    schema: getFormationEtablissementsSchema,
   }).handle((props) => {
     server.route({
       ...props,
       handler: async (request, response) => {
         const { order, orderBy, ...filters } = request.query;
-        const etablissements = await getEtablissements({
+        const etablissements = await getFormationEtablissements({
           ...filters,
           orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
