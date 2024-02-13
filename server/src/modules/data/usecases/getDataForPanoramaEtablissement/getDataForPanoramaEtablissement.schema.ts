@@ -21,7 +21,7 @@ const FormationSchema = z.object({
   continuum: z
     .object({
       cfd: z.string(),
-      libelle: z.string().optional(),
+      libelleFormation: z.string().optional(),
     })
     .optional(),
 });
@@ -40,6 +40,8 @@ export const getEtablissementSchema = {
       rentreeScolaire: z.string(),
       libelleEtablissement: z.string().optional(),
       valeurAjoutee: z.coerce.number().optional(),
+      nbFormations: z.coerce.number().optional(),
+      effectif: z.coerce.number().optional(),
       codeRegion: z.string().optional(),
       libelleRegion: z.string().optional(),
       formations: z.array(FormationSchema),

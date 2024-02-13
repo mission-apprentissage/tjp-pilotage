@@ -1,4 +1,3 @@
-import { cleanNull } from "../../../../utils/noNull";
 import { getStatsSortieParRegions } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
@@ -7,6 +6,7 @@ export const getDataForPanoramaEtablissementFactory =
   (
     deps = {
       getFormationsEtablissement: dependencies.getFormationsEtablissement,
+      getStatsEtablissement: dependencies.getStatsEtablissement,
       getStatsSortieParRegions: getStatsSortieParRegions,
       getPositionQuadrant,
     }
@@ -15,24 +15,23 @@ export const getDataForPanoramaEtablissementFactory =
     uai: string;
     orderBy?: { column: string; order: "asc" | "desc" };
   }) => {
-    const [etablissement, statsSortie] = await Promise.all([
-      deps.getFormationsEtablissement(activeFilters),
-      deps.getStatsSortieParRegions({}),
-    ]);
+    const [formationsEtablissement, statsEtablissement, statsSortie] =
+      await Promise.all([
+        deps.getFormationsEtablissement(activeFilters),
+        deps.getStatsEtablissement(activeFilters),
+        deps.getStatsSortieParRegions({}),
+      ]);
 
-    return (
-      etablissement &&
-      cleanNull({
-        ...etablissement,
-        formations: etablissement?.formations?.map((formation) => ({
-          ...formation,
-          positionQuadrant: deps.getPositionQuadrant(
-            formation,
-            statsSortie[etablissement.codeRegion ?? ""] || {}
-          ),
-        })),
-      })
-    );
+    return {
+      ...statsEtablissement,
+      formations: formationsEtablissement?.map((formation) => ({
+        ...formation,
+        positionQuadrant: deps.getPositionQuadrant(
+          formation,
+          statsSortie[statsEtablissement.codeRegion ?? ""] || {}
+        ),
+      })),
+    };
   };
 
 export const getDataForPanoramaEtablissement =

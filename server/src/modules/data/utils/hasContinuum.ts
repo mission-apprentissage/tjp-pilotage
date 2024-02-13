@@ -23,8 +23,8 @@ export function hasContinuum<
   return jsonObjectFrom(
     eb
       .selectFrom("indicateurRegionSortie as subIRS")
-      .leftJoin(
-        "formationView as subFormation",
+      .innerJoin(
+        "dataFormation as subFormation",
         "subFormation.cfd",
         "subIRS.cfdContinuum"
       )
@@ -37,9 +37,11 @@ export function hasContinuum<
       )
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
       .where("subIRS.cfdContinuum", "is not", null)
-      .select("subIRS.cfdContinuum as cfd")
-      .$narrowType<{ cfd: string }>()
-      .select("subFormation.libelleFormation")
+      .select([
+        "subIRS.cfdContinuum as cfd",
+        "subFormation.libelleFormation as libelleFormation"
+      ])
+      .$narrowType<{ cfd: string, libelleFormation: string }>()
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",
