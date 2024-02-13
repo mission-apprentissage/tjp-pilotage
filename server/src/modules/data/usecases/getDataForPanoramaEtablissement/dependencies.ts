@@ -18,7 +18,7 @@ import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 export const getStatsEtablissement = async ({
   uai,
   millesimeSortie = CURRENT_IJ_MILLESIME,
-  rentreeScolaire = "2022",
+  rentreeScolaire = CURRENT_RENTREE,
 }: {
   uai: string;
   millesimeSortie?: string;

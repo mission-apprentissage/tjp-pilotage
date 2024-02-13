@@ -1,10 +1,11 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { getDateRentreeScolaire } from "../../services/getRentreeScolaire";
 
 export const getFormationsRenoveesEnseignees = async ({
-  rentreeScolaire = ["2022"],
+  rentreeScolaire = [CURRENT_RENTREE],
 }: {
   rentreeScolaire?: string[];
 }) => {
@@ -32,7 +33,7 @@ export const getFormationsRenoveesEnseignees = async ({
 };
 
 export const getFormationsRenoveesRentreeScolaire = async ({
-  rentreeScolaire = ["2022"],
+  rentreeScolaire = [CURRENT_RENTREE],
 }: {
   rentreeScolaire?: string[];
 }) => {
