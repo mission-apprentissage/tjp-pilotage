@@ -13,7 +13,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
-import { ScopeEnum } from "shared";
+import { CURRENT_RENTREE, ScopeEnum } from "shared";
 
 import { client } from "../../../../../api.client";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
@@ -350,7 +350,7 @@ export const IndicateursClesSection = ({
                 <TooltipIcon
                   ms={1}
                   mt={1}
-                  label="Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation (constat de rentrée 2022)."
+                  label={`Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation (constat de rentrée ${CURRENT_RENTREE}).`}
                 />
               }
             >

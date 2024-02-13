@@ -11,6 +11,7 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
@@ -88,8 +89,8 @@ export const IndicateursSection = ({
         </Flex>
         <Box flex={1}>
           <Text>
-            Retrouvez ici les principaux indicateurs (chiffres 2022) sur votre
-            territoire.
+            Retrouvez ici les principaux indicateurs (chiffres {CURRENT_RENTREE}
+            ) sur votre territoire.
           </Text>
           <SimpleGrid spacing={3} columns={[2]} mt="4">
             <Center fontSize="2xl" fontWeight="bold">
