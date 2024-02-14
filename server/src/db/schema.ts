@@ -24,6 +24,16 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface ChangeLog {
+  id: Generated<number>;
+  date: Generated<Timestamp | null>;
+  tableName: string | null;
+  operation: string | null;
+  user: Generated<string | null>;
+  newVal: Json | null;
+  oldVal: Json | null;
+}
+
 export interface ConstatRentree {
   rentreeScolaire: string | null;
   mefstat11: string | null;
@@ -276,6 +286,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  changeLog: ChangeLog;
   constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;

@@ -119,10 +119,14 @@ export const Quadrant = function <
   const repartitionsQuadrants = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
     return {
-      q1: data.filter((item) => item.positionQuadrant === "Q1").length,
-      q2: data.filter((item) => item.positionQuadrant === "Q2").length,
-      q3: data.filter((item) => item.positionQuadrant === "Q3").length,
-      q4: data.filter((item) => item.positionQuadrant === "Q4").length,
+      q1: data.filter((item) => item.positionQuadrant === "Q1" && item.effectif)
+        .length,
+      q2: data.filter((item) => item.positionQuadrant === "Q2" && item.effectif)
+        .length,
+      q3: data.filter((item) => item.positionQuadrant === "Q3" && item.effectif)
+        .length,
+      q4: data.filter((item) => item.positionQuadrant === "Q4" && item.effectif)
+        .length,
     };
   }, [data, meanInsertion, meanPoursuite]);
 

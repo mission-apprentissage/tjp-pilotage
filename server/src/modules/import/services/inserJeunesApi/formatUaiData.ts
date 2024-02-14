@@ -1,5 +1,7 @@
+import { Voies } from "./voies.enum";
+
 export type R = {
-  meftstats: Record<
+  [voie in Voies]: Record<
     string,
     {
       nb_annee_term: number;
@@ -34,19 +36,9 @@ export const formatUaiData = (rawData: any): R => {
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
-      const filiere = cur.filiere;
-      const voie = (
-        {
-          voie_pro_sco_educ_nat: "scolaire",
-          apprentissage: "apprentissage",
-        } as const
-      )[filiere];
-
       const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 =
-        voie === "scolaire"
-          ? cur.dimensions[0].id_mefstat11
-          : cur.dimensions[0].id_formation_apprentissage;
+      const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const cfd = cur.dimensions[0].id_formation_apprentissage;
 
       if (ensemble) {
         return {
@@ -61,10 +53,23 @@ export const formatUaiData = (rawData: any): R => {
       if (mefstat11) {
         return {
           ...acc,
-          meftstats: {
-            ...acc.meftstats,
+          scolaire: {
+            ...acc.scolaire,
             [mefstat11]: {
-              ...acc.meftstats[mefstat11],
+              ...acc.scolaire[mefstat11],
+              [cur.id_mesure]: cur.valeur_mesure,
+            },
+          },
+        };
+      }
+
+      if (cfd) {
+        return {
+          ...acc,
+          apprentissage: {
+            ...acc.apprentissage,
+            [cfd]: {
+              ...acc.apprentissage[cfd],
               [cur.id_mesure]: cur.valeur_mesure,
             },
           },
@@ -72,6 +77,6 @@ export const formatUaiData = (rawData: any): R => {
       }
       return acc;
     },
-    { meftstats: {} } as R
+    { scolaire: {}, apprentissage: {} } as R
   );
 };

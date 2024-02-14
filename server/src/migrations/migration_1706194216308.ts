@@ -104,21 +104,20 @@ export const up = async (db: Kysely<unknown>) => {
         df."cpcSousSecteur",
         df."libelleFiliere",
         df."typeFamille",
-        dp."voie"
+        formations."voie"
       from "dataFormation" df
       inner join
       (
-        select dp."cfd"
+        select dp."cfd", dp."voie"
         from "diplomeProfessionnel" dp
         union
-        select distinct "ancienCFD"
+        select distinct "ancienCFD", 'scolaire' as "voie"
         from "formationHistorique" fh
         union
-        select distinct fm."cfdFamille"
+        select distinct fm."cfdFamille", 'scolaire' as "voie"
         from "familleMetier" fm
       ) as formations
       on df."cfd" = formations.cfd
-      left join "diplomeProfessionnel" dp on dp."cfd" = df."cfd"
       order by df."cfd";
 
       create unique index on "formationView" ("id");
@@ -179,6 +178,34 @@ export const up = async (db: Kysely<unknown>) => {
           create unique index on "formationApprentissageView" ("id");`
     )
     .materialized()
+    .execute();
+
+  await db.schema
+    .alterTable("formationEtablissement")
+    .dropConstraint("formationetablissement_pk")
+    .execute();
+
+  await db.schema
+    .alterTable("formationEtablissement")
+    .addUniqueConstraint(
+      "formationetablissement_pk",
+      ["cfd", "UAI", "dispositifId", "voie"],
+      (builder) => builder.nullsNotDistinct()
+    )
+    .execute();
+
+  await db.schema
+    .alterTable("indicateurRegionSortie")
+    .dropConstraint("indicateurRegionSortie_unique_constraint")
+    .execute();
+
+  await db.schema
+    .alterTable("indicateurRegionSortie")
+    .addUniqueConstraint(
+      "indicateurRegionSortie_unique_constraint",
+      ["cfd", "codeRegion", "dispositifId", "millesimeSortie", "voie"],
+      (builder) => builder.nullsNotDistinct()
+    )
     .execute();
 };
 

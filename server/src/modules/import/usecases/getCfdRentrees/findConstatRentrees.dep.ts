@@ -1,3 +1,5 @@
+import { sql } from "kysely";
+
 import { kdb } from "../../../../db/db";
 import { Constat } from "../../fileTypes/Constat";
 
@@ -20,6 +22,14 @@ export const findConstatRentrees = async ({
       .where("data", "@>", {
         "Mef Bcp 11": mefStat11,
       })
+      .innerJoin("dataEtablissement", (join) =>
+        join.onRef(
+          "dataEtablissement.uai",
+          "=",
+          sql`"data"->>'UAI'`
+        )
+      )
+      .where("dataEtablissement.codeRegion", "not in", ["00", "99"])
       .execute()
   ).map((item) => item.data as Constat);
 };

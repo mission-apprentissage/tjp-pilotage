@@ -1,13 +1,13 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
+import { loggerReg, loggerUai } from "../../services/logger/logger";
 import { streamIt } from "../../utils/streamIt";
 import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
-import { logger } from "./importLogger";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
@@ -25,7 +25,7 @@ import {
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
 
-const processedUais: string[] = [];
+const processedUais: Set<string> = new Set();
 
 export const [importFormations] = inject(
   {
@@ -38,16 +38,19 @@ export const [importFormations] = inject(
   },
   (deps) => {
     return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
-      logger.reset();
+      loggerReg.set();
+      loggerUai.set();
+      loggerReg.reset();
       if (fetchIj) await deps.fetchIjReg();
+      loggerReg.write();
 
       await streamIt(
         (count) =>
-          deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
+          deps.findDiplomesProfessionnels({ offset: count, limit: 10 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
-          console.log("cfd", cfd, count);
+          console.log("cfd", `(${voie})`, cfd, count);
           if (!cfd) return;
           const ancienCfds = await deps.importFormationHistorique({
             cfd,
@@ -61,11 +64,11 @@ export const [importFormations] = inject(
           }
           await importFormationEtablissements({ cfd, fetchIj, voie });
         },
-        { parallel: 20 }
+        { parallel: 10 }
       );
 
       await streamIt(
-        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
+        (count) => deps.findFamillesMetiers({ offset: count, limit: 20 }),
         async (item, count) => {
           const cfd = item.cfd;
           console.log("cfd famille", cfd, count);
@@ -115,14 +118,16 @@ export const [importFormationEtablissements] = inject(
         if (!uais) return;
 
         for (const uai of uais) {
-          if (!processedUais.includes(uai)) {
+          if (!processedUais.has(uai)) {
+            loggerUai.reset();
             if (fetchIj) await deps.fetchIJ({ uai });
+            loggerUai.write();
 
             await deps.importEtablissement({ uai });
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurEtablissement({ uai, millesime });
             }
-            processedUais.push(uai);
+            processedUais.add(uai);
           }
           const formationEtablissement =
             await deps.createFormationEtablissement({
@@ -141,70 +146,73 @@ export const [importFormationEtablissements] = inject(
             });
           }
         }
-      }
-      const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
+      } else {
+        const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
-      for (const cfdDispositif of cfdDispositifs) {
-        const { codeDispositif, anneesDispositif } = cfdDispositif;
+        for (const cfdDispositif of cfdDispositifs) {
+          const { codeDispositif, anneesDispositif } = cfdDispositif;
 
-        const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
-        if (!lastMefstat) continue;
+          const lastMefstat = Object.values(anneesDispositif).pop()?.mefstat;
+          if (!lastMefstat) continue;
 
-        await deps.importIndicateursRegionSortie({
-          cfd,
-          dispositifId: codeDispositif,
-          mefstat: lastMefstat,
-        });
+          await deps.importIndicateursRegionSortie({
+            cfd,
+            dispositifId: codeDispositif,
+            mefstat: lastMefstat,
+          });
 
-        for (const rentreeScolaire of RENTREES_SCOLAIRES) {
-          const { enseignements } =
-            (await deps.getCfdRentrees({
-              cfd,
-              codeDispositif,
-              year: rentreeScolaire,
-            })) ?? {};
-
-          if (!enseignements) continue;
-
-          for (const enseignement of enseignements) {
-            const { uai, anneesEnseignement, voie } = enseignement;
-            if (!processedUais.includes(uai)) {
-              if (fetchIj) await deps.fetchIJ({ uai });
-
-              await deps.importEtablissement({ uai });
-              for (const millesime of MILLESIMES_IJ) {
-                await deps.importIndicateurEtablissement({ uai, millesime });
-              }
-              processedUais.push(uai);
-            }
-            if (voie !== "scolaire") continue;
-
-            const formationEtablissement =
-              await deps.createFormationEtablissement({
-                UAI: uai,
-                cfd,
-                dispositifId: codeDispositif,
-                voie,
-              });
-
-            await deps.importIndicateurEntree({
-              formationEtablissementId: formationEtablissement.id,
-              rentreeScolaire,
-              cfd,
-              uai,
-              anneesEnseignement,
-              anneesDispositif,
-            });
-
-            for (const millesime of MILLESIMES_IJ) {
-              await deps.importIndicateurSortie({
-                uai,
-                mefstat: lastMefstat,
-                formationEtablissementId: formationEtablissement.id,
-                millesime,
+          for (const rentreeScolaire of RENTREES_SCOLAIRES) {
+            const { enseignements } =
+              (await deps.getCfdRentrees({
                 cfd,
                 codeDispositif,
+                year: rentreeScolaire,
+              })) ?? {};
+
+            if (!enseignements) continue;
+
+            for (const enseignement of enseignements) {
+              const { uai, anneesEnseignement, voie } = enseignement;
+              if (!processedUais.has(uai)) {
+                loggerUai.reset();
+                if (fetchIj) await deps.fetchIJ({ uai });
+                loggerUai.write();
+
+                await deps.importEtablissement({ uai });
+                for (const millesime of MILLESIMES_IJ) {
+                  await deps.importIndicateurEtablissement({ uai, millesime });
+                }
+                processedUais.add(uai);
+              }
+              if (voie !== "scolaire") continue;
+
+              const formationEtablissement =
+                await deps.createFormationEtablissement({
+                  UAI: uai,
+                  cfd,
+                  dispositifId: codeDispositif,
+                  voie,
+                });
+
+              await deps.importIndicateurEntree({
+                formationEtablissementId: formationEtablissement.id,
+                rentreeScolaire,
+                cfd,
+                uai,
+                anneesEnseignement,
+                anneesDispositif,
               });
+
+              for (const millesime of MILLESIMES_IJ) {
+                await deps.importIndicateurSortie({
+                  uai,
+                  mefstat: lastMefstat,
+                  formationEtablissementId: formationEtablissement.id,
+                  millesime,
+                  cfd,
+                  codeDispositif,
+                });
+              }
             }
           }
         }
@@ -212,53 +220,3 @@ export const [importFormationEtablissements] = inject(
     };
   }
 );
-
-// const importFormationEtablissemenScolaire = inject(
-//   {
-//     createFormationEtablissement,
-//     importEtablissement,
-//     importIndicateurEtablissement,
-//     importIndicateurEntree,
-//     importIndicateurSortie,
-//     getCfdRentrees,
-//     getCfdDispositifs,
-//     fetchIJ,
-//     importIndicateursRegionSortie,
-//     findUAIsApprentissage,
-//   },
-//   (deps) => {
-//     return async ({
-//       cfd,
-//       fetchIj = true,
-//     }: {
-//       cfd: string;
-//       fetchIj?: boolean;
-//     }) => {
-
-//   }
-// );
-
-// export const importFormationEtablissementApprentissage = inject(
-//   {
-//     createFormationEtablissement,
-//     importEtablissement,
-//     importIndicateurEtablissement,
-//     importIndicateurEntree,
-//     importIndicateurSortieApprentissage,
-//     getCfdRentrees,
-//     getCfdDispositifs,
-//     fetchIJ,
-//     importIndicateursRegionSortieApprentissage,
-//     findUAIsApprentissage,
-//   },
-//   (deps) => {
-//     return async ({
-//       cfd,
-//       fetchIj = true,
-//     }: {
-//       cfd: string;
-//       fetchIj?: boolean;
-//     }) => {
-
-//   }
-// );

@@ -1,7 +1,7 @@
 import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
-import { Offres_apprentissages } from "../../fileTypes/Offres_apprentissages";
+import { Offres_apprentissage } from "../../fileTypes/Offres_apprentissage";
 
 export const findOffresApprentissages = async ({
   offset,
@@ -37,20 +37,5 @@ export const findOffresApprentissages = async ({
     })
     .execute();
 
-  return items.map((item) => item.data as Offres_apprentissages);
+  return items.map((item) => item.data as Offres_apprentissage);
 };
-
-// .selectFrom("rawData")
-// .select(
-//   sql<string>`data->>'Code du diplome ou du titre suivant la nomenclature de l''Education nationale (CodeEN)'`.as(
-//     "cfd"
-//   )
-// )
-// .distinct()
-// .where("type", "=", "offres_apprentissage")
-// .offset(offset)
-// .$call((q) => {
-//   if (!limit) return q;
-//   return q.limit(limit);
-// })
-// .execute();

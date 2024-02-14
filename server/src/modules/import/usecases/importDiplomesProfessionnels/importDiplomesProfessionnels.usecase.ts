@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 
 import { DiplomeProfessionnelLine } from "../../fileTypes/DiplomesProfessionnels";
-import { Offres_apprentissages } from "../../fileTypes/Offres_apprentissages";
+import { Offres_apprentissage } from "../../fileTypes/Offres_apprentissage";
 import { streamIt } from "../../utils/streamIt";
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
 import { findDiplomesProfessionnels } from "./findDiplomeProfessionnel.dep";
@@ -16,7 +16,7 @@ const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
   return cfd;
 };
 
-const formatCFDOffreApprentissage = (line: Offres_apprentissages) => {
+const formatCFDOffreApprentissage = (line: Offres_apprentissage) => {
   if (
     !line[
       "Code du diplome ou du titre suivant la nomenclature de l'Education nationale (CodeEN)"

@@ -12,7 +12,7 @@ import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
-import { Offres_apprentissages } from "../fileTypes/Offres_apprentissages";
+import { Offres_apprentissage } from "../fileTypes/Offres_apprentissage";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
@@ -20,7 +20,7 @@ import { R } from "../services/inserJeunesApi/formatUaiData";
 
 type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
-  offres_apprentissages: Offres_apprentissages;
+  offres_apprentissage: Offres_apprentissage;
   nFormationDiplome_: NFormationDiplomeLine;
   vFormationDiplome_: VFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
