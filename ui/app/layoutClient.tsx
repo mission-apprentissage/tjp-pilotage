@@ -20,6 +20,16 @@ import {
 import { Auth, AuthContext } from "@/app/(wrapped)/auth/authContext";
 
 import { theme } from "../theme/theme";
+import {
+  Changelog,
+  ChangelogContext,
+} from "./(wrapped)/changelog/changelogContext";
+
+interface RootLayoutClientProps {
+  children: React.ReactNode;
+  auth?: Auth;
+  changelog: Changelog;
+}
 
 const useTracking = () => {
   const searchParams = useSearchParams();
@@ -70,10 +80,8 @@ export const UaiFilterContext = createContext<{
 export default function RootLayoutClient({
   children,
   auth: initialAuth,
-}: {
-  children: React.ReactNode;
-  auth?: Auth;
-}) {
+  changelog: initialChangelog,
+}: RootLayoutClientProps) {
   const tracking = useTracking();
   console.log("tr", tracking);
   const [queryClient] = useState(
@@ -87,6 +95,7 @@ export default function RootLayoutClient({
   );
 
   const [auth, setAuth] = useState<Auth | undefined>(initialAuth);
+  const [changelog, setChangelog] = useState<Changelog>(initialChangelog);
   const [codeRegionFilter, setCodeRegionFilter] = useState<string>(
     auth?.user.codeRegion ?? ""
   );
@@ -132,15 +141,19 @@ export default function RootLayoutClient({
                   <CodeRegionFilterContext.Provider
                     value={codeRegionFilterValue}
                   >
-                    <Flex
-                      direction="column"
-                      height="100vh"
-                      overflow="auto"
-                      ref={containerRef}
-                      onScroll={handleScrolling}
+                    <ChangelogContext.Provider
+                      value={{ changelog, setChangelog }}
                     >
-                      {children}
-                    </Flex>
+                      <Flex
+                        direction="column"
+                        height="100vh"
+                        overflow="auto"
+                        ref={containerRef}
+                        onScroll={handleScrolling}
+                      >
+                        {children}
+                      </Flex>
+                    </ChangelogContext.Provider>
                   </CodeRegionFilterContext.Provider>
                 </UaiFilterContext.Provider>
               </AuthContext.Provider>

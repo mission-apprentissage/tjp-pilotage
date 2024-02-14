@@ -26,7 +26,7 @@ export const [importIndicateurSortie] = inject(
       codeDispositif: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
-      const mefData = ijData?.meftstats[mefstat];
+      const mefData = ijData?.scolaire[mefstat];
 
       if (!mefData) {
         const continuumData = await getContinuumData({
@@ -76,7 +76,7 @@ export const [importIndicateurSortieApprentissage] = inject(
       cfd: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
-      const mefData = ijData?.meftstats[cfd];
+      const mefData = ijData?.apprentissage[cfd];
 
       if (!mefData) {
         const continuumData = await getContinuumData({

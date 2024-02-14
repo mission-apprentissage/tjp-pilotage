@@ -43,7 +43,7 @@ const findEtablissementsInDb = async ({
   codeAcademie,
   codeDepartement,
   codeDiplome,
-  dispositifId,
+  codeDispositif,
   commune,
   cfd,
   cfdFamille,
@@ -64,7 +64,7 @@ const findEtablissementsInDb = async ({
   codeAcademie?: string[];
   codeDepartement?: string[];
   codeDiplome?: string[];
-  dispositifId?: string[];
+  codeDispositif?: string[];
   commune?: string[];
   cfd?: string[];
   cfdFamille?: string[];
@@ -143,6 +143,10 @@ const findEtablissementsInDb = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelleDepartement as departement",
       "etablissement.codeRegion",
@@ -266,8 +270,8 @@ const findEtablissementsInDb = async ({
       return q.where("etablissement.commune", "in", commune);
     })
     .$call((q) => {
-      if (!dispositifId) return q;
-      return q.where("dispositif.codeDispositif", "in", dispositifId);
+      if (!codeDispositif) return q;
+      return q.where("dispositif.codeDispositif", "in", codeDispositif);
     })
     .$call((q) => {
       if (!codeDiplome) return q;
@@ -318,6 +322,10 @@ const findEtablissementsInDb = async ({
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
       "formationView.dateFermeture",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       "formationHistorique.codeFormationDiplome",
       "etablissement.id",
       "departement.codeDepartement",
@@ -406,7 +414,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -450,7 +458,10 @@ const findFiltersInDb = async ({
 
   const inCfdFamille = (eb: ExpressionBuilder<DB, "familleMetier">) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb("familleMetier.cfdFamille", "in", cfdFamille);
+    return eb.or([
+      eb("familleMetier.cfd", "in", cfdFamille),
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {

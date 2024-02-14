@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import { client } from "@/api.client";
+import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatAnneeCommuneLibelle";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -72,7 +73,7 @@ export const FormationsSection = ({
               <Tbody>
                 {formations?.map((formation) => (
                   <Tr key={`${formation.cfd}_${formation.codeDispositif}`}>
-                    <Td>{formation.libelleFormation}</Td>
+                    <Td>{formatAnneeCommuneLibelle(formation)}</Td>
                     <Td>{formation.libelleNiveauDiplome}</Td>
                     <Td isNumeric>{formation.effectif}</Td>
                   </Tr>

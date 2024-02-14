@@ -151,7 +151,9 @@ export const [importDataFormations] = inject(
         );
       },
       { parallel: 20 }
-    );
+    ).then(() => {
+      console.log();
+    });
     await streamIt(
       (offset) =>
         rawDataRepository.findRawDatas({

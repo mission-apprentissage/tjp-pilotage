@@ -17,6 +17,7 @@ import {
   notPerimetreIJEtablissement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
+import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
@@ -66,10 +67,10 @@ const findFormationsInDb = async ({
 } = {}) => {
   const query = kdb
     .selectFrom("formationScolaireView as formationView")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
+    .leftJoin("formationEtablissement", (join) =>
+      join
+        .onRef("formationEtablissement.cfd", "=", "formationView.cfd")
+        .on("formationEtablissement.dispositifId", "is not", null)
     )
     .leftJoin(
       "dispositif",
@@ -115,6 +116,10 @@ const findFormationsInDb = async ({
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
@@ -191,6 +196,7 @@ const findFormationsInDb = async ({
     ])
     .where(notPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "is not", null),
@@ -226,6 +232,10 @@ const findFormationsInDb = async ({
       "formationView.codeNiveauDiplome",
       "formationView.typeFamille",
       "formationView.dateFermeture",
+      "formationView.cpc",
+      "formationView.cpcSecteur",
+      "formationView.cpcSousSecteur",
+      "formationView.libelleFiliere",
       "formationHistorique.codeFormationDiplome",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
@@ -331,7 +341,7 @@ const findFiltersInDb = async ({
   cpcSecteur,
   cpcSousSecteur,
   libelleFiliere,
-  rentreeScolaire = ["2022"],
+  rentreeScolaire = [CURRENT_RENTREE],
 }: {
   codeRegion?: string[];
   codeAcademie?: string[];
@@ -359,7 +369,7 @@ const findFiltersInDb = async ({
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
-    .leftJoin("familleMetier", "familleMetier.cfdFamille", "formationView.cfd")
+    .leftJoin("familleMetier", "familleMetier.cfd", "formationView.cfd")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -378,6 +388,7 @@ const findFiltersInDb = async ({
     )
     .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
+    .where((eb) => openForRentreeScolaire(eb, rentreeScolaire[0]))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -405,7 +416,10 @@ const findFiltersInDb = async ({
     eb: ExpressionBuilder<DB, "familleMetier" | "formationView">
   ) => {
     if (!cfdFamille) return sql<true>`true`;
-    return eb.or([eb("familleMetier.cfdFamille", "in", cfdFamille)]);
+    return eb.or([
+      eb("familleMetier.cfd", "in", cfdFamille),
+      eb("familleMetier.cfdFamille", "in", cfdFamille),
+    ]);
   };
 
   const inCfd = (eb: ExpressionBuilder<DB, "formationView">) => {
@@ -524,13 +538,8 @@ const findFiltersInDb = async ({
     .execute();
 
   const familles = await base
-    .select((eb) => [
-      sql<string>`CONCAT(
-        ${eb.ref("familleMetier.libelleFamille")},
-        ' (',
-        ${eb.ref("niveauDiplome.libelleNiveauDiplome")},
-        ')'
-      )`.as("label"),
+    .select([
+      "familleMetier.libelleFamille as label",
       "familleMetier.cfdFamille as value",
     ])
     .where("familleMetier.cfdFamille", "is not", null)

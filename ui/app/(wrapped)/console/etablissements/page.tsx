@@ -170,7 +170,7 @@ export default function Etablissements() {
         withAnneeCommune: withAnneeCommune?.toString() ?? "true",
       },
     },
-    { keepPreviousData: true, staleTime: 10000000 }
+    { keepPreviousData: false }
   );
 
   const trackEvent = usePlausible();
@@ -319,7 +319,7 @@ export default function Etablissements() {
           options={data?.filters.etablissements}
           value={filters.uai ?? []}
         >
-          Etablissement
+          Établissement
         </Multiselect>
         <Multiselect
           onClose={filterTracker("secteur")}
@@ -735,7 +735,12 @@ export default function Etablissements() {
       <TableFooter
         onExport={async () => {
           const data = await client.ref("[GET]/etablissements").query({
-            query: { ...filters, ...order, limit: 10000000 },
+            query: {
+              ...filters,
+              ...order,
+              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+              limit: 10000000,
+            },
           });
           trackEvent("etablissements:export");
           downloadCsv(

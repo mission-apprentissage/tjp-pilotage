@@ -1,23 +1,22 @@
+import { Voies } from "./voies.enum";
+
 export type IjRegionData = {
-  meftstats: Record<
+  [voie in Voies]: Record<
     string,
-    Record<
-      "scolaire" | "apprentissage",
-      {
-        nb_annee_term: number;
-        nb_en_emploi_12_mois: number;
-        nb_en_emploi_18_mois: number;
-        nb_en_emploi_24_mois: number;
-        nb_en_emploi_6_mois: number;
-        nb_poursuite_etudes: number;
-        nb_sortant: number;
-        taux_emploi_12_mois: number;
-        taux_emploi_18_mois: number;
-        taux_emploi_24_mois: number;
-        taux_emploi_6_mois: number;
-        taux_poursuite_etudes: number;
-      }
-    >
+    {
+      nb_annee_term: number;
+      nb_en_emploi_12_mois: number;
+      nb_en_emploi_18_mois: number;
+      nb_en_emploi_24_mois: number;
+      nb_en_emploi_6_mois: number;
+      nb_poursuite_etudes: number;
+      nb_sortant: number;
+      taux_emploi_12_mois: number;
+      taux_emploi_18_mois: number;
+      taux_emploi_24_mois: number;
+      taux_emploi_6_mois: number;
+      taux_poursuite_etudes: number;
+    }
   >;
 };
 
@@ -37,19 +36,9 @@ export const formatRegionData = (rawData: any): IjRegionData => {
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
-      const filiere = cur.filiere;
-      const voie = (
-        {
-          voie_pro_sco_educ_nat: "scolaire",
-          apprentissage: "apprentissage",
-        } as const
-      )[filiere];
-
       const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 =
-        voie === "scolaire"
-          ? cur.dimensions[0].id_mefstat11
-          : cur.dimensions[0].id_formation_apprentissage;
+      const mefstat11 = cur.dimensions[0].id_mefstat11;
+      const cfd = cur.dimensions[0].id_formation_apprentissage;
 
       if (ensemble) {
         return acc;
@@ -58,20 +47,29 @@ export const formatRegionData = (rawData: any): IjRegionData => {
       if (mefstat11) {
         return {
           ...acc,
-          meftstats: {
-            ...acc.meftstats,
+          scolaire: {
+            ...acc.scolaire,
             [mefstat11]: {
-              ...acc.meftstats[mefstat11],
-              [voie]: {
-                ...acc.meftstats[mefstat11]?.[voie],
-                [cur.id_mesure]: cur.valeur_mesure,
-              },
+              ...acc.scolaire[mefstat11],
+              [cur.id_mesure]: cur.valeur_mesure,
+            },
+          },
+        };
+      }
+      if (cfd) {
+        return {
+          ...acc,
+          apprentissage: {
+            ...acc.apprentissage,
+            [cfd]: {
+              ...acc.apprentissage[cfd],
+              [cur.id_mesure]: cur.valeur_mesure,
             },
           },
         };
       }
       return acc;
     },
-    { meftstats: {} } as IjRegionData
+    { scolaire: {}, apprentissage: {} } as IjRegionData
   );
 };

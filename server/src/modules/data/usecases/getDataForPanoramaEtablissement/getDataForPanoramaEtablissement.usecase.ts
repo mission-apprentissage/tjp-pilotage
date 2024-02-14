@@ -8,6 +8,7 @@ export const getDataForPanoramaEtablissementFactory =
     deps = {
       getFormationsEtablissement: dependencies.getFormationsEtablissement,
       getStatsSortieParRegions: getStatsSortieParRegions,
+      getPositionQuadrant,
     }
   ) =>
   async (activeFilters: {
@@ -16,7 +17,7 @@ export const getDataForPanoramaEtablissementFactory =
   }) => {
     const [etablissement, statsSortie] = await Promise.all([
       deps.getFormationsEtablissement(activeFilters),
-      getStatsSortieParRegions({}),
+      deps.getStatsSortieParRegions({}),
     ]);
 
     return (
@@ -25,7 +26,7 @@ export const getDataForPanoramaEtablissementFactory =
         ...etablissement,
         formations: etablissement?.formations?.map((formation) => ({
           ...formation,
-          positionQuadrant: getPositionQuadrant(
+          positionQuadrant: deps.getPositionQuadrant(
             formation,
             statsSortie[etablissement.codeRegion ?? ""] || {}
           ),

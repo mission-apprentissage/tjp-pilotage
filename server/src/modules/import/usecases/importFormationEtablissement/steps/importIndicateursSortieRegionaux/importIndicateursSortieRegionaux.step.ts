@@ -27,11 +27,11 @@ export const [importIndicateursRegionSortie] = inject(
     }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
         for (const millesimeSortie of MILLESIMES_IJ_REG) {
-          const data = await deps.findRawData({
+          const ijRegData = await deps.findRawData({
             type: "ij_reg",
             filter: { millesime: millesimeSortie, codeRegion },
           });
-          const mefstatData = data?.meftstats[mefstat];
+          const mefstatData = ijRegData?.scolaire[mefstat];
 
           if (!mefstatData) {
             const continuumData = await getContinuumData({
@@ -56,15 +56,12 @@ export const [importIndicateursRegionSortie] = inject(
             voie: "scolaire",
             codeRegion,
             millesimeSortie,
-            effectifSortie: mefstatData.scolaire?.nb_annee_term ?? null,
-            nbSortants: mefstatData.scolaire?.nb_sortant ?? null,
-            nbPoursuiteEtudes:
-              mefstatData.scolaire?.nb_poursuite_etudes ?? null,
-            nbInsertion6mois: mefstatData.scolaire?.nb_en_emploi_6_mois ?? null,
-            nbInsertion12mois:
-              mefstatData.scolaire?.nb_en_emploi_12_mois ?? null,
-            nbInsertion24mois:
-              mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
+            effectifSortie: mefstatData.nb_annee_term ?? null,
+            nbSortants: mefstatData.nb_sortant ?? null,
+            nbPoursuiteEtudes: mefstatData.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: mefstatData.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois: mefstatData.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois: mefstatData.nb_en_emploi_24_mois ?? null,
           });
         }
     }
@@ -84,9 +81,9 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             type: "ij_reg",
             filter: { millesime: millesimeSortie, codeRegion },
           });
-          const mefstatData = data?.meftstats[cfd];
+          const cfdData = data?.apprentissage[cfd];
 
-          if (!mefstatData) {
+          if (!cfdData) {
             const continuumData = await getContinuumData({
               cfd,
               dispositifId: null,
@@ -109,15 +106,12 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             voie: "apprentissage",
             codeRegion,
             millesimeSortie,
-            effectifSortie: mefstatData.scolaire?.nb_annee_term ?? null,
-            nbSortants: mefstatData.scolaire?.nb_sortant ?? null,
-            nbPoursuiteEtudes:
-              mefstatData.scolaire?.nb_poursuite_etudes ?? null,
-            nbInsertion6mois: mefstatData.scolaire?.nb_en_emploi_6_mois ?? null,
-            nbInsertion12mois:
-              mefstatData.scolaire?.nb_en_emploi_12_mois ?? null,
-            nbInsertion24mois:
-              mefstatData.scolaire?.nb_en_emploi_24_mois ?? null,
+            effectifSortie: cfdData.nb_annee_term ?? null,
+            nbSortants: cfdData.nb_sortant ?? null,
+            nbPoursuiteEtudes: cfdData.nb_poursuite_etudes ?? null,
+            nbInsertion6mois: cfdData.nb_en_emploi_6_mois ?? null,
+            nbInsertion12mois: cfdData.nb_en_emploi_12_mois ?? null,
+            nbInsertion24mois: cfdData.nb_en_emploi_24_mois ?? null,
           });
         }
     }

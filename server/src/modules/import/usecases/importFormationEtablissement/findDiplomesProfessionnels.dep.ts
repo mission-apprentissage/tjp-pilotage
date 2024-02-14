@@ -16,6 +16,7 @@ export const findDiplomesProfessionnels = ({
       if (!limit) return q;
       return q.limit(limit);
     })
+    .orderBy("voie asc")
     .execute()
     .then(cleanNull);
 };

@@ -1,6 +1,7 @@
 import axios from "axios";
 
 import { config } from "../../../../../config/config";
+import { logError, logResolve } from "../logger/logger";
 import { formatRegionData } from "./formatRegionData";
 import { formatUaiData } from "./formatUaiData";
 
@@ -21,26 +22,38 @@ export const login = async () => {
   return token;
 };
 
-instance.interceptors.response.use(undefined, async (err) => {
-  const { config, response } = err;
+instance.interceptors.response.use(
+  async (resolve) => {
+    const { config } = resolve;
+    if (config.url) logResolve(config.url);
 
-  if (config.retried || ![500, 401, undefined].includes(response?.status)) {
-    return Promise.reject(err);
+    return resolve;
+  },
+  async (err) => {
+    const { config, response } = err;
+
+    if (config.retried || ![500, 401, undefined].includes(response?.status)) {
+      logError(response, config.url);
+      console.log(`[ERROR] ${response?.data?.msg} : ${config.url}`);
+      return Promise.reject(err);
+    }
+    if (config.retried || response?.status === 500) {
+      logError(response, config.url);
+    }
+    console.log("Retry with new token");
+    config.retried = true;
+    const token = await login();
+    instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+
+    return axios({
+      ...config,
+      headers: {
+        ...config.headers,
+        Authorization: `Bearer ${token}`,
+      },
+    });
   }
-
-  console.log("Retry with new token");
-  config.retried = true;
-  const token = await login();
-  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-  return axios({
-    ...config,
-    headers: {
-      ...config.headers,
-      Authorization: `Bearer ${token}`,
-    },
-  });
-});
+);
 
 export const getUaiData = async ({
   uai,
