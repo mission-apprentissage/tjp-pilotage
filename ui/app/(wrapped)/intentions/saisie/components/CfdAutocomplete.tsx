@@ -44,6 +44,7 @@ export const CfdAutocompleteInput = ({
         ({
           ...defaultValue,
           isSpecialite: false,
+          isOption: false,
           isFCIL: false,
           dateFermeture: "",
           dispositifs: [],
@@ -62,6 +63,11 @@ export const CfdAutocompleteInput = ({
             {option.isSpecialite && (
               <Tag colorScheme={"blue"} size={"md"} ms={2}>
                 Spécialité
+              </Tag>
+            )}
+            {option.isOption && (
+              <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                Option
               </Tag>
             )}
             {option.dateFermeture && (

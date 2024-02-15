@@ -56,6 +56,7 @@ export const findManyInDataFormationQuery = async ({
         eb.or([
           eb("dataFormation.typeFamille", "is", null),
           eb("dataFormation.typeFamille", "=", "specialite"),
+          eb("dataFormation.typeFamille", "=", "option"),
         ]),
       ])
     )
@@ -84,6 +85,9 @@ export const findManyInDataFormationQuery = async ({
       ' (',${eb.ref("dataFormation.cfd")},')')`.as("label"),
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'specialite'`.as(
         "isSpecialite"
+      ),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'option'`.as(
+        "isOption"
       ),
       sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", [
         "381",
