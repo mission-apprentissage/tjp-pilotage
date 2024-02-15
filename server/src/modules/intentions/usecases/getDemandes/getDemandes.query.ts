@@ -77,6 +77,8 @@ export const findDemandes = async ({
                 sql`concat(
                   unaccent(${eb.ref("demande.id")}),
                   ' ',
+                  unaccent(${eb.ref("demande.cfd")}),
+                  ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
                   unaccent(${eb.ref("departement.libelleDepartement")}),
