@@ -8,11 +8,12 @@ export const [fetchIJ] = inject(
   { getUaiData, cacheIj, clearIjCache },
   (deps) =>
     async ({ uai }: { uai: string }) => {
-      for (const millesime of MILLESIMES_IJ) {
+      const promises = MILLESIMES_IJ.map(async (millesime) => {
         const data = await deps.getUaiData({ uai, millesime });
         await deps.clearIjCache({ uai, millesime });
-        if (!data) continue;
+        if (!data) return;
         await deps.cacheIj({ data, uai, millesime });
-      }
+      });
+      await Promise.all(promises);
     }
 );

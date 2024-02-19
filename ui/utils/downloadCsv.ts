@@ -21,7 +21,7 @@ export function downloadCsv<D extends object>(
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
       label: label as string,
-      value: value.replace(".", ","),
+      value: value,
     })),
     formatters: {
       number: numberFormatter({

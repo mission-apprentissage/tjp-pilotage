@@ -34,7 +34,7 @@ import {
 import { selectTauxPression } from "../../utils/tauxPression";
 import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
-const findEtablissementsInDb = async ({
+const findFormationEtablissementsInDb = async ({
   offset = 0,
   limit = 20,
   rentreeScolaire = [CURRENT_RENTREE],
@@ -154,7 +154,7 @@ const findEtablissementsInDb = async ({
       "formationView.typeFamille",
       "familleMetier.libelleFamille",
       "libelleDispositif",
-      "dispositifId",
+      "dispositifId as codeDispositif",
       "libelleNiveauDiplome",
       "indicateurEntree.rentreeScolaire",
       "indicateurEtablissement.valeurAjoutee",
@@ -181,7 +181,9 @@ const findEtablissementsInDb = async ({
         "capacite3"
       ),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
-      selectTauxPression("indicateurEntree").as("tauxPression"),
+      selectTauxPression("indicateurEntree", "formationView").as(
+        "tauxPression"
+      ),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
       selectTauxInsertion6mois("indicateurSortie").as(
         "tauxInsertionEtablissement"
@@ -706,6 +708,6 @@ const findFiltersInDb = async ({
 };
 
 export const dependencies = {
-  findEtablissementsInDb,
+  findFormationEtablissementsInDb,
   findFiltersInDb,
 };

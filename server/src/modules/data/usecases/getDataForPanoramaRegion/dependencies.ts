@@ -104,7 +104,9 @@ export const getFormationsRegion = async ({
       )},' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")}, ')')`.as(
         "libelleFormation"
       ),
-      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as(
+        "tauxPression"
+      ),
       (eb) =>
         withInsertionReg({
           eb,

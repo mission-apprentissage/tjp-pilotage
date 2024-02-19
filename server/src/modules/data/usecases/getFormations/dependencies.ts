@@ -158,7 +158,9 @@ const findFormationsInDb = async ({
         alias: "indicateurEntree",
         annee: sql`'2'`,
       })})`.as("capacite3"),
-      selectTauxPressionAgg("indicateurEntree").as("tauxPression"),
+      selectTauxPressionAgg("indicateurEntree", "formationView").as(
+        "tauxPression"
+      ),
     ])
     .select((eb) => [
       hasContinuum({

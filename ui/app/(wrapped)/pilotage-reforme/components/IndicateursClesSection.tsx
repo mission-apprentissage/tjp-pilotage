@@ -9,6 +9,7 @@ import {
   Skeleton,
   Text,
 } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
 import { IndicateurType, PilotageReformeStats } from "../types";
 
@@ -419,7 +420,7 @@ const StatCard = ({
 const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
   <Flex direction={"column"} w="100%">
     <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES 2022
+      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES {CURRENT_RENTREE}
     </Text>
     <SimpleGrid spacing={3} columns={[2]} mt={4}>
       <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
