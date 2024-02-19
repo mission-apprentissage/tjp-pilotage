@@ -1,4 +1,5 @@
 "use client";
+import { Center, Spinner } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useContext, useState } from "react";
@@ -79,10 +80,6 @@ export default function Panorama({
     { keepPreviousData: true, staleTime: 10000000, enabled: !!etablissement }
   );
 
-  // const { data: defaultEtablissementSearchValues } = client
-  //   .ref("[GET]/etablissement/:uai")
-  //   .useQuery({ params: { uai: uai } }, { cacheTime: 0, staleTime: 0 });
-
   const diplomeOptions = Object.values(
     etablissement?.formations.reduce(
       (acc, cur) => {
@@ -104,6 +101,20 @@ export default function Panorama({
       <>
         <PanoramaSelection wrongUai={uai} />
       </>
+    );
+  }
+  if (isLoading) {
+    return (
+      <Center
+        height="100%"
+        width="100%"
+        position="absolute"
+        bg="rgb(255,255,255,0.8)"
+        zIndex="1"
+        mt={24}
+      >
+        <Spinner size={"large"} />
+      </Center>
     );
   }
 
