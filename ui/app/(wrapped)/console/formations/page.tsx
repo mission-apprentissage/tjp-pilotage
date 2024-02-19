@@ -16,8 +16,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
@@ -32,6 +32,7 @@ import { OrderIcon } from "../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import {
   FormationLineContent,
   FormationLineLoader,
@@ -123,6 +124,8 @@ export default function Formations() {
   );
 
   const trackEvent = usePlausible();
+
+  const { onOpen: openGlossaireAtEntry } = useGlossaireContext();
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("formations:ordre", { props: { colonne: column } });
@@ -413,7 +416,14 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {FORMATIONS_COLUMNS.effectif1}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -422,7 +432,14 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {FORMATIONS_COLUMNS.effectif2}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -431,7 +448,14 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {FORMATIONS_COLUMNS.effectif3}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   cursor="pointer"
@@ -443,14 +467,19 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label={
-                      <>
-                        <Box>
+                      <Box>
+                        <Text>
                           Le ratio entre le nombre de premiers voeux et la
-                          capacité de la formation.
-                        </Box>
+                          capacité de la formation au niveau régional.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
                         <TauxPressionScale />
-                      </>
+                      </Box>
                     }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-pression");
+                    }}
                   />
                 </Th>
                 <Th
@@ -462,7 +491,19 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxRemplissage}
                   <TooltipIcon
                     ml="1"
-                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                    label={
+                      <Box>
+                        <Text>
+                          Le ratio entre l’effectif d’entrée en formation et sa
+                          capacité.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-remplissage");
+                    }}
                   />
                 </Th>
                 <Th
@@ -474,7 +515,19 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                    label={
+                      <Box>
+                        <Text>
+                          La part de ceux qui sont en emploi 6 mois après leur
+                          sortie d’étude.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-emploi-6-mois");
+                    }}
                   />
                 </Th>
                 <Th
@@ -486,7 +539,19 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                    label={
+                      <Box>
+                        <Text>
+                          Tout élève inscrit à N+1 (réorientation et
+                          redoublement compris).
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-poursuite-etudes");
+                    }}
                   />
                 </Th>
                 <Th
@@ -498,7 +563,20 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
-                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                    label={
+                      <Box>
+                        <Text>
+                          (nombre d'élèves inscrits en formation + nombre
+                          d'élèves en emploi) / nombre d'élèves en entrée en
+                          dernière année de formation.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-devenir-favorable");
+                    }}
                   />
                 </Th>
                 <Th
@@ -545,7 +623,21 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.positionQuadrant}
                   <TooltipIcon
                     ml="1"
-                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                    label={
+                      <Box>
+                        <Text>
+                          Positionnement du point de la formation dans le
+                          quadrant par rapport aux moyennes régionales des taux
+                          d'emploi et de poursuite d'études appliquées au niveau
+                          de diplôme.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("quadrant");
+                    }}
                   />
                 </Th>
               </Tr>

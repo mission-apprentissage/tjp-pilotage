@@ -6,6 +6,7 @@ export type GlossaireEntryWithKey =
   };
 
 export type GlossaireEntry = (typeof client.infer)["[GET]/glossaire"];
+export type GlossaireEntries = (typeof client.infer)["[GET]/glossaire"];
 
 export type GlossaireEntryContent =
   (typeof client.infer)["[GET]/glossaire/:id"];

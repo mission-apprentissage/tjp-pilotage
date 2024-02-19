@@ -16,8 +16,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
+import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
@@ -37,6 +37,7 @@ import {
   UaiFilterContext,
 } from "../../../layoutClient";
 import { TauxPressionScale } from "../../components/TauxPressionScale";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import {
   EtablissementLineContent,
   EtablissementLineLoader,
@@ -229,6 +230,8 @@ export default function Etablissements() {
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
+
+  const { onOpen: openGlossaireAtEntry } = useGlossaireContext();
 
   const { data: historique, isFetching: isFetchingHistorique } = useQuery({
     keepPreviousData: false,
@@ -489,7 +492,14 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {ETABLISSEMENTS_COLUMNS.effectif1}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -498,7 +508,14 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {ETABLISSEMENTS_COLUMNS.effectif2}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -507,7 +524,14 @@ export default function Etablissements() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {ETABLISSEMENTS_COLUMNS.effectif3}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("effectifs");
+                    }}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -526,14 +550,19 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label={
-                      <>
-                        <Box>
+                      <Box>
+                        <Text>
                           Le ratio entre le nombre de premiers voeux et la
-                          capacité de l'offre de formation.
-                        </Box>
+                          capacité de la formation au niveau régional.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
                         <TauxPressionScale />
-                      </>
+                      </Box>
                     }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-pression");
+                    }}
                   />
                 </Th>
                 <Th
@@ -544,7 +573,19 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
                   <TooltipIcon
                     ml="1"
-                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                    label={
+                      <Box>
+                        <Text>
+                          Le ratio entre l’effectif d’entrée en formation et sa
+                          capacité.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-remplissage");
+                    }}
                   />
                 </Th>
                 <Th
@@ -555,7 +596,19 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                    label={
+                      <Box>
+                        <Text>
+                          La part de ceux qui sont en emploi 6 mois après leur
+                          sortie d’étude.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-emploi-6-mois");
+                    }}
                   />
                 </Th>
                 <Th
@@ -566,14 +619,40 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                    label={
+                      <Box>
+                        <Text>
+                          Tout élève inscrit à N+1 (réorientation et
+                          redoublement compris).
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-poursuite-etudes");
+                    }}
                   />
                 </Th>
                 <Th>
                   {ETABLISSEMENTS_COLUMNS.positionQuadrant}
                   <TooltipIcon
                     ml="1"
-                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                    label={
+                      <Box>
+                        <Text>
+                          Positionnement du point de la formation dans le
+                          quadrant par rapport aux moyennes régionales des taux
+                          d'emploi et de poursuite d'études appliquées au niveau
+                          de diplôme.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("quadrant");
+                    }}
                   />
                 </Th>
                 <Th
@@ -584,7 +663,20 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
-                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                    label={
+                      <Box>
+                        <Text>
+                          (nombre d'élèves inscrits en formation + nombre
+                          d'élèves en emploi) / nombre d'élèves en entrée en
+                          dernière année de formation.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-devenir-favorable");
+                    }}
                   />
                 </Th>
                 <Th
@@ -595,7 +687,19 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxInsertionEtablissement}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                    label={
+                      <Box>
+                        <Text>
+                          La part de ceux qui sont en emploi 6 mois après leur
+                          sortie d’étude.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-devenir-favorable");
+                    }}
                   />
                 </Th>
                 <Th
@@ -606,7 +710,19 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtablissement}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                    label={
+                      <Box>
+                        <Text>
+                          Tout élève inscrit à N+1 (réorientation et
+                          redoublement compris).
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-poursuite-etudes");
+                    }}
                   />
                 </Th>
                 <Th
@@ -622,7 +738,19 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorableEtablissement}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                    label={
+                      <Box>
+                        <Text>
+                          Tout élève inscrit à N+1 (réorientation et
+                          redoublement compris).
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("taux-de-devenir-favorable");
+                    }}
                   />
                 </Th>
                 <Th
@@ -634,7 +762,21 @@ export default function Etablissements() {
                   {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
                   <TooltipIcon
                     ml="1"
-                    label="Capacité de l'établissement à insérer, en prenant en compte le profil social des élèves et le taux de chômage de la zone d'emploi, comparativement au taux de référence d’établissements similaires."
+                    label={
+                      <Box>
+                        <Text>
+                          Capacité de l'établissement à insérer, en prenant en
+                          compte le profil social des élèves et le taux de
+                          chômage de la zone d'emploi, comparativement au taux
+                          de référence d’établissements similaires.
+                        </Text>
+                        <Text>Cliquez pour plus d'informations.</Text>
+                      </Box>
+                    }
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      openGlossaireAtEntry("valeur-ajoutee");
+                    }}
                   />
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
