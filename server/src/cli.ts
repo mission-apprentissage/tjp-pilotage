@@ -16,6 +16,7 @@ import { refreshFormationMaterializedView } from "./modules/import/usecases/impo
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
+import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
 import { importIndicateursAcademie } from "./modules/import/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
@@ -206,6 +207,12 @@ cli
     await importIndicateursAcademie();
     await importIndicateursRegion();
     await importFormations({ fetchIj });
+  });
+
+cli
+  .command("importIJ")
+  .action(async () => {
+    await importIJData();
   });
 
 cli.parse(process.argv);
