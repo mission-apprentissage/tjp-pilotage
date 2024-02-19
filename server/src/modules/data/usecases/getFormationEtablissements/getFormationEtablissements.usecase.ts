@@ -1,12 +1,16 @@
+import { getFormationsRenoveesEnseignees } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
-const getEtablissementsFactory =
+const getFormationEtablissementsFactory =
   (
     deps = {
-      findEtablissementsInDb: dependencies.findEtablissementsInDb,
+      findFormationEtablissementsInDb:
+        dependencies.findFormationEtablissementsInDb,
       findFiltersInDb: dependencies.findFiltersInDb,
+      getFormationsRenoveesEnseignees,
+      getStatsSortieParRegionsEtNiveauDiplome,
     }
   ) =>
   async (activeFilters: {
@@ -23,21 +27,31 @@ const getEtablissementsFactory =
     uai?: string[];
     secteur?: string[];
     withAnneeCommune?: string;
+    rentreeScolaire?: string[];
     orderBy?: { order: "asc" | "desc"; column: string };
   }) => {
-    const [{ etablissements, count }, filters, statsSortie] = await Promise.all(
-      [
-        deps.findEtablissementsInDb(activeFilters),
-        deps.findFiltersInDb(activeFilters),
-        getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
-      ]
-    );
+    const [
+      { etablissements, count },
+      filters,
+      statsSortie,
+      formationsRenoveesEnseignees,
+    ] = await Promise.all([
+      deps.findFormationEtablissementsInDb(activeFilters),
+      deps.findFiltersInDb(activeFilters),
+      deps.getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
+      deps.getFormationsRenoveesEnseignees(activeFilters),
+    ]);
 
     return {
       count,
       filters,
       etablissements: etablissements.map((etablissement) => ({
         ...etablissement,
+        formationRenovee: formationsRenoveesEnseignees.includes(
+          etablissement.formationRenovee ?? ""
+        )
+          ? etablissement.formationRenovee
+          : undefined,
         positionQuadrant:
           statsSortie && statsSortie[etablissement.codeRegion ?? ""]
             ? getPositionQuadrant(
@@ -51,4 +65,4 @@ const getEtablissementsFactory =
     };
   };
 
-export const getEtablissements = getEtablissementsFactory();
+export const getFormationEtablissements = getFormationEtablissementsFactory();

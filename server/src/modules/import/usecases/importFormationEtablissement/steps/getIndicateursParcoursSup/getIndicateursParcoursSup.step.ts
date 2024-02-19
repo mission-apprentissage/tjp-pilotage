@@ -16,7 +16,7 @@ const findAttractiviteCapaciteBTS = async ({
     type: "BTS_attractivite_capacite",
     year: rentreeScolaire,
     filter: {
-      "MEFSTAT11": mefstat,
+      MEFSTAT11: mefstat,
       UAI: uai,
       STATUT: "Scolaire",
     },
@@ -48,28 +48,40 @@ export const [getIndicateursParcoursSup] = inject(
         rentreeScolaire,
       });
 
-      if (lines.length !== 1) return { capacites: [], premiersVoeux: [] };
+      if (lines.length == 0) return { capacites: [], premiersVoeux: [] };
 
-      const {
-        CAPACITEPSUP: rawCapacite,
-        NB_VOEUX_CONFIRMES: rawPremiersVoeux,
-      } = lines[0];
+      const numbers: {
+        capacite: number | undefined;
+        premiersVoeux: number | undefined;
+      } = {
+        capacite: undefined,
+        premiersVoeux: undefined,
+      };
 
-      const capacite =
-        rawCapacite && rawCapacite !== "0" && rawCapacite !== "999"
-          ? parseInt(rawCapacite)
-          : undefined;
-      const premiersVoeux = rawPremiersVoeux
-        ? parseInt(rawPremiersVoeux)
-        : undefined;
+      lines.forEach((line) => {
+        const rawCapacite = line.CAPACITEPSUP;
+        const rawPremiersVoeux = line.NB_VOEUX_CONFIRMES;
+        // Parfois la capacité est indiquée à 0 ou 999 pour signifier quelle est manquante
+        if (rawCapacite && rawCapacite !== "0" && rawCapacite !== "999") {
+          if (!numbers.capacite) numbers.capacite = 0;
+          numbers.capacite += parseInt(rawCapacite);
+        }
+
+        if (rawPremiersVoeux) {
+          if (!numbers.premiersVoeux) numbers.premiersVoeux = 0;
+          numbers.premiersVoeux += parseInt(rawPremiersVoeux);
+        }
+      });
 
       return {
         capacites:
-          anneeDebut === 0 ? [capacite ?? null] : [null, capacite ?? null],
+          anneeDebut === 0
+            ? [numbers.capacite ?? null]
+            : [null, numbers.capacite ?? null],
         premiersVoeux:
           anneeDebut === 0
-            ? [premiersVoeux ?? null]
-            : [null, premiersVoeux ?? null],
+            ? [numbers.premiersVoeux ?? null]
+            : [null, numbers.premiersVoeux ?? null],
       };
     }
 );

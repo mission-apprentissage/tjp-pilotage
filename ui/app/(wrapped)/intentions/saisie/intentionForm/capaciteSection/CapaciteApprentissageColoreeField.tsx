@@ -49,7 +49,6 @@ export const CapaciteApprentissageColoreeField = chakra(
               shouldUnregister: true,
               setValueAs: safeParseInt,
               disabled,
-              value: null as unknown as undefined,
               validate: (value) => {
                 if (value === undefined) return "Le champ est obligatoire";
                 if (Number.isNaN(value))

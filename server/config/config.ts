@@ -74,5 +74,6 @@ export const config = {
   notion: {
     token: env.get("NOTION_TOKEN").required().asString(),
     dbChangelogId: env.get("NOTION_DB_CHANGELOG_ID").required().asString(),
+    dbGlossaireId: env.get("NOTION_DB_GLOSSAIRE_ID").required().asString(),
   },
 };

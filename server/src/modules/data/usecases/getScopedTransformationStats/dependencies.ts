@@ -1,5 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE,Scope, ScopeEnum } from "shared";
+import { CURRENT_RENTREE, Scope, ScopeEnum } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -526,6 +526,7 @@ const getFiltersQuery = async ({
       "niveauDiplome.codeNiveauDiplome",
       "dataFormation.codeNiveauDiplome"
     )
+    .where(isDemandeNotDeletedOrRefused)
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -611,6 +612,25 @@ const getFiltersQuery = async ({
     .where("niveauDiplome.codeNiveauDiplome", "is not", null)
     .where((eb) =>
       eb.and([inStatus(eb), inRentreeScolaire(eb), inCPC(eb), inFiliere(eb)])
+    )
+    .union(
+      kdb
+        .selectFrom("constatRentree")
+        .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
+        .leftJoin(
+          "niveauDiplome",
+          "niveauDiplome.codeNiveauDiplome",
+          "dataFormation.codeNiveauDiplome"
+        )
+        .select([
+          "niveauDiplome.libelleNiveauDiplome as label",
+          "niveauDiplome.codeNiveauDiplome as value",
+        ])
+        .distinct()
+        .where("niveauDiplome.codeNiveauDiplome", "is not", null)
+        .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
+        .where((eb) => eb.and([inCPC(eb), inFiliere(eb)]))
+        .$castTo<{ label: string; value: string }>()
     )
     .execute();
 

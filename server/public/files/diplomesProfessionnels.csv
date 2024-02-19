@@ -145,7 +145,7 @@ CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-
 CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22207 R;BTS;Bio analyses et contrôle;2705;2004-06-25;2006;;rénovation
 CPC Agriculture, agroalimentaire et aménagement des espaces;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22106 R;BTS;Bioqualité;35335;2020-03-02;2022;;Remplace le n°320-22103
 CPC Industrie;Secteur Chimie, bio-industrie, environnement;Sous-secteur Contrôle;Niveau 5;320-22104 R;BTS;Biotechnologies;1033;2006-11-08;2009;;rénovation
-CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;;BTS;Communication;37198;2022-12-19;2025;;Remplace le n°320-32002 P
+CPC Commerce;Secteur Commercialisation et distribution;Sous-secteur;Niveau 5;32032003;BTS;Communication;37198;2022-12-19;2025;;Remplace le n°320-32002 P
 CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-22317 N;BTS;Conception des processus de réalisation de produits option B production sérielle;37464;2016-02-16;2018;;.
 CPC Industrie;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-20009 N;BTS;Conception des produits industriels;37374;2016-02-16;2018;;.
 CPC Mer et navigation intérieure;Secteur Métallurgie;Sous-secteur Travail des métaux;Niveau 5;320-25413 S;BTS;Conception et industrialisation en construction navale;35459;2017-02-13;2019;;-
@@ -489,7 +489,7 @@ CPC Services aux entreprises;Secteur Transport, logistique, sécurité et autres
 CPC Services et produits de consommation;Secteur Coiffure, esthétique et services connexes;Sous-secteur;Niveau 5;320-33611 T;BTS;Métiers de l'esthétique-cosmétique-parfumerie, option C cosmétologie;37375;2022-12-09;2025;;remplace le 320-33605 T
 CPC Industrie;Secteur Métallurgie;Sous-secteur Electrotechnique, électronique, automatisme et informatique;Niveau 5;320-20115 R;BTS;Métiers de la mesure;35803;2020-12-18;2023;;Remplace le n°320-22002 R
 CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33108 S;BTS;Podo-orthésiste;1088;1997-07-28;1998;;REMPLACEMENT ANNEXE 2 ET 3  EN 2023
-CPC Cohésion sociale et santé;Secteur;Sous-secteur;Niveau 5;;BTS;Prothésiste dentaire;37376;2023-01-25;2025;;REMPLACE celui de 2012   320-33110 S
+CPC Cohésion sociale et santé;Secteur;Sous-secteur;Niveau 5;32033111;BTS;Prothésiste dentaire;37376;2023-01-25;2025;;REMPLACE celui de 2012   320-33110 S
 CPC Cohésion sociale et santé;Secteur Sanitaire et social, médico-social;Sous-secteur;Niveau 5;320-33104 S;BTS;Prothésiste orthésiste;1097;1997-07-28;1998;;remplacement  annexe 2 et 3 en 2023
 CPC Services aux entreprises;Secteur Services administratifs et financiers;Sous-secteur;Niveau 5;320-32409 T;BTS;Support à l'action managériale;34029;2018-02-16;2020;;.
 CPC Services et produits de consommation;Secteur Tourisme, hôtellerie, restauration;Sous-secteur;Niveau 5;320-33426 M;BTS;Tourisme;37890;2019-03-05;2021;;-
