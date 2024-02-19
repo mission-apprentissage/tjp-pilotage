@@ -13,6 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
+import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
 import { Multiselect } from "../../../../components/Multiselect";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
 import { StatCard } from "./StatCard";
@@ -91,6 +92,11 @@ export const IndicateursSection = ({
           <Text>
             Retrouvez ici les principaux indicateurs (chiffres {CURRENT_RENTREE}
             ) sur votre territoire.
+            <GlossaireShortcut
+              display={"inline"}
+              marginInline={1}
+              iconSize={"16px"}
+            />
           </Text>
           <SimpleGrid spacing={3} columns={[2]} mt="4">
             <Center fontSize="2xl" fontWeight="bold">
