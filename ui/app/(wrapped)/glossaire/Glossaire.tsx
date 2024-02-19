@@ -10,14 +10,14 @@ import {
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
-import { DoubleArrowLeft } from "../../../components/icons/DoubleArrowLeft";
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { DoubleArrowRight } from "../../../components/icons/DoubleArrowRight";
-import { useGlossaireContext } from "../../contexts/glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
+import { useGlossaireContext } from "./glossaireContext";
 
 export const Glossaire = () => {
-  const { isOpen, onOpen, onClose, selectedEntry, setSelectedEntry } =
+  const { isOpen, onOpen, onClose, selectedEntry, setSelectedEntry, entries } =
     useGlossaireContext();
 
   const currentContent = useMemo(() => {
@@ -26,18 +26,21 @@ export const Glossaire = () => {
     }
 
     return (
-      <GlossaireListContent selectEntry={(e: string) => setSelectedEntry(e)} />
+      <GlossaireListContent
+        selectEntry={(e: string) => setSelectedEntry(e)}
+        initialEntries={entries}
+      />
     );
-  }, [selectedEntry, setSelectedEntry]);
+  }, [selectedEntry, setSelectedEntry, entries]);
 
   return (
     <Box display={"flex"} flexGrow={"1"} justifyContent={"end"}>
       <Button
         variant={"secondary"}
-        leftIcon={<DoubleArrowLeft height={24} width={24} />}
+        leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
         onClick={() => onOpen()}
         color="bluefrance.113"
-        fontSize={"medium"}
+        fontSize={"14px"}
       >
         Glossaire
       </Button>

@@ -4,12 +4,12 @@ import "react-notion-x/src/styles.css";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
+import { useSearchParams } from "next/navigation";
 import {
-  createContext,
   Dispatch,
   SetStateAction,
+  createContext,
   useEffect,
   useLayoutEffect,
   useMemo,
@@ -24,12 +24,14 @@ import {
   Changelog,
   ChangelogContext,
 } from "./(wrapped)/changelog/changelogContext";
-import { GlossaireProvider } from "./contexts/glossaireContext";
+import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
+import { GlossaireEntries } from "./(wrapped)/glossaire/types";
 
 interface RootLayoutClientProps {
   children: React.ReactNode;
   auth?: Auth;
   changelog: Changelog;
+  glossaire: GlossaireEntries;
 }
 
 const useTracking = () => {
@@ -82,6 +84,7 @@ export default function RootLayoutClient({
   children,
   auth: initialAuth,
   changelog: initialChangelog,
+  glossaire: initialGlossaire,
 }: RootLayoutClientProps) {
   const tracking = useTracking();
   console.log("tr", tracking);
@@ -142,7 +145,7 @@ export default function RootLayoutClient({
                   <CodeRegionFilterContext.Provider
                     value={codeRegionFilterValue}
                   >
-                    <GlossaireProvider>
+                    <GlossaireProvider initialEntries={initialGlossaire}>
                       <ChangelogContext.Provider
                         value={{ changelog, setChangelog }}
                       >

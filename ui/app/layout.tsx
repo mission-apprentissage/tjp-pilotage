@@ -34,6 +34,17 @@ const fetchChangelog = async () => {
   }
 };
 
+const fetchGlossaire = async () => {
+  const headersList = Object.fromEntries(headers().entries());
+  try {
+    return await client
+      .ref("[GET]/glossaire")
+      .query({}, { headers: headersList });
+  } catch (e) {
+    return undefined;
+  }
+};
+
 interface LayoutProps {
   children: React.ReactNode;
 }
@@ -41,8 +52,13 @@ interface LayoutProps {
 async function Layout({ children }: LayoutProps) {
   const auth = await fetchAuth();
   const changelog = await fetchChangelog();
+  const glossaire = await fetchGlossaire();
   return (
-    <RootLayoutClient auth={auth || undefined} changelog={changelog || []}>
+    <RootLayoutClient
+      auth={auth || undefined}
+      changelog={changelog || []}
+      glossaire={glossaire || []}
+    >
       {children}
     </RootLayoutClient>
   );
