@@ -1,4 +1,4 @@
-## Ordre de l'import des données :
+# Ordre de l'import des données
 
 - `yarn cli importFiles`
 - `yarn cli importTables`
