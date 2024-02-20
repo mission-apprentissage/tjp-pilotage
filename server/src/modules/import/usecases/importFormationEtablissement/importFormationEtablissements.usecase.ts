@@ -7,8 +7,6 @@ import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { logger } from "./importLogger";
-import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
-import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
 import { importFormationHistorique } from "./steps/importFormationsHistoriques/importFormationsHistoriques.step";
@@ -26,13 +24,10 @@ export const [importFormations] = inject(
     importFormationHistorique,
     findDiplomesProfessionnels,
     findFamillesMetiers,
-    fetchIJ,
-    fetchIjReg,
   },
   (deps) => {
-    return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
+    return async () => {
       logger.reset();
-      if (fetchIj) await deps.fetchIjReg();
 
       await streamIt(
         (count) =>
@@ -44,9 +39,9 @@ export const [importFormations] = inject(
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements(ancienCfd, { fetchIj });
+            await importFormationEtablissements(ancienCfd);
           }
-          await importFormationEtablissements(cfd, { fetchIj });
+          await importFormationEtablissements(cfd);
           if (!formation) return;
         },
         { parallel: 20 }
@@ -61,9 +56,9 @@ export const [importFormations] = inject(
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements(ancienCfd, { fetchIj });
+            await importFormationEtablissements(ancienCfd);
           }
-          await importFormationEtablissements(cfd, { fetchIj });
+          await importFormationEtablissements(cfd);
           if (!formation) return;
         },
         { parallel: 20 }
@@ -81,13 +76,11 @@ export const [importFormationEtablissements] = inject(
     importIndicateurSortie,
     getCfdRentrees,
     getCfdDispositifs,
-    fetchIJ,
     importIndicateursRegionSortie,
   },
   (deps) => {
     return async (
       cfd: string,
-      { fetchIj = true }: { fetchIj?: boolean } = {}
     ) => {
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
@@ -116,8 +109,6 @@ export const [importFormationEtablissements] = inject(
           for (const enseignement of enseignements) {
             const { uai, anneesEnseignement, voie } = enseignement;
             if (!processedUais.includes(uai)) {
-              if (fetchIj) await deps.fetchIJ({ uai });
-
               await deps.importEtablissement({ uai });
               for (const millesime of MILLESIMES_IJ) {
                 await deps.importIndicateurEtablissement({ uai, millesime });

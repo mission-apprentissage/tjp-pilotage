@@ -200,19 +200,17 @@ cli
   });
 
 cli
-  .command("importFormations")
-  .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async (fetchIjOption: boolean | string) => {
-    const fetchIj = fetchIjOption !== "false";
-    await importIndicateursAcademie();
-    await importIndicateursRegion();
-    await importFormations({ fetchIj });
-  });
-
-cli
   .command("importIJ")
   .action(async () => {
     await importIJData();
+  });
+
+cli
+  .command("importFormations")
+  .action(async () => {
+    await importIndicateursAcademie();
+    await importIndicateursRegion();
+    await importFormations();
   });
 
 cli.parse(process.argv);
