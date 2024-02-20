@@ -4,7 +4,9 @@ import {
   Box,
   Button,
   Center,
+  chakra,
   Checkbox,
+  createIcon,
   Flex,
   FormControl,
   FormLabel,
@@ -20,8 +22,6 @@ import {
   Stack,
   Text,
   VStack,
-  chakra,
-  createIcon,
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
