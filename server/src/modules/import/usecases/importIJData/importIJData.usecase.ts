@@ -20,6 +20,8 @@ function addProcess(uai: string) {
   }
 }
 
+const BATCH_SIZE = 50;
+
 export const [importIJData] = inject(
   {
     importFormationHistorique,
@@ -73,7 +75,6 @@ export const [importIJData] = inject(
 
       console.log("--- construction batchs")
       const batchs: Array<Array<string>> = []
-      const BATCH_SIZE = 50;
       for (const uai in toProcess) {
         if (batchs.length === 0) batchs.push([])
         const lastIndex = batchs.length - 1
