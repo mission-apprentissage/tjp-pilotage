@@ -112,7 +112,7 @@ export const TableQuadrant = ({
                         Le ratio entre le nombre de premiers voeux et la
                         capacité de la formation au niveau régional.
                       </Text>
-                      <Text>Cliquez pour plus d'informations.</Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
                       <TauxPressionScale />
                     </Box>
                   }

@@ -1,18 +1,19 @@
 import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
-import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
+import { breadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
 import { checkboxTheme } from "@/theme/Checkbox.theme";
 import { formStyle } from "@/theme/Label.theme";
 import { linkTheme } from "@/theme/Link.theme";
-import { radioTheme } from "@/theme/radio.theme";
+import { radioTheme } from "@/theme/Radio.theme";
 import { selectTheme } from "@/theme/Select.theme";
-import { sliderTheme } from "@/theme/slider.theme";
+import { sliderTheme } from "@/theme/Slider.theme";
 import { tableTheme } from "@/theme/Table.theme";
 import { tabsTheme } from "@/theme/Tabs.theme";
 import { tagTheme } from "@/theme/Tag.theme";
 import { tooltipTheme } from "@/theme/Tooltip.theme";
 
+import { badgeTheme } from "./Badge.theme";
 import { buttonTheme } from "./Button.theme";
 
 export const themeDefinition = {
@@ -162,7 +163,7 @@ export const themeDefinition = {
   components: {
     Button: buttonTheme,
     Tabs: tabsTheme,
-    Breadcrumb: BreadcrumbTheme,
+    Breadcrumb: breadcrumbTheme,
     Table: tableTheme,
     Tooltip: tooltipTheme,
     Select: selectTheme,
@@ -173,6 +174,7 @@ export const themeDefinition = {
     Form: formStyle,
     Tag: tagTheme,
     Checkbox: checkboxTheme,
+    Badge: badgeTheme,
   },
 };
 

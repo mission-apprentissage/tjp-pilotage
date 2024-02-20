@@ -115,10 +115,6 @@ const useGlossaireEntryContentHook = (id: string) => {
 };
 
 export const GlossaireEntryContent = ({ id }: { id: string }) => {
-  const [blue, yellow, purple, gray, red, green, pink, orange] = useToken(
-    "colors",
-    ["blue", "yellow", "purple", "gray", "red", "green", "pink", "orange"]
-  );
   const { entry, isLoading, isError, error } = useGlossaireEntryContentHook(id);
 
   if (isLoading) {
@@ -158,20 +154,18 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         </Flex>
         {entry?.indicator && (
           <Badge
-            colorScheme={
+            variant={
               {
-                blue,
-                yellow,
-                purple,
-                gray,
-                red,
-                brown: blue,
-                green,
-                pink,
-                orange,
-              }[entry.indicator?.color ?? "blue"]
+                green: "success",
+                blue: "info",
+                yellow: "new",
+                red: "error",
+                orange: "warning",
+                purple: "purpleGlycine",
+                pink: "pinkTuile",
+                brown: "brownCafeCreme",
+              }[entry.indicator?.color]
             }
-            variant="subtle"
             display="flex"
             alignItems={"center"}
             style={{ borderRadius: "0.25rem", padding: "0.25rem 0.5rem" }}
