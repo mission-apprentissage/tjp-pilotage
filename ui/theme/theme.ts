@@ -1,20 +1,19 @@
-import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
-
-import { breadcrumbTheme } from "@/theme/Breadcrumb.theme";
-import { cardTheme } from "@/theme/Card.theme";
-import { checkboxTheme } from "@/theme/Checkbox.theme";
-import { formStyle } from "@/theme/Label.theme";
-import { linkTheme } from "@/theme/Link.theme";
-import { radioTheme } from "@/theme/Radio.theme";
-import { selectTheme } from "@/theme/Select.theme";
-import { sliderTheme } from "@/theme/Slider.theme";
-import { tableTheme } from "@/theme/Table.theme";
-import { tabsTheme } from "@/theme/Tabs.theme";
-import { tagTheme } from "@/theme/Tag.theme";
-import { tooltipTheme } from "@/theme/Tooltip.theme";
+import { extendBaseTheme,theme as chakraTheme } from "@chakra-ui/react";
 
 import { badgeTheme } from "./Badge.theme";
+import { breadcrumbTheme } from "./Breadcrumb.theme";
 import { buttonTheme } from "./Button.theme";
+import { cardTheme } from "./Card.theme";
+import { checkboxTheme } from "./Checkbox.theme";
+import { formStyle } from "./Label.theme";
+import { linkTheme } from "./Link.theme";
+import { radioTheme } from "./Radio.theme";
+import { selectTheme } from "./Select.theme";
+import { sliderTheme } from "./Slider.theme";
+import { tableTheme } from "./Table.theme";
+import { tabsTheme } from "./Tabs.theme";
+import { tagTheme } from "./Tag.theme";
+import { tooltipTheme } from "./Tooltip.theme";
 
 export const themeDefinition = {
   styles: {

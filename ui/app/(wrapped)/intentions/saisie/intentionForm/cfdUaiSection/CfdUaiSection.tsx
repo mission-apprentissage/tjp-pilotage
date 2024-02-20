@@ -101,9 +101,11 @@ export const CfdUaiSection = ({
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   useEffect(() => {
-    watch(() => {
+    const subscription = watch(() => {
       setIsSubmitDisabled(!isCFDUaiSectionValid(getValues()));
-    }).unsubscribe;
+    });
+
+    return () => subscription.unsubscribe();
   });
 
   const anchorToStatus = () => {
