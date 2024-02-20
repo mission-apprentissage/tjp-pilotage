@@ -1,4 +1,4 @@
-import { extendBaseTheme,theme as chakraTheme } from "@chakra-ui/react";
+import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
 import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
 import { cardTheme } from "@/theme/Card.theme";
@@ -34,7 +34,7 @@ export const themeDefinition = {
       525: "#0078f3",
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
-      "text": "#0063CB",
+      text: "#0063CB",
       950: "#E8EDFF",
       "950_hover": "#c2d1ff",
       "950_active": "#a9bfff",
@@ -174,6 +174,6 @@ export const themeDefinition = {
     Tag: tagTheme,
     Checkbox: checkboxTheme,
   },
-}
+};
 
 export const theme = extendBaseTheme(chakraTheme, themeDefinition);

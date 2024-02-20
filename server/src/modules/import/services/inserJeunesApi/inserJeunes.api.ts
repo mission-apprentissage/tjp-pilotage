@@ -1,14 +1,53 @@
-import axios from "axios";
+import axios, { AxiosError } from "axios";
+import axiosRetry, { isNetworkError } from "axios-retry";
 
 import { config } from "../../../../../config/config";
-import { logError, logResolve } from "../logger/logger";
 import { formatRegionData } from "./formatRegionData";
 import { formatUaiData } from "./formatUaiData";
+import { instance, setInstanceBearerToken } from "./inserJeunes.provider";
 
-const instance = axios.create({
-  baseURL: "https://www.inserjeunes.education.gouv.fr/api/v1.0",
-  responseType: "json",
-  timeout: 20000,
+let loggingIn = false;
+
+async function retryCondition(error: AxiosError) {
+  const response = error?.response;
+
+  if (isNetworkError(error)) {
+    return true;
+  }
+
+  if (![500, 401, undefined].includes(response?.status)) {
+    if (response?.status === 400) {
+      console.log(
+        `[ERROR] ${JSON.stringify(response?.data)} : ${error.config?.url}`
+      );
+      return false;
+    } else {
+      console.log(`[ERROR] unknown.`, JSON.stringify(response));
+    }
+  }
+
+  if (!loggingIn) {
+    loggingIn = true;
+    console.log("--- Refreshing insertjeunes API token");
+    const token = await login();
+    setInstanceBearerToken(token);
+    console.log("--- Refreshed insertjeunes API token");
+    loggingIn = false;
+  } else {
+    console.log(
+      "--- Already refreshing insertjeunes API token, triggering a 10s delay"
+    );
+    await new Promise((resolve) => setTimeout(resolve, 10000));
+  }
+
+  return true;
+}
+
+axiosRetry(instance, {
+  retries: 20,
+  retryDelay: axiosRetry.exponentialDelay,
+  retryCondition,
+  shouldResetTimeout: true,
 });
 
 export const login = async () => {
@@ -22,39 +61,6 @@ export const login = async () => {
   return token;
 };
 
-instance.interceptors.response.use(
-  async (resolve) => {
-    const { config } = resolve;
-    if (config.url) logResolve(config.url);
-
-    return resolve;
-  },
-  async (err) => {
-    const { config, response } = err;
-
-    if (config.retried || ![500, 401, undefined].includes(response?.status)) {
-      logError(response, config.url);
-      console.log(`[ERROR] ${response?.data?.msg} : ${config.url}`);
-      return Promise.reject(err);
-    }
-    if (config.retried || response?.status === 500) {
-      logError(response, config.url);
-    }
-    console.log("Retry with new token");
-    config.retried = true;
-    const token = await login();
-    instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-
-    return axios({
-      ...config,
-      headers: {
-        ...config.headers,
-        Authorization: `Bearer ${token}`,
-      },
-    });
-  }
-);
-
 export const getUaiData = async ({
   uai,
   millesime,
@@ -62,14 +68,14 @@ export const getUaiData = async ({
   uai: string;
   millesime: string;
 }) => {
-  try {
-    const response = await instance.get(`/UAI/${uai}/millesime/${millesime}`);
-    const data = JSON.parse(response.data);
+  const response = await instance.get(`/UAI/${uai}/millesime/${millesime}`);
+
+  if (response) {
+    const data = JSON.parse(response?.data);
     return formatUaiData(data);
-  } catch (e) {
-    if (axios.isAxiosError(e)) return undefined;
-    throw e;
   }
+
+  throw new Error("no data");
 };
 
 export const getRegionData = async ({

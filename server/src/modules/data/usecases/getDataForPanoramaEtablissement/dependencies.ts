@@ -1,10 +1,14 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimePrecedent } from "../../services/getMillesime";
-import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
+import {
+  getDateRentreeScolaire,
+  getRentreeScolairePrecedente,
+} from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notAnneeCommune, notSpecialite } from "../../utils/notAnneeCommune";
@@ -49,6 +53,16 @@ export const getStatsEtablissement = async ({
         .on("indicateurEtablissement.millesime", "=", millesimeSortie)
     )
     .where("etablissement.UAI", "=", uai)
+    .where((w) =>
+      w.or([
+        w("etablissement.dateFermeture", "is", null),
+        w(
+          "etablissement.dateFermeture",
+          ">",
+          sql<Date>`${getDateRentreeScolaire(CURRENT_RENTREE)}`
+        ),
+      ])
+    )
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire);
 
   const informationsEtablissement = await baseStatsEntree
@@ -61,7 +75,10 @@ export const getStatsEtablissement = async ({
       "region.codeRegion",
       "valeurAjoutee",
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.badRequest(`Code UAI invalide : ${uai}`);
+    });
 
   const nbFormations = await baseStatsEntree
     .where(notAnneeCommune)

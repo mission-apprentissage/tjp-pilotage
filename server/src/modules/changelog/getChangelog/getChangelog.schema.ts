@@ -2,8 +2,8 @@ import { z } from "zod";
 
 const typeSchema = z.object({
   label: z.string(),
-  color: z.string()
-})
+  color: z.string(),
+});
 
 export const changelogEntrySchema = z.object({
   id: z.string(),
@@ -11,17 +11,16 @@ export const changelogEntrySchema = z.object({
   deployed: z.boolean(),
   types: z.array(typeSchema),
   date: z.object({
-    type: z.union([ z.literal("date"), z.literal("string") ]),
-    value: z.string()
+    type: z.union([z.literal("date"), z.literal("string")]),
+    value: z.string(),
   }),
   description: z.string(),
   document: z.string().optional(),
-  show: z.boolean()
+  show: z.boolean(),
 });
 
-
 export type ChangelogEntry = z.infer<typeof changelogEntrySchema>;
-export type Changelog = Array<ChangelogEntry>
+export type Changelog = Array<ChangelogEntry>;
 
 export const getChangelogSchema = {
   response: {

@@ -25,9 +25,9 @@ export const [importRawFile, importRawFileFactory] = inject(
        * C'est nécessaire uniquement lors du passage en prod des imports 2023. Le bout de code devra être retiré ensuite
        */
       if (type.indexOf("constat") > -1) {
-        const year = type.replace(/[a-zA-Z]+_/g, '');
-        const oldConstatName = "Cab-nbre_division_effectifs_par_etab_mefst11"
-        await deps.deleteRawData({ type: `${oldConstatName}_${year}` })
+        const year = type.replace(/[a-zA-Z]+_/g, "");
+        const oldConstatName = "Cab-nbre_division_effectifs_par_etab_mefst11";
+        await deps.deleteRawData({ type: `${oldConstatName}_${year}` });
       }
 
       /**
@@ -36,10 +36,10 @@ export const [importRawFile, importRawFileFactory] = inject(
        * Il faut donc clean la table rawData de toutes les ocurences de ces éléments.
        * C'est nécessaire uniquement lors du passage en prod des imports 2023. Le bout de code devra être retiré ensuite
        */
-      if (type.indexOf('BTS_attractivite_capacite') > -1) {
-        const year = type.replace(/[a-zA-Z]+_/g, '');
-        const oldBtsAttractiviteName = "attractivite_capacite_BTS"
-        await deps.deleteRawData({ type: `${oldBtsAttractiviteName}_${year}` })
+      if (type.indexOf("BTS_attractivite_capacite") > -1) {
+        const year = type.replace(/[a-zA-Z]+_/g, "");
+        const oldBtsAttractiviteName = "attractivite_capacite_BTS";
+        await deps.deleteRawData({ type: `${oldBtsAttractiviteName}_${year}` });
       }
 
       let count = 0;

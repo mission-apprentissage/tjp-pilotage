@@ -8,18 +8,14 @@ export const findDiplomeProfessionnel = async ({ cfd }: { cfd: string }) => {
     .selectFrom("rawData")
     .select("data")
     .where("type", "=", "diplomesProfessionnels")
-    .where(eb =>
+    .where((eb) =>
       eb.or([
         eb(
           sql`"data"->>'Code diplôme'`,
           "like",
           `${cfd.slice(0, 3)}-${cfd.slice(3, 8)}%`
         ),
-        eb(
-          sql`"data"->>'Code diplôme'`,
-          "like",
-          `${cfd}%`
-        )
+        eb(sql`"data"->>'Code diplôme'`, "like", `${cfd}%`),
       ])
     )
     .limit(1)

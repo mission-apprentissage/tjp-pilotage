@@ -39,9 +39,9 @@ export function hasContinuum<
       .where("subIRS.cfdContinuum", "is not", null)
       .select([
         "subIRS.cfdContinuum as cfd",
-        "subFormation.libelleFormation as libelleFormation"
+        "subFormation.libelleFormation as libelleFormation",
       ])
-      .$narrowType<{ cfd: string, libelleFormation: string }>()
+      .$narrowType<{ cfd: string; libelleFormation: string }>()
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",
