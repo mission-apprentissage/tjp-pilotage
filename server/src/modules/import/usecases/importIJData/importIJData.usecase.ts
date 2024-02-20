@@ -6,17 +6,17 @@ import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
+import { findFormationsHistoriques } from "./findFormationsHistoriques.step";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
-import { importFormationHistorique } from "./steps/importFormationsHistoriques/importFormationsHistoriques.step";
 
-const toProcess: {
+const UAI_TO_PROCESS: {
   [k: string]: unknown
 } = {}
 
-function addProcess(uai: string) {
-  if (!toProcess[uai]) {
-    toProcess[uai] = true;
+function addUaiToProcess(uai: string) {
+  if (!UAI_TO_PROCESS[uai]) {
+    UAI_TO_PROCESS[uai] = true;
   }
 }
 
@@ -24,7 +24,7 @@ const BATCH_SIZE = 50;
 
 export const [importIJData] = inject(
   {
-    importFormationHistorique,
+    findFormationsHistoriques,
     findDiplomesProfessionnels,
     findFamillesMetiers,
     fetchIJ,
@@ -44,12 +44,12 @@ export const [importIJData] = inject(
         async (item) => {
           const cfd = item["Code diplôme"]?.replace("-", "").slice(0, 8);
           if (!cfd) return;
-          const ancienCfds = await deps.importFormationHistorique({ cfd });
+          const ancienCfds = await deps.findFormationsHistoriques({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements(ancienCfd);
+            await importIJDataForEtablissement(ancienCfd);
           }
-          await importFormationEtablissements(cfd);
-          console.log("---- uai count", Object.keys(toProcess).length);
+          await importIJDataForEtablissement(cfd);
+          console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
         },
         { parallel: 20 }
       );
@@ -61,13 +61,13 @@ export const [importIJData] = inject(
         async (item) => {
           const cfd = item.cfd;
           if (!cfd) return;
-          const ancienCfds = await deps.importFormationHistorique({ cfd });
+          const ancienCfds = await deps.findFormationsHistoriques({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements(ancienCfd);
+            await importIJDataForEtablissement(ancienCfd);
           }
-          await importFormationEtablissements(cfd);
+          await importIJDataForEtablissement(cfd);
 
-          console.log("---- uai count", Object.keys(toProcess).length);
+          console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
         },
         { parallel: 20 }
       );
@@ -75,7 +75,7 @@ export const [importIJData] = inject(
 
       console.log("--- construction batchs")
       const batchs: Array<Array<string>> = []
-      for (const uai in toProcess) {
+      for (const uai in UAI_TO_PROCESS) {
         if (batchs.length === 0) batchs.push([])
         const lastIndex = batchs.length - 1
         if (batchs[lastIndex].length < BATCH_SIZE) {
@@ -97,7 +97,7 @@ export const [importIJData] = inject(
   }
 );
 
-export const [importFormationEtablissements] = inject(
+export const [importIJDataForEtablissement] = inject(
   {
     getCfdRentrees,
     getCfdDispositifs,
@@ -127,7 +127,7 @@ export const [importFormationEtablissements] = inject(
 
           for (const enseignement of enseignements) {
             const { uai, voie } = enseignement;
-            addProcess(uai);
+            addUaiToProcess(uai);
             if (voie !== "scolaire") continue;
           }
         }
