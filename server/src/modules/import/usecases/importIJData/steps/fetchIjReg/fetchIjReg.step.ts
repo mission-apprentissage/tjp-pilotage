@@ -5,7 +5,6 @@ import { regionAcademiqueMapping } from "../../../../domain/regionAcademiqueMapp
 import { getRegionData } from "../../../../services/inserJeunesApi/inserJeunes.api";
 import { cacheIjReg, clearIjRegCache } from "./cacheIjReg.dep";
 
-
 export const [fetchIjReg] = inject(
   { getRegionData, cacheIjReg, clearIjRegCache },
   (deps) => async () => {

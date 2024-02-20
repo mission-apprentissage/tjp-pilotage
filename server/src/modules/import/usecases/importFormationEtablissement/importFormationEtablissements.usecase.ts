@@ -1,15 +1,12 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ, RENTREES_SCOLAIRES } from "shared";
 
-import { loggerReg, loggerUai } from "../../services/logger/logger";
 import { streamIt } from "../../utils/streamIt";
 import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
-import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
+import { findDiplomesProfessionnels } from "../importIJData/findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
 import { findUAIsApprentissage } from "./findUAIsApprentissage";
-import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
-import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
 import { importEtablissement } from "./steps/importEtablissement/importEtablissement.step";
 import { importFormation } from "./steps/importFormation/importFormation.step";
 import { importFormationHistorique } from "./steps/importFormationsHistoriques/importFormationsHistoriques.step";
@@ -33,17 +30,9 @@ export const [importFormations] = inject(
     importFormationHistorique,
     findDiplomesProfessionnels,
     findFamillesMetiers,
-    fetchIJ,
-    fetchIjReg,
   },
   (deps) => {
-    return async ({ fetchIj = true }: { fetchIj?: boolean } = {}) => {
-      loggerReg.set();
-      loggerUai.set();
-      loggerReg.reset();
-      if (fetchIj) await deps.fetchIjReg();
-      loggerReg.write();
-
+    return async () => {
       await streamIt(
         (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 10 }),
@@ -56,14 +45,11 @@ export const [importFormations] = inject(
             cfd,
           });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements({
-              cfd: ancienCfd,
-              fetchIj,
-              voie,
-            });
+            await importFormationEtablissements({ cfd: ancienCfd, voie });
           }
-          await importFormationEtablissements({ cfd, fetchIj, voie });
-        }
+          await importFormationEtablissements({ cfd, voie });
+        },
+        { parallel: 20 }
       );
 
       await streamIt(
@@ -75,11 +61,12 @@ export const [importFormations] = inject(
           const formation = await deps.importFormation({ cfd });
           const ancienCfds = await deps.importFormationHistorique({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importFormationEtablissements({ cfd: ancienCfd, fetchIj });
+            await importFormationEtablissements({ cfd: ancienCfd });
           }
-          await importFormationEtablissements({ cfd, fetchIj });
+          await importFormationEtablissements({ cfd });
           if (!formation) return;
-        }
+        },
+        { parallel: 20 }
       );
     };
   }
@@ -94,7 +81,6 @@ export const [importFormationEtablissements] = inject(
     importIndicateurSortie,
     getCfdRentrees,
     getCfdDispositifs,
-    fetchIJ,
     importIndicateursRegionSortie,
     importIndicateurSortieApprentissage,
     importIndicateursRegionSortieApprentissage,
@@ -103,24 +89,17 @@ export const [importFormationEtablissements] = inject(
   (deps) => {
     return async ({
       cfd,
-      fetchIj = true,
       voie = "scolaire",
     }: {
       cfd: string;
-      fetchIj?: boolean;
       voie?: string;
     }) => {
       if (voie !== "scolaire") {
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
-
         for (const uai of uais) {
           if (!processedUais.has(uai)) {
-            loggerUai.reset();
-            if (fetchIj) await deps.fetchIJ({ uai });
-            loggerUai.write();
-
             await deps.importEtablissement({ uai });
             for (const millesime of MILLESIMES_IJ) {
               await deps.importIndicateurEtablissement({ uai, millesime });
@@ -172,10 +151,6 @@ export const [importFormationEtablissements] = inject(
             for (const enseignement of enseignements) {
               const { uai, anneesEnseignement, voie } = enseignement;
               if (!processedUais.has(uai)) {
-                loggerUai.reset();
-                if (fetchIj) await deps.fetchIJ({ uai });
-                loggerUai.write();
-
                 await deps.importEtablissement({ uai });
                 for (const millesime of MILLESIMES_IJ) {
                   await deps.importIndicateurEtablissement({ uai, millesime });
