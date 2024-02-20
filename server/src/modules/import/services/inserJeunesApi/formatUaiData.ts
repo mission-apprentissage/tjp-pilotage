@@ -1,6 +1,6 @@
 import { Voies } from "./voies.enum";
 
-export type R = {
+export type IJUaiData = {
   [voie in Voies]: Record<
     string,
     {
@@ -21,10 +21,10 @@ export type R = {
 } & { [s: string]: { valeur_ajoutee_6_mois: number } };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const formatUaiData = (rawData: any): R => {
+export const formatUaiData = (rawData: any): IJUaiData => {
   return rawData.data.reduce(
     (
-      acc: R,
+      acc: IJUaiData,
       cur: {
         id_mesure: string;
         valeur_mesure: number;
@@ -77,6 +77,6 @@ export const formatUaiData = (rawData: any): R => {
       }
       return acc;
     },
-    { scolaire: {}, apprentissage: {} } as R
+    { scolaire: {}, apprentissage: {} } as IJUaiData
   );
 };

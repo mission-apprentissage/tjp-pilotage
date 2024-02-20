@@ -1,4 +1,4 @@
-import axios, { AxiosError } from "axios";
+import { AxiosError } from "axios";
 import axiosRetry, { isNetworkError } from "axios-retry";
 
 import { config } from "../../../../../config/config";
@@ -85,15 +85,15 @@ export const getRegionData = async ({
   codeRegionIj: string;
   millesime: string;
 }) => {
-  try {
-    const response = await instance.get(
-      `/region/${codeRegionIj}/millesime/${millesime}`
-    );
-    return formatRegionData(response.data);
-  } catch (e) {
-    if (axios.isAxiosError(e)) return undefined;
-    throw e;
+  const response = await instance.get(
+    `/region/${codeRegionIj}/millesime/${millesime}`
+  );
+
+  if (response) {
+    return formatRegionData(response?.data);
   }
+
+  throw new Error("no data");
 };
 
 export const inserJeunesApi = { getUaiData, getRegionData };
