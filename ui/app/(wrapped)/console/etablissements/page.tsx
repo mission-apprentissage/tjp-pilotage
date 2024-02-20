@@ -16,8 +16,8 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
-import { usePlausible } from "next-plausible";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { Fragment, useContext, useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
@@ -555,7 +555,7 @@ export default function Etablissements() {
                           Le ratio entre le nombre de premiers voeux et la
                           capacité de la formation au niveau régional.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                         <TauxPressionScale />
                       </Box>
                     }
@@ -579,7 +579,7 @@ export default function Etablissements() {
                           Le ratio entre l’effectif d’entrée en formation et sa
                           capacité.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -602,7 +602,7 @@ export default function Etablissements() {
                           La part de ceux qui sont en emploi 6 mois après leur
                           sortie d’étude.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -625,7 +625,7 @@ export default function Etablissements() {
                           Tout élève inscrit à N+1 (réorientation et
                           redoublement compris).
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -646,7 +646,7 @@ export default function Etablissements() {
                           d'emploi et de poursuite d'études appliquées au niveau
                           de diplôme.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -670,7 +670,7 @@ export default function Etablissements() {
                           d'élèves en emploi) / nombre d'élèves en entrée en
                           dernière année de formation.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -693,7 +693,7 @@ export default function Etablissements() {
                           La part de ceux qui sont en emploi 6 mois après leur
                           sortie d’étude.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -716,7 +716,7 @@ export default function Etablissements() {
                           Tout élève inscrit à N+1 (réorientation et
                           redoublement compris).
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -744,7 +744,7 @@ export default function Etablissements() {
                           Tout élève inscrit à N+1 (réorientation et
                           redoublement compris).
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
@@ -770,7 +770,7 @@ export default function Etablissements() {
                           chômage de la zone d'emploi, comparativement au taux
                           de référence d’établissements similaires.
                         </Text>
-                        <Text>Cliquez pour plus d'informations.</Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
                     onClick={(e) => {
