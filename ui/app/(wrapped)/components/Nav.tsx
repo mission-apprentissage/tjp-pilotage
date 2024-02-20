@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
-import { ReactNode, useContext } from "react";
+import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
 import { hasPermission } from "shared";
 
 import { UaiFilterContext } from "@/app/layoutClient";
@@ -27,11 +27,13 @@ const NavLink = chakra(
     segment,
     href,
     className,
+    target,
   }: {
     children: ReactNode;
     segment: string | null;
     href: string;
     className?: string;
+    target?: HTMLAttributeAnchorTarget;
   }) => {
     const segments = useSelectedLayoutSegments();
     const isActive =
@@ -50,6 +52,7 @@ const NavLink = chakra(
         borderBottomWidth={3}
         borderColor={isActive ? "bluefrance.113" : "transparent"}
         _hover={{ textDecoration: "unset", bg: "blueecume.925" }}
+        target={target ?? "_self"}
       >
         {children}
       </Link>
@@ -209,6 +212,13 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
+      <NavLink
+        href="https://sunrise-waitress-5d6.notion.site/a09d6b68b9bd4c5ea8460e2b41939f41?v=5d5afb3f224f44499f9d96628eb5d510&pvs=4"
+        target="_blank"
+        segment="ressources"
+      >
+        Ressources
+      </NavLink>
       <Glossaire />
     </Flex>
   );
