@@ -1,7 +1,8 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Flex, ResponsiveValue, Text, chakra } from "@chakra-ui/react";
-import { GlossaireEntryKey } from "../app/(wrapped)/glossaire/GlossaireEntries";
+import { chakra, Flex, ResponsiveValue, Text } from "@chakra-ui/react";
+
 import { useGlossaireContext } from "../app/(wrapped)/glossaire/glossaireContext";
+import { GlossaireEntryKey } from "../app/(wrapped)/glossaire/GlossaireEntries";
 
 export const GlossaireShortcut = chakra(
   ({
@@ -13,7 +14,7 @@ export const GlossaireShortcut = chakra(
     className?: string;
     label?: string;
     glossaireEntryKey?: GlossaireEntryKey;
-    iconSize?: ResponsiveValue<number | (string & {})>;
+    iconSize?: ResponsiveValue<number | string>;
   }) => {
     const { onOpen } = useGlossaireContext();
     return (

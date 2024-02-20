@@ -1,3 +1,4 @@
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,11 +11,10 @@ import {
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { DoubleArrowRight } from "../../../components/icons/DoubleArrowRight";
+import { useGlossaireContext } from "./glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
-import { useGlossaireContext } from "./glossaireContext";
 
 export const Glossaire = () => {
   const { isOpen, onOpen, onClose, selectedEntry, setSelectedEntry, entries } =
