@@ -16,7 +16,7 @@ import { Offres_apprentissage } from "../fileTypes/Offres_apprentissage";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
-import { R } from "../services/inserJeunesApi/formatUaiData";
+import { IJUaiData } from "../services/inserJeunesApi/formatUaiData";
 
 type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
@@ -33,7 +33,7 @@ type LineTypes = {
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
   BTS_attractivite_capacite: BTS_Attractivite_capacite;
-  ij: R & { uai: string; millesime: string };
+  ij: IJUaiData & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   decrochage_regional: Decrochage_regional;
   decrochage_academique: Decrochage_academique;

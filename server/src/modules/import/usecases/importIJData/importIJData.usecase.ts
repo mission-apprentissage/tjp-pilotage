@@ -37,7 +37,6 @@ export const [importIJData] = inject(
       console.log("--- fetch IJ regions");
       await deps.fetchIjReg();
       console.log("--- end fetch IJ regions");
-
       console.log(
         "--- recueil des UAI à partir des CFD des diplomes professionnels"
       );
