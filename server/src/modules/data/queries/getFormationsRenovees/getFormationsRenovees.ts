@@ -17,7 +17,7 @@ export const getFormationsRenoveesEnseignees = async ({
       "formationHistorique.codeFormationDiplome"
     )
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "formationHistorique.codeFormationDiplome"
     )

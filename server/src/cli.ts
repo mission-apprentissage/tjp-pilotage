@@ -200,11 +200,24 @@ cli.command("importIJ").action(async () => {
   await importIJData();
 });
 
-cli.command("importFormations").action(async () => {
-  await importIndicateursAcademie();
-  await importIndicateursRegion();
-  await importFormations();
-  await refreshViews();
-});
+cli
+  .command("importFormations")
+  .argument("[usecase]")
+  .action(async (usecaseName: string) => {
+    const usecases = {
+      importIndicateursAcademie,
+      importIndicateursRegion,
+      importFormations,
+      refreshViews,
+    };
+
+    if (usecaseName) {
+      await usecases[usecaseName as keyof typeof usecases]();
+    } else {
+      for (const usecase of Object.values(usecases)) {
+        await usecase();
+      }
+    }
+  });
 
 cli.parse(process.argv);
