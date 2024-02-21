@@ -14,7 +14,15 @@ export const TooltipIcon = chakra(
   }) => {
     return (
       <Tooltip maxWidth={180} label={label}>
-        <QuestionOutlineIcon className={className} onClick={onClick} />
+        <QuestionOutlineIcon
+          className={className}
+          onClick={(e) => {
+            if (onClick) {
+              e.stopPropagation();
+              onClick(e);
+            }
+          }}
+        />
       </Tooltip>
     );
   }

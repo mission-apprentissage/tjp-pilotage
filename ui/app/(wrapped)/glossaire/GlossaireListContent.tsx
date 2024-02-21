@@ -9,16 +9,16 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 
-import { usePlausible } from "next-plausible";
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
-import { GlossaireEntries, GlossaireEntry } from "./types";
+import { GlossaireEntries } from "./types";
 
-const useGetGlossaireList = (initialEntries: GlossaireEntries) => {
+const useGlossaireList = (initialEntries: GlossaireEntries) => {
   const trackEvent = usePlausible();
   const [searchValue, setSearchValue] = useState("");
-  const [entries, setEntries] = useState<GlossaireEntry>(initialEntries);
+  const [entries, setEntries] = useState<GlossaireEntries>(initialEntries);
   const [greyColor] = useToken("colors", ["grey.625"]);
 
   useEffect(() => {
@@ -54,7 +54,7 @@ export const GlossaireListContent = ({
   initialEntries: GlossaireEntries;
 }) => {
   const { entries, searchValue, setSearchValue, greyColor } =
-    useGetGlossaireList(initialEntries);
+    useGlossaireList(initialEntries);
 
   return (
     <>
