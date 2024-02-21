@@ -18,6 +18,12 @@ export const [importRawFile, importRawFileFactory] = inject(
 
       await deps.deleteRawData({ type });
 
+      /**
+       * Suppression des anciennes données de décrochage
+       */
+      await deps.deleteRawData({ type: "decrochage_academique_2020" });
+      await deps.deleteRawData({ type: "decrochage_regional_2020" });
+
       let count = 0;
       await pipeline(
         fileStream,
