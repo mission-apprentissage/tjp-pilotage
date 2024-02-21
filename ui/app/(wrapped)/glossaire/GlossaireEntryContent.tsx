@@ -14,14 +14,14 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
+import { usePlausible } from "next-plausible";
+import { useEffect } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 
 import { client } from "@/api.client";
 
-import { usePlausible } from "next-plausible";
-import { useEffect } from "react";
-import { GlossaireIcon } from "./GlossaireIcon";
 import { useGlossaireContext } from "./glossaireContext";
+import { GlossaireIcon } from "./GlossaireIcon";
 
 const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;
 

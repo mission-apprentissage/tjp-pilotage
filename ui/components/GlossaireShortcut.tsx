@@ -16,7 +16,7 @@ export const GlossaireShortcut = chakra(
     glossaireEntryKey?: GlossaireEntryKey;
     iconSize?: ResponsiveValue<number | string>;
   }) => {
-    const { onOpen } = useGlossaireContext();
+    const { openGlossaire } = useGlossaireContext();
     return (
       <Flex
         alignItems={"center"}
@@ -24,7 +24,7 @@ export const GlossaireShortcut = chakra(
         _hover={{ cursor: "pointer" }}
         onClick={(e) => {
           e.stopPropagation();
-          onOpen(glossaireEntryKey);
+          openGlossaire(glossaireEntryKey);
         }}
       >
         <QuestionOutlineIcon height={iconSize} width={iconSize} />

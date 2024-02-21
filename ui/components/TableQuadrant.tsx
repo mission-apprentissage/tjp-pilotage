@@ -46,7 +46,7 @@ export const TableQuadrant = ({
     orderBy?: string;
   };
 }) => {
-  const { onOpen } = useGlossaireContext();
+  const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
     if (currentCfd && formation.cfd === currentCfd) return "white !important";
     return "";
@@ -116,10 +116,7 @@ export const TableQuadrant = ({
                       <TauxPressionScale />
                     </Box>
                   }
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpen("taux-de-pression");
-                  }}
+                  onClick={() => openGlossaire("taux-de-pression")}
                 />
               </Th>
               <Th
@@ -143,10 +140,7 @@ export const TableQuadrant = ({
                       <Text>Cliquer pour plus d'informations.</Text>
                     </Box>
                   }
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpen("taux-emploi-6-mois");
-                  }}
+                  onClick={() => openGlossaire("taux-emploi-6-mois")}
                 />
               </Th>
               <Th
@@ -170,10 +164,7 @@ export const TableQuadrant = ({
                       <Text>Cliquez pour plus d'informations</Text>
                     </Box>
                   }
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    onOpen("taux-poursuite-etudes");
-                  }}
+                  onClick={() => openGlossaire("taux-poursuite-etudes")}
                 />
               </Th>
             </Tr>

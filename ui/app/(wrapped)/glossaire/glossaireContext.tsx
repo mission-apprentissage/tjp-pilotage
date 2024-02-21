@@ -12,8 +12,8 @@ import { GlossaireEntries } from "./types";
 
 type GlossaireContextType = {
   isOpen: boolean;
-  onOpen: (key?: GlossaireEntryKey | undefined) => void;
-  onClose: () => void;
+  openGlossaire: (key?: GlossaireEntryKey) => void;
+  closeGlossaire: () => void;
   selectedEntry?: string;
   setSelectedEntry: (id?: string) => void;
   entries: GlossaireEntries;
@@ -55,8 +55,8 @@ export function GlossaireProvider({
     () => ({
       isOpen,
       selectedEntry,
-      onOpen: onOpenCallback,
-      onClose: onCloseCallback,
+      openGlossaire: onOpenCallback,
+      closeGlossaire: onCloseCallback,
       setSelectedEntry,
       entries,
     }),

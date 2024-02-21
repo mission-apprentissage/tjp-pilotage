@@ -6,38 +6,38 @@ const infoStyle = defineStyle({
 });
 
 const errorStyle = defineStyle({
-  color: "#ce0500",
-  bgColor: "#ffe9e9",
+  color: "error.425",
+  bgColor: "error.950",
 });
 
 const successStyle = defineStyle({
-  color: "#18753c",
-  bgColor: "#b8fec9",
+  color: "success.425",
+  bgColor: "success.950",
 });
 
 const warningStyle = defineStyle({
-  color: "#b34000",
-  bgColor: "#ffe9e6",
+  color: "warning.425",
+  bgColor: "warning.950",
 });
 
 const newStyle = defineStyle({
-  color: "#695240",
-  bgColor: "#feebd0",
+  color: "yellowMoutarde.348",
+  bgColor: "yellowMoutarde.950",
 });
 
 const purpleGlycineStyle = defineStyle({
-  color: "#6e445a",
-  bgColor: "#fee7fc",
+  color: "purpleGlycine.319",
+  bgColor: "purpleGlycine.950",
 });
 
 const pinkTuileStyle = defineStyle({
-  color: "#a94645",
-  bgColor: "#fee9e7",
+  color: "pinkTuile.425",
+  bgColor: "pinkTuile.950",
 });
 
 const brownCafeCremeStyle = defineStyle({
-  color: "#685c48",
-  bgColor: "#f7ecdb",
+  color: "brownCafeCreme.383",
+  bgColor: "brownCafeCreme.950",
 });
 
 export const badgeTheme = defineStyleConfig({
@@ -49,8 +49,8 @@ export const badgeTheme = defineStyleConfig({
     fontWeight: 700,
     borderRadius: "0.25rem",
     textTransform: "uppercase",
-    color: "grey.850",
-    backgroundColor: "#242424", // grey.950
+    color: "grey.200",
+    backgroundColor: "grey.950",
   },
   sizes: {
     sm: {
