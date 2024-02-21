@@ -1,5 +1,4 @@
 import { useDisclosure } from "@chakra-ui/hooks";
-import { usePlausible } from "next-plausible";
 import {
   createContext,
   useCallback,
@@ -34,7 +33,6 @@ export function GlossaireProvider({
   const [entries] = useState<GlossaireEntries>(initialEntries);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [selectedEntry, setSelectedEntry] = useState<string | undefined>();
-  const trackEvent = usePlausible();
 
   const onCloseCallback = useCallback(() => {
     setSelectedEntry(undefined);
@@ -45,10 +43,8 @@ export function GlossaireProvider({
     (key: GlossaireEntryKey | undefined) => {
       if (key && key in GLOSSAIRE_ENTRIES_KEYS) {
         setSelectedEntry(GLOSSAIRE_ENTRIES_KEYS[key]);
-        trackEvent("glossaire", { props: { entry: key } });
       } else {
         setSelectedEntry(undefined);
-        trackEvent("glossaire", { props: { entry: "all" } });
       }
       onOpen();
     },
