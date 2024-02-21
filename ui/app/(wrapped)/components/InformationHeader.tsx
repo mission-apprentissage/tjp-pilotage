@@ -9,13 +9,7 @@ import { useChangelog } from "../changelog/useChangelog";
 const LOCAL_STORAGE_KEY = "closedChangelogEntries";
 
 export const InformationHeader = () => {
-  const [closedEntries, setClosedEntries] = useState<Array<string>>(
-    JSON.parse(
-      typeof localStorage !== "undefined"
-        ? localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]"
-        : "[]"
-    )
-  );
+  const [closedEntries, setClosedEntries] = useState<Array<string>>([]);
   const { changelog } = useChangelog();
 
   const filteredChangelog =
@@ -31,6 +25,15 @@ export const InformationHeader = () => {
       localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(closedEntries));
     }
   }, [closedEntries]);
+
+  useEffect(() => {
+    if (localStorage) {
+      const storedEntries = JSON.parse(
+        localStorage.getItem(LOCAL_STORAGE_KEY) ?? "[]"
+      );
+      setClosedEntries(storedEntries);
+    }
+  }, [setClosedEntries]);
 
   function closeInfo(id: string) {
     if (!closedEntries.includes(id)) {
