@@ -11,10 +11,12 @@ import {
 import { Icon } from "@iconify/react";
 import { useEffect, useState } from "react";
 
+import { usePlausible } from "next-plausible";
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
 import { GlossaireEntries, GlossaireEntry } from "./types";
 
 const useGetGlossaireList = (initialEntries: GlossaireEntries) => {
+  const trackEvent = usePlausible();
   const [searchValue, setSearchValue] = useState("");
   const [entries, setEntries] = useState<GlossaireEntry>(initialEntries);
   const [greyColor] = useToken("colors", ["grey.625"]);
@@ -31,6 +33,10 @@ const useGetGlossaireList = (initialEntries: GlossaireEntries) => {
       )
     );
   }, [searchValue, setEntries]);
+
+  useEffect(() => {
+    trackEvent("glossaire", { props: { name: "Liste" } });
+  }, [trackEvent]);
 
   return {
     entries,
