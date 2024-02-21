@@ -24,7 +24,7 @@ const getStatsRegions = async ({
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )

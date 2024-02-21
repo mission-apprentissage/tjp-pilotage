@@ -66,7 +66,7 @@ export const getStats = async ({
     return kdb
       .selectFrom("formationEtablissement")
       .leftJoin(
-        "formationView",
+        "formationScolaireView as formationView",
         "formationView.cfd",
         "formationEtablissement.cfd"
       )
@@ -188,7 +188,7 @@ export const getStats = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",

@@ -38,7 +38,7 @@ export const getDepartementStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )

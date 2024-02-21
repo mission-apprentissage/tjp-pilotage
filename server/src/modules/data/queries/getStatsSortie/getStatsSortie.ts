@@ -20,7 +20,7 @@ const getStatsSortieBase = ({
   const statsSortie = kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
