@@ -128,7 +128,7 @@ const getFormationsEtablissement = async ({
         .on("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     )
     .innerJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "formationEtablissement.cfd"
     )

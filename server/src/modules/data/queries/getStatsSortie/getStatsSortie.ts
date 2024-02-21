@@ -2,6 +2,7 @@ import { CURRENT_IJ_MILLESIME } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
+import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -57,6 +58,7 @@ const getStatsSortieBase = ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notApprentissageIndicateurRegionSortie)
     .where(notAnneeCommune)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([

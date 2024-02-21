@@ -2,6 +2,7 @@ import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 
 import { DB } from "../../../db/db";
+import { notApprentissageIndicateurRegionSortie } from "./notApprentissage";
 
 export function hasContinuum<
   EB extends
@@ -36,6 +37,7 @@ export function hasContinuum<
         sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
       )
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
+      .where(notApprentissageIndicateurRegionSortie)
       .where("subIRS.cfdContinuum", "is not", null)
       .select([
         "subIRS.cfdContinuum as cfd",
