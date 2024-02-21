@@ -1,6 +1,7 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/db";
+import { notApprentissageIndicateurRegionSortie } from "./notApprentissage";
 
 const seuil = 20;
 
@@ -64,6 +65,7 @@ export function withPoursuiteReg<
     .whereRef("subIRS.cfd", "=", cfdRef)
     .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
+    .where(notApprentissageIndicateurRegionSortie)
     .whereRef(
       "subIRS.codeRegion",
       "=",

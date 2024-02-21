@@ -9,6 +9,7 @@ import {
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
+import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -44,6 +45,7 @@ export const getRegionStats = async ({
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notApprentissageIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
@@ -63,7 +65,7 @@ export const getRegionStats = async ({
   const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "formationEtablissement.cfd"
     )

@@ -5,6 +5,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
+import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import {
   notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
@@ -57,6 +58,7 @@ const getStatsRegions = async ({
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .where(notApprentissageIndicateurRegionSortie)
     .select([
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",
@@ -78,7 +80,7 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",

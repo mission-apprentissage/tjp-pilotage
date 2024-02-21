@@ -74,7 +74,7 @@ export const notHistoriqueUnlessCoExistantFormationEtablissement = (
     "formationEtablissement.cfd",
     "not in",
     eb
-      .selectFrom("formationView")
+      .selectFrom("formationScolaireView as formationView")
       .distinct()
       .select("cfd")
       .where((eb) =>
@@ -98,7 +98,7 @@ export const notHistoriqueUnlessCoExistantIndicateurRegionSortie = (
     "indicateurRegionSortie.cfd",
     "not in",
     eb
-      .selectFrom("formationView")
+      .selectFrom("formationScolaireView as formationView")
       .distinct()
       .select("cfd")
       .where((eb) =>

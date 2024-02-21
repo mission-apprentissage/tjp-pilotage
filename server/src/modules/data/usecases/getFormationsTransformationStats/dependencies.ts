@@ -6,6 +6,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { hasContinuum } from "../../utils/hasContinuum";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
+import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
 import {
@@ -317,6 +318,7 @@ const getRegionStats = async ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(notApprentissageIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .select([

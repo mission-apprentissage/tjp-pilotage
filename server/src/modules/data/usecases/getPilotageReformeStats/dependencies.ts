@@ -9,6 +9,7 @@ import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
 } from "../../utils/notAnneeCommune";
+import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import {
   notHistorique,
   notHistoriqueFormation,
@@ -126,7 +127,7 @@ export const getStats = async ({
     kdb
       .selectFrom("indicateurRegionSortie")
       .leftJoin(
-        "formationView",
+        "formationScolaireView as formationView",
         "formationView.cfd",
         "indicateurRegionSortie.cfd"
       )
@@ -150,6 +151,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
+      .where(notApprentissageIndicateurRegionSortie)
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
