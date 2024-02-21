@@ -1,7 +1,7 @@
-import { sql } from "kysely";
+import { ExpressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
@@ -11,6 +11,22 @@ import {
 } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+
+/**
+ * On prend le taux de chomage du dernier trimestre de l'année
+ * définit le taux de chomage annuel. Or, à cette date (13/02/2024)
+ * le taux de chomage du T4 n'est pas encore disponible, nous
+ * prenons donc celui de 2022, et inscrivons la valeur en "dur".
+ */
+const dernierTauxDeChomage = (
+  eb: ExpressionBuilder<DB, "indicateurRegion">
+) => {
+  return eb.or([
+    eb("indicateurRegion.rentreeScolaire", "=", "2022"),
+    eb("indicateurRegion.rentreeScolaire", "is", null),
+  ])
+}
+
 
 const getStatsRegions = async ({
   codeNiveauDiplome,
@@ -57,13 +73,15 @@ const getStatsRegions = async ({
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .where(dernierTauxDeChomage)
     .select([
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",
+      "indicateurRegion.tauxChomage",
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
     ])
-    .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion"])
+    .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"])
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(

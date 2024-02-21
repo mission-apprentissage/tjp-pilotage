@@ -55,59 +55,7 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
@@ -245,12 +193,10 @@ export interface FormationNonMaterializedView {
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
 }
 
-export interface IndicateurAcademie {
-  codeAcademie: string;
+export interface IndicateurDepartement {
+  codeDepartement: string;
   rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
+  tauxChomage: number | null;
 }
 
 export interface IndicateurEntree {
@@ -271,9 +217,7 @@ export interface IndicateurEtablissement {
 export interface IndicateurRegion {
   codeRegion: string;
   rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
+  tauxChomage: number | null;
 }
 
 export interface IndicateurRegionSortie {
@@ -350,7 +294,7 @@ export interface DB {
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
-  indicateurAcademie: IndicateurAcademie;
+  indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurRegion: IndicateurRegion;
