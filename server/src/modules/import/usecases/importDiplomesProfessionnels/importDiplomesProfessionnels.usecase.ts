@@ -6,7 +6,6 @@ import { streamIt } from "../../utils/streamIt";
 import { createDiplomeProfessionnel } from "./createDiplomeProfessionnel.dep";
 import { findDiplomesProfessionnels } from "./findDiplomeProfessionnel.dep";
 import { findOffresApprentissages } from "./findOffresApprentissages";
-import { refreshFormationMaterializedView } from "./refreshFormationView.dep";
 
 const formatCFDDiplomeProfessionnel = (line: DiplomeProfessionnelLine) => {
   if (!line["Code diplôme"]) return;
@@ -37,7 +36,6 @@ export const [importDiplomesProfessionnels] = inject(
     findDiplomesProfessionnels,
     findOffresApprentissages,
     createDiplomeProfessionnel,
-    refreshFormationMaterializedView,
   },
   (deps) => async () => {
     console.log("Import des diplomeProfessionnel");

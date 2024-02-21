@@ -12,7 +12,6 @@ import { importConstatRentree } from "./modules/import/usecases/importConstatRen
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
-import { refreshFormationMaterializedView } from "./modules/import/usecases/importDiplomesProfessionnels/refreshFormationView.dep";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -22,6 +21,7 @@ import { importIndicateursRegion } from "./modules/import/usecases/importIndicat
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
+import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
@@ -184,7 +184,7 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
-      refreshFormationMaterializedView,
+      refreshViews,
     };
 
     if (usecaseName) {
@@ -204,6 +204,7 @@ cli.command("importFormations").action(async () => {
   await importIndicateursAcademie();
   await importIndicateursRegion();
   await importFormations();
+  await refreshViews();
 });
 
 cli.parse(process.argv);
