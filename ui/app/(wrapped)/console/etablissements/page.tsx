@@ -231,7 +231,7 @@ export default function Etablissements() {
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
 
-  const { onOpen: openGlossaireAtEntry } = useGlossaireContext();
+  const { openGlossaire } = useGlossaireContext();
 
   const { data: historique, isFetching: isFetchingHistorique } = useQuery({
     keepPreviousData: false,
@@ -495,10 +495,7 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -511,10 +508,7 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -527,10 +521,7 @@ export default function Etablissements() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -559,10 +550,7 @@ export default function Etablissements() {
                         <TauxPressionScale />
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-pression");
-                    }}
+                    onClick={() => openGlossaire("taux-de-pression")}
                   />
                 </Th>
                 <Th
@@ -582,10 +570,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-remplissage");
-                    }}
+                    onClick={() => openGlossaire("taux-de-remplissage")}
                   />
                 </Th>
                 <Th
@@ -605,10 +590,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-emploi-6-mois");
-                    }}
+                    onClick={() => openGlossaire("taux-emploi-6-mois")}
                   />
                 </Th>
                 <Th
@@ -628,10 +610,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-poursuite-etudes");
-                    }}
+                    onClick={() => openGlossaire("taux-poursuite-etudes")}
                   />
                 </Th>
                 <Th>
@@ -649,10 +628,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("quadrant");
-                    }}
+                    onClick={() => openGlossaire("quadrant")}
                   />
                 </Th>
                 <Th
@@ -673,10 +649,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-devenir-favorable");
-                    }}
+                    onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
                 <Th
@@ -696,10 +669,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-devenir-favorable");
-                    }}
+                    onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
                 <Th
@@ -719,10 +689,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-poursuite-etudes");
-                    }}
+                    onClick={() => openGlossaire("taux-poursuite-etudes")}
                   />
                 </Th>
                 <Th
@@ -747,10 +714,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-devenir-favorable");
-                    }}
+                    onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
                 <Th
@@ -773,10 +737,7 @@ export default function Etablissements() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("valeur-ajoutee");
-                    }}
+                    onClick={() => openGlossaire("valeur-ajoutee")}
                   />
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>

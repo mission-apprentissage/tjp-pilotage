@@ -125,7 +125,7 @@ export default function Formations() {
 
   const trackEvent = usePlausible();
 
-  const { onOpen: openGlossaireAtEntry } = useGlossaireContext();
+  const { openGlossaire } = useGlossaireContext();
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("formations:ordre", { props: { colonne: column } });
@@ -419,10 +419,7 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -435,10 +432,7 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -451,10 +445,7 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("effectifs");
-                    }}
+                    onClick={() => openGlossaire("effectifs")}
                   />
                 </Th>
                 <Th
@@ -476,10 +467,7 @@ export default function Formations() {
                         <TauxPressionScale />
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-pression");
-                    }}
+                    onClick={() => openGlossaire("taux-de-pression")}
                   />
                 </Th>
                 <Th
@@ -500,10 +488,7 @@ export default function Formations() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-remplissage");
-                    }}
+                    onClick={() => openGlossaire("taux-de-remplissage")}
                   />
                 </Th>
                 <Th
@@ -524,10 +509,7 @@ export default function Formations() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-emploi-6-mois");
-                    }}
+                    onClick={() => openGlossaire("taux-emploi-6-mois")}
                   />
                 </Th>
                 <Th
@@ -548,10 +530,7 @@ export default function Formations() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-poursuite-etudes");
-                    }}
+                    onClick={() => openGlossaire("taux-poursuite-etudes")}
                   />
                 </Th>
                 <Th
@@ -573,10 +552,7 @@ export default function Formations() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("taux-de-devenir-favorable");
-                    }}
+                    onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
                 <Th
@@ -634,10 +610,7 @@ export default function Formations() {
                         <Text>Cliquez pour plus d'infos.</Text>
                       </Box>
                     }
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      openGlossaireAtEntry("quadrant");
-                    }}
+                    onClick={() => openGlossaire("quadrant")}
                   />
                 </Th>
               </Tr>

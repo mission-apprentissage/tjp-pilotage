@@ -106,7 +106,7 @@ export const CfdUaiSection = ({
     });
 
     return () => subscription.unsubscribe();
-  });
+  }, [watch, getValues, isCFDUaiSectionValid]);
 
   const anchorToStatus = () => {
     statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
