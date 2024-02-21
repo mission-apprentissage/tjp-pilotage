@@ -18,8 +18,10 @@ import ReactMarkdown, { Components } from "react-markdown";
 
 import { client } from "@/api.client";
 
-import { useGlossaireContext } from "./glossaireContext";
+import { usePlausible } from "next-plausible";
+import { useEffect } from "react";
 import { GlossaireIcon } from "./GlossaireIcon";
+import { useGlossaireContext } from "./glossaireContext";
 
 const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;
 
@@ -92,6 +94,8 @@ const RenderGlossaireEntrySkeleton = () => {
 };
 
 const useGlossaireEntryContentHook = (id: string) => {
+  const trackEvent = usePlausible();
+
   const { data, isLoading, isError, error } = client
     .ref("[GET]/glossaire/:id")
     .useQuery(
@@ -105,6 +109,12 @@ const useGlossaireEntryContentHook = (id: string) => {
         staleTime: 10000000,
       }
     );
+
+  useEffect(() => {
+    if (data) {
+      trackEvent("glossaire", { props: { name: data.title } });
+    }
+  }, [data, trackEvent]);
 
   return {
     isLoading,
