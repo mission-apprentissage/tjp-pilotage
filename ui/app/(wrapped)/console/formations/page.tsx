@@ -40,6 +40,7 @@ import {
 import { Filters, LineId, Order } from "./types";
 
 const PAGE_SIZE = 30;
+const EXPORT_LIMIT = 1_000_000;
 
 const FORMATIONS_COLUMNS = {
   rentreeScolaire: "RS",
@@ -100,21 +101,23 @@ export default function Formations() {
   );
 
   useEffect(() => {
-    if (codeRegionFilter != "") {
+    if (codeRegionFilter !== "") {
       filters.codeRegion = [codeRegionFilter];
       setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
+  const getFormationsQueryParameters = (qLimit: number, qOffset?: number) => ({
+    ...filters,
+    ...order,
+    offset: qOffset,
+    limit: qLimit,
+    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+  });
+
   const { data, isFetching } = client.ref("[GET]/formations").useQuery(
     {
-      query: {
-        ...order,
-        offset: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        ...filters,
-        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-      },
+      query: getFormationsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     { staleTime: 10000000, keepPreviousData: true }
   );
@@ -186,7 +189,7 @@ export default function Formations() {
             order: "desc",
             orderBy: "rentreeScolaire",
             rentreeScolaire: RENTREES_SCOLAIRES.filter(
-              (rentree) => rentree != CURRENT_RENTREE
+              (rentree) => rentree !== CURRENT_RENTREE
             ),
             withEmptyFormations: false,
           },
@@ -597,12 +600,7 @@ export default function Formations() {
         onExport={async () => {
           trackEvent("formations:export");
           const data = await client.ref("[GET]/formations").query({
-            query: {
-              ...filters,
-              ...order,
-              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-              limit: 1000000,
-            },
+            query: getFormationsQueryParameters(EXPORT_LIMIT),
           });
           downloadCsv(
             "formations_export.csv",
