@@ -4,8 +4,8 @@ import { CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
-import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import {
   notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
@@ -58,7 +58,7 @@ const getStatsRegions = async ({
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
-    .where(notApprentissageIndicateurRegionSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .select([
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",

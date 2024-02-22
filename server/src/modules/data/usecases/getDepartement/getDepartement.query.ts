@@ -4,12 +4,12 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
-import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
@@ -60,12 +60,16 @@ export const getDepartementStats = async ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where(notApprentissageIndicateurRegionSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .where((eb) =>
       eb(
         "indicateurRegionSortie.cfd",
         "not in",
-        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+        eb
+          .selectFrom("formationHistorique")
+          .distinct()
+          .select("ancienCFD")
+          .where("voie", "=", "scolaire")
       )
     )
     .select([

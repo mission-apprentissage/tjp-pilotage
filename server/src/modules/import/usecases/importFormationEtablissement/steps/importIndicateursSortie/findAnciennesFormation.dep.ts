@@ -5,6 +5,6 @@ export const findAnciennesFormation = ({ cfd }: { cfd: string }) =>
   kdb
     .selectFrom("formationHistorique")
     .selectAll()
-    .where("codeFormationDiplome", "=", cfd)
+    .where("cfd", "=", cfd)
     .execute()
     .then(cleanNull);

@@ -2,6 +2,7 @@ import { ExpressionBuilder, sql } from "kysely";
 
 import { DB } from "../../../db/db";
 import { getDateRentreeScolaire } from "../services/getRentreeScolaire";
+import { isScolaireFormationHistorique } from "./isScolaire";
 
 export const notHistorique = (
   eb: ExpressionBuilder<DB, "formationEtablissement">
@@ -9,7 +10,11 @@ export const notHistorique = (
   return eb(
     "formationEtablissement.cfd",
     "not in",
-    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+    eb
+      .selectFrom("formationHistorique")
+      .distinct()
+      .select("ancienCFD")
+      .where(isScolaireFormationHistorique)
   );
 };
 
@@ -19,7 +24,11 @@ export const notHistoriqueFormation = (
   return eb(
     "formationView.cfd",
     "not in",
-    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+    eb
+      .selectFrom("formationHistorique")
+      .distinct()
+      .select("ancienCFD")
+      .where(isScolaireFormationHistorique)
   );
 };
 
@@ -29,7 +38,11 @@ export const notHistoriqueIndicateurRegionSortie = (
   return eb(
     "indicateurRegionSortie.cfd",
     "not in",
-    eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+    eb
+      .selectFrom("formationHistorique")
+      .distinct()
+      .select("ancienCFD")
+      .where(isScolaireFormationHistorique)
   );
 };
 
@@ -41,7 +54,11 @@ export const isHistoriqueCoExistant = (
     eb(
       "formationView.cfd",
       "in",
-      eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+      eb
+        .selectFrom("formationHistorique")
+        .distinct()
+        .select("ancienCFD")
+        .where(isScolaireFormationHistorique)
     ),
     eb("formationView.dateFermeture", "is not", null),
     eb(

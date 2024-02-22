@@ -227,8 +227,9 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  codeFormationDiplome: string;
   ancienCFD: string;
+  cfd: string;
+  voie: string;
 }
 
 export interface FormationNonMaterializedView {
