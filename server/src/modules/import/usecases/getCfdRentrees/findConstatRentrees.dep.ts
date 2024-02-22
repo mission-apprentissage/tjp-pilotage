@@ -14,20 +14,12 @@ export const findConstatRentrees = async ({
     await kdb
       .selectFrom("rawData")
       .selectAll("rawData")
-      .where(
-        "type",
-        "=",
-        `constat_${year}`
-      )
+      .where("type", "=", `constat_${year}`)
       .where("data", "@>", {
         "Mef Bcp 11": mefStat11,
       })
       .innerJoin("dataEtablissement", (join) =>
-        join.onRef(
-          "dataEtablissement.uai",
-          "=",
-          sql`"data"->>'UAI'`
-        )
+        join.onRef("dataEtablissement.uai", "=", sql`"data"->>'UAI'`)
       )
       .where("dataEtablissement.codeRegion", "not in", ["00", "99"])
       .execute()

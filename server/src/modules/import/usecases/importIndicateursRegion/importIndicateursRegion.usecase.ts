@@ -25,8 +25,10 @@ export const [importIndicateursRegion] = inject(
         await deps.upsertRegionQuery({
           codeRegion,
           rentreeScolaire,
-          tauxChomage: line?.tauxChomage ? parseFloat(line?.tauxChomage.replace(',', '.')) : null
-        })
+          tauxChomage: line?.tauxChomage
+            ? parseFloat(line?.tauxChomage.replace(",", "."))
+            : null,
+        });
       }
     }
   }

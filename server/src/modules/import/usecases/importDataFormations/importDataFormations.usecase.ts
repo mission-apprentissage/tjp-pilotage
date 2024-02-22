@@ -21,8 +21,15 @@ const EMPTY_VALUE = "(VIDE)";
  */
 const normalizeCpcSecteur = (cpcSecteur?: string) => {
   if (!cpcSecteur) return EMPTY_VALUE;
-  return _.capitalize(cpcSecteur.trim().replace(/^secteur/i, "").trim()) || EMPTY_VALUE;
-}
+  return (
+    _.capitalize(
+      cpcSecteur
+        .trim()
+        .replace(/^secteur/i, "")
+        .trim()
+    ) || EMPTY_VALUE
+  );
+};
 
 /**
  * Si le premier mot c'est CPC (insensible à la case),
@@ -32,7 +39,7 @@ const normalizeCpcSecteur = (cpcSecteur?: string) => {
 const normalizeCpc = (cpc?: string) => {
   if (!cpc) return EMPTY_VALUE;
   return _.capitalize(cpc.trim().replace(/^cpc/i, "").trim()) || EMPTY_VALUE;
-}
+};
 
 /**
  * Si le premier mot c'est sous-secteur (insensible à la case),
@@ -41,9 +48,15 @@ const normalizeCpc = (cpc?: string) => {
  */
 const normalizeCpcSousSecteur = (cpcSousSecteur?: string) => {
   if (!cpcSousSecteur) return EMPTY_VALUE;
-  return _.capitalize(cpcSousSecteur.trim().replace(/^sous-secteur/i, "").trim()) || EMPTY_VALUE;
-}
-
+  return (
+    _.capitalize(
+      cpcSousSecteur
+        .trim()
+        .replace(/^sous-secteur/i, "")
+        .trim()
+    ) || EMPTY_VALUE
+  );
+};
 
 const getLineOverride = (line: DiplomeProfessionnelLine) => {
   return overrides[
@@ -148,9 +161,13 @@ export const [importDataFormations] = inject(
             rncp: diplomeProfessionnel?.["Code RNCP"]
               ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
               : undefined,
-            cpc: normalizeCpc(diplomeProfessionnel?.["Commission professionnelle consultative"]),
+            cpc: normalizeCpc(
+              diplomeProfessionnel?.["Commission professionnelle consultative"]
+            ),
             cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
-            cpcSousSecteur: normalizeCpcSousSecteur(diplomeProfessionnel?.["Sous-secteur"]),
+            cpcSousSecteur: normalizeCpcSousSecteur(
+              diplomeProfessionnel?.["Sous-secteur"]
+            ),
             libelleFiliere: regroupement || "(VIDE)",
             codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
             dateOuverture: nFormationDiplome.DATE_OUVERTURE

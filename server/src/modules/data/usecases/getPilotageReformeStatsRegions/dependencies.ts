@@ -24,9 +24,8 @@ const dernierTauxDeChomage = (
   return eb.or([
     eb("indicateurRegion.rentreeScolaire", "=", "2022"),
     eb("indicateurRegion.rentreeScolaire", "is", null),
-  ])
-}
-
+  ]);
+};
 
 const getStatsRegions = async ({
   codeNiveauDiplome,
@@ -81,7 +80,11 @@ const getStatsRegions = async ({
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
     ])
-    .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"])
+    .groupBy([
+      "indicateurRegionSortie.codeRegion",
+      "region.libelleRegion",
+      "indicateurRegion.tauxChomage",
+    ])
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(
