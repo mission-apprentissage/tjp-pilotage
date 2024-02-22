@@ -16,7 +16,7 @@ import { importDispositifs } from "./modules/import/usecases/importDispositifs/i
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
-import { importIndicateursAcademie } from "./modules/import/usecases/importIndicateursAcademie/importIndicateursAcademie.usecase";
+import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
@@ -143,7 +143,7 @@ cli
     };
 
     const actions = {
-      regroupements: () => getImport("regroupements"),
+      ...getImports("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
       ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
       ...getImports("decrochage_regional", ["2020"]),
@@ -160,6 +160,8 @@ cli
       ...getImports("nFormationDiplome_"),
       ...getImports("vFormationDiplome_"),
       ...getImports("lyceesACCE"),
+      ...getImports("chomage_regional_INSEE"),
+      ...getImports("chomage_departemental_INSEE"),
     };
 
     if (filename) {
@@ -184,6 +186,8 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
+      importIndicateursRegion,
+      importIndicateursDepartement,
       refreshViews,
     };
 
@@ -205,8 +209,6 @@ cli
   .argument("[usecase]")
   .action(async (usecaseName: string) => {
     const usecases = {
-      importIndicateursAcademie,
-      importIndicateursRegion,
       importFormations,
       refreshViews,
     };

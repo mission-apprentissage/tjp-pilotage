@@ -12,6 +12,52 @@ import { find2ndeCommune, findSpecialite } from "./findFamilleMetier.dep";
 import { findRegroupements } from "./findRegroupements.dep";
 import { overrides } from "./overrides";
 
+const EMPTY_VALUE = "(VIDE)";
+
+/**
+ * Si le premier mot c'est secteur (insensible à la case),
+ * retourner le contenu hors premier mot avec un trim.
+ * Rajouter une majuscule pour la première lettre.
+ */
+const normalizeCpcSecteur = (cpcSecteur?: string) => {
+  if (!cpcSecteur) return EMPTY_VALUE;
+  return (
+    _.capitalize(
+      cpcSecteur
+        .trim()
+        .replace(/^secteur/i, "")
+        .trim()
+    ) || EMPTY_VALUE
+  );
+};
+
+/**
+ * Si le premier mot c'est CPC (insensible à la case),
+ * retourner le contenu hors premier mot avec un trim.
+ * Rajouter une majuscule pour la première lettre.
+ */
+const normalizeCpc = (cpc?: string) => {
+  if (!cpc) return EMPTY_VALUE;
+  return _.capitalize(cpc.trim().replace(/^cpc/i, "").trim()) || EMPTY_VALUE;
+};
+
+/**
+ * Si le premier mot c'est sous-secteur (insensible à la case),
+ * retourner le contenu hors premier mot avec un trim.
+ * Rajouter une majuscule pour la première lettre.
+ */
+const normalizeCpcSousSecteur = (cpcSousSecteur?: string) => {
+  if (!cpcSousSecteur) return EMPTY_VALUE;
+  return (
+    _.capitalize(
+      cpcSousSecteur
+        .trim()
+        .replace(/^sous-secteur/i, "")
+        .trim()
+    ) || EMPTY_VALUE
+  );
+};
+
 const getLineOverride = (line: DiplomeProfessionnelLine) => {
   return overrides[
     `${line["Diplôme"]}_${line["Intitulé de la spécialité (et options)"]}`
@@ -115,17 +161,13 @@ export const [importDataFormations] = inject(
             rncp: diplomeProfessionnel?.["Code RNCP"]
               ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
               : undefined,
-            cpc:
+            cpc: normalizeCpc(
               diplomeProfessionnel?.["Commission professionnelle consultative"]
-                ?.replace("CPC", "")
-                .trim() || "(VIDE)",
-            cpcSecteur:
-              diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
-              "(VIDE)",
-            cpcSousSecteur:
+            ),
+            cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
+            cpcSousSecteur: normalizeCpcSousSecteur(
               diplomeProfessionnel?.["Sous-secteur"]
-                ?.replace("Sous-secteur", "")
-                .trim() || "(VIDE)",
+            ),
             libelleFiliere: regroupement || "(VIDE)",
             codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
             dateOuverture: nFormationDiplome.DATE_OUVERTURE
