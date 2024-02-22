@@ -19,28 +19,10 @@ export const [importRawFile, importRawFileFactory] = inject(
       await deps.deleteRawData({ type });
 
       /**
-       * TO_REMOVE:
-       * L'ancien nom des constats de rentrée c'était : Cab-nbre_division_effectifs_par_etab_mefst11
-       * Il faut donc clean la table rawData de toutes les ocurences de ces éléments.
-       * C'est nécessaire uniquement lors du passage en prod des imports 2023. Le bout de code devra être retiré ensuite
+       * Suppression des anciennes données de décrochage
        */
-      if (type.indexOf("constat") > -1) {
-        const year = type.replace(/[a-zA-Z]+_/g, "");
-        const oldConstatName = "Cab-nbre_division_effectifs_par_etab_mefst11";
-        await deps.deleteRawData({ type: `${oldConstatName}_${year}` });
-      }
-
-      /**
-       * TO_REMOVE:
-       * L'ancien nom de BTS_attractivite_capacite c'était : attractivite_capacite_BTS
-       * Il faut donc clean la table rawData de toutes les ocurences de ces éléments.
-       * C'est nécessaire uniquement lors du passage en prod des imports 2023. Le bout de code devra être retiré ensuite
-       */
-      if (type.indexOf("BTS_attractivite_capacite") > -1) {
-        const year = type.replace(/[a-zA-Z]+_/g, "");
-        const oldBtsAttractiviteName = "attractivite_capacite_BTS";
-        await deps.deleteRawData({ type: `${oldBtsAttractiviteName}_${year}` });
-      }
+      await deps.deleteRawData({ type: "decrochage_academique_2020" });
+      await deps.deleteRawData({ type: "decrochage_regional_2020" });
 
       let count = 0;
       await pipeline(

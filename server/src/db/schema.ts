@@ -248,12 +248,10 @@ export interface FormationNonMaterializedView {
   voie: string | null;
 }
 
-export interface IndicateurAcademie {
-  codeAcademie: string;
+export interface IndicateurDepartement {
+  codeDepartement: string;
   rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
+  tauxChomage: number | null;
 }
 
 export interface IndicateurEntree {
@@ -274,9 +272,7 @@ export interface IndicateurEtablissement {
 export interface IndicateurRegion {
   codeRegion: string;
   rentreeScolaire: string;
-  nbDecrocheurs: number | null;
-  effectifDecrochage: number | null;
-  tauxDecrochage: number | null;
+  tauxChomage: number | null;
 }
 
 export interface IndicateurRegionSortie {
@@ -353,7 +349,7 @@ export interface DB {
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
-  indicateurAcademie: IndicateurAcademie;
+  indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurRegion: IndicateurRegion;

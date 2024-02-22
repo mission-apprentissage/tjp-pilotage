@@ -1,10 +1,10 @@
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 
-export const findAcademiesQuery = async () => {
+export const findDepartementsQuery = async () => {
   const regions = await kdb
-    .selectFrom("academie")
-    .selectAll("academie")
+    .selectFrom("departement")
+    .selectAll("departement")
     .execute();
   return regions.map(cleanNull);
 };
