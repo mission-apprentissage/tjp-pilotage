@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
 import { hasPermission } from "shared";
 
@@ -28,13 +29,16 @@ const NavLink = chakra(
     href,
     className,
     target,
+    plausibleEventName,
   }: {
     children: ReactNode;
     segment: string | null;
     href: string;
     className?: string;
     target?: HTMLAttributeAnchorTarget;
+    plausibleEventName?: string;
   }) => {
+    const trackEvent = usePlausible();
     const segments = useSelectedLayoutSegments();
     const isActive =
       (!segment && !segments.length) ||
@@ -53,6 +57,11 @@ const NavLink = chakra(
         borderColor={isActive ? "bluefrance.113" : "transparent"}
         _hover={{ textDecoration: "unset", bg: "blueecume.925" }}
         target={target ?? "_self"}
+        onClick={() => {
+          if (plausibleEventName !== undefined) {
+            trackEvent(`nav:${plausibleEventName}`);
+          }
+        }}
       >
         {children}
       </Link>
@@ -212,7 +221,11 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
-      <NavLink href="/ressources" segment="ressources">
+      <NavLink
+        href="/ressources"
+        segment="ressources"
+        plausibleEventName="ressources"
+      >
         Ressources
       </NavLink>
       <Glossaire />
