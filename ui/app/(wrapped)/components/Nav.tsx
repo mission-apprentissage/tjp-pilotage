@@ -212,11 +212,7 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
-      <NavLink
-        href="https://sunrise-waitress-5d6.notion.site/a09d6b68b9bd4c5ea8460e2b41939f41?v=5d5afb3f224f44499f9d96628eb5d510&pvs=4"
-        target="_blank"
-        segment="ressources"
-      >
+      <NavLink href="/ressources" segment="ressources">
         Ressources
       </NavLink>
       <Glossaire />
