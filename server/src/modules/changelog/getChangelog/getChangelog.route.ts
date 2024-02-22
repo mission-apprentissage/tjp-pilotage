@@ -12,7 +12,7 @@ export const getChangelogRoute = (server: Server) => {
     server.route({
       ...props,
       handler: async (request, response) => {
-        const changelog = await getChangelog()
+        const changelog = await getChangelog();
         response.code(200).send(changelog);
       },
     });

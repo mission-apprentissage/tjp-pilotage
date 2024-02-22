@@ -38,23 +38,27 @@ export const [importConstatRentree] = inject(
             });
 
             const uai = constatRentreeLine["UAI"];
-          
+
             if (!uai) {
-              throw new Error(`Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`)
+              throw new Error(
+                `Création de la table constatRentree : Pas d'UAI pour la ligne comportant le mefstat ${constatRentreeLine["Mef Bcp 11"]}.`
+              );
             }
-  
+
             const constatRentree: Insertable<DB["constatRentree"]> = {
               uai: constatRentreeLine["UAI"],
               mefstat11: constatRentreeLine["Mef Bcp 11"],
-              effectif: Number(constatRentreeLine["Nombre d'élèves : Total"] ?? "0"),
+              effectif: Number(
+                constatRentreeLine["Nombre d'élèves : Total"] ?? "0"
+              ),
               cfd: nMef.FORMATION_DIPLOME,
               anneeDispositif: Number(nMef.ANNEE_DISPOSITIF ?? "0"),
               rentreeScolaire,
             };
-  
+
             try {
               await deps.createConstatRentree(constatRentree);
-  
+
               process.stdout.write(
                 `\r${count} constat de rentrée ajoutés ou mis à jour`
               );

@@ -32,7 +32,7 @@ type LineTypes = {
   ij: R & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   chomage_regional_INSEE: Chomage_regional_INSEE;
-  chomage_departemental_INSEE: Chomage_departemental_INSEE
+  chomage_departemental_INSEE: Chomage_departemental_INSEE;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

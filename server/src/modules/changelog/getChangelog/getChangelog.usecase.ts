@@ -79,7 +79,7 @@ export interface Annotations {
 export interface Type {
   id: string;
   type: string;
-  multi_select?: (MultiSelectEntity)[] | null;
+  multi_select?: MultiSelectEntity[] | null;
 }
 export interface MultiSelectEntity {
   id: string;
@@ -89,7 +89,7 @@ export interface MultiSelectEntity {
 export interface Documentation {
   id: string;
   type: string;
-  files?: (null)[] | null;
+  files?: null[] | null;
 }
 export interface NotionCheckbox {
   id: string;
@@ -125,7 +125,7 @@ export interface TimeFrame {
 export interface PropertyDate {
   id: string;
   type: string;
-  rich_text?: (RichTextEntity)[] | null;
+  rich_text?: RichTextEntity[] | null;
 }
 
 export interface MiseAJour {
@@ -138,7 +138,6 @@ export interface MiseAJour {
  * AUTO GENERATED TYPES
  */
 
-
 export const getChangelogFactory =
   (
     deps = {
@@ -146,51 +145,61 @@ export const getChangelogFactory =
       config,
     }
   ) =>
-  async (dbId: string = deps.config.notion.dbChangelogId): Promise<Changelog> => {
-
-    const database = await deps.getDatabaseRows(dbId) as unknown as ChangelogDatabase;
-    const changelog: Changelog = []
+  async (
+    dbId: string = deps.config.notion.dbChangelogId
+  ): Promise<Changelog> => {
+    const database = (await deps.getDatabaseRows(
+      dbId
+    )) as unknown as ChangelogDatabase;
+    const changelog: Changelog = [];
 
     database.results?.forEach((result) => {
-      const entry: Partial<ChangelogEntry> = {}
+      const entry: Partial<ChangelogEntry> = {};
 
-      entry.title = result.properties["Mise à jour"].title?.[0]?.plain_text ?? ""
-      
+      entry.title =
+        result.properties["Mise à jour"].title?.[0]?.plain_text ?? "";
+
       if (!entry.title) {
         return;
       }
 
-      entry.id = result.id
+      entry.id = result.id;
 
-      entry.types = result.properties.Type.multi_select?.map(type => ({
-        label: type.name,
-        color: type.color
-      })) ?? []
+      entry.types =
+        result.properties.Type.multi_select?.map((type) => ({
+          label: type.name,
+          color: type.color,
+        })) ?? [];
 
-      entry.show = result.properties["A afficher"].checkbox
-      entry.description = result.properties["Description"].rich_text?.[0]?.plain_text ?? ""
-      entry.deployed = result.properties["En Prod ?"].checkbox
+      entry.show = result.properties["A afficher"].checkbox;
+      entry.description =
+        result.properties["Description"].rich_text?.[0]?.plain_text ?? "";
+      entry.deployed = result.properties["En Prod ?"].checkbox;
 
       if (result.properties.Date.type === "rich_text") {
-          entry.date = {
-            type: result.properties.Date.rich_text?.[0]?.type === "mention" ? "date" : "string",
-            value: result.properties.Date.rich_text?.[0]?.plain_text ?? ''
-          }
-        }
-
-      changelog.push(entry as ChangelogEntry)
-    })
-  
-    changelog.sort((a , b) => {
-      if (a.date.type === "date" && b.date.type === "date") {
-        return new Date(b.date.value).getTime() - new Date(a.date.value).getTime()
+        entry.date = {
+          type:
+            result.properties.Date.rich_text?.[0]?.type === "mention"
+              ? "date"
+              : "string",
+          value: result.properties.Date.rich_text?.[0]?.plain_text ?? "",
+        };
       }
 
+      changelog.push(entry as ChangelogEntry);
+    });
 
-      return 0
-    })
+    changelog.sort((a, b) => {
+      if (a.date.type === "date" && b.date.type === "date") {
+        return (
+          new Date(b.date.value).getTime() - new Date(a.date.value).getTime()
+        );
+      }
 
-    return changelog
+      return 0;
+    });
+
+    return changelog;
   };
 
 export const getChangelog = getChangelogFactory();

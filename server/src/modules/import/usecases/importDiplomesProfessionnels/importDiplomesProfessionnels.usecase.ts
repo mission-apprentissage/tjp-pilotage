@@ -29,7 +29,11 @@ export const [importDiplomesProfessionnels] = inject(
         const cfd = formatCFD(diplomeProfessionnel);
 
         if (!cfd) {
-          console.log("\n--\nIl manque le CFD pour ce diplome professionnel : ", JSON.stringify(diplomeProfessionnel),"\n--\n")
+          console.log(
+            "\n--\nIl manque le CFD pour ce diplome professionnel : ",
+            JSON.stringify(diplomeProfessionnel),
+            "\n--\n"
+          );
           return;
         }
 

@@ -146,12 +146,7 @@ cli
       ...getImports("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
       ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
-      ...getImports("constat", [
-        "2020",
-        "2021",
-        "2022",
-        "2023"
-      ]),
+      ...getImports("constat", ["2020", "2021", "2022", "2023"]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
       ...getImports("nDispositifFormation_"),
@@ -189,7 +184,7 @@ cli
       importDiplomesProfessionnels,
       refreshFormationMaterializedView,
       importIndicateursRegion,
-      importIndicateursDepartement
+      importIndicateursDepartement,
     };
 
     if (usecaseName) {
@@ -201,11 +196,9 @@ cli
     }
   });
 
-cli
-  .command("importIJ")
-  .action(async () => {
-    await importIJData();
-  });
+cli.command("importIJ").action(async () => {
+  await importIJData();
+});
 
 cli
   .command("importFormations")
