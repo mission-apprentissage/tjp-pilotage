@@ -146,8 +146,6 @@ cli
       ...getImports("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
       ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
-      ...getImports("decrochage_regional", ["2020"]),
-      ...getImports("decrochage_academique", ["2020"]),
       ...getImports("constat", ["2020", "2021", "2022", "2023"]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
