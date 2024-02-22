@@ -117,6 +117,7 @@ type LineId = {
 };
 
 const PAGE_SIZE = 30;
+const EXPORT_LIMIT = 1_000_000;
 
 export default function Etablissements() {
   const router = useRouter();
@@ -150,25 +151,30 @@ export default function Etablissements() {
   const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
 
   useEffect(() => {
-    if (codeRegionFilter != "") {
+    if (codeRegionFilter !== "") {
       filters.codeRegion = [codeRegionFilter];
       setSearchParams({ filters: filters, withAnneeCommune });
     }
-    if (uaiFilter != "") {
+    if (uaiFilter !== "") {
       filters.uai = [uaiFilter];
       setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
+  const getEtablissementsQueryParameters = (
+    qLimit: number,
+    qOffset?: number
+  ) => ({
+    ...order,
+    ...filters,
+    offset: qOffset,
+    limit: qLimit,
+    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+  });
+
   const { data, isFetching } = client.ref("[GET]/etablissements").useQuery(
     {
-      query: {
-        ...filters,
-        ...order,
-        offset: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-      },
+      query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     { keepPreviousData: false }
   );
@@ -735,12 +741,7 @@ export default function Etablissements() {
       <TableFooter
         onExport={async () => {
           const data = await client.ref("[GET]/etablissements").query({
-            query: {
-              ...filters,
-              ...order,
-              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-              limit: 10000000,
-            },
+            query: getEtablissementsQueryParameters(EXPORT_LIMIT),
           });
           trackEvent("etablissements:export");
           downloadCsv(
