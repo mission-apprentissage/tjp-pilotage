@@ -6,6 +6,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { isScolaireFormationHistorique } from "../../utils/isScolaire";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
@@ -106,10 +107,10 @@ const findFormationsInDb = async ({
       "etablissement.UAI",
       "formationEtablissement.UAI"
     )
-    .leftJoin(
-      "formationHistorique",
-      "formationHistorique.ancienCFD",
-      "formationView.cfd"
+    .leftJoin("formationHistorique", (join) =>
+      join
+        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
+        .on(isScolaireFormationHistorique)
     )
     .select([
       "formationView.cfd",
@@ -194,7 +195,7 @@ const findFormationsInDb = async ({
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
         "isHistoriqueCoExistant"
       ),
-      "formationHistorique.codeFormationDiplome as formationRenovee",
+      "formationHistorique.cfd as formationRenovee",
     ])
     .where(notPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
@@ -238,7 +239,7 @@ const findFormationsInDb = async ({
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
       "formationView.libelleFiliere",
-      "formationHistorique.codeFormationDiplome",
+      "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
       "dispositif.codeDispositif",

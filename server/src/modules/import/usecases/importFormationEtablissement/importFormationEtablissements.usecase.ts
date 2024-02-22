@@ -35,7 +35,7 @@ export const [importFormations] = inject(
     return async () => {
       await streamIt(
         (count) =>
-          deps.findDiplomesProfessionnels({ offset: count, limit: 10 }),
+          deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           const voie = item.voie;
@@ -43,6 +43,7 @@ export const [importFormations] = inject(
           if (!cfd) return;
           const ancienCfds = await deps.importFormationHistorique({
             cfd,
+            voie,
           });
           for (const ancienCfd of ancienCfds ?? []) {
             await importFormationEtablissements({ cfd: ancienCfd, voie });
@@ -53,7 +54,7 @@ export const [importFormations] = inject(
       );
 
       await streamIt(
-        (count) => deps.findFamillesMetiers({ offset: count, limit: 20 }),
+        (count) => deps.findFamillesMetiers({ offset: count, limit: 60 }),
         async (item, count) => {
           const cfd = item.cfd;
           console.log("cfd famille", cfd, count);

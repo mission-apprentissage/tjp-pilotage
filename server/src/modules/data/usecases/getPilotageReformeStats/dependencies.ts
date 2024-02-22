@@ -5,11 +5,11 @@ import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
 } from "../../utils/notAnneeCommune";
-import { notApprentissageIndicateurRegionSortie } from "../../utils/notApprentissage";
 import {
   notHistorique,
   notHistoriqueFormation,
@@ -151,7 +151,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
-      .where(notApprentissageIndicateurRegionSortie)
+      .where(isScolaireIndicateurRegionSortie)
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([

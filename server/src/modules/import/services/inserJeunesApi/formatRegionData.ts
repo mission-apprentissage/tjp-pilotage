@@ -1,5 +1,7 @@
-import { Voies } from "./voies.enum";
-
+enum Voies {
+  scolaire = "scolaire",
+  apprentissage = "apprentissage",
+}
 export type IjRegionData = {
   [voie in Voies]: Record<
     string,

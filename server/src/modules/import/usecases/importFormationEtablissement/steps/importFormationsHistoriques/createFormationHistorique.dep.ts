@@ -6,20 +6,22 @@ import { DB, kdb } from "../../../../../../db/db";
 export const createFormationHistorique = async (
   ancienneFormation: Insertable<DB["formation"]> & {
     nouveauCFD: string;
+    voie: string;
   }
 ) => {
   const formationHistorique = {
-    codeFormationDiplome: ancienneFormation.nouveauCFD,
+    cfd: ancienneFormation.nouveauCFD,
     ancienCFD: ancienneFormation.codeFormationDiplome,
+    voie: ancienneFormation.voie,
   };
   kdb.transaction().execute(async (t) => {
     await t
       .insertInto("formation")
-      .values(_.omit(ancienneFormation, "nouveauCFD"))
+      .values(_.omit(ancienneFormation, ["nouveauCFD", "voie"]))
       .onConflict((oc) =>
         oc
           .column("codeFormationDiplome")
-          .doUpdateSet(_.omit(ancienneFormation, "nouveauCFD"))
+          .doUpdateSet(_.omit(ancienneFormation, ["nouveauCFD", "voie"]))
       )
       .execute();
 
@@ -28,7 +30,7 @@ export const createFormationHistorique = async (
       .values(formationHistorique)
       .onConflict((oc) =>
         oc
-          .columns(["ancienCFD", "codeFormationDiplome"])
+          .columns(["ancienCFD", "cfd", "voie"])
           .doUpdateSet(formationHistorique)
       )
       .execute();
