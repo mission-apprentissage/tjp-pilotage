@@ -8,5 +8,5 @@ export type BTS_Attractivite_capacite = {
   CFD: string;
   "CFD rectifié": string;
   Rectif: string;
-  "MEFSTAT11_old": string;
+  MEFSTAT11_old: string;
 };

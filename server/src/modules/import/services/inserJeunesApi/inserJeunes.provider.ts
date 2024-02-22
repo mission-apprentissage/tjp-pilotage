@@ -1,9 +1,9 @@
 import axios from "axios";
 
-let bearerToken = '';
+let bearerToken = "";
 
 function setInstanceBearerToken(newToken: string) {
-  bearerToken = newToken
+  bearerToken = newToken;
 }
 
 const instance = axios.create({
@@ -14,7 +14,7 @@ const instance = axios.create({
 
 instance.interceptors.request.use((config) => {
   config.headers.Authorization = `Bearer ${bearerToken}`;
-  return config
-})
+  return config;
+});
 
 export { instance, setInstanceBearerToken };

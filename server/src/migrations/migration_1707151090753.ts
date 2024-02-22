@@ -17,4 +17,3 @@ export const down = async (db: Kysely<unknown>) => {
     .addColumn("tauxDecrochage", "int4")
     .execute();
 };
-    

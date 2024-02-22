@@ -79,9 +79,7 @@ export const [importFormationEtablissements] = inject(
     importIndicateursRegionSortie,
   },
   (deps) => {
-    return async (
-      cfd: string,
-    ) => {
+    return async (cfd: string) => {
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
