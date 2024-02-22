@@ -1,7 +1,7 @@
 "use client";
 
 import { CheckIcon } from "@chakra-ui/icons";
-import { Box, Button, Collapse, Container } from "@chakra-ui/react";
+import { Box, Button, Collapse, Container, useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useRef, useState } from "react";
@@ -28,6 +28,7 @@ export const IntentionForm = ({
   defaultValues: PartialIntentionForms;
   formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
 }) => {
+  const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
   const form = useForm<IntentionForms>({
@@ -45,7 +46,33 @@ export const IntentionForm = ({
     mutateAsync: submitDemande,
     isSuccess: isSuccess,
   } = client.ref("[POST]/demande/submit").useMutation({
-    onSuccess: (body) => push(`/intentions/saisie?action=${body.status}`),
+    onSuccess: (body) => {
+      push(`/intentions/saisie`);
+
+      let message: string | null = null;
+
+      switch (body.status) {
+        case "draft":
+          message = "Projet de demande enregistré avec succès";
+          break;
+        case "submitted":
+          message = "Demande validée avec succès";
+          break;
+        case "refused":
+          message = "Demande refusée avec succès";
+          break;
+        case "deleted":
+          message = "Demande supprimée avec succès";
+          break;
+      }
+
+      if (message) {
+        toast({
+          variant: "left-accent",
+          title: message,
+        });
+      }
+    },
     //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
       const errors = e.response?.data.errors;
@@ -81,7 +108,7 @@ export const IntentionForm = ({
   }, []);
 
   const submitCFDUAISection = () => {
-    if (step != 2)
+    if (step !== 2)
       setTimeout(() => {
         step2Ref.current?.scrollIntoView({ behavior: "smooth" });
       }, 500);
