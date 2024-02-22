@@ -147,9 +147,10 @@ const findRestitutionIntentionsStatsInDB = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("pression"),
-      nbEtablissementFormationRegion({ eb, rentreeScolaire: CURRENT_RENTREE }).as(
-        "nbEtablissement"
-      ),
+      nbEtablissementFormationRegion({
+        eb,
+        rentreeScolaire: CURRENT_RENTREE,
+      }).as("nbEtablissement"),
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "in", status);

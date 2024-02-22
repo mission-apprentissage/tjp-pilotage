@@ -3,7 +3,7 @@ import NodeCache from "node-cache";
 
 import { Server } from "../../../../server";
 import { CACHE_KEYS } from "../../../../utils/cacheKeys";
-import { getGlossaireSchema,GlossaireEntry } from "./getGlossaire.schema";
+import { getGlossaireSchema, GlossaireEntry } from "./getGlossaire.schema";
 import { getGlossaire } from "./getGlossaire.usecase";
 
 export const getGlossaireRoute = ({

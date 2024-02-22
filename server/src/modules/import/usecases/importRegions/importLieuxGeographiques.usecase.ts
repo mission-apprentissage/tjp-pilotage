@@ -7,42 +7,44 @@ import batchCreate from "../../utils/batchCreate";
 import { streamIt } from "../../utils/streamIt";
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 
+export const [importLieuxGeographiques, importLieuxGeographiquesFactory] =
+  inject(
+    {
+      region: batchCreate(importRegionsDeps.createRegions),
+      academie: batchCreate(importRegionsDeps.createAcademies),
+      departement: batchCreate(importRegionsDeps.createDepartements),
+      findDepartementAcademieRegions:
+        importRegionsDeps.findDepartementAcademieRegions,
+    },
+    (deps) => async () => {
+      console.log(`Import des regions`);
 
-export const [importLieuxGeographiques, importLieuxGeographiquesFactory] = inject(
-  {
-    region: batchCreate(importRegionsDeps.createRegions),
-    academie: batchCreate(importRegionsDeps.createAcademies),
-    departement: batchCreate(importRegionsDeps.createDepartements),
-    findDepartementAcademieRegions: importRegionsDeps.findDepartementAcademieRegions,
-  },
-  (deps) => async () => {
-    console.log(`Import des regions`);
+      await streamIt(
+        (count) =>
+          deps.findDepartementAcademieRegions({ offset: count, limit: 20 }),
+        async (item) => {
+          const region = createRegionFromLine(item);
+          await deps.region.create({ data: region });
 
-    await streamIt(
-      (count) => deps.findDepartementAcademieRegions({ offset: count, limit: 20 }),
-      async (item) => {
-        const region = createRegionFromLine(item);
-        await deps.region.create({ data: region });
+          const academie = createAcademieFromLine(item);
+          if (!academie) return;
+          await deps.academie.create({ data: academie });
 
-        const academie = createAcademieFromLine(item);
-        if (!academie) return;
-        await deps.academie.create({ data: academie });
+          const departement = createDepartementFromLine(item);
+          if (!departement) return;
+          await deps.departement.create({ data: departement });
+        },
+        { parallel: 20 },
+        async () => {
+          await deps.academie.flush();
+          await deps.departement.flush();
+          await deps.region.flush();
+        }
+      );
 
-        const departement = createDepartementFromLine(item);
-        if (!departement) return;
-        await deps.departement.create({ data: departement });
-      },
-      { parallel: 20 },
-      async () => {
-        await deps.academie.flush();
-        await deps.departement.flush();
-        await deps.region.flush();
-      }
-    );
-
-    console.log("Lieux géographiques ajoutés ou mis à jour\n");
-  }
-)
+      console.log("Lieux géographiques ajoutés ou mis à jour\n");
+    }
+  );
 
 const createRegionFromLine = (
   data: Departements_academies_regions

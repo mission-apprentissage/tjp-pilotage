@@ -25,8 +25,10 @@ export const [importIndicateursDepartement] = inject(
         await deps.upsertDepartementQuery({
           codeDepartement,
           rentreeScolaire,
-          tauxChomage: line?.tauxChomage ? parseFloat(line?.tauxChomage.replace(',', '.')) : null
-        })
+          tauxChomage: line?.tauxChomage
+            ? parseFloat(line?.tauxChomage.replace(",", "."))
+            : null,
+        });
       }
     }
   }
