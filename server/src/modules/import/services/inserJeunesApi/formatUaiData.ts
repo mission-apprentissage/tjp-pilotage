@@ -38,44 +38,54 @@ export const formatUaiData = (rawData: any): IJUaiData => {
         filiere: "voie_pro_sco_educ_nat" | "apprentissage";
       }
     ) => {
-      const ensemble = cur.dimensions[0].ensemble;
-      const mefstat11 = cur.dimensions[0].id_mefstat11;
-      const cfd = cur.dimensions[0].id_formation_apprentissage;
+      const filiere = cur.filiere;
+      const voie = (
+        {
+          voie_pro_sco_educ_nat: "scolaire",
+          apprentissage: "apprentissage",
+        } as const
+      )[filiere];
 
-      if (ensemble) {
-        return {
-          ...acc,
-          [ensemble]: {
-            ...acc["ensemble"],
-            [cur.id_mesure]: cur.valeur_mesure,
-          },
-        };
-      }
+      if (voie === "scolaire" || voie === "apprentissage") {
+        const ensemble = cur.dimensions[0].ensemble;
+        const mefstat11 = cur.dimensions[0].id_mefstat11;
+        const cfd = cur.dimensions[0].id_formation_apprentissage;
 
-      if (mefstat11) {
-        return {
-          ...acc,
-          scolaire: {
-            ...acc.scolaire,
-            [mefstat11]: {
-              ...acc.scolaire[mefstat11],
+        if (ensemble) {
+          return {
+            ...acc,
+            [ensemble]: {
+              ...acc["ensemble"],
               [cur.id_mesure]: cur.valeur_mesure,
             },
-          },
-        };
-      }
+          };
+        }
 
-      if (cfd) {
-        return {
-          ...acc,
-          apprentissage: {
-            ...acc.apprentissage,
-            [cfd]: {
-              ...acc.apprentissage[cfd],
-              [cur.id_mesure]: cur.valeur_mesure,
+        if (mefstat11) {
+          return {
+            ...acc,
+            scolaire: {
+              ...acc.scolaire,
+              [mefstat11]: {
+                ...acc.scolaire[mefstat11],
+                [cur.id_mesure]: cur.valeur_mesure,
+              },
             },
-          },
-        };
+          };
+        }
+
+        if (cfd) {
+          return {
+            ...acc,
+            apprentissage: {
+              ...acc.apprentissage,
+              [cfd]: {
+                ...acc.apprentissage[cfd],
+                [cur.id_mesure]: cur.valeur_mesure,
+              },
+            },
+          };
+        }
       }
       return acc;
     },
