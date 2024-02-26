@@ -10,13 +10,15 @@ export const findDiplomesProfessionnels = ({
 }) => {
   return kdb
     .selectFrom("diplomeProfessionnel")
-    .selectAll()
+    .select(["cfd", "voie"])
+    .distinct()
     .offset(offset)
     .$call((q) => {
       if (!limit) return q;
       return q.limit(limit);
     })
-    .orderBy("voie asc")
+    .orderBy("voie", "asc")
+    .orderBy("cfd", "asc")
     .execute()
     .then(cleanNull);
 };
