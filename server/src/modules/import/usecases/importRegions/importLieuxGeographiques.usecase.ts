@@ -3,16 +3,15 @@ import { Insertable } from "kysely";
 
 import { DB } from "../../../../db/db";
 import { Departements_academies_regions } from "../../fileTypes/Departements_academies_regions";
-import batchCreate from "../../utils/batchCreate";
 import { streamIt } from "../../utils/streamIt";
 import { importRegionsDeps } from "./importLieuxGeographiques.deps";
 
 export const [importLieuxGeographiques, importLieuxGeographiquesFactory] =
   inject(
     {
-      region: batchCreate(importRegionsDeps.createRegions),
-      academie: batchCreate(importRegionsDeps.createAcademies),
-      departement: batchCreate(importRegionsDeps.createDepartements),
+      region: importRegionsDeps.createRegions,
+      academie: importRegionsDeps.createAcademies,
+      departement: importRegionsDeps.createDepartements,
       findDepartementAcademieRegions:
         importRegionsDeps.findDepartementAcademieRegions,
     },
@@ -24,22 +23,17 @@ export const [importLieuxGeographiques, importLieuxGeographiquesFactory] =
           deps.findDepartementAcademieRegions({ offset: count, limit: 20 }),
         async (item) => {
           const region = createRegionFromLine(item);
-          await deps.region.create({ data: region });
+          await deps.region({ data: [region] });
 
           const academie = createAcademieFromLine(item);
           if (!academie) return;
-          await deps.academie.create({ data: academie });
+          await deps.academie({ data: [academie] });
 
           const departement = createDepartementFromLine(item);
           if (!departement) return;
-          await deps.departement.create({ data: departement });
+          await deps.departement({ data: [departement] });
         },
-        { parallel: 20 },
-        async () => {
-          await deps.academie.flush();
-          await deps.departement.flush();
-          await deps.region.flush();
-        }
+        { parallel: 20 }
       );
 
       console.log("Lieux géographiques ajoutés ou mis à jour\n");
