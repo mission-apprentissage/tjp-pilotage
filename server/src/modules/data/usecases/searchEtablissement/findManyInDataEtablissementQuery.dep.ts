@@ -23,6 +23,7 @@ export const findManyInDataEtablissementsQuery = async ({
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune",
     ])
+    .distinct()
     .where((eb) =>
       eb.and([
         eb("dataEtablissement.typeUai", "in", [
