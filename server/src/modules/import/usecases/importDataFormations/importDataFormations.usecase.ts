@@ -12,6 +12,8 @@ import { find2ndeCommune, findSpecialite } from "./findFamilleMetier.dep";
 import { findRegroupements } from "./findRegroupements.dep";
 import { overrides } from "./overrides";
 
+const processedCfds: Set<string> = new Set();
+
 const EMPTY_VALUE = "(VIDE)";
 
 /**
@@ -129,6 +131,7 @@ export const [importDataFormations] = inject(
         }),
       async (nFormationDiplome, count) => {
         const cfd = nFormationDiplome.FORMATION_DIPLOME;
+        if (processedCfds.has(cfd)) return;
 
         const diplomeProfessionnel = await deps
           .findDiplomeProfessionnel({ cfd })
@@ -151,46 +154,56 @@ export const [importDataFormations] = inject(
         };
 
         try {
-          await deps.createDataFormation({
-            cfd,
-            libelleFormation:
-              diplomeProfessionnel?.[
-                "Intitulé de la spécialité (et options)"
-              ]?.replace(/"/g, "") ||
-              formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
-            rncp: diplomeProfessionnel?.["Code RNCP"]
-              ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
-              : undefined,
-            cpc: normalizeCpc(
-              diplomeProfessionnel?.["Commission professionnelle consultative"]
-            ),
-            cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
-            cpcSousSecteur: normalizeCpcSousSecteur(
-              diplomeProfessionnel?.["Sous-secteur"]
-            ),
-            libelleFiliere: regroupement || "(VIDE)",
-            codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
-            dateOuverture: nFormationDiplome.DATE_OUVERTURE
-              ? DateTime.fromFormat(
-                  nFormationDiplome.DATE_OUVERTURE,
-                  "dd/LL/yyyy"
-                ).toJSDate()
-              : undefined,
-            dateFermeture: nFormationDiplome.DATE_FERMETURE
-              ? DateTime.fromFormat(
-                  nFormationDiplome.DATE_FERMETURE,
-                  "dd/LL/yyyy"
-                ).toJSDate()
-              : undefined,
-            typeFamille: getTypeFamille(),
-          });
+          await deps
+            .createDataFormation({
+              cfd,
+              libelleFormation:
+                diplomeProfessionnel?.[
+                  "Intitulé de la spécialité (et options)"
+                ]?.replace(/"/g, "") ||
+                formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
+              rncp: diplomeProfessionnel?.["Code RNCP"]
+                ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
+                : undefined,
+              cpc: normalizeCpc(
+                diplomeProfessionnel?.[
+                  "Commission professionnelle consultative"
+                ]
+              ),
+              cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
+              cpcSousSecteur: normalizeCpcSousSecteur(
+                diplomeProfessionnel?.["Sous-secteur"]
+              ),
+              libelleFiliere: regroupement || "(VIDE)",
+              codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(
+                0,
+                3
+              ),
+              dateOuverture: nFormationDiplome.DATE_OUVERTURE
+                ? DateTime.fromFormat(
+                    nFormationDiplome.DATE_OUVERTURE,
+                    "dd/LL/yyyy"
+                  ).toJSDate()
+                : undefined,
+              dateFermeture: nFormationDiplome.DATE_FERMETURE
+                ? DateTime.fromFormat(
+                    nFormationDiplome.DATE_FERMETURE,
+                    "dd/LL/yyyy"
+                  ).toJSDate()
+                : undefined,
+              typeFamille: getTypeFamille(),
+            })
+            .then(() => {
+              processedCfds.add(cfd);
+            });
         } catch (e) {
           console.log(e);
           errorCount++;
+        } finally {
+          process.stdout.write(
+            `\r${count} dataFormation (scolaire) ajoutées ou mises à jour`
+          );
         }
-        process.stdout.write(
-          `\r${count} dataFormation (scolaire) ajoutées ou mises à jour`
-        );
       },
       { parallel: 20 }
     ).then(() => {
@@ -205,6 +218,7 @@ export const [importDataFormations] = inject(
         }),
       async (vFormationDiplome, count) => {
         const cfd = vFormationDiplome.FORMATION_DIPLOME;
+        if (processedCfds.has(cfd)) return;
 
         const diplomeProfessionnel = await deps
           .findDiplomeProfessionnel({ cfd })
@@ -227,50 +241,56 @@ export const [importDataFormations] = inject(
         };
 
         try {
-          await deps.createDataFormation({
-            cfd,
-            libelleFormation:
-              diplomeProfessionnel?.[
-                "Intitulé de la spécialité (et options)"
-              ]?.replace(/"/g, "") ||
-              formatLibelle(vFormationDiplome.LIBELLE_LONG_200),
-            rncp: diplomeProfessionnel?.["Code RNCP"]
-              ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
-              : undefined,
-            cpc:
-              diplomeProfessionnel?.["Commission professionnelle consultative"]
-                ?.replace("CPC", "")
-                .trim() || "(VIDE)",
-            cpcSecteur:
-              diplomeProfessionnel?.Secteur?.replace("Secteur", "").trim() ||
-              "(VIDE)",
-            cpcSousSecteur:
-              diplomeProfessionnel?.["Sous-secteur"]
-                ?.replace("Sous-secteur", "")
-                .trim() || "(VIDE)",
-            libelleFiliere: regroupement || "(VIDE)",
-            codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(0, 3),
-            dateOuverture: vFormationDiplome.DATE_OUVERTURE
-              ? DateTime.fromFormat(
-                  vFormationDiplome.DATE_OUVERTURE,
-                  "dd/LL/yyyy"
-                ).toJSDate()
-              : undefined,
-            dateFermeture: vFormationDiplome.DATE_FERMETURE
-              ? DateTime.fromFormat(
-                  vFormationDiplome.DATE_FERMETURE,
-                  "dd/LL/yyyy"
-                ).toJSDate()
-              : undefined,
-            typeFamille: getTypeFamille(),
-          });
+          await deps
+            .createDataFormation({
+              cfd,
+              libelleFormation:
+                diplomeProfessionnel?.[
+                  "Intitulé de la spécialité (et options)"
+                ]?.replace(/"/g, "") ||
+                formatLibelle(vFormationDiplome.LIBELLE_LONG_200),
+              rncp: diplomeProfessionnel?.["Code RNCP"]
+                ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
+                : undefined,
+              cpc: normalizeCpc(
+                diplomeProfessionnel?.[
+                  "Commission professionnelle consultative"
+                ]
+              ),
+              cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
+              cpcSousSecteur: normalizeCpcSousSecteur(
+                diplomeProfessionnel?.["Sous-secteur"]
+              ),
+              libelleFiliere: regroupement || "(VIDE)",
+              codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(
+                0,
+                3
+              ),
+              dateOuverture: vFormationDiplome.DATE_OUVERTURE
+                ? DateTime.fromFormat(
+                    vFormationDiplome.DATE_OUVERTURE,
+                    "dd/LL/yyyy"
+                  ).toJSDate()
+                : undefined,
+              dateFermeture: vFormationDiplome.DATE_FERMETURE
+                ? DateTime.fromFormat(
+                    vFormationDiplome.DATE_FERMETURE,
+                    "dd/LL/yyyy"
+                  ).toJSDate()
+                : undefined,
+              typeFamille: getTypeFamille(),
+            })
+            .then(() => {
+              processedCfds.add(cfd);
+            });
         } catch (e) {
           console.log(e);
           errorCount++;
+        } finally {
+          process.stdout.write(
+            `\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`
+          );
         }
-        process.stdout.write(
-          `\r${count} dataFormation (apprentissage) ajoutées ou mises à jour`
-        );
       },
       { parallel: 20 }
     );
