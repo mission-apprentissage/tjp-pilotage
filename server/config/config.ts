@@ -69,6 +69,7 @@ export const config = {
   },
   env: env.get("PILOTAGE_ENV").required().asString(),
   host: env.get("PILOTAGE_HOST").asString(),
+  gitRevision: env.get("PILOTAGE_GIT_REVISION").asString(),
   sql: {
     logLevel: env.get("PILOTAGE_SQL_LOG_LEVEL").asString(),
   },
