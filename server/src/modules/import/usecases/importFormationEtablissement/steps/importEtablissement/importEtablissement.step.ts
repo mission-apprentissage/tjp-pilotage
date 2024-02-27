@@ -6,6 +6,7 @@ import { DB } from "../../../../../../db/db";
 import { LyceesACCELine } from "../../../../fileTypes/LyceesACCELine";
 import { createEtablissement } from "./createEtablissement.dep";
 import { findDepartement } from "./findDepartement.dep";
+import { EtablissementGeoloc, findEtablissementGeoloc } from "./findGeoloc.dep";
 import { findLyceeACCE } from "./findLyceeAcce.dep";
 
 export const [importEtablissement] = inject(
@@ -24,11 +25,15 @@ export const [importEtablissement] = inject(
       const departement =
         codeDepartement && (await deps.findDepartement({ codeDepartement }));
 
+      const geoloc = await findEtablissementGeoloc({ uai, lyceeACCE });
+
       const etablissement = toEtablissement({
         uai,
         lyceeACCE,
         departement,
+        geoloc,
       });
+
       await deps.createEtablissement(etablissement);
     }
 );
@@ -44,10 +49,12 @@ const toEtablissement = ({
   uai,
   lyceeACCE,
   departement,
+  geoloc,
 }: {
   uai: string;
   lyceeACCE?: LyceesACCELine;
   departement?: Selectable<DB["departement"]>;
+  geoloc?: EtablissementGeoloc;
 }): Insertable<DB["etablissement"]> => {
   return {
     UAI: uai,
@@ -57,9 +64,6 @@ const toEtablissement = ({
     codeDepartement: departement?.codeDepartement,
     natureUAI: lyceeACCE?.nature_uai,
     libelleEtablissement: lyceeACCE?.appellation_officielle,
-    adresseEtablissement: lyceeACCE?.adresse_uai,
-    commune: lyceeACCE?.commune_libe,
-    codePostal: lyceeACCE?.code_postal_uai,
     secteur: lyceeACCE?.secteur_public_prive,
     dateOuverture:
       lyceeACCE &&
@@ -68,5 +72,11 @@ const toEtablissement = ({
       ? DateTime.fromFormat(lyceeACCE.date_fermeture, "dd/LL/yyyy").toJSDate()
       : null,
     codeMinistereTutuelle: lyceeACCE?.ministere_tutelle,
+    adresseEtablissement: geoloc?.adresse,
+    commune: geoloc?.commune,
+    codePostal: geoloc?.codePostal,
+    latitude: geoloc?.latitude,
+    longitude: geoloc?.longitude,
+    sourceGeoloc: geoloc?.source,
   };
 };
