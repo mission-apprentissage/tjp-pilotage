@@ -12,6 +12,9 @@ import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
+import { NSF_Categorie_Specialite } from "../fileTypes/NSFCategorieSpecialite";
+import { NSF_Domaine_Specialite } from "../fileTypes/NSFDomaineSpecialite";
+import { NSF_Groupe_Specialite } from "../fileTypes/NSFGroupeSpecialite";
 import { Offres_apprentissage } from "../fileTypes/Offres_apprentissage";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { Regroupement } from "../fileTypes/Regroupement";
@@ -42,6 +45,9 @@ export type LineTypes = {
   onisep_structures_denseignement_secondaire: StructureDenseignement;
   onisep_structures_denseignement_superieur: StructureDenseignement;
   regroupements: Regroupement;
+  n_categorie_specialite_: NSF_Categorie_Specialite;
+  n_domaine_specialite_: NSF_Domaine_Specialite;
+  n_groupe_specialite_: NSF_Groupe_Specialite;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

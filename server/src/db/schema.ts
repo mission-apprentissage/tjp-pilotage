@@ -311,6 +311,11 @@ export interface NiveauDiplome {
   libelleNiveauDiplome: string | null;
 }
 
+export interface Nsf {
+  codeNsf: string;
+  libelleNsf: string;
+}
+
 export interface RawData {
   type: string;
   data: Json | null;
@@ -359,6 +364,7 @@ export interface DB {
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   niveauDiplome: NiveauDiplome;
+  nsf: Nsf;
   rawData: RawData;
   region: Region;
   user: User;
