@@ -13,10 +13,12 @@ import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
+import { Regroupement } from "../fileTypes/Regroupement";
+import { StructureDenseignement } from "../fileTypes/Structures_denseignement";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
 import { R } from "../services/inserJeunesApi/formatUaiData";
 
-type LineTypes = {
+export type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
   nFormationDiplome_: NFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
@@ -33,6 +35,9 @@ type LineTypes = {
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   chomage_regional_INSEE: Chomage_regional_INSEE;
   chomage_departemental_INSEE: Chomage_departemental_INSEE;
+  onisep_structures_denseignement_secondaire: StructureDenseignement;
+  onisep_structures_denseignement_superieur: StructureDenseignement;
+  regroupements: Regroupement;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
