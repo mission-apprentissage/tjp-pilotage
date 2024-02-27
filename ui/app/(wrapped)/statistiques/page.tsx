@@ -14,7 +14,7 @@ const fetchData = async () => {
   return recordMap;
 };
 
-export default async function CGU() {
+export default async function Statistiques() {
   const recordMap = await fetchData();
   return (
     <>

@@ -16,7 +16,7 @@ const fetchData = async () => {
   return recordMap;
 };
 
-export default async function CGU() {
+export default async function Ressources() {
   const recordMap = await fetchData();
   return (
     <>
