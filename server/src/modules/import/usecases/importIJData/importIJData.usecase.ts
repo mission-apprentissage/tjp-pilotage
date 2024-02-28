@@ -121,7 +121,7 @@ export const [importIJDataForEtablissement] = inject(
       cfd: string;
       voie?: string;
     }) => {
-      if (voie !== "scolaire") {
+      if (voie === "apprentissage") {
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
         for (const uai of uais) {
