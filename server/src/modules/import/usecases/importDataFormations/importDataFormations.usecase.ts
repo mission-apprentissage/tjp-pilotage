@@ -174,6 +174,7 @@ export const [importDataFormations] = inject(
               cpcSousSecteur: normalizeCpcSousSecteur(
                 diplomeProfessionnel?.["Sous-secteur"]
               ),
+              codeNsf: cfd.slice(3, 6),
               libelleFiliere: regroupement || "(VIDE)",
               codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
@@ -261,6 +262,7 @@ export const [importDataFormations] = inject(
               cpcSousSecteur: normalizeCpcSousSecteur(
                 diplomeProfessionnel?.["Sous-secteur"]
               ),
+              codeNsf: cfd.slice(3, 6),
               libelleFiliere: regroupement || "(VIDE)",
               codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
