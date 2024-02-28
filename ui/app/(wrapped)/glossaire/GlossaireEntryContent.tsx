@@ -14,11 +14,13 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import ChakraUIRenderer from "chakra-ui-markdown-renderer";
+import { usePlausible } from "next-plausible";
+import { useEffect } from "react";
 import ReactMarkdown, { Components } from "react-markdown";
 
 import { client } from "@/api.client";
 
-import { useGlossaireContext } from "../../contexts/glossaireContext";
+import { useGlossaireContext } from "./glossaireContext";
 import { GlossaireIcon } from "./GlossaireIcon";
 
 const notionIdHrefRegex = /^\/?[0-9a-zA-Z]{32}$/;
@@ -36,18 +38,21 @@ function convertToNotionPageId(id: string | undefined): string {
 const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
   li: ({ children }) => <ListItem>{children}</ListItem>,
-  blockquote: ({ children }) => (
-    <blockquote
-      style={{
-        borderLeft: "4px solid #6a6af4",
-        padding: "16px 32px",
-        marginBottom: "24px",
-        backgroundColor: "#F6F6F6",
-      }}
-    >
-      {children}
-    </blockquote>
-  ),
+  blockquote: ({ children }) => {
+    const [grey] = useToken("colors", ["grey.975"]);
+    return (
+      <blockquote
+        style={{
+          borderLeft: "4px solid #6a6af4",
+          padding: "16px 32px",
+          marginBottom: "24px",
+          backgroundColor: grey,
+        }}
+      >
+        {children}
+      </blockquote>
+    );
+  },
   a: ({ children, href }) => {
     const { setSelectedEntry } = useGlossaireContext();
     if (isNotionId(href)) {
@@ -89,6 +94,8 @@ const RenderGlossaireEntrySkeleton = () => {
 };
 
 const useGlossaireEntryContentHook = (id: string) => {
+  const trackEvent = usePlausible();
+
   const { data, isLoading, isError, error } = client
     .ref("[GET]/glossaire/:id")
     .useQuery(
@@ -103,6 +110,12 @@ const useGlossaireEntryContentHook = (id: string) => {
       }
     );
 
+  useEffect(() => {
+    if (data) {
+      trackEvent("glossaire", { props: { name: data.title } });
+    }
+  }, [data, trackEvent]);
+
   return {
     isLoading,
     isError,
@@ -112,10 +125,6 @@ const useGlossaireEntryContentHook = (id: string) => {
 };
 
 export const GlossaireEntryContent = ({ id }: { id: string }) => {
-  const [blue, yellow, purple, gray, red, green, pink, orange] = useToken(
-    "colors",
-    ["blue", "yellow", "purple", "gray", "red", "green", "pink", "orange"]
-  );
   const { entry, isLoading, isError, error } = useGlossaireEntryContentHook(id);
 
   if (isLoading) {
@@ -155,20 +164,18 @@ export const GlossaireEntryContent = ({ id }: { id: string }) => {
         </Flex>
         {entry?.indicator && (
           <Badge
-            colorScheme={
+            variant={
               {
-                blue,
-                yellow,
-                purple,
-                gray,
-                red,
-                brown: blue,
-                green,
-                pink,
-                orange,
-              }[entry.indicator?.color ?? "blue"]
+                green: "success",
+                blue: "info",
+                yellow: "new",
+                red: "error",
+                orange: "warning",
+                purple: "purpleGlycine",
+                pink: "pinkTuile",
+                brown: "brownCafeCreme",
+              }[entry.indicator?.color]
             }
-            variant="subtle"
             display="flex"
             alignItems={"center"}
             style={{ borderRadius: "0.25rem", padding: "0.25rem 0.5rem" }}

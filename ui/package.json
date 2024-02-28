@@ -7,7 +7,8 @@
     "build": "NEXT_PUBLIC_VERSION=$npm_package_version next build",
     "start": "NEXT_PUBLIC_VERSION=$npm_package_version next start",
     "docker-dev": "yarn dev",
-    "typecheck": "tsc"
+    "typecheck": "tsc",
+    "theme": "chakra-cli tokens theme/theme.ts"
   },
   "dependencies": {
     "@chakra-ui/icons": "^2.1.1",
@@ -43,6 +44,7 @@
     "zod": "^3.22.4"
   },
   "devDependencies": {
+    "@chakra-ui/cli": "^2.4.1",
     "@iconify/react": "^4.1.1",
     "@types/node": "^20.11.6",
     "@types/qs": "^6.9.11",

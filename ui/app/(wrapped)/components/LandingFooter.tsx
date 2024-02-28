@@ -12,6 +12,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
+import { usePlausible } from "next-plausible";
 
 import { themeDefinition } from "../../../theme/theme";
 
@@ -32,6 +33,8 @@ const LinkWithIcon = ({ children, href }: LinkWithIconProps) => {
 };
 
 export const LandingFooter = () => {
+  const trackEvent = usePlausible();
+
   return (
     <VStack
       borderTop="1px"
@@ -123,13 +126,26 @@ export const LandingFooter = () => {
             </Link>
           </Box>
           <Box>
-            <Link as={NextLink} href="/changelog">
+            <Link
+              as={NextLink}
+              href="/changelog"
+              onClick={() => trackEvent("footer:journal-des-mises-a-jour")}
+            >
               Journal des mises à jour
             </Link>
           </Box>
           <Box>
             <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
               Nous contacter : orion@inserjeunes.beta.gouv.fr
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/statistiques"
+              onClick={() => trackEvent("footer:statistiques")}
+            >
+              Statistiques
             </Link>
           </Box>
         </HStack>

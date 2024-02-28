@@ -5,12 +5,14 @@ import {
   TableContainer,
   Tbody,
   Td,
+  Text,
   Th,
   Thead,
   Tr,
 } from "@chakra-ui/react";
 
 import { TauxPressionScale } from "../app/(wrapped)/components/TauxPressionScale";
+import { useGlossaireContext } from "../app/(wrapped)/glossaire/glossaireContext";
 import { getTauxPressionStyle } from "../utils/getBgScale";
 import { GraphWrapper } from "./GraphWrapper";
 import { OrderIcon } from "./OrderIcon";
@@ -44,6 +46,7 @@ export const TableQuadrant = ({
     orderBy?: string;
   };
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
     if (currentCfd && formation.cfd === currentCfd) return "white !important";
     return "";
@@ -104,14 +107,16 @@ export const TableQuadrant = ({
                 <TooltipIcon
                   ml="1"
                   label={
-                    <>
-                      <Box>
+                    <Box>
+                      <Text>
                         Le ratio entre le nombre de premiers voeux et la
                         capacité de la formation au niveau régional.
-                      </Box>
+                      </Text>
+                      <Text>Cliquez pour plus d'infos.</Text>
                       <TauxPressionScale />
-                    </>
+                    </Box>
                   }
+                  onClick={() => openGlossaire("taux-de-pression")}
                 />
               </Th>
               <Th
@@ -126,7 +131,16 @@ export const TableQuadrant = ({
                 TX EMPLOI
                 <TooltipIcon
                   ml="1"
-                  label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                  label={
+                    <Box>
+                      <Text>
+                        La part de ceux qui sont en emploi 6 mois après leur
+                        sortie d’étude.
+                      </Text>
+                      <Text>Cliquer pour plus d'informations.</Text>
+                    </Box>
+                  }
+                  onClick={() => openGlossaire("taux-emploi-6-mois")}
                 />
               </Th>
               <Th
@@ -141,7 +155,16 @@ export const TableQuadrant = ({
                 TX POURSUITE
                 <TooltipIcon
                   ml="1"
-                  label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                  label={
+                    <Box>
+                      <Text>
+                        Tout élève inscrit à N+1 (réorientation et redoublement
+                        compris).
+                      </Text>
+                      <Text>Cliquez pour plus d'informations</Text>
+                    </Box>
+                  }
+                  onClick={() => openGlossaire("taux-poursuite-etudes")}
                 />
               </Th>
             </Tr>
