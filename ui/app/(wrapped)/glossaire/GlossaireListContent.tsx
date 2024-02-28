@@ -1,63 +1,45 @@
 import {
   Box,
-  Flex,
   Input,
   InputGroup,
   InputLeftElement,
-  SkeletonText,
   StackDivider,
   Text,
   useToken,
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 
-import { client } from "../../../api.client";
 import { GlossaireListContentItem } from "./GlossaireListContentItem";
-import { GlossaireEntry } from "./types";
+import { GlossaireEntries } from "./types";
 
-const GlossaireListContentSkeleton = () => {
-  return (
-    <Flex direction={"column"}>
-      <SkeletonText noOfLines={5} spacing="4" skeletonHeight="20" />
-    </Flex>
-  );
-};
-
-const useGetGlossaireList = () => {
+const useGlossaireList = (initialEntries: GlossaireEntries) => {
+  const trackEvent = usePlausible();
   const [searchValue, setSearchValue] = useState("");
-  const [entries, setEntries] = useState<GlossaireEntry>([]);
+  const [entries, setEntries] = useState<GlossaireEntries>(initialEntries);
   const [greyColor] = useToken("colors", ["grey.625"]);
-  const { data, isLoading, isError, error } = client
-    .ref("[GET]/glossaire")
-    .useQuery(
-      {},
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
 
   useEffect(() => {
-    setEntries(
-      (data ?? []).filter(
+    setEntries((e) =>
+      e.filter(
         (entry) =>
           searchValue === "" ||
-          entry?.title?.toLowerCase().includes(searchValue.toLowerCase().trim())
+          entry?.title
+            ?.toLowerCase()
+            .trim()
+            .includes(searchValue.toLowerCase().trim())
       )
     );
-  }, [searchValue, data]);
+  }, [searchValue, setEntries]);
 
   useEffect(() => {
-    setEntries(data ?? []);
-  }, [data]);
+    trackEvent("glossaire", { props: { name: "Liste" } });
+  }, [trackEvent]);
 
   return {
     entries,
-    isLoading,
-    isError,
-    error,
     searchValue,
     setSearchValue,
     greyColor,
@@ -66,17 +48,13 @@ const useGetGlossaireList = () => {
 
 export const GlossaireListContent = ({
   selectEntry,
+  initialEntries,
 }: {
   selectEntry: (e: string) => void;
+  initialEntries: GlossaireEntries;
 }) => {
-  const {
-    entries,
-    isLoading,
-    isError,
-    searchValue,
-    setSearchValue,
-    greyColor,
-  } = useGetGlossaireList();
+  const { entries, searchValue, setSearchValue, greyColor } =
+    useGlossaireList(initialEntries);
 
   return (
     <>
@@ -109,24 +87,20 @@ export const GlossaireListContent = ({
           value={searchValue}
         />
       </InputGroup>
-      {isLoading && <GlossaireListContentSkeleton />}
-      {isError && <Text>Erreur lors du chargement</Text>}
-      {!isLoading && !isError && (
-        <VStack
-          divider={<StackDivider borderColor="grey.950" />}
-          spacing={0}
-          cursor={"pointer"}
-        >
-          {(entries ?? []).map((entry) => (
-            <GlossaireListContentItem
-              key={entry.id}
-              entry={entry}
-              selectEntry={selectEntry}
-              searchValue={searchValue}
-            />
-          ))}
-        </VStack>
-      )}
+      <VStack
+        divider={<StackDivider borderColor="grey.950" />}
+        spacing={0}
+        cursor={"pointer"}
+      >
+        {(entries ?? []).map((entry) => (
+          <GlossaireListContentItem
+            key={entry.id}
+            entry={entry}
+            selectEntry={selectEntry}
+            searchValue={searchValue}
+          />
+        ))}
+      </VStack>
     </>
   );
 };

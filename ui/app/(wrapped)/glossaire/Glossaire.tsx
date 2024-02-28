@@ -1,3 +1,4 @@
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -10,15 +11,20 @@ import {
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 
-import { DoubleArrowLeft } from "../../../components/icons/DoubleArrowLeft";
 import { DoubleArrowRight } from "../../../components/icons/DoubleArrowRight";
-import { useGlossaireContext } from "../../contexts/glossaireContext";
+import { useGlossaireContext } from "./glossaireContext";
 import { GlossaireEntryContent } from "./GlossaireEntryContent";
 import { GlossaireListContent } from "./GlossaireListContent";
 
 export const Glossaire = () => {
-  const { isOpen, onOpen, onClose, selectedEntry, setSelectedEntry } =
-    useGlossaireContext();
+  const {
+    isOpen,
+    openGlossaire,
+    closeGlossaire,
+    selectedEntry,
+    setSelectedEntry,
+    entries,
+  } = useGlossaireContext();
 
   const currentContent = useMemo(() => {
     if (selectedEntry) {
@@ -26,22 +32,30 @@ export const Glossaire = () => {
     }
 
     return (
-      <GlossaireListContent selectEntry={(e: string) => setSelectedEntry(e)} />
+      <GlossaireListContent
+        selectEntry={(e: string) => setSelectedEntry(e)}
+        initialEntries={entries}
+      />
     );
-  }, [selectedEntry, setSelectedEntry]);
+  }, [selectedEntry, setSelectedEntry, entries]);
 
   return (
     <Box display={"flex"} flexGrow={"1"} justifyContent={"end"}>
       <Button
         variant={"secondary"}
-        leftIcon={<DoubleArrowLeft height={24} width={24} />}
-        onClick={() => onOpen()}
+        leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
+        onClick={() => openGlossaire()}
         color="bluefrance.113"
-        fontSize={"medium"}
+        fontSize={"14px"}
       >
         Glossaire
       </Button>
-      <Drawer isOpen={isOpen} placement="right" onClose={onClose} size={"lg"}>
+      <Drawer
+        isOpen={isOpen}
+        placement="right"
+        onClose={closeGlossaire}
+        size={"lg"}
+      >
         <DrawerContent>
           <DrawerHeader>
             <HStack justifyContent={"space-between"}>
@@ -59,7 +73,7 @@ export const Glossaire = () => {
                 variant={"unstyled"}
                 color="bluefrance.113"
                 rightIcon={<DoubleArrowRight />}
-                onClick={onClose}
+                onClick={closeGlossaire}
                 display="flex"
               >
                 <span style={{ paddingBottom: "3px" }}>Fermer</span>
