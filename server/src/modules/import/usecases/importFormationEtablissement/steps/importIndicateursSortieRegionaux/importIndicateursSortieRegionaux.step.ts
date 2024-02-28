@@ -39,6 +39,7 @@ export const [importIndicateursRegionSortie] = inject(
               dispositifId,
               codeRegion,
               millesimeSortie,
+              voie: "scolaire",
             });
 
             if (!continuumData) continue;
@@ -89,6 +90,7 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
               dispositifId: null,
               codeRegion,
               millesimeSortie,
+              voie: "apprentissage",
             });
 
             if (!continuumData) continue;
@@ -129,17 +131,23 @@ const [getContinuumData] = inject(
       dispositifId,
       codeRegion,
       millesimeSortie,
+      voie,
     }: {
       cfd: string;
       dispositifId: string | null;
       codeRegion: string;
       millesimeSortie: string;
+      voie: string;
     }) => {
-      const ancienneFormation = await deps.findAnciennesFormation({ cfd });
+      const ancienneFormation = await deps.findAnciennesFormation({
+        cfd,
+        voie,
+      });
       if (ancienneFormation.length !== 1) return;
       const cfdContinuum = ancienneFormation[0].ancienCFD;
       const nouvellesFormation = await deps.findNouvellesFormation({
         cfd: cfdContinuum,
+        voie,
       });
       if (nouvellesFormation.length !== 1) return;
 
@@ -148,6 +156,7 @@ const [getContinuumData] = inject(
         codeDispositif: dispositifId,
         codeRegion,
         millesimeSortie,
+        voie,
       });
     }
 );
