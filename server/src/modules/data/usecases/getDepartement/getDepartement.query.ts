@@ -4,7 +4,10 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
+import {
+  isScolaireFormationHistorique,
+  isScolaireIndicateurRegionSortie,
+} from "../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
@@ -69,7 +72,7 @@ export const getDepartementStats = async ({
           .selectFrom("formationHistorique")
           .distinct()
           .select("ancienCFD")
-          .where("voie", "=", "scolaire")
+          .where(isScolaireFormationHistorique)
       )
     )
     .select([

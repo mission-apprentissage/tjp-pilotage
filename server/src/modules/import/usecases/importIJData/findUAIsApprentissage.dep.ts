@@ -12,13 +12,11 @@ export const findUAIsApprentissage = ({ cfd }: { cfd: string }) => {
     .then((rawDatas) => {
       if (!rawDatas || !rawDatas.length) return;
       return rawDatas
-        .map((rawData) =>
-          rawData["UAI formation"]
-            ? rawData["UAI formation"]
-            : rawData["UAI formateur"]
-            ? rawData["UAI formateur"]
-            : rawData["UAI Responsable"]
-        )
+        .map((rawData) => {
+          if (rawData["UAI formation"]) return rawData["UAI formation"];
+          if (rawData["UAI formateur"]) return rawData["UAI formateur"];
+          return rawData["UAI Responsable"];
+        })
         .filter((uai) => uai);
     });
 };

@@ -95,7 +95,7 @@ export const [importFormationEtablissements] = inject(
       cfd: string;
       voie?: string;
     }) => {
-      if (voie !== "scolaire") {
+      if (voie === "apprentissage") {
         await deps.importIndicateursRegionSortieApprentissage({ cfd });
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
