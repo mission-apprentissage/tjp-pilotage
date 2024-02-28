@@ -6,11 +6,13 @@ export const findIndicateurRegionSortie = ({
   codeDispositif,
   codeRegion,
   millesimeSortie,
+  voie,
 }: {
   cfd: string;
   codeDispositif: string | null;
   codeRegion: string;
   millesimeSortie: string;
+  voie: string;
 }) =>
   kdb
     .selectFrom("indicateurRegionSortie")
@@ -22,5 +24,6 @@ export const findIndicateurRegionSortie = ({
     })
     .where("codeRegion", "=", codeRegion)
     .where("millesimeSortie", "=", millesimeSortie)
+    .where("voie", "=", voie)
     .executeTakeFirst()
     .then(cleanNull);

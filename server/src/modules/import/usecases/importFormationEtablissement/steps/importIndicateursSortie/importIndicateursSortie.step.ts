@@ -1,10 +1,10 @@
 import { inject } from "injecti";
 import _ from "lodash";
 
-import { findAnciennesFormation } from "../importIndicateursSortieRegionaux/findAnciennesFormation.dep";
-import { findNouvellesFormation } from "../importIndicateursSortieRegionaux/findNouvellesFormation.dep";
 import { createIndicateurSortie } from "./createIndicateurSortie.dep";
+import { findAnciennesFormation } from "./findAnciennesFormation.dep";
 import { findIndicateurSortie } from "./findIndicateurSortie.dep";
+import { findNouvellesFormation } from "./findNouvellesFormation.dep";
 import { getUaiData } from "./getUaiData.dep";
 
 export const [importIndicateurSortie] = inject(
@@ -34,6 +34,7 @@ export const [importIndicateurSortie] = inject(
           codeDispositif,
           uai,
           millesimeSortie: millesime,
+          voie: "scolaire",
         });
         if (!continuumData) return;
 
@@ -84,6 +85,7 @@ export const [importIndicateurSortieApprentissage] = inject(
           codeDispositif: null,
           uai,
           millesimeSortie: millesime,
+          voie: "apprentissage",
         });
         if (!continuumData) return;
 
@@ -123,17 +125,23 @@ const [getContinuumData] = inject(
       codeDispositif,
       uai,
       millesimeSortie,
+      voie,
     }: {
       cfd: string;
       codeDispositif: string | null;
       uai: string;
       millesimeSortie: string;
+      voie: string;
     }) => {
-      const ancienneFormation = await deps.findAnciennesFormation({ cfd });
+      const ancienneFormation = await deps.findAnciennesFormation({
+        cfd,
+        voie,
+      });
       if (ancienneFormation.length !== 1) return;
       const cfdContinuum = ancienneFormation[0].ancienCFD;
       const nouvellesFormation = await deps.findNouvellesFormation({
         cfd: cfdContinuum,
+        voie,
       });
       if (nouvellesFormation.length !== 1) return;
 
