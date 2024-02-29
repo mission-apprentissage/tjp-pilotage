@@ -132,6 +132,7 @@ export const themeDefinition = {
       "525_hover": "#a6a6a6",
       "525_active": "#bababa",
       625: "#929292",
+      50: "#161616",
     },
     warning: {
       425: "#b34000",
