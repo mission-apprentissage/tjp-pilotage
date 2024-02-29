@@ -177,12 +177,13 @@ export const withTauxPressionReg = <
   cfdRef,
   codeDispositifRef,
   codeRegionRef,
+  indicateurEntreeAlias,
 }: {
   eb: EB;
-  codeRegion?: string | "ref";
   cfdRef: Parameters<EB["ref"]>[0];
   codeDispositifRef: Parameters<EB["ref"]>[0];
   codeRegionRef: Parameters<EB["ref"]>[0];
+  indicateurEntreeAlias?: string;
 }) => {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
@@ -190,7 +191,15 @@ export const withTauxPressionReg = <
     .innerJoin("indicateurEntree as subIE", (join) =>
       join
         .onRef("subFE.id", "=", "subIE.formationEtablissementId")
-        .on("subIE.rentreeScolaire", "=", CURRENT_RENTREE)
+        .$call((j) => {
+          if (indicateurEntreeAlias)
+            return j.onRef(
+              "subIE.rentreeScolaire",
+              "=",
+              sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            );
+          return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
+        })
     )
     .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
@@ -203,4 +212,83 @@ export const withTauxPressionReg = <
     )
     .select([selectTauxPressionAgg("subIE", "subF").as("s")])
     .groupBy(["subFE.cfd", "dispositifId"]);
+};
+
+export const withTauxPressionDep = <
+  EB extends ExpressionBuilder<DB, "demande" | "dataEtablissement">,
+>({
+  cfdRef,
+  codeDispositifRef,
+  codeDepartementRef,
+  indicateurEntreeAlias,
+}: {
+  eb: EB;
+  cfdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
+  codeDepartementRef: Parameters<EB["ref"]>[0];
+  indicateurEntreeAlias?: string;
+}) => {
+  const eb = expressionBuilder<DB, keyof DB>();
+  return eb
+    .selectFrom("formationEtablissement as subFE")
+    .innerJoin("indicateurEntree as subIE", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
+        .$call((j) => {
+          if (indicateurEntreeAlias)
+            return j.onRef(
+              "subIE.rentreeScolaire",
+              "=",
+              sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            );
+          return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
+        })
+    )
+    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
+    .whereRef("subFE.cfd", "=", cfdRef)
+    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
+    .whereRef(
+      "subEtab.codeDepartement",
+      "=",
+      sql`ANY(array_agg(${eb.ref(codeDepartementRef)}))`
+    )
+    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
+};
+
+export const withTauxPressionNat = <
+  EB extends ExpressionBuilder<DB, "demande" | "dataEtablissement">,
+>({
+  cfdRef,
+  codeDispositifRef,
+  indicateurEntreeAlias,
+}: {
+  eb: EB;
+  cfdRef: Parameters<EB["ref"]>[0];
+  codeDispositifRef: Parameters<EB["ref"]>[0];
+  indicateurEntreeAlias?: string;
+}) => {
+  const eb = expressionBuilder<DB, keyof DB>();
+  return eb
+    .selectFrom("formationEtablissement as subFE")
+    .innerJoin("indicateurEntree as subIE", (join) =>
+      join
+        .onRef("subFE.id", "=", "subIE.formationEtablissementId")
+        .$call((j) => {
+          if (indicateurEntreeAlias)
+            return j.onRef(
+              "subIE.rentreeScolaire",
+              "=",
+              sql`${sql.table(indicateurEntreeAlias)}."rentreeScolaire"::text`
+            );
+          return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
+        })
+    )
+    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
+    .whereRef("subFE.cfd", "=", cfdRef)
+    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
+    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
 };
