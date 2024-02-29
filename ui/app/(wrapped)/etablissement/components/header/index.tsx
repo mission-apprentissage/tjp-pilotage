@@ -1,8 +1,28 @@
+import { Grid } from "@chakra-ui/react";
+
 import { useEtablissementContext } from "../../context/etablissementContext";
+import { AccesRapide } from "./accesRapide";
+import { Coordonnees } from "./coordonnees";
+import { DonneesIncompletes } from "./donneesIncompletes";
+import { Filieres } from "./filieres";
+import { useEtablissementHeader } from "./hook";
+import { Indicateurs } from "./indicateurs";
+import { Libelle } from "./libelle";
+import { SearchInput } from "./searchInput";
 
-const EtablissementHeader = () => {
+export const EtablissementHeader = () => {
   const { uai } = useEtablissementContext();
-  return <div>Header (uai: {uai})</div>;
-};
+  const { filieres, informations, search } = useEtablissementHeader(uai) || {};
 
-export { EtablissementHeader };
+  return (
+    <Grid templateColumns={"repeat(12,1fr)"}>
+      <Libelle informations={informations} />
+      <SearchInput search={search} />
+      <Coordonnees informations={informations} />
+      <Filieres filieres={filieres} />
+      <AccesRapide uai={uai} />
+      <Indicateurs millessimes={["2022", "2023"]} />
+      <DonneesIncompletes isMissingDatas={true} />
+    </Grid>
+  );
+};
