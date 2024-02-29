@@ -8,7 +8,12 @@ const outline = defineStyle({
   },
 });
 
+const info = defineStyle({
+  bgColor: "info.950",
+  color: "info.text",
+});
+
 export const tagTheme = defineStyleConfig({
-  variants: { outline },
+  variants: { outline, info },
   baseStyle: {},
 });
