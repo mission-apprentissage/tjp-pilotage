@@ -5455,6 +5455,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"axios-rate-limit@npm:^1.3.0":
+  version: 1.3.0
+  resolution: "axios-rate-limit@npm:1.3.0"
+  peerDependencies:
+    axios: "*"
+  checksum: 19e963732231d2a0c35c19b0603aa4aeeb55a52bab5edd75908d6df1df86978afb7525b9e79fa17dca281d8d6132072c7f269d9cb90867d0a58da4f713a6dea1
+  languageName: node
+  linkType: hard
+
 "axios-retry@npm:^4.0.0":
   version: 4.0.0
   resolution: "axios-retry@npm:4.0.0"
@@ -17002,6 +17011,7 @@ __metadata:
     "@types/qs": ^6.9.7
     "@types/uuid": ^9.0.4
     axios: 1.6.2
+    axios-rate-limit: ^1.3.0
     axios-retry: ^4.0.0
     commander: ^10.0.0
     cookie: ^0.5.0

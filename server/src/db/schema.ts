@@ -194,6 +194,9 @@ export interface Etablissement {
   codeRegion: string | null;
   codeDepartement: string | null;
   commune: string | null;
+  latitude: number | null;
+  longitude: number | null;
+  sourceGeoloc: string | null;
 }
 
 export interface FamilleMetier {

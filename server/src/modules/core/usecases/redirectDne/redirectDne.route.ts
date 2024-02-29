@@ -54,7 +54,14 @@ export const redirectDneRoute = (server: Server) => {
               }
             );
 
-            response.header("set-cookie", cookies).redirect(302, url).send();
+            /**
+             * Return est obligatoire ici pour interrompre l'exécution de la fonction
+             * et empêcher la séquence d'authentification d'être exécutée en entière.
+             */
+            return response
+              .header("set-cookie", cookies)
+              .redirect(302, url)
+              .send();
           }
 
           const { token } = await redirectDne({
