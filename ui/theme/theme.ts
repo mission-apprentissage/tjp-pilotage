@@ -113,6 +113,9 @@ export const themeDefinition = {
       950: "#eeeeee",
       "950_hover": "#d2d2d2",
       "950_active": "#c1c1c1",
+      925: "#E5E5E5",
+      "925_hover": "#c5c5c5",
+      "925_active": "#b2b2b2",
       900: "#dddddd",
       "900_hover": "#bbbbbb",
       "900_active": "#a7a7a7",
@@ -155,6 +158,21 @@ export const themeDefinition = {
     },
     green: {
       submitted: "#C8F6D6",
+    },
+    greenarchipel: {
+      557: "#009099",
+      "557_hover": "#00c6d2",
+      "557_active": "#00e0ee",
+    },
+    orangeterrebattue: {
+      645: "#E4794A",
+      "645_hover": "#f1a892",
+      "645_active": "#f4bfb1",
+    },
+    purpleglycine: {
+      494: "#A558A0",
+      "494_hover": "#d282cd",
+      "494_active": "#db9cd6",
     },
     pilotage: {
       red: "#FA9293",
