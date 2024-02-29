@@ -5,6 +5,10 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import {
+  isScolaireFormationHistorique,
+  isScolaireIndicateurRegionSortie,
+} from "../../utils/isScolaire";
+import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
@@ -38,7 +42,7 @@ export const getDepartementStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
@@ -59,11 +63,16 @@ export const getDepartementStats = async ({
       );
     })
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .where((eb) =>
       eb(
         "indicateurRegionSortie.cfd",
         "not in",
-        eb.selectFrom("formationHistorique").distinct().select("ancienCFD")
+        eb
+          .selectFrom("formationHistorique")
+          .distinct()
+          .select("ancienCFD")
+          .where(isScolaireFormationHistorique)
       )
     )
     .select([
@@ -75,7 +84,7 @@ export const getDepartementStats = async ({
   const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "formationEtablissement.cfd"
     )

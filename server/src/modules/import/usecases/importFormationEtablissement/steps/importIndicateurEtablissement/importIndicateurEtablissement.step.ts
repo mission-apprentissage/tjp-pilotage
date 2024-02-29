@@ -2,24 +2,24 @@ import { inject } from "injecti";
 import { Insertable } from "kysely";
 
 import { DB } from "../../../../../../db/db";
-import { R } from "../../../../services/inserJeunesApi/formatUaiData";
+import { IJUaiData } from "../../../../services/inserJeunesApi/formatUaiData";
 import { getUaiData } from "./getUaiData.dep";
 import { upsertIndicateurEtablissement } from "./upsertIndicateurEtablissement.dep";
 
 const toIndicateurEtablissement = ({
-  deppEtablissement,
+  uaiData,
   uai,
   millesime,
 }: {
-  deppEtablissement?: R;
+  uaiData?: IJUaiData;
   millesime: string;
   uai: string;
 }): Insertable<DB["indicateurEtablissement"]> | undefined => {
-  if (!deppEtablissement) return;
+  if (!uaiData) return;
   return {
     UAI: uai,
     millesime,
-    valeurAjoutee: deppEtablissement.ensemble?.valeur_ajoutee_6_mois,
+    valeurAjoutee: uaiData.ensemble?.valeur_ajoutee_6_mois,
   };
 };
 
@@ -30,9 +30,9 @@ export const [importIndicateurEtablissement] = inject(
   },
   (deps) =>
     async ({ uai, millesime }: { uai: string; millesime: string }) => {
-      const ijData = await deps.getUaiData({ uai, millesime });
+      const ijUaiData = await deps.getUaiData({ uai, millesime });
       const indicateur = toIndicateurEtablissement({
-        deppEtablissement: ijData,
+        uaiData: ijUaiData,
         millesime,
         uai,
       });

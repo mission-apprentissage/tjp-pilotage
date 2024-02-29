@@ -4,6 +4,7 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
@@ -38,12 +39,13 @@ export const getRegionStats = async ({
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
     .innerJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
     .where("indicateurRegionSortie.codeRegion", "=", codeRegion)
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
@@ -63,7 +65,7 @@ export const getRegionStats = async ({
   const baseStatsEntree = kdb
     .selectFrom("formationEtablissement")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "formationEtablissement.cfd"
     )

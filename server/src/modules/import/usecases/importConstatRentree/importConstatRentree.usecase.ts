@@ -64,7 +64,7 @@ export const [importConstatRentree] = inject(
               );
             } catch (error) {
               console.log(
-                `An error occured while importing datas`,
+                `An error occured while importing data`,
                 JSON.stringify(constatRentree, null, 2)
               );
               console.error(error);

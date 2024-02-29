@@ -74,6 +74,7 @@ export function withTauxDevenirFavorableReg<
     .whereRef("subIRS.cfd", "=", cfdRef)
     .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
+    .where("subIRS.voie", "=", "scolaire")
     .whereRef(
       "subIRS.codeRegion",
       "=",

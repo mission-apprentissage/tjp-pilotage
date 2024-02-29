@@ -6,7 +6,8 @@ import { getCfdDispositifs } from "../getCfdRentrees/getCfdDispositifs.dep";
 import { getCfdRentrees } from "../getCfdRentrees/getCfdRentrees.usecase";
 import { findDiplomesProfessionnels } from "./findDiplomesProfessionnels.dep";
 import { findFamillesMetiers } from "./findFamillesMetiers.dep";
-import { findFormationsHistoriques } from "./findFormationsHistoriques.step";
+import { findFormationsHistoriques } from "./findFormationsHistoriques.dep";
+import { findUAIsApprentissage } from "./findUAIsApprentissage.dep";
 import { fetchIJ } from "./steps/fetchIJ/fetchIJ.step";
 import { fetchIjReg } from "./steps/fetchIjReg/fetchIjReg.step";
 
@@ -36,7 +37,6 @@ export const [importIJData] = inject(
       console.log("--- fetch IJ regions");
       await deps.fetchIjReg();
       console.log("--- end fetch IJ regions");
-
       console.log(
         "--- recueil des UAI à partir des CFD des diplomes professionnels"
       );
@@ -44,13 +44,14 @@ export const [importIJData] = inject(
         (count) =>
           deps.findDiplomesProfessionnels({ offset: count, limit: 60 }),
         async (item) => {
-          const cfd = item["Code diplôme"]?.replace("-", "").slice(0, 8);
+          const cfd = item.cfd;
+          const voie = item.voie;
           if (!cfd) return;
           const ancienCfds = await deps.findFormationsHistoriques({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importIJDataForEtablissement(ancienCfd);
+            await importIJDataForEtablissement({ cfd: ancienCfd, voie });
           }
-          await importIJDataForEtablissement(cfd);
+          await importIJDataForEtablissement({ cfd, voie });
           console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
         },
         { parallel: 20 }
@@ -67,9 +68,9 @@ export const [importIJData] = inject(
           if (!cfd) return;
           const ancienCfds = await deps.findFormationsHistoriques({ cfd });
           for (const ancienCfd of ancienCfds ?? []) {
-            await importIJDataForEtablissement(ancienCfd);
+            await importIJDataForEtablissement({ cfd: ancienCfd });
           }
-          await importIJDataForEtablissement(cfd);
+          await importIJDataForEtablissement({ cfd });
 
           console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
         },
@@ -107,12 +108,26 @@ export const [importIJData] = inject(
 
 export const [importIJDataForEtablissement] = inject(
   {
+    findUAIsApprentissage,
     getCfdRentrees,
     getCfdDispositifs,
     fetchIJ,
   },
   (deps) => {
-    return async (cfd: string) => {
+    return async ({
+      cfd,
+      voie = "scolaire",
+    }: {
+      cfd: string;
+      voie?: string;
+    }) => {
+      if (voie === "apprentissage") {
+        const uais = await deps.findUAIsApprentissage({ cfd });
+        if (!uais) return;
+        for (const uai of uais) {
+          addUaiToProcess(uai);
+        }
+      }
       const cfdDispositifs = await deps.getCfdDispositifs({ cfd });
 
       for (const cfdDispositif of cfdDispositifs) {
@@ -132,9 +147,8 @@ export const [importIJDataForEtablissement] = inject(
           if (!enseignements) continue;
 
           for (const enseignement of enseignements) {
-            const { uai, voie } = enseignement;
+            const { uai } = enseignement;
             addUaiToProcess(uai);
-            if (voie !== "scolaire") continue;
           }
         }
       }
