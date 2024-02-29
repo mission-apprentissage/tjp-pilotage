@@ -137,11 +137,7 @@ export const getDepartementStats = async ({
       ),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy([
-      "departement.libelleDepartement",
-      "departement.codeRegion",
-      "formationView.codeNiveauDiplome",
-    ])
+    .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
     .executeTakeFirst();
 
   return {

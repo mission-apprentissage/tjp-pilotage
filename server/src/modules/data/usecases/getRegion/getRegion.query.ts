@@ -113,7 +113,7 @@ export const getRegionStats = async ({
       ),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy(["region.libelleRegion", "formationView.codeNiveauDiplome"])
+    .groupBy(["region.libelleRegion"])
     .executeTakeFirst();
 
   return {

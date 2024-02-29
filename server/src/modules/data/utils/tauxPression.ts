@@ -24,10 +24,15 @@ const premierVoeuxAnnee = (
 };
 
 export const selectDenominateurPressionAgg = (
-  indicateurEntreeAlias: string
+  indicateurEntreeAlias: string,
+  codeNiveauDiplomeAlias: string
 ) => sql<number>`
   SUM(
-    CASE WHEN ${premierVoeuxAnnee(
+    CASE
+    WHEN ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(
+      CODE_NIVEAU_DIPLOME_DES_BTS
+    )}' THEN NULL
+    WHEN ${premierVoeuxAnnee(
       sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
       indicateurEntreeAlias
     )} IS NOT NULL
@@ -43,17 +48,20 @@ export const selectTauxPressionAgg = (
   codeNiveauDiplomeAlias: string
 ) => sql<number>`
     CASE
-    WHEN ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(
-      CODE_NIVEAU_DIPLOME_DES_BTS
-    )}' THEN NULL
-    WHEN ${selectDenominateurPressionAgg(indicateurEntreeAlias)} >= 0
+    WHEN ${selectDenominateurPressionAgg(
+      indicateurEntreeAlias,
+      codeNiveauDiplomeAlias
+    )} >= 0
     THEN ROUND(
       (
         SUM(${premierVoeuxAnnee(
           sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
           indicateurEntreeAlias
         )})
-      / ${selectDenominateurPressionAgg(indicateurEntreeAlias)}
+      / ${selectDenominateurPressionAgg(
+        indicateurEntreeAlias,
+        codeNiveauDiplomeAlias
+      )}
       )::NUMERIC, 2)
     END
   `;
@@ -194,5 +202,5 @@ export const withTauxPressionReg = <
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .select([selectTauxPressionAgg("subIE", "subF").as("s")])
-    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
+    .groupBy(["subFE.cfd", "dispositifId"]);
 };

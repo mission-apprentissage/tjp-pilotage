@@ -8,6 +8,7 @@ import { z } from "zod";
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
+import { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { importConstatRentree } from "./modules/import/usecases/importConstatRentree/importConstatRentree.usecase";
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
@@ -129,7 +130,7 @@ cli
         ),
       });
 
-    const getImports = (type: string, years?: string[]) => {
+    const getImports = (type: keyof LineTypes, years?: string[]) => {
       if (!years) {
         return { [type]: () => getImport(type) };
       }
@@ -160,6 +161,8 @@ cli
       ...getImports("lyceesACCE"),
       ...getImports("chomage_regional_INSEE"),
       ...getImports("chomage_departemental_INSEE"),
+      ...getImports("onisep_structures_denseignement_secondaire"),
+      ...getImports("onisep_structures_denseignement_superieur"),
     };
 
     if (filename) {
