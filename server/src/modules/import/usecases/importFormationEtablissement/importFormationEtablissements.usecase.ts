@@ -22,8 +22,6 @@ import {
   importIndicateursRegionSortieApprentissage,
 } from "./steps/importIndicateursSortieRegionaux/importIndicateursSortieRegionaux.step";
 
-const processedUais: Set<string> = new Set();
-
 export const [importFormations] = inject(
   {
     importFormation,
@@ -100,13 +98,7 @@ export const [importFormationEtablissements] = inject(
         const uais = await deps.findUAIsApprentissage({ cfd });
         if (!uais) return;
         for (const uai of uais) {
-          if (!processedUais.has(uai)) {
-            await deps.importEtablissement({ uai });
-            for (const millesime of MILLESIMES_IJ) {
-              await deps.importIndicateurEtablissement({ uai, millesime });
-            }
-            processedUais.add(uai);
-          }
+          await deps.importEtablissement({ uai });
           const formationEtablissement =
             await deps.createFormationEtablissement({
               UAI: uai,
@@ -116,6 +108,7 @@ export const [importFormationEtablissements] = inject(
             });
 
           for (const millesime of MILLESIMES_IJ) {
+            await deps.importIndicateurEtablissement({ uai, millesime });
             await deps.importIndicateurSortieApprentissage({
               uai,
               formationEtablissementId: formationEtablissement.id,
@@ -151,15 +144,7 @@ export const [importFormationEtablissements] = inject(
 
             for (const enseignement of enseignements) {
               const { uai, anneesEnseignement, voie } = enseignement;
-              if (!processedUais.has(uai)) {
-                await deps.importEtablissement({ uai });
-                for (const millesime of MILLESIMES_IJ) {
-                  await deps.importIndicateurEtablissement({ uai, millesime });
-                }
-                processedUais.add(uai);
-              }
-              if (voie !== "scolaire") continue;
-
+              await deps.importEtablissement({ uai });
               const formationEtablissement =
                 await deps.createFormationEtablissement({
                   UAI: uai,
@@ -178,6 +163,7 @@ export const [importFormationEtablissements] = inject(
               });
 
               for (const millesime of MILLESIMES_IJ) {
+                await deps.importIndicateurEtablissement({ uai, millesime });
                 await deps.importIndicateurSortie({
                   uai,
                   mefstat: lastMefstat,
