@@ -13,7 +13,7 @@ services:
       - smtp
 
   postgres:
-    image: postgres:14.2
+    image: postgres:15.5
     container_name: pilotage_postgres
     restart: unless-stopped
     networks:

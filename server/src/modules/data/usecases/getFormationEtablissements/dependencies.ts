@@ -443,6 +443,7 @@ const findFiltersInDb = async ({
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
   };
+
   const inCodeDepartement = (eb: ExpressionBuilder<DB, "departement">) => {
     if (!codeDepartement) return sql<true>`true`;
     return eb("departement.codeDepartement", "in", codeDepartement);
