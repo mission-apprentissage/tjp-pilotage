@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ } from "shared";
 
-import { R } from "../../../../services/inserJeunesApi/formatUaiData";
+import { IJUaiData } from "../../../../services/inserJeunesApi/formatUaiData";
 import { getUaiData } from "../../../../services/inserJeunesApi/inserJeunes.api";
 import { cacheIj, clearIjCache } from "./cacheIJ.dep";
 
@@ -9,7 +9,7 @@ export const [fetchIJ] = inject(
   { getUaiData, cacheIj, clearIjCache },
   (deps) =>
     async ({ uai }: { uai: string }) => {
-      const d: Array<R> = [];
+      const d: Array<IJUaiData> = [];
       const millesimesOK: Array<string> = [];
       const millesimesNOK: Array<string> = [];
       console.log(`--- fetch IJ (uai :${uai}})`);

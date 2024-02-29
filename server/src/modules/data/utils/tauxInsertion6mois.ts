@@ -64,6 +64,7 @@ export function withInsertionReg<
     .whereRef("subIRS.cfd", "=", cfdRef)
     .whereRef("subIRS.dispositifId", "=", codeDispositifRef)
     .where("subIRS.millesimeSortie", "=", millesimeSortie)
+    .where("subIRS.voie", "=", "scolaire")
     .whereRef(
       "subIRS.codeRegion",
       "=",
