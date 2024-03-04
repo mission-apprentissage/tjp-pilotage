@@ -85,6 +85,7 @@ const getFormationsParNiveauDeDiplome = async ({
       sql<string>`left(${eb.ref("dataFormation.codeNiveauDiplome")}, 1)`.as(
         "ordreFormation"
       ),
+      "dataFormation.typeFamille",
     ])
     .orderBy([
       "ordreFormation desc",
@@ -180,9 +181,9 @@ const getChiffresEntree = async ({
       premiersVoeuxAnnee({ alias: "ie" }).as("premiersVoeux"),
       capaciteAnnee({ alias: "ie" }).as("capacite"),
       effectifAnnee({ alias: "ie" }).as("effectifEntree"),
-      effectifAnnee({ alias: "ie", annee: sql`'1'` }).as("effectifAnnee1"),
-      effectifAnnee({ alias: "ie", annee: sql`'2'` }).as("effectifAnnee2"),
-      effectifAnnee({ alias: "ie", annee: sql`'3'` }).as("effectifAnnee3"),
+      effectifAnnee({ alias: "ie", annee: sql`'0'` }).as("effectifAnnee1"),
+      effectifAnnee({ alias: "ie", annee: sql`'1'` }).as("effectifAnnee2"),
+      effectifAnnee({ alias: "ie", annee: sql`'2'` }).as("effectifAnnee3"),
       selectTauxPression("ie", "nd").as("tauxPression"),
       withTauxPressionNat({
         eb: eb2,
@@ -258,6 +259,26 @@ const getFilters = async ({ uai }: { uai: string }) =>
     }>()
     .execute();
 
+const getEtablissement = async ({ uai }: { uai: string }) =>
+  kdb
+    .selectFrom("dataEtablissement")
+    .where("uai", "=", uai)
+    .select([
+      "codeRegion",
+      "codeAcademie",
+      "codeDepartement",
+      "uai",
+      "libelleEtablissement",
+    ])
+    .$castTo<{
+      uai: string;
+      libelleEtablissement: string;
+      codeRegion: string;
+      codeAcademie: string;
+      codeDepartement: string;
+    }>()
+    .executeTakeFirstOrThrow();
+
 const getAnalyseDetailleeEtablissementQuery = async ({
   uai,
   rentreeScolaire = CURRENT_RENTREE,
@@ -267,11 +288,13 @@ const getAnalyseDetailleeEtablissementQuery = async ({
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
 }) => {
+  const etablissement = await getEtablissement({ uai });
+
   const formations = await getFormationsParNiveauDeDiplome({
     uai,
     codeNiveauDiplome,
   });
-  const chiffresIj = await getChiffresIj({
+  const chiffresIJ = await getChiffresIj({
     uai,
     codeNiveauDiplome,
   });
@@ -283,8 +306,9 @@ const getAnalyseDetailleeEtablissementQuery = async ({
   const filters = await getFilters({ uai });
 
   return {
+    etablissement: cleanNull(etablissement),
     formations: formations.map(cleanNull),
-    chiffresIj: chiffresIj.map(cleanNull),
+    chiffresIJ: chiffresIJ.map(cleanNull),
     chiffresEntree: chiffresEntree.map(cleanNull),
     filters: {
       diplomes: filters.map(cleanNull),

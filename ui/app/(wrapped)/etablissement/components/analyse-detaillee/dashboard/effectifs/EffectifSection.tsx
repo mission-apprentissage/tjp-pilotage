@@ -1,12 +1,12 @@
 import { Badge, Flex, Text } from "@chakra-ui/react";
 
-import { ChiffresEntree } from "../../types";
+import { ChiffresEntreeOffre } from "../../types";
 import { NombreElevesParAnnee } from "./NombreElevesParAnnee";
 
 export const EffectifSection = ({
-  chiffresEntree,
+  chiffresEntreeOffre,
 }: {
-  chiffresEntree?: ChiffresEntree;
+  chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
     <>
@@ -21,7 +21,7 @@ export const EffectifSection = ({
         </Text>
         <Badge variant="info">Rentrée 2023</Badge>
       </Flex>
-      <NombreElevesParAnnee chiffresEntree={chiffresEntree} />
+      <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
     </>
   );
 };

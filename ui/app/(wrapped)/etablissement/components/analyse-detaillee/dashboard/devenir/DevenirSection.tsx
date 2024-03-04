@@ -1,11 +1,15 @@
 import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
-import { ChiffresIJ } from "../../types";
+import { ChiffresIJOffre } from "../../types";
 import { TauxDevenirFavorable } from "./TauxDevenirFavorable";
 import { TauxEmploi } from "./TauxEmploi";
 import { TauxPoursuiteEtudes } from "./TauxPoursuiteEtudes";
 
-export const DevenirSection = ({ chiffresIj }: { chiffresIj?: ChiffresIJ }) => {
+export const DevenirSection = ({
+  chiffresIJOffre,
+}: {
+  chiffresIJOffre?: ChiffresIJOffre;
+}) => {
   return (
     <>
       <Flex direction={"row"} justifyContent={"space-between"}>
@@ -20,13 +24,13 @@ export const DevenirSection = ({ chiffresIj }: { chiffresIj?: ChiffresIJ }) => {
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
-          <TauxEmploi chiffresIj={chiffresIj} />
+          <TauxEmploi chiffresIJOffre={chiffresIJOffre} />
         </GridItem>
         <GridItem colSpan={1}>
-          <TauxPoursuiteEtudes chiffresIj={chiffresIj} />
+          <TauxPoursuiteEtudes chiffresIJOffre={chiffresIJOffre} />
         </GridItem>
         <GridItem colSpan={1}>
-          <TauxDevenirFavorable chiffresIj={chiffresIj} />
+          <TauxDevenirFavorable chiffresIJOffre={chiffresIJOffre} />
         </GridItem>
       </Grid>
     </>

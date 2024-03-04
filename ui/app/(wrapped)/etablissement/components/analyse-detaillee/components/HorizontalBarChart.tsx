@@ -1,10 +1,11 @@
 import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
+import { CURRENT_RENTREE } from "shared";
+import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 export const HorizontalBarChart = ({
   data,
-  rentreeScolaire,
 }: {
   data: Record<
     string,
@@ -13,20 +14,21 @@ export const HorizontalBarChart = ({
       value: number;
     }[]
   >;
-  rentreeScolaire: string;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
-  const bf113 = useToken("colors", "bluefrance.113");
-  const be850a = useToken("colors", "blueecume.850_active");
-  const be850 = useToken("colors", "bluefrance.850");
+  const bf525 = useToken("colors", "bluefrance.525");
   const warning = useToken("colors", "warning.525");
   const success = useToken("colors", "success.425");
   const marianneFont = useToken("fonts", "body");
 
-  const colors = [bf113, be850a, be850];
-
-  const getDelta = (current?: number, previous?: number) => {
+  const getDelta = (valueName?: string) => {
+    const current = data[CURRENT_RENTREE]?.find(
+      (data) => data.label === valueName
+    )?.value;
+    const previous = data[getRentreeScolairePrecedente(CURRENT_RENTREE)]?.find(
+      (data) => data.label === valueName
+    )?.value;
     if (current && previous) {
       if (current > previous) {
         return ` {arrowUp|}{deltaUp|+${current - previous}}`;
@@ -38,15 +40,15 @@ export const HorizontalBarChart = ({
   };
 
   const getXAxisData = () => {
-    if (data && data[rentreeScolaire]) {
-      return data[rentreeScolaire]?.map((data) => data.label);
+    if (data && data[CURRENT_RENTREE]) {
+      return data[CURRENT_RENTREE]?.map((data) => data.label);
     }
     return [];
   };
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
-      animationDelay: 1,
+      animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
       tooltip: {
@@ -54,27 +56,12 @@ export const HorizontalBarChart = ({
         axisPointer: {
           type: "shadow",
         },
-        formatter: "{a} : {c}%",
-      },
-      legend: {
-        data: getXAxisData(),
-        icon: "rectangle",
-        orient: "vertical",
-        right: 10,
-        bottom: "center",
-        itemStyle: {
-          color: "inherit",
-        },
-        textStyle: {
-          color: "inherit",
-          fontSize: 12,
-        },
+        formatter: "{b} : {c}%",
       },
       grid: {
-        left: "-20%",
-        right: "40%",
-        bottom: "0%",
         containLabel: true,
+        bottom: 20,
+        left: 5,
       },
       xAxis: {
         type: "value",
@@ -82,26 +69,36 @@ export const HorizontalBarChart = ({
       },
       yAxis: {
         type: "category",
-        show: false,
+        show: true,
+        data: getXAxisData().reverse(),
+        axisLabel: {
+          show: true,
+          fontSize: 14,
+          fontWeight: 400,
+          color: "black",
+        },
+        axisTick: {
+          show: false,
+        },
+        axisLine: {
+          show: false,
+        },
       },
-      series: data[rentreeScolaire]?.map((serie, index) => ({
-        data: [serie.value],
-        name: serie.label,
+      series: {
+        data: data[CURRENT_RENTREE]?.map((serie) => serie.value).reverse(),
         type: "bar",
-        color: colors[index],
-        barWidth: 30,
-        barGap: "50%",
-        barCategoryGap: "10%",
+        color: bf525,
+        barWidth: 20,
+        barCategoryGap: 5,
+        barGap: 1,
         itemStyle: {
-          borderRadius: [4, 4, 0, 0],
+          borderRadius: [0, 4, 4, 0],
         },
         label: {
           distance: 10,
           show: true,
           position: "right",
-          formatter: (value) =>
-            value.data +
-            getDelta(value.data as number, data[2022][index].value),
+          formatter: (value) => value.data + getDelta(value.name),
           rich: {
             deltaDown: {
               color: warning,
@@ -126,13 +123,10 @@ export const HorizontalBarChart = ({
               },
             },
           },
-          fontSize: "16px",
+          fontSize: "14px",
           fontWeight: 700,
         },
-        tooltip: {
-          valueFormatter: (value) => value + "%",
-        },
-      })),
+      },
     }),
     [data]
   );
@@ -147,7 +141,7 @@ export const HorizontalBarChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={200} width={800}></Box>
+      <Box ref={containerRef} height={200} width={600}></Box>
     </Box>
   );
 };

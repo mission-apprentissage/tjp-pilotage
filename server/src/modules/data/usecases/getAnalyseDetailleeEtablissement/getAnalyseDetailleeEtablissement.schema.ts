@@ -1,5 +1,13 @@
 import { z } from "zod";
 
+const EtablissementSchema = z.object({
+  uai: z.string(),
+  libelleEtablissement: z.string(),
+  codeRegion: z.string(),
+  codeAcademie: z.string(),
+  codeDepartement: z.string(),
+});
+
 const OptionSchema = z.object({
   label: z.string(),
   value: z.string(),
@@ -56,6 +64,7 @@ const FormationSchema = z.object({
   codeDispositif: z.string().optional(),
   codeNiveauDiplome: z.string(),
   ordreFormation: z.string().optional(),
+  typeFamille: z.string().optional(),
 });
 
 export const getAnalyseDetailleeEtablissementSchema = {
@@ -65,11 +74,12 @@ export const getAnalyseDetailleeEtablissementSchema = {
   }),
   response: {
     200: z.object({
+      etablissement: EtablissementSchema,
       formations: z.record(
         z.string(), // offre
         FormationSchema
       ),
-      chiffresIj: z.record(
+      chiffresIJ: z.record(
         z.string(), // offre
         ChiffresIjSchema
       ),
