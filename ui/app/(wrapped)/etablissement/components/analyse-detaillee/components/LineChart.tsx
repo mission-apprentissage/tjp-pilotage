@@ -13,25 +13,9 @@ export const LineChart = ({
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
 
-  // const getXAxisData = () => {
-  //   if (data !== undefined) {
-  //     return data.map((data) => data.label);
-  //   }
-  //   return [];
-  // };
-
-  // const getYAxisData = () => {
-  //   if (data !== undefined) {
-  //     return data.map((data) => data.value * 100);
-  //   }
-  //   return [];
-  // };
-
   const option = useMemo<echarts.EChartsOption>(
     () => ({
       animationDelay: 1,
-      responsive: true,
-      maintainAspectRatio: true,
       tooltip: {
         trigger: "axis",
         textStyle: {
@@ -43,18 +27,29 @@ export const LineChart = ({
         icon: "none",
         orient: "vertical",
         bottom: "center",
-        right: "20%",
+        left: "40%",
         itemStyle: {
           color: "inherit",
         },
         textStyle: {
           color: "inherit",
           fontSize: 12,
+          rich: {
+            bold: {
+              fontWeight: 700,
+            },
+          },
+        },
+        formatter: (name) => {
+          if (name === mainKey) {
+            return `{bold|${name.charAt(0).toUpperCase() + name.slice(1)}}`;
+          }
+          return name.charAt(0).toUpperCase() + name.slice(1);
         },
       },
       grid: {
         left: "-10%",
-        right: "40%",
+        right: "50%",
         bottom: "0",
         containLabel: true,
       },
