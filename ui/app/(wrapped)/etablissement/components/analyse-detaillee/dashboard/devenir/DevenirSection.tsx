@@ -1,4 +1,4 @@
-import { Grid, GridItem, Text } from "@chakra-ui/react";
+import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
 import { ChiffresIJ } from "../../types";
 import { TauxDevenirFavorable } from "./TauxDevenirFavorable";
@@ -8,14 +8,16 @@ import { TauxPoursuiteEtudes } from "./TauxPoursuiteEtudes";
 export const DevenirSection = ({ chiffresIj }: { chiffresIj?: ChiffresIJ }) => {
   return (
     <>
-      <Text
-        fontSize={14}
-        fontWeight={700}
-        textTransform={"uppercase"}
-        lineHeight={"24px"}
-      >
-        Devenir des élèves
-      </Text>
+      <Flex direction={"row"} justifyContent={"space-between"}>
+        <Text
+          fontSize={14}
+          fontWeight={700}
+          textTransform={"uppercase"}
+          lineHeight={"24px"}
+        >
+          Devenir des élèves
+        </Text>
+      </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
           <TauxEmploi chiffresIj={chiffresIj} />

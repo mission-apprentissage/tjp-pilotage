@@ -6,19 +6,14 @@ export const CounterChart = ({
   type = "absolute",
 }: {
   data?: number;
-  compareData?: string;
+  compareData?: React.ReactNode;
   type?: "absolute" | "percentage";
 }) => {
   return (
     <Flex justifyContent={"space-between"} flexDirection={"row"} width={"100%"}>
       {data ? (
         <>
-          <Flex
-            fontSize={"40px"}
-            lineHeight={"48px"}
-            fontWeight={"700"}
-            flex={1}
-          >
+          <Flex fontSize={"40px"} fontWeight={"700"} flex={1}>
             {data}
             {type === "percentage" ? "%" : ""}
           </Flex>

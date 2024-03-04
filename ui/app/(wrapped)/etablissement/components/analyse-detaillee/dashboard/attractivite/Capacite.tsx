@@ -1,3 +1,5 @@
+import { Flex } from "@chakra-ui/react";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
@@ -9,10 +11,19 @@ export const Capacite = ({
   effectifEntree?: number;
 }) => {
   const getCompareData = () => {
-    if (!capacite || !effectifEntree) return "";
-    if (capacite > effectifEntree)
-      return `${capacite - effectifEntree} place(s) vacante(s)`;
-    return "complet";
+    if (!effectifEntree || !capacite) return "";
+    if (capacite > effectifEntree) {
+      return (
+        <>
+          <Flex>{`${capacite - effectifEntree} place(s) vacante(s)`}</Flex>
+        </>
+      );
+    }
+    return (
+      <>
+        <Flex>complet</Flex>
+      </>
+    );
   };
 
   return (
