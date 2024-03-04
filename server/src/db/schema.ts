@@ -169,6 +169,7 @@ export interface Departement {
 
 export interface DiplomeProfessionnel {
   cfd: string;
+  voie: string | null;
 }
 
 export interface Dispositif {
@@ -224,13 +225,14 @@ export interface FormationEtablissement {
   id: Generated<string>;
   cfd: string;
   UAI: string;
-  dispositifId: string;
+  dispositifId: string | null;
   voie: string;
 }
 
 export interface FormationHistorique {
-  codeFormationDiplome: string;
   ancienCFD: string;
+  cfd: string;
+  voie: string;
 }
 
 export interface FormationNonMaterializedView {
@@ -246,6 +248,7 @@ export interface FormationNonMaterializedView {
   cpcSousSecteur: string | null;
   libelleFiliere: string | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
+  voie: string | null;
 }
 
 export interface IndicateurDepartement {
@@ -277,7 +280,7 @@ export interface IndicateurRegion {
 
 export interface IndicateurRegionSortie {
   cfd: string;
-  dispositifId: string;
+  dispositifId: string | null;
   codeRegion: string;
   voie: string;
   millesimeSortie: string;

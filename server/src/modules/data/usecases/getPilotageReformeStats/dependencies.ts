@@ -5,6 +5,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import {
   notAnneeCommune,
   notAnneeCommuneIndicateurRegionSortie,
@@ -66,7 +67,7 @@ export const getStats = async ({
     return kdb
       .selectFrom("formationEtablissement")
       .leftJoin(
-        "formationView",
+        "formationScolaireView as formationView",
         "formationView.cfd",
         "formationEtablissement.cfd"
       )
@@ -126,7 +127,7 @@ export const getStats = async ({
     kdb
       .selectFrom("indicateurRegionSortie")
       .leftJoin(
-        "formationView",
+        "formationScolaireView as formationView",
         "formationView.cfd",
         "indicateurRegionSortie.cfd"
       )
@@ -150,6 +151,7 @@ export const getStats = async ({
         )
       )
       .where("indicateurRegionSortie.cfdContinuum", "is", null)
+      .where(isScolaireIndicateurRegionSortie)
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
@@ -188,7 +190,7 @@ export const getStats = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",

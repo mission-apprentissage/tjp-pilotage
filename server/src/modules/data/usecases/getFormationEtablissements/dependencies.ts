@@ -7,6 +7,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { isScolaireFormationHistorique } from "../../utils/isScolaire";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
@@ -78,7 +79,7 @@ const findFormationEtablissementsInDb = async ({
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
@@ -133,10 +134,10 @@ const findFormationEtablissementsInDb = async ({
       "dataFormationContinuum.cfd",
       "indicateurSortie.cfdContinuum"
     )
-    .leftJoin(
-      "formationHistorique",
-      "formationHistorique.ancienCFD",
-      "formationView.cfd"
+    .leftJoin("formationHistorique", (join) =>
+      join
+        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
+        .on(isScolaireFormationHistorique)
     )
     .selectAll("etablissement")
     .select((eb) => [
@@ -194,7 +195,7 @@ const findFormationEtablissementsInDb = async ({
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
         "isHistoriqueCoExistant"
       ),
-      "formationHistorique.codeFormationDiplome as formationRenovee",
+      "formationHistorique.cfd as formationRenovee",
     ])
     .select((eb) =>
       eb
@@ -328,7 +329,7 @@ const findFormationEtablissementsInDb = async ({
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
       "formationView.libelleFiliere",
-      "formationHistorique.codeFormationDiplome",
+      "formationHistorique.cfd",
       "etablissement.id",
       "departement.codeDepartement",
       "indicateurEntree.rentreeScolaire",
@@ -396,7 +397,7 @@ const findFiltersInDb = async ({
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",

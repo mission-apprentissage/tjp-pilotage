@@ -14,6 +14,7 @@ import {
   isIntentionVisible,
   isRegionVisible,
 } from "../../../utils/isIntentionVisible";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
@@ -105,6 +106,7 @@ const findRestitutionIntentionsStatsInDB = async ({
           "demande.dispositifId"
         )
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+        .on(isScolaireIndicateurRegionSortie)
     )
     .selectAll("demande")
     .select((eb) => [

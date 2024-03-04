@@ -13,7 +13,6 @@ import { importConstatRentree } from "./modules/import/usecases/importConstatRen
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
-import { refreshFormationMaterializedView } from "./modules/import/usecases/importDiplomesProfessionnels/refreshFormationView.dep";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -23,6 +22,7 @@ import { importIndicateursRegion } from "./modules/import/usecases/importIndicat
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
+import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
@@ -155,7 +155,9 @@ cli
       ...getImports("familleMetiers"),
       ...getImports("optionsBTS"),
       ...getImports("diplomesProfessionnels"),
+      ...getImports("offres_apprentissage"),
       ...getImports("nFormationDiplome_"),
+      ...getImports("vFormationDiplome_"),
       ...getImports("lyceesACCE"),
       ...getImports("chomage_regional_INSEE"),
       ...getImports("chomage_departemental_INSEE"),
@@ -185,9 +187,9 @@ cli
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
-      refreshFormationMaterializedView,
       importIndicateursRegion,
       importIndicateursDepartement,
+      refreshViews,
     };
 
     if (usecaseName) {
@@ -205,9 +207,20 @@ cli.command("importIJ").action(async () => {
 
 cli
   .command("importFormations")
-  .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async () => {
-    await importFormations();
+  .argument("[usecase]")
+  .action(async (usecaseName: string) => {
+    const usecases = {
+      importFormations,
+      refreshViews,
+    };
+
+    if (usecaseName) {
+      await usecases[usecaseName as keyof typeof usecases]();
+    } else {
+      for (const usecase of Object.values(usecases)) {
+        await usecase();
+      }
+    }
   });
 
 cli.parse(process.argv);

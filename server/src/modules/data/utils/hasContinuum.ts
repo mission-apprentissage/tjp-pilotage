@@ -36,6 +36,7 @@ export function hasContinuum<
         sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
       )
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
+      .where("subIRS.voie", "=", "scolaire")
       .where("subIRS.cfdContinuum", "is not", null)
       .select([
         "subIRS.cfdContinuum as cfd",

@@ -34,7 +34,7 @@
     "typecheck": "yarn workspace server typecheck && yarn workspace ui typecheck",
     "commitlint": "commitlint --config ./config/commitlint.config.js --edit $1",
     "preventSensibleFilesCommit": "./git-hooks/preventSensibleFilesCommit.sh",
-    "dev": "yarn ui:dev & yarn server:dev",
+    "dev": "yarn dev:ui & yarn dev:server",
     "dev:ui": "yarn workspace ui dev",
     "dev:server": "yarn workspace server dev",
     "import": "yarn import:files && yarn import:tables && yarn import:ij && yarn import:formations",
