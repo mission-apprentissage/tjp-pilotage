@@ -88,8 +88,8 @@ const getFormationsParNiveauDeDiplome = async ({
     ])
     .orderBy([
       "ordreFormation desc",
-      "libelleNiveauDiplome",
-      "libelleFormation",
+      "libelleNiveauDiplome desc",
+      "libelleFormation asc",
       "libelleDispositif",
     ])
     .$call((q) => {
@@ -236,8 +236,8 @@ const getFilters = async ({ uai }: { uai: string }) =>
     uai,
   })
     .select((eb) => [
-      "libelleNiveauDiplome",
-      "dataFormation.codeNiveauDiplome",
+      "libelleNiveauDiplome as label",
+      "dataFormation.codeNiveauDiplome as value",
       sql<string>`left(${eb.ref("dataFormation.codeNiveauDiplome")}, 1)`.as(
         "ordreFormation"
       ),
@@ -248,12 +248,14 @@ const getFilters = async ({ uai }: { uai: string }) =>
              ${eb.ref("formationEtablissement.voie")}
            ))`.as("nbOffres"),
     ])
-    .groupBy([
-      "libelleNiveauDiplome",
-      "dataFormation.codeNiveauDiplome",
-      "ordreFormation",
-    ])
-    .orderBy(["ordreFormation desc", "libelleNiveauDiplome asc"])
+    .groupBy(["label", "value", "ordreFormation"])
+    .orderBy(["ordreFormation desc", "label asc"])
+    .$castTo<{
+      label: string;
+      value: string;
+      ordreFormation: string;
+      nbOffres: number;
+    }>()
     .execute();
 
 const getAnalyseDetailleeEtablissementQuery = async ({

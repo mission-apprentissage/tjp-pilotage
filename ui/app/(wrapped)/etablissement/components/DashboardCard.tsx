@@ -18,6 +18,7 @@ export const DashboardCard = ({
       borderRadius={"4px"}
       padding={"16px"}
       minH={"200px"}
+      h="100%"
       flexDirection={"column"}
     >
       <Flex justifyContent={"space-between"} flex={1}>
