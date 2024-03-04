@@ -39,7 +39,7 @@ export const HorizontalBarChart = ({
 
   const getXAxisData = () => {
     if (data && data[rentreeScolaire]) {
-      return data[rentreeScolaire].map((data) => data.label);
+      return data[rentreeScolaire]?.map((data) => data.label);
     }
     return [];
   };
@@ -61,7 +61,7 @@ export const HorizontalBarChart = ({
         icon: "rectangle",
         orient: "vertical",
         right: 10,
-        bottom: 15,
+        bottom: "center",
         itemStyle: {
           color: "inherit",
         },
@@ -78,18 +78,17 @@ export const HorizontalBarChart = ({
       },
       xAxis: {
         type: "value",
-        show: false, // Hide X-axis
+        show: false,
       },
       yAxis: {
         type: "category",
-        show: false, // Hide Y-axis
+        show: false,
       },
-      series: data[rentreeScolaire].map((serie, index) => ({
+      series: data[rentreeScolaire]?.map((serie, index) => ({
         data: [serie.value],
         name: serie.label,
         type: "bar",
         color: colors[index],
-        // colorBy: "data",
         barWidth: 30,
         barGap: "50%",
         barCategoryGap: "10%",
@@ -148,7 +147,7 @@ export const HorizontalBarChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={300} width={1000}></Box>
+      <Box ref={containerRef} height={200} width={800}></Box>
     </Box>
   );
 };

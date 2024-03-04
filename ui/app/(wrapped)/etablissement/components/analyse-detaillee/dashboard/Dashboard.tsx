@@ -13,7 +13,7 @@ export const Dashboard = ({
   chiffresEntree?: ChiffresEntree;
 }) => {
   return (
-    <Flex flexDirection={"column"} mr={8} gap={8}>
+    <Flex flexDirection={"column"} mr={8} gap={8} mt={20}>
       <DevenirSection chiffresIj={chiffresIj} />
       <AttractiviteSection chiffresEntree={chiffresEntree} />
       <EffectifSection chiffresEntree={chiffresEntree} />

@@ -59,7 +59,16 @@ export const VerticalBarChart = ({
       },
       xAxis: {
         type: "category",
-        show: false, // Hide X-axis
+        show: true,
+        axisLabel: {
+          show: false,
+        },
+        axisLine: {
+          show: true,
+        },
+        axisTick: {
+          show: false,
+        },
       },
       yAxis: {
         type: "value",
@@ -71,7 +80,7 @@ export const VerticalBarChart = ({
         type: "bar",
         color: colors[index],
         // colorBy: "data",
-        barWidth: 30,
+        barWidth: 25,
         barGap: "50%",
         barCategoryGap: "10%",
         itemStyle: {
@@ -103,7 +112,7 @@ export const VerticalBarChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={300} width={300}></Box>
+      <Box ref={containerRef} height={150} width={300}></Box>
     </Box>
   );
 };
