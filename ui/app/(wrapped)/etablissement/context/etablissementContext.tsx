@@ -3,7 +3,6 @@ import { createContext, useContext, useState } from "react";
 type EtablissementContextType = {
   uai: string;
   setUai: (uai: string) => void;
-  //etablissement: Etablissement
 };
 
 interface EtablissementContextProps {

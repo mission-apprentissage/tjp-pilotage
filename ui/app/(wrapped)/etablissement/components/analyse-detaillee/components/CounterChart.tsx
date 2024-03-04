@@ -10,15 +10,21 @@ export const CounterChart = ({
   type?: "absolute" | "percentage";
 }) => {
   return (
-    <Flex justifyContent={"space-between"} flexDirection={"row"} width={"100%"}>
+    <Flex justify={"space-between"} direction={"row"} width={"100%"}>
       {data ? (
         <>
-          <Flex fontSize={"40px"} fontWeight={"700"} flex={1}>
+          <Flex
+            fontSize={"40px"}
+            lineHeight={"45px"}
+            fontWeight={"700"}
+            mb="unset"
+            mt="auto"
+          >
             {data}
             {type === "percentage" ? "%" : ""}
           </Flex>
-          <Flex flexShrink={0} justifyContent={"end"} m={"auto"}>
-            {compareData}
+          <Flex shrink={0} justify={"end"} direction={"column"} mb="unset">
+            <Flex>{compareData}</Flex>
           </Flex>
         </>
       ) : (

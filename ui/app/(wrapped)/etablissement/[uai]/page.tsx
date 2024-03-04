@@ -15,7 +15,6 @@ const EtablissementPage = ({ params: { uai } }: EtablissementPageProps) => {
     <EtablissementContextProvider value={{ uai }}>
       <EtablissementHeader />
       <EtablissementAnalyseDetaillee />
-      <div>Page en cours de construction. (uai : {uai})</div>
     </EtablissementContextProvider>
   );
 };

@@ -27,7 +27,7 @@ export const VerticalBarChart = ({
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
-      animationDelay: 1,
+      animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
       tooltip: {
@@ -41,7 +41,7 @@ export const VerticalBarChart = ({
         data: getXAxisData(),
         icon: "rectangle",
         orient: "vertical",
-        right: 10,
+        right: 0,
         bottom: 15,
         itemStyle: {
           color: "inherit",
@@ -52,9 +52,9 @@ export const VerticalBarChart = ({
         },
       },
       grid: {
-        left: "-20%",
+        left: 0,
         right: "40%",
-        bottom: "0%",
+        bottom: 1,
         containLabel: true,
       },
       xAxis: {
@@ -65,6 +65,11 @@ export const VerticalBarChart = ({
         },
         axisLine: {
           show: true,
+          lineStyle: {
+            color: "black",
+            width: 0.5,
+          },
+          onZero: false,
         },
         axisTick: {
           show: false,
@@ -79,7 +84,6 @@ export const VerticalBarChart = ({
         name: serie.label,
         type: "bar",
         color: colors[index],
-        // colorBy: "data",
         barWidth: 25,
         barGap: "50%",
         barCategoryGap: "10%",
@@ -112,7 +116,7 @@ export const VerticalBarChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={150} width={300}></Box>
+      <Box ref={containerRef} height={150} width={225}></Box>
     </Box>
   );
 };

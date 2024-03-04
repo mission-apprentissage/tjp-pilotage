@@ -15,13 +15,23 @@ export const Capacite = ({
     if (capacite > effectifEntree) {
       return (
         <>
-          <Flex>{`${capacite - effectifEntree} place(s) vacante(s)`}</Flex>
+          <Flex color="warning.525">{`${
+            capacite - effectifEntree
+          } pl. vacante(s)`}</Flex>
+        </>
+      );
+    } else if (capacite < effectifEntree) {
+      return (
+        <>
+          <Flex color="warning.525">{`${
+            capacite - effectifEntree
+          } pl. en surnombre`}</Flex>
         </>
       );
     }
     return (
       <>
-        <Flex>complet</Flex>
+        <Flex color="grey.625">{`0 pl. vacante`}</Flex>
       </>
     );
   };
