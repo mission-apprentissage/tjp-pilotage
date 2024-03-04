@@ -4,16 +4,16 @@ import { formatMillesime } from "@/app/(wrapped)/etablissement/components/analys
 import { DashboardCard } from "../../../DashboardCard";
 import { VerticalBarChart } from "../../components/VerticalBarChart";
 import { formatTaux } from "../../formatData";
-import { ChiffresIJ } from "../../types";
+import { ChiffresIJOffre } from "../../types";
 
 export const TauxDevenirFavorable = ({
-  chiffresIj,
+  chiffresIJOffre,
 }: {
-  chiffresIj?: ChiffresIJ;
+  chiffresIJOffre?: ChiffresIJOffre;
 }) => {
-  const checkDataAvailability = (chiffresIj: ChiffresIJ) => {
+  const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
     return (
-      Object.values(chiffresIj).findIndex(
+      Object.values(chiffresIJOffre).findIndex(
         (value) => value.tauxDevenirFavorable
       ) !== -1
     );
@@ -21,11 +21,11 @@ export const TauxDevenirFavorable = ({
 
   return (
     <DashboardCard label="Devenir favorable">
-      {chiffresIj && checkDataAvailability(chiffresIj) ? (
+      {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIj).map((millesime) => ({
+          data={Object.keys(chiffresIJOffre).map((millesime) => ({
             label: formatMillesime(millesime),
-            value: formatTaux(chiffresIj[millesime].tauxDevenirFavorable),
+            value: formatTaux(chiffresIJOffre[millesime].tauxDevenirFavorable),
           }))}
         />
       ) : (

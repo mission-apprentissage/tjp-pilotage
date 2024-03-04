@@ -5,16 +5,16 @@ import { DashboardCard } from "@/app/(wrapped)/etablissement/components/Dashboar
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
 import { formatTaux } from "../../formatData";
-import { ChiffresEntree } from "../../types";
+import { ChiffresEntreeOffre } from "../../types";
 
 export const TauxPression = ({
-  chiffresEntree,
+  chiffresEntreeOffre,
 }: {
-  chiffresEntree?: ChiffresEntree;
+  chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const checkDataAvailability = (chiffresEntree: ChiffresEntree) => {
+  const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
     return (
-      Object.values(chiffresEntree).findIndex(
+      Object.values(chiffresEntreeOffre).findIndex(
         (value) =>
           value.tauxPression &&
           value.tauxPressionNational &&
@@ -24,28 +24,28 @@ export const TauxPression = ({
     );
   };
 
-  const getData = (chiffresEntree?: ChiffresEntree) => {
-    if (chiffresEntree) {
+  const getData = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
+    if (chiffresEntreeOffre) {
       return {
-        "Taux de pression établissement": Object.values(chiffresEntree).map(
-          (value) => formatTaux(value.tauxPression)
+        établissement: Object.values(chiffresEntreeOffre).map((value) =>
+          formatTaux(value.tauxPression)
         ),
-        "Taux de pression national": Object.values(chiffresEntree).map(
-          (value) => formatTaux(value.tauxPressionNational)
+        national: Object.values(chiffresEntreeOffre).map((value) =>
+          formatTaux(value.tauxPressionNational)
         ),
-        "Taux de pression régional": Object.values(chiffresEntree).map(
-          (value) => formatTaux(value.tauxPressionRegional)
+        régional: Object.values(chiffresEntreeOffre).map((value) =>
+          formatTaux(value.tauxPressionRegional)
         ),
-        "Taux de pression départemental": Object.values(chiffresEntree).map(
-          (value) => formatTaux(value.tauxPressionDepartemental)
+        départemental: Object.values(chiffresEntreeOffre).map((value) =>
+          formatTaux(value.tauxPressionDepartemental)
         ),
       };
     }
     return {
-      "Taux de pression établissement": [],
-      "Taux de pression national": [],
-      "Taux de pression régional": [],
-      "Taux de pression départemental": [],
+      établissement: [],
+      national: [],
+      régional: [],
+      départemental: [],
     };
   };
 
@@ -54,19 +54,19 @@ export const TauxPression = ({
   const orange = useToken("colors", "orangeterrebattue.645");
   const purple = useToken("colors", "purpleglycine.494");
   const colors: Record<string, string> = {
-    "Taux de pression établissement": blue,
-    "Taux de pression national": purple,
-    "Taux de pression régional": green,
-    "Taux de pression départemental": orange,
+    établissement: blue,
+    national: purple,
+    régional: green,
+    départemental: orange,
   };
 
   return (
     <DashboardCard label="Taux de pression">
-      {chiffresEntree && checkDataAvailability(chiffresEntree) ? (
+      {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
         <LineChart
-          data={getData(chiffresEntree)}
+          data={getData(chiffresEntreeOffre)}
           colors={colors}
-          mainKey="Taux de pression établissement"
+          mainKey="établissement"
         />
       ) : (
         <CounterChart />

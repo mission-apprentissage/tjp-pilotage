@@ -1,15 +1,4 @@
-import {
-  Button,
-  Divider,
-  Flex,
-  Grid,
-  GridItem,
-  Img,
-  Tab,
-  TabList,
-  Tabs,
-  Text,
-} from "@chakra-ui/react";
+import { Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -17,26 +6,29 @@ import { useEffect, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
 import { client } from "@/api.client";
-import { Multiselect } from "@/components/Multiselect";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import Loading from "../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
+import { FiltersSection } from "./filters/FiltersSection";
+import { LiensUtilesSection } from "./liens-utiles/LiensUtilesSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
-
-type Query =
-  (typeof client.inferArgs)["[GET]/etablissement/analyse-detaillee"]["query"];
-
-type Filters = Pick<Query, "codeNiveauDiplome">;
+import { QuadrantSection } from "./quadrant/QuadrantSection";
+import { TabsSection } from "./tabs/TabsSection";
+import { Filters } from "./types";
 
 const EtablissementAnalyseDetaillee = () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    offre?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
-  const setSearchParams = (params: { filters?: typeof filters }) => {
+  const setSearchParams = (params: {
+    filters?: typeof filters;
+    offre?: string;
+  }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
@@ -75,13 +67,11 @@ const EtablissementAnalyseDetaillee = () => {
     );
 
   useEffect(() => {
-    if (!offre) setOffre(Object.keys(data?.formations ?? [])[0]);
-    // setOffre("0141687H40025214247scolaire");
+    if (searchParams.offre) setOffre(searchParams.offre);
+    else {
+      setOffre(Object.keys(data?.formations ?? [])[0]);
+    }
   }, [data]);
-
-  if (isLoading) {
-    return <Loading />;
-  }
 
   const handleFilters = (
     type: keyof Filters,
@@ -100,74 +90,42 @@ const EtablissementAnalyseDetaillee = () => {
     });
   };
 
+  const setOffreFilter = (offre: string) => {
+    setOffre(offre);
+    setSearchParams({
+      filters,
+      offre,
+    });
+  };
+
+  if (isLoading) {
+    return <Loading />;
+  }
+
   return (
-    <Flex direction={"column"} mx={"5%"} gap={8}>
+    <Flex direction={"column"} mx={"1%"} gap={8}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         Analyse des formations
       </Text>
       <Divider width="48px" />
-      <Tabs
-        isLazy={true}
-        display="flex"
-        flex="1"
-        flexDirection="column"
-        variant="enclosed-colored"
-        minHeight="0"
-        width={"100%"}
-      >
-        <TabList>
-          <Tab
-            as={Button}
-            onClick={() => displayDashboard()}
-            width="100%"
-            minH={"54px"}
-            color={"black"}
-          >
-            {displayType === "dashboard" ? (
-              <Img src={`/icons/dashboard_selected.svg`} alt="" me={2} />
-            ) : (
-              <Img src={`/icons/dashboard.svg`} alt="" me={2} />
-            )}
-            Tableau de bord
-          </Tab>
-          <Tab
-            as={Button}
-            onClick={() => displayQuadrant()}
-            width="100%"
-            minH={"54px"}
-            color={"black"}
-          >
-            {displayType === "quadrant" ? (
-              <Img src={`/icons/quadrant_selected.svg`} alt="" me={2} />
-            ) : (
-              <Img src={`/icons/quadrant.svg`} alt="" me={2} />
-            )}
-            Quadrant des formations
-          </Tab>
-        </TabList>
-      </Tabs>
-      <Flex direction={"column"} gap={4}>
-        <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
-          Diplôme
-        </Text>
-        <Multiselect
-          onClose={filterTracker("codeNiveauDiplome")}
-          width="24rem"
-          variant={"newInput"}
-          onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
-          options={data?.filters.diplomes ?? []}
-          value={filters.codeNiveauDiplome ?? []}
-        >
-          Tous
-        </Multiselect>
-      </Flex>
-      <Divider pt="4" mb="4" />
+      <TabsSection
+        displayDashboard={displayDashboard}
+        displayQuadrant={displayQuadrant}
+        displayType={displayType}
+      />
+      <FiltersSection
+        data={data}
+        filters={filters}
+        handleFilters={handleFilters}
+        filterTracker={filterTracker}
+      />
+      <Divider />
       <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>
         <GridItem colSpan={4}>
           <ListeFormations
             formations={Object.values(data?.formations ?? {})}
             offre={offre}
-            setOffre={setOffre}
+            setOffre={setOffreFilter}
             nbOffres={
               data?.filters.diplomes.reduce(
                 (acc, diplome) => {
@@ -182,14 +140,26 @@ const EtablissementAnalyseDetaillee = () => {
         <GridItem colSpan={6}>
           {displayType === "dashboard" ? (
             <Dashboard
-              chiffresIj={data?.chiffresIj[offre]}
-              chiffresEntree={data?.chiffresEntree[offre]}
+              formation={data?.formations[offre]}
+              chiffresIJOffre={data?.chiffresIJ[offre]}
+              chiffresEntreeOffre={data?.chiffresEntree[offre]}
             />
           ) : (
-            <Text>Quadrant des formations</Text>
+            <QuadrantSection
+              _formations={Object.values(data?.formations ?? {})}
+              _chiffresIJ={data?.chiffresIJ}
+              _chiffresEntree={data?.chiffresEntree}
+              _offre={offre}
+              _setOffre={setOffreFilter}
+            />
           )}
         </GridItem>
       </Grid>
+      <Divider />
+      <LiensUtilesSection
+        codeDepartement={data?.etablissement.codeDepartement}
+        codeRegion={data?.etablissement.codeRegion}
+      />
     </Flex>
   );
 };

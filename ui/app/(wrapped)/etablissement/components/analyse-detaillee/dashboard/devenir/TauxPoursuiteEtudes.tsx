@@ -3,19 +3,21 @@ import {
   formatMillesime,
   formatTaux,
 } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
-import { ChiffresIJ } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/types";
+import { ChiffresIJOffre } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/types";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
 export const TauxPoursuiteEtudes = ({
-  chiffresIj,
+  chiffresIJOffre,
 }: {
-  chiffresIj?: ChiffresIJ;
+  chiffresIJOffre?: ChiffresIJOffre;
 }) => {
-  const checkDataAvailability = (chiffresIj: ChiffresIJ) => {
+  const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
     return (
-      Object.values(chiffresIj).findIndex((value) => value.tauxPoursuite) !== -1
+      Object.values(chiffresIJOffre).findIndex(
+        (value) => value.tauxPoursuite
+      ) !== -1
     );
   };
   return (
@@ -23,11 +25,11 @@ export const TauxPoursuiteEtudes = ({
       label={"Poursuite d'études"}
       tooltip={"Taux de poursuite d'études"}
     >
-      {chiffresIj && checkDataAvailability(chiffresIj) ? (
+      {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIj).map((millesime) => ({
+          data={Object.keys(chiffresIJOffre).map((millesime) => ({
             label: formatMillesime(millesime),
-            value: formatTaux(chiffresIj[millesime].tauxPoursuite),
+            value: formatTaux(chiffresIJOffre[millesime].tauxPoursuite),
           }))}
         />
       ) : (

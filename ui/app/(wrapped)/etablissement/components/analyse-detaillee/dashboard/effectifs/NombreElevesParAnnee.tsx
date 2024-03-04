@@ -1,19 +1,17 @@
-import { CURRENT_RENTREE } from "shared";
-
 import { CounterChart } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/components/CounterChart";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";
-import { ChiffresEntree } from "../../types";
+import { ChiffresEntreeOffre } from "../../types";
 
 export const NombreElevesParAnnee = ({
-  chiffresEntree,
+  chiffresEntreeOffre,
 }: {
-  chiffresEntree?: ChiffresEntree;
+  chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const checkDataAvailability = (chiffresEntree: ChiffresEntree) => {
+  const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
     return (
-      Object.values(chiffresEntree).findIndex(
+      Object.values(chiffresEntreeOffre).findIndex(
         (value) =>
           value.effectifAnnee1 || value.effectifAnnee2 || value.effectifAnnee3
       ) !== -1
@@ -21,29 +19,33 @@ export const NombreElevesParAnnee = ({
   };
   return (
     <DashboardCard label="Nombre d'élèves par année (Constat de rentrée 2023)">
-      {chiffresEntree && checkDataAvailability(chiffresEntree) ? (
+      {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
         <HorizontalBarChart
-          data={Object.values(chiffresEntree).reduce(
+          data={Object.values(chiffresEntreeOffre).reduce(
             (acc, rentreeScolaire) => {
-              acc[rentreeScolaire.rentreeScolaire] = [
-                {
+              acc[rentreeScolaire.rentreeScolaire] = [];
+              if (rentreeScolaire.effectifAnnee1) {
+                acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 1",
-                  value: rentreeScolaire.effectifAnnee1 ?? 0,
-                },
-                {
+                  value: rentreeScolaire.effectifAnnee1,
+                });
+              }
+              if (rentreeScolaire.effectifAnnee2) {
+                acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 2",
-                  value: rentreeScolaire.effectifAnnee1 ?? 0,
-                },
-                {
+                  value: rentreeScolaire.effectifAnnee2,
+                });
+              }
+              if (rentreeScolaire.effectifAnnee3) {
+                acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 3",
-                  value: rentreeScolaire.effectifAnnee1 ?? 0,
-                },
-              ];
+                  value: rentreeScolaire.effectifAnnee3,
+                });
+              }
               return acc;
             },
             {} as Record<string, { label: string; value: number }[]>
           )}
-          rentreeScolaire={CURRENT_RENTREE}
         />
       ) : (
         <CounterChart />

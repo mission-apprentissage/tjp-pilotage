@@ -4,14 +4,20 @@ import {
   formatMillesime,
   formatTaux,
 } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
-import { ChiffresIJ } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/types";
+import { ChiffresIJOffre } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/types";
 
 import { DashboardCard } from "../../../DashboardCard";
 
-export const TauxEmploi = ({ chiffresIj }: { chiffresIj?: ChiffresIJ }) => {
-  const checkDataAvailability = (chiffresIj: ChiffresIJ) => {
+export const TauxEmploi = ({
+  chiffresIJOffre,
+}: {
+  chiffresIJOffre?: ChiffresIJOffre;
+}) => {
+  const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
     return (
-      Object.values(chiffresIj).findIndex((value) => value.tauxInsertion) !== -1
+      Object.values(chiffresIJOffre).findIndex(
+        (value) => value.tauxInsertion
+      ) !== -1
     );
   };
   return (
@@ -19,11 +25,11 @@ export const TauxEmploi = ({ chiffresIj }: { chiffresIj?: ChiffresIJ }) => {
       label="Taux d'emploi à 6 mois"
       tooltip="Taux d'emploi à 6 mois après la formation"
     >
-      {chiffresIj && checkDataAvailability(chiffresIj) ? (
+      {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIj).map((millesime) => ({
+          data={Object.keys(chiffresIJOffre).map((millesime) => ({
             label: formatMillesime(millesime),
-            value: formatTaux(chiffresIj[millesime].tauxInsertion),
+            value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
           }))}
         />
       ) : (
