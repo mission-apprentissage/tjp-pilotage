@@ -12,15 +12,19 @@ import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
+import { Offres_apprentissage } from "../fileTypes/Offres_apprentissage";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { Regroupement } from "../fileTypes/Regroupement";
 import { StructureDenseignement } from "../fileTypes/Structures_denseignement";
+import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
-import { R } from "../services/inserJeunesApi/formatUaiData";
+import { IJUaiData } from "../services/inserJeunesApi/formatUaiData";
 
 export type LineTypes = {
   diplomesProfessionnels: DiplomeProfessionnelLine;
+  offres_apprentissage: Offres_apprentissage;
   nFormationDiplome_: NFormationDiplomeLine;
+  vFormationDiplome_: VFormationDiplomeLine;
   familleMetiers: FamillesMetiersLine;
   optionsBTS: OptionsBTSLine;
   lyceesACCE: LyceesACCELine;
@@ -31,7 +35,7 @@ export type LineTypes = {
   nDispositifFormation_: NDispositifFormation;
   attractivite_capacite: Attractivite_capacite;
   BTS_attractivite_capacite: BTS_Attractivite_capacite;
-  ij: R & { uai: string; millesime: string };
+  ij: IJUaiData & { uai: string; millesime: string };
   ij_reg: { codeRegion: string; millesime: string } & IjRegionData;
   chomage_regional_INSEE: Chomage_regional_INSEE;
   chomage_departemental_INSEE: Chomage_departemental_INSEE;

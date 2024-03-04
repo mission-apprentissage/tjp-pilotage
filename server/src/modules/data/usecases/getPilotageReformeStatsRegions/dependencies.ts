@@ -4,6 +4,7 @@ import { CURRENT_RENTREE } from "shared";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
 import {
   notHistoriqueFormation,
@@ -39,7 +40,7 @@ const getStatsRegions = async ({
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
@@ -72,6 +73,7 @@ const getStatsRegions = async ({
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .where(dernierTauxDeChomage)
     .select([
       "indicateurRegionSortie.codeRegion",
@@ -99,7 +101,7 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
