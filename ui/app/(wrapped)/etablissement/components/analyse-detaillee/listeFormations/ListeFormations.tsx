@@ -1,4 +1,4 @@
-import { Box, List, ListItem, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, List, ListItem, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
 import { Formation } from "../types";
@@ -7,25 +7,39 @@ export const ListeFormations = ({
   formations,
   offre,
   setOffre,
+  nbOffres,
 }: {
   formations?: Array<Formation>;
   offre: string;
   setOffre: (offre: string) => void;
+  nbOffres: Record<string, number>;
 }) => {
   const formattedFormations = _.chain(formations)
-    .orderBy("libelleFormation", "asc")
+    .orderBy("ordreFormation", "desc")
     .groupBy("libelleNiveauDiplome")
     .value();
 
+  const totalNbOffres = Object.values(nbOffres).reduce(
+    (acc, nbOffres) => acc + nbOffres,
+    0
+  );
+
   return (
     <Box borderRightWidth={1} borderRightColor={"grey.925"}>
+      <Flex flexDirection={"row"} justifyContent={"space-between"} me={2}>
+        <Flex>
+          <Text fontWeight={700}>{totalNbOffres}</Text>
+          <Text>&nbsp;Formation(s)</Text>
+        </Flex>
+        <Badge variant="info">Rentrée 2023</Badge>
+      </Flex>
       <List>
         {Object.keys(formattedFormations).map((codeNiveauDiplome) => (
           <ListItem key={codeNiveauDiplome} ms={3}>
             <Text
               fontWeight={"bold"}
               my={"3"}
-            >{`${codeNiveauDiplome} (${formattedFormations[codeNiveauDiplome].length})`}</Text>
+            >{`${codeNiveauDiplome} (${nbOffres[codeNiveauDiplome]})`}</Text>
             <List>
               {formattedFormations[codeNiveauDiplome].map((formation) => (
                 <ListItem

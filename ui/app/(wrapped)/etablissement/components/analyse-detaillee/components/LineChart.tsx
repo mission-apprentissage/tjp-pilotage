@@ -42,8 +42,8 @@ export const LineChart = ({
         data: Object.keys(data),
         icon: "none",
         orient: "vertical",
-        top: 10,
-        right: 10,
+        bottom: "center",
+        right: "20%",
         itemStyle: {
           color: "inherit",
         },
@@ -53,7 +53,7 @@ export const LineChart = ({
         },
       },
       grid: {
-        left: "-20%",
+        left: "-10%",
         right: "40%",
         bottom: "0",
         containLabel: true,
@@ -61,7 +61,14 @@ export const LineChart = ({
       xAxis: {
         type: "category",
         data: ["2021", "2022", "2023"],
-        show: false,
+        show: true,
+        axisLine: {
+          show: false,
+        },
+        axisTick: {
+          alignWithLabel: true,
+          show: false,
+        },
       },
       yAxis: {
         show: false, // Hide Y-axis

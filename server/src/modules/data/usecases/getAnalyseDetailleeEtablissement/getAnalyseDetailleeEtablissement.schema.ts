@@ -1,8 +1,8 @@
 import { z } from "zod";
 
 const OptionSchema = z.object({
-  libelleNiveauDiplome: z.string().optional(),
-  codeNiveauDiplome: z.string(),
+  label: z.string(),
+  value: z.string(),
   ordreFormation: z.string(),
   nbOffres: z.coerce.number(),
 });
