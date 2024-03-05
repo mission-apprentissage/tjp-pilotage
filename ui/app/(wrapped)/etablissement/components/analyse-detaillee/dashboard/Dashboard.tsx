@@ -84,7 +84,10 @@ export const Dashboard = ({
         )}
       </Flex>
       <DevenirSection chiffresIJOffre={chiffresIJOffre} />
-      <AttractiviteSection chiffresEntreeOffre={chiffresEntreeOffre} />
+      <AttractiviteSection
+        formation={formation}
+        chiffresEntreeOffre={chiffresEntreeOffre}
+      />
       <EffectifSection chiffresEntreeOffre={chiffresEntreeOffre} />
     </Flex>
   );

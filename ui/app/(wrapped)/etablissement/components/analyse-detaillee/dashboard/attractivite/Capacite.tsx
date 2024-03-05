@@ -1,5 +1,8 @@
 import { Flex } from "@chakra-ui/react";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
@@ -10,6 +13,7 @@ export const Capacite = ({
   capacite?: number;
   effectifEntree?: number;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const getCompareData = () => {
     if (!effectifEntree || !capacite) return "";
     if (capacite > effectifEntree) {
@@ -37,7 +41,16 @@ export const Capacite = ({
   };
 
   return (
-    <DashboardCard label="Capacité - Année 1">
+    <DashboardCard
+      label="Capacité - Année 1"
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Capacité en première année de formation"
+          onClick={() => openGlossaire("capacite")}
+        />
+      }
+    >
       <CounterChart data={capacite} compareData={getCompareData()} />
     </DashboardCard>
   );
