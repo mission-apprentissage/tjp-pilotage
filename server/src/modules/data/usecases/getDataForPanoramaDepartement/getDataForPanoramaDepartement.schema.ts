@@ -35,7 +35,7 @@ export const getDataForPanoramaDepartementSchema = {
   querystring: z.object({
     codeDepartement: z.string(),
     codeNiveauDiplome: z.array(z.string()).optional(),
-    libelleFiliere: z.array(z.string()).optional(),
+    codeNsf: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationSchema.keyof().optional(),
   }),
@@ -44,7 +44,7 @@ export const getDataForPanoramaDepartementSchema = {
       formations: z.array(FormationSchema),
       filters: z.object({
         diplomes: z.array(OptionSchema),
-        filieres: z.array(OptionSchema),
+        libellesNsf: z.array(OptionSchema),
       }),
     }),
   },

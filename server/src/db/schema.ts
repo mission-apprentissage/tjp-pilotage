@@ -122,7 +122,6 @@ export interface DataFormation {
   dateFermeture: Timestamp | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
   codeNsf: string | null;
-  libelleFiliere: string | null;
 }
 
 export interface Demande {
@@ -248,7 +247,6 @@ export interface FormationNonMaterializedView {
   cpcSecteur: string | null;
   cpcSousSecteur: string | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
-  libelleFiliere: string | null;
   voie: string | null;
   libelleNsf: string | null;
   codeNsf: string | null;

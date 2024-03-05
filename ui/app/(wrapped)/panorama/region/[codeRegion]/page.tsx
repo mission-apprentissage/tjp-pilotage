@@ -22,37 +22,31 @@ export default function Panorama({
 }) {
   const router = useRouter();
   const queryParams = useSearchParams();
-  const searchParams: {
-    order?: Partial<OrderPanoramaFormation>;
-    filters?: Partial<FiltersPanoramaFormation>;
-  } = qs.parse(queryParams.toString());
+  const searchParams: Partial<FiltersPanoramaFormation> = qs.parse(
+    queryParams.toString()
+  );
 
-  const order = searchParams.order ?? { order: "asc" };
-  const filters = searchParams.filters ?? {};
-
-  const setSearchParams = (params: {
-    order?: typeof order;
-    filters?: typeof filters;
-  }) => {
+  const setSearchParams = (params: Partial<FiltersPanoramaFormation>) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
     );
   };
 
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
-    if (order?.orderBy !== column) {
+    if (searchParams.orderBy !== column) {
       setSearchParams({
-        ...filters,
-        order: { order: "desc", orderBy: column },
+        codeRegion,
+        ...searchParams,
+        order: "desc",
+        orderBy: column,
       });
       return;
     }
     setSearchParams({
-      ...filters,
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
-      },
+      codeRegion,
+      ...searchParams,
+      order: searchParams.order === "asc" ? "desc" : "asc",
+      orderBy: column,
     });
   };
 
@@ -60,9 +54,7 @@ export default function Panorama({
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => {
-    setSearchParams({
-      filters: { ...filters, [type]: value },
-    });
+    setSearchParams({ ...searchParams, [type]: value });
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
@@ -80,7 +72,7 @@ export default function Panorama({
   const { data: stats } = client.ref("[GET]/region/:codeRegion").useQuery(
     {
       params: { codeRegion },
-      query: { ...filters },
+      query: { ...searchParams },
     },
     {
       keepPreviousData: true,
@@ -94,8 +86,7 @@ export default function Panorama({
       {
         query: {
           codeRegion,
-          ...order,
-          ...filters,
+          ...searchParams,
         },
       },
       { keepPreviousData: true, staleTime: 10000000 }
@@ -109,20 +100,20 @@ export default function Panorama({
         options={regionOptions}
         stats={stats}
         handleFilters={handleFilters}
-        activeFilters={filters}
+        activeFilters={searchParams}
         diplomeOptions={data?.filters.diplomes}
       />
       <FiltersSection
         handleFilters={handleFilters}
-        activeFilters={filters}
-        libelleFiliereOptions={data?.filters.filieres}
+        activeFilters={searchParams}
+        libelleNsfOptions={data?.filters.libellesNsf}
       />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
         meanPoursuite={stats?.tauxPoursuite}
         quadrantFormations={data?.formations}
         isLoading={isLoading}
-        order={order}
+        order={{ order: searchParams.order, orderBy: searchParams.orderBy }}
         handleOrder={(column?: string) =>
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }

@@ -74,6 +74,7 @@ export const getStatsEtablissement = async ({
       "region.libelleRegion",
       "region.codeRegion",
       "valeurAjoutee",
+      "libelleNsf",
     ])
     .executeTakeFirstOrThrow()
     .catch(() => {
@@ -237,7 +238,7 @@ const getFormationsEtablissement = async ({
     .groupBy([
       "formationView.id",
       "formationView.libelleFormation",
-      "formationView.libelleFiliere",
+      "formationView.libelleNsf",
       "formationView.typeFamille",
       "formationEtablissement.cfd",
       "formationEtablissement.dispositifId",

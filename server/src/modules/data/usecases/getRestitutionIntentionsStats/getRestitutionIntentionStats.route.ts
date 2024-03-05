@@ -19,12 +19,11 @@ export const getRestitutionIntentionsStatsRoute = ({
       ...props,
       preHandler: hasPermissionHandler("restitution-intentions/lecture"),
       handler: async (request, response) => {
-        const { order, orderBy, ...rest } = request.query;
+        const { ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
 
         const result = await getRestitutionIntentionsStats({
-          ...rest,
-          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
+          ...filters,
           user: request.user,
         });
         response.status(200).send(result);
