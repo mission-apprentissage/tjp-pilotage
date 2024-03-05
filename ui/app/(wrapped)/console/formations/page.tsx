@@ -593,7 +593,7 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.libelleNsf}
                   <TooltipIcon
                     ml="1"
-                    label={null}
+                    label="cliquez pour plus d'infos."
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
