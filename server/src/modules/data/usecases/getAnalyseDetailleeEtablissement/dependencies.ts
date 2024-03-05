@@ -264,11 +264,11 @@ const getEtablissement = async ({ uai }: { uai: string }) =>
     .selectFrom("dataEtablissement")
     .where("uai", "=", uai)
     .select([
+      "uai",
+      "libelleEtablissement",
       "codeRegion",
       "codeAcademie",
       "codeDepartement",
-      "uai",
-      "libelleEtablissement",
     ])
     .$castTo<{
       uai: string;

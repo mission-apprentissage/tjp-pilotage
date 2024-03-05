@@ -127,7 +127,7 @@ export const LiensUtilesSection = ({
     : codeDepartement;
 
   return (
-    <Flex direction={"column"} gap={8} mt={8}>
+    <Flex direction={"column"} gap={8} mt={8} maxW={"100%"}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         Liens utiles
       </Text>
@@ -138,13 +138,15 @@ export const LiensUtilesSection = ({
       </Box>
       <Box pb={12} mt={2} as="section">
         <SimpleGrid spacing={6} columns={[1, null, 2]}>
-          <InfoCard
-            title="Projection métiers 2030"
-            description="Retrouvez le dernier rapport de votre région"
-            links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
-            img="/phone_man.png"
-            sourceText="* Source: DARES"
-          />
+          {codeRegion && lienDares[codeRegion] && (
+            <InfoCard
+              title="Projection métiers 2030"
+              description="Retrouvez le dernier rapport de votre région"
+              links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
+              img="/phone_man.png"
+              sourceText="* Source: DARES"
+            />
+          )}
           <InfoCard
             title="Métiers en tension 2021"
             description="Retrouvez le dernier rapport de votre région"

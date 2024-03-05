@@ -27,7 +27,7 @@ export const LineChart = ({
         icon: "none",
         orient: "vertical",
         bottom: "center",
-        left: "40%",
+        right: 20,
         itemStyle: {
           color: "inherit",
         },
@@ -48,9 +48,9 @@ export const LineChart = ({
         },
       },
       grid: {
-        left: "-10%",
-        right: "50%",
-        bottom: "0",
+        left: "-20%",
+        right: 30,
+        bottom: 0,
         containLabel: true,
       },
       xAxis: {
@@ -113,7 +113,7 @@ export const LineChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={200} w={700}></Box>
+      <Box ref={containerRef} height={200} w={550}></Box>
     </Box>
   );
 };

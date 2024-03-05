@@ -1,4 +1,4 @@
-import { Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Center, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -99,7 +99,7 @@ const EtablissementAnalyseDetaillee = () => {
   };
 
   if (isLoading) {
-    return <Loading />;
+    return <Loading my={16} size="xl" />;
   }
 
   return (
@@ -113,48 +113,58 @@ const EtablissementAnalyseDetaillee = () => {
         displayQuadrant={displayQuadrant}
         displayType={displayType}
       />
-      <FiltersSection
-        data={data}
-        filters={filters}
-        handleFilters={handleFilters}
-        filterTracker={filterTracker}
-      />
-      <Divider />
-      <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>
-        <GridItem colSpan={4}>
-          <ListeFormations
-            formations={Object.values(data?.formations ?? {})}
-            offre={offre}
-            setOffre={setOffreFilter}
-            nbOffres={
-              data?.filters.diplomes.reduce(
-                (acc, diplome) => {
-                  acc[diplome.label] = diplome.nbOffres;
-                  return acc;
-                },
-                {} as Record<string, number>
-              ) ?? {}
-            }
+      {Object.values(data?.formations ?? {}).length ? (
+        <Flex direction={"column"} gap={8}>
+          <FiltersSection
+            data={data}
+            filters={filters}
+            handleFilters={handleFilters}
+            filterTracker={filterTracker}
           />
-        </GridItem>
-        <GridItem colSpan={6}>
-          {displayType === "dashboard" ? (
-            <Dashboard
-              formation={data?.formations[offre]}
-              chiffresIJOffre={data?.chiffresIJ[offre]}
-              chiffresEntreeOffre={data?.chiffresEntree[offre]}
-            />
-          ) : (
-            <QuadrantSection
-              _formations={Object.values(data?.formations ?? {})}
-              _chiffresIJ={data?.chiffresIJ}
-              _chiffresEntree={data?.chiffresEntree}
-              _offre={offre}
-              _setOffre={setOffreFilter}
-            />
-          )}
-        </GridItem>
-      </Grid>
+          <Divider />
+          <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>
+            <GridItem colSpan={4}>
+              <ListeFormations
+                formations={Object.values(data?.formations ?? {})}
+                offre={offre}
+                setOffre={setOffreFilter}
+                nbOffres={
+                  data?.filters.diplomes.reduce(
+                    (acc, diplome) => {
+                      acc[diplome.label] = diplome.nbOffres;
+                      return acc;
+                    },
+                    {} as Record<string, number>
+                  ) ?? {}
+                }
+              />
+            </GridItem>
+            <GridItem colSpan={6}>
+              {displayType === "dashboard" ? (
+                <Dashboard
+                  formation={data?.formations[offre]}
+                  chiffresIJOffre={data?.chiffresIJ[offre]}
+                  chiffresEntreeOffre={data?.chiffresEntree[offre]}
+                />
+              ) : (
+                <QuadrantSection
+                  _formations={Object.values(data?.formations ?? {})}
+                  _chiffresIJ={data?.chiffresIJ}
+                  _chiffresEntree={data?.chiffresEntree}
+                  _offre={offre}
+                  _setOffre={setOffreFilter}
+                />
+              )}
+            </GridItem>
+          </Grid>
+        </Flex>
+      ) : (
+        <Center my={16}>
+          <Text fontSize={25}>
+            {`Aucune formation trouvée pour l'établissement ${data?.etablissement.libelleEtablissement} (${data?.etablissement.uai})`}
+          </Text>
+        </Center>
+      )}
       <Divider />
       <LiensUtilesSection
         codeDepartement={data?.etablissement.codeDepartement}
