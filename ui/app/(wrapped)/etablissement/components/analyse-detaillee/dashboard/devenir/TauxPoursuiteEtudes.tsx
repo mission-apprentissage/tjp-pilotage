@@ -4,6 +4,8 @@ import {
   formatTaux,
 } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
 import { ChiffresIJOffre } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/types";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
@@ -13,6 +15,7 @@ export const TauxPoursuiteEtudes = ({
 }: {
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
     return (
       Object.values(chiffresIJOffre).findIndex(
@@ -23,7 +26,13 @@ export const TauxPoursuiteEtudes = ({
   return (
     <DashboardCard
       label={"Poursuite d'études"}
-      tooltip={"Taux de poursuite d'études"}
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Poursuite d'études"
+          onClick={() => openGlossaire("taux-poursuite-etudes")}
+        />
+      }
     >
       {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart

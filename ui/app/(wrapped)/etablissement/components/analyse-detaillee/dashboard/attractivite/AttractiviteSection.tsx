@@ -2,7 +2,7 @@ import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { ChiffresEntreeOffre } from "../../types";
+import { ChiffresEntreeOffre, Formation } from "../../types";
 import { Capacite } from "./Capacite";
 import { Effectifs } from "./Effectifs";
 import { PremiersVoeux } from "./PremiersVoeux";
@@ -10,8 +10,10 @@ import { TauxPression } from "./TauxPression";
 import { TauxRemplissage } from "./TauxRemplissage";
 
 export const AttractiviteSection = ({
+  formation,
   chiffresEntreeOffre,
 }: {
+  formation?: Formation;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
@@ -30,6 +32,7 @@ export const AttractiviteSection = ({
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
           <PremiersVoeux
+            codeNiveauDiplome={formation?.codeNiveauDiplome}
             premiersVoeux={
               chiffresEntreeOffre?.[CURRENT_RENTREE]?.premiersVoeux
             }
@@ -41,7 +44,10 @@ export const AttractiviteSection = ({
           />
         </GridItem>
         <GridItem colSpan={2}>
-          <TauxPression chiffresEntreeOffre={chiffresEntreeOffre} />
+          <TauxPression
+            codeNiveauDiplome={formation?.codeNiveauDiplome}
+            chiffresEntreeOffre={chiffresEntreeOffre}
+          />
         </GridItem>
       </Grid>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
