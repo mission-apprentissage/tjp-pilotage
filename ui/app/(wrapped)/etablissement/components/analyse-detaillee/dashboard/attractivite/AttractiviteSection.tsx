@@ -25,7 +25,7 @@ export const AttractiviteSection = ({
         >
           Attractivité de la formation
         </Text>
-        <Badge variant="info">Rentrée 2023</Badge>
+        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>

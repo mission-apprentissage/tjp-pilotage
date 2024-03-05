@@ -69,8 +69,9 @@ export const HorizontalBarChart = ({
       },
       yAxis: {
         type: "category",
+        inverse: true,
         show: true,
-        data: getXAxisData().reverse(),
+        data: getXAxisData(),
         axisLabel: {
           show: true,
           fontSize: 14,
@@ -85,7 +86,7 @@ export const HorizontalBarChart = ({
         },
       },
       series: {
-        data: data[CURRENT_RENTREE]?.map((serie) => serie.value).reverse(),
+        data: data[CURRENT_RENTREE]?.map((serie) => serie.value),
         type: "bar",
         color: bf525,
         barWidth: 20,
@@ -141,7 +142,7 @@ export const HorizontalBarChart = ({
 
   return (
     <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={200} width={600}></Box>
+      <Box ref={containerRef} height={200} width={400}></Box>
     </Box>
   );
 };

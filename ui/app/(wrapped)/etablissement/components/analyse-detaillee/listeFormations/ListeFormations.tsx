@@ -72,6 +72,9 @@ export const ListeFormations = ({
                     <Text
                       my={2}
                       color={offre === formation.offre ? "bluefrance.113" : ""}
+                      whiteSpace="normal"
+                      textOverflow={"ellipsis"}
+                      isTruncated={true}
                     >
                       {formation.libelleFormation
                         .replace("2nde commune", "")
