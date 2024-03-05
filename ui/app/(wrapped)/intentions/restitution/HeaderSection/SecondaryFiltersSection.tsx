@@ -1,6 +1,8 @@
 import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
@@ -19,6 +21,8 @@ export const SecondaryFiltersSection = ({
   filterTracker: (filterName: keyof Filters) => () => void;
   data?: StatsIntentions;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
+
   const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
     if (motifLabel === "autre") return "Autre";
     return getMotifLabel(motifLabel as MotifLabel);
@@ -90,7 +94,14 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Domaine de formation (NSF)</FormLabel>
+            <FormLabel>
+              Domaine de formation (NSF)
+              <TooltipIcon
+                ml="1"
+                label={null}
+                onClick={() => openGlossaire("domaine-de-formation-nsf")}
+              />
+            </FormLabel>
             <Multiselect
               onClose={filterTracker("codeNsf")}
               width={"48"}

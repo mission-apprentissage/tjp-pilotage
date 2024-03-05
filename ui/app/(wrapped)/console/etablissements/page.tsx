@@ -769,6 +769,11 @@ export default function Etablissements() {
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
                   {ETABLISSEMENTS_COLUMNS.libelleNsf}
+                  <TooltipIcon
+                    ml="1"
+                    label={null}
+                    onClick={() => openGlossaire("domaine-de-formation-nsf")}
+                  />
                 </Th>
               </Tr>
             </Thead>
