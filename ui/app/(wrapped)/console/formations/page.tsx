@@ -591,6 +591,11 @@ export default function Formations() {
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
                   {FORMATIONS_COLUMNS.libelleNsf}
+                  <TooltipIcon
+                    ml="1"
+                    label={null}
+                    onClick={() => openGlossaire("domaine-de-formation-nsf")}
+                  />
                 </Th>
                 <Th>
                   {FORMATIONS_COLUMNS.positionQuadrant}
