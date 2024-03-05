@@ -1,15 +1,22 @@
 import { expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
+import { hasContinuum } from "../../utils/hasContinuum";
 import { premiersVoeuxAnnee } from "../../utils/premiersVoeuxAnnee";
 import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
+import {
+  selectTauxInsertion6mois,
+  withInsertionReg,
+} from "../../utils/tauxInsertion6mois";
+import {
+  selectTauxPoursuite,
+  withPoursuiteReg,
+} from "../../utils/tauxPoursuite";
 import {
   selectTauxPression,
   withTauxPressionDep,
@@ -107,11 +114,14 @@ const getFormationsParNiveauDeDiplome = async ({
 const getChiffresIj = async ({
   uai,
   codeNiveauDiplome,
+  millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   uai: string;
   codeNiveauDiplome?: string[];
-}) =>
-  getBase({ uai })
+  millesimeSortie?: string;
+}) => {
+  const eb2 = expressionBuilder<DB, keyof DB>();
+  return getBase({ uai })
     .innerJoin(
       "indicateurSortie",
       "indicateurSortie.formationEtablissementId",
@@ -129,12 +139,33 @@ const getChiffresIj = async ({
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
       selectTauxDevenirFavorable("indicateurSortie").as("tauxDevenirFavorable"),
+      withInsertionReg({
+        eb: eb2,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxPoursuiteRegional"),
+      withPoursuiteReg({
+        eb: eb2,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("tauxInsertionRegional"),
       "dataFormation.cfd",
       "codeDispositif",
       "effectifSortie",
       "nbSortants",
       "nbPoursuiteEtudes",
       "nbInsertion6mois",
+      hasContinuum({
+        eb: eb2,
+        millesimeSortie,
+        cfdRef: "formationEtablissement.cfd",
+        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeRegionRef: "dataEtablissement.codeRegion",
+      }).as("continuum"),
     ])
     .$call((q) => {
       if (codeNiveauDiplome?.length)
@@ -145,7 +176,21 @@ const getChiffresIj = async ({
         );
       return q;
     })
+    .groupBy([
+      "dataEtablissement.uai",
+      "dataFormation.cfd",
+      "formationEtablissement.dispositifId",
+      "formationEtablissement.cfd",
+      "voie",
+      "millesimeSortie",
+      "nbPoursuiteEtudes",
+      "nbInsertion6mois",
+      "effectifSortie",
+      "nbSortants",
+      "codeDispositif",
+    ])
     .execute();
+};
 
 const getChiffresEntree = async ({
   uai,
