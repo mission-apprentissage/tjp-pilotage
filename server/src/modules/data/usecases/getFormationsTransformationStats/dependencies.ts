@@ -1,5 +1,9 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, MILLESIMES_IJ } from "shared";
+import {
+  CURRENT_IJ_MILLESIME,
+  MILLESIMES_IJ,
+  RENTREE_INTENTIONS,
+} from "shared";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -78,7 +82,7 @@ const selectNbEtablissements = (
 const getFormationsTransformationStatsQuery = ({
   status,
   type,
-  rentreeScolaire = "2024",
+  rentreeScolaire = RENTREE_INTENTIONS,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,

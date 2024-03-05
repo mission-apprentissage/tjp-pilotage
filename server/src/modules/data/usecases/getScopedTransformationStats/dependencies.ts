@@ -1,5 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE, Scope, ScopeEnum } from "shared";
+import { CURRENT_RENTREE, RENTREE_INTENTIONS, Scope, ScopeEnum } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -114,7 +114,7 @@ const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
 const genericOnDemandes =
   ({
     status,
-    rentreeScolaire = "2024",
+    rentreeScolaire = RENTREE_INTENTIONS,
     codeNiveauDiplome,
     CPC,
     codeNsf,
@@ -398,7 +398,7 @@ const getDepartementData = async (filters: {
 
 const getScopedData = async ({
   status,
-  rentreeScolaire = "2024",
+  rentreeScolaire = RENTREE_INTENTIONS,
   codeNiveauDiplome,
   CPC,
   codeNsf,
@@ -451,7 +451,7 @@ const getScopedData = async ({
 
 const getFiltersQuery = async ({
   status,
-  rentreeScolaire = "2024",
+  rentreeScolaire = RENTREE_INTENTIONS,
   codeNiveauDiplome,
   CPC,
   nsf,
