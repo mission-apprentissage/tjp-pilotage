@@ -16,7 +16,7 @@ export const VerticalBarChart = ({
   const be850a = useToken("colors", "blueecume.850_active");
   const be850 = useToken("colors", "bluefrance.850");
 
-  const colors = [bf113, be850a, be850];
+  const colors = [be850, be850a, bf113];
 
   const getXAxisData = () => {
     if (data !== undefined) {
@@ -79,29 +79,31 @@ export const VerticalBarChart = ({
         type: "value",
         show: false, // Hide Y-axis
       },
-      series: data.map((serie, index) => ({
-        data: [serie.value],
-        name: serie.label,
-        type: "bar",
-        color: colors[index],
-        barWidth: 25,
-        barGap: "50%",
-        barCategoryGap: "10%",
-        itemStyle: {
-          borderRadius: [4, 4, 0, 0],
-        },
-        label: {
-          distance: 10,
-          show: true,
-          position: "top",
-          formatter: "{c}%",
-          fontSize: "16px",
-          fontWeight: 700,
-        },
-        tooltip: {
-          valueFormatter: (value) => value + "%",
-        },
-      })),
+      series: data
+        .sort((a, b) => a.label.localeCompare(b.label))
+        .map((serie, index) => ({
+          data: [serie.value],
+          name: serie.label,
+          type: "bar",
+          color: colors[index],
+          barWidth: 25,
+          barGap: "50%",
+          barCategoryGap: "10%",
+          itemStyle: {
+            borderRadius: [4, 4, 0, 0],
+          },
+          label: {
+            distance: 10,
+            show: true,
+            position: "top",
+            formatter: "{c}%",
+            fontSize: "16px",
+            fontWeight: 700,
+          },
+          tooltip: {
+            valueFormatter: (value) => value + "%",
+          },
+        })),
     }),
     [data]
   );
