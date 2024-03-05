@@ -520,7 +520,7 @@ const InfoTooltipContent = () => (
             borderRadius={100}
             width={`${size}px`}
             height={`${size}px`}
-            mx={22 - size / 2}
+            mx={`${22 - size / 2}`}
             border="1px solid black"
           />
           <Text flex={1} ml="4" fontSize="sm">
