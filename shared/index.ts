@@ -13,4 +13,4 @@ export {
 } from "./time/millesimes";
 export { CURRENT_IJ_MILLESIME } from "./time/CURRENT_IJ_MILLESIME";
 export { CURRENT_RENTREE } from "./time/CURRENT_RENTREE";
-export { NEXT_RENTREE } from "./time/NEXT_RENTREE";
+export { RENTREE_INTENTIONS } from "./time/RENTREE_INTENTIONS";
