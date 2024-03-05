@@ -103,7 +103,7 @@ const EtablissementAnalyseDetaillee = () => {
   }
 
   return (
-    <Flex direction={"column"} mx={"1%"} gap={8}>
+    <Flex direction={"column"} gap={8}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         Analyse des formations
       </Text>
@@ -148,11 +148,12 @@ const EtablissementAnalyseDetaillee = () => {
                 />
               ) : (
                 <QuadrantSection
-                  _formations={Object.values(data?.formations ?? {})}
-                  _chiffresIJ={data?.chiffresIJ}
-                  _chiffresEntree={data?.chiffresEntree}
-                  _offre={offre}
-                  _setOffre={setOffreFilter}
+                  formations={Object.values(data?.formations ?? {})}
+                  chiffresIJ={data?.chiffresIJ}
+                  chiffresEntree={data?.chiffresEntree}
+                  statsSortie={data?.statsSortie}
+                  offre={offre}
+                  setOffre={setOffreFilter}
                 />
               )}
             </GridItem>
