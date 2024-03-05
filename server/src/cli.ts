@@ -20,6 +20,7 @@ import { importIJData } from "./modules/import/usecases/importIJData/importIJDat
 import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
+import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
@@ -163,6 +164,9 @@ cli
       ...getImports("chomage_departemental_INSEE"),
       ...getImports("onisep_structures_denseignement_secondaire"),
       ...getImports("onisep_structures_denseignement_superieur"),
+      ...getImports("n_categorie_specialite_"),
+      ...getImports("n_domaine_specialite_"),
+      ...getImports("n_groupe_specialite_"),
     };
 
     if (filename) {
@@ -181,6 +185,7 @@ cli
     const usecases = {
       importLieuxGeographiques,
       importNiveauxDiplome,
+      importNSF,
       importDispositifs,
       importFamillesMetiers,
       importDataEtablissements,

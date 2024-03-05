@@ -27,7 +27,7 @@ export const getFormationsTransformationsSchema = {
   querystring: z.object({
     rentreeScolaire: z.string().optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),
-    filiere: z.array(z.string()).optional(),
+    codeNsf: z.array(z.string()).optional(),
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),

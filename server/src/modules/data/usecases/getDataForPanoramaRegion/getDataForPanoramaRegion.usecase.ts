@@ -1,6 +1,9 @@
+import z from "zod";
+
 import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
+import { getDataForPanoramaRegionSchema } from "./getDataForPanoramaRegion.schema";
 
 export const getDataForPanoramaRegionFactory =
   (
@@ -11,12 +14,9 @@ export const getDataForPanoramaRegionFactory =
       getPositionQuadrant,
     }
   ) =>
-  async (activeFilters: {
-    codeRegion: string;
-    codeNiveauDiplome?: string[];
-    libelleFiliere?: string[];
-    orderBy?: { column: string; order: "asc" | "desc" };
-  }) => {
+  async (
+    activeFilters: z.infer<typeof getDataForPanoramaRegionSchema.querystring>
+  ) => {
     const [formations, filters, statsSortie] = await Promise.all([
       deps.getFormationsRegion(activeFilters),
       deps.getFilters(activeFilters),

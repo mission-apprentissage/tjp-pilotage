@@ -30,7 +30,7 @@ const QuerySchema = z.object({
   rentreeScolaire: z.string().optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
-  filiere: z.array(z.string()).optional(),
+  codeNsf: z.array(z.string()).optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: ScopedStatsTransfoSchema.pick({
     libelle: true,
@@ -71,7 +71,7 @@ export const getScopedTransformationStatsSchema = {
         academies: z.array(OptionSchema),
         departements: z.array(OptionSchema),
         CPCs: z.array(OptionSchema),
-        filieres: z.array(OptionSchema),
+        libellesNsf: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),
     }),

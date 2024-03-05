@@ -1,5 +1,10 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_IJ_MILLESIME } from "shared";
+import {
+  CURRENT_IJ_MILLESIME,
+  MILLESIMES_IJ,
+  RENTREE_INTENTIONS,
+} from "shared";
+import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -18,6 +23,12 @@ import {
   withPoursuiteReg,
 } from "../../utils/tauxPoursuite";
 import { withTauxPressionReg } from "../../utils/tauxPression";
+import { getFormationsTransformationsSchema } from "./getFormationsTransformations.schema";
+
+export interface Filters
+  extends z.infer<typeof getFormationsTransformationsSchema.querystring> {
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+}
 
 const selectDifferencePlaces = (
   eb: ExpressionBuilder<DB, "demande">,
@@ -71,28 +82,17 @@ const selectNbEtablissements = (
 const getFormationsTransformationStatsQuery = ({
   status,
   type,
-  rentreeScolaire = "2024",
+  rentreeScolaire = RENTREE_INTENTIONS,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
   codeDepartement,
   tauxPression,
   codeNiveauDiplome,
-  filiere,
+  codeNsf,
   orderBy,
-}: {
-  status?: "draft" | "submitted";
-  type?: "fermeture" | "ouverture";
-  rentreeScolaire?: string;
-  millesimeSortie?: string;
-  codeRegion?: string;
-  codeAcademie?: string;
-  codeDepartement?: string;
-  tauxPression?: "eleve" | "faible";
-  codeNiveauDiplome?: string[];
-  filiere?: string[];
-  orderBy?: { column: string; order: "asc" | "desc" };
-}) => {
+  order,
+}: Filters) => {
   const partition = (() => {
     if (codeDepartement) return ["dataEtablissement.codeDepartement"] as const;
     if (codeAcademie) return ["dataEtablissement.codeAcademie"] as const;
@@ -250,15 +250,12 @@ const getFormationsTransformationStatsQuery = ({
       );
     })
     .$call((q) => {
-      if (!filiere?.length) return q;
-      return q.where("dataFormation.libelleFiliere", "in", filiere);
+      if (codeNsf === undefined || codeNsf.length === 0) return q;
+      return q.where("dataFormation.codeNsf", "in", codeNsf);
     })
     .$call((q) => {
-      if (!orderBy) return q;
-      return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
-      );
+      if (!orderBy || !order) return q;
+      return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
     .where(isDemandeNotDeletedOrRefused)
     .orderBy("tauxDevenirFavorable", "desc")

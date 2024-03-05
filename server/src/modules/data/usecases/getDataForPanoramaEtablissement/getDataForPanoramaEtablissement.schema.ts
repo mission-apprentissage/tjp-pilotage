@@ -16,7 +16,7 @@ const FormationSchema = z.object({
   CPC: z.string().optional(),
   CPCSecteur: z.string().optional(),
   CPCSousSecteur: z.string().optional(),
-  libelleFiliere: z.string().optional(),
+  libelleNsf: z.string().optional(),
   typeFamille: z.string().optional(),
   continuum: z
     .object({
@@ -30,7 +30,6 @@ export const getEtablissementSchema = {
   querystring: z.object({
     uai: z.string(),
     codeNiveauDiplome: z.array(z.string()).optional(),
-    libelleFiliere: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationSchema.keyof().optional(),
   }),
