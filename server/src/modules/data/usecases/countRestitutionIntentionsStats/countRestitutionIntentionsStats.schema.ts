@@ -29,6 +29,7 @@ export const countRestitutionIntentionsStatsSchema = {
     compensation: z.string().optional(),
     positionQuadrant: z.string().optional(),
     voie: z.enum(["scolaire", "apprentissage"]).optional(),
+    codeNsf: z.array(z.string()).optional(),
   }),
   response: {
     200: z.object({

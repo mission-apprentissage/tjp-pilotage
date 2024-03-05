@@ -18,10 +18,9 @@ export const getFormationsTransformationsRoute = ({
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
-        const { order, orderBy, ...filters } = request.query;
+        const { ...filters } = request.query;
         const stats = await getFormationsTransformationStats({
           ...filters,
-          orderBy: order && orderBy ? { order, column: orderBy } : undefined,
         });
         response.status(200).send(stats);
       },

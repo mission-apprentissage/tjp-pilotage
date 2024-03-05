@@ -40,7 +40,7 @@ const FormationEtablissementLineSchema = z.object({
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   cpcSousSecteur: z.string().optional(),
-  libelleFiliere: z.string().optional(),
+  libelleNsf: z.string().optional(),
   continuum: z
     .object({
       cfd: z.string(),
@@ -74,7 +74,7 @@ export const getFormationEtablissementsSchema = {
     cpc: z.array(z.string()).optional(),
     cpcSecteur: z.array(z.string()).optional(),
     cpcSousSecteur: z.array(z.string()).optional(),
-    libelleFiliere: z.array(z.string()).optional(),
+    codeNsf: z.array(z.string()).optional(),
     withAnneeCommune: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationEtablissementLineSchema.keyof().optional(),
@@ -97,7 +97,7 @@ export const getFormationEtablissementsSchema = {
         cpcs: z.array(OptionSchema),
         cpcSecteurs: z.array(OptionSchema),
         cpcSousSecteurs: z.array(OptionSchema),
-        libelleFilieres: z.array(OptionSchema),
+        libellesNsf: z.array(OptionSchema),
       }),
       etablissements: z.array(FormationEtablissementLineSchema),
     }),

@@ -135,7 +135,7 @@ export const FormationLineContent = ({
     <Td>{line.cpc ?? "-"}</Td>
     <Td>{line.cpcSecteur ?? "-"}</Td>
     <Td>{line.cpcSousSecteur ?? "-"}</Td>
-    <Td>{line.libelleFiliere ?? "-"}</Td>
+    <Td>{line.libelleNsf ?? "-"}</Td>
     <Td>{line.positionQuadrant}</Td>
   </>
 );

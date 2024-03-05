@@ -1,6 +1,9 @@
+import z from "zod";
+
 import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
+import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 
 export const getDataForPanoramaDepartementFactory =
   (
@@ -11,12 +14,11 @@ export const getDataForPanoramaDepartementFactory =
       getPositionQuadrant,
     }
   ) =>
-  async (activeFilters: {
-    codeDepartement: string;
-    codeNiveauDiplome?: string[];
-    filiere?: string[];
-    orderBy?: { column: string; order: "asc" | "desc" };
-  }) => {
+  async (
+    activeFilters: z.infer<
+      typeof getDataForPanoramaDepartementSchema.querystring
+    >
+  ) => {
     const [formations, filters, statsSortie] = await Promise.all([
       deps.getFormationsDepartement(activeFilters),
       deps.getFilters(activeFilters),

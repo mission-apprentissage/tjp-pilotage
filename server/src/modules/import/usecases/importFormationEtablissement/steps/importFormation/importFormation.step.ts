@@ -21,7 +21,7 @@ export const [importFormation] = inject(
         codeNiveauDiplome: dataFormation.codeNiveauDiplome,
         dateOuverture: dataFormation.dateOuverture,
         dateFermeture: dataFormation.dateFermeture,
-        libelleFiliere: dataFormation.libelleFiliere,
+        libelleFiliere: dataFormation.libelleNsf,
         CPC: dataFormation.cpc,
         cpcSecteur: dataFormation.cpcSecteur,
         cpcSousSecteur: dataFormation.cpcSousSecteur,
