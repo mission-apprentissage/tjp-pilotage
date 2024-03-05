@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -14,6 +15,12 @@ import {
 } from "../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
+import { countRestitutionIntentionsStatsSchema } from "./countRestitutionIntentionsStats.schema";
+
+export interface Filters
+  extends z.infer<typeof countRestitutionIntentionsStatsSchema.querystring> {
+  user: RequestUser;
+}
 
 const countRestitutionIntentionsStatsInDB = async ({
   status,
@@ -36,28 +43,8 @@ const countRestitutionIntentionsStatsInDB = async ({
   compensation,
   user,
   voie,
-}: {
-  status?: ("draft" | "submitted" | "refused")[];
-  codeRegion?: string[];
-  rentreeScolaire?: string;
-  typeDemande?: string[];
-  motif?: string[];
-  cfd?: string[];
-  codeNiveauDiplome?: string[];
-  dispositif?: string[];
-  CPC?: string[];
-  coloration?: string;
-  amiCMA?: string;
-  secteur?: string;
-  cfdFamille?: string[];
-  codeDepartement?: string[];
-  codeAcademie?: string[];
-  commune?: string[];
-  uai?: string[];
-  compensation?: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-  voie?: "scolaire" | "apprentissage";
-}) => {
+  codeNsf,
+}: Filters) => {
   const countDemandes = await kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -319,6 +306,13 @@ const countRestitutionIntentionsStatsInDB = async ({
               ${ebw.ref("demande.capaciteScolaireActuelle")}
             ) > 1`
         );
+      }
+
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNsf && codeNsf.length > 0) {
+        return eb.where("dataFormation.codeNsf", "in", codeNsf);
       }
 
       return eb;

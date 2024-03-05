@@ -137,12 +137,6 @@ export const [importDataFormations] = inject(
           .findDiplomeProfessionnel({ cfd })
           .then(formatDiplomeProfessionel);
 
-        const dispositifs = await deps.getCfdDispositifs({ cfd });
-        const mefstats = dispositifs.flatMap((dispositif) =>
-          Object.values(dispositif.anneesDispositif).map((item) => item.mefstat)
-        );
-        const regroupement = await deps.findRegroupements({ mefstats });
-
         const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
         const isSpecialite = !!(await deps.findSpecialite(cfd));
@@ -174,7 +168,7 @@ export const [importDataFormations] = inject(
               cpcSousSecteur: normalizeCpcSousSecteur(
                 diplomeProfessionnel?.["Sous-secteur"]
               ),
-              libelleFiliere: regroupement || "(VIDE)",
+              codeNsf: cfd.slice(3, 6),
               codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
                 3
@@ -224,12 +218,6 @@ export const [importDataFormations] = inject(
           .findDiplomeProfessionnel({ cfd })
           .then(formatDiplomeProfessionel);
 
-        const dispositifs = await deps.getCfdDispositifs({ cfd });
-        const mefstats = dispositifs.flatMap((dispositif) =>
-          Object.values(dispositif.anneesDispositif).map((item) => item.mefstat)
-        );
-        const regroupement = await deps.findRegroupements({ mefstats });
-
         const isBTS = cfd.slice(0, 3) === "320";
         const is2ndeCommune = !!(await deps.find2ndeCommune(cfd));
         const isSpecialite = !!(await deps.findSpecialite(cfd));
@@ -261,7 +249,7 @@ export const [importDataFormations] = inject(
               cpcSousSecteur: normalizeCpcSousSecteur(
                 diplomeProfessionnel?.["Sous-secteur"]
               ),
-              libelleFiliere: regroupement || "(VIDE)",
+              codeNsf: cfd.slice(3, 6),
               codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
                 3

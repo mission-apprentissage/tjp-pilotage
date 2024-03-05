@@ -15,7 +15,7 @@ export type ScopedTransformationStatsData = Omit<
 
 export type Filters = Pick<
   ScopedTransformationStatsQuery,
-  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
+  "rentreeScolaire" | "CPC" | "codeNiveauDiplome" | "scope" | "codeNsf"
 > & {
   code?: string;
 };
@@ -28,7 +28,7 @@ export type FiltersEvents =
 
 export type ScopedFilters = Pick<
   ScopedTransformationStatsQuery,
-  "rentreeScolaire" | "CPC" | "filiere" | "codeNiveauDiplome" | "scope"
+  "rentreeScolaire" | "CPC" | "codeNsf" | "codeNiveauDiplome" | "scope"
 >;
 
 export type ScopedPilotageTransformationStatsByScope = {

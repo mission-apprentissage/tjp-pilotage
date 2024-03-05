@@ -77,7 +77,7 @@ const ETABLISSEMENTS_COLUMNS = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   cpcSousSecteur: "CPC Sous Secteur",
-  libelleFiliere: "Secteur d’activité",
+  libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   codeDispositif: "Code dispositif",
@@ -91,23 +91,7 @@ type Query = (typeof client.inferArgs)["[GET]/etablissements"]["query"];
 export type Line =
   (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
 
-type Filters = Pick<
-  Query,
-  | "cfd"
-  | "cfdFamille"
-  | "codeAcademie"
-  | "codeDepartement"
-  | "codeDiplome"
-  | "codeRegion"
-  | "commune"
-  | "uai"
-  | "secteur"
-  | "cpc"
-  | "cpcSecteur"
-  | "cpcSousSecteur"
-  | "libelleFiliere"
-  | "codeDispositif"
->;
+type Filters = Query;
 
 type Order = Pick<Query, "order" | "orderBy">;
 
@@ -200,9 +184,10 @@ export default function Etablissements() {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    if (type === "uai" && value != null) setUaiFilter(value[0] ?? "");
+    if (type === "uai" && value != null)
+      setUaiFilter((value as string[])[0] ?? "");
     if (type === "codeRegion" && value != null)
-      setCodeRegionFilter(value[0] ?? "");
+      setCodeRegionFilter((value as string[])[0] ?? "");
   };
 
   const handleFilters = (
@@ -406,13 +391,13 @@ export default function Etablissements() {
           CPC Sous Secteur
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("libelleFiliere")}
+          onClose={filterTracker("codeNsf")}
           width="12rem"
-          onChange={(selected) => handleFilters("libelleFiliere", selected)}
-          options={data?.filters.libelleFilieres}
-          value={filters.libelleFiliere ?? []}
+          onChange={(selected) => handleFilters("codeNsf", selected)}
+          options={data?.filters.libellesNsf}
+          value={filters.codeNsf ?? []}
         >
-          Secteur d’activité
+          Domaine de formation (NSF)
         </Multiselect>
         <Flex w="24rem" mr="3">
           <Checkbox
@@ -781,12 +766,14 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="cpcSousSecteur" />
                   {ETABLISSEMENTS_COLUMNS.cpcSousSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("libelleFiliere")}
-                >
-                  <OrderIcon {...order} column="libelleFiliere" />
-                  {ETABLISSEMENTS_COLUMNS.libelleFiliere}
+                <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
+                  <OrderIcon {...order} column="libelleNsf" />
+                  {ETABLISSEMENTS_COLUMNS.libelleNsf}
+                  <TooltipIcon
+                    ml="1"
+                    label="cliquez pour plus d'infos."
+                    onClick={() => openGlossaire("domaine-de-formation-nsf")}
+                  />
                 </Th>
               </Tr>
             </Thead>

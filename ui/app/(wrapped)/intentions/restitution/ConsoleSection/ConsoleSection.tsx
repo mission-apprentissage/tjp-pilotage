@@ -142,13 +142,13 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("libelleFiliere")}
+                  onClick={() => handleOrder("libelleNsf")}
                   minW={200}
                   maxW={200}
                   whiteSpace="normal"
                 >
-                  <OrderIcon {...order} column="libelleFiliere" />
-                  {STATS_DEMANDES_COLUMNS.libelleFiliere}
+                  <OrderIcon {...order} column="libelleNsf" />
+                  {STATS_DEMANDES_COLUMNS.libelleNsf}
                 </Th>
                 <Th
                   isNumeric

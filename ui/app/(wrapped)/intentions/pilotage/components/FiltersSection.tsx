@@ -2,6 +2,8 @@ import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { Scope, ScopeEnum } from "shared";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import {
   Filters,
   FiltersEvents,
@@ -50,6 +52,7 @@ export const FiltersSection = ({
   data?: ScopedTransformationStats;
   scope: SelectedScope;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   if (isLoading) {
     return <Loader />;
   }
@@ -218,19 +221,26 @@ export const FiltersSection = ({
           </Multiselect>
         </Box>
         <Box display={["none", null, "block"]}>
-          <FormLabel>Secteur d'activité</FormLabel>
+          <FormLabel>
+            Domaine de formation (NSF)
+            <TooltipIcon
+              ml="1"
+              label="cliquez pour plus d'infos."
+              onClick={() => openGlossaire("domaine-de-formation-nsf")}
+            />
+          </FormLabel>
           <Multiselect
-            onClose={filterTracker("filiere")}
+            onClose={filterTracker("codeNsf")}
             width={"100%"}
             size="md"
             variant={"newInput"}
-            onChange={(selected) => handleFilters({ filiere: selected })}
-            options={data?.filters?.filieres ?? []}
-            value={activeFilters.filiere ?? []}
-            disabled={!data?.filters?.filieres?.length}
+            onChange={(selected) => handleFilters({ codeNsf: selected })}
+            options={data?.filters?.libellesNsf ?? []}
+            value={activeFilters.codeNsf ?? []}
+            disabled={!data?.filters?.libellesNsf?.length}
             hasDefaultValue={false}
           >
-            TOUS ({data?.filters?.filieres?.length ?? 0})
+            TOUS ({data?.filters?.libellesNsf?.length ?? 0})
           </Multiselect>
         </Box>
       </SimpleGrid>

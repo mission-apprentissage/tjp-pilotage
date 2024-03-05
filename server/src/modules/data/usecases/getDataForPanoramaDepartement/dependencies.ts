@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import z from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -14,22 +15,22 @@ import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
+import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 
+export interface Filters
+  extends z.infer<typeof getDataForPanoramaDepartementSchema.querystring> {
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}
 export const getFormationsDepartement = async ({
   codeDepartement,
   rentreeScolaire = CURRENT_RENTREE,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeNiveauDiplome,
-  libelleFiliere,
+  codeNsf,
+  order,
   orderBy,
-}: {
-  codeDepartement: string;
-  rentreeScolaire?: string;
-  millesimeSortie?: string;
-  codeNiveauDiplome?: string[];
-  libelleFiliere?: string[];
-  orderBy?: { column: string; order: "asc" | "desc" };
-}) =>
+}: Filters) =>
   kdb
     .selectFrom("formationScolaireView as formationView")
     .leftJoin(
@@ -82,8 +83,8 @@ export const getFormationsDepartement = async ({
       );
     })
     .$call((q) => {
-      if (!libelleFiliere) return q;
-      return q.where("formationView.libelleFiliere", "in", libelleFiliere);
+      if (!codeNsf) return q;
+      return q.where("formationView.codeNsf", "in", codeNsf);
     })
     .select((eb) => [
       "formationView.cfd",
@@ -196,11 +197,8 @@ export const getFormationsDepartement = async ({
       "niveauDiplome.libelleNiveauDiplome",
     ])
     .$call((q) => {
-      if (!orderBy) return q;
-      return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
-      );
+      if (!orderBy || !order) return q;
+      return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
     .orderBy("libelleFormation", "asc")
     .execute()
@@ -244,17 +242,15 @@ export const getFilters = async ({
     .where("formationView.codeNiveauDiplome", "is not", null)
     .execute();
 
-  const filieres = await filtersBase
-    .select([
-      "formationView.libelleFiliere as label",
-      "formationView.libelleFiliere as value",
-    ])
-    .where("formationView.libelleFiliere", "is not", null)
+  const libellesNsf = await filtersBase
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {
     diplomes: diplomes.map(cleanNull),
-    filieres: filieres.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
   };
 };
 

@@ -1,6 +1,8 @@
 import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
@@ -19,6 +21,8 @@ export const SecondaryFiltersSection = ({
   filterTracker: (filterName: keyof Filters) => () => void;
   data?: StatsIntentions;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
+
   const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
     if (motifLabel === "autre") return "Autre";
     return getMotifLabel(motifLabel as MotifLabel);
@@ -90,19 +94,26 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Secteur d'activité</FormLabel>
+            <FormLabel>
+              Domaine de formation (NSF)
+              <TooltipIcon
+                ml="1"
+                label="cliquez pour plus d'infos."
+                onClick={() => openGlossaire("domaine-de-formation-nsf")}
+              />
+            </FormLabel>
             <Multiselect
-              onClose={filterTracker("filiere")}
+              onClose={filterTracker("codeNsf")}
               width={"48"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("filiere", selected)}
-              options={data?.filters.filieres}
-              value={activeFilters.filiere ?? []}
-              disabled={data?.filters.filieres.length === 0}
+              onChange={(selected) => handleFilters("codeNsf", selected)}
+              options={data?.filters.libellesNsf}
+              value={activeFilters.codeNsf ?? []}
+              disabled={data?.filters.libellesNsf.length === 0}
               hasDefaultValue={false}
             >
-              TOUS ({data?.filters.filieres.length ?? 0})
+              TOUS ({data?.filters.libellesNsf.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
