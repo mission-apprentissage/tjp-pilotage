@@ -118,10 +118,10 @@ export interface DataFormation {
   cpc: string | null;
   cpcSecteur: string | null;
   cpcSousSecteur: string | null;
-  libelleFiliere: string | null;
   dateOuverture: Timestamp | null;
   dateFermeture: Timestamp | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
+  codeNsf: string | null;
 }
 
 export interface Demande {
@@ -230,8 +230,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  ancienCFD: string;
   cfd: string;
+  ancienCFD: string;
   voie: string;
 }
 
@@ -246,9 +246,9 @@ export interface FormationNonMaterializedView {
   cpc: string | null;
   cpcSecteur: string | null;
   cpcSousSecteur: string | null;
-  libelleFiliere: string | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
   voie: string | null;
+  codeNsf: string | null;
 }
 
 export interface IndicateurDepartement {
@@ -311,6 +311,11 @@ export interface NiveauDiplome {
   libelleNiveauDiplome: string | null;
 }
 
+export interface Nsf {
+  codeNsf: string;
+  libelleNsf: string;
+}
+
 export interface RawData {
   type: string;
   data: Json | null;
@@ -359,6 +364,7 @@ export interface DB {
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   niveauDiplome: NiveauDiplome;
+  nsf: Nsf;
   rawData: RawData;
   region: Region;
   user: User;

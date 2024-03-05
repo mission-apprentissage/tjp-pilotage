@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -24,6 +25,12 @@ import { withInsertionReg } from "../../utils/tauxInsertion6mois";
 import { withPoursuiteReg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
+import { getFormationSchema } from "./getFormations.schema";
+
+export interface Filters
+  extends z.infer<typeof getFormationSchema.querystring> {
+  millesimeSortie: (typeof MILLESIMES_IJ)[number];
+}
 
 const findFormationsInDb = async ({
   offset = 0,
@@ -38,34 +45,15 @@ const findFormationsInDb = async ({
   commune,
   cfd,
   cfdFamille,
-  orderBy,
   withEmptyFormations = true,
   withAnneeCommune,
   cpc,
   cpcSecteur,
   cpcSousSecteur,
-  libelleFiliere,
-}: {
-  offset?: number;
-  limit?: number;
-  rentreeScolaire?: string[];
-  millesimeSortie?: string;
-  codeRegion?: string[];
-  codeAcademie?: string[];
-  codeDepartement?: string[];
-  codeDiplome?: string[];
-  codeDispositif?: string[];
-  commune?: string[];
-  cfd?: string[];
-  cfdFamille?: string[];
-  orderBy?: { column: string; order: "asc" | "desc" };
-  withEmptyFormations?: boolean;
-  withAnneeCommune?: string;
-  cpc?: string[];
-  cpcSecteur?: string[];
-  cpcSousSecteur?: string[];
-  libelleFiliere?: string[];
-} = {}) => {
+  codeNsf,
+  order,
+  orderBy,
+}: Partial<Filters>) => {
   const query = kdb
     .selectFrom("formationScolaireView as formationView")
     .leftJoin("formationEtablissement", (join) =>
@@ -112,6 +100,7 @@ const findFormationsInDb = async ({
         .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
         .on(isScolaireFormationHistorique)
     )
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select([
       "formationView.cfd",
       "formationView.libelleFormation",
@@ -120,7 +109,7 @@ const findFormationsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleFiliere",
+      "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
@@ -238,7 +227,7 @@ const findFormationsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleFiliere",
+      "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
@@ -300,8 +289,8 @@ const findFormationsInDb = async ({
       return q.where("formationView.cpcSousSecteur", "in", cpcSousSecteur);
     })
     .$call((q) => {
-      if (!libelleFiliere) return q;
-      return q.where("formationView.libelleFiliere", "in", libelleFiliere);
+      if (!codeNsf) return q;
+      return q.where("formationView.codeNsf", "in", codeNsf);
     })
     .$call((q) => {
       if (!withAnneeCommune || withAnneeCommune === "false")
@@ -309,11 +298,8 @@ const findFormationsInDb = async ({
       return q;
     })
     .$call((q) => {
-      if (!orderBy) return q;
-      return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
-      );
+      if (!orderBy || !order) return q;
+      return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
     .orderBy("libelleFormation", "asc")
     .orderBy("libelleNiveauDiplome", "asc")
@@ -343,23 +329,8 @@ const findFiltersInDb = async ({
   cpc,
   cpcSecteur,
   cpcSousSecteur,
-  libelleFiliere,
   rentreeScolaire = [CURRENT_RENTREE],
-}: {
-  codeRegion?: string[];
-  codeAcademie?: string[];
-  codeDepartement?: string[];
-  codeDiplome?: string[];
-  codeDispositif?: string[];
-  commune?: string[];
-  cfd?: string[];
-  cfdFamille?: string[];
-  cpc?: string[];
-  cpcSecteur?: string[];
-  cpcSousSecteur?: string[];
-  libelleFiliere?: string[];
-  rentreeScolaire?: string[];
-}) => {
+}: Partial<Filters>) => {
   const base = kdb
     .selectFrom("formationScolaireView as formationView")
     .leftJoin(
@@ -614,20 +585,10 @@ const findFiltersInDb = async ({
     })
     .execute();
 
-  const libelleFilieres = await base
-    .select([
-      "formationView.libelleFiliere as label",
-      "formationView.libelleFiliere as value",
-    ])
-    .where("formationView.libelleFiliere", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([]),
-        libelleFiliere
-          ? eb("formationView.libelleFiliere", "in", libelleFiliere)
-          : sql<boolean>`false`,
-      ]);
-    })
+  const libellesNsf = await base
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {
@@ -642,7 +603,7 @@ const findFiltersInDb = async ({
     cpcs: cpcs.map(cleanNull),
     cpcSecteurs: cpcSecteurs.map(cleanNull),
     cpcSousSecteurs: cpcSousSecteurs.map(cleanNull),
-    libelleFilieres: libelleFilieres.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
   };
 };
 

@@ -6,14 +6,14 @@ import { FiltersPanoramaFormation } from "../types";
 export const FiltersSection = ({
   handleFilters,
   activeFilters,
-  libelleFiliereOptions,
+  libelleNsfOptions,
 }: {
   handleFilters: (
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => void;
   activeFilters: Partial<FiltersPanoramaFormation>;
-  libelleFiliereOptions?: { value: string; label: string }[];
+  libelleNsfOptions?: { value: string; label: string }[];
 }) => {
   return (
     <Container
@@ -28,13 +28,13 @@ export const FiltersSection = ({
     >
       <Flex justify="flex-end">
         <Multiselect
-          onChange={(selected) => handleFilters("libelleFiliere", selected)}
+          onChange={(selected) => handleFilters("codeNsf", selected)}
           width={250}
-          options={libelleFiliereOptions}
-          value={activeFilters.libelleFiliere ?? []}
+          options={libelleNsfOptions}
+          value={activeFilters.codeNsf ?? []}
           ml="2"
         >
-          Secteur d’activité
+          Domaine de formation (NSF)
         </Multiselect>
       </Flex>
     </Container>

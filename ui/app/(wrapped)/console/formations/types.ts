@@ -1,21 +1,8 @@
 import { client } from "@/api.client";
+
 export type Query = (typeof client.inferArgs)["[GET]/formations"]["query"];
 
-export type Filters = Pick<
-  Query,
-  | "cfd"
-  | "cfdFamille"
-  | "codeAcademie"
-  | "codeDepartement"
-  | "codeDiplome"
-  | "codeRegion"
-  | "commune"
-  | "cpc"
-  | "cpcSecteur"
-  | "cpcSousSecteur"
-  | "libelleFiliere"
-  | "codeDispositif"
->;
+export type Filters = Query;
 
 export type Order = Pick<Query, "order" | "orderBy">;
 
