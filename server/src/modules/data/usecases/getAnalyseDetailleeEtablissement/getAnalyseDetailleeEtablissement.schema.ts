@@ -24,11 +24,20 @@ const ChiffresIjSchema = z.record(
     codeDispositif: z.string().optional(),
     tauxPoursuite: z.coerce.number().optional(),
     tauxInsertion: z.coerce.number().optional(),
+    tauxPoursuiteRegional: z.coerce.number().optional(),
+    tauxInsertionRegional: z.coerce.number().optional(),
     tauxDevenirFavorable: z.coerce.number().optional(),
     effectifSortie: z.coerce.number().optional(),
     nbSortants: z.coerce.number().optional(),
     nbPoursuiteEtudes: z.coerce.number().optional(),
     nbInsertion6mois: z.coerce.number().optional(),
+    positionQuadrant: z.string().optional(),
+    continuum: z
+      .object({
+        cfd: z.string(),
+        libelleFormation: z.string().optional(),
+      })
+      .optional(),
   })
 );
 
@@ -87,6 +96,10 @@ export const getAnalyseDetailleeEtablissementSchema = {
         z.string(), // offre
         ChiffresEntreeSchema
       ),
+      statsSortie: z.object({
+        tauxPoursuite: z.coerce.number().optional(),
+        tauxInsertion: z.coerce.number().optional(),
+      }),
       filters: z.object({
         diplomes: z.array(OptionSchema),
       }),
