@@ -1,17 +1,24 @@
 import { useToken } from "@chakra-ui/react";
 
+import { formatAbsolute } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
 import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
-import { formatTaux } from "../../formatData";
 import { ChiffresEntreeOffre } from "../../types";
 
+const CODE_NIVEAU_DIPLOME_BTS = "320";
+
 export const TauxPression = ({
+  codeNiveauDiplome,
   chiffresEntreeOffre,
 }: {
+  codeNiveauDiplome?: string;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
     return (
       Object.values(chiffresEntreeOffre).findIndex(
@@ -28,25 +35,31 @@ export const TauxPression = ({
     if (chiffresEntreeOffre) {
       return {
         établissement: Object.values(chiffresEntreeOffre).map((value) =>
-          formatTaux(value.tauxPression)
-        ),
-        national: Object.values(chiffresEntreeOffre).map((value) =>
-          formatTaux(value.tauxPressionNational)
-        ),
-        régional: Object.values(chiffresEntreeOffre).map((value) =>
-          formatTaux(value.tauxPressionRegional)
+          formatAbsolute(value.tauxPression)
         ),
         départemental: Object.values(chiffresEntreeOffre).map((value) =>
-          formatTaux(value.tauxPressionDepartemental)
+          formatAbsolute(value.tauxPressionDepartemental)
+        ),
+        régional: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsolute(value.tauxPressionRegional)
+        ),
+        national: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsolute(value.tauxPressionNational)
         ),
       };
     }
     return {
       établissement: [],
-      national: [],
-      régional: [],
       départemental: [],
+      régional: [],
+      national: [],
     };
+  };
+
+  const getCategories = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
+    if (chiffresEntreeOffre) {
+      return Object.keys(chiffresEntreeOffre);
+    }
   };
 
   const blue = useToken("colors", "bluefrance.113");
@@ -61,12 +74,30 @@ export const TauxPression = ({
   };
 
   return (
-    <DashboardCard label="Taux de pression">
+    <DashboardCard
+      label={
+        codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+          ? "Taux de demande"
+          : "Taux de pression"
+      }
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label={
+            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+              ? "Taux de demande"
+              : "Taux de pression"
+          }
+          onClick={() => openGlossaire("taux-de-pression")}
+        />
+      }
+    >
       {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
         <LineChart
           data={getData(chiffresEntreeOffre)}
+          categories={getCategories(chiffresEntreeOffre)}
           colors={colors}
-          mainKey="établissement"
+          defaultMainKey="établissement"
         />
       ) : (
         <CounterChart />

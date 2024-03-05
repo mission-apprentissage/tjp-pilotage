@@ -14,8 +14,8 @@ export const CounterChart = ({
       {data ? (
         <>
           <Flex
-            fontSize={"40px"}
-            lineHeight={"45px"}
+            fontSize={"36px"}
+            lineHeight={"36px"}
             fontWeight={"700"}
             mb="unset"
             mt="auto"
@@ -23,14 +23,20 @@ export const CounterChart = ({
             {data}
             {type === "percentage" ? "%" : ""}
           </Flex>
-          <Flex shrink={0} justify={"end"} direction={"column"} mb="unset">
+          <Flex
+            shrink={0}
+            justify={"end"}
+            direction={"column"}
+            mb="unset"
+            fontSize={"12px"}
+          >
             <Flex>{compareData}</Flex>
           </Flex>
         </>
       ) : (
         <>
           <Flex
-            fontSize={"12px"}
+            fontSize={"11px"}
             lineHeight={"14px"}
             fontWeight={"400"}
             color={"grey.450"}
