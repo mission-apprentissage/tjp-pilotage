@@ -25,11 +25,13 @@ const premierVoeuxAnnee = (
 
 export const selectDenominateurPressionAgg = (
   indicateurEntreeAlias: string,
-  codeNiveauDiplomeAlias: string
+  codeNiveauDiplomeAlias: string,
+  withTauxDemande: boolean = false
 ) => sql<number>`
   SUM(
     CASE
-    WHEN ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(
+    WHEN ${sql<boolean>`${!withTauxDemande}`} AND
+    ${sql.table(codeNiveauDiplomeAlias)}."codeNiveauDiplome" = '${sql.raw(
       CODE_NIVEAU_DIPLOME_DES_BTS
     )}' THEN NULL
     WHEN ${premierVoeuxAnnee(
@@ -45,12 +47,14 @@ export const selectDenominateurPressionAgg = (
 
 export const selectTauxPressionAgg = (
   indicateurEntreeAlias: string,
-  codeNiveauDiplomeAlias: string
+  codeNiveauDiplomeAlias: string,
+  withTauxDemande: boolean = false
 ) => sql<number>`
     CASE
     WHEN ${selectDenominateurPressionAgg(
       indicateurEntreeAlias,
-      codeNiveauDiplomeAlias
+      codeNiveauDiplomeAlias,
+      withTauxDemande
     )} >= 0
     THEN ROUND(
       (
@@ -60,7 +64,8 @@ export const selectTauxPressionAgg = (
         )})
       / ${selectDenominateurPressionAgg(
         indicateurEntreeAlias,
-        codeNiveauDiplomeAlias
+        codeNiveauDiplomeAlias,
+        withTauxDemande
       )}
       )::NUMERIC, 2)
     END
@@ -81,10 +86,11 @@ export const selectDenominateurPression = (
 
 export const selectTauxPression = (
   indicateurEntreeAlias: string,
-  codeNiveauDiplomeTableAlias: string
+  codeNiveauDiplomeTableAlias: string,
+  withTauxDemande: boolean = true
 ) => sql<number>`
     CASE
-      WHEN ${sql.table(
+      WHEN ${sql<boolean>`${!withTauxDemande}`} AND ${sql.table(
         codeNiveauDiplomeTableAlias
       )}."codeNiveauDiplome" = '${sql.raw(
         CODE_NIVEAU_DIPLOME_DES_BTS
@@ -128,9 +134,11 @@ export const selectTauxPressionParFormationEtParRegionDemande = ({
 export const tauxPressionFormationRegional = ({
   eb,
   rentreeScolaire = CURRENT_RENTREE,
+  withTauxDemande = false,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
   rentreeScolaire?: string;
+  withTauxDemande?: boolean;
 }) => {
   return eb
     .selectFrom("formationView")
@@ -159,7 +167,11 @@ export const tauxPressionFormationRegional = ({
     .whereRef("region.codeRegion", "=", "demande.codeRegion")
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select([
-      selectTauxPressionAgg("indicateurEntree", "formationView").as("pression"),
+      selectTauxPressionAgg(
+        "indicateurEntree",
+        "formationView",
+        withTauxDemande
+      ).as("pression"),
       "region.codeRegion",
       "formationView.cfd",
     ])
@@ -178,12 +190,14 @@ export const withTauxPressionReg = <
   codeDispositifRef,
   codeRegionRef,
   indicateurEntreeAlias,
+  withTauxDemande = false,
 }: {
   eb: EB;
   cfdRef: Parameters<EB["ref"]>[0];
   codeDispositifRef: Parameters<EB["ref"]>[0];
   codeRegionRef: Parameters<EB["ref"]>[0];
   indicateurEntreeAlias?: string;
+  withTauxDemande?: boolean;
 }) => {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
@@ -210,7 +224,7 @@ export const withTauxPressionReg = <
       "=",
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
-    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
     .groupBy(["subFE.cfd", "dispositifId"]);
 };
 
@@ -221,12 +235,14 @@ export const withTauxPressionDep = <
   codeDispositifRef,
   codeDepartementRef,
   indicateurEntreeAlias,
+  withTauxDemande = false,
 }: {
   eb: EB;
   cfdRef: Parameters<EB["ref"]>[0];
   codeDispositifRef: Parameters<EB["ref"]>[0];
   codeDepartementRef: Parameters<EB["ref"]>[0];
   indicateurEntreeAlias?: string;
+  withTauxDemande?: boolean;
 }) => {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
@@ -253,7 +269,7 @@ export const withTauxPressionDep = <
       "=",
       sql`ANY(array_agg(${eb.ref(codeDepartementRef)}))`
     )
-    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
     .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
 };
 
@@ -263,11 +279,13 @@ export const withTauxPressionNat = <
   cfdRef,
   codeDispositifRef,
   indicateurEntreeAlias,
+  withTauxDemande = false,
 }: {
   eb: EB;
   cfdRef: Parameters<EB["ref"]>[0];
   codeDispositifRef: Parameters<EB["ref"]>[0];
   indicateurEntreeAlias?: string;
+  withTauxDemande?: boolean;
 }) => {
   const eb = expressionBuilder<DB, keyof DB>();
   return eb
@@ -289,6 +307,6 @@ export const withTauxPressionNat = <
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
     .whereRef("subFE.cfd", "=", cfdRef)
     .whereRef("subFE.dispositifId", "=", codeDispositifRef)
-    .select([selectTauxPressionAgg("subIE", "subF").as("s")])
+    .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
     .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
 };

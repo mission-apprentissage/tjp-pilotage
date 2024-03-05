@@ -1,5 +1,7 @@
 import { CounterChart } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/components/CounterChart";
 import { formatMillesime } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { VerticalBarChart } from "../../components/VerticalBarChart";
@@ -11,6 +13,7 @@ export const TauxDevenirFavorable = ({
 }: {
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
     return (
       Object.values(chiffresIJOffre).findIndex(
@@ -20,13 +23,28 @@ export const TauxDevenirFavorable = ({
   };
 
   return (
-    <DashboardCard label="Devenir favorable">
+    <DashboardCard
+      label="Devenir favorable"
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Taux de devenir favorable"
+          onClick={() => openGlossaire("taux-de-devenir-favorable")}
+        />
+      }
+    >
       {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIJOffre).map((millesime) => ({
-            label: formatMillesime(millesime),
-            value: formatTaux(chiffresIJOffre[millesime].tauxDevenirFavorable),
-          }))}
+          data={Object.keys(chiffresIJOffre)
+            .filter(
+              (millesime) => chiffresIJOffre[millesime].tauxDevenirFavorable
+            )
+            .map((millesime) => ({
+              label: formatMillesime(millesime),
+              value: formatTaux(
+                chiffresIJOffre[millesime].tauxDevenirFavorable
+              ),
+            }))}
         />
       ) : (
         <CounterChart />
