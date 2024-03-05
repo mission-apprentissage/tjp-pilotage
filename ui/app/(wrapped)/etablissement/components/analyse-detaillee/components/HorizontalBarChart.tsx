@@ -1,4 +1,4 @@
-import { Box, useToken } from "@chakra-ui/react";
+import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { CURRENT_RENTREE } from "shared";
@@ -141,8 +141,10 @@ export const HorizontalBarChart = ({
   }, [data]);
 
   return (
-    <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={200} width={400}></Box>
-    </Box>
+    <AspectRatio ratio={3.5} w={"100%"}>
+      <Box position="relative" overflow="visible !important">
+        <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+      </Box>
+    </AspectRatio>
   );
 };
