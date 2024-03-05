@@ -64,11 +64,11 @@ const genericOnConstatRentree =
   ({
     codeNiveauDiplome,
     CPC,
-    filiere,
+    codeNsf,
   }: {
     codeNiveauDiplome?: string[];
     CPC?: string[];
-    filiere?: string[];
+    codeNsf?: string[];
   }) =>
   () => {
     return expressionBuilder<DB, keyof DB>()
@@ -86,8 +86,7 @@ const genericOnConstatRentree =
         return eb;
       })
       .$call((eb) => {
-        if (filiere)
-          return eb.where("dataFormation.libelleFiliere", "in", filiere);
+        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
         return eb;
       })
       .$call((eb) => {
@@ -101,6 +100,14 @@ const genericOnConstatRentree =
       });
   };
 
+interface GenericFilter {
+  status?: "draft" | "submitted";
+  rentreeScolaire?: string;
+  codeNiveauDiplome?: string[];
+  CPC?: string[];
+  codeNsf?: string[];
+}
+
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.id");
 
@@ -110,14 +117,8 @@ const genericOnDemandes =
     rentreeScolaire = "2024",
     codeNiveauDiplome,
     CPC,
-    filiere,
-  }: {
-    status?: "draft" | "submitted";
-    rentreeScolaire?: string;
-    codeNiveauDiplome?: string[];
-    CPC?: string[];
-    filiere?: string[];
-  }) =>
+    codeNsf,
+  }: GenericFilter) =>
   (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
       .selectFrom("demande")
@@ -145,8 +146,7 @@ const genericOnDemandes =
         return eb;
       })
       .$call((eb) => {
-        if (filiere)
-          return eb.where("dataFormation.libelleFiliere", "in", filiere);
+        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
         return eb;
       })
       .$call((eb) => {
@@ -163,13 +163,7 @@ const genericOnDemandes =
         return q.where("demande.status", "=", status);
       });
 
-const getNationalData = async (filters: {
-  status?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  filiere?: string[];
-}) => {
+const getNationalData = async (filters: GenericFilter) => {
   return kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
@@ -201,8 +195,8 @@ const getNationalData = async (filters: {
       return eb;
     })
     .$call((eb) => {
-      if (filters.filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filters.filiere);
+      if (filters.codeNsf)
+        return eb.where("dataFormation.codeNsf", "in", filters.codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -222,13 +216,7 @@ const getNationalData = async (filters: {
     .then(cleanNull);
 };
 
-const getRegionData = async (filters: {
-  status?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  filiere?: string[];
-}) => {
+const getRegionData = async (filters: GenericFilter) => {
   return kdb
     .selectFrom("region")
     .leftJoin(
@@ -280,13 +268,7 @@ const getRegionData = async (filters: {
     .then(cleanNull);
 };
 
-const getAcademieData = async (filters: {
-  status?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  filiere?: string[];
-}) => {
+const getAcademieData = async (filters: GenericFilter) => {
   return kdb
     .selectFrom("academie")
     .leftJoin(
@@ -345,7 +327,7 @@ const getDepartementData = async (filters: {
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
-  filiere?: string[];
+  codeNsf?: string[];
 }) => {
   return kdb
     .selectFrom("departement")
@@ -419,14 +401,14 @@ const getScopedData = async ({
   rentreeScolaire = "2024",
   codeNiveauDiplome,
   CPC,
-  filiere,
+  codeNsf,
   scope,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
-  filiere?: string[];
+  codeNsf?: string[];
   scope: Scope;
 }) => {
   switch (scope) {
@@ -436,7 +418,7 @@ const getScopedData = async ({
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
-        filiere,
+        codeNsf,
       });
 
     case ScopeEnum.departement:
@@ -445,7 +427,7 @@ const getScopedData = async ({
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
-        filiere,
+        codeNsf,
       });
     case ScopeEnum.region:
       return getRegionData({
@@ -453,7 +435,7 @@ const getScopedData = async ({
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
-        filiere,
+        codeNsf,
       });
     case ScopeEnum.national:
     default:
@@ -462,7 +444,7 @@ const getScopedData = async ({
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
-        filiere,
+        codeNsf,
       });
   }
 };
@@ -472,13 +454,13 @@ const getFiltersQuery = async ({
   rentreeScolaire = "2024",
   codeNiveauDiplome,
   CPC,
-  filiere,
+  nsf,
 }: {
   status?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
-  filiere?: string[];
+  nsf?: string[];
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!status || status === undefined) return sql<true>`true`;
@@ -502,8 +484,8 @@ const getFiltersQuery = async ({
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!filiere) return sql<true>`true`;
-    return eb("dataFormation.libelleFiliere", "in", filiere);
+    if (!nsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", nsf);
   };
 
   const base = kdb
@@ -588,12 +570,10 @@ const getFiltersQuery = async ({
     )
     .execute();
 
-  const filieresFilters = await base
-    .select([
-      "dataFormation.libelleFiliere as label",
-      "dataFormation.libelleFiliere as value",
-    ])
-    .where("dataFormation.libelleFiliere", "is not", null)
+  const libellesNsf = await base
+    .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
+    .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
+    .where("dataFormation.codeNsf", "is not", null)
     .where((eb) =>
       eb.and([
         inStatus(eb),
@@ -640,7 +620,7 @@ const getFiltersQuery = async ({
     academies: academiesFilters.map(cleanNull),
     departements: departementsFilters.map(cleanNull),
     CPCs: CPCFilters.map(cleanNull),
-    filieres: filieresFilters.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
   };
 };

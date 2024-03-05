@@ -4,7 +4,7 @@ import { Kysely } from "kysely";
 
 import { DB } from "../db/db";
 
-export const up = async (db: Kysely<unknown>) => {
+export const up = async (db: Kysely<DB>) => {
   await db.schema
     .dropView("formationScolaireView")
     .materialized()
@@ -19,6 +19,11 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema.dropView("formationView").materialized().ifExists().execute();
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();
+
+  await db.schema
+    .alterTable("dataFormation")
+    .dropColumn("libelleFiliere")
+    .execute();
 
   await db.schema
     .createView("formationNonMaterializedView")
@@ -49,11 +54,6 @@ export const up = async (db: Kysely<unknown>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -67,7 +67,6 @@ export const up = async (db: Kysely<unknown>) => {
           "cpcSecteur",
           "cpcSousSecteur",
           "typeFamille",
-          "libelleFiliere",
           "formations.voie",
           "nsf.libelleNsf",
           "nsf.codeNsf",
@@ -105,11 +104,6 @@ export const up = async (db: Kysely<unknown>) => {
               .as("formations"),
           (join) => join.onRef("formations.cfd", "=", "dataFormation.cfd")
         )
-        .leftJoin(
-          "diplomeProfessionnel",
-          "diplomeProfessionnel.cfd",
-          "dataFormation.cfd"
-        )
         .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
@@ -123,7 +117,6 @@ export const up = async (db: Kysely<unknown>) => {
           "cpcSecteur",
           "cpcSousSecteur",
           "typeFamille",
-          "libelleFiliere",
           "formations.voie",
           "nsf.codeNsf",
           "nsf.libelleNsf",
@@ -161,7 +154,6 @@ export const up = async (db: Kysely<unknown>) => {
           "cpc",
           "cpcSecteur",
           "cpcSousSecteur",
-          "libelleFiliere",
           "codeNsf",
           "libelleNsf",
           "typeFamille",
@@ -204,7 +196,6 @@ export const up = async (db: Kysely<unknown>) => {
           "cpc",
           "cpcSecteur",
           "cpcSousSecteur",
-          "libelleFiliere",
           "codeNsf",
           "libelleNsf",
           "typeFamille",
@@ -244,6 +235,11 @@ export const down = async (db: Kysely<DB>) => {
   await db.schema.dropView("formationNonMaterializedView").ifExists().execute();
 
   await db.schema
+    .alterTable("dataFormation")
+    .addColumn("libelleFiliere", "varchar")
+    .execute();
+
+  await db.schema
     .createView("formationNonMaterializedView")
     .as(
       db
@@ -277,6 +273,7 @@ export const down = async (db: Kysely<DB>) => {
           "diplomeProfessionnel.cfd",
           "dataFormation.cfd"
         )
+        .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "dataFormation.cfd",
@@ -288,9 +285,11 @@ export const down = async (db: Kysely<DB>) => {
           "cpc",
           "cpcSecteur",
           "cpcSousSecteur",
-          "libelleFiliere",
           "typeFamille",
+          "libelleFiliere",
           "formations.voie",
+          "nsf.libelleNsf",
+          "nsf.codeNsf",
         ])
         .orderBy("cfd")
     )
@@ -330,6 +329,7 @@ export const down = async (db: Kysely<DB>) => {
           "diplomeProfessionnel.cfd",
           "dataFormation.cfd"
         )
+        .leftJoin("nsf", "nsf.codeNsf", "dataFormation.codeNsf")
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "dataFormation.cfd",
@@ -341,14 +341,17 @@ export const down = async (db: Kysely<DB>) => {
           "cpc",
           "cpcSecteur",
           "cpcSousSecteur",
-          "libelleFiliere",
           "typeFamille",
+          "libelleFiliere",
           "formations.voie",
+          "nsf.codeNsf",
+          "nsf.libelleNsf",
         ])
         .orderBy("cfd")
     )
     .materialized()
     .execute();
+
   await db.schema
     .createIndex("formationView_index")
     .unique()
@@ -360,8 +363,12 @@ export const down = async (db: Kysely<DB>) => {
   await db.schema
     .createView("formationScolaireView")
     .as(
+      // ts-ignore is mandatory here because we refresh views in this migration
+      // types are not yet infered from kysely codegen
+      // @ts-ignore
       db
         .selectFrom("formationView")
+        // @ts-ignore
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "cfd",
@@ -374,6 +381,8 @@ export const down = async (db: Kysely<DB>) => {
           "cpcSecteur",
           "cpcSousSecteur",
           "libelleFiliere",
+          "codeNsf",
+          "libelleNsf",
           "typeFamille",
           "voie",
         ])
@@ -386,17 +395,23 @@ export const down = async (db: Kysely<DB>) => {
     )
     .materialized()
     .execute();
+
   await db.schema
     .createIndex("formationScolaireView_index")
     .unique()
     .on("formationScolaireView")
     .column("id")
     .execute();
+
   await db.schema
     .createView("formationApprentissageView")
     .as(
+      // ts-ignore is mandatory here because we refresh views in this migration
+      // types are not yet infered from kysely codegen
+      // @ts-ignore
       db
         .selectFrom("formationView")
+        // @ts-ignore
         .select((sb) => [
           sb.fn("uuid_generate_v4").as("id"),
           "cfd",
@@ -409,6 +424,8 @@ export const down = async (db: Kysely<DB>) => {
           "cpcSecteur",
           "cpcSousSecteur",
           "libelleFiliere",
+          "codeNsf",
+          "libelleNsf",
           "typeFamille",
           "voie",
         ])

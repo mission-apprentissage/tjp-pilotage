@@ -117,12 +117,14 @@ export default () => {
     value: Filters[keyof Filters]
   ) => {
     if (type === "codeRegion" && value != null) {
-      setCodeRegionFilter(value[0] ?? "");
+      setCodeRegionFilter((value as string[])[0] ?? "");
     }
     if (type === "rentreeScolaire" && value != null)
-      setRentreeScolaireFilter(value[0] ?? "");
+      setRentreeScolaireFilter((value as string[])[0] ?? "");
     if (type === "status" && value != null)
-      setStatutFilter([value[0] as "draft" | "submitted" | "refused"]);
+      setStatutFilter([
+        (value as string[])[0] as "draft" | "submitted" | "refused",
+      ]);
   };
 
   const handleFilters = (

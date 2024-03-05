@@ -49,7 +49,7 @@ export const LineContent = ({
       </Td>
       <Td>{demande.commune}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
-        {demande.libelleFiliere}
+        {demande.libelleNsf}
       </Td>
       <Td isNumeric>{demande.nbEtablissement}</Td>
       <Td>{demande.libelleRegion}</Td>

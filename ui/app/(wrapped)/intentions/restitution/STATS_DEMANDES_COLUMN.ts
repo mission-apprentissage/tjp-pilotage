@@ -21,7 +21,7 @@ export const STATS_DEMANDES_COLUMNS = {
   amiCma: "AMI/CMA ?",
   poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
-  libelleFiliere: "Filière",
+  libelleNsf: "Domaine de formation (NSF)",
   status: "Status",
   codeRegion: "CodeRegion",
   libelleRegion: "Région",

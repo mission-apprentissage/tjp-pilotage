@@ -62,7 +62,7 @@ const FORMATIONS_COLUMNS = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   cpcSousSecteur: "CPC Sous Secteur",
-  libelleFiliere: "Secteur d’activité",
+  libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
@@ -146,7 +146,7 @@ export default function Formations() {
     value: Filters[keyof Filters]
   ) => {
     if (type === "codeRegion" && value != null)
-      setCodeRegionFilter(value[0] ?? "");
+      setCodeRegionFilter((value as string[])[0] ?? "");
   };
 
   const handleFilters = (
@@ -335,13 +335,13 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          onClose={filterTracker("libelleFiliere")}
+          onClose={filterTracker("codeNsf")}
           width="12rem"
-          onChange={(selected) => handleFilters("libelleFiliere", selected)}
-          options={data?.filters.libelleFilieres}
-          value={filters.libelleFiliere ?? []}
+          onChange={(selected) => handleFilters("codeNsf", selected)}
+          options={data?.filters.libellesNsf}
+          value={filters.codeNsf ?? []}
         >
-          Secteur d’activité
+          Domaine de formation (NSF)
         </Multiselect>
         <Flex w="24rem" mr="3">
           <Checkbox
@@ -588,12 +588,9 @@ export default function Formations() {
                   <OrderIcon {...order} column="cpcSousSecteur" />
                   {FORMATIONS_COLUMNS.cpcSousSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("libelleFiliere")}
-                >
-                  <OrderIcon {...order} column="libelleFiliere" />
-                  {FORMATIONS_COLUMNS.libelleFiliere}
+                <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
+                  <OrderIcon {...order} column="libelleNsf" />
+                  {FORMATIONS_COLUMNS.libelleNsf}
                 </Th>
                 <Th>
                   {FORMATIONS_COLUMNS.positionQuadrant}
