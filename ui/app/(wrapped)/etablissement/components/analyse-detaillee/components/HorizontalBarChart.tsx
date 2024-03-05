@@ -36,7 +36,7 @@ export const HorizontalBarChart = ({
         return ` {arrowDown|}{deltaDown|-${previous - current}}`;
       }
     }
-    return "";
+    return "{noDelta|+0}";
   };
 
   const getXAxisData = () => {
@@ -56,7 +56,7 @@ export const HorizontalBarChart = ({
         axisPointer: {
           type: "shadow",
         },
-        formatter: "{b} : {c}%",
+        formatter: "{b} : {c} élèves",
       },
       grid: {
         containLabel: true,
@@ -112,6 +112,12 @@ export const HorizontalBarChart = ({
               fontFamily: marianneFont,
               fontSize: "12px",
               fontWeight: 700,
+            },
+            noDelta: {
+              fontFamily: marianneFont,
+              fontSize: "12px",
+              fontWeight: 700,
+              paddingLeft: "5px",
             },
             arrowDown: {
               backgroundColor: {

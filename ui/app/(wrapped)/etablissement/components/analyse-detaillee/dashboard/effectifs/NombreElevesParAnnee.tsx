@@ -1,4 +1,6 @@
 import { CounterChart } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/components/CounterChart";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";
@@ -9,6 +11,7 @@ export const NombreElevesParAnnee = ({
 }: {
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
     return (
       Object.values(chiffresEntreeOffre).findIndex(
@@ -18,7 +21,16 @@ export const NombreElevesParAnnee = ({
     );
   };
   return (
-    <DashboardCard label="Nombre d'élèves par année (Constat de rentrée 2023)">
+    <DashboardCard
+      label="Nombre d'élèves par année (Constat de rentrée 2023)"
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Nombre d'élèves"
+          onClick={() => openGlossaire("effectifs")}
+        />
+      }
+    >
       {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
         <HorizontalBarChart
           data={Object.values(chiffresEntreeOffre).reduce(

@@ -227,7 +227,8 @@ export const Multiselect = chakra(
           pointerEvents={disabled ? "none" : "unset"}
           className={className}
           variant={variant}
-          borderBottomColor={value.length ? "info.525" : ""}
+          borderColor={value.length ? "info.525" : "grey.950"}
+          borderWidth={value.length ? "1.5px" : "1px"}
           rightIcon={<ChevronDownIcon />}
         >
           <ButtonContent selected={Array.from(map.values())}>

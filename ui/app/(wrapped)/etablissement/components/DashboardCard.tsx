@@ -1,7 +1,5 @@
 import { Flex, Text } from "@chakra-ui/react";
 
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-
 export const DashboardCard = ({
   label,
   tooltip,
@@ -25,7 +23,7 @@ export const DashboardCard = ({
         <Text fontSize={"14"} fontWeight={400} lineHeight={"19px"}>
           {label}
         </Text>
-        {tooltip && <TooltipIcon label={tooltip} />}
+        {tooltip}
       </Flex>
       <Flex>{children}</Flex>
     </Flex>

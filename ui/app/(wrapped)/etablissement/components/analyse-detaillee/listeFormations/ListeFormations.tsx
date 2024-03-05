@@ -1,4 +1,12 @@
-import { Badge, Box, Flex, List, ListItem, Text } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  List,
+  ListItem,
+  Text,
+  Tooltip,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 
@@ -26,12 +34,7 @@ export const ListeFormations = ({
   );
 
   return (
-    <Box
-      borderRightWidth={1}
-      borderRightColor={"grey.925"}
-      overflowY="auto"
-      maxH={"84rem"}
-    >
+    <Box borderRightWidth={1} borderRightColor={"grey.925"}>
       <Flex
         flex={1}
         flexDirection={"row"}
@@ -56,8 +59,7 @@ export const ListeFormations = ({
                 <ListItem
                   key={`${formation.offre}`}
                   ms={3}
-                  p={1}
-                  ps={2}
+                  p={"8px 16px 8px 8px"}
                   cursor={"pointer"}
                   onClick={() => {
                     setOffre(formation.offre);
@@ -68,39 +70,61 @@ export const ListeFormations = ({
                   }
                   borderLeft={offre === formation.offre ? "2px" : ""}
                 >
-                  <Flex direction="row">
-                    <Text
-                      my={2}
-                      color={offre === formation.offre ? "bluefrance.113" : ""}
-                      whiteSpace="normal"
-                      textOverflow={"ellipsis"}
-                      isTruncated={true}
-                    >
-                      {formation.libelleFormation
+                  <Flex direction="row" justify={"space-between"}>
+                    <Tooltip
+                      label={formation.libelleFormation
                         .replace("2nde commune", "")
                         .replace("1ere commune", "")}
-                    </Text>
+                    >
+                      <Text
+                        my={2}
+                        color={
+                          offre === formation.offre ? "bluefrance.113" : ""
+                        }
+                        whiteSpace="normal"
+                        textOverflow={"ellipsis"}
+                        overflow={"hidden"}
+                        isTruncated={true}
+                      >
+                        {formation.libelleFormation
+                          .replace("2nde commune", "")
+                          .replace("1ere commune", "")}
+                      </Text>
+                    </Tooltip>
                     {(formation.typeFamille === "2nde_commune" ||
                       formation.typeFamille === "1ere_commune") && (
-                      <Text color="bluefrance.113" ms={2} my="auto">
-                        <Icon
-                          icon="ri:node-tree"
-                          color="inherit"
-                          width={16}
-                          height={16}
-                        />
-                      </Text>
+                      <Tooltip
+                        label={formation.typeFamille
+                          .replace("2nde_commune", "Seconde commune")
+                          .replace("1ere_commune", "Première commune")}
+                      >
+                        <Text color="bluefrance.113" ms={2} me={1} my="auto">
+                          <Icon
+                            icon="ri:node-tree"
+                            color="inherit"
+                            width={"16px"}
+                            height={"16px"}
+                          />
+                        </Text>
+                      </Tooltip>
                     )}
                     {(formation.typeFamille === "specialite" ||
                       formation.typeFamille === "option") && (
-                      <Text color="bluefrance.113" ms={2} my="auto">
-                        <Icon
-                          icon="ri:git-branch-line"
-                          color="inherit"
-                          width={16}
-                          height={16}
-                        />
-                      </Text>
+                      <Tooltip
+                        label={formation.typeFamille
+                          .replace("specialite", "Spécialité")
+                          .replace("option", "Option")}
+                      >
+                        <Text color="bluefrance.113" ms={2} me={1} my="auto">
+                          <Icon
+                            icon="ri:node-tree"
+                            color="inherit"
+                            width={"16px"}
+                            height={"16px"}
+                            rotate={270}
+                          />
+                        </Text>
+                      </Tooltip>
                     )}
                   </Flex>
                 </ListItem>
