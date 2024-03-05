@@ -2,6 +2,8 @@ import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { Scope, ScopeEnum } from "shared";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import {
   Filters,
   FiltersEvents,
@@ -50,6 +52,7 @@ export const FiltersSection = ({
   data?: ScopedTransformationStats;
   scope: SelectedScope;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   if (isLoading) {
     return <Loader />;
   }
@@ -218,7 +221,14 @@ export const FiltersSection = ({
           </Multiselect>
         </Box>
         <Box display={["none", null, "block"]}>
-          <FormLabel>Domaine de formation (NSF)</FormLabel>
+          <FormLabel>
+            Domaine de formation (NSF)
+            <TooltipIcon
+              ml="1"
+              label={null}
+              onClick={() => openGlossaire("domaine-de-formation-nsf")}
+            />
+          </FormLabel>
           <Multiselect
             onClose={filterTracker("codeNsf")}
             width={"100%"}
