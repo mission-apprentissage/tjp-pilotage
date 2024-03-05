@@ -1,17 +1,21 @@
 import { AspectRatio, Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
-import { useLayoutEffect, useMemo, useRef } from "react";
+import { useLayoutEffect, useMemo, useRef, useState } from "react";
 export const LineChart = ({
   data,
+  categories,
   colors,
-  mainKey,
+  defaultMainKey,
 }: {
   data: Record<string, number[]>;
+  categories?: string[];
   colors: Record<string, string>;
-  mainKey?: string;
+  defaultMainKey?: string;
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+
+  const [mainKey, setMainKey] = useState<string>(defaultMainKey ?? "");
 
   const option = useMemo<echarts.EChartsOption>(
     () => ({
@@ -26,12 +30,13 @@ export const LineChart = ({
         data: Object.keys(data),
         icon: "none",
         orient: "vertical",
-        right: 0,
+        right: "0%",
         bottom: 0,
         itemGap: 15,
         itemStyle: {
           color: "inherit",
         },
+        align: "left",
         textStyle: {
           color: "inherit",
           fontSize: 12,
@@ -50,15 +55,15 @@ export const LineChart = ({
         },
       },
       grid: {
-        left: "-20%",
-        top: 0,
+        left: "-10%",
+        top: "20%",
         right: "20%",
         bottom: 0,
         containLabel: true,
       },
       xAxis: {
         type: "category",
-        data: ["2021", "2022", "2023"],
+        data: categories,
         show: true,
         axisLine: {
           show: false,
@@ -70,11 +75,11 @@ export const LineChart = ({
         },
       },
       yAxis: {
-        show: false, // Hide Y-axis
+        show: false,
         scale: true,
         type: "value",
         axisLabel: {
-          formatter: "{value}%",
+          formatter: "{value}",
           align: "left",
         },
       },
@@ -85,13 +90,14 @@ export const LineChart = ({
           data: Object.values(data[key]).map((value) => value),
           color: colors[key] ?? "inherit",
           showSymbol: true,
-          symbolSize: 0,
+          symbol: "circle",
+          symbolSize: categories?.length && categories.length > 1 ? 0 : 6,
           label: {
             show: key === mainKey,
             position: "top",
             color: "inherit",
             distance: 5,
-            formatter: "{c}%",
+            formatter: (value) => value.data.toString().replace(".", ","),
             fontSize: 14,
             fontWeight: 700,
           },
@@ -101,13 +107,13 @@ export const LineChart = ({
             cap: "round",
           },
           tooltip: {
-            valueFormatter: (value) => value + "%",
+            valueFormatter: (value) => value.toString().replace(".", ","),
           },
           connectNulls: true,
         };
       }),
     }),
-    [data]
+    [data, mainKey]
   );
 
   useLayoutEffect(() => {
@@ -116,10 +122,18 @@ export const LineChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
-  }, [data]);
+    chartRef.current.on("click", { dataType: "legend" }, (event) => {
+      console.log("1", event);
+    });
+
+    chartRef.current.on("legendselectchanged", (params) => {
+      //@ts-ignore
+      setMainKey(params.name);
+    });
+  }, [data, mainKey]);
 
   return (
-    <AspectRatio ratio={2.7} w={"100%"}>
+    <AspectRatio ratio={3.5} w={"100%"}>
       <Box position="relative" overflow="visible !important">
         <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
       </Box>

@@ -24,9 +24,6 @@ const input = definePartsStyle({
     _focusVisible: {
       outlineColor: "#0A76F6",
     },
-    _active: {
-      outlineColor: "#0A76F6",
-    },
   },
 });
 
@@ -50,6 +47,9 @@ const newInput = definePartsStyle({
     },
     _active: {
       outlineColor: "#0A76F6",
+    },
+    _selected: {
+      borderBottomColor: "info.525",
     },
   },
 });

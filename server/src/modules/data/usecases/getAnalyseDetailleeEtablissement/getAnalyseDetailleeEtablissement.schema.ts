@@ -11,7 +11,6 @@ const EtablissementSchema = z.object({
 const OptionSchema = z.object({
   label: z.string(),
   value: z.string(),
-  ordreFormation: z.string(),
   nbOffres: z.coerce.number(),
 });
 
@@ -72,7 +71,6 @@ const FormationSchema = z.object({
   cfd: z.string(),
   codeDispositif: z.string().optional(),
   codeNiveauDiplome: z.string(),
-  ordreFormation: z.string().optional(),
   typeFamille: z.string().optional(),
 });
 
