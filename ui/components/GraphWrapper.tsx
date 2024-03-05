@@ -8,10 +8,12 @@ export const GraphWrapper = chakra(
     value,
     continuum,
     className,
+    outlined = false,
   }: {
     value?: number;
     continuum?: { cfd: string; libelleFormation?: string };
     className?: string;
+    outlined?: boolean;
   }) => (
     <Flex
       w="160px"
@@ -25,6 +27,7 @@ export const GraphWrapper = chakra(
           <Graph
             flex={1}
             continuum={continuum}
+            outlined={outlined}
             value={value * 100}
             display="inline-block"
             mr="1"

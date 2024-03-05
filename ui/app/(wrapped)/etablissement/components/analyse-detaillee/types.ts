@@ -18,3 +18,5 @@ export type ChiffresIJOffreMillesime = ChiffresIJOffre[string];
 export type ChiffresEntree = AnalyseDetaillee["chiffresEntree"];
 export type ChiffresEntreeOffre = ChiffresEntree[string];
 export type ChiffresEntreeOffreRentree = ChiffresEntreeOffre[string];
+
+export type StatsSortie = AnalyseDetaillee["statsSortie"];
