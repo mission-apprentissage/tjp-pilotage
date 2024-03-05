@@ -1,4 +1,4 @@
-import { Box } from "@chakra-ui/react";
+import { AspectRatio, Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 export const LineChart = ({
@@ -26,8 +26,9 @@ export const LineChart = ({
         data: Object.keys(data),
         icon: "none",
         orient: "vertical",
-        bottom: "center",
-        right: 20,
+        right: 0,
+        bottom: 0,
+        itemGap: 15,
         itemStyle: {
           color: "inherit",
         },
@@ -37,6 +38,7 @@ export const LineChart = ({
           rich: {
             bold: {
               fontWeight: 700,
+              fontSize: 14,
             },
           },
         },
@@ -49,7 +51,8 @@ export const LineChart = ({
       },
       grid: {
         left: "-20%",
-        right: 30,
+        top: 0,
+        right: "20%",
         bottom: 0,
         containLabel: true,
       },
@@ -63,6 +66,7 @@ export const LineChart = ({
         axisTick: {
           alignWithLabel: true,
           show: false,
+          fontSize: 14,
         },
       },
       yAxis: {
@@ -71,6 +75,7 @@ export const LineChart = ({
         type: "value",
         axisLabel: {
           formatter: "{value}%",
+          align: "left",
         },
       },
       series: Object.keys(data).map((key) => {
@@ -87,10 +92,12 @@ export const LineChart = ({
             color: "inherit",
             distance: 5,
             formatter: "{c}%",
+            fontSize: 14,
+            fontWeight: 700,
           },
           lineStyle: {
             opacity: 0.75,
-            width: key === mainKey ? 3 : 2,
+            width: key === mainKey ? 2.5 : 1.5,
             cap: "round",
           },
           tooltip: {
@@ -112,8 +119,10 @@ export const LineChart = ({
   }, [data]);
 
   return (
-    <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={200} w={550}></Box>
-    </Box>
+    <AspectRatio ratio={2.7} w={"100%"}>
+      <Box position="relative" overflow="visible !important">
+        <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+      </Box>
+    </AspectRatio>
   );
 };
