@@ -25,7 +25,13 @@ import {
 } from "../../utils/tauxPression";
 import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
-const getBase = ({ uai }: { uai: string }) =>
+const getBase = ({
+  uai,
+  _rentreeScolaire = CURRENT_RENTREE,
+}: {
+  uai: string;
+  _rentreeScolaire?: string;
+}) =>
   kdb
     .selectFrom("formationEtablissement")
     .innerJoin(
@@ -89,14 +95,10 @@ const getFormationsParNiveauDeDiplome = async ({
       "dataFormation.codeNiveauDiplome",
       "dataFormation.cfd",
       "codeDispositif",
-      sql<string>`left(${eb.ref("dataFormation.codeNiveauDiplome")}, 1)`.as(
-        "ordreFormation"
-      ),
       "dataFormation.typeFamille",
     ])
     .orderBy([
-      "ordreFormation desc",
-      "libelleNiveauDiplome desc",
+      "libelleNiveauDiplome asc",
       "libelleFormation asc",
       "libelleDispositif",
     ])
@@ -284,9 +286,6 @@ const getFilters = async ({ uai }: { uai: string }) =>
     .select((eb) => [
       "libelleNiveauDiplome as label",
       "dataFormation.codeNiveauDiplome as value",
-      sql<string>`left(${eb.ref("dataFormation.codeNiveauDiplome")}, 1)`.as(
-        "ordreFormation"
-      ),
       sql<number>`COUNT(DISTINCT CONCAT(
              ${eb.ref("dataEtablissement.uai")},
              ${eb.ref("dataFormation.cfd")},
@@ -294,12 +293,11 @@ const getFilters = async ({ uai }: { uai: string }) =>
              ${eb.ref("formationEtablissement.voie")}
            ))`.as("nbOffres"),
     ])
-    .groupBy(["label", "value", "ordreFormation"])
-    .orderBy(["ordreFormation desc", "label asc"])
+    .groupBy(["label", "value"])
+    .orderBy(["label asc"])
     .$castTo<{
       label: string;
       value: string;
-      ordreFormation: string;
       nbOffres: number;
     }>()
     .execute();
