@@ -52,12 +52,14 @@ export const [importIJData] = inject(
             await importIJDataForEtablissement({ cfd: ancienCfd, voie });
           }
           await importIJDataForEtablissement({ cfd, voie });
-          console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
+          process.stdout.write(
+            `\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`
+          );
         },
         { parallel: 20 }
       );
       console.log(
-        "--- end recueil des UAI à partir des CFD des diplomes professionnels"
+        "\n--- end recueil des UAI à partir des CFD des diplomes professionnels"
       );
 
       console.log("--- recueil des UAI à partir des CFD des familles métiers");
@@ -72,12 +74,14 @@ export const [importIJData] = inject(
           }
           await importIJDataForEtablissement({ cfd });
 
-          console.log("---- uai count", Object.keys(UAI_TO_PROCESS).length);
+          process.stdout.write(
+            `\r---- ${Object.keys(UAI_TO_PROCESS).length} processed UAIs`
+          );
         },
         { parallel: 20 }
       );
       console.log(
-        "--- end recueil des UAI à partir des CFD des familles métiers"
+        "\n--- end recueil des UAI à partir des CFD des familles métiers"
       );
 
       console.log("--- construction batchs");
