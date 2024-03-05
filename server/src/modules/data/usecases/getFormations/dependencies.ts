@@ -100,6 +100,7 @@ const findFormationsInDb = async ({
         .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
         .on(isScolaireFormationHistorique)
     )
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select([
       "formationView.cfd",
       "formationView.libelleFormation",
@@ -108,7 +109,7 @@ const findFormationsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleNsf",
+      "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
       "libelleDispositif",
@@ -226,7 +227,7 @@ const findFormationsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleNsf",
+      "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",
       "dispositif.libelleDispositif",
@@ -585,11 +586,9 @@ const findFiltersInDb = async ({
     .execute();
 
   const libellesNsf = await base
-    .select([
-      "formationView.libelleNsf as label",
-      "formationView.codeNsf as value",
-    ])
-    .where("formationView.libelleNsf", "is not", null)
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {

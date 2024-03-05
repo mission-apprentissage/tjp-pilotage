@@ -243,11 +243,9 @@ export const getFilters = async ({
     .execute();
 
   const libellesNsf = await filtersBase
-    .select([
-      "formationView.libelleNsf as label",
-      "formationView.codeNsf as value",
-    ])
-    .where("formationView.libelleNsf", "is not", null)
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {
