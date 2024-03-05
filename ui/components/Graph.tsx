@@ -10,10 +10,12 @@ export const Graph = memo(
       value = 50,
       className,
       continuum,
+      outlined = false,
     }: {
       value: number;
       className?: string;
       continuum?: { cfd: string; libelleFormation?: string };
+      outlined?: boolean;
     }) => (
       <Tooltip
         isDisabled={!continuum}
@@ -32,7 +34,7 @@ export const Graph = memo(
       >
         <Box
           className={className}
-          bg="grey.900"
+          bg={"grey.900"}
           height="10px"
           position="relative"
           borderRadius="4"
@@ -51,7 +53,25 @@ export const Graph = memo(
             <Box
               height="100%"
               borderRightRadius="4"
-              bg={value >= 0 ? "bluefrance.525" : "redmarianne.625"}
+              bg={
+                value >= 0
+                  ? outlined
+                    ? "white"
+                    : "bluefrance.525"
+                  : outlined
+                  ? "white"
+                  : "redmarianne.625"
+              }
+              borderColor={
+                value >= 0
+                  ? outlined
+                    ? "bluefrance.525"
+                    : "transparent"
+                  : outlined
+                  ? "redmarianne.625"
+                  : "transparent"
+              }
+              borderWidth={outlined ? 2 : 0}
               width={`${Math.abs(value)}%`}
             />
           )}

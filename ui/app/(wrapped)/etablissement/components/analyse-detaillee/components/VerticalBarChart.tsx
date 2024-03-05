@@ -1,4 +1,4 @@
-import { Box, useToken } from "@chakra-ui/react";
+import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
@@ -12,6 +12,7 @@ export const VerticalBarChart = ({
 }) => {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const g425 = useToken("colors", "grey.425");
   const bf113 = useToken("colors", "bluefrance.113");
   const be850a = useToken("colors", "blueecume.850_active");
   const be850 = useToken("colors", "bluefrance.850");
@@ -39,20 +40,22 @@ export const VerticalBarChart = ({
       },
       legend: {
         data: getXAxisData(),
-        icon: "rectangle",
+        icon: "square",
         orient: "vertical",
         right: 0,
         bottom: 15,
+        padding: 0,
+        itemWidth: 15,
         itemStyle: {
           color: "inherit",
         },
         textStyle: {
-          color: "inherit",
+          color: g425,
           fontSize: 12,
         },
       },
       grid: {
-        left: 0,
+        left: -30,
         right: "40%",
         bottom: 1,
         containLabel: true,
@@ -86,9 +89,8 @@ export const VerticalBarChart = ({
           name: serie.label,
           type: "bar",
           color: colors[index],
-          barWidth: 25,
+          barWidth: 18.5,
           barGap: "50%",
-          barCategoryGap: "10%",
           itemStyle: {
             borderRadius: [4, 4, 0, 0],
           },
@@ -97,7 +99,7 @@ export const VerticalBarChart = ({
             show: true,
             position: "top",
             formatter: "{c}%",
-            fontSize: "16px",
+            fontSize: "14px",
             fontWeight: 700,
           },
           tooltip: {
@@ -117,8 +119,10 @@ export const VerticalBarChart = ({
   }, [data]);
 
   return (
-    <Box position="relative" overflow="visible !important">
-      <Box ref={containerRef} height={150} width={225}></Box>
-    </Box>
+    <AspectRatio ratio={1} w={"100%"}>
+      <Box position="relative" overflow="visible !important">
+        <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
+      </Box>
+    </AspectRatio>
   );
 };

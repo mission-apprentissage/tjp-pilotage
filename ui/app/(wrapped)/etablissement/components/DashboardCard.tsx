@@ -17,7 +17,7 @@ export const DashboardCard = ({
       borderColor="grey.925"
       borderRadius={"4px"}
       padding={"16px"}
-      minH={"205px"}
+      minH={"200px"}
       h="100%"
       flexDirection={"column"}
     >
