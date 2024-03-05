@@ -1,6 +1,11 @@
 import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
+import { CURRENT_IJ_MILLESIME } from "shared";
+
+import { formatMillesime } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
+
+import { getMillesime } from "../../../../../../../shared/utils/getMillesime";
 
 export const VerticalBarChart = ({
   data,
@@ -14,14 +19,22 @@ export const VerticalBarChart = ({
   const containerRef = useRef<HTMLDivElement>(null);
   const g425 = useToken("colors", "grey.425");
   const bf113 = useToken("colors", "bluefrance.113");
-  const be850a = useToken("colors", "blueecume.850_active");
+  const be850a = useToken("colors", "bluefrance.850_active");
   const be850 = useToken("colors", "bluefrance.850");
 
-  const colors = [be850, be850a, bf113];
+  const colors: Record<string, string> = {
+    [formatMillesime(
+      getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -2 })
+    )]: be850,
+    [formatMillesime(
+      getMillesime({ millesimeSortie: CURRENT_IJ_MILLESIME, offset: -1 })
+    )]: be850a,
+    [formatMillesime(CURRENT_IJ_MILLESIME)]: bf113,
+  };
 
   const getXAxisData = () => {
     if (data !== undefined) {
-      return data.map((data) => data.label);
+      return data.map((data) => data.label).reverse();
     }
     return [];
   };
@@ -84,11 +97,11 @@ export const VerticalBarChart = ({
       },
       series: data
         .sort((a, b) => a.label.localeCompare(b.label))
-        .map((serie, index) => ({
+        .map((serie) => ({
           data: [serie.value],
           name: serie.label,
           type: "bar",
-          color: colors[index],
+          color: colors[serie.label],
           barWidth: 18.5,
           barGap: "50%",
           itemStyle: {
@@ -119,7 +132,7 @@ export const VerticalBarChart = ({
   }, [data]);
 
   return (
-    <AspectRatio ratio={1} w={"100%"}>
+    <AspectRatio ratio={1.3} w={"100%"}>
       <Box position="relative" overflow="visible !important">
         <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
       </Box>

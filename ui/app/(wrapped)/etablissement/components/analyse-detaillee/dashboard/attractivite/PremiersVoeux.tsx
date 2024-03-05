@@ -3,13 +3,18 @@ import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { CounterChart } from "../../components/CounterChart";
 
+const CODE_NIVEAU_DIPLOME_BTS = "320";
+
 export const PremiersVoeux = ({
+  codeNiveauDiplome,
   premiersVoeux,
   premiersVoeuxAnneePrecedente,
 }: {
+  codeNiveauDiplome?: string;
   premiersVoeux?: number;
   premiersVoeuxAnneePrecedente?: number;
 }) => {
@@ -19,7 +24,7 @@ export const PremiersVoeux = ({
       return (
         <>
           <Flex color="success.425">
-            <Img src={"/icons/arrow_up.svg"} alt="up" me={1} />
+            <Img src={"/icons/arrow_up.svg"} alt="up" />
             {`+${
               premiersVoeux - premiersVoeuxAnneePrecedente
             } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
@@ -30,7 +35,7 @@ export const PremiersVoeux = ({
       return (
         <>
           <Flex color="warning.525">
-            <Img src={"/icons/arrow_down.svg"} alt="down" me={1} />
+            <Img src={"/icons/arrow_down.svg"} alt="down" />
             {`${
               premiersVoeux - premiersVoeuxAnneePrecedente
             } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
@@ -42,7 +47,23 @@ export const PremiersVoeux = ({
   };
 
   return (
-    <DashboardCard label="Nombre de 1ers voeux">
+    <DashboardCard
+      label={
+        codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+          ? "Nombre de voeux"
+          : "Nombre de 1ers voeux"
+      }
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label={
+            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+              ? "Nombre de voeux"
+              : "Nombre de 1ers voeux"
+          }
+        />
+      }
+    >
       <CounterChart data={premiersVoeux} compareData={getCompareData()} />
     </DashboardCard>
   );

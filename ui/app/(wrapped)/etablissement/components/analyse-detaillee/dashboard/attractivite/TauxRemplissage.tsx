@@ -3,6 +3,8 @@ import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 import { formatTaux } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
@@ -14,13 +16,14 @@ export const TauxRemplissage = ({
   tauxRemplissage?: number;
   tauxRemplissageAnneePrecedente?: number;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const getCompareData = () => {
     if (!tauxRemplissage || !tauxRemplissageAnneePrecedente) return "";
     if (tauxRemplissage > tauxRemplissageAnneePrecedente) {
       return (
         <>
           <Flex color="success.425">
-            <Img src={"/icons/arrow_up.svg"} alt="up" me={1} />
+            <Img src={"/icons/arrow_up.svg"} alt="up" />
             {`+${formatTaux(
               tauxRemplissage - tauxRemplissageAnneePrecedente
             )}% vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
@@ -31,7 +34,7 @@ export const TauxRemplissage = ({
       return (
         <>
           <Flex color="warning.525">
-            <Img src={"/icons/arrow_down.svg"} alt="down" me={1} />
+            <Img src={"/icons/arrow_down.svg"} alt="down" />
             {`${formatTaux(
               tauxRemplissage - tauxRemplissageAnneePrecedente
             )}% vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
@@ -42,7 +45,16 @@ export const TauxRemplissage = ({
     return "";
   };
   return (
-    <DashboardCard label="Taux de remplissage">
+    <DashboardCard
+      label="Taux de remplissage"
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Taux de remplissage"
+          onClick={() => openGlossaire("taux-de-remplissage")}
+        />
+      }
+    >
       <CounterChart
         data={formatTaux(tauxRemplissage)}
         compareData={getCompareData()}

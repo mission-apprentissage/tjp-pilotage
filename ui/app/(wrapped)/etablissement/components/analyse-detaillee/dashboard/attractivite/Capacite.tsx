@@ -1,43 +1,60 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Img } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
+import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
+
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
 export const Capacite = ({
   capacite,
-  effectifEntree,
+  capaciteAnneePrecedente,
 }: {
   capacite?: number;
-  effectifEntree?: number;
+  capaciteAnneePrecedente?: number;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const getCompareData = () => {
-    if (!effectifEntree || !capacite) return "";
-    if (capacite > effectifEntree) {
+    if (!capacite || !capaciteAnneePrecedente) return "";
+    if (capacite > capaciteAnneePrecedente) {
       return (
         <>
-          <Flex color="warning.525">{`${
-            capacite - effectifEntree
-          } pl. vacante(s)`}</Flex>
+          <Flex color="success.425">
+            <Img src={"/icons/arrow_up.svg"} alt="up" />
+            {`+${
+              capacite - capaciteAnneePrecedente
+            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+          </Flex>
         </>
       );
-    } else if (capacite < effectifEntree) {
+    } else if (capacite < capaciteAnneePrecedente) {
       return (
         <>
-          <Flex color="warning.525">{`${
-            capacite - effectifEntree
-          } pl. en surnombre`}</Flex>
+          <Flex color="warning.525">
+            <Img src={"/icons/arrow_down.svg"} alt="down" />
+            {`${
+              capacite - capaciteAnneePrecedente
+            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+          </Flex>
         </>
       );
     }
-    return (
-      <>
-        <Flex color="grey.625">{`0 pl. vacante`}</Flex>
-      </>
-    );
+    return "";
   };
 
   return (
-    <DashboardCard label="Capacité - Année 1">
+    <DashboardCard
+      label="Capacité - en entrée"
+      tooltip={
+        <TooltipIcon
+          ml="1"
+          label="Capacité en entrée en première année de formation"
+          onClick={() => openGlossaire("capacite")}
+        />
+      }
+    >
       <CounterChart data={capacite} compareData={getCompareData()} />
     </DashboardCard>
   );

@@ -2,7 +2,7 @@ import { Center, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
 import { client } from "@/api.client";
@@ -38,7 +38,7 @@ const EtablissementAnalyseDetaillee = () => {
   const filters = searchParams.filters ?? {};
   const { uai } = useEtablissementContext();
 
-  const [offre, setOffre] = useState<string>("");
+  // const [offre, setOffre] = useState<string>("");
   const [displayType, setDisplayType] = useState<"dashboard" | "quadrant">(
     "dashboard"
   );
@@ -66,12 +66,24 @@ const EtablissementAnalyseDetaillee = () => {
       }
     );
 
+  // Si l'offre n'est pas dans la liste des formations (changement de filtre par exemple),
+  // on la remplace par la première formation de la nouvelle liste
   useEffect(() => {
-    if (searchParams.offre) setOffre(searchParams.offre);
-    else {
-      setOffre(Object.keys(data?.formations ?? [])[0]);
-    }
+    if (
+      searchParams.offre &&
+      !Object.keys(data?.formations ?? {}).includes(searchParams.offre)
+    )
+      setOffreFilter(Object.keys(data?.formations ?? [])[0]);
   }, [data]);
+
+  const setOffreFilter = (offre: string) => {
+    setSearchParams({
+      filters,
+      offre,
+    });
+  };
+
+  const offre = useMemo(() => searchParams.offre ?? "", [searchParams.offre]);
 
   const handleFilters = (
     type: keyof Filters,
@@ -87,14 +99,6 @@ const EtablissementAnalyseDetaillee = () => {
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("analyse-detailee-etablissement:filtre", {
       props: { filter_name: filterName },
-    });
-  };
-
-  const setOffreFilter = (offre: string) => {
-    setOffre(offre);
-    setSearchParams({
-      filters,
-      offre,
     });
   };
 
@@ -126,7 +130,7 @@ const EtablissementAnalyseDetaillee = () => {
             <GridItem colSpan={4}>
               <ListeFormations
                 formations={Object.values(data?.formations ?? {})}
-                offre={offre}
+                offre={searchParams.offre ?? offre}
                 setOffre={setOffreFilter}
                 nbOffres={
                   data?.filters.diplomes.reduce(
@@ -142,9 +146,13 @@ const EtablissementAnalyseDetaillee = () => {
             <GridItem colSpan={6}>
               {displayType === "dashboard" ? (
                 <Dashboard
-                  formation={data?.formations[offre]}
-                  chiffresIJOffre={data?.chiffresIJ[offre]}
-                  chiffresEntreeOffre={data?.chiffresEntree[offre]}
+                  formation={data?.formations[searchParams.offre ?? offre]}
+                  chiffresIJOffre={
+                    data?.chiffresIJ[searchParams.offre ?? offre]
+                  }
+                  chiffresEntreeOffre={
+                    data?.chiffresEntree[searchParams.offre ?? offre]
+                  }
                 />
               ) : (
                 <QuadrantSection
@@ -152,7 +160,7 @@ const EtablissementAnalyseDetaillee = () => {
                   chiffresIJ={data?.chiffresIJ}
                   chiffresEntree={data?.chiffresEntree}
                   statsSortie={data?.statsSortie}
-                  offre={offre}
+                  offre={searchParams.offre ?? offre}
                   setOffre={setOffreFilter}
                 />
               )}
