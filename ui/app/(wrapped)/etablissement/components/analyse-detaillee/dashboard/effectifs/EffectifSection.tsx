@@ -1,4 +1,5 @@
 import { Badge, Flex, Text } from "@chakra-ui/react";
+import { CURRENT_RENTREE } from "shared";
 
 import { ChiffresEntreeOffre } from "../../types";
 import { NombreElevesParAnnee } from "./NombreElevesParAnnee";
@@ -19,7 +20,7 @@ export const EffectifSection = ({
         >
           Nombre d'élèves par année
         </Text>
-        <Badge variant="info">Rentrée 2023</Badge>
+        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
       </Flex>
       <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
     </>
