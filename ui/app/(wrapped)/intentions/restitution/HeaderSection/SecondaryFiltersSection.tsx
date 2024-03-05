@@ -98,7 +98,7 @@ export const SecondaryFiltersSection = ({
               Domaine de formation (NSF)
               <TooltipIcon
                 ml="1"
-                label={null}
+                label="cliquez pour plus d'infos."
                 onClick={() => openGlossaire("domaine-de-formation-nsf")}
               />
             </FormLabel>
