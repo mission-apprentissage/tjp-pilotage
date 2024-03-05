@@ -66,6 +66,7 @@ export const getStatsEtablissement = async ({
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire);
 
   const informationsEtablissement = await baseStatsEntree
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .select([
       sql<string>`${rentreeScolaire}`.as("rentreeScolaire"),
@@ -74,7 +75,7 @@ export const getStatsEtablissement = async ({
       "region.libelleRegion",
       "region.codeRegion",
       "valeurAjoutee",
-      "libelleNsf",
+      "nsf.libelleNsf",
     ])
     .executeTakeFirstOrThrow()
     .catch(() => {
@@ -158,6 +159,7 @@ const getFormationsEtablissement = async ({
         )
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select((sb) => [
       "formationEtablissement.cfd as cfd",
       "formationEtablissement.dispositifId as codeDispositif",
@@ -238,7 +240,7 @@ const getFormationsEtablissement = async ({
     .groupBy([
       "formationView.id",
       "formationView.libelleFormation",
-      "formationView.libelleNsf",
+      "nsf.libelleNsf",
       "formationView.typeFamille",
       "formationEtablissement.cfd",
       "formationEtablissement.dispositifId",

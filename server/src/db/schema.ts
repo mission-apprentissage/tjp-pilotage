@@ -248,7 +248,6 @@ export interface FormationNonMaterializedView {
   cpcSousSecteur: string | null;
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
   voie: string | null;
-  libelleNsf: string | null;
   codeNsf: string | null;
 }
 
