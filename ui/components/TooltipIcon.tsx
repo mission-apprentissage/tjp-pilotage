@@ -15,6 +15,7 @@ export const TooltipIcon = chakra(
     return (
       <Tooltip maxWidth={180} label={label}>
         <QuestionOutlineIcon
+          cursor="pointer"
           className={className}
           onClick={(e) => {
             if (onClick) {
