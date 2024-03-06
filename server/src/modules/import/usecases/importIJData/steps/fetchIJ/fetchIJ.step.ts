@@ -1,17 +1,15 @@
 import { inject } from "injecti";
 import { MILLESIMES_IJ } from "shared";
 
-import { R } from "../../../../services/inserJeunesApi/formatUaiData";
+import { IJUaiData } from "../../../../services/inserJeunesApi/formatUaiData";
 import { getUaiData } from "../../../../services/inserJeunesApi/inserJeunes.api";
 import { cacheIj, clearIjCache } from "./cacheIJ.dep";
-
-
 
 export const [fetchIJ] = inject(
   { getUaiData, cacheIj, clearIjCache },
   (deps) =>
     async ({ uai }: { uai: string }) => {
-      const d: Array<R> = []
+      const d: Array<IJUaiData> = [];
       const millesimesOK: Array<string> = [];
       const millesimesNOK: Array<string> = [];
       console.log(`--- fetch IJ (uai :${uai}})`);
@@ -23,20 +21,28 @@ export const [fetchIJ] = inject(
           if (!data) throw new Error("no data");
           millesimesOK.push(MILLESIMES_IJ[i]);
           await deps.cacheIj({ data, uai, millesime });
-          d.push(data)
+          d.push(data);
         } catch (err) {
           millesimesNOK.push(MILLESIMES_IJ[i]);
         }
       }
 
       if (d.length > 0) {
-        console.log(`--- fetch IJ summary for ${uai} :`, millesimesOK.join(','), 'ok');
-      }
-      
-      if(millesimesNOK.length > 0) {
-        console.log(`--- fetch IJ summary for ${uai} :`, millesimesNOK.join(','), 'nok');
+        console.log(
+          `--- fetch IJ summary for ${uai} :`,
+          millesimesOK.join(","),
+          "ok"
+        );
       }
 
-      return d
+      if (millesimesNOK.length > 0) {
+        console.log(
+          `--- fetch IJ summary for ${uai} :`,
+          millesimesNOK.join(","),
+          "nok"
+        );
+      }
+
+      return d;
     }
 );

@@ -9,7 +9,7 @@
   "types": "src/index.ts",
   "scripts": {
     "start": "node --enable-source-maps dist/index.js",
-    "dev": "tsup src/index.ts --watch . --watch ../shared --onSuccess 'yarn run copyPublic && yarn run start'",
+    "dev": "tsup src/index.ts --watch . --watch ../shared --ignore-watch **/logs --onSuccess 'yarn run copyPublic && yarn run start'",
     "dev:debug": "tsup src/index.ts --watch . --watch ../shared --onSuccess 'yarn run copyPublic && yarn run start -- --inspect'",
     "copyPublic": "cp -a public/. dist",
     "build": "tsup src/index.ts",
@@ -30,6 +30,7 @@
     "@notionhq/client": "^2.2.14",
     "@slack/bolt": "^3.15.0",
     "axios": "1.6.2",
+    "axios-rate-limit": "^1.3.0",
     "axios-retry": "^4.0.0",
     "commander": "^10.0.0",
     "cookie": "^0.5.0",

@@ -1,6 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -14,11 +15,19 @@ import {
   isIntentionVisible,
   isRegionVisible,
 } from "../../../utils/isIntentionVisible";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
+import { getRestitutionIntentionsStatsSchema } from "./getRestitutionIntentionStats.schema";
+
+export interface Filters
+  extends z.infer<typeof getRestitutionIntentionsStatsSchema.querystring> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+}
 
 const findRestitutionIntentionsStatsInDB = async ({
   status,
@@ -30,7 +39,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   codeNiveauDiplome,
   dispositif,
   CPC,
-  filiere,
+  codeNsf,
   coloration,
   amiCMA,
   secteur,
@@ -44,38 +53,14 @@ const findRestitutionIntentionsStatsInDB = async ({
   millesimeSortie = CURRENT_IJ_MILLESIME,
   offset = 0,
   limit = 20,
-  orderBy = { order: "desc", column: "createdAt" },
+  order = "desc",
+  orderBy = "createdAt",
   voie,
-}: {
-  status?: ("draft" | "submitted" | "refused")[];
-  codeRegion?: string[];
-  rentreeScolaire?: string;
-  typeDemande?: string[];
-  motif?: string[];
-  cfd?: string[];
-  codeNiveauDiplome?: string[];
-  dispositif?: string[];
-  CPC?: string[];
-  filiere?: string[];
-  coloration?: string;
-  amiCMA?: string;
-  secteur?: string;
-  cfdFamille?: string[];
-  codeDepartement?: string[];
-  codeAcademie?: string[];
-  commune?: string[];
-  uai?: string[];
-  compensation?: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-  millesimeSortie?: string;
-  offset?: number;
-  limit?: number;
-  orderBy?: { order: "asc" | "desc"; column: string };
-  voie?: "scolaire" | "apprentissage";
-}) => {
+}: Filters) => {
   const demandes = await kdb
     .selectFrom("demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
     .leftJoin(
@@ -105,13 +90,14 @@ const findRestitutionIntentionsStatsInDB = async ({
           "demande.dispositifId"
         )
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+        .on(isScolaireIndicateurRegionSortie)
     )
     .selectAll("demande")
     .select((eb) => [
       "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
       "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
       "dataFormation.libelleFormation",
-      "dataFormation.libelleFiliere as libelleFiliere",
+      "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
       "dispositif.libelleDispositif",
@@ -147,9 +133,10 @@ const findRestitutionIntentionsStatsInDB = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("pression"),
-      nbEtablissementFormationRegion({ eb, rentreeScolaire: CURRENT_RENTREE }).as(
-        "nbEtablissement"
-      ),
+      nbEtablissementFormationRegion({
+        eb,
+        rentreeScolaire: CURRENT_RENTREE,
+      }).as("nbEtablissement"),
     ])
     .$call((eb) => {
       if (status) return eb.where("demande.status", "in", status);
@@ -228,8 +215,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (filiere)
-        return eb.where("dataFormation.libelleFiliere", "in", filiere);
+      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
       return eb;
     })
     .$call((eb) => {
@@ -289,10 +275,10 @@ const findRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((q) => {
-      if (!orderBy) return q;
+      if (!orderBy || !order) return q;
       return q.orderBy(
-        sql`${sql.ref(orderBy.column)}`,
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
+        sql`${sql.ref(orderBy)}`,
+        sql`${sql.raw(order)} NULLS LAST`
       );
     })
     .where(isDemandeNotDeleted)
@@ -325,7 +311,7 @@ const findFiltersInDb = async ({
   codeNiveauDiplome,
   dispositif,
   CPC,
-  filiere,
+  codeNsf,
   coloration,
   amiCMA,
   secteur,
@@ -336,28 +322,7 @@ const findFiltersInDb = async ({
   uai,
   compensation,
   user,
-}: {
-  status?: ("draft" | "submitted" | "refused")[];
-  codeRegion?: string[];
-  rentreeScolaire?: string;
-  typeDemande?: string[];
-  motif?: string[];
-  cfd?: string[];
-  codeNiveauDiplome?: string[];
-  dispositif?: string[];
-  CPC?: string[];
-  filiere?: string[];
-  coloration?: string;
-  amiCMA?: string;
-  secteur?: string;
-  cfdFamille?: string[];
-  codeDepartement?: string[];
-  codeAcademie?: string[];
-  commune?: string[];
-  uai?: string[];
-  compensation?: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-}) => {
+}: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
     return eb.and([
@@ -407,9 +372,9 @@ const findFiltersInDb = async ({
     return eb("dataFormation.cpc", "in", CPC);
   };
 
-  const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!filiere) return sql<true>`true`;
-    return eb("dataFormation.libelleFiliere", "in", filiere);
+  const inCodeNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
+    if (!codeNsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", codeNsf);
   };
 
   const inFamilleMetier = (eb: ExpressionBuilder<DB, "familleMetier">) => {
@@ -568,7 +533,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -603,7 +568,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -636,7 +601,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -668,7 +633,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -703,7 +668,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -742,7 +707,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -777,7 +742,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -817,7 +782,7 @@ const findFiltersInDb = async ({
           inCodeDispositif(eb),
           inFamilleMetier(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -850,7 +815,7 @@ const findFiltersInDb = async ({
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
           inCPC(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
@@ -881,7 +846,7 @@ const findFiltersInDb = async ({
           inCfd(eb),
           inCodeNiveauDiplome(eb),
           inCodeDispositif(eb),
-          inFiliere(eb),
+          inCodeNsf(eb),
           inFamilleMetier(eb),
           inColoration(eb),
           inAmiCMA(eb),
@@ -894,12 +859,10 @@ const findFiltersInDb = async ({
     })
     .execute();
 
-  const filieresFilters = await filtersBase
-    .select([
-      "dataFormation.libelleFiliere as label",
-      "dataFormation.libelleFiliere as value",
-    ])
-    .where("dataFormation.libelleFiliere", "is not", null)
+  const libellesNsf = await filtersBase
+    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .select(["nsf.libelleNsf as label", "nsf.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .where((eb) => {
       return eb.or([
         eb.and([
@@ -922,8 +885,8 @@ const findFiltersInDb = async ({
           inCompensation(eb),
           inStatus(eb),
         ]),
-        CPC
-          ? eb("dataFormation.libelleFiliere", "in", CPC)
+        codeNsf
+          ? eb("dataFormation.codeNsf", "in", codeNsf)
           : sql<boolean>`false`,
       ]);
     })
@@ -939,7 +902,7 @@ const findFiltersInDb = async ({
     formations: (await formationsFilters).map(cleanNull),
     familles: (await famillesFilters).map(cleanNull),
     CPCs: (await CPCFilters).map(cleanNull),
-    filieres: (await filieresFilters).map(cleanNull),
+    libellesNsf: (await libellesNsf).map(cleanNull),
     departements: (await departementsFilters).map(cleanNull),
     academies: (await academiesFilters).map(cleanNull),
     communes: (await communesFilters).map(cleanNull),

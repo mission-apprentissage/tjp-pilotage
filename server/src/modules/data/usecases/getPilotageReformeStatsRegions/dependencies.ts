@@ -4,6 +4,7 @@ import { CURRENT_RENTREE } from "shared";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
 import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
 import {
   notHistoriqueFormation,
@@ -24,9 +25,8 @@ const dernierTauxDeChomage = (
   return eb.or([
     eb("indicateurRegion.rentreeScolaire", "=", "2022"),
     eb("indicateurRegion.rentreeScolaire", "is", null),
-  ])
-}
-
+  ]);
+};
 
 const getStatsRegions = async ({
   codeNiveauDiplome,
@@ -40,7 +40,7 @@ const getStatsRegions = async ({
   const statsRegions = await kdb
     .selectFrom("indicateurRegionSortie")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
@@ -73,6 +73,7 @@ const getStatsRegions = async ({
     .where("indicateurRegionSortie.cfdContinuum", "is", null)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    .where(isScolaireIndicateurRegionSortie)
     .where(dernierTauxDeChomage)
     .select([
       "indicateurRegionSortie.codeRegion",
@@ -81,7 +82,11 @@ const getStatsRegions = async ({
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
     ])
-    .groupBy(["indicateurRegionSortie.codeRegion", "region.libelleRegion", "indicateurRegion.tauxChomage"])
+    .groupBy([
+      "indicateurRegionSortie.codeRegion",
+      "region.libelleRegion",
+      "indicateurRegion.tauxChomage",
+    ])
     .$call((q) => {
       if (!orderBy) return q;
       return q.orderBy(
@@ -96,7 +101,7 @@ const getStatsRegions = async ({
 
 const findFiltersInDb = async () => {
   const filtersBase = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",

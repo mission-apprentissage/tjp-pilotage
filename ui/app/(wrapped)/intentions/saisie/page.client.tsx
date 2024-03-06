@@ -24,13 +24,12 @@ import {
   Thead,
   Tooltip,
   Tr,
-  useToast,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -86,6 +85,7 @@ export type Filters = Pick<Query, "status">;
 export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
+const EXPORT_LIMIT = 1_000_000;
 
 const TagDemande = ({ status }: { status: string }) => {
   switch (status) {
@@ -128,7 +128,6 @@ export const PageClient = () => {
     search?: typeof search;
     order?: typeof order;
     page?: typeof page;
-    action?: typeof action;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -155,45 +154,18 @@ export const PageClient = () => {
   const search = searchParams.search ?? "";
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
-  const action = searchParams.action;
 
-  const toast = useToast();
-  const toastId = "action-demande-toast";
-
-  useEffect(() => {
-    const toastMessage =
-      action === "draft"
-        ? "Projet de demande enregistré avec succès"
-        : action === "submitted"
-        ? "Demande validée avec succès"
-        : action === "refused"
-        ? "Demande refusée avec succès"
-        : action === "deleted"
-        ? "Demande supprimée avec succès"
-        : null;
-    !toast.isActive(toastId) &&
-      action &&
-      toastMessage &&
-      toast({
-        id: toastId,
-        title: toastMessage,
-        position: "top-right",
-        status: "success",
-        variant: "left-accent",
-        isClosable: true,
-        size: "md",
-      });
-  }, [action]);
+  const getDemandesQueryParameters = (qLimit: number, qOffset?: number) => ({
+    ...filters,
+    search,
+    ...order,
+    offset: qOffset,
+    limit: qLimit,
+  });
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
     {
-      query: {
-        ...filters,
-        search,
-        ...order,
-        offset: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
-      },
+      query: getDemandesQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     { keepPreviousData: true, staleTime: 0 }
   );
@@ -296,9 +268,8 @@ export const PageClient = () => {
               onClick={async () => {
                 trackEvent("demandes:export");
                 const data = await client.ref("[GET]/demandes").query({
-                  query: { ...filters, search, ...order, limit: 10000000 },
+                  query: getDemandesQueryParameters(EXPORT_LIMIT),
                 });
-
                 downloadCsv(
                   "export_demandes.csv",
                   data.demandes,

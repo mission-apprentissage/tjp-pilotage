@@ -13,4 +13,3 @@ export const down = async (db: Kysely<unknown>) => {
     .dropColumn("tauxChomage")
     .execute();
 };
-    

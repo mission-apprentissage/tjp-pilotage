@@ -176,9 +176,9 @@ export default () => {
                     <Td>{user.role}</Td>
                     <Td>
                       {user.enabled ? (
-                        <Badge colorScheme="green">Actif</Badge>
+                        <Badge variant="success">Actif</Badge>
                       ) : (
-                        <Badge colorScheme="red">Désactivé</Badge>
+                        <Badge variant="error">Désactivé</Badge>
                       )}
                     </Td>
                     <Td>{user.libelleRegion}</Td>

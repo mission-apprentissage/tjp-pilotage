@@ -1,7 +1,7 @@
 import { getFormationsRenoveesRentreeScolaire } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies } from "./dependencies";
+import { dependencies, Filters } from "./dependencies";
 
 const getFormationsFactory =
   (
@@ -12,27 +12,7 @@ const getFormationsFactory =
       getFormationsRenoveesRentreeScolaire,
     }
   ) =>
-  async (activeFilters: {
-    offset?: number;
-    limit?: number;
-    codeRegion?: string[];
-    codeAcademie?: string[];
-    codeDepartement?: string[];
-    codeDiplome?: string[];
-    codeDispositif?: string[];
-    commune?: string[];
-    cfd?: string[];
-    rentreeScolaire?: string[];
-    cfdFamille?: string[];
-    cpc?: string[];
-    cpcSecteur?: string[];
-    cpcSousSecteur?: string[];
-    libelleFiliere?: string[];
-    orderBy?: { order: "asc" | "desc"; column: string };
-    withEmptyFormations?: boolean;
-    withAnneeCommune?: string;
-    positionQuadrant?: string;
-  }) => {
+  async (activeFilters: Partial<Filters>) => {
     const [
       { formations, count },
       filters,

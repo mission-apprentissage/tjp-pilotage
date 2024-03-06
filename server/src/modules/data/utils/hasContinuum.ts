@@ -36,12 +36,13 @@ export function hasContinuum<
         sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
       )
       .where("subIRS.millesimeSortie", "=", millesimeSortie)
+      .where("subIRS.voie", "=", "scolaire")
       .where("subIRS.cfdContinuum", "is not", null)
       .select([
         "subIRS.cfdContinuum as cfd",
-        "subFormation.libelleFormation as libelleFormation"
+        "subFormation.libelleFormation as libelleFormation",
       ])
-      .$narrowType<{ cfd: string, libelleFormation: string }>()
+      .$narrowType<{ cfd: string; libelleFormation: string }>()
       .groupBy([
         "subIRS.codeRegion",
         "subIRS.cfdContinuum",

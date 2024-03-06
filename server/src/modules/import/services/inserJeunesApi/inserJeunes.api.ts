@@ -1,12 +1,12 @@
-import axios, { AxiosError } from "axios";
-import axiosRetry, { isNetworkError } from 'axios-retry'
+import { AxiosError } from "axios";
+import axiosRetry, { isNetworkError } from "axios-retry";
 
 import { config } from "../../../../../config/config";
 import { formatRegionData } from "./formatRegionData";
 import { formatUaiData } from "./formatUaiData";
-import { instance, setInstanceBearerToken } from './inserJeunes.provider'
+import { instance, setInstanceBearerToken } from "./inserJeunes.provider";
 
-let loggingIn = false
+let loggingIn = false;
 
 async function retryCondition(error: AxiosError) {
   const response = error?.response;
@@ -14,10 +14,12 @@ async function retryCondition(error: AxiosError) {
   if (isNetworkError(error)) {
     return true;
   }
-  
+
   if (![500, 401, undefined].includes(response?.status)) {
     if (response?.status === 400) {
-      console.log(`[ERROR] ${JSON.stringify(response?.data)} : ${error.config?.url}`);
+      console.log(
+        `[ERROR] ${JSON.stringify(response?.data)} : ${error.config?.url}`
+      );
       return false;
     } else {
       console.log(`[ERROR] unknown.`, JSON.stringify(response));
@@ -32,8 +34,10 @@ async function retryCondition(error: AxiosError) {
     console.log("--- Refreshed insertjeunes API token");
     loggingIn = false;
   } else {
-    console.log("--- Already refreshing insertjeunes API token, triggering a 10s delay");
-    await new Promise(resolve => setTimeout(resolve, 10000));
+    console.log(
+      "--- Already refreshing insertjeunes API token, triggering a 10s delay"
+    );
+    await new Promise((resolve) => setTimeout(resolve, 10000));
   }
 
   return true;
@@ -43,8 +47,8 @@ axiosRetry(instance, {
   retries: 20,
   retryDelay: axiosRetry.exponentialDelay,
   retryCondition,
-  shouldResetTimeout: true
-})
+  shouldResetTimeout: true,
+});
 
 export const login = async () => {
   const response = await instance.post("/login", undefined, {
@@ -81,15 +85,15 @@ export const getRegionData = async ({
   codeRegionIj: string;
   millesime: string;
 }) => {
-  try {
-    const response = await instance.get(
-      `/region/${codeRegionIj}/millesime/${millesime}`
-    );
-    return formatRegionData(response.data);
-  } catch (e) {
-    if (axios.isAxiosError(e)) return undefined;
-    throw e;
+  const response = await instance.get(
+    `/region/${codeRegionIj}/millesime/${millesime}`
+  );
+
+  if (response) {
+    return formatRegionData(response?.data);
   }
+
+  throw new Error("no data");
 };
 
 export const inserJeunesApi = { getUaiData, getRegionData };

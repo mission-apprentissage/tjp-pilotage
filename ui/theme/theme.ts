@@ -1,19 +1,19 @@
-import { extendBaseTheme,theme as chakraTheme } from "@chakra-ui/react";
+import { extendBaseTheme, theme as chakraTheme } from "@chakra-ui/react";
 
-import { BreadcrumbTheme } from "@/theme/Breadcrumb.theme";
-import { cardTheme } from "@/theme/Card.theme";
-import { checkboxTheme } from "@/theme/Checkbox.theme";
-import { formStyle } from "@/theme/Label.theme";
-import { linkTheme } from "@/theme/Link.theme";
-import { radioTheme } from "@/theme/radio.theme";
-import { selectTheme } from "@/theme/Select.theme";
-import { sliderTheme } from "@/theme/slider.theme";
-import { tableTheme } from "@/theme/Table.theme";
-import { tabsTheme } from "@/theme/Tabs.theme";
-import { tagTheme } from "@/theme/Tag.theme";
-import { tooltipTheme } from "@/theme/Tooltip.theme";
-
+import { badgeTheme } from "./Badge.theme";
+import { breadcrumbTheme } from "./Breadcrumb.theme";
 import { buttonTheme } from "./Button.theme";
+import { cardTheme } from "./Card.theme";
+import { checkboxTheme } from "./Checkbox.theme";
+import { formStyle } from "./Label.theme";
+import { linkTheme } from "./Link.theme";
+import { radioTheme } from "./Radio.theme";
+import { selectTheme } from "./Select.theme";
+import { sliderTheme } from "./Slider.theme";
+import { tableTheme } from "./Table.theme";
+import { tabsTheme } from "./Tabs.theme";
+import { tagTheme } from "./Tag.theme";
+import { tooltipTheme } from "./Tooltip.theme";
 
 export const themeDefinition = {
   styles: {
@@ -34,7 +34,7 @@ export const themeDefinition = {
       525: "#0078f3",
       "525_hover": "#6196ff",
       "525_active": "#85a9ff",
-      "text": "#0063CB",
+      text: "#0063CB",
       950: "#E8EDFF",
       "950_hover": "#c2d1ff",
       "950_active": "#a9bfff",
@@ -131,14 +131,22 @@ export const themeDefinition = {
       625: "#929292",
     },
     warning: {
+      425: "#b34000",
       525: "#d64d00",
       "525_hover": "#ff754e",
       "525_active": "#ff8e76",
+      950: "#ffe9e6",
     },
     success: {
+      425: "#18753c",
+      "425_hover": "#27a959",
+      "425_active": "#2fc368",
       850: "#3bea7e",
       "850_hover": "#2cb862",
       "850_active": "#259e53",
+      950: "#b8fec9",
+      "950_hover": "#46fd89",
+      "950_active": "#34eb7b",
     },
     orange: {
       draft: "#FEEBCA",
@@ -158,11 +166,31 @@ export const themeDefinition = {
         3: "#4B9F6C",
       },
     },
+    error: {
+      425: "#ce0500",
+      950: "#ffe9e9",
+    },
+    yellowMoutarde: {
+      348: "#695240",
+      950: "#feebd0",
+    },
+    purpleGlycine: {
+      319: "#6e445a",
+      950: "#fee7fc",
+    },
+    pinkTuile: {
+      425: "#a94645",
+      950: "#fee9e7",
+    },
+    brownCafeCreme: {
+      383: "#685c48",
+      950: "#f7ecdb",
+    },
   },
   components: {
     Button: buttonTheme,
     Tabs: tabsTheme,
-    Breadcrumb: BreadcrumbTheme,
+    Breadcrumb: breadcrumbTheme,
     Table: tableTheme,
     Tooltip: tooltipTheme,
     Select: selectTheme,
@@ -173,7 +201,8 @@ export const themeDefinition = {
     Form: formStyle,
     Tag: tagTheme,
     Checkbox: checkboxTheme,
+    Badge: badgeTheme,
   },
-}
+};
 
 export const theme = extendBaseTheme(chakraTheme, themeDefinition);

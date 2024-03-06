@@ -101,10 +101,12 @@ export const CfdUaiSection = ({
   const [isSubmitDisabled, setIsSubmitDisabled] = useState(true);
 
   useEffect(() => {
-    watch(() => {
+    const subscription = watch(() => {
       setIsSubmitDisabled(!isCFDUaiSectionValid(getValues()));
-    }).unsubscribe;
-  });
+    });
+
+    return () => subscription.unsubscribe();
+  }, [watch, getValues, isCFDUaiSectionValid]);
 
   const anchorToStatus = () => {
     statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
@@ -194,7 +196,7 @@ export const CfdUaiSection = ({
             {!uaiInfo && <Text>Veuillez sélectionner un établissement.</Text>}
             {uaiInfo && (
               <>
-                <Badge mb="2" colorScheme="green">
+                <Badge mb="2" variant="success" size="sm">
                   Établissement validé
                 </Badge>
                 <Text fontSize="sm">{`Numéro UAI : ${uaiInfo.value}`}</Text>

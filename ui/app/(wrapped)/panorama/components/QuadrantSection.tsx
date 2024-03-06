@@ -25,6 +25,7 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo, useState } from "react";
 
+import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
 import { Quadrant } from "../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../components/TableQuadrant";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
@@ -219,7 +220,7 @@ export const QuadrantSection = ({
   return (
     <Box as="section" py="6" mt="6" maxWidth={"container.xl"}>
       <Stack direction={["column", "row"]} spacing="10">
-        <Box flex={1}>
+        <Flex direction={"column"} alignContent={"flex-start"}>
           <Heading
             fontWeight={"hairline"}
             maxWidth={250}
@@ -339,7 +340,8 @@ export const QuadrantSection = ({
               icon={<SmallCloseIcon></SmallCloseIcon>}
             />
           </FormControl>
-        </Box>
+          <GlossaireShortcut label="Voir les définitions" mt={12} />
+        </Flex>
         <Box flex={1}>
           <Flex justify="space-between" flexDir={["column", null, "row"]}>
             <Flex>

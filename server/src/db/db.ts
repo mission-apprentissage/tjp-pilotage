@@ -35,6 +35,20 @@ export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
     >;
   };
 }
+export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
+  formationScolaireView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<
+      DBSchema["formationNonMaterializedView"][K]
+    >;
+  };
+}
+export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
+  formationApprentissageView: {
+    [K in keyof DBSchema["formationNonMaterializedView"]]: NonNullable<
+      DBSchema["formationNonMaterializedView"][K]
+    >;
+  };
+}
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),

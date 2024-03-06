@@ -12,6 +12,6 @@ const baseStyle = definePartsStyle({
   separator: { marginInlineStart: "8px", marginInlineEnd: "8px" },
 });
 
-export const BreadcrumbTheme = defineMultiStyleConfig({
+export const breadcrumbTheme = defineMultiStyleConfig({
   baseStyle,
 });

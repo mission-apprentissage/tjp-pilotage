@@ -7,6 +7,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { capaciteAnnee } from "../../utils/capaciteAnnee";
 import { effectifAnnee } from "../../utils/effectifAnnee";
 import { hasContinuum } from "../../utils/hasContinuum";
+import { isScolaireFormationHistorique } from "../../utils/isScolaire";
 import { notAnneeCommune } from "../../utils/notAnneeCommune";
 import {
   isHistoriqueCoExistant,
@@ -53,7 +54,7 @@ const findFormationEtablissementsInDb = async ({
   cpc,
   cpcSecteur,
   cpcSousSecteur,
-  libelleFiliere,
+  codeNsf,
   withAnneeCommune,
 }: {
   offset?: number;
@@ -73,12 +74,12 @@ const findFormationEtablissementsInDb = async ({
   cpc?: string[];
   cpcSecteur?: string[];
   cpcSousSecteur?: string[];
-  libelleFiliere?: string[];
+  codeNsf?: string[];
   withAnneeCommune?: string;
   orderBy?: { column: string; order: "asc" | "desc" };
 } = {}) => {
   const result = await kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .innerJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
@@ -133,11 +134,12 @@ const findFormationEtablissementsInDb = async ({
       "dataFormationContinuum.cfd",
       "indicateurSortie.cfdContinuum"
     )
-    .leftJoin(
-      "formationHistorique",
-      "formationHistorique.ancienCFD",
-      "formationView.cfd"
+    .leftJoin("formationHistorique", (join) =>
+      join
+        .onRef("formationHistorique.ancienCFD", "=", "formationView.cfd")
+        .on(isScolaireFormationHistorique)
     )
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .selectAll("etablissement")
     .select((eb) => [
       "formationView.cfd",
@@ -146,7 +148,7 @@ const findFormationEtablissementsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleFiliere",
+      "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelleDepartement as departement",
       "etablissement.codeRegion",
@@ -194,7 +196,7 @@ const findFormationEtablissementsInDb = async ({
       isHistoriqueCoExistant(eb, rentreeScolaire[0]).as(
         "isHistoriqueCoExistant"
       ),
-      "formationHistorique.codeFormationDiplome as formationRenovee",
+      "formationHistorique.cfd as formationRenovee",
     ])
     .select((eb) =>
       eb
@@ -312,8 +314,8 @@ const findFormationEtablissementsInDb = async ({
       return q.where("formationView.cpcSousSecteur", "in", cpcSousSecteur);
     })
     .$call((q) => {
-      if (!libelleFiliere) return q;
-      return q.where("formationView.libelleFiliere", "in", libelleFiliere);
+      if (!codeNsf) return q;
+      return q.where("formationView.codeNsf", "in", codeNsf);
     })
     .where(notPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
@@ -327,8 +329,8 @@ const findFormationEtablissementsInDb = async ({
       "formationView.cpc",
       "formationView.cpcSecteur",
       "formationView.cpcSousSecteur",
-      "formationView.libelleFiliere",
-      "formationHistorique.codeFormationDiplome",
+      "nsf.libelleNsf",
+      "formationHistorique.cfd",
       "etablissement.id",
       "departement.codeDepartement",
       "indicateurEntree.rentreeScolaire",
@@ -377,7 +379,6 @@ const findFiltersInDb = async ({
   cpc,
   cpcSecteur,
   cpcSousSecteur,
-  libelleFiliere,
   rentreeScolaire = [CURRENT_RENTREE],
 }: {
   codeRegion?: string[];
@@ -392,11 +393,10 @@ const findFiltersInDb = async ({
   cpc?: string[];
   cpcSecteur?: string[];
   cpcSousSecteur?: string[];
-  libelleFiliere?: string[];
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
-    .selectFrom("formationView")
+    .selectFrom("formationScolaireView as formationView")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.cfd",
@@ -674,20 +674,10 @@ const findFiltersInDb = async ({
     )
     .execute();
 
-  const libelleFilieres = await base
-    .select([
-      "formationView.libelleFiliere as label",
-      "formationView.libelleFiliere as value",
-    ])
-    .where("formationView.libelleFiliere", "is not", null)
-    .where((eb) =>
-      eb.or([
-        eb.and([]),
-        libelleFiliere
-          ? eb("formationView.libelleFiliere", "in", libelleFiliere)
-          : sql<boolean>`false`,
-      ])
-    )
+  const libellesNsf = await base
+    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
+    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
+    .where("nsf.libelleNsf", "is not", null)
     .execute();
 
   return {
@@ -703,7 +693,7 @@ const findFiltersInDb = async ({
     cpcs: cpcs.map(cleanNull),
     cpcSecteurs: cpcSecteurs.map(cleanNull),
     cpcSousSecteurs: cpcSousSecteurs.map(cleanNull),
-    libelleFilieres: libelleFilieres.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
   };
 };
 

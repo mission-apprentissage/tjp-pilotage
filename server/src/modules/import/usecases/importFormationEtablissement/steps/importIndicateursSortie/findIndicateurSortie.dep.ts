@@ -8,7 +8,7 @@ export const findIndicateurSortie = ({
   millesimeSortie,
 }: {
   cfd: string;
-  codeDispositif: string;
+  codeDispositif: string | null;
   uai: string;
   millesimeSortie: string;
 }) =>
@@ -22,7 +22,10 @@ export const findIndicateurSortie = ({
     .selectAll("indicateurSortie")
     .select("formationEtablissement.cfd")
     .where("cfd", "=", cfd)
-    .where("dispositifId", "=", codeDispositif)
+    .$call((eb) => {
+      if (!codeDispositif) return eb.where("dispositifId", "is", null);
+      return eb.where("dispositifId", "=", codeDispositif);
+    })
     .where("UAI", "=", uai)
     .where("millesimeSortie", "=", millesimeSortie)
     .executeTakeFirst()

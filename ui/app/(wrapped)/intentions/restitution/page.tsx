@@ -19,6 +19,7 @@ import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
+const EXPORT_LIMIT = 1_000_000;
 
 const TableHeader = ({
   page,
@@ -116,12 +117,14 @@ export default () => {
     value: Filters[keyof Filters]
   ) => {
     if (type === "codeRegion" && value != null) {
-      setCodeRegionFilter(value[0] ?? "");
+      setCodeRegionFilter((value as string[])[0] ?? "");
     }
     if (type === "rentreeScolaire" && value != null)
-      setRentreeScolaireFilter(value[0] ?? "");
+      setRentreeScolaireFilter((value as string[])[0] ?? "");
     if (type === "status" && value != null)
-      setStatutFilter([value[0] as "draft" | "submitted" | "refused"]);
+      setStatutFilter([
+        (value as string[])[0] as "draft" | "submitted" | "refused",
+      ]);
   };
 
   const handleFilters = (
@@ -134,16 +137,21 @@ export default () => {
     });
   };
 
+  const getIntentionsStatsQueryParameters = (
+    qLimit: number,
+    qOffset?: number
+  ) => ({
+    ...filters,
+    ...order,
+    offset: qOffset,
+    limit: qLimit,
+  });
+
   const { data, isLoading: isLoading } = client
     .ref("[GET]/intentions/stats")
     .useQuery(
       {
-        query: {
-          ...filters,
-          ...order,
-          offset: page * PAGE_SIZE,
-          limit: PAGE_SIZE,
-        },
+        query: getIntentionsStatsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
       },
       {
         keepPreviousData: true,
@@ -189,7 +197,7 @@ export default () => {
           onExport={async () => {
             trackEvent("restitution-demandes:export");
             const data = await client.ref("[GET]/intentions/stats").query({
-              query: { ...filters, ...order, limit: 10000000 },
+              query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
             });
             downloadCsv(
               "demandes_stats_export.csv",

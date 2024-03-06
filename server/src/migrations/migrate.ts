@@ -16,9 +16,11 @@ export const migrateDownDB = async () => {
   const { results, error } = await migrator.migrateDown();
   results?.forEach((it) => {
     if (it.status === "Success") {
-      console.log(`migration "${it.migrationName}" was executed successfully`);
+      console.log(
+        `migration "${it.migrationName}" was executed successfully (DOWN)`
+      );
     } else if (it.status === "Error") {
-      console.error(`failed to execute migration "${it.migrationName}"`);
+      console.error(`failed to execute migration "${it.migrationName}" (DOWN)`);
     }
   });
   if (error) {
@@ -35,9 +37,11 @@ export async function migrateToLatest(keepAlive?: boolean) {
 
   results?.forEach((it) => {
     if (it.status === "Success") {
-      console.log(`migration "${it.migrationName}" was executed successfully`);
+      console.log(
+        `migration "${it.migrationName}" was executed successfully (UP)`
+      );
     } else if (it.status === "Error") {
-      console.error(`failed to execute migration "${it.migrationName}"`);
+      console.error(`failed to execute migration "${it.migrationName}" (UP)`);
     }
   });
 
@@ -46,7 +50,7 @@ export async function migrateToLatest(keepAlive?: boolean) {
   }
 
   if (error) {
-    console.error("failed to migrate");
+    console.error("failed to migrate up");
     console.error(error);
     process.exit(1);
   }

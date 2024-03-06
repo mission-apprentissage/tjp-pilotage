@@ -8,11 +8,11 @@ import { z } from "zod";
 import { basepath } from "./basepath";
 import { migrateDownDB, migrateToLatest } from "./migrations/migrate";
 import { createUser } from "./modules/core/usecases/createUser/createUser.usecase";
+import { LineTypes } from "./modules/import/repositories/rawData.repository";
 import { importConstatRentree } from "./modules/import/usecases/importConstatRentree/importConstatRentree.usecase";
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
-import { refreshFormationMaterializedView } from "./modules/import/usecases/importDiplomesProfessionnels/refreshFormationView.dep";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -20,8 +20,10 @@ import { importIJData } from "./modules/import/usecases/importIJData/importIJDat
 import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
+import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
+import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 
 cli.command("migrateDB").action(async () => {
   await migrateToLatest();
@@ -129,7 +131,7 @@ cli
         ),
       });
 
-    const getImports = (type: string, years?: string[]) => {
+    const getImports = (type: keyof LineTypes, years?: string[]) => {
       if (!years) {
         return { [type]: () => getImport(type) };
       }
@@ -146,12 +148,7 @@ cli
       ...getImports("regroupements"),
       ...getImports("attractivite_capacite", ["2021", "2022", "2023"]),
       ...getImports("BTS_attractivite_capacite", ["2022", "2023"]),
-      ...getImports("constat", [
-        "2020",
-        "2021",
-        "2022",
-        "2023"
-      ]),
+      ...getImports("constat", ["2020", "2021", "2022", "2023"]),
       ...getImports("nMef"),
       ...getImports("nNiveauFormationDiplome_"),
       ...getImports("nDispositifFormation_"),
@@ -159,10 +156,17 @@ cli
       ...getImports("familleMetiers"),
       ...getImports("optionsBTS"),
       ...getImports("diplomesProfessionnels"),
+      ...getImports("offres_apprentissage"),
       ...getImports("nFormationDiplome_"),
+      ...getImports("vFormationDiplome_"),
       ...getImports("lyceesACCE"),
       ...getImports("chomage_regional_INSEE"),
       ...getImports("chomage_departemental_INSEE"),
+      ...getImports("onisep_structures_denseignement_secondaire"),
+      ...getImports("onisep_structures_denseignement_superieur"),
+      ...getImports("n_categorie_specialite_"),
+      ...getImports("n_domaine_specialite_"),
+      ...getImports("n_groupe_specialite_"),
     };
 
     if (filename) {
@@ -181,15 +185,16 @@ cli
     const usecases = {
       importLieuxGeographiques,
       importNiveauxDiplome,
+      importNSF,
       importDispositifs,
       importFamillesMetiers,
       importDataEtablissements,
       importDataFormations,
       importConstatRentree,
       importDiplomesProfessionnels,
-      refreshFormationMaterializedView,
       importIndicateursRegion,
-      importIndicateursDepartement
+      importIndicateursDepartement,
+      refreshViews,
     };
 
     if (usecaseName) {
@@ -201,17 +206,26 @@ cli
     }
   });
 
-cli
-  .command("importIJ")
-  .action(async () => {
-    await importIJData();
-  });
+cli.command("importIJ").action(async () => {
+  await importIJData();
+});
 
 cli
   .command("importFormations")
-  .argument("[fetchIj]", "if true, refetch the ij data", true)
-  .action(async () => {
-    await importFormations();
+  .argument("[usecase]")
+  .action(async (usecaseName: string) => {
+    const usecases = {
+      importFormations,
+      refreshViews,
+    };
+
+    if (usecaseName) {
+      await usecases[usecaseName as keyof typeof usecases]();
+    } else {
+      for (const usecase of Object.values(usecases)) {
+        await usecase();
+      }
+    }
   });
 
 cli.parse(process.argv);

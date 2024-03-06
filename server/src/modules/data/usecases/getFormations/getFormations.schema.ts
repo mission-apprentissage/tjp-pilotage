@@ -28,7 +28,7 @@ export const FormationLineSchema = z.object({
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
   cpcSousSecteur: z.string().optional(),
-  libelleFiliere: z.string().optional(),
+  libelleNsf: z.string().optional(),
   continuum: z
     .object({
       cfd: z.string(),
@@ -55,7 +55,7 @@ export const getFormationSchema = {
     cpc: z.array(z.string()).optional(),
     cpcSecteur: z.array(z.string()).optional(),
     cpcSousSecteur: z.array(z.string()).optional(),
-    libelleFiliere: z.array(z.string()).optional(),
+    codeNsf: z.array(z.string()).optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationLineSchema.keyof().optional(),
     withEmptyFormations: z.coerce.boolean().optional(),
@@ -78,7 +78,7 @@ export const getFormationSchema = {
         cpcs: z.array(OptionSchema),
         cpcSecteurs: z.array(OptionSchema),
         cpcSousSecteurs: z.array(OptionSchema),
-        libelleFilieres: z.array(OptionSchema),
+        libellesNsf: z.array(OptionSchema),
       }),
       formations: z.array(FormationLineSchema),
     }),

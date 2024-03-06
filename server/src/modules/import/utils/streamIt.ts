@@ -42,7 +42,7 @@ export const streamIt = <T>(
     final: async (callback) => {
       await onFinal?.();
       callback();
-    }
+    },
   });
 
   return pipeline(readable, writable);

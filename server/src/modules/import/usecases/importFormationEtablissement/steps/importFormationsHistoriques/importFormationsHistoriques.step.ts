@@ -35,7 +35,7 @@ export const [importFormationHistorique] = inject(
     findDataFormation,
   },
   (deps) =>
-    async ({ cfd }: { cfd: string }) => {
+    async ({ cfd, voie = "scolaire" }: { cfd: string; voie?: string }) => {
       const formationData = await deps.findRawData({
         type: "nFormationDiplome_",
         filter: { FORMATION_DIPLOME: cfd },
@@ -50,11 +50,12 @@ export const [importFormationHistorique] = inject(
         const ancienneFormation = {
           nouveauCFD: cfd,
           codeFormationDiplome: ancienCfd,
+          voie,
           libelleFormation: dataFormation.libelleFormation,
           codeNiveauDiplome: dataFormation.codeNiveauDiplome,
           dateOuverture: dataFormation.dateOuverture,
           dateFermeture: dataFormation.dateFermeture,
-          libelleFiliere: dataFormation.libelleFiliere,
+          libelleFiliere: dataFormation.libelleNsf,
           CPC: dataFormation.cpc,
           cpcSecteur: dataFormation.cpcSecteur,
           cpcSousSecteur: dataFormation.cpcSousSecteur,

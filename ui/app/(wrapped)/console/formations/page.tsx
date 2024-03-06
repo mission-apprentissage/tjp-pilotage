@@ -32,6 +32,7 @@ import { OrderIcon } from "../../../../components/OrderIcon";
 import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
 import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import {
   FormationLineContent,
   FormationLineLoader,
@@ -40,6 +41,7 @@ import {
 import { Filters, LineId, Order } from "./types";
 
 const PAGE_SIZE = 30;
+const EXPORT_LIMIT = 1_000_000;
 
 const FORMATIONS_COLUMNS = {
   rentreeScolaire: "RS",
@@ -60,7 +62,7 @@ const FORMATIONS_COLUMNS = {
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
   cpcSousSecteur: "CPC Sous Secteur",
-  libelleFiliere: "Secteur d’activité",
+  libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
@@ -100,26 +102,30 @@ export default function Formations() {
   );
 
   useEffect(() => {
-    if (codeRegionFilter != "") {
+    if (codeRegionFilter !== "") {
       filters.codeRegion = [codeRegionFilter];
       setSearchParams({ filters: filters, withAnneeCommune });
     }
   }, []);
 
+  const getFormationsQueryParameters = (qLimit: number, qOffset?: number) => ({
+    ...filters,
+    ...order,
+    offset: qOffset,
+    limit: qLimit,
+    withAnneeCommune: withAnneeCommune?.toString() ?? "true",
+  });
+
   const { data, isFetching } = client.ref("[GET]/formations").useQuery(
     {
-      query: {
-        ...order,
-        offset: page * PAGE_SIZE,
-        limit: PAGE_SIZE,
-        ...filters,
-        withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-      },
+      query: getFormationsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     { staleTime: 10000000, keepPreviousData: true }
   );
 
   const trackEvent = usePlausible();
+
+  const { openGlossaire } = useGlossaireContext();
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("formations:ordre", { props: { colonne: column } });
@@ -140,7 +146,7 @@ export default function Formations() {
     value: Filters[keyof Filters]
   ) => {
     if (type === "codeRegion" && value != null)
-      setCodeRegionFilter(value[0] ?? "");
+      setCodeRegionFilter((value as string[])[0] ?? "");
   };
 
   const handleFilters = (
@@ -186,7 +192,7 @@ export default function Formations() {
             order: "desc",
             orderBy: "rentreeScolaire",
             rentreeScolaire: RENTREES_SCOLAIRES.filter(
-              (rentree) => rentree != CURRENT_RENTREE
+              (rentree) => rentree !== CURRENT_RENTREE
             ),
             withEmptyFormations: false,
           },
@@ -329,13 +335,13 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          onClose={filterTracker("libelleFiliere")}
+          onClose={filterTracker("codeNsf")}
           width="12rem"
-          onChange={(selected) => handleFilters("libelleFiliere", selected)}
-          options={data?.filters.libelleFilieres}
-          value={filters.libelleFiliere ?? []}
+          onChange={(selected) => handleFilters("codeNsf", selected)}
+          options={data?.filters.libellesNsf}
+          value={filters.codeNsf ?? []}
         >
-          Secteur d’activité
+          Domaine de formation (NSF)
         </Multiselect>
         <Flex w="24rem" mr="3">
           <Checkbox
@@ -410,7 +416,11 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif1" />
                   {FORMATIONS_COLUMNS.effectif1}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={() => openGlossaire("effectifs")}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -419,7 +429,11 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif2" />
                   {FORMATIONS_COLUMNS.effectif2}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={() => openGlossaire("effectifs")}
+                  />
                 </Th>
                 <Th
                   isNumeric
@@ -428,7 +442,11 @@ export default function Formations() {
                 >
                   <OrderIcon {...order} column="effectif3" />
                   {FORMATIONS_COLUMNS.effectif3}
-                  <TooltipIcon ml="1" label="Nb d'élèves" />
+                  <TooltipIcon
+                    ml="1"
+                    label="Nb d'élèves"
+                    onClick={() => openGlossaire("effectifs")}
+                  />
                 </Th>
                 <Th
                   cursor="pointer"
@@ -440,14 +458,16 @@ export default function Formations() {
                   <TooltipIcon
                     ml="1"
                     label={
-                      <>
-                        <Box>
+                      <Box>
+                        <Text>
                           Le ratio entre le nombre de premiers voeux et la
-                          capacité de la formation.
-                        </Box>
+                          capacité de la formation au niveau régional.
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
                         <TauxPressionScale />
-                      </>
+                      </Box>
                     }
+                    onClick={() => openGlossaire("taux-de-pression")}
                   />
                 </Th>
                 <Th
@@ -459,7 +479,16 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxRemplissage}
                   <TooltipIcon
                     ml="1"
-                    label="Le ratio entre l’effectif d’entrée en formation et sa capacité."
+                    label={
+                      <Box>
+                        <Text>
+                          Le ratio entre l’effectif d’entrée en formation et sa
+                          capacité.
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
+                      </Box>
+                    }
+                    onClick={() => openGlossaire("taux-de-remplissage")}
                   />
                 </Th>
                 <Th
@@ -471,7 +500,16 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
-                    label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude."
+                    label={
+                      <Box>
+                        <Text>
+                          La part de ceux qui sont en emploi 6 mois après leur
+                          sortie d’étude.
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
+                      </Box>
+                    }
+                    onClick={() => openGlossaire("taux-emploi-6-mois")}
                   />
                 </Th>
                 <Th
@@ -483,7 +521,16 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
-                    label="Tout élève inscrit à N+1 (réorientation et redoublement compris)."
+                    label={
+                      <Box>
+                        <Text>
+                          Tout élève inscrit à N+1 (réorientation et
+                          redoublement compris).
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
+                      </Box>
+                    }
+                    onClick={() => openGlossaire("taux-poursuite-etudes")}
                   />
                 </Th>
                 <Th
@@ -495,7 +542,17 @@ export default function Formations() {
                   {FORMATIONS_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
-                    label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+                    label={
+                      <Box>
+                        <Text>
+                          (nombre d'élèves inscrits en formation + nombre
+                          d'élèves en emploi) / nombre d'élèves en entrée en
+                          dernière année de formation.
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
+                      </Box>
+                    }
+                    onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
                 <Th
@@ -531,18 +588,31 @@ export default function Formations() {
                   <OrderIcon {...order} column="cpcSousSecteur" />
                   {FORMATIONS_COLUMNS.cpcSousSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("libelleFiliere")}
-                >
-                  <OrderIcon {...order} column="libelleFiliere" />
-                  {FORMATIONS_COLUMNS.libelleFiliere}
+                <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
+                  <OrderIcon {...order} column="libelleNsf" />
+                  {FORMATIONS_COLUMNS.libelleNsf}
+                  <TooltipIcon
+                    ml="1"
+                    label="cliquez pour plus d'infos."
+                    onClick={() => openGlossaire("domaine-de-formation-nsf")}
+                  />
                 </Th>
                 <Th>
                   {FORMATIONS_COLUMNS.positionQuadrant}
                   <TooltipIcon
                     ml="1"
-                    label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
+                    label={
+                      <Box>
+                        <Text>
+                          Positionnement du point de la formation dans le
+                          quadrant par rapport aux moyennes régionales des taux
+                          d'emploi et de poursuite d'études appliquées au niveau
+                          de diplôme.
+                        </Text>
+                        <Text>Cliquez pour plus d'infos.</Text>
+                      </Box>
+                    }
+                    onClick={() => openGlossaire("quadrant")}
                   />
                 </Th>
               </Tr>
@@ -597,12 +667,7 @@ export default function Formations() {
         onExport={async () => {
           trackEvent("formations:export");
           const data = await client.ref("[GET]/formations").query({
-            query: {
-              ...filters,
-              ...order,
-              withAnneeCommune: withAnneeCommune?.toString() ?? "true",
-              limit: 1000000,
-            },
+            query: getFormationsQueryParameters(EXPORT_LIMIT),
           });
           downloadCsv(
             "formations_export.csv",
