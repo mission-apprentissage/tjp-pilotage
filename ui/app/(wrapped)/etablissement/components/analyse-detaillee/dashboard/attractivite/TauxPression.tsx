@@ -34,18 +34,18 @@ export const TauxPression = ({
   const getData = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
     if (chiffresEntreeOffre) {
       return {
-        établissement: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsolute(value.tauxPression)
-        ),
-        départemental: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsolute(value.tauxPressionDepartemental)
-        ),
-        régional: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsolute(value.tauxPressionRegional)
-        ),
-        national: Object.values(chiffresEntreeOffre).map((value) =>
-          formatAbsolute(value.tauxPressionNational)
-        ),
+        établissement: Object.values(chiffresEntreeOffre)
+          .map((value) => formatAbsolute(value.tauxPression))
+          .filter((value) => value),
+        départemental: Object.values(chiffresEntreeOffre)
+          .map((value) => formatAbsolute(value.tauxPressionDepartemental))
+          .filter((value) => value),
+        régional: Object.values(chiffresEntreeOffre)
+          .map((value) => formatAbsolute(value.tauxPressionRegional))
+          .filter((value) => value),
+        national: Object.values(chiffresEntreeOffre)
+          .map((value) => formatAbsolute(value.tauxPressionNational))
+          .filter((value) => value),
       };
     }
     return {
@@ -58,7 +58,13 @@ export const TauxPression = ({
 
   const getCategories = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
     if (chiffresEntreeOffre) {
-      return Object.keys(chiffresEntreeOffre);
+      return Object.keys(chiffresEntreeOffre).filter(
+        (key) =>
+          chiffresEntreeOffre[key].tauxPression ||
+          chiffresEntreeOffre[key].tauxPressionNational ||
+          chiffresEntreeOffre[key].tauxPressionRegional ||
+          chiffresEntreeOffre[key].tauxPressionDepartemental
+      );
     }
   };
 

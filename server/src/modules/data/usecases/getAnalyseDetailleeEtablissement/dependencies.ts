@@ -93,7 +93,11 @@ const getFormationsParNiveauDeDiplome = async ({
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "libelleNiveauDiplome",
-      "libelleFormation",
+      sql<string>`CONCAT(
+        ${eb.ref("dataFormation.libelleFormation")},
+        ' ',
+        ${eb.ref("dispositif.libelleDispositif")}
+      )`.as("libelleFormation"),
       "voie",
       "libelleDispositif",
       "dataFormation.codeNiveauDiplome",
@@ -242,12 +246,13 @@ const getChiffresEntree = async ({
       effectifAnnee({ alias: "ie", annee: sql`'0'` }).as("effectifAnnee1"),
       effectifAnnee({ alias: "ie", annee: sql`'1'` }).as("effectifAnnee2"),
       effectifAnnee({ alias: "ie", annee: sql`'2'` }).as("effectifAnnee3"),
-      selectTauxPression("ie", "nd").as("tauxPression"),
+      selectTauxPression("ie", "nd", true).as("tauxPression"),
       withTauxPressionNat({
         eb: eb2,
         cfdRef: "dataFormation.cfd",
         codeDispositifRef: "codeDispositif",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionNational"),
       withTauxPressionReg({
         eb: eb2,
@@ -255,6 +260,7 @@ const getChiffresEntree = async ({
         codeDispositifRef: "codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionRegional"),
       withTauxPressionDep({
         eb: eb2,
@@ -262,6 +268,7 @@ const getChiffresEntree = async ({
         codeDispositifRef: "codeDispositif",
         codeDepartementRef: "dataEtablissement.codeDepartement",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionDepartemental"),
       selectTauxRemplissage("ie").as("tauxRemplissage"),
     ])

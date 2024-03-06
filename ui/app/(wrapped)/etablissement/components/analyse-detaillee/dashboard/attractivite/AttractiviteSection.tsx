@@ -54,8 +54,10 @@ export const AttractiviteSection = ({
         <GridItem colSpan={1}>
           <Capacite
             capacite={chiffresEntreeOffre?.[CURRENT_RENTREE]?.capacite}
-            effectifEntree={
-              chiffresEntreeOffre?.[CURRENT_RENTREE]?.effectifEntree
+            capaciteAnneePrecedente={
+              chiffresEntreeOffre?.[
+                getRentreeScolairePrecedente(CURRENT_RENTREE)
+              ]?.capacite
             }
           />
         </GridItem>
@@ -64,11 +66,7 @@ export const AttractiviteSection = ({
             effectifEntree={
               chiffresEntreeOffre?.[CURRENT_RENTREE]?.effectifEntree
             }
-            effectifEntreeAnneePrecedente={
-              chiffresEntreeOffre?.[
-                getRentreeScolairePrecedente(CURRENT_RENTREE)
-              ]?.effectifEntree
-            }
+            capacite={chiffresEntreeOffre?.[CURRENT_RENTREE]?.capacite}
           />
         </GridItem>
         <GridItem colSpan={1}>

@@ -90,7 +90,8 @@ export const LineChart = ({
           data: Object.values(data[key]).map((value) => value),
           color: colors[key] ?? "inherit",
           showSymbol: true,
-          symbolSize: 0,
+          symbol: "circle",
+          symbolSize: categories?.length && categories.length > 1 ? 0 : 6,
           label: {
             show: key === mainKey,
             position: "top",
