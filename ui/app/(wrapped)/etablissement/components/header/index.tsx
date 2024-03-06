@@ -1,28 +1,27 @@
 import { Grid } from "@chakra-ui/react";
 
 import { useEtablissementContext } from "../../context/etablissementContext";
-import { AccesRapide } from "./accesRapide";
-import { Coordonnees } from "./coordonnees";
-import { DonneesIncompletes } from "./donneesIncompletes";
-import { Filieres } from "./filieres";
+import { AccesRapide } from "./components/accesRapide";
+import { Coordonnees } from "./components/coordonnees";
+import { Filieres } from "./components/filieres";
+import { IndicateursSection } from "./components/indicateurs";
+import { Libelle } from "./components/libelle";
+import { SearchInput } from "./components/searchInput";
 import { useEtablissementHeader } from "./hook";
-import { Indicateurs } from "./indicateurs";
-import { Libelle } from "./libelle";
-import { SearchInput } from "./searchInput";
 
 export const EtablissementHeader = () => {
   const { uai } = useEtablissementContext();
-  const { filieres, informations, search } = useEtablissementHeader(uai) || {};
+
+  const { nsfs, informations, indicateurs } = useEtablissementHeader(uai) || {};
 
   return (
-    <Grid templateColumns={"repeat(12,1fr)"}>
+    <Grid templateColumns={"repeat(12,1fr)"} py={"32px"}>
       <Libelle informations={informations} />
-      <SearchInput search={search} />
+      <SearchInput uai={uai} />
       <Coordonnees informations={informations} />
-      <Filieres filieres={filieres} />
+      <Filieres nsfs={nsfs} />
       <AccesRapide uai={uai} />
-      <Indicateurs millessimes={["2022", "2023"]} />
-      <DonneesIncompletes isMissingDatas={true} />
+      <IndicateursSection indicateurs={indicateurs} />
     </Grid>
   );
 };
