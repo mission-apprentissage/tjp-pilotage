@@ -14,8 +14,9 @@ import Link from "next/link";
 import { useMemo } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { Quadrant } from "../../../../../../components/Quadrant";
-import { TooltipIcon } from "../../../../../../components/TooltipIcon";
+import { Quadrant } from "@/components/Quadrant";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import {
   ChiffresEntree,
   ChiffresIJ,

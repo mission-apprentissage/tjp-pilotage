@@ -2,12 +2,12 @@ import { Flex, Img } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { formatTaux } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
+import { formatTaux } from "../../formatData";
 
 export const TauxRemplissage = ({
   tauxRemplissage,
