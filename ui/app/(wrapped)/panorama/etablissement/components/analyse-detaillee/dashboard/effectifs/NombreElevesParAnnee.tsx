@@ -1,8 +1,8 @@
-import { CounterChart } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/components/CounterChart";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
+import { CounterChart } from "../../components/CounterChart";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";
 import { ChiffresEntreeOffre } from "../../types";
 

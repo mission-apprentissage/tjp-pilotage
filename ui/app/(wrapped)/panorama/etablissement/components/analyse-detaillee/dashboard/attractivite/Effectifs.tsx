@@ -1,9 +1,9 @@
 import { Flex } from "@chakra-ui/react";
 
-import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
 export const Effectifs = ({

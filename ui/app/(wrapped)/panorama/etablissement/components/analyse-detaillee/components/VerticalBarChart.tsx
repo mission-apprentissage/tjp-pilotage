@@ -2,10 +2,9 @@ import { AspectRatio, Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 import { CURRENT_IJ_MILLESIME } from "shared";
+import { getMillesime } from "shared/utils/getMillesime";
 
-import { formatMillesime } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
-
-import { getMillesime } from "../../../../../../../shared/utils/getMillesime";
+import { formatMillesime } from "../formatData";
 
 export const VerticalBarChart = ({
   data,
