@@ -67,11 +67,16 @@ const EtablissementAnalyseDetaillee = () => {
     );
 
   useEffect(() => {
-    if (searchParams.offre) setOffre(searchParams.offre);
+    if (
+      searchParams.offre &&
+      data?.formations &&
+      Object.keys(data?.formations).includes(searchParams.offre)
+    )
+      setOffre(searchParams.offre);
     else {
       setOffre(Object.keys(data?.formations ?? [])[0]);
     }
-  }, [data]);
+  }, [data, filters]);
 
   const handleFilters = (
     type: keyof Filters,

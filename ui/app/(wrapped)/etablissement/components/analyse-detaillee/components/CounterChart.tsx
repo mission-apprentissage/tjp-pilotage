@@ -39,7 +39,7 @@ export const CounterChart = ({
             fontSize={"11px"}
             lineHeight={"14px"}
             fontWeight={"400"}
-            color={"grey.450"}
+            color={"grey.425"}
           >
             Indisponible
           </Flex>

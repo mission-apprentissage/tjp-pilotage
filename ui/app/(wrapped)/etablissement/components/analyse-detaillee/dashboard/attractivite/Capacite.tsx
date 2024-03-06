@@ -42,11 +42,11 @@ export const Capacite = ({
 
   return (
     <DashboardCard
-      label="Capacité - Année 1"
+      label="Capacité - en entrée"
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Capacité en première année de formation"
+          label="Capacité en entrée en première année de formation"
           onClick={() => openGlossaire("capacite")}
         />
       }

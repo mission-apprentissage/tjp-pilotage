@@ -45,11 +45,11 @@ export const Effectifs = ({
   };
   return (
     <DashboardCard
-      label="Effectifs année 1 (Constat Rentrée 2023)"
+      label="Effectifs - en entrée (Constat Rentrée 2023)"
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Effectifs en première année de formation"
+          label="Effectifs en entrée en première année de formation"
           onClick={() => openGlossaire("effectifs")}
         />
       }

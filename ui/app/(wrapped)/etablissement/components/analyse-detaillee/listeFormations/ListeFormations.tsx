@@ -34,12 +34,7 @@ export const ListeFormations = ({
   );
 
   return (
-    <Box
-      borderRightWidth={1}
-      borderRightColor={"grey.925"}
-      overflowY="auto"
-      maxH={"84rem"}
-    >
+    <Box borderRightWidth={1} borderRightColor={"grey.925"}>
       <Flex
         flex={1}
         flexDirection={"row"}
@@ -64,8 +59,7 @@ export const ListeFormations = ({
                 <ListItem
                   key={`${formation.offre}`}
                   ms={3}
-                  p={1}
-                  ps={2}
+                  p={"8px 16px 8px 8px"}
                   cursor={"pointer"}
                   onClick={() => {
                     setOffre(formation.offre);
