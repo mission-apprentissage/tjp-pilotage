@@ -8,7 +8,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 
-import { Informations } from "./types";
+import { Informations } from "../types";
 
 export const Coordonnees = ({
   informations,

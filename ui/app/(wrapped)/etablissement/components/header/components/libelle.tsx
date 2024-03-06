@@ -1,6 +1,6 @@
 import { GridItem, Heading } from "@chakra-ui/react";
 
-import { Informations } from "./types";
+import { Informations } from "../types";
 
 export const Libelle = ({ informations }: { informations: Informations }) => {
   return (
