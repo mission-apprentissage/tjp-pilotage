@@ -1,6 +1,8 @@
+import { Point } from "geojson";
 import { useEffect, useState } from "react";
 import {
   CircleLayer,
+  GeoJSONSource,
   Layer,
   MapGeoJSONFeature,
   MapMouseEvent,
@@ -18,7 +20,12 @@ interface EtabsProps {
 }
 
 export const Etabs = ({ etabs }: EtabsProps) => {
-  const [popupState, setPopupState] = useState({ show: false, lat: 0, lng: 0 });
+  const [popupState, setPopupState] = useState({
+    show: false,
+    lat: 0,
+    lng: 0,
+    text: "",
+  });
   const { current: map } = useMap();
 
   const geojson = {
@@ -28,6 +35,9 @@ export const Etabs = ({ etabs }: EtabsProps) => {
         type: "point",
         coordinates: [etab["longitude (X)"], etab["latitude (Y)"]],
       },
+      properties: {
+        uai: etab["code UAI"],
+      },
     })),
   };
 
@@ -35,6 +45,7 @@ export const Etabs = ({ etabs }: EtabsProps) => {
     id: "clusters",
     type: "circle",
     source: "data",
+    filter: ["has", "point_count"],
     paint: {
       "circle-color": [
         "step",
@@ -60,6 +71,16 @@ export const Etabs = ({ etabs }: EtabsProps) => {
     },
   };
 
+  const singlePointLayer: SymbolLayer = {
+    id: "single-points",
+    type: "symbol",
+    source: "data",
+    filter: ["!", ["has", "point_count"]],
+    layout: {
+      "icon-image": "map_point",
+    },
+  };
+
   const onClusterClick = async (
     map: MapRef,
     e: MapMouseEvent & {
@@ -71,7 +92,7 @@ export const Etabs = ({ etabs }: EtabsProps) => {
     });
     const clusterId = features[0].properties.cluster_id;
 
-    const source = await map.getSource("data");
+    const source = (await map.getSource("data")) as GeoJSONSource;
     if (source && "getClusterExpansionZoom" in source) {
       const clusterZoom = await source.getClusterExpansionZoom(clusterId);
       map.easeTo({
@@ -84,12 +105,36 @@ export const Etabs = ({ etabs }: EtabsProps) => {
     }
   };
 
+  const onSinglePointClick = async (
+    map: MapRef,
+    e: MapMouseEvent & {
+      features?: MapGeoJSONFeature[];
+    }
+  ) => {
+    const features = map.queryRenderedFeatures(e.point, {
+      layers: [singlePointLayer.id],
+    });
+    const point = features[0].geometry as Point;
+    setPopupState({
+      show: true,
+      lng: point.coordinates[0],
+      lat: point.coordinates[1],
+      text: features[0].properties?.uai,
+    });
+  };
+
   useEffect(() => {
     if (map !== undefined) {
-      map.on("load", () => {
+      map.on("load", async () => {
+        map.removeImage("map_point");
+        const img = await map.loadImage("/map_point.png");
+        map.addImage("map_point", img.data);
         map.off("click", clusterLayer.id, (e) => onClusterClick(map, e));
         map.on("click", clusterLayer.id, (e) => onClusterClick(map, e));
-        map.on("click", clusterLayer.id, (e) => onClusterClick(map, e));
+        map.off("click", singlePointLayer.id, (e) =>
+          onSinglePointClick(map, e)
+        );
+        map.on("click", singlePointLayer.id, (e) => onSinglePointClick(map, e));
       });
     }
   }, [map]);
@@ -99,6 +144,7 @@ export const Etabs = ({ etabs }: EtabsProps) => {
       <Source id="data" type="geojson" data={geojson} cluster={true} />
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
+      <Layer {...singlePointLayer} />
       {popupState.show && (
         <Popup
           longitude={popupState.lng}
@@ -106,7 +152,7 @@ export const Etabs = ({ etabs }: EtabsProps) => {
           anchor="bottom"
           onClose={() => setPopupState({ ...popupState, show: false })}
         >
-          You are here
+          {popupState.text}
         </Popup>
       )}
     </>
