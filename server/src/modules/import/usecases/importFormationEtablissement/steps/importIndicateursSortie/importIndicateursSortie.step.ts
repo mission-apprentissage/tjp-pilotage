@@ -77,7 +77,7 @@ export const [importIndicateurSortieApprentissage] = inject(
       cfd: string;
     }) => {
       const ijData = await deps.getUaiData({ millesime, uai });
-      const mefData = ijData?.apprentissage[cfd];
+      const mefData = ijData?.apprentissage?.[cfd];
 
       if (!mefData) {
         const continuumData = await getContinuumData({
