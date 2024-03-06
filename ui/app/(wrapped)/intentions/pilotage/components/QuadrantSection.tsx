@@ -414,7 +414,10 @@ export const QuadrantSection = ({
                       />
                     ) : (
                       <TableQuadrant
-                        formations={formations}
+                        formations={formations?.map((formation) => ({
+                          ...formation,
+                          effectif: formation.differencePlaces,
+                        }))}
                         handleClick={setFormationId}
                         currentCfd={currentCfd}
                         order={order}
