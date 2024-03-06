@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
 export const CounterChart = ({
   data,
@@ -21,7 +21,11 @@ export const CounterChart = ({
             mt="auto"
           >
             {data}
-            {type === "percentage" ? "%" : ""}
+            {type === "percentage" && (
+              <Text fontSize={"12px"} lineHeight={"14px"} fontWeight={"400"}>
+                %
+              </Text>
+            )}
           </Flex>
           <Flex
             shrink={0}

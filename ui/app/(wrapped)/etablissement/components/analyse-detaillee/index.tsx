@@ -71,6 +71,7 @@ const EtablissementAnalyseDetaillee = () => {
   useEffect(() => {
     if (
       searchParams.offre &&
+      !isLoading &&
       !Object.keys(data?.formations ?? {}).includes(searchParams.offre)
     )
       setOffreFilter(Object.keys(data?.formations ?? [])[0]);

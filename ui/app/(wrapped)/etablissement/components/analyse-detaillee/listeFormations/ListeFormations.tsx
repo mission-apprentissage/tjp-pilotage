@@ -7,7 +7,6 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import _ from "lodash";
 
 import { Formation } from "../types";
@@ -98,14 +97,11 @@ export const ListeFormations = ({
                           .replace("2nde_commune", "Seconde commune")
                           .replace("1ere_commune", "Première commune")}
                       >
-                        <Text color="bluefrance.113" ms={2} me={1} my="auto">
-                          <Icon
-                            icon="ri:node-tree"
-                            color="inherit"
-                            width={"16px"}
-                            height={"16px"}
-                          />
-                        </Text>
+                        <Badge variant={"info"} size="xs">
+                          {formation.typeFamille
+                            .replace("2nde_commune", "2nde")
+                            .replace("1ere_commune", "1ère")}
+                        </Badge>
                       </Tooltip>
                     )}
                     {(formation.typeFamille === "specialite" ||
@@ -115,15 +111,18 @@ export const ListeFormations = ({
                           .replace("specialite", "Spécialité")
                           .replace("option", "Option")}
                       >
-                        <Text color="bluefrance.113" ms={2} me={1} my="auto">
-                          <Icon
-                            icon="ri:node-tree"
-                            color="inherit"
-                            width={"16px"}
-                            height={"16px"}
-                            rotate={270}
-                          />
-                        </Text>
+                        <Badge variant={"purpleGlycine"} size="xs">
+                          {formation.typeFamille
+                            .replace("specialite", "Spé")
+                            .replace("option", "Opt")}
+                        </Badge>
+                      </Tooltip>
+                    )}
+                    {formation.voie === "apprentissage" && (
+                      <Tooltip label={"Apprentissage"}>
+                        <Badge variant={"new"} size="xs">
+                          Appr
+                        </Badge>
                       </Tooltip>
                     )}
                   </Flex>

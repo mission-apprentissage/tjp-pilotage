@@ -11,11 +11,18 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
+import { useMemo } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { Quadrant } from "../../../../../../components/Quadrant";
 import { TooltipIcon } from "../../../../../../components/TooltipIcon";
-import { ChiffresEntree, ChiffresIJ, Formation, StatsSortie } from "../types";
+import {
+  ChiffresEntree,
+  ChiffresIJ,
+  ChiffresIJOffreMillesime,
+  Formation,
+  StatsSortie,
+} from "../types";
 import { DonneesDisponiblesSection } from "./DonneesDisponiblesSection";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 const effectifSizes = [
@@ -68,6 +75,25 @@ export const QuadrantSection = ({
         formation.effectif
     );
 
+  const getOffreDimensions = (
+    chiffresIJOffreMillesime?: ChiffresIJOffreMillesime
+  ): Array<"tauxPoursuite" | "tauxInsertion"> | undefined => {
+    const dimensions: Array<"tauxPoursuite" | "tauxInsertion"> = [];
+    if (chiffresIJOffreMillesime?.tauxPoursuite) {
+      dimensions.push("tauxPoursuite");
+    }
+    if (chiffresIJOffreMillesime?.tauxInsertion) {
+      dimensions.push("tauxInsertion");
+    }
+    return dimensions.length ? dimensions : undefined;
+  };
+
+  const offresDimensions: Array<"tauxPoursuite" | "tauxInsertion"> | undefined =
+    useMemo(
+      () => getOffreDimensions(chiffresIJ?.[offre]?.[CURRENT_IJ_MILLESIME]),
+      [offre]
+    );
+
   return (
     <Flex direction={"column"} gap={4}>
       <Flex direction="row" justify={"space-between"}>
@@ -93,6 +119,7 @@ export const QuadrantSection = ({
         filteredFormations={filteredFormations}
         chiffresEntree={chiffresEntree}
       />
+      {/* <DonneesIndisponiblesSection dimensions={offresDimensions} /> */}
       <Flex direction={"column"} m={12} mt={4} gap={2}>
         <Flex direction={"row"} justify="space-between">
           <Flex justify="flex-start" ms={10}>
@@ -151,6 +178,7 @@ export const QuadrantSection = ({
                 setOffre(formation.offre)
               }
               effectifSizes={effectifSizes}
+              dimensions={offresDimensions}
             />
           ) : (
             <Flex>
