@@ -1,6 +1,4 @@
-import { Flex, Img } from "@chakra-ui/react";
-import { CURRENT_RENTREE } from "shared";
-import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
+import { Flex } from "@chakra-ui/react";
 
 import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -10,38 +8,36 @@ import { CounterChart } from "../../components/CounterChart";
 
 export const Effectifs = ({
   effectifEntree,
-  effectifEntreeAnneePrecedente,
+  capacite,
 }: {
   effectifEntree?: number;
-  effectifEntreeAnneePrecedente?: number;
+  capacite?: number;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const getCompareData = () => {
-    if (!effectifEntree || !effectifEntreeAnneePrecedente) return "";
-    if (effectifEntree > effectifEntreeAnneePrecedente) {
+    if (!effectifEntree || !capacite) return "";
+    if (capacite > effectifEntree) {
       return (
         <>
-          <Flex color="success.425">
-            <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${
-              effectifEntree - effectifEntreeAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
-          </Flex>
+          <Flex color="warning.525">{`${
+            capacite - effectifEntree
+          } pl. vacante(s)`}</Flex>
         </>
       );
-    } else if (effectifEntree < effectifEntreeAnneePrecedente) {
+    } else if (capacite < effectifEntree) {
       return (
         <>
-          <Flex color="warning.525">
-            <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${
-              effectifEntree - effectifEntreeAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
-          </Flex>
+          <Flex color="success.425">{`${
+            capacite - effectifEntree
+          } pl. en surnombre`}</Flex>
         </>
       );
     }
-    return "";
+    return (
+      <>
+        <Flex color="grey.625">{`0 pl. vacante`}</Flex>
+      </>
+    );
   };
   return (
     <DashboardCard

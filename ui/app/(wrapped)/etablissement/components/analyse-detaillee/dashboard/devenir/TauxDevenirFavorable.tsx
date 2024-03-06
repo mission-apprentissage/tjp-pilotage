@@ -35,10 +35,16 @@ export const TauxDevenirFavorable = ({
     >
       {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIJOffre).map((millesime) => ({
-            label: formatMillesime(millesime),
-            value: formatTaux(chiffresIJOffre[millesime].tauxDevenirFavorable),
-          }))}
+          data={Object.keys(chiffresIJOffre)
+            .filter(
+              (millesime) => chiffresIJOffre[millesime].tauxDevenirFavorable
+            )
+            .map((millesime) => ({
+              label: formatMillesime(millesime),
+              value: formatTaux(
+                chiffresIJOffre[millesime].tauxDevenirFavorable
+              ),
+            }))}
         />
       ) : (
         <CounterChart />

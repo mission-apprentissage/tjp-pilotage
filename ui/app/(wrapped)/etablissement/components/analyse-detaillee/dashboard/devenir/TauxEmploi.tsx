@@ -36,10 +36,12 @@ export const TauxEmploi = ({
     >
       {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
         <VerticalBarChart
-          data={Object.keys(chiffresIJOffre).map((millesime) => ({
-            label: formatMillesime(millesime),
-            value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
-          }))}
+          data={Object.keys(chiffresIJOffre)
+            .filter((millesime) => chiffresIJOffre[millesime].tauxInsertion)
+            .map((millesime) => ({
+              label: formatMillesime(millesime),
+              value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
+            }))}
         />
       ) : (
         <CounterChart />
