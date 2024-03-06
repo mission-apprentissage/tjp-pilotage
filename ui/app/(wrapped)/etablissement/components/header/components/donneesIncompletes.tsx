@@ -18,7 +18,7 @@ export const DonneesIncompletes = ({
       borderColor={"bluefrance.525"}
       borderLeftWidth={"4px"}
       padding={"16px 28px"}
-      marginTop={"32px"}
+      mt={"32px"}
     >
       <Flex
         direction={"row"}
