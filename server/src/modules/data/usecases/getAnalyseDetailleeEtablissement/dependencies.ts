@@ -93,11 +93,7 @@ const getFormationsParNiveauDeDiplome = async ({
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "libelleNiveauDiplome",
-      sql<string>`CONCAT(
-        ${eb.ref("dataFormation.libelleFormation")},
-        ' ',
-        ${eb.ref("dispositif.libelleDispositif")}
-      )`.as("libelleFormation"),
+      "libelleFormation",
       "voie",
       "libelleDispositif",
       "dataFormation.codeNiveauDiplome",
@@ -297,6 +293,7 @@ const getChiffresEntree = async ({
     ])
     .execute();
 };
+
 const getFilters = async ({ uai }: { uai: string }) =>
   getBase({
     uai,
