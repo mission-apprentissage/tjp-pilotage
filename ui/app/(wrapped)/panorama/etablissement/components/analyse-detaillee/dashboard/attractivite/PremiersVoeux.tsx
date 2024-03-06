@@ -2,9 +2,9 @@ import { Flex, Img } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
