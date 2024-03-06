@@ -1,11 +1,10 @@
-import { CounterChart } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/components/CounterChart";
-import { formatMillesime } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { DashboardCard } from "../../../DashboardCard";
+import { CounterChart } from "../../components/CounterChart";
 import { VerticalBarChart } from "../../components/VerticalBarChart";
-import { formatTaux } from "../../formatData";
+import { formatMillesime, formatTaux } from "../../formatData";
 import { ChiffresIJOffre } from "../../types";
 
 export const TauxDevenirFavorable = ({

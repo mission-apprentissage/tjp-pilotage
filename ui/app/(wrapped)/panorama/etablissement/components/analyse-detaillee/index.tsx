@@ -8,7 +8,7 @@ import { unstable_batchedUpdates } from "react-dom";
 import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import Loading from "../../../components/Loading";
+import Loading from "../../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";

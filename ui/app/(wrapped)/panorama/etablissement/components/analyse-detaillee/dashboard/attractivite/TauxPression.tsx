@@ -1,12 +1,12 @@
 import { useToken } from "@chakra-ui/react";
 
-import { formatAbsolute } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/formatData";
-import { DashboardCard } from "@/app/(wrapped)/etablissement/components/DashboardCard";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
+import { formatAbsolute } from "../../formatData";
 import { ChiffresEntreeOffre } from "../../types";
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";

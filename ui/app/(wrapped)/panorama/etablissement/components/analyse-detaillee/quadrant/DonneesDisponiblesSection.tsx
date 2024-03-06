@@ -1,9 +1,8 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
-import { ProgressBar } from "@/app/(wrapped)/etablissement/components/analyse-detaillee/quadrant/ProgressBar";
-
 import { ChiffresEntree, Formation } from "../types";
+import { ProgressBar } from "./ProgressBar";
 export const DonneesDisponiblesSection = ({
   formations,
   filteredFormations,
