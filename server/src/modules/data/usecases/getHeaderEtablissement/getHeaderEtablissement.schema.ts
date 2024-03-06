@@ -12,23 +12,32 @@ const informationsSchema = z.object({
   secteur: z.string().optional(),
 });
 
-const filieresSchema = z.array(
+const nsfsSchema = z.array(
   z.object({
-    icon: z.string(),
-    name: z.string(),
+    codeNsf: z.string().optional(),
+    libelleNsf: z.string().optional(),
+    nbFormations: z.number(),
   })
 );
 
-const indicateurSchema = z.object({
-  value: z.number(),
-  compareTo: z
-    .object({
-      value: z.string(),
-      direction: z.enum(["up", "down"]),
-      color: z.enum(["green", "red"]),
-    })
-    .optional(),
-});
+const compareToSchema = z
+  .object({
+    value: z.string(),
+    direction: z.enum(["up", "down", "equal"]),
+    color: z.enum(["green", "red", "grey"]),
+  })
+  .optional();
+
+export type CompareTo = z.infer<typeof compareToSchema>;
+
+const indicateurSchema = z
+  .object({
+    value: z.number(),
+    compareTo: compareToSchema,
+  })
+  .optional();
+
+export type Indicateur = z.infer<typeof indicateurSchema>;
 
 const indicateursSchema = z.object({
   millesime: z.string(),
@@ -38,19 +47,21 @@ const indicateursSchema = z.object({
   tauxDevenir: indicateurSchema,
 });
 
-export const getEtablissementHeaderSchema = {
+export type Indicateurs = z.infer<typeof indicateursSchema>;
+
+export const getHeaderEtablissementSchema = {
   params: z.object({
     uai: z.string(),
   }),
   response: {
     200: z.object({
       informations: informationsSchema.optional(),
-      filieres: filieresSchema,
       indicateurs: indicateursSchema,
+      nsfs: nsfsSchema,
     }),
   },
 };
 
-export type GetEtablissementHeaderType = z.infer<
-  (typeof getEtablissementHeaderSchema)["response"]["200"]
+export type GetHeaderEtablissementType = z.infer<
+  (typeof getHeaderEtablissementSchema)["response"]["200"]
 >;

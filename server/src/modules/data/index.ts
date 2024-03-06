@@ -7,10 +7,10 @@ import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegi
 import { getDepartementRoute } from "./usecases/getDepartement/getDepartement.route";
 import { getDepartementsRoute } from "./usecases/getDepartements/getDepartements.route";
 import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissement.route";
-import { getEtablissementHeaderRoute } from "./usecases/getEtablissement/header/getEtablissementHeader.route";
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
 import { getFormationsTransformationsRoute } from "./usecases/getFormationsTransformationStats/getFormationsTransformations.route";
+import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
@@ -22,7 +22,7 @@ import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchE
 export const registerFormationModule = ({ server }: { server: Server }) => {
   return {
     ...getFormationsRoute({ server }),
-    ...getEtablissementHeaderRoute({ server }),
+    ...getHeaderEtablissementRoute({ server }),
     ...getEtablissementRoute({ server }),
     ...getFormationEtablissementsRoutes({ server }),
     ...getDataForPanoramaEtablissementRoute({ server }),
