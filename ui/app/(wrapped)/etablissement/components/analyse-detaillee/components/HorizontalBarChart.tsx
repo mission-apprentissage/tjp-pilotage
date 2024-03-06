@@ -31,12 +31,16 @@ export const HorizontalBarChart = ({
     )?.value;
     if (current && previous) {
       if (current > previous) {
-        return ` {arrowUp|}{deltaUp|+${current - previous}}`;
+        return `{arrowUp|}{deltaUp|+${
+          current - previous
+        } vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
       } else if (current < previous) {
-        return ` {arrowDown|}{deltaDown|-${previous - current}}`;
+        return ` {arrowDown|}{deltaDown|-${
+          previous - current
+        } vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
       }
     }
-    return "{noDelta|+0}";
+    return `{noDelta| +0 vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
   };
 
   const getXAxisData = () => {
@@ -62,6 +66,7 @@ export const HorizontalBarChart = ({
         containLabel: true,
         bottom: 20,
         left: 5,
+        right: "30%",
       },
       xAxis: {
         type: "value",

@@ -1,4 +1,4 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
+import { ChevronDownIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Box,
   Button,
@@ -47,48 +47,57 @@ const InfoCard = ({
   sourceText?: string;
 }) => {
   return (
-    <Card bg="grey.1000" padding={"1.5rem"}>
+    <Card bg="grey.1000" padding={"1rem"}>
       <CardBody>
-        <Flex align="center" height="100%">
-          <Flex
-            direction="column"
-            align="flex-start"
-            mr="4"
-            flex={1}
-            height="100%"
-          >
-            <Heading as="h4" fontSize={20}>
-              {title}
-            </Heading>
-            <Text flex={1} mt={2}>
-              {description}
-            </Text>
-            {Array.isArray(links) && (
-              <Menu>
-                <MenuButton
-                  mt={4}
-                  as={Button}
-                  variant="primary"
-                  rightIcon={<ChevronDownIcon />}
-                >
-                  Accéder à l'information
-                </MenuButton>
-                <MenuList>
-                  {links.map(({ href, label }) => (
-                    <MenuItem
-                      _hover={{ textDecoration: "none" }}
-                      as={Link}
-                      href={href}
-                      key={href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {label}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </Menu>
-            )}
+        <Flex direction={"column"} justify={"space-between"} height={"100%"}>
+          <Flex align="center">
+            <Flex
+              direction="column"
+              align="flex-start"
+              mr="4"
+              flex={1}
+              height="100%"
+            >
+              <Heading as="h4" fontSize={20}>
+                {title}
+              </Heading>
+              <Text flex={1} mt={2}>
+                {description}
+              </Text>
+              {Array.isArray(links) && (
+                <Menu>
+                  <MenuButton
+                    mt={4}
+                    as={Button}
+                    variant="primary"
+                    rightIcon={<ChevronDownIcon />}
+                  >
+                    Accéder à l'information
+                  </MenuButton>
+                  <MenuList>
+                    {links.map(({ href, label }) => (
+                      <MenuItem
+                        _hover={{ textDecoration: "none" }}
+                        as={Link}
+                        href={href}
+                        key={href}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {label}
+                      </MenuItem>
+                    ))}
+                  </MenuList>
+                </Menu>
+              )}
+            </Flex>
+            <Img
+              width={["70px", null, "160px"]}
+              src={img}
+              objectFit="contain"
+            />
+          </Flex>
+          <Flex direction={"row"} justify={"space-between"} mt={"auto"}>
             {!Array.isArray(links) && (
               <Button
                 mt={4}
@@ -98,17 +107,17 @@ const InfoCard = ({
                 href={links.href}
                 target="_blank"
                 rel="noreferrer"
+                rightIcon={<ExternalLinkIcon />}
               >
-                Accéder à l'information
+                Voir le site
               </Button>
             )}
             {sourceText && (
-              <Text mt="2" fontSize="xs" color="grey">
+              <Text mt="auto" fontSize="xs" color="grey">
                 {sourceText}
               </Text>
             )}
           </Flex>
-          <Img width={["70px", null, "160px"]} src={img} objectFit="contain" />
         </Flex>
       </CardBody>
     </Card>
@@ -138,35 +147,41 @@ export const LiensUtilesSection = ({
       </Box>
       <Box pb={12} mt={2} as="section">
         <SimpleGrid spacing={6} columns={[1, null, 2]}>
+          <InfoCard
+            title="Data emploi : les métiers"
+            description={`Consultez les métiers les plus recherchés par les recruteurs dans votre ${
+              codeDepartement ? "département" : "région"
+            }`}
+            links={{
+              href: `https://dataemploi.pole-emploi.fr/metier/${
+                codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
+              }`,
+            }}
+            img="/looking_man.png"
+            sourceText="* Source: France Travail"
+          />
+          <InfoCard
+            title="Data emploi : les secteurs"
+            description={`Visualisez les secteurs les plus représentatés dans votre ${
+              codeDepartement ? "département" : "région"
+            }`}
+            links={{
+              href: `https://dataemploi.pole-emploi.fr/secteur/${
+                codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
+              }`,
+            }}
+            img="/dashboard_girl.png"
+            sourceText="* Source: France Travail"
+          />
           {codeRegion && lienDares[codeRegion] && (
             <InfoCard
               title="Projection métiers 2030"
               description="Retrouvez le dernier rapport de votre région"
               links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
-              img="/phone_man.png"
+              img="/graphs_statistics2.png"
               sourceText="* Source: DARES"
             />
           )}
-          <InfoCard
-            title="Métiers en tension 2021"
-            description="Retrouvez le dernier rapport de votre région"
-            links={{
-              href: "https://dares.travail-emploi.gouv.fr/publication/les-tensions-sur-le-marche-du-travail-en-2021",
-            }}
-            img="/looking_man.png"
-            sourceText="* Source: DARES"
-          />
-          <InfoCard
-            title="Data emploi"
-            description="Retrouvez les informations essentielles pour décrypter le marché du travail sur votre territoire"
-            links={{
-              href: `https://dataemploi.pole-emploi.fr/panorama/${
-                codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
-              }`,
-            }}
-            img="/dashboard_girl.png"
-            sourceText="* Source: Pole Emploi"
-          />
         </SimpleGrid>
       </Box>
     </Flex>

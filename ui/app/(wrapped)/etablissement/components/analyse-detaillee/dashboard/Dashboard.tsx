@@ -1,6 +1,5 @@
 import { WarningTwoIcon } from "@chakra-ui/icons";
 import { Badge, Flex } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
 import { AttractiviteSection } from "./attractivite/AttractiviteSection";
@@ -46,34 +45,27 @@ export const Dashboard = ({
       <Flex direction={"row"} gap={2} h={10}>
         {formation?.typeFamille === "2nde_commune" && (
           <Badge variant="info" maxH={5} mt="auto">
-            <Flex me={2}>
-              <Icon icon="ri:node-tree" color="inherit"></Icon>
-            </Flex>
             seconde commune
           </Badge>
         )}
         {formation?.typeFamille === "1ere_commune" && (
           <Badge variant="info" maxH={5} mt="auto">
-            <Flex me={2}>
-              <Icon icon="ri:node-tree" color="inherit"></Icon>
-            </Flex>
             première commune
           </Badge>
         )}
         {formation?.typeFamille === "specialite" && (
-          <Badge variant="info" maxH={5} mt="auto">
-            <Flex me={2}>
-              <Icon icon="ri:node-tree" color="inherit"></Icon>
-            </Flex>
+          <Badge variant="purpleGlycine" maxH={5} mt="auto">
             spécialité
           </Badge>
         )}
         {formation?.typeFamille === "option" && (
-          <Badge variant="info" maxH={5} mt="auto">
-            <Flex me={2}>
-              <Icon icon="ri:node-tree" color="inherit"></Icon>
-            </Flex>
+          <Badge variant="purpleGlycine" maxH={5} mt="auto">
             option
+          </Badge>
+        )}
+        {formation?.voie === "apprentissage" && (
+          <Badge variant="new" maxH={5} mt="auto">
+            apprentissage
           </Badge>
         )}
         {!checkDataAvailability() && (

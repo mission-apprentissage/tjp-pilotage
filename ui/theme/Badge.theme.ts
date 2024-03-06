@@ -65,6 +65,15 @@ export const badgeTheme = defineStyleConfig({
       minHeight: "1.5rem",
       padding: "0 0.5rem",
     },
+    xs: {
+      padding: "0 6px 0 6px",
+      fontSize: "12px",
+      lineHeight: "20px",
+      height: "fit-content",
+      fontWeight: 400,
+      textTransform: "none",
+      margin: "auto",
+    },
   },
   variants: {
     info: infoStyle,
