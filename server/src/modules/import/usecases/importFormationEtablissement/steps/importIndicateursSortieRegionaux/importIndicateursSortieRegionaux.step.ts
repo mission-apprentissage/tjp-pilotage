@@ -82,7 +82,7 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
             type: "ij_reg",
             filter: { millesime: millesimeSortie, codeRegion },
           });
-          const cfdData = data?.apprentissage[cfd];
+          const cfdData = data?.apprentissage?.[cfd];
 
           if (!cfdData) {
             const continuumData = await getContinuumData({
