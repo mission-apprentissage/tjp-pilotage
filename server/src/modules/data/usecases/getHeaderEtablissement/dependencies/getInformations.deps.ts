@@ -35,6 +35,7 @@ export const getInformations = ({ uai }: { uai: string }) =>
       eb.ref("etablissement.codePostal").as("codePostal"),
       eb.ref("departement.libelleDepartement").as("libelleDepartement"),
       eb.ref("departement.codeDepartement").as("codeDepartement"),
+      eb.ref("departement.codeRegion").as("codeRegion"),
       sql<boolean>`count(${eb.table(
         "feScolaire"
       )}.*) over (partition by ${eb.ref("feScolaire.UAI")}) > 0`.as(
