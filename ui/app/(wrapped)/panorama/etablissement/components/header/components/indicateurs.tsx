@@ -160,8 +160,10 @@ const isMissingDatas = (indicateurs?: Indicateurs) => {
 
 export const IndicateursSection = ({
   indicateurs,
+  codeRegion,
 }: {
   indicateurs?: Indicateurs;
+  codeRegion?: string;
 }) => {
   return (
     <GridItem colSpan={12}>
@@ -184,7 +186,10 @@ export const IndicateursSection = ({
         <IndicateurPoursuiteDetudes indicateur={indicateurs?.tauxPoursuite} />
         <IndicateurTauxDevenirFavorable indicateur={indicateurs?.tauxDevenir} />
       </Flex>
-      <DonneesIncompletes isMissingDatas={isMissingDatas(indicateurs)} />
+      <DonneesIncompletes
+        isMissingDatas={isMissingDatas(indicateurs)}
+        codeRegion={codeRegion}
+      />
     </GridItem>
   );
 };
