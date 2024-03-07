@@ -54,6 +54,7 @@ const ChiffresEntreeSchema = z.record(
     effectifAnnee1: z.coerce.number().optional(),
     effectifAnnee2: z.coerce.number().optional(),
     effectifAnnee3: z.coerce.number().optional(),
+    effectifs: z.array(z.coerce.string().optional()).optional(),
     tauxPression: z.coerce.number().optional(),
     tauxPressionNational: z.coerce.number().optional(),
     tauxPressionRegional: z.coerce.number().optional(),
