@@ -161,7 +161,9 @@ export default function Etablissements() {
     {
       query: getEtablissementsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { keepPreviousData: false }
+    {
+      staleTime: 10000000,
+    }
   );
 
   const trackEvent = usePlausible();
