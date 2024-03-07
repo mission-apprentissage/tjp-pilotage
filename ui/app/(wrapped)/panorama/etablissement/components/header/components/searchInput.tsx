@@ -13,6 +13,7 @@ export const SearchInput = ({ uai }: { uai: string }) => {
       ...styles,
       borderColor: undefined,
       zIndex: "2",
+      width: "400px",
     }),
   };
 
