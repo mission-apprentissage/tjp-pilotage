@@ -1,6 +1,15 @@
-import { Badge, Flex, GridItem, Img, Text, useToken } from "@chakra-ui/react";
+import {
+  Badge,
+  Box,
+  Flex,
+  GridItem,
+  Img,
+  Text,
+  useToken,
+} from "@chakra-ui/react";
 
 import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
+import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
 import type { Indicateur, Indicateurs } from "../types";
@@ -55,6 +64,17 @@ const IndicateurValeurAjoutee = ({
         marginInline={1}
         iconSize={"16px"}
         glossaireEntryKey={"valeur-ajoutee"}
+        tooltip={
+          <Box>
+            <Text>
+              Capacité de l'établissement à insérer, en prenant en compte le
+              profil social des élèves et le taux de chômage de la zone
+              d'emploi, comparativement au taux de référence d’établissements
+              similaires.
+            </Text>
+            <Text>Cliquez pour plus d'infos.</Text>
+          </Box>
+        }
       />
     }
     grow={1}
@@ -82,6 +102,15 @@ const IndicateurTauxEmploi6mois = ({
         marginInline={1}
         iconSize={"16px"}
         glossaireEntryKey={"taux-emploi-6-mois"}
+        tooltip={
+          <Box>
+            <Text>
+              La part de ceux qui sont en emploi 6 mois après leur sortie
+              d’étude.
+            </Text>
+            <Text>Cliquez pour plus d'infos.</Text>
+          </Box>
+        }
       />
     }
     minH={"120px"}
@@ -108,6 +137,14 @@ const IndicateurPoursuiteDetudes = ({
         marginInline={1}
         iconSize={"16px"}
         glossaireEntryKey={"taux-poursuite-etudes"}
+        tooltip={
+          <Box>
+            <Text>
+              Tout élève inscrit à N+1 (réorientation et redoublement compris).
+            </Text>
+            <Text>Cliquez pour plus d'infos.</Text>
+          </Box>
+        }
       />
     }
     minH={"120px"}
@@ -135,6 +172,16 @@ const IndicateurTauxDevenirFavorable = ({
           marginInline={1}
           iconSize={"16px"}
           glossaireEntryKey={"taux-de-devenir-favorable"}
+          tooltip={
+            <Box>
+              <Text>
+                (nombre d'élèves inscrits en formation + nombre d'élèves en
+                emploi) / nombre d'élèves en entrée en dernière année de
+                formation.
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
         />
       }
       minH={"120px"}
@@ -165,6 +212,7 @@ export const IndicateursSection = ({
   indicateurs?: Indicateurs;
   codeRegion?: string;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   return (
     <GridItem colSpan={12}>
       <Flex
@@ -173,10 +221,13 @@ export const IndicateursSection = ({
         alignItems={"center"}
         width={"100%"}
       >
-        <Text fontWeight={"bold"}>
-          INDICATEURS ÉTABLISSEMENT (VOIE SCOLAIRE)
-        </Text>
-        <Badge variant="info" size={"md"}>
+        <Text fontWeight={"bold"}>INDICATEURS ÉTABLISSEMENT</Text>
+        <Badge
+          variant="info"
+          size={"md"}
+          as="button"
+          onClick={() => openGlossaire("inserjeunes")}
+        >
           Millésimes {indicateurs?.millesime}
         </Badge>
       </Flex>
