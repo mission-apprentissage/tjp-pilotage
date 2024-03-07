@@ -77,7 +77,7 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
         pb={"16px"}
         fontWeight={"bold"}
       >
-        FILIÈRES PROPROSÉES
+        DOMAINES DES FORMATION ENSEIGNÉS
       </Text>
       {(nsfs || []).length === 0 && <Text>Information indisponible</Text>}
       {(nsfs || []).length > 0 && (
