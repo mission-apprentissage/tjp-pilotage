@@ -191,7 +191,6 @@ export const withTauxPressionReg = <
   codeRegionRef,
   indicateurEntreeAlias,
   withTauxDemande = false,
-
 }: {
   eb: EB;
   cfdRef: Parameters<EB["ref"]>[0];
