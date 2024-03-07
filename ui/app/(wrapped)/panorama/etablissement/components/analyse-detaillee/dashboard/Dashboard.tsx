@@ -56,7 +56,7 @@ export const Dashboard = ({
           )}
           {formation?.typeFamille === "1ere_commune" && (
             <Badge variant="info" maxH={5} mt="auto">
-              première commune
+              première année commune
             </Badge>
           )}
           {formation?.typeFamille === "specialite" && (

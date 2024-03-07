@@ -175,9 +175,9 @@ export const QuadrantSection = ({
               itemColor={(formation: (typeof filteredFormations)[number]) =>
                 formation.offre === offre ? "#fd3b4cb5" : undefined
               }
-              onClick={(formation: (typeof filteredFormations)[number]) =>
-                setOffre(formation.offre)
-              }
+              onClick={(formation: (typeof filteredFormations)[number]) => {
+                if (offre != formation.offre) setOffre(formation.offre);
+              }}
               effectifSizes={effectifSizes}
               dimensions={offresDimensions}
             />
