@@ -1,4 +1,4 @@
-import { Flex, Img } from "@chakra-ui/react";
+import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -50,7 +50,14 @@ export const TauxRemplissage = ({
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Taux de remplissage"
+          label={
+            <Box>
+              <Text>
+                Le ratio entre l’effectif d’entrée en formation et sa capacité.
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
           onClick={() => openGlossaire("taux-de-remplissage")}
         />
       }
