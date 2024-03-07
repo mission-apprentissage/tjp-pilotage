@@ -72,7 +72,8 @@ export const badgeTheme = defineStyleConfig({
       height: "fit-content",
       fontWeight: 400,
       textTransform: "none",
-      margin: "auto",
+      marginTop: "auto",
+      marginBottom: "auto",
     },
   },
   variants: {

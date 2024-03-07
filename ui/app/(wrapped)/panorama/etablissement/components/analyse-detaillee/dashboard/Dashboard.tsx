@@ -42,13 +42,13 @@ export const Dashboard = ({
 
   return (
     <Flex flexDirection={"column"} mr={8} gap={8}>
-      <Flex flexDirection={"column"} gap={2}>
+      <Flex flexDirection={"column"} gap={2} h={16}>
         <Text fontSize="18px" fontWeight={700}>
           {formation?.libelleFormation
             .replace("2nde commune", " ")
             .replace("1ere commune", " ")}
         </Text>
-        <Flex direction={"row"} gap={2} h={10}>
+        <Flex direction={"row"} gap={2}>
           {formation?.typeFamille === "2nde_commune" && (
             <Badge variant="info" maxH={5} mt="auto">
               seconde commune
