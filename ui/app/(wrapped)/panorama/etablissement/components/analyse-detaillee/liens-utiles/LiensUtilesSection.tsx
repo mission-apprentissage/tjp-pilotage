@@ -136,7 +136,7 @@ export const LiensUtilesSection = ({
     : codeDepartement;
 
   return (
-    <Flex direction={"column"} gap={8} mt={8} maxW={"100%"}>
+    <Flex direction={"column"} gap={8} mt={8} maxW={"100%"} id={"liens-utiles"}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         Liens utiles
       </Text>

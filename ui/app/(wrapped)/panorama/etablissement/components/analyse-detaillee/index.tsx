@@ -108,7 +108,7 @@ const EtablissementAnalyseDetaillee = () => {
   }
 
   return (
-    <Flex direction={"column"} gap={8}>
+    <Flex direction={"column"} gap={8} id={"analyse-detaille"}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         Analyse des formations
       </Text>
