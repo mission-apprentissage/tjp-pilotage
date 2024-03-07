@@ -53,7 +53,19 @@ export const EtablissementLineContent = ({
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td minW={300} maxW={300} whiteSpace="normal">
-      {line.libelleEtablissement ?? "-"}
+      <Link
+        variant="text"
+        as={NextLink}
+        href={`/panorama/etablissement/${line.uai}`}
+        target="_blank"
+        color="chakra-body-text"
+        fontWeight={400}
+        _hover={{
+          textDecoration: "underline",
+        }}
+      >
+        <Flex justify={"start"}>{line.libelleEtablissement ?? "-"}</Flex>
+      </Link>
     </Td>
     <Td minW={150} maxW={150} whiteSpace="normal">
       {line.commune ?? "-"}
