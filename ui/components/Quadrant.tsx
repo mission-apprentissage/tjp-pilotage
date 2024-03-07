@@ -50,6 +50,7 @@ export const Quadrant = function <
   onClick,
   itemColor = "rgba(58, 85, 209, 0.6)",
   itemId,
+  dimensions = ["tauxInsertion", "tauxPoursuite"],
 }: {
   className?: string;
   data: F[];
@@ -61,6 +62,7 @@ export const Quadrant = function <
   onClick?: (_: F) => void;
   itemColor?: string | ((_: F) => string | undefined);
   itemId: (_: F) => string;
+  dimensions?: Array<"tauxInsertion" | "tauxPoursuite">;
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
@@ -103,17 +105,32 @@ export const Quadrant = function <
 
   const series = useMemo(() => {
     return data.map((formation) => ({
-      value: [formation.tauxPoursuite * 100, formation.tauxInsertion * 100],
+      value: [
+        dimensions?.includes("tauxPoursuite")
+          ? formation.tauxPoursuite * 100
+          : 50,
+        dimensions?.includes("tauxInsertion")
+          ? formation.tauxInsertion * 100
+          : 50,
+      ],
       name: itemId(formation),
     }));
   }, [data]);
 
   const moyennes = useMemo(
     () => ({
-      insertion: meanInsertion ? meanInsertion * 100 : undefined,
-      poursuite: meanPoursuite ? meanPoursuite * 100 : undefined,
+      insertion: dimensions?.includes("tauxInsertion")
+        ? meanInsertion
+          ? meanInsertion * 100
+          : undefined
+        : 50,
+      poursuite: dimensions?.includes("tauxPoursuite")
+        ? meanPoursuite
+          ? meanPoursuite * 100
+          : undefined
+        : 50,
     }),
-    [meanPoursuite, meanInsertion]
+    [meanPoursuite, meanInsertion, dimensions]
   );
 
   const repartitionsQuadrants = useMemo(() => {
@@ -128,7 +145,7 @@ export const Quadrant = function <
       q4: data.filter((item) => item.positionQuadrant === "Q4" && item.effectif)
         .length,
     };
-  }, [data, meanInsertion, meanPoursuite]);
+  }, [data, meanInsertion, meanPoursuite, dimensions]);
 
   const option = useMemo<EChartsOption>(
     () => ({
@@ -138,6 +155,7 @@ export const Quadrant = function <
         {
           type: "value",
           name: "Taux de poursuite d'étude",
+          show: dimensions?.includes("tauxPoursuite"),
           min: 0,
           max: 100,
           position: "bottom",
@@ -157,6 +175,7 @@ export const Quadrant = function <
           axisLine: {
             onZero: false,
             symbol: ["none", "arrow"],
+            show: dimensions?.includes("tauxInsertion"),
           },
         },
       ],
@@ -164,6 +183,7 @@ export const Quadrant = function <
         {
           type: "value",
           name: "Taux d'emploi 6 mois",
+          show: dimensions?.includes("tauxInsertion"),
           min: 0,
           max: 100,
           position: "left",
@@ -183,6 +203,7 @@ export const Quadrant = function <
           axisLine: {
             onZero: false,
             symbol: ["none", "arrow"],
+            show: dimensions?.includes("tauxInsertion"),
           },
         },
       ],
@@ -232,7 +253,13 @@ export const Quadrant = function <
                     [
                       {
                         coord: [0, 0],
-                        itemStyle: { color: redColor },
+                        itemStyle: {
+                          color:
+                            dimensions?.includes("tauxPoursuite") &&
+                            dimensions?.includes("tauxInsertion")
+                              ? redColor
+                              : "#F5F5F5",
+                        },
                         name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -244,7 +271,13 @@ export const Quadrant = function <
                     [
                       {
                         coord: [moyennes.poursuite, moyennes.insertion],
-                        itemStyle: { color: greenColor },
+                        itemStyle: {
+                          color:
+                            dimensions?.includes("tauxPoursuite") &&
+                            dimensions?.includes("tauxInsertion")
+                              ? greenColor
+                              : "#F5F5F5",
+                        },
                         name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -256,7 +289,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [0, moyennes.insertion],
-                        itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        itemStyle: { color: "#FAFAFA" },
                         name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -268,7 +301,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [moyennes.poursuite, 0],
-                        itemStyle: { color: "rgba(0,0,0,0.04)" },
+                        itemStyle: { color: "#FAFAFA" },
                         name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -283,7 +316,7 @@ export const Quadrant = function <
         },
       ],
     }),
-    [data, moyennes, itemColor, itemId]
+    [data, moyennes, itemColor, itemId, dimensions]
   );
 
   useLayoutEffect(() => {

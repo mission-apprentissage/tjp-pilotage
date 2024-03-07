@@ -27,10 +27,10 @@ import { selectTauxRemplissage } from "../../utils/tauxRemplissage";
 
 const getBase = ({
   uai,
-  _rentreeScolaire = CURRENT_RENTREE,
+  rentreeScolaire = CURRENT_RENTREE,
 }: {
   uai: string;
-  _rentreeScolaire?: string;
+  rentreeScolaire?: string;
 }) =>
   kdb
     .selectFrom("formationEtablissement")
@@ -58,17 +58,21 @@ const getBase = ({
         )
         .on("formationEtablissement.voie", "=", "scolaire")
     )
-    .leftJoin("indicateurEntree as ie", (join) =>
+    .leftJoin("indicateurEntree", (join) =>
       join
-        .onRef("ie.formationEtablissementId", "=", "formationEtablissement.id")
+        .onRef(
+          "indicateurEntree.formationEtablissementId",
+          "=",
+          "formationEtablissement.id"
+        )
         .on("formationEtablissement.voie", "=", "scolaire")
     )
     .where((w) =>
       w.and([
-        // w.or([
-        //   w("ie.rentreeScolaire", "=", rentreeScolaire),
-        //   w("ie.rentreeScolaire", "is", null),
-        // ]),
+        w.or([
+          w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
+          w("indicateurEntree.rentreeScolaire", "is", null),
+        ]),
         w("formationEtablissement.UAI", "=", uai),
       ])
     );
@@ -206,6 +210,13 @@ const getChiffresEntree = async ({
   const eb2 = expressionBuilder<DB, keyof DB>();
 
   return getBase({ uai })
+    .innerJoin("indicateurEntree as ie", (join) =>
+      join.onRef(
+        "ie.formationEtablissementId",
+        "=",
+        "formationEtablissement.id"
+      )
+    )
     .where("ie.rentreeScolaire", "in", [
       rentreeScolaire,
       getRentreeScolaire({ rentreeScolaire, offset: -1 }),
@@ -231,12 +242,13 @@ const getChiffresEntree = async ({
       effectifAnnee({ alias: "ie", annee: sql`'0'` }).as("effectifAnnee1"),
       effectifAnnee({ alias: "ie", annee: sql`'1'` }).as("effectifAnnee2"),
       effectifAnnee({ alias: "ie", annee: sql`'2'` }).as("effectifAnnee3"),
-      selectTauxPression("ie", "nd").as("tauxPression"),
+      selectTauxPression("ie", "nd", true).as("tauxPression"),
       withTauxPressionNat({
         eb: eb2,
         cfdRef: "dataFormation.cfd",
         codeDispositifRef: "codeDispositif",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionNational"),
       withTauxPressionReg({
         eb: eb2,
@@ -244,6 +256,7 @@ const getChiffresEntree = async ({
         codeDispositifRef: "codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionRegional"),
       withTauxPressionDep({
         eb: eb2,
@@ -251,6 +264,7 @@ const getChiffresEntree = async ({
         codeDispositifRef: "codeDispositif",
         codeDepartementRef: "dataEtablissement.codeDepartement",
         indicateurEntreeAlias: "ie",
+        withTauxDemande: true,
       }).as("tauxPressionDepartemental"),
       selectTauxRemplissage("ie").as("tauxRemplissage"),
     ])
@@ -279,6 +293,7 @@ const getChiffresEntree = async ({
     ])
     .execute();
 };
+
 const getFilters = async ({ uai }: { uai: string }) =>
   getBase({
     uai,
