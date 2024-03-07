@@ -7,6 +7,7 @@ const informationsSchema = z.object({
   codePostal: z.string().optional(),
   libelleDepartement: z.string().optional(),
   codeDepartement: z.string().optional(),
+  codeRegion: z.string().optional(),
   isScolaire: z.boolean(),
   isApprentissage: z.boolean(),
   secteur: z.string().optional(),
