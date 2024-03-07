@@ -70,19 +70,38 @@ export const [redirectDne, redirectDneFactory] = inject(
       );
 
       const email = userinfo.email;
-      if (!email) throw new Error("missing user email");
+      if (!email) {
+        logger.info("(sso) : missing user email", {
+          userinfo,
+        });
+        throw new Error("missing user email");
+      }
 
       const user = await deps.findUserQuery(email);
       if (user && !user.enabled) throw new Error("user not enabled");
 
       const attributes = getUserRoleAttributes(userinfo);
-      if (!attributes) throw new Error("missing user info");
+      if (!attributes) {
+        logger.info("(sso) : missing right attributes", {
+          userinfo,
+          email,
+        });
+        throw new Error("missing right attributes");
+      }
 
       const etablissement =
         attributes.uais &&
         (await deps.findEtablissement({ uais: attributes.uais }));
 
-      if (!etablissement?.codeRegion) throw new Error("missing codeRegion");
+      if (!etablissement?.codeRegion) {
+        logger.info("(sso) : missing etablissement", {
+          userinfo,
+          email,
+          attributes,
+          etablissement,
+        });
+        throw new Error("missing codeRegion");
+      }
 
       const userToInsert = {
         ...user,
