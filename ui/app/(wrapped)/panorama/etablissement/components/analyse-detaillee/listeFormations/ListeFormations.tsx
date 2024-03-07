@@ -104,7 +104,7 @@ export const ListeFormations = ({
                         <Tooltip
                           label={formation.typeFamille
                             .replace("2nde_commune", "Seconde commune")
-                            .replace("1ere_commune", "Première commune")}
+                            .replace("1ere_commune", "Première année commune")}
                         >
                           <Badge variant={"info"} size="xs">
                             {formation.typeFamille

@@ -122,10 +122,6 @@ export const LineChart = ({
       chartRef.current = echarts.init(containerRef.current);
     }
     chartRef.current.setOption(option, true);
-    chartRef.current.on("click", { dataType: "legend" }, (event) => {
-      console.log("1", event);
-    });
-
     chartRef.current.on("legendselectchanged", (params) => {
       //@ts-ignore
       setMainKey(params.name);

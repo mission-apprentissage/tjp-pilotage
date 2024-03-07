@@ -405,7 +405,6 @@ export default function Etablissements() {
           <Checkbox
             size="lg"
             onChange={(event) => {
-              console.log(event.target.checked);
               handleToggleShowAnneeCommune(
                 event.target.checked.toString() ?? "false"
               );

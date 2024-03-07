@@ -1,3 +1,5 @@
+import { Box, Text } from "@chakra-ui/react";
+
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -26,7 +28,15 @@ export const TauxEmploi = ({
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Taux d'emploi à 6 mois après la formation"
+          label={
+            <Box>
+              <Text>
+                La part de ceux qui sont en emploi 6 mois après leur sortie
+                d’étude.
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
           onClick={() => openGlossaire("taux-emploi-6-mois")}
         />
       }

@@ -1,3 +1,5 @@
+import { Box, Text } from "@chakra-ui/react";
+
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -27,7 +29,16 @@ export const TauxDevenirFavorable = ({
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Taux de devenir favorable"
+          label={
+            <Box>
+              <Text>
+                (nombre d'élèves inscrits en formation + nombre d'élèves en
+                emploi) / nombre d'élèves en entrée en dernière année de
+                formation.
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
           onClick={() => openGlossaire("taux-de-devenir-favorable")}
         />
       }
