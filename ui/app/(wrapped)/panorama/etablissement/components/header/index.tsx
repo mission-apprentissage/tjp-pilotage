@@ -1,5 +1,6 @@
 import { Grid } from "@chakra-ui/react";
 
+import Loading from "../../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { AccesRapide } from "./components/accesRapide";
 import { Coordonnees } from "./components/coordonnees";
@@ -12,7 +13,12 @@ import { useEtablissementHeader } from "./hook";
 export const EtablissementHeader = () => {
   const { uai } = useEtablissementContext();
 
-  const { nsfs, informations, indicateurs } = useEtablissementHeader(uai) || {};
+  const { nsfs, informations, indicateurs, isLoading } =
+    useEtablissementHeader(uai) || {};
+
+  if (isLoading) {
+    return <Loading my={16} size="xl" />;
+  }
 
   return (
     <Grid templateColumns={"repeat(12,1fr)"} py={"32px"}>
