@@ -1,4 +1,4 @@
-import { client } from "../../../../../api.client";
+import { client } from "../../../../../../api.client";
 
 export type EtablissementHeader =
   (typeof client.infer)["[GET]/etablissement/:uai/header"];

@@ -3,7 +3,7 @@ import { useRouter } from "next/navigation";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../../api.client";
+import { client } from "../../../../../../../api.client";
 
 export const SearchInput = ({ uai }: { uai: string }) => {
   const router = useRouter();
