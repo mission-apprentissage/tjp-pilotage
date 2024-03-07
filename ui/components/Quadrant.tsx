@@ -4,6 +4,7 @@ import {
   Box,
   Card,
   CardBody,
+  Flex,
   Popover,
   PopoverCloseButton,
   PopoverContent,
@@ -66,6 +67,7 @@ export const Quadrant = function <
 }) {
   const chartRef = useRef<echarts.ECharts>();
   const containerRef = useRef<HTMLDivElement>(null);
+  const tooltipRef = useRef<HTMLDivElement>(null);
 
   const greenColor = useToken("colors", "green.submitted");
   const redColor = useToken("colors", "redmarianne.925");
@@ -88,7 +90,6 @@ export const Quadrant = function <
   useLayoutEffect(() => {
     if (!containerRef.current) return;
     if (!displayedDetail) return;
-
     popperInstance.referenceRef({
       getBoundingClientRect: () => {
         const containerRect = containerRef.current?.getBoundingClientRect();
@@ -326,10 +327,15 @@ export const Quadrant = function <
     }
     chartRef.current.setOption(option);
 
-    const handler = (event: { dataIndex: number; data: [number, number] }) => {
-      const [x, y] = chartRef.current?.convertToPixel("grid", event.data) ?? [
-        0, 0,
-      ];
+    const handler = (event: {
+      dataIndex: number;
+      data: { value: [number, number] };
+    }) => {
+      console.log("click", event.data);
+      const [x, y] = chartRef.current?.convertToPixel(
+        "grid",
+        event.data.value
+      ) ?? [0, 0];
       chartRef.current?.setOption(option);
       onClick?.(data[event.dataIndex]);
       setDisplayedDetail({
@@ -376,7 +382,9 @@ export const Quadrant = function <
           {...popperInstance.getPopperProps()}
         >
           {TooltipContent && displayedDetail && (
-            <TooltipContent formation={displayedDetail?.formation} />
+            <Flex ref={tooltipRef}>
+              <TooltipContent formation={displayedDetail?.formation} />
+            </Flex>
           )}
         </FormationTooltipWrapper>
       )}
