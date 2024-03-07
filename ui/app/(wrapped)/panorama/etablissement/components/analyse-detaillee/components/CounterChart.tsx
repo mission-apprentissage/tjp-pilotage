@@ -13,17 +13,13 @@ export const CounterChart = ({
     <Flex justify={"space-between"} direction={"row"} width={"100%"}>
       {data ? (
         <>
-          <Flex
-            fontSize={"36px"}
-            lineHeight={"36px"}
-            fontWeight={"700"}
-            mb="unset"
-            mt="auto"
-          >
-            {data}
+          <Flex mb="unset" mt="auto" align={"flex-end"}>
+            <Text fontSize={"36px"} lineHeight={"36px"} fontWeight={"700"}>
+              {data}
+            </Text>
             {type === "percentage" && (
-              <Text fontSize={"12px"} lineHeight={"14px"} fontWeight={"400"}>
-                %
+              <Text fontSize={"14px"} fontWeight={"400"}>
+                &nbsp;%
               </Text>
             )}
           </Flex>

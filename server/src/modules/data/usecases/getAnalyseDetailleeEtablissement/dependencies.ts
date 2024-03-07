@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { expressionBuilder, sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
@@ -236,6 +237,7 @@ const getChiffresEntree = async ({
       "uai",
       "dataFormation.cfd",
       "dispositifId",
+      sql<string[]>`COALESCE(${eb.ref("ie.effectifs")}, '[]')`.as("effectifs"),
       premiersVoeuxAnnee({ alias: "ie" }).as("premiersVoeux"),
       capaciteAnnee({ alias: "ie" }).as("capacite"),
       effectifAnnee({ alias: "ie" }).as("effectifEntree"),
@@ -335,7 +337,10 @@ const getEtablissement = async ({ uai }: { uai: string }) =>
       codeAcademie: string;
       codeDepartement: string;
     }>()
-    .executeTakeFirstOrThrow();
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.notFound(`Uai introuvable : ${uai}`);
+    });
 
 const getAnalyseDetailleeEtablissementQuery = async ({
   uai,

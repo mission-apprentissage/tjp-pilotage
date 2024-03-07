@@ -8,9 +8,14 @@ export const TabsSection = ({
   displayDashboard: () => void;
   displayQuadrant: () => void;
 }) => {
+  const getTabIndex = () => {
+    if (displayType === "dashboard") return 0;
+    if (displayType === "quadrant") return 1;
+  };
   return (
     <Tabs
       isLazy={true}
+      index={getTabIndex()}
       display="flex"
       flex="1"
       flexDirection="column"

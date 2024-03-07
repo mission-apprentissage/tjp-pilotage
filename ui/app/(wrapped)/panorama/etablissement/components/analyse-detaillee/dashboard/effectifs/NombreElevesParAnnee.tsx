@@ -36,22 +36,22 @@ export const NombreElevesParAnnee = ({
           data={Object.values(chiffresEntreeOffre).reduce(
             (acc, rentreeScolaire) => {
               acc[rentreeScolaire.rentreeScolaire] = [];
-              if (rentreeScolaire.effectifAnnee1) {
+              if (rentreeScolaire.effectifs && rentreeScolaire.effectifs[0]) {
                 acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 1",
-                  value: rentreeScolaire.effectifAnnee1,
+                  value: rentreeScolaire.effectifAnnee1 ?? 0,
                 });
               }
-              if (rentreeScolaire.effectifAnnee2) {
+              if (rentreeScolaire.effectifs && rentreeScolaire.effectifs[1]) {
                 acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 2",
-                  value: rentreeScolaire.effectifAnnee2,
+                  value: rentreeScolaire.effectifAnnee2 ?? 0,
                 });
               }
-              if (rentreeScolaire.effectifAnnee3) {
+              if (rentreeScolaire.effectifs && rentreeScolaire.effectifs[2]) {
                 acc[rentreeScolaire.rentreeScolaire].push({
                   label: "Année 3",
-                  value: rentreeScolaire.effectifAnnee3,
+                  value: rentreeScolaire.effectifAnnee3 ?? 0,
                 });
               }
               return acc;

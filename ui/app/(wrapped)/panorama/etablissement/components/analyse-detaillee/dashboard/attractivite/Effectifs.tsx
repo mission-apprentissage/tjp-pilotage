@@ -35,7 +35,7 @@ export const Effectifs = ({
     }
     return (
       <>
-        <Flex color="grey.625">{`0 pl. vacante`}</Flex>
+        <Flex color="grey.625">0 pl. vacante</Flex>
       </>
     );
   };
