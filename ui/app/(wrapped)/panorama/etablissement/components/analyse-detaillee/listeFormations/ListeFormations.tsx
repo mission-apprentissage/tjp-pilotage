@@ -67,6 +67,9 @@ export const ListeFormations = ({
                   borderLeftColor={
                     offre === formation.offre ? "bluefrance.113" : ""
                   }
+                  _hover={{
+                    bgColor: "rgba(0, 0, 0, 0.04)",
+                  }}
                   borderLeft={offre === formation.offre ? "2px" : ""}
                 >
                   <Flex direction="row" justify={"space-between"}>
