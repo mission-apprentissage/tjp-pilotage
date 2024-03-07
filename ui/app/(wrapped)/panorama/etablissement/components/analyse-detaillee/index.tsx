@@ -2,7 +2,7 @@ import { Center, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
 import { client } from "@/api.client";
@@ -24,10 +24,12 @@ const EtablissementAnalyseDetaillee = () => {
   const searchParams: {
     filters?: Partial<Filters>;
     offre?: string;
+    displayType?: "dashboard" | "quadrant";
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
   const setSearchParams = (params: {
     filters?: typeof filters;
     offre?: string;
+    displayType?: "dashboard" | "quadrant";
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -37,18 +39,12 @@ const EtablissementAnalyseDetaillee = () => {
   const trackEvent = usePlausible();
   const filters = searchParams.filters ?? {};
   const { uai } = useEtablissementContext();
-
-  // const [offre, setOffre] = useState<string>("");
-  const [displayType, setDisplayType] = useState<"dashboard" | "quadrant">(
-    "dashboard"
-  );
-
   const displayDashboard = () => {
-    setDisplayType("dashboard");
+    setSearchParams({ ...searchParams, displayType: "dashboard" });
   };
 
   const displayQuadrant = () => {
-    setDisplayType("quadrant");
+    setSearchParams({ ...searchParams, displayType: "quadrant" });
   };
 
   const { data, isLoading: isLoading } = client
@@ -75,16 +71,22 @@ const EtablissementAnalyseDetaillee = () => {
       !Object.keys(data?.formations ?? {}).includes(searchParams.offre)
     )
       setOffreFilter(Object.keys(data?.formations ?? [])[0]);
+    else if (!searchParams.offre && !isLoading)
+      setOffreFilter(Object.keys(data?.formations ?? [])[0]);
   }, [data]);
 
   const setOffreFilter = (offre: string) => {
     setSearchParams({
-      filters,
+      ...searchParams,
       offre,
     });
   };
 
   const offre = useMemo(() => searchParams.offre ?? "", [searchParams.offre]);
+  const displayType = useMemo(
+    () => searchParams.displayType ?? "dashboard",
+    [searchParams.displayType]
+  );
 
   const handleFilters = (
     type: keyof Filters,
@@ -116,7 +118,7 @@ const EtablissementAnalyseDetaillee = () => {
       <TabsSection
         displayDashboard={displayDashboard}
         displayQuadrant={displayQuadrant}
-        displayType={displayType}
+        displayType={searchParams.displayType ?? displayType}
       />
       {Object.values(data?.formations ?? {}).length ? (
         <Flex direction={"column"} gap={8}>
@@ -136,7 +138,10 @@ const EtablissementAnalyseDetaillee = () => {
                 nbOffres={
                   data?.filters.diplomes.reduce(
                     (acc, diplome) => {
-                      acc[diplome.label] = diplome.nbOffres;
+                      if (!filters.codeNiveauDiplome)
+                        acc[diplome.label] = diplome.nbOffres;
+                      if (filters.codeNiveauDiplome?.includes(diplome.value))
+                        acc[diplome.label] = diplome.nbOffres;
                       return acc;
                     },
                     {} as Record<string, number>
@@ -171,7 +176,9 @@ const EtablissementAnalyseDetaillee = () => {
       ) : (
         <Center my={16}>
           <Text fontSize={25}>
-            {`Aucune formation trouvée pour l'établissement ${data?.etablissement.libelleEtablissement} (${data?.etablissement.uai})`}
+            {`Aucune formation trouvée pour l'établissement ${
+              data?.etablissement.libelleEtablissement ?? ""
+            } (${data?.etablissement.uai ?? uai})`}
           </Text>
         </Center>
       )}
