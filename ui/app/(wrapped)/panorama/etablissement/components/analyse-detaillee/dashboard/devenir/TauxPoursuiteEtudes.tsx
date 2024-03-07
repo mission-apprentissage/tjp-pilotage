@@ -1,3 +1,5 @@
+import { Box, Text } from "@chakra-ui/react";
+
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -26,7 +28,15 @@ export const TauxPoursuiteEtudes = ({
       tooltip={
         <TooltipIcon
           ml="1"
-          label="Poursuite d'études"
+          label={
+            <Box>
+              <Text>
+                Tout élève inscrit à N+1 (réorientation et redoublement
+                compris).
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
+          }
           onClick={() => openGlossaire("taux-poursuite-etudes")}
         />
       }
