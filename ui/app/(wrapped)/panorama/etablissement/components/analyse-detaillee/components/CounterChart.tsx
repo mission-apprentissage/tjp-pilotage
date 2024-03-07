@@ -5,7 +5,7 @@ export const CounterChart = ({
   compareData,
   type = "absolute",
 }: {
-  data?: number;
+  data?: number | string;
   compareData?: React.ReactNode;
   type?: "absolute" | "percentage";
 }) => {

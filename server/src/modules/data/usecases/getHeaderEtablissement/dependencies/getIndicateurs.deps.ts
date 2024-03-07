@@ -7,7 +7,7 @@ import {
   Indicateurs,
 } from "../getHeaderEtablissement.schema";
 import { getTauxIJ } from "./getTauxIJ.deps";
-import { getValeurAjoutee } from "./getValeurAjoutee";
+import { getValeurAjoutee } from "./getValeurAjoutee.deps";
 
 const getCompareTo = (
   current?: number,

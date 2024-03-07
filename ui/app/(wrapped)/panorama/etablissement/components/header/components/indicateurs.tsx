@@ -1,6 +1,6 @@
 import { Badge, Flex, GridItem, Img, Text, useToken } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../../components/GlossaireShortcut";
+import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
 import type { Indicateur, Indicateurs } from "../types";
