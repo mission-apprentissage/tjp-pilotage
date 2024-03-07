@@ -48,7 +48,7 @@ const getIndicateur = (
   previous?: number,
   year?: string
 ): Indicateur => {
-  if (!current) {
+  if (current === undefined) {
     return undefined;
   }
 
