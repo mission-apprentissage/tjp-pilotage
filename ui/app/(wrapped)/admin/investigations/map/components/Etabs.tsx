@@ -7,19 +7,20 @@ import {
   MapGeoJSONFeature,
   MapMouseEvent,
   MapRef,
+  Marker,
   Popup,
   Source,
   SymbolLayer,
   useMap,
 } from "react-map-gl/maplibre";
 
-import { Etablissement } from "./Map_MAPLIBRE";
+import { client } from "../../../../../../api.client";
 
 interface EtabsProps {
-  etabs: Array<Etablissement>;
+  etab: (typeof client.infer)["[GET]/etablissement/:uai/map"];
 }
 
-export const Etabs = ({ etabs }: EtabsProps) => {
+export const Etabs = ({ etab }: EtabsProps) => {
   const [popupState, setPopupState] = useState({
     show: false,
     lat: 0,
@@ -30,13 +31,13 @@ export const Etabs = ({ etabs }: EtabsProps) => {
 
   const geojson = {
     type: "FeatureCollection",
-    features: etabs.map((etab) => ({
+    features: etab.etablissementsProches.map((e) => ({
       geometry: {
         type: "point",
-        coordinates: [etab["longitude (X)"], etab["latitude (Y)"]],
+        coordinates: [e.longitude, e.latitude],
       },
       properties: {
-        uai: etab["code UAI"],
+        uai: e.uai,
       },
     })),
   };
@@ -142,6 +143,7 @@ export const Etabs = ({ etabs }: EtabsProps) => {
   return (
     <>
       <Source id="data" type="geojson" data={geojson} cluster={true} />
+      <Marker longitude={etab.longitude} latitude={etab.latitude} />
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
       <Layer {...singlePointLayer} />

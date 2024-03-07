@@ -9,7 +9,7 @@ export default function MapExperimentation() {
   return (
     <GuardPermission permission="investigations">
       <HStack>
-        <MAPLIBRE />
+        <MAPLIBRE uai={"0141687H"} />
       </HStack>
     </GuardPermission>
   );

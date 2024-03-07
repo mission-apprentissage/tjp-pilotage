@@ -17,7 +17,7 @@ export const getDataForEtablissementMapFactory =
   (
     deps = {
       getEtablissement: dependencies.getEtablissement,
-      getFormation: dependencies.getFormation,
+      getEtablissementCfds: dependencies.getEtablissementCfds,
       getEtablissementsProches: dependencies.getEtablissementsProches,
     }
   ) =>
@@ -30,7 +30,18 @@ export const getDataForEtablissementMapFactory =
     const etablissementsProches: Array<EtablissementProche> = [];
     const etablissement = await deps.getEtablissement({ uai: params.uai });
 
-    const etablissements = await deps.getEtablissementsProches({ ...filters });
+    const cfds =
+      filters?.cfd && filters.cfd.length > 0
+        ? filters.cfd
+        : (await deps.getEtablissementCfds({ uai: params.uai })).map(
+            (r) => r.cfd
+          );
+
+    const etablissements = await deps.getEtablissementsProches({
+      cfd: cfds,
+      bbox: filters.bbox,
+      uai: params.uai,
+    });
 
     const filteredEtablissements = getDistance({
       etablissement,

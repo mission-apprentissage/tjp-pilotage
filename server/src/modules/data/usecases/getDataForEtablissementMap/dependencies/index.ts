@@ -1,3 +1,3 @@
 export { getEtablissement } from "./getEtablissement";
-export { getFormation } from "./getFormation";
+export { getEtablissementCfds } from "./getEtablissementCfds";
 export { getEtablissementsProches } from "./getEtablissementsProches";

@@ -7,7 +7,7 @@ import MapGLMap, {
   ScaleControl,
 } from "react-map-gl/maplibre";
 
-import json from "./csvjson.json";
+import { client } from "../../../../../../api.client";
 import { Etabs } from "./Etabs";
 
 export interface Etablissement {
@@ -46,19 +46,27 @@ const AVAILABLE_STYLES = [
   "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json",
 ];
 
-export function Map({ uai }: { uai?: string }) {
+export function Map({ uai }: { uai: string }) {
   const [style] = useState(AVAILABLE_STYLES[0]);
-  const typedJson = json as Array<Etablissement>;
 
-  const etabs = typedJson.slice(0, 9000);
+  const { data: etab } = client.ref("[GET]/etablissement/:uai/map").useQuery({
+    params: {
+      uai,
+    },
+    query: {
+      cfd: ["40025007"],
+    },
+  });
 
   return (
     <Box w="100vw" h="1000px">
-      <MapGLMap style={{ width: "100%", height: "100%" }} mapStyle={style}>
-        <Etabs etabs={etabs} />
-        <ScaleControl />
-        <NavigationControl />
-      </MapGLMap>
+      {etab && (
+        <MapGLMap style={{ width: "100%", height: "100%" }} mapStyle={style}>
+          <Etabs etab={etab} />
+          <ScaleControl />
+          <NavigationControl />
+        </MapGLMap>
+      )}
     </Box>
   );
 }

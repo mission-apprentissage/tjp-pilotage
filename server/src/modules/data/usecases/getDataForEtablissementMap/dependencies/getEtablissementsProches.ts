@@ -1,9 +1,11 @@
 import { kdb } from "../../../../../db/db";
 import { RouteQueryString } from "../getDataForEtablissementMap.usecase";
 
-export interface Filters extends RouteQueryString {}
+export interface Filters extends RouteQueryString {
+  uai: string;
+}
 
-export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
+export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -12,6 +14,8 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.UAI"
     )
     .selectAll("etablissement")
+    .distinctOn("formationEtablissement.UAI")
+    .where("formationEtablissement.UAI", "!=", uai)
     .$call((q) => {
       if (bbox !== undefined) {
         return q.where((eb) =>
