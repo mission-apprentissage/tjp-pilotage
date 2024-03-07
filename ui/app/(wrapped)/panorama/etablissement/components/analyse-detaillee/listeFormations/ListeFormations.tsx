@@ -33,7 +33,12 @@ export const ListeFormations = ({
   );
 
   return (
-    <Box borderRightWidth={1} borderRightColor={"grey.925"}>
+    <Box
+      borderRightWidth={1}
+      borderRightColor={"grey.925"}
+      overflowY={"auto"}
+      h={"85rem"}
+    >
       <Flex
         flex={1}
         flexDirection={"row"}
@@ -93,41 +98,43 @@ export const ListeFormations = ({
                           .replace("1ere commune", "")}
                       </Text>
                     </Tooltip>
-                    {(formation.typeFamille === "2nde_commune" ||
-                      formation.typeFamille === "1ere_commune") && (
-                      <Tooltip
-                        label={formation.typeFamille
-                          .replace("2nde_commune", "Seconde commune")
-                          .replace("1ere_commune", "Première commune")}
-                      >
-                        <Badge variant={"info"} size="xs">
-                          {formation.typeFamille
-                            .replace("2nde_commune", "2nde")
-                            .replace("1ere_commune", "1ère")}
-                        </Badge>
-                      </Tooltip>
-                    )}
-                    {(formation.typeFamille === "specialite" ||
-                      formation.typeFamille === "option") && (
-                      <Tooltip
-                        label={formation.typeFamille
-                          .replace("specialite", "Spécialité")
-                          .replace("option", "Option")}
-                      >
-                        <Badge variant={"purpleGlycine"} size="xs">
-                          {formation.typeFamille
-                            .replace("specialite", "Spé")
-                            .replace("option", "Opt")}
-                        </Badge>
-                      </Tooltip>
-                    )}
-                    {formation.voie === "apprentissage" && (
-                      <Tooltip label={"Apprentissage"}>
-                        <Badge variant={"new"} size="xs">
-                          Appr
-                        </Badge>
-                      </Tooltip>
-                    )}
+                    <Flex direction="row" gap={1}>
+                      {(formation.typeFamille === "2nde_commune" ||
+                        formation.typeFamille === "1ere_commune") && (
+                        <Tooltip
+                          label={formation.typeFamille
+                            .replace("2nde_commune", "Seconde commune")
+                            .replace("1ere_commune", "Première année commune")}
+                        >
+                          <Badge variant={"info"} size="xs">
+                            {formation.typeFamille
+                              .replace("2nde_commune", "2nde")
+                              .replace("1ere_commune", "1ère")}
+                          </Badge>
+                        </Tooltip>
+                      )}
+                      {(formation.typeFamille === "specialite" ||
+                        formation.typeFamille === "option") && (
+                        <Tooltip
+                          label={formation.typeFamille
+                            .replace("specialite", "Spécialité")
+                            .replace("option", "Option")}
+                        >
+                          <Badge variant={"purpleGlycine"} size="xs">
+                            {formation.typeFamille
+                              .replace("specialite", "Spé")
+                              .replace("option", "Opt")}
+                          </Badge>
+                        </Tooltip>
+                      )}
+                      {formation.voie === "apprentissage" && (
+                        <Tooltip label={"Apprentissage"}>
+                          <Badge variant={"new"} size="xs">
+                            Appr
+                          </Badge>
+                        </Tooltip>
+                      )}
+                    </Flex>
                   </Flex>
                 </ListItem>
               ))}

@@ -1,5 +1,6 @@
-import { useToken } from "@chakra-ui/react";
+import { Box, Text, useToken } from "@chakra-ui/react";
 
+import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -90,9 +91,25 @@ export const TauxPression = ({
         <TooltipIcon
           ml="1"
           label={
-            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
-              ? "Taux de demande"
-              : "Taux de pression"
+            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? (
+              <Box>
+                <Text>
+                  Le ratio entre le nombre de voeux et la capacité de la
+                  formation au niveau régional.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+                <TauxPressionScale />
+              </Box>
+            ) : (
+              <Box>
+                <Text>
+                  Le ratio entre le nombre de premiers voeux et la capacité de
+                  la formation au niveau régional.
+                </Text>
+                <Text>Cliquez pour plus d'infos.</Text>
+                <TauxPressionScale />
+              </Box>
+            )
           }
           onClick={() => openGlossaire("taux-de-pression")}
         />

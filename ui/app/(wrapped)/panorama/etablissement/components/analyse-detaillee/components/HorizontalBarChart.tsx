@@ -39,8 +39,11 @@ export const HorizontalBarChart = ({
           previous - current
         } vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
       }
+      return `{noDelta| +0 vs ${getRentreeScolairePrecedente(
+        CURRENT_RENTREE
+      )}}`;
     }
-    return `{noDelta| +0 vs ${getRentreeScolairePrecedente(CURRENT_RENTREE)}}`;
+    return "";
   };
 
   const getXAxisData = () => {
