@@ -21,7 +21,10 @@ export const EtablissementHeader = () => {
       <Coordonnees informations={informations} />
       <Filieres nsfs={nsfs} />
       <AccesRapide uai={uai} />
-      <IndicateursSection indicateurs={indicateurs} />
+      <IndicateursSection
+        indicateurs={indicateurs}
+        codeRegion={informations?.codeRegion}
+      />
     </Grid>
   );
 };
