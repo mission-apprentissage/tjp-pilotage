@@ -6,10 +6,10 @@ import { getTauxIJ } from "./getTauxIJ.deps";
 import { getValeurAjoutee } from "./getValeurAjoutee.deps";
 
 export {
-  getEtablissement, getIndicateurs,
+  getEtablissement,
+  getIndicateurs,
   getInformations,
   getNsfs,
   getTauxIJ,
-  getValeurAjoutee
+  getValeurAjoutee,
 };
-
