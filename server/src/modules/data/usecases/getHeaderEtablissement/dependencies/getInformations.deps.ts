@@ -19,7 +19,7 @@ export const getInformations = ({ uai }: { uai: string }) =>
     .leftJoin("formationEtablissement as feApprentissage", (join) =>
       join
         .onRef("feApprentissage.UAI", "=", "etablissement.UAI")
-        .on("feApprentissage.voie", "=", sql<string>`'voie'`)
+        .on("feApprentissage.voie", "=", sql<string>`'apprentissage'`)
     )
     .where("etablissement.UAI", "=", uai)
     .select((eb) => [
@@ -28,7 +28,9 @@ export const getInformations = ({ uai }: { uai: string }) =>
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
         "libelleEtablissement"
       ),
-      eb.ref("etablissement.adresseEtablissement").as("adresse"),
+      sql<string>`INITCAP(${eb.ref("etablissement.adresseEtablissement")})`.as(
+        "adresse"
+      ),
       eb.ref("etablissement.commune").as("commune"),
       eb.ref("etablissement.codePostal").as("codePostal"),
       eb.ref("departement.libelleDepartement").as("libelleDepartement"),
@@ -45,5 +47,6 @@ export const getInformations = ({ uai }: { uai: string }) =>
       ),
       eb.ref("etablissement.secteur").as("secteur"),
     ])
+    .distinct()
     .executeTakeFirst()
     .then(cleanNull);
