@@ -5,44 +5,39 @@ import {
   EtablissementProcheSchema,
   getDataForEtablissementMapSchema,
 } from "./getDataForEtablissementMap.schema";
-import { filterByDistance } from "./services/filterByDistance";
 import { formatEtablissement } from "./services/formatEtablissement";
+import { getDistance } from "./services/getDistance";
 
 export type EtablissementProche = z.infer<typeof EtablissementProcheSchema>;
+export type RouteQueryString = z.infer<
+  typeof getDataForEtablissementMapSchema.querystring
+>;
 
 export const getDataForEtablissementMapFactory =
   (
     deps = {
       getEtablissement: dependencies.getEtablissement,
       getFormation: dependencies.getFormation,
-      getEtablissementsFromCfd: dependencies.getEtablissementsFromCfd,
+      getEtablissementsProches: dependencies.getEtablissementsProches,
     }
   ) =>
   async (
     params: z.infer<typeof getDataForEtablissementMapSchema.params>,
-    filters: z.infer<typeof getDataForEtablissementMapSchema.querystring>
+    filters: RouteQueryString
   ): Promise<
     z.infer<(typeof getDataForEtablissementMapSchema.response)["200"]>
   > => {
     const etablissementsProches: Array<EtablissementProche> = [];
     const etablissement = await deps.getEtablissement({ uai: params.uai });
 
-    if (filters.cfd && filters.cfd.length > 0) {
-      const cfds = [...filters.cfd];
+    const etablissements = await deps.getEtablissementsProches({ ...filters });
 
-      for (let i = 0; i < cfds.length; i++) {
-        const etablissements = await deps.getEtablissementsFromCfd({
-          cfd: cfds[i],
-        });
+    const filteredEtablissements = getDistance({
+      etablissement,
+      etablissements,
+    }).map(formatEtablissement);
 
-        const filteredEtablissements = filterByDistance({
-          etablissement,
-          etablissements,
-        }).map(formatEtablissement);
-
-        etablissementsProches.push(...filteredEtablissements);
-      }
-    }
+    etablissementsProches.push(...filteredEtablissements);
 
     return {
       uai: etablissement.UAI,

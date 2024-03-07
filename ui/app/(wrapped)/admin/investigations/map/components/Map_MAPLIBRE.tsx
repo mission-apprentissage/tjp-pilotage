@@ -2,7 +2,10 @@ import "maplibre-gl/dist/maplibre-gl.css";
 
 import { Box } from "@chakra-ui/react";
 import { useState } from "react";
-import MapGLMap, { ScaleControl } from "react-map-gl/maplibre";
+import MapGLMap, {
+  NavigationControl,
+  ScaleControl,
+} from "react-map-gl/maplibre";
 
 import json from "./csvjson.json";
 import { Etabs } from "./Etabs";
@@ -41,12 +44,9 @@ export interface Etablissement {
 
 const AVAILABLE_STYLES = [
   "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json",
-  "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/standard.json",
-  "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/attenue.json",
-  "https://wxs.ign.fr/static/vectorTiles/styles/PLAN.IGN/essentiels/accentue.json",
 ];
 
-export function Map() {
+export function Map({ uai }: { uai?: string }) {
   const [style] = useState(AVAILABLE_STYLES[0]);
   const typedJson = json as Array<Etablissement>;
 
@@ -57,6 +57,7 @@ export function Map() {
       <MapGLMap style={{ width: "100%", height: "100%" }} mapStyle={style}>
         <Etabs etabs={etabs} />
         <ScaleControl />
+        <NavigationControl />
       </MapGLMap>
     </Box>
   );

@@ -1,5 +1,5 @@
 import { EtablissementProche } from "../getDataForEtablissementMap.usecase";
-import { EtablissementWithDistance } from "./filterByDistance";
+import { EtablissementWithDistance } from "./getDistance";
 
 export function formatEtablissement(
   etablissement: EtablissementWithDistance

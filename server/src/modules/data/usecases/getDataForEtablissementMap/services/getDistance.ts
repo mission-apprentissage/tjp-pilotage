@@ -1,4 +1,4 @@
-import { getDistance } from "geolib";
+import { getDistance as getGeoDistance } from "geolib";
 import { Selectable } from "kysely";
 
 import { DB } from "../../../../../db/schema";
@@ -13,7 +13,7 @@ interface FilterByDistanceParams {
   etablissements: Array<Selectable<DB["etablissement"]>>;
 }
 
-export function filterByDistance({
+export function getDistance({
   etablissement,
   etablissements,
 }: FilterByDistanceParams): Array<EtablissementWithDistance> {
@@ -28,7 +28,7 @@ export function filterByDistance({
         return;
 
       // get distance in metters
-      const distance = getDistance(
+      const distance = getGeoDistance(
         {
           latitude: etablissement.latitude,
           longitude: etablissement.longitude,

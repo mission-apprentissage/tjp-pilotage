@@ -13,6 +13,14 @@ export const getDataForEtablissementMapSchema = {
   }),
   querystring: z.object({
     cfd: z.string().array().optional(),
+    bbox: z
+      .object({
+        x1: z.string(),
+        x2: z.string(),
+        y1: z.string(),
+        y2: z.string(),
+      })
+      .optional(),
   }),
   response: {
     200: z.object({
