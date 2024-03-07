@@ -3,13 +3,13 @@ import { getIndicateurs } from "./getIndicateurs.deps";
 import { getInformations } from "./getInformations.deps";
 import { getNsfs } from "./getNsfs.deps";
 import { getTauxIJ } from "./getTauxIJ.deps";
-import { getIndicateurValeurAjoutee } from "./getValeurAjoutee";
+import { getValeurAjoutee } from "./getValeurAjoutee.deps";
 
 export {
   getEtablissement,
-  getIndicateurValeurAjoutee,
   getIndicateurs,
   getInformations,
   getNsfs,
   getTauxIJ,
+  getValeurAjoutee,
 };

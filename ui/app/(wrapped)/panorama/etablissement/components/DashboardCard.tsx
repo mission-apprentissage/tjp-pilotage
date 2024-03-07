@@ -1,15 +1,13 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, FlexProps, forwardRef, Text } from "@chakra-ui/react";
 
-export const DashboardCard = ({
-  label,
-  tooltip,
-  children,
-}: {
+type DashboardCardProps = FlexProps & {
   label: string;
   tooltip?: React.ReactNode;
   children?: React.ReactNode;
-}) => {
-  return (
+};
+
+export const DashboardCard = forwardRef<DashboardCardProps, "div">(
+  ({ label, tooltip, children, ...rest }, ref) => (
     <Flex
       borderWidth={"1px"}
       borderColor="grey.925"
@@ -18,6 +16,8 @@ export const DashboardCard = ({
       minH={"200px"}
       h="100%"
       flexDirection={"column"}
+      ref={ref}
+      {...rest}
     >
       <Flex justifyContent={"space-between"} flex={1}>
         <Text fontSize={"14"} fontWeight={400} lineHeight={"19px"}>
@@ -27,5 +27,5 @@ export const DashboardCard = ({
       </Flex>
       <Flex>{children}</Flex>
     </Flex>
-  );
-};
+  )
+);
