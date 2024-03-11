@@ -339,7 +339,6 @@ export interface User {
   uais: string[] | null;
   enabled: Generated<boolean>;
   sub: string | null;
-  lastSeenAt: Timestamp | null;
 }
 
 export interface DB {
