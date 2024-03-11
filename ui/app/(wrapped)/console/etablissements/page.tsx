@@ -252,7 +252,7 @@ export default function Etablissements() {
         <Select
           placeholder="Toutes les régions"
           width="12rem"
-          variant="input"
+          variant="dsfr"
           size="sm"
           onChange={(e) => {
             handleFiltersContext("codeRegion", [e.target.value]);

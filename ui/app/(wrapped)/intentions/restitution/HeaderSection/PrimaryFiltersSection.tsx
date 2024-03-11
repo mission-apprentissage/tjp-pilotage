@@ -58,7 +58,7 @@ export const PrimaryFiltersSection = ({
                   <Select
                     width={[null, null, "72"]}
                     size="md"
-                    variant={"newInput"}
+                    variant={"dsfr"}
                     value={activeFilters.rentreeScolaire?.toString() ?? ""}
                     onChange={(e) =>
                       handleFilters("rentreeScolaire", e.target.value)
@@ -83,7 +83,7 @@ export const PrimaryFiltersSection = ({
                     onClose={filterTracker("codeRegion")}
                     width={["100%", null, "72"]}
                     size="md"
-                    variant={"newInput"}
+                    variant={"dsfr"}
                     onChange={(selected) =>
                       handleFilters("codeRegion", selected)
                     }
@@ -101,7 +101,7 @@ export const PrimaryFiltersSection = ({
                     onClose={filterTracker("codeAcademie")}
                     width={"72"}
                     size="md"
-                    variant={"newInput"}
+                    variant={"dsfr"}
                     onChange={(selected) =>
                       handleFilters("codeAcademie", selected)
                     }
@@ -118,7 +118,7 @@ export const PrimaryFiltersSection = ({
                     onClose={filterTracker("codeDepartement")}
                     width={"72"}
                     size="md"
-                    variant={"newInput"}
+                    variant={"dsfr"}
                     onChange={(selected) =>
                       handleFilters("codeDepartement", selected)
                     }

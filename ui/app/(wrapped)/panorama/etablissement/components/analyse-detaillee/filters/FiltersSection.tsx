@@ -22,7 +22,7 @@ export const FiltersSection = ({
       <Multiselect
         onClose={filterTracker("codeNiveauDiplome")}
         width="24rem"
-        variant={"newInput"}
+        variant={"dsfr"}
         onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
         options={data?.filters.diplomes ?? []}
         value={filters.codeNiveauDiplome ?? []}

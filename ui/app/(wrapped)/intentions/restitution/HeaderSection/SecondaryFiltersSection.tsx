@@ -37,7 +37,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("commune")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("commune", selected)}
               options={data?.filters.communes}
               value={activeFilters.commune ?? []}
@@ -52,7 +52,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("uai")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("uai", selected)}
               options={data?.filters.etablissements}
               value={activeFilters.uai ?? []}
@@ -67,7 +67,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("codeNiveauDiplome")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) =>
                 handleFilters("codeNiveauDiplome", selected)
               }
@@ -84,7 +84,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("cfd")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("cfd", selected)}
               options={data?.filters.formations}
               value={activeFilters.cfd ?? []}
@@ -104,9 +104,9 @@ export const SecondaryFiltersSection = ({
             </FormLabel>
             <Multiselect
               onClose={filterTracker("codeNsf")}
-              width={"48"}
+              width={"64"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("codeNsf", selected)}
               options={data?.filters.libellesNsf}
               value={activeFilters.codeNsf ?? []}
@@ -122,7 +122,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("CPC")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("CPC", selected)}
               options={data?.filters.CPCs}
               value={activeFilters.CPC ?? []}
@@ -138,7 +138,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("cfdFamille")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("cfdFamille", selected)}
               options={data?.filters.familles}
               value={activeFilters.cfdFamille ?? []}
@@ -156,7 +156,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("status")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("status", selected)}
               options={data?.filters.statuts}
               value={activeFilters.status ?? []}
@@ -172,7 +172,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("typeDemande")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
               options={data?.filters.typesDemande.map(
                 (typeDemande: { value: string; label: string }) => {
@@ -196,7 +196,7 @@ export const SecondaryFiltersSection = ({
               onClose={filterTracker("motif")}
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               onChange={(selected) => handleFilters("motif", selected)}
               options={data?.filters.motifs.map(
                 (motif: { value: string; label: string }) => {
@@ -217,7 +217,7 @@ export const SecondaryFiltersSection = ({
             <Select
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               value={activeFilters.coloration?.toString() ?? ""}
               onChange={(e) => handleFilters("coloration", e.target.value)}
               borderBottomColor={
@@ -237,7 +237,7 @@ export const SecondaryFiltersSection = ({
             <Select
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               value={activeFilters.amiCMA?.toString() ?? ""}
               onChange={(e) => handleFilters("amiCMA", e.target.value)}
               borderBottomColor={
@@ -257,7 +257,7 @@ export const SecondaryFiltersSection = ({
             <Select
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               value={activeFilters.secteur ?? ""}
               onChange={(e) => handleFilters("secteur", e.target.value)}
               borderBottomColor={
@@ -277,7 +277,7 @@ export const SecondaryFiltersSection = ({
             <Select
               width={"48"}
               size="md"
-              variant={"newInput"}
+              variant={"dsfr"}
               value={activeFilters.voie ?? ""}
               onChange={(e) => handleFilters("voie", e.target.value)}
               borderBottomColor={

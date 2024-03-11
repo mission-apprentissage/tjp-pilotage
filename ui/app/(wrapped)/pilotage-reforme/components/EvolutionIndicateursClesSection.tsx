@@ -64,7 +64,7 @@ export const EvolutionIndicateursClesSection = ({
             <Select
               width="64"
               size="sm"
-              variant="newInput"
+              variant="dsfr"
               bg={"grey.150"}
               onChange={(e) => handleIndicateurChange(e.target.value)}
               value={indicateur}

@@ -51,7 +51,7 @@ export function PanoramaSelection({
           <FormLabel>Choisissez un département pour commencer</FormLabel>
           <Select
             onChange={(e) => onCodeDepartementChanged(e.target.value)}
-            variant="input"
+            variant="dsfr"
           >
             <option key="-" value="">
               -

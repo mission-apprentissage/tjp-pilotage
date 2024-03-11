@@ -61,7 +61,7 @@ export const IndicateursSection = ({
             </FormLabel>
             <Select
               onChange={(e) => onCodeChanged(e.target.value)}
-              variant="input"
+              variant="dsfr"
               value={code}
               autoFocus={true}
             >
