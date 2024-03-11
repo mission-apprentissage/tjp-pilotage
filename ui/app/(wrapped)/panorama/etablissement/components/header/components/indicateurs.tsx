@@ -221,7 +221,9 @@ export const IndicateursSection = ({
         alignItems={"center"}
         width={"100%"}
       >
-        <Text fontWeight={"bold"}>INDICATEURS ÉTABLISSEMENT</Text>
+        <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
+          INDICATEURS ÉTABLISSEMENT
+        </Text>
         <Badge
           variant="info"
           size={"md"}
@@ -231,7 +233,7 @@ export const IndicateursSection = ({
           Millésimes {indicateurs?.millesime}
         </Badge>
       </Flex>
-      <Flex width={"100%"} gap={2} justifyContent={"space-between"} mt={"32px"}>
+      <Flex width={"100%"} gap={2} justifyContent={"space-between"} mt={"16px"}>
         <IndicateurValeurAjoutee indicateur={indicateurs?.valeurAjoutee} />
         <IndicateurTauxEmploi6mois indicateur={indicateurs?.tauxEmploi6mois} />
         <IndicateurPoursuiteDetudes indicateur={indicateurs?.tauxPoursuite} />
