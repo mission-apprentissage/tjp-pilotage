@@ -31,6 +31,7 @@ export const getInformations = ({ uai }: { uai: string }) =>
       sql<string>`INITCAP(${eb.ref("etablissement.adresseEtablissement")})`.as(
         "adresse"
       ),
+      eb.ref("etablissement.UAI").as("uai"),
       eb.ref("etablissement.commune").as("commune"),
       eb.ref("etablissement.codePostal").as("codePostal"),
       eb.ref("departement.libelleDepartement").as("libelleDepartement"),
