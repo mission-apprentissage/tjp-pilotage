@@ -10,6 +10,7 @@ import { logger, loggerContextPlugin } from "./logger";
 import { migrateToLatest } from "./migrations/migrate";
 import { registerChangelogModule } from "./modules/changelog";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
+import { userLastSeenAt } from "./modules/core/utils/lastSeenAt/userLastSeenAt";
 import { registerFormationModule } from "./modules/data";
 import { registerGlossaireModule } from "./modules/glossaire";
 import { registerIntentionsModule } from "./modules/intentions";
@@ -88,6 +89,7 @@ process.on("uncaughtExceptionMonitor", (error, origin) => {
 });
 
 server.addHook("onRequest", extractUserInRequest);
+server.addHook("onRequest", userLastSeenAt);
 server.register(loggerContextPlugin);
 
 const registerRoutes = (instance: Server) => {
