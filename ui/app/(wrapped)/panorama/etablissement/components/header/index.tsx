@@ -1,4 +1,4 @@
-import { Grid } from "@chakra-ui/react";
+import { Grid, GridItem } from "@chakra-ui/react";
 
 import Loading from "../../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
@@ -24,9 +24,13 @@ export const EtablissementHeader = () => {
     <Grid templateColumns={"repeat(12,1fr)"} py={"32px"}>
       <Libelle informations={informations} />
       <SearchInput uai={uai} />
-      <Coordonnees informations={informations} />
-      <Filieres nsfs={nsfs} />
       <AccesRapide uai={uai} />
+      <GridItem colSpan={12} mt={"48px"} mb={"32px"}>
+        <Grid templateColumns={"repeat(12,1fr)"}>
+          <Coordonnees informations={informations} />
+          <Filieres nsfs={nsfs} />
+        </Grid>
+      </GridItem>
       <IndicateursSection
         indicateurs={indicateurs}
         codeRegion={informations?.codeRegion}
