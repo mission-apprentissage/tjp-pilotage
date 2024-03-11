@@ -24,15 +24,12 @@ export const Coordonnees = ({
     codeDepartement,
     isApprentissage,
     isScolaire,
+    uai,
   } = informations || {};
   const [textDisabled] = useToken("colors", ["grey.625"]);
   return (
-    <GridItem colSpan={6} mt={"32px"}>
-      <Text
-        fontSize={{ base: "14px", md: "18px" }}
-        pb={"16px"}
-        fontWeight={"bold"}
-      >
+    <GridItem colSpan={7}>
+      <Text fontSize={{ base: "14px" }} pb={"16px"} fontWeight={"bold"}>
         {secteur === "PU" && "ÉTABLISSEMENT PUBLIC"}
         {secteur === "PR" && "ÉTABLISSEMENT PRIVÉ"}
       </Text>
@@ -49,6 +46,7 @@ export const Coordonnees = ({
           <Text color={textDisabled}>
             {codePostal} {commune} - {libelleDepartement} ({codeDepartement})
           </Text>
+          <Text>{uai && <Text color={textDisabled}>UAI : {uai}</Text>}</Text>
           <Box>
             {isScolaire && (
               <Badge variant="info" mr={"8px"}>

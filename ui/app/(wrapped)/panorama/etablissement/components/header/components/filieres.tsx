@@ -71,17 +71,15 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
   }, [nsfs]);
 
   return (
-    <GridItem colSpan={6} mt={"32px"}>
-      <Text
-        fontSize={{ base: "14px", md: "18px" }}
-        pb={"16px"}
-        fontWeight={"bold"}
-      >
+    <GridItem colSpan={5}>
+      <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
         DOMAINES DES FORMATION ENSEIGNÉS
       </Text>
-      {(nsfs || []).length === 0 && <Text>Information indisponible</Text>}
+      {(nsfs || []).length === 0 && (
+        <Text my={"16px"}>Information indisponible</Text>
+      )}
       {(nsfs || []).length > 0 && (
-        <SimpleGrid columns={2} spacing={"16px"} color={"grey.50"}>
+        <SimpleGrid columns={2} spacing={"16px"} color={"grey.50"} my={"16px"}>
           {splited?.map((filiere) => (
             <Flex key={filiere.codeNsf} direction={"row"}>
               <Icon
