@@ -44,6 +44,8 @@ export interface Etablissement {
 
 const AVAILABLE_STYLES = [
   "https://openmaptiles.geo.data.gouv.fr/styles/osm-bright/style.json",
+  "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/standard.json",
+  "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json",
 ];
 
 export function Map({ uai }: { uai: string }) {
