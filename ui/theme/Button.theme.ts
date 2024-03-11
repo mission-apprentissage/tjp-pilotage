@@ -77,7 +77,19 @@ const input = defineStyle({
   },
 });
 
+const externalLink = defineStyle({
+  ...commonButtonStyle,
+  bg: "transparent",
+  color: "bluefrance.113",
+  fontWeight: 500,
+  fontSize: "14px",
+  borderWidth: "1px",
+  borderColor: "grey.900",
+  padding: 2,
+  w: "fit-content",
+});
+
 export const buttonTheme = defineStyleConfig({
-  variants: { primary, input, newInput, secondary, createButton },
+  variants: { primary, input, newInput, secondary, createButton, externalLink },
   baseStyle: {},
 });
