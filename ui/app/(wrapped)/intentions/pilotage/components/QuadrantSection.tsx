@@ -254,7 +254,7 @@ export const QuadrantSection = ({
             </Button>
             <Select
               ml="6"
-              variant="newInput"
+              variant="dsfr"
               bg="blueecume.400_hover"
               color="white"
               maxW={250}

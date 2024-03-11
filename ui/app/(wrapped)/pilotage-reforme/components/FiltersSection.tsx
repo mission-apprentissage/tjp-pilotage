@@ -31,7 +31,7 @@ export const FiltersSection = ({
                 onClose={filterTracker("codeNiveauDiplome")}
                 width={["12rem", null, "72"]}
                 size="md"
-                variant="newInput"
+                variant="dsfr"
                 onChange={(selected) =>
                   handleFilters("codeNiveauDiplome", selected)
                 }
@@ -46,7 +46,7 @@ export const FiltersSection = ({
               <Select
                 width={["12rem", null, "72"]}
                 size="md"
-                variant="newInput"
+                variant="dsfr"
                 borderBottomColor={
                   activeFilters.codeRegion != undefined ? "info.525" : ""
                 }

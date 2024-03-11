@@ -65,7 +65,7 @@ export const FiltersSection = ({
           <Select
             width={["100%", null, "100%"]}
             size="md"
-            variant="newInput"
+            variant="dsfr"
             value={scope.type}
             onChange={(e) => {
               filterTracker(generateEventFromScope(e.target.value as Scope));
@@ -92,7 +92,7 @@ export const FiltersSection = ({
           <Select
             width={"100%"}
             size="md"
-            variant="newInput"
+            variant="dsfr"
             value={
               scope.type === ScopeEnum.region && scope?.value
                 ? scope.value ?? ""
@@ -120,7 +120,7 @@ export const FiltersSection = ({
           <Select
             width={"100%"}
             size="md"
-            variant="newInput"
+            variant="dsfr"
             value={
               scope.type === ScopeEnum.academie && scope?.value
                 ? scope.value ?? ""
@@ -151,7 +151,7 @@ export const FiltersSection = ({
           <Select
             width={"100%"}
             size="md"
-            variant="newInput"
+            variant="dsfr"
             value={
               scope.type === ScopeEnum.departement && scope?.value
                 ? scope.value
@@ -180,7 +180,7 @@ export const FiltersSection = ({
       <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
         <Box flex={[1, null, "unset"]}>
           <FormLabel>Rentrée scolaire</FormLabel>
-          <Select width={"100%"} size="md" variant="newInput">
+          <Select width={"100%"} size="md" variant="dsfr">
             <option>2024</option>
             <option disabled>2025</option>
             <option disabled>2026</option>
@@ -193,7 +193,7 @@ export const FiltersSection = ({
             onClose={filterTracker("codeNiveauDiplome")}
             width={"100%"}
             size="md"
-            variant={"newInput"}
+            variant={"dsfr"}
             onChange={(selected) =>
               handleFilters({ codeNiveauDiplome: selected })
             }
@@ -210,7 +210,7 @@ export const FiltersSection = ({
             onClose={filterTracker("CPC")}
             width={"100%"}
             size="md"
-            variant={"newInput"}
+            variant={"dsfr"}
             onChange={(selected) => handleFilters({ CPC: selected })}
             options={data?.filters?.CPCs}
             value={activeFilters.CPC ?? []}
@@ -233,7 +233,7 @@ export const FiltersSection = ({
             onClose={filterTracker("codeNsf")}
             width={"100%"}
             size="md"
-            variant={"newInput"}
+            variant={"dsfr"}
             onChange={(selected) => handleFilters({ codeNsf: selected })}
             options={data?.filters?.libellesNsf ?? []}
             value={activeFilters.codeNsf ?? []}

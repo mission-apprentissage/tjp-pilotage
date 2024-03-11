@@ -4,7 +4,7 @@ import { createMultiStyleConfigHelpers } from "@chakra-ui/react";
 const { definePartsStyle, defineMultiStyleConfig } =
   createMultiStyleConfigHelpers(selectAnatomy.keys);
 
-const input = definePartsStyle({
+const dsfr = definePartsStyle({
   field: {
     borderRadius: "4px 4px 0 0",
     textTransform: "none",
@@ -55,5 +55,5 @@ const newInput = definePartsStyle({
 });
 
 export const selectTheme = defineMultiStyleConfig({
-  variants: { input, newInput },
+  variants: { dsfr, newInput },
 });

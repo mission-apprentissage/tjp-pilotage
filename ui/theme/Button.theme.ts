@@ -59,7 +59,7 @@ const newInput = defineStyle({
   },
 });
 
-const input = defineStyle({
+const dsfr = defineStyle({
   ...commonButtonStyle,
   bg: "grey.950",
   color: "inherit",
@@ -78,6 +78,6 @@ const input = defineStyle({
 });
 
 export const buttonTheme = defineStyleConfig({
-  variants: { primary, input, newInput, secondary, createButton },
+  variants: { primary, dsfr, newInput, secondary, createButton },
   baseStyle: {},
 });

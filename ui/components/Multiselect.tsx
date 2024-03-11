@@ -133,7 +133,7 @@ export const Multiselect = chakra(
     value,
     size,
     hasDefaultValue = true,
-    variant = "input",
+    variant = "dsfr",
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -227,8 +227,8 @@ export const Multiselect = chakra(
           pointerEvents={disabled ? "none" : "unset"}
           className={className}
           variant={variant}
-          borderColor={value.length ? "info.525" : "grey.950"}
-          borderWidth={value.length ? "1.5px" : "1px"}
+          borderColor={value.length ? "info.525" : "grey.200"}
+          // borderWidth={value.length ? "1.5px" : "1px"}
           rightIcon={<ChevronDownIcon />}
         >
           <ButtonContent selected={Array.from(map.values())}>
