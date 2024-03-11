@@ -42,7 +42,13 @@ export const TauxRemplissage = ({
         </>
       );
     }
-    return "";
+    return (
+      <>
+        <Flex>{`+0% vs. ${getRentreeScolairePrecedente(
+          CURRENT_RENTREE
+        )}`}</Flex>
+      </>
+    );
   };
   return (
     <DashboardCard
