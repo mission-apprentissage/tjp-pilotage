@@ -28,7 +28,7 @@ export const Effectifs = ({
       return (
         <>
           <Flex color="success.425">{`${
-            capacite - effectifEntree
+            effectifEntree - capacite
           } pl. en surnombre`}</Flex>
         </>
       );
