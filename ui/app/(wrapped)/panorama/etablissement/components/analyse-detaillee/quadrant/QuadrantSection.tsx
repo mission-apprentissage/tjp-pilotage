@@ -10,10 +10,10 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import Link from "next/link";
 import { useMemo } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { Quadrant } from "@/components/Quadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -48,6 +48,7 @@ export const QuadrantSection = ({
   offre: string;
   setOffre: (offre: string) => void;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   const filteredFormations = Object.values(formations)
     .map((formation) => ({
       ...formation,
@@ -110,10 +111,20 @@ export const QuadrantSection = ({
         l'établissement avec les taux moyens de la région
       </Text>
       <Flex direction={"row"} gap={2} h={10}>
-        <TooltipIcon label="Comprendre le quadrant"></TooltipIcon>
-        <Text as={Link} href="test" color={"grey.425"} lineHeight={"12px"}>
-          Comprendre le quadrant
-        </Text>
+        <Flex
+          gap={2}
+          onClick={() => openGlossaire("quadrant")}
+          cursor={"pointer"}
+        >
+          <TooltipIcon ml="1" label={"Comprendre le quadrant"} />
+          <Text
+            textDecoration={"underline"}
+            color={"grey.425"}
+            lineHeight={"12px"}
+          >
+            Comprendre le quadrant
+          </Text>
+        </Flex>
       </Flex>
       <DonneesDisponiblesSection
         formations={formations}
