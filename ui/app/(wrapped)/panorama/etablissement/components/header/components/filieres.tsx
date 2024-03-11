@@ -73,7 +73,7 @@ export const Filieres = ({ nsfs = [] }: { nsfs?: Nsfs }) => {
   return (
     <GridItem colSpan={5}>
       <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
-        DOMAINES DES FORMATION ENSEIGNÉS
+        DOMAINES DE FORMATION PROPOSÉS
       </Text>
       {(nsfs || []).length === 0 && (
         <Text my={"16px"}>Information indisponible</Text>
