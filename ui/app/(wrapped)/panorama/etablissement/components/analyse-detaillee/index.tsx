@@ -14,8 +14,6 @@ import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
 import { LiensUtilesSection } from "./liens-utiles/LiensUtilesSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
-import { QuadrantSection } from "./quadrant/QuadrantSection";
-import { TabsSection } from "./tabs/TabsSection";
 import { Filters } from "./types";
 
 const EtablissementAnalyseDetaillee = () => {
@@ -39,13 +37,14 @@ const EtablissementAnalyseDetaillee = () => {
   const trackEvent = usePlausible();
   const filters = searchParams.filters ?? {};
   const { uai } = useEtablissementContext();
-  const displayDashboard = () => {
-    setSearchParams({ ...searchParams, displayType: "dashboard" });
-  };
+  // PAGE ETAB V2 AVEC QUADRANT FF
+  // const displayDashboard = () => {
+  //   setSearchParams({ ...searchParams, displayType: "dashboard" });
+  // };
 
-  const displayQuadrant = () => {
-    setSearchParams({ ...searchParams, displayType: "quadrant" });
-  };
+  // const displayQuadrant = () => {
+  //   setSearchParams({ ...searchParams, displayType: "quadrant" });
+  // };
 
   const { data, isLoading: isLoading } = client
     .ref(`[GET]/etablissement/analyse-detaillee`)
@@ -83,10 +82,12 @@ const EtablissementAnalyseDetaillee = () => {
   };
 
   const offre = useMemo(() => searchParams.offre ?? "", [searchParams.offre]);
-  const displayType = useMemo(
-    () => searchParams.displayType ?? "dashboard",
-    [searchParams.displayType]
-  );
+
+  // PAGE ETAB V2 AVEC QUADRANT FF
+  // const displayType = useMemo(
+  //   () => searchParams.displayType ?? "dashboard",
+  //   [searchParams.displayType]
+  // );
 
   const handleFilters = (
     type: keyof Filters,
@@ -115,11 +116,12 @@ const EtablissementAnalyseDetaillee = () => {
         Analyse des formations
       </Text>
       <Divider width="48px" />
-      <TabsSection
+      {/* // PAGE ETAB V2 AVEC QUADRANT FF */}
+      {/* <TabsSection
         displayDashboard={displayDashboard}
         displayQuadrant={displayQuadrant}
         displayType={searchParams.displayType ?? displayType}
-      />
+      /> */}
       {Object.values(data?.formations ?? {}).length ? (
         <Flex direction={"column"} gap={8}>
           <FiltersSection
@@ -150,17 +152,16 @@ const EtablissementAnalyseDetaillee = () => {
               />
             </GridItem>
             <GridItem colSpan={6}>
-              {displayType === "dashboard" ? (
-                <Dashboard
-                  formation={data?.formations[searchParams.offre ?? offre]}
-                  chiffresIJOffre={
-                    data?.chiffresIJ[searchParams.offre ?? offre]
-                  }
-                  chiffresEntreeOffre={
-                    data?.chiffresEntree[searchParams.offre ?? offre]
-                  }
-                />
-              ) : (
+              {/* // PAGE ETAB V2 AVEC QUADRANT FF */}
+              {/* {displayType === "dashboard" ? ( */}
+              <Dashboard
+                formation={data?.formations[searchParams.offre ?? offre]}
+                chiffresIJOffre={data?.chiffresIJ[searchParams.offre ?? offre]}
+                chiffresEntreeOffre={
+                  data?.chiffresEntree[searchParams.offre ?? offre]
+                }
+              />
+              {/* ) : (
                 <QuadrantSection
                   formations={Object.values(data?.formations ?? {})}
                   chiffresIJ={data?.chiffresIJ}
@@ -169,7 +170,7 @@ const EtablissementAnalyseDetaillee = () => {
                   offre={searchParams.offre ?? offre}
                   setOffre={setOffreFilter}
                 />
-              )}
+               )} */}
             </GridItem>
           </Grid>
         </Flex>
