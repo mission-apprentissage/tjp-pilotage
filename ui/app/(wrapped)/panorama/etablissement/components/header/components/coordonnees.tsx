@@ -53,9 +53,7 @@ export const Coordonnees = ({
                 VOIE SCOLAIRE
               </Badge>
             )}
-            {isApprentissage && (
-              <Badge variant="brownCafeCreme">APPRENTISSAGE</Badge>
-            )}
+            {isApprentissage && <Badge variant="new">APPRENTISSAGE</Badge>}
           </Box>
         </Flex>
       </Flex>
