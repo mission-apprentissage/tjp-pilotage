@@ -1,3 +1,4 @@
+import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Badge,
   Box,
@@ -9,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 
 import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
+import { TooltipIcon } from "../../../../../../../components/TooltipIcon";
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
@@ -207,10 +209,8 @@ const isMissingDatas = (indicateurs?: Indicateurs) => {
 
 export const IndicateursSection = ({
   indicateurs,
-  codeRegion,
 }: {
   indicateurs?: Indicateurs;
-  codeRegion?: string;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   return (
@@ -221,9 +221,16 @@ export const IndicateursSection = ({
         alignItems={"center"}
         width={"100%"}
       >
-        <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
-          INDICATEURS ÉTABLISSEMENT
-        </Text>
+        <Flex direction={"row"} alignItems={"center"}>
+          <Text fontSize={{ base: "14px" }} fontWeight={"bold"}>
+            INDICATEURS ÉTABLISSEMENT
+          </Text>
+          <TooltipIcon
+            ml="2"
+            label="Ces chiffres incluent l'apprentissage pour les établissements qui en proposent."
+            placement="right"
+          />
+        </Flex>
         <Badge
           variant="info"
           size={"md"}
@@ -231,6 +238,7 @@ export const IndicateursSection = ({
           onClick={() => openGlossaire("inserjeunes")}
         >
           Millésimes {indicateurs?.millesime}
+          <QuestionOutlineIcon ml={"0.2rem"} />
         </Badge>
       </Flex>
       <Flex width={"100%"} gap={2} justifyContent={"space-between"} mt={"16px"}>
@@ -239,10 +247,7 @@ export const IndicateursSection = ({
         <IndicateurPoursuiteDetudes indicateur={indicateurs?.tauxPoursuite} />
         <IndicateurTauxDevenirFavorable indicateur={indicateurs?.tauxDevenir} />
       </Flex>
-      <DonneesIncompletes
-        isMissingDatas={isMissingDatas(indicateurs)}
-        codeRegion={codeRegion}
-      />
+      <DonneesIncompletes isMissingDatas={isMissingDatas(indicateurs)} />
     </GridItem>
   );
 };

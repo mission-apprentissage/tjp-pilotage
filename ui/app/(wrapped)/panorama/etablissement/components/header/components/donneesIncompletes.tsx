@@ -1,13 +1,9 @@
-import { Box, Button, Flex, GridItem, Text } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
-import Link from "next/link";
+import { Box, Flex, GridItem, Text } from "@chakra-ui/react";
 
 export const DonneesIncompletes = ({
   isMissingDatas,
-  codeRegion,
 }: {
   isMissingDatas: boolean;
-  codeRegion?: string;
 }) => {
   if (!isMissingDatas) {
     return null;
@@ -36,18 +32,6 @@ export const DonneesIncompletes = ({
             de cet établissement
           </Text>
         </Box>
-
-        <Link href={`/panorama/region/${codeRegion}`} passHref>
-          <Button as="a" color="bluefrance.113">
-            Voir les données régionales
-            <Icon
-              icon="ri:external-link-line"
-              width={"16px"}
-              height={"16px"}
-              style={{ marginLeft: "8px" }}
-            />
-          </Button>
-        </Link>
       </Flex>
     </GridItem>
   );
