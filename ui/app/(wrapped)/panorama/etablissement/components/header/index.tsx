@@ -31,10 +31,7 @@ export const EtablissementHeader = () => {
           <Filieres nsfs={nsfs} />
         </Grid>
       </GridItem>
-      <IndicateursSection
-        indicateurs={indicateurs}
-        codeRegion={informations?.codeRegion}
-      />
+      <IndicateursSection indicateurs={indicateurs} />
     </Grid>
   );
 };
