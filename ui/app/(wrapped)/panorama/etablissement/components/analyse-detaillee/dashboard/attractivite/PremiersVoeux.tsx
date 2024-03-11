@@ -43,7 +43,11 @@ export const PremiersVoeux = ({
         </>
       );
     }
-    return "";
+    return (
+      <>
+        <Flex>{`+0 vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}</Flex>
+      </>
+    );
   };
 
   return (
