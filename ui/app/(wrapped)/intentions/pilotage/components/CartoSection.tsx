@@ -139,7 +139,6 @@ export const CartoSection = ({
                 width="64"
                 size="sm"
                 variant="dsfr"
-                bg={"grey.150"}
                 onChange={(e) => handleIndicateurChange(e.target.value)}
                 value={indicateur}
                 borderBottomColor={
