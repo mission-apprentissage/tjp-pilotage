@@ -323,6 +323,9 @@ const getEtablissement = async ({ uai }: { uai: string }) =>
   kdb
     .selectFrom("dataEtablissement")
     .where("uai", "=", uai)
+    .where("codeRegion", "is not", null)
+    .where("codeAcademie", "is not", null)
+    .where("codeDepartement", "is not", null)
     .select([
       "uai",
       "libelleEtablissement",

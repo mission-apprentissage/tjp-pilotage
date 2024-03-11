@@ -11,6 +11,8 @@ export type AnalyseDetaillee =
 export type Formations = AnalyseDetaillee["formations"];
 export type Formation = Formations[string];
 
+export type Etablissement = AnalyseDetaillee["etablissement"];
+
 export type ChiffresIJ = AnalyseDetaillee["chiffresIJ"];
 export type ChiffresIJOffre = ChiffresIJ[string];
 export type ChiffresIJOffreMillesime = ChiffresIJOffre[string];
