@@ -215,15 +215,39 @@ export const getTauxIJ = ({
       "voie",
       "rentreeScolaire",
       "millesimeSortie",
-      sql<number>`100 * ${eb.ref("numerateurPoursuite")}::float/${eb.ref(
-        "denominateurPoursuite"
-      )}::float`.as("tauxPoursuite"),
-      sql<number>`100 * ${eb.ref("numerateurEmploi")}::float/${eb.ref(
-        "denominateurEmploi"
-      )}::float`.as("tauxEmploi6mois"),
-      sql<number>`100 * (${eb.ref("numerateurPoursuite")} + ${eb.ref(
-        "numerateurEmploi"
-      )})::float/${eb.ref("denominateurDevenir")}::float`.as("tauxDevenir"),
+      eb
+        .case()
+        .when(eb.ref("denominateurPoursuite"), ">=", sql<number>`20`)
+        .then(
+          sql<number>`100 * ${eb.ref("numerateurPoursuite")}::float/${eb.ref(
+            "denominateurPoursuite"
+          )}::float`
+        )
+        .else(null)
+        .end()
+        .as("tauxPoursuite"),
+      eb
+        .case()
+        .when(eb.ref("denominateurEmploi"), ">=", sql<number>`20`)
+        .then(
+          sql<number>`100 * ${eb.ref("numerateurEmploi")}::float/${eb.ref(
+            "denominateurEmploi"
+          )}::float`
+        )
+        .else(null)
+        .end()
+        .as("tauxEmploi6mois"),
+      eb
+        .case()
+        .when(eb.ref("denominateurDevenir"), ">=", sql<number>`20`)
+        .then(
+          sql<number>`100 * (${eb.ref("numerateurPoursuite")} + ${eb.ref(
+            "numerateurEmploi"
+          )})::float/${eb.ref("denominateurDevenir")}::float`
+        )
+        .else(null)
+        .end()
+        .as("tauxDevenir"),
     ])
     .orderBy(["voie desc", "millesimeSortie desc"])
     .execute()
