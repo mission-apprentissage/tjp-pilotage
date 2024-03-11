@@ -331,7 +331,6 @@ export const Quadrant = function <
       dataIndex: number;
       data: { value: [number, number] };
     }) => {
-      console.log("click", event.data);
       const [x, y] = chartRef.current?.convertToPixel(
         "grid",
         event.data.value
