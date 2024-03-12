@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useToken,
   VStack,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
@@ -36,6 +37,9 @@ export const Header = () => {
     setAuth(undefined);
     queryClient.clear();
   };
+
+  const greyColor = useToken("colors", "grey.900");
+
   return (
     <>
       <VStack
@@ -49,7 +53,7 @@ export const Header = () => {
           />
         }
         align={"start"}
-        boxShadow="0 2px 3px rgba(0,0,18,0.16)"
+        borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
           <HStack as={Link} spacing={10} align="center" href="/">
@@ -99,10 +103,19 @@ export const Header = () => {
             )}
           </Box>
         </Flex>
+      </VStack>
+      <Box
+        boxShadow="0 2px 3px rgba(0,0,18,0.16)"
+        position="sticky"
+        top={0}
+        left={0}
+        zIndex={1000}
+        backgroundColor="white"
+      >
         <Container maxWidth={"container.xl"} px={0}>
           <Nav />
         </Container>
-      </VStack>
+      </Box>
       <InformationHeader />
     </>
   );
