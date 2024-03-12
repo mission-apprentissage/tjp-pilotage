@@ -1,34 +1,30 @@
 import { Search2Icon } from "@chakra-ui/icons";
 import { Flex, GridItem, Skeleton, useToken } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import {
-  components,
-  CSSObjectWithLabel,
-  ValueContainerProps,
-} from "react-select";
+import { components, ControlProps, CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "../../../../../../../api.client";
 
-const ValueContainer = ({
+const Control = ({
   children,
   ...props
-}: ValueContainerProps<
+}: ControlProps<
   (typeof client.infer)["[GET]/etablissement/search/:search"][0],
   false
 >) => {
   const [placeholderGrey] = useToken("colors", ["grey.625"]);
 
   return (
-    <components.ValueContainer {...props}>
+    <components.Control {...props}>
       <Search2Icon
-        mr={2}
+        ml={2}
         height={"18px"}
         width={"18px"}
         color={placeholderGrey}
       />
       {children}
-    </components.ValueContainer>
+    </components.Control>
   );
 };
 
@@ -64,16 +60,11 @@ export const SearchInput = ({ uai }: { uai: string }) => {
                 display: "flex",
                 alignItems: "center",
               }),
-              valueContainer: (styles) => ({
-                ...styles,
-                display: "flex",
-                alignItems: "center",
-              }),
             }}
             components={{
               DropdownIndicator: () => null,
               IndicatorSeparator: () => null,
-              ValueContainer,
+              Control,
             }}
             onChange={(selected) => selected && router.push(selected.value)}
             defaultValue={
