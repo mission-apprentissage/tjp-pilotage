@@ -24,7 +24,6 @@ const getCompareTo = (
     return {
       value: `+${diff.toFixed(2)} vs. ${year}`,
       direction: "up",
-      color: "green",
     };
   }
 
@@ -32,14 +31,12 @@ const getCompareTo = (
     return {
       value: `${diff.toFixed(2)} vs. ${year}`,
       direction: "down",
-      color: "red",
     };
   }
 
   return {
     value: `${diff.toFixed(2)} vs. ${year}`,
     direction: "equal",
-    color: "grey",
   };
 };
 

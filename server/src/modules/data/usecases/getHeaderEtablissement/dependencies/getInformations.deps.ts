@@ -14,12 +14,12 @@ export const getInformations = ({ uai }: { uai: string }) =>
     .leftJoin("formationEtablissement as feScolaire", (join) =>
       join
         .onRef("feScolaire.UAI", "=", "etablissement.UAI")
-        .on("feScolaire.voie", "=", sql<string>`'scolaire'`)
+        .on("feScolaire.voie", "=", "scolaire")
     )
     .leftJoin("formationEtablissement as feApprentissage", (join) =>
       join
         .onRef("feApprentissage.UAI", "=", "etablissement.UAI")
-        .on("feApprentissage.voie", "=", sql<string>`'apprentissage'`)
+        .on("feApprentissage.voie", "=", "apprentissage")
     )
     .where("etablissement.UAI", "=", uai)
     .select((eb) => [
