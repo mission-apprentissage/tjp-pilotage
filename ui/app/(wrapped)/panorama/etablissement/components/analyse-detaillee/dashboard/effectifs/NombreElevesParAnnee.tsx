@@ -12,14 +12,58 @@ export const NombreElevesParAnnee = ({
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
-    return (
-      Object.values(chiffresEntreeOffre).findIndex(
-        (value) =>
-          value.effectifAnnee1 || value.effectifAnnee2 || value.effectifAnnee3
-      ) !== -1
-    );
+  const checkDataAvailability = (): boolean => {
+    if (chiffresEntreeOffre) {
+      return (
+        Object.values(chiffresEntreeOffre).findIndex(
+          (value) =>
+            value.effectifAnnee1 || value.effectifAnnee2 || value.effectifAnnee3
+        ) !== -1
+      );
+    }
+    return false;
   };
+
+  const getHorizontalBarChartData = () => {
+    if (chiffresEntreeOffre) {
+      return Object.values(chiffresEntreeOffre ?? {}).reduce(
+        (acc, rentreeScolaire) => {
+          acc[rentreeScolaire.rentreeScolaire] = [];
+          if (
+            rentreeScolaire.effectifs &&
+            rentreeScolaire.effectifs.length >= 1
+          ) {
+            acc[rentreeScolaire.rentreeScolaire].push({
+              label: "Année 1",
+              value: rentreeScolaire.effectifAnnee1 ?? 0,
+            });
+          }
+          if (
+            rentreeScolaire.effectifs &&
+            rentreeScolaire.effectifs.length >= 2
+          ) {
+            acc[rentreeScolaire.rentreeScolaire].push({
+              label: "Année 2",
+              value: rentreeScolaire.effectifAnnee2 ?? 0,
+            });
+          }
+          if (
+            rentreeScolaire.effectifs &&
+            rentreeScolaire.effectifs.length >= 3
+          ) {
+            acc[rentreeScolaire.rentreeScolaire].push({
+              label: "Année 3",
+              value: rentreeScolaire.effectifAnnee3 ?? 0,
+            });
+          }
+          return acc;
+        },
+        {} as Record<string, { label: string; value: number }[]>
+      );
+    }
+    return {};
+  };
+
   return (
     <DashboardCard
       label="Nombre d'élèves par année (Constat de rentrée 2023)"
@@ -31,43 +75,8 @@ export const NombreElevesParAnnee = ({
         />
       }
     >
-      {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
-        <HorizontalBarChart
-          data={Object.values(chiffresEntreeOffre).reduce(
-            (acc, rentreeScolaire) => {
-              acc[rentreeScolaire.rentreeScolaire] = [];
-              if (
-                rentreeScolaire.effectifs &&
-                rentreeScolaire.effectifs.length >= 1
-              ) {
-                acc[rentreeScolaire.rentreeScolaire].push({
-                  label: "Année 1",
-                  value: rentreeScolaire.effectifAnnee1 ?? 0,
-                });
-              }
-              if (
-                rentreeScolaire.effectifs &&
-                rentreeScolaire.effectifs.length >= 2
-              ) {
-                acc[rentreeScolaire.rentreeScolaire].push({
-                  label: "Année 2",
-                  value: rentreeScolaire.effectifAnnee2 ?? 0,
-                });
-              }
-              if (
-                rentreeScolaire.effectifs &&
-                rentreeScolaire.effectifs.length >= 3
-              ) {
-                acc[rentreeScolaire.rentreeScolaire].push({
-                  label: "Année 3",
-                  value: rentreeScolaire.effectifAnnee3 ?? 0,
-                });
-              }
-              return acc;
-            },
-            {} as Record<string, { label: string; value: number }[]>
-          )}
-        />
+      {checkDataAvailability() ? (
+        <HorizontalBarChart data={getHorizontalBarChartData()} />
       ) : (
         <CounterChart />
       )}

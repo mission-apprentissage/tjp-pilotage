@@ -76,8 +76,10 @@ const FormationSchema = z.object({
 });
 
 export const getAnalyseDetailleeEtablissementSchema = {
-  querystring: z.object({
+  params: z.object({
     uai: z.string(),
+  }),
+  querystring: z.object({
     codeNiveauDiplome: z.array(z.string()).optional(),
   }),
   response: {

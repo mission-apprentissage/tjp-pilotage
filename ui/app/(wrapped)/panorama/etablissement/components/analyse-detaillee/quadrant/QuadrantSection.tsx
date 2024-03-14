@@ -20,7 +20,6 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 import {
   ChiffresEntree,
   ChiffresIJ,
-  ChiffresIJOffreMillesime,
   Etablissement,
   Formation,
   StatsSortie,
@@ -83,24 +82,21 @@ export const QuadrantSection = ({
         formation.effectif
     );
 
-  const getOffreDimensions = (
-    chiffresIJOffreMillesime?: ChiffresIJOffreMillesime
-  ): Array<"tauxPoursuite" | "tauxInsertion"> | undefined => {
+  const getOffreDimensions = ():
+    | Array<"tauxPoursuite" | "tauxInsertion">
+    | undefined => {
     const dimensions: Array<"tauxPoursuite" | "tauxInsertion"> = [];
-    if (chiffresIJOffreMillesime?.tauxPoursuite) {
+    if (chiffresIJ?.[offre]?.[CURRENT_IJ_MILLESIME]?.tauxPoursuite) {
       dimensions.push("tauxPoursuite");
     }
-    if (chiffresIJOffreMillesime?.tauxInsertion) {
+    if (chiffresIJ?.[offre]?.[CURRENT_IJ_MILLESIME]?.tauxInsertion) {
       dimensions.push("tauxInsertion");
     }
     return dimensions.length ? dimensions : undefined;
   };
 
   const offresDimensions: Array<"tauxPoursuite" | "tauxInsertion"> | undefined =
-    useMemo(
-      () => getOffreDimensions(chiffresIJ?.[offre]?.[CURRENT_IJ_MILLESIME]),
-      [offre]
-    );
+    useMemo(() => getOffreDimensions(), [offre]);
 
   return (
     <Flex direction={"column"} gap={4}>
