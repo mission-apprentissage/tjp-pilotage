@@ -1,6 +1,6 @@
 import { client } from "@/api.client";
 
-import { ExportColumns } from "../../../../utils/downloadCsv";
+import { ExportColumns } from "../../../../utils/downloadExport";
 
 export const STATS_DEMANDES_COLUMNS = {
   id: "N° demande",

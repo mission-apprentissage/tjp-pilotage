@@ -24,17 +24,16 @@ import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
 
+import { client } from "@/api.client";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
+import { Quadrant } from "@/components/Quadrant";
+import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { useStateParams } from "@/utils/useFilters";
 
-import { client } from "../../../../../api.client";
-import { Quadrant } from "../../../../../components/Quadrant";
-import { TableQuadrant } from "../../../../../components/TableQuadrant";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../../utils/downloadCsv";
-import { downloadExcel } from "../../../../../utils/downloadExcel";
-import { useStateParams } from "../../../../../utils/useFilters";
 import {
   Filters,
   OrderFormationsTransformationStats,
