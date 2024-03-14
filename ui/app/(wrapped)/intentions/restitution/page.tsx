@@ -7,12 +7,11 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
-import { downloadExcel } from "@/utils/downloadExcel";
+import { TableFooter } from "@/components/TableFooter";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { TableFooter } from "../../../../components/TableFooter";
-import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
