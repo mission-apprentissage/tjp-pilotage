@@ -3,7 +3,7 @@ import { z } from "zod";
 const informationsSchema = z.object({
   libelleEtablissement: z.string(),
   uai: z.string(),
-  adresse: z.string().optional(),
+  adresse: z.string(),
   commune: z.string().optional(),
   codePostal: z.string().optional(),
   libelleDepartement: z.string().optional(),
@@ -26,7 +26,6 @@ const compareToSchema = z
   .object({
     value: z.string(),
     direction: z.enum(["up", "down", "equal"]),
-    color: z.enum(["green", "red", "grey"]),
   })
   .optional();
 

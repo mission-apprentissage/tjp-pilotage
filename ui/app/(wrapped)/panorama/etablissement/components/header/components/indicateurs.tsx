@@ -14,21 +14,13 @@ import { TooltipIcon } from "../../../../../../../components/TooltipIcon";
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
-import type { Indicateur, Indicateurs } from "../types";
+import type { CompareTo, Indicateur, Indicateurs } from "../types";
 import { DonneesIncompletes } from "./donneesIncompletes";
 
-const getCompareData = (
-  compareTo:
-    | {
-        value: string;
-        direction: "up" | "down" | "equal";
-        color: "green" | "red" | "grey";
-      }
-    | undefined
-) => {
-  const { value, direction, color } = compareTo || {};
+const getCompareData = (compareTo?: CompareTo) => {
+  const { value, direction } = compareTo || {};
 
-  if (!value) return null;
+  if (!value || !direction) return null;
 
   const [green, red, grey] = useToken("colors", [
     "success.425",
@@ -36,18 +28,17 @@ const getCompareData = (
     "grey.425",
   ]);
 
+  const arrowImg: string = {
+    up: `/icons/arrow_${direction}.svg`,
+    down: `/icons/arrow_${direction}.svg`,
+    equal: `/icons/arrow_right.svg`,
+  }[direction];
+
+  const color = { up: green, down: red, equal: grey }[direction];
+
   return (
-    <Flex color={{ green, red, grey }[color!]}>
-      <Img
-        src={
-          {
-            up: `/icons/arrow_${direction}.svg`,
-            down: `/icons/arrow_${direction}.svg`,
-            equal: `/icons/arrow_right.svg`,
-          }[direction!]
-        }
-        alt={direction}
-      />
+    <Flex color={color}>
+      <Img src={arrowImg} alt={direction} />
       <Text fontWeight={"bold"}>{value}</Text>
     </Flex>
   );
@@ -56,7 +47,7 @@ const getCompareData = (
 const IndicateurValeurAjoutee = ({
   indicateur,
 }: {
-  indicateur: Indicateur;
+  indicateur?: Indicateur;
 }) => (
   <DashboardCard
     label="Valeur ajoutée"
@@ -83,7 +74,7 @@ const IndicateurValeurAjoutee = ({
     minH={"120px"}
   >
     <CounterChart
-      data={indicateur?.value?.toFixed(0)}
+      data={indicateur?.value.toFixed(0)}
       type="absolute"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -93,7 +84,7 @@ const IndicateurValeurAjoutee = ({
 const IndicateurTauxEmploi6mois = ({
   indicateur,
 }: {
-  indicateur: Indicateur;
+  indicateur?: Indicateur;
 }) => (
   <DashboardCard
     label="Taux d'emploi à 6 mois"
@@ -128,7 +119,7 @@ const IndicateurTauxEmploi6mois = ({
 const IndicateurPoursuiteDetudes = ({
   indicateur,
 }: {
-  indicateur: Indicateur;
+  indicateur?: Indicateur;
 }) => (
   <DashboardCard
     label="Poursuite d'études"
@@ -162,7 +153,7 @@ const IndicateurPoursuiteDetudes = ({
 const IndicateurTauxDevenirFavorable = ({
   indicateur,
 }: {
-  indicateur: Indicateur;
+  indicateur?: Indicateur;
 }) => {
   return (
     <DashboardCard
