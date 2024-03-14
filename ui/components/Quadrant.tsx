@@ -118,21 +118,28 @@ export const Quadrant = function <
     }));
   }, [data]);
 
-  const moyennes = useMemo(
-    () => ({
-      insertion: dimensions?.includes("tauxInsertion")
-        ? meanInsertion
-          ? meanInsertion * 100
-          : undefined
-        : 50,
-      poursuite: dimensions?.includes("tauxPoursuite")
-        ? meanPoursuite
-          ? meanPoursuite * 100
-          : undefined
-        : 50,
-    }),
-    [meanPoursuite, meanInsertion, dimensions]
-  );
+  const moyennes = useMemo(() => {
+    const moyenneInsertion = (() => {
+      if (dimensions?.includes("tauxInsertion")) {
+        if (meanInsertion) return meanInsertion * 100;
+        return undefined;
+      }
+      return 50;
+    })();
+
+    const moyennePoursuite = (() => {
+      if (dimensions?.includes("tauxPoursuite")) {
+        if (meanPoursuite) return meanPoursuite * 100;
+        return undefined;
+      }
+      return 50;
+    })();
+
+    return {
+      insertion: moyenneInsertion,
+      poursuite: moyennePoursuite,
+    };
+  }, [meanPoursuite, meanInsertion, dimensions]);
 
   const repartitionsQuadrants = useMemo(() => {
     if (!meanInsertion || !meanPoursuite) return;
