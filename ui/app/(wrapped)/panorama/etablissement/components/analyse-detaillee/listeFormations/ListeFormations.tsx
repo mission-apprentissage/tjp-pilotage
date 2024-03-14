@@ -9,6 +9,12 @@ import {
 } from "@chakra-ui/react";
 import _ from "lodash";
 
+import {
+  formatAnneeCommuneLibelle,
+  formatTypeFamilleCourt,
+  formatTypeFamilleLong,
+} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+
 import { Formation } from "../types";
 
 export const ListeFormations = ({
@@ -79,9 +85,9 @@ export const ListeFormations = ({
                 >
                   <Flex direction="row" justify={"space-between"}>
                     <Tooltip
-                      label={formation.libelleFormation
-                        .replace("2nde commune", "")
-                        .replace("1ere commune", "")}
+                      label={formatAnneeCommuneLibelle(
+                        formation.libelleFormation
+                      )}
                     >
                       <Text
                         my={2}
@@ -93,37 +99,27 @@ export const ListeFormations = ({
                         overflow={"hidden"}
                         isTruncated={true}
                       >
-                        {formation.libelleFormation
-                          .replace("2nde commune", "")
-                          .replace("1ere commune", "")}
+                        {formatAnneeCommuneLibelle(formation.libelleFormation)}
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
                       {(formation.typeFamille === "2nde_commune" ||
                         formation.typeFamille === "1ere_commune") && (
                         <Tooltip
-                          label={formation.typeFamille
-                            .replace("2nde_commune", "Seconde commune")
-                            .replace("1ere_commune", "Première année commune")}
+                          label={formatTypeFamilleLong(formation.typeFamille)}
                         >
                           <Badge variant={"info"} size="xs">
-                            {formation.typeFamille
-                              .replace("2nde_commune", "2nde")
-                              .replace("1ere_commune", "1ère")}
+                            {formatTypeFamilleCourt(formation.typeFamille)}
                           </Badge>
                         </Tooltip>
                       )}
                       {(formation.typeFamille === "specialite" ||
                         formation.typeFamille === "option") && (
                         <Tooltip
-                          label={formation.typeFamille
-                            .replace("specialite", "Spécialité")
-                            .replace("option", "Option")}
+                          label={formatTypeFamilleLong(formation.typeFamille)}
                         >
                           <Badge variant={"purpleGlycine"} size="xs">
-                            {formation.typeFamille
-                              .replace("specialite", "Spé")
-                              .replace("option", "Opt")}
+                            {formatTypeFamilleCourt(formation.typeFamille)}
                           </Badge>
                         </Tooltip>
                       )}

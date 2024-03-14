@@ -1,6 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import Loading from "../../../../components/Loading";
+import { Loading } from "@/components/Loading";
+
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { AccesRapide } from "./components/accesRapide";
 import { Coordonnees } from "./components/coordonnees";

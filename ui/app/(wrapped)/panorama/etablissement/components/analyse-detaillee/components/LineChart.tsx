@@ -97,7 +97,8 @@ export const LineChart = ({
             position: "top",
             color: "inherit",
             distance: 5,
-            formatter: (value) => value.data.toString().replace(".", ","),
+            formatter: (value) =>
+              value?.data?.toString().replace(".", ",") ?? "",
             fontSize: 14,
             fontWeight: 700,
           },
@@ -107,7 +108,8 @@ export const LineChart = ({
             cap: "round",
           },
           tooltip: {
-            valueFormatter: (value) => value.toString().replace(".", ","),
+            valueFormatter: (value) =>
+              value?.toString().replace(".", ",") ?? "",
           },
           connectNulls: true,
         };

@@ -15,13 +15,29 @@ export const TauxEmploi = ({
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
-    return (
-      Object.values(chiffresIJOffre).findIndex(
-        (value) => value.tauxInsertion
-      ) !== -1
-    );
+  const checkDataAvailability = (): boolean => {
+    if (chiffresIJOffre) {
+      return (
+        Object.values(chiffresIJOffre).findIndex(
+          (value) => value.tauxInsertion
+        ) !== -1
+      );
+    }
+    return false;
   };
+
+  const getVerticalBarChartData = (): { label: string; value: number }[] => {
+    if (chiffresIJOffre) {
+      return Object.keys(chiffresIJOffre)
+        .filter((millesime) => chiffresIJOffre[millesime].tauxInsertion)
+        .map((millesime) => ({
+          label: formatMillesime(millesime),
+          value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
+        }));
+    }
+    return [];
+  };
+
   return (
     <DashboardCard
       label="Taux d'emploi à 6 mois"
@@ -41,15 +57,8 @@ export const TauxEmploi = ({
         />
       }
     >
-      {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
-        <VerticalBarChart
-          data={Object.keys(chiffresIJOffre)
-            .filter((millesime) => chiffresIJOffre[millesime].tauxInsertion)
-            .map((millesime) => ({
-              label: formatMillesime(millesime),
-              value: formatTaux(chiffresIJOffre[millesime].tauxInsertion),
-            }))}
-        />
+      {checkDataAvailability() ? (
+        <VerticalBarChart data={getVerticalBarChartData()} />
       ) : (
         <CounterChart />
       )}
