@@ -32,6 +32,7 @@ import { ExportColumns } from "@/utils/downloadCsv";
 import { Multiselect } from "../../../../components/Multiselect";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { downloadCsv } from "../../../../utils/downloadCsv";
+import { downloadExcel } from "../../../../utils/downloadExcel";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -838,6 +839,17 @@ export default function Etablissements() {
           trackEvent("etablissements:export");
           downloadCsv(
             "etablissement_export.csv",
+            data.etablissements,
+            ETABLISSEMENTS_COLUMNS
+          );
+        }}
+        onExportExcel={async () => {
+          const data = await client.ref("[GET]/etablissements").query({
+            query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+          });
+          trackEvent("etablissements:export-excel");
+          downloadExcel(
+            "etablissement_export.xls",
             data.etablissements,
             ETABLISSEMENTS_COLUMNS
           );

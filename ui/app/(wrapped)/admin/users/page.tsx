@@ -23,6 +23,7 @@ import { useMemo, useState } from "react";
 import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { downloadExcel } from "@/utils/downloadExcel";
 import { useStateParams } from "@/utils/useFilters";
 
 import { client } from "../../../../api.client";
@@ -223,6 +224,12 @@ export default () => {
                 query: { ...filters, ...order, limit: 1000000 },
               });
               downloadCsv("users_export.csv", data.users, Columns);
+            }}
+            onExportExcel={async () => {
+              const data = await client.ref("[GET]/users").query({
+                query: { ...filters, ...order, limit: 1000000 },
+              });
+              downloadExcel("users_export.xls", data.users, Columns);
             }}
           />
           {user && isOpen && (

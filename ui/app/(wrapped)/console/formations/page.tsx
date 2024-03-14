@@ -26,6 +26,7 @@ import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { downloadExcel } from "@/utils/downloadExcel";
 
 import { Multiselect } from "../../../../components/Multiselect";
 import { OrderIcon } from "../../../../components/OrderIcon";
@@ -671,6 +672,17 @@ export default function Formations() {
           });
           downloadCsv(
             "formations_export.csv",
+            data.formations,
+            FORMATIONS_COLUMNS
+          );
+        }}
+        onExportExcel={async () => {
+          const data = await client.ref("[GET]/formations").query({
+            query: getFormationsQueryParameters(EXPORT_LIMIT),
+          });
+          trackEvent("formations:export-excel");
+          downloadExcel(
+            "formations_export.xls",
             data.formations,
             FORMATIONS_COLUMNS
           );

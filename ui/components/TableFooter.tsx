@@ -7,9 +7,16 @@ import {
   IconButton,
   Spinner,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useState } from "react";
 
-const ExportButton = ({ onExport }: { onExport?: () => Promise<void> }) => {
+const ExportButton = ({
+  onExport,
+  type = "csv",
+}: {
+  onExport?: () => Promise<void>;
+  type?: "csv" | "excel";
+}) => {
   const [loading, setIsLoading] = useState<boolean>(false);
 
   const handleExport = async () => {
@@ -31,10 +38,15 @@ const ExportButton = ({ onExport }: { onExport?: () => Promise<void> }) => {
     );
   }
 
-  return (
-    <Button onClick={handleExport} mr="auto" size="sm" variant="ghost">
-      <DownloadIcon mr="2" />
+  return type === "csv" ? (
+    <Button onClick={handleExport} size="sm" variant="ghost" gap={2} m="0">
+      <DownloadIcon />
       Exporter en CSV
+    </Button>
+  ) : (
+    <Button onClick={handleExport} size="sm" variant="ghost" gap={2} m="0">
+      <Icon icon="ri:file-excel-2-line" />
+      Exporter en Excel
     </Button>
   );
 };
@@ -46,6 +58,7 @@ export const TableFooter = chakra(
     count = 0,
     onPageChange,
     onExport,
+    onExportExcel,
     className,
   }: {
     pageSize: number;
@@ -53,6 +66,7 @@ export const TableFooter = chakra(
     count?: number;
     onPageChange: (page: number) => void;
     onExport?: () => Promise<void>;
+    onExportExcel?: () => Promise<void>;
     className?: string;
   }) => {
     return (
@@ -63,7 +77,10 @@ export const TableFooter = chakra(
         py="1.5"
         className={className}
       >
-        <ExportButton onExport={onExport} />
+        <Flex mr="auto">
+          <ExportButton onExport={onExport} />
+          <ExportButton onExport={onExportExcel} type={"excel"} />
+        </Flex>
         <Box mr="4" ml="auto">
           {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
           {count}
