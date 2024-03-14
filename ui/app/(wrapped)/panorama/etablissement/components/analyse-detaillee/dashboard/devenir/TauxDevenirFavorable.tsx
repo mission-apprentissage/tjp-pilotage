@@ -15,12 +15,27 @@ export const TauxDevenirFavorable = ({
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (chiffresIJOffre: ChiffresIJOffre) => {
-    return (
-      Object.values(chiffresIJOffre).findIndex(
-        (value) => value.tauxDevenirFavorable
-      ) !== -1
-    );
+  const checkDataAvailability = (): boolean => {
+    if (chiffresIJOffre) {
+      return (
+        Object.values(chiffresIJOffre).findIndex(
+          (value) => value.tauxDevenirFavorable
+        ) !== -1
+      );
+    }
+    return false;
+  };
+
+  const getVerticalBarChartData = (): { label: string; value: number }[] => {
+    if (chiffresIJOffre) {
+      return Object.keys(chiffresIJOffre)
+        .filter((millesime) => chiffresIJOffre[millesime].tauxDevenirFavorable)
+        .map((millesime) => ({
+          label: formatMillesime(millesime),
+          value: formatTaux(chiffresIJOffre[millesime].tauxDevenirFavorable),
+        }));
+    }
+    return [];
   };
 
   return (
@@ -43,19 +58,8 @@ export const TauxDevenirFavorable = ({
         />
       }
     >
-      {chiffresIJOffre && checkDataAvailability(chiffresIJOffre) ? (
-        <VerticalBarChart
-          data={Object.keys(chiffresIJOffre)
-            .filter(
-              (millesime) => chiffresIJOffre[millesime].tauxDevenirFavorable
-            )
-            .map((millesime) => ({
-              label: formatMillesime(millesime),
-              value: formatTaux(
-                chiffresIJOffre[millesime].tauxDevenirFavorable
-              ),
-            }))}
-        />
+      {checkDataAvailability() ? (
+        <VerticalBarChart data={getVerticalBarChartData()} />
       ) : (
         <CounterChart />
       )}
