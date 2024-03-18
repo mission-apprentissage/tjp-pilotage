@@ -153,6 +153,7 @@ export default function RootLayoutClient({
                           direction="column"
                           height="100vh"
                           overflow="auto"
+                          position="relative"
                           ref={containerRef}
                           onScroll={handleScrolling}
                         >
