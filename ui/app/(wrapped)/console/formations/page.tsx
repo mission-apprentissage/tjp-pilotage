@@ -24,13 +24,17 @@ import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
+import { Multiselect } from "@/components/Multiselect";
+import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import {
+  downloadCsv,
+  downloadExcel,
+  ExportColumns,
+} from "@/utils/downloadExport";
 
-import { Multiselect } from "../../../../components/Multiselect";
-import { OrderIcon } from "../../../../components/OrderIcon";
-import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import {
@@ -669,8 +673,15 @@ export default function Formations() {
           const data = await client.ref("[GET]/formations").query({
             query: getFormationsQueryParameters(EXPORT_LIMIT),
           });
-          downloadCsv(
-            "formations_export.csv",
+          downloadCsv("formations_export", data.formations, FORMATIONS_COLUMNS);
+        }}
+        onExportExcel={async () => {
+          const data = await client.ref("[GET]/formations").query({
+            query: getFormationsQueryParameters(EXPORT_LIMIT),
+          });
+          trackEvent("formations:export-excel");
+          downloadExcel(
+            "formations_export",
             data.formations,
             FORMATIONS_COLUMNS
           );
