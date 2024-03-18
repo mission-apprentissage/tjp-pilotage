@@ -24,14 +24,17 @@ import { unstable_batchedUpdates } from "react-dom";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
+import { Multiselect } from "@/components/Multiselect";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { ExportColumns } from "@/utils/downloadCsv";
+import {
+  downloadCsv,
+  downloadExcel,
+  ExportColumns,
+} from "@/utils/downloadExport";
 
-import { Multiselect } from "../../../../components/Multiselect";
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { downloadCsv } from "../../../../utils/downloadCsv";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -837,7 +840,18 @@ export default function Etablissements() {
           });
           trackEvent("etablissements:export");
           downloadCsv(
-            "etablissement_export.csv",
+            "etablissement_export",
+            data.etablissements,
+            ETABLISSEMENTS_COLUMNS
+          );
+        }}
+        onExportExcel={async () => {
+          const data = await client.ref("[GET]/etablissements").query({
+            query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+          });
+          trackEvent("etablissements:export-excel");
+          downloadExcel(
+            "etablissement_export",
             data.etablissements,
             ETABLISSEMENTS_COLUMNS
           );

@@ -17,7 +17,7 @@ import { client } from "@/api.client";
 
 import { Quadrant } from "../../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../../components/TableQuadrant";
-import { downloadCsv } from "../../../../../utils/downloadCsv";
+import { downloadCsv } from "../../../../../utils/downloadExport";
 import { OrderPanoramaEtablissement } from "../../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 

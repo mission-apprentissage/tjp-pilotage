@@ -17,22 +17,23 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
 
+import { client } from "@/api.client";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
+import { Quadrant } from "@/components/Quadrant";
+import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { useStateParams } from "@/utils/useFilters";
 
-import { client } from "../../../../../api.client";
-import { Quadrant } from "../../../../../components/Quadrant";
-import { TableQuadrant } from "../../../../../components/TableQuadrant";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../../utils/downloadCsv";
-import { useStateParams } from "../../../../../utils/useFilters";
 import {
   Filters,
   OrderFormationsTransformationStats,
@@ -207,7 +208,7 @@ export const QuadrantSection = ({
               onClick={async () => {
                 if (!formations) return;
                 downloadCsv(
-                  "formations_transformees.csv",
+                  "formations_transformees",
                   formations.map((formation) => ({
                     ...formation,
                     libelleRegion:
@@ -251,6 +252,58 @@ export const QuadrantSection = ({
             >
               <DownloadIcon mr="2" />
               Exporter en csv
+            </Button>
+            <Button
+              ml="6"
+              aria-label="csv"
+              variant="solid"
+              onClick={async () => {
+                if (!formations) return;
+                downloadExcel(
+                  "formations_transformees",
+                  formations.map((formation) => ({
+                    ...formation,
+                    libelleRegion:
+                      scope?.type === ScopeEnum.region
+                        ? getLibelleTerritoire(
+                            scopeFilters?.regions,
+                            scope.value
+                          )
+                        : undefined,
+                    libelleAcademie:
+                      scope?.type === ScopeEnum.academie
+                        ? getLibelleTerritoire(
+                            scopeFilters?.academies,
+                            scope.value
+                          )
+                        : undefined,
+                    libelleDepartement:
+                      scope?.type === ScopeEnum.departement
+                        ? getLibelleTerritoire(
+                            scopeFilters?.departements,
+                            scope.value
+                          )
+                        : undefined,
+                  })),
+                  {
+                    libelleFormation: "Formation",
+                    cfd: "CFD",
+                    libelleDispositif: "Dispositif",
+                    tauxInsertion: "Taux d'emploi",
+                    tauxPoursuite: "Taux de poursuite",
+                    tauxPression: "Taux de pression",
+                    placesOuvertes: "Places ouvertes",
+                    placesFermees: "Places fermées",
+                    positionQuadrant: "Position dans le quadrant",
+                    libelleRegion: "Région",
+                    libelleAcademie: "Académie",
+                    libelleDepartement: "Département",
+                  }
+                );
+              }}
+            >
+              <Icon icon="ri:file-excel-2-line" width={"14px"} />
+              Exporter en Excel
             </Button>
             <Select
               ml="6"
