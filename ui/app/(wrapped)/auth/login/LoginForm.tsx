@@ -61,7 +61,7 @@ export const LoginForm = () => {
   }, [auth]);
 
   return (
-    <Box maxW="360px" mt="20" width="100%" mx="auto">
+    <Box maxW="360px" width="100%" mx="auto">
       <Card boxShadow="md">
         <CardBody
           p="6"
