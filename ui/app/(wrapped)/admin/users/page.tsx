@@ -222,7 +222,7 @@ export default () => {
             onPageChange={(newPage) =>
               setFilters({ ...filters, page: newPage })
             }
-            onExport={async () => {
+            onExportCsv={async () => {
               const data = await client.ref("[GET]/users").query({
                 query: { ...filters, ...order, limit: 1000000 },
               });

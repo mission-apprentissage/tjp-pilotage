@@ -1,4 +1,4 @@
-import { DownloadIcon, ViewIcon } from "@chakra-ui/icons";
+import { ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -17,7 +17,6 @@ import {
   Stack,
   Text,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
@@ -34,6 +33,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { useStateParams } from "@/utils/useFilters";
 
+import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import {
   Filters,
   OrderFormationsTransformationStats,
@@ -191,7 +191,7 @@ export const QuadrantSection = ({
       </Heading>
       <Card>
         <CardBody p="8">
-          <Flex align="center">
+          <Flex align="center" gap={6}>
             <Heading fontSize="md" mr="auto" color="bluefrance.113">
               RÉPARTITION DES OFFRES DE FORMATIONS TRANSFORMÉES
             </Heading>
@@ -201,112 +201,100 @@ export const QuadrantSection = ({
                 typeVue === "quadrant" ? "tableau" : "quadrant"
               }`}
             </Button>
-            <Button
-              ml="6"
-              aria-label="csv"
-              variant="solid"
-              onClick={async () => {
-                if (!formations) return;
-                downloadCsv(
-                  "formations_transformees",
-                  formations.map((formation) => ({
-                    ...formation,
-                    libelleRegion:
-                      scope?.type === ScopeEnum.region
-                        ? getLibelleTerritoire(
-                            scopeFilters?.regions,
-                            scope.value
-                          )
-                        : undefined,
-                    libelleAcademie:
-                      scope?.type === ScopeEnum.academie
-                        ? getLibelleTerritoire(
-                            scopeFilters?.academies,
-                            scope.value
-                          )
-                        : undefined,
-                    libelleDepartement:
-                      scope?.type === ScopeEnum.departement
-                        ? getLibelleTerritoire(
-                            scopeFilters?.departements,
-                            scope.value
-                          )
-                        : undefined,
-                  })),
-                  {
-                    libelleFormation: "Formation",
-                    cfd: "CFD",
-                    libelleDispositif: "Dispositif",
-                    tauxInsertion: "Taux d'emploi",
-                    tauxPoursuite: "Taux de poursuite",
-                    tauxPression: "Taux de pression",
-                    placesOuvertes: "Places ouvertes",
-                    placesFermees: "Places fermées",
-                    positionQuadrant: "Position dans le quadrant",
-                    libelleRegion: "Région",
-                    libelleAcademie: "Académie",
-                    libelleDepartement: "Département",
-                  }
-                );
-              }}
-            >
-              <DownloadIcon mr="2" />
-              Exporter en csv
-            </Button>
-            <Button
-              ml="6"
-              aria-label="csv"
-              variant="solid"
-              onClick={async () => {
-                if (!formations) return;
-                downloadExcel(
-                  "formations_transformees",
-                  formations.map((formation) => ({
-                    ...formation,
-                    libelleRegion:
-                      scope?.type === ScopeEnum.region
-                        ? getLibelleTerritoire(
-                            scopeFilters?.regions,
-                            scope.value
-                          )
-                        : undefined,
-                    libelleAcademie:
-                      scope?.type === ScopeEnum.academie
-                        ? getLibelleTerritoire(
-                            scopeFilters?.academies,
-                            scope.value
-                          )
-                        : undefined,
-                    libelleDepartement:
-                      scope?.type === ScopeEnum.departement
-                        ? getLibelleTerritoire(
-                            scopeFilters?.departements,
-                            scope.value
-                          )
-                        : undefined,
-                  })),
-                  {
-                    libelleFormation: "Formation",
-                    cfd: "CFD",
-                    libelleDispositif: "Dispositif",
-                    tauxInsertion: "Taux d'emploi",
-                    tauxPoursuite: "Taux de poursuite",
-                    tauxPression: "Taux de pression",
-                    placesOuvertes: "Places ouvertes",
-                    placesFermees: "Places fermées",
-                    positionQuadrant: "Position dans le quadrant",
-                    libelleRegion: "Région",
-                    libelleAcademie: "Académie",
-                    libelleDepartement: "Département",
-                  }
-                );
-              }}
-            >
-              <Icon icon="ri:file-excel-2-line" width={"14px"} />
-              Exporter en Excel
-            </Button>
+            <Flex>
+              <ExportMenuButton
+                onExportCsv={async () => {
+                  if (!formations) return;
+                  downloadCsv(
+                    "formations_transformees",
+                    formations.map((formation) => ({
+                      ...formation,
+                      libelleRegion:
+                        scope?.type === ScopeEnum.region
+                          ? getLibelleTerritoire(
+                              scopeFilters?.regions,
+                              scope.value
+                            )
+                          : undefined,
+                      libelleAcademie:
+                        scope?.type === ScopeEnum.academie
+                          ? getLibelleTerritoire(
+                              scopeFilters?.academies,
+                              scope.value
+                            )
+                          : undefined,
+                      libelleDepartement:
+                        scope?.type === ScopeEnum.departement
+                          ? getLibelleTerritoire(
+                              scopeFilters?.departements,
+                              scope.value
+                            )
+                          : undefined,
+                    })),
+                    {
+                      libelleFormation: "Formation",
+                      cfd: "CFD",
+                      libelleDispositif: "Dispositif",
+                      tauxInsertion: "Taux d'emploi",
+                      tauxPoursuite: "Taux de poursuite",
+                      tauxPression: "Taux de pression",
+                      placesOuvertes: "Places ouvertes",
+                      placesFermees: "Places fermées",
+                      positionQuadrant: "Position dans le quadrant",
+                      libelleRegion: "Région",
+                      libelleAcademie: "Académie",
+                      libelleDepartement: "Département",
+                    }
+                  );
+                }}
+                onExportExcel={async () => {
+                  if (!formations) return;
+                  downloadExcel(
+                    "formations_transformees",
+                    formations.map((formation) => ({
+                      ...formation,
+                      libelleRegion:
+                        scope?.type === ScopeEnum.region
+                          ? getLibelleTerritoire(
+                              scopeFilters?.regions,
+                              scope.value
+                            )
+                          : undefined,
+                      libelleAcademie:
+                        scope?.type === ScopeEnum.academie
+                          ? getLibelleTerritoire(
+                              scopeFilters?.academies,
+                              scope.value
+                            )
+                          : undefined,
+                      libelleDepartement:
+                        scope?.type === ScopeEnum.departement
+                          ? getLibelleTerritoire(
+                              scopeFilters?.departements,
+                              scope.value
+                            )
+                          : undefined,
+                    })),
+                    {
+                      libelleFormation: "Formation",
+                      cfd: "CFD",
+                      libelleDispositif: "Dispositif",
+                      tauxInsertion: "Taux d'emploi",
+                      tauxPoursuite: "Taux de poursuite",
+                      tauxPression: "Taux de pression",
+                      placesOuvertes: "Places ouvertes",
+                      placesFermees: "Places fermées",
+                      positionQuadrant: "Position dans le quadrant",
+                      libelleRegion: "Région",
+                      libelleAcademie: "Académie",
+                      libelleDepartement: "Département",
+                    }
+                  );
+                }}
+                variant="solid"
+              />
+            </Flex>
             <Select
-              ml="6"
               variant="newInput"
               bg="blueecume.400_hover"
               color="white"

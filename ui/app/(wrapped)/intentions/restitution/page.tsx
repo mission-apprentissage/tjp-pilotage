@@ -194,7 +194,7 @@ export default () => {
         <TableFooter
           mb={36}
           pl="4"
-          onExport={async () => {
+          onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
             const data = await client.ref("[GET]/intentions/stats").query({
               query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
