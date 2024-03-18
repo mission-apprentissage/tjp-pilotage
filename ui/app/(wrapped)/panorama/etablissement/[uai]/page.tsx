@@ -1,6 +1,7 @@
 "use client";
 
 import { EtablissementAnalyseDetaillee } from "../components/analyse-detaillee";
+import { EtablissementMap } from "../components/carto";
 import { EtablissementHeader } from "../components/header";
 import { EtablissementContextProvider } from "../context/etablissementContext";
 
@@ -15,6 +16,7 @@ const EtablissementPage = ({ params: { uai } }: EtablissementPageProps) => {
     <EtablissementContextProvider value={{ uai }}>
       <EtablissementHeader />
       <EtablissementAnalyseDetaillee />
+      <EtablissementMap />
     </EtablissementContextProvider>
   );
 };
