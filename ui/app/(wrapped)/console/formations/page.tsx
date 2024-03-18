@@ -668,7 +668,7 @@ export default function Formations() {
         </TableContainer>
       </Flex>
       <TableFooter
-        onExport={async () => {
+        onExportCsv={async () => {
           trackEvent("formations:export");
           const data = await client.ref("[GET]/formations").query({
             query: getFormationsQueryParameters(EXPORT_LIMIT),

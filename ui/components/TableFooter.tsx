@@ -1,55 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  chakra,
-  Flex,
-  IconButton,
-  Spinner,
-} from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
-import { useState } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
+import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
 
-const ExportButton = ({
-  onExport,
-  type = "csv",
-}: {
-  onExport?: () => Promise<void>;
-  type?: "csv" | "excel";
-}) => {
-  const [loading, setIsLoading] = useState<boolean>(false);
-
-  const handleExport = async () => {
-    if (onExport && !loading) {
-      setIsLoading(true);
-      await onExport();
-      setIsLoading(false);
-    }
-  };
-
-  if (!onExport) return null;
-
-  if (loading) {
-    return (
-      <Button mr="auto" size="sm" variant="ghost" disabled={true}>
-        <Spinner mr="2" size="sm" />
-        Export en cours...
-      </Button>
-    );
-  }
-
-  return type === "csv" ? (
-    <Button onClick={handleExport} size="sm" variant="ghost" gap={2} m="0">
-      <DownloadIcon />
-      Exporter en CSV
-    </Button>
-  ) : (
-    <Button onClick={handleExport} size="sm" variant="ghost" gap={2} m="0">
-      <Icon icon="ri:file-excel-2-line" />
-      Exporter en Excel
-    </Button>
-  );
-};
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 
 export const TableFooter = chakra(
   ({
@@ -57,7 +9,7 @@ export const TableFooter = chakra(
     page,
     count = 0,
     onPageChange,
-    onExport,
+    onExportCsv,
     onExportExcel,
     className,
   }: {
@@ -65,7 +17,7 @@ export const TableFooter = chakra(
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    onExport?: () => Promise<void>;
+    onExportCsv?: () => Promise<void>;
     onExportExcel?: () => Promise<void>;
     className?: string;
   }) => {
@@ -78,8 +30,12 @@ export const TableFooter = chakra(
         className={className}
       >
         <Flex mr="auto">
-          <ExportButton onExport={onExport} />
-          <ExportButton onExport={onExportExcel} type={"excel"} />
+          {(onExportCsv || onExportExcel) && (
+            <ExportMenuButton
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+            />
+          )}
         </Flex>
         <Box mr="4" ml="auto">
           {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
