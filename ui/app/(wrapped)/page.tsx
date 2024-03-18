@@ -136,7 +136,7 @@ export default function Home() {
           </Text>
         </Card>
         <Card
-          icon={<Img src="/illustrations/location-france.svg" />}
+          icon={<Img src="/illustrations/school.svg" />}
           title="Explorer les données"
           link="Voir la console"
           linkHref="/console/formations"
