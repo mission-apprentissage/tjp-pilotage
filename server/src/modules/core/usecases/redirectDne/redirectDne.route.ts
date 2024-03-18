@@ -5,6 +5,7 @@ import { FastifyRequest } from "fastify";
 import { logger } from "../../../../logger";
 import { Server } from "../../../../server";
 import { getDneUrl } from "../getDneUrl/getDneUrl.usecase";
+import { ERROR_TYPE } from "./const";
 import { redirectDneSchema } from "./redirectDne.schema";
 import { redirectDne } from "./redirectDne.usecase";
 
@@ -80,7 +81,7 @@ export const redirectDneRoute = (server: Server) => {
           response.header("set-cookie", cookies).redirect(302, "/").send();
         } catch (error) {
           logger.error("echec dne redirect", { error: error as Error });
-          response.redirect(302, "/auth/login").send();
+          response.redirect(302, `/auth/login?error=${ERROR_TYPE}`).send();
         }
       },
     });
