@@ -834,7 +834,7 @@ export default function Etablissements() {
         </TableContainer>
       </Flex>
       <TableFooter
-        onExport={async () => {
+        onExportCsv={async () => {
           const data = await client.ref("[GET]/etablissements").query({
             query: getEtablissementsQueryParameters(EXPORT_LIMIT),
           });
