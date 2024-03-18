@@ -1,4 +1,7 @@
-import { number as numberFormatter } from "@json2csv/formatters";
+import {
+  number as numberFormatter,
+  stringExcel as stringExcelFormatter,
+} from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
@@ -28,15 +31,27 @@ export function downloadCsv<D extends object>(
 ) {
   const filenameWithExtension =
     filename.indexOf(".csv") !== -1 ? filename : `${filename}.csv`;
+
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const objectFormatter = (value: any) => {
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "";
+      return value.join(", ");
+    }
+    return value.toString();
+  };
+
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
       label: label as string,
       value: value,
     })),
     formatters: {
+      string: stringExcelFormatter,
       number: numberFormatter({
         separator: ",",
       }),
+      object: objectFormatter,
     },
     delimiter: ";",
   });
@@ -46,9 +61,10 @@ export function downloadCsv<D extends object>(
 
 function downloadCsvFromString(filename: string, text: string) {
   const element = document.createElement("a");
+  const universalBOM = "\uFEFF";
   element.setAttribute(
     "href",
-    "data:text/plain;charset=utf-8," + encodeURIComponent(text)
+    "data:text/plain;charset=utf-8," + encodeURIComponent(universalBOM + text)
   );
   element.setAttribute("download", filename);
   element.style.display = "none";
