@@ -47,6 +47,8 @@ export const STATS_DEMANDES_COLUMNS = {
   positionQuadrant: "Position dans le quadrant",
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
+  motifRefus: "Motif(s) de refus",
+  autreMotifRefus: "Autre motif de refus",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/intentions/stats"]["demandes"][number]
 >;
