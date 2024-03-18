@@ -25,6 +25,9 @@ function formatCodeDepartement(codeDepartement: string): string {
     ? codeDepartement.substring(1)
     : codeDepartement;
 }
+import { usePlausible } from "next-plausible";
+
+import { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
@@ -48,12 +51,14 @@ const InfoCard = ({
   links,
   img,
   sourceText,
+  linkTracker,
 }: {
   title: string;
   description: string;
   links: { label?: string; href: string } | { label?: string; href: string }[];
   img: string;
   sourceText?: string;
+  linkTracker: (filterName: string) => () => void;
 }) => {
   return (
     <Card bg="grey.1000" padding={"1rem"}>
@@ -92,6 +97,7 @@ const InfoCard = ({
                         key={href}
                         target="_blank"
                         rel="noreferrer"
+                        onClick={linkTracker(title)}
                       >
                         {label}
                       </MenuItem>
@@ -117,6 +123,7 @@ const InfoCard = ({
                 target="_blank"
                 rel="noreferrer"
                 rightIcon={<ExternalLinkIcon />}
+                onClick={linkTracker(title)}
               >
                 Voir le site
               </Button>
@@ -144,6 +151,13 @@ export const LiensUtilesSection = () => {
     analyseDetaillee.etablissement.codeDepartement
   );
   const codeRegion = analyseDetaillee.etablissement.codeRegion;
+  const trackEvent = usePlausible();
+
+  const linkTracker = (filterName: keyof Filters | string) => () => {
+    trackEvent("analyse-detailee-etablissement:liens-utile", {
+      props: { filter_name: filterName },
+    });
+  };
 
   return (
     <Flex direction={"column"} gap={8} mt={8} maxW={"100%"} id={"liens-utiles"}>
@@ -169,6 +183,7 @@ export const LiensUtilesSection = () => {
             }}
             img="/looking_man.png"
             sourceText="* Source: France Travail"
+            linkTracker={linkTracker}
           />
           <InfoCard
             title="Data emploi : les secteurs"
@@ -182,6 +197,7 @@ export const LiensUtilesSection = () => {
             }}
             img="/dashboard_girl.png"
             sourceText="* Source: France Travail"
+            linkTracker={linkTracker}
           />
           {codeRegion && lienDares[codeRegion] && (
             <InfoCard
@@ -190,6 +206,7 @@ export const LiensUtilesSection = () => {
               links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
               img="/graphs_statistics2.png"
               sourceText="* Source: DARES"
+              linkTracker={linkTracker}
             />
           )}
         </SimpleGrid>

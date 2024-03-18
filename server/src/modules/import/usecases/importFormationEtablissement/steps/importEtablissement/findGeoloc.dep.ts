@@ -119,7 +119,7 @@ export const findEtablissementGeoloc = async ({
     limit: 1,
   });
 
-  const [latitude, longitude] =
+  const [longitude, latitude] =
     resultFromBAN?.features[0]?.geometry?.coordinates ?? [];
 
   if (!latitude || !longitude) {
