@@ -54,6 +54,8 @@ const StatsDemandesItem = z.object({
   tauxInsertionMoyen: z.coerce.number().optional(),
   tauxPoursuiteMoyen: z.coerce.number().optional(),
   voie: z.string().optional(),
+  motifRefus: z.array(z.string()).optional(),
+  autreMotifRefus: z.string().optional(),
 });
 
 export const getRestitutionIntentionsStatsSchema = {

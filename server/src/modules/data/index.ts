@@ -13,7 +13,7 @@ import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
-import { getRestitutionIntentionsStatsRoute } from "./usecases/getRestitutionIntentionsStats/getRestitutionIntentionStats.route";
+import { getRestitutionIntentionsStatsRoute } from "./usecases/getRestitutionIntentionsStats/getRestitutionIntentionsStats.route";
 import { getScopedTransformationStatsRoute } from "./usecases/getScopedTransformationStats/getScopedTransformationStats.route";
 import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
 
