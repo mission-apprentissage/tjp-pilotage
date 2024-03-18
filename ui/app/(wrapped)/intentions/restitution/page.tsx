@@ -200,7 +200,7 @@ export default () => {
               query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
             });
             downloadCsv(
-              "demandes_stats_export.csv",
+              "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
                 createdAt: new Date(demande.createdAt).toLocaleDateString(
@@ -227,7 +227,7 @@ export default () => {
               query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
             });
             downloadExcel(
-              "demandes_stats_export.csv",
+              "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
                 createdAt: new Date(demande.createdAt).toLocaleDateString(

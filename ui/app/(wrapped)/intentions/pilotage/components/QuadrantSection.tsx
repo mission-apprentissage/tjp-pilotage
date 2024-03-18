@@ -208,7 +208,7 @@ export const QuadrantSection = ({
               onClick={async () => {
                 if (!formations) return;
                 downloadCsv(
-                  "formations_transformees.csv",
+                  "formations_transformees",
                   formations.map((formation) => ({
                     ...formation,
                     libelleRegion:
@@ -260,7 +260,7 @@ export const QuadrantSection = ({
               onClick={async () => {
                 if (!formations) return;
                 downloadExcel(
-                  "formations_transformees.csv",
+                  "formations_transformees",
                   formations.map((formation) => ({
                     ...formation,
                     libelleRegion:
