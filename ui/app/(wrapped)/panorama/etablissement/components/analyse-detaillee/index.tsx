@@ -13,7 +13,11 @@ import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
+import { QuadrantSection } from "./quadrant/QuadrantSection";
+import { TabsSection } from "./tabs/TabsSection";
 import { Filters } from "./types";
+
+const QUADRANT_FEATURE_FLAG = false;
 
 const EtablissementAnalyseDetaillee = () => {
   const router = useRouter();
@@ -35,16 +39,15 @@ const EtablissementAnalyseDetaillee = () => {
 
   const trackEvent = usePlausible();
   const filters = searchParams.filters ?? {};
-  const { uai, setAnalyseDetaillee, analyseDetaillee } =
+  const { uai, analyseDetaillee, setAnalyseDetaillee } =
     useEtablissementContext();
-  // PAGE ETAB V2 AVEC QUADRANT FF
-  // const displayDashboard = () => {
-  //   setSearchParams({ ...searchParams, displayType: "dashboard" });
-  // };
+  const displayDashboard = () => {
+    setSearchParams({ ...searchParams, displayType: "dashboard" });
+  };
 
-  // const displayQuadrant = () => {
-  //   setSearchParams({ ...searchParams, displayType: "quadrant" });
-  // };
+  const displayQuadrant = () => {
+    setSearchParams({ ...searchParams, displayType: "quadrant" });
+  };
 
   const { data, isLoading: isLoading } = client
     .ref(`[GET]/etablissement/analyse-detaillee`)
@@ -81,6 +84,7 @@ const EtablissementAnalyseDetaillee = () => {
   }, [data]);
 
   const setOffreFilter = (offre: string) => {
+    filterTracker("offre", offre);
     setSearchParams({
       ...searchParams,
       offre,
@@ -89,11 +93,10 @@ const EtablissementAnalyseDetaillee = () => {
 
   const offre = useMemo(() => searchParams.offre ?? "", [searchParams.offre]);
 
-  // PAGE ETAB V2 AVEC QUADRANT FF
-  // const displayType = useMemo(
-  //   () => searchParams.displayType ?? "dashboard",
-  //   [searchParams.displayType]
-  // );
+  const displayType = useMemo(
+    () => searchParams.displayType ?? "dashboard",
+    [searchParams.displayType]
+  );
 
   const handleFilters = (
     type: keyof Filters,
@@ -106,11 +109,13 @@ const EtablissementAnalyseDetaillee = () => {
     });
   };
 
-  const filterTracker = (filterName: keyof Filters) => () => {
-    trackEvent("analyse-detailee-etablissement:filtre", {
-      props: { filter_name: filterName },
-    });
-  };
+  const filterTracker =
+    (filterName: keyof Filters | string, filterValue?: string | number) =>
+    () => {
+      trackEvent("analyse-detailee-etablissement:filtre", {
+        props: { filter_name: filterName, filter_value: filterValue },
+      });
+    };
 
   if (isLoading || !analyseDetaillee) {
     return <Loading my={16} size="xl" />;
@@ -122,12 +127,13 @@ const EtablissementAnalyseDetaillee = () => {
         Analyse des formations
       </Text>
       <Divider width="48px" />
-      {/* // PAGE ETAB V2 AVEC QUADRANT FF */}
-      {/* <TabsSection
-        displayDashboard={displayDashboard}
-        displayQuadrant={displayQuadrant}
-        displayType={searchParams.displayType ?? displayType}
-      /> */}
+      {QUADRANT_FEATURE_FLAG && (
+        <TabsSection
+          displayDashboard={displayDashboard}
+          displayQuadrant={displayQuadrant}
+          displayType={searchParams.displayType ?? displayType}
+        />
+      )}
       {Object.values(analyseDetaillee?.formations ?? {}).length ? (
         <Flex direction={"column"} gap={8}>
           <FiltersSection
@@ -158,29 +164,44 @@ const EtablissementAnalyseDetaillee = () => {
               />
             </GridItem>
             <GridItem colSpan={6}>
-              {/* // PAGE ETAB V2 AVEC QUADRANT FF */}
-              {/* {displayType === "dashboard" ? ( */}
-              <Dashboard
-                formation={
-                  analyseDetaillee?.formations[searchParams.offre ?? offre]
-                }
-                chiffresIJOffre={
-                  analyseDetaillee?.chiffresIJ[searchParams.offre ?? offre]
-                }
-                chiffresEntreeOffre={
-                  analyseDetaillee?.chiffresEntree[searchParams.offre ?? offre]
-                }
-              />
-              {/* ) : (
-                <QuadrantSection
-                  formations={Object.values(data?.formations ?? {})}
-                  chiffresIJ={data?.chiffresIJ}
-                  chiffresEntree={data?.chiffresEntree}
-                  statsSortie={data?.statsSortie}
-                  offre={searchParams.offre ?? offre}
-                  setOffre={setOffreFilter}
+              {QUADRANT_FEATURE_FLAG ? (
+                <>
+                  {displayType === "dashboard" ? (
+                    <Dashboard
+                      formation={data?.formations[searchParams.offre ?? offre]}
+                      chiffresIJOffre={
+                        data?.chiffresIJ[searchParams.offre ?? offre]
+                      }
+                      chiffresEntreeOffre={
+                        data?.chiffresEntree[searchParams.offre ?? offre]
+                      }
+                    />
+                  ) : (
+                    <QuadrantSection
+                      formations={Object.values(data?.formations ?? {})}
+                      currentFormation={
+                        data?.formations[searchParams.offre ?? offre]
+                      }
+                      etablissement={data?.etablissement}
+                      chiffresIJ={data?.chiffresIJ}
+                      chiffresEntree={data?.chiffresEntree}
+                      statsSortie={data?.statsSortie}
+                      offre={searchParams.offre ?? offre}
+                      setOffre={setOffreFilter}
+                    />
+                  )}
+                </>
+              ) : (
+                <Dashboard
+                  formation={data?.formations[searchParams.offre ?? offre]}
+                  chiffresIJOffre={
+                    data?.chiffresIJ[searchParams.offre ?? offre]
+                  }
+                  chiffresEntreeOffre={
+                    data?.chiffresEntree[searchParams.offre ?? offre]
+                  }
                 />
-               )} */}
+              )}
             </GridItem>
           </Grid>
         </Flex>

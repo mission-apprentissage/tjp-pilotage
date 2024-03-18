@@ -49,6 +49,7 @@ describe("extractUserInRequest usecase", () => {
         uais: undefined,
         enabled: false,
         sub: undefined,
+        lastSeenAt: undefined,
       }),
     });
 
@@ -75,6 +76,7 @@ describe("extractUserInRequest usecase", () => {
         uais: undefined,
         enabled: true,
         sub: undefined,
+        lastSeenAt: undefined,
       }),
     });
 

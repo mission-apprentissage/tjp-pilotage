@@ -21,10 +21,12 @@ import {
   ChiffresEntree,
   ChiffresIJ,
   ChiffresIJOffreMillesime,
+  Etablissement,
   Formation,
   StatsSortie,
 } from "../types";
 import { DonneesDisponiblesSection } from "./DonneesDisponiblesSection";
+import { DonneesIndisponiblesSection } from "./DonneesIndisponiblesSection";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 const effectifSizes = [
   { max: 1, size: 10 },
@@ -35,6 +37,8 @@ const effectifSizes = [
 
 export const QuadrantSection = ({
   formations,
+  etablissement,
+  currentFormation,
   chiffresEntree,
   chiffresIJ,
   statsSortie,
@@ -42,6 +46,8 @@ export const QuadrantSection = ({
   setOffre,
 }: {
   formations: Formation[];
+  etablissement?: Etablissement;
+  currentFormation?: Formation;
   chiffresEntree?: ChiffresEntree;
   chiffresIJ?: ChiffresIJ;
   statsSortie?: StatsSortie;
@@ -131,7 +137,11 @@ export const QuadrantSection = ({
         filteredFormations={filteredFormations}
         chiffresEntree={chiffresEntree}
       />
-      {/* <DonneesIndisponiblesSection dimensions={offresDimensions} /> */}
+      <DonneesIndisponiblesSection
+        dimensions={offresDimensions}
+        currentFormation={currentFormation}
+        etablissement={etablissement}
+      />
       <Flex direction={"column"} m={12} mt={4} gap={2}>
         <Flex direction={"row"} justify="space-between">
           <Flex justify="flex-start" ms={10}>
