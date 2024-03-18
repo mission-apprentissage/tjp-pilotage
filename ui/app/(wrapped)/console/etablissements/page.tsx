@@ -840,7 +840,7 @@ export default function Etablissements() {
           });
           trackEvent("etablissements:export");
           downloadCsv(
-            "etablissement_export.csv",
+            "etablissement_export",
             data.etablissements,
             ETABLISSEMENTS_COLUMNS
           );
@@ -851,7 +851,7 @@ export default function Etablissements() {
           });
           trackEvent("etablissements:export-excel");
           downloadExcel(
-            "etablissement_export.xls",
+            "etablissement_export",
             data.etablissements,
             ETABLISSEMENTS_COLUMNS
           );

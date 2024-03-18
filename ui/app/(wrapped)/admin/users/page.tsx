@@ -226,13 +226,13 @@ export default () => {
               const data = await client.ref("[GET]/users").query({
                 query: { ...filters, ...order, limit: 1000000 },
               });
-              downloadCsv("users_export.csv", data.users, Columns);
+              downloadCsv("users_export", data.users, Columns);
             }}
             onExportExcel={async () => {
               const data = await client.ref("[GET]/users").query({
                 query: { ...filters, ...order, limit: 1000000 },
               });
-              downloadExcel("users_export.xls", data.users, Columns);
+              downloadExcel("users_export", data.users, Columns);
             }}
           />
           {user && isOpen && (

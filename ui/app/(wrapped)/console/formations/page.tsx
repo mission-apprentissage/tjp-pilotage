@@ -673,11 +673,7 @@ export default function Formations() {
           const data = await client.ref("[GET]/formations").query({
             query: getFormationsQueryParameters(EXPORT_LIMIT),
           });
-          downloadCsv(
-            "formations_export.csv",
-            data.formations,
-            FORMATIONS_COLUMNS
-          );
+          downloadCsv("formations_export", data.formations, FORMATIONS_COLUMNS);
         }}
         onExportExcel={async () => {
           const data = await client.ref("[GET]/formations").query({
@@ -685,7 +681,7 @@ export default function Formations() {
           });
           trackEvent("formations:export-excel");
           downloadExcel(
-            "formations_export.xls",
+            "formations_export",
             data.formations,
             FORMATIONS_COLUMNS
           );
