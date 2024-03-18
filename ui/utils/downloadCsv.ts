@@ -1,4 +1,7 @@
-import { number as numberFormatter } from "@json2csv/formatters";
+import {
+  number as numberFormatter,
+  stringExcel as stringExcelFormatter,
+} from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 
 export type ExportColumns<T extends object> = {
@@ -18,15 +21,26 @@ export function downloadCsv<D extends object>(
   data: D[],
   columns: ExportColumns<D>
 ) {
+  /* eslint-disable @typescript-eslint/no-explicit-any */
+  const objectFormatter = (value: any) => {
+    if (Array.isArray(value)) {
+      if (value.length === 0) return "";
+      return value.join(", ");
+    }
+    return value.toString();
+  };
+
   const parser = new Parser({
     fields: Object.entries(columns).map(([value, label]) => ({
       label: label as string,
       value: value,
     })),
     formatters: {
+      string: stringExcelFormatter,
       number: numberFormatter({
         separator: ",",
       }),
+      object: objectFormatter,
     },
     delimiter: ";",
   });
