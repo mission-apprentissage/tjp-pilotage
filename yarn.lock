@@ -3015,29 +3015,20 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@json2csv/formatters@npm:^7.0.4, @json2csv/formatters@npm:^7.0.5":
-  version: 7.0.5
-  resolution: "@json2csv/formatters@npm:7.0.5"
-  checksum: 7998816a5fe49d60725369d3b5e9000f40c1e36db6e63efc3b68d48e1b8089fa1265e59111f1e26d5accedb187f329761bf3e74160ede228d5c97dff06b5869d
+"@json2csv/formatters@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "@json2csv/formatters@npm:7.0.6"
+  checksum: 9589566ea925f19597664f7a253624f4392c0b5da4bca709cbca188761c9d8068e275e26829d3bc0b386ad1872295acf2c5d4da097026fd3ac4423690c5eff9b
   languageName: node
   linkType: hard
 
-"@json2csv/node@npm:^7.0.4":
-  version: 7.0.5
-  resolution: "@json2csv/node@npm:7.0.5"
+"@json2csv/plainjs@npm:^7.0.6":
+  version: 7.0.6
+  resolution: "@json2csv/plainjs@npm:7.0.6"
   dependencies:
-    "@json2csv/plainjs": ^7.0.5
-  checksum: 4d7d7e80a91d7f8bd4a32a3553afd6f8aa85d6ed83e1092a3856c5a3988c25054c5509d79ddf212464eb693f1aceca082e5f6d17f9ccf9a37d5d91825c72dea8
-  languageName: node
-  linkType: hard
-
-"@json2csv/plainjs@npm:^7.0.4, @json2csv/plainjs@npm:^7.0.5":
-  version: 7.0.5
-  resolution: "@json2csv/plainjs@npm:7.0.5"
-  dependencies:
-    "@json2csv/formatters": ^7.0.5
-    "@streamparser/json": ^0.0.19
-  checksum: 17bb1b58ba6692cc1c8215ec2f10c683d5165be69d0ebe372812559cc1db245ca40b14c0deec768b525e45f32547d4117a9b6a340727d287ad8ec15feb5aa4ff
+    "@json2csv/formatters": ^7.0.6
+    "@streamparser/json": ^0.0.20
+  checksum: e02ba6e5ea554493c60f4767a93d21a7c61a377591e6cb0e0768aeeeef82c4b3adb5c0decc4c70077bf1ff30015379aea32f97f8e6e781672184b30de1f9bc78
   languageName: node
   linkType: hard
 
@@ -3996,10 +3987,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@streamparser/json@npm:^0.0.19":
-  version: 0.0.19
-  resolution: "@streamparser/json@npm:0.0.19"
-  checksum: cc61f04642515455263d458b57d867ff7e6a1e391ec5aaa3cb877a57ca48b8f9d156029f2c31660a2508b7cab556a80fc62d24e7692f5ba29df04038a26eda62
+"@streamparser/json@npm:^0.0.20":
+  version: 0.0.20
+  resolution: "@streamparser/json@npm:0.0.20"
+  checksum: fd17c94c03411cc852512bd196a9ea2e85a3404391b64525384821d3b04b1cd03f5899d51da135a4bf9d88185acb5de42d1a99a9ea440d652555ef70e0a9a081
   languageName: node
   linkType: hard
 
@@ -4321,15 +4312,6 @@ __metadata:
   version: 7.0.15
   resolution: "@types/json-schema@npm:7.0.15"
   checksum: 97ed0cb44d4070aecea772b7b2e2ed971e10c81ec87dd4ecc160322ffa55ff330dace1793489540e3e318d90942064bb697cc0f8989391797792d919737b3b98
-  languageName: node
-  linkType: hard
-
-"@types/json2csv@npm:^5.0.3":
-  version: 5.0.7
-  resolution: "@types/json2csv@npm:5.0.7"
-  dependencies:
-    "@types/node": "*"
-  checksum: 8b354f11f8efa1a8af6f7ca9d5ef091409ade121df790c7f97ba556c47b60cb9d7ae732876a9405c827132ee5d38ba351d4fb6c56693a31482e727ece07ed349
   languageName: node
   linkType: hard
 
@@ -5475,14 +5457,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"axios@npm:1.6.2":
-  version: 1.6.2
-  resolution: "axios@npm:1.6.2"
+"axios@npm:1.6.8":
+  version: 1.6.8
+  resolution: "axios@npm:1.6.8"
   dependencies:
-    follow-redirects: ^1.15.0
+    follow-redirects: ^1.15.6
     form-data: ^4.0.0
     proxy-from-env: ^1.1.0
-  checksum: 4a7429e2b784be0f2902ca2680964391eae7236faa3967715f30ea45464b98ae3f1c6f631303b13dfe721b17126b01f486c7644b9ef276bfc63112db9fd379f8
+  checksum: bf007fa4b207d102459300698620b3b0873503c6d47bf5a8f6e43c0c64c90035a4f698b55027ca1958f61ab43723df2781c38a99711848d232cad7accbcdfcdd
   languageName: node
   linkType: hard
 
@@ -8959,13 +8941,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"follow-redirects@npm:^1.15.0, follow-redirects@npm:^1.15.4":
+"follow-redirects@npm:^1.15.4":
   version: 1.15.5
   resolution: "follow-redirects@npm:1.15.5"
   peerDependenciesMeta:
     debug:
       optional: true
   checksum: 5ca49b5ce6f44338cbfc3546823357e7a70813cecc9b7b768158a1d32c1e62e7407c944402a918ea8c38ae2e78266312d617dc68783fac502cbb55e1047b34ec
+  languageName: node
+  linkType: hard
+
+"follow-redirects@npm:^1.15.6":
+  version: 1.15.6
+  resolution: "follow-redirects@npm:1.15.6"
+  peerDependenciesMeta:
+    debug:
+      optional: true
+  checksum: a62c378dfc8c00f60b9c80cab158ba54e99ba0239a5dd7c81245e5a5b39d10f0c35e249c3379eae719ff0285fff88c365dd446fab19dee771f1d76252df1bbf5
   languageName: node
   linkType: hard
 
@@ -11406,10 +11398,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"jose@npm:^4.15.4":
-  version: 4.15.4
-  resolution: "jose@npm:4.15.4"
-  checksum: dccad91cb3357f36423774a0b89ad830dd84b31090de65cd139b85488439f16a00f8c59c0773825e8a1adb0dd9d13ad725ad66e6ea33880ecb3959bb99e1ea5b
+"jose@npm:^4.15.5":
+  version: 4.15.5
+  resolution: "jose@npm:4.15.5"
+  checksum: 7dde76447c7707bd4b448f914b216f3858e701aa83f00447434252461af5b9e159dcbffb88badea3f9616739526763581267c9560622f0a058df8d68c86d7f79
   languageName: node
   linkType: hard
 
@@ -14649,15 +14641,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"openid-client@npm:^5.6.1":
-  version: 5.6.4
-  resolution: "openid-client@npm:5.6.4"
+"openid-client@npm:^5.6.5":
+  version: 5.6.5
+  resolution: "openid-client@npm:5.6.5"
   dependencies:
-    jose: ^4.15.4
+    jose: ^4.15.5
     lru-cache: ^6.0.0
     object-hash: ^2.2.0
     oidc-token-hash: ^5.0.3
-  checksum: 69843f078dacbbc6bad6d65ca6689414ac73f095dfe2f8e606822e6cfc9d9cd7d0dfaf2649352eda604653806f0ea65326ad2d6266da897e4740ec93d26d21f6
+  checksum: 2240079f761173b10635ce5fefbac04b6820f54e00d588ab2afdddb6c0f0ab6568e663cf1ab6a4a2297fbdbb73e42d78b8190f91dba7e1b80d287b2127fcbc7c
   languageName: node
   linkType: hard
 
@@ -16992,14 +16984,11 @@ __metadata:
     "@fastify/type-provider-typebox": ^3.5.0
     "@hapi/boom": ^10.0.1
     "@http-wizard/core": ^1.3.16
-    "@json2csv/node": ^7.0.4
-    "@json2csv/plainjs": ^7.0.4
     "@notionhq/client": ^2.2.14
     "@slack/bolt": ^3.15.0
     "@types/cookie": ^0.5.1
     "@types/ejs": ^3.1.2
     "@types/jest": ^29.5.1
-    "@types/json2csv": ^5.0.3
     "@types/jsonwebtoken": ^9.0.2
     "@types/lodash": ^4.14.191
     "@types/luxon": ^3.3.5
@@ -17010,7 +16999,7 @@ __metadata:
     "@types/pg": ^8.6.6
     "@types/qs": ^6.9.7
     "@types/uuid": ^9.0.4
-    axios: 1.6.2
+    axios: 1.6.8
     axios-rate-limit: ^1.3.0
     axios-retry: ^4.0.0
     commander: ^10.0.0
@@ -17034,7 +17023,7 @@ __metadata:
     nodemailer: ^6.9.4
     nodemailer-html-to-text: ^3.2.0
     notion-to-md: ^3.1.1
-    openid-client: ^5.6.1
+    openid-client: ^5.6.5
     pg: ^8.9.0
     qs: ^6.11.1
     rate-limiter-flexible: 2.3.6
@@ -17123,7 +17112,7 @@ __metadata:
   dependencies:
     "@http-wizard/core": ^1.3.20
     "@sinclair/typebox": ^0.25.21
-    axios: 1.6.2
+    axios: 1.6.8
     injecti: ^1.0.5
     server: "*"
     zod: ^3.22.4
@@ -18651,15 +18640,15 @@ __metadata:
     "@http-wizard/core": ^1.3.16
     "@http-wizard/react-query": ^1.3.16
     "@iconify/react": ^4.1.1
-    "@json2csv/formatters": ^7.0.4
-    "@json2csv/plainjs": ^7.0.4
+    "@json2csv/formatters": ^7.0.6
+    "@json2csv/plainjs": ^7.0.6
     "@notionhq/client": ^2.2.14
     "@tanstack/react-query": ^4.29.3
     "@types/node": ^20.11.6
     "@types/qs": ^6.9.11
     "@types/react": ^18.2.48
     "@types/react-dom": ^18.2.18
-    axios: 1.6.2
+    axios: 1.6.8
     chakra-ui-markdown-renderer: ^4.1.0
     echarts: ^5.4.2
     framer-motion: ^10.9.1

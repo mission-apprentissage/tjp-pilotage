@@ -21,7 +21,7 @@ import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
-import { getRestitutionIntentionsStatsSchema } from "./getRestitutionIntentionStats.schema";
+import { getRestitutionIntentionsStatsSchema } from "./getRestitutionIntentionsStats.schema";
 
 export interface Filters
   extends z.infer<typeof getRestitutionIntentionsStatsSchema.querystring> {
