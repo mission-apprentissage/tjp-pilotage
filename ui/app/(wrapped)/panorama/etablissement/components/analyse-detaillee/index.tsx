@@ -12,7 +12,6 @@ import Loading from "../../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
-import { LiensUtilesSection } from "./liens-utiles/LiensUtilesSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
 import { Filters } from "./types";
 
@@ -36,7 +35,8 @@ const EtablissementAnalyseDetaillee = () => {
 
   const trackEvent = usePlausible();
   const filters = searchParams.filters ?? {};
-  const { uai } = useEtablissementContext();
+  const { uai, setAnalyseDetaillee, analyseDetaillee } =
+    useEtablissementContext();
   // PAGE ETAB V2 AVEC QUADRANT FF
   // const displayDashboard = () => {
   //   setSearchParams({ ...searchParams, displayType: "dashboard" });
@@ -60,6 +60,12 @@ const EtablissementAnalyseDetaillee = () => {
         staleTime: 10000000,
       }
     );
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setAnalyseDetaillee(data);
+    }
+  }, [data, isLoading]);
 
   // Si l'offre n'est pas dans la liste des formations (changement de filtre par exemple),
   // on la remplace par la première formation de la nouvelle liste
@@ -106,7 +112,7 @@ const EtablissementAnalyseDetaillee = () => {
     });
   };
 
-  if (isLoading) {
+  if (isLoading || !analyseDetaillee) {
     return <Loading my={16} size="xl" />;
   }
 
@@ -122,10 +128,10 @@ const EtablissementAnalyseDetaillee = () => {
         displayQuadrant={displayQuadrant}
         displayType={searchParams.displayType ?? displayType}
       /> */}
-      {Object.values(data?.formations ?? {}).length ? (
+      {Object.values(analyseDetaillee?.formations ?? {}).length ? (
         <Flex direction={"column"} gap={8}>
           <FiltersSection
-            data={data}
+            data={analyseDetaillee}
             filters={filters}
             handleFilters={handleFilters}
             filterTracker={filterTracker}
@@ -134,11 +140,11 @@ const EtablissementAnalyseDetaillee = () => {
           <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>
             <GridItem colSpan={4}>
               <ListeFormations
-                formations={Object.values(data?.formations ?? {})}
+                formations={Object.values(analyseDetaillee?.formations ?? {})}
                 offre={searchParams.offre ?? offre}
                 setOffre={setOffreFilter}
                 nbOffres={
-                  data?.filters.diplomes.reduce(
+                  analyseDetaillee?.filters.diplomes.reduce(
                     (acc, diplome) => {
                       if (!filters.codeNiveauDiplome)
                         acc[diplome.label] = diplome.nbOffres;
@@ -155,10 +161,14 @@ const EtablissementAnalyseDetaillee = () => {
               {/* // PAGE ETAB V2 AVEC QUADRANT FF */}
               {/* {displayType === "dashboard" ? ( */}
               <Dashboard
-                formation={data?.formations[searchParams.offre ?? offre]}
-                chiffresIJOffre={data?.chiffresIJ[searchParams.offre ?? offre]}
+                formation={
+                  analyseDetaillee?.formations[searchParams.offre ?? offre]
+                }
+                chiffresIJOffre={
+                  analyseDetaillee?.chiffresIJ[searchParams.offre ?? offre]
+                }
                 chiffresEntreeOffre={
-                  data?.chiffresEntree[searchParams.offre ?? offre]
+                  analyseDetaillee?.chiffresEntree[searchParams.offre ?? offre]
                 }
               />
               {/* ) : (
@@ -178,16 +188,12 @@ const EtablissementAnalyseDetaillee = () => {
         <Center my={16}>
           <Text fontSize={25}>
             {`Aucune formation trouvée pour l'établissement ${
-              data?.etablissement.libelleEtablissement ?? ""
-            } (${data?.etablissement.uai ?? uai})`}
+              analyseDetaillee?.etablissement.libelleEtablissement ?? ""
+            } (${analyseDetaillee?.etablissement.uai ?? uai})`}
           </Text>
         </Center>
       )}
       <Divider />
-      <LiensUtilesSection
-        codeDepartement={data?.etablissement.codeDepartement}
-        codeRegion={data?.etablissement.codeRegion}
-      />
     </Flex>
   );
 };

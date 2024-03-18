@@ -17,6 +17,15 @@ import {
   Text,
 } from "@chakra-ui/react";
 
+import Loading from "../../../../../components/Loading";
+import { useEtablissementContext } from "../../../context/etablissementContext";
+
+function formatCodeDepartement(codeDepartement: string): string {
+  return codeDepartement?.startsWith("0")
+    ? codeDepartement.substring(1)
+    : codeDepartement;
+}
+
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
   53: "https://dares.travail-emploi.gouv.fr/publication/bretagne-quelles-difficultes-de-recrutement-dici-2030",
@@ -124,16 +133,17 @@ const InfoCard = ({
   );
 };
 
-export const LiensUtilesSection = ({
-  codeRegion,
-  codeDepartement,
-}: {
-  codeRegion?: string;
-  codeDepartement?: string;
-}) => {
-  codeDepartement = codeDepartement?.startsWith("0")
-    ? codeDepartement.substring(1)
-    : codeDepartement;
+export const LiensUtilesSection = () => {
+  const { analyseDetaillee } = useEtablissementContext();
+
+  if (!analyseDetaillee) {
+    return <Loading my={16} size="xl" />;
+  }
+
+  const codeDepartement = formatCodeDepartement(
+    analyseDetaillee.etablissement.codeDepartement
+  );
+  const codeRegion = analyseDetaillee.etablissement.codeRegion;
 
   return (
     <Flex direction={"column"} gap={8} mt={8} maxW={"100%"} id={"liens-utiles"}>
