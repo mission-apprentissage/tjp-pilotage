@@ -1,6 +1,7 @@
 import { Server } from "../../server";
 import { countRestitutionIntentionsStatsRoute } from "./usecases/countRestitutionIntentionsStats/countRestitutionIntentionsStats.route";
 import { getAnalyseDetailleeEtablissementRoute } from "./usecases/getAnalyseDetailleeEtablissement/getAnalyseDetailleeEtablissement.route";
+import { getDataForEtablissementMapRoute } from "./usecases/getDataForEtablissementMap/getDataForEtablissementMap.route";
 import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.route";
 import { getDataForPanoramaEtablissementRoute } from "./usecases/getDataForPanoramaEtablissement/getDataForPanoramaEtablissement.route";
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
@@ -40,5 +41,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...getScopedTransformationStatsRoute({ server }),
     ...getPilotageReformeStatsRegionsRoute({ server }),
     ...getAnalyseDetailleeEtablissementRoute({ server }),
+    ...getDataForEtablissementMapRoute({ server }),
   };
 };
