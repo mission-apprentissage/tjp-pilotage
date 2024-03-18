@@ -1,43 +1,7 @@
-import { ArrowLeftIcon, ArrowRightIcon, DownloadIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  chakra,
-  Flex,
-  IconButton,
-  Spinner,
-} from "@chakra-ui/react";
-import { useState } from "react";
+import { ArrowLeftIcon, ArrowRightIcon } from "@chakra-ui/icons";
+import { Box, chakra, Flex, IconButton } from "@chakra-ui/react";
 
-const ExportButton = ({ onExport }: { onExport?: () => Promise<void> }) => {
-  const [loading, setIsLoading] = useState<boolean>(false);
-
-  const handleExport = async () => {
-    if (onExport && !loading) {
-      setIsLoading(true);
-      await onExport();
-      setIsLoading(false);
-    }
-  };
-
-  if (!onExport) return null;
-
-  if (loading) {
-    return (
-      <Button mr="auto" size="sm" variant="ghost" disabled={true}>
-        <Spinner mr="2" size="sm" />
-        Export en cours...
-      </Button>
-    );
-  }
-
-  return (
-    <Button onClick={handleExport} mr="auto" size="sm" variant="ghost">
-      <DownloadIcon mr="2" />
-      Exporter en CSV
-    </Button>
-  );
-};
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 
 export const TableFooter = chakra(
   ({
@@ -45,14 +9,16 @@ export const TableFooter = chakra(
     page,
     count = 0,
     onPageChange,
-    onExport,
+    onExportCsv,
+    onExportExcel,
     className,
   }: {
     pageSize: number;
     page: number;
     count?: number;
     onPageChange: (page: number) => void;
-    onExport?: () => Promise<void>;
+    onExportCsv?: () => Promise<void>;
+    onExportExcel?: () => Promise<void>;
     className?: string;
   }) => {
     return (
@@ -63,7 +29,14 @@ export const TableFooter = chakra(
         py="1.5"
         className={className}
       >
-        <ExportButton onExport={onExport} />
+        <Flex mr="auto">
+          {(onExportCsv || onExportExcel) && (
+            <ExportMenuButton
+              onExportCsv={onExportCsv}
+              onExportExcel={onExportExcel}
+            />
+          )}
+        </Flex>
         <Box mr="4" ml="auto">
           {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
           {count}

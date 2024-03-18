@@ -25,19 +25,24 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 
+import { client } from "@/api.client";
+import { OrderIcon } from "@/components/OrderIcon";
+import { TableFooter } from "@/components/TableFooter";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import {
+  downloadCsv,
+  downloadExcel,
+  ExportColumns,
+} from "@/utils/downloadExport";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { client } from "../../../../api.client";
-import { OrderIcon } from "../../../../components/OrderIcon";
-import { TableFooter } from "../../../../components/TableFooter";
-import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -260,26 +265,46 @@ export const PageClient = () => {
                 <Search2Icon color="white" />
               </Button>
             </Flex>
-            <Button
-              mr="auto"
-              size="md"
-              variant="ghost"
-              color={"bluefrance.113"}
-              onClick={async () => {
-                trackEvent("demandes:export");
-                const data = await client.ref("[GET]/demandes").query({
-                  query: getDemandesQueryParameters(EXPORT_LIMIT),
-                });
-                downloadCsv(
-                  "export_demandes.csv",
-                  data.demandes,
-                  DEMANDES_COLUMNS
-                );
-              }}
-            >
-              <DownloadIcon mr="2" />
-              Exporter en CSV
-            </Button>
+            <Flex mr="auto" ms={2}>
+              <Button
+                size="md"
+                variant="ghost"
+                color={"bluefrance.113"}
+                onClick={async () => {
+                  trackEvent("demandes:export");
+                  const data = await client.ref("[GET]/demandes").query({
+                    query: getDemandesQueryParameters(EXPORT_LIMIT),
+                  });
+                  downloadCsv(
+                    "export_demandes",
+                    data.demandes,
+                    DEMANDES_COLUMNS
+                  );
+                }}
+              >
+                <DownloadIcon mr="2" />
+                Exporter en CSV
+              </Button>
+              <Button
+                size="md"
+                variant="ghost"
+                color={"bluefrance.113"}
+                onClick={async () => {
+                  trackEvent("demandes:export-excel");
+                  const data = await client.ref("[GET]/demandes").query({
+                    query: getDemandesQueryParameters(EXPORT_LIMIT),
+                  });
+                  downloadExcel(
+                    "export_demandes",
+                    data.demandes,
+                    DEMANDES_COLUMNS
+                  );
+                }}
+              >
+                <Icon icon="ri:file-excel-2-line" width={"14px"} />
+                <Text ms={2}>Exporter en Excel</Text>
+              </Button>
+            </Flex>
           </Flex>
           {data?.demandes.length ? (
             <>

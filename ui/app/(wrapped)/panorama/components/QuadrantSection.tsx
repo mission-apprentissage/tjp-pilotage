@@ -29,7 +29,7 @@ import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
 import { Quadrant } from "../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../components/TableQuadrant";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { downloadCsv } from "../../../../utils/downloadCsv";
+import { downloadCsv } from "../../../../utils/downloadExport";
 import { Order, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
