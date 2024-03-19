@@ -1,7 +1,6 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
 import { getEtablissementSchema } from "./getEtablissement.schema";
 import { getEtablissement } from "./getEtablissement.usecase";
 
@@ -12,7 +11,6 @@ export const getEtablissementRoute = ({ server }: { server: Server }) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
         const { uai } = request.params;
         const result = await getEtablissement({ uai });

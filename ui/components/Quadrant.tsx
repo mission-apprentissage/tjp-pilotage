@@ -19,6 +19,7 @@ import {
   FC,
   forwardRef,
   ReactNode,
+  useEffect,
   useLayoutEffect,
   useMemo,
   useRef,
@@ -35,6 +36,8 @@ const quadrantLabelStyle = {
 
 export const Quadrant = function <
   F extends {
+    cfd: string;
+    codeDispositif: string;
     effectif?: number;
     tauxPoursuite: number;
     tauxInsertion: number;
@@ -49,8 +52,7 @@ export const Quadrant = function <
   InfoTootipContent,
   effectifSizes,
   onClick,
-  itemColor = "rgba(58, 85, 209, 0.6)",
-  itemId,
+  currentFormationId,
   dimensions = ["tauxInsertion", "tauxPoursuite"],
 }: {
   className?: string;
@@ -61,8 +63,7 @@ export const Quadrant = function <
   InfoTootipContent?: FC;
   effectifSizes: { max: number; size: number }[];
   onClick?: (_: F) => void;
-  itemColor?: string | ((_: F) => string | undefined);
-  itemId: (_: F) => string;
+  currentFormationId?: string;
   dimensions?: Array<"tauxInsertion" | "tauxPoursuite">;
 }) {
   const chartRef = useRef<echarts.ECharts>();
@@ -71,6 +72,16 @@ export const Quadrant = function <
 
   const greenColor = useToken("colors", "green.submitted");
   const redColor = useToken("colors", "redmarianne.925");
+  const greyColor = useToken("colors", "grey.975");
+
+  const itemActiveColor = useToken("colors", "quadrantItemColor.active");
+  const itemInactiveColor = useToken("colors", "quadrantItemColor.inactive");
+
+  const currentFormation = ((): F | undefined =>
+    data.find(
+      (formation) =>
+        currentFormationId === `${formation.cfd}_${formation.codeDispositif}`
+    ))();
 
   const popperInstance = usePopper({
     modifiers: [
@@ -81,11 +92,22 @@ export const Quadrant = function <
     ],
   });
 
-  const [displayedDetail, setDisplayedDetail] = useState<{
-    x: number;
-    y: number;
-    formation: F;
-  }>();
+  const [displayedDetail, setDisplayedDetail] = useState<
+    | {
+        x: number;
+        y: number;
+        formation: F;
+      }
+    | undefined
+  >();
+
+  const displayTooltip = (formation: F) => {
+    const [x, y] = chartRef.current?.convertToPixel("grid", [
+      formation.tauxPoursuite * 100 ?? 0,
+      formation.tauxInsertion * 100 ?? 0,
+    ]) ?? [0, 0];
+    setDisplayedDetail({ x, y, formation });
+  };
 
   useLayoutEffect(() => {
     if (!containerRef.current) return;
@@ -102,58 +124,54 @@ export const Quadrant = function <
         );
       },
     });
-  }, [containerRef.current, popperInstance, displayedDetail]);
+  }, [displayedDetail]);
 
-  const series = useMemo(() => {
-    return data.map((formation) => ({
-      value: [
-        dimensions?.includes("tauxPoursuite")
-          ? formation.tauxPoursuite * 100
-          : 50,
-        dimensions?.includes("tauxInsertion")
-          ? formation.tauxInsertion * 100
-          : 50,
-      ],
-      name: itemId(formation),
-    }));
-  }, [data]);
+  const series = data.map((formation) => ({
+    value: [
+      dimensions?.includes("tauxPoursuite")
+        ? formation.tauxPoursuite * 100
+        : 50,
+      dimensions?.includes("tauxInsertion")
+        ? formation.tauxInsertion * 100
+        : 50,
+    ],
+    name: `${formation.cfd}_${formation.codeDispositif}`,
+  }));
 
-  const moyennes = useMemo(() => {
-    const moyenneInsertion = (() => {
-      if (dimensions?.includes("tauxInsertion")) {
-        if (meanInsertion) return meanInsertion * 100;
-        return undefined;
-      }
-      return 50;
-    })();
-
-    const moyennePoursuite = (() => {
+  const moyennes = {
+    insertion: (() => {
       if (dimensions?.includes("tauxPoursuite")) {
         if (meanPoursuite) return meanPoursuite * 100;
         return undefined;
       }
       return 50;
-    })();
+    })(),
+    poursuite: (() => {
+      if (dimensions?.includes("tauxInsertion")) {
+        if (meanInsertion) return meanInsertion * 100;
+        return undefined;
+      }
+      return 50;
+    })(),
+  };
 
-    return {
-      insertion: moyenneInsertion,
-      poursuite: moyennePoursuite,
-    };
-  }, [meanPoursuite, meanInsertion, dimensions]);
-
-  const repartitionsQuadrants = useMemo(() => {
-    if (!meanInsertion || !meanPoursuite) return;
-    return {
-      q1: data.filter((item) => item.positionQuadrant === "Q1" && item.effectif)
-        .length,
-      q2: data.filter((item) => item.positionQuadrant === "Q2" && item.effectif)
-        .length,
-      q3: data.filter((item) => item.positionQuadrant === "Q3" && item.effectif)
-        .length,
-      q4: data.filter((item) => item.positionQuadrant === "Q4" && item.effectif)
-        .length,
-    };
-  }, [data, meanInsertion, meanPoursuite, dimensions]);
+  const repartitionsQuadrants =
+    meanInsertion && meanPoursuite
+      ? {
+          q1: data.filter(
+            (item) => item.positionQuadrant === "Q1" && item.effectif
+          ).length,
+          q2: data.filter(
+            (item) => item.positionQuadrant === "Q2" && item.effectif
+          ).length,
+          q3: data.filter(
+            (item) => item.positionQuadrant === "Q3" && item.effectif
+          ).length,
+          q4: data.filter(
+            (item) => item.positionQuadrant === "Q4" && item.effectif
+          ).length,
+        }
+      : undefined;
 
   const option = useMemo<EChartsOption>(
     () => ({
@@ -221,8 +239,12 @@ export const Quadrant = function <
             color: ({ dataIndex }) => {
               const formation = data[dataIndex];
               if (!formation) return "";
-              if (typeof itemColor === "string") return itemColor;
-              return itemColor(formation) ?? "rgba(58, 85, 209, 0.6)";
+              if (
+                currentFormationId ===
+                `${formation.cfd}_${formation.codeDispositif}`
+              )
+                return itemActiveColor;
+              return itemInactiveColor;
             },
           },
           animation: true,
@@ -266,7 +288,7 @@ export const Quadrant = function <
                             dimensions?.includes("tauxPoursuite") &&
                             dimensions?.includes("tauxInsertion")
                               ? redColor
-                              : "#F5F5F5",
+                              : greyColor,
                         },
                         name: `Q4 - ${repartitionsQuadrants?.q4} formations`,
                         label: {
@@ -284,7 +306,7 @@ export const Quadrant = function <
                             dimensions?.includes("tauxPoursuite") &&
                             dimensions?.includes("tauxInsertion")
                               ? greenColor
-                              : "#F5F5F5",
+                              : greyColor,
                         },
                         name: `Q1 - ${repartitionsQuadrants?.q1} formations`,
                         label: {
@@ -297,7 +319,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [0, moyennes.insertion],
-                        itemStyle: { color: "#FAFAFA" },
+                        itemStyle: { color: greyColor },
                         name: `Q2 - ${repartitionsQuadrants?.q2} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -309,7 +331,7 @@ export const Quadrant = function <
                     [
                       {
                         coord: [moyennes.poursuite, 0],
-                        itemStyle: { color: "#FAFAFA" },
+                        itemStyle: { color: greyColor },
                         name: `Q3 - ${repartitionsQuadrants?.q3} formations`,
                         label: {
                           ...quadrantLabelStyle,
@@ -324,7 +346,7 @@ export const Quadrant = function <
         },
       ],
     }),
-    [data, moyennes, itemColor, itemId, dimensions]
+    [data, moyennes, dimensions]
   );
 
   useLayoutEffect(() => {
@@ -334,29 +356,25 @@ export const Quadrant = function <
     }
     chartRef.current.setOption(option);
 
-    const handler = (event: {
+    const selectFormationHandler = (event: {
       dataIndex: number;
       data: { value: [number, number] };
     }) => {
-      const [x, y] = chartRef.current?.convertToPixel(
-        "grid",
-        event.data.value
-      ) ?? [0, 0];
-      chartRef.current?.setOption(option);
       onClick?.(data[event.dataIndex]);
-      setDisplayedDetail({
-        x,
-        y,
-        formation: data[event.dataIndex],
-      });
-      return true;
+      displayTooltip(data[event.dataIndex]);
     };
     //@ts-ignore
-    chartRef.current.on("click", "series", handler);
+    chartRef.current.on("click", "series", selectFormationHandler);
     return () => {
-      chartRef.current?.off("click", handler);
+      chartRef.current?.off("click", selectFormationHandler);
     };
   }, [option, data]);
+
+  useEffect(() => {
+    if (!displayedDetail && currentFormation) {
+      displayTooltip(currentFormation);
+    }
+  }, [currentFormation]);
 
   return (
     <Box
@@ -384,7 +402,9 @@ export const Quadrant = function <
       {displayedDetail && TooltipContent && (
         <FormationTooltipWrapper
           ref={popperInstance.popperRef}
-          clickOutside={() => setDisplayedDetail(undefined)}
+          clickOutside={() => {
+            setDisplayedDetail(undefined);
+          }}
           {...popperInstance.getPopperProps()}
         >
           {TooltipContent && displayedDetail && (
