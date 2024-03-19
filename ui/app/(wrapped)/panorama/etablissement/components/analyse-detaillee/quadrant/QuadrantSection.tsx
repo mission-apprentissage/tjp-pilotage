@@ -35,8 +35,8 @@ const effectifSizes = [
 ];
 
 export const QuadrantSection = ({
-  formations,
   etablissement,
+  formations,
   currentFormation,
   chiffresEntree,
   chiffresIJ,
@@ -44,8 +44,8 @@ export const QuadrantSection = ({
   offre,
   setOffre,
 }: {
-  formations: Formation[];
   etablissement?: Etablissement;
+  formations: Formation[];
   currentFormation?: Formation;
   chiffresEntree?: ChiffresEntree;
   chiffresIJ?: ChiffresIJ;

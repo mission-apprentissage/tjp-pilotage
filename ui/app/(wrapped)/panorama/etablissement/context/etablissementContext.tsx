@@ -3,7 +3,7 @@ import { createContext, useContext, useState } from "react";
 import { client } from "@/api.client";
 
 type AnalyseDetailleeType =
-  (typeof client.infer)["[GET]/etablissement/analyse-detaillee"];
+  (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
 type EtablissementMapType =
   (typeof client.infer)["[GET]/etablissement/:uai/map"];
 
