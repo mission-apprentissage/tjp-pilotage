@@ -55,6 +55,7 @@ export const getDataForEtablissementMapFactory =
       latitude: etablissement.latitude || +Infinity,
       longitude: etablissement.longitude || +Infinity,
       etablissementsProches: etablissementsProches,
+      initialZoom: 10,
     };
   };
 

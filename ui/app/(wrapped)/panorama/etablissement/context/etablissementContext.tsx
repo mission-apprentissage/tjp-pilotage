@@ -4,12 +4,16 @@ import { client } from "@/api.client";
 
 type AnalyseDetailleeType =
   (typeof client.infer)["[GET]/etablissement/analyse-detaillee"];
+type EtablissementMapType =
+  (typeof client.infer)["[GET]/etablissement/:uai/map"];
 
 type EtablissementContextType = {
   uai: string;
   setUai: (uai: string) => void;
   analyseDetaillee: AnalyseDetailleeType | undefined;
   setAnalyseDetaillee: (data: AnalyseDetailleeType) => void;
+  etablissementMap: EtablissementMapType | undefined;
+  setEtablissementMap: (data: EtablissementMapType) => void;
 };
 
 interface EtablissementContextProps {
@@ -28,12 +32,16 @@ export function EtablissementContextProvider({
   const [uai, setUai] = useState(value?.uai ?? "");
   const [analyseDetaillee, setAnalyseDetaillee] =
     useState<AnalyseDetailleeType>();
+  const [etablissementMap, setEtablissementMap] =
+    useState<EtablissementMapType>();
 
   const context = {
     uai,
     setUai,
     analyseDetaillee,
     setAnalyseDetaillee,
+    etablissementMap,
+    setEtablissementMap,
   };
 
   return (
