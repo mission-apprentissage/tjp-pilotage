@@ -13,11 +13,17 @@ interface FilterByDistanceParams {
   etablissements: Array<Selectable<DB["etablissement"]>>;
 }
 
+/**
+ * Calcule la distance en km depuis le point initial (l'établissement source) jusqu'aux points finaux.
+ *
+ * @param {FilterByDistanceParams} param - Un objet contenant l'établissement (point initial) and la liste d'établissements (points finaux)
+ * @return {Array<EtablissementWithDistance>} Un tableau d'EtablissementsProches avec leur distance depuis le point initial en km
+ */
 export function getDistance({
   etablissement,
   etablissements,
 }: FilterByDistanceParams): Array<EtablissementWithDistance> {
-  return etablissements
+  const etablissementsWithDistance = etablissements
     .map((e) => {
       if (
         !e?.latitude ||
@@ -42,4 +48,6 @@ export function getDistance({
       };
     })
     .filter((e) => e !== undefined) as Array<EtablissementWithDistance>;
+
+  return etablissementsWithDistance.sort((a, b) => a?.distance - b?.distance);
 }

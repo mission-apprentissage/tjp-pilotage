@@ -3,7 +3,7 @@ import { Filters } from "./types";
 
 export const useAnalyseDetaillee = (uai: string, filters: Filters) => {
   const { data, isLoading: isLoading } = client
-    .ref(`[GET]/etablissement/:uai/analyse-detaillee`)
+    .ref("[GET]/etablissement/:uai/analyse-detaillee")
     .useQuery(
       {
         params: { uai },
@@ -16,7 +16,7 @@ export const useAnalyseDetaillee = (uai: string, filters: Filters) => {
     );
 
   return {
-    ...data,
+    data,
     isLoading,
   };
 };

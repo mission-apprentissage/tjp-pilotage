@@ -15,7 +15,7 @@ import { FiltersSection } from "./filters/FiltersSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { TabsSection } from "./tabs/TabsSection";
-import { Filters } from "./types";
+import { AnalyseDetaillee, Filters } from "./types";
 
 const QUADRANT_FEATURE_FLAG = true;
 
@@ -49,7 +49,7 @@ const EtablissementAnalyseDetaillee = () => {
     setSearchParams({ ...searchParams, displayType: "quadrant" });
   };
 
-  const { isLoading, ...data } = useAnalyseDetaillee(uai, filters) || {};
+  const { isLoading, data } = useAnalyseDetaillee(uai, filters);
   const {
     etablissement,
     formations,
@@ -57,11 +57,11 @@ const EtablissementAnalyseDetaillee = () => {
     chiffresEntree,
     statsSortie,
     filters: filtersData,
-  } = data;
+  } = data || {};
 
   useEffect(() => {
     if (!isLoading && data) {
-      setAnalyseDetaillee(data);
+      setAnalyseDetaillee(data as AnalyseDetaillee);
     }
   }, [data, isLoading]);
 

@@ -7,6 +7,7 @@ import {
 } from "./getDataForEtablissementMap.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
+import { getInitialZoom } from "./services/getInitialZoom";
 
 export type EtablissementProche = z.infer<typeof EtablissementProcheSchema>;
 export type RouteQueryString = z.infer<
@@ -50,12 +51,14 @@ export const getDataForEtablissementMapFactory =
 
     etablissementsProches.push(...filteredEtablissements);
 
+    const initialZoom = getInitialZoom(etablissementsProches);
+
     return {
       uai: etablissement.UAI,
       latitude: etablissement.latitude || +Infinity,
       longitude: etablissement.longitude || +Infinity,
       etablissementsProches: etablissementsProches,
-      initialZoom: 10,
+      initialZoom,
     };
   };
 

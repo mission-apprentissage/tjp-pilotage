@@ -7,6 +7,13 @@ type AnalyseDetailleeType =
 type EtablissementMapType =
   (typeof client.infer)["[GET]/etablissement/:uai/map"];
 
+interface Bbox {
+  minLat: number;
+  minLng: number;
+  maxLat: number;
+  maxLng: number;
+}
+
 type EtablissementContextType = {
   uai: string;
   setUai: (uai: string) => void;
@@ -14,6 +21,8 @@ type EtablissementContextType = {
   setAnalyseDetaillee: (data: AnalyseDetailleeType) => void;
   etablissementMap: EtablissementMapType | undefined;
   setEtablissementMap: (data: EtablissementMapType) => void;
+  bbox: Bbox;
+  setBbox: (bbox: Bbox) => void;
 };
 
 interface EtablissementContextProps {
@@ -30,6 +39,12 @@ export function EtablissementContextProvider({
   value,
 }: EtablissementContextProps) {
   const [uai, setUai] = useState(value?.uai ?? "");
+  const [bbox, setBbox] = useState({
+    minLat: 0,
+    minLng: 0,
+    maxLat: 0,
+    maxLng: 0,
+  });
   const [analyseDetaillee, setAnalyseDetaillee] =
     useState<AnalyseDetailleeType>();
   const [etablissementMap, setEtablissementMap] =
@@ -42,6 +57,8 @@ export function EtablissementContextProvider({
     setAnalyseDetaillee,
     etablissementMap,
     setEtablissementMap,
+    bbox,
+    setBbox,
   };
 
   return (
