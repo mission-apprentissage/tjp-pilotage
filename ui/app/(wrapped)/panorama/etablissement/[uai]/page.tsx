@@ -1,21 +1,15 @@
-"use client";
+import { feature } from "../../../../../utils/feature";
+import { EtablissementPage as EtablissementPageV1 } from "./etablissementV1";
+import { EtablissementPage as EtablissementPageV2 } from "./etablissementV2";
 
-import { EtablissementHeader } from "../components/header";
-import { EtablissementContextProvider } from "../context/etablissementContext";
+export default function PanoramaEtablissement({
+  params,
+}: {
+  params: { uai: string };
+}) {
+  if (feature.etablissement) {
+    return <EtablissementPageV2 params={params} />;
+  }
 
-interface EtablissementPageProps {
-  params: {
-    uai: string;
-  };
+  return <EtablissementPageV1 params={params} />;
 }
-
-const EtablissementPage = ({ params: { uai } }: EtablissementPageProps) => {
-  return (
-    <EtablissementContextProvider value={{ uai }}>
-      <EtablissementHeader />
-      {/* <EtablissementAnalyseDetaillee /> */}
-    </EtablissementContextProvider>
-  );
-};
-
-export default EtablissementPage;
