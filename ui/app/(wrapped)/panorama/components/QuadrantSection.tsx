@@ -161,7 +161,9 @@ export const QuadrantSection = ({
   const [tendances, setTendances] = useState<Tendances>(tendancesDefaultValue);
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
 
-  const [currentCfd, setFormationId] = useState<string | undefined>();
+  const [currentFormationId, setCurrentFormationId] = useState<
+    string | undefined
+  >();
 
   const toggleTypeVue = () => {
     if (typeVue === "quadrant") setTypeVue("tableau");
@@ -404,25 +406,25 @@ export const QuadrantSection = ({
                 meanPoursuite ? (
                 typeVue === "quadrant" ? (
                   <Quadrant
-                    onClick={({ cfd }) => setFormationId(cfd)}
+                    onClick={({ cfd, codeDispositif }) =>
+                      setCurrentFormationId(`${cfd}_${codeDispositif}`)
+                    }
                     meanInsertion={meanInsertion}
                     meanPoursuite={meanPoursuite}
-                    data={filteredFormations}
+                    currentFormationId={currentFormationId}
+                    data={filteredFormations.map((formation) => ({
+                      ...formation,
+                      codeDispositif: formation.codeDispositif ?? "",
+                    }))}
                     TooltipContent={FormationTooltipContent}
-                    itemId={(formation) =>
-                      formation.cfd + formation.codeDispositif
-                    }
-                    itemColor={(formation) =>
-                      formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
-                    }
                     InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}
                   />
                 ) : (
                   <TableQuadrant
                     formations={filteredFormations}
-                    handleClick={setFormationId}
-                    currentCfd={currentCfd}
+                    handleClick={setCurrentFormationId}
+                    currentFormationId={currentFormationId}
                     order={order}
                     handleOrder={(column?: string) =>
                       handleOrder(column as Order["orderBy"])

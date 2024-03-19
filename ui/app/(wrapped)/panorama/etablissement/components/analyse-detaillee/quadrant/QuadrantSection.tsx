@@ -184,14 +184,12 @@ export const QuadrantSection = ({
             <Quadrant
               meanPoursuite={statsSortie.tauxPoursuite}
               meanInsertion={statsSortie.tauxInsertion}
-              data={filteredFormations}
+              data={filteredFormations.map((formation) => ({
+                ...formation,
+                codeDispositif: formation.codeDispositif ?? "",
+              }))}
+              currentFormationId={`${currentFormation?.cfd}_${currentFormation?.codeDispositif}`}
               TooltipContent={FormationTooltipContent}
-              itemId={(formation: (typeof filteredFormations)[number]) =>
-                formation.offre
-              }
-              itemColor={(formation: (typeof filteredFormations)[number]) =>
-                formation.offre === offre ? "#fd3b4cb5" : undefined
-              }
               onClick={(formation: (typeof filteredFormations)[number]) => {
                 if (offre != formation.offre) setOffre(formation.offre);
               }}

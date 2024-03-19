@@ -119,7 +119,9 @@ export const QuadrantSection = ({
 
   const order = filters.order;
 
-  const [currentCfd, setFormationId] = useState<string | undefined>();
+  const [currentFormationId, setCurrentFormationId] = useState<
+    string | undefined
+  >();
   const { ...otherFilters } = parentFilters;
   const mergedFilters = {
     ...otherFilters,
@@ -148,8 +150,11 @@ export const QuadrantSection = ({
     );
 
   const formation = useMemo(
-    () => formations?.find((item) => item.cfd === currentCfd),
-    [currentCfd, formations]
+    () =>
+      formations?.find(
+        (item) => `${item.cfd}_${item.codeDispositif}` === currentFormationId
+      ),
+    [currentFormationId, formations]
   );
 
   const getLibelleTerritoire = (
@@ -433,19 +438,17 @@ export const QuadrantSection = ({
                   {formations &&
                     (typeVue === "quadrant" ? (
                       <Quadrant
-                        onClick={({ cfd }) => setFormationId(cfd)}
+                        onClick={({ cfd, codeDispositif }) =>
+                          setCurrentFormationId(`${cfd}_${codeDispositif}`)
+                        }
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
-                        itemId={(formation) =>
-                          formation.cfd + formation.codeDispositif
-                        }
+                        currentFormationId={currentFormationId}
                         data={formations?.map((formation) => ({
                           ...formation,
+                          codeDispositif: formation.codeDispositif ?? "",
                           effectif: formation.differencePlaces,
                         }))}
-                        itemColor={(formation) =>
-                          formation.cfd === currentCfd ? "#fd3b4cb5" : undefined
-                        }
                         effectifSizes={[
                           { max: 15, size: 6 },
                           { max: 60, size: 12 },
@@ -459,8 +462,8 @@ export const QuadrantSection = ({
                           ...formation,
                           effectif: formation.differencePlaces,
                         }))}
-                        handleClick={setFormationId}
-                        currentCfd={currentCfd}
+                        handleClick={setCurrentFormationId}
+                        currentFormationId={currentFormationId}
                         order={order}
                         handleOrder={(column?: string) =>
                           handleOrder(
