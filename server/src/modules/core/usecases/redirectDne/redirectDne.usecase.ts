@@ -135,21 +135,33 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       const email = userinfo.email;
       if (!email) {
-        logger.info("(sso) : missing user email", {
+        logger.error("Error (SSO) : Il manque l'email de l'utilisateur", {
+          error: new Error("missing user email"),
           userinfo,
         });
         throw new Error("missing user email");
       }
 
       const user = await deps.findUserQuery(email);
-      if (user && !user.enabled) throw new Error("user not enabled");
-
-      const attributes = getUserRoleAttributes(userinfo);
-      if (!attributes) {
-        logger.info("(sso) : missing right attributes", {
+      if (user && !user.enabled) {
+        logger.error("Error (SSO) : L'utilisateur existe et est désactivé", {
+          error: new Error("user not enabled"),
           userinfo,
           email,
         });
+        throw new Error("user not enabled");
+      }
+
+      const attributes = getUserRoleAttributes(userinfo);
+      if (!attributes) {
+        logger.error(
+          "Error (SSO) : Il manque les droits perdir pour l'utilisateur",
+          {
+            error: new Error("missing rights"),
+            userinfo,
+            email,
+          }
+        );
         throw new Error("missing right attributes");
       }
 
@@ -158,12 +170,16 @@ export const [redirectDne, redirectDneFactory] = inject(
         (await deps.findEtablissement({ uais: attributes.uais }));
 
       if (!etablissement?.codeRegion) {
-        logger.info("(sso) : missing etablissement", {
-          userinfo,
-          email,
-          attributes,
-          etablissement,
-        });
+        logger.error(
+          "Error (SSO): Il manque le code région pour l'établissement",
+          {
+            error: new Error("missing codeRegion"),
+            userinfo,
+            email,
+            attributes,
+            etablissement,
+          }
+        );
         throw new Error("missing codeRegion");
       }
 
@@ -180,16 +196,21 @@ export const [redirectDne, redirectDneFactory] = inject(
 
       await deps.createUserInDB({ user: userToInsert });
 
-      logger.info(`Nouvel utilisateur DNE`, {
-        user: userToInsert,
-        password: undefined,
-      });
+      if (user) {
+        logger.info(`Info (SSO) : Nouveau login`, {
+          user: userToInsert,
+        });
+      } else {
+        logger.info(`Info (SSO) : Nouvel utilisateur DNE`, {
+          user: userToInsert,
+        });
+      }
 
       const authorizationToken = jwt.sign({ email }, deps.authJwtSecret, {
         issuer: "orion",
         expiresIn: "7d",
       });
 
-      return { token: authorizationToken };
+      return { token: authorizationToken, user: userToInsert };
     }
 );

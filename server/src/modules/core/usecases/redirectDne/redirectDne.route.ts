@@ -65,7 +65,7 @@ export const redirectDneRoute = (server: Server) => {
               .send();
           }
 
-          const { token } = await redirectDne({
+          const { token, user } = await redirectDne({
             codeVerifierJwt,
             url: request.url,
           });
@@ -78,7 +78,10 @@ export const redirectDneRoute = (server: Server) => {
             path: "/",
           });
 
-          response.header("set-cookie", cookies).redirect(302, "/").send();
+          response
+            .header("set-cookie", cookies)
+            .redirect(302, `/panorama/etablissement/${user.uais[0]}`)
+            .send();
         } catch (error) {
           logger.error("echec dne redirect", { error: error as Error });
           response.redirect(302, `/auth/login?error=${ERROR_TYPE}`).send();

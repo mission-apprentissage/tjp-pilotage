@@ -147,6 +147,10 @@ const NavMenuButton = chakra(
 export const Nav = () => {
   const { auth } = useAuth();
   const { uaiFilter } = useContext(UaiFilterContext);
+  const hasIntentionsMenu =
+    hasPermission(auth?.user.role, "intentions/lecture") ||
+    hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
+    hasPermission(auth?.user.role, "restitution-intentions/lecture");
 
   return (
     <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
@@ -171,20 +175,22 @@ export const Nav = () => {
       >
         Console
       </NavLink>
-      {hasPermission(auth?.user.role, "intentions/lecture") && (
+      {hasIntentionsMenu && (
         <Menu gutter={0} matchWidth={true}>
           <NavMenuButton segment="intentions">
             Recueil des demandes
           </NavMenuButton>
           <MenuList p="0" borderTop="unset" w="100%">
-            <MenuItem p="0" w="100%">
-              <NavMenuLink
-                href="/intentions/saisie"
-                segment="saisie-intentions"
-              >
-                Formulaire
-              </NavMenuLink>
-            </MenuItem>
+            {hasPermission(auth?.user.role, "intentions/lecture") && (
+              <MenuItem p="0" w="100%">
+                <NavMenuLink
+                  href="/intentions/saisie"
+                  segment="saisie-intentions"
+                >
+                  Formulaire
+                </NavMenuLink>
+              </MenuItem>
+            )}
             {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
               <MenuItem p="0">
                 <NavMenuLink
