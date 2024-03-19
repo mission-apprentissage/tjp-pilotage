@@ -16,18 +16,12 @@ import {
   SimpleGrid,
   Text,
 } from "@chakra-ui/react";
-
-import Loading from "../../../../../components/Loading";
-import { useEtablissementContext } from "../../../context/etablissementContext";
-
-function formatCodeDepartement(codeDepartement: string): string {
-  return codeDepartement?.startsWith("0")
-    ? codeDepartement.substring(1)
-    : codeDepartement;
-}
 import { usePlausible } from "next-plausible";
 
 import { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
+
+import { Loading } from "../../../../../../../components/Loading";
+import { useEtablissementContext } from "../../../context/etablissementContext";
 
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
@@ -44,6 +38,12 @@ const lienDares: Record<string, string> = {
   52: "https://dares.travail-emploi.gouv.fr/publication/pays-de-la-loire-quelles-difficultes-de-recrutement-dici-2030",
   93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
 };
+
+function formatCodeDepartement(codeDepartement: string): string {
+  return codeDepartement?.startsWith("0")
+    ? codeDepartement.substring(1)
+    : codeDepartement;
+}
 
 const InfoCard = ({
   title,

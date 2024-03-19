@@ -29,7 +29,7 @@ export const UaiForm = ({
   return (
     <FormControl margin="auto" maxW="400px" as="form">
       <FormLabel>Recherche d'un établissement</FormLabel>
-      <Flex zIndex={"dropdown"}>
+      <Flex zIndex="overlay">
         {isLoading ? (
           <Skeleton height="38px" width="25rem" opacity={0.25} />
         ) : (

@@ -43,7 +43,7 @@ export const Header = () => {
   return (
     <>
       <VStack
-        zIndex="popover"
+        zIndex="banner"
         spacing="0"
         divider={
           <Box
