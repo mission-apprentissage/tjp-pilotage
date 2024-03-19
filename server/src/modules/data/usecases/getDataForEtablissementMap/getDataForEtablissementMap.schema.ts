@@ -27,6 +27,7 @@ export const getDataForEtablissementMapSchema = {
       uai: z.string(),
       latitude: z.number(),
       longitude: z.number(),
+      initialZoom: z.number(),
       etablissementsProches: z.array(EtablissementProcheSchema),
     }),
   },
