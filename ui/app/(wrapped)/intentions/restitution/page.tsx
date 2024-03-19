@@ -7,11 +7,11 @@ import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 
 import { client } from "@/api.client";
+import { TableFooter } from "@/components/TableFooter";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { TableFooter } from "../../../../components/TableFooter";
-import { createParametrizedUrl } from "../../../../utils/createParametrizedUrl";
-import { downloadCsv } from "../../../../utils/downloadCsv";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
@@ -194,13 +194,40 @@ export default () => {
         <TableFooter
           mb={36}
           pl="4"
-          onExport={async () => {
+          onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
             const data = await client.ref("[GET]/intentions/stats").query({
               query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
             });
             downloadCsv(
-              "demandes_stats_export.csv",
+              "demandes_stats_export",
+              data.demandes.map((demande) => ({
+                ...demande,
+                createdAt: new Date(demande.createdAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
+                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
+              })),
+              STATS_DEMANDES_COLUMNS
+            );
+          }}
+          onExportExcel={async () => {
+            trackEvent("restitution-demandes:export-excel");
+            const data = await client.ref("[GET]/intentions/stats").query({
+              query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+            });
+            downloadExcel(
+              "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
                 createdAt: new Date(demande.createdAt).toLocaleDateString(

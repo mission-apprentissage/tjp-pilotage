@@ -110,8 +110,13 @@ export const VerticalBarChart = ({
             distance: 10,
             show: true,
             position: "top",
-            formatter: "{c}%",
-            fontSize: "14px",
+            formatter: "{c}{percent|%}",
+            rich: {
+              percent: {
+                fontSize: "11px",
+              },
+            },
+            fontSize: "13px",
             fontWeight: 700,
           },
           tooltip: {

@@ -1,6 +1,6 @@
 import { client } from "@/api.client";
 
-import { ExportColumns } from "../../../../utils/downloadCsv";
+import { ExportColumns } from "../../../../utils/downloadExport";
 
 export const STATS_DEMANDES_COLUMNS = {
   id: "N° demande",
@@ -47,6 +47,8 @@ export const STATS_DEMANDES_COLUMNS = {
   positionQuadrant: "Position dans le quadrant",
   pression: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
+  motifRefus: "Motif(s) de refus",
+  autreMotifRefus: "Autre motif de refus",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/intentions/stats"]["demandes"][number]
 >;

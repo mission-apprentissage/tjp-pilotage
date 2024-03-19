@@ -1,7 +1,7 @@
 import { Grid, GridItem } from "@chakra-ui/react";
 
-import Loading from "../../../../components/Loading";
-import { useEtablissementContext } from "../../context/etablissementContext";
+import { Loading } from "@/components/Loading";
+
 import { AccesRapide } from "./components/accesRapide";
 import { Coordonnees } from "./components/coordonnees";
 import { Filieres } from "./components/filieres";
@@ -11,10 +11,8 @@ import { SearchInput } from "./components/searchInput";
 import { useEtablissementHeader } from "./hook";
 
 export const EtablissementHeader = () => {
-  const { uai } = useEtablissementContext();
-
-  const { nsfs, informations, indicateurs, isLoading } =
-    useEtablissementHeader(uai) || {};
+  const { nsfs, informations, indicateurs, isLoading, uai } =
+    useEtablissementHeader();
 
   if (isLoading) {
     return <Loading my={16} size="xl" />;

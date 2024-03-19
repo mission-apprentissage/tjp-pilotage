@@ -1,5 +1,8 @@
+import dayjs from "dayjs";
+import customParseFormat from "dayjs/plugin/customParseFormat";
 import { inject } from "injecti";
 import jwt from "jsonwebtoken";
+import _ from "lodash";
 import { UserinfoResponse } from "openid-client";
 
 import { config } from "../../../../../config/config";
@@ -9,14 +12,75 @@ import { createUserInDB } from "./createUser.dep";
 import { findEtablissement } from "./findEtablissement.dep";
 import { findUserQuery } from "./findUserQuery.dep";
 
-type ExtraUserInfo = { FrEduFonctAdm: string; FrEduRne: [string] };
+dayjs.extend(customParseFormat);
+
+type ExtraUserInfo = {
+  FrEduFonctAdm: string;
+  FrEduRne: Array<string>;
+  FrEduResDel?: Array<string>;
+  FrEduRneResp?: Array<string>;
+};
+
+const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
+  const uais: Array<string> = [];
+  const perdirOnUais = userInfo.FrEduRne?.map((item) => item.split("$")[0]);
+
+  if (userInfo.FrEduFonctAdm === "DIR") {
+    if (perdirOnUais.length > 0) {
+      uais.push(...perdirOnUais);
+    }
+  }
+
+  if (perdirOnUais?.length > 0) {
+    /**
+     * Format des délégations : <nom appli>|<nom ressource>|<date debut>|<date fin>|<delegant>|<fredurneresp>|<id serveur>|<fonction deleguee>|
+     * Les délégations ici présentes sont forcément des perdir puisque c'est spécifié dans le scope de demande
+     * openId.
+     * Il est aussi nécessaire de dé-dupliquer les entrées puisqu'elles peuvent correspondre à d'anciennes
+     * délégations.
+     * frEduRneResp est au format suivant : FrEduRneResp=UAI$UAJ$PU$N$T3$LP$320
+     **/
+    const delegations = _.uniq(
+      _.flatten(
+        userInfo?.FrEduResDel?.map((del) => {
+          const frEduRneResp = del.split("|")[5];
+          const startDate = dayjs(del.split("|")[2], "DD/MM/YYYY");
+          const endDate = dayjs(del.split("|")[3], "DD/MM/YYYY");
+          const now = dayjs();
+
+          if (startDate.isBefore(now) && endDate.isAfter(now)) {
+            const frEduRnes = frEduRneResp.replace("FrEduRneResp=", "");
+            return frEduRnes
+              .split(";")
+              .map((frEduRne) => frEduRne.split("$")[0]);
+          }
+        })
+      ).filter((del) => {
+        return del !== undefined;
+      }) as unknown as Array<string>
+    );
+
+    const verifiedDelegations = delegations.filter((del) =>
+      perdirOnUais.includes(del)
+    );
+
+    if (verifiedDelegations.length > 0) {
+      uais.push(...verifiedDelegations);
+    }
+  }
+  return uais;
+};
 
 const getUserRoleAttributes = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
-  if (userInfo.FrEduFonctAdm === "DIR") {
-    return {
-      role: "perdir",
-      uais: userInfo.FrEduRne?.map((item) => item.split("$")[0]) ?? null,
-    };
+  if (userInfo.FrEduFonctAdm === "DIR" || userInfo.FrEduResDel) {
+    const uais = extractUaisRep(userInfo);
+
+    if (uais.length > 0) {
+      return {
+        role: "perdir",
+        uais,
+      };
+    }
   }
 };
 
@@ -113,6 +177,7 @@ export const [redirectDne, redirectDneFactory] = inject(
         enabled: true,
         ...attributes,
       };
+
       await deps.createUserInDB({ user: userToInsert });
 
       logger.info(`Nouvel utilisateur DNE`, {
