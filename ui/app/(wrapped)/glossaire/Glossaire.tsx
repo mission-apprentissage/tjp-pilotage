@@ -40,7 +40,12 @@ export const Glossaire = () => {
   }, [selectedEntry, setSelectedEntry, entries]);
 
   return (
-    <Box display={"flex"} flexGrow={"1"} justifyContent={"end"}>
+    <Box
+      display={"flex"}
+      flexGrow={"1"}
+      justifyContent={"end"}
+      zIndex={"tooltip"}
+    >
       <Button
         variant={"secondary"}
         leftIcon={<QuestionOutlineIcon height={"14px"} width={"14px"} />}
