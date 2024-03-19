@@ -5,6 +5,7 @@ import {
   Box,
   HStack,
   Text,
+  useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
@@ -19,15 +20,14 @@ export const LandingAccordionItem = ({
   label,
   children,
 }: LandingAccordionItemProps) => {
+  const grey900Color = useToken("colors", "grey.900");
+  const grey975Color = useToken("colors", "grey.975");
+
   return (
-    <AccordionItem
-      border="1px"
-      borderColor={themeDefinition.colors.grey[900]}
-      width="100%"
-    >
+    <AccordionItem border="1px" borderColor={grey900Color} width="100%">
       {({ isExpanded }) => (
         <>
-          <Text as="h2" backgroundColor={isExpanded ? "#F5F5F5" : "auto"}>
+          <Text as="h2" backgroundColor={isExpanded ? grey975Color : "auto"}>
             <AccordionButton>
               <HStack padding="16px" width="100%">
                 <Text

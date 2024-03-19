@@ -46,7 +46,7 @@ export const Coordonnees = ({
           <Text color={textDisabled}>
             {codePostal} {commune} - {libelleDepartement} ({codeDepartement})
           </Text>
-          <Text>{uai && <Text color={textDisabled}>UAI : {uai}</Text>}</Text>
+          {uai && <Text color={textDisabled}>UAI : {uai}</Text>}
           <Box>
             {isScolaire && (
               <Badge variant="info" mr={"8px"}>
