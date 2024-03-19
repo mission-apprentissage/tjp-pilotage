@@ -57,7 +57,13 @@ export const getNsfs = ({ uai }: { uai: string }) =>
         .else(true)
         .end()
     )
-    .select(["codeNsf", "libelleNsf", "nbFormations"])
+    .select((eb) => [
+      "codeNsf",
+      "libelleNsf",
+      eb.fn.sum("nbFormations").as("nbFormations"),
+    ])
+    .groupBy(["codeNsf", "libelleNsf"])
     .distinct()
+    .$castTo<{ codeNsf: string; libelleNsf: string; nbFormations: number }>()
     .execute()
     .then(cleanNull);
