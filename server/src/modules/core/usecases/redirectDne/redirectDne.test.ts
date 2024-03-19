@@ -186,4 +186,179 @@ describe("redirectDne usecase", () => {
       token: expect.stringMatching(""),
     });
   });
+
+  it("should create the user with the correct role if there is a authorization delegation", async () => {
+    const ssoUserInfo = {
+      FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
+      FrEduResDel: [
+        "orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+        "orioninserjeunes|/redirectionhub/redirect.jsp?applicationname=orioninserjeunes_etab|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+      ],
+      FrEduRneResp: ["X"],
+      email: "user@test.test",
+      given_name: "firstname",
+      family_name: "lastname",
+    };
+    const deps = {
+      getDneClient: jest.fn().mockResolvedValue({
+        callbackParams: jest.fn(),
+        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      }),
+      createUserInDB: jest.fn(),
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
+      findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+    };
+    const redirectDne = redirectDneFactory(deps);
+
+    const result = await redirectDne({
+      codeVerifierJwt: jwt.sign(
+        { code_verifier: "code_verifier" },
+        "codeVerifierJwtSecret"
+      ),
+      url: "localhost?code=mycode",
+    });
+    expect(deps.createUserInDB).toHaveBeenCalledWith({
+      user: expect.objectContaining({
+        email: ssoUserInfo.email,
+        firstname: ssoUserInfo.given_name,
+        lastname: ssoUserInfo.family_name,
+        role: "perdir",
+        uais: ["0693045K"],
+        codeRegion: "75",
+      }),
+    });
+    expect(result).toMatchObject({
+      token: expect.stringMatching(""),
+    });
+  });
+
+  it("should not create the user with the correct role if there is a authorization delegation, but no perdir role", async () => {
+    const ssoUserInfo = {
+      FrEduResDel: [
+        "orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+        "orioninserjeunes|/redirectionhub/redirect.jsp?applicationname=orioninserjeunes_etab|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+      ],
+      FrEduRneResp: ["X"],
+      email: "user@test.test",
+      given_name: "firstname",
+      family_name: "lastname",
+    };
+    const deps = {
+      getDneClient: jest.fn().mockResolvedValue({
+        callbackParams: jest.fn(),
+        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      }),
+      createUserInDB: jest.fn(),
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
+      findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+    };
+    const redirectDne = redirectDneFactory(deps);
+
+    await expect(() =>
+      redirectDne({
+        codeVerifierJwt: jwt.sign(
+          { code_verifier: "code_verifier" },
+          "codeVerifierJwtSecret"
+        ),
+        url: "localhost?code=mycode",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("should not create the user with the correct role if there is a authorization delegation, but no perdir role on uai", async () => {
+    const ssoUserInfo = {
+      FrEduRne: ["XXXXXXXK$UAJ$PU$ADM$0693045K$T3$LP$320"],
+      FrEduResDel: [
+        "orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+        "orioninserjeunes|/redirectionhub/redirect.jsp?applicationname=orioninserjeunes_etab|03/03/2024|31/12/9999|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||",
+      ],
+      FrEduRneResp: ["X"],
+      email: "user@test.test",
+      given_name: "firstname",
+      family_name: "lastname",
+    };
+    const deps = {
+      getDneClient: jest.fn().mockResolvedValue({
+        callbackParams: jest.fn(),
+        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      }),
+      createUserInDB: jest.fn(),
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
+      findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+    };
+    const redirectDne = redirectDneFactory(deps);
+
+    await expect(() =>
+      redirectDne({
+        codeVerifierJwt: jwt.sign(
+          { code_verifier: "code_verifier" },
+          "codeVerifierJwtSecret"
+        ),
+        url: "localhost?code=mycode",
+      })
+    ).rejects.toThrow();
+  });
+
+  it("should not create the user if authorization delegation is past or future", async () => {
+    const currentYear = new Date().getFullYear();
+    const ssoUserInfo = {
+      FrEduRne: ["0693045K$UAJ$PU$ADM$0693045K$T3$LP$320"],
+      FrEduResDel: [
+        `orioninserjeunes|/mdp/redirectionhub/redirect.jsp?applicationname=orioninserjeunes|03/03/${
+          currentYear - 2
+        }|31/12/${
+          currentYear - 1
+        }|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
+        `orioninserjeunes|/redirectionhub/redirect.jsp?applicationname=orioninserjeunes_etab|03/10/${
+          currentYear + 1
+        }|31/12/${
+          currentYear + 2
+        }|cpizzagalli|FrEduRneResp=0693045K$UAJ$PU$N$T3$LP$320|rev-proxy-dmz-portail||`,
+      ],
+      FrEduRneResp: ["X"],
+      email: "user@test.test",
+      given_name: "firstname",
+      family_name: "lastname",
+    };
+    const deps = {
+      getDneClient: jest.fn().mockResolvedValue({
+        callbackParams: jest.fn(),
+        callback: jest.fn().mockResolvedValue({ access_token: "access_token" }),
+        userinfo: jest.fn().mockResolvedValue(ssoUserInfo),
+      }),
+      createUserInDB: jest.fn(),
+      authJwtSecret: "authJwtSecret",
+      codeVerifierJwtSecret: "codeVerifierJwtSecret",
+      findUserQuery: jest.fn().mockResolvedValue(undefined),
+      findEtablissement: jest
+        .fn()
+        .mockResolvedValue({ uai: "monuai", codeRegion: "75" }),
+    };
+    const redirectDne = redirectDneFactory(deps);
+
+    await expect(() =>
+      redirectDne({
+        codeVerifierJwt: jwt.sign(
+          { code_verifier: "code_verifier" },
+          "codeVerifierJwtSecret"
+        ),
+        url: "localhost?code=mycode",
+      })
+    ).rejects.toThrow();
+  });
 });

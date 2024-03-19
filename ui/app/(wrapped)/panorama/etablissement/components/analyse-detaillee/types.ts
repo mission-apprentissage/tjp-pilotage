@@ -1,12 +1,12 @@
 import { client } from "@/api.client";
 
 export type Query =
-  (typeof client.inferArgs)["[GET]/etablissement/analyse-detaillee"]["query"];
+  (typeof client.inferArgs)["[GET]/etablissement/:uai/analyse-detaillee"]["query"];
 
 export type Filters = Pick<Query, "codeNiveauDiplome">;
 
 export type AnalyseDetaillee =
-  (typeof client.infer)["[GET]/etablissement/analyse-detaillee"];
+  (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
 
 export type Formations = AnalyseDetaillee["formations"];
 export type Formation = Formations[string];
@@ -22,3 +22,5 @@ export type ChiffresEntreeOffre = ChiffresEntree[string];
 export type ChiffresEntreeOffreRentree = ChiffresEntreeOffre[string];
 
 export type StatsSortie = AnalyseDetaillee["statsSortie"];
+
+export type FiltersData = AnalyseDetaillee["filters"];

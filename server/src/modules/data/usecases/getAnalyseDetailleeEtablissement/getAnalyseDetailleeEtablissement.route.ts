@@ -9,16 +9,19 @@ export const getAnalyseDetailleeEtablissementRoute = ({
 }: {
   server: Server;
 }) => {
-  return createRoute("/etablissement/analyse-detaillee", {
+  return createRoute("/etablissement/:uai/analyse-detaillee", {
     method: "GET",
     schema: getAnalyseDetailleeEtablissementSchema,
   }).handle((props) => {
     server.route({
       ...props,
       handler: async (request, response) => {
+        const { uai } = request.params;
         const filters = request.query;
-        const analyseDetaillee =
-          await getAnalyseDetailleeEtablissement(filters);
+        const analyseDetaillee = await getAnalyseDetailleeEtablissement({
+          uai,
+          ...filters,
+        });
         response.status(200).send(analyseDetaillee);
       },
     });

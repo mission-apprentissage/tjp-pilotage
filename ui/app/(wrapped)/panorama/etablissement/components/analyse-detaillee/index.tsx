@@ -5,10 +5,10 @@ import qs from "qs";
 import { useEffect, useMemo } from "react";
 import { unstable_batchedUpdates } from "react-dom";
 
-import { client } from "@/api.client";
+import { useAnalyseDetaillee } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/hook";
+import { Loading } from "@/components/Loading";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import Loading from "../../../../components/Loading";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
@@ -17,7 +17,7 @@ import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { TabsSection } from "./tabs/TabsSection";
 import { Filters } from "./types";
 
-const QUADRANT_FEATURE_FLAG = false;
+const QUADRANT_FEATURE_FLAG = true;
 
 const EtablissementAnalyseDetaillee = () => {
   const router = useRouter();
@@ -49,20 +49,15 @@ const EtablissementAnalyseDetaillee = () => {
     setSearchParams({ ...searchParams, displayType: "quadrant" });
   };
 
-  const { data, isLoading: isLoading } = client
-    .ref(`[GET]/etablissement/analyse-detaillee`)
-    .useQuery(
-      {
-        query: {
-          uai,
-          ...filters,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
+  const { isLoading, ...data } = useAnalyseDetaillee(uai, filters) || {};
+  const {
+    etablissement,
+    formations,
+    chiffresIJ,
+    chiffresEntree,
+    statsSortie,
+    filters: filtersData,
+  } = data;
 
   useEffect(() => {
     if (!isLoading && data) {
@@ -76,12 +71,12 @@ const EtablissementAnalyseDetaillee = () => {
     if (
       searchParams.offre &&
       !isLoading &&
-      !Object.keys(data?.formations ?? {}).includes(searchParams.offre)
+      !Object.keys(formations ?? {}).includes(searchParams.offre)
     )
-      setOffreFilter(Object.keys(data?.formations ?? [])[0]);
+      setOffreFilter(Object.keys(formations ?? [])[0]);
     else if (!searchParams.offre && !isLoading)
-      setOffreFilter(Object.keys(data?.formations ?? [])[0]);
-  }, [data]);
+      setOffreFilter(Object.keys(formations ?? [])[0]);
+  }, [formations]);
 
   const setOffreFilter = (offre: string) => {
     filterTracker("offre", offre);
@@ -134,10 +129,10 @@ const EtablissementAnalyseDetaillee = () => {
           displayType={searchParams.displayType ?? displayType}
         />
       )}
-      {Object.values(analyseDetaillee?.formations ?? {}).length ? (
+      {Object.values(formations ?? {}).length ? (
         <Flex direction={"column"} gap={8}>
           <FiltersSection
-            data={analyseDetaillee}
+            filtersData={filtersData}
             filters={filters}
             handleFilters={handleFilters}
             filterTracker={filterTracker}
@@ -146,11 +141,11 @@ const EtablissementAnalyseDetaillee = () => {
           <Grid templateColumns={"repeat(10, 1fr)"} gap={8}>
             <GridItem colSpan={4}>
               <ListeFormations
-                formations={Object.values(analyseDetaillee?.formations ?? {})}
+                formations={Object.values(formations ?? {})}
                 offre={searchParams.offre ?? offre}
                 setOffre={setOffreFilter}
                 nbOffres={
-                  analyseDetaillee?.filters.diplomes.reduce(
+                  filtersData?.diplomes.reduce(
                     (acc, diplome) => {
                       if (!filters.codeNiveauDiplome)
                         acc[diplome.label] = diplome.nbOffres;
@@ -168,24 +163,27 @@ const EtablissementAnalyseDetaillee = () => {
                 <>
                   {displayType === "dashboard" ? (
                     <Dashboard
-                      formation={data?.formations[searchParams.offre ?? offre]}
+                      formation={
+                        formations && formations[searchParams.offre ?? offre]
+                      }
                       chiffresIJOffre={
-                        data?.chiffresIJ[searchParams.offre ?? offre]
+                        chiffresIJ && chiffresIJ[searchParams.offre ?? offre]
                       }
                       chiffresEntreeOffre={
-                        data?.chiffresEntree[searchParams.offre ?? offre]
+                        chiffresEntree &&
+                        chiffresEntree[searchParams.offre ?? offre]
                       }
                     />
                   ) : (
                     <QuadrantSection
-                      formations={Object.values(data?.formations ?? {})}
+                      formations={Object.values(formations ?? {})}
                       currentFormation={
-                        data?.formations[searchParams.offre ?? offre]
+                        formations && formations[searchParams.offre ?? offre]
                       }
-                      etablissement={data?.etablissement}
-                      chiffresIJ={data?.chiffresIJ}
-                      chiffresEntree={data?.chiffresEntree}
-                      statsSortie={data?.statsSortie}
+                      etablissement={etablissement}
+                      chiffresIJ={chiffresIJ}
+                      chiffresEntree={chiffresEntree}
+                      statsSortie={statsSortie}
                       offre={searchParams.offre ?? offre}
                       setOffre={setOffreFilter}
                     />
@@ -193,12 +191,15 @@ const EtablissementAnalyseDetaillee = () => {
                 </>
               ) : (
                 <Dashboard
-                  formation={data?.formations[searchParams.offre ?? offre]}
+                  formation={
+                    formations && formations[searchParams.offre ?? offre]
+                  }
                   chiffresIJOffre={
-                    data?.chiffresIJ[searchParams.offre ?? offre]
+                    chiffresIJ && chiffresIJ[searchParams.offre ?? offre]
                   }
                   chiffresEntreeOffre={
-                    data?.chiffresEntree[searchParams.offre ?? offre]
+                    chiffresEntree &&
+                    chiffresEntree[searchParams.offre ?? offre]
                   }
                 />
               )}
@@ -209,8 +210,8 @@ const EtablissementAnalyseDetaillee = () => {
         <Center my={16}>
           <Text fontSize={25}>
             {`Aucune formation trouvée pour l'établissement ${
-              analyseDetaillee?.etablissement.libelleEtablissement ?? ""
-            } (${analyseDetaillee?.etablissement.uai ?? uai})`}
+              etablissement?.libelleEtablissement ?? ""
+            } (${etablissement?.uai ?? uai})`}
           </Text>
         </Center>
       )}

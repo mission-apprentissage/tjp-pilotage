@@ -20,14 +20,18 @@ import {
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
 
+import { client } from "@/api.client";
 import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
+import {
+  downloadCsv,
+  downloadExcel,
+  ExportColumns,
+} from "@/utils/downloadExport";
+import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 
-import { client } from "../../../../api.client";
-import { downloadCsv, ExportColumns } from "../../../../utils/downloadCsv";
-import { GuardPermission } from "../../../../utils/security/GuardPermission";
 import { CreateUser } from "./CreateUser";
 
 const Columns = {
@@ -218,11 +222,17 @@ export default () => {
             onPageChange={(newPage) =>
               setFilters({ ...filters, page: newPage })
             }
-            onExport={async () => {
+            onExportCsv={async () => {
               const data = await client.ref("[GET]/users").query({
                 query: { ...filters, ...order, limit: 1000000 },
               });
-              downloadCsv("users_export.csv", data.users, Columns);
+              downloadCsv("users_export", data.users, Columns);
+            }}
+            onExportExcel={async () => {
+              const data = await client.ref("[GET]/users").query({
+                query: { ...filters, ...order, limit: 1000000 },
+              });
+              downloadExcel("users_export", data.users, Columns);
             }}
           />
           {user && isOpen && (

@@ -1,6 +1,9 @@
 import { client } from "../../../../../../api.client";
+import { useEtablissementContext } from "../../context/etablissementContext";
 
-export const useEtablissementHeader = (uai: string) => {
+export const useEtablissementHeader = () => {
+  const { uai } = useEtablissementContext();
+
   const { data, isLoading } = client
     .ref("[GET]/etablissement/:uai/header")
     .useQuery({
@@ -10,5 +13,6 @@ export const useEtablissementHeader = (uai: string) => {
   return {
     ...data,
     isLoading,
+    uai,
   };
 };

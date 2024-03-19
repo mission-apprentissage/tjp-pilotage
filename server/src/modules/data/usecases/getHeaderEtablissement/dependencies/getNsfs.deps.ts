@@ -4,7 +4,7 @@ import { kdb } from "../../../../../db/db";
 import { DB } from "../../../../../db/schema";
 import { cleanNull } from "../../../../../utils/noNull";
 
-const allNsfs = ({ uai }: { uai: string }) =>
+const getAllEtablisementNsfs = ({ uai }: { uai: string }) =>
   expressionBuilder<DB, keyof DB>()
     .selectFrom("formationEtablissement")
     .leftJoin("nsf", (join) =>
@@ -48,12 +48,12 @@ const allNsfs = ({ uai }: { uai: string }) =>
 
 export const getNsfs = ({ uai }: { uai: string }) =>
   kdb
-    .selectFrom(allNsfs({ uai }).as("allNsfs"))
+    .selectFrom(getAllEtablisementNsfs({ uai }).as("nsfs"))
     .where((w) =>
       w
         .case()
-        .when(w.ref("allNsfs.voie"), "=", "scolaire")
-        .then(sql<boolean>`${w.ref("allNsfs.rentreeScolaire")} = '2023'`)
+        .when(w.ref("nsfs.voie"), "=", "scolaire")
+        .then(sql<boolean>`${w.ref("nsfs.rentreeScolaire")} = '2023'`)
         .else(true)
         .end()
     )

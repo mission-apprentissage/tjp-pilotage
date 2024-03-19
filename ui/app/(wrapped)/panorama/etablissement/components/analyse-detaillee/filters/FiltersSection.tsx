@@ -2,14 +2,14 @@ import { Flex, Text } from "@chakra-ui/react";
 
 import { Multiselect } from "@/components/Multiselect";
 
-import { AnalyseDetaillee, Filters } from "../types";
+import { Filters, FiltersData } from "../types";
 export const FiltersSection = ({
-  data,
+  filtersData,
   filters,
   handleFilters,
   filterTracker,
 }: {
-  data?: AnalyseDetaillee;
+  filtersData?: FiltersData;
   filters: Filters;
   handleFilters: (key: keyof Filters, value: string[]) => void;
   filterTracker: (filterName: keyof Filters) => () => void;
@@ -24,7 +24,7 @@ export const FiltersSection = ({
         width="24rem"
         variant={"newInput"}
         onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
-        options={data?.filters.diplomes ?? []}
+        options={filtersData?.diplomes ?? []}
         value={filters.codeNiveauDiplome ?? []}
       >
         Tous

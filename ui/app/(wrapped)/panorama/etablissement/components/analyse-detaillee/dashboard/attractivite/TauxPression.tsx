@@ -20,19 +20,27 @@ export const TauxPression = ({
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-  const checkDataAvailability = (chiffresEntreeOffre: ChiffresEntreeOffre) => {
-    return (
-      Object.values(chiffresEntreeOffre).findIndex(
-        (value) =>
-          value.tauxPression &&
-          value.tauxPressionNational &&
-          value.tauxPressionRegional &&
-          value.tauxPressionDepartemental
-      ) !== -1
-    );
+  const checkDataAvailability = (): boolean => {
+    if (chiffresEntreeOffre) {
+      return (
+        Object.values(chiffresEntreeOffre).findIndex(
+          (value) =>
+            value.tauxPression &&
+            value.tauxPressionNational &&
+            value.tauxPressionRegional &&
+            value.tauxPressionDepartemental
+        ) !== -1
+      );
+    }
+    return false;
   };
 
-  const getData = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
+  const getData = (): {
+    établissement: number[];
+    départemental: number[];
+    régional: number[];
+    national: number[];
+  } => {
     if (chiffresEntreeOffre) {
       return {
         établissement: Object.values(chiffresEntreeOffre)
@@ -57,7 +65,7 @@ export const TauxPression = ({
     };
   };
 
-  const getCategories = (chiffresEntreeOffre?: ChiffresEntreeOffre) => {
+  const getCategories = (): string[] => {
     if (chiffresEntreeOffre) {
       return Object.keys(chiffresEntreeOffre).filter(
         (key) =>
@@ -67,6 +75,7 @@ export const TauxPression = ({
           chiffresEntreeOffre[key].tauxPressionDepartemental
       );
     }
+    return [];
   };
 
   const blue = useToken("colors", "bluefrance.113");
@@ -115,10 +124,10 @@ export const TauxPression = ({
         />
       }
     >
-      {chiffresEntreeOffre && checkDataAvailability(chiffresEntreeOffre) ? (
+      {chiffresEntreeOffre && checkDataAvailability() ? (
         <LineChart
-          data={getData(chiffresEntreeOffre)}
-          categories={getCategories(chiffresEntreeOffre)}
+          data={getData()}
+          categories={getCategories()}
           colors={colors}
           defaultMainKey="établissement"
         />
