@@ -18,6 +18,7 @@ import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
 import { getRestitutionIntentionsStatsRoute } from "./usecases/getRestitutionIntentionsStats/getRestitutionIntentionsStats.route";
 import { getScopedTransformationStatsRoute } from "./usecases/getScopedTransformationStats/getScopedTransformationStats.route";
+import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
@@ -42,5 +43,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...getPilotageReformeStatsRegionsRoute({ server }),
     ...getAnalyseDetailleeEtablissementRoute({ server }),
     ...getDataForEtablissementMapRoute({ server }),
+    ...searchDiplomeRoute({ server }),
   };
 };
