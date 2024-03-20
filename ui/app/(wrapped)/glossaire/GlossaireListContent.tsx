@@ -22,8 +22,8 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
   const [greyColor] = useToken("colors", ["grey.625"]);
 
   useEffect(() => {
-    setEntries((e) =>
-      e.filter(
+    setEntries(() =>
+      initialEntries.filter(
         (entry) =>
           searchValue === "" ||
           entry?.title
@@ -32,7 +32,7 @@ const useGlossaireList = (initialEntries: GlossaireEntries) => {
             .includes(searchValue.toLowerCase().trim())
       )
     );
-  }, [searchValue, setEntries]);
+  }, [searchValue, setEntries, initialEntries]);
 
   useEffect(() => {
     trackEvent("glossaire", { props: { name: "Liste" } });
