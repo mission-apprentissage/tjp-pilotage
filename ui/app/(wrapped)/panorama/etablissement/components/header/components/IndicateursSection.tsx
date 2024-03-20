@@ -15,7 +15,7 @@ import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
 import type { CompareTo, Indicateur, Indicateurs } from "../types";
-import { DonneesIncompletes } from "./donneesIncompletes";
+import { DonneesIncompletes } from "./DonneesIncompletes";
 
 const getCompareData = (compareTo?: CompareTo) => {
   const { value, direction } = compareTo || {};
