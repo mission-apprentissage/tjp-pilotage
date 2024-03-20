@@ -50,7 +50,7 @@ const ShortLink = forwardRef<ShtLinkProps, "a">(
   )
 );
 
-export const AccesRapide = ({ uai }: { uai: string }) => {
+export const AccesRapideSection = ({ uai }: { uai: string }) => {
   return (
     <GridItem colSpan={12} justifySelf={"start"} my={"16px"}>
       <HStack
