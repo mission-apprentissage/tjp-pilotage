@@ -30,7 +30,7 @@ const demande = {
   uai: "demande-uai",
   cfd: "demande-cfd",
   createurId: "user-id",
-  dispositifId: "dispositifId",
+  codeDispositif: "codeDispositif",
   rentreeScolaire: 2025,
   typeDemande: "augmentation",
   motif: ["autre"],
@@ -70,7 +70,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          status: "submitted",
+          statut: "submitted",
         },
       })
     ).rejects.toThrowError("Code uai non valide");
@@ -87,7 +87,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          status: "submitted",
+          statut: "submitted",
         },
       })
     ).rejects.toThrowError("Code diplome non valide");
@@ -101,7 +101,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          status: "refused",
+          statut: "refused",
           motifRefus: undefined,
         },
       })
@@ -122,7 +122,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           mixte: true,
           capaciteApprentissage: undefined,
-          status: "submitted",
+          statut: "submitted",
         },
       })
     ).rejects.toThrowError("Forbidden");
@@ -141,7 +141,7 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
-        status: "draft",
+        statut: "draft",
         id: undefined,
       },
     });
@@ -151,7 +151,7 @@ describe("submitDemande usecase", () => {
         codeRegion: "75",
         codeAcademie: "06",
         createurId: "user-id",
-        status: "draft",
+        statut: "draft",
         id: expect.stringMatching(".+"),
       })
     );
@@ -169,7 +169,7 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
-        status: "submitted",
+        statut: "submitted",
       },
     });
     expect(deps.createDemandeQuery).toBeCalledWith(
@@ -178,7 +178,7 @@ describe("submitDemande usecase", () => {
         codeRegion: "75",
         codeAcademie: "06",
         createurId: "user-id",
-        status: "submitted",
+        statut: "submitted",
       })
     );
   });

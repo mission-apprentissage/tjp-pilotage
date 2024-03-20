@@ -6,6 +6,7 @@ import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../utils/typeDemandeUtils";
 import { StatsIntentions } from "../types";
+
 export const LineContent = ({
   demande,
 }: {
@@ -84,7 +85,7 @@ export const LineContent = ({
         {demande.commentaire}
       </Td>
       <Td>{demande.positionQuadrant}</Td>
-      <Td>{demande.id}</Td>
+      <Td>{demande.numero}</Td>
     </>
   );
 };

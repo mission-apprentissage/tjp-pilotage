@@ -7,7 +7,7 @@ import qs from "qs";
 import { client } from "../../../../../api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "status">;
+export type Filters = Pick<Query, "statut">;
 
 export const MenuIntention = ({
   isRecapView = false,
@@ -21,8 +21,8 @@ export const MenuIntention = ({
     filters?: Partial<Filters>;
   } = qs.parse(queryParams.toString());
 
-  const status =
-    searchParams.filters === undefined ? "none" : searchParams.filters?.status;
+  const statut =
+    searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
     {},
@@ -56,7 +56,7 @@ export const MenuIntention = ({
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
         >
           <Text
-            fontWeight={isRecapView && status === "none" ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
           >
             Toutes
           </Text>
@@ -65,7 +65,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=submitted"
+          href="/intentions/saisie?filters[statut]=submitted"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -74,7 +74,7 @@ export const MenuIntention = ({
         >
           <Text
             fontWeight={
-              isRecapView && status === "submitted" ? "bold" : "normal"
+              isRecapView && statut === "submitted" ? "bold" : "normal"
             }
           >
             Demandes validées
@@ -84,13 +84,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=draft"
+          href="/intentions/saisie?filters[statut]=draft"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
         >
           <Text
-            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "draft" ? "bold" : "normal"}
           >
             Projets de demandes
           </Text>
@@ -99,7 +99,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=refused"
+          href="/intentions/saisie?filters[statut]=refused"
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -107,7 +107,7 @@ export const MenuIntention = ({
           }
         >
           <Text
-            fontWeight={isRecapView && status === "refused" ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "refused" ? "bold" : "normal"}
           >
             Demandes refusées
           </Text>

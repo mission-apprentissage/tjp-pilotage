@@ -24,6 +24,14 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface Campagne {
+  id: Generated<string>;
+  annee: string;
+  dateDebut: Timestamp | null;
+  dateFin: Timestamp | null;
+  statut: string;
+}
+
 export interface ChangeLog {
   id: Generated<number>;
   date: Generated<Timestamp | null>;
@@ -125,9 +133,9 @@ export interface DataFormation {
 }
 
 export interface Demande {
-  id: string;
+  numero: string;
   cfd: string | null;
-  dispositifId: string | null;
+  codeDispositif: string | null;
   uai: string;
   rentreeScolaire: number | null;
   typeDemande: string | null;
@@ -138,11 +146,11 @@ export interface Demande {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  status: "deleted" | "draft" | "refused" | "submitted";
+  statut: "deleted" | "draft" | "refused" | "submitted";
   codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
-  createdAt: Generated<Timestamp>;
+  dateCreation: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -152,12 +160,15 @@ export interface Demande {
   mixte: boolean | null;
   compensationUai: string | null;
   compensationCfd: string | null;
-  compensationDispositifId: string | null;
+  compensationCodeDispositif: string | null;
   compensationRentreeScolaire: number | null;
-  updatedAt: Timestamp;
+  dateModification: Timestamp;
   libelleFCIL: string | null;
   motifRefus: string[] | null;
   autreMotifRefus: string | null;
+  campagneId: string | null;
+  id: Generated<string>;
+  numeroHistorique: string | null;
 }
 
 export interface Departement {
@@ -230,8 +241,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  cfd: string;
   ancienCFD: string;
+  cfd: string;
   voie: string;
 }
 
@@ -306,6 +317,45 @@ export interface IndicateurSortie {
   cfdContinuum: string | null;
 }
 
+export interface LatestDemandeView {
+  numero: string | null;
+  cfd: string | null;
+  codeDispositif: string | null;
+  uai: string | null;
+  rentreeScolaire: number | null;
+  typeDemande: string | null;
+  motif: string[] | null;
+  autreMotif: string | null;
+  coloration: boolean | null;
+  libelleColoration: string | null;
+  amiCma: boolean | null;
+  poursuitePedagogique: boolean | null;
+  commentaire: string | null;
+  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  codeRegion: string | null;
+  codeAcademie: string | null;
+  createurId: string | null;
+  dateCreation: Timestamp | null;
+  capaciteScolaire: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissage: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteApprentissageColoree: number | null;
+  mixte: boolean | null;
+  compensationUai: string | null;
+  compensationCfd: string | null;
+  compensationCodeDispositif: string | null;
+  compensationRentreeScolaire: number | null;
+  dateModification: Timestamp | null;
+  libelleFCIL: string | null;
+  motifRefus: string[] | null;
+  autreMotifRefus: string | null;
+  campagneId: string | null;
+  id: string | null;
+  numeroHistorique: string | null;
+}
+
 export interface NiveauDiplome {
   codeNiveauDiplome: string;
   libelleNiveauDiplome: string | null;
@@ -344,6 +394,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  campagne: Campagne;
   changeLog: ChangeLog;
   constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
@@ -364,6 +415,7 @@ export interface DB {
   indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
+  latestDemandeView: LatestDemandeView;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;

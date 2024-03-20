@@ -15,11 +15,11 @@ export const countDemandes = async ({
 }) => {
   const countDemandes = await kdb
     .selectFrom("demande")
-    .select((eb) => sql<number>`count(${eb.ref("demande.id")})`.as("total"))
+    .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.status")} = 'draft'
+          CASE WHEN ${eb.ref("demande.statut")} = 'draft'
           THEN 1
           ELSE 0
           END
@@ -30,7 +30,7 @@ export const countDemandes = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.status")} = 'submitted'
+          CASE WHEN ${eb.ref("demande.statut")} = 'submitted'
           THEN 1
           ELSE 0
           END
@@ -41,7 +41,7 @@ export const countDemandes = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.status")} = 'refused'
+          CASE WHEN ${eb.ref("demande.statut")} = 'refused'
           THEN 1
           ELSE 0
           END

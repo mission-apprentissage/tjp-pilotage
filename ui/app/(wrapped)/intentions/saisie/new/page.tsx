@@ -8,26 +8,26 @@ import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 export default () => {
   const queryParams = useSearchParams();
-  const intentionId = queryParams.get("intentionId");
+  const numero = queryParams.get("numero");
 
-  const { data, isLoading } = client.ref("[GET]/demande/:id").useQuery(
-    { params: { id: intentionId ?? "" } },
+  const { data, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
+    { params: { numero: numero ?? "" } },
     {
-      enabled: !!intentionId,
+      enabled: !!numero,
       cacheTime: 0,
     }
   );
 
-  if (isLoading && !!intentionId) return <IntentionSpinner />;
+  if (isLoading && !!numero) return <IntentionSpinner />;
   return (
     <GuardPermission permission="intentions/ecriture">
-      {intentionId ? (
+      {numero ? (
         data && (
           <IntentionForm
             disabled={false}
             defaultValues={{
               cfd: data?.compensationCfd,
-              dispositifId: data?.compensationDispositifId,
+              codeDispositif: data?.compensationCodeDispositif,
               uai: data?.compensationUai,
               rentreeScolaire: data?.compensationRentreeScolaire,
             }}

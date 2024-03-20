@@ -73,14 +73,14 @@ const selectPlacesFermees = (eb: ExpressionBuilder<DB, "demande">) =>
             - ${eb.ref("capaciteApprentissage")}, 0)`;
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb.fn.count<number>("demande.id").distinct();
+  eb.fn.count<number>("demande.numero").distinct();
 
 const selectNbEtablissements = (
   eb: ExpressionBuilder<DB, "dataEtablissement">
 ) => eb.fn.count<number>("dataEtablissement.uai").distinct();
 
 const getFormationsTransformationStatsQuery = ({
-  status,
+  statut,
   type,
   rentreeScolaire = RENTREE_INTENTIONS,
   millesimeSortie = CURRENT_IJ_MILLESIME,
@@ -104,7 +104,11 @@ const getFormationsTransformationStatsQuery = ({
     .selectFrom("demande")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin(
       "academie",
@@ -120,33 +124,33 @@ const getFormationsTransformationStatsQuery = ({
       "dataFormation.libelleFormation",
       "dispositif.libelleDispositif",
       "dataFormation.cfd",
-      "demande.dispositifId as codeDispositif",
+      "demande.codeDispositif as codeDispositif",
       (eb) =>
         withInsertionReg({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.dispositifId",
+          codeDispositifRef: "demande.codeDispositif",
           codeRegionRef: "dataEtablissement.codeRegion",
         }).as("tauxInsertion"),
       withPoursuiteReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        codeDispositifRef: "demande.dispositifId",
+        codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPoursuite"),
       withTauxPressionReg({
         eb,
         cfdRef: "demande.cfd",
-        codeDispositifRef: "demande.dispositifId",
+        codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPression"),
       withTauxDevenirFavorableReg({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        codeDispositifRef: "demande.dispositifId",
+        codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxDevenirFavorable"),
       selectNbDemandes(eb).as("nbDemandes"),
@@ -161,7 +165,7 @@ const getFormationsTransformationStatsQuery = ({
         eb,
         millesimeSortie,
         cfdRef: "demande.cfd",
-        codeDispositifRef: "demande.dispositifId",
+        codeDispositifRef: "demande.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
     ])
@@ -184,7 +188,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.dispositifId",
+          codeDispositifRef: "demande.codeDispositif",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -196,7 +200,7 @@ const getFormationsTransformationStatsQuery = ({
           eb,
           millesimeSortie,
           cfdRef: "demande.cfd",
-          codeDispositifRef: "demande.dispositifId",
+          codeDispositifRef: "demande.codeDispositif",
           codeRegionRef: "dataEtablissement.codeRegion",
         }),
       "is not",
@@ -209,7 +213,7 @@ const getFormationsTransformationStatsQuery = ({
           withTauxPressionReg({
             eb,
             cfdRef: "demande.cfd",
-            codeDispositifRef: "demande.dispositifId",
+            codeDispositifRef: "demande.codeDispositif",
             codeRegionRef: "dataEtablissement.codeRegion",
           }),
         tauxPression === "eleve" ? ">" : "<",
@@ -232,14 +236,14 @@ const getFormationsTransformationStatsQuery = ({
     .groupBy([
       "demande.cfd",
       "dataFormation.cfd",
-      "demande.dispositifId",
+      "demande.codeDispositif",
       "dispositif.libelleDispositif",
       "dataFormation.libelleFormation",
       ...partition,
     ])
     .$call((q) => {
-      if (!status) return q;
-      return q.where("demande.status", "=", status);
+      if (!statut) return q;
+      return q.where("demande.statut", "=", statut);
     })
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;

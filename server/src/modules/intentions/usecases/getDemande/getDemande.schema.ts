@@ -30,18 +30,18 @@ const MetadataSchema = z.object({
 });
 
 const DemandeSchema = z.object({
-  id: z.string(),
-  createdAt: z.string(),
-  status: z.enum(["draft", "submitted", "refused"]).optional(),
+  numero: z.string(),
+  dateCreation: z.string(),
+  statut: z.enum(["draft", "submitted", "refused"]).optional(),
   uai: z.string(),
   cfd: z.string(),
-  dispositifId: z.string(),
+  codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
   rentreeScolaire: z.coerce.number(),
   typeDemande: z.string(),
   compensationUai: z.string().optional(),
   compensationCfd: z.string().optional(),
-  compensationDispositifId: z.string().optional(),
+  compensationCodeDispositif: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
   motif: z.array(z.string()),
   autreMotif: z.string().optional(),
@@ -62,7 +62,7 @@ const DemandeSchema = z.object({
 });
 
 export const getDemandeSchema = {
-  params: z.object({ id: z.string() }),
+  params: z.object({ numero: z.string() }),
   response: {
     200: DemandeSchema.partial().merge(
       z.object({

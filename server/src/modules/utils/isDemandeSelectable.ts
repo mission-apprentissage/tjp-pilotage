@@ -11,7 +11,7 @@ export const isDemandeSelectable =
     const { filter, draftFilter } = getDemandeSelectableFilters(user);
     return eb.or([
       eb.and([
-        eb("status", "=", "draft"),
+        eb("statut", "=", "draft"),
         draftFilter.userId
           ? eb("demande.createurId", "=", draftFilter.userId)
           : sql<boolean>`true`,
@@ -20,7 +20,7 @@ export const isDemandeSelectable =
           : sql<boolean>`true`,
       ]),
       eb.and([
-        eb("status", "!=", "draft"),
+        eb("statut", "!=", "draft"),
         filter.codeRegion
           ? eb("demande.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
@@ -51,8 +51,8 @@ const getDemandeSelectableFilters = (
 };
 
 export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb("status", "!=", "deleted");
+  eb("statut", "!=", "deleted");
 
 export const isDemandeNotDeletedOrRefused = (
   eb: ExpressionBuilder<DB, "demande">
-) => eb("status", "not in", ["deleted", "refused"]);
+) => eb("statut", "not in", ["deleted", "refused"]);

@@ -8,7 +8,7 @@ import { findDemande } from "./getDemande.query";
 import { getDemandeSchema } from "./getDemande.schema";
 
 export const getDemandeRoute = (server: Server) => {
-  return createRoute("/demande/:id", {
+  return createRoute("/demande/:numero", {
     method: "GET",
     schema: getDemandeSchema,
   }).handle((props) => {
@@ -18,9 +18,12 @@ export const getDemandeRoute = (server: Server) => {
       handler: async (request, response) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();
-        const demande = await findDemande({ id: request.params.id, user });
+        const demande = await findDemande({
+          numero: request.params.numero,
+          user,
+        });
         if (!demande) return response.status(404).send();
-        if (demande.status === "deleted") throw Boom.forbidden();
+        if (demande.statut === "deleted") throw Boom.forbidden();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
         const canEdit = guardScope(scope?.default, {
@@ -31,7 +34,7 @@ export const getDemandeRoute = (server: Server) => {
 
         response.status(200).send({
           ...demande,
-          status: demande.status,
+          statut: demande.statut,
           canEdit,
         });
       },

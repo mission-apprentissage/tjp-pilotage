@@ -153,13 +153,13 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>Statut</FormLabel>
             <Multiselect
-              onClose={filterTracker("status")}
+              onClose={filterTracker("statut")}
               width={"48"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("status", selected)}
+              onChange={(selected) => handleFilters("statut", selected)}
               options={data?.filters.statuts}
-              value={activeFilters.status ?? []}
+              value={activeFilters.statut ?? []}
               disabled={data?.filters.statuts.length === 0}
               hasDefaultValue={false}
             >

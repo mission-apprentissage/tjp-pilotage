@@ -15,7 +15,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
       </Text>
       <Divider mb={4} />
       <Controller
-        name="status"
+        name="statut"
         control={control}
         rules={{ required: "Le type de demande est obligatoire." }}
         render={({ field: { onChange, name, value } }) => (

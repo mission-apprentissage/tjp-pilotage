@@ -6,7 +6,7 @@ import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { findOneDataEtablissement } from "../../../data/repositories/findOneDataEtablissement.query";
-import { generateId } from "../../../utils/generateId";
+import { generateId, generateShortId } from "../../../utils/generateId";
 import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "../../repositories/findOneSimilarDemande.query";
@@ -14,13 +14,14 @@ import { createDemandeQuery } from "./createDemandeQuery.dep";
 
 type Demande = {
   id?: string;
+  numero?: string;
   uai: string;
   typeDemande: string;
   cfd: string;
-  dispositifId: string;
+  codeDispositif: string;
   libelleFCIL?: string;
   compensationCfd?: string;
-  compensationDispositifId?: string;
+  compensationCodeDispositif?: string;
   compensationUai?: string;
   compensationRentreeScolaire?: number;
   motif: string[];
@@ -38,7 +39,7 @@ type Demande = {
   capaciteApprentissage?: number;
   capaciteApprentissageActuelle?: number;
   capaciteApprentissageColoree?: number;
-  status: "draft" | "submitted" | "refused";
+  statut: "draft" | "submitted" | "refused";
   motifRefus?: string[];
   autreMotifRefus?: string;
 };
@@ -53,9 +54,9 @@ const validateDemande = (demande: Demande) => {
   return Object.keys(errors).length ? errors : undefined;
 };
 
-const logDemande = (demande?: { status: string }) => {
+const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
-  switch (demande.status) {
+  switch (demande.statut) {
     case "draft":
       logger.info("Projet de demande enregistré", { demande: demande });
       break;
@@ -84,8 +85,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion">;
       demande: Demande;
     }) => {
-      const currentDemande = demande.id
-        ? await deps.findOneDemande(demande.id)
+      const currentDemande = demande.numero
+        ? await deps.findOneDemande(demande.numero)
         : undefined;
 
       const { cfd, uai } = demande;
@@ -135,7 +136,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         autreMotif: null,
         commentaire: null,
         compensationCfd: null,
-        compensationDispositifId: null,
+        compensationCodeDispositif: null,
         compensationUai: null,
         capaciteScolaire: 0,
         capaciteScolaireActuelle: 0,
@@ -145,8 +146,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
         capaciteApprentissageColoree: 0,
         mixte: false,
         poursuitePedagogique: false,
-        ...demande,
         compensationRentreeScolaire,
+        ...demande,
       };
 
       const errors = validateDemande(cleanNull(demandeData));
@@ -158,10 +159,11 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const created = await deps.createDemandeQuery({
         ...demandeData,
         id: currentDemande?.id ?? generateId(),
+        numero: currentDemande?.numero ?? generateShortId(),
         createurId: currentDemande?.createurId ?? user.id,
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
-        updatedAt: new Date(),
+        dateModification: new Date(),
       });
 
       logDemande(created);

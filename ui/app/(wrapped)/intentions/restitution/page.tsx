@@ -86,7 +86,7 @@ export default () => {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
     if (statutFilter !== undefined) {
-      filters.status = statutFilter;
+      filters.statut = statutFilter;
     }
     setSearchParams({ filters: filters });
   }, []);
@@ -121,7 +121,7 @@ export default () => {
     }
     if (type === "rentreeScolaire" && value != null)
       setRentreeScolaireFilter((value as string[])[0] ?? "");
-    if (type === "status" && value != null)
+    if (type === "statut" && value != null)
       setStatutFilter([
         (value as string[])[0] as "draft" | "submitted" | "refused",
       ]);
@@ -203,20 +203,19 @@ export default () => {
               "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
-                createdAt: new Date(demande.createdAt).toLocaleDateString(
+                dateCreation: new Date(demande.dateCreation).toLocaleDateString(
                   "fr-FR",
                   {
                     hour: "2-digit",
                     minute: "2-digit",
                   }
                 ),
-                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
+                dateModification: new Date(
+                  demande.dateModification
+                ).toLocaleDateString("fr-FR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
               })),
               STATS_DEMANDES_COLUMNS
             );
@@ -230,20 +229,19 @@ export default () => {
               "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
-                createdAt: new Date(demande.createdAt).toLocaleDateString(
+                dateCreation: new Date(demande.dateCreation).toLocaleDateString(
                   "fr-FR",
                   {
                     hour: "2-digit",
                     minute: "2-digit",
                   }
                 ),
-                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
-                  "fr-FR",
-                  {
-                    hour: "2-digit",
-                    minute: "2-digit",
-                  }
-                ),
+                dateModification: new Date(
+                  demande.dateModification
+                ).toLocaleDateString("fr-FR", {
+                  hour: "2-digit",
+                  minute: "2-digit",
+                }),
               })),
               STATS_DEMANDES_COLUMNS
             );

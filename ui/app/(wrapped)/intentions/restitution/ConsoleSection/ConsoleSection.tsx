@@ -317,8 +317,8 @@ export const ConsoleSection = ({
                   pb="4"
                   onClick={() => handleOrder("pression")}
                 >
-                  <OrderIcon {...order} column="id" />
-                  {STATS_DEMANDES_COLUMNS.id}
+                  <OrderIcon {...order} column="numero" />
+                  {STATS_DEMANDES_COLUMNS.numero}
                 </Th>
               </Tr>
             </Thead>
@@ -327,13 +327,13 @@ export const ConsoleSection = ({
                 {data?.demandes.map(
                   (demande: StatsIntentions["demandes"][0]) => {
                     return (
-                      <Fragment key={`${demande.id}`}>
+                      <Fragment key={`${demande.numero}`}>
                         <Tr
                           h="12"
                           _hover={{ bg: "blueecume.925" }}
                           cursor={"pointer"}
                           onClick={() =>
-                            router.push(`/intentions/saisie/${demande.id}`)
+                            router.push(`/intentions/saisie/${demande.numero}`)
                           }
                         >
                           <LineContent demande={demande} />

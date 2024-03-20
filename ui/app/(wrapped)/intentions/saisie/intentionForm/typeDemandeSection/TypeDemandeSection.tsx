@@ -20,7 +20,7 @@ export const TypeDemandeSection = ({
   disabled,
   formId,
 }: {
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   disabled?: boolean;
   formId?: string;
 }) => {
