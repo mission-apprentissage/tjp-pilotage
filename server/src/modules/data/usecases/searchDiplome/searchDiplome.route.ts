@@ -5,7 +5,7 @@ import { hasPermissionHandler } from "../../../core";
 import { searchDiplomeSchema } from "./searchDiplome.schema";
 import { searchDiplome } from "./searchDiplome.usecase";
 
-export const searchDiplomeRoute = (server: Server) => {
+export const searchDiplomeRoute = ({ server }: { server: Server }) => {
   return createRoute("/diplome/search/:search", {
     method: "GET",
     schema: searchDiplomeSchema,
