@@ -22,8 +22,8 @@ import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
-const TagDemande = ({ status }: { status?: string }) => {
-  switch (status) {
+const TagDemande = ({ statut }: { statut?: string }) => {
+  switch (statut) {
     case "draft":
       return (
         <Tag size="md" colorScheme={"yellow"} ml={4}>
@@ -68,7 +68,7 @@ export const CfdUaiSection = ({
   active: boolean;
   disabled?: boolean;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
@@ -122,7 +122,7 @@ export const CfdUaiSection = ({
       >
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
-          <TagDemande status={defaultValues.status} />
+          <TagDemande statut={defaultValues.statut} />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}

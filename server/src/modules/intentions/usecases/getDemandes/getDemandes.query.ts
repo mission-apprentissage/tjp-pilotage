@@ -1,5 +1,6 @@
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -8,22 +9,21 @@ import {
   isDemandeNotDeleted,
   isDemandeSelectable,
 } from "../../../utils/isDemandeSelectable";
+import { getDemandesSchema } from "./getDemandes.schema";
+
+export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
+  user: RequestUser;
+}
 
 export const findDemandes = async ({
-  status,
+  statut,
   search,
   user,
   offset = 0,
   limit = 20,
-  orderBy = { order: "desc", column: "createdAt" },
-}: {
-  status?: "draft" | "submitted" | "refused";
-  search?: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-  offset?: number;
-  limit?: number;
-  orderBy?: { order: "asc" | "desc"; column: string };
-}) => {
+  order,
+  orderBy,
+}: Filters) => {
   const cleanSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
   const search_array = cleanSearch.split(" ") ?? [];
@@ -37,7 +37,11 @@ export const findDemandes = async ({
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
     .leftJoin("user", "user.id", "demande.createurId")
     .selectAll("demande")
     .select((eb) => [
@@ -56,16 +60,16 @@ export const findDemandes = async ({
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef(
-            "demandeCompensee.dispositifId",
+            "demandeCompensee.codeDispositif",
             "=",
-            "demande.compensationDispositifId"
+            "demande.compensationCodeDispositif"
           )
-          .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
+          .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
           .limit(1)
       ).as("demandeCompensee"),
     ])
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "=", status);
+      if (statut) return eb.where("demande.statut", "=", statut);
       return eb;
     })
     .$call((eb) => {
@@ -75,7 +79,7 @@ export const findDemandes = async ({
             search_array.map((search_word) =>
               eb(
                 sql`concat(
-                  unaccent(${eb.ref("demande.id")}),
+                  unaccent(${eb.ref("demande.numero")}),
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
@@ -100,10 +104,10 @@ export const findDemandes = async ({
       return eb;
     })
     .$call((q) => {
-      if (!orderBy) return q;
+      if (!orderBy || !order) return q;
       return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
+        sql`${sql.ref(orderBy)}`,
+        sql`${sql.raw(order)} NULLS LAST`
       );
     })
     .where(isDemandeNotDeleted)
@@ -116,9 +120,9 @@ export const findDemandes = async ({
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-        idCompensation: demande.demandeCompensee?.id,
+        dateCreation: demande.dateCreation?.toISOString(),
+        dateModification: demande.dateModification?.toISOString(),
+        numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })
     ),

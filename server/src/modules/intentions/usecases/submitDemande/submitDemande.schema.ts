@@ -3,16 +3,16 @@ import { z } from "zod";
 export const submitDemandeSchema = {
   body: z.object({
     demande: z.object({
-      id: z.string().optional(),
+      numero: z.string().optional(),
       uai: z.string(),
       cfd: z.string(),
-      dispositifId: z.string(),
+      codeDispositif: z.string(),
       libelleFCIL: z.string().optional(),
       rentreeScolaire: z.coerce.number(),
       typeDemande: z.string(),
       compensationUai: z.string().optional(),
       compensationCfd: z.string().optional(),
-      compensationDispositifId: z.string().optional(),
+      compensationCodeDispositif: z.string().optional(),
       compensationRentreeScolaire: z.coerce.number().optional(),
       motif: z.array(z.string()),
       autreMotif: z.string().optional(),
@@ -28,7 +28,7 @@ export const submitDemandeSchema = {
       capaciteApprentissageActuelle: z.coerce.number().optional(),
       capaciteApprentissage: z.coerce.number().optional(),
       capaciteApprentissageColoree: z.coerce.number().optional(),
-      status: z.enum(["draft", "submitted", "refused"]),
+      statut: z.enum(["draft", "submitted", "refused"]),
       motifRefus: z.array(z.string()).optional(),
       autreMotifRefus: z.string().optional(),
     }),
@@ -36,7 +36,7 @@ export const submitDemandeSchema = {
   response: {
     200: z.object({
       id: z.string(),
-      status: z.enum(["draft", "submitted", "refused", "deleted"]),
+      statut: z.enum(["draft", "submitted", "refused", "deleted"]),
     }),
   },
 };

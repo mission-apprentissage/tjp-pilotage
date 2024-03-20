@@ -154,7 +154,7 @@ export const tauxPressionFormationRegional = ({
     .whereRef(
       "formationEtablissement.dispositifId",
       "=",
-      "demande.dispositifId"
+      "demande.codeDispositif"
     )
     .whereRef("region.codeRegion", "=", "demande.codeRegion")
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)

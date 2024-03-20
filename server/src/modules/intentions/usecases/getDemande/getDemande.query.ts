@@ -4,6 +4,7 @@ import {
   jsonBuildObject,
   jsonObjectFrom,
 } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -12,14 +13,13 @@ import {
   isDemandeNotDeleted,
   isDemandeSelectable,
 } from "../../../utils/isDemandeSelectable";
+import { getDemandeSchema } from "./getDemande.schema";
 
-export const findDemande = async ({
-  id,
-  user,
-}: {
-  id: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-}) => {
+export interface Filters extends z.infer<typeof getDemandeSchema.params> {
+  user: RequestUser;
+}
+
+export const findDemande = async ({ numero, user }: Filters) => {
   const demande = await kdb
     .selectFrom("demande")
     .selectAll()
@@ -141,15 +141,15 @@ export const findDemande = async ({
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
-    .where("id", "=", id)
-    .orderBy("createdAt", "asc")
+    .where("demande.numero", "=", numero)
+    .orderBy("dateCreation", "asc")
     .limit(1)
     .executeTakeFirst();
 
   const codeDispositif =
-    demande?.dispositifId &&
+    demande?.codeDispositif &&
     demande.metadata.formation?.dispositifs.find(
-      (item) => item.codeDispositif === demande?.dispositifId
+      (item) => item.codeDispositif === demande?.codeDispositif
     )?.codeDispositif;
 
   return (
@@ -167,7 +167,7 @@ export const findDemande = async ({
           demande.metadata.etablissementCompensation
         ),
       }),
-      createdAt: demande.createdAt?.toISOString(),
+      dateCreation: demande.dateCreation?.toISOString(),
       codeDispositif,
     })
   );

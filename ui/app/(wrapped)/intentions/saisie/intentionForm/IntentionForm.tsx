@@ -26,7 +26,7 @@ export const IntentionForm = ({
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
 }) => {
   const toast = useToast();
   const { push } = useRouter();
@@ -51,7 +51,7 @@ export const IntentionForm = ({
 
       let message: string | null = null;
 
-      switch (body.status) {
+      switch (body.statut) {
         case "draft":
           message = "Projet de demande enregistré avec succès";
           break;
@@ -88,12 +88,12 @@ export const IntentionForm = ({
 
   const isCFDUaiSectionValid = ({
     cfd,
-    dispositifId,
+    codeDispositif,
     libelleFCIL,
     uai,
   }: Partial<IntentionForms>): boolean => {
-    if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
-    return !!(cfd && dispositifId && uai);
+    if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
+    return !!(cfd && codeDispositif && uai);
   };
 
   const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);
@@ -126,7 +126,7 @@ export const IntentionForm = ({
           as="form"
           noValidate
           onSubmit={handleSubmit((values) =>
-            submitDemande({ body: { demande: { id: formId, ...values } } })
+            submitDemande({ body: { demande: { numero: formId, ...values } } })
           )}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
@@ -183,9 +183,9 @@ export const IntentionForm = ({
                           submitDemande({
                             body: {
                               demande: {
-                                id: formId,
+                                numero: formId,
                                 ...values,
-                                status: formId ? values.status : "draft",
+                                statut: formId ? values.statut : "draft",
                               },
                             },
                           })

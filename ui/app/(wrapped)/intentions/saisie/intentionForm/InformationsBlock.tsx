@@ -41,7 +41,7 @@ export const InformationsBlock = ({
   formId?: string;
   disabled: boolean;
   errors?: Record<string, string>;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   footerActions: ReactNode;
 }) => {
   const { push } = useRouter();
@@ -130,7 +130,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("status", "refused");
+                        setValue("statut", "refused");
                         onClose();
                       }}
                       variant={"secondary"}

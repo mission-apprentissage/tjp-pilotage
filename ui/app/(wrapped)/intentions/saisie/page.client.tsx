@@ -48,10 +48,10 @@ import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 
 const DEMANDES_COLUMNS = {
-  id: "id",
+  numero: "numero",
   cfd: "CFD",
   libelleFormation: "Diplôme",
-  dispositifId: "Code dispositif",
+  codeDispositif: "Code dispositif",
   libelleDispositif: "Dispositif",
   libelleFCIL: "Libellé de la FCIL",
   uai: "UAI",
@@ -66,14 +66,14 @@ const DEMANDES_COLUMNS = {
   amiCma: "AMI/CMA ?",
   poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
-  status: "Statut",
+  statut: "Statut",
   codeRegion: "Code Region",
   codeAcademie: "Code Académie",
-  createdAt: "Date de création",
-  updatedAt: "Dernière modification",
+  dateCreation: "Date de création",
+  dateModification: "Dernière modification",
   compensationCfd: "CFD compensé",
   compensationUai: "UAI compensé",
-  compensationDispositifId: "Dispositif compensé",
+  compensationCodeDispositif: "Dispositif compensé",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
   capaciteScolaireColoree: "Capacité scolaire coloree",
@@ -86,14 +86,14 @@ const DEMANDES_COLUMNS = {
 >;
 
 export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "status">;
+export type Filters = Pick<Query, "statut">;
 export type Order = Pick<Query, "order" | "orderBy">;
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
-const TagDemande = ({ status }: { status: string }) => {
-  switch (status) {
+const TagDemande = ({ statut }: { statut: string }) => {
+  switch (statut) {
     case "draft":
       return (
         <Tag size="sm" colorScheme={"orange"}>
@@ -180,7 +180,7 @@ export const PageClient = () => {
   ) => {
     router.push(
       createParametrizedUrl(`${location.pathname}/new`, {
-        intentionId: demandeCompensee.id,
+        intentionId: demandeCompensee.numero,
         compensation: true,
       })
     );
@@ -355,17 +355,17 @@ export const PageClient = () => {
                       <Th>compensation</Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("status")}
+                        onClick={() => handleOrder("statut")}
                       >
-                        <OrderIcon {...order} column="status" />
-                        {DEMANDES_COLUMNS.status}
+                        <OrderIcon {...order} column="statut" />
+                        {DEMANDES_COLUMNS.statut}
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("createdAt")}
+                        onClick={() => handleOrder("dateCreation")}
                       >
-                        <OrderIcon {...order} column="createdAt" />
-                        {DEMANDES_COLUMNS.createdAt}
+                        <OrderIcon {...order} column="dateCreation" />
+                        {DEMANDES_COLUMNS.dateCreation}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -377,10 +377,10 @@ export const PageClient = () => {
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("updatedAt")}
+                        onClick={() => handleOrder("dateModification")}
                       >
-                        <OrderIcon {...order} column="updatedAt" />
-                        {DEMANDES_COLUMNS.updatedAt}
+                        <OrderIcon {...order} column="dateModification" />
+                        {DEMANDES_COLUMNS.dateModification}
                       </Th>
                     </Tr>
                   </Thead>
@@ -391,14 +391,14 @@ export const PageClient = () => {
                       ) => (
                         <Tr
                           height={"60px"}
-                          key={demande.id}
+                          key={demande.numero}
                           cursor="pointer"
                           whiteSpace={"pre"}
                           onClick={() =>
-                            router.push(`/intentions/saisie/${demande.id}`)
+                            router.push(`/intentions/saisie/${demande.numero}`)
                           }
                         >
-                          <Td>{demande.id}</Td>
+                          <Td>{demande.numero}</Td>
                           <Td>
                             <Text
                               textOverflow={"ellipsis"}
@@ -443,9 +443,9 @@ export const PageClient = () => {
                           </Td>
                           <Td>
                             {demande.compensationCfd &&
-                            demande.compensationDispositifId &&
+                            demande.compensationCodeDispositif &&
                             demande.compensationUai ? (
-                              demande.idCompensation ? (
+                              demande.numeroCompensation ? (
                                 <Button
                                   _hover={{ bg: "gray.200" }}
                                   variant="ghost"
@@ -458,7 +458,7 @@ export const PageClient = () => {
                                   onClick={(e) => {
                                     e.stopPropagation();
                                     router.push(
-                                      `/intentions/saisie/${demande.idCompensation}?compensation=true`
+                                      `/intentions/saisie/${demande.numeroCompensation}?compensation=true`
                                     );
                                   }}
                                 >
@@ -473,7 +473,7 @@ export const PageClient = () => {
                                       } liée `}
                                     </Box>
                                     <Text textDecoration="underline">
-                                      {demande.idCompensation}
+                                      {demande.numeroCompensation}
                                     </Text>
                                   </Box>
                                 </Button>
@@ -503,10 +503,10 @@ export const PageClient = () => {
                             )}
                           </Td>
                           <Td align="center" w={0}>
-                            <TagDemande status={demande.status} />
+                            <TagDemande statut={demande.statut} />
                           </Td>
                           <Td>
-                            {new Date(demande.createdAt).toLocaleString()}
+                            {new Date(demande.dateCreation).toLocaleString()}
                           </Td>
                           <Td w="15" textAlign={"center"}>
                             <Tooltip label={demande.userName}>
@@ -522,7 +522,9 @@ export const PageClient = () => {
                             </Tooltip>
                           </Td>
                           <Td textAlign={"center"}>
-                            {new Date(demande.updatedAt).toLocaleString()}
+                            {new Date(
+                              demande.dateModification
+                            ).toLocaleString()}
                           </Td>
                         </Tr>
                       )

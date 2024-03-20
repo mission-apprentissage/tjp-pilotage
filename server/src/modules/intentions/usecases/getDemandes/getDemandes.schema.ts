@@ -1,7 +1,7 @@
 import { z } from "zod";
 
 const DemandesItem = z.object({
-  id: z.string(),
+  numero: z.string(),
   cfd: z.string().optional(),
   libelleFormation: z.string().optional(),
   libelleEtablissement: z.string().optional(),
@@ -9,18 +9,18 @@ const DemandesItem = z.object({
   libelleDispositif: z.string().optional(),
   libelleFCIL: z.string().optional(),
   uai: z.string().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
+  dateCreation: z.string(),
+  dateModification: z.string(),
   createurId: z.string(),
-  status: z.string(),
+  statut: z.string(),
   typeDemande: z.string().optional(),
   compensationCfd: z.string().optional(),
-  compensationDispositifId: z.string().optional(),
+  compensationCodeDispositif: z.string().optional(),
   compensationUai: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
-  idCompensation: z.string().optional(),
+  numeroCompensation: z.string().optional(),
   typeCompensation: z.string().optional(),
-  dispositifId: z.string().optional(),
+  codeDispositif: z.string().optional(),
   rentreeScolaire: z.coerce.number().optional(),
   motif: z.array(z.string()).optional(),
   autreMotif: z.string().optional(),
@@ -43,7 +43,7 @@ const DemandesItem = z.object({
 
 export const getDemandesSchema = {
   querystring: z.object({
-    status: z.enum(["draft", "submitted", "refused"]).optional(),
+    statut: z.enum(["draft", "submitted", "refused"]).optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: DemandesItem.keyof().optional(),

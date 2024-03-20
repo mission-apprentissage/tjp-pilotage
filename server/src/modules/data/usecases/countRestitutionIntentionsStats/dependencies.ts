@@ -23,14 +23,14 @@ export interface Filters
 }
 
 const countRestitutionIntentionsStatsInDB = async ({
-  status,
+  statut,
   codeRegion,
   rentreeScolaire,
   typeDemande,
   motif,
   cfd,
   codeNiveauDiplome,
-  dispositif,
+  codeDispositif,
   CPC,
   coloration,
   amiCMA,
@@ -177,7 +177,7 @@ const countRestitutionIntentionsStatsInDB = async ({
       }).as("FCILs")
     )
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "in", status);
+      if (statut) return eb.where("demande.statut", "in", statut);
       return eb;
     })
     .$call((eb) => {
@@ -245,7 +245,8 @@ const countRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (dispositif) return eb.where("demande.dispositifId", "in", dispositif);
+      if (codeDispositif)
+        return eb.where("demande.codeDispositif", "in", codeDispositif);
       return eb;
     })
     .$call((eb) => {

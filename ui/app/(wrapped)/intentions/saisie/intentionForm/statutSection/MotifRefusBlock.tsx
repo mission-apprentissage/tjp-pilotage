@@ -28,13 +28,13 @@ export const MotifRefusBlock = chakra(
       setValue,
     } = useFormContext<IntentionForms>();
 
-    const status = watch("status");
-    const visible = status === "refused";
+    const statut = watch("statut");
+    const visible = statut === "refused";
 
     useEffect(
       () =>
         watch((_, { name }) => {
-          if (name !== "status") return;
+          if (name !== "statut") return;
           setValue("motifRefus", []);
           setValue("autreMotifRefus", "");
         }).unsubscribe

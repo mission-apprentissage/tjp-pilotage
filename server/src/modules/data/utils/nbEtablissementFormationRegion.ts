@@ -30,7 +30,7 @@ export const nbEtablissementFormationRegion = ({
     .whereRef(
       "formationEtablissement.dispositifId",
       "=",
-      "demande.dispositifId"
+      "demande.codeDispositif"
     )
     .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
     .select((eb2) =>

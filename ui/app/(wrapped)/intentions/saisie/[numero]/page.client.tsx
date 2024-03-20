@@ -5,14 +5,14 @@ import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 
 export default ({
-  params: { intentionId },
+  params: { numero },
 }: {
   params: {
-    intentionId: string;
+    numero: string;
   };
 }) => {
-  const { data, isLoading } = client.ref("[GET]/demande/:id").useQuery(
-    { params: { id: intentionId } },
+  const { data, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
+    { params: { numero: numero } },
     {
       cacheTime: 0,
     }
@@ -24,7 +24,7 @@ export default ({
       {data && (
         <IntentionForm
           disabled={!data.canEdit}
-          formId={intentionId}
+          formId={numero}
           defaultValues={data}
           formMetadata={data.metadata}
         />
