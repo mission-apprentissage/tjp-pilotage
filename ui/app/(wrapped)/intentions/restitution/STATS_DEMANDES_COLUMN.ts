@@ -26,6 +26,7 @@ export const STATS_DEMANDES_COLUMNS = {
   codeRegion: "CodeRegion",
   libelleRegion: "Région",
   codeAcademie: "CodeAcadémie",
+  libelleAcademie: "Académie",
   codeDepartement: "CodeDepartement",
   libelleDepartement: "Département",
   dateCreation: "Date de création",

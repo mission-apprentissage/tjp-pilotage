@@ -5,7 +5,12 @@ const DemandesItem = z.object({
   cfd: z.string().optional(),
   libelleFormation: z.string().optional(),
   libelleEtablissement: z.string().optional(),
+  codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
+  codeAcademie: z.string().optional(),
+  libelleAcademie: z.string().optional(),
+  codeRegion: z.string(),
+  libelleRegion: z.string().optional(),
   libelleDispositif: z.string().optional(),
   libelleFCIL: z.string().optional(),
   uai: z.string().optional(),
@@ -36,8 +41,6 @@ const DemandesItem = z.object({
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
-  codeRegion: z.string(),
-  codeAcademie: z.string().optional(),
   userName: z.string().optional(),
 });
 

@@ -39,14 +39,16 @@ const chakraRendererTheme: Components = {
   ul: ({ children }) => <UnorderedList mb={"24px"}>{children}</UnorderedList>,
   li: ({ children }) => <ListItem>{children}</ListItem>,
   blockquote: ({ children }) => {
-    const [grey] = useToken("colors", ["grey.975"]);
+    const greyColor = useToken("colors", "grey.975");
+    const blueColor = useToken("colors", "bluefrance.525");
     return (
       <blockquote
         style={{
-          borderLeft: "4px solid #6a6af4",
+          borderLeft: "4px solid",
+          borderColor: blueColor,
           padding: "16px 32px",
           marginBottom: "24px",
-          backgroundColor: grey,
+          backgroundColor: greyColor,
         }}
       >
         {children}

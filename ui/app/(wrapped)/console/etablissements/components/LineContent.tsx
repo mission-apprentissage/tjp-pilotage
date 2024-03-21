@@ -12,13 +12,13 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { formatAnneeCommuneLibelle } from "../../../utils/formatAnneeCommuneLibelle";
-import { Line } from "../page";
+import { Line } from "../types";
 
 export const EtablissementLineContent = ({
   line,
@@ -53,12 +53,24 @@ export const EtablissementLineContent = ({
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td minW={300} maxW={300} whiteSpace="normal">
-      {line.libelleEtablissement ?? "-"}
+      <Link
+        variant="text"
+        as={NextLink}
+        href={`/panorama/etablissement/${line.uai}`}
+        target="_blank"
+        color="chakra-body-text"
+        fontWeight={400}
+        _hover={{
+          textDecoration: "underline",
+        }}
+      >
+        <Flex justify={"start"}>{line.libelleEtablissement ?? "-"}</Flex>
+      </Link>
     </Td>
     <Td minW={150} maxW={150} whiteSpace="normal">
       {line.commune ?? "-"}
     </Td>
-    <Td>{line.departement ?? "-"}</Td>
+    <Td>{line.libelleDepartement ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
     <Td minW={450} whiteSpace="normal">
       <Flex>

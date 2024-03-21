@@ -1,5 +1,6 @@
 import { Server } from "../../server";
 import { countRestitutionIntentionsStatsRoute } from "./usecases/countRestitutionIntentionsStats/countRestitutionIntentionsStats.route";
+import { getAnalyseDetailleeEtablissementRoute } from "./usecases/getAnalyseDetailleeEtablissement/getAnalyseDetailleeEtablissement.route";
 import { getDataForPanoramaDepartementRoute } from "./usecases/getDataForPanoramaDepartement/getDataForPanoramaDepartement.route";
 import { getDataForPanoramaEtablissementRoute } from "./usecases/getDataForPanoramaEtablissement/getDataForPanoramaEtablissement.route";
 import { getDataForPanoramaRegionRoute } from "./usecases/getDataForPanoramaRegion/getDataForPanoramaRegion.route";
@@ -9,6 +10,7 @@ import { getEtablissementRoute } from "./usecases/getEtablissement/getEtablissem
 import { getFormationEtablissementsRoutes } from "./usecases/getFormationEtablissements/getFormationEtablissements.routes";
 import { getFormationsRoute } from "./usecases/getFormations/getFormations.routes";
 import { getFormationsTransformationsRoute } from "./usecases/getFormationsTransformationStats/getFormationsTransformations.route";
+import { getHeaderEtablissementRoute } from "./usecases/getHeaderEtablissement/getHeaderEtablissement.route";
 import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats/getPilotageReformeStats.route";
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
@@ -20,7 +22,8 @@ import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchE
 export const registerFormationModule = ({ server }: { server: Server }) => {
   return {
     ...getFormationsRoute({ server }),
-    ...getEtablissementRoute(server),
+    ...getHeaderEtablissementRoute({ server }),
+    ...getEtablissementRoute({ server }),
     ...getFormationEtablissementsRoutes({ server }),
     ...getDataForPanoramaEtablissementRoute({ server }),
     ...getDepartementRoute({ server }),
@@ -36,5 +39,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...searchEtablissementRoute(server),
     ...getScopedTransformationStatsRoute({ server }),
     ...getPilotageReformeStatsRegionsRoute({ server }),
+    ...getAnalyseDetailleeEtablissementRoute({ server }),
   };
 };

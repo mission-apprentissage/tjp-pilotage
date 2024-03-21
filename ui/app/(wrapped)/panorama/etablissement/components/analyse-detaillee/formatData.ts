@@ -1,0 +1,30 @@
+export const formatTaux = (value?: number): number =>
+  Number(((value ?? 0) * 100).toFixed(0));
+
+export const formatAbsolute = (value?: number): number =>
+  Number((value ?? 0).toFixed(2));
+
+export const formatMillesime = (millesime: string): string =>
+  `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;
+
+export const formatAnneeCommuneLibelle = (libelleFormation: string): string => {
+  return libelleFormation
+    .replace("2nde commune", "")
+    .replace("1ere commune", "");
+};
+
+export const formatTypeFamilleLong = (typeFamille: string): string => {
+  return typeFamille
+    .replace("2nde_commune", "Seconde commune")
+    .replace("1ere_commune", "Première année commune")
+    .replace("specialite", "Spécialité")
+    .replace("option", "Option");
+};
+
+export const formatTypeFamilleCourt = (typeFamille: string): string => {
+  return typeFamille
+    .replace("2nde_commune", "2nde")
+    .replace("1ere_commune", "1ère")
+    .replace("specialite", "Spé")
+    .replace("option", "Opt");
+};

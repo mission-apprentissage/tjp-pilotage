@@ -154,3 +154,5 @@ sdk/lib
 
 .scannerwork/
 sonar.sh
+
+**/**(draft)**

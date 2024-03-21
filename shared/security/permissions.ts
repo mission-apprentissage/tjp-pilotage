@@ -34,7 +34,9 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "user" },
     "restitution-intentions/lecture": { default: "region" },
   },
-  perdir: {},
+  perdir: {
+    "pilotage-intentions/lecture": { default: "national" },
+  },
 } satisfies {
   [R: string]: {
     [s: string]: Record<string | "defaultScope", Scope>;

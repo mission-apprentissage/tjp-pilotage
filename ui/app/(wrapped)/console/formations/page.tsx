@@ -29,11 +29,7 @@ import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
@@ -42,38 +38,11 @@ import {
   FormationLineLoader,
   FormationLinePlaceholder,
 } from "./components/LineContent";
+import { FORMATION_COLUMNS } from "./FORMATION_COLUMNS";
 import { Filters, LineId, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
-
-const FORMATIONS_COLUMNS = {
-  rentreeScolaire: "RS",
-  libelleNiveauDiplome: "Diplôme",
-  libelleFormation: "Formation",
-  nbEtablissement: "Nb Etab",
-  effectif1: "Année 1",
-  effectif2: "Année 2",
-  effectif3: "Année 3",
-  tauxPression: "Tx de pression",
-  tauxRemplissage: "Tx de remplissage",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
-  libelleDispositif: "Dispositif",
-  libelleFamille: "	Famille de métiers",
-  cfd: "Code formation diplôme",
-  cpc: "CPC",
-  cpcSecteur: "CPC Secteur",
-  cpcSousSecteur: "CPC Sous Secteur",
-  libelleNsf: "Domaine de formation (NSF)",
-  "continuum.libelleFormation": "Diplôme historique",
-  "continuum.cfd": "Code diplôme historique",
-  positionQuadrant: "Position dans le quadrant",
-  codeDispositif: "Code dispositif",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/formations"]["formations"][number]
->;
 
 export default function Formations() {
   const router = useRouter();
@@ -352,7 +321,6 @@ export default function Formations() {
             size="lg"
             variant="accessible"
             onChange={(event) => {
-              console.log(event.target.checked);
               handleToggleShowAnneeCommune(
                 event.target.checked.toString() ?? "false"
               );
@@ -390,20 +358,20 @@ export default function Formations() {
             >
               <Tr>
                 <Th />
-                <Th>{FORMATIONS_COLUMNS.rentreeScolaire}</Th>
+                <Th>{FORMATION_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("codeNiveauDiplome")}
                 >
                   <OrderIcon {...order} column="codeNiveauDiplome" />
-                  {FORMATIONS_COLUMNS.libelleNiveauDiplome}
+                  {FORMATION_COLUMNS.libelleNiveauDiplome}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleFormation")}
                 >
                   <OrderIcon {...order} column="libelleFormation" />
-                  {FORMATIONS_COLUMNS.libelleFormation}
+                  {FORMATION_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   isNumeric
@@ -411,7 +379,7 @@ export default function Formations() {
                   onClick={() => handleOrder("nbEtablissement")}
                 >
                   <OrderIcon {...order} column="nbEtablissement" />
-                  {FORMATIONS_COLUMNS.nbEtablissement}
+                  {FORMATION_COLUMNS.nbEtablissement}
                 </Th>
                 <Th
                   isNumeric
@@ -419,7 +387,7 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  {FORMATIONS_COLUMNS.effectif1}
+                  {FORMATION_COLUMNS.effectif1}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -432,7 +400,7 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  {FORMATIONS_COLUMNS.effectif2}
+                  {FORMATION_COLUMNS.effectif2}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -445,7 +413,7 @@ export default function Formations() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  {FORMATIONS_COLUMNS.effectif3}
+                  {FORMATION_COLUMNS.effectif3}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -458,7 +426,7 @@ export default function Formations() {
                   textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  {FORMATIONS_COLUMNS.tauxPression}
+                  {FORMATION_COLUMNS.tauxPression}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -480,7 +448,7 @@ export default function Formations() {
                   textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
-                  {FORMATIONS_COLUMNS.tauxRemplissage}
+                  {FORMATION_COLUMNS.tauxRemplissage}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -501,7 +469,7 @@ export default function Formations() {
                   textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxInsertion" />
-                  {FORMATIONS_COLUMNS.tauxInsertion}
+                  {FORMATION_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -522,7 +490,7 @@ export default function Formations() {
                   textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxPoursuite" />
-                  {FORMATIONS_COLUMNS.tauxPoursuite}
+                  {FORMATION_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -543,7 +511,7 @@ export default function Formations() {
                   textAlign={"center"}
                 >
                   <OrderIcon {...order} column="tauxDevenirFavorable" />
-                  {FORMATIONS_COLUMNS.tauxDevenirFavorable}
+                  {FORMATION_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -564,37 +532,37 @@ export default function Formations() {
                   onClick={() => handleOrder("libelleDispositif")}
                 >
                   <OrderIcon {...order} column="libelleDispositif" />
-                  {FORMATIONS_COLUMNS.libelleDispositif}
+                  {FORMATION_COLUMNS.libelleDispositif}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleFamille")}
                 >
                   <OrderIcon {...order} column="libelleFamille" />
-                  {FORMATIONS_COLUMNS.libelleFamille}
+                  {FORMATION_COLUMNS.libelleFamille}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
                   <OrderIcon {...order} column="cfd" />
-                  {FORMATIONS_COLUMNS.cfd}
+                  {FORMATION_COLUMNS.cfd}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
                   <OrderIcon {...order} column="cpc" />
-                  {FORMATIONS_COLUMNS.cpc}
+                  {FORMATION_COLUMNS.cpc}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
                   <OrderIcon {...order} column="cpcSecteur" />
-                  {FORMATIONS_COLUMNS.cpcSecteur}
+                  {FORMATION_COLUMNS.cpcSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("cpcSousSecteur")}
                 >
                   <OrderIcon {...order} column="cpcSousSecteur" />
-                  {FORMATIONS_COLUMNS.cpcSousSecteur}
+                  {FORMATION_COLUMNS.cpcSousSecteur}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
-                  {FORMATIONS_COLUMNS.libelleNsf}
+                  {FORMATION_COLUMNS.libelleNsf}
                   <TooltipIcon
                     ml="1"
                     label="cliquez pour plus d'infos."
@@ -602,7 +570,7 @@ export default function Formations() {
                   />
                 </Th>
                 <Th>
-                  {FORMATIONS_COLUMNS.positionQuadrant}
+                  {FORMATION_COLUMNS.positionQuadrant}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -673,7 +641,7 @@ export default function Formations() {
           const data = await client.ref("[GET]/formations").query({
             query: getFormationsQueryParameters(EXPORT_LIMIT),
           });
-          downloadCsv("formations_export", data.formations, FORMATIONS_COLUMNS);
+          downloadCsv("formations_export", data.formations, FORMATION_COLUMNS);
         }}
         onExportExcel={async () => {
           const data = await client.ref("[GET]/formations").query({
@@ -683,7 +651,7 @@ export default function Formations() {
           downloadExcel(
             "formations_export",
             data.formations,
-            FORMATIONS_COLUMNS
+            FORMATION_COLUMNS
           );
         }}
         page={page}
