@@ -6,16 +6,11 @@ import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
 import { getInitialZoom } from "./services/getInitialZoom";
 
-type RequiredNotNull<T> = {
-  [P in keyof T]: NonNullable<T[P]>;
-};
-
 export type Etablissement = Awaited<
   ReturnType<typeof dependencies.getEtablissementsProches>
 >[number];
 
-export interface EtablissementWithDistance
-  extends RequiredNotNull<Etablissement> {
+export interface EtablissementWithDistance extends Etablissement {
   distance: number;
 }
 export type RouteQueryString = z.infer<

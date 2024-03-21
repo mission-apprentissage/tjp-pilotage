@@ -8,8 +8,8 @@ export const EtablissementSchema = z.object({
   commune: z.string(),
   codeDepartement: z.string(),
   libelleEtablissement: z.string(),
-  libelleDispositif: z.string(),
-  voie: z.string(),
+  libellesDispositifs: z.array(z.string()),
+  voies: z.array(z.string()),
 });
 
 export const getDataForEtablissementMapSchema = {

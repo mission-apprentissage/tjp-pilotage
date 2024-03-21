@@ -1,3 +1,4 @@
+import { sql } from "kysely";
 import { z } from "zod";
 
 import { kdb } from "../../../../../db/db";
@@ -25,9 +26,13 @@ export const getEtablissement = async ({ uai }: Filters) =>
       "formationEtablissement.dispositifId"
     )
     .distinct()
-    .select([
-      "formationEtablissement.voie",
-      "dispositif.libelleDispositif",
+    .select((sb) => [
+      sql<string[]>`array_agg(distinct ${sb.ref(
+        "formationEtablissement.voie"
+      )})`.as("voies"),
+      sql<string[]>`array_agg(distinct ${sb.ref(
+        "dispositif.libelleDispositif"
+      )})`.as("libellesDispositifs"),
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",
@@ -36,4 +41,13 @@ export const getEtablissement = async ({ uai }: Filters) =>
       "etablissement.libelleEtablissement",
     ])
     .where("etablissement.UAI", "=", uai)
+    .groupBy([
+      "dispositif.libelleDispositif",
+      "etablissement.UAI",
+      "etablissement.codeDepartement",
+      "etablissement.commune",
+      "etablissement.longitude",
+      "etablissement.latitude",
+      "etablissement.libelleEtablissement",
+    ])
     .executeTakeFirstOrThrow();

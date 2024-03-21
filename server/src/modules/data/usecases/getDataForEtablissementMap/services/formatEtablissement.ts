@@ -10,11 +10,12 @@ export function formatEtablissement(
     uai: etablissement.UAI,
     latitude: etablissement.latitude || +Infinity,
     longitude: etablissement.longitude || +Infinity,
-    voie: etablissement.voie || "",
+    voies: etablissement.voies || [],
     codeDepartement: etablissement.codeDepartement || "",
     libelleEtablissement: etablissement.libelleEtablissement || "",
     commune: etablissement.commune || "",
-    libelleDispositif: etablissement.libelleDispositif || "",
+    libellesDispositifs:
+      etablissement.libellesDispositifs.map((l) => (l === null ? "" : l)) || [],
     distance: etablissement.distance,
   };
 }

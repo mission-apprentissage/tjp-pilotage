@@ -1,3 +1,4 @@
+import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
@@ -26,9 +27,13 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "formationEtablissement.dispositifId"
     )
     .distinct()
-    .select([
-      "formationEtablissement.voie",
-      "dispositif.libelleDispositif",
+    .select((sb) => [
+      sql<string[]>`array_agg(distinct ${sb.ref(
+        "formationEtablissement.voie"
+      )})`.as("voies"),
+      sql<string[]>`array_agg(distinct ${sb.ref(
+        "dispositif.libelleDispositif"
+      )})`.as("libellesDispositifs"),
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",
@@ -63,10 +68,13 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       }
       return q;
     })
-    .$call((q) => {
-      console.log(JSON.stringify(q.compile()));
-      console.log(q.compile().sql);
-
-      return q;
-    })
+    .groupBy([
+      "dispositif.libelleDispositif",
+      "etablissement.UAI",
+      "etablissement.codeDepartement",
+      "etablissement.commune",
+      "etablissement.longitude",
+      "etablissement.latitude",
+      "etablissement.libelleEtablissement",
+    ])
     .execute();
