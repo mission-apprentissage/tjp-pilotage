@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  DownloadIcon,
-  LinkIcon,
-  Search2Icon,
-  WarningTwoIcon,
-} from "@chakra-ui/icons";
+import { LinkIcon, Search2Icon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -25,7 +20,6 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -33,6 +27,7 @@ import qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -225,44 +220,31 @@ export const PageClient = () => {
               </Button>
             </Flex>
             <Flex mr="auto" ms={2}>
-              <Button
-                size="md"
-                variant="ghost"
-                color={"bluefrance.113"}
-                onClick={async () => {
-                  trackEvent("demandes:export");
+              <ExportMenuButton
+                onExportCsv={async () => {
+                  trackEvent("saisie_demandes:export");
                   const data = await client.ref("[GET]/demandes").query({
                     query: getDemandesQueryParameters(EXPORT_LIMIT),
                   });
                   downloadCsv(
-                    "export_demandes",
+                    "export_saisie_demandes",
                     data.demandes,
                     DEMANDES_COLUMNS
                   );
                 }}
-              >
-                <DownloadIcon mr="2" />
-                Exporter en CSV
-              </Button>
-              <Button
-                size="md"
-                variant="ghost"
-                color={"bluefrance.113"}
-                onClick={async () => {
-                  trackEvent("demandes:export-excel");
+                onExportExcel={async () => {
+                  trackEvent("saisie_demandes:export-excel");
                   const data = await client.ref("[GET]/demandes").query({
                     query: getDemandesQueryParameters(EXPORT_LIMIT),
                   });
                   downloadExcel(
-                    "export_demandes",
+                    "export_saisie_demandes",
                     data.demandes,
                     DEMANDES_COLUMNS
                   );
                 }}
-              >
-                <Icon icon="ri:file-excel-2-line" width={"14px"} />
-                <Text ms={2}>Exporter en Excel</Text>
-              </Button>
+                variant="solid"
+              />
             </Flex>
           </Flex>
           {data?.demandes.length ? (
