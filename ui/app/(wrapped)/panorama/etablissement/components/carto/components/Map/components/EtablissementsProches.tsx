@@ -1,5 +1,4 @@
 import { Point } from "geojson";
-import { MapLibreEvent } from "maplibre-gl";
 import { useEffect, useState } from "react";
 import {
   CircleLayer,
@@ -13,15 +12,24 @@ import {
   useMap,
 } from "react-map-gl/maplibre";
 
-import { client } from "../../../../../../../../../api.client";
+import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
-interface EtablissementsProchesProps {
-  etablissementsProches: (typeof client.infer)["[GET]/etablissement/:uai/map"]["etablissementsProches"];
-}
+const MAP_IMAGES = {
+  MAP_POINT_APPRENTISSAGE: {
+    path: "/map/map_point_apprentissage.png",
+    name: "map_point_apprentissage",
+  },
+  MAP_POINT_SCOLAIRE_APPRENTISSAGE: {
+    path: "/map/map_point_scolaire_apprentissage.png",
+    name: "map_point_scolaire_apprentissage",
+  },
+  MAP_POINT_SCOLAIRE: {
+    path: "/map/map_point_scolaire.png",
+    name: "map_point_scolaire",
+  },
+};
 
-export const EtablissementsProches = ({
-  etablissementsProches,
-}: EtablissementsProchesProps) => {
+export const EtablissementsProches = () => {
   const [popupState, setPopupState] = useState({
     show: false,
     lat: 0,
@@ -30,6 +38,7 @@ export const EtablissementsProches = ({
   });
 
   const { current: map } = useMap();
+  const { etablissementsProches } = useEtablissementMapContext();
 
   const geojson = {
     type: "FeatureCollection",
@@ -40,9 +49,12 @@ export const EtablissementsProches = ({
       },
       properties: {
         uai: e.uai,
+        voie: e.voie,
       },
     })),
   };
+
+  console.log(geojson);
 
   const clusterLayer: CircleLayer = {
     id: "clusters",
@@ -74,13 +86,23 @@ export const EtablissementsProches = ({
     },
   };
 
-  const singlePointLayer: SymbolLayer = {
-    id: "single-points",
+  const scolaireSinglePointLayer: SymbolLayer = {
+    id: "single-scolaire-points",
     type: "symbol",
     source: "data",
-    filter: ["!", ["has", "point_count"]],
+    filter: ["all", ["!has", "point_count"], ["in", "voie", "scolaire"]],
     layout: {
-      "icon-image": "map_point",
+      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
+    },
+  };
+
+  const apprentissageSinglePointLayer: SymbolLayer = {
+    id: "single-apprentissage-points",
+    type: "symbol",
+    source: "data",
+    filter: ["all", ["!has", "point_count"], ["in", "voie", "apprentissage"]],
+    layout: {
+      "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
     },
   };
 
@@ -116,7 +138,7 @@ export const EtablissementsProches = ({
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {
-        layers: [singlePointLayer.id],
+        layers: [scolaireSinglePointLayer.id],
       });
       const point = features[0].geometry as Point;
       setPopupState({
@@ -128,39 +150,42 @@ export const EtablissementsProches = ({
     }
   };
 
+  const loadImageOnMap = async (image: { path: string; name: string }) => {
+    if (map !== undefined) {
+      const loadedImage = await map.loadImage(image.path);
+      if (map.hasImage(image.name)) {
+        map.updateImage(image.name, loadedImage.data);
+      } else {
+        map.addImage(image.name, loadedImage.data);
+      }
+    }
+  };
+
   useEffect(() => {
     if (map !== undefined) {
       map.on("load", async () => {
-        map.removeImage("map_point");
-        const img = await map.loadImage("/map_point.png");
-        map.addImage("map_point", img.data);
+        await Promise.all(
+          Object.values(MAP_IMAGES).map(
+            async (image) => await loadImageOnMap(image)
+          )
+        );
 
         map.off("click", clusterLayer.id, onClusterClick);
         map.on("click", clusterLayer.id, onClusterClick);
 
-        map.off("click", singlePointLayer.id, onSinglePointClick);
-        map.on("click", singlePointLayer.id, onSinglePointClick);
-
-        map.off("moveend", onZoomEnd);
-        map.on("moveend", onZoomEnd);
+        map.off("click", scolaireSinglePointLayer.id, onSinglePointClick);
+        map.on("click", scolaireSinglePointLayer.id, onSinglePointClick);
       });
     }
   }, [map]);
-
-  const onZoomEnd = (
-    e: MapLibreEvent<MouseEvent | TouchEvent | WheelEvent | undefined>
-  ) => {
-    if (map !== undefined) {
-      console.log(map.getMap().getBounds(), e);
-    }
-  };
 
   return (
     <>
       <Source id="data" type="geojson" data={geojson} cluster={true} />
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
-      <Layer {...singlePointLayer} />
+      <Layer {...scolaireSinglePointLayer} />
+      <Layer {...apprentissageSinglePointLayer} />
       {popupState.show && (
         <Popup
           longitude={popupState.lng}

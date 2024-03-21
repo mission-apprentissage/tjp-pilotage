@@ -1,11 +1,11 @@
 import { useEffect } from "react";
 import { useMap } from "react-map-gl/maplibre";
 
-import { useEtablissementContext } from "../../../../../context/etablissementContext";
+import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
 export const CustomControls = () => {
   const { current: map } = useMap();
-  const { setBbox } = useEtablissementContext();
+  const { setBbox } = useEtablissementMapContext();
 
   useEffect(() => {
     if (map !== undefined) {

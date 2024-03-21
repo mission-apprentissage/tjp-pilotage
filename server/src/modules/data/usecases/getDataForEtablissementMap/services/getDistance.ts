@@ -1,16 +1,13 @@
 import { getDistance as getGeoDistance } from "geolib";
-import { Selectable } from "kysely";
 
-import { DB } from "../../../../../db/schema";
-
-export interface EtablissementWithDistance
-  extends Selectable<DB["etablissement"]> {
-  distance: number;
-}
+import {
+  Etablissement,
+  EtablissementWithDistance,
+} from "../getDataForEtablissementMap.usecase";
 
 interface FilterByDistanceParams {
-  etablissement: Selectable<DB["etablissement"]>;
-  etablissements: Array<Selectable<DB["etablissement"]>>;
+  etablissement: Etablissement;
+  etablissements: Array<Etablissement>;
 }
 
 /**

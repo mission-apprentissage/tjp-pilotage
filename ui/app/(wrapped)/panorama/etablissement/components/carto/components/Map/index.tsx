@@ -8,7 +8,7 @@ import MapGLMap, {
 } from "react-map-gl/maplibre";
 
 import { client } from "../../../../../../../../api.client";
-import { useEtablissementContext } from "../../../../context/etablissementContext";
+import { useEtablissementMapContext } from "../../context/etablissementMapContext";
 import { CustomControls } from "./components/CustomControls";
 import { Etablissement } from "./components/Etablissement";
 import { EtablissementsProches } from "./components/EtablissementsProches";
@@ -27,7 +27,8 @@ const AVAILABLE_STYLES = [
 
 export function Map({ uai, cfd }: MapProps) {
   const [style] = useState(AVAILABLE_STYLES[0]);
-  const { etablissementMap, setEtablissementMap } = useEtablissementContext();
+  const { etablissementMap, setEtablissementMap } =
+    useEtablissementMapContext();
 
   const { data: etablissement, isLoading } = client
     .ref("[GET]/etablissement/:uai/map")
@@ -60,10 +61,8 @@ export function Map({ uai, cfd }: MapProps) {
         maxPitch={0}
         minPitch={0}
       >
-        <Etablissement etablissement={etablissementMap} />
-        <EtablissementsProches
-          etablissementsProches={etablissementMap.etablissementsProches}
-        />
+        <Etablissement />
+        <EtablissementsProches />
         <ScaleControl />
         <NavigationControl />
         <CustomControls />
