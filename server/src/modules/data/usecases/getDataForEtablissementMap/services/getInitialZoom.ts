@@ -32,12 +32,44 @@ const getZoomLevelFromBoundingBox = ({
   return zoomLevel;
 };
 
+const getGroupMean = (group: Array<EtablissementProche>) => {
+  return group.reduce((a, b) => a + b.distance, 0) / group.length;
+};
+
+const getEtablissementContext = (
+  etablissementsProches: Array<EtablissementProche>
+) => {
+  const group: Array<EtablissementProche> = [];
+
+  etablissementsProches.forEach((etablissement) => {
+    if (group.length === 0) {
+      group.push(etablissement);
+    }
+
+    if (
+      getGroupMean(group) * 1.5 > etablissement.distance &&
+      group.length < CLOSEST_ETABLISSEMENTS
+    ) {
+      group.push(etablissement);
+    }
+
+    if (
+      getGroupMean(group) * 3 > etablissement.distance &&
+      group.length < CLOSEST_ETABLISSEMENTS
+    ) {
+      group.push(etablissement);
+      return;
+    }
+  });
+
+  return group;
+};
+
 export const getInitialZoom = (
   etablissementsProches: Array<EtablissementProche>
 ) => {
-  const sortedEtablissementsProches = etablissementsProches.slice(
-    0,
-    CLOSEST_ETABLISSEMENTS
+  const sortedEtablissementsProches = getEtablissementContext(
+    etablissementsProches
   );
 
   const bbox = {
@@ -67,6 +99,6 @@ export const getInitialZoom = (
 
   const zoomLevel = getZoomLevelFromBoundingBox(bbox);
 
-  // We add a 0.5 padding to the zoom level to avoid having makers close to map borders
-  return zoomLevel - 0.5;
+  // We add a 1 padding to the zoom level to avoid having makers close to map borders
+  return zoomLevel - 1;
 };

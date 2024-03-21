@@ -1,9 +1,9 @@
-import { Grid, Stack, Text } from "@chakra-ui/react";
+import { Divider, Grid, Stack, Text } from "@chakra-ui/react";
 import _ from "lodash";
 
 import { client } from "../../../../../../api.client";
 import { useEtablissementContext } from "../../context/etablissementContext";
-import { ListeEtablissementsProches } from "./components/ListeEtablissementsProches";
+import { ListeEtablissementsProches } from "./components/ListEtablissementsProches";
 import { Map } from "./components/Map";
 
 export const EtablissementMap = () => {
@@ -21,18 +21,17 @@ export const EtablissementMap = () => {
     });
 
   return (
-    <Stack>
+    <Stack gap={8} mt={8}>
       <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
         L'offre de formations autour de l'établissement
       </Text>
+      <Divider width="48px" />
       <Text>
         Visualisez l'offre de formations sur la carte régionale, et comparez les
         établissements selon les taux d'emploi et de devenir favorable.
       </Text>
-      <Grid maxHeight="500px" templateColumns={"repeat(2,1fr)"}>
-        <ListeEtablissementsProches
-          etablissementsProches={etablissement?.etablissementsProches ?? []}
-        />
+      <Grid height="500px" templateColumns={"repeat(2,1fr)"}>
+        <ListeEtablissementsProches />
         <Map uai={uai} cfd={cfd} initialZoom={etablissement?.initialZoom} />
       </Grid>
     </Stack>
