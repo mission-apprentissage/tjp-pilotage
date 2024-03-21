@@ -464,7 +464,7 @@ const findFiltersInDb = async ({
     .where("departement.libelleDepartement", "is not", null)
     .where((eb) => {
       return eb.or([
-        eb.and([inCodeRegion(eb)]),
+        eb.and([inCodeRegion(eb), inCodeAcademie(eb)]),
         codeDepartement
           ? eb("departement.codeDepartement", "in", codeDepartement)
           : sql<boolean>`false`,

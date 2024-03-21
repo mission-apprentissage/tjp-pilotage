@@ -20,7 +20,7 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
   const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
 
   useEffect(() => {
-    if (uaiFilter != "") {
+    if (uaiFilter !== "") {
       router.push(`/panorama/etablissement/${uaiFilter}`);
     }
   }, []);

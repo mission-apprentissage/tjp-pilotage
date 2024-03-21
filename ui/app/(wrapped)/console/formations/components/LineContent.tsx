@@ -13,11 +13,11 @@ import {
 import NextLink from "next/link";
 
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatAnneeCommuneLibelle";
+import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { Line } from "../types";
 export const FormationLineContent = ({
   line,

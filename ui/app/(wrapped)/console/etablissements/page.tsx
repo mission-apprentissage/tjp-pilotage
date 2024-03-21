@@ -24,16 +24,13 @@ import { unstable_batchedUpdates } from "react-dom";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
+import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { Multiselect } from "@/components/Multiselect";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import {
   CodeRegionFilterContext,
@@ -46,63 +43,7 @@ import {
   EtablissementLineLoader,
   EtablissementLinePlaceholder,
 } from "./components/LineContent";
-
-const ETABLISSEMENTS_COLUMNS = {
-  libelleEtablissement: "Nom d'établissement",
-  rentreeScolaire: "RS",
-  commune: "Commune",
-  departement: "Département",
-  libelleNiveauDiplome: "Diplome",
-  libelleFormation: "Formation",
-  effectif1: "Année 1",
-  effectif2: "Année 2",
-  effectif3: "Année 3",
-  capacite: "Capacité",
-  premiersVoeux: "Nb de premiers voeux",
-  tauxPression: "Tx de pression",
-  tauxRemplissage: "Tx de remplissage",
-  tauxInsertion: "Tx d'emploi 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  positionQuadrant: "Positionnement dans le quadrant",
-  tauxDevenirFavorable: "Tx de devenir favorable régional",
-  tauxInsertionEtablissement:
-    "Tx d'emploi 6 mois de la formation dans l'établissement",
-  tauxPoursuiteEtablissement:
-    "Tx de poursuite d'études de la formation dans l'établissement",
-  tauxDevenirFavorableEtablissement:
-    "Tx de devenir favorable de la formation dans l'établissement",
-  valeurAjoutee: "Valeur ajoutée",
-  secteur: "Secteur",
-  uai: "UAI",
-  libelleDispositif: "Dispositif",
-  libelleFamille: "Famille de métiers",
-  cfd: "Code formation diplôme",
-  cpc: "CPC",
-  cpcSecteur: "CPC Secteur",
-  cpcSousSecteur: "CPC Sous Secteur",
-  libelleNsf: "Domaine de formation (NSF)",
-  "continuum.libelleFormation": "Diplôme historique",
-  "continuum.cfd": "Code diplôme historique",
-  codeDispositif: "Code dispositif",
-  codeRegion: "Code Région",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number]
->;
-
-type Query = (typeof client.inferArgs)["[GET]/etablissements"]["query"];
-
-export type Line =
-  (typeof client.infer)["[GET]/etablissements"]["etablissements"][number];
-
-type Filters = Query;
-
-type Order = Pick<Query, "order" | "orderBy">;
-
-type LineId = {
-  codeDispositif?: string;
-  cfd: string;
-  uai: string;
-};
+import { Filters, LineId, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -408,7 +349,6 @@ export default function Etablissements() {
           <Checkbox
             size="lg"
             onChange={(event) => {
-              console.log(event.target.checked);
               handleToggleShowAnneeCommune(
                 event.target.checked.toString() ?? "false"
               );
@@ -445,35 +385,38 @@ export default function Etablissements() {
             >
               <Tr>
                 <Th />
-                <Th>{ETABLISSEMENTS_COLUMNS.rentreeScolaire}</Th>
+                <Th>{FORMATION_ETABLISSEMENT_COLUMNS.rentreeScolaire}</Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleEtablissement")}
                 >
                   <OrderIcon {...order} column="libelleEtablissement" />
-                  {ETABLISSEMENTS_COLUMNS.libelleEtablissement}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleEtablissement}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("commune")}>
                   <OrderIcon {...order} column="commune" />
-                  {ETABLISSEMENTS_COLUMNS.commune}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.commune}
                 </Th>
-                <Th cursor="pointer" onClick={() => handleOrder("departement")}>
-                  <OrderIcon {...order} column="departement" />
-                  {ETABLISSEMENTS_COLUMNS.departement}
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("libelleDepartement")}
+                >
+                  <OrderIcon {...order} column="libelleDepartement" />
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleDepartement}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleNiveauDiplome")}
                 >
                   <OrderIcon {...order} column="libelleNiveauDiplome" />
-                  {ETABLISSEMENTS_COLUMNS.libelleNiveauDiplome}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleNiveauDiplome}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleFormation")}
                 >
                   <OrderIcon {...order} column="libelleFormation" />
-                  {ETABLISSEMENTS_COLUMNS.libelleFormation}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleFormation}
                 </Th>
                 <Th
                   isNumeric
@@ -481,7 +424,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif1")}
                 >
                   <OrderIcon {...order} column="effectif1" />
-                  {ETABLISSEMENTS_COLUMNS.effectif1}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.effectif1}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -494,7 +437,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif2")}
                 >
                   <OrderIcon {...order} column="effectif2" />
-                  {ETABLISSEMENTS_COLUMNS.effectif2}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.effectif2}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -507,7 +450,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("effectif3")}
                 >
                   <OrderIcon {...order} column="effectif3" />
-                  {ETABLISSEMENTS_COLUMNS.effectif3}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.effectif3}
                   <TooltipIcon
                     ml="1"
                     label="Nb d'élèves"
@@ -520,14 +463,14 @@ export default function Etablissements() {
                   onClick={() => handleOrder("capacite")}
                 >
                   <OrderIcon {...order} column="capacite" />
-                  {ETABLISSEMENTS_COLUMNS.capacite}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.capacite}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("tauxPression")}
                 >
                   <OrderIcon {...order} column="tauxPression" />
-                  {ETABLISSEMENTS_COLUMNS.tauxPression}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxPression}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -548,7 +491,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxRemplissage")}
                 >
                   <OrderIcon {...order} column="tauxRemplissage" />
-                  {ETABLISSEMENTS_COLUMNS.tauxRemplissage}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxRemplissage}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -568,7 +511,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxInsertion")}
                 >
                   <OrderIcon {...order} column="tauxInsertion" />
-                  {ETABLISSEMENTS_COLUMNS.tauxInsertion}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertion}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -588,7 +531,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxPoursuite")}
                 >
                   <OrderIcon {...order} column="tauxPoursuite" />
-                  {ETABLISSEMENTS_COLUMNS.tauxPoursuite}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuite}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -604,7 +547,7 @@ export default function Etablissements() {
                   />
                 </Th>
                 <Th>
-                  {ETABLISSEMENTS_COLUMNS.positionQuadrant}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.positionQuadrant}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -626,7 +569,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxDevenirFavorable")}
                 >
                   <OrderIcon {...order} column="tauxDevenirFavorable" />
-                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorable}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorable}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -647,7 +590,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxInsertionEtablissement")}
                 >
                   <OrderIcon {...order} column="tauxInsertionEtablissement" />
-                  {ETABLISSEMENTS_COLUMNS.tauxInsertionEtablissement}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxInsertionEtablissement}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -667,7 +610,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("tauxPoursuiteEtablissement")}
                 >
                   <OrderIcon {...order} column="tauxPoursuiteEtablissement" />
-                  {ETABLISSEMENTS_COLUMNS.tauxPoursuiteEtablissement}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.tauxPoursuiteEtablissement}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -692,7 +635,9 @@ export default function Etablissements() {
                     {...order}
                     column="tauxDevenirFavorableEtablissement"
                   />
-                  {ETABLISSEMENTS_COLUMNS.tauxDevenirFavorableEtablissement}
+                  {
+                    FORMATION_ETABLISSEMENT_COLUMNS.tauxDevenirFavorableEtablissement
+                  }
                   <TooltipIcon
                     ml="1"
                     label={
@@ -713,7 +658,7 @@ export default function Etablissements() {
                   onClick={() => handleOrder("valeurAjoutee")}
                 >
                   <OrderIcon {...order} column="valeurAjoutee" />
-                  {ETABLISSEMENTS_COLUMNS.valeurAjoutee}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.valeurAjoutee}
                   <TooltipIcon
                     ml="1"
                     label={
@@ -732,48 +677,48 @@ export default function Etablissements() {
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("secteur")}>
                   <OrderIcon {...order} column="secteur" />
-                  {ETABLISSEMENTS_COLUMNS.secteur}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.secteur}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("uai")}>
                   <OrderIcon {...order} column="uai" />
-                  {ETABLISSEMENTS_COLUMNS.uai}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.uai}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
                 >
                   <OrderIcon {...order} column="libelleDispositif" />
-                  {ETABLISSEMENTS_COLUMNS.libelleDispositif}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleDispositif}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleFamille")}
                 >
                   <OrderIcon {...order} column="libelleFamille" />
-                  {ETABLISSEMENTS_COLUMNS.libelleFamille}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleFamille}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cfd")}>
                   <OrderIcon {...order} column="cfd" />
-                  {ETABLISSEMENTS_COLUMNS.cfd}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.cfd}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cpc")}>
                   <OrderIcon {...order} column="cpc" />
-                  {ETABLISSEMENTS_COLUMNS.cpc}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.cpc}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("cpcSecteur")}>
                   <OrderIcon {...order} column="cpcSecteur" />
-                  {ETABLISSEMENTS_COLUMNS.cpcSecteur}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.cpcSecteur}
                 </Th>
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("cpcSousSecteur")}
                 >
                   <OrderIcon {...order} column="cpcSousSecteur" />
-                  {ETABLISSEMENTS_COLUMNS.cpcSousSecteur}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.cpcSousSecteur}
                 </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
-                  {ETABLISSEMENTS_COLUMNS.libelleNsf}
+                  {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
                   <TooltipIcon
                     ml="1"
                     label="cliquez pour plus d'infos."
@@ -842,7 +787,7 @@ export default function Etablissements() {
           downloadCsv(
             "etablissement_export",
             data.etablissements,
-            ETABLISSEMENTS_COLUMNS
+            FORMATION_ETABLISSEMENT_COLUMNS
           );
         }}
         onExportExcel={async () => {
@@ -853,7 +798,7 @@ export default function Etablissements() {
           downloadExcel(
             "etablissement_export",
             data.etablissements,
-            ETABLISSEMENTS_COLUMNS
+            FORMATION_ETABLISSEMENT_COLUMNS
           );
         }}
         page={page}

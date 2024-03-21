@@ -7,11 +7,11 @@ const { definePartsStyle, defineMultiStyleConfig } =
 const enclosedColored = definePartsStyle({
   tab: {
     bg: "bluefrance.925",
-    color: "bluefrance.113",
     mr: 2,
     fontWeight: 700,
     marginInlineEnd: "2 !important",
     borderTopWidth: 2,
+    borderRadius: "4px 4px 0px 0px",
     _hover: {
       bg: "bluefrance.925_hover",
     },

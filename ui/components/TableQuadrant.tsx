@@ -27,6 +27,7 @@ type Formation = {
   effectif?: number;
   positionQuadrant?: string;
   cfd?: string;
+  codeDispositif?: string;
   continuum?: { cfd: string; libelleFormation?: string };
 };
 
@@ -34,13 +35,13 @@ export const TableQuadrant = ({
   formations,
   handleOrder,
   handleClick,
-  currentCfd,
+  currentFormationId,
   order,
 }: {
   formations: Formation[];
   handleOrder?: (column?: string) => void;
   handleClick?: (value?: string) => void;
-  currentCfd?: string;
+  currentFormationId?: string;
   order?: {
     order?: "asc" | "desc";
     orderBy?: string;
@@ -48,12 +49,19 @@ export const TableQuadrant = ({
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const getTdColor = (formation: Formation) => {
-    if (currentCfd && formation.cfd === currentCfd) return "white !important";
+    if (
+      currentFormationId &&
+      `${formation.cfd}_${formation.codeDispositif}` === currentFormationId
+    )
+      return "white !important";
     return "";
   };
 
   const getTrBgColor = (formation: Formation) => {
-    if (currentCfd && formation.cfd === currentCfd)
+    if (
+      currentFormationId &&
+      `${formation.cfd}_${formation.codeDispositif}` === currentFormationId
+    )
       return "blueecume.400_hover !important";
     switch (formation.positionQuadrant) {
       case "Q1":
@@ -176,7 +184,10 @@ export const TableQuadrant = ({
                 <Tr
                   key={`${formation.cfd}-${index}`}
                   bgColor={getTrBgColor(formation)}
-                  onClick={() => handleClick && handleClick(formation.cfd)}
+                  onClick={() =>
+                    handleClick &&
+                    handleClick(`${formation.cfd}_${formation.codeDispositif}`)
+                  }
                   cursor={handleClick ? "pointer" : "default"}
                 >
                   <Td whiteSpace="normal" color={getTdColor(formation)}>
