@@ -12,13 +12,13 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
+import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
-import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { formatAnneeCommuneLibelle } from "../../../utils/formatAnneeCommuneLibelle";
-import { Line } from "../page";
+import { Line } from "../types";
 
 export const EtablissementLineContent = ({
   line,
@@ -70,7 +70,7 @@ export const EtablissementLineContent = ({
     <Td minW={150} maxW={150} whiteSpace="normal">
       {line.commune ?? "-"}
     </Td>
-    <Td>{line.departement ?? "-"}</Td>
+    <Td>{line.libelleDepartement ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
     <Td minW={450} whiteSpace="normal">
       <Flex>
