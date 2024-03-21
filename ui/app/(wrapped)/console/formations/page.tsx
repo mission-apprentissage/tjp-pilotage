@@ -352,7 +352,6 @@ export default function Formations() {
             size="lg"
             variant="accessible"
             onChange={(event) => {
-              console.log(event.target.checked);
               handleToggleShowAnneeCommune(
                 event.target.checked.toString() ?? "false"
               );
