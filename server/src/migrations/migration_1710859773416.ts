@@ -96,6 +96,16 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
+  // On delete les doublons sur les demandes en récupérants les plus récentes
+  await db.executeQuery(
+    sql`
+      DELETE FROM "demande" d1
+      USING "demande" d2
+      WHERE d1."dateModification" < d2."dateModification"
+      AND d1.numero = d2.numero;
+  `.compile(db)
+  );
+
   await db.schema
     .alterTable("demande")
     .renameColumn("dateModification", "updatedAt")

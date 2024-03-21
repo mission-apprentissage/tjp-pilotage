@@ -29,9 +29,15 @@ cli.command("migrateDB").action(async () => {
   await migrateToLatest();
 });
 
-cli.command("migrateDownDB").action(async () => {
-  await migrateDownDB();
-});
+cli
+  .command("migrateDownDB")
+  .argument(
+    "[numberOfMigrations]",
+    "number of migrations to rollback [default: 1]"
+  )
+  .action(async (numberOfMigrations: number = 1) => {
+    await migrateDownDB(numberOfMigrations);
+  });
 
 cli.command("create-migration").action(() =>
   writeFileSync(
