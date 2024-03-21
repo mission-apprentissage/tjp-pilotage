@@ -1,7 +1,7 @@
 import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
-import { RouteQueryString } from "../getDataForEtablissementMap.usecase";
+import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
 export interface Filters extends RouteQueryString {
   uai: string;
@@ -20,8 +20,22 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
     )
-    .selectAll("etablissement")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "formationEtablissement.dispositifId"
+    )
     .distinct()
+    .select([
+      "formationEtablissement.voie",
+      "dispositif.libelleDispositif",
+      "etablissement.UAI",
+      "etablissement.codeDepartement",
+      "etablissement.commune",
+      "etablissement.longitude",
+      "etablissement.latitude",
+      "etablissement.libelleEtablissement",
+    ])
     .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
@@ -29,14 +43,15 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
         eb("indicateurEntree.rentreeScolaire", "is", null),
       ])
     )
+    .where("formationEtablissement.UAI", "!=", uai)
     .$call((q) => {
       if (bbox !== undefined) {
         return q.where((eb) =>
           eb.and([
-            eb("etablissement.longitude", ">=", parseFloat(bbox.x1)),
-            eb("etablissement.longitude", "<=", parseFloat(bbox.x2)),
-            eb("etablissement.latitude", ">=", parseFloat(bbox.y1)),
-            eb("etablissement.latitude", "<=", parseFloat(bbox.y2)),
+            eb("etablissement.longitude", ">=", parseFloat(bbox.minLng)),
+            eb("etablissement.longitude", "<=", parseFloat(bbox.maxLng)),
+            eb("etablissement.latitude", ">=", parseFloat(bbox.minLat)),
+            eb("etablissement.latitude", "<=", parseFloat(bbox.maxLat)),
           ])
         );
       }
@@ -46,6 +61,12 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       if (cfd !== undefined && cfd.length > 0) {
         return q.where("formationEtablissement.cfd", "in", cfd);
       }
+      return q;
+    })
+    .$call((q) => {
+      console.log(JSON.stringify(q.compile()));
+      console.log(q.compile().sql);
+
       return q;
     })
     .execute();

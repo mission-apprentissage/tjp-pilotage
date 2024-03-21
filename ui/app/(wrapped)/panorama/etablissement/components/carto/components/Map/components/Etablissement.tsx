@@ -16,8 +16,8 @@ export const Etablissement = ({ etablissement }: EtablissementProps) => {
     if (etablissementMap && map !== undefined) {
       map.flyTo({
         center: {
-          lng: etablissementMap.longitude,
-          lat: etablissementMap.latitude,
+          lng: -0.35546871978761685,
+          lat: 49.19142003753902,
         },
         zoom: etablissementMap.initialZoom,
       });

@@ -1,4 +1,5 @@
 import { Point } from "geojson";
+import { MapLibreEvent } from "maplibre-gl";
 import { useEffect, useState } from "react";
 import {
   CircleLayer,
@@ -6,7 +7,6 @@ import {
   Layer,
   MapGeoJSONFeature,
   MapMouseEvent,
-  MapRef,
   Popup,
   Source,
   SymbolLayer,
@@ -28,6 +28,7 @@ export const EtablissementsProches = ({
     lng: 0,
     text: "",
   });
+
   const { current: map } = useMap();
 
   const geojson = {
@@ -84,45 +85,47 @@ export const EtablissementsProches = ({
   };
 
   const onClusterClick = async (
-    map: MapRef,
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
     }
   ) => {
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: [clusterLayer.id],
-    });
-    const clusterId = features[0].properties.cluster_id;
-
-    const source = (await map.getSource("data")) as GeoJSONSource;
-    if (source && "getClusterExpansionZoom" in source) {
-      const clusterZoom = await source.getClusterExpansionZoom(clusterId);
-      map.easeTo({
-        center:
-          "coordinates" in features[0].geometry
-            ? (features[0].geometry.coordinates as [number, number])
-            : [-1, -1],
-        zoom: clusterZoom,
+    if (map !== undefined) {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: [clusterLayer.id],
       });
+      const clusterId = features[0].properties.cluster_id;
+
+      const source = (await map.getSource("data")) as GeoJSONSource;
+      if (source && "getClusterExpansionZoom" in source) {
+        const clusterZoom = await source.getClusterExpansionZoom(clusterId);
+        map.easeTo({
+          center:
+            "coordinates" in features[0].geometry
+              ? (features[0].geometry.coordinates as [number, number])
+              : [-1, -1],
+          zoom: clusterZoom,
+        });
+      }
     }
   };
 
   const onSinglePointClick = async (
-    map: MapRef,
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
     }
   ) => {
-    const features = map.queryRenderedFeatures(e.point, {
-      layers: [singlePointLayer.id],
-    });
-    const point = features[0].geometry as Point;
-    setPopupState({
-      show: true,
-      lng: point.coordinates[0],
-      lat: point.coordinates[1],
-      text: features[0].properties?.uai,
-    });
+    if (map !== undefined) {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: [singlePointLayer.id],
+      });
+      const point = features[0].geometry as Point;
+      setPopupState({
+        show: true,
+        lng: point.coordinates[0],
+        lat: point.coordinates[1],
+        text: features[0].properties?.uai,
+      });
+    }
   };
 
   useEffect(() => {
@@ -131,15 +134,26 @@ export const EtablissementsProches = ({
         map.removeImage("map_point");
         const img = await map.loadImage("/map_point.png");
         map.addImage("map_point", img.data);
-        map.off("click", clusterLayer.id, (e) => onClusterClick(map, e));
-        map.on("click", clusterLayer.id, (e) => onClusterClick(map, e));
-        map.off("click", singlePointLayer.id, (e) =>
-          onSinglePointClick(map, e)
-        );
-        map.on("click", singlePointLayer.id, (e) => onSinglePointClick(map, e));
+
+        map.off("click", clusterLayer.id, onClusterClick);
+        map.on("click", clusterLayer.id, onClusterClick);
+
+        map.off("click", singlePointLayer.id, onSinglePointClick);
+        map.on("click", singlePointLayer.id, onSinglePointClick);
+
+        map.off("moveend", onZoomEnd);
+        map.on("moveend", onZoomEnd);
       });
     }
   }, [map]);
+
+  const onZoomEnd = (
+    e: MapLibreEvent<MouseEvent | TouchEvent | WheelEvent | undefined>
+  ) => {
+    if (map !== undefined) {
+      console.log(map.getMap().getBounds(), e);
+    }
+  };
 
   return (
     <>
