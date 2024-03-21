@@ -63,6 +63,7 @@ export const getNsfs = ({ uai }: { uai: string }) =>
       eb.fn.sum("nbFormations").as("nbFormations"),
     ])
     .groupBy(["codeNsf", "libelleNsf"])
+    .orderBy("nbFormations desc")
     .distinct()
     .$castTo<{ codeNsf: string; libelleNsf: string; nbFormations: number }>()
     .execute()
