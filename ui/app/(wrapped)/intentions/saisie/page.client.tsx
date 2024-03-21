@@ -36,54 +36,13 @@ import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
-
-const DEMANDES_COLUMNS = {
-  id: "id",
-  cfd: "CFD",
-  libelleFormation: "Diplôme",
-  dispositifId: "Code dispositif",
-  libelleDispositif: "Dispositif",
-  libelleFCIL: "Libellé de la FCIL",
-  uai: "UAI",
-  libelleEtablissement: "Établissement",
-  libelleDepartement: "Département",
-  rentreeScolaire: "RS",
-  typeDemande: "Type de demande",
-  motif: "Motif",
-  autreMotif: "Autre motif",
-  coloration: "Coloration",
-  libelleColoration: "Libelle coloration",
-  amiCma: "AMI/CMA ?",
-  poursuitePedagogique: "Poursuite pédagogique ?",
-  commentaire: "Commentaire",
-  status: "Statut",
-  codeRegion: "Code Region",
-  codeAcademie: "Code Académie",
-  createdAt: "Date de création",
-  updatedAt: "Dernière modification",
-  compensationCfd: "CFD compensé",
-  compensationUai: "UAI compensé",
-  compensationDispositifId: "Dispositif compensé",
-  capaciteScolaireActuelle: "Capacité scolaire actuelle",
-  capaciteScolaire: "Capacité scolaire",
-  capaciteScolaireColoree: "Capacité scolaire coloree",
-  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-  capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  userName: "Auteur",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
->;
+import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 
 export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
 export type Filters = Pick<Query, "status">;
