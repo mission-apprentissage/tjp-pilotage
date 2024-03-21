@@ -49,12 +49,12 @@ export const EtablissementsProches = () => {
       },
       properties: {
         uai: e.uai,
-        voie: e.voie,
+        // Attention, ici on utilise une string puisque les expressions de filtre de maplibre
+        // ne permettent pas de vérifier les occurences dans un tableau
+        voies: e.voies.join(","),
       },
     })),
   };
-
-  console.log(geojson);
 
   const clusterLayer: CircleLayer = {
     id: "clusters",
@@ -90,7 +90,7 @@ export const EtablissementsProches = () => {
     id: "single-scolaire-points",
     type: "symbol",
     source: "data",
-    filter: ["all", ["!has", "point_count"], ["in", "voie", "scolaire"]],
+    filter: ["all", ["!has", "point_count"], ["in", "voies", "scolaire"]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
     },
@@ -100,9 +100,22 @@ export const EtablissementsProches = () => {
     id: "single-apprentissage-points",
     type: "symbol",
     source: "data",
-    filter: ["all", ["!has", "point_count"], ["in", "voie", "apprentissage"]],
+    filter: ["all", ["!has", "point_count"], ["in", "voies", "apprentissage"]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
+    },
+  };
+  const scolaireApprentissageSinglePointLayer: SymbolLayer = {
+    id: "single-scolaire-apprentissage-points",
+    type: "symbol",
+    source: "data",
+    filter: [
+      "all",
+      ["!has", "point_count"],
+      ["in", "voies", "apprentissage,scolaire"],
+    ],
+    layout: {
+      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
     },
   };
 
@@ -186,6 +199,7 @@ export const EtablissementsProches = () => {
       <Layer {...clusterLabelLayer} />
       <Layer {...scolaireSinglePointLayer} />
       <Layer {...apprentissageSinglePointLayer} />
+      <Layer {...scolaireApprentissageSinglePointLayer} />
       {popupState.show && (
         <Popup
           longitude={popupState.lng}

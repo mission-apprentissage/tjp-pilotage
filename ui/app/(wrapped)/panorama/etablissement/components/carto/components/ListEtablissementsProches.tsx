@@ -46,7 +46,9 @@ export const ListeEtablissementsProches = () => {
           <ListItem key={e.uai + i} padding="16px">
             <VStack>
               <HStack justifyContent={"space-between"} width="100%">
-                <Text fontWeight={700}>{e.libelleEtablissement}</Text>
+                <Text fontWeight={700}>
+                  {e.uai} - {e.libelleEtablissement}
+                </Text>
                 <Text>{e.libelleDispositif}</Text>
               </HStack>
               <HStack justifyContent={"space-between"} width="100%">
