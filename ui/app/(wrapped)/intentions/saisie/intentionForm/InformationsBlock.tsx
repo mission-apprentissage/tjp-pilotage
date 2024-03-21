@@ -51,8 +51,8 @@ export const InformationsBlock = ({
     mutationFn: async () => {
       if (!formId) return;
       await client
-        .ref("[DELETE]/demande/:id")
-        .query({ params: { id: formId } })
+        .ref("[DELETE]/demande/:numero")
+        .query({ params: { numero: formId } })
         .then(() => push("/intentions/saisie?action=deleted"));
     },
   });

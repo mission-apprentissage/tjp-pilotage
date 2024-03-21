@@ -16,16 +16,16 @@ export const up = async (db: Kysely<unknown>) => {
               sql<number>`max("demande"."dateModification")`.as(
                 "dateDerniereModification"
               ),
-              "id",
+              "numero",
             ])
             .distinct()
-            .groupBy("id")
+            .groupBy("numero")
             .as("latestDemandes")
         )
         // @ts-ignore
         .leftJoin("demande", (join) =>
           join
-            .onRef("latestDemandes.id", "=", "demande.id")
+            .onRef("latestDemandes.numero", "=", "demande.numero")
             .onRef(
               "latestDemandes.dateDerniereModification",
               "=",

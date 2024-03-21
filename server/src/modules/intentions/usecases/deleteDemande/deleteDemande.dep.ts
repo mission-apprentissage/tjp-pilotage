@@ -1,10 +1,8 @@
-import { kdb } from "../../../../db/db";
+import { Insertable } from "kysely";
 
-export const deleteDemandeQuery = async (id: string) => {
-  await kdb
-    .updateTable("demande")
-    .set({ statut: "deleted" })
-    .set({ dateModification: new Date() })
-    .where("id", "=", id)
-    .execute();
+import { Demande } from "../../../../db/schema";
+import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHistory.query";
+
+export const deleteDemandeQuery = async (demande?: Insertable<Demande>) => {
+  if (demande) updateDemandeWithHistory({ ...demande, statut: "deleted" });
 };

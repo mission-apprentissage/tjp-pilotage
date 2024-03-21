@@ -26,6 +26,18 @@ export const up = async (db: Kysely<unknown>) => {
     .ifExists()
     .execute();
 
+  await db.schema
+    .alterTable("demande")
+    .dropConstraint("demande_id_key")
+    .ifExists()
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .dropConstraint("demande_unique_constraint")
+    .ifExists()
+    .execute();
+
   await db.schema.alterTable("demande").renameColumn("id", "numero").execute();
 
   await db.schema
@@ -35,24 +47,17 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema
     .alterTable("demande")
-    .addColumn("id", "uuid", (c) =>
-      c.defaultTo(db.fn("uuid_generate_v4")).primaryKey()
-    )
+    .addColumn("id", "uuid", (c) => c.defaultTo(db.fn("uuid_generate_v4")))
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .addPrimaryKeyConstraint("demande_pkey", ["id"])
     .execute();
 
   await db.schema
     .alterTable("demande")
     .addColumn("numeroHistorique", "varchar(8)")
-    .execute();
-
-  await db.schema
-    .alterTable("demande")
-    .addForeignKeyConstraint(
-      "demande_numeroHistorique_fk",
-      ["numeroHistorique"],
-      "demande",
-      ["numero"]
-    )
     .execute();
 
   await db.schema
@@ -121,15 +126,25 @@ export const down = async (db: Kysely<unknown>) => {
     .dropColumn("numeroHistorique")
     .execute();
 
-  await db.schema
-    .alterTable("demande")
-    .dropConstraint("demande_numeroHistorique_fk")
-    .ifExists()
-    .execute();
-
   await db.schema.alterTable("demande").dropColumn("id").execute();
 
   await db.schema.alterTable("demande").renameColumn("numero", "id").execute();
+
+  await db.schema
+    .alterTable("demande")
+    .addPrimaryKeyConstraint("demande_pkey", ["id"])
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .addUniqueConstraint("demande_unique_constraint", [
+      "uai",
+      "cfd",
+      "dispositifId",
+      "rentreeScolaire",
+      "libelleFCIL",
+    ])
+    .execute();
 
   await db.schema
     .alterTable("demande")

@@ -1,6 +1,5 @@
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
-import { isDemandeNotDeleted } from "../../utils/isDemandeSelectable";
 
 export const findOneSimilarDemande = ({
   cfd,
@@ -8,17 +7,17 @@ export const findOneSimilarDemande = ({
   codeDispositif,
   libelleFCIL,
   rentreeScolaire,
-  notId,
+  notNumero,
 }: {
   cfd: string;
   uai: string;
   codeDispositif: string;
   libelleFCIL?: string;
   rentreeScolaire: number;
-  notId?: string;
+  notNumero?: string;
 }) =>
   kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .selectAll()
     .where("cfd", "=", cfd)
     .where("uai", "=", uai)
@@ -29,10 +28,9 @@ export const findOneSimilarDemande = ({
     })
     .where("rentreeScolaire", "=", rentreeScolaire)
     .$call((q) => {
-      if (!notId) return q;
-      return q.where("id", "!=", notId);
+      if (!notNumero) return q;
+      return q.where("numero", "!=", notNumero);
     })
     .limit(1)
-    .where(isDemandeNotDeleted)
     .executeTakeFirst()
     .then(cleanNull);
