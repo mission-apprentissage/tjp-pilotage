@@ -26,7 +26,7 @@
     "docker:clean": "docker-compose kill && docker system prune --force --volumes",
     "lint": "eslint .",
     "lint:staged": "lint-staged",
-    "prettier:fix": "prettier --write ./ui ./server ./shared",
+    "prettier:fix": "prettier --log-level silent --write ./ui ./server ./shared",
     "prettier:check": "prettier --check ./ui ./server ./shared",
     "pretty": "yarn lint --fix && yarn prettier:fix",
     "npm:release": "semantic-release",

@@ -1,5 +1,5 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { chakra, Flex, ResponsiveValue, Text } from "@chakra-ui/react";
+import { chakra, Flex, ResponsiveValue, Text, Tooltip } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "../app/(wrapped)/glossaire/glossaireContext";
 import { GlossaireEntryKey } from "../app/(wrapped)/glossaire/GlossaireEntries";
@@ -10,11 +10,13 @@ export const GlossaireShortcut = chakra(
     label,
     glossaireEntryKey,
     iconSize,
+    tooltip,
   }: {
     className?: string;
     label?: string;
     glossaireEntryKey?: GlossaireEntryKey;
     iconSize?: ResponsiveValue<number | string>;
+    tooltip?: React.ReactNode;
   }) => {
     const { openGlossaire } = useGlossaireContext();
     return (
@@ -27,7 +29,9 @@ export const GlossaireShortcut = chakra(
           openGlossaire(glossaireEntryKey);
         }}
       >
-        <QuestionOutlineIcon height={iconSize} width={iconSize} />
+        <Tooltip maxWidth={180} label={tooltip}>
+          <QuestionOutlineIcon height={iconSize} width={iconSize} />
+        </Tooltip>
         {label && <Text marginLeft={2}>{label}</Text>}
       </Flex>
     );
