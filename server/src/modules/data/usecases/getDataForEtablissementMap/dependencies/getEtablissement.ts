@@ -9,6 +9,31 @@ export interface Filters
 export const getEtablissement = async ({ uai }: Filters) =>
   await kdb
     .selectFrom("etablissement")
-    .selectAll()
-    .where("UAI", "=", uai)
+    .leftJoin(
+      "formationEtablissement",
+      "formationEtablissement.UAI",
+      "etablissement.UAI"
+    )
+    .leftJoin(
+      "indicateurEntree",
+      "indicateurEntree.formationEtablissementId",
+      "formationEtablissement.id"
+    )
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "formationEtablissement.dispositifId"
+    )
+    .distinct()
+    .select([
+      "formationEtablissement.voie",
+      "dispositif.libelleDispositif",
+      "etablissement.UAI",
+      "etablissement.codeDepartement",
+      "etablissement.commune",
+      "etablissement.longitude",
+      "etablissement.latitude",
+      "etablissement.libelleEtablissement",
+    ])
+    .where("etablissement.UAI", "=", uai)
     .executeTakeFirstOrThrow();

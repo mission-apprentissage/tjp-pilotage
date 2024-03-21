@@ -1,10 +1,15 @@
 import { z } from "zod";
 
-export const EtablissementProcheSchema = z.object({
+export const EtablissementSchema = z.object({
   uai: z.string(),
   latitude: z.number(),
   longitude: z.number(),
   distance: z.number(),
+  commune: z.string(),
+  codeDepartement: z.string(),
+  libelleEtablissement: z.string(),
+  libelleDispositif: z.string(),
+  voie: z.string(),
 });
 
 export const getDataForEtablissementMapSchema = {
@@ -23,12 +28,9 @@ export const getDataForEtablissementMapSchema = {
       .optional(),
   }),
   response: {
-    200: z.object({
-      uai: z.string(),
-      latitude: z.number(),
-      longitude: z.number(),
+    200: EtablissementSchema.extend({
       initialZoom: z.number(),
-      etablissementsProches: z.array(EtablissementProcheSchema),
+      etablissementsProches: z.array(EtablissementSchema),
     }),
   },
 };

@@ -1,15 +1,23 @@
 import z from "zod";
 
 import * as dependencies from "./dependencies";
-import {
-  EtablissementProcheSchema,
-  getDataForEtablissementMapSchema,
-} from "./getDataForEtablissementMap.schema";
+import { getDataForEtablissementMapSchema } from "./getDataForEtablissementMap.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
 import { getInitialZoom } from "./services/getInitialZoom";
 
-export type EtablissementProche = z.infer<typeof EtablissementProcheSchema>;
+type RequiredNotNull<T> = {
+  [P in keyof T]: NonNullable<T[P]>;
+};
+
+export type Etablissement = Awaited<
+  ReturnType<typeof dependencies.getEtablissementsProches>
+>[number];
+
+export interface EtablissementWithDistance
+  extends RequiredNotNull<Etablissement> {
+  distance: number;
+}
 export type RouteQueryString = z.infer<
   typeof getDataForEtablissementMapSchema.querystring
 >;
@@ -28,7 +36,6 @@ export const getDataForEtablissementMapFactory =
   ): Promise<
     z.infer<(typeof getDataForEtablissementMapSchema.response)["200"]>
   > => {
-    const etablissementsProches: Array<EtablissementProche> = [];
     const etablissement = await deps.getEtablissement({ uai: params.uai });
 
     const cfds =
@@ -49,15 +56,11 @@ export const getDataForEtablissementMapFactory =
       etablissements,
     }).map(formatEtablissement);
 
-    etablissementsProches.push(...filteredEtablissements);
-
-    const initialZoom = getInitialZoom(etablissementsProches);
+    const initialZoom = getInitialZoom(filteredEtablissements);
 
     return {
-      uai: etablissement.UAI,
-      latitude: etablissement.latitude || +Infinity,
-      longitude: etablissement.longitude || +Infinity,
-      etablissementsProches: etablissementsProches,
+      ...formatEtablissement({ ...etablissement, distance: 0 }),
+      etablissementsProches: filteredEtablissements,
       initialZoom,
     };
   };

@@ -42,11 +42,6 @@ export const getDataForEtablissementMapListFactory =
       throw Boom.badData("L'etablissement n'a pas de coordonnées GPS");
     }
 
-    // Sur notre model, la latitude et la longitude peut être null,
-    // Or, nous gérons cette erreur juste au dessus. Nous pouvons donc cast
-    // l'object pour faciliter l'implémentation
-    const validatedEtablissement = etablissement as unknown as Etablissement;
-
     const cfds =
       filters?.cfd && filters.cfd.length > 0
         ? filters.cfd
@@ -61,7 +56,7 @@ export const getDataForEtablissementMapListFactory =
     });
 
     const filteredEtablissements = getDistance({
-      etablissement: validatedEtablissement,
+      etablissement,
       etablissements: etablissements,
     }).map(formatEtablissement);
 

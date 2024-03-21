@@ -1,23 +1,18 @@
 import { useEffect } from "react";
 import { Marker, useMap } from "react-map-gl/maplibre";
 
-import { client } from "../../../../../../../../../api.client";
-import { useEtablissementContext } from "../../../../../context/etablissementContext";
+import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
-interface EtablissementProps {
-  etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map"];
-}
-
-export const Etablissement = ({ etablissement }: EtablissementProps) => {
+export const Etablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap } = useEtablissementContext();
+  const { etablissementMap } = useEtablissementMapContext();
 
   const flyToEtablissement = () => {
     if (etablissementMap && map !== undefined) {
       map.flyTo({
         center: {
-          lng: -0.35546871978761685,
-          lat: 49.19142003753902,
+          lng: etablissementMap.longitude,
+          lat: etablissementMap.latitude,
         },
         zoom: etablissementMap.initialZoom,
       });
@@ -32,10 +27,12 @@ export const Etablissement = ({ etablissement }: EtablissementProps) => {
     }
   }, [map]);
 
-  return (
+  return etablissementMap ? (
     <Marker
-      longitude={etablissement.longitude}
-      latitude={etablissement.latitude}
+      longitude={etablissementMap.longitude}
+      latitude={etablissementMap.latitude}
     />
+  ) : (
+    <></>
   );
 };

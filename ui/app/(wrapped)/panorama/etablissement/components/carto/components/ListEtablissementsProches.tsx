@@ -10,9 +10,11 @@ import _ from "lodash";
 
 import { client } from "../../../../../../../api.client";
 import { useEtablissementContext } from "../../../context/etablissementContext";
+import { useEtablissementMapContext } from "../context/etablissementMapContext";
 
 export const ListeEtablissementsProches = () => {
-  const { uai, bbox, analyseDetaillee } = useEtablissementContext();
+  const { uai, analyseDetaillee } = useEtablissementContext();
+  const { bbox } = useEtablissementMapContext();
   const cfd =
     analyseDetaillee !== undefined
       ? _.uniq(Object.values(analyseDetaillee.formations).map((f) => f.cfd))

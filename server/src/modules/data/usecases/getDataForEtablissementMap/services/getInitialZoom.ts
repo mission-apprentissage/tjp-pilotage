@@ -1,4 +1,6 @@
-import { EtablissementProche } from "../getDataForEtablissementMap.usecase";
+import { z } from "zod";
+
+import { EtablissementSchema } from "../getDataForEtablissementMap.schema";
 
 interface BoundingBox {
   latMin: number;
@@ -6,6 +8,8 @@ interface BoundingBox {
   lngMin: number;
   lngMax: number;
 }
+
+type EtablissementSchemaType = z.infer<typeof EtablissementSchema>;
 
 const CLOSEST_ETABLISSEMENTS = 10;
 
@@ -32,14 +36,14 @@ const getZoomLevelFromBoundingBox = ({
   return zoomLevel;
 };
 
-const getGroupMean = (group: Array<EtablissementProche>) => {
+const getGroupMean = (group: Array<EtablissementSchemaType>) => {
   return group.reduce((a, b) => a + b.distance, 0) / group.length;
 };
 
 const getEtablissementContext = (
-  etablissementsProches: Array<EtablissementProche>
+  etablissementsProches: Array<EtablissementSchemaType>
 ) => {
-  const group: Array<EtablissementProche> = [];
+  const group: Array<EtablissementSchemaType> = [];
 
   etablissementsProches.forEach((etablissement) => {
     if (group.length === 0) {
@@ -66,7 +70,7 @@ const getEtablissementContext = (
 };
 
 export const getInitialZoom = (
-  etablissementsProches: Array<EtablissementProche>
+  etablissementsProches: Array<EtablissementSchemaType>
 ) => {
   const sortedEtablissementsProches = getEtablissementContext(
     etablissementsProches
