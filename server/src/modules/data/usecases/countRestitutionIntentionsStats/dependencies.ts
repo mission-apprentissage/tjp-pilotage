@@ -13,7 +13,6 @@ import {
   countOuverturesApprentissage,
   countOuverturesSco,
 } from "../../../utils/countCapacite";
-import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 import { countRestitutionIntentionsStatsSchema } from "./countRestitutionIntentionsStats.schema";
 
@@ -46,7 +45,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   codeNsf,
 }: Filters) => {
   const countDemandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
@@ -318,7 +317,6 @@ const countRestitutionIntentionsStatsInDB = async ({
 
       return eb;
     })
-    .where(isDemandeNotDeleted)
     .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);

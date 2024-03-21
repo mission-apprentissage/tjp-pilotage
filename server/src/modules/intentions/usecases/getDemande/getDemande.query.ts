@@ -21,7 +21,7 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
 
 export const findDemande = async ({ numero, user }: Filters) => {
   const demande = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .selectAll()
     .select((eb) => [
       jsonBuildObject({

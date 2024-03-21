@@ -107,7 +107,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
 
       const sameDemande = await deps.findOneSimilarDemande({
         ...demande,
-        notId: demande.id,
+        notNumero: demande.numero,
       });
       if (sameDemande) {
         logger.info("Demande similaire existante", { sameDemande, demande });

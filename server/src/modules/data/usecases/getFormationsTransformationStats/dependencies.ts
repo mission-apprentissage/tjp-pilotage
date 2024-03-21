@@ -101,7 +101,7 @@ const getFormationsTransformationStatsQuery = ({
   })();
 
   return kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin(

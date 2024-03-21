@@ -1,14 +1,10 @@
 import { Insertable } from "kysely";
 
-import { DB, kdb } from "../../../../db/db";
+import { DB } from "../../../../db/db";
+import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHistory.query";
 
 export const createDemandeQuery = async (
   demande: Insertable<DB["demande"]>
 ) => {
-  return await kdb
-    .insertInto("demande")
-    .values(demande)
-    .onConflict((oc) => oc.column("id").doUpdateSet(demande))
-    .returningAll()
-    .executeTakeFirst();
+  return updateDemandeWithHistory({ ...demande });
 };

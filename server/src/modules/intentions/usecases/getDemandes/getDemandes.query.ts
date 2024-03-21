@@ -5,10 +5,7 @@ import { z } from "zod";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import {
-  isDemandeNotDeleted,
-  isDemandeSelectable,
-} from "../../../utils/isDemandeSelectable";
+import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
 import { getDemandesSchema } from "./getDemandes.schema";
 
 export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
@@ -29,7 +26,7 @@ export const findDemandes = async ({
   const search_array = cleanSearch.split(" ") ?? [];
 
   const demandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin(
@@ -110,7 +107,6 @@ export const findDemandes = async ({
         sql`${sql.raw(order)} NULLS LAST`
       );
     })
-    .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
