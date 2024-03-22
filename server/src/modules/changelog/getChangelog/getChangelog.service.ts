@@ -1,6 +1,8 @@
 import Boom from "@hapi/boom";
 import { APIErrorCode, Client, isNotionClientError } from "@notionhq/client";
 
+import { logger } from "../../../logger";
+
 export const notionClient = new Client({
   auth: process.env.NOTION_TOKEN,
 });
@@ -14,6 +16,10 @@ const withNotionErrorHandling =
       return await callback(...args);
     } catch (error) {
       if (isNotionClientError(error)) {
+        logger.error("Erreur lors de l'appel à Notion", {
+          error: error as Error,
+        });
+
         switch (error.code) {
           case APIErrorCode.ObjectNotFound:
             throw Boom.notFound("Base de donnée Notion introuvable");
