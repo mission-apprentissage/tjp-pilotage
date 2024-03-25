@@ -22,4 +22,7 @@ prettier_fix:
 test:
 	yarn --cwd server test
 
+build:
+	yarn workspaces foreach -p run build
+
 ci: install lint typecheck test
