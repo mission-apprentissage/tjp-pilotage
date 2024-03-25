@@ -15,8 +15,6 @@ import { EtablissementsProches } from "./components/EtablissementsProches";
 
 interface MapProps {
   uai: string;
-  cfd: string[] | undefined;
-  initialZoom?: number;
 }
 
 const AVAILABLE_STYLES = [
@@ -25,9 +23,9 @@ const AVAILABLE_STYLES = [
   "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json",
 ];
 
-export function Map({ uai, cfd }: MapProps) {
+export function Map({ uai }: MapProps) {
   const [style] = useState(AVAILABLE_STYLES[0]);
-  const { etablissementMap, setEtablissementMap } =
+  const { etablissementMap, setEtablissementMap, cfdFilter } =
     useEtablissementMapContext();
 
   const { data: etablissement, isLoading } = client
@@ -37,7 +35,7 @@ export function Map({ uai, cfd }: MapProps) {
         uai,
       },
       query: {
-        cfd,
+        cfd: [cfdFilter],
       },
     });
 

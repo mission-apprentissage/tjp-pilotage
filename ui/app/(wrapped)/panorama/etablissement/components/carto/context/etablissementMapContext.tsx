@@ -26,6 +26,8 @@ type EtablissementMapContextType = {
   setBbox: (bbox: Bbox) => void;
   map: MapRef | undefined;
   setMap: (map: MapRef) => void;
+  cfdFilter: string;
+  setCfdFilter: (cfd: string) => void;
 };
 
 interface EtablissementMapContextProps {
@@ -51,6 +53,7 @@ export function EtablissementMapContextProvider({
   const [etablissementList, setEtablissementList] =
     useState<EtablissementListType>({ etablissements: [] });
   const [map, setMap] = useState<MapRef>();
+  const [cfdFilter, setCfdFilter] = useState("");
 
   const context = {
     etablissementMap,
@@ -62,6 +65,8 @@ export function EtablissementMapContextProvider({
     setEtablissementList,
     map,
     setMap,
+    cfdFilter,
+    setCfdFilter,
   };
 
   return (
