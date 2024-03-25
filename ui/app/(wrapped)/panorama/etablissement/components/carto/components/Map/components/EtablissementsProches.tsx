@@ -12,6 +12,7 @@ import {
   useMap,
 } from "react-map-gl/maplibre";
 
+import { themeDefinition } from "../../../../../../../../../theme/theme";
 import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
 const MAP_IMAGES = {
@@ -65,11 +66,11 @@ export const EtablissementsProches = () => {
       "circle-color": [
         "step",
         ["get", "point_count"],
-        "#51bbd6",
+        themeDefinition.colors.bluefrance[113],
         100,
-        "#f1f075",
+        themeDefinition.colors.bluefrance[113],
         750,
-        "#f28cb1",
+        themeDefinition.colors.bluefrance[113],
       ],
       "circle-radius": ["step", ["get", "point_count"], 20, 100, 30, 750, 40],
     },
@@ -83,6 +84,9 @@ export const EtablissementsProches = () => {
     layout: {
       "text-field": "{point_count_abbreviated}",
       "text-size": 12,
+    },
+    paint: {
+      "text-color": "white",
     },
   };
 

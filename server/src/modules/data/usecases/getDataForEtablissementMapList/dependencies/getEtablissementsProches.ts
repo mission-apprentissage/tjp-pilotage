@@ -68,6 +68,7 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       }
       return q;
     })
+    .limit(100)
     .groupBy([
       "dispositif.libelleDispositif",
       "etablissement.UAI",

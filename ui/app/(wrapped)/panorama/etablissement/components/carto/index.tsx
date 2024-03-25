@@ -34,7 +34,7 @@ export const EtablissementMap = () => {
           Visualisez l'offre de formations sur la carte régionale, et comparez
           les établissements selon les taux d'emploi et de devenir favorable.
         </Text>
-        <Grid height="500px" templateColumns={"repeat(2,1fr)"}>
+        <Grid height="500px" templateColumns={"repeat(2,1fr)"} gap="8px">
           <ListeEtablissementsProches />
           <Map uai={uai} cfd={cfd} initialZoom={etablissement?.initialZoom} />
         </Grid>
