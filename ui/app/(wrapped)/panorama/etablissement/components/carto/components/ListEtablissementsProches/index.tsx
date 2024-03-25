@@ -8,12 +8,9 @@ import { useEtablissementMapContext } from "../../context/etablissementMapContex
 import { CustomListItem } from "./components/CustomListItem";
 
 export const ListeEtablissementsProches = () => {
-  const { uai, analyseDetaillee } = useEtablissementContext();
-  const { bbox, etablissementMap, map } = useEtablissementMapContext();
-  const cfd =
-    analyseDetaillee !== undefined
-      ? _.uniq(Object.values(analyseDetaillee.formations).map((f) => f.cfd))
-      : [];
+  const { uai } = useEtablissementContext();
+  const { bbox, etablissementMap, map, cfdFilter } =
+    useEtablissementMapContext();
 
   const { data, isLoading } = client
     .ref("[GET]/etablissement/:uai/map/list")
@@ -28,7 +25,7 @@ export const ListeEtablissementsProches = () => {
           minLng: "" + bbox.minLng,
           maxLng: "" + bbox.maxLng,
         },
-        cfd,
+        cfd: cfdFilter ? [cfdFilter] : undefined,
       },
     });
 

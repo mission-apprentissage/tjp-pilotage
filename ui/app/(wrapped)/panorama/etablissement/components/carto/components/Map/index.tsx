@@ -35,7 +35,7 @@ export function Map({ uai }: MapProps) {
         uai,
       },
       query: {
-        cfd: [cfdFilter],
+        cfd: cfdFilter ? [cfdFilter] : undefined,
       },
     });
 

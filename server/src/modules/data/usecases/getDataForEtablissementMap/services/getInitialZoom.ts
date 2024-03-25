@@ -52,14 +52,20 @@ const getEtablissementContext = (
 
     if (
       getGroupMean(group) * 1.5 > etablissement.distance &&
-      group.length < CLOSEST_ETABLISSEMENTS
+      group.length < CLOSEST_ETABLISSEMENTS &&
+      group.findIndex(
+        (groupEtablissement) => etablissement.uai === groupEtablissement.uai
+      ) === -1
     ) {
       group.push(etablissement);
     }
 
     if (
       getGroupMean(group) * 3 > etablissement.distance &&
-      group.length < CLOSEST_ETABLISSEMENTS
+      group.length < CLOSEST_ETABLISSEMENTS &&
+      group.findIndex(
+        (groupEtablissement) => etablissement.uai === groupEtablissement.uai
+      ) === -1
     ) {
       group.push(etablissement);
       return;
@@ -75,6 +81,8 @@ export const getInitialZoom = (
   const sortedEtablissementsProches = getEtablissementContext(
     etablissementsProches
   );
+
+  console.log(sortedEtablissementsProches);
 
   const bbox = {
     latMin: etablissementsProches[0].latitude,
@@ -101,8 +109,13 @@ export const getInitialZoom = (
     }
   });
 
-  const zoomLevel = getZoomLevelFromBoundingBox(bbox);
+  const latDiff = bbox.latMax - bbox.latMin;
+  const lngDiff = bbox.lngMax - bbox.lngMin;
+  const maxDiff = lngDiff > latDiff ? lngDiff : latDiff;
 
+  const zoomLevel = getZoomLevelFromBoundingBox(bbox);
   // We add a 1 padding to the zoom level to avoid having makers close to map borders
-  return zoomLevel - 1;
+  const normalizedZoomLevel = zoomLevel - Math.log(maxDiff * 2) / Math.log(2);
+
+  return normalizedZoomLevel > 13 ? 13 : normalizedZoomLevel;
 };

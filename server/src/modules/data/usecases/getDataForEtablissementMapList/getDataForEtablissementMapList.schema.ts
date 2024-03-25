@@ -17,7 +17,7 @@ export const getDataForEtablissementMapListSchema = {
     uai: z.string(),
   }),
   querystring: z.object({
-    cfd: z.string().array(),
+    cfd: z.string().array().optional(),
     bbox: z.object({
       minLat: z.string(),
       maxLat: z.string(),
