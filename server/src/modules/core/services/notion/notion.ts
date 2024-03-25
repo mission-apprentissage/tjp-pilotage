@@ -20,10 +20,12 @@ const withNotionErrorHandling =
     try {
       return await callback(...args);
     } catch (error) {
+      logger.error("Erreur lors de l'appel à Notion", {
+        error: error as Error,
+        ...args,
+      });
+
       if (isNotionClientError(error)) {
-        logger.error("Erreur lors de l'appel à Notion", {
-          error: error as Error,
-        });
         switch (error.code) {
           case APIErrorCode.ObjectNotFound:
             throw Boom.notFound("Base de donnée Notion introuvable");
