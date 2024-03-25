@@ -5,10 +5,17 @@ import { useEtablissementMapContext } from "../../../context/etablissementMapCon
 
 export const CustomControls = () => {
   const { current: map } = useMap();
-  const { setBbox, setMap } = useEtablissementMapContext();
+  const { etablissementMap, setBbox, setMap } = useEtablissementMapContext();
 
   useEffect(() => {
     if (map !== undefined) {
+      if (etablissementMap) {
+        map.setCenter({
+          lng: etablissementMap.longitude,
+          lat: etablissementMap.latitude,
+        });
+        map.setZoom(etablissementMap.initialZoom);
+      }
       map.on("load", async () => {
         map.off("moveend", onZoomEnd);
         map.on("moveend", onZoomEnd);

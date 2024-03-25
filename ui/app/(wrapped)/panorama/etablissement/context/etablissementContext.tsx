@@ -2,7 +2,7 @@ import { createContext, useContext, useState } from "react";
 
 import { client } from "@/api.client";
 
-type AnalyseDetailleeType =
+export type AnalyseDetailleeType =
   (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
 
 type EtablissementContextType = {
