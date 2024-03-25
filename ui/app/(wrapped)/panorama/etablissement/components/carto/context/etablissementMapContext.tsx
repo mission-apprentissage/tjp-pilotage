@@ -1,4 +1,5 @@
 import { createContext, useContext, useState } from "react";
+import { MapRef } from "react-map-gl/maplibre";
 
 import { client } from "@/api.client";
 
@@ -23,6 +24,8 @@ type EtablissementMapContextType = {
   setEtablissementList: (data: EtablissementListType) => void;
   bbox: Bbox;
   setBbox: (bbox: Bbox) => void;
+  map: MapRef | undefined;
+  setMap: (map: MapRef) => void;
 };
 
 interface EtablissementMapContextProps {
@@ -47,6 +50,7 @@ export function EtablissementMapContextProvider({
     useState<EtablissementMapType>();
   const [etablissementList, setEtablissementList] =
     useState<EtablissementListType>({ etablissements: [] });
+  const [map, setMap] = useState<MapRef>();
 
   const context = {
     etablissementMap,
@@ -56,6 +60,8 @@ export function EtablissementMapContextProvider({
     etablissementsProches: etablissementMap?.etablissementsProches || [],
     etablissementList,
     setEtablissementList,
+    map,
+    setMap,
   };
 
   return (

@@ -5,7 +5,7 @@ import { useEtablissementMapContext } from "../../../context/etablissementMapCon
 
 export const CustomControls = () => {
   const { current: map } = useMap();
-  const { setBbox } = useEtablissementMapContext();
+  const { setBbox, setMap } = useEtablissementMapContext();
 
   useEffect(() => {
     if (map !== undefined) {
@@ -13,6 +13,7 @@ export const CustomControls = () => {
         map.off("moveend", onZoomEnd);
         map.on("moveend", onZoomEnd);
       });
+      setMap(map);
     }
   }, [map]);
 
