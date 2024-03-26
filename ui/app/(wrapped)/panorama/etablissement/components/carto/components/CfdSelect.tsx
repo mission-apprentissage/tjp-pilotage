@@ -1,4 +1,5 @@
 import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
+import _ from "lodash";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
@@ -41,14 +42,12 @@ export const CfdSelect = () => {
 
   useEffect(() => {
     if (selected) {
-      console.log(selected);
       setCfdFilter(selected.value);
     }
   }, [selected]);
 
   useEffect(() => {
     if (analyseDetailleeOffre) {
-      console.log(analyseDetailleeOffre.cfd);
       setCfdFilter(analyseDetailleeOffre.cfd);
     }
   }, [analyseDetailleeOffre]);
@@ -58,10 +57,13 @@ export const CfdSelect = () => {
       analyseDetaillee?.formations ?? {}
     ).map(formatOffreToCfdSearchResult);
 
-    const searchResults = cfdAnalyseDetaillee.filter(
-      (cfd) =>
-        cfd.label.toLowerCase().includes(search.toLowerCase()) ||
-        cfd.value.toLowerCase().includes(search.toLowerCase())
+    const searchResults = _.uniqBy(
+      cfdAnalyseDetaillee.filter(
+        (cfd) =>
+          cfd.label.toLowerCase().includes(search.toLowerCase()) ||
+          cfd.value.toLowerCase().includes(search.toLowerCase())
+      ),
+      "value"
     );
     let queryResult: CfdSearchResult[] = [];
 
