@@ -1,4 +1,4 @@
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
 import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
@@ -24,12 +24,23 @@ export const getCountEtablissementsProches = async ({
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
     )
+    .leftJoin(
+      "indicateurSortie",
+      "indicateurSortie.formationEtablissementId",
+      "formationEtablissement.id"
+    )
     .select((sb) => sb.fn.count<number>("etablissement.UAI").over().as("count"))
     .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
         eb("indicateurEntree.rentreeScolaire", "is", null),
+      ])
+    )
+    .where((eb) =>
+      eb.or([
+        eb("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME),
+        eb("indicateurSortie.millesimeSortie", "is", null),
       ])
     )
     .$call((q) => {
