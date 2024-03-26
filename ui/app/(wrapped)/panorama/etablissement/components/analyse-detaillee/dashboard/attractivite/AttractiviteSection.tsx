@@ -1,3 +1,4 @@
+import { WarningTwoIcon } from "@chakra-ui/icons";
 import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
@@ -9,6 +10,16 @@ import { PremiersVoeux } from "./PremiersVoeux";
 import { TauxPression } from "./TauxPression";
 import { TauxRemplissage } from "./TauxRemplissage";
 
+const isAnyDataMissing = (chiffresEntreeOffre?: ChiffresEntreeOffre) =>
+  !chiffresEntreeOffre ||
+  typeof chiffresEntreeOffre.nbSortants === "undefined" ||
+  typeof chiffresEntreeOffre.nbPoursuiteEtudes === "undefined" ||
+  typeof chiffresEntreeOffre.nbInsertion6mois === "undefined" ||
+  typeof chiffresEntreeOffre.effectifSortie === "undefined" ||
+  typeof chiffresEntreeOffre.tauxDevenirFavorable === "undefined" ||
+  typeof chiffresEntreeOffre.tauxInsertion === "undefined" ||
+  typeof chiffresEntreeOffre.tauxPoursuite === "undefined";
+
 export const AttractiviteSection = ({
   formation,
   chiffresEntreeOffre,
@@ -18,7 +29,12 @@ export const AttractiviteSection = ({
 }) => {
   return (
     <>
-      <Flex direction={"row"} justifyContent={"space-between"}>
+      <Flex
+        direction={"row"}
+        justifyContent={"flex-start"}
+        gap={"8px"}
+        alignItems={"center"}
+      >
         <Text
           fontSize={14}
           fontWeight={700}
@@ -27,7 +43,15 @@ export const AttractiviteSection = ({
         >
           Attractivité de la formation
         </Text>
-        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
+        <Badge variant="info" maxH={5}>
+          Rentrée {CURRENT_RENTREE}
+        </Badge>
+        {isAnyDataMissing(chiffresEntreeOffre) && (
+          <Badge variant="warning" maxH={5}>
+            <WarningTwoIcon me={2} />
+            Données incomplètes
+          </Badge>
+        )}
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>

@@ -50,6 +50,7 @@ export const TauxRemplissage = ({
       </>
     );
   };
+
   return (
     <DashboardCard
       label="Taux de remplissage"
@@ -69,7 +70,11 @@ export const TauxRemplissage = ({
       }
     >
       <CounterChart
-        data={formatTaux(tauxRemplissage)}
+        data={
+          typeof tauxRemplissage === "undefined"
+            ? undefined
+            : formatTaux(tauxRemplissage)
+        }
         compareData={getCompareData()}
         type="percentage"
       />

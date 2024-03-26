@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import _ from "lodash";
+import { CURRENT_RENTREE } from "shared";
 
 import {
   formatAnneeCommuneLibelle,
@@ -15,6 +16,7 @@ import {
   formatTypeFamilleLong,
 } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
+import { themeColors } from "../../../../../../../theme/themeColors";
 import { Formation } from "../types";
 
 export const ListeFormations = ({
@@ -55,7 +57,7 @@ export const ListeFormations = ({
           <Text fontWeight={700}>{totalNbOffres}</Text>
           <Text>&nbsp;Formation(s)</Text>
         </Flex>
-        <Badge variant="info">Rentrée 2023</Badge>
+        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
       </Flex>
       <List>
         {Object.keys(formattedFormations).map((codeNiveauDiplome) => (
@@ -74,16 +76,33 @@ export const ListeFormations = ({
                   onClick={() => {
                     setOffre(formation.offre);
                   }}
-                  bgColor={offre === formation.offre ? "grey.1000_active" : ""}
-                  borderLeftColor={
-                    offre === formation.offre ? "bluefrance.113" : ""
-                  }
+                  bgColor={offre === formation.offre ? "bluefrance.925" : ""}
                   _hover={{
-                    bgColor: "rgba(0, 0, 0, 0.04)",
+                    backgroundColor:
+                      offre === formation.offre
+                        ? "bluefrance.925_hover"
+                        : "grey.1000_active",
                   }}
-                  borderLeft={offre === formation.offre ? "2px" : ""}
+                  fontWeight={offre === formation.offre ? "bold" : ""}
+                  position={"relative"}
                 >
-                  <Flex direction="row" justify={"space-between"}>
+                  <Flex
+                    direction="row"
+                    justify={"space-between"}
+                    _before={{
+                      content: "''",
+                      width: "0",
+                      height: "60%",
+                      left: "0",
+                      borderLeft: offre === formation.offre
+                      ? `3px solid ${themeColors.bluefrance[113]}`
+                      : "",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      position: "absolute",
+                    }}
+                    paddingLeft={"2px"}
+                  >
                     <Tooltip
                       label={formatAnneeCommuneLibelle(
                         formation.libelleFormation

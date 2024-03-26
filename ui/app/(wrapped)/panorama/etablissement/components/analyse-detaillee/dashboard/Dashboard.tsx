@@ -1,4 +1,3 @@
-import { WarningTwoIcon } from "@chakra-ui/icons";
 import { Badge, Flex, Text } from "@chakra-ui/react";
 
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
@@ -15,31 +14,6 @@ export const Dashboard = ({
   chiffresIJOffre?: ChiffresIJOffre;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const checkDataAvailability = () =>
-    chiffresIJOffre &&
-    chiffresEntreeOffre &&
-    Object.values(chiffresEntreeOffre).findIndex(
-      (value) =>
-        value.tauxPression &&
-        value.tauxPressionNational &&
-        value.tauxPressionRegional &&
-        value.tauxPressionDepartemental &&
-        value.premiersVoeux &&
-        value.effectifEntree &&
-        value.capacite &&
-        value.tauxRemplissage
-    ) !== -1 &&
-    Object.values(chiffresIJOffre).findIndex(
-      (value) =>
-        value.nbSortants &&
-        value.nbPoursuiteEtudes &&
-        value.nbInsertion6mois &&
-        value.effectifSortie &&
-        value.tauxDevenirFavorable &&
-        value.tauxInsertion &&
-        value.tauxPoursuite
-    ) !== -1;
-
   return (
     <Flex flexDirection={"column"} mr={8} gap={8}>
       <Flex flexDirection={"column"} gap={2} h={16}>
@@ -72,12 +46,6 @@ export const Dashboard = ({
           {formation?.voie === "apprentissage" && (
             <Badge variant="new" maxH={5} mt="auto">
               apprentissage
-            </Badge>
-          )}
-          {!checkDataAvailability() && (
-            <Badge variant="warning" maxH={5} mt="auto">
-              <WarningTwoIcon me={2} />
-              Données incomplètes
             </Badge>
           )}
         </Flex>

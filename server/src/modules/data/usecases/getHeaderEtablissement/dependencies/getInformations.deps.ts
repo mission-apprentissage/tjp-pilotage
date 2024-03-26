@@ -1,7 +1,12 @@
-import { sql } from "kysely";
+import { ExpressionBuilder, sql } from "kysely";
 
-import { kdb } from "../../../../../db/db";
+import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+
+const getEtablissementLibelle = (eb: ExpressionBuilder<DB, "etablissement">) =>
+  sql<string>`trim(split_part(split_part(split_part(split_part(coalesce(${eb.ref(
+    "etablissement.libelleEtablissement"
+  )},${sql.lit("Sans libellé")}),' - Lycée',1),' -Lycée',1),',',1),' : ',1))`;
 
 export const getInformations = ({ uai }: { uai: string }) =>
   kdb
@@ -23,11 +28,7 @@ export const getInformations = ({ uai }: { uai: string }) =>
     )
     .where("etablissement.UAI", "=", uai)
     .select((eb) => [
-      sql<string>`trim(split_part(split_part(split_part(split_part(${eb.ref(
-        "etablissement.libelleEtablissement"
-      )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
-        "libelleEtablissement"
-      ),
+      getEtablissementLibelle(eb).as("libelleEtablissement"),
       sql<string>`INITCAP(${eb.ref("etablissement.adresseEtablissement")})`.as(
         "adresse"
       ),
