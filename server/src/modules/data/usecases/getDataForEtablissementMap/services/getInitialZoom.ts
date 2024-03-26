@@ -76,13 +76,16 @@ const getEtablissementContext = (
 };
 
 export const getInitialZoom = (
+  etablissement: EtablissementSchemaType,
   etablissementsProches: Array<EtablissementSchemaType>
 ) => {
   const sortedEtablissementsProches = getEtablissementContext(
     etablissementsProches
   );
 
-  console.log(sortedEtablissementsProches);
+  if (etablissementsProches.length === 0) {
+    return 11;
+  }
 
   const bbox = {
     latMin: etablissementsProches[0].latitude,

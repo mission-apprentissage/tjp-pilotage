@@ -59,11 +59,11 @@ export function Map({ uai }: MapProps) {
         maxPitch={0}
         minPitch={0}
       >
-        <Etablissement />
         <EtablissementsProches />
         <ScaleControl />
         <NavigationControl />
         <CustomControls />
+        <Etablissement />
       </MapGLMap>
     </Box>
   );
