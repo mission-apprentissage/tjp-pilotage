@@ -104,7 +104,9 @@ export const Etablissement = () => {
           scolaireApprentissageSinglePointLayer.id,
         ],
       });
-      setActiveUai(features[0].properties.uai);
+      if (features.length > 0 && features[0] !== undefined) {
+        setActiveUai(features[0].properties?.uai);
+      }
     }
   };
 

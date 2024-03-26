@@ -28,8 +28,6 @@ export const ActiveEtablissement = () => {
     },
   };
 
-  console.log(etablissementPoint, activeEtablissement);
-
   const scolaireInvertedSinglePointLayer: SymbolLayer = {
     id: "single-scolaire-activeEtablissement-inverted",
     type: "symbol",
