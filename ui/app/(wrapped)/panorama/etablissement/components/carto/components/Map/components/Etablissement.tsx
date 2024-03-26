@@ -116,6 +116,9 @@ export const Etablissement = () => {
         flyToEtablissement();
         map.off("click", onSinglePointClick);
         map.on("click", onSinglePointClick);
+        if (etablissementMap) {
+          setActiveUai(etablissementMap?.uai);
+        }
       });
     }
   }, [map]);
