@@ -13,6 +13,7 @@ export const EtablissementSchema = z.object({
   effectif: z.number().optional(),
   tauxInsertion: z.number().optional(),
   tauxPoursuite: z.number().optional(),
+  secteur: z.string().optional(),
 });
 
 export const getDataForEtablissementMapListSchema = {
