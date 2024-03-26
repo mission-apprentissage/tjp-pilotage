@@ -1,3 +1,5 @@
+import { Badge } from "@chakra-ui/react";
+
 import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
@@ -70,6 +72,11 @@ export const NombreElevesParAnnee = ({
           tooltip="Nombre d'élèves"
           glossaireEntryKey="effectifs"
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       {checkDataAvailability() ? (

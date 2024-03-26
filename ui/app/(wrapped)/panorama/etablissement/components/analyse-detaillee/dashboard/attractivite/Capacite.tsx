@@ -1,4 +1,4 @@
-import { Flex, Img } from "@chakra-ui/react";
+import { Badge, Flex, Img } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -57,6 +57,11 @@ export const Capacite = ({
           label="Capacité en entrée en première année de formation"
           onClick={() => openGlossaire("capacite")}
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       <CounterChart data={capacite} compareData={getCompareData()} />
