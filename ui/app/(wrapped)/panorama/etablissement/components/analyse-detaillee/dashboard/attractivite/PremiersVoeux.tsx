@@ -1,9 +1,8 @@
-import { Flex, Img } from "@chakra-ui/react";
+import { Box, Flex, Img, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { TooltipIcon } from "@/components/TooltipIcon";
-
+import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 
@@ -58,12 +57,19 @@ export const PremiersVoeux = ({
           : "Nombre de 1ers voeux"
       }
       tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
-              ? "Nombre de voeux"
-              : "Nombre de 1ers voeux"
+        <GlossaireShortcut
+          display={"inline"}
+          marginInline={1}
+          glossaireEntryKey="voeux"
+          tooltip={
+            <Box>
+              <Text>
+                {codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+                  ? "Nombre de voeux"
+                  : "Nombre de 1ers voeux"}
+              </Text>
+              <Text>Cliquez pour plus d'infos.</Text>
+            </Box>
           }
         />
       }

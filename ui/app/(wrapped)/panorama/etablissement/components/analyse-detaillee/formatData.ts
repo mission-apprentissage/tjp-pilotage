@@ -23,7 +23,7 @@ export const formatTypeFamilleLong = (typeFamille: string): string => {
 
 export const formatTypeFamilleCourt = (typeFamille: string): string => {
   return typeFamille
-    .replace("2nde_commune", "2nde")
+    .replace("2nde_commune", "2de")
     .replace("1ere_commune", "1ère")
     .replace("specialite", "Spé")
     .replace("option", "Opt");

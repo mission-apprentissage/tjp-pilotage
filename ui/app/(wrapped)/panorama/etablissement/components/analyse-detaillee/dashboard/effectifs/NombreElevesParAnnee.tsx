@@ -1,6 +1,4 @@
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { TooltipIcon } from "@/components/TooltipIcon";
-
+import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";
@@ -11,7 +9,6 @@ export const NombreElevesParAnnee = ({
 }: {
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresEntreeOffre) {
       return (
@@ -68,10 +65,10 @@ export const NombreElevesParAnnee = ({
     <DashboardCard
       label="Nombre d'élèves par année (Constat de rentrée 2023)"
       tooltip={
-        <TooltipIcon
+        <GlossaireShortcut
           ml="1"
-          label="Nombre d'élèves"
-          onClick={() => openGlossaire("effectifs")}
+          tooltip="Nombre d'élèves"
+          glossaireEntryKey="effectifs"
         />
       }
     >

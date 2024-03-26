@@ -37,7 +37,7 @@ export const DonneesIndisponiblesSection = ({
         <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
           {`Pour cette formation, le ${
             dimensions?.includes("tauxPoursuite")
-              ? "taux de poursuite "
+              ? "taux de poursuite"
               : "taux d'insertion"
           } n’est pas disponible, seul le ${
             dimensions?.includes("tauxPoursuite")
