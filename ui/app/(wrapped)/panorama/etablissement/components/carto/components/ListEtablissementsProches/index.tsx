@@ -1,5 +1,14 @@
-import { Button, List, ListItem, Skeleton } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
+import {
+  Box,
+  Button,
+  HStack,
+  List,
+  ListItem,
+  Skeleton,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
+import { Icon, InlineIcon } from "@iconify/react";
 import _ from "lodash";
 
 import { client } from "../../../../../../../../api.client";
@@ -41,35 +50,52 @@ export const ListeEtablissementsProches = () => {
   const etablissements = data?.etablissements;
 
   return (
-    <List overflow="auto">
-      {etablissementMap && (
-        <CustomListItem
-          withDivider
-          etablissement={_.omit(
-            etablissementMap,
-            "initialZoom",
-            "etablissementsProches"
-          )}
-        >
-          <Button variant="primary" onClick={() => centerOnEtablissement()}>
-            <Icon icon="ri:map-pin-line"></Icon>Recentrer sur l'établissement
-          </Button>
-        </CustomListItem>
-      )}
-      {etablissements &&
-        etablissements.map((e, i) => (
+    <VStack width="100%" height="100%" justifyContent="start">
+      <HStack width="100%" justifyContent="space-between">
+        {!data ? (
+          <Skeleton height="20px" width="100%" />
+        ) : (
+          <Text>
+            <b>{data?.count}</b> résultat(s) dans la zone sélectionnée
+          </Text>
+        )}
+        <HStack>
+          <Box display="inline" mr="2px">
+            <InlineIcon icon="ri:sort-desc" />
+          </Box>
+          <Text>Tri : par distance</Text>
+        </HStack>
+      </HStack>
+      <List flexGrow={1} overflow="auto">
+        {etablissementMap && (
           <CustomListItem
-            etablissement={e}
-            key={e.uai + i}
-            withDivider={i !== etablissements.length}
-          />
-        ))}
-      {isLoading ||
-        (!etablissements && (
-          <ListItem key="loading">
-            <Skeleton height="20px" width="100%" />
-          </ListItem>
-        ))}
-    </List>
+            withDivider
+            etablissement={_.omit(
+              etablissementMap,
+              "initialZoom",
+              "etablissementsProches"
+            )}
+          >
+            <Button variant="primary" onClick={() => centerOnEtablissement()}>
+              <Icon icon="ri:map-pin-line"></Icon>Recentrer sur l'établissement
+            </Button>
+          </CustomListItem>
+        )}
+        {etablissements &&
+          etablissements.map((e, i) => (
+            <CustomListItem
+              etablissement={e}
+              key={e.uai + i}
+              withDivider={i !== etablissements.length}
+            />
+          ))}
+        {isLoading ||
+          (!etablissements && (
+            <ListItem key="loading">
+              <Skeleton height="20px" width="100%" />
+            </ListItem>
+          ))}
+      </List>
+    </VStack>
   );
 };

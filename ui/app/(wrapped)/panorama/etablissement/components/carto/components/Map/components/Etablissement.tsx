@@ -13,7 +13,7 @@ import { MAP_IMAGES } from "./CustomControls";
 
 export const Etablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap, activeUais } = useEtablissementMapContext();
+  const { etablissementMap, activeUai } = useEtablissementMapContext();
 
   const etablissementPoint = {
     type: "Feature",
@@ -29,8 +29,6 @@ export const Etablissement = () => {
     },
   };
 
-  console.log(etablissementMap);
-
   const pointBackgroundLayer: CircleLayer = {
     id: "background-layer-etablissement",
     type: "circle",
@@ -42,70 +40,39 @@ export const Etablissement = () => {
   };
 
   const scolaireSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-point-etablissement",
+    id: "single-scolaire-etablissement",
     type: "symbol",
     source: "etablissement",
-    filter: ["in", "voies", "scolaire"],
+    filter: ["all", ["in", "voies", "scolaire"], ["!=", "uai", activeUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
-    },
-  };
-
-  const scolaireInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-point-etablissement",
-    type: "symbol",
-    source: "etablissement",
-    filter: ["all", ["in", "voies", "scolaire"], ["in", "uai", ...activeUais]],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_INVERTED.name,
+      "icon-overlap": "always",
     },
   };
 
   const apprentissageSinglePointLayer: SymbolLayer = {
-    id: "single-apprentissage-point-etablissement",
+    id: "single-apprentissage-etablissement",
     type: "symbol",
     source: "etablissement",
-    filter: ["in", "voies", "apprentissage"],
+    filter: ["all", ["in", "voies", "apprentissage"], ["!=", "uai", activeUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
-    },
-  };
-
-  const apprentissageInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-apprentissage-point-etablissement",
-    type: "symbol",
-    source: "etablissement",
-    filter: [
-      "all",
-      ["in", "voies", "apprentissage"],
-      ["in", "uai", ...activeUais],
-    ],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE_INVERTED.name,
+      "icon-overlap": "always",
     },
   };
 
   const scolaireApprentissageSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-apprentissage-point-etablissement",
-    type: "symbol",
-    source: "etablissement",
-    filter: ["in", "voies", "apprentissage,scolaire"],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
-    },
-  };
-
-  const scolaireApprentissageInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-apprentissage-point-etablissement",
+    id: "single-scolaire-apprentissage-etablissement",
     type: "symbol",
     source: "etablissement",
     filter: [
       "all",
       ["in", "voies", "apprentissage,scolaire"],
-      ["in", "uai", ...activeUais],
+      ["!=", "uai", activeUai],
     ],
     layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
+      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -138,11 +105,8 @@ export const Etablissement = () => {
       <Source id="etablissement" type="geojson" data={etablissementPoint} />
       <Layer {...pointBackgroundLayer} />
       <Layer {...scolaireSinglePointLayer} />
-      <Layer {...scolaireInvertedSinglePointLayer} />
       <Layer {...apprentissageSinglePointLayer} />
-      <Layer {...apprentissageInvertedSinglePointLayer} />
       <Layer {...scolaireApprentissageSinglePointLayer} />
-      <Layer {...scolaireApprentissageInvertedSinglePointLayer} />
     </>
   );
 };

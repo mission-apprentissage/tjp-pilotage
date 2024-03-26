@@ -21,7 +21,11 @@ export const EtablissementMap = () => {
           les établissements selon les taux d'emploi et de devenir favorable.
         </Text>
         <CfdSelect />
-        <Grid height="500px" templateColumns={"repeat(2,1fr)"} gap="16px">
+        <Grid
+          templateColumns={"repeat(2,1fr)"}
+          templateRows={"repeat(1,500px)"}
+          gap="16px"
+        >
           <ListeEtablissementsProches />
           <Map uai={uai} />
         </Grid>
