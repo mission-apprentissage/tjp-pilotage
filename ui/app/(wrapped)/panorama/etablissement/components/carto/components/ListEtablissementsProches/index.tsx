@@ -21,7 +21,7 @@ export const ListeEtablissementsProches = () => {
   const { bbox, etablissementMap, map, cfdFilter } =
     useEtablissementMapContext();
 
-  const { data, isLoading } = client
+  const { data: etablissementsList, isLoading } = client
     .ref("[GET]/etablissement/:uai/map/list")
     .useQuery({
       params: {
@@ -38,7 +38,7 @@ export const ListeEtablissementsProches = () => {
       },
     });
 
-  const centerOnEtablissement = () => {
+  const flyToEtablissement = () => {
     if (map && etablissementMap) {
       map.flyTo({
         center: [etablissementMap.longitude, etablissementMap.latitude],
@@ -47,16 +47,17 @@ export const ListeEtablissementsProches = () => {
     }
   };
 
-  const etablissementsProches = data?.etablissementsProches;
+  const etablissementsProches = etablissementsList?.etablissementsProches;
 
   return (
     <VStack width="100%" height="100%" justifyContent="start">
       <HStack width="100%" justifyContent="space-between">
-        {!data ? (
+        {!etablissementsList ? (
           <Skeleton height="16px" width="50%" />
         ) : (
           <Text>
-            <b>{data?.count}</b> résultat(s) dans la zone sélectionnée
+            <b>{etablissementsList?.count}</b> résultat(s) dans la zone
+            sélectionnée
           </Text>
         )}
         <HStack>
@@ -66,17 +67,17 @@ export const ListeEtablissementsProches = () => {
           <Text>Tri : par distance</Text>
         </HStack>
       </HStack>
-      <List flexGrow={1} overflow="auto">
-        {etablissementMap && (
+      <List flexGrow={1} overflow="auto" width="100%">
+        {etablissementsList && (
           <CustomListItem
             withDivider
             etablissement={_.omit(
-              etablissementMap,
-              "initialZoom",
+              etablissementsList,
+              "count",
               "etablissementsProches"
             )}
           >
-            <Button variant="primary" onClick={() => centerOnEtablissement()}>
+            <Button variant="primary" onClick={() => flyToEtablissement()}>
               <HStack gap="4px">
                 <Icon icon="ri:map-pin-line"></Icon>
                 <Text>Recentrer</Text>

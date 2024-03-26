@@ -36,12 +36,25 @@ const formatPercentage = (percentage: number) => {
   return Math.round(percentage * 100) + "%";
 };
 
+const formatSecteur = (secteur: string) => {
+  switch (secteur) {
+    case "PU":
+      return "Public";
+    case "PR":
+      return "Prive";
+    default:
+      return "";
+  }
+};
+
 export const CustomListItem = ({
   etablissement,
   withDivider,
   children,
 }: CustomListItemProps) => {
   const { activeUai, setActiveUai } = useEtablissementMapContext();
+
+  if (!etablissement) return null;
 
   return (
     <>
@@ -87,6 +100,9 @@ export const CustomListItem = ({
                 {etablissement.commune} ({etablissement.codeDepartement})
               </Text>
               <Text>{formatDistance(etablissement.distance)}</Text>
+              {etablissement.secteur && (
+                <Text>{formatSecteur(etablissement.secteur)}</Text>
+              )}
             </HStack>
           </HStack>
           <HStack width="100%" justifyContent="space-between">

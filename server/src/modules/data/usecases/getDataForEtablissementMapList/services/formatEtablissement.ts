@@ -20,5 +20,6 @@ export function formatEtablissement(
     effectif: etablissement.effectif || undefined,
     tauxInsertion: etablissement.tauxInsertion || undefined,
     tauxPoursuite: etablissement.tauxPoursuite || undefined,
+    secteur: etablissement.secteur || undefined,
   };
 }
