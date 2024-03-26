@@ -1,4 +1,4 @@
-import { Box, Text, useToken } from "@chakra-ui/react";
+import { Badge, Box, Text, useToken } from "@chakra-ui/react";
 
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
@@ -122,6 +122,11 @@ export const TauxPression = ({
           }
           onClick={() => openGlossaire("taux-de-pression")}
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       {chiffresEntreeOffre && checkDataAvailability() ? (

@@ -1,4 +1,4 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Img, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -72,6 +72,11 @@ export const PremiersVoeux = ({
             </Box>
           }
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       <CounterChart data={premiersVoeux} compareData={getCompareData()} />
