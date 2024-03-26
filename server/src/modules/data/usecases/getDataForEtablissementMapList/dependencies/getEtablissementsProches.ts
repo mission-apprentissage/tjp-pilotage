@@ -60,8 +60,12 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
         eb("indicateurEntree.rentreeScolaire", "is", null),
       ])
     )
-    .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
-    .where("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME)
+    .where((eb) =>
+      eb.or([
+        eb("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME),
+        eb("indicateurSortie.millesimeSortie", "is", null),
+      ])
+    )
     .$call((q) => {
       if (bbox !== undefined) {
         return q.where((eb) =>
