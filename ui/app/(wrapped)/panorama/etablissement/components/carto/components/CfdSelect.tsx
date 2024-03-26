@@ -5,6 +5,7 @@ import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
 
 import { client } from "../../../../../../../api.client";
+import { themeDefinition } from "../../../../../../../theme/theme";
 import { useEtablissementContext } from "../../../context/etablissementContext";
 import { AnalyseDetaillee } from "../../analyse-detaillee/types";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
@@ -72,7 +73,21 @@ export const CfdSelect = () => {
         .ref("[GET]/diplome/search/:search")
         .query({ params: { search } });
 
-    return [...searchResults, ...queryResult];
+    const filteredQueryResult = queryResult.filter(
+      (result) =>
+        searchResults.findIndex((local) => local.value === result.value) === -1
+    );
+
+    return [
+      {
+        label: `FORMATIONS DE L'ÉTABLISSEMENT (${searchResults.length})`,
+        options: searchResults,
+      },
+      {
+        label: `AUTRES (${filteredQueryResult.length})`,
+        options: filteredQueryResult,
+      },
+    ];
   };
 
   return (
@@ -100,6 +115,15 @@ export const CfdSelect = () => {
             }
             placeholder="Code diplôme ou libellé"
             isDisabled={!analyseDetaillee}
+            styles={{
+              groupHeading: (provided) => ({
+                ...provided,
+                fontWeight: "bold",
+                fontSize: "12px",
+                textTransform: "uppercase",
+                color: themeDefinition.colors.grey[50],
+              }),
+            }}
           />
         </Stack>
       )}
