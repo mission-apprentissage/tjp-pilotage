@@ -62,9 +62,15 @@ export const getDataForEtablissementMapListFactory =
       uai: params.uai,
     });
 
+    const formattedEtablissement = formatEtablissement({
+      ...etablissement,
+      distance: 0,
+    });
+
     return {
+      ...formattedEtablissement,
       count: count[0]?.count ?? 0,
-      etablissements: filteredEtablissements,
+      etablissementsProches: filteredEtablissements,
     };
   };
 

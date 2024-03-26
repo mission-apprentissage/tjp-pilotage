@@ -47,13 +47,13 @@ export const ListeEtablissementsProches = () => {
     }
   };
 
-  const etablissements = data?.etablissements;
+  const etablissementsProches = data?.etablissementsProches;
 
   return (
     <VStack width="100%" height="100%" justifyContent="start">
       <HStack width="100%" justifyContent="space-between">
         {!data ? (
-          <Skeleton height="20px" width="100%" />
+          <Skeleton height="16px" width="50%" />
         ) : (
           <Text>
             <b>{data?.count}</b> résultat(s) dans la zone sélectionnée
@@ -77,24 +77,26 @@ export const ListeEtablissementsProches = () => {
             )}
           >
             <Button variant="primary" onClick={() => centerOnEtablissement()}>
-              <Icon icon="ri:map-pin-line"></Icon>Recentrer sur l'établissement
+              <HStack gap="4px">
+                <Icon icon="ri:map-pin-line"></Icon>
+                <Text>Recentrer</Text>
+              </HStack>
             </Button>
           </CustomListItem>
         )}
-        {etablissements &&
-          etablissements.map((e, i) => (
+        {etablissementsProches &&
+          etablissementsProches.map((e, i) => (
             <CustomListItem
               etablissement={e}
               key={e.uai + i}
-              withDivider={i !== etablissements.length}
+              withDivider={i !== etablissementsProches.length}
             />
           ))}
-        {isLoading ||
-          (!etablissements && (
-            <ListItem key="loading">
-              <Skeleton height="20px" width="100%" />
-            </ListItem>
-          ))}
+        {isLoading && (
+          <ListItem key="loading">
+            <Skeleton height="100px" width="100%" />
+          </ListItem>
+        )}
       </List>
     </VStack>
   );
