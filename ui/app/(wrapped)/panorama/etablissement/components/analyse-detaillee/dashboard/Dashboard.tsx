@@ -1,5 +1,7 @@
-import { Badge, Flex, Text } from "@chakra-ui/react";
+import { Flex, Text } from "@chakra-ui/react";
 
+import { BadgeTypeFamille } from "../../../../../../../components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
 import { AttractiviteSection } from "./attractivite/AttractiviteSection";
 import { DevenirSection } from "./devenir/DevenirSection";
@@ -15,7 +17,7 @@ export const Dashboard = ({
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
-    <Flex flexDirection={"column"} mr={8} gap={8}>
+    <Flex flexDirection={"column"} mr={8} gap={16}>
       <Flex flexDirection={"column"} gap={2} h={16}>
         <Text fontSize="18px" fontWeight={700}>
           {formation?.libelleFormation
@@ -23,39 +25,27 @@ export const Dashboard = ({
             .replace("1ere commune", " ")}
         </Text>
         <Flex direction={"row"} gap={2}>
-          {formation?.typeFamille === "2nde_commune" && (
-            <Badge variant="info" maxH={5} mt="auto">
-              seconde commune
-            </Badge>
-          )}
-          {formation?.typeFamille === "1ere_commune" && (
-            <Badge variant="info" maxH={5} mt="auto">
-              première année commune
-            </Badge>
-          )}
-          {formation?.typeFamille === "specialite" && (
-            <Badge variant="purpleGlycine" maxH={5} mt="auto">
-              spécialité
-            </Badge>
-          )}
-          {formation?.typeFamille === "option" && (
-            <Badge variant="purpleGlycine" maxH={5} mt="auto">
-              option
-            </Badge>
-          )}
-          {formation?.voie === "apprentissage" && (
-            <Badge variant="new" maxH={5} mt="auto">
-              apprentissage
-            </Badge>
-          )}
+          <BadgeTypeFamille
+            typeFamille={formation?.typeFamille}
+            labelSize="long"
+            size={"md"}
+          />
+          <BadgeVoieApprentissage
+            voie={formation?.voie}
+            labelSize="long"
+            size={"md"}
+          />
         </Flex>
       </Flex>
-      <DevenirSection chiffresIJOffre={chiffresIJOffre} />
+      <DevenirSection formation={formation} chiffresIJOffre={chiffresIJOffre} />
       <AttractiviteSection
         formation={formation}
         chiffresEntreeOffre={chiffresEntreeOffre}
       />
-      <EffectifSection chiffresEntreeOffre={chiffresEntreeOffre} />
+      <EffectifSection
+        formation={formation}
+        chiffresEntreeOffre={chiffresEntreeOffre}
+      />
     </Flex>
   );
 };

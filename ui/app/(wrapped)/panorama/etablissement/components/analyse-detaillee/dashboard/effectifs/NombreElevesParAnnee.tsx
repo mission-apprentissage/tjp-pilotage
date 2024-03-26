@@ -68,7 +68,6 @@ export const NombreElevesParAnnee = ({
       label="Nombre d'élèves par année (Constat de rentrée 2023)"
       tooltip={
         <GlossaireShortcut
-          ml="1"
           tooltip="Nombre d'élèves"
           glossaireEntryKey="effectifs"
         />

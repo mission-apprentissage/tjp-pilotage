@@ -1,56 +1,69 @@
 import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
-import { unstable_batchedUpdates } from "react-dom";
-import { CURRENT_IJ_MILLESIME } from "shared";
+import { CURRENT_IJ_MILLESIME, VoieEnum } from "shared";
 import { CURRENT_RENTREE } from "shared/time/CURRENT_RENTREE";
 
 import { client } from "../../../../../../api.client";
 import { useStateParams } from "../../../../../../utils/useFilters";
 import { useEtablissementContext } from "../../context/etablissementContext";
-import { ChiffresEntree, ChiffresIJ, Filters, Formations } from "./types";
+import {
+  AnalyseDetaillee,
+  ChiffresEntree,
+  ChiffresEntreeOffreRentree,
+  ChiffresIJ,
+  ChiffresIJOffreMillesime,
+  Filters,
+  Formations,
+} from "./types";
+
+type Params = {
+  filters: Filters;
+  offre: string;
+  displayType: "dashboard" | "quadrant";
+};
+
+function countValues(
+  data: ChiffresEntreeOffreRentree | ChiffresIJOffreMillesime,
+  keys: string[]
+): number {
+  return keys.reduce((count, key) => (key in data ? count + 1 : count), 0);
+}
 
 function selectFormationWithMostValues(
   formations: Formations,
   chiffresIJ: ChiffresIJ,
   chiffresEntree: ChiffresEntree
 ): string {
+  console.debug(
+    "SelectFormationWithMostValues",
+    formations,
+    chiffresIJ,
+    chiffresEntree
+  );
   const offres = Object.keys(formations);
 
-  if (offres.length === 0) {
-    return "";
+  if (offres.length <= 1) {
+    return offres[0] ?? "";
   }
 
-  if (offres.length === 1) {
-    return offres[0];
-  }
   const numberOfValuesPerFormation: Record<string, number> = {};
 
   for (const formation of offres) {
-    let numberOfValues = 0;
+    const ijData = chiffresIJ[formation]?.[CURRENT_IJ_MILLESIME];
+    const entreeData = chiffresEntree[formation]?.[CURRENT_RENTREE];
 
-    if (chiffresIJ[formation]?.[CURRENT_IJ_MILLESIME]) {
-      ["tauxInsertion", "tauxPoursuite", "tauxDevenirFavorable"].forEach(
-        (key) => {
-          if (key in chiffresIJ[formation][CURRENT_IJ_MILLESIME]) {
-            numberOfValues += 1;
-          }
-        }
-      );
-    }
+    const ijKeys = ["tauxInsertion", "tauxPoursuite", "tauxDevenirFavorable"];
+    const entreeKeys = [
+      "premiersVoeux",
+      "capacite",
+      "effectifEntree",
+      "tauxRemplissage",
+      "tauxPression",
+    ];
 
-    if (chiffresEntree[formation]?.[CURRENT_RENTREE]) {
-      [
-        "premiersVoeux",
-        "capacite",
-        "effectifEntree",
-        "tauxRemplissage",
-        "tauxPression",
-      ].forEach((key) => {
-        if (key in chiffresEntree[formation][CURRENT_RENTREE]) {
-          numberOfValues += 1;
-        }
-      });
-    }
+    const numberOfValues =
+      (ijData ? countValues(ijData, ijKeys) : 0) +
+      (entreeData ? countValues(entreeData, entreeKeys) : 0);
 
     numberOfValuesPerFormation[formation] = numberOfValues;
   }
@@ -62,17 +75,42 @@ function selectFormationWithMostValues(
   return formationWithMostValues[0];
 }
 
+function shouldSelectDefaultFormation(params: Params, data?: AnalyseDetaillee) {
+  const hasFormations =
+    data?.formations && Object.keys(data.formations).length > 0;
+  const hasCodeNiveauDiplomeFilter =
+    (params.filters.codeNiveauDiplome?.length || 0) > 0;
+  const hasVoieFilter = (params.filters.voie?.length || 0) > 0;
+
+  if (
+    hasFormations &&
+    (!params.offre || hasCodeNiveauDiplomeFilter || hasVoieFilter)
+  ) {
+    const isOffreInFilteredListOfFormations = Object.values(
+      data.formations
+    ).some(
+      (f) =>
+        (params.filters.codeNiveauDiplome?.includes(f.codeNiveauDiplome) ||
+          params.filters.voie?.includes(f.voie)) &&
+        f.offre === params.offre
+    );
+
+    return !isOffreInFilteredListOfFormations;
+  }
+
+  return false;
+}
+
 export const useAnalyseDetaillee = () => {
   const trackEvent = usePlausible();
   const { uai } = useEtablissementContext();
 
-  const [searchParams, setSearchParams] = useStateParams<{
-    filters: Filters;
-    offre: string;
-    displayType: "dashboard" | "quadrant";
-  }>({
+  const [searchParams, setSearchParams] = useStateParams<Params>({
     defaultValues: {
-      filters: {},
+      filters: {
+        codeNiveauDiplome: [],
+        voie: [VoieEnum.scolaire],
+      },
       offre: "",
       displayType: "dashboard",
     },
@@ -109,11 +147,9 @@ export const useAnalyseDetaillee = () => {
     type: keyof Filters,
     value: Filters[keyof Filters]
   ) => {
-    unstable_batchedUpdates(() => {
-      setSearchParams({
-        ...searchParams,
-        filters: { ...searchParams.filters, [type]: value },
-      });
+    setSearchParams({
+      ...searchParams,
+      filters: { ...searchParams.filters, [type]: value },
     });
   };
 
@@ -126,14 +162,34 @@ export const useAnalyseDetaillee = () => {
     };
 
   useEffect(() => {
-    if (data?.formations && !searchParams.offre) {
+    console.debug("useEffect", { searchParams, data });
+    if (shouldSelectDefaultFormation(searchParams, data)) {
+      const { codeNiveauDiplome, voie } = searchParams.filters;
+      const filteredFormations = Object.values(data!.formations).reduce(
+        (acc, f) => {
+          if (
+            (codeNiveauDiplome?.length === 0 ||
+              codeNiveauDiplome?.includes(f.codeNiveauDiplome)) &&
+            (voie?.length === 0 || voie?.includes(f.voie))
+          ) {
+            acc[f.offre] = f;
+          }
+          return acc;
+        },
+        {} as Formations
+      );
+
+      const selectedOffre = selectFormationWithMostValues(
+        filteredFormations,
+        data!.chiffresIJ,
+        data!.chiffresEntree
+      );
+
+      console.debug("useEffect", { filteredFormations, selectedOffre });
+
       setSearchParams({
         ...searchParams,
-        offre: selectFormationWithMostValues(
-          data?.formations,
-          data?.chiffresIJ,
-          data?.chiffresEntree
-        ),
+        offre: selectedOffre,
       });
     }
   }, [data, searchParams]);

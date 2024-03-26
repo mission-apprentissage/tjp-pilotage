@@ -10,42 +10,44 @@ import {
 import _ from "lodash";
 import { CURRENT_RENTREE } from "shared";
 
-import {
-  formatAnneeCommuneLibelle,
-  formatTypeFamilleCourt,
-  formatTypeFamilleLong,
-} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
+import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
+import { BadgeTypeFamille } from "../../../../../../../components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
 import { themeColors } from "../../../../../../../theme/themeColors";
 import { Formation } from "../types";
+
+const LabelNumberOfFormations = ({
+  formations,
+}: {
+  formations?: Array<Formation>;
+}) => (
+  <Text>
+    <strong>{formations?.length ?? 0}</strong> Formation
+    {(formations?.length ?? 0) > 1 ? "s" : ""}
+  </Text>
+);
 
 export const ListeFormations = ({
   formations,
   offre,
   setOffre,
-  nbOffres,
 }: {
   formations?: Array<Formation>;
   offre: string;
   setOffre: (offre: string) => void;
-  nbOffres: Record<string, number>;
 }) => {
   const formattedFormations = _.chain(formations)
     .orderBy("ordreFormation", "desc")
     .groupBy("libelleNiveauDiplome")
     .value();
 
-  const totalNbOffres = Object.values(nbOffres).reduce(
-    (acc, nbOffres) => acc + nbOffres,
-    0
-  );
-
   return (
     <Box
       borderRightWidth={1}
       borderRightColor={"grey.925"}
       overflowY={"auto"}
-      h={"85rem"}
+      h={"90rem"}
     >
       <Flex
         flex={1}
@@ -53,10 +55,7 @@ export const ListeFormations = ({
         justifyContent={"space-between"}
         me={2}
       >
-        <Flex>
-          <Text fontWeight={700}>{totalNbOffres}</Text>
-          <Text>&nbsp;Formation(s)</Text>
-        </Flex>
+        <LabelNumberOfFormations formations={formations} />
         <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
       </Flex>
       <List>
@@ -65,7 +64,7 @@ export const ListeFormations = ({
             <Text
               fontWeight={"bold"}
               my={"3"}
-            >{`${codeNiveauDiplome} (${nbOffres[codeNiveauDiplome]})`}</Text>
+            >{`${codeNiveauDiplome} (${formattedFormations[codeNiveauDiplome].length})`}</Text>
             <List>
               {formattedFormations[codeNiveauDiplome].map((formation) => (
                 <ListItem
@@ -94,9 +93,10 @@ export const ListeFormations = ({
                       width: "0",
                       height: "60%",
                       left: "0",
-                      borderLeft: offre === formation.offre
-                      ? `3px solid ${themeColors.bluefrance[113]}`
-                      : "",
+                      borderLeft:
+                        offre === formation.offre
+                          ? `3px solid ${themeColors.bluefrance[113]}`
+                          : "",
                       top: "50%",
                       transform: "translateY(-50%)",
                       position: "absolute",
@@ -122,33 +122,8 @@ export const ListeFormations = ({
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
-                      {(formation.typeFamille === "2nde_commune" ||
-                        formation.typeFamille === "1ere_commune") && (
-                        <Tooltip
-                          label={formatTypeFamilleLong(formation.typeFamille)}
-                        >
-                          <Badge variant={"info"} size="xs">
-                            {formatTypeFamilleCourt(formation.typeFamille)}
-                          </Badge>
-                        </Tooltip>
-                      )}
-                      {(formation.typeFamille === "specialite" ||
-                        formation.typeFamille === "option") && (
-                        <Tooltip
-                          label={formatTypeFamilleLong(formation.typeFamille)}
-                        >
-                          <Badge variant={"purpleGlycine"} size="xs">
-                            {formatTypeFamilleCourt(formation.typeFamille)}
-                          </Badge>
-                        </Tooltip>
-                      )}
-                      {formation.voie === "apprentissage" && (
-                        <Tooltip label={"Apprentissage"}>
-                          <Badge variant={"new"} size="xs">
-                            Appr
-                          </Badge>
-                        </Tooltip>
-                      )}
+                      <BadgeTypeFamille typeFamille={formation.typeFamille} />
+                      <BadgeVoieApprentissage voie={formation.voie} />
                     </Flex>
                   </Flex>
                 </ListItem>

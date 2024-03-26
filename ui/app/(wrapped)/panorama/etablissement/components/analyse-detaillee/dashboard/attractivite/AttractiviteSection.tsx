@@ -3,22 +3,27 @@ import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { ChiffresEntreeOffre, Formation } from "../../types";
+import {
+  ChiffresEntreeOffre,
+  ChiffresEntreeOffreRentree,
+  Formation,
+} from "../../types";
 import { Capacite } from "./Capacite";
 import { Effectifs } from "./Effectifs";
 import { PremiersVoeux } from "./PremiersVoeux";
 import { TauxPression } from "./TauxPression";
 import { TauxRemplissage } from "./TauxRemplissage";
 
-const isAnyDataMissing = (chiffresEntreeOffre?: ChiffresEntreeOffre) =>
+const isAnyDataMissing = (chiffresEntreeOffre?: ChiffresEntreeOffreRentree) =>
   !chiffresEntreeOffre ||
-  typeof chiffresEntreeOffre.nbSortants === "undefined" ||
-  typeof chiffresEntreeOffre.nbPoursuiteEtudes === "undefined" ||
-  typeof chiffresEntreeOffre.nbInsertion6mois === "undefined" ||
-  typeof chiffresEntreeOffre.effectifSortie === "undefined" ||
-  typeof chiffresEntreeOffre.tauxDevenirFavorable === "undefined" ||
-  typeof chiffresEntreeOffre.tauxInsertion === "undefined" ||
-  typeof chiffresEntreeOffre.tauxPoursuite === "undefined";
+  typeof chiffresEntreeOffre.premiersVoeux === "undefined" ||
+  typeof chiffresEntreeOffre.tauxPression === "undefined" ||
+  typeof chiffresEntreeOffre.effectifs === "undefined" ||
+  typeof chiffresEntreeOffre.capacite === "undefined" ||
+  typeof chiffresEntreeOffre.tauxPressionDepartemental === "undefined" ||
+  typeof chiffresEntreeOffre.tauxPressionRegional === "undefined" ||
+  typeof chiffresEntreeOffre.tauxPressionNational === "undefined" ||
+  typeof chiffresEntreeOffre.tauxRemplissage === "undefined";
 
 export const AttractiviteSection = ({
   formation,
@@ -28,7 +33,7 @@ export const AttractiviteSection = ({
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
-    <>
+    <Flex gap={4} direction={"column"}>
       <Flex
         direction={"row"}
         justifyContent={"flex-start"}
@@ -46,8 +51,8 @@ export const AttractiviteSection = ({
         <Badge variant="info" maxH={5}>
           Rentrée {CURRENT_RENTREE}
         </Badge>
-        {isAnyDataMissing(chiffresEntreeOffre) && (
-          <Badge variant="warning" maxH={5}>
+        {isAnyDataMissing(chiffresEntreeOffre?.[CURRENT_RENTREE]) && (
+          <Badge variant="grey" maxH={5}>
             <WarningTwoIcon me={2} />
             Données incomplètes
           </Badge>
@@ -106,6 +111,6 @@ export const AttractiviteSection = ({
           />
         </GridItem>
       </Grid>
-    </>
+    </Flex>
   );
 };
