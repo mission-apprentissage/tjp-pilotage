@@ -1,4 +1,3 @@
-import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
@@ -8,7 +7,11 @@ export interface Filters extends RouteQueryString {
   uai: string;
 }
 
-export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
+export const getCountEtablissementsProches = async ({
+  cfd,
+  uai,
+  bbox,
+}: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -21,26 +24,7 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
     )
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
-    )
-    .distinct()
-    .select((sb) => [
-      sql<string[]>`array_agg(distinct ${sb.ref(
-        "formationEtablissement.voie"
-      )})`.as("voies"),
-      sql<string[]>`array_agg(distinct ${sb.ref(
-        "dispositif.libelleDispositif"
-      )})`.as("libellesDispositifs"),
-      "etablissement.UAI",
-      "etablissement.codeDepartement",
-      "etablissement.commune",
-      "etablissement.longitude",
-      "etablissement.latitude",
-      "etablissement.libelleEtablissement",
-    ])
+    .select((sb) => sb.fn.count<number>("etablissement.UAI").over().as("count"))
     .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
@@ -67,13 +51,6 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       }
       return q;
     })
-    .limit(100)
-    .groupBy([
-      "etablissement.UAI",
-      "etablissement.codeDepartement",
-      "etablissement.commune",
-      "etablissement.longitude",
-      "etablissement.latitude",
-      "etablissement.libelleEtablissement",
-    ])
+    .groupBy(["etablissement.UAI", "formationEtablissement.cfd"])
+    .limit(1)
     .execute();

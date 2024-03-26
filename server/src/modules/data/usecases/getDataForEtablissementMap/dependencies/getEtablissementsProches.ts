@@ -68,7 +68,6 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       return q;
     })
     .groupBy([
-      "dispositif.libelleDispositif",
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",

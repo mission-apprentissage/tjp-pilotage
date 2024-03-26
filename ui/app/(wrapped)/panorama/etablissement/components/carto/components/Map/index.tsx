@@ -9,6 +9,7 @@ import MapGLMap, {
 
 import { client } from "../../../../../../../../api.client";
 import { useEtablissementMapContext } from "../../context/etablissementMapContext";
+import { ActiveEtablissement } from "./components/ActiveEtablissement";
 import { CustomControls } from "./components/CustomControls";
 import { Etablissement } from "./components/Etablissement";
 import { EtablissementsProches } from "./components/EtablissementsProches";
@@ -58,12 +59,14 @@ export function Map({ uai }: MapProps) {
         touchZoomRotate={false}
         maxPitch={0}
         minPitch={0}
+        fadeDuration={0}
       >
         <EtablissementsProches />
+        <Etablissement />
+        <ActiveEtablissement />
         <ScaleControl />
         <NavigationControl />
         <CustomControls />
-        <Etablissement />
       </MapGLMap>
     </Box>
   );

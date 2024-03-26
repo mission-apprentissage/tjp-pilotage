@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import z from "zod";
 
 import * as dependencies from "./dependencies";
+import { getCountEtablissementsProches } from "./dependencies/getCountEtablissementsProches";
 import { getDataForEtablissementMapListSchema } from "./getDataForEtablissementMapList.schema";
 import { formatEtablissement } from "./services/formatEtablissement";
 import { getDistance } from "./services/getDistance";
@@ -55,7 +56,14 @@ export const getDataForEtablissementMapListFactory =
       etablissements: etablissements,
     }).map(formatEtablissement);
 
+    const count = await getCountEtablissementsProches({
+      cfd: cfds,
+      bbox: filters.bbox,
+      uai: params.uai,
+    });
+
     return {
+      count: count[0]?.count ?? 0,
       etablissements: filteredEtablissements,
     };
   };

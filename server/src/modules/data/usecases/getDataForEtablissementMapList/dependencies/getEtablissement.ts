@@ -42,7 +42,6 @@ export const getEtablissement = async ({ uai }: Filters) =>
     ])
     .where("etablissement.UAI", "=", uai)
     .groupBy([
-      "dispositif.libelleDispositif",
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",

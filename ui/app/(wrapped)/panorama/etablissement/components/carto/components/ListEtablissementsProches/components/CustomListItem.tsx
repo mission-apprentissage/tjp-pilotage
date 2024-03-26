@@ -11,6 +11,7 @@ import {
 import { client } from "@/api.client";
 
 import { themeDefinition } from "../../../../../../../../../theme/theme";
+import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 
 interface CustomListItemProps {
   etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map"]["etablissementsProches"][number];
@@ -27,9 +28,25 @@ export const CustomListItem = ({
   withDivider,
   children,
 }: CustomListItemProps) => {
+  const { activeUai, setActiveUai } = useEtablissementMapContext();
+
+  console.log(activeUai);
+
   return (
     <>
-      <ListItem padding="16px">
+      <ListItem
+        padding="16px"
+        _hover={{
+          backgroundColor: themeDefinition.colors.grey["1000_hover"],
+          cursor: "pointer",
+        }}
+        backgroundColor={
+          activeUai === etablissement.uai
+            ? themeDefinition.colors.grey["1000_active"]
+            : "transparent"
+        }
+        onClick={() => setActiveUai(etablissement.uai)}
+      >
         <VStack>
           <HStack justifyContent={"space-between"} width="100%">
             <Text fontWeight={700}>

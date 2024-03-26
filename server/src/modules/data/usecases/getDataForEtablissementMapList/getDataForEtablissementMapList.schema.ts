@@ -27,6 +27,7 @@ export const getDataForEtablissementMapListSchema = {
   }),
   response: {
     200: z.object({
+      count: z.number(),
       etablissements: z.array(EtablissementSchema),
     }),
   },
