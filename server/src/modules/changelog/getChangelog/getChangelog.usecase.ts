@@ -1,6 +1,6 @@
 import { config } from "../../../../config/config";
+import { getDatabaseRows } from "../../core/services/notion/notion";
 import { Changelog, ChangelogEntry } from "./getChangelog.schema";
-import { getDatabaseRows } from "./getChangelog.service";
 
 /**
  * AUTO GENERATED TYPES
@@ -141,7 +141,7 @@ export interface MiseAJour {
 export const getChangelogFactory =
   (
     deps = {
-      getDatabaseRows: getDatabaseRows,
+      getDatabaseRows,
       config,
     }
   ) =>
