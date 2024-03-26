@@ -2,6 +2,8 @@ import { useEffect } from "react";
 import {
   CircleLayer,
   Layer,
+  MapGeoJSONFeature,
+  MapMouseEvent,
   Source,
   SymbolLayer,
   useMap,
@@ -13,7 +15,8 @@ import { MAP_IMAGES } from "./CustomControls";
 
 export const Etablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap, activeUai } = useEtablissementMapContext();
+  const { etablissementMap, activeUai, setActiveUai } =
+    useEtablissementMapContext();
 
   const etablissementPoint = {
     type: "Feature",
@@ -88,10 +91,29 @@ export const Etablissement = () => {
     }
   };
 
+  const onSinglePointClick = async (
+    e: MapMouseEvent & {
+      features?: MapGeoJSONFeature[];
+    }
+  ) => {
+    if (map !== undefined) {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: [
+          scolaireSinglePointLayer.id,
+          apprentissageSinglePointLayer.id,
+          scolaireApprentissageSinglePointLayer.id,
+        ],
+      });
+      setActiveUai(features[0].properties.uai);
+    }
+  };
+
   useEffect(() => {
     if (map !== undefined) {
       map.on("load", async () => {
         flyToEtablissement();
+        map.off("click", onSinglePointClick);
+        map.on("click", onSinglePointClick);
       });
     }
   }, [map]);

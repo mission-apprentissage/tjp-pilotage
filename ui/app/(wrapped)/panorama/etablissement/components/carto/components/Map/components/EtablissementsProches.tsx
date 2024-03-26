@@ -1,12 +1,10 @@
-import { Point } from "geojson";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import {
   CircleLayer,
   GeoJSONSource,
   Layer,
   MapGeoJSONFeature,
   MapMouseEvent,
-  Popup,
   Source,
   SymbolLayer,
   useMap,
@@ -17,15 +15,9 @@ import { useEtablissementMapContext } from "../../../context/etablissementMapCon
 import { MAP_IMAGES } from "./CustomControls";
 
 export const EtablissementsProches = () => {
-  const [popupState, setPopupState] = useState({
-    show: false,
-    lat: 0,
-    lng: 0,
-    text: "",
-  });
-
   const { current: map } = useMap();
-  const { etablissementsProches, activeUai } = useEtablissementMapContext();
+  const { etablissementsProches, activeUai, setActiveUai } =
+    useEtablissementMapContext();
 
   const geojson = {
     type: "FeatureCollection",
@@ -89,6 +81,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -104,6 +97,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_INVERTED.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -119,6 +113,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -134,6 +129,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE_INVERTED.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -149,6 +145,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -164,6 +161,7 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
+      "icon-overlap": "always",
     },
   };
 
@@ -194,20 +192,6 @@ export const EtablissementsProches = () => {
     }
   };
 
-  const onActiveUaiUpdate = async (newActiveUai: string) => {
-    const activeEtablissement = etablissementsProches.find(
-      (e) => e.uai === newActiveUai
-    );
-    if (map !== undefined && activeEtablissement) {
-      const source = map.getSource("etablissementsProches");
-      console.log(source);
-    }
-  };
-
-  useEffect(() => {
-    onActiveUaiUpdate(activeUai);
-  }, [activeUai]);
-
   const onSinglePointClick = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
@@ -215,15 +199,13 @@ export const EtablissementsProches = () => {
   ) => {
     if (map !== undefined) {
       const features = map.queryRenderedFeatures(e.point, {
-        layers: [scolaireSinglePointLayer.id],
+        layers: [
+          scolaireSinglePointLayer.id,
+          apprentissageSinglePointLayer.id,
+          scolaireApprentissageSinglePointLayer.id,
+        ],
       });
-      const point = features[0].geometry as Point;
-      setPopupState({
-        show: true,
-        lng: point.coordinates[0],
-        lat: point.coordinates[1],
-        text: features[0].properties?.uai,
-      });
+      setActiveUai(features[0].properties.uai);
     }
   };
 
@@ -233,8 +215,19 @@ export const EtablissementsProches = () => {
         map.off("click", clusterLayer.id, onClusterClick);
         map.on("click", clusterLayer.id, onClusterClick);
 
-        map.off("click", scolaireSinglePointLayer.id, onSinglePointClick);
-        map.on("click", scolaireSinglePointLayer.id, onSinglePointClick);
+        const singlePointLayers = [
+          scolaireSinglePointLayer,
+          scolaireInvertedSinglePointLayer,
+          scolaireApprentissageSinglePointLayer,
+          scolaireApprentissageInvertedSinglePointLayer,
+          apprentissageSinglePointLayer,
+          apprentissageInvertedSinglePointLayer,
+        ];
+
+        singlePointLayers.forEach((layer) => {
+          map.off("click", layer.id, onSinglePointClick);
+          map.on("click", layer.id, onSinglePointClick);
+        });
       });
     }
   }, [map]);
@@ -255,16 +248,6 @@ export const EtablissementsProches = () => {
       <Layer {...apprentissageInvertedSinglePointLayer} />
       <Layer {...scolaireApprentissageSinglePointLayer} />
       <Layer {...scolaireApprentissageInvertedSinglePointLayer} />
-      {popupState.show && (
-        <Popup
-          longitude={popupState.lng}
-          latitude={popupState.lat}
-          anchor="bottom"
-          onClose={() => setPopupState({ ...popupState, show: false })}
-        >
-          {popupState.text}
-        </Popup>
-      )}
     </>
   );
 };
