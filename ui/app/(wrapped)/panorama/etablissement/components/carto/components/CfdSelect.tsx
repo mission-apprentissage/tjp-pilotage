@@ -1,4 +1,4 @@
-import { Flex, Skeleton } from "@chakra-ui/react";
+import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
@@ -77,30 +77,29 @@ export const CfdSelect = () => {
     <>
       {!offre || (!analyseDetaillee && <Skeleton />)}
       {offre && analyseDetaillee && (
-        <AsyncSelect
-          // Ce hack ici permet de rentre le rendu du composant async select dépendant de
-          // l'offre sélectionnée dans analyse detaillée
-          key={`cfd-select-${offre}`}
-          name="MapCfdSelect"
-          components={{
-            DropdownIndicator: () => null,
-            IndicatorSeparator: () => null,
-          }}
-          onChange={(selected) => {
-            if (selected) onChange(selected);
-          }}
-          defaultValue={defaultValue}
-          defaultOptions={true}
-          loadOptions={loadOptions}
-          formatOptionLabel={(option) => {
-            return <Flex>{option.label}</Flex>;
-          }}
-          loadingMessage={({ inputValue }) =>
-            `${inputValue} est en cours de recherche...`
-          }
-          placeholder="Code diplôme ou libellé"
-          isDisabled={!analyseDetaillee}
-        />
+        <Stack gap="8px">
+          <Text>Formation</Text>
+          <AsyncSelect
+            // Rendre la key dépendente de l'offre, permet le rendu du composant à chaque fois que
+            // l'offre sélectionnée dans analyse detaillée change
+            key={`cfd-select-${offre}`}
+            name="MapCfdSelect"
+            onChange={(selected) => {
+              if (selected) onChange(selected);
+            }}
+            defaultValue={defaultValue}
+            defaultOptions={true}
+            loadOptions={loadOptions}
+            formatOptionLabel={(option) => {
+              return <Flex>{option.label}</Flex>;
+            }}
+            loadingMessage={({ inputValue }) =>
+              `${inputValue} est en cours de recherche...`
+            }
+            placeholder="Code diplôme ou libellé"
+            isDisabled={!analyseDetaillee}
+          />
+        </Stack>
       )}
     </>
   );

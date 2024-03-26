@@ -24,10 +24,14 @@ type EtablissementMapContextType = {
   setEtablissementList: (data: EtablissementListType) => void;
   bbox: Bbox;
   setBbox: (bbox: Bbox) => void;
+  // Obligé ici de référencer la carte pour qu'elle soit partagé à tout le contexte
+  // et non uniquement aux enfants de la carte maplibre
   map: MapRef | undefined;
   setMap: (map: MapRef) => void;
   cfdFilter: string;
   setCfdFilter: (cfd: string) => void;
+  activeUais: string[];
+  setActiveUais: (uai: string[]) => void;
 };
 
 interface EtablissementMapContextProps {
@@ -54,6 +58,7 @@ export function EtablissementMapContextProvider({
     useState<EtablissementListType>({ etablissements: [] });
   const [map, setMap] = useState<MapRef>();
   const [cfdFilter, setCfdFilter] = useState("");
+  const [activeUais, setActiveUais] = useState<string[]>([]);
 
   const context = {
     etablissementMap,
@@ -67,6 +72,8 @@ export function EtablissementMapContextProvider({
     setMap,
     cfdFilter,
     setCfdFilter,
+    activeUais,
+    setActiveUais,
   };
 
   return (

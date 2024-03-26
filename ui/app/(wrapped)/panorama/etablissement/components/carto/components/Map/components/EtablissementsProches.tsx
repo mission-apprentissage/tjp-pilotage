@@ -14,21 +14,7 @@ import {
 
 import { themeDefinition } from "../../../../../../../../../theme/theme";
 import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
-
-const MAP_IMAGES = {
-  MAP_POINT_APPRENTISSAGE: {
-    path: "/map/map_point_apprentissage.png",
-    name: "map_point_apprentissage",
-  },
-  MAP_POINT_SCOLAIRE_APPRENTISSAGE: {
-    path: "/map/map_point_scolaire_apprentissage.png",
-    name: "map_point_scolaire_apprentissage",
-  },
-  MAP_POINT_SCOLAIRE: {
-    path: "/map/map_point_scolaire.png",
-    name: "map_point_scolaire",
-  },
-};
+import { MAP_IMAGES } from "./CustomControls";
 
 export const EtablissementsProches = () => {
   const [popupState, setPopupState] = useState({
@@ -39,13 +25,13 @@ export const EtablissementsProches = () => {
   });
 
   const { current: map } = useMap();
-  const { etablissementsProches } = useEtablissementMapContext();
+  const { etablissementsProches, activeUais } = useEtablissementMapContext();
 
   const geojson = {
     type: "FeatureCollection",
     features: etablissementsProches.map((e) => ({
       geometry: {
-        type: "point",
+        type: "Point",
         coordinates: [e.longitude, e.latitude],
       },
       properties: {
@@ -58,9 +44,9 @@ export const EtablissementsProches = () => {
   };
 
   const clusterLayer: CircleLayer = {
-    id: "clusters",
+    id: "cluster-etablissementsProches",
     type: "circle",
-    source: "data",
+    source: "etablissementsProches",
     filter: ["has", "point_count"],
     paint: {
       "circle-color": [
@@ -77,9 +63,9 @@ export const EtablissementsProches = () => {
   };
 
   const clusterLabelLayer: SymbolLayer = {
-    id: "clusters-count",
+    id: "cluster-count-etablissementsProches",
     type: "symbol",
-    source: "data",
+    source: "etablissementsProches",
     filter: ["has", "point_count"],
     layout: {
       "text-field": "{point_count_abbreviated}",
@@ -91,28 +77,59 @@ export const EtablissementsProches = () => {
   };
 
   const scolaireSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-points",
+    id: "single-scolaire-points-etablissementsProches",
     type: "symbol",
-    source: "data",
+    source: "etablissementsProches",
     filter: ["all", ["!has", "point_count"], ["in", "voies", "scolaire"]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
     },
   };
 
-  const apprentissageSinglePointLayer: SymbolLayer = {
-    id: "single-apprentissage-points",
+  const scolaireInvertedSinglePointLayer: SymbolLayer = {
+    id: "single-scolaire-points-etablissementsProches",
     type: "symbol",
-    source: "data",
+    source: "etablissementsProches",
+    filter: [
+      "all",
+      ["!has", "point_count"],
+      ["in", "voies", "scolaire"],
+      ["in", "uai", ...activeUais],
+    ],
+    layout: {
+      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_INVERTED.name,
+    },
+  };
+
+  const apprentissageSinglePointLayer: SymbolLayer = {
+    id: "single-apprentissage-points-etablissementsProches",
+    type: "symbol",
+    source: "etablissementsProches",
     filter: ["all", ["!has", "point_count"], ["in", "voies", "apprentissage"]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
     },
   };
-  const scolaireApprentissageSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-apprentissage-points",
+
+  const apprentissageInvertedSinglePointLayer: SymbolLayer = {
+    id: "single-apprentissage-points-etablissementsProches",
     type: "symbol",
-    source: "data",
+    source: "etablissementsProches",
+    filter: [
+      "all",
+      ["!has", "point_count"],
+      ["in", "voies", "apprentissage"],
+      ["in", "uai", ...activeUais],
+    ],
+    layout: {
+      "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE_INVERTED.name,
+    },
+  };
+
+  const scolaireApprentissageSinglePointLayer: SymbolLayer = {
+    id: "single-scolaire-apprentissage-points-etablissementsProches",
+    type: "symbol",
+    source: "etablissementsProches",
     filter: [
       "all",
       ["!has", "point_count"],
@@ -120,6 +137,21 @@ export const EtablissementsProches = () => {
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
+    },
+  };
+
+  const scolaireApprentissageInvertedSinglePointLayer: SymbolLayer = {
+    id: "single-scolaire-apprentissage-points-etablissementsProches",
+    type: "symbol",
+    source: "etablissementsProches",
+    filter: [
+      "all",
+      ["!has", "point_count"],
+      ["in", "voies", "apprentissage,scolaire"],
+      ["in", "uai", ...activeUais],
+    ],
+    layout: {
+      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
     },
   };
 
@@ -134,7 +166,9 @@ export const EtablissementsProches = () => {
       });
       const clusterId = features[0].properties.cluster_id;
 
-      const source = (await map.getSource("data")) as GeoJSONSource;
+      const source = (await map.getSource(
+        "etablissementsProches"
+      )) as GeoJSONSource;
       if (source && "getClusterExpansionZoom" in source) {
         const clusterZoom = await source.getClusterExpansionZoom(clusterId);
         map.easeTo({
@@ -167,26 +201,9 @@ export const EtablissementsProches = () => {
     }
   };
 
-  const loadImageOnMap = async (image: { path: string; name: string }) => {
-    if (map !== undefined) {
-      const loadedImage = await map.loadImage(image.path);
-      if (map.hasImage(image.name)) {
-        map.updateImage(image.name, loadedImage.data);
-      } else {
-        map.addImage(image.name, loadedImage.data);
-      }
-    }
-  };
-
   useEffect(() => {
     if (map !== undefined) {
       map.on("load", async () => {
-        await Promise.all(
-          Object.values(MAP_IMAGES).map(
-            async (image) => await loadImageOnMap(image)
-          )
-        );
-
         map.off("click", clusterLayer.id, onClusterClick);
         map.on("click", clusterLayer.id, onClusterClick);
 
@@ -198,12 +215,20 @@ export const EtablissementsProches = () => {
 
   return (
     <>
-      <Source id="data" type="geojson" data={geojson} cluster={true} />
+      <Source
+        id="etablissementsProches"
+        type="geojson"
+        data={geojson}
+        cluster={true}
+      />
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
       <Layer {...scolaireSinglePointLayer} />
+      <Layer {...scolaireInvertedSinglePointLayer} />
       <Layer {...apprentissageSinglePointLayer} />
+      <Layer {...apprentissageInvertedSinglePointLayer} />
       <Layer {...scolaireApprentissageSinglePointLayer} />
+      <Layer {...scolaireApprentissageInvertedSinglePointLayer} />
       {popupState.show && (
         <Popup
           longitude={popupState.lng}

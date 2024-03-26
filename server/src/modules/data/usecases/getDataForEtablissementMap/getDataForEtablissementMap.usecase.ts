@@ -51,10 +51,18 @@ export const getDataForEtablissementMapFactory =
       etablissements,
     }).map(formatEtablissement);
 
-    const initialZoom = getInitialZoom(filteredEtablissements);
+    const formattedEtablissement = formatEtablissement({
+      ...etablissement,
+      distance: 0,
+    });
+
+    const initialZoom = getInitialZoom(
+      formattedEtablissement,
+      filteredEtablissements
+    );
 
     return {
-      ...formatEtablissement({ ...etablissement, distance: 0 }),
+      ...formattedEtablissement,
       etablissementsProches: filteredEtablissements,
       initialZoom,
     };

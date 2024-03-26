@@ -1,5 +1,6 @@
 import {
   Badge,
+  Box,
   Divider,
   HStack,
   ListItem,
@@ -8,6 +9,8 @@ import {
 } from "@chakra-ui/react";
 
 import { client } from "@/api.client";
+
+import { themeDefinition } from "../../../../../../../../../theme/theme";
 
 interface CustomListItemProps {
   etablissement: (typeof client.infer)["[GET]/etablissement/:uai/map"]["etablissementsProches"][number];
@@ -41,22 +44,34 @@ export const CustomListItem = ({
               {formatDistance(etablissement.distance)}km
             </Text>
           </HStack>
-          <HStack width="100%">
-            {etablissement.libellesDispositifs
-              .filter((l) => l !== "")
-              .map((l) => (
-                <Badge key={`${etablissement.uai}-${l}`} variant="">
-                  {l}
+          <HStack width="100%" justifyContent="space-between">
+            <Box>
+              {etablissement.voies.map((voie) => (
+                <Badge
+                  key={`${etablissement.uai}-${voie}`}
+                  variant={voie === "scolaire" ? "info" : "new"}
+                >
+                  {voie}
                 </Badge>
               ))}
-            {etablissement.voies.map((v) => (
-              <Badge
-                key={`${etablissement.uai}-${v}`}
-                variant={v === "scolaire" ? "info" : "new"}
-              >
-                {v}
-              </Badge>
-            ))}
+            </Box>
+            <Box>
+              {etablissement.libellesDispositifs
+                .filter((libelle) => libelle !== "")
+                .map((libelle, i) => (
+                  <>
+                    <Text
+                      key={`${etablissement.uai}-${libelle}`}
+                      color={themeDefinition.colors.grey[425]}
+                    >
+                      {libelle}
+                    </Text>
+                    {i < etablissement.libellesDispositifs.length - 1 && (
+                      <Divider orientation="vertical" />
+                    )}
+                  </>
+                ))}
+            </Box>
           </HStack>
         </VStack>
       </ListItem>
