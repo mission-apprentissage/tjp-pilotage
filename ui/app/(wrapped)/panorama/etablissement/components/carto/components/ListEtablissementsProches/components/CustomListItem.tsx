@@ -47,6 +47,14 @@ const formatSecteur = (secteur: string) => {
   }
 };
 
+const formatDepartement = (departement: string) => {
+  if (departement.length === 3 && departement[0] === "0") {
+    return departement.substring(1);
+  }
+
+  return departement;
+};
+
 export const CustomListItem = ({
   etablissement,
   withDivider,
@@ -97,7 +105,8 @@ export const CustomListItem = ({
               divider={<Divider orientation="vertical" h="12px" w="1px" />}
             >
               <Text>
-                {etablissement.commune} ({etablissement.codeDepartement})
+                {etablissement.commune} (
+                {formatDepartement(etablissement.codeDepartement)})
               </Text>
               <Text>{formatDistance(etablissement.distance)}</Text>
               {etablissement.secteur && (
