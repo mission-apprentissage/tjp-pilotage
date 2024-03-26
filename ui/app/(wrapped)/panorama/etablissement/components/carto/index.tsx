@@ -22,7 +22,7 @@ export const EtablissementMap = () => {
         </Text>
         <CfdSelect />
         <Grid
-          templateColumns={"repeat(2,1fr)"}
+          templateColumns={"repeat(2,50%)"}
           templateRows={"repeat(1,500px)"}
           gap="16px"
         >

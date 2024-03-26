@@ -10,6 +10,9 @@ export const EtablissementSchema = z.object({
   libelleEtablissement: z.string(),
   libellesDispositifs: z.array(z.string()),
   voies: z.array(z.string()),
+  effectif: z.number().optional(),
+  tauxInsertion: z.number().optional(),
+  tauxPoursuite: z.number().optional(),
 });
 
 export const getDataForEtablissementMapListSchema = {
@@ -26,9 +29,9 @@ export const getDataForEtablissementMapListSchema = {
     }),
   }),
   response: {
-    200: z.object({
+    200: EtablissementSchema.extend({
       count: z.number(),
-      etablissements: z.array(EtablissementSchema),
+      etablissementsProches: z.array(EtablissementSchema),
     }),
   },
 };

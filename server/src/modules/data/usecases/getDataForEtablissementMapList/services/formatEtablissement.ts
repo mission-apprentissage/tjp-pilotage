@@ -17,5 +17,8 @@ export function formatEtablissement(
     libellesDispositifs:
       etablissement.libellesDispositifs.map((l) => (l === null ? "" : l)) || [],
     distance: etablissement.distance,
+    effectif: etablissement.effectif || undefined,
+    tauxInsertion: etablissement.tauxInsertion || undefined,
+    tauxPoursuite: etablissement.tauxPoursuite || undefined,
   };
 }

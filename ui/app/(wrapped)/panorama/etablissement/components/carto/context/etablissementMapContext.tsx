@@ -20,7 +20,7 @@ type EtablissementMapContextType = {
   etablissementMap: EtablissementMapType | undefined;
   setEtablissementMap: (data: EtablissementMapType) => void;
   etablissementsProches: EtablissementMapType["etablissementsProches"];
-  etablissementList: EtablissementListType;
+  etablissementList: EtablissementListType | undefined;
   setEtablissementList: (data: EtablissementListType) => void;
   bbox: Bbox;
   setBbox: (bbox: Bbox) => void;
@@ -55,7 +55,7 @@ export function EtablissementMapContextProvider({
   const [etablissementMap, setEtablissementMap] =
     useState<EtablissementMapType>();
   const [etablissementList, setEtablissementList] =
-    useState<EtablissementListType>({ count: 0, etablissements: [] });
+    useState<EtablissementListType>();
   const [map, setMap] = useState<MapRef>();
   const [cfdFilter, setCfdFilter] = useState("");
   const [activeUai, setActiveUai] = useState<string>("");

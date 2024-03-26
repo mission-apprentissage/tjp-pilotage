@@ -1,7 +1,10 @@
 import { sql } from "kysely";
-import { CURRENT_RENTREE } from "shared";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
+import { effectifAnnee } from "../../../utils/effectifAnnee";
+import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
+import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
 import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
 export interface Filters extends RouteQueryString {
@@ -26,6 +29,11 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "dispositif.codeDispositif",
       "formationEtablissement.dispositifId"
     )
+    .leftJoin(
+      "indicateurSortie",
+      "indicateurSortie.formationEtablissementId",
+      "formationEtablissement.id"
+    )
     .distinct()
     .select((sb) => [
       sql<string[]>`array_agg(distinct ${sb.ref(
@@ -40,6 +48,9 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "etablissement.longitude",
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
+      selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
+      selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
+      effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
     ])
     .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
@@ -48,6 +59,8 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
         eb("indicateurEntree.rentreeScolaire", "is", null),
       ])
     )
+    .where("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE)
+    .where("indicateurSortie.millesimeSortie", "=", CURRENT_IJ_MILLESIME)
     .$call((q) => {
       if (bbox !== undefined) {
         return q.where((eb) =>
@@ -75,5 +88,11 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "etablissement.longitude",
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
+      "indicateurSortie.effectifSortie",
+      "indicateurSortie.nbSortants",
+      "indicateurSortie.nbPoursuiteEtudes",
+      "indicateurSortie.nbInsertion6mois",
+      "indicateurEntree.effectifs",
+      "indicateurEntree.anneeDebut",
     ])
     .execute();
