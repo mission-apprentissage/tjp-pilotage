@@ -1,9 +1,8 @@
-import { Badge, Box, Text, useToken } from "@chakra-ui/react";
+import { Box, Text, useToken } from "@chakra-ui/react";
 
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
@@ -19,7 +18,6 @@ export const TauxPression = ({
   codeNiveauDiplome?: string;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresEntreeOffre) {
       return (
@@ -97,36 +95,35 @@ export const TauxPression = ({
           : "Taux de pression"
       }
       tooltip={
-        <TooltipIcon
-          ml="1"
-          label={
-            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? (
+        codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS ? (
+          <GlossaireShortcut
+            tooltip={
               <Box>
                 <Text>
                   Le ratio entre le nombre de voeux et la capacité de la
-                  formation au niveau régional.
+                  formation dans l'établissement.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
                 <TauxPressionScale />
               </Box>
-            ) : (
+            }
+            glossaireEntryKey="taux-de-demande"
+          />
+        ) : (
+          <GlossaireShortcut
+            tooltip={
               <Box>
                 <Text>
                   Le ratio entre le nombre de premiers voeux et la capacité de
-                  la formation au niveau régional.
+                  la formation dans l'établissement.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
                 <TauxPressionScale />
               </Box>
-            )
-          }
-          onClick={() => openGlossaire("taux-de-pression")}
-        />
-      }
-      badge={
-        <Badge variant="lavander" size={"xs"}>
-          Étab.
-        </Badge>
+            }
+            glossaireEntryKey="taux-de-pression"
+          />
+        )
       }
     >
       {chiffresEntreeOffre && checkDataAvailability() ? (

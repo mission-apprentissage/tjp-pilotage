@@ -1,3 +1,4 @@
+import { voie } from "shared/enum/voieEnum";
 import { z } from "zod";
 
 const EtablissementSchema = z.object({
@@ -63,11 +64,11 @@ const ChiffresEntreeSchema = z.record(
   })
 );
 
-const FormationSchema = z.object({
+export const FormationSchema = z.object({
   offre: z.string(),
   libelleNiveauDiplome: z.string().optional(),
   libelleFormation: z.string(),
-  voie: z.string(),
+  voie: voie,
   libelleDispositif: z.string().optional(),
   cfd: z.string(),
   codeDispositif: z.string().optional(),
@@ -75,34 +76,29 @@ const FormationSchema = z.object({
   typeFamille: z.string().optional(),
 });
 
+const OffreSchema = z.string();
+
 export const getAnalyseDetailleeEtablissementSchema = {
   params: z.object({
     uai: z.string(),
   }),
   querystring: z.object({
     codeNiveauDiplome: z.array(z.string()).optional(),
+    voie: z.array(voie).optional(),
   }),
   response: {
     200: z.object({
       etablissement: EtablissementSchema,
-      formations: z.record(
-        z.string(), // offre
-        FormationSchema
-      ),
-      chiffresIJ: z.record(
-        z.string(), // offre
-        ChiffresIjSchema
-      ),
-      chiffresEntree: z.record(
-        z.string(), // offre
-        ChiffresEntreeSchema
-      ),
+      formations: z.record(OffreSchema, FormationSchema),
+      chiffresIJ: z.record(OffreSchema, ChiffresIjSchema),
+      chiffresEntree: z.record(OffreSchema, ChiffresEntreeSchema),
       statsSortie: z.object({
         tauxPoursuite: z.coerce.number().optional(),
         tauxInsertion: z.coerce.number().optional(),
       }),
       filters: z.object({
         diplomes: z.array(OptionSchema),
+        voies: z.array(voie),
       }),
     }),
   },

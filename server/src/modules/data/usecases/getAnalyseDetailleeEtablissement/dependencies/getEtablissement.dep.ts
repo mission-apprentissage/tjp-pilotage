@@ -3,6 +3,7 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+
 export const getEtablissement = async ({ uai }: { uai: string }) =>
   kdb
     .selectFrom("dataEtablissement")

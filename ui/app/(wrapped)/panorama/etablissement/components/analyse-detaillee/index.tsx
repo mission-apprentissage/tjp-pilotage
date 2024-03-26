@@ -58,18 +58,6 @@ const EtablissementAnalyseDetaillee = () => {
             formations={Object.values(formations ?? {})}
             offre={offre}
             setOffre={setOffre}
-            nbOffres={
-              filtersData?.diplomes.reduce(
-                (acc, diplome) => {
-                  if (!activeFilters.codeNiveauDiplome)
-                    acc[diplome.label] = diplome.nbOffres;
-                  if (activeFilters.codeNiveauDiplome?.includes(diplome.value))
-                    acc[diplome.label] = diplome.nbOffres;
-                  return acc;
-                },
-                {} as Record<string, number>
-              ) ?? {}
-            }
           />
         </GridItem>
         <GridItem colSpan={6}>

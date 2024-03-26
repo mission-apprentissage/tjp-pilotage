@@ -1,28 +1,60 @@
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import { Badge, Flex, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
-import { ChiffresEntreeOffre } from "../../types";
+import {
+  ChiffresEntreeOffre,
+  ChiffresEntreeOffreRentree,
+  Formation,
+} from "../../types";
 import { NombreElevesParAnnee } from "./NombreElevesParAnnee";
 
-const isAnyDataMissing = (chiffresEntreeOffre?: ChiffresEntreeOffre) =>
-  !chiffresEntreeOffre ||
-  typeof chiffresEntreeOffre.effectifAnnee1 === "undefined" ||
-  typeof chiffresEntreeOffre.effectifAnnee2 === "undefined" ||
-  typeof chiffresEntreeOffre.effectifAnnee3 === "undefined";
+const isAnyDataMissing = (
+  formation?: Formation,
+  chiffresEntreeOffre?: ChiffresEntreeOffreRentree
+) => {
+  if (!formation || !chiffresEntreeOffre) {
+    return true;
+  }
+
+  if (formation.typeFamille === "2nde_commune") {
+    return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
+  }
+
+  if (formation.typeFamille === "1ere_commune") {
+    return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
+  }
+
+  if (formation.typeFamille === "specialite") {
+    return (
+      typeof chiffresEntreeOffre.effectifAnnee2 === "undefined" ||
+      typeof chiffresEntreeOffre.effectifAnnee3 === "undefined"
+    );
+  }
+
+  if (formation.typeFamille === "option") {
+    return typeof chiffresEntreeOffre.effectifAnnee2 === "undefined";
+  }
+
+  return chiffresEntreeOffre.effectifs?.some((f) => f === null);
+};
 
 export const EffectifSection = ({
+  formation,
   chiffresEntreeOffre,
 }: {
+  formation?: Formation;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
+  console.debug("EffectifSection", { formation, chiffresEntreeOffre });
   return (
-    <>
+    <Box>
       <Flex
         direction={"row"}
         justifyContent={"flex-start"}
         gap={"8px"}
         alignItems={"center"}
+        mb={4}
       >
         <Text
           fontSize={14}
@@ -35,14 +67,17 @@ export const EffectifSection = ({
         <Badge variant="info" maxH={5}>
           Rentrée {CURRENT_RENTREE}
         </Badge>
-        {isAnyDataMissing(chiffresEntreeOffre) && (
-          <Badge variant="warning" maxH={5}>
+        {isAnyDataMissing(
+          formation,
+          chiffresEntreeOffre?.[CURRENT_RENTREE]
+        ) && (
+          <Badge variant="grey" maxH={5}>
             <WarningTwoIcon me={2} />
             Données incomplètes
           </Badge>
         )}
       </Flex>
       <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
-    </>
+    </Box>
   );
 };

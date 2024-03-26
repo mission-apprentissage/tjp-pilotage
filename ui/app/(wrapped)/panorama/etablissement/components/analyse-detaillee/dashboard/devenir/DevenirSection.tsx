@@ -1,29 +1,54 @@
 import { WarningTwoIcon } from "@chakra-ui/icons";
-import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
-import { ChiffresIJOffre } from "../../types";
+import { ChiffresIJOffre, Formation } from "../../types";
 import { TauxDevenirFavorable } from "./TauxDevenirFavorable";
 import { TauxEmploi } from "./TauxEmploi";
 import { TauxPoursuiteEtudes } from "./TauxPoursuiteEtudes";
 
-const isAnyDataMissing = (chiffresIJOffre?: ChiffresIJOffre) =>
-  !chiffresIJOffre ||
-  typeof chiffresIJOffre.tauxInsertion === "undefined" ||
-  typeof chiffresIJOffre.tauxPoursuite === "undefined" ||
-  typeof chiffresIJOffre.tauxDevenirFavorable === "undefined";
+const isAnyDataMissing = (
+  formation?: Formation,
+  chiffresIJOffre?: ChiffresIJOffre
+) => {
+  if (!chiffresIJOffre) {
+    if (
+      formation &&
+      (formation.typeFamille === "2nde_commune" ||
+        formation.typeFamille === "1ere_commune")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  return Object.values(chiffresIJOffre).reduce((acc, value) => {
+    if (
+      typeof value.tauxInsertion === "undefined" ||
+      typeof value.tauxPoursuite === "undefined" ||
+      typeof value.tauxDevenirFavorable === "undefined"
+    ) {
+      return true;
+    }
+    return acc;
+  }, false);
+};
 
 export const DevenirSection = ({
+  formation,
   chiffresIJOffre,
 }: {
+  formation?: Formation;
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
+  console.debug("DevenirSection", { formation, chiffresIJOffre });
   return (
-    <>
+    <Box>
       <Flex
         direction={"row"}
         justifyContent={"flex-start"}
         gap={"8px"}
         alignItems={"center"}
+        mb={4}
       >
         <Text
           fontSize={14}
@@ -34,8 +59,8 @@ export const DevenirSection = ({
           Devenir des élèves
         </Text>
 
-        {isAnyDataMissing(chiffresIJOffre) && (
-          <Badge variant="warning" maxH={5}>
+        {isAnyDataMissing(formation, chiffresIJOffre) && (
+          <Badge variant="grey" maxH={5}>
             <WarningTwoIcon me={2} />
             Données incomplètes
           </Badge>
@@ -52,6 +77,6 @@ export const DevenirSection = ({
           <TauxDevenirFavorable chiffresIJOffre={chiffresIJOffre} />
         </GridItem>
       </Grid>
-    </>
+    </Box>
   );
 };
