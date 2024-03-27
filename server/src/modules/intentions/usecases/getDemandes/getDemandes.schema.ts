@@ -42,6 +42,8 @@ const DemandesItem = z.object({
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
   userName: z.string().optional(),
+  statutCampagne: z.string(),
+  numeroDemandeImportee: z.string().optional(),
 });
 
 export const getDemandesSchema = {
@@ -52,11 +54,18 @@ export const getDemandesSchema = {
     orderBy: DemandesItem.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
+    campagne: z.string().optional(),
   }),
   response: {
     200: z.object({
       count: z.coerce.number(),
       demandes: z.array(DemandesItem),
+      campagnes: z.array(
+        z.object({
+          annee: z.string(),
+          statut: z.string(),
+        })
+      ),
     }),
   },
 };

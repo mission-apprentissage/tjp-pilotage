@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkIcon, Search2Icon, WarningTwoIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -20,6 +20,7 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -38,10 +39,7 @@ import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
-
-export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "statut">;
-export type Order = Pick<Query, "order" | "orderBy">;
+import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -79,14 +77,22 @@ export const PageClient = () => {
     search?: string;
     order?: Partial<Order>;
     page?: string;
+    campagne?: string;
     action?: "draft" | "submitted" | "refused";
   } = qs.parse(queryParams.toString());
+
+  const filters = searchParams.filters ?? {};
+  const search = searchParams.search ?? "";
+  const order = searchParams.order ?? { order: "asc" };
+  const campagne = searchParams.campagne;
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
     order?: typeof order;
     page?: typeof page;
+    campagne?: typeof campagne;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -109,17 +115,13 @@ export const PageClient = () => {
     });
   };
 
-  const filters = searchParams.filters ?? {};
-  const search = searchParams.search ?? "";
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-
   const getDemandesQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     search,
     ...order,
     offset: qOffset,
     limit: qLimit,
+    campagne,
   });
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
@@ -128,17 +130,6 @@ export const PageClient = () => {
     },
     { keepPreviousData: true, staleTime: 0 }
   );
-
-  const nouvelleCompensation = (
-    demandeCompensee: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
-  ) => {
-    router.push(
-      createParametrizedUrl(`${location.pathname}/new`, {
-        intentionId: demandeCompensee.numero,
-        compensation: true,
-      })
-    );
-  };
 
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
@@ -168,6 +159,19 @@ export const PageClient = () => {
     ];
     return colors[userName.charCodeAt(1) % colors.length];
   };
+
+  const importDemande = async (numero: string) => {
+    await client
+      .ref("[POST]/demande/import/:numero")
+      .query({ params: { numero } })
+      .then((demande) => {
+        router.push(`/intentions/saisie/${demande.numero}`);
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+  };
+
   if (isLoading) return <IntentionSpinner />;
 
   return (
@@ -180,7 +184,11 @@ export const PageClient = () => {
         minHeight={0}
         py={4}
       >
-        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
+        <MenuIntention
+          hasPermissionEnvoi={hasPermissionEnvoi}
+          isRecapView
+          campagnes={data?.campagnes}
+        />
         <Box
           display={["none", null, "unset"]}
           borderLeft="solid 1px"
@@ -293,7 +301,6 @@ export const PageClient = () => {
                         <OrderIcon {...order} column="typeDemande" />
                         {DEMANDES_COLUMNS.typeDemande}
                       </Th>
-                      <Th>compensation</Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("statut")}
@@ -382,67 +389,6 @@ export const PageClient = () => {
                                 : null}
                             </Text>
                           </Td>
-                          <Td>
-                            {demande.compensationCfd &&
-                            demande.compensationCodeDispositif &&
-                            demande.compensationUai ? (
-                              demande.numeroCompensation ? (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  leftIcon={<LinkIcon focusable={true} />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    router.push(
-                                      `/intentions/saisie/${demande.numeroCompensation}?compensation=true`
-                                    );
-                                  }}
-                                >
-                                  <Box textAlign="left">
-                                    <Box whiteSpace="nowrap">
-                                      {`${
-                                        demande.typeCompensation
-                                          ? getTypeDemandeLabel(
-                                              demande.typeCompensation
-                                            )
-                                          : "Demande"
-                                      } liée `}
-                                    </Box>
-                                    <Text textDecoration="underline">
-                                      {demande.numeroCompensation}
-                                    </Text>
-                                  </Box>
-                                </Button>
-                              ) : (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  color="red.500"
-                                  leftIcon={<WarningTwoIcon />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    nouvelleCompensation(demande);
-                                  }}
-                                >
-                                  <Box textAlign="left" whiteSpace="nowrap">
-                                    Aucune demande liée <br /> identifiée
-                                  </Box>
-                                </Button>
-                              )
-                            ) : (
-                              <></>
-                            )}
-                          </Td>
                           <Td align="center" w={0}>
                             <TagDemande statut={demande.statut} />
                           </Td>
@@ -467,6 +413,36 @@ export const PageClient = () => {
                               demande.dateModification
                             ).toLocaleString()}
                           </Td>
+                          {demande.statutCampagne === "terminée" && (
+                            <Td>
+                              {demande.numeroDemandeImportee ? (
+                                <Button
+                                  as={NextLink}
+                                  variant="link"
+                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                  leftIcon={<ExternalLinkIcon />}
+                                  me={"auto"}
+                                >
+                                  Demande importée{" "}
+                                  {demande.numeroDemandeImportee}
+                                </Button>
+                              ) : (
+                                <Button
+                                  leftIcon={<Icon icon="ri:import-line" />}
+                                  variant={"newInput"}
+                                  onClick={(e) => {
+                                    if (demande.numeroDemandeImportee) return;
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    importDemande(demande.numero);
+                                  }}
+                                  isDisabled={!!demande.numeroDemandeImportee}
+                                >
+                                  Importer cette demande
+                                </Button>
+                              )}
+                            </Td>
+                          )}
                         </Tr>
                       )
                     )}
