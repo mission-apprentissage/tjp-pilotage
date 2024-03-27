@@ -1,4 +1,6 @@
 import { sql } from "kysely";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -7,14 +9,23 @@ import {
   isDemandeNotDeleted,
   isDemandeSelectable,
 } from "../../../utils/isDemandeSelectable";
+import { countDemandesSchema } from "./countDemandes.schema";
 
+export interface Filters
+  extends z.infer<typeof countDemandesSchema.querystring> {
+  user: RequestUser;
+}
 export const countDemandes = async ({
   user,
-}: {
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-}) => {
+  campagne = CURRENT_ANNEE_CAMPAGNE,
+}: Filters) => {
   const countDemandes = await kdb
     .selectFrom("demande")
+    .innerJoin("campagne", (join) =>
+      join
+        .onRef("campagne.id", "=", "demande.campagneId")
+        .on("campagne.annee", "=", campagne)
+    )
     .select((eb) => sql<number>`count(${eb.ref("demande.numero")})`.as("total"))
     .select((eb) =>
       sql<number>`COALESCE(

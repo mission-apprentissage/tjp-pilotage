@@ -1,31 +1,54 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import { Button, Flex, Select, Text, VStack } from "@chakra-ui/react";
+import _ from "lodash";
 import NextLink from "next/link";
-import { useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { client } from "../../../../../api.client";
+import { client } from "@/api.client";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "statut">;
+import { Campagnes, Filters } from "../types";
 
 export const MenuIntention = ({
   isRecapView = false,
   hasPermissionEnvoi,
+  campagnes,
 }: {
   isRecapView?: boolean;
   hasPermissionEnvoi: boolean;
+  campagnes?: Campagnes;
 }) => {
+  const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    campagne?: string;
   } = qs.parse(queryParams.toString());
 
   const statut =
     searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
+  const campagne = searchParams.campagne;
+
+  const setSearchParams = (params: {
+    filters?: Partial<Filters>;
+    campagne?: string;
+  }) => {
+    router.replace(
+      createParametrizedUrl(location.pathname, {
+        ...searchParams,
+        ...params,
+      })
+    );
+  };
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
-    {},
+    {
+      query: {
+        campagne,
+      },
+    },
     {
       keepPreviousData: true,
       staleTime: 0,
@@ -33,7 +56,7 @@ export const MenuIntention = ({
   );
 
   return (
-    <Flex direction="column" pr={[null, null, 4]} minW={250}>
+    <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
         isDisabled={!hasPermissionEnvoi}
         mb="4"
@@ -45,12 +68,38 @@ export const MenuIntention = ({
       >
         Nouvelle demande
       </Button>
+      <Flex direction={"column"} gap={1}>
+        <Text>Sélectionner une campagne</Text>
+        <Select
+          value={campagne ?? CURRENT_ANNEE_CAMPAGNE}
+          onChange={(event) =>
+            setSearchParams({
+              ...searchParams,
+              campagne: event.target.value,
+            })
+          }
+        >
+          {campagnes?.map((campagne) => (
+            <option value={campagne.annee} key={campagne.annee}>
+              {`${campagne.annee} (${
+                campagne.statut.charAt(0).toUpperCase() +
+                campagne.statut.substr(1)
+              })`}
+            </option>
+          ))}
+        </Select>
+      </Flex>
       <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ..._.omit(searchParams.filters, ["statut"]),
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
@@ -65,7 +114,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[statut]=submitted"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: "submitted",
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -84,7 +139,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[statut]=draft"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: "draft",
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
@@ -99,7 +160,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[statut]=refused"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: "refused",
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
