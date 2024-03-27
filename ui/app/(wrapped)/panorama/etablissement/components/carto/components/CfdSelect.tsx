@@ -16,8 +16,12 @@ type CfdSearchResult =
 const formatOffreToCfdSearchResult = (
   offre: AnalyseDetaillee["formations"][number] | undefined
 ): CfdSearchResult => ({
-  value: offre?.cfd || "",
-  label: offre?.libelleFormation || "",
+  value: offre?.cfd ? offre?.cfd : "",
+  label: offre?.libelleFormation
+    ? `${offre?.libelleFormation} (${
+        offre?.libelleDispositif ?? ""
+      }) (${offre?.cfd})`
+    : "",
   // Hard set à false ici, parce que nous n'en aurons pas besoin pour le filtre ici
   isSpecialite: false,
   isOption: false,
