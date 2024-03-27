@@ -1,4 +1,4 @@
-import { DownloadIcon, SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
+import { SmallCloseIcon, ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -23,7 +23,12 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { useSelectedLayoutSegment } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import { ReactNode, useMemo, useState } from "react";
+
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { downloadExcel } from "@/utils/downloadExport";
 
 import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
 import { Quadrant } from "../../../../components/Quadrant";
@@ -146,6 +151,9 @@ export const QuadrantSection = ({
   order?: Partial<Order>;
   handleOrder: (column: Order["orderBy"]) => void;
 }) => {
+  const segment = useSelectedLayoutSegment();
+  const trackEvent = usePlausible();
+
   const [effectifMin, setEffectifMin] = useState(0);
   const tendancesDefaultValue = {
     effectif_hausse: false,
@@ -346,24 +354,19 @@ export const QuadrantSection = ({
         </Flex>
         <Box flex={1}>
           <Flex justify="space-between" flexDir={["column", null, "row"]}>
-            <Flex>
+            <Flex gap={2}>
               <Button onClick={() => toggleTypeVue()} variant="solid">
                 <ViewIcon mr={2}></ViewIcon>
                 {`Passer en vue ${
                   typeVue === "quadrant" ? "tableau" : "quadrant"
                 }`}
               </Button>
-              <Button
-                ml="2"
-                aria-label="csv"
-                variant="solid"
-                isDisabled={
-                  !filteredFormations || filteredFormations.length === 0
-                }
-                onClick={async () => {
+              <ExportMenuButton
+                onExportCsv={async () => {
                   if (!filteredFormations) return;
+                  trackEvent(`panorama-${segment}:export`);
                   downloadCsv(
-                    "formations_panorama.csv",
+                    `formations_panorama_${segment}`,
                     filteredFormations.map((formation) => ({
                       ...formation,
                     })),
@@ -378,11 +381,29 @@ export const QuadrantSection = ({
                     }
                   );
                 }}
-              >
-                <DownloadIcon mr="2" />
-                Exporter en csv
-              </Button>
+                onExportExcel={async () => {
+                  if (!filteredFormations) return;
+                  trackEvent(`panorama-${segment}:export-excel`);
+                  downloadExcel(
+                    `formations_panorama_${segment}`,
+                    filteredFormations.map((formation) => ({
+                      ...formation,
+                    })),
+                    {
+                      libelleFormation: "Formation",
+                      cfd: "CFD",
+                      libelleDispositif: "Dispositif",
+                      tauxInsertion: "Taux d'emploi",
+                      tauxPoursuite: "Taux de poursuite",
+                      tauxPression: "Taux de pression",
+                      positionQuadrant: "Position dans le quadrant",
+                    }
+                  );
+                }}
+                variant="solid"
+              />
             </Flex>
+
             <Flex alignItems={"flex-end"} justify="flex-end" gap={2}>
               <Text color="grey" fontSize="sm" textAlign="left">
                 {filteredFormations?.length ?? "-"} certifications

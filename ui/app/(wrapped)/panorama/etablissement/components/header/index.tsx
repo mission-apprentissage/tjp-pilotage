@@ -2,12 +2,12 @@ import { Grid, GridItem } from "@chakra-ui/react";
 
 import { Loading } from "@/components/Loading";
 
-import { AccesRapide } from "./components/accesRapide";
-import { Coordonnees } from "./components/coordonnees";
-import { Filieres } from "./components/filieres";
-import { IndicateursSection } from "./components/indicateurs";
-import { Libelle } from "./components/libelle";
-import { SearchInput } from "./components/searchInput";
+import { AccesRapideSection } from "./components/AccesRapideSection";
+import { Coordonnees } from "./components/Coordonnees";
+import { Filieres } from "./components/Filieres";
+import { IndicateursSection } from "./components/IndicateursSection";
+import { Libelle } from "./components/Libelle";
+import { SearchInput } from "./components/SearchInput";
 import { useEtablissementHeader } from "./hook";
 
 export const EtablissementHeader = () => {
@@ -22,7 +22,7 @@ export const EtablissementHeader = () => {
     <Grid templateColumns={"repeat(12,1fr)"} py={"32px"}>
       <Libelle informations={informations} />
       <SearchInput uai={uai} />
-      <AccesRapide uai={uai} />
+      <AccesRapideSection uai={uai} />
       <GridItem colSpan={12} mt={"48px"} mb={"32px"}>
         <Grid templateColumns={"repeat(12,1fr)"}>
           <Coordonnees informations={informations} />
