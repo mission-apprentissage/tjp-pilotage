@@ -18,17 +18,23 @@ export const Etablissement = () => {
   const { etablissementMap, hoverUai, setActiveUai, setHoverUai } =
     useEtablissementMapContext();
 
+  const etablissement = etablissementMap?.etablissement;
+  const showEtablissement =
+    etablissementMap?.etablissementsProches.findIndex(
+      (e) => e.uai === etablissement?.uai
+    ) !== -1;
+
   const etablissementPoint = {
     type: "Feature",
     geometry: {
       type: "Point",
-      coordinates: [etablissementMap?.longitude, etablissementMap?.latitude],
+      coordinates: [etablissement?.longitude, etablissement?.latitude],
     },
     properties: {
-      uai: etablissementMap?.uai,
+      uai: etablissement?.uai,
       // Attention, ici on utilise une string puisque les expressions de filtre de maplibre
       // ne permettent pas de vérifier les occurences dans un tableau
-      voies: etablissementMap?.voies.join(",") || "",
+      voies: etablissement?.voies.join(",") || "",
     },
   };
 
@@ -80,11 +86,15 @@ export const Etablissement = () => {
   };
 
   const flyToEtablissement = () => {
-    if (etablissementMap && map !== undefined) {
+    if (
+      etablissementMap !== undefined &&
+      etablissement !== undefined &&
+      map !== undefined
+    ) {
       map.flyTo({
         center: {
-          lng: etablissementMap.longitude,
-          lat: etablissementMap.latitude,
+          lng: etablissement.longitude,
+          lat: etablissement.latitude,
         },
         zoom: etablissementMap.initialZoom,
       });
@@ -126,24 +136,28 @@ export const Etablissement = () => {
           map.on("mouseover", layer.id, onSinglePointOver);
         });
 
-        if (etablissementMap) {
-          setActiveUai(etablissementMap?.uai);
+        if (etablissementMap?.etablissement) {
+          setActiveUai(etablissementMap.etablissement.uai);
         }
       });
     }
   }, [map]);
 
-  if (!etablissementMap) {
+  if (!etablissementMap?.etablissement) {
     return <></>;
   }
 
   return (
     <>
       <Source id="etablissement" type="geojson" data={etablissementPoint} />
-      <Layer {...pointBackgroundLayer} />
-      <Layer {...scolaireSinglePointLayer} />
-      <Layer {...apprentissageSinglePointLayer} />
-      <Layer {...scolaireApprentissageSinglePointLayer} />
+      {showEtablissement && (
+        <>
+          <Layer {...pointBackgroundLayer} />
+          <Layer {...scolaireSinglePointLayer} />
+          <Layer {...apprentissageSinglePointLayer} />
+          <Layer {...scolaireApprentissageSinglePointLayer} />
+        </>
+      )}
     </>
   );
 };

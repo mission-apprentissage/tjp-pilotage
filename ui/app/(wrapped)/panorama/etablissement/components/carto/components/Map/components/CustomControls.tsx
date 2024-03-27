@@ -34,6 +34,8 @@ export const CustomControls = () => {
   const { current: map } = useMap();
   const { etablissementMap, setBbox, setMap } = useEtablissementMapContext();
 
+  const etablissement = etablissementMap?.etablissement;
+
   const loadImageOnMap = async (image: { path: string; name: string }) => {
     if (map !== undefined) {
       const loadedImage = await map.loadImage(image.path);
@@ -48,10 +50,10 @@ export const CustomControls = () => {
   // Lors de l'initialisation de la carte
   useEffect(() => {
     if (map !== undefined) {
-      if (etablissementMap) {
+      if (etablissementMap !== undefined && etablissement !== undefined) {
         map.setCenter({
-          lng: etablissementMap.longitude,
-          lat: etablissementMap.latitude,
+          lng: etablissement.longitude,
+          lat: etablissement.latitude,
         });
         map.setZoom(etablissementMap.initialZoom);
       }
@@ -73,10 +75,10 @@ export const CustomControls = () => {
   // Lors du chargement du filtre / rechargement d'une nouvelle liste
   useEffect(() => {
     if (map !== undefined) {
-      if (etablissementMap) {
+      if (etablissementMap !== undefined && etablissement !== undefined) {
         map.setCenter({
-          lng: etablissementMap.longitude,
-          lat: etablissementMap.latitude,
+          lng: etablissement.longitude,
+          lat: etablissement.latitude,
         });
         map.setZoom(etablissementMap.initialZoom);
       }

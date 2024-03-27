@@ -61,8 +61,8 @@ export function Map({ uai }: MapProps) {
         minPitch={0}
         fadeDuration={0}
       >
-        <EtablissementsProches />
         <Etablissement />
+        <EtablissementsProches />
         <ActiveEtablissement />
         <ScaleControl />
         <NavigationControl />

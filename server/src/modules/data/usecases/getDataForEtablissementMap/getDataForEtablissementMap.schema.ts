@@ -28,8 +28,9 @@ export const getDataForEtablissementMapSchema = {
       .optional(),
   }),
   response: {
-    200: EtablissementSchema.extend({
+    200: z.object({
       initialZoom: z.number(),
+      etablissement: z.optional(EtablissementSchema),
       etablissementsProches: z.array(EtablissementSchema),
     }),
   },

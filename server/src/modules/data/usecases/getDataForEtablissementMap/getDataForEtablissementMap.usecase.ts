@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import z from "zod";
 
 import * as dependencies from "./dependencies";
@@ -31,7 +32,33 @@ export const getDataForEtablissementMapFactory =
   ): Promise<
     z.infer<(typeof getDataForEtablissementMapSchema.response)["200"]>
   > => {
-    const etablissement = await deps.getEtablissement({ uai: params.uai });
+    // Nécessaire ici de récupérer l'établissement sans filtrer par
+    // CFD, parce qu'il est possible que l'établissement
+    // ne dispense pas la formation sur laquelle la carte est filtrée.
+    const etablissementData = await deps.getEtablissement({
+      uai: params.uai,
+    });
+
+    if (!etablissementData) {
+      throw Boom.notFound("Etablissement not found");
+    }
+
+    const etablissement = await deps.getEtablissement({
+      uai: params.uai,
+      cfd: filters?.cfd,
+    });
+
+    const foundEtablissement = etablissement
+      ? etablissement
+      : // Si l'établissement a été trouvé sans filtre par CFD, cela signifie que la
+        // formation (cfd) n'est pas enseignée dans celui-ci. Il faut donc remettre à
+        // 0 les voies et les libellés dispositifs où il est enseigné.
+        { ...etablissementData, voies: [], libellesDispositifs: [] };
+
+    const formattedEtablissement = formatEtablissement({
+      ...foundEtablissement,
+      distance: 0,
+    });
 
     const cfds =
       filters?.cfd && filters.cfd.length > 0
@@ -43,18 +70,12 @@ export const getDataForEtablissementMapFactory =
     const etablissements = await deps.getEtablissementsProches({
       cfd: cfds,
       bbox: filters.bbox,
-      uai: params.uai,
     });
 
     const filteredEtablissements = getDistance({
-      etablissement,
+      etablissement: foundEtablissement,
       etablissements,
     }).map(formatEtablissement);
-
-    const formattedEtablissement = formatEtablissement({
-      ...etablissement,
-      distance: 0,
-    });
 
     const initialZoom = getInitialZoom(
       formattedEtablissement,
@@ -62,8 +83,8 @@ export const getDataForEtablissementMapFactory =
     );
 
     return {
-      ...formattedEtablissement,
       etablissementsProches: filteredEtablissements,
+      etablissement: etablissement ? formattedEtablissement : undefined,
       initialZoom,
     };
   };

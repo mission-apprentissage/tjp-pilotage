@@ -32,11 +32,33 @@ export const getDataForEtablissementMapListFactory =
   ): Promise<
     z.infer<(typeof getDataForEtablissementMapListSchema.response)["200"]>
   > => {
-    const etablissement = await deps.getEtablissement({ uai: params.uai });
+    // Nécessaire ici de récupérer l'établissement sans filtrer par
+    // CFD, parce qu'il est possible que l'établissement
+    // ne dispense pas la formation sur laquelle la carte est filtrée.
+    const etablissementData = await deps.getEtablissement({
+      uai: params.uai,
+    });
 
-    if (!etablissement.latitude || !etablissement.longitude) {
-      throw Boom.badData("L'etablissement n'a pas de coordonnées GPS");
+    if (!etablissementData) {
+      throw Boom.notFound("Etablissement not found");
     }
+
+    const etablissement = await deps.getEtablissement({
+      uai: params.uai,
+      cfd: filters?.cfd,
+    });
+
+    const foundEtablissement = etablissement
+      ? etablissement
+      : // Si l'établissement a été trouvé sans filtre par CFD, cela signifie que la
+        // formation (cfd) n'est pas enseignée dans celui-ci. Il faut donc remettre à
+        // 0 les voies et les libellés dispositifs où il est enseigné.
+        { ...etablissementData, voies: [], libellesDispositifs: [] };
+
+    const formattedEtablissement = formatEtablissement({
+      ...foundEtablissement,
+      distance: 0,
+    });
 
     const cfds =
       filters?.cfd && filters.cfd.length > 0
@@ -48,11 +70,10 @@ export const getDataForEtablissementMapListFactory =
     const etablissements = await deps.getEtablissementsProches({
       cfd: cfds,
       bbox: filters.bbox,
-      uai: params.uai,
     });
 
     const filteredEtablissements = getDistance({
-      etablissement,
+      etablissement: foundEtablissement,
       etablissements: etablissements,
     }).map(formatEtablissement);
 
@@ -62,14 +83,9 @@ export const getDataForEtablissementMapListFactory =
       uai: params.uai,
     });
 
-    const formattedEtablissement = formatEtablissement({
-      ...etablissement,
-      distance: 0,
-    });
-
     return {
-      ...formattedEtablissement,
       count: count[0]?.count ?? 0,
+      etablissement: etablissement ? formattedEtablissement : undefined,
       etablissementsProches: filteredEtablissements,
     };
   };

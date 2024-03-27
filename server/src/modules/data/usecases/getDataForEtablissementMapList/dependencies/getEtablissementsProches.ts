@@ -7,11 +7,9 @@ import { selectTauxInsertion6mois } from "../../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
 import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
-export interface Filters extends RouteQueryString {
-  uai: string;
-}
+export interface Filters extends RouteQueryString {}
 
-export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
+export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -55,7 +53,6 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
         .as("tauxInsertion"),
       sb.fn.max(effectifAnnee({ alias: "indicateurEntree" })).as("effectif"),
     ])
-    .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),

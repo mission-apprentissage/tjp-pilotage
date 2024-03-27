@@ -15,9 +15,11 @@ export const ActiveEtablissement = () => {
   const { current: map } = useMap();
   const { etablissementMap, hoverUai, etablissementsProches, setActiveUai } =
     useEtablissementMapContext();
+
+  const etablissement = etablissementMap?.etablissement;
   const activeEtablissement =
-    etablissementMap?.uai === hoverUai
-      ? etablissementMap
+    etablissement?.uai === hoverUai
+      ? etablissement
       : etablissementsProches.find((e) => e.uai === hoverUai);
 
   const etablissementPoint = {
@@ -108,8 +110,8 @@ export const ActiveEtablissement = () => {
           map.on("click", layer.id, onSinglePointClick);
         });
 
-        if (etablissementMap) {
-          setActiveUai(etablissementMap?.uai);
+        if (etablissement) {
+          setActiveUai(etablissement?.uai);
         }
       });
     }

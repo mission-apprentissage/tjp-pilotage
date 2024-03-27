@@ -4,11 +4,9 @@ import { CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../../db/db";
 import { RouteQueryString } from "../getDataForEtablissementMap.usecase";
 
-export interface Filters extends RouteQueryString {
-  uai: string;
-}
+export interface Filters extends RouteQueryString {}
 
-export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
+export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -41,7 +39,6 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
     ])
-    .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
