@@ -1,7 +1,6 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
-import { hasPermissionHandler } from "../../../core";
 import { searchDiplomeSchema } from "./searchDiplome.schema";
 import { searchDiplome } from "./searchDiplome.usecase";
 
@@ -12,7 +11,6 @@ export const searchDiplomeRoute = ({ server }: { server: Server }) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
         const { search } = request.params;
         const result = await searchDiplome({ search });
