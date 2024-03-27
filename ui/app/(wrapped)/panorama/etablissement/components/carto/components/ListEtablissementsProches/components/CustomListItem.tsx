@@ -8,6 +8,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
+import { useState } from "react";
 
 import { client } from "@/api.client";
 
@@ -61,6 +62,7 @@ export const CustomListItem = ({
   children,
 }: CustomListItemProps) => {
   const { activeUai, setActiveUai } = useEtablissementMapContext();
+  const [hover, setHover] = useState(false);
 
   if (!etablissement) return null;
 
@@ -77,13 +79,27 @@ export const CustomListItem = ({
             ? themeDefinition.colors.grey["1000_active"]
             : "transparent"
         }
-        onClick={() => setActiveUai(etablissement.uai)}
+        onMouseOver={() => setActiveUai(etablissement.uai)}
       >
         <VStack>
           <HStack justifyContent={"space-between"} width="100%">
-            <Text fontWeight={700}>
-              {etablissement.libelleEtablissement.split(" - ")[0]}
-            </Text>
+            <HStack>
+              <Text
+                fontWeight={700}
+                _hover={{ textDecoration: "underline" }}
+                onMouseOver={() => setHover(true)}
+                onMouseLeave={() => setHover(false)}
+                onClick={() =>
+                  window.open(
+                    `/panorama/etablissement/${etablissement.uai}`,
+                    "_blank"
+                  )
+                }
+              >
+                {etablissement.libelleEtablissement.split(" - ")[0]}
+              </Text>
+              {hover && <InlineIcon icon="ri:arrow-right-line" />}
+            </HStack>
             <HStack flexWrap="wrap" justifyContent="flex-end">
               {formatDispositifs(etablissement.libellesDispositifs).map(
                 (libelle) => (
