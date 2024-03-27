@@ -16,7 +16,7 @@ import { MAP_IMAGES } from "./CustomControls";
 
 export const EtablissementsProches = () => {
   const { current: map } = useMap();
-  const { etablissementsProches, activeUai, setActiveUai } =
+  const { etablissementsProches, hoverUai, setHoverUai } =
     useEtablissementMapContext();
 
   const geojson = {
@@ -77,26 +77,10 @@ export const EtablissementsProches = () => {
       "all",
       ["!has", "point_count"],
       ["in", "voies", "scolaire"],
-      ["!=", "uai", activeUai],
+      ["!=", "uai", hoverUai],
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
-      "icon-overlap": "always",
-    },
-  };
-
-  const scolaireInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-etablissementsProches-inverted",
-    type: "symbol",
-    source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "scolaire"],
-      ["==", "uai", activeUai],
-    ],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_INVERTED.name,
       "icon-overlap": "always",
     },
   };
@@ -109,26 +93,10 @@ export const EtablissementsProches = () => {
       "all",
       ["!has", "point_count"],
       ["in", "voies", "apprentissage"],
-      ["!=", "uai", activeUai],
+      ["!=", "uai", hoverUai],
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
-      "icon-overlap": "always",
-    },
-  };
-
-  const apprentissageInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-apprentissage-etablissementsProches-inverted",
-    type: "symbol",
-    source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "apprentissage"],
-      ["==", "uai", activeUai],
-    ],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE_INVERTED.name,
       "icon-overlap": "always",
     },
   };
@@ -141,26 +109,10 @@ export const EtablissementsProches = () => {
       "all",
       ["!has", "point_count"],
       ["in", "voies", "apprentissage,scolaire"],
-      ["!=", "uai", activeUai],
+      ["!=", "uai", hoverUai],
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
-      "icon-overlap": "always",
-    },
-  };
-
-  const scolaireApprentissageInvertedSinglePointLayer: SymbolLayer = {
-    id: "single-scolaire-apprentissage-etablissementsProches-inverted",
-    type: "symbol",
-    source: "etablissementsProches",
-    filter: [
-      "all",
-      ["!has", "point_count"],
-      ["in", "voies", "apprentissage,scolaire"],
-      ["==", "uai", activeUai],
-    ],
-    layout: {
-      "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
       "icon-overlap": "always",
     },
   };
@@ -207,7 +159,7 @@ export const EtablissementsProches = () => {
       });
 
       if (features.length > 0 && features[0] !== undefined) {
-        setActiveUai(features[0].properties.uai);
+        setHoverUai(features[0].properties.uai);
       }
     }
   };
@@ -243,11 +195,8 @@ export const EtablissementsProches = () => {
       <Layer {...clusterLayer} />
       <Layer {...clusterLabelLayer} />
       <Layer {...scolaireSinglePointLayer} />
-      <Layer {...scolaireInvertedSinglePointLayer} />
       <Layer {...apprentissageSinglePointLayer} />
-      <Layer {...apprentissageInvertedSinglePointLayer} />
       <Layer {...scolaireApprentissageSinglePointLayer} />
-      <Layer {...scolaireApprentissageInvertedSinglePointLayer} />
     </>
   );
 };
