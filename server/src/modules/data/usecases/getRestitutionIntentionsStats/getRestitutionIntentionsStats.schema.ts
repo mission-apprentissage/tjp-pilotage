@@ -30,6 +30,7 @@ const StatsDemandesItem = z.object({
   codeRegion: z.string().optional(),
   libelleRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
+  libelleAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
   createdAt: z.string(),

@@ -3,7 +3,7 @@ import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 import {
   getPageAsMarkdown,
   getPageProperties,
-} from "../../services/notion/notion";
+} from "../../../core/services/notion/notion";
 import { dependencies } from "./dependencies";
 
 export const getGlossaireEntryFactory =
