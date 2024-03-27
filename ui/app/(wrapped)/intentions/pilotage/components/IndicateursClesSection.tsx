@@ -350,7 +350,7 @@ export const IndicateursClesSection = ({
                 <TooltipIcon
                   ms={1}
                   mt={1}
-                  label={`Le taux de transformation est calculé de la manière suivante : (nombre de places ouvertes en voie scolaire et apprentissage + nombre de places fermées en voie scolaire) / nombre total d'élèves accueillis en 1ère année de formation (constat de rentrée ${CURRENT_RENTREE}).`}
+                  label={`Le taux de transformation est calculé de la manière suivante : (nbre de places ouvertes en voie scolaire et apprentissage + nbre de places en fermées en voie scolaire) / nbre total de places effectivement occupées en 1ère année de formation (constat de rentrée ${CURRENT_RENTREE}).`}
                 />
               }
             >
