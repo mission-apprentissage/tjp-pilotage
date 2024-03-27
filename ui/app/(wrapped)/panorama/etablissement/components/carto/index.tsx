@@ -11,7 +11,7 @@ export const EtablissementMap = () => {
 
   return (
     <EtablissementMapContextProvider>
-      <Stack gap={8} mt={8}>
+      <Stack gap={8} mt={8} id="carte">
         <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
           L'offre de formations autour de l'établissement
         </Text>
