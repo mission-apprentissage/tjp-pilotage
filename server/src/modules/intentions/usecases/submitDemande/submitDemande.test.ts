@@ -18,7 +18,7 @@ const valideDeps = {
     >),
   findOneDemande: async () =>
     Promise.resolve({
-      id: "demande-id",
+      numero: "numero-id",
       codeRegion: "codeRegion",
       createurId: "user-id",
     } as AwaitedResult<Deps["findOneDemande"]>),
@@ -27,6 +27,7 @@ const valideDeps = {
 
 const demande = {
   id: "demande-id",
+  numero: "numero-id",
   uai: "demande-uai",
   cfd: "demande-cfd",
   createurId: "user-id",
@@ -73,7 +74,7 @@ describe("submitDemande usecase", () => {
           statut: "submitted",
         },
       })
-    ).rejects.toThrowError("Code uai non valide");
+    ).rejects.toThrow("Code uai non valide");
   });
 
   it("should throw an exception if the cfd is not found", async () => {
@@ -90,7 +91,7 @@ describe("submitDemande usecase", () => {
           statut: "submitted",
         },
       })
-    ).rejects.toThrowError("Code diplome non valide");
+    ).rejects.toThrow("Code diplome non valide");
   });
 
   it("should throw an exception if the user tries to refuse without specifying motifRefus", async () => {
@@ -105,7 +106,7 @@ describe("submitDemande usecase", () => {
           motifRefus: undefined,
         },
       })
-    ).rejects.toThrowError("Donnée incorrectes");
+    ).rejects.toThrow("Donnée incorrectes");
   });
 
   it("should throw an exception if the user has right in his region but codeRegion is different from the etablissement's codeRegion", async () => {
@@ -125,13 +126,12 @@ describe("submitDemande usecase", () => {
           statut: "submitted",
         },
       })
-    ).rejects.toThrowError("Forbidden");
+    ).rejects.toThrow("Forbidden");
   });
 
-  it("should create a new demande if data is valid and sent demand does not contain an id", async () => {
+  it("should create a new demande if data is valid and sent demand does not contain a numero", async () => {
     const deps = {
       ...valideDeps,
-      findOneDemande: () => Promise.resolve(undefined),
       createDemandeQuery: jest.fn((data) => Promise.resolve(data)),
     };
 
@@ -142,22 +142,21 @@ describe("submitDemande usecase", () => {
       demande: {
         ...demande,
         statut: "draft",
-        id: undefined,
+        numero: undefined,
       },
     });
-    expect(deps.createDemandeQuery).toBeCalledWith(
+    expect(deps.createDemandeQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...demande,
-        codeRegion: "75",
-        codeAcademie: "06",
-        createurId: "user-id",
         statut: "draft",
         id: expect.stringMatching(".+"),
+        numero: expect.stringMatching(".+"),
+        dateModification: expect.any(Date),
       })
     );
   });
 
-  it("should update a demande if data is valid and sent demand contains an id", async () => {
+  it("should update a demande if data is valid and sent demand contains a numero", async () => {
     const deps = {
       ...valideDeps,
       createDemandeQuery: jest.fn((data) => Promise.resolve(data)),
@@ -170,15 +169,16 @@ describe("submitDemande usecase", () => {
       demande: {
         ...demande,
         statut: "submitted",
+        numero: "numero-id",
       },
     });
-    expect(deps.createDemandeQuery).toBeCalledWith(
+    expect(deps.createDemandeQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...demande,
-        codeRegion: "75",
-        codeAcademie: "06",
-        createurId: "user-id",
         statut: "submitted",
+        numero: "numero-id",
+        id: expect.stringMatching(".+"),
+        dateModification: expect.any(Date),
       })
     );
   });

@@ -12,7 +12,7 @@ export const createDemandeQuery = ({
 }: {
   demande: Insertable<DB["demande"]>;
   campagne: { id: string };
-  user: RequestUser;
+  user: Pick<RequestUser, "id">;
 }) => {
   const importedDemande = kdb
     .insertInto("demande")
