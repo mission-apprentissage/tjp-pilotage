@@ -61,25 +61,38 @@ export const CustomListItem = ({
   withDivider,
   children,
 }: CustomListItemProps) => {
-  const { activeUai, setActiveUai } = useEtablissementMapContext();
+  const { hoverUai, setHoverUai, map, activeUai } =
+    useEtablissementMapContext();
   const [hover, setHover] = useState(false);
 
+  const flyToEtablissement = () => {
+    if (map !== undefined) {
+      map.flyTo({
+        center: [etablissement.longitude, etablissement.latitude],
+      });
+    }
+  };
+
   if (!etablissement) return null;
+
+  const backgroundColor = (() => {
+    if (activeUai === etablissement.uai) {
+      return themeDefinition.colors.grey["1000_active"];
+    }
+    if (hoverUai === etablissement.uai) {
+      return themeDefinition.colors.grey["1000_hover"];
+    }
+    return "transparent";
+  })();
 
   return (
     <>
       <ListItem
         padding="16px"
-        _hover={{
-          backgroundColor: themeDefinition.colors.grey["1000_hover"],
-          cursor: "pointer",
-        }}
-        backgroundColor={
-          activeUai === etablissement.uai
-            ? themeDefinition.colors.grey["1000_active"]
-            : "transparent"
-        }
-        onMouseOver={() => setActiveUai(etablissement.uai)}
+        backgroundColor={backgroundColor}
+        _hover={{ cursor: "pointer" }}
+        onMouseOver={() => setHoverUai(etablissement.uai)}
+        onClick={() => flyToEtablissement()}
       >
         <VStack>
           <HStack justifyContent={"space-between"} width="100%">

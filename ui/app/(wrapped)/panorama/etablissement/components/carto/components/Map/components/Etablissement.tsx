@@ -15,7 +15,7 @@ import { MAP_IMAGES } from "./CustomControls";
 
 export const Etablissement = () => {
   const { current: map } = useMap();
-  const { etablissementMap, activeUai, setActiveUai } =
+  const { etablissementMap, hoverUai, setActiveUai, setHoverUai } =
     useEtablissementMapContext();
 
   const etablissementPoint = {
@@ -46,7 +46,7 @@ export const Etablissement = () => {
     id: "single-scolaire-etablissement",
     type: "symbol",
     source: "etablissement",
-    filter: ["all", ["in", "voies", "scolaire"], ["!=", "uai", activeUai]],
+    filter: ["all", ["in", "voies", "scolaire"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE.name,
       "icon-overlap": "always",
@@ -57,7 +57,7 @@ export const Etablissement = () => {
     id: "single-apprentissage-etablissement",
     type: "symbol",
     source: "etablissement",
-    filter: ["all", ["in", "voies", "apprentissage"], ["!=", "uai", activeUai]],
+    filter: ["all", ["in", "voies", "apprentissage"], ["!=", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE.name,
       "icon-overlap": "always",
@@ -71,7 +71,7 @@ export const Etablissement = () => {
     filter: [
       "all",
       ["in", "voies", "apprentissage,scolaire"],
-      ["!=", "uai", activeUai],
+      ["!=", "uai", hoverUai],
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE.name,
@@ -105,7 +105,7 @@ export const Etablissement = () => {
         ],
       });
       if (features.length > 0 && features[0] !== undefined) {
-        setActiveUai(features[0].properties?.uai);
+        setHoverUai(features[0].properties?.uai);
       }
     }
   };

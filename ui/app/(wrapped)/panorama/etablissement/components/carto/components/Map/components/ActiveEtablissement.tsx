@@ -1,15 +1,24 @@
-import { Layer, Source, SymbolLayer } from "react-map-gl/maplibre";
+import { useEffect } from "react";
+import {
+  Layer,
+  MapGeoJSONFeature,
+  MapMouseEvent,
+  Source,
+  SymbolLayer,
+  useMap,
+} from "react-map-gl/maplibre";
 
 import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
 import { MAP_IMAGES } from "./CustomControls";
 
 export const ActiveEtablissement = () => {
-  const { etablissementMap, activeUai, etablissementsProches } =
+  const { current: map } = useMap();
+  const { etablissementMap, hoverUai, etablissementsProches, setActiveUai } =
     useEtablissementMapContext();
   const activeEtablissement =
-    etablissementMap?.uai === activeUai
+    etablissementMap?.uai === hoverUai
       ? etablissementMap
-      : etablissementsProches.find((e) => e.uai === activeUai);
+      : etablissementsProches.find((e) => e.uai === hoverUai);
 
   const etablissementPoint = {
     type: "Feature",
@@ -32,7 +41,7 @@ export const ActiveEtablissement = () => {
     id: "single-scolaire-activeEtablissement-inverted",
     type: "symbol",
     source: "activeEtablissement",
-    filter: ["all", ["in", "voies", "scolaire"], ["==", "uai", activeUai]],
+    filter: ["all", ["in", "voies", "scolaire"], ["==", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_INVERTED.name,
       "icon-overlap": "always",
@@ -43,7 +52,7 @@ export const ActiveEtablissement = () => {
     id: "single-apprentissage-activeEtablissement-inverted",
     type: "symbol",
     source: "activeEtablissement",
-    filter: ["all", ["in", "voies", "apprentissage"], ["==", "uai", activeUai]],
+    filter: ["all", ["in", "voies", "apprentissage"], ["==", "uai", hoverUai]],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_APPRENTISSAGE_INVERTED.name,
       "icon-overlap": "always",
@@ -57,13 +66,54 @@ export const ActiveEtablissement = () => {
     filter: [
       "all",
       ["in", "voies", "apprentissage,scolaire"],
-      ["==", "uai", activeUai],
+      ["==", "uai", hoverUai],
     ],
     layout: {
       "icon-image": MAP_IMAGES.MAP_POINT_SCOLAIRE_APPRENTISSAGE_INVERTED.name,
       "icon-overlap": "always",
     },
   };
+
+  const onSinglePointClick = async (
+    e: MapMouseEvent & {
+      features?: MapGeoJSONFeature[];
+    }
+  ) => {
+    if (map !== undefined) {
+      const features = map.queryRenderedFeatures(e.point, {
+        layers: [
+          scolaireInvertedSinglePointLayer.id,
+          apprentissageInvertedSinglePointLayer.id,
+          scolaireApprentissageInvertedSinglePointLayer.id,
+        ],
+      });
+
+      if (features.length > 0 && features[0] !== undefined) {
+        setActiveUai(features[0].properties.uai);
+      }
+    }
+  };
+
+  useEffect(() => {
+    if (map !== undefined) {
+      map.on("load", async () => {
+        const singlePointLayers = [
+          scolaireInvertedSinglePointLayer,
+          apprentissageInvertedSinglePointLayer,
+          scolaireApprentissageInvertedSinglePointLayer,
+        ];
+
+        singlePointLayers.forEach((layer) => {
+          map.off("click", layer.id, onSinglePointClick);
+          map.on("click", layer.id, onSinglePointClick);
+        });
+
+        if (etablissementMap) {
+          setActiveUai(etablissementMap?.uai);
+        }
+      });
+    }
+  }, [map]);
 
   return (
     <>
@@ -73,18 +123,18 @@ export const ActiveEtablissement = () => {
         data={etablissementPoint}
       />
       {/**
-       * We have to set a key to each layers to force re-rendere when the activeUai changes
+       * We have to set a key to each layers to force re-rendere when the hoverUai changes
        */}
       <Layer
-        key={`activeEtablissement-point-scolaire-inverted-layer-${activeUai}`}
+        key={`activeEtablissement-point-scolaire-inverted-layer-${hoverUai}`}
         {...scolaireInvertedSinglePointLayer}
       />
       <Layer
-        key={`activeEtablissement-point-apprentissage-inverted-layer-${activeUai}`}
+        key={`activeEtablissement-point-apprentissage-inverted-layer-${hoverUai}`}
         {...apprentissageInvertedSinglePointLayer}
       />
       <Layer
-        key={`activeEtablissement-point-scolaire-apprentissage-inverted-layer-${activeUai}`}
+        key={`activeEtablissement-point-scolaire-apprentissage-inverted-layer-${hoverUai}`}
         {...scolaireApprentissageInvertedSinglePointLayer}
       />
     </>

@@ -32,6 +32,8 @@ type EtablissementMapContextType = {
   setCfdFilter: (cfd: string) => void;
   activeUai: string;
   setActiveUai: (uai: string) => void;
+  hoverUai: string;
+  setHoverUai: (uai: string) => void;
 };
 
 interface EtablissementMapContextProps {
@@ -59,6 +61,7 @@ export function EtablissementMapContextProvider({
   const [map, setMap] = useState<MapRef>();
   const [cfdFilter, setCfdFilter] = useState("");
   const [activeUai, setActiveUai] = useState<string>("");
+  const [hoverUai, setHoverUai] = useState<string>("");
 
   const context = {
     etablissementMap,
@@ -74,6 +77,8 @@ export function EtablissementMapContextProvider({
     setCfdFilter,
     activeUai,
     setActiveUai,
+    hoverUai,
+    setHoverUai,
   };
 
   return (
