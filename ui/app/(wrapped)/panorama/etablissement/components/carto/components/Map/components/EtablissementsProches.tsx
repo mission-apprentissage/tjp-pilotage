@@ -192,7 +192,7 @@ export const EtablissementsProches = () => {
     }
   };
 
-  const onSinglePointClick = async (
+  const onSinglePointOver = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
     }
@@ -220,16 +220,13 @@ export const EtablissementsProches = () => {
 
         const singlePointLayers = [
           scolaireSinglePointLayer,
-          scolaireInvertedSinglePointLayer,
           scolaireApprentissageSinglePointLayer,
-          scolaireApprentissageInvertedSinglePointLayer,
           apprentissageSinglePointLayer,
-          apprentissageInvertedSinglePointLayer,
         ];
 
         singlePointLayers.forEach((layer) => {
-          map.off("click", layer.id, onSinglePointClick);
-          map.on("click", layer.id, onSinglePointClick);
+          map.off("mouseover", layer.id, onSinglePointOver);
+          map.on("mouseover", layer.id, onSinglePointOver);
         });
       });
     }

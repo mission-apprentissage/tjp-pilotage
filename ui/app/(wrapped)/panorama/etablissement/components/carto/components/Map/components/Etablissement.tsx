@@ -91,7 +91,7 @@ export const Etablissement = () => {
     }
   };
 
-  const onSinglePointClick = async (
+  const onSinglePointOver = async (
     e: MapMouseEvent & {
       features?: MapGeoJSONFeature[];
     }
@@ -114,8 +114,18 @@ export const Etablissement = () => {
     if (map !== undefined) {
       map.on("load", async () => {
         flyToEtablissement();
-        map.off("click", onSinglePointClick);
-        map.on("click", onSinglePointClick);
+
+        const singlePointLayers = [
+          scolaireSinglePointLayer,
+          apprentissageSinglePointLayer,
+          scolaireApprentissageSinglePointLayer,
+        ];
+
+        singlePointLayers.forEach((layer) => {
+          map.off("mouseover", layer.id, onSinglePointOver);
+          map.on("mouseover", layer.id, onSinglePointOver);
+        });
+
         if (etablissementMap) {
           setActiveUai(etablissementMap?.uai);
         }
