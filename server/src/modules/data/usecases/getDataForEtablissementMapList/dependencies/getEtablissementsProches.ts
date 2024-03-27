@@ -49,9 +49,11 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
       "etablissement.secteur",
-      selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
-      selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
-      effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
+      sb.fn.max(selectTauxPoursuite("indicateurSortie")).as("tauxPoursuite"),
+      sb.fn
+        .max(selectTauxInsertion6mois("indicateurSortie"))
+        .as("tauxInsertion"),
+      sb.fn.max(effectifAnnee({ alias: "indicateurEntree" })).as("effectif"),
     ])
     .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
@@ -94,11 +96,5 @@ export const getEtablissementsProches = async ({ cfd, uai, bbox }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
       "etablissement.secteur",
-      "indicateurSortie.effectifSortie",
-      "indicateurSortie.nbSortants",
-      "indicateurSortie.nbPoursuiteEtudes",
-      "indicateurSortie.nbInsertion6mois",
-      "indicateurEntree.effectifs",
-      "indicateurEntree.anneeDebut",
     ])
     .execute();
