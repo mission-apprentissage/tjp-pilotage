@@ -5,10 +5,12 @@ import {
   HStack,
   ListItem,
   Text,
+  Tooltip,
   VStack,
 } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
 import { useState } from "react";
+import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { client } from "@/api.client";
 
@@ -177,22 +179,40 @@ export const CustomListItem = ({
                 color={themeDefinition.colors.grey[425]}
               >
                 {etablissement.effectif !== undefined && (
-                  <HStack gap="4px">
-                    <InlineIcon icon="ri:group-line" />
-                    <Text>{etablissement.effectif}</Text>
-                  </HStack>
+                  <Tooltip label={`Effectif ${CURRENT_RENTREE}`}>
+                    <HStack gap="4px">
+                      <InlineIcon icon="ri:group-line" />
+                      <Text>{etablissement.effectif}</Text>
+                    </HStack>
+                  </Tooltip>
                 )}
                 {etablissement.tauxInsertion !== undefined && (
-                  <HStack gap="4px">
-                    <InlineIcon icon="ri:briefcase-line" />
-                    <Text>{formatPercentage(etablissement.tauxInsertion)}</Text>
-                  </HStack>
+                  <Tooltip
+                    label={`Taux d'emploi à 6mois (${CURRENT_IJ_MILLESIME.split(
+                      "_"
+                    ).join("/")})`}
+                  >
+                    <HStack gap="4px">
+                      <InlineIcon icon="ri:briefcase-line" />
+                      <Text>
+                        {formatPercentage(etablissement.tauxInsertion)}
+                      </Text>
+                    </HStack>
+                  </Tooltip>
                 )}
                 {etablissement.tauxPoursuite !== undefined && (
-                  <HStack gap="4px">
-                    <InlineIcon icon="ri:book-open-line" />
-                    <Text>{formatPercentage(etablissement.tauxPoursuite)}</Text>
-                  </HStack>
+                  <Tooltip
+                    label={`Taux de poursuite d'étude (${CURRENT_IJ_MILLESIME.split(
+                      "_"
+                    ).join("/")})`}
+                  >
+                    <HStack gap="4px">
+                      <InlineIcon icon="ri:book-open-line" />
+                      <Text>
+                        {formatPercentage(etablissement.tauxPoursuite)}
+                      </Text>
+                    </HStack>
+                  </Tooltip>
                 )}
               </HStack>
             </HStack>
