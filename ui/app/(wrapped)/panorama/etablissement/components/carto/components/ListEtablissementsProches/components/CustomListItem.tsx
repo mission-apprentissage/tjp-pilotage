@@ -63,12 +63,13 @@ export const CustomListItem = ({
   withDivider,
   children,
 }: CustomListItemProps) => {
-  const { hoverUai, setHoverUai, map, activeUai } =
+  const { hoverUai, setHoverUai, map, activeUai, setActiveUai } =
     useEtablissementMapContext();
   const [hover, setHover] = useState(false);
 
   const flyToEtablissement = () => {
     if (map !== undefined) {
+      setActiveUai(etablissement.uai);
       map.flyTo({
         center: [etablissement.longitude, etablissement.latitude],
       });
