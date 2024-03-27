@@ -30,8 +30,9 @@ export const getDataForEtablissementMapListSchema = {
     }),
   }),
   response: {
-    200: EtablissementSchema.extend({
+    200: z.object({
       count: z.number(),
+      etablissement: z.optional(EtablissementSchema),
       etablissementsProches: z.array(EtablissementSchema),
     }),
   },

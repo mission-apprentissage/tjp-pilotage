@@ -8,9 +8,11 @@ import { selectTauxPoursuite } from "../../../utils/tauxPoursuite";
 import { getDataForEtablissementMapListSchema } from "../getDataForEtablissementMapList.schema";
 
 export interface Filters
-  extends z.infer<typeof getDataForEtablissementMapListSchema.params> {}
+  extends z.infer<typeof getDataForEtablissementMapListSchema.params> {
+  cfd?: string[];
+}
 
-export const getEtablissement = async ({ uai }: Filters) =>
+export const getEtablissement = async ({ uai, cfd }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -53,6 +55,12 @@ export const getEtablissement = async ({ uai }: Filters) =>
       effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
     ])
     .where("etablissement.UAI", "=", uai)
+    .$call((q) => {
+      if (cfd !== undefined && cfd.length > 0) {
+        return q.where("formationEtablissement.cfd", "in", cfd);
+      }
+      return q;
+    })
     .groupBy([
       "etablissement.UAI",
       "etablissement.codeDepartement",
@@ -68,4 +76,4 @@ export const getEtablissement = async ({ uai }: Filters) =>
       "indicateurEntree.effectifs",
       "indicateurEntree.anneeDebut",
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();

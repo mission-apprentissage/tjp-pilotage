@@ -5,9 +5,11 @@ import { kdb } from "../../../../../db/db";
 import { getDataForEtablissementMapSchema } from "../getDataForEtablissementMap.schema";
 
 export interface Filters
-  extends z.infer<typeof getDataForEtablissementMapSchema.params> {}
+  extends z.infer<typeof getDataForEtablissementMapSchema.params> {
+  cfd?: string[];
+}
 
-export const getEtablissement = async ({ uai }: Filters) =>
+export const getEtablissement = async ({ uai, cfd }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -40,6 +42,12 @@ export const getEtablissement = async ({ uai }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
     ])
+    .$call((q) => {
+      if (cfd !== undefined && cfd.length > 0) {
+        return q.where("formationEtablissement.cfd", "in", cfd);
+      }
+      return q;
+    })
     .where("etablissement.UAI", "=", uai)
     .groupBy([
       "etablissement.UAI",
@@ -49,4 +57,4 @@ export const getEtablissement = async ({ uai }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
     ])
-    .executeTakeFirstOrThrow();
+    .executeTakeFirst();
