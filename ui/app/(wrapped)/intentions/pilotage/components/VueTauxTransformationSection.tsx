@@ -162,7 +162,7 @@ export const ScopedTable = ({
                   onClick={() => handleOrder("effectif")}
                 >
                   <OrderIcon {...order} column="effectif" />
-                  Effectif en entrée
+                  Places effectivement occupées
                 </Th>
                 <Th
                   isNumeric
