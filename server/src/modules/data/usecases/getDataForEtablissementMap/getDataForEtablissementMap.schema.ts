@@ -31,6 +31,10 @@ export const getDataForEtablissementMapSchema = {
   }),
   response: {
     200: z.object({
+      center: z.object({
+        lat: z.number(),
+        lng: z.number(),
+      }),
       initialZoom: z.number(),
       etablissement: z.optional(EtablissementSchema),
       etablissementsProches: z.array(EtablissementSchema),

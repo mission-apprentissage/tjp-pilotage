@@ -87,6 +87,10 @@ export const getDataForEtablissementMapFactory =
       etablissementsProches: filteredEtablissements,
       etablissement: etablissement ? formattedEtablissement : undefined,
       initialZoom,
+      center: {
+        lat: formattedEtablissement.latitude,
+        lng: formattedEtablissement.longitude,
+      },
     };
   };
 

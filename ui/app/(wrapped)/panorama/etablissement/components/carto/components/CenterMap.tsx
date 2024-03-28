@@ -10,17 +10,16 @@ export const CenterMap = () => {
   const etablissement = etablissementMap?.etablissement;
 
   const flyToHome = () => {
-    if (
-      etablissementMap !== undefined &&
-      map !== undefined &&
-      etablissement !== undefined
-    ) {
-      setActiveUai(etablissement.uai);
-      setHoverUai(etablissement.uai);
+    if (etablissementMap !== undefined && map !== undefined) {
+      if (etablissement !== undefined) {
+        setActiveUai(etablissement.uai);
+        setHoverUai(etablissement.uai);
+      }
+
       map.flyTo({
         center: {
-          lng: etablissement.longitude,
-          lat: etablissement.latitude,
+          lng: etablissementMap.center.lng,
+          lat: etablissementMap.center.lat,
         },
         zoom: etablissementMap.initialZoom,
       });
