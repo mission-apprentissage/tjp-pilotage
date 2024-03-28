@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkIcon, Search2Icon, WarningTwoIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon, Search2Icon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -19,7 +19,9 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -38,16 +40,13 @@ import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
-
-export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "status">;
-export type Order = Pick<Query, "order" | "orderBy">;
+import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
-const TagDemande = ({ status }: { status: string }) => {
-  switch (status) {
+const TagDemande = ({ statut }: { statut: string }) => {
+  switch (statut) {
     case "draft":
       return (
         <Tag size="sm" colorScheme={"orange"}>
@@ -72,6 +71,7 @@ const TagDemande = ({ status }: { status: string }) => {
 };
 
 export const PageClient = () => {
+  const toast = useToast();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -79,14 +79,22 @@ export const PageClient = () => {
     search?: string;
     order?: Partial<Order>;
     page?: string;
+    campagne?: string;
     action?: "draft" | "submitted" | "refused";
   } = qs.parse(queryParams.toString());
+
+  const filters = searchParams.filters ?? {};
+  const search = searchParams.search ?? "";
+  const order = searchParams.order ?? { order: "asc" };
+  const campagne = searchParams.campagne;
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
     order?: typeof order;
     page?: typeof page;
+    campagne?: typeof campagne;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -109,17 +117,13 @@ export const PageClient = () => {
     });
   };
 
-  const filters = searchParams.filters ?? {};
-  const search = searchParams.search ?? "";
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-
   const getDemandesQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     search,
     ...order,
     offset: qOffset,
     limit: qLimit,
+    campagne,
   });
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
@@ -128,17 +132,6 @@ export const PageClient = () => {
     },
     { keepPreviousData: true, staleTime: 0 }
   );
-
-  const nouvelleCompensation = (
-    demandeCompensee: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
-  ) => {
-    router.push(
-      createParametrizedUrl(`${location.pathname}/new`, {
-        intentionId: demandeCompensee.id,
-        compensation: true,
-      })
-    );
-  };
 
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
@@ -168,6 +161,34 @@ export const PageClient = () => {
     ];
     return colors[userName.charCodeAt(1) % colors.length];
   };
+
+  const { mutateAsync: importDemande } = client
+    .ref("[POST]/demande/import/:numero")
+    .useMutation({
+      onSuccess: (demande) => {
+        router.push(`/intentions/saisie/${demande.numero}`);
+      },
+      onError: (error) => {
+        toast({
+          variant: "error",
+          title: error.message,
+        });
+      },
+    });
+
+  // const importDemande = async (numero: string) => {
+  //   await client
+  //     .ref("[POST]/demande/import/:numero")
+  //     .useMutation(())
+  //     .query({ params: { numero } })
+  //     .then((demande) => {
+  //       router.push(`/intentions/saisie/${demande.numero}`);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
+
   if (isLoading) return <IntentionSpinner />;
 
   return (
@@ -180,7 +201,11 @@ export const PageClient = () => {
         minHeight={0}
         py={4}
       >
-        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
+        <MenuIntention
+          hasPermissionEnvoi={hasPermissionEnvoi}
+          isRecapView
+          campagnes={data?.campagnes}
+        />
         <Box
           display={["none", null, "unset"]}
           borderLeft="solid 1px"
@@ -293,20 +318,19 @@ export const PageClient = () => {
                         <OrderIcon {...order} column="typeDemande" />
                         {DEMANDES_COLUMNS.typeDemande}
                       </Th>
-                      <Th>compensation</Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("status")}
+                        onClick={() => handleOrder("statut")}
                       >
-                        <OrderIcon {...order} column="status" />
-                        {DEMANDES_COLUMNS.status}
+                        <OrderIcon {...order} column="statut" />
+                        {DEMANDES_COLUMNS.statut}
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("createdAt")}
+                        onClick={() => handleOrder("dateCreation")}
                       >
-                        <OrderIcon {...order} column="createdAt" />
-                        {DEMANDES_COLUMNS.createdAt}
+                        <OrderIcon {...order} column="dateCreation" />
+                        {DEMANDES_COLUMNS.dateCreation}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -318,10 +342,10 @@ export const PageClient = () => {
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("updatedAt")}
+                        onClick={() => handleOrder("dateModification")}
                       >
-                        <OrderIcon {...order} column="updatedAt" />
-                        {DEMANDES_COLUMNS.updatedAt}
+                        <OrderIcon {...order} column="dateModification" />
+                        {DEMANDES_COLUMNS.dateModification}
                       </Th>
                     </Tr>
                   </Thead>
@@ -332,14 +356,14 @@ export const PageClient = () => {
                       ) => (
                         <Tr
                           height={"60px"}
-                          key={demande.id}
+                          key={demande.numero}
                           cursor="pointer"
                           whiteSpace={"pre"}
                           onClick={() =>
-                            router.push(`/intentions/saisie/${demande.id}`)
+                            router.push(`/intentions/saisie/${demande.numero}`)
                           }
                         >
-                          <Td>{demande.id}</Td>
+                          <Td>{demande.numero}</Td>
                           <Td>
                             <Text
                               textOverflow={"ellipsis"}
@@ -382,72 +406,11 @@ export const PageClient = () => {
                                 : null}
                             </Text>
                           </Td>
-                          <Td>
-                            {demande.compensationCfd &&
-                            demande.compensationDispositifId &&
-                            demande.compensationUai ? (
-                              demande.idCompensation ? (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  leftIcon={<LinkIcon focusable={true} />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    router.push(
-                                      `/intentions/saisie/${demande.idCompensation}?compensation=true`
-                                    );
-                                  }}
-                                >
-                                  <Box textAlign="left">
-                                    <Box whiteSpace="nowrap">
-                                      {`${
-                                        demande.typeCompensation
-                                          ? getTypeDemandeLabel(
-                                              demande.typeCompensation
-                                            )
-                                          : "Demande"
-                                      } liée `}
-                                    </Box>
-                                    <Text textDecoration="underline">
-                                      {demande.idCompensation}
-                                    </Text>
-                                  </Box>
-                                </Button>
-                              ) : (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  color="red.500"
-                                  leftIcon={<WarningTwoIcon />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    nouvelleCompensation(demande);
-                                  }}
-                                >
-                                  <Box textAlign="left" whiteSpace="nowrap">
-                                    Aucune demande liée <br /> identifiée
-                                  </Box>
-                                </Button>
-                              )
-                            ) : (
-                              <></>
-                            )}
-                          </Td>
                           <Td align="center" w={0}>
-                            <TagDemande status={demande.status} />
+                            <TagDemande statut={demande.statut} />
                           </Td>
                           <Td>
-                            {new Date(demande.createdAt).toLocaleString()}
+                            {new Date(demande.dateCreation).toLocaleString()}
                           </Td>
                           <Td w="15" textAlign={"center"}>
                             <Tooltip label={demande.userName}>
@@ -463,8 +426,42 @@ export const PageClient = () => {
                             </Tooltip>
                           </Td>
                           <Td textAlign={"center"}>
-                            {new Date(demande.updatedAt).toLocaleString()}
+                            {new Date(
+                              demande.dateModification
+                            ).toLocaleString()}
                           </Td>
+                          {demande.statutCampagne === "terminée" && (
+                            <Td>
+                              {demande.numeroDemandeImportee ? (
+                                <Button
+                                  as={NextLink}
+                                  variant="link"
+                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                  leftIcon={<ExternalLinkIcon />}
+                                  me={"auto"}
+                                >
+                                  Demande dupliquée{" "}
+                                  {demande.numeroDemandeImportee}
+                                </Button>
+                              ) : (
+                                <Button
+                                  leftIcon={<Icon icon="ri:import-line" />}
+                                  variant={"newInput"}
+                                  onClick={(e) => {
+                                    if (demande.numeroDemandeImportee) return;
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    importDemande({
+                                      params: { numero: demande.numero },
+                                    });
+                                  }}
+                                  isDisabled={!!demande.numeroDemandeImportee}
+                                >
+                                  Dupliquer cette demande
+                                </Button>
+                              )}
+                            </Td>
+                          )}
                         </Tr>
                       )
                     )}

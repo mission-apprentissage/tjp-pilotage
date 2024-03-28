@@ -1,8 +1,10 @@
 import { Server } from "../../server";
 import { countDemandesRoute } from "./usecases/countDemandes/countDemandes.route";
 import { deleteDemandeRoute } from "./usecases/deleteDemande/deleteDemande.route";
+import { getCurrentCampagneRoute } from "./usecases/getCurrentCampagne/getCurrentCampagne.route";
 import { getDemandeRoute } from "./usecases/getDemande/getDemande.route";
 import { getDemandesRoute } from "./usecases/getDemandes/getDemandes.route";
+import { importDemandeRoute } from "./usecases/importDemande/importDemande.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { submitDemandeRoute } from "./usecases/submitDemande/submitDemande.route";
 
@@ -14,5 +16,7 @@ export const registerIntentionsModule = ({ server }: { server: Server }) => {
     ...countDemandesRoute(server),
     ...deleteDemandeRoute(server),
     ...searchDiplomeRoute(server),
+    ...importDemandeRoute(server),
+    ...getCurrentCampagneRoute(server),
   };
 };

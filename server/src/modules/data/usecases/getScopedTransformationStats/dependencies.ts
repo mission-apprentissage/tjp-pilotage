@@ -101,7 +101,7 @@ const genericOnConstatRentree =
   };
 
 interface GenericFilter {
-  status?: "draft" | "submitted";
+  statut?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
@@ -109,11 +109,11 @@ interface GenericFilter {
 }
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb.fn.count<number>("demande.id");
+  eb.fn.count<number>("demande.numero");
 
 const genericOnDemandes =
   ({
-    status,
+    statut,
     rentreeScolaire = RENTREE_INTENTIONS,
     codeNiveauDiplome,
     CPC,
@@ -159,8 +159,8 @@ const genericOnDemandes =
         return eb;
       })
       .$call((q) => {
-        if (!status) return q;
-        return q.where("demande.status", "=", status);
+        if (!statut) return q;
+        return q.where("demande.statut", "=", statut);
       });
 
 const getNationalData = async (filters: GenericFilter) => {
@@ -209,8 +209,8 @@ const getNationalData = async (filters: GenericFilter) => {
       return eb;
     })
     .$call((q) => {
-      if (!filters.status) return q;
-      return q.where("demande.status", "=", filters.status);
+      if (!filters.statut) return q;
+      return q.where("demande.statut", "=", filters.statut);
     })
     .execute()
     .then(cleanNull);
@@ -323,7 +323,7 @@ const getAcademieData = async (filters: GenericFilter) => {
 };
 
 const getDepartementData = async (filters: {
-  status?: "draft" | "submitted";
+  statut?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
@@ -397,14 +397,14 @@ const getDepartementData = async (filters: {
 };
 
 const getScopedData = async ({
-  status,
+  statut,
   rentreeScolaire = RENTREE_INTENTIONS,
   codeNiveauDiplome,
   CPC,
   codeNsf,
   scope,
 }: {
-  status?: "draft" | "submitted";
+  statut?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
@@ -414,7 +414,7 @@ const getScopedData = async ({
   switch (scope) {
     case ScopeEnum.academie:
       return getAcademieData({
-        status,
+        statut,
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
@@ -423,7 +423,7 @@ const getScopedData = async ({
 
     case ScopeEnum.departement:
       return getDepartementData({
-        status,
+        statut,
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
@@ -431,7 +431,7 @@ const getScopedData = async ({
       });
     case ScopeEnum.region:
       return getRegionData({
-        status,
+        statut,
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
@@ -440,7 +440,7 @@ const getScopedData = async ({
     case ScopeEnum.national:
     default:
       return getNationalData({
-        status,
+        statut,
         rentreeScolaire,
         codeNiveauDiplome,
         CPC,
@@ -450,21 +450,21 @@ const getScopedData = async ({
 };
 
 const getFiltersQuery = async ({
-  status,
+  statut,
   rentreeScolaire = RENTREE_INTENTIONS,
   codeNiveauDiplome,
   CPC,
   nsf,
 }: {
-  status?: "draft" | "submitted";
+  statut?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
   nsf?: string[];
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!status || status === undefined) return sql<true>`true`;
-    return eb("demande.status", "=", status);
+    if (!statut || statut === undefined) return sql<true>`true`;
+    return eb("demande.statut", "=", statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {

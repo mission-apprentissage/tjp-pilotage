@@ -227,6 +227,11 @@ export const Nav = () => {
           Utilisateurs
         </NavLink>
       )}
+      {hasPermission(auth?.user.role, "campagnes/lecture") && (
+        <NavLink href="/admin/campagnes" segment="admin/campagnes">
+          Campagnes
+        </NavLink>
+      )}
       <NavLink
         href="/ressources"
         segment="ressources"

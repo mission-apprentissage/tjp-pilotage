@@ -12,7 +12,7 @@ export const UaiBlock = ({
   setUaiInfo,
 }: {
   active: boolean;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   setUaiInfo: (
     uaiInfo:
       | (typeof client.infer)["[GET]/etablissement/search/:search"][number]

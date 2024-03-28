@@ -285,7 +285,7 @@ export const demandeValidators: Record<
     if (!isTypeCompensation(demande.typeDemande)) return;
     if (!demande.compensationCfd)
       return "Le diplôme de compensation est obligatoire";
-    if (!demande.compensationDispositifId)
+    if (!demande.compensationCodeDispositif)
       return "Le dispositif de compensation est obligatoire";
     if (!demande.compensationUai)
       return "L'établissement de compensation est obligatoire";
@@ -293,7 +293,7 @@ export const demandeValidators: Record<
       return "La rentrée scolaire de compensation est obligatoire";
   },
   motifRefus: (demande) => {
-    if (demande.status === "refused" && !demande.motifRefus?.length) {
+    if (demande.statut === "refused" && !demande.motifRefus?.length) {
       return "Le champ 'motif refus' est obligatoire";
     }
   },

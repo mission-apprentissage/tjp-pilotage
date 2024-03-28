@@ -30,7 +30,7 @@ export interface Filters
 }
 
 const findRestitutionIntentionsStatsInDB = async ({
-  status,
+  statut,
   codeRegion,
   rentreeScolaire,
   typeDemande,
@@ -54,7 +54,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   offset = 0,
   limit = 20,
   order = "desc",
-  orderBy = "createdAt",
+  orderBy = "dateCreation",
   voie,
 }: Filters) => {
   const demandes = await kdb
@@ -62,7 +62,11 @@ const findRestitutionIntentionsStatsInDB = async ({
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
     .leftJoin(
       "departement",
       "departement.codeDepartement",
@@ -87,7 +91,7 @@ const findRestitutionIntentionsStatsInDB = async ({
         .onRef(
           "indicateurRegionSortie.dispositifId",
           "=",
-          "demande.dispositifId"
+          "demande.codeDispositif"
         )
         .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
         .on(isScolaireIndicateurRegionSortie)
@@ -117,11 +121,11 @@ const findRestitutionIntentionsStatsInDB = async ({
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef(
-            "demandeCompensee.dispositifId",
+            "demandeCompensee.codeDispositif",
             "=",
-            "demande.compensationDispositifId"
+            "demande.compensationCodeDispositif"
           )
-          .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
+          .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
           .limit(1)
       ).as("demandeCompensee"),
       selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertion"),
@@ -139,7 +143,7 @@ const findRestitutionIntentionsStatsInDB = async ({
       }).as("nbEtablissement"),
     ])
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "in", status);
+      if (statut) return eb.where("demande.statut", "in", statut);
       return eb;
     })
     .$call((eb) => {
@@ -207,7 +211,8 @@ const findRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (dispositif) return eb.where("demande.dispositifId", "in", dispositif);
+      if (dispositif)
+        return eb.where("demande.codeDispositif", "in", dispositif);
       return eb;
     })
     .$call((eb) => {
@@ -291,9 +296,9 @@ const findRestitutionIntentionsStatsInDB = async ({
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-        idCompensation: demande.demandeCompensee?.id,
+        dateCreation: demande.dateCreation?.toISOString(),
+        dateModification: demande.dateModification?.toISOString(),
+        numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })
     ),
@@ -302,7 +307,7 @@ const findRestitutionIntentionsStatsInDB = async ({
 };
 
 const findFiltersInDb = async ({
-  status,
+  statut,
   codeRegion,
   rentreeScolaire,
   typeDemande,
@@ -430,9 +435,9 @@ const findFiltersInDb = async ({
     ]);
   };
 
-  const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!status) return sql<true>`true`;
-    return eb("demande.status", "in", status);
+  const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
+    if (!statut) return sql<true>`true`;
+    return eb("demande.statut", "in", statut);
   };
 
   const geoFiltersBase = kdb
@@ -499,7 +504,11 @@ const findFiltersInDb = async ({
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -538,7 +547,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         commune
           ? eb("dataEtablissement.commune", "in", commune)
@@ -573,7 +582,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         uai ? eb("dataEtablissement.uai", "in", uai) : sql<boolean>`false`,
       ]);
@@ -606,7 +615,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         rentreeScolaire && !Number.isNaN(rentreeScolaire)
           ? eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire))
@@ -638,7 +647,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         typeDemande
           ? eb("demande.typeDemande", "in", typeDemande)
@@ -673,7 +682,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         motif
           ? eb.or(
@@ -712,7 +721,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         dispositif
           ? eb("dispositif.codeDispositif", "in", dispositif)
@@ -747,7 +756,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         codeNiveauDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
@@ -787,7 +796,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         cfd ? eb("dataFormation.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
@@ -820,7 +829,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
@@ -852,7 +861,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql<boolean>`false`,
       ]);
@@ -883,7 +892,7 @@ const findFiltersInDb = async ({
           inAmiCMA(eb),
           inSecteur(eb),
           inCompensation(eb),
-          inStatus(eb),
+          inStatut(eb),
         ]),
         codeNsf
           ? eb("dataFormation.codeNsf", "in", codeNsf)

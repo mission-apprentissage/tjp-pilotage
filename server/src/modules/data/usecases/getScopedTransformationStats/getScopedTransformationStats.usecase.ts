@@ -78,11 +78,11 @@ const getScopedTransformationStatsFactory =
       deps.getFiltersQuery(activeFilters),
       deps.getScopedData({
         ...activeFilters,
-        status: "draft",
+        statut: "draft",
       }),
       deps.getScopedData({
         ...activeFilters,
-        status: "submitted",
+        statut: "submitted",
       }),
       deps.getScopedData({
         ...activeFilters,

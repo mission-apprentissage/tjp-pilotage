@@ -9,13 +9,13 @@ import { deleteDemandeQuery } from "./deleteDemande.dep";
 export const deleteDemandeFactory =
   (deps = { findOneDemande, deleteDemandeQuery }) =>
   async ({
-    id,
+    numero,
     user,
   }: {
-    id: string;
+    numero: string;
     user: Pick<RequestUser, "id" | "role" | "codeRegion">;
   }) => {
-    const demande = await deps.findOneDemande(id);
+    const demande = await deps.findOneDemande(numero);
     if (!demande) throw Boom.notFound();
 
     const scope = getPermissionScope(user.role, "intentions/ecriture");
@@ -25,8 +25,8 @@ export const deleteDemandeFactory =
       national: () => true,
     });
     if (!isAllowed) throw Boom.forbidden();
-    await deps.deleteDemandeQuery(demande.id);
-    logger.info("Demande supprimée", { id, demande: demande });
+    await deps.deleteDemandeQuery(demande);
+    logger.info("Demande supprimée", { numero, demande: demande });
   };
 
 export const deleteDemande = deleteDemandeFactory();

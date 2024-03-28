@@ -13,7 +13,6 @@ import {
   countOuverturesApprentissage,
   countOuverturesSco,
 } from "../../../utils/countCapacite";
-import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 import { countRestitutionIntentionsStatsSchema } from "./countRestitutionIntentionsStats.schema";
 
@@ -23,14 +22,14 @@ export interface Filters
 }
 
 const countRestitutionIntentionsStatsInDB = async ({
-  status,
+  statut,
   codeRegion,
   rentreeScolaire,
   typeDemande,
   motif,
   cfd,
   codeNiveauDiplome,
-  dispositif,
+  codeDispositif,
   CPC,
   coloration,
   amiCMA,
@@ -46,7 +45,7 @@ const countRestitutionIntentionsStatsInDB = async ({
   codeNsf,
 }: Filters) => {
   const countDemandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
@@ -177,7 +176,7 @@ const countRestitutionIntentionsStatsInDB = async ({
       }).as("FCILs")
     )
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "in", status);
+      if (statut) return eb.where("demande.statut", "in", statut);
       return eb;
     })
     .$call((eb) => {
@@ -245,7 +244,8 @@ const countRestitutionIntentionsStatsInDB = async ({
       return eb;
     })
     .$call((eb) => {
-      if (dispositif) return eb.where("demande.dispositifId", "in", dispositif);
+      if (codeDispositif)
+        return eb.where("demande.codeDispositif", "in", codeDispositif);
       return eb;
     })
     .$call((eb) => {
@@ -317,7 +317,6 @@ const countRestitutionIntentionsStatsInDB = async ({
 
       return eb;
     })
-    .where(isDemandeNotDeleted)
     .where(isIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);

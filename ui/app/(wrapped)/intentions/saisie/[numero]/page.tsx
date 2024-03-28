@@ -6,7 +6,7 @@ export default ({
   params,
 }: {
   params: {
-    intentionId: string;
+    numero: string;
   };
 }) => (
   <GuardPermission permission="intentions/lecture">

@@ -41,7 +41,7 @@ export const InformationsBlock = ({
   formId?: string;
   disabled: boolean;
   errors?: Record<string, string>;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   footerActions: ReactNode;
 }) => {
   const { push } = useRouter();
@@ -51,8 +51,8 @@ export const InformationsBlock = ({
     mutationFn: async () => {
       if (!formId) return;
       await client
-        .ref("[DELETE]/demande/:id")
-        .query({ params: { id: formId } })
+        .ref("[DELETE]/demande/:numero")
+        .query({ params: { numero: formId } })
         .then(() => push("/intentions/saisie?action=deleted"));
     },
   });
@@ -130,7 +130,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("status", "refused");
+                        setValue("statut", "refused");
                         onClose();
                       }}
                       variant={"secondary"}

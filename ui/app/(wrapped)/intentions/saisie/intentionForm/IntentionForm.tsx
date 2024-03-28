@@ -11,6 +11,7 @@ import {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { client } from "../../../../../api.client";
 import { Breadcrumb } from "../../../../../components/Breadcrumb";
@@ -22,11 +23,13 @@ export const IntentionForm = ({
   formId,
   defaultValues,
   formMetadata,
+  campagne,
 }: {
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
+  campagne?: Campagne;
 }) => {
   const toast = useToast();
   const { push } = useRouter();
@@ -35,6 +38,7 @@ export const IntentionForm = ({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
+    disabled: campagne?.statut != "en cours",
   });
 
   const { getValues, handleSubmit } = form;
@@ -51,7 +55,7 @@ export const IntentionForm = ({
 
       let message: string | null = null;
 
-      switch (body.status) {
+      switch (body.statut) {
         case "draft":
           message = "Projet de demande enregistré avec succès";
           break;
@@ -86,14 +90,16 @@ export const IntentionForm = ({
     formMetadata?.formation?.isFCIL ?? false
   );
 
+  const isFormDisabled = disabled || form.formState.disabled;
+
   const isCFDUaiSectionValid = ({
     cfd,
-    dispositifId,
+    codeDispositif,
     libelleFCIL,
     uai,
   }: Partial<IntentionForms>): boolean => {
-    if (isFCIL) return !!(cfd && dispositifId && libelleFCIL && uai);
-    return !!(cfd && dispositifId && uai);
+    if (isFCIL) return !!(cfd && codeDispositif && libelleFCIL && uai);
+    return !!(cfd && codeDispositif && uai);
   };
 
   const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);
@@ -126,7 +132,7 @@ export const IntentionForm = ({
           as="form"
           noValidate
           onSubmit={handleSubmit((values) =>
-            submitDemande({ body: { demande: { id: formId, ...values } } })
+            submitDemande({ body: { demande: { numero: formId, ...values } } })
           )}
         >
           <Container maxW={"container.xl"} pt="4" mb={24}>
@@ -155,17 +161,18 @@ export const IntentionForm = ({
               formMetadata={formMetadata}
               onEditUaiCfdSection={onEditUaiCfdSection}
               active={step === 1}
-              disabled={disabled}
+              disabled={isFormDisabled}
               isFCIL={isFCIL}
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
               statusComponentRef={statusComponentRef}
+              campagne={campagne}
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
                 formId={formId}
-                disabled={disabled}
+                disabled={isFormDisabled}
                 errors={errors}
                 formMetadata={formMetadata}
                 footerActions={
@@ -175,7 +182,8 @@ export const IntentionForm = ({
                         isDisabled={
                           disabled ||
                           isActionsDisabled ||
-                          !form.formState.isDirty
+                          !form.formState.isDirty ||
+                          campagne?.statut != "en cours"
                         }
                         isLoading={isSubmitting}
                         variant="primary"
@@ -183,9 +191,9 @@ export const IntentionForm = ({
                           submitDemande({
                             body: {
                               demande: {
-                                id: formId,
+                                numero: formId,
                                 ...values,
-                                status: formId ? values.status : "draft",
+                                statut: formId ? values.statut : "draft",
                               },
                             },
                           })

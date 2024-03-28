@@ -15,10 +15,12 @@ export const countDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
+        const { campagne } = request.query;
         if (!request.user) throw Boom.forbidden();
 
         const result = await countDemandes({
           user: request.user,
+          campagne,
         });
         response.status(200).send(result);
       },

@@ -30,7 +30,7 @@ export const DispositifBlock = ({
     () =>
       watch((_, { name }) => {
         if (name !== "cfd") return;
-        setValue("dispositifId", "");
+        setValue("codeDispositif", "");
       }).unsubscribe
   );
 
@@ -40,12 +40,12 @@ export const DispositifBlock = ({
         mb="4"
         w="100%"
         maxW="752px"
-        isInvalid={!!errors.dispositifId}
+        isInvalid={!!errors.codeDispositif}
         isRequired
       >
         <FormLabel>Dispositif</FormLabel>
         <Controller
-          name="dispositifId"
+          name="codeDispositif"
           control={control}
           rules={{ required: "Ce champ est obligatoire" }}
           render={({ field: { onChange, value, name } }) => (
@@ -69,8 +69,8 @@ export const DispositifBlock = ({
           )}
         />
 
-        {errors.dispositifId && (
-          <FormErrorMessage>{errors.dispositifId.message}</FormErrorMessage>
+        {errors.codeDispositif && (
+          <FormErrorMessage>{errors.codeDispositif.message}</FormErrorMessage>
         )}
       </FormControl>
     </LightMode>

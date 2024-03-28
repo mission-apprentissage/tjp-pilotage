@@ -31,7 +31,7 @@ export const getFormationsTransformationsSchema = {
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
-    status: z.enum(["draft", "submitted"]).optional(),
+    statut: z.enum(["draft", "submitted"]).optional(),
     type: z.enum(["ouverture", "fermeture"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     order: z.enum(["asc", "desc"]).optional(),
