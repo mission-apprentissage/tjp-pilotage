@@ -5,3 +5,5 @@ export type Filters = Pick<Query, "statut" | "campagne">;
 export type Order = Pick<Query, "order" | "orderBy">;
 
 export type Campagnes = (typeof client.infer)["[GET]/demandes"]["campagnes"];
+export type Campagne =
+  (typeof client.infer)["[GET]/demande/:numero"]["campagne"];

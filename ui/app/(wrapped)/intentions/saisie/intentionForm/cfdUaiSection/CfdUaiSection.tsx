@@ -16,6 +16,7 @@ import { useFormContext } from "react-hook-form";
 
 import { client } from "@/api.client";
 
+import { Campagne } from "../../types";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
@@ -51,7 +52,38 @@ const TagDemande = ({ statut }: { statut?: string }) => {
   }
 };
 
+const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
+  if (!campagne) return null;
+  switch (campagne.statut) {
+    case "en cours":
+      return (
+        <Tag size="md" colorScheme={"green"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    case "en attente":
+      return (
+        <Tag size="md" colorScheme={"purple"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    case "terminée":
+      return (
+        <Tag size="md" colorScheme={"red"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    default:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+  }
+};
+
 export const CfdUaiSection = ({
+  campagne,
   formId,
   active,
   disabled,
@@ -64,6 +96,7 @@ export const CfdUaiSection = ({
   isCFDUaiSectionValid,
   statusComponentRef,
 }: {
+  campagne?: Campagne;
   formId?: string;
   active: boolean;
   disabled?: boolean;
@@ -122,6 +155,7 @@ export const CfdUaiSection = ({
       >
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
+          <TagCampagne campagne={campagne} />
           <TagDemande statut={defaultValues.statut} />
           {defaultValues && (
             <IconButton

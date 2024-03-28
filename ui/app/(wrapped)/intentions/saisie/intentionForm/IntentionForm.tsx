@@ -11,6 +11,7 @@ import {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { client } from "../../../../../api.client";
 import { Breadcrumb } from "../../../../../components/Breadcrumb";
@@ -22,11 +23,13 @@ export const IntentionForm = ({
   formId,
   defaultValues,
   formMetadata,
+  campagne,
 }: {
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
   formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
+  campagne?: Campagne;
 }) => {
   const toast = useToast();
   const { push } = useRouter();
@@ -35,6 +38,7 @@ export const IntentionForm = ({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
+    disabled: campagne?.statut != "en cours",
   });
 
   const { getValues, handleSubmit } = form;
@@ -161,11 +165,12 @@ export const IntentionForm = ({
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
               statusComponentRef={statusComponentRef}
+              campagne={campagne}
             />
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
                 formId={formId}
-                disabled={disabled}
+                disabled={form.formState.disabled || disabled}
                 errors={errors}
                 formMetadata={formMetadata}
                 footerActions={
@@ -175,7 +180,8 @@ export const IntentionForm = ({
                         isDisabled={
                           disabled ||
                           isActionsDisabled ||
-                          !form.formState.isDirty
+                          !form.formState.isDirty ||
+                          campagne?.statut != "en cours"
                         }
                         isLoading={isSubmitting}
                         variant="primary"

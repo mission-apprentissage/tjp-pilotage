@@ -32,6 +32,8 @@ export const getDemandeRoute = (server: Server) => {
           national: () => true,
         });
 
+        console.log(demande);
+
         response.status(200).send({
           ...demande,
           statut: demande.statut,

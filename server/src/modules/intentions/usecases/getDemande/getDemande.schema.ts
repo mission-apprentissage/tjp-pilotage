@@ -59,6 +59,10 @@ const DemandeSchema = z.object({
   capaciteApprentissageColoree: z.coerce.number().optional(),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
+  campagne: z.object({
+    annee: z.coerce.string().optional(),
+    statut: z.string().optional(),
+  }),
 });
 
 export const getDemandeSchema = {

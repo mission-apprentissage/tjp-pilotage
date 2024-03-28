@@ -18,13 +18,17 @@ export default () => {
     }
   );
 
+  const { data: currentCampagne } = client
+    .ref("[GET]/campagne/current")
+    .useQuery({});
+
   if (isLoading && !!numero) return <IntentionSpinner />;
   return (
     <GuardPermission permission="intentions/ecriture">
       {numero ? (
         data && (
           <IntentionForm
-            disabled={false}
+            disabled={currentCampagne?.statut !== "en cours"}
             defaultValues={{
               cfd: data?.compensationCfd,
               codeDispositif: data?.compensationCodeDispositif,
@@ -35,10 +39,16 @@ export default () => {
               etablissement: data?.metadata?.etablissementCompensation,
               formation: data?.metadata?.formationCompensation,
             }}
+            campagne={currentCampagne}
           />
         )
       ) : (
-        <IntentionForm disabled={false} defaultValues={{}} formMetadata={{}} />
+        <IntentionForm
+          disabled={currentCampagne?.statut !== "en cours"}
+          defaultValues={{}}
+          formMetadata={{}}
+          campagne={currentCampagne}
+        />
       )}
     </GuardPermission>
   );

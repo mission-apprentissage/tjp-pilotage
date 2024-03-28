@@ -24,6 +24,13 @@ export const findDemande = async ({ numero, user }: Filters) => {
     .selectFrom("latestDemandeView as demande")
     .selectAll()
     .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom("campagne")
+          .selectAll("campagne")
+          .whereRef("campagne.id", "=", "demande.campagneId")
+          .limit(1)
+      ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
@@ -168,6 +175,9 @@ export const findDemande = async ({ numero, user }: Filters) => {
         ),
       }),
       dateCreation: demande.dateCreation?.toISOString(),
+      campagne: cleanNull({
+        ...demande.campagne,
+      }),
       codeDispositif,
     })
   );

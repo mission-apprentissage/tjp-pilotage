@@ -19,6 +19,7 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
@@ -70,6 +71,7 @@ const TagDemande = ({ statut }: { statut: string }) => {
 };
 
 export const PageClient = () => {
+  const toast = useToast();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -160,17 +162,32 @@ export const PageClient = () => {
     return colors[userName.charCodeAt(1) % colors.length];
   };
 
-  const importDemande = async (numero: string) => {
-    await client
-      .ref("[POST]/demande/import/:numero")
-      .query({ params: { numero } })
-      .then((demande) => {
+  const { mutateAsync: importDemande } = client
+    .ref("[POST]/demande/import/:numero")
+    .useMutation({
+      onSuccess: (demande) => {
         router.push(`/intentions/saisie/${demande.numero}`);
-      })
-      .catch((error) => {
-        console.error(error);
-      });
-  };
+      },
+      onError: (error) => {
+        toast({
+          variant: "error",
+          title: error.message,
+        });
+      },
+    });
+
+  // const importDemande = async (numero: string) => {
+  //   await client
+  //     .ref("[POST]/demande/import/:numero")
+  //     .useMutation(())
+  //     .query({ params: { numero } })
+  //     .then((demande) => {
+  //       router.push(`/intentions/saisie/${demande.numero}`);
+  //     })
+  //     .catch((error) => {
+  //       console.error(error);
+  //     });
+  // };
 
   if (isLoading) return <IntentionSpinner />;
 
@@ -423,7 +440,7 @@ export const PageClient = () => {
                                   leftIcon={<ExternalLinkIcon />}
                                   me={"auto"}
                                 >
-                                  Demande importée{" "}
+                                  Demande dupliquée{" "}
                                   {demande.numeroDemandeImportee}
                                 </Button>
                               ) : (
@@ -434,11 +451,13 @@ export const PageClient = () => {
                                     if (demande.numeroDemandeImportee) return;
                                     e.preventDefault();
                                     e.stopPropagation();
-                                    importDemande(demande.numero);
+                                    importDemande({
+                                      params: { numero: demande.numero },
+                                    });
                                   }}
                                   isDisabled={!!demande.numeroDemandeImportee}
                                 >
-                                  Importer cette demande
+                                  Dupliquer cette demande
                                 </Button>
                               )}
                             </Td>
