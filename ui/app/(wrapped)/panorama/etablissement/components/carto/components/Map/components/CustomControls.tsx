@@ -50,10 +50,10 @@ export const CustomControls = () => {
   // Lors de l'initialisation de la carte
   useEffect(() => {
     if (map !== undefined) {
-      if (etablissementMap !== undefined && etablissement !== undefined) {
+      if (etablissementMap !== undefined) {
         map.setCenter({
-          lng: etablissement.longitude,
-          lat: etablissement.latitude,
+          lng: etablissementMap.center.lng,
+          lat: etablissementMap.center.lat,
         });
         map.setZoom(etablissementMap.initialZoom);
       }
