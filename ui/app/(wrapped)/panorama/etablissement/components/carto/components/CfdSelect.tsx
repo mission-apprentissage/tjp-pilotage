@@ -1,4 +1,4 @@
-import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
+import { Flex, Skeleton, Stack, Tag, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
@@ -16,6 +16,9 @@ type TCfdSearchResult =
 interface Option {
   label: string;
   value: string;
+  isSpecialite: boolean;
+  dateFermeture?: string;
+  isOption: boolean;
 }
 
 const formatOffreToCfdSearchResult = (
@@ -42,6 +45,9 @@ const formatSearchResultToOption = (
 ): Option => ({
   label: `${cfdSearchResult.libelleFormation} (${cfdSearchResult.cfd})`,
   value: cfdSearchResult.value,
+  isSpecialite: cfdSearchResult.isSpecialite,
+  dateFermeture: cfdSearchResult.dateFermeture,
+  isOption: cfdSearchResult.isOption,
 });
 
 export const CfdSelect = () => {
@@ -132,7 +138,26 @@ export const CfdSelect = () => {
             defaultOptions={true}
             loadOptions={loadOptions}
             formatOptionLabel={(option) => {
-              return <Flex>{option.label}</Flex>;
+              return (
+                <Flex>
+                  {option.label}{" "}
+                  {option.isSpecialite && (
+                    <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                      Spécialité
+                    </Tag>
+                  )}
+                  {option.isOption && (
+                    <Tag colorScheme={"blue"} size={"md"} ms={2}>
+                      Option
+                    </Tag>
+                  )}
+                  {option.dateFermeture && (
+                    <Tag colorScheme={"red"} size={"md"} ms={2}>
+                      Fermeture au {option.dateFermeture}
+                    </Tag>
+                  )}
+                </Flex>
+              );
             }}
             loadingMessage={({ inputValue }) =>
               `${inputValue} est en cours de recherche...`
