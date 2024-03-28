@@ -26,6 +26,8 @@ export const getDataForEtablissementMapSchema = {
         y2: z.string(),
       })
       .optional(),
+    mapHeight: z.coerce.number(),
+    mapWidth: z.coerce.number(),
   }),
   response: {
     200: z.object({

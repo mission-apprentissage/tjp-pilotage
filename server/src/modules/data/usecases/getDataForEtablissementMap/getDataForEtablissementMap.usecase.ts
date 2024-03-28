@@ -77,10 +77,11 @@ export const getDataForEtablissementMapFactory =
       etablissements,
     }).map(formatEtablissement);
 
-    const initialZoom = getInitialZoom(
-      formattedEtablissement,
-      filteredEtablissements
-    );
+    const initialZoom = getInitialZoom({
+      etablissement: formattedEtablissement,
+      etablissementsProches: filteredEtablissements,
+      mapDimensions: { height: filters.mapHeight, width: filters.mapWidth },
+    });
 
     return {
       etablissementsProches: filteredEtablissements,

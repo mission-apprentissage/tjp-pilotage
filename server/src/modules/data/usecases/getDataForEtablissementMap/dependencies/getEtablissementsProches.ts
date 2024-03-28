@@ -4,7 +4,7 @@ import { CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../../db/db";
 import { RouteQueryString } from "../getDataForEtablissementMap.usecase";
 
-export interface Filters extends RouteQueryString {}
+export interface Filters extends Pick<RouteQueryString, "bbox" | "cfd"> {}
 
 export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
   await kdb

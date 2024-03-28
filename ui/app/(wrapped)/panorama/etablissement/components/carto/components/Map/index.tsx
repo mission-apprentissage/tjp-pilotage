@@ -1,6 +1,6 @@
 import "maplibre-gl/dist/maplibre-gl.css";
 
-import { Box, Skeleton } from "@chakra-ui/react";
+import { Skeleton } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import MapGLMap, {
   NavigationControl,
@@ -16,6 +16,8 @@ import { EtablissementsProches } from "./components/EtablissementsProches";
 
 interface MapProps {
   uai: string;
+  height: number;
+  width: number;
 }
 
 const AVAILABLE_STYLES = [
@@ -24,10 +26,12 @@ const AVAILABLE_STYLES = [
   "https://data.geopf.fr/annexes/ressources/vectorTiles/styles/PLAN.IGN/attenue.json",
 ];
 
-export function Map({ uai }: MapProps) {
+export function Map({ uai, height, width }: MapProps) {
   const [style] = useState(AVAILABLE_STYLES[0]);
   const { etablissementMap, setEtablissementMap, cfdFilter } =
     useEtablissementMapContext();
+
+  console.log(height, width);
 
   const { data: etablissement, isLoading } = client
     .ref("[GET]/etablissement/:uai/map")
@@ -37,6 +41,8 @@ export function Map({ uai }: MapProps) {
       },
       query: {
         cfd: cfdFilter ? [cfdFilter] : undefined,
+        mapHeight: height,
+        mapWidth: width,
       },
     });
 
@@ -51,23 +57,21 @@ export function Map({ uai }: MapProps) {
   }
 
   return (
-    <Box height="100%" width="100%">
-      <MapGLMap
-        style={{ width: "100%", height: "100%" }}
-        mapStyle={style}
-        dragRotate={false}
-        touchZoomRotate={false}
-        maxPitch={0}
-        minPitch={0}
-        fadeDuration={0}
-      >
-        <Etablissement />
-        <EtablissementsProches />
-        <ActiveEtablissement />
-        <ScaleControl />
-        <NavigationControl />
-        <CustomControls />
-      </MapGLMap>
-    </Box>
+    <MapGLMap
+      style={{ width, height }}
+      mapStyle={style}
+      dragRotate={false}
+      touchZoomRotate={false}
+      maxPitch={0}
+      minPitch={0}
+      fadeDuration={0}
+    >
+      <Etablissement />
+      <EtablissementsProches />
+      <ActiveEtablissement />
+      <ScaleControl />
+      <NavigationControl />
+      <CustomControls />
+    </MapGLMap>
   );
 }
