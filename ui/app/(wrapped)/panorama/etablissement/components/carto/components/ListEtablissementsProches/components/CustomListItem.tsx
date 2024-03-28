@@ -44,7 +44,7 @@ const formatSecteur = (secteur: string) => {
     case "PU":
       return "Public";
     case "PR":
-      return "Prive";
+      return "Privé";
     default:
       return "";
   }
