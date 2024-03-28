@@ -4,7 +4,8 @@ import { Icon } from "@iconify/react";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
 
 export const CenterMap = () => {
-  const { map, etablissementMap } = useEtablissementMapContext();
+  const { map, etablissementMap, setActiveUai, setHoverUai } =
+    useEtablissementMapContext();
 
   const etablissement = etablissementMap?.etablissement;
 
@@ -14,6 +15,8 @@ export const CenterMap = () => {
       map !== undefined &&
       etablissement !== undefined
     ) {
+      setActiveUai(etablissement.uai);
+      setHoverUai(etablissement.uai);
       map.flyTo({
         center: {
           lng: etablissement.longitude,
