@@ -112,7 +112,7 @@ export const CustomListItem = ({
                   )
                 }
               >
-                {etablissement.libelleEtablissement.split(" - ")[0]}
+                {etablissement.libelleEtablissement}
               </Text>
               {hover && <InlineIcon icon="ri:arrow-right-line" />}
             </HStack>

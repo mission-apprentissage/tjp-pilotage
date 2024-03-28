@@ -45,7 +45,11 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.commune",
       "etablissement.longitude",
       "etablissement.latitude",
-      "etablissement.libelleEtablissement",
+      sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
+        "etablissement.libelleEtablissement"
+      )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
+        "libelleEtablissement"
+      ),
       "etablissement.secteur",
       sb.fn.max(selectTauxPoursuite("indicateurSortie")).as("tauxPoursuite"),
       sb.fn
