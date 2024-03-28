@@ -27,6 +27,7 @@ export default ({
           formId={numero}
           defaultValues={data}
           formMetadata={data.metadata}
+          campagne={data.campagne}
         />
       )}
     </>

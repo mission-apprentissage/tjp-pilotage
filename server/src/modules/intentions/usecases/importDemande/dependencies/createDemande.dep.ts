@@ -14,7 +14,7 @@ export const createDemandeQuery = ({
   campagne: { id: string };
   user: Pick<RequestUser, "id">;
 }) => {
-  const importedDemande = kdb
+  return kdb
     .insertInto("demande")
     .values({
       ...(_.omit(demande, [
@@ -31,6 +31,7 @@ export const createDemandeQuery = ({
         "compensationRentreeScolaire",
         "createurId",
         "statut",
+        "typeDemande",
       ]) as Insertable<DB["demande"]>),
       id: generateId(),
       numero: generateShortId(),
@@ -44,9 +45,13 @@ export const createDemandeQuery = ({
       compensationRentreeScolaire: null,
       createurId: user.id,
       statut: "draft",
+      typeDemande:
+        demande.typeDemande === "augmentation_compensation"
+          ? "augmentation_nette"
+          : demande.typeDemande === "ouverture_compensation"
+          ? "ouverture_nette"
+          : demande.typeDemande,
     })
     .returning("id")
     .executeTakeFirst();
-
-  return importedDemande;
 };

@@ -1,15 +1,53 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Button, Flex, Select, Text, VStack } from "@chakra-ui/react";
+import { ChevronDownIcon, QuestionOutlineIcon } from "@chakra-ui/icons";
+import {
+  Button,
+  Flex,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
+  Tag,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Campagnes, Filters } from "../types";
+
+const CampagneStatutTag = ({ statut }: { statut?: string }) => {
+  switch (statut) {
+    case "en cours":
+      return (
+        <Tag size="md" colorScheme={"green"} ml={2}>
+          {statut}
+        </Tag>
+      );
+    case "en attente":
+      return (
+        <Tag size="md" colorScheme={"purple"} ml={2}>
+          {statut}
+        </Tag>
+      );
+    case "terminée":
+      return (
+        <Tag size="md" colorScheme={"red"} ml={2}>
+          {statut}
+        </Tag>
+      );
+    default:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={2}>
+          {statut}
+        </Tag>
+      );
+  }
+};
 
 export const MenuIntention = ({
   isRecapView = false,
@@ -70,24 +108,42 @@ export const MenuIntention = ({
       </Button>
       <Flex direction={"column"} gap={1}>
         <Text>Sélectionner une campagne</Text>
-        <Select
-          value={campagne ?? CURRENT_ANNEE_CAMPAGNE}
-          onChange={(event) =>
-            setSearchParams({
-              ...searchParams,
-              campagne: event.target.value,
-            })
-          }
-        >
-          {campagnes?.map((campagne) => (
-            <option value={campagne.annee} key={campagne.annee}>
-              {`${campagne.annee} (${
-                campagne.statut.charAt(0).toUpperCase() +
-                campagne.statut.substr(1)
-              })`}
-            </option>
-          ))}
-        </Select>
+        <Menu gutter={0} matchWidth={true} autoSelect={false}>
+          <MenuButton
+            as={Button}
+            variant={"selectButton"}
+            rightIcon={<ChevronDownIcon />}
+            w={"100%"}
+          >
+            <Flex direction="row">
+              <Text my={"auto"}>
+                {campagnes?.find((c) => c.annee === campagne)?.annee ?? ""}
+              </Text>
+              <CampagneStatutTag
+                statut={campagnes?.find((c) => c.annee === campagne)?.statut}
+              />
+            </Flex>
+          </MenuButton>
+          <MenuList py={0} borderTopRadius={0}>
+            {campagnes?.map((campagne) => (
+              <MenuItem
+                p={2}
+                key={campagne.annee}
+                onClick={() => {
+                  setSearchParams({
+                    ...searchParams,
+                    campagne: campagne.annee,
+                  });
+                }}
+              >
+                <Flex direction="row">
+                  <Text my={"auto"}>{campagne.annee}</Text>
+                  <CampagneStatutTag statut={campagne.statut} />
+                </Flex>
+              </MenuItem>
+            ))}
+          </MenuList>
+        </Menu>
       </Flex>
       <VStack flex="1" align="flex-start" spacing={2}>
         <Button
