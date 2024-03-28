@@ -51,6 +51,7 @@ export const CfdSelect = () => {
   const analyseDetailleeOffre =
     analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
   const [selected, setSelected] = useState<Option>();
+  const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
 
   const onChange = (newValue: Option) => {
     setSelected(newValue);
@@ -141,6 +142,9 @@ export const CfdSelect = () => {
             }
             placeholder="Code diplôme ou libellé"
             isDisabled={!analyseDetaillee}
+            controlShouldRenderValue={!isMenuOpen}
+            onMenuOpen={() => setIsMenuOpen(true)}
+            onMenuClose={() => setIsMenuOpen(false)}
             styles={{
               groupHeading: (provided) => ({
                 ...provided,
