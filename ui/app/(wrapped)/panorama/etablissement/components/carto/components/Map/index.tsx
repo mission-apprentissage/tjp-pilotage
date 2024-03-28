@@ -31,8 +31,6 @@ export function Map({ uai, height, width }: MapProps) {
   const { etablissementMap, setEtablissementMap, cfdFilter } =
     useEtablissementMapContext();
 
-  console.log(height, width);
-
   const { data: etablissement, isLoading } = client
     .ref("[GET]/etablissement/:uai/map")
     .useQuery({
