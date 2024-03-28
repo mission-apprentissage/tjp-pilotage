@@ -48,6 +48,8 @@ export const CfdAutocompleteInput = ({
           isFCIL: false,
           dateFermeture: "",
           dispositifs: [],
+          libelleFormation: "",
+          cfd: "",
         } as (typeof client.infer)["[GET]/diplome/search/:search"][number])
       }
       loadOptions={(search) => {

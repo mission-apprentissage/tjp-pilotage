@@ -5,7 +5,6 @@ import { Loading } from "@/components/Loading";
 
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
-import { LiensUtilesSection } from "./liens-utiles/LiensUtilesSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { TabsSection } from "./tabs/TabsSection";
@@ -65,14 +64,14 @@ const EtablissementAnalyseDetaillee = () => {
             <>
               {displayType === "dashboard" ? (
                 <Dashboard
-                  formation={formations && formations[offre]}
-                  chiffresIJOffre={chiffresIJ && chiffresIJ[offre]}
-                  chiffresEntreeOffre={chiffresEntree && chiffresEntree[offre]}
+                  formation={formations?.[offre]}
+                  chiffresIJOffre={chiffresIJ?.[offre]}
+                  chiffresEntreeOffre={chiffresEntree?.[offre]}
                 />
               ) : (
                 <QuadrantSection
                   formations={Object.values(formations ?? {})}
-                  currentFormation={formations && formations[offre]}
+                  currentFormation={formations?.[offre]}
                   etablissement={etablissement}
                   chiffresIJ={chiffresIJ}
                   chiffresEntree={chiffresEntree}
@@ -84,9 +83,9 @@ const EtablissementAnalyseDetaillee = () => {
             </>
           ) : (
             <Dashboard
-              formation={formations && formations[offre]}
-              chiffresIJOffre={chiffresIJ && chiffresIJ[offre]}
-              chiffresEntreeOffre={chiffresEntree && chiffresEntree[offre]}
+              formation={formations?.[offre]}
+              chiffresIJOffre={chiffresIJ?.[offre]}
+              chiffresEntreeOffre={chiffresEntree?.[offre]}
             />
           )}
         </GridItem>
@@ -113,10 +112,6 @@ const EtablissementAnalyseDetaillee = () => {
       )}
       {formationFounds ? renderFormations() : renderNoFormationFound()}
       <Divider />
-      <LiensUtilesSection
-        codeDepartement={etablissement?.codeDepartement}
-        codeRegion={etablissement?.codeRegion}
-      />
     </Flex>
   );
 };
