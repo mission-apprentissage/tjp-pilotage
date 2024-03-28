@@ -88,6 +88,59 @@ export const CustomListItem = ({
     return "transparent";
   })();
 
+  const isScolaire = etablissement.voies.includes("scolaire");
+  const isApprentissage = etablissement.voies.includes("apprentissage");
+
+  const tooltipLabelEffectif = (() => {
+    if (etablissement.effectif !== undefined) {
+      if (isScolaire && !isApprentissage) {
+        return `Effectif ${CURRENT_RENTREE}`;
+      }
+
+      if (isScolaire && isApprentissage) {
+        return `Effectif ${CURRENT_IJ_MILLESIME} voie scolaire`;
+      }
+    }
+
+    if (isApprentissage && !isScolaire) {
+      return `Données indisponibles pour l'apprentissage`;
+    }
+
+    return `Données indisponibles`;
+  })();
+
+  const tooltipLabelTauxEmploi = (() => {
+    if (etablissement.tauxInsertion !== undefined) {
+      if (isScolaire) {
+        return `Taux d'emploi à 6mois (Millesime ${CURRENT_IJ_MILLESIME.split(
+          "_"
+        ).join("+")})`;
+      }
+
+      if (isApprentissage) {
+        return `Données indisponibles pour l'apprentissage`;
+      }
+    }
+
+    return `Données indisponibles`;
+  })();
+
+  const tooltipLabelTauxPoursuite = (() => {
+    if (etablissement.tauxPoursuite !== undefined) {
+      if (isScolaire) {
+        return `Taux de poursuite d'étude (Millesime ${CURRENT_IJ_MILLESIME.split(
+          "_"
+        ).join("+")})`;
+      }
+
+      if (isApprentissage) {
+        return `Données indisponibles pour l'apprentissage`;
+      }
+    }
+
+    return "Données indisponibles";
+  })();
+
   return (
     <>
       <ListItem
@@ -179,42 +232,36 @@ export const CustomListItem = ({
                 divider={<Divider h="12px" w="1px" orientation="vertical" />}
                 color={themeDefinition.colors.grey[425]}
               >
-                {etablissement.effectif !== undefined && (
-                  <Tooltip label={`Effectif ${CURRENT_RENTREE}`}>
-                    <HStack gap="4px">
-                      <InlineIcon icon="ri:group-line" />
-                      <Text>{etablissement.effectif}</Text>
-                    </HStack>
-                  </Tooltip>
-                )}
-                {etablissement.tauxInsertion !== undefined && (
-                  <Tooltip
-                    label={`Taux d'emploi à 6mois (${CURRENT_IJ_MILLESIME.split(
-                      "_"
-                    ).join("/")})`}
-                  >
-                    <HStack gap="4px">
-                      <InlineIcon icon="ri:briefcase-line" />
-                      <Text>
-                        {formatPercentage(etablissement.tauxInsertion)}
-                      </Text>
-                    </HStack>
-                  </Tooltip>
-                )}
-                {etablissement.tauxPoursuite !== undefined && (
-                  <Tooltip
-                    label={`Taux de poursuite d'étude (${CURRENT_IJ_MILLESIME.split(
-                      "_"
-                    ).join("/")})`}
-                  >
-                    <HStack gap="4px">
-                      <InlineIcon icon="ri:book-open-line" />
-                      <Text>
-                        {formatPercentage(etablissement.tauxPoursuite)}
-                      </Text>
-                    </HStack>
-                  </Tooltip>
-                )}
+                <Tooltip label={tooltipLabelEffectif}>
+                  <HStack gap="4px">
+                    <InlineIcon icon="ri:group-line" />
+                    <Text>
+                      {etablissement.effectif !== undefined
+                        ? etablissement.effectif
+                        : "--"}
+                    </Text>
+                  </HStack>
+                </Tooltip>
+                <Tooltip label={tooltipLabelTauxEmploi}>
+                  <HStack gap="4px">
+                    <InlineIcon icon="ri:briefcase-line" />
+                    <Text>
+                      {etablissement.tauxInsertion !== undefined
+                        ? formatPercentage(etablissement.tauxInsertion)
+                        : "--"}
+                    </Text>
+                  </HStack>
+                </Tooltip>
+                <Tooltip label={tooltipLabelTauxPoursuite}>
+                  <HStack gap="4px">
+                    <InlineIcon icon="ri:book-open-line" />
+                    <Text>
+                      {etablissement.tauxPoursuite !== undefined
+                        ? formatPercentage(etablissement.tauxPoursuite)
+                        : "--"}
+                    </Text>
+                  </HStack>
+                </Tooltip>
               </HStack>
             </HStack>
           </HStack>
