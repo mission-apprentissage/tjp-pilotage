@@ -1,4 +1,5 @@
 import { Box, Divider, Grid, HStack, Stack, Text } from "@chakra-ui/react";
+import { createRef, useEffect, useState } from "react";
 
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { CenterMap } from "./components/CenterMap";
@@ -9,6 +10,23 @@ import { EtablissementMapContextProvider } from "./context/etablissementMapConte
 
 export const EtablissementMap = () => {
   const { uai } = useEtablissementContext();
+  const mapContainer = createRef<HTMLDivElement>();
+  const [mapDimensions, setMapDimensions] = useState<{
+    height: number;
+    width: number;
+  }>({
+    height: 0,
+    width: 0,
+  });
+
+  useEffect(() => {
+    if (mapContainer.current) {
+      setMapDimensions({
+        height: mapContainer.current.clientHeight,
+        width: mapContainer.current.clientWidth,
+      });
+    }
+  }, []);
 
   return (
     <EtablissementMapContextProvider>
@@ -38,7 +56,9 @@ export const EtablissementMap = () => {
           gap="16px"
         >
           <ListeEtablissementsProches />
-          <Map uai={uai} />
+          <Box ref={mapContainer}>
+            <Map uai={uai} {...mapDimensions} />
+          </Box>
         </Grid>
       </Stack>
     </EtablissementMapContextProvider>

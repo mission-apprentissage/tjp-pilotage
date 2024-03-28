@@ -16,7 +16,6 @@ export const getDataForEtablissementMapListRoute = ({
     server.route({
       ...props,
       handler: async (request, response) => {
-        console.log("tt");
         const stats = await getDataForEtablissementMapList(
           { ...request.params },
           { ...request.query }

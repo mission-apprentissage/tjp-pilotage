@@ -37,7 +37,7 @@ export const CustomControls = () => {
   const etablissement = etablissementMap?.etablissement;
 
   const loadImageOnMap = async (image: { path: string; name: string }) => {
-    if (map !== undefined) {
+    if (map !== undefined && map.isStyleLoaded()) {
       const loadedImage = await map.loadImage(image.path);
       if (map.hasImage(image.name)) {
         map.updateImage(image.name, loadedImage.data);
