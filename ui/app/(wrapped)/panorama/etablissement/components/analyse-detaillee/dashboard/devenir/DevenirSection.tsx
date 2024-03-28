@@ -1,18 +1,55 @@
-import { Flex, Grid, GridItem, Text } from "@chakra-ui/react";
+import { WarningTwoIcon } from "@chakra-ui/icons";
+import { Badge, Box, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 
-import { ChiffresIJOffre } from "../../types";
+import { ChiffresIJOffre, Formation } from "../../types";
 import { TauxDevenirFavorable } from "./TauxDevenirFavorable";
 import { TauxEmploi } from "./TauxEmploi";
 import { TauxPoursuiteEtudes } from "./TauxPoursuiteEtudes";
 
+const isAnyDataMissing = (
+  formation?: Formation,
+  chiffresIJOffre?: ChiffresIJOffre
+) => {
+  if (!chiffresIJOffre) {
+    if (
+      formation &&
+      (formation.typeFamille === "2nde_commune" ||
+        formation.typeFamille === "1ere_commune")
+    ) {
+      return false;
+    }
+    return true;
+  }
+
+  return Object.values(chiffresIJOffre).reduce((acc, value) => {
+    if (
+      typeof value.tauxInsertion === "undefined" ||
+      typeof value.tauxPoursuite === "undefined" ||
+      typeof value.tauxDevenirFavorable === "undefined"
+    ) {
+      return true;
+    }
+    return acc;
+  }, false);
+};
+
 export const DevenirSection = ({
+  formation,
   chiffresIJOffre,
 }: {
+  formation?: Formation;
   chiffresIJOffre?: ChiffresIJOffre;
 }) => {
+  console.debug("DevenirSection", { formation, chiffresIJOffre });
   return (
-    <>
-      <Flex direction={"row"} justifyContent={"space-between"}>
+    <Box>
+      <Flex
+        direction={"row"}
+        justifyContent={"flex-start"}
+        gap={"8px"}
+        alignItems={"center"}
+        mb={4}
+      >
         <Text
           fontSize={14}
           fontWeight={700}
@@ -21,6 +58,13 @@ export const DevenirSection = ({
         >
           Devenir des élèves
         </Text>
+
+        {isAnyDataMissing(formation, chiffresIJOffre) && (
+          <Badge variant="grey" maxH={5}>
+            <WarningTwoIcon me={2} />
+            Données incomplètes
+          </Badge>
+        )}
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
@@ -33,6 +77,6 @@ export const DevenirSection = ({
           <TauxDevenirFavorable chiffresIJOffre={chiffresIJOffre} />
         </GridItem>
       </Grid>
-    </>
+    </Box>
   );
 };
