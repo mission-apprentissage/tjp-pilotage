@@ -14,6 +14,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -67,7 +68,7 @@ export const MenuIntention = ({
 
   const statut =
     searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
-  const campagne = searchParams.campagne;
+  const campagne = searchParams.campagne ?? CURRENT_ANNEE_CAMPAGNE;
 
   const setSearchParams = (params: {
     filters?: Partial<Filters>;
@@ -117,6 +118,7 @@ export const MenuIntention = ({
           >
             <Flex direction="row">
               <Text my={"auto"}>
+                Campagne{" "}
                 {campagnes?.find((c) => c.annee === campagne)?.annee ?? ""}
               </Text>
               <CampagneStatutTag
@@ -137,7 +139,7 @@ export const MenuIntention = ({
                 }}
               >
                 <Flex direction="row">
-                  <Text my={"auto"}>{campagne.annee}</Text>
+                  <Text my={"auto"}>Campagne {campagne.annee}</Text>
                   <CampagneStatutTag statut={campagne.statut} />
                 </Flex>
               </MenuItem>

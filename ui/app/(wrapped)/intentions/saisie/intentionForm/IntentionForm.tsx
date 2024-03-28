@@ -90,6 +90,8 @@ export const IntentionForm = ({
     formMetadata?.formation?.isFCIL ?? false
   );
 
+  const isFormDisabled = disabled || form.formState.disabled;
+
   const isCFDUaiSectionValid = ({
     cfd,
     codeDispositif,
@@ -159,7 +161,7 @@ export const IntentionForm = ({
               formMetadata={formMetadata}
               onEditUaiCfdSection={onEditUaiCfdSection}
               active={step === 1}
-              disabled={disabled}
+              disabled={isFormDisabled}
               isFCIL={isFCIL}
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
@@ -170,7 +172,7 @@ export const IntentionForm = ({
             <Collapse in={step === 2} animateOpacity ref={step2Ref}>
               <InformationsBlock
                 formId={formId}
-                disabled={form.formState.disabled || disabled}
+                disabled={isFormDisabled}
                 errors={errors}
                 formMetadata={formMetadata}
                 footerActions={

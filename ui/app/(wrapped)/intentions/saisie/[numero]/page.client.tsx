@@ -1,6 +1,7 @@
 "use client";
 
-import { client } from "../../../../../api.client";
+import { client } from "@/api.client";
+
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 

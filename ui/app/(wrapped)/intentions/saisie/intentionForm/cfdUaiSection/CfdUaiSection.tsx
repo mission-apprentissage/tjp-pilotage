@@ -167,22 +167,27 @@ export const CfdUaiSection = ({
               onClick={() => anchorToStatus()}
             />
           )}
+          {disabled && (
+            <Tag size="lg" colorScheme={"red"} ml={"auto"}>
+              Mode consultation
+            </Tag>
+          )}
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock
           formMetaData={formMetadata}
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
-          active={active}
+          active={active && !disabled}
         />
-        <DispositifBlock options={dispositifs} active={active} />
+        <DispositifBlock options={dispositifs} active={active && !disabled} />
         {isFCIL && <LibelleFCILField active={active}></LibelleFCILField>}
         <Flex flexDirection={"row"} justifyContent={"space-between"}>
           <Flex flexDirection="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">
               <UaiBlock
                 formMetadata={formMetadata}
-                active={active}
+                active={active && !disabled}
                 setUaiInfo={setUaiInfo}
               />
             </Box>
