@@ -20,6 +20,9 @@ import { usePlausible } from "next-plausible";
 
 import { Filters } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/types";
 
+import { Loading } from "../../../../../../../components/Loading";
+import { useEtablissementContext } from "../../../context/etablissementContext";
+
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
   53: "https://dares.travail-emploi.gouv.fr/publication/bretagne-quelles-difficultes-de-recrutement-dici-2030",
@@ -35,6 +38,12 @@ const lienDares: Record<string, string> = {
   52: "https://dares.travail-emploi.gouv.fr/publication/pays-de-la-loire-quelles-difficultes-de-recrutement-dici-2030",
   93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
 };
+
+function formatCodeDepartement(codeDepartement: string): string {
+  return codeDepartement?.startsWith("0")
+    ? codeDepartement.substring(1)
+    : codeDepartement;
+}
 
 const InfoCard = ({
   title,
@@ -131,13 +140,17 @@ const InfoCard = ({
   );
 };
 
-export const LiensUtilesSection = ({
-  codeRegion,
-  codeDepartement,
-}: {
-  codeRegion?: string;
-  codeDepartement?: string;
-}) => {
+export const LiensUtilesSection = () => {
+  const { analyseDetaillee } = useEtablissementContext();
+
+  if (!analyseDetaillee) {
+    return <Loading my={16} size="xl" />;
+  }
+
+  const codeDepartement = formatCodeDepartement(
+    analyseDetaillee.etablissement.codeDepartement
+  );
+  const codeRegion = analyseDetaillee.etablissement.codeRegion;
   const trackEvent = usePlausible();
 
   const linkTracker = (filterName: keyof Filters | string) => () => {
@@ -145,9 +158,6 @@ export const LiensUtilesSection = ({
       props: { filter_name: filterName },
     });
   };
-  codeDepartement = codeDepartement?.startsWith("0")
-    ? codeDepartement.substring(1)
-    : codeDepartement;
 
   return (
     <Flex direction={"column"} gap={8} mt={8} maxW={"100%"} id={"liens-utiles"}>

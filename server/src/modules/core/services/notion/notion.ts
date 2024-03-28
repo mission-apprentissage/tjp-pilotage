@@ -1,8 +1,15 @@
 import Boom from "@hapi/boom";
 import { APIErrorCode, Client, isNotionClientError } from "@notionhq/client";
+import { NotionToMarkdown } from "notion-to-md";
+
+import { logger } from "../../../../logger";
 
 export const notionClient = new Client({
   auth: process.env.NOTION_TOKEN,
+});
+
+export const notionToMarkdownClient = new NotionToMarkdown({
+  notionClient: notionClient,
 });
 
 type CallbackFunction<K extends unknown[], T> = (...args: K) => Promise<T>;
@@ -13,6 +20,11 @@ const withNotionErrorHandling =
     try {
       return await callback(...args);
     } catch (error) {
+      logger.error("Erreur lors de l'appel à Notion", {
+        error: error as Error,
+        ...args,
+      });
+
       if (isNotionClientError(error)) {
         switch (error.code) {
           case APIErrorCode.ObjectNotFound:
@@ -40,10 +52,50 @@ const getDatabaseRowsFactory = (
     client: notionClient,
   }
 ) =>
-  withNotionErrorHandling(async (databaseId: string) =>
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any -- filters type currently not exported from notion package
+  withNotionErrorHandling(async (databaseId: string, filter?: any) =>
     deps.client.databases.query({
       database_id: databaseId,
+      filter,
     })
   );
 
 export const getDatabaseRows = getDatabaseRowsFactory();
+
+const getPageFactory = (
+  deps = {
+    client: notionClient,
+  }
+) =>
+  withNotionErrorHandling(async (pageId: string) =>
+    deps.client.pages.retrieve({
+      page_id: pageId,
+    })
+  );
+
+export const getPage = getPageFactory();
+
+const getPageAsMarkdownFactory = (
+  deps = {
+    n2m: notionToMarkdownClient,
+  }
+) =>
+  withNotionErrorHandling(async (pageId: string) => {
+    const mdblocks = await deps.n2m.pageToMarkdown(pageId);
+    const mdString = deps.n2m.toMarkdownString(mdblocks);
+
+    return mdString?.parent ? mdString.parent : "";
+  });
+
+export const getPageAsMarkdown = getPageAsMarkdownFactory();
+
+const getPagePropertiesFactory = (
+  deps = {
+    client: notionClient,
+  }
+) =>
+  withNotionErrorHandling(async (pageId: string) => {
+    return deps.client.pages.retrieve({ page_id: pageId });
+  });
+
+export const getPageProperties = getPagePropertiesFactory();

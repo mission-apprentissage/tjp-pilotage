@@ -1,4 +1,4 @@
-import { DownloadIcon, ViewIcon } from "@chakra-ui/icons";
+import { ViewIcon } from "@chakra-ui/icons";
 import {
   AspectRatio,
   Box,
@@ -11,11 +11,14 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 
-import { Quadrant } from "../../../../../../components/Quadrant";
-import { TableQuadrant } from "../../../../../../components/TableQuadrant";
-import { downloadCsv } from "../../../../../../utils/downloadExport";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { Quadrant } from "@/components/Quadrant";
+import { TableQuadrant } from "@/components/TableQuadrant";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+
 import {
   OrderPanoramaEtablissement,
   PanoramaFormationEtablissement,
@@ -56,6 +59,8 @@ export const QuadrantSection = ({
   order?: Partial<OrderPanoramaEtablissement>;
   handleOrder: (column: OrderPanoramaEtablissement["orderBy"]) => void;
 }) => {
+  const trackEvent = usePlausible();
+
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
   const [currentCfd, setFormationId] = useState<string | undefined>();
 
@@ -141,21 +146,19 @@ export const QuadrantSection = ({
       </Box>
       <Box px={[null, null, "16"]} maxW={800} m="auto">
         <Flex justify="space-between" flexDir={["column", null, "row"]} gap={2}>
-          <Flex>
+          <Flex gap={2}>
             <Button onClick={() => toggleTypeVue()} variant="solid">
               <ViewIcon mr={2}></ViewIcon>
               {`Passer en vue ${
                 typeVue === "quadrant" ? "tableau" : "quadrant"
               }`}
             </Button>
-            <Button
-              ml="2"
-              aria-label="csv"
-              variant="solid"
-              onClick={async () => {
+            <ExportMenuButton
+              onExportCsv={async () => {
                 if (!filteredFormations) return;
+                trackEvent("panorama-etablissement:export");
                 downloadCsv(
-                  "formations_panorama.csv",
+                  "formations_panorama_etablissement",
                   filteredFormations.map((formation) => ({
                     ...formation,
                   })),
@@ -170,10 +173,27 @@ export const QuadrantSection = ({
                   }
                 );
               }}
-            >
-              <DownloadIcon mr="2" />
-              Exporter en csv
-            </Button>
+              onExportExcel={async () => {
+                if (!filteredFormations) return;
+                trackEvent("panorama-etablissement:export-excel");
+                downloadExcel(
+                  "formations_panorama_etablissement",
+                  filteredFormations.map((formation) => ({
+                    ...formation,
+                  })),
+                  {
+                    libelleFormation: "Formation",
+                    cfd: "CFD",
+                    libelleDispositif: "Dispositif",
+                    tauxInsertion: "Taux d'emploi",
+                    tauxPoursuite: "Taux de poursuite",
+                    tauxPression: "Taux de pression",
+                    positionQuadrant: "Position dans le quadrant",
+                  }
+                );
+              }}
+              variant="solid"
+            />
           </Flex>
           <Flex alignItems={"flex-end"} justify="flex-end">
             <Text color="grey" fontSize="sm" textAlign="left">

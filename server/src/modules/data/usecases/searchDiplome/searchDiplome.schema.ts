@@ -13,6 +13,9 @@ export const searchDiplomeSchema = {
         isOption: z.coerce.boolean(),
         isFCIL: z.boolean(),
         dateFermeture: z.string().optional(),
+        libelleFormation: z.string(),
+        libelleNiveauDiplome: z.string().optional(),
+        cfd: z.string(),
         dispositifs: z
           .array(
             z.object({

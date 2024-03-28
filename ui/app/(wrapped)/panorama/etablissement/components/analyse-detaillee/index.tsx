@@ -12,11 +12,10 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
-import { LiensUtilesSection } from "./liens-utiles/LiensUtilesSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { TabsSection } from "./tabs/TabsSection";
-import { Filters } from "./types";
+import { AnalyseDetaillee, Filters } from "./types";
 
 const QUADRANT_FEATURE_FLAG = true;
 
@@ -40,7 +39,8 @@ const EtablissementAnalyseDetaillee = () => {
 
   const trackEvent = usePlausible();
   const filters = searchParams.filters ?? {};
-  const { uai } = useEtablissementContext();
+  const { uai, analyseDetaillee, setAnalyseDetaillee } =
+    useEtablissementContext();
   const displayDashboard = () => {
     setSearchParams({ ...searchParams, displayType: "dashboard" });
   };
@@ -49,6 +49,7 @@ const EtablissementAnalyseDetaillee = () => {
     setSearchParams({ ...searchParams, displayType: "quadrant" });
   };
 
+  const { isLoading, data } = useAnalyseDetaillee(uai, filters);
   const {
     etablissement,
     formations,
@@ -56,8 +57,13 @@ const EtablissementAnalyseDetaillee = () => {
     chiffresEntree,
     statsSortie,
     filters: filtersData,
-    isLoading,
-  } = useAnalyseDetaillee(uai, filters) || {};
+  } = data || {};
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setAnalyseDetaillee(data as AnalyseDetaillee);
+    }
+  }, [data, isLoading]);
 
   // Si l'offre n'est pas dans la liste des formations (changement de filtre par exemple),
   // on la remplace par la première formation de la nouvelle liste
@@ -106,7 +112,7 @@ const EtablissementAnalyseDetaillee = () => {
       });
     };
 
-  if (isLoading) {
+  if (isLoading || !analyseDetaillee) {
     return <Loading my={16} size="xl" />;
   }
 
@@ -210,10 +216,6 @@ const EtablissementAnalyseDetaillee = () => {
         </Center>
       )}
       <Divider />
-      <LiensUtilesSection
-        codeDepartement={etablissement?.codeDepartement}
-        codeRegion={etablissement?.codeRegion}
-      />
     </Flex>
   );
 };

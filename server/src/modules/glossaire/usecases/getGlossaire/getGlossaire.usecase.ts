@@ -1,7 +1,7 @@
 import { PageObjectResponse } from "@notionhq/client/build/src/api-endpoints";
 
 import { config } from "../../../../../config/config";
-import * as notion from "../../services/notion/notion";
+import * as notion from "../../../core/services/notion/notion";
 import { PROPERTIES } from "../utils/properties/properties";
 import { dependencies } from "./dependencies";
 
@@ -28,7 +28,7 @@ export const getGlossaireFactory =
       database.results as PageObjectResponse[]
     );
 
-    return entries.sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
+    return entries.sort((a, b) => a.title?.localeCompare(b.title ?? "") ?? 0);
   };
 
 export const getGlossaire = getGlossaireFactory();

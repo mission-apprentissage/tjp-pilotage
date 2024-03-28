@@ -1,0 +1,43 @@
+import { client } from "@/api.client";
+import { ExportColumns } from "@/utils/downloadExport";
+
+export const DEMANDES_COLUMNS = {
+  id: "id",
+  cfd: "CFD",
+  libelleFormation: "Diplôme",
+  dispositifId: "Code dispositif",
+  libelleDispositif: "Dispositif",
+  libelleFCIL: "Libellé de la FCIL",
+  uai: "UAI",
+  libelleEtablissement: "Établissement",
+  codeRegion: "Code Region",
+  libelleRegion: "Région",
+  codeAcademie: "Code Académie",
+  libelleAcademie: "Académie",
+  codeDepartement: "Code Département",
+  libelleDepartement: "Département",
+  rentreeScolaire: "RS",
+  typeDemande: "Type de demande",
+  motif: "Motif",
+  autreMotif: "Autre motif",
+  coloration: "Coloration",
+  libelleColoration: "Libelle coloration",
+  amiCma: "AMI/CMA ?",
+  poursuitePedagogique: "Poursuite pédagogique ?",
+  commentaire: "Commentaire",
+  status: "Statut",
+  createdAt: "Date de création",
+  updatedAt: "Dernière modification",
+  compensationCfd: "CFD compensé",
+  compensationUai: "UAI compensé",
+  compensationDispositifId: "Dispositif compensé",
+  capaciteScolaireActuelle: "Capacité scolaire actuelle",
+  capaciteScolaire: "Capacité scolaire",
+  capaciteScolaireColoree: "Capacité scolaire coloree",
+  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
+  capaciteApprentissage: "Capacité apprentissage",
+  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  userName: "Auteur",
+} satisfies ExportColumns<
+  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
+>;

@@ -1,11 +1,6 @@
 "use client";
 
-import {
-  DownloadIcon,
-  LinkIcon,
-  Search2Icon,
-  WarningTwoIcon,
-} from "@chakra-ui/icons";
+import { LinkIcon, Search2Icon, WarningTwoIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -25,7 +20,6 @@ import {
   Tooltip,
   Tr,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -33,57 +27,17 @@ import qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import {
-  downloadCsv,
-  downloadExcel,
-  ExportColumns,
-} from "@/utils/downloadExport";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
-
-const DEMANDES_COLUMNS = {
-  id: "id",
-  cfd: "CFD",
-  libelleFormation: "Diplôme",
-  dispositifId: "Code dispositif",
-  libelleDispositif: "Dispositif",
-  libelleFCIL: "Libellé de la FCIL",
-  uai: "UAI",
-  libelleEtablissement: "Établissement",
-  libelleDepartement: "Département",
-  rentreeScolaire: "RS",
-  typeDemande: "Type de demande",
-  motif: "Motif",
-  autreMotif: "Autre motif",
-  coloration: "Coloration",
-  libelleColoration: "Libelle coloration",
-  amiCma: "AMI/CMA ?",
-  poursuitePedagogique: "Poursuite pédagogique ?",
-  commentaire: "Commentaire",
-  status: "Statut",
-  codeRegion: "Code Region",
-  codeAcademie: "Code Académie",
-  createdAt: "Date de création",
-  updatedAt: "Dernière modification",
-  compensationCfd: "CFD compensé",
-  compensationUai: "UAI compensé",
-  compensationDispositifId: "Dispositif compensé",
-  capaciteScolaireActuelle: "Capacité scolaire actuelle",
-  capaciteScolaire: "Capacité scolaire",
-  capaciteScolaireColoree: "Capacité scolaire coloree",
-  capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-  capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
-  userName: "Auteur",
-} satisfies ExportColumns<
-  (typeof client.infer)["[GET]/demandes"]["demandes"][number]
->;
+import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 
 export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
 export type Filters = Pick<Query, "status">;
@@ -266,44 +220,31 @@ export const PageClient = () => {
               </Button>
             </Flex>
             <Flex mr="auto" ms={2}>
-              <Button
-                size="md"
-                variant="ghost"
-                color={"bluefrance.113"}
-                onClick={async () => {
-                  trackEvent("demandes:export");
+              <ExportMenuButton
+                onExportCsv={async () => {
+                  trackEvent("saisie_demandes:export");
                   const data = await client.ref("[GET]/demandes").query({
                     query: getDemandesQueryParameters(EXPORT_LIMIT),
                   });
                   downloadCsv(
-                    "export_demandes",
+                    "export_saisie_demandes",
                     data.demandes,
                     DEMANDES_COLUMNS
                   );
                 }}
-              >
-                <DownloadIcon mr="2" />
-                Exporter en CSV
-              </Button>
-              <Button
-                size="md"
-                variant="ghost"
-                color={"bluefrance.113"}
-                onClick={async () => {
-                  trackEvent("demandes:export-excel");
+                onExportExcel={async () => {
+                  trackEvent("saisie_demandes:export-excel");
                   const data = await client.ref("[GET]/demandes").query({
                     query: getDemandesQueryParameters(EXPORT_LIMIT),
                   });
                   downloadExcel(
-                    "export_demandes",
+                    "export_saisie_demandes",
                     data.demandes,
                     DEMANDES_COLUMNS
                   );
                 }}
-              >
-                <Icon icon="ri:file-excel-2-line" width={"14px"} />
-                <Text ms={2}>Exporter en Excel</Text>
-              </Button>
+                variant="solid"
+              />
             </Flex>
           </Flex>
           {data?.demandes.length ? (

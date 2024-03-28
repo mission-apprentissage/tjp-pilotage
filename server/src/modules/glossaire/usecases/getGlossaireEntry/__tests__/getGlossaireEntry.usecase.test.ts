@@ -5,7 +5,7 @@ import Boom from "@hapi/boom";
 import {
   getPageAsMarkdown,
   getPageProperties,
-} from "../../../services/notion/notion";
+} from "../../../../core/services/notion/notion";
 import { dependencies } from "../dependencies";
 import { getGlossaireEntryFactory } from "../getGlossaireEntry.usecase";
 

@@ -129,6 +129,8 @@ const findFormationEtablissementsInDb = async ({
       "departement.codeDepartement",
       "etablissement.codeDepartement"
     )
+    .leftJoin("academie", "academie.codeAcademie", "etablissement.codeAcademie")
+    .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .leftJoin(
       "dataFormation as dataFormationContinuum",
       "dataFormationContinuum.cfd",
@@ -150,7 +152,9 @@ const findFormationEtablissementsInDb = async ({
       "formationView.cpcSousSecteur",
       "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
-      "departement.libelleDepartement as departement",
+      "departement.libelleDepartement",
+      "academie.libelleAcademie",
+      "region.libelleRegion",
       "etablissement.codeRegion",
       "etablissement.UAI as uai",
       "formationView.typeFamille",
@@ -332,7 +336,9 @@ const findFormationEtablissementsInDb = async ({
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "etablissement.id",
-      "departement.codeDepartement",
+      "departement.libelleDepartement",
+      "academie.libelleAcademie",
+      "region.libelleRegion",
       "indicateurEntree.rentreeScolaire",
       "indicateurEntree.formationEtablissementId",
       "indicateurSortie.formationEtablissementId",

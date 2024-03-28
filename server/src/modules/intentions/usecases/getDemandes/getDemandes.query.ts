@@ -37,6 +37,12 @@ export const findDemandes = async ({
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
     .leftJoin("user", "user.id", "demande.createurId")
     .selectAll("demande")
@@ -48,6 +54,8 @@ export const findDemandes = async ({
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
+      "academie.libelleAcademie",
+      "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(
