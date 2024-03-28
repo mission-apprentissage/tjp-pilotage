@@ -110,7 +110,15 @@ export const findManyInDataFormationQuery = async ({
         end
       `.as("dateFermeture"),
     ])
-    .distinctOn("dataFormation.cfd")
+    .distinctOn([
+      "dataFormation.cfd",
+      "dataFormation.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+    ])
+    .orderBy([
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.libelleFormation asc",
+    ])
     .limit(20)
     .execute()
     .then(cleanNull);
