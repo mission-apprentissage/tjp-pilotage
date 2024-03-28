@@ -1,4 +1,4 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Img, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -50,6 +50,7 @@ export const TauxRemplissage = ({
       </>
     );
   };
+
   return (
     <DashboardCard
       label="Taux de remplissage"
@@ -67,9 +68,18 @@ export const TauxRemplissage = ({
           onClick={() => openGlossaire("taux-de-remplissage")}
         />
       }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
+      }
     >
       <CounterChart
-        data={formatTaux(tauxRemplissage)}
+        data={
+          typeof tauxRemplissage === "undefined"
+            ? undefined
+            : formatTaux(tauxRemplissage)
+        }
         compareData={getCompareData()}
         type="percentage"
       />

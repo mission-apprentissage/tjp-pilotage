@@ -72,6 +72,11 @@ const IndicateurValeurAjoutee = ({
     }
     grow={1}
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value.toFixed(0)}
@@ -107,6 +112,11 @@ const IndicateurTauxEmploi6mois = ({
       />
     }
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value?.toFixed(0)}
@@ -141,6 +151,11 @@ const IndicateurPoursuiteDetudes = ({
       />
     }
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value?.toFixed(0)}
@@ -178,6 +193,11 @@ const IndicateurTauxDevenirFavorable = ({
         />
       }
       minH={"120px"}
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
+      }
     >
       <CounterChart
         data={indicateur?.value?.toFixed(0)}

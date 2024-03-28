@@ -1,4 +1,4 @@
-import { Box, Text } from "@chakra-ui/react";
+import { Badge, Box, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -56,6 +56,11 @@ export const TauxDevenirFavorable = ({
           }
           onClick={() => openGlossaire("taux-de-devenir-favorable")}
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       {checkDataAvailability() ? (

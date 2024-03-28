@@ -1,4 +1,4 @@
-import { Flex } from "@chakra-ui/react";
+import { Badge, Flex } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -48,6 +48,11 @@ export const Effectifs = ({
           label="Effectifs en entrée en première année de formation"
           onClick={() => openGlossaire("effectifs")}
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       <CounterChart data={effectifEntree} compareData={getCompareData()} />
