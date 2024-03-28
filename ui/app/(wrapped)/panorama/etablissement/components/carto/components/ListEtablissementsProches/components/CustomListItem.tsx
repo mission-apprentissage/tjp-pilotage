@@ -98,7 +98,7 @@ export const CustomListItem = ({
       }
 
       if (isScolaire && isApprentissage) {
-        return `Effectif ${CURRENT_IJ_MILLESIME} voie scolaire`;
+        return `Effectif ${CURRENT_RENTREE} voie scolaire`;
       }
     }
 
