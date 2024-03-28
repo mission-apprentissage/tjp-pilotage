@@ -13,10 +13,9 @@ import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { Quadrant } from "@/components/Quadrant";
-import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
 import {
   ChiffresEntree,
   ChiffresIJ,
@@ -53,7 +52,6 @@ export const QuadrantSection = ({
   offre: string;
   setOffre: (offre: string) => void;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const filteredFormations = Object.values(formations)
     .map((formation) => ({
       ...formation,
@@ -113,30 +111,17 @@ export const QuadrantSection = ({
         l'établissement avec les taux moyens de la région
       </Text>
       <Flex direction={"row"} gap={2} h={10}>
-        <Flex
-          gap={2}
-          onClick={() => openGlossaire("quadrant")}
-          cursor={"pointer"}
-        >
-          <TooltipIcon ml="1" label={"Comprendre le quadrant"} />
-          <Text
-            textDecoration={"underline"}
-            color={"grey.425"}
-            lineHeight={"12px"}
-          >
-            Comprendre le quadrant
-          </Text>
-        </Flex>
+        <GlossaireShortcut
+          label="Comprendre le quadrant"
+          glossaireEntryKey="quadrant"
+          color={"grey.425"}
+          textDecorationLine={"underline"}
+        />
       </Flex>
       <DonneesDisponiblesSection
         formations={formations}
         filteredFormations={filteredFormations}
         chiffresEntree={chiffresEntree}
-      />
-      <DonneesIndisponiblesSection
-        dimensions={offresDimensions}
-        currentFormation={currentFormation}
-        etablissement={etablissement}
       />
       <Flex direction={"column"} m={12} mt={4} gap={2}>
         <Flex direction={"row"} justify="space-between">
@@ -191,7 +176,7 @@ export const QuadrantSection = ({
               currentFormationId={`${currentFormation?.cfd}_${currentFormation?.codeDispositif}`}
               TooltipContent={FormationTooltipContent}
               onClick={(formation: (typeof filteredFormations)[number]) => {
-                if (offre != formation.offre) setOffre(formation.offre);
+                if (offre !== formation.offre) setOffre(formation.offre);
               }}
               effectifSizes={effectifSizes}
               dimensions={offresDimensions}
@@ -205,6 +190,11 @@ export const QuadrantSection = ({
           )}
         </AspectRatio>
       </Flex>
+      <DonneesIndisponiblesSection
+        dimensions={offresDimensions}
+        currentFormation={currentFormation}
+        etablissement={etablissement}
+      />
     </Flex>
   );
 };
