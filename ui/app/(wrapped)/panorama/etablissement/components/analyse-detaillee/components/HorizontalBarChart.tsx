@@ -63,7 +63,11 @@ export const HorizontalBarChart = ({
         axisPointer: {
           type: "shadow",
         },
-        formatter: "{b} : {c} élèves",
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        formatter: (params: any) =>
+          `${params?.name} : ${params?.data} élève${
+            params?.data > 1 ? "s" : ""
+          }`,
       },
       grid: {
         containLabel: true,
