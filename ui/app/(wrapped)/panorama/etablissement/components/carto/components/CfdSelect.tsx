@@ -117,6 +117,9 @@ export const CfdSelect = () => {
             loadingMessage={({ inputValue }) =>
               `${inputValue} est en cours de recherche...`
             }
+            noOptionsMessage={({ inputValue }) =>
+              `${inputValue} n'a donné aucun résultat.`
+            }
             placeholder="Code diplôme ou libellé"
             isDisabled={!analyseDetaillee}
             styles={{
