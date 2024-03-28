@@ -10,12 +10,17 @@ import { useEtablissementContext } from "../../../context/etablissementContext";
 import { AnalyseDetaillee } from "../../analyse-detaillee/types";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
 
-type CfdSearchResult =
+type TCfdSearchResult =
   (typeof client.infer)["[GET]/diplome/search/:search"][number];
+
+interface Option {
+  label: string;
+  value: string;
+}
 
 const formatOffreToCfdSearchResult = (
   offre: AnalyseDetaillee["formations"][number] | undefined
-): CfdSearchResult => ({
+): TCfdSearchResult => ({
   value: offre?.cfd ? offre?.cfd : "",
   label: offre?.libelleFormation
     ? `${offre?.libelleFormation} (${
@@ -26,6 +31,17 @@ const formatOffreToCfdSearchResult = (
   isSpecialite: false,
   isOption: false,
   isFCIL: false,
+  //
+  libelleFormation: offre?.libelleFormation || "",
+  libelleNiveauDiplome: offre?.libelleNiveauDiplome || "",
+  cfd: offre?.cfd || "",
+});
+
+const formatSearchResultToOption = (
+  cfdSearchResult: TCfdSearchResult
+): Option => ({
+  label: `${cfdSearchResult.libelleFormation} (${cfdSearchResult.cfd})`,
+  value: cfdSearchResult.value,
 });
 
 export const CfdSelect = () => {
@@ -34,14 +50,17 @@ export const CfdSelect = () => {
   const { setCfdFilter } = useEtablissementMapContext();
   const analyseDetailleeOffre =
     analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
-  const [selected, setSelected] = useState<CfdSearchResult>();
+  const [selected, setSelected] = useState<Option>();
 
-  const onChange = (newValue: CfdSearchResult) => {
+  const onChange = (newValue: Option) => {
     setSelected(newValue);
   };
 
-  const defaultValue: CfdSearchResult = useMemo(
-    () => formatOffreToCfdSearchResult(analyseDetailleeOffre),
+  const defaultValue: Option = useMemo(
+    () =>
+      formatSearchResultToOption(
+        formatOffreToCfdSearchResult(analyseDetailleeOffre)
+      ),
     [offre, analyseDetailleeOffre]
   );
 
@@ -70,7 +89,7 @@ export const CfdSelect = () => {
       ),
       "value"
     );
-    let queryResult: CfdSearchResult[] = [];
+    let queryResult: TCfdSearchResult[] = [];
 
     if (search.length >= 3)
       queryResult = await client
@@ -85,11 +104,11 @@ export const CfdSelect = () => {
     return [
       {
         label: `FORMATIONS DE L'ÉTABLISSEMENT (${searchResults.length})`,
-        options: searchResults,
+        options: searchResults.map(formatSearchResultToOption),
       },
       {
         label: `AUTRES (${filteredQueryResult.length})`,
-        options: filteredQueryResult,
+        options: filteredQueryResult.map(formatSearchResultToOption),
       },
     ];
   };
