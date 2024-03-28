@@ -116,10 +116,10 @@ export const CustomListItem = ({
           "_"
         ).join("+")})`;
       }
+    }
 
-      if (isApprentissage) {
-        return `Données indisponibles pour l'apprentissage`;
-      }
+    if (isApprentissage && !isScolaire) {
+      return `Données indisponibles pour l'apprentissage`;
     }
 
     return `Données indisponibles`;
@@ -132,10 +132,10 @@ export const CustomListItem = ({
           "_"
         ).join("+")})`;
       }
+    }
 
-      if (isApprentissage) {
-        return `Données indisponibles pour l'apprentissage`;
-      }
+    if (isApprentissage && !isScolaire) {
+      return `Données indisponibles pour l'apprentissage`;
     }
 
     return "Données indisponibles";
@@ -233,7 +233,7 @@ export const CustomListItem = ({
                 color={themeDefinition.colors.grey[425]}
               >
                 <Tooltip label={tooltipLabelEffectif}>
-                  <HStack gap="4px">
+                  <HStack gap="4px" width="30px">
                     <InlineIcon icon="ri:group-line" />
                     <Text>
                       {etablissement.effectif !== undefined
@@ -243,7 +243,7 @@ export const CustomListItem = ({
                   </HStack>
                 </Tooltip>
                 <Tooltip label={tooltipLabelTauxEmploi}>
-                  <HStack gap="4px">
+                  <HStack gap="4px" width="40px">
                     <InlineIcon icon="ri:briefcase-line" />
                     <Text>
                       {etablissement.tauxInsertion !== undefined
@@ -253,7 +253,7 @@ export const CustomListItem = ({
                   </HStack>
                 </Tooltip>
                 <Tooltip label={tooltipLabelTauxPoursuite}>
-                  <HStack gap="4px">
+                  <HStack gap="4px" width="40px">
                     <InlineIcon icon="ri:book-open-line" />
                     <Text>
                       {etablissement.tauxPoursuite !== undefined
