@@ -103,7 +103,7 @@ function shouldSelectDefaultFormation(params: Params, data?: AnalyseDetaillee) {
 
 export const useAnalyseDetaillee = () => {
   const trackEvent = usePlausible();
-  const { uai } = useEtablissementContext();
+  const { uai, setAnalyseDetaillee } = useEtablissementContext();
 
   const [searchParams, setSearchParams] = useStateParams<Params>({
     defaultValues: {
@@ -117,7 +117,7 @@ export const useAnalyseDetaillee = () => {
   });
 
   const { data, isLoading: isLoading } = client
-    .ref(`[GET]/etablissement/:uai/analyse-detaillee`)
+    .ref("[GET]/etablissement/:uai/analyse-detaillee")
     .useQuery(
       {
         params: { uai },
@@ -193,6 +193,12 @@ export const useAnalyseDetaillee = () => {
       });
     }
   }, [data, searchParams]);
+
+  useEffect(() => {
+    if (!isLoading && data) {
+      setAnalyseDetaillee(data as AnalyseDetaillee);
+    }
+  }, [data, isLoading]);
 
   return {
     ...data,

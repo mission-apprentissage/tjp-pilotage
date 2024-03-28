@@ -20,6 +20,12 @@ export const findManyInDataFormationQuery = async ({
       "dataFormation.codeNiveauDiplome"
     )
     .leftJoin("familleMetier", "dataFormation.cfd", "familleMetier.cfd")
+    .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 1)`, "in", [
+      "0",
+      "3",
+      "4",
+      "5",
+    ])
     .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
       "420",
       "430",
@@ -94,6 +100,9 @@ export const findManyInDataFormationQuery = async ({
         "481",
         "581",
       ])}`.as("isFCIL"),
+      "dataFormation.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "dataFormation.cfd",
       sql<string | null>`
         case when ${eb.ref("dataFormation.dateFermeture")} is not null
         then to_char(${eb.ref("dataFormation.dateFermeture")}, 'dd/mm/yyyy')
