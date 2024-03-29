@@ -31,9 +31,6 @@ export const getDemandeRoute = (server: Server) => {
           region: () => user.codeRegion === demande.codeRegion,
           national: () => true,
         });
-
-        console.log(demande);
-
         response.status(200).send({
           ...demande,
           statut: demande.statut,

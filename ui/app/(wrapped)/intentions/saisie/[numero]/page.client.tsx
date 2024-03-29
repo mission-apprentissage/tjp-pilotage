@@ -19,6 +19,8 @@ export default ({
     }
   );
 
+  console.log(data, isLoading);
+
   if (isLoading) return <IntentionSpinner />;
   return (
     <>

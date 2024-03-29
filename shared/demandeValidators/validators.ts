@@ -45,6 +45,11 @@ export const demandeValidators: Record<
       return "Le champ 'autre motif' est obligatoire";
     }
   },
+  autreBesoinRH: (demande) => {
+    if (demande.besoinRH?.includes("autre") && !demande.autreBesoinRH) {
+      return "Le champ 'autre besoin rh' est obligatoire";
+    }
+  },
   mixte: (demande) => {
     if (isTransfertApprentissage(demande.motif) && !demande.mixte) {
       return "Dans le cas d'un transfert vers l'apprentissage, la demande doit être mixte";

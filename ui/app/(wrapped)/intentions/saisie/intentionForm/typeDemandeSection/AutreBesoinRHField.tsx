@@ -10,7 +10,7 @@ import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-export const AutreMotifField = chakra(
+export const AutreBesoinRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
@@ -18,9 +18,9 @@ export const AutreMotifField = chakra(
       watch,
     } = useFormContext<IntentionForms>();
 
-    const [motif] = watch(["motif"]);
+    const [besoinRH] = watch(["besoinRH"]);
 
-    const visible = motif?.includes("autre");
+    const visible = besoinRH?.includes("autre");
 
     return (
       <Collapse in={visible} unmountOnExit>
@@ -29,18 +29,18 @@ export const AutreMotifField = chakra(
           isInvalid={!!errors.autreMotif}
           isRequired
         >
-          <FormLabel>Autre motif</FormLabel>
+          <FormLabel>Autre besoin RH</FormLabel>
           {visible && (
             <Textarea
-              {...register("autreMotif", {
+              {...register("autreBesoinRH", {
                 shouldUnregister: true,
                 disabled,
                 required: "Veuillez préciser votre motif",
               })}
             />
           )}
-          {errors.autreMotif && (
-            <FormErrorMessage>{errors.autreMotif.message}</FormErrorMessage>
+          {errors.autreBesoinRH && (
+            <FormErrorMessage>{errors.autreBesoinRH.message}</FormErrorMessage>
           )}
         </FormControl>
       </Collapse>

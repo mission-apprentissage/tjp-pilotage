@@ -4,7 +4,16 @@ import { CheckIcon } from "@chakra-ui/icons";
 import { Box, Button, Collapse, Container, useToast } from "@chakra-ui/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useRef, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useContext,
+  useEffect,
+  useMemo,
+  useRef,
+  useState,
+} from "react";
 import { FormProvider, useForm } from "react-hook-form";
 
 import {
@@ -17,6 +26,14 @@ import { client } from "../../../../../api.client";
 import { Breadcrumb } from "../../../../../components/Breadcrumb";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
+
+export const CampagneContext = createContext<{
+  campagne?: Campagne;
+  setCampagne: Dispatch<SetStateAction<Campagne>>;
+}>({
+  campagne: undefined,
+  setCampagne: () => {},
+});
 
 export const IntentionForm = ({
   disabled = true,
@@ -123,95 +140,102 @@ export const IntentionForm = ({
 
   const statusComponentRef = useRef<HTMLDivElement>(null);
 
+  const { setCampagne } = useContext(CampagneContext);
+
+  const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
   return (
     <>
-      <FormProvider {...form}>
-        <Box
-          flex={1}
-          bg="blueecume.925"
-          as="form"
-          noValidate
-          onSubmit={handleSubmit((values) =>
-            submitDemande({ body: { demande: { numero: formId, ...values } } })
-          )}
-        >
-          <Container maxW={"container.xl"} pt="4" mb={24}>
-            <Breadcrumb
-              ml={4}
-              mb={4}
-              pages={[
-                { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions" },
-                pathname === "/intentions/saisie/new"
-                  ? {
-                      title: "Nouvelle demande",
-                      to: "/intentions/saisie/new",
-                      active: true,
-                    }
-                  : {
-                      title: `Demande n°${formId}`,
-                      to: `/intentions/saisie/${formId}`,
-                      active: true,
-                    },
-              ]}
-            />
-            <CfdUaiSection
-              formId={formId}
-              defaultValues={defaultValues}
-              formMetadata={formMetadata}
-              onEditUaiCfdSection={onEditUaiCfdSection}
-              active={step === 1}
-              disabled={isFormDisabled}
-              isFCIL={isFCIL}
-              setIsFCIL={setIsFCIL}
-              isCFDUaiSectionValid={isCFDUaiSectionValid}
-              submitCFDUAISection={submitCFDUAISection}
-              statusComponentRef={statusComponentRef}
-              campagne={campagne}
-            />
-            <Collapse in={step === 2} animateOpacity ref={step2Ref}>
-              <InformationsBlock
-                formId={formId}
-                disabled={isFormDisabled}
-                errors={errors}
-                formMetadata={formMetadata}
-                footerActions={
-                  <>
-                    <Box justifyContent={"center"} ref={statusComponentRef}>
-                      <Button
-                        isDisabled={
-                          disabled ||
-                          isActionsDisabled ||
-                          !form.formState.isDirty ||
-                          campagne?.statut != "en cours"
-                        }
-                        isLoading={isSubmitting}
-                        variant="primary"
-                        onClick={handleSubmit((values) =>
-                          submitDemande({
-                            body: {
-                              demande: {
-                                numero: formId,
-                                ...values,
-                                statut: formId ? values.statut : "draft",
-                              },
-                            },
-                          })
-                        )}
-                        leftIcon={<CheckIcon />}
-                      >
-                        {formId
-                          ? "Sauvegarder les modifications"
-                          : "Enregistrer le projet de demande"}
-                      </Button>
-                    </Box>
-                  </>
-                }
+      <CampagneContext.Provider value={campagneValue}>
+        <FormProvider {...form}>
+          <Box
+            flex={1}
+            bg="blueecume.925"
+            as="form"
+            noValidate
+            onSubmit={handleSubmit((values) =>
+              submitDemande({
+                body: { demande: { numero: formId, ...values } },
+              })
+            )}
+          >
+            <Container maxW={"container.xl"} pt="4" mb={24}>
+              <Breadcrumb
+                ml={4}
+                mb={4}
+                pages={[
+                  { title: "Accueil", to: "/" },
+                  { title: "Recueil des demandes", to: "/intentions" },
+                  pathname === "/intentions/saisie/new"
+                    ? {
+                        title: "Nouvelle demande",
+                        to: "/intentions/saisie/new",
+                        active: true,
+                      }
+                    : {
+                        title: `Demande n°${formId}`,
+                        to: `/intentions/saisie/${formId}`,
+                        active: true,
+                      },
+                ]}
               />
-            </Collapse>
-          </Container>
-        </Box>
-      </FormProvider>
+              <CfdUaiSection
+                formId={formId}
+                defaultValues={defaultValues}
+                formMetadata={formMetadata}
+                onEditUaiCfdSection={onEditUaiCfdSection}
+                active={step === 1}
+                disabled={isFormDisabled}
+                isFCIL={isFCIL}
+                setIsFCIL={setIsFCIL}
+                isCFDUaiSectionValid={isCFDUaiSectionValid}
+                submitCFDUAISection={submitCFDUAISection}
+                statusComponentRef={statusComponentRef}
+                campagne={campagne}
+              />
+              <Collapse in={step === 2} animateOpacity ref={step2Ref}>
+                <InformationsBlock
+                  formId={formId}
+                  disabled={isFormDisabled}
+                  errors={errors}
+                  formMetadata={formMetadata}
+                  footerActions={
+                    <>
+                      <Box justifyContent={"center"} ref={statusComponentRef}>
+                        <Button
+                          isDisabled={
+                            disabled ||
+                            isActionsDisabled ||
+                            !form.formState.isDirty ||
+                            campagne?.statut != "en cours"
+                          }
+                          isLoading={isSubmitting}
+                          variant="primary"
+                          onClick={handleSubmit((values) =>
+                            submitDemande({
+                              body: {
+                                demande: {
+                                  numero: formId,
+                                  ...values,
+                                  statut: formId ? values.statut : "draft",
+                                },
+                              },
+                            })
+                          )}
+                          leftIcon={<CheckIcon />}
+                        >
+                          {formId
+                            ? "Sauvegarder les modifications"
+                            : "Enregistrer le projet de demande"}
+                        </Button>
+                      </Box>
+                    </>
+                  }
+                />
+              </Collapse>
+            </Container>
+          </Box>
+        </FormProvider>
+      </CampagneContext.Provider>
     </>
   );
 };

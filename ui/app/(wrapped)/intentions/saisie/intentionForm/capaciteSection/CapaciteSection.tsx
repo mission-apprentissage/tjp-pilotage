@@ -5,7 +5,9 @@ import {
   FormLabel,
   Heading,
   Input,
+  Text,
 } from "@chakra-ui/react";
+import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { AmiCmaField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/AmiCmaField";
@@ -16,17 +18,60 @@ import { LibelleColorationField } from "@/app/(wrapped)/intentions/saisie/intent
 import { MixteField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/MixteField";
 import { PoursuitePedagogiqueField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/PoursuitePedagogique";
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import {
+  getTypeDemandeLabel,
+  TypeDemande,
+} from "@/app/(wrapped)/utils/typeDemandeUtils";
 
 import {
   isTypeAugmentation,
   isTypeFermeture,
   isTypeOuverture,
 } from "../../../../utils/typeDemandeUtils";
+import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
+import { AmiCmaValideField } from "./AmiCmaValideField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
 import { ColorationField } from "./ColorationField";
+
+const getTypeDemandeLabelAvecDeterminant = (
+  typeDemande?: TypeDemande
+): ReactNode => {
+  if (!typeDemande) return "";
+  switch (typeDemande) {
+    case "ouverture_nette":
+    case "augmentation_nette":
+    case "augmentation_compensation":
+    case "ouverture_compensation":
+      return (
+        <Flex mx={1}>
+          d'
+          {
+            <Text color="bluefrance.113">
+              {getTypeDemandeLabel(typeDemande)}
+            </Text>
+          }
+        </Flex>
+      );
+    case "diminution":
+    case "fermeture":
+    case "transfert":
+      return (
+        <Flex mx={1}>
+          de
+          {
+            <Text color="bluefrance.113">
+              {getTypeDemandeLabel(typeDemande)}
+            </Text>
+          }
+        </Flex>
+      );
+    default:
+      return "";
+  }
+};
 
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
@@ -86,19 +131,21 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
 
   return (
     <>
-      <Heading as="h2" fontSize="xl">
-        Précisions sur votre demande et saisie de la capacité
+      <Heading as="h2" fontSize="xl" display={"flex"}>
+        Précisions sur votre demande{" "}
+        {getTypeDemandeLabelAvecDeterminant(typeDemande)} et saisie de la
+        capacité
       </Heading>
       <Divider pt="4" mb="4" />
-      <Flex maxW="752px" gap="6" mb="6">
+      <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
         <MixteField disabled={disabled} />
         {!isTypeFermeture(typeDemande) && (
           <PoursuitePedagogiqueField disabled={disabled} />
         )}
-      </Flex>
-      <Flex maxW="752px" gap="6" mb="6">
         <ColorationField disabled={disabled} />
         <AmiCmaField disabled={disabled} />
+        <AmiCmaValideField disabled={disabled} />
+        <AmiCmaValideAnneeField disabled={disabled} />
       </Flex>
       <LibelleColorationField disabled={disabled} maxW="752px" mb="4" />
       <Heading fontSize="lg" mb="6" mt="10" color="bluefrance.113">

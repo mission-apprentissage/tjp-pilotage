@@ -16,13 +16,15 @@ export const MOTIFS_LABELS = {
   taux_poursuite_satisfaisant: "Taux de poursuite satisfaisant",
   taux_insertion_insatisfaisant: "Taux d’insertion insatisfaisant",
   taux_poursuite_insatisfaisant: "Taux de poursuite insatisfaisant",
-  besoin_recrutement_local: "Besoins recrutements avérés localement",
+  besoins_economiques_locaux: "Besoins économiques avérés localement",
+  besoins_economiques_en_baisse: "Besoins économiques en baisse",
   ouverture_plus_inserante: "Ouverture d’une formation plus insérante",
   repartition_autres_etablissements:
     "Répartition des élèves sur d’autres établissements",
   transfert_apprentissage: "Transfert vers l’apprentissage",
   recrutements_baisse: "Recrutements en baisse",
   capacite_trop_élevée_territoire: "Capacité trop élevée sur le territoire",
+  nombre_eleves_en_baisse: "Baisse du nombre d'élèves dans la formation",
   locaux: "Locaux",
   cout_financier: "Coût financier",
   plateau_technique: "Plateau technique",
@@ -37,7 +39,7 @@ export const MOTIFS_LABELS = {
 const motifsOuverture: MotifLabel[] = [
   "taux_insertion_satisfaisant",
   "taux_poursuite_satisfaisant",
-  "besoin_recrutement_local",
+  "besoins_economiques_locaux",
   "metiers_2030",
   "projet_pedagogique_territorial",
   "nouvel_etablissement",
@@ -57,6 +59,8 @@ const motifsFermeture: MotifLabel[] = [
   "locaux",
   "cout_financier",
   "plateau_technique",
+  "nombre_eleves_en_baisse",
+  "besoins_economiques_en_baisse",
   "autre",
 ];
 

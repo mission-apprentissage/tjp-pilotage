@@ -176,19 +176,6 @@ export const PageClient = () => {
       },
     });
 
-  // const importDemande = async (numero: string) => {
-  //   await client
-  //     .ref("[POST]/demande/import/:numero")
-  //     .useMutation(())
-  //     .query({ params: { numero } })
-  //     .then((demande) => {
-  //       router.push(`/intentions/saisie/${demande.numero}`);
-  //     })
-  //     .catch((error) => {
-  //       console.error(error);
-  //     });
-  // };
-
   if (isLoading) return <IntentionSpinner />;
 
   return (

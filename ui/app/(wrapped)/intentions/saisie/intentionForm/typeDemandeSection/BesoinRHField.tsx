@@ -7,71 +7,41 @@ import {
   FormLabel,
   Stack,
 } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-import {
-  getMotifsTypeDemande,
-  MotifLabel,
-  MOTIFS_LABELS,
-} from "../../../../utils/motifDemandeUtils";
-import {
-  getTypeDemandeLabel,
-  TypeDemande,
-} from "../../../../utils/typeDemandeUtils";
+import { BESOINS_RH_LABELS } from "../../../../utils/besoinsRHUtils";
 
-const getMotifOptions = (typeDemande: TypeDemande) => {
-  return Object.entries(MOTIFS_LABELS)
-    .filter(
-      ([key]) => getMotifsTypeDemande(typeDemande)?.includes(key as MotifLabel)
-    )
-    .map(([value, label]) => ({
-      value,
-      label,
-    }));
+const getBesoinsRHOptions = () => {
+  return Object.entries(BESOINS_RH_LABELS).map(([value, label]) => ({
+    value,
+    label,
+  }));
 };
 
-export const MotifField = chakra(
+export const BesoinRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
-      watch,
-      setValue,
     } = useFormContext<IntentionForms>();
-
-    useEffect(
-      () =>
-        watch((_, { name }) => {
-          if (name !== "typeDemande") return;
-          setValue("motif", []);
-        }).unsubscribe
-    );
-
-    const [typeDemande] = watch(["typeDemande"]);
-    if (!typeDemande) return <></>;
 
     return (
       <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-        <FormLabel>
-          Merci de préciser le(s) motif(s) de votre{" "}
-          {getTypeDemandeLabel(typeDemande).toLowerCase()}
-        </FormLabel>
+        <FormLabel>Sur le plan RH, identifiez-vous des besoins ?</FormLabel>
         <Controller
-          name="motif"
+          name="besoinRH"
           shouldUnregister
           disabled={disabled}
           control={control}
-          rules={{ required: "Le motif est obligatoire" }}
           render={({
             field: { onChange, value, onBlur, ref, name, disabled },
           }) => {
             return (
               <CheckboxGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]} ms={6}>
-                  {getMotifOptions(typeDemande)?.map(({ value, label }) => (
+                  {getBesoinsRHOptions()?.map(({ value, label }) => (
                     <Checkbox
                       ref={ref}
                       disabled={disabled}
@@ -91,8 +61,8 @@ export const MotifField = chakra(
             );
           }}
         />
-        {errors.motif && (
-          <FormErrorMessage>{errors.motif?.message}</FormErrorMessage>
+        {errors.besoinRH && (
+          <FormErrorMessage>{errors.besoinRH?.message}</FormErrorMessage>
         )}
       </FormControl>
     );
