@@ -49,6 +49,7 @@ const demande = {
   capaciteApprentissageColoree: 2,
   commentaire: "mon commentaire",
   motifRefus: undefined,
+  campagneId: "campagne-id",
 };
 
 const gestionnaire = {

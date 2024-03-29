@@ -169,6 +169,10 @@ export interface Demande {
   campagneId: string | null;
   id: Generated<string>;
   numeroHistorique: string | null;
+  besoinRH: string[] | null;
+  autreBesoinRH: string | null;
+  amiCmaValide: boolean | null;
+  amiCmaValideAnnee: string | null;
 }
 
 export interface Departement {

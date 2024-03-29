@@ -12,16 +12,19 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
-import { ComponentProps, ReactNode } from "react";
+import { ComponentProps, ReactNode, useContext } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
 import {
   isTypeDiminution,
   isTypeFermeture,
+  shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
 } from "../../../../utils/typeDemandeUtils";
+import { CampagneContext } from "../IntentionForm";
 
 function RadioCard({
   value,
@@ -94,6 +97,8 @@ export const TypeDemandeField = chakra(
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
 
+    const { campagne } = useContext(CampagneContext);
+
     return (
       <FormControl
         className={className}
@@ -116,22 +121,28 @@ export const TypeDemandeField = chakra(
               onChange={onChange}
               value={value}
             >
-              {Object.values(TYPES_DEMANDES_OPTIONS).map((item) => (
-                <RadioCard
-                  selected={value === item.value}
-                  key={item.value}
-                  value={item.value}
-                  title={item.label}
-                  desc={item.desc}
-                  disabled={
-                    disabled ||
-                    (compensation != null &&
-                      !isTypeFermeture(item.value) &&
-                      !isTypeDiminution(item.value))
-                  }
-                  onClick={() => onChange(item.value)}
-                />
-              ))}
+              {Object.values(TYPES_DEMANDES_OPTIONS).map(
+                (item) =>
+                  shouldDisplayTypeDemande(
+                    item.value,
+                    campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE
+                  ) && (
+                    <RadioCard
+                      selected={value === item.value}
+                      key={item.value}
+                      value={item.value}
+                      title={item.label}
+                      desc={item.desc}
+                      disabled={
+                        disabled ||
+                        (compensation != null &&
+                          !isTypeFermeture(item.value) &&
+                          !isTypeDiminution(item.value))
+                      }
+                      onClick={() => onChange(item.value)}
+                    />
+                  )
+              )}
             </RadioGroup>
           )}
         ></Controller>

@@ -26,8 +26,12 @@ type Demande = {
   compensationRentreeScolaire?: number;
   motif: string[];
   autreMotif?: string;
+  besoinRH?: string[];
+  autreBesoinRH?: string;
   rentreeScolaire: number;
   amiCma: boolean;
+  amiCmaValide?: boolean;
+  amiCmaValideAnnee?: string;
   libelleColoration?: string;
   poursuitePedagogique?: boolean;
   commentaire?: string;
@@ -42,6 +46,7 @@ type Demande = {
   statut: "draft" | "submitted" | "refused";
   motifRefus?: string[];
   autreMotifRefus?: string;
+  campagneId: string;
 };
 
 const validateDemande = (demande: Demande) => {

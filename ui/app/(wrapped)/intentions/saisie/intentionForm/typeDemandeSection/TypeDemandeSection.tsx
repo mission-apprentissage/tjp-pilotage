@@ -2,6 +2,7 @@ import { Box, Divider, Fade, Flex, Heading } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
 import { client } from "@/api.client";
+import { AutreMotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/typeDemandeSection/AutreMotifField";
 import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/typeDemandeSection/MotifField";
 
 import {
@@ -11,7 +12,8 @@ import {
 } from "../../../../utils/typeDemandeUtils";
 import { InfoBox } from "../../components/InfoBox";
 import { IntentionForms } from "../defaultFormValues";
-import { AutreMotif } from "./AutreMotifField";
+import { AutreBesoinRHField } from "./AutreBesoinRHField";
+import { BesoinRHField } from "./BesoinRHField";
 import { CompensationSection } from "./CompensationSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
@@ -85,7 +87,9 @@ export const TypeDemandeSection = ({
       )}
 
       <MotifField disabled={disabled} maxW="752px" mb="6" />
-      <AutreMotif disabled={disabled} mb="6" maxW="752px" />
+      <AutreMotifField disabled={disabled} mb="6" maxW="752px" />
+      <BesoinRHField disabled={disabled} maxW="752px" mb="6" />
+      <AutreBesoinRHField disabled={disabled} mb="6" maxW="752px" />
     </>
   );
 };

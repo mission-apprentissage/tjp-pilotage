@@ -5,20 +5,23 @@ export const findOneSimilarDemande = ({
   cfd,
   uai,
   codeDispositif,
-  libelleFCIL,
   rentreeScolaire,
+  campagneId,
+  libelleFCIL,
   notNumero,
 }: {
   cfd: string;
   uai: string;
   codeDispositif: string;
-  libelleFCIL?: string;
   rentreeScolaire: number;
+  campagneId: string;
+  libelleFCIL?: string;
   notNumero?: string;
 }) =>
   kdb
     .selectFrom("latestDemandeView as demande")
     .selectAll()
+    .where("campagneId", "=", campagneId)
     .where("cfd", "=", cfd)
     .where("uai", "=", uai)
     .where("codeDispositif", "=", codeDispositif)

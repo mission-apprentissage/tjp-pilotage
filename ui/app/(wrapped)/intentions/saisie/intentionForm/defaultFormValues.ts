@@ -10,12 +10,16 @@ export type IntentionForms = {
   typeDemande: string;
   motif: string[];
   autreMotif?: string;
+  besoinRH?: string[];
+  autreBesoinRH?: string;
   commentaire?: string;
   coloration: boolean;
   libelleColoration?: string;
   mixte: boolean;
   poursuitePedagogique: boolean;
   amiCma: boolean;
+  amiCmaValide?: boolean;
+  amiCmaValideAnnee?: string;
   rentreeScolaire: number;
   capaciteScolaireActuelle?: number;
   capaciteScolaire?: number;
@@ -30,4 +34,5 @@ export type IntentionForms = {
   statut: "draft" | "submitted" | "refused";
   motifRefus?: string[];
   autreMotifRefus?: string;
+  campagneId: string;
 };
