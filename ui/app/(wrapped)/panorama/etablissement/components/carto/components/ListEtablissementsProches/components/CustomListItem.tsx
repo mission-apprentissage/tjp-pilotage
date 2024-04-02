@@ -94,11 +94,11 @@ export const CustomListItem = ({
   const tooltipLabelEffectif = (() => {
     if (etablissement.effectif !== undefined) {
       if (isScolaire && !isApprentissage) {
-        return `Effectif ${CURRENT_RENTREE}`;
+        return `Effectif - en entrée (rentrée ${CURRENT_RENTREE})`;
       }
 
       if (isScolaire && isApprentissage) {
-        return `Effectif ${CURRENT_RENTREE} voie scolaire`;
+        return `Effectif voie scolaire - en entrée (rentrée ${CURRENT_RENTREE}) `;
       }
     }
 
