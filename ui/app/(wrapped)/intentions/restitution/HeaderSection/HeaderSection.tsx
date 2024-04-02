@@ -1,6 +1,10 @@
 import { Flex, Skeleton } from "@chakra-ui/react";
 
-import { CountStatsIntentions, Filters, StatsIntentions } from "../types";
+import {
+  DemandesRestitutionIntentions,
+  FiltersDemandesRestitutionIntentions,
+  StatsRestitutionIntentions,
+} from "../types";
 import { CountersSection } from "./CountersSection";
 import { PrimaryFiltersSection } from "./PrimaryFiltersSection";
 import { SecondaryFiltersSection } from "./SecondaryFiltersSection";
@@ -42,12 +46,17 @@ export const HeaderSection = ({
   data,
   countData,
 }: {
-  activeFilters: Filters;
-  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
+  activeFilters: FiltersDemandesRestitutionIntentions;
+  handleFilters: (
+    type: keyof FiltersDemandesRestitutionIntentions,
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+  ) => void;
+  filterTracker: (
+    filterName: keyof FiltersDemandesRestitutionIntentions
+  ) => () => void;
   isLoading: boolean;
-  data?: StatsIntentions;
-  countData?: CountStatsIntentions;
+  data?: DemandesRestitutionIntentions;
+  countData?: StatsRestitutionIntentions;
 }) => (
   <>
     {isLoading ? (

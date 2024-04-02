@@ -4,6 +4,7 @@ import {
   MILLESIMES_IJ,
   RENTREE_INTENTIONS,
 } from "shared";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -23,10 +24,10 @@ import {
   withPoursuiteReg,
 } from "../../utils/tauxPoursuite";
 import { withTauxPressionReg } from "../../utils/tauxPression";
-import { getFormationsTransformationsSchema } from "./getFormationsTransformations.schema";
+import { getFormationsPilotageIntentionsSchema } from "./getFormationsPilotageIntentions.schema";
 
 export interface Filters
-  extends z.infer<typeof getFormationsTransformationsSchema.querystring> {
+  extends z.infer<typeof getFormationsPilotageIntentionsSchema.querystring> {
   millesimeSortie?: (typeof MILLESIMES_IJ)[number];
 }
 
@@ -79,7 +80,7 @@ const selectNbEtablissements = (
   eb: ExpressionBuilder<DB, "dataEtablissement">
 ) => eb.fn.count<number>("dataEtablissement.uai").distinct();
 
-const getFormationsTransformationStatsQuery = ({
+const getFormationsPilotageIntentionsQuery = ({
   statut,
   type,
   rentreeScolaire = RENTREE_INTENTIONS,
@@ -90,6 +91,7 @@ const getFormationsTransformationStatsQuery = ({
   tauxPression,
   codeNiveauDiplome,
   codeNsf,
+  campagne = CURRENT_ANNEE_CAMPAGNE,
   orderBy,
   order,
 }: Filters) => {
@@ -102,6 +104,11 @@ const getFormationsTransformationStatsQuery = ({
 
   return kdb
     .selectFrom("latestDemandeView as demande")
+    .innerJoin("campagne", (join) =>
+      join
+        .onRef("campagne.id", "=", "demande.campagneId")
+        .on("campagne.annee", "=", campagne)
+    )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin(
@@ -332,6 +339,6 @@ const getRegionStats = async ({
 };
 
 export const dependencies = {
-  getFormationsTransformationStatsQuery,
+  getFormationsPilotageIntentionsQuery,
   getRegionStats,
 };
