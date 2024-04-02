@@ -52,6 +52,7 @@ export const getChiffresEntree = async ({
       "voie",
       "uai",
       "dataFormation.cfd",
+      "dataFormation.dateOuverture",
       "dispositifId",
       sql<string[]>`COALESCE(${eb.ref("ie.effectifs")}, '[]')`.as("effectifs"),
       premiersVoeuxAnnee({ alias: "ie" }).as("premiersVoeux"),
