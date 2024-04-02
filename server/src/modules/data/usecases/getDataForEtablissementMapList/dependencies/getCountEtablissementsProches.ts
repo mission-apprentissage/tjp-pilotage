@@ -3,15 +3,9 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 import { kdb } from "../../../../../db/db";
 import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
-export interface Filters extends RouteQueryString {
-  uai: string;
-}
+export interface Filters extends RouteQueryString {}
 
-export const getCountEtablissementsProches = async ({
-  cfd,
-  uai,
-  bbox,
-}: Filters) =>
+export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -30,7 +24,6 @@ export const getCountEtablissementsProches = async ({
       "formationEtablissement.id"
     )
     .select((sb) => sb.fn.count<number>("etablissement.UAI").over().as("count"))
-    .where("formationEtablissement.UAI", "!=", uai)
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),

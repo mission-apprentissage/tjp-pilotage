@@ -80,7 +80,6 @@ export const getDataForEtablissementMapListFactory =
     const count = await getCountEtablissementsProches({
       cfd: cfds,
       bbox: filters.bbox,
-      uai: params.uai,
     });
 
     return {
