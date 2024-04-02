@@ -51,5 +51,5 @@ export const STATS_DEMANDES_COLUMNS = {
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number]
+  (typeof client.infer)["[GET]/intentions/stats"]["demandes"][number]
 >;

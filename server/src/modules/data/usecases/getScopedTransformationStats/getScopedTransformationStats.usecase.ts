@@ -1,10 +1,7 @@
 import _ from "lodash";
 
-import {
-  dependencies,
-  GetScopedStatsPilotageIntentionsType,
-} from "./dependencies";
-import { QuerySchema } from "./getStatsPilotageIntentions.schema";
+import { dependencies, GetScopedTransformationStatsType } from "./dependencies";
+import { QuerySchema } from "./getScopedTransformationStats.schema";
 
 const formatTauxTransformation = (
   transformes: number,
@@ -20,7 +17,7 @@ const formatTauxTransformation = (
 };
 
 const formatResult = (
-  result: GetScopedStatsPilotageIntentionsType,
+  result: GetScopedTransformationStatsType,
   order: "asc" | "desc" = "asc",
   orderBy?: string
 ) => {
@@ -69,26 +66,25 @@ const formatResult = (
     .value();
 };
 
-const getStatsPilotageIntentionsFactory =
+const getScopedTransformationStatsFactory =
   (
     deps = {
-      getStatsPilotageIntentionsQuery:
-        dependencies.getStatsPilotageIntentionsQuery,
+      getScopedData: dependencies.getScopedData,
       getFiltersQuery: dependencies.getFiltersQuery,
     }
   ) =>
   async (activeFilters: QuerySchema) => {
     const [filters, draft, submitted, all] = await Promise.all([
       deps.getFiltersQuery(activeFilters),
-      deps.getStatsPilotageIntentionsQuery({
+      deps.getScopedData({
         ...activeFilters,
         statut: "draft",
       }),
-      deps.getStatsPilotageIntentionsQuery({
+      deps.getScopedData({
         ...activeFilters,
         statut: "submitted",
       }),
-      deps.getStatsPilotageIntentionsQuery({
+      deps.getScopedData({
         ...activeFilters,
       }),
     ]);
@@ -105,5 +101,5 @@ const getStatsPilotageIntentionsFactory =
     };
   };
 
-export const getStatsPilotageIntentionsUsecase =
-  getStatsPilotageIntentionsFactory();
+export const getScopedTransformationStats =
+  getScopedTransformationStatsFactory();

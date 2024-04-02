@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
@@ -17,10 +16,7 @@ import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
-import {
-  FiltersDemandesRestitutionIntentions,
-  OrderDemandesRestitutionIntentions,
-} from "./types";
+import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -47,8 +43,8 @@ export default () => {
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
-    filters?: Partial<FiltersDemandesRestitutionIntentions>;
-    order?: Partial<OrderDemandesRestitutionIntentions>;
+    filters?: Partial<Filters>;
+    order?: Partial<Order>;
     page?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
@@ -70,15 +66,12 @@ export default () => {
     CodeRegionFilterContext
   );
 
-  const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
+  const [rentreeScolaireFilter, setRentreeScolaireFilter] =
+    useState<string>("2024");
 
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
   >(["draft", "submitted"]);
-
-  const [campagneFilter, setCampagneFilter] = useState<string>(
-    CURRENT_ANNEE_CAMPAGNE
-  );
 
   useEffect(() => {
     if (
@@ -89,32 +82,23 @@ export default () => {
     ) {
       filters.codeRegion = [codeRegionFilter];
     }
-    if (
-      filters?.rentreeScolaire === undefined &&
-      rentreeScolaireFilter !== ""
-    ) {
+    if (rentreeScolaireFilter !== "") {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
-    if (filters?.statut === undefined && statutFilter !== undefined) {
+    if (statutFilter !== undefined) {
       filters.statut = statutFilter;
-    }
-    if (filters?.campagne === undefined && campagneFilter != "") {
-      filters.campagne = campagneFilter;
     }
     setSearchParams({ filters: filters });
   }, []);
 
   const trackEvent = usePlausible();
-  const filterTracker =
-    (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
-      trackEvent("restitution-demandes:filtre", {
-        props: { filter_name: filterName },
-      });
-    };
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("restitution-demandes:filtre", {
+      props: { filter_name: filterName },
+    });
+  };
 
-  const handleOrder = (
-    column: OrderDemandesRestitutionIntentions["orderBy"]
-  ) => {
+  const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("restitution-demandes:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
@@ -129,8 +113,8 @@ export default () => {
   };
 
   const handleDefaultFilters = (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof Filters,
+    value: Filters[keyof Filters]
   ) => {
     if (type === "codeRegion" && value != null) {
       setCodeRegionFilter((value as string[])[0] ?? "");
@@ -141,13 +125,11 @@ export default () => {
       setStatutFilter([
         (value as string[])[0] as "draft" | "submitted" | "refused",
       ]);
-    if (type === "campagne" && value != null)
-      setCampagneFilter((value as string[])[0] ?? "");
   };
 
   const handleFilters = (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+    type: keyof Filters,
+    value: Filters[keyof Filters]
   ) => {
     handleDefaultFilters(type, value);
     setSearchParams({
@@ -166,7 +148,7 @@ export default () => {
   });
 
   const { data, isLoading: isLoading } = client
-    .ref("[GET]/restitution-intentions/demandes")
+    .ref("[GET]/intentions/stats")
     .useQuery(
       {
         query: getIntentionsStatsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
@@ -178,7 +160,7 @@ export default () => {
     );
 
   const { data: countData, isLoading: isLoadingCount } = client
-    .ref("[GET]/restitution-intentions/stats")
+    .ref("[GET]/intentions/stats/count")
     .useQuery(
       {
         query: {
@@ -214,11 +196,9 @@ export default () => {
           pl="4"
           onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
-            const data = await client
-              .ref("[GET]/restitution-intentions/demandes")
-              .query({
-                query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-              });
+            const data = await client.ref("[GET]/intentions/stats").query({
+              query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+            });
             downloadCsv(
               "demandes_stats_export",
               data.demandes.map((demande) => ({
@@ -242,11 +222,9 @@ export default () => {
           }}
           onExportExcel={async () => {
             trackEvent("restitution-demandes:export-excel");
-            const data = await client
-              .ref("[GET]/restitution-intentions/demandes")
-              .query({
-                query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
-              });
+            const data = await client.ref("[GET]/intentions/stats").query({
+              query: getIntentionsStatsQueryParameters(EXPORT_LIMIT),
+            });
             downloadExcel(
               "demandes_stats_export",
               data.demandes.map((demande) => ({

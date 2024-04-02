@@ -3,14 +3,9 @@ import { useCallback } from "react";
 import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
-import { CartoGraph } from "@/components/CartoGraph";
 
-import {
-  FiltersStatsPilotageIntentions,
-  IndicateurType,
-  OrderStatsPilotageIntentions,
-  SelectedScope,
-} from "../types";
+import { CartoGraph } from "../../../../../components/CartoGraph";
+import { Filters, IndicateurType, Order, SelectedScope } from "../types";
 
 type Props = {
   indicateur: IndicateurType;
@@ -20,10 +15,10 @@ type Props = {
     value: string;
     isDefault: boolean;
   }[];
-  filters: Partial<FiltersStatsPilotageIntentions>;
-  order: Partial<OrderStatsPilotageIntentions>;
+  filters: Partial<Filters>;
+  order: Partial<Order>;
   scope: SelectedScope;
-  handleFilters: (filters: Partial<FiltersStatsPilotageIntentions>) => void;
+  handleFilters: (filters: Partial<Filters>) => void;
 };
 
 export const CartoSection = ({
@@ -80,7 +75,7 @@ export const CartoSection = ({
   };
 
   const { data, isLoading } = client
-    .ref("[GET]/pilotage-intentions/stats")
+    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
     .useQuery(
       {
         query: {

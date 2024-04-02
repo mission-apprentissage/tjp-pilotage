@@ -2,24 +2,24 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { getFormationsPilotageIntentionsSchema } from "./getFormationsPilotageIntentions.schema";
-import { getFormationsPilotageIntentionsUsecase } from "./getFormationsPilotageIntentions.usecase";
+import { getFormationsTransformationsSchema } from "./getFormationsTransformations.schema";
+import { getFormationsTransformationStats } from "./getFormationsTransformationStats.usecase";
 
-export const getFormationsPilotageIntentionsRoute = ({
+export const getFormationsTransformationsRoute = ({
   server,
 }: {
   server: Server;
 }) => {
-  return createRoute("/pilotage-intentions/formations", {
+  return createRoute("/pilotage-transformation/formations", {
     method: "GET",
-    schema: getFormationsPilotageIntentionsSchema,
+    schema: getFormationsTransformationsSchema,
   }).handle((props) => {
     server.route({
       ...props,
       preHandler: hasPermissionHandler("pilotage-intentions/lecture"),
       handler: async (request, response) => {
         const { ...filters } = request.query;
-        const stats = await getFormationsPilotageIntentionsUsecase({
+        const stats = await getFormationsTransformationStats({
           ...filters,
         });
         response.status(200).send(stats);

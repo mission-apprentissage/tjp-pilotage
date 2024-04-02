@@ -14,15 +14,10 @@ import {
 import { Fragment } from "react";
 import { ScopeEnum } from "shared";
 
-import { Legend } from "@/components/Legend";
-import { OrderIcon } from "@/components/OrderIcon";
-import { displayPercentage } from "@/utils/displayPercent";
-
-import {
-  OrderStatsPilotageIntentions,
-  SelectedScope,
-  StatsPilotageIntentions,
-} from "../types";
+import { Legend } from "../../../../../components/Legend";
+import { OrderIcon } from "../../../../../components/OrderIcon";
+import { displayPercentage } from "../../../../../utils/displayPercent";
+import { Order, ScopedTransformationStats, SelectedScope } from "../types";
 
 const SEUIL_RATIO_FERMETURE: number = 33;
 
@@ -66,10 +61,10 @@ const ScopedTable = ({
   title,
   columnTitle,
 }: {
-  data?: StatsPilotageIntentions;
-  order: Partial<OrderStatsPilotageIntentions>;
+  data?: ScopedTransformationStats;
+  order: Partial<Order>;
   isLoading: boolean;
-  handleOrder: (column: OrderStatsPilotageIntentions["orderBy"]) => void;
+  handleOrder: (column: Order["orderBy"]) => void;
   scope: SelectedScope;
   title: string;
   columnTitle: string;
@@ -254,12 +249,12 @@ const getColumnTitle = (scope: SelectedScope) =>
   })[scope.type];
 
 export const VueOuverturesFermeturesSection = (props: {
-  data?: StatsPilotageIntentions;
+  data?: ScopedTransformationStats;
   scope: SelectedScope;
   isLoading: boolean;
   codeRegion?: string;
-  order: OrderStatsPilotageIntentions;
-  handleOrder: (column: OrderStatsPilotageIntentions["orderBy"]) => void;
+  order: Order;
+  handleOrder: (column: Order["orderBy"]) => void;
 }) => (
   <ScopedTable
     {...props}

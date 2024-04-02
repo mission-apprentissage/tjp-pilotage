@@ -1,6 +1,5 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -15,13 +14,14 @@ import {
   countOuverturesSco,
 } from "../../../utils/countCapacite";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
-import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
+import { countRestitutionIntentionsStatsSchema } from "./countRestitutionIntentionsStats.schema";
 
-export interface Filters extends z.infer<typeof FiltersSchema> {
+export interface Filters
+  extends z.infer<typeof countRestitutionIntentionsStatsSchema.querystring> {
   user: RequestUser;
 }
 
-const getStatsRestitutionIntentionsQuery = async ({
+const countRestitutionIntentionsStatsInDB = async ({
   statut,
   codeRegion,
   rentreeScolaire,
@@ -43,15 +43,9 @@ const getStatsRestitutionIntentionsQuery = async ({
   user,
   voie,
   codeNsf,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
 }: Filters) => {
   const countDemandes = await kdb
     .selectFrom("latestDemandeView as demande")
-    .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", campagne)
-    )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
@@ -331,5 +325,5 @@ const getStatsRestitutionIntentionsQuery = async ({
 };
 
 export const dependencies = {
-  getStatsRestitutionIntentionsQuery,
+  countRestitutionIntentionsStatsInDB,
 };
