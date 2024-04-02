@@ -75,6 +75,21 @@ function selectFormationWithMostValues(
   return formationWithMostValues[0];
 }
 
+function shouldSetDefaultVoieFilterToApprentissage(data?: AnalyseDetaillee) {
+  if (data && data.formations) {
+    const hasAnyScolaireFormation = Object.values(data.formations).some(
+      (f) => f.voie === VoieEnum.scolaire
+    );
+    const hasAnyApprentissageFormation = Object.values(data.formations).some(
+      (f) => f.voie === VoieEnum.apprentissage
+    );
+
+    return !hasAnyScolaireFormation && hasAnyApprentissageFormation;
+  }
+
+  return false;
+}
+
 function shouldSelectDefaultFormation(params: Params, data?: AnalyseDetaillee) {
   const hasFormations =
     data?.formations && Object.keys(data.formations).length > 0;
@@ -162,7 +177,6 @@ export const useAnalyseDetaillee = () => {
     };
 
   useEffect(() => {
-    console.debug("useEffect", { searchParams, data });
     if (shouldSelectDefaultFormation(searchParams, data)) {
       const { codeNiveauDiplome, voie } = searchParams.filters;
       const filteredFormations = Object.values(data!.formations).reduce(
@@ -185,8 +199,6 @@ export const useAnalyseDetaillee = () => {
         data!.chiffresEntree
       );
 
-      console.debug("useEffect", { filteredFormations, selectedOffre });
-
       setSearchParams({
         ...searchParams,
         offre: selectedOffre,
@@ -195,8 +207,14 @@ export const useAnalyseDetaillee = () => {
   }, [data, searchParams]);
 
   useEffect(() => {
+    if (shouldSetDefaultVoieFilterToApprentissage(data)) {
+      handleFilters("voie", [VoieEnum.apprentissage]);
+    }
+  }, [data]);
+
+  useEffect(() => {
     if (!isLoading && data) {
-      setAnalyseDetaillee(data as AnalyseDetaillee);
+      setAnalyseDetaillee(data);
     }
   }, [data, isLoading]);
 
