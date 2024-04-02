@@ -6,6 +6,7 @@ import {
   GridItem,
   Img,
   Text,
+  Tooltip,
   useToken,
 } from "@chakra-ui/react";
 
@@ -37,10 +38,12 @@ const getCompareData = (compareTo?: CompareTo) => {
   const color = { up: green, down: red, equal: grey }[direction];
 
   return (
-    <Flex color={color}>
-      <Img src={arrowImg} alt={direction} />
-      <Text fontWeight={"bold"}>{value}</Text>
-    </Flex>
+    <Tooltip label={compareTo?.description}>
+      <Flex color={color}>
+        <Img src={arrowImg} alt={direction} />
+        <Text fontWeight={"bold"}>{value}</Text>
+      </Flex>
+    </Tooltip>
   );
 };
 

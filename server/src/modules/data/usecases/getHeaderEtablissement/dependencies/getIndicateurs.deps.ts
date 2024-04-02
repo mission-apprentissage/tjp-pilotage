@@ -18,25 +18,28 @@ const getCompareTo = (
     return undefined;
   }
 
-  const diff = current - previous;
+  const diff = Math.round(current - previous);
 
   if (diff > 0) {
     return {
-      value: `+${diff.toFixed(2)} vs. ${year}`,
+      value: `+${diff.toFixed(2)}`,
       direction: "up",
+      description: `En comparaison avec les millésimes ${year}`,
     };
   }
 
   if (diff < 0) {
     return {
-      value: `${diff.toFixed(2)} vs. ${year}`,
+      value: `${diff.toFixed(2)}`,
       direction: "down",
+      description: `En comparaison avec les millésimes ${year}`,
     };
   }
 
   return {
-    value: `${diff.toFixed(2)} vs. ${year}`,
+    value: `${diff.toFixed(2)}`,
     direction: "equal",
+    description: `En comparaison avec les millésimes ${year}`,
   };
 };
 
@@ -75,22 +78,22 @@ export const getIndicateurs = async ({
     valeurAjoutee: getIndicateur(
       valeurAjoutee[0]?.valeurAjoutee,
       valeurAjoutee[1]?.valeurAjoutee,
-      valeurAjoutee[1]?.millesime?.replace("_20", "+")
+      valeurAjoutee[1]?.millesime?.replace("_", "+")
     ),
     tauxPoursuite: getIndicateur(
       tauxIJ[0]?.["tauxPoursuite"],
       tauxIJ[1]?.["tauxPoursuite"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_20", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
     ),
     tauxDevenir: getIndicateur(
       tauxIJ[0]?.["tauxDevenir"],
       tauxIJ[1]?.["tauxDevenir"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_20", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
     ),
     tauxEmploi6mois: getIndicateur(
       tauxIJ[0]?.["tauxEmploi6mois"],
       tauxIJ[1]?.["tauxEmploi6mois"],
-      tauxIJ[1]?.["millesimeSortie"]?.replace("_20", "+")
+      tauxIJ[1]?.["millesimeSortie"]?.replace("_", "+")
     ),
   };
 };
