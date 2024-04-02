@@ -24,6 +24,7 @@ import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { Quadrant } from "@/components/Quadrant";
@@ -33,12 +34,11 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { useStateParams } from "@/utils/useFilters";
 
-import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import {
-  Filters,
-  OrderFormationsTransformationStats,
-  ScopedTransformationStats,
+  FiltersStatsPilotageIntentions,
+  OrderFormationsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
 } from "../types";
 
 const generateRestitutionUrl = (
@@ -49,7 +49,7 @@ const generateRestitutionUrl = (
     tauxPression?: "faible" | "eleve";
     status?: "draft" | "submitted";
     type?: "ouverture" | "fermeture";
-    order?: Partial<OrderFormationsTransformationStats>;
+    order?: Partial<OrderFormationsPilotageIntentions>;
   }
 ) => {
   const urlFilters: Record<string, unknown> = {
@@ -91,8 +91,8 @@ export const QuadrantSection = ({
   scopeFilters,
 }: {
   scope?: SelectedScope;
-  parentFilters: Partial<Filters>;
-  scopeFilters?: ScopedTransformationStats["filters"];
+  parentFilters: Partial<FiltersStatsPilotageIntentions>;
+  scopeFilters?: StatsPilotageIntentions["filters"];
 }) => {
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
@@ -113,7 +113,7 @@ export const QuadrantSection = ({
       tauxPression?: "eleve" | "faible";
       status?: "submitted" | "draft";
       type?: "ouverture" | "fermeture";
-      order?: Partial<OrderFormationsTransformationStats>;
+      order?: Partial<OrderFormationsPilotageIntentions>;
     },
   });
 
@@ -135,7 +135,7 @@ export const QuadrantSection = ({
   };
 
   const { data: { formations, stats } = {} } = client
-    .ref("[GET]/pilotage-transformation/formations")
+    .ref("[GET]/pilotage-intentions/formations")
     .useQuery(
       {
         query: {
@@ -168,7 +168,7 @@ export const QuadrantSection = ({
   };
 
   const handleOrder = (
-    column: OrderFormationsTransformationStats["orderBy"]
+    column: OrderFormationsPilotageIntentions["orderBy"]
   ) => {
     trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
@@ -467,7 +467,7 @@ export const QuadrantSection = ({
                         order={order}
                         handleOrder={(column?: string) =>
                           handleOrder(
-                            column as OrderFormationsTransformationStats["orderBy"]
+                            column as OrderFormationsPilotageIntentions["orderBy"]
                           )
                         }
                       />

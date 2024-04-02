@@ -5,12 +5,12 @@ import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../utils/typeDemandeUtils";
-import { StatsIntentions } from "../types";
+import { DemandesRestitutionIntentions } from "../types";
 
 export const LineContent = ({
   demande,
 }: {
-  demande: StatsIntentions["demandes"][0];
+  demande: DemandesRestitutionIntentions["demandes"][0];
 }) => {
   const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
     return motif ? (
