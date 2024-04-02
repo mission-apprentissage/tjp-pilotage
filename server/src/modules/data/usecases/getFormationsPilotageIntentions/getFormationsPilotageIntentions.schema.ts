@@ -23,7 +23,7 @@ const FormationTransformationStatsSchema = z.object({
     .optional(),
 });
 
-export const getFormationsTransformationsSchema = {
+export const getFormationsPilotageIntentionsSchema = {
   querystring: z.object({
     rentreeScolaire: z.string().optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),
@@ -34,6 +34,7 @@ export const getFormationsTransformationsSchema = {
     statut: z.enum(["draft", "submitted"]).optional(),
     type: z.enum(["ouverture", "fermeture"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
+    campagne: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: FormationTransformationStatsSchema.keyof().optional(),
   }),

@@ -3,15 +3,15 @@ import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsS
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies, Filters } from "./dependencies";
 
-const getRestitutionIntentionsStatsFactory =
+const getDemandesRestitutionIntentionsFactory =
   ({
-    findRestitutionIntentionsStatsInDB = dependencies.findRestitutionIntentionsStatsInDB,
-    findFiltersInDb = dependencies.findFiltersInDb,
+    getDemandesRestitutionIntentionsQuery = dependencies.getDemandesRestitutionIntentionsQuery,
+    getFilters = dependencies.getFilters,
   }) =>
   async (activeFilters: Filters) => {
     const [{ count, demandes }, filters, statsSortie] = await Promise.all([
-      findRestitutionIntentionsStatsInDB(activeFilters),
-      findFiltersInDb(activeFilters),
+      getDemandesRestitutionIntentionsQuery(activeFilters),
+      getFilters(activeFilters),
       getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
     ]);
 
@@ -35,5 +35,5 @@ const getRestitutionIntentionsStatsFactory =
     };
   };
 
-export const getRestitutionIntentionsStats =
-  getRestitutionIntentionsStatsFactory({});
+export const getDemandesRestitutionIntentionsUsecase =
+  getDemandesRestitutionIntentionsFactory({});

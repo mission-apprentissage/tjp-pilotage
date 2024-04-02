@@ -1,6 +1,7 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -21,15 +22,14 @@ import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
 import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
-import { getRestitutionIntentionsStatsSchema } from "./getRestitutionIntentionsStats.schema";
+import { FiltersSchema } from "./getDemandesRestitutionIntentions.schema";
 
-export interface Filters
-  extends z.infer<typeof getRestitutionIntentionsStatsSchema.querystring> {
+export interface Filters extends z.infer<typeof FiltersSchema> {
   user: RequestUser;
   millesimeSortie?: (typeof MILLESIMES_IJ)[number];
 }
 
-const findRestitutionIntentionsStatsInDB = async ({
+const getDemandesRestitutionIntentionsQuery = async ({
   statut,
   codeRegion,
   rentreeScolaire,
@@ -51,14 +51,20 @@ const findRestitutionIntentionsStatsInDB = async ({
   compensation,
   user,
   millesimeSortie = CURRENT_IJ_MILLESIME,
+  voie,
+  campagne = CURRENT_ANNEE_CAMPAGNE,
   offset = 0,
   limit = 20,
   order = "desc",
   orderBy = "dateCreation",
-  voie,
 }: Filters) => {
   const demandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
+    .innerJoin("campagne", (join) =>
+      join
+        .onRef("campagne.id", "=", "demande.campagneId")
+        .on("campagne.annee", "=", campagne)
+    )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -306,7 +312,7 @@ const findRestitutionIntentionsStatsInDB = async ({
   };
 };
 
-const findFiltersInDb = async ({
+const getFilters = async ({
   statut,
   codeRegion,
   rentreeScolaire,
@@ -327,6 +333,7 @@ const findFiltersInDb = async ({
   uai,
   compensation,
   user,
+  campagne = CURRENT_ANNEE_CAMPAGNE,
 }: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
@@ -440,6 +447,11 @@ const findFiltersInDb = async ({
     return eb("demande.statut", "in", statut);
   };
 
+  const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
+    if (!campagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", campagne);
+  };
+
   const geoFiltersBase = kdb
     .selectFrom("region")
     .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
@@ -500,7 +512,7 @@ const findFiltersInDb = async ({
     .execute();
 
   const filtersBase = kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -517,9 +529,15 @@ const findFiltersInDb = async ({
     .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
+    .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
+
+  const campagnesFilters = filtersBase
+    .select(["campagne.annee as label", "campagne.annee as value"])
+    .where("campagne.annee", "is not", null)
+    .execute();
 
   const communesFilters = filtersBase
     .select([
@@ -548,6 +566,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         commune
           ? eb("dataEtablissement.commune", "in", commune)
@@ -583,6 +602,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         uai ? eb("dataEtablissement.uai", "in", uai) : sql<boolean>`false`,
       ]);
@@ -616,6 +636,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         rentreeScolaire && !Number.isNaN(rentreeScolaire)
           ? eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire))
@@ -648,6 +669,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         typeDemande
           ? eb("demande.typeDemande", "in", typeDemande)
@@ -683,6 +705,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         motif
           ? eb.or(
@@ -722,6 +745,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         dispositif
           ? eb("dispositif.codeDispositif", "in", dispositif)
@@ -757,6 +781,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         codeNiveauDiplome
           ? eb("niveauDiplome.codeNiveauDiplome", "in", codeNiveauDiplome)
@@ -797,6 +822,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         cfd ? eb("dataFormation.cfd", "in", cfd) : sql<boolean>`false`,
       ]);
@@ -830,6 +856,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         cfdFamille
           ? eb("familleMetier.cfdFamille", "in", cfdFamille)
@@ -862,6 +889,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql<boolean>`false`,
       ]);
@@ -893,6 +921,7 @@ const findFiltersInDb = async ({
           inSecteur(eb),
           inCompensation(eb),
           inStatut(eb),
+          inCampagne(eb),
         ]),
         codeNsf
           ? eb("dataFormation.codeNsf", "in", codeNsf)
@@ -916,6 +945,7 @@ const findFiltersInDb = async ({
     academies: (await academiesFilters).map(cleanNull),
     communes: (await communesFilters).map(cleanNull),
     etablissements: (await etablissementsFilters).map(cleanNull),
+    campagnes: (await campagnesFilters).map(cleanNull),
     secteurs: [
       {
         label: "Public",
@@ -970,7 +1000,7 @@ const findFiltersInDb = async ({
         value: "refused",
       },
     ],
-    voie: [
+    voies: [
       {
         label: "Scolaire",
         value: "scolaire",
@@ -988,6 +1018,6 @@ const findFiltersInDb = async ({
 };
 
 export const dependencies = {
-  findRestitutionIntentionsStatsInDB,
-  findFiltersInDb,
+  getDemandesRestitutionIntentionsQuery,
+  getFilters,
 };

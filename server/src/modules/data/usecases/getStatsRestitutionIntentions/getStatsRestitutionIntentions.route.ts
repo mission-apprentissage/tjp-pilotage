@@ -3,17 +3,17 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { getRestitutionIntentionsStatsSchema } from "./getRestitutionIntentionsStats.schema";
-import { getRestitutionIntentionsStats } from "./getRestitutionIntentionsStats.usecase";
+import { getStatsRestitutionIntentionsSchema } from "./getStatsRestitutionIntentions.schema";
+import { getStatsRestitutionIntentionsUsecase } from "./getStatsRestitutionIntentions.usecase";
 
-export const getRestitutionIntentionsStatsRoute = ({
+export const getStatsRestitutionIntentionsRoute = ({
   server,
 }: {
   server: Server;
 }) => {
-  return createRoute("/intentions/stats", {
+  return createRoute("/restitution-intentions/stats", {
     method: "GET",
-    schema: getRestitutionIntentionsStatsSchema,
+    schema: getStatsRestitutionIntentionsSchema,
   }).handle((props) => {
     server.route({
       ...props,
@@ -22,7 +22,7 @@ export const getRestitutionIntentionsStatsRoute = ({
         const { ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
 
-        const result = await getRestitutionIntentionsStats({
+        const result = await getStatsRestitutionIntentionsUsecase({
           ...filters,
           user: request.user,
         });

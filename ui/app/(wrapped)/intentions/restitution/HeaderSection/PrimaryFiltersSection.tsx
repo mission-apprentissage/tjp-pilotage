@@ -7,8 +7,12 @@ import {
   Skeleton,
 } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../../../components/Multiselect";
-import { Filters, StatsIntentions } from "../types";
+import { Multiselect } from "@/components/Multiselect";
+
+import {
+  DemandesRestitutionIntentions,
+  FiltersDemandesRestitutionIntentions,
+} from "../types";
 
 export const PrimaryFiltersSection = ({
   activeFilters,
@@ -17,11 +21,16 @@ export const PrimaryFiltersSection = ({
   isLoading,
   data,
 }: {
-  activeFilters: Filters;
-  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
+  activeFilters: FiltersDemandesRestitutionIntentions;
+  handleFilters: (
+    type: keyof FiltersDemandesRestitutionIntentions,
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+  ) => void;
+  filterTracker: (
+    filterName: keyof FiltersDemandesRestitutionIntentions
+  ) => () => void;
   isLoading: boolean;
-  data?: StatsIntentions;
+  data?: DemandesRestitutionIntentions;
 }) => {
   return (
     <>
@@ -53,6 +62,25 @@ export const PrimaryFiltersSection = ({
               w="100%"
             >
               <Flex gap={4}>
+                <Box justifyContent={"start"}>
+                  <FormLabel color="white">CAMPAGNE</FormLabel>
+                  <Select
+                    width={[null, null, "72"]}
+                    size="md"
+                    variant={"newInput"}
+                    value={activeFilters.campagne?.toString() ?? ""}
+                    onChange={(e) => handleFilters("campagne", e.target.value)}
+                    borderBottomColor={
+                      activeFilters.campagne != undefined ? "info.525" : ""
+                    }
+                  >
+                    {data?.filters.campagnes?.map((option) => (
+                      <option key={option.value} value={option.value}>
+                        {option.label}
+                      </option>
+                    ))}
+                  </Select>
+                </Box>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
                   <Select
@@ -77,6 +105,8 @@ export const PrimaryFiltersSection = ({
                     ))}
                   </Select>
                 </Box>
+              </Flex>
+              <Flex gap={4} display={["none", null, "flex"]}>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RÉGION</FormLabel>
                   <Multiselect
@@ -93,8 +123,6 @@ export const PrimaryFiltersSection = ({
                     TOUTES ({data?.filters.regions.length ?? 0})
                   </Multiselect>
                 </Box>
-              </Flex>
-              <Flex gap={4} display={["none", null, "flex"]}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">ACADÉMIE</FormLabel>
                   <Multiselect

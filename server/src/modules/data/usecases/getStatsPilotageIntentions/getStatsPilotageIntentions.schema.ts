@@ -46,6 +46,7 @@ const QuerySchema = z.object({
     .keyof()
     .optional(),
   scope: scope.default(ScopeEnum.national),
+  campagne: z.string().optional(),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;
@@ -58,7 +59,7 @@ const StatsTransfoSchema = z.record(
   })
 );
 
-export const getScopedTransformationStatsSchema = {
+export const getStatsPilotageIntentionsSchema = {
   querystring: QuerySchema,
   response: {
     200: z.object({
@@ -66,6 +67,7 @@ export const getScopedTransformationStatsSchema = {
       submitted: StatsTransfoSchema,
       all: StatsTransfoSchema,
       filters: z.object({
+        campagnes: z.array(OptionSchema),
         rentreesScolaires: z.array(OptionSchema),
         regions: z.array(OptionSchema),
         academies: z.array(OptionSchema),
