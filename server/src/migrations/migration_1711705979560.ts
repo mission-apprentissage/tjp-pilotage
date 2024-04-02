@@ -51,6 +51,9 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
+  // Refresh view to include new columns
+  await db.schema.dropView("latestDemandeView").execute();
+
   await db.schema
     .alterTable("demande")
     .dropColumn("amiCmaValideAnnee")
@@ -59,8 +62,6 @@ export const down = async (db: Kysely<unknown>) => {
     .dropColumn("besoinRH")
     .execute();
 
-  // Refresh view to include new columns
-  await db.schema.dropView("latestDemandeView").execute();
   await db.schema
     .createView("latestDemandeView")
     .as(
