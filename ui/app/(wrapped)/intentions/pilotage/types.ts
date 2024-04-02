@@ -2,55 +2,42 @@ import { Scope } from "shared";
 
 import { client } from "@/api.client";
 
-export type StatsPilotageIntentions =
-  (typeof client.infer)["[GET]/pilotage-intentions/stats"];
+export type ScopedTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/get-scoped-transformations-stats"];
 
-export type StatsPilotageIntentionsQuery =
-  (typeof client.inferArgs)["[GET]/pilotage-intentions/stats"]["query"];
+export type ScopedTransformationStatsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-transformation/get-scoped-transformations-stats"]["query"];
 
-export type StatsPilotageIntentionsData = Omit<
-  StatsPilotageIntentions,
+export type ScopedTransformationStatsData = Omit<
+  ScopedTransformationStats,
   "filters"
 >;
 
-export type FiltersStatsPilotageIntentions = Pick<
-  StatsPilotageIntentionsQuery,
-  | "rentreeScolaire"
-  | "CPC"
-  | "codeNiveauDiplome"
-  | "scope"
-  | "codeNsf"
-  | "campagne"
+export type Filters = Pick<
+  ScopedTransformationStatsQuery,
+  "rentreeScolaire" | "CPC" | "codeNiveauDiplome" | "scope" | "codeNsf"
 > & {
   code?: string;
 };
 
-export type FiltersEventsStatsPilotageIntentions =
-  | keyof FiltersStatsPilotageIntentions
+export type FiltersEvents =
+  | keyof Filters
   | "codeRegion"
   | "codeAcademie"
   | "codeDepartement";
 
-export type ScopedFiltersStatsPilotageIntentions = Pick<
-  StatsPilotageIntentionsQuery,
-  | "rentreeScolaire"
-  | "CPC"
-  | "codeNsf"
-  | "codeNiveauDiplome"
-  | "scope"
-  | "campagne"
+export type ScopedFilters = Pick<
+  ScopedTransformationStatsQuery,
+  "rentreeScolaire" | "CPC" | "codeNsf" | "codeNiveauDiplome" | "scope"
 >;
 
-export type StatsPilotageIntentionsByScope = {
-  [K in Scope]?: StatsPilotageIntentionsData;
+export type ScopedPilotageTransformationStatsByScope = {
+  [K in Scope]?: ScopedTransformationStatsData;
 } & {
-  filters?: StatsPilotageIntentions["filters"];
+  filters?: ScopedTransformationStats["filters"];
 };
 
-export type OrderStatsPilotageIntentions = Pick<
-  StatsPilotageIntentionsQuery,
-  "order" | "orderBy"
->;
+export type Order = Pick<ScopedTransformationStatsQuery, "order" | "orderBy">;
 
 export type IndicateurType = "tauxTransformation" | "ratioFermeture";
 
@@ -75,13 +62,13 @@ export type TerritoiresFilters = {
   [K in Scope]?: string;
 };
 
-export type FormationsPilotageIntentionsQuery =
-  (typeof client.inferArgs)["[GET]/pilotage-intentions/formations"]["query"];
+export type FormationsTransformationStatsQuery =
+  (typeof client.inferArgs)["[GET]/pilotage-transformation/formations"]["query"];
 
-export type FormationsPilotageIntentions =
-  (typeof client.infer)["[GET]/pilotage-intentions/formations"];
+export type FormationsTransformationStats =
+  (typeof client.infer)["[GET]/pilotage-transformation/formations"];
 
-export type OrderFormationsPilotageIntentions = Pick<
-  FormationsPilotageIntentionsQuery,
+export type OrderFormationsTransformationStats = Pick<
+  FormationsTransformationStatsQuery,
   "order" | "orderBy"
 >;

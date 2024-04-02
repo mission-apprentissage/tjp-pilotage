@@ -1,18 +1,14 @@
 import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
 
-import { Multiselect } from "@/components/Multiselect";
-import { TooltipIcon } from "@/components/TooltipIcon";
-
+import { Multiselect } from "../../../../../components/Multiselect";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
-import {
-  DemandesRestitutionIntentions,
-  FiltersDemandesRestitutionIntentions,
-} from "../types";
+import { Filters, StatsIntentions } from "../types";
 
 export const SecondaryFiltersSection = ({
   activeFilters,
@@ -20,15 +16,10 @@ export const SecondaryFiltersSection = ({
   filterTracker,
   data,
 }: {
-  activeFilters: FiltersDemandesRestitutionIntentions;
-  handleFilters: (
-    type: keyof FiltersDemandesRestitutionIntentions,
-    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
-  ) => void;
-  filterTracker: (
-    filterName: keyof FiltersDemandesRestitutionIntentions
-  ) => () => void;
-  data?: DemandesRestitutionIntentions;
+  activeFilters: Filters;
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
+  filterTracker: (filterName: keyof Filters) => () => void;
+  data?: StatsIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
 
@@ -103,6 +94,29 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
+            <FormLabel>
+              Domaine de formation (NSF)
+              <TooltipIcon
+                ml="1"
+                label="cliquez pour plus d'infos."
+                onClick={() => openGlossaire("domaine-de-formation-nsf")}
+              />
+            </FormLabel>
+            <Multiselect
+              onClose={filterTracker("codeNsf")}
+              width={"48"}
+              size="md"
+              variant={"newInput"}
+              onChange={(selected) => handleFilters("codeNsf", selected)}
+              options={data?.filters.libellesNsf}
+              value={activeFilters.codeNsf ?? []}
+              disabled={data?.filters.libellesNsf.length === 0}
+              hasDefaultValue={false}
+            >
+              TOUS ({data?.filters.libellesNsf.length ?? 0})
+            </Multiselect>
+          </Box>
+          <Box justifyContent={"start"}>
             <FormLabel>CPC</FormLabel>
             <Multiselect
               onClose={filterTracker("CPC")}
@@ -132,29 +146,6 @@ export const SecondaryFiltersSection = ({
               hasDefaultValue={false}
             >
               TOUS ({data?.filters.familles.length ?? 0})
-            </Multiselect>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>
-              Domaine de formation (NSF)
-              <TooltipIcon
-                ml="1"
-                label="cliquez pour plus d'infos."
-                onClick={() => openGlossaire("domaine-de-formation-nsf")}
-              />
-            </FormLabel>
-            <Multiselect
-              onClose={filterTracker("codeNsf")}
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              onChange={(selected) => handleFilters("codeNsf", selected)}
-              options={data?.filters.libellesNsf}
-              value={activeFilters.codeNsf ?? []}
-              disabled={data?.filters.libellesNsf.length === 0}
-              hasDefaultValue={false}
-            >
-              TOUS ({data?.filters.libellesNsf.length ?? 0})
             </Multiselect>
           </Box>
         </Flex>
@@ -294,7 +285,7 @@ export const SecondaryFiltersSection = ({
               }
               placeholder="TOUTES"
             >
-              {data?.filters.voies?.map((option) => (
+              {data?.filters.voie?.map((option) => (
                 <option key={option.value} value={option.value}>
                   {option.label}
                 </option>

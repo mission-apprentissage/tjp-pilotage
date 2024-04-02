@@ -1,22 +1,17 @@
 import { client } from "../../../../api.client";
 
-export type DemandesRestitutionIntentions =
-  (typeof client.infer)["[GET]/restitution-intentions/demandes"];
+export type StatsIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/intentions/stats"]["query"];
 
-export type DemandesRestitutionIntentionsQuery =
-  (typeof client.inferArgs)["[GET]/restitution-intentions/demandes"]["query"];
+export type Order = Pick<StatsIntentionsQuery, "order" | "orderBy">;
+export type Filters = StatsIntentionsQuery;
 
-export type OrderDemandesRestitutionIntentions = Pick<
-  DemandesRestitutionIntentionsQuery,
-  "order" | "orderBy"
->;
-export type FiltersDemandesRestitutionIntentions =
-  DemandesRestitutionIntentionsQuery;
+export type StatsIntentions = (typeof client.infer)["[GET]/intentions/stats"];
 
 export type IndicateurType = "insertion" | "poursuite";
 
-export type StatsRestitutionIntentions =
-  (typeof client.infer)["[GET]/restitution-intentions/stats"];
+export type CountStatsIntentionsQuery =
+  (typeof client.inferArgs)["[GET]/intentions/stats/count"]["query"];
 
-export type StatsRestitutionIntentionsQuery =
-  (typeof client.inferArgs)["[GET]/restitution-intentions/stats"]["query"];
+export type CountStatsIntentions =
+  (typeof client.infer)["[GET]/intentions/stats/count"];

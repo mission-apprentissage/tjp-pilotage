@@ -1,40 +1,34 @@
 import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
 import { ScopeEnum } from "shared";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 
 import { useStateParams } from "../../../../utils/useFilters";
 import {
-  FiltersEventsStatsPilotageIntentions,
-  FiltersStatsPilotageIntentions,
+  Filters,
+  FiltersEvents,
   IndicateurType,
-  OrderStatsPilotageIntentions,
+  Order,
   SelectedScope,
 } from "./types";
 
 export const usePilotageIntentionsHook = () => {
   const [indicateur, setIndicateur] =
     useState<IndicateurType>("tauxTransformation");
-  const [filters, setFilters] = useStateParams<
-    Partial<FiltersStatsPilotageIntentions>
-  >({
+  const [filters, setFilters] = useStateParams<Partial<Filters>>({
     defaultValues: {
       scope: ScopeEnum.region,
-      campagne: CURRENT_ANNEE_CAMPAGNE,
     },
   });
-  const [order, setOrder] = useStateParams<
-    Partial<OrderStatsPilotageIntentions>
-  >({
+  const [order, setOrder] = useStateParams<Partial<Order>>({
     prefix: "ord",
     defaultValues: {
       order: "asc",
     },
   });
 
-  const handleOrder = (column: OrderStatsPilotageIntentions["orderBy"]) => {
+  const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("pilotage-intentions:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setOrder({ order: "asc", orderBy: column });
@@ -47,29 +41,30 @@ export const usePilotageIntentionsHook = () => {
   };
 
   const trackEvent = usePlausible();
-  const filterTracker =
-    (filterName: FiltersEventsStatsPilotageIntentions) => () => {
-      trackEvent("pilotage-intentions:filtre", {
-        props: { filter_name: filterName },
-      });
-    };
+  const filterTracker = (filterName: FiltersEvents) => () => {
+    trackEvent("pilotage-intentions:filtre", {
+      props: { filter_name: filterName },
+    });
+  };
 
   const {
     data: scopedTransformationsStats,
     isLoading: isLoadingScopedTransformationsStats,
-  } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
-    {
-      query: {
-        ...filters,
-        ...order,
-        scope: filters.scope!,
+  } = client
+    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          ...order,
+          scope: filters.scope!,
+        },
       },
-    },
-    {
-      keepPreviousData: true,
-      staleTime: 10000000,
-    }
-  );
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   const indicateurOptions = [
     {
@@ -92,7 +87,7 @@ export const usePilotageIntentionsHook = () => {
   );
 
   const handleFilters = useCallback(
-    (additionalFilters: Partial<FiltersStatsPilotageIntentions>) =>
+    (additionalFilters: Partial<Filters>) =>
       setFilters({ ...filters, ...additionalFilters }),
     [setFilters]
   );
