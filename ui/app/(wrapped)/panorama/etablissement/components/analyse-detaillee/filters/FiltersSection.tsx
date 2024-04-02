@@ -31,7 +31,7 @@ export const FiltersSection = ({
   filterTracker: (filterName: keyof Filters) => () => void;
 }) => {
   return (
-    <Flex gap={"16px"}>
+    <Flex gap={"16px"} mt={"24px"} mb={"-12px"}>
       <Flex direction={"column"} gap={"8px"}>
         <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
           Diplôme
