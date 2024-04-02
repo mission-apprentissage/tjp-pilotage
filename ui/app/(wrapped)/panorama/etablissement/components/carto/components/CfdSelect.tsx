@@ -43,7 +43,7 @@ const formatOffreToCfdSearchResult = (
 const formatSearchResultToOption = (
   cfdSearchResult: TCfdSearchResult
 ): Option => ({
-  label: `${cfdSearchResult.libelleFormation} (${cfdSearchResult.cfd})`,
+  label: `${cfdSearchResult.libelleNiveauDiplome} ${cfdSearchResult.libelleFormation} (${cfdSearchResult.cfd})`,
   value: cfdSearchResult.value,
   isSpecialite: cfdSearchResult.isSpecialite,
   dateFermeture: cfdSearchResult.dateFermeture,

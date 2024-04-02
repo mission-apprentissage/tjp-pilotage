@@ -16624,6 +16624,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-intersection-observer@npm:^9.8.1":
+  version: 9.8.1
+  resolution: "react-intersection-observer@npm:9.8.1"
+  peerDependencies:
+    react: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^15.0.0 || ^16.0.0 || ^17.0.0 || ^18.0.0
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+  checksum: 0aec6f3fb51bdcbf0131c8e8b9a6b0c89b835608c908d3236e675db58fa2ddc7128f7b1e7c0761fc5b36384cfdf5edef0f5c3651f900220f6b92a992794700ca
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -19587,6 +19600,7 @@ __metadata:
     react: 18.2.0
     react-dom: 18.2.0
     react-hook-form: ^7.47.0
+    react-intersection-observer: ^9.8.1
     react-map-gl: ^7.1.7
     react-markdown: ^9.0.1
     react-notion-x: ^6.16.0
