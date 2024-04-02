@@ -74,6 +74,7 @@ export const FormationSchema = z.object({
   codeDispositif: z.string().optional(),
   codeNiveauDiplome: z.string(),
   typeFamille: z.string().optional(),
+  dateOuverture: z.date().optional(),
 });
 
 const OffreSchema = z.string();

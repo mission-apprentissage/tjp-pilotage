@@ -28,6 +28,7 @@ export const getFormations = async ({
       "libelleDispositif",
       "dataFormation.codeNiveauDiplome",
       "dataFormation.cfd",
+      "dataFormation.dateOuverture",
       "codeDispositif",
       "dataFormation.typeFamille",
     ])
