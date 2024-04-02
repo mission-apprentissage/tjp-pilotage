@@ -66,6 +66,7 @@ export const ListeEtablissementsProches = () => {
     ) {
       refs[activeUai].current?.scrollIntoView({
         behavior: "smooth",
+        block: "nearest",
         inline: "nearest",
       });
     }
