@@ -34,12 +34,6 @@ function selectFormationWithMostValues(
   chiffresIJ: ChiffresIJ,
   chiffresEntree: ChiffresEntree
 ): string {
-  console.debug(
-    "SelectFormationWithMostValues",
-    formations,
-    chiffresIJ,
-    chiffresEntree
-  );
   const offres = Object.keys(formations);
 
   if (offres.length <= 1) {

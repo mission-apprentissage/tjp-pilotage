@@ -66,39 +66,33 @@ export const EffectifSection = ({
 }: {
   formation?: Formation;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
-}) => {
-  console.debug("EffectifSection", { formation, chiffresEntreeOffre });
-  return (
-    <Box>
-      <Flex
-        direction={"row"}
-        justifyContent={"flex-start"}
-        gap={"8px"}
-        alignItems={"center"}
-        mb={4}
+}) => (
+  <Box>
+    <Flex
+      direction={"row"}
+      justifyContent={"flex-start"}
+      gap={"8px"}
+      alignItems={"center"}
+      mb={4}
+    >
+      <Text
+        fontSize={14}
+        fontWeight={700}
+        textTransform={"uppercase"}
+        lineHeight={"24px"}
       >
-        <Text
-          fontSize={14}
-          fontWeight={700}
-          textTransform={"uppercase"}
-          lineHeight={"24px"}
-        >
-          Nombre d'élèves par année
-        </Text>
-        <Badge variant="info" maxH={5}>
-          Rentrée {CURRENT_RENTREE}
+        Nombre d'élèves par année
+      </Text>
+      <Badge variant="info" maxH={5}>
+        Rentrée {CURRENT_RENTREE}
+      </Badge>
+      {isAnyDataMissing(formation, chiffresEntreeOffre?.[CURRENT_RENTREE]) && (
+        <Badge variant="grey" maxH={5}>
+          <WarningTwoIcon me={2} />
+          Données incomplètes
         </Badge>
-        {isAnyDataMissing(
-          formation,
-          chiffresEntreeOffre?.[CURRENT_RENTREE]
-        ) && (
-          <Badge variant="grey" maxH={5}>
-            <WarningTwoIcon me={2} />
-            Données incomplètes
-          </Badge>
-        )}
-      </Flex>
-      <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
-    </Box>
-  );
-};
+      )}
+    </Flex>
+    <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
+  </Box>
+);

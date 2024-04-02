@@ -39,44 +39,41 @@ export const DevenirSection = ({
 }: {
   formation?: Formation;
   chiffresIJOffre?: ChiffresIJOffre;
-}) => {
-  console.debug("DevenirSection", { formation, chiffresIJOffre });
-  return (
-    <Box>
-      <Flex
-        direction={"row"}
-        justifyContent={"flex-start"}
-        gap={"8px"}
-        alignItems={"center"}
-        mb={4}
+}) => (
+  <Box>
+    <Flex
+      direction={"row"}
+      justifyContent={"flex-start"}
+      gap={"8px"}
+      alignItems={"center"}
+      mb={4}
+    >
+      <Text
+        fontSize={14}
+        fontWeight={700}
+        textTransform={"uppercase"}
+        lineHeight={"24px"}
       >
-        <Text
-          fontSize={14}
-          fontWeight={700}
-          textTransform={"uppercase"}
-          lineHeight={"24px"}
-        >
-          Devenir des élèves
-        </Text>
+        Devenir des élèves
+      </Text>
 
-        {isAnyDataMissing(formation, chiffresIJOffre) && (
-          <Badge variant="grey" maxH={5}>
-            <WarningTwoIcon me={2} />
-            Données incomplètes
-          </Badge>
-        )}
-      </Flex>
-      <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
-        <GridItem colSpan={1}>
-          <TauxEmploi chiffresIJOffre={chiffresIJOffre} />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <TauxPoursuiteEtudes chiffresIJOffre={chiffresIJOffre} />
-        </GridItem>
-        <GridItem colSpan={1}>
-          <TauxDevenirFavorable chiffresIJOffre={chiffresIJOffre} />
-        </GridItem>
-      </Grid>
-    </Box>
-  );
-};
+      {isAnyDataMissing(formation, chiffresIJOffre) && (
+        <Badge variant="grey" maxH={5}>
+          <WarningTwoIcon me={2} />
+          Données incomplètes
+        </Badge>
+      )}
+    </Flex>
+    <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
+      <GridItem colSpan={1}>
+        <TauxEmploi chiffresIJOffre={chiffresIJOffre} />
+      </GridItem>
+      <GridItem colSpan={1}>
+        <TauxPoursuiteEtudes chiffresIJOffre={chiffresIJOffre} />
+      </GridItem>
+      <GridItem colSpan={1}>
+        <TauxDevenirFavorable chiffresIJOffre={chiffresIJOffre} />
+      </GridItem>
+    </Grid>
+  </Box>
+);
