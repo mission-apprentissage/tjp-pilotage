@@ -98,11 +98,11 @@ const EtablissementAnalyseDetaillee = () => {
   }
 
   return (
-    <Flex direction={"column"} gap={8} id={"analyse-detaille"}>
-      <Text as={"h2"} fontSize={"20px"} fontWeight={700}>
+    <Flex direction={"column"} id={"analyse-detaille"}>
+      <Text as={"h2"} fontSize={"20px"} fontWeight={700} mt={"32px"}>
         Analyse des formations
       </Text>
-      <Divider width="48px" />
+      <Divider width="48px" mb={"32px"} mt={"24px"} />
       {QUADRANT_FEATURE_FLAG && (
         <TabsSection
           displayDashboard={displayDashboard}
@@ -111,7 +111,7 @@ const EtablissementAnalyseDetaillee = () => {
         />
       )}
       {formationFounds ? renderFormations() : renderNoFormationFound()}
-      <Divider />
+      <Divider mb={"32px"} mt={"24px"} />
     </Flex>
   );
 };
