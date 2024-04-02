@@ -26,6 +26,10 @@ const isAnyDataMissing = (
   }
 
   if (formation.typeFamille === "specialite") {
+    if (chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE) === 0) {
+      return typeof chiffresEntreeOffre.effectifAnnee2 === "undefined";
+    }
+
     return (
       typeof chiffresEntreeOffre.effectifAnnee2 === "undefined" ||
       typeof chiffresEntreeOffre.effectifAnnee3 === "undefined"
@@ -34,6 +38,23 @@ const isAnyDataMissing = (
 
   if (formation.typeFamille === "option") {
     return typeof chiffresEntreeOffre.effectifAnnee2 === "undefined";
+  }
+
+  if (chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE) === 0) {
+    return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
+  }
+
+  if (
+    Math.abs(chiffresEntreeOffre.dateOuverture - Number(CURRENT_RENTREE)) === 1
+  ) {
+    if ((chiffresEntreeOffre.effectifs ?? []).length >= 2) {
+      return (
+        typeof chiffresEntreeOffre.effectifAnnee2 === "undefined" &&
+        typeof chiffresEntreeOffre.effectifAnnee1 === "undefined"
+      );
+    } else {
+      return typeof chiffresEntreeOffre.effectifAnnee1 === "undefined";
+    }
   }
 
   return chiffresEntreeOffre.effectifs?.some((f) => f === null);

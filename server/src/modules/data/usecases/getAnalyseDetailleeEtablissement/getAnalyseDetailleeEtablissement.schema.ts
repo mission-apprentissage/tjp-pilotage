@@ -61,6 +61,7 @@ const ChiffresEntreeSchema = z.record(
     tauxPressionRegional: z.coerce.number().optional(),
     tauxPressionDepartemental: z.coerce.number().optional(),
     tauxRemplissage: z.coerce.number().optional(),
+    dateOuverture: z.coerce.number(),
   })
 );
 
