@@ -2,17 +2,17 @@ import { getStatsSortie } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies, Filters } from "./dependencies";
 
-const getFormationsTransformationStatsFactory =
+const getQuadrantPilotageIntentionsFactory =
   (
     deps = {
-      getFormationsTransformationStatsQuery:
-        dependencies.getFormationsTransformationStatsQuery,
+      getFormationsPilotageIntentionsQuery:
+        dependencies.getFormationsPilotageIntentionsQuery,
       getRegionStats: dependencies.getRegionStats,
     }
   ) =>
   async (activeFilters: Filters) => {
     const [formations, statsSortie] = await Promise.all([
-      deps.getFormationsTransformationStatsQuery(activeFilters),
+      deps.getFormationsPilotageIntentionsQuery(activeFilters),
       getStatsSortie(activeFilters),
     ]);
 
@@ -24,5 +24,5 @@ const getFormationsTransformationStatsFactory =
       })),
     };
   };
-export const getFormationsTransformationStats =
-  getFormationsTransformationStatsFactory();
+export const getFormationsPilotageIntentionsUsecase =
+  getQuadrantPilotageIntentionsFactory();

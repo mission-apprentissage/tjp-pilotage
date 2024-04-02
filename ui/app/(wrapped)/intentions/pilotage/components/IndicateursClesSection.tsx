@@ -15,14 +15,15 @@ import {
 import { ReactNode, useMemo } from "react";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
 
-import { client } from "../../../../../api.client";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { client } from "@/api.client";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import {
-  Filters,
+  FiltersStatsPilotageIntentions,
   Indicateur,
-  Order,
-  ScopedTransformationStats,
+  OrderStatsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
   Status,
 } from "../types";
 import { isTerritoireSelected } from "../utils/isTerritoireSelected";
@@ -250,7 +251,7 @@ const StatCard = ({
 
 function generatePercentageDataOr(
   code: string,
-  data?: ScopedTransformationStats,
+  data?: StatsPilotageIntentions,
   or: string = "-"
 ) {
   return (status: Status, indicateur: Indicateur): string => {
@@ -273,7 +274,7 @@ function generatePercentageDataOr(
   };
 }
 
-function generateGetScopedData(code: string, data?: ScopedTransformationStats) {
+function generateGetScopedData(code: string, data?: StatsPilotageIntentions) {
   return (status: Status, indicateur: Indicateur): number => {
     return Number.parseFloat(
       (data?.[status]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
@@ -288,14 +289,14 @@ export const IndicateursClesSection = ({
   filters,
   order,
 }: {
-  data?: ScopedTransformationStats;
+  data?: StatsPilotageIntentions;
   isLoading: boolean;
   scope: SelectedScope;
-  filters: Partial<Filters>;
-  order: Partial<Order>;
+  filters: Partial<FiltersStatsPilotageIntentions>;
+  order: Partial<OrderStatsPilotageIntentions>;
 }) => {
   const { data: nationalStats, isLoading: isLoadingNationalStats } = client
-    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
+    .ref("[GET]/pilotage-intentions/stats")
     .useQuery(
       {
         query: {

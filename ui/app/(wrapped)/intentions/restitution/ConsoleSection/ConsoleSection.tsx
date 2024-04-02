@@ -17,7 +17,10 @@ import { OrderIcon } from "../../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import { Order, StatsIntentions } from "../types";
+import {
+  DemandesRestitutionIntentions,
+  OrderDemandesRestitutionIntentions,
+} from "../types";
 import { LineContent } from "./LineContent";
 
 const Loader = () => (
@@ -63,10 +66,10 @@ export const ConsoleSection = ({
   order,
   handleOrder,
 }: {
-  data?: StatsIntentions;
+  data?: DemandesRestitutionIntentions;
   isLoading: boolean;
-  order: Order;
-  handleOrder: (column: Order["orderBy"]) => void;
+  order: OrderDemandesRestitutionIntentions;
+  handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
 }) => {
   const router = useRouter();
   return (
@@ -325,7 +328,7 @@ export const ConsoleSection = ({
             <Tbody>
               <Fragment>
                 {data?.demandes.map(
-                  (demande: StatsIntentions["demandes"][0]) => {
+                  (demande: DemandesRestitutionIntentions["demandes"][0]) => {
                     return (
                       <Fragment key={`${demande.numero}`}>
                         <Tr

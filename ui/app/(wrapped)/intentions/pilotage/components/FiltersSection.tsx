@@ -1,14 +1,15 @@
 import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
 import { Scope, ScopeEnum } from "shared";
 
-import { Multiselect } from "../../../../../components/Multiselect";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { Multiselect } from "@/components/Multiselect";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import {
-  Filters,
-  FiltersEvents,
-  ScopedTransformationStats,
+  FiltersEventsStatsPilotageIntentions,
+  FiltersStatsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
 } from "../types";
 
 const Loader = () => (
@@ -45,11 +46,13 @@ export const FiltersSection = ({
   data,
   scope,
 }: {
-  activeFilters: Partial<Filters>;
-  handleFilters: (filter: Partial<Filters>) => void;
-  filterTracker: (filterName: FiltersEvents) => () => void;
+  activeFilters: Partial<FiltersStatsPilotageIntentions>;
+  handleFilters: (filter: Partial<FiltersStatsPilotageIntentions>) => void;
+  filterTracker: (
+    filterName: FiltersEventsStatsPilotageIntentions
+  ) => () => void;
   isLoading: boolean;
-  data?: ScopedTransformationStats;
+  data?: StatsPilotageIntentions;
   scope: SelectedScope;
 }) => {
   const { openGlossaire } = useGlossaireContext();
@@ -59,6 +62,31 @@ export const FiltersSection = ({
 
   return (
     <Box borderRadius={4}>
+      <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
+        <Box flex={[1, null, "unset"]}>
+          <FormLabel>Campagne</FormLabel>
+          <Select
+            width={"100%"}
+            size="md"
+            variant="newInput"
+            value={activeFilters.campagne ?? ""}
+            borderBottomColor={
+              scope.type === ScopeEnum.region ? "info.525" : ""
+            }
+            onChange={(e) => {
+              filterTracker("campagne");
+              handleFilters({ campagne: e.target.value });
+            }}
+            placeholder="Choisir une campagne"
+          >
+            {data?.filters?.campagnes?.map((option) => (
+              <option key={option.value} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </Select>
+        </Box>
+      </SimpleGrid>
       <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
         <Box flex={[1, null, "unset"]}>
           <FormLabel>Granularité</FormLabel>
@@ -86,7 +114,6 @@ export const FiltersSection = ({
             </option>
           </Select>
         </Box>
-
         <Box display={["none", null, "block"]}>
           <FormLabel>Région</FormLabel>
           <Select
@@ -114,7 +141,6 @@ export const FiltersSection = ({
             ))}
           </Select>
         </Box>
-
         <Box display={["none", null, "block"]}>
           <FormLabel>Académie</FormLabel>
           <Select
@@ -145,7 +171,6 @@ export const FiltersSection = ({
             ))}
           </Select>
         </Box>
-
         <Box display={["none", null, "block"]}>
           <FormLabel>Département</FormLabel>
           <Select
