@@ -18,7 +18,8 @@ export const formatTypeFamilleLong = (typeFamille: string): string => {
     .replace("2nde_commune", "Seconde commune")
     .replace("1ere_commune", "Première année commune")
     .replace("specialite", "Spécialité")
-    .replace("option", "Option");
+    .replace("option", "Option")
+    .replace("fermeture", "Fermeture au ");
 };
 
 export const formatTypeFamilleCourt = (typeFamille: string): string => {
@@ -26,5 +27,6 @@ export const formatTypeFamilleCourt = (typeFamille: string): string => {
     .replace("2nde_commune", "2de")
     .replace("1ere_commune", "1ère")
     .replace("specialite", "Spé")
-    .replace("option", "Opt");
+    .replace("option", "Opt")
+    .replace("fermeture", "Fermeture au ");
 };

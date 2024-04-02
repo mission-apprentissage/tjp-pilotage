@@ -1,10 +1,14 @@
-import { Flex, Skeleton, Stack, Tag, Text } from "@chakra-ui/react";
+import { Flex, Skeleton, Stack, Text } from "@chakra-ui/react";
 import _ from "lodash";
 import { useSearchParams } from "next/navigation";
 import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
 
 import { client } from "../../../../../../../api.client";
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../../../../../components/BadgeTypeFamille";
 import { themeDefinition } from "../../../../../../../theme/theme";
 import { useEtablissementContext } from "../../../context/etablissementContext";
 import { AnalyseDetaillee } from "../../analyse-detaillee/types";
@@ -19,6 +23,8 @@ interface Option {
   isSpecialite: boolean;
   dateFermeture?: string;
   isOption: boolean;
+  is1ereCommune: boolean;
+  is2ndeCommune: boolean;
 }
 
 const formatOffreToCfdSearchResult = (
@@ -34,6 +40,8 @@ const formatOffreToCfdSearchResult = (
   isSpecialite: false,
   isOption: false,
   isFCIL: false,
+  is1ereCommune: false,
+  is2ndeCommune: false,
   //
   libelleFormation: offre?.libelleFormation || "",
   libelleNiveauDiplome: offre?.libelleNiveauDiplome || "",
@@ -48,6 +56,8 @@ const formatSearchResultToOption = (
   isSpecialite: cfdSearchResult.isSpecialite,
   dateFermeture: cfdSearchResult.dateFermeture,
   isOption: cfdSearchResult.isOption,
+  is1ereCommune: cfdSearchResult.is1ereCommune,
+  is2ndeCommune: cfdSearchResult.is2ndeCommune,
 });
 
 export const CfdSelect = () => {
@@ -120,6 +130,32 @@ export const CfdSelect = () => {
     ];
   };
 
+  const getFormationTypeFamille = (
+    option: Option
+  ): TypeFamilleKeys | undefined => {
+    if (option.isSpecialite) {
+      return "specialite";
+    }
+
+    if (option.isOption) {
+      return "option";
+    }
+
+    if (option.dateFermeture) {
+      return "fermeture";
+    }
+
+    if (option.is1ereCommune) {
+      return "1ere_commune";
+    }
+
+    if (option.is2ndeCommune) {
+      return "2nde_commune";
+    }
+
+    return undefined;
+  };
+
   return (
     <>
       {!offre || (!analyseDetaillee && <Skeleton />)}
@@ -139,23 +175,16 @@ export const CfdSelect = () => {
             loadOptions={loadOptions}
             formatOptionLabel={(option) => {
               return (
-                <Flex>
-                  {option.label}{" "}
-                  {option.isSpecialite && (
-                    <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                      Spécialité
-                    </Tag>
-                  )}
-                  {option.isOption && (
-                    <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                      Option
-                    </Tag>
-                  )}
-                  {option.dateFermeture && (
-                    <Tag colorScheme={"red"} size={"md"} ms={2}>
-                      Fermeture au {option.dateFermeture}
-                    </Tag>
-                  )}
+                <Flex gap="4px">
+                  <Text>{option.label} </Text>
+                  <BadgeTypeFamille
+                    typeFamille={getFormationTypeFamille(option)}
+                    labelSize="short"
+                  >
+                    {option.dateFermeture !== undefined
+                      ? option.dateFermeture
+                      : undefined}
+                  </BadgeTypeFamille>
                 </Flex>
               );
             }}

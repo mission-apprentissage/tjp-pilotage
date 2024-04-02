@@ -95,6 +95,12 @@ export const findManyInDataFormationQuery = async ({
       sql<boolean>`${eb.ref("dataFormation.typeFamille")} = 'option'`.as(
         "isOption"
       ),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '1ere_commune'`.as(
+        "is1ereCommune"
+      ),
+      sql<boolean>`${eb.ref("dataFormation.typeFamille")} = '2nde_commune'`.as(
+        "is2ndeCommune"
+      ),
       sql<boolean>`${eb("dataFormation.codeNiveauDiplome", "in", [
         "381",
         "481",
