@@ -5,14 +5,26 @@ import {
   formatTypeFamilleLong,
 } from "../app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
+export const TYPE_FAMILL_KEYS = {
+  ["2nde_commune"]: "info",
+  ["1ere_commune"]: "info",
+  ["specialite"]: "purpleGlycine",
+  ["option"]: "purpleGlycine",
+  ["fermeture"]: "grey",
+};
+
+export type TypeFamilleKeys = keyof typeof TYPE_FAMILL_KEYS;
+
 export const BadgeTypeFamille = ({
   typeFamille,
   labelSize = "short",
   size = "xs",
+  children,
 }: {
-  typeFamille?: string;
+  typeFamille?: TypeFamilleKeys;
   labelSize?: "short" | "long";
   size?: "xs" | "sm" | "md";
+  children?: React.ReactNode;
 }) => {
   if (!typeFamille) {
     return null;
@@ -23,6 +35,7 @@ export const BadgeTypeFamille = ({
     ["1ere_commune"]: "info",
     ["specialite"]: "purpleGlycine",
     ["option"]: "purpleGlycine",
+    ["fermeture"]: "grey",
   }[typeFamille];
 
   return (
@@ -30,6 +43,7 @@ export const BadgeTypeFamille = ({
       {labelSize === "short"
         ? formatTypeFamilleCourt(typeFamille)
         : formatTypeFamilleLong(typeFamille)}
+      {children && <> {children}</>}
     </Badge>
   );
 };
