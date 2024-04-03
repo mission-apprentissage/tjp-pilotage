@@ -31,6 +31,7 @@ export const getFormations = async ({
       "dataFormation.dateOuverture",
       "codeDispositif",
       "dataFormation.typeFamille",
+      "dispositif.libelleDispositif",
     ])
     .orderBy([
       "libelleNiveauDiplome asc",

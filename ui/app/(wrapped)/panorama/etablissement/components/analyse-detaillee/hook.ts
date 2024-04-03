@@ -212,6 +212,8 @@ export const useAnalyseDetaillee = () => {
     }
   }, [data, isLoading]);
 
+  console.log({ data });
+
   return {
     ...data,
     isLoading,
