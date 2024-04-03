@@ -1,4 +1,4 @@
-import { Button, Img, Tab, TabList, Tabs } from "@chakra-ui/react";
+import { Button, Flex, Img, Tab, TabList, Tabs, Text } from "@chakra-ui/react";
 export const TabsSection = ({
   displayType,
   displayDashboard,
@@ -27,30 +27,60 @@ export const TabsSection = ({
         <Tab
           as={Button}
           onClick={() => displayDashboard()}
-          width="100%"
-          minH={"54px"}
           color={"black"}
+          h={"102px"}
+          w={"300px"}
         >
-          {displayType === "dashboard" ? (
-            <Img src={`/icons/dashboard_selected.svg`} alt="" me={2} />
-          ) : (
-            <Img src={`/icons/dashboard.svg`} alt="" me={2} />
-          )}
-          Tableau de bord
+          <Flex
+            direction={"column"}
+            justify={"center"}
+            alignItems={"center"}
+            mx={"80px"}
+          >
+            {displayType === "dashboard" ? (
+              <Img
+                src={`/icons/dashboard_selected.svg`}
+                alt="dashboard"
+                w={"32px"}
+                h={"32px"}
+              />
+            ) : (
+              <Img
+                src={`/icons/dashboard.svg`}
+                alt="dashboard"
+                w={"32px"}
+                h={"32px"}
+              />
+            )}
+            <Text>Tableau de bord</Text>
+          </Flex>
         </Tab>
         <Tab
           as={Button}
           onClick={() => displayQuadrant()}
-          width="100%"
-          minH={"54px"}
           color={"black"}
+          p={"24px 32px"}
+          h={"102px"}
+          w={"300px"}
         >
-          {displayType === "quadrant" ? (
-            <Img src={`/icons/quadrant_selected.svg`} alt="" me={2} />
-          ) : (
-            <Img src={`/icons/quadrant.svg`} alt="" me={2} />
-          )}
-          Quadrant des formations
+          <Flex direction={"column"} justify={"center"} alignItems={"center"}>
+            {displayType === "quadrant" ? (
+              <Img
+                src={`/icons/quadrant_selected.svg`}
+                alt="quadrant"
+                w={"32px"}
+                h={"32px"}
+              />
+            ) : (
+              <Img
+                src={`/icons/quadrant.svg`}
+                alt="quadrant"
+                w={"32px"}
+                h={"32px"}
+              />
+            )}
+            <Text>Quadrant des formations</Text>
+          </Flex>
         </Tab>
       </TabList>
     </Tabs>
