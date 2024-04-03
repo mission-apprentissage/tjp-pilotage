@@ -21,6 +21,7 @@ function formatLibelleFormation(
     (f) =>
       f.libelleFormation === formation.libelleFormation &&
       f.codeNiveauDiplome === formation.codeNiveauDiplome &&
+      f.voie === formation.voie &&
       f.offre !== formation.offre
   );
 
