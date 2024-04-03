@@ -73,6 +73,8 @@ export const CfdSelect = () => {
     setSelected(newValue);
   };
 
+  const isDefaultSelected = analyseDetailleeOffre?.cfd === selected?.value;
+
   const defaultValue: Option = useMemo(
     () =>
       formatSearchResultToOption(
@@ -206,6 +208,13 @@ export const CfdSelect = () => {
                 fontSize: "12px",
                 textTransform: "uppercase",
                 color: themeDefinition.colors.grey[50],
+              }),
+              control: (baseStyles) => ({
+                ...baseStyles,
+                borderWidth: isDefaultSelected ? "1.5px" : "1px",
+                borderColor: isDefaultSelected
+                  ? themeDefinition.colors.info[525]
+                  : baseStyles.borderColor,
               }),
             }}
           />
