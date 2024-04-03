@@ -1,3 +1,5 @@
+import { z } from "zod";
+
 import { getStatsSortieParRegions } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import {
@@ -7,6 +9,31 @@ import {
   getFilters,
   getFormations,
 } from "./dependencies";
+import { FormationSchema } from "./getAnalyseDetailleeEtablissement.schema";
+
+type Formation = z.infer<typeof FormationSchema>;
+
+function formatLibelleFormation(
+  formations: Formation[],
+  formation: Formation
+): string {
+  const formationWithSameLibelle = formations.filter(
+    (f) =>
+      f.libelleFormation === formation.libelleFormation &&
+      f.codeNiveauDiplome === formation.codeNiveauDiplome &&
+      f.offre !== formation.offre
+  );
+
+  if (formationWithSameLibelle.length > 0) {
+    const match = formation.libelleDispositif?.match(/(?:EN\s)?(\d ANS?)/i);
+
+    if (match) {
+      return `${formation.libelleFormation} (${match[1].toLowerCase()})`;
+    }
+  }
+
+  return formation.libelleFormation;
+}
 
 export const getAnalyseDetailleeEtablissementFactory =
   (
@@ -43,7 +70,10 @@ export const getAnalyseDetailleeEtablissementFactory =
 
     const formationsObject: Record<string, (typeof formations)[0]> = {};
     formations.forEach((formation) => {
-      formationsObject[formation.offre] = formation;
+      formationsObject[formation.offre] = {
+        ...formation,
+        libelleFormation: formatLibelleFormation(formations, formation),
+      };
     });
 
     const chiffresIJObject: Record<
@@ -88,6 +118,5 @@ export const getAnalyseDetailleeEtablissementFactory =
       filters,
     };
   };
-
 export const getAnalyseDetailleeEtablissement =
   getAnalyseDetailleeEtablissementFactory();
