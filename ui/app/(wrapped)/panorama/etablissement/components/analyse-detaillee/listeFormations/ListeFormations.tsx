@@ -125,10 +125,10 @@ export const ListeFormations = ({
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
+                      <BadgeVoieApprentissage voie={formation.voie} />
                       <BadgeTypeFamille
                         typeFamille={formation.typeFamille as TypeFamilleKeys}
                       />
-                      <BadgeVoieApprentissage voie={formation.voie} />
                     </Flex>
                   </Flex>
                 </ListItem>
