@@ -92,6 +92,11 @@ export const CfdSelect = () => {
   useEffect(() => {
     if (analyseDetailleeOffre) {
       setCfdFilter(analyseDetailleeOffre.cfd);
+      setSelected(
+        formatSearchResultToOption(
+          formatOffreToCfdSearchResult(analyseDetailleeOffre)
+        )
+      );
     }
   }, [analyseDetailleeOffre]);
 
@@ -211,7 +216,8 @@ export const CfdSelect = () => {
               }),
               control: (baseStyles) => ({
                 ...baseStyles,
-                borderWidth: isDefaultSelected ? "1.5px" : "1px",
+                borderWidth: isDefaultSelected ? "2px" : "1px",
+                borderType: "solid",
                 borderColor: isDefaultSelected
                   ? themeDefinition.colors.info[525]
                   : baseStyles.borderColor,
