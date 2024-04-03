@@ -1,7 +1,10 @@
 import { Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
-import { BadgeTypeFamille } from "../../../components/BadgeTypeFamille";
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../components/BadgeTypeFamille";
 
 export const formatAnneeCommuneLibelle = (formation: {
   libelleFormation?: string;
@@ -30,7 +33,7 @@ export const format2ndeCommuneLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 2nde commune", "")}
-    <BadgeTypeFamille typeFamille={typeFamille} />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
   </Flex>
 );
 
@@ -40,7 +43,7 @@ export const format1ereCommuneLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 1ere annee commune", "")}
-    <BadgeTypeFamille typeFamille={typeFamille} />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
   </Flex>
 );
 
@@ -50,7 +53,7 @@ export const formatSpecialiteLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <BadgeTypeFamille typeFamille={typeFamille} />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
   </Flex>
 );
 
@@ -60,6 +63,6 @@ export const formatOptionLibelle = (
 ): ReactNode => (
   <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <BadgeTypeFamille typeFamille={typeFamille} />
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
   </Flex>
 );
