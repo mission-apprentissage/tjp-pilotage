@@ -12,7 +12,10 @@ import { CURRENT_RENTREE } from "shared";
 
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
-import { BadgeTypeFamille } from "../../../../../../../components/BadgeTypeFamille";
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../../../../../components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
 import { themeColors } from "../../../../../../../theme/themeColors";
 import { Formation } from "../types";
@@ -122,7 +125,9 @@ export const ListeFormations = ({
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
-                      <BadgeTypeFamille typeFamille={formation.typeFamille} />
+                      <BadgeTypeFamille
+                        typeFamille={formation.typeFamille as TypeFamilleKeys}
+                      />
                       <BadgeVoieApprentissage voie={formation.voie} />
                     </Flex>
                   </Flex>

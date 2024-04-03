@@ -46,6 +46,8 @@ export const CfdAutocompleteInput = ({
           isSpecialite: false,
           isOption: false,
           isFCIL: false,
+          is1ereCommune: false,
+          is2ndeCommune: false,
           dateFermeture: "",
           dispositifs: [],
           libelleFormation: "",
