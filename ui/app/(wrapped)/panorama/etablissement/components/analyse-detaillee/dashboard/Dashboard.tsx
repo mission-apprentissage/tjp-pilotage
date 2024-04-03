@@ -1,6 +1,9 @@
 import { Box, Flex, Text } from "@chakra-ui/react";
 
-import { BadgeTypeFamille } from "../../../../../../../components/BadgeTypeFamille";
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../../../../../components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
 import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
@@ -27,7 +30,7 @@ export const Dashboard = ({
         </Text>
         <Flex direction={"row"} gap={2}>
           <BadgeTypeFamille
-            typeFamille={formation?.typeFamille}
+            typeFamille={formation?.typeFamille as TypeFamilleKeys}
             labelSize="long"
             size={"md"}
           />
