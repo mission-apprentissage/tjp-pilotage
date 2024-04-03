@@ -30,6 +30,8 @@ export const TabsSection = ({
           color={"black"}
           h={"102px"}
           w={"300px"}
+          _hover={{ bg: "bluefrance.975_hover" }}
+          bg={"bluefrance.975"}
         >
           <Flex
             direction={"column"}
@@ -61,6 +63,8 @@ export const TabsSection = ({
           color={"black"}
           p={"24px 32px"}
           h={"102px"}
+          bg={"bluefrance.975"}
+          _hover={{ bg: "bluefrance.975_hover" }}
           w={"300px"}
         >
           <Flex direction={"column"} justify={"center"} alignItems={"center"}>

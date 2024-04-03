@@ -34,11 +34,6 @@ export const Dashboard = ({
             labelSize="long"
             size={"md"}
           />
-          <BadgeVoieApprentissage
-            voie={formation?.voie}
-            labelSize="long"
-            size={"md"}
-          />
           <Flex>
             <BadgeVoieApprentissage
               voie={formation?.voie}
