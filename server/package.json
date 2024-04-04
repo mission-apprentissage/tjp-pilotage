@@ -42,6 +42,7 @@
     "fastify-qs": "^4.0.1",
     "fastify-type-provider-zod": "^1.1.9",
     "file-saver": "^2.0.5",
+    "geolib": "^3.3.4",
     "jsonwebtoken": "9.0.2",
     "kysely": "0.27.2",
     "lodash": "^4.17.21",

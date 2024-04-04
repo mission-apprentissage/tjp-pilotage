@@ -11,8 +11,13 @@ export const searchDiplomeSchema = {
         label: z.string(),
         isSpecialite: z.coerce.boolean(),
         isOption: z.coerce.boolean(),
-        isFCIL: z.boolean(),
+        is1ereCommune: z.coerce.boolean(),
+        is2ndeCommune: z.coerce.boolean(),
+        isFCIL: z.coerce.boolean(),
         dateFermeture: z.string().optional(),
+        libelleFormation: z.string(),
+        libelleNiveauDiplome: z.string().optional(),
+        cfd: z.string(),
         dispositifs: z
           .array(
             z.object({

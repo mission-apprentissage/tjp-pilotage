@@ -1,5 +1,10 @@
-import { Tag } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
+
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../components/BadgeTypeFamille";
 
 export const formatAnneeCommuneLibelle = (formation: {
   libelleFormation?: string;
@@ -7,7 +12,10 @@ export const formatAnneeCommuneLibelle = (formation: {
 }) => {
   switch (formation.typeFamille) {
     case "2nde_commune":
-      return format2ndeCommuneLibelle(formation.libelleFormation);
+      return format2ndeCommuneLibelle(
+        formation.libelleFormation,
+        formation.typeFamille
+      );
     case "1ere_commune":
       return format1ereCommuneLibelle(formation.libelleFormation);
     case "specialite":
@@ -20,67 +28,41 @@ export const formatAnneeCommuneLibelle = (formation: {
 };
 
 export const format2ndeCommuneLibelle = (
-  libelleFormation?: string
+  libelleFormation?: string,
+  typeFamille?: string
 ): ReactNode => (
-  <>
+  <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 2nde commune", "")}
-    <Tag
-      colorScheme={"blue"}
-      size={"sm"}
-      ms={2}
-      minW="fit-content"
-      maxH={"1rem"}
-    >
-      2nde commune
-    </Tag>
-  </>
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
+  </Flex>
 );
 
 export const format1ereCommuneLibelle = (
-  libelleFormation?: string
+  libelleFormation?: string,
+  typeFamille?: string
 ): ReactNode => (
-  <>
+  <Flex alignItems={"center"} gap={2}>
     {libelleFormation?.replace(" 1ere annee commune", "")}
-    <Tag
-      colorScheme={"blue"}
-      size={"sm"}
-      ms={2}
-      minW="fit-content"
-      maxH={"1rem"}
-    >
-      1ère commune
-    </Tag>
-  </>
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
+  </Flex>
 );
 
 export const formatSpecialiteLibelle = (
-  libelleFormation?: string
+  libelleFormation?: string,
+  typeFamille?: string
 ): ReactNode => (
-  <>
+  <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <Tag
-      colorScheme={"blue"}
-      size={"sm"}
-      ms={2}
-      minW="fit-content"
-      maxH={"1rem"}
-    >
-      spécialité
-    </Tag>
-  </>
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
+  </Flex>
 );
 
-export const formatOptionLibelle = (libelleFormation?: string): ReactNode => (
-  <>
+export const formatOptionLibelle = (
+  libelleFormation?: string,
+  typeFamille?: string
+): ReactNode => (
+  <Flex alignItems={"center"} gap={2}>
     {libelleFormation}
-    <Tag
-      colorScheme={"blue"}
-      size={"sm"}
-      ms={2}
-      minW="fit-content"
-      maxH={"1rem"}
-    >
-      option
-    </Tag>
-  </>
+    <BadgeTypeFamille typeFamille={typeFamille as TypeFamilleKeys} />
+  </Flex>
 );
