@@ -4,6 +4,7 @@ import "react-notion-x/src/styles.css";
 import { CacheProvider } from "@chakra-ui/next-js";
 import { ChakraProvider, Flex } from "@chakra-ui/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import { Crisp } from "crisp-sdk-web";
 import { useSearchParams } from "next/navigation";
 import PlausibleProvider from "next-plausible";
 import {
@@ -33,6 +34,17 @@ interface RootLayoutClientProps {
   changelog: Changelog;
   glossaire: GlossaireEntries;
 }
+
+const useCrisp = () => {
+  useEffect(() => {
+    const token = process.env.NEXT_PUBLIC_CRISP_TOKEN;
+    if (process.env.NEXT_PUBLIC_ENV === "production" && token) {
+      Crisp.configure(token);
+    } else {
+      console.log("Crisp disabled");
+    }
+  }, []);
+};
 
 const useTracking = () => {
   const searchParams = useSearchParams();
@@ -86,6 +98,7 @@ export default function RootLayoutClient({
   changelog: initialChangelog,
   glossaire: initialGlossaire,
 }: RootLayoutClientProps) {
+  useCrisp();
   const tracking = useTracking();
   console.log("tr", tracking);
   const [queryClient] = useState(
