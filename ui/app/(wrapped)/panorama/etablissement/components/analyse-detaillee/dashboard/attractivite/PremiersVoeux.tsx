@@ -1,4 +1,4 @@
-import { Badge, Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -21,31 +21,43 @@ export const PremiersVoeux = ({
     if (!premiersVoeux || !premiersVoeuxAnneePrecedente) return "";
     if (premiersVoeux > premiersVoeuxAnneePrecedente) {
       return (
-        <>
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
           <Flex color="success.425">
             <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${
-              premiersVoeux - premiersVoeuxAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"}>
+              {`+${premiersVoeux - premiersVoeuxAnneePrecedente}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     } else if (premiersVoeux < premiersVoeuxAnneePrecedente) {
       return (
-        <>
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
           <Flex color="warning.525">
             <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${
-              premiersVoeux - premiersVoeuxAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"}>
+              {`${premiersVoeux - premiersVoeuxAnneePrecedente}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     }
     return (
-      <>
-        <Flex>{`+0 vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}</Flex>
-      </>
+      <Tooltip
+        label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+          CURRENT_RENTREE
+        )}`}
+      >
+        <Text fontWeight={"bold"}>+0pts</Text>
+      </Tooltip>
     );
   };
 
