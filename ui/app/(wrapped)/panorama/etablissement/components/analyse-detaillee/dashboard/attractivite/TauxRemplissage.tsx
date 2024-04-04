@@ -26,11 +26,13 @@ export const TauxRemplissage = ({
             CURRENT_RENTREE
           )}`}
         >
-          <Flex color="success.425">
+          <Flex>
             <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${formatTaux(
-              tauxRemplissage - tauxRemplissageAnneePrecedente
-            )}pts`}
+            <Text fontWeight={"bold"} color="success.425">
+              {`+${formatTaux(
+                tauxRemplissage - tauxRemplissageAnneePrecedente
+              )}`}
+            </Text>
           </Flex>
         </Tooltip>
       );
@@ -41,11 +43,13 @@ export const TauxRemplissage = ({
             CURRENT_RENTREE
           )}`}
         >
-          <Flex color="warning.525">
+          <Flex>
             <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${formatTaux(
-              tauxRemplissage - tauxRemplissageAnneePrecedente
-            )}% vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"} color="warning.525">
+              {`${formatTaux(
+                tauxRemplissage - tauxRemplissageAnneePrecedente
+              )}`}
+            </Text>
           </Flex>
         </Tooltip>
       );
@@ -56,7 +60,7 @@ export const TauxRemplissage = ({
           CURRENT_RENTREE
         )}`}
       >
-        <Text fontWeight={"bold"}>+0pts</Text>
+        <Text fontWeight={"bold"}>+0</Text>
       </Tooltip>
     );
   };
