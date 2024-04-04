@@ -1,4 +1,4 @@
-import { Badge, Img, Text, Tooltip } from "@chakra-ui/react";
+import { Badge, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -25,10 +25,12 @@ export const Capacite = ({
             CURRENT_RENTREE
           )}`}
         >
-          <Text fontWeight={"bold"} color="success.425">
+          <Flex>
             <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${capacite - capaciteAnneePrecedente}`}
-          </Text>
+            <Text fontWeight={"bold"} color="success.425">
+              {`+${capacite - capaciteAnneePrecedente}`}
+            </Text>
+          </Flex>
         </Tooltip>
       );
     } else if (capacite < capaciteAnneePrecedente) {
@@ -38,10 +40,12 @@ export const Capacite = ({
             CURRENT_RENTREE
           )}`}
         >
-          <Text fontWeight={"bold"} color="warning.525">
+          <Flex>
             <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${capacite - capaciteAnneePrecedente}`}
-          </Text>
+            <Text fontWeight={"bold"} color="warning.525">
+              {`${capacite - capaciteAnneePrecedente}`}
+            </Text>
+          </Flex>
         </Tooltip>
       );
     }
