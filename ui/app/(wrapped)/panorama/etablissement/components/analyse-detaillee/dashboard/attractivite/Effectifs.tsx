@@ -1,4 +1,4 @@
-import { Badge, Flex } from "@chakra-ui/react";
+import { Badge, Text } from "@chakra-ui/react";
 
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -18,30 +18,26 @@ export const Effectifs = ({
     if (!effectifEntree || !capacite) return "";
     if (capacite > effectifEntree) {
       return (
-        <>
-          <Flex color="warning.525">{`${
-            capacite - effectifEntree
-          } pl. vacante(s)`}</Flex>
-        </>
+        <Text fontWeight={"bold"} color="warning.525">
+          {`${capacite - effectifEntree} pl. vacante(s)`}
+        </Text>
       );
     } else if (capacite < effectifEntree) {
       return (
-        <>
-          <Flex color="success.425">{`${
-            effectifEntree - capacite
-          } pl. en surnombre`}</Flex>
-        </>
+        <Text fontWeight={"bold"} color={"success.425"}>
+          {`${effectifEntree - capacite} pl. en surnombre`}
+        </Text>
       );
     }
     return (
-      <>
-        <Flex color="grey.625">0 pl. vacante</Flex>
-      </>
+      <Text fontWeight={"bold"} color="grey.625">
+        0 pl. vacante
+      </Text>
     );
   };
   return (
     <DashboardCard
-      label="Effectifs - en entrée (Constat Rentrée 2023)"
+      label="Effectifs en entrée (Constat Rentrée 2023)"
       tooltip={
         <TooltipIcon
           ml="1"
