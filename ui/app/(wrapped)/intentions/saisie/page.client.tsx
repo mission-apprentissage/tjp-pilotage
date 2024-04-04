@@ -27,6 +27,7 @@ import qs from "qs";
 import { useState } from "react";
 
 import { client } from "@/api.client";
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
@@ -195,6 +196,23 @@ export const PageClient = () => {
           minHeight={0}
           minW={0}
         >
+          {isSaisieDisabled() && (
+            <Flex
+              borderLeftWidth={5}
+              borderLeftColor={"bluefrance.113"}
+              bgColor={"grey.975"}
+              direction={"column"}
+              gap={2}
+              padding={5}
+              mb={8}
+            >
+              <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
+              <Text fontWeight={400}>
+                La campagne de saisie 2023 est terminée, vous pourrez saisir vos
+                demandes pour la campagne de saisie 2024 très bientôt.
+              </Text>
+            </Flex>
+          )}
           <Flex
             flexDirection={["column", null, "row"]}
             justifyContent={"space-between"}
@@ -333,11 +351,12 @@ export const PageClient = () => {
                         <Tr
                           height={"60px"}
                           key={demande.id}
-                          cursor="pointer"
+                          cursor={isSaisieDisabled() ? "initial" : "pointer"}
                           whiteSpace={"pre"}
-                          onClick={() =>
-                            router.push(`/intentions/saisie/${demande.id}`)
-                          }
+                          onClick={() => {
+                            if (isSaisieDisabled()) return;
+                            router.push(`/intentions/saisie/${demande.id}`);
+                          }}
                         >
                           <Td>{demande.id}</Td>
                           <Td>
@@ -485,9 +504,10 @@ export const PageClient = () => {
                 <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                 {hasPermissionEnvoi && (
                   <Button
+                    isDisabled={isSaisieDisabled()}
                     variant="createButton"
                     size={"lg"}
-                    as={NextLink}
+                    as={!isSaisieDisabled() ? NextLink : undefined}
                     href="/intentions/saisie/new"
                     px={3}
                     mt={12}
