@@ -53,7 +53,7 @@ export const LiensUtiles = ({
       <Divider width="48px" />
       <Box>
         Les enjeux de demain pour mieux anticiper les formations insérantes :
-        accédez ici à une multitude d'informations pour enrichir vos analyses
+        accédez ici à une multitude d'informations pour enrichir vos analyses.
       </Box>
       <Box pb={12} mt={2} as="section">
         <SimpleGrid spacing={6} columns={[1, null, 2]}>
@@ -73,7 +73,7 @@ export const LiensUtiles = ({
           />
           <InfoCard
             title="Data emploi : les secteurs"
-            description={`Visualisez les secteurs les plus représentatés dans votre ${
+            description={`Visualisez les secteurs les plus représentés dans votre ${
               codeDepartement ? "département" : "région"
             }`}
             links={{

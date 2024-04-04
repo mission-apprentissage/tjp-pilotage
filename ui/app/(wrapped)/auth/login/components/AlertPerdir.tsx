@@ -72,10 +72,9 @@ const AlertPerdir = () => {
             </Heading>
             <Text fontSize="16px">
               Votre accès à Orion sera disponible au cours du premier trimestre
-              2024, accompagné d’un Espace établissement dédié. Si vous le
-              souhaitez, vous pouvez nous faire part de vos suggestions en
-              écrivant à <b>orion@inserjeunes.beta.gouv.fr</b>. Vos retours
-              seront précieux !
+              2024. Si vous le souhaitez, vous pouvez nous faire part de vos
+              suggestions en écrivant à <b>orion@inserjeunes.beta.gouv.fr</b>.
+              Vos retours seront précieux !
             </Text>
           </VStack>
         </Box>
