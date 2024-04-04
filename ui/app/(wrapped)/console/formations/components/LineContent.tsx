@@ -19,6 +19,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { Line } from "../types";
+
 export const FormationLineContent = ({
   line,
   defaultRentreeScolaire,

@@ -63,6 +63,7 @@ export const AccesRapideSection = ({ uai }: { uai: string }) => {
           href="#analyse-detaille"
           ml={"0px"}
         />
+        <ShortLink iconLeft={"ri:map-pin-line"} label={"Carte"} href="#carte" />
         <ShortLink
           iconLeft={"ri:link"}
           label={"Liens utiles"}

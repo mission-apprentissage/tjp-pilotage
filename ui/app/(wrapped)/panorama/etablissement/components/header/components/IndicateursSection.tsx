@@ -6,6 +6,7 @@ import {
   GridItem,
   Img,
   Text,
+  Tooltip,
   useToken,
 } from "@chakra-ui/react";
 
@@ -37,10 +38,12 @@ const getCompareData = (compareTo?: CompareTo) => {
   const color = { up: green, down: red, equal: grey }[direction];
 
   return (
-    <Flex color={color}>
-      <Img src={arrowImg} alt={direction} />
-      <Text fontWeight={"bold"}>{value}</Text>
-    </Flex>
+    <Tooltip label={compareTo?.description}>
+      <Flex color={color}>
+        <Img src={arrowImg} alt={direction} />
+        <Text fontWeight={"bold"}>{value}</Text>
+      </Flex>
+    </Tooltip>
   );
 };
 
@@ -72,6 +75,11 @@ const IndicateurValeurAjoutee = ({
     }
     grow={1}
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value.toFixed(0)}
@@ -107,6 +115,11 @@ const IndicateurTauxEmploi6mois = ({
       />
     }
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value?.toFixed(0)}
@@ -141,6 +154,11 @@ const IndicateurPoursuiteDetudes = ({
       />
     }
     minH={"120px"}
+    badge={
+      <Badge variant="lavander" size={"xs"}>
+        Étab.
+      </Badge>
+    }
   >
     <CounterChart
       data={indicateur?.value?.toFixed(0)}
@@ -178,6 +196,11 @@ const IndicateurTauxDevenirFavorable = ({
         />
       }
       minH={"120px"}
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
+      }
     >
       <CounterChart
         data={indicateur?.value?.toFixed(0)}
