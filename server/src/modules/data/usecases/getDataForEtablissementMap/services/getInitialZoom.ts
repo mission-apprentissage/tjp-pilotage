@@ -151,6 +151,13 @@ export const getInitialZoom = ({
     bbox,
     mapDimensions,
   });
+
+  // Dans certains cas, le zoom level peut être à NaN (établissements sur
+  // les memes coordonnées par ex)
+  if (Number.isNaN(zoomLevel)) {
+    return 11;
+  }
+
   // We add a 1 padding to the zoom level to avoid having makers close to map borders
   const normalizedZoom = zoomLevel - 0.5;
 
