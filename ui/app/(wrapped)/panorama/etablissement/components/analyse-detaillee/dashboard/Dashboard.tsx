@@ -40,35 +40,34 @@ export const Dashboard = ({
               labelSize="long"
               size={"md"}
             />
-            <GlossaireShortcut
-              ml={2}
-              maxWidthTooltip={300}
-              tooltip={
-                <Box>
-                  Cette mention signale que la formation est enseignée en
-                  apprentissage sur les années civiles 2023 et/ou 2024.
-                  <br />
-                  Une formation peut apparaître "dédoublée", il s'agit alors
-                  d'une classe mixte (voie scolaire et apprentissage), dont la
-                  part d'apprentis est inconnue.
-                  <br />
-                  <br />
-                  Cliquez pour plus d'infos.
-                </Box>
-              }
-            />
+            {formation?.voie === "apprentissage" && (
+              <GlossaireShortcut
+                ml={2}
+                maxWidthTooltip={300}
+                tooltip={
+                  <Box>
+                    Cette mention signale que la formation est enseignée en
+                    apprentissage sur les années civiles 2023 et/ou 2024.
+                    <br />
+                    Une formation peut apparaître "dédoublée", il s'agit alors
+                    d'une classe mixte (voie scolaire et apprentissage), dont la
+                    part d'apprentis est inconnue.
+                    <br />
+                    <br />
+                    Cliquez pour plus d'infos.
+                  </Box>
+                }
+              />
+            )}
           </Flex>
         </Flex>
       </Flex>
-      <DevenirSection formation={formation} chiffresIJOffre={chiffresIJOffre} />
+      <DevenirSection chiffresIJOffre={chiffresIJOffre} />
       <AttractiviteSection
         formation={formation}
         chiffresEntreeOffre={chiffresEntreeOffre}
       />
-      <EffectifSection
-        formation={formation}
-        chiffresEntreeOffre={chiffresEntreeOffre}
-      />
+      <EffectifSection chiffresEntreeOffre={chiffresEntreeOffre} />
     </Flex>
   );
 };
