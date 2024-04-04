@@ -6,6 +6,7 @@ import {
 } from "../../../../../../../components/BadgeTypeFamille";
 import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
 import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
+import { InformationDonneeIncompletes } from "../components/InformationDonneeIncompletes";
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
 import { AttractiviteSection } from "./attractivite/AttractiviteSection";
 import { DevenirSection } from "./devenir/DevenirSection";
@@ -13,17 +14,23 @@ import { EffectifSection } from "./effectifs/EffectifSection";
 
 export const Dashboard = ({
   formation,
+  codeRegion,
   chiffresIJOffre,
   chiffresEntreeOffre,
 }: {
+  codeRegion?: string;
   formation?: Formation;
   chiffresIJOffre?: ChiffresIJOffre;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
     <Flex flexDirection={"column"} mr={8} gap={16}>
-      <Flex flexDirection={"column"} gap={2} h={16}>
-        <Text fontSize="18px" fontWeight={700}>
+      <Flex flexDirection={"column"} gap={2}>
+        <Text
+          fontSize="18px"
+          fontWeight={700}
+          _firstLetter={{ textTransform: "uppercase" }}
+        >
           {formation?.libelleFormation
             .replace("2nde commune", " ")
             .replace("1ere commune", " ")}
@@ -68,6 +75,12 @@ export const Dashboard = ({
         chiffresEntreeOffre={chiffresEntreeOffre}
       />
       <EffectifSection chiffresEntreeOffre={chiffresEntreeOffre} />
+      <InformationDonneeIncompletes
+        codeRegion={codeRegion}
+        formation={formation}
+        chiffresIJOffre={chiffresIJOffre}
+        chiffresEntreeOffre={chiffresEntreeOffre}
+      />
     </Flex>
   );
 };

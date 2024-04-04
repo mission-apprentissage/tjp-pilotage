@@ -120,6 +120,7 @@ export const ListeFormations = ({
                         textOverflow={"ellipsis"}
                         overflow={"hidden"}
                         isTruncated={true}
+                        _firstLetter={{ textTransform: "uppercase" }}
                       >
                         {formatAnneeCommuneLibelle(formation.libelleFormation)}
                       </Text>
