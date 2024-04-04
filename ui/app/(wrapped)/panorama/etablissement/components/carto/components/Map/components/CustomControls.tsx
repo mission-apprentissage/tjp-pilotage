@@ -35,7 +35,9 @@ export const CustomControls = () => {
   const { etablissementMap, setBbox, setMap } = useEtablissementMapContext();
 
   const loadImageOnMap = async (image: { path: string; name: string }) => {
-    if (map !== undefined && map.isStyleLoaded()) {
+    if (!map?.isStyleLoaded()) {
+      setTimeout(() => loadImageOnMap(image), 200);
+    } else {
       const loadedImage = await map.loadImage(image.path);
       if (map.hasImage(image.name)) {
         map.updateImage(image.name, loadedImage.data);
@@ -57,15 +59,18 @@ export const CustomControls = () => {
       }
 
       map.on("load", async () => {
+        map.off("moveend", onZoomEnd);
+        map.on("moveend", onZoomEnd);
+      });
+
+      map.on("style.load", async () => {
         await Promise.all(
           Object.values(MAP_IMAGES).map(
             async (image) => await loadImageOnMap(image)
           )
         );
-
-        map.off("moveend", onZoomEnd);
-        map.on("moveend", onZoomEnd);
       });
+
       setMap(map);
     }
   }, [map]);
