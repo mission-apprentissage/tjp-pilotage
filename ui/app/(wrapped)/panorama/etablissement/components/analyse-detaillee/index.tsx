@@ -3,13 +3,14 @@ import { Center, Divider, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { useAnalyseDetaillee } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/hook";
 import { Loading } from "@/components/Loading";
 
+import { feature } from "../../../../../../utils/feature";
 import { Dashboard } from "./dashboard/Dashboard";
 import { FiltersSection } from "./filters/FiltersSection";
 import { ListeFormations } from "./listeFormations/ListeFormations";
 import { QuadrantSection } from "./quadrant/QuadrantSection";
 import { TabsSection } from "./tabs/TabsSection";
 
-const QUADRANT_FEATURE_FLAG = true;
+const QUADRANT_FEATURE_FLAG = false;
 
 const EtablissementAnalyseDetaillee = () => {
   const {
@@ -102,8 +103,12 @@ const EtablissementAnalyseDetaillee = () => {
       <Text as={"h2"} fontSize={"20px"} fontWeight={700} mt={"32px"}>
         Analyse des formations
       </Text>
-      <Divider width="48px" mb={"32px"} mt={"24px"} />
-      {QUADRANT_FEATURE_FLAG && (
+      <Divider
+        width="48px"
+        mb={feature.etablissementQuadrant ? "32px" : undefined}
+        mt={"24px"}
+      />
+      {feature.etablissementQuadrant && (
         <TabsSection
           displayDashboard={displayDashboard}
           displayQuadrant={displayQuadrant}

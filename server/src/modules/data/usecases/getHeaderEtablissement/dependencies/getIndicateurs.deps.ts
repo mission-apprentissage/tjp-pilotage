@@ -22,7 +22,7 @@ const getCompareTo = (
 
   if (diff > 0) {
     return {
-      value: `+${diff.toFixed(2)}`,
+      value: `+${diff}`,
       direction: "up",
       description: `En comparaison avec les millésimes ${year}`,
     };
@@ -30,14 +30,14 @@ const getCompareTo = (
 
   if (diff < 0) {
     return {
-      value: `${diff.toFixed(2)}`,
+      value: `${diff}`,
       direction: "down",
       description: `En comparaison avec les millésimes ${year}`,
     };
   }
 
   return {
-    value: `${diff.toFixed(2)}`,
+    value: `${diff}`,
     direction: "equal",
     description: `En comparaison avec les millésimes ${year}`,
   };
