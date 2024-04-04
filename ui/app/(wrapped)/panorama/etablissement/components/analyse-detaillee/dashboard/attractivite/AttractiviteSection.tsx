@@ -1,29 +1,13 @@
-import { WarningTwoIcon } from "@chakra-ui/icons";
 import { Badge, Flex, Grid, GridItem, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import {
-  ChiffresEntreeOffre,
-  ChiffresEntreeOffreRentree,
-  Formation,
-} from "../../types";
+import { ChiffresEntreeOffre, Formation } from "../../types";
 import { Capacite } from "./Capacite";
 import { Effectifs } from "./Effectifs";
 import { PremiersVoeux } from "./PremiersVoeux";
 import { TauxPression } from "./TauxPression";
 import { TauxRemplissage } from "./TauxRemplissage";
-
-const isAnyDataMissing = (chiffresEntreeOffre?: ChiffresEntreeOffreRentree) =>
-  !chiffresEntreeOffre ||
-  typeof chiffresEntreeOffre.premiersVoeux === "undefined" ||
-  typeof chiffresEntreeOffre.tauxPression === "undefined" ||
-  typeof chiffresEntreeOffre.effectifs === "undefined" ||
-  typeof chiffresEntreeOffre.capacite === "undefined" ||
-  typeof chiffresEntreeOffre.tauxPressionDepartemental === "undefined" ||
-  typeof chiffresEntreeOffre.tauxPressionRegional === "undefined" ||
-  typeof chiffresEntreeOffre.tauxPressionNational === "undefined" ||
-  typeof chiffresEntreeOffre.tauxRemplissage === "undefined";
 
 export const AttractiviteSection = ({
   formation,
@@ -51,12 +35,6 @@ export const AttractiviteSection = ({
         <Badge variant="info" maxH={5}>
           Rentrée {CURRENT_RENTREE}
         </Badge>
-        {isAnyDataMissing(chiffresEntreeOffre?.[CURRENT_RENTREE]) && (
-          <Badge variant="grey" maxH={5}>
-            <WarningTwoIcon me={2} />
-            Données incomplètes
-          </Badge>
-        )}
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
