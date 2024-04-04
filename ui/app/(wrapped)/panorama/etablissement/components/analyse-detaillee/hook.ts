@@ -176,9 +176,9 @@ export const useAnalyseDetaillee = () => {
       const filteredFormations = Object.values(data!.formations).reduce(
         (acc, f) => {
           if (
-            (codeNiveauDiplome?.length === 0 ||
+            ((codeNiveauDiplome ?? []).length === 0 ||
               codeNiveauDiplome?.includes(f.codeNiveauDiplome)) &&
-            (voie?.length === 0 || voie?.includes(f.voie))
+            ((voie ?? []).length === 0 || voie?.includes(f.voie))
           ) {
             acc[f.offre] = f;
           }
