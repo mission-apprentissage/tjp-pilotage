@@ -1,5 +1,7 @@
 "use client";
 
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+
 import { client } from "../../../../../api.client";
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
@@ -23,7 +25,7 @@ export default ({
     <>
       {data && (
         <IntentionForm
-          disabled={!data.canEdit}
+          disabled={!data.canEdit || isSaisieDisabled()}
           formId={intentionId}
           defaultValues={data}
           formMetadata={data.metadata}
