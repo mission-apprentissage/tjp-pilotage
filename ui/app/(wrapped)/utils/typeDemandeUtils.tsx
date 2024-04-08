@@ -55,7 +55,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour une ouverture nette :
         </Text>
         <Text>
-          J’ouvre un BAC PRO Boucher Charcutier Traiter dans un établissement
+          J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
           qui ne dispense pas cette formation.
         </Text>
         <Text>
@@ -77,7 +77,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         </Text>
         <Text>J’ouvre des places sur un BAC Pro Aéronautique.</Text>
         <Text>
-          J'indique le motif ; je peux préciser qu'il s'ajit d'une coloration
+          J'indique le motif ; je peux préciser qu'il s'agit d'une coloration
         </Text>
       </>
     ),
@@ -161,7 +161,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     value: "diminution",
     label: "Diminution",
     campagnes: ["2023", "2024"],
-    desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions netttes.",
+    desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions nettes.",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
@@ -188,7 +188,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Exemple pour un transfert :
         </Text>
         <Text mb="1">
-          Je transfert une partie des places en voie scolaire d'un BAC PRO
+          Je transfère une partie des places en voie scolaire d'un BAC PRO
           Menuisier Fabricant vers l'apprentissage.
         </Text>
         <Text>

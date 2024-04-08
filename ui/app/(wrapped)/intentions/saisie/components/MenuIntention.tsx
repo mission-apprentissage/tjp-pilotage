@@ -20,6 +20,7 @@ import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Campagnes, Filters } from "../types";
+import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 const CampagneStatutTag = ({ statut }: { statut?: string }) => {
   switch (statut) {
@@ -97,12 +98,12 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
-        isDisabled={!hasPermissionEnvoi}
+        isDisabled={!hasPermissionEnvoi || isSaisieDisabled()}
         mb="4"
         variant="createButton"
         size={"md"}
         width={"100%"}
-        as={hasPermissionEnvoi ? NextLink : undefined}
+        as={hasPermissionEnvoi && !isSaisieDisabled() ? NextLink : undefined}
         href="/intentions/saisie/new"
       >
         Nouvelle demande

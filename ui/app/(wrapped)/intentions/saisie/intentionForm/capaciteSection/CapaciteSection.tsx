@@ -46,26 +46,28 @@ const getTypeDemandeLabelAvecDeterminant = (
     case "augmentation_compensation":
     case "ouverture_compensation":
       return (
-        <Flex mx={1}>
-          d'
+        <Flex>
+          &nbsp;d'
           {
             <Text color="bluefrance.113">
               {getTypeDemandeLabel(typeDemande)}
             </Text>
           }
+          &nbsp;
         </Flex>
       );
     case "diminution":
     case "fermeture":
     case "transfert":
       return (
-        <Flex mx={1}>
-          de
+        <Flex>
+          &nbsp;de
           {
             <Text color="bluefrance.113">
               {getTypeDemandeLabel(typeDemande)}
             </Text>
           }
+          &nbsp;
         </Flex>
       );
     default:
