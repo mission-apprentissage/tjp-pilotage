@@ -23,7 +23,7 @@ import {
   isTypeFermeture,
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
 import { CampagneContext } from "../IntentionForm";
 
 function RadioCard({

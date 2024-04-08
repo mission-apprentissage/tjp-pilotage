@@ -21,7 +21,6 @@ export const MOTIFS_LABELS = {
   ouverture_plus_inserante: "Ouverture d’une formation plus insérante",
   repartition_autres_etablissements:
     "Répartition des élèves sur d’autres établissements",
-  transfert_apprentissage: "Transfert vers l’apprentissage",
   recrutements_baisse: "Recrutements en baisse",
   capacite_trop_élevée_territoire: "Capacité trop élevée sur le territoire",
   nombre_eleves_en_baisse: "Baisse du nombre d'élèves dans la formation",
@@ -33,6 +32,12 @@ export const MOTIFS_LABELS = {
   maintien_specifique: "Maintien pour public spécifique",
   nouvel_etablissement: "Nouvel établissement",
   sauvegarde_metier_rare: "Sauvegarde métier rare",
+  effectif_faible_scolaire: "Effectif trop faible en voie scolaire",
+  mixite_peu_attractive: "Mixité peu attractive",
+  insertion_professionnelle_insuffisante:
+    "Insertion professionnelle insuffisante",
+  formation_situation_fragilite: "Formation en situation de fragilité",
+  disponibilite_fonciere_insuffisante: "Disponibilité foncière insuffisante",
   autre: "Autre motif (veuillez préciser)",
 };
 
@@ -53,7 +58,6 @@ const motifsFermeture: MotifLabel[] = [
   "taux_poursuite_insatisfaisant",
   "ouverture_plus_inserante",
   "repartition_autres_etablissements",
-  "transfert_apprentissage",
   "recrutements_baisse",
   "capacite_trop_élevée_territoire",
   "locaux",
@@ -64,11 +68,19 @@ const motifsFermeture: MotifLabel[] = [
   "autre",
 ];
 
+const motifsTransfert: MotifLabel[] = [
+  "effectif_faible_scolaire",
+  "mixite_peu_attractive",
+  "insertion_professionnelle_insuffisante",
+  "formation_situation_fragilite",
+  "disponibilite_fonciere_insuffisante",
+  "autre",
+];
+
 const motifs: Record<TypeDemande, MotifLabel[]> = {
   ouverture_nette: motifsOuverture,
-  ouverture_compensation: motifsOuverture,
   augmentation_nette: motifsOuverture,
-  augmentation_compensation: motifsOuverture,
   fermeture: motifsFermeture,
   diminution: motifsFermeture,
+  transfert: motifsTransfert,
 };

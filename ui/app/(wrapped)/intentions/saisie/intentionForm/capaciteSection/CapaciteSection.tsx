@@ -10,31 +10,26 @@ import {
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { AmiCmaField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/AmiCmaField";
-import { CapaciteApprentissageActuelleField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/CapaciteApprentissageActuelleField";
-import { CapaciteScolaireActuelleField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/CapaciteScolaireActuelleField";
-import { CommentaireField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/CommentaireField";
-import { LibelleColorationField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/LibelleColorationField";
-import { MixteField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/MixteField";
-import { PoursuitePedagogiqueField } from "@/app/(wrapped)/intentions/saisie/intentionForm/capaciteSection/PoursuitePedagogique";
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import {
   getTypeDemandeLabel,
-  TypeDemande,
-} from "@/app/(wrapped)/utils/typeDemandeUtils";
-
-import {
   isTypeAugmentation,
-  isTypeFermeture,
   isTypeOuverture,
-} from "../../../../utils/typeDemandeUtils";
+  TypeDemande,
+} from "../../../utils/typeDemandeUtils";
+import { IntentionForms } from "../defaultFormValues";
+import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
 import { AmiCmaValideField } from "./AmiCmaValideField";
+import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
+import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
 import { ColorationField } from "./ColorationField";
+import { CommentaireField } from "./CommentaireField";
+import { LibelleColorationField } from "./LibelleColorationField";
+import { MixteField } from "./MixteField";
 
 const getTypeDemandeLabelAvecDeterminant = (
   typeDemande?: TypeDemande
@@ -50,7 +45,7 @@ const getTypeDemandeLabelAvecDeterminant = (
           &nbsp;d'
           {
             <Text color="bluefrance.113">
-              {getTypeDemandeLabel(typeDemande)}
+              &nbsp;{getTypeDemandeLabel(typeDemande)}
             </Text>
           }
           &nbsp;
@@ -64,7 +59,7 @@ const getTypeDemandeLabelAvecDeterminant = (
           &nbsp;de
           {
             <Text color="bluefrance.113">
-              {getTypeDemandeLabel(typeDemande)}
+              &nbsp;{getTypeDemandeLabel(typeDemande)}
             </Text>
           }
           &nbsp;
@@ -141,15 +136,12 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
       <Divider pt="4" mb="4" />
       <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
         <MixteField disabled={disabled} />
-        {!isTypeFermeture(typeDemande) && (
-          <PoursuitePedagogiqueField disabled={disabled} />
-        )}
         <ColorationField disabled={disabled} />
+        <LibelleColorationField disabled={disabled} maxW="752px" mb="4" />
         <AmiCmaField disabled={disabled} />
         <AmiCmaValideField disabled={disabled} />
         <AmiCmaValideAnneeField disabled={disabled} />
       </Flex>
-      <LibelleColorationField disabled={disabled} maxW="752px" mb="4" />
       <Heading fontSize="lg" mb="6" mt="10" color="bluefrance.113">
         Capacité en voie scolaire {mixte ? " uniquement" : null}
       </Heading>

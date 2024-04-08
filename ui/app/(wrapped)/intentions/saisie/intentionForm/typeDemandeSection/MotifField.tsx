@@ -16,11 +16,11 @@ import {
   getMotifsTypeDemande,
   MotifLabel,
   MOTIFS_LABELS,
-} from "../../../../utils/motifDemandeUtils";
+} from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
   TypeDemande,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
 
 const getMotifOptions = (typeDemande: TypeDemande) => {
   return Object.entries(MOTIFS_LABELS)

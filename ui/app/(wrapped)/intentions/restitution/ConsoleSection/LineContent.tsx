@@ -3,8 +3,8 @@ import { Td } from "@chakra-ui/react";
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
-import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel } from "../../../utils/typeDemandeUtils";
+import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { DemandesRestitutionIntentions } from "../types";
 
 export const LineContent = ({
