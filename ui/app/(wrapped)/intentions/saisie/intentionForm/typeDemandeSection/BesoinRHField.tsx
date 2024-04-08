@@ -11,7 +11,7 @@ import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-import { BESOINS_RH_LABELS } from "../../../../utils/besoinsRHUtils";
+import { BESOINS_RH_LABELS } from "../../../utils/besoinsRHUtils";
 
 const getBesoinsRHOptions = () => {
   return Object.entries(BESOINS_RH_LABELS).map(([value, label]) => ({

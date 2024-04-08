@@ -16,8 +16,8 @@ import {
   getMotifsRefusTypeDemande,
   MotifRefusLabel,
   MOTIFS_REFUS_LABELS,
-} from "@/app/(wrapped)/utils/motifRefusDemandeUtils";
-import { TypeDemande } from "@/app/(wrapped)/utils/typeDemandeUtils";
+} from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
+import { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const MotifRefusBlock = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

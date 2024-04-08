@@ -4,11 +4,8 @@ import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
-import {
-  getTypeDemandeLabel,
-  TypeDemande,
-} from "../../../utils/typeDemandeUtils";
+import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import { getTypeDemandeLabel, TypeDemande } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,

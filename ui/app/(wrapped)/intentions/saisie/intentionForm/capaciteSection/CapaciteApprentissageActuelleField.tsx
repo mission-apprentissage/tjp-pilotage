@@ -9,7 +9,8 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { isTypeOuverture } from "../../../../utils/typeDemandeUtils";
+import { isTypeOuverture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import { safeParseInt } from "../../utils/safeParseInt";
 import { IntentionForms } from "../defaultFormValues";
 

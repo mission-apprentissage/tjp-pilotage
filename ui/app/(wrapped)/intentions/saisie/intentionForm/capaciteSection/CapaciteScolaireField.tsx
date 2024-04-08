@@ -9,12 +9,11 @@ import {
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { safeParseInt } from "@/app/(wrapped)/intentions/saisie/utils/safeParseInt";
-
 import {
   isTypeFermeture,
   isTypeOuverture,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
+import { safeParseInt } from "../../utils/safeParseInt";
 import { IntentionForms } from "../defaultFormValues";
 
 export const CapaciteScolaireField = chakra(

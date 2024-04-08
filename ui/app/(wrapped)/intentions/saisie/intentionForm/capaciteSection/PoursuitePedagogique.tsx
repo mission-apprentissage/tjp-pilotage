@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { isTypeFermeture } from "@/app/(wrapped)/utils/typeDemandeUtils";
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { toBoolean } from "../../utils/toBoolean";
+import { IntentionForms } from "../defaultFormValues";
 
 export const PoursuitePedagogiqueField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

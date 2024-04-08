@@ -1,6 +1,6 @@
 "use client";
 
-import { ExternalLinkIcon, Search2Icon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -8,7 +8,6 @@ import {
   Center,
   Container,
   Flex,
-  Input,
   Table,
   TableContainer,
   Tag,
@@ -30,21 +29,19 @@ import { useState } from "react";
 
 import { client } from "@/api.client";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
+import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
 const TagDemande = ({ statut }: { statut: string }) => {
   switch (statut) {
@@ -138,10 +135,6 @@ export const PageClient = () => {
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
-  const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
-  };
-
   const getAvatarBgColor = (userName: string) => {
     const colors = [
       "#958b62",
@@ -189,11 +182,7 @@ export const PageClient = () => {
         minHeight={0}
         py={4}
       >
-        <MenuIntention
-          hasPermissionEnvoi={hasPermissionEnvoi}
-          isRecapView
-          campagnes={data?.campagnes}
-        />
+        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
         <Box
           display={["none", null, "unset"]}
           borderLeft="solid 1px"
@@ -208,75 +197,14 @@ export const PageClient = () => {
           minHeight={0}
           minW={0}
         >
-          {isSaisieDisabled() && (
-            <Flex
-              borderLeftWidth={5}
-              borderLeftColor={"bluefrance.113"}
-              bgColor={"grey.975"}
-              direction={"column"}
-              gap={2}
-              padding={5}
-              mb={8}
-            >
-              <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
-              <Text fontWeight={400}>
-                La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-                demandes pour la campagne de saisie 2024 d'ici le 15 avril.
-              </Text>
-            </Flex>
-          )}
-          <Flex
-            flexDirection={["column", null, "row"]}
-            justifyContent={"space-between"}
-          >
-            <Flex>
-              <Input
-                type="text"
-                placeholder="Rechercher par diplôme, établissement, numéro,..."
-                w="sm"
-                mr={2}
-                value={searchDemande}
-                onChange={(e) => setSearchDemande(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") onClickSearchDemande();
-                }}
-              />
-              <Button
-                bgColor={"bluefrance.113"}
-                size={"md"}
-                onClick={() => onClickSearchDemande()}
-              >
-                <Search2Icon color="white" />
-              </Button>
-            </Flex>
-            <Flex mr="auto" ms={2}>
-              <ExportMenuButton
-                onExportCsv={async () => {
-                  trackEvent("saisie_demandes:export");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: getDemandesQueryParameters(EXPORT_LIMIT),
-                  });
-                  downloadCsv(
-                    "export_saisie_demandes",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
-                onExportExcel={async () => {
-                  trackEvent("saisie_demandes:export-excel");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: getDemandesQueryParameters(EXPORT_LIMIT),
-                  });
-                  downloadExcel(
-                    "export_saisie_demandes",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
-                variant="solid"
-              />
-            </Flex>
-          </Flex>
+          <Header
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+            getDemandesQueryParameters={getDemandesQueryParameters}
+            searchDemande={searchDemande}
+            setSearchDemande={setSearchDemande}
+            campagnes={data?.campagnes}
+          />
           {data?.demandes.length ? (
             <>
               <TableContainer overflowY="auto" flex={1}>

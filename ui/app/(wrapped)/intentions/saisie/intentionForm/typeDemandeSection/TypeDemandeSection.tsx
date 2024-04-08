@@ -9,7 +9,7 @@ import {
   getTypeDemandeExemple,
   getTypeDemandeLabel,
   isTypeCompensation,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../utils/typeDemandeUtils";
 import { InfoBox } from "../../components/InfoBox";
 import { IntentionForms } from "../defaultFormValues";
 import { AutreBesoinRHField } from "./AutreBesoinRHField";
