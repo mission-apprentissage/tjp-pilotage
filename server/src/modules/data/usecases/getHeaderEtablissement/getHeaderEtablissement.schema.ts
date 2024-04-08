@@ -26,6 +26,7 @@ const compareToSchema = z
   .object({
     value: z.string(),
     direction: z.enum(["up", "down", "equal"]),
+    description: z.string().optional(),
   })
   .optional();
 

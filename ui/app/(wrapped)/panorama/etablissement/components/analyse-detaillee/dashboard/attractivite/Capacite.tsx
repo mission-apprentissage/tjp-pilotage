@@ -1,4 +1,4 @@
-import { Flex, Img } from "@chakra-ui/react";
+import { Badge, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -20,43 +20,60 @@ export const Capacite = ({
     if (!capacite || !capaciteAnneePrecedente) return "";
     if (capacite > capaciteAnneePrecedente) {
       return (
-        <>
-          <Flex color="success.425">
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
+          <Flex>
             <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${
-              capacite - capaciteAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"} color="success.425">
+              {`+${capacite - capaciteAnneePrecedente}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     } else if (capacite < capaciteAnneePrecedente) {
       return (
-        <>
-          <Flex color="warning.525">
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
+          <Flex>
             <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${
-              capacite - capaciteAnneePrecedente
-            } vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"} color="warning.525">
+              {`${capacite - capaciteAnneePrecedente}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     }
     return (
-      <>
-        <Flex>{`+0 vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}</Flex>
-      </>
+      <Tooltip
+        label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+          CURRENT_RENTREE
+        )}`}
+      >
+        <Text fontWeight={"bold"}>{`+0`}</Text>
+      </Tooltip>
     );
   };
 
   return (
     <DashboardCard
-      label="Capacité - en entrée"
+      label="Capacité en entrée"
       tooltip={
         <TooltipIcon
           ml="1"
           label="Capacité en entrée en première année de formation"
           onClick={() => openGlossaire("capacite")}
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       <CounterChart data={capacite} compareData={getCompareData()} />
