@@ -1,4 +1,4 @@
-import { Box, Flex, Img, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
@@ -21,35 +21,50 @@ export const TauxRemplissage = ({
     if (!tauxRemplissage || !tauxRemplissageAnneePrecedente) return "";
     if (tauxRemplissage > tauxRemplissageAnneePrecedente) {
       return (
-        <>
-          <Flex color="success.425">
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
+          <Flex>
             <Img src={"/icons/arrow_up.svg"} alt="up" />
-            {`+${formatTaux(
-              tauxRemplissage - tauxRemplissageAnneePrecedente
-            )}% vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"} color="success.425">
+              {`+${formatTaux(
+                tauxRemplissage - tauxRemplissageAnneePrecedente
+              )}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     } else if (tauxRemplissage < tauxRemplissageAnneePrecedente) {
       return (
-        <>
-          <Flex color="warning.525">
+        <Tooltip
+          label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
+            CURRENT_RENTREE
+          )}`}
+        >
+          <Flex>
             <Img src={"/icons/arrow_down.svg"} alt="down" />
-            {`${formatTaux(
-              tauxRemplissage - tauxRemplissageAnneePrecedente
-            )}% vs. ${getRentreeScolairePrecedente(CURRENT_RENTREE)}`}
+            <Text fontWeight={"bold"} color="warning.525">
+              {`${formatTaux(
+                tauxRemplissage - tauxRemplissageAnneePrecedente
+              )}`}
+            </Text>
           </Flex>
-        </>
+        </Tooltip>
       );
     }
     return (
-      <>
-        <Flex>{`+0% vs. ${getRentreeScolairePrecedente(
+      <Tooltip
+        label={`En comparaison avec la rentrée scolaire ${getRentreeScolairePrecedente(
           CURRENT_RENTREE
-        )}`}</Flex>
-      </>
+        )}`}
+      >
+        <Text fontWeight={"bold"}>+0</Text>
+      </Tooltip>
     );
   };
+
   return (
     <DashboardCard
       label="Taux de remplissage"
@@ -67,9 +82,18 @@ export const TauxRemplissage = ({
           onClick={() => openGlossaire("taux-de-remplissage")}
         />
       }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
+      }
     >
       <CounterChart
-        data={formatTaux(tauxRemplissage)}
+        data={
+          typeof tauxRemplissage === "undefined"
+            ? undefined
+            : formatTaux(tauxRemplissage)
+        }
         compareData={getCompareData()}
         type="percentage"
       />
