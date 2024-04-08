@@ -1,6 +1,6 @@
-import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
-import { TooltipIcon } from "@/components/TooltipIcon";
+import { Badge } from "@chakra-ui/react";
 
+import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";
@@ -11,7 +11,6 @@ export const NombreElevesParAnnee = ({
 }: {
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const { openGlossaire } = useGlossaireContext();
   const checkDataAvailability = (): boolean => {
     if (chiffresEntreeOffre) {
       return (
@@ -68,11 +67,15 @@ export const NombreElevesParAnnee = ({
     <DashboardCard
       label="Nombre d'élèves par année (Constat de rentrée 2023)"
       tooltip={
-        <TooltipIcon
-          ml="1"
-          label="Nombre d'élèves"
-          onClick={() => openGlossaire("effectifs")}
+        <GlossaireShortcut
+          tooltip="Nombre d'élèves"
+          glossaireEntryKey="effectifs"
         />
+      }
+      badge={
+        <Badge variant="lavander" size={"xs"}>
+          Étab.
+        </Badge>
       }
     >
       {checkDataAvailability() ? (

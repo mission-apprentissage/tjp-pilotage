@@ -17,8 +17,13 @@ export const AttractiviteSection = ({
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
   return (
-    <>
-      <Flex direction={"row"} justifyContent={"space-between"}>
+    <Flex gap={4} direction={"column"}>
+      <Flex
+        direction={"row"}
+        justifyContent={"flex-start"}
+        gap={"8px"}
+        alignItems={"center"}
+      >
         <Text
           fontSize={14}
           fontWeight={700}
@@ -27,7 +32,9 @@ export const AttractiviteSection = ({
         >
           Attractivité de la formation
         </Text>
-        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
+        <Badge variant="info" maxH={5}>
+          Rentrée {CURRENT_RENTREE}
+        </Badge>
       </Flex>
       <Grid templateColumns={"repeat(3, 1fr)"} gap={4}>
         <GridItem colSpan={1}>
@@ -82,6 +89,6 @@ export const AttractiviteSection = ({
           />
         </GridItem>
       </Grid>
-    </>
+    </Flex>
   );
 };

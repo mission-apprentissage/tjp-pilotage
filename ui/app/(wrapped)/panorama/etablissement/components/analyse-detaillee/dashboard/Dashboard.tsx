@@ -1,6 +1,12 @@
-import { WarningTwoIcon } from "@chakra-ui/icons";
-import { Badge, Flex, Text } from "@chakra-ui/react";
+import { Box, Flex, Text } from "@chakra-ui/react";
 
+import {
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../../../../../components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
+import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
+import { InformationDonneeIncompletes } from "../components/InformationDonneeIncompletes";
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
 import { AttractiviteSection } from "./attractivite/AttractiviteSection";
 import { DevenirSection } from "./devenir/DevenirSection";
@@ -8,78 +14,59 @@ import { EffectifSection } from "./effectifs/EffectifSection";
 
 export const Dashboard = ({
   formation,
+  codeRegion,
   chiffresIJOffre,
   chiffresEntreeOffre,
 }: {
+  codeRegion?: string;
   formation?: Formation;
   chiffresIJOffre?: ChiffresIJOffre;
   chiffresEntreeOffre?: ChiffresEntreeOffre;
 }) => {
-  const checkDataAvailability = () =>
-    chiffresIJOffre &&
-    chiffresEntreeOffre &&
-    Object.values(chiffresEntreeOffre).findIndex(
-      (value) =>
-        value.tauxPression &&
-        value.tauxPressionNational &&
-        value.tauxPressionRegional &&
-        value.tauxPressionDepartemental &&
-        value.premiersVoeux &&
-        value.effectifEntree &&
-        value.capacite &&
-        value.tauxRemplissage
-    ) !== -1 &&
-    Object.values(chiffresIJOffre).findIndex(
-      (value) =>
-        value.nbSortants &&
-        value.nbPoursuiteEtudes &&
-        value.nbInsertion6mois &&
-        value.effectifSortie &&
-        value.tauxDevenirFavorable &&
-        value.tauxInsertion &&
-        value.tauxPoursuite
-    ) !== -1;
-
   return (
-    <Flex flexDirection={"column"} mr={8} gap={8}>
-      <Flex flexDirection={"column"} gap={2} h={16}>
-        <Text fontSize="18px" fontWeight={700}>
+    <Flex flexDirection={"column"} mr={8} gap={16}>
+      <Flex flexDirection={"column"} gap={2}>
+        <Text
+          fontSize="18px"
+          fontWeight={700}
+          _firstLetter={{ textTransform: "uppercase" }}
+        >
           {formation?.libelleFormation
             .replace("2nde commune", " ")
             .replace("1ere commune", " ")}
         </Text>
         <Flex direction={"row"} gap={2}>
-          {formation?.typeFamille === "2nde_commune" && (
-            <Badge variant="info" maxH={5} mt="auto">
-              seconde commune
-            </Badge>
-          )}
-          {formation?.typeFamille === "1ere_commune" && (
-            <Badge variant="info" maxH={5} mt="auto">
-              première année commune
-            </Badge>
-          )}
-          {formation?.typeFamille === "specialite" && (
-            <Badge variant="purpleGlycine" maxH={5} mt="auto">
-              spécialité
-            </Badge>
-          )}
-          {formation?.typeFamille === "option" && (
-            <Badge variant="purpleGlycine" maxH={5} mt="auto">
-              option
-            </Badge>
-          )}
-          {formation?.voie === "apprentissage" && (
-            <Badge variant="new" maxH={5} mt="auto">
-              apprentissage
-            </Badge>
-          )}
-          {!checkDataAvailability() && (
-            <Badge variant="warning" maxH={5} mt="auto">
-              <WarningTwoIcon me={2} />
-              Données incomplètes
-            </Badge>
-          )}
+          <BadgeTypeFamille
+            typeFamille={formation?.typeFamille as TypeFamilleKeys}
+            labelSize="long"
+            size={"md"}
+          />
+          <Flex>
+            <BadgeVoieApprentissage
+              voie={formation?.voie}
+              labelSize="long"
+              size={"md"}
+            />
+            {formation?.voie === "apprentissage" && (
+              <GlossaireShortcut
+                ml={2}
+                maxWidthTooltip={300}
+                tooltip={
+                  <Box>
+                    Cette mention signale que la formation est enseignée en
+                    apprentissage sur les années civiles 2023 et/ou 2024.
+                    <br />
+                    Une formation peut apparaître "dédoublée", il s'agit alors
+                    d'une classe mixte (voie scolaire et apprentissage), dont la
+                    part d'apprentis est inconnue.
+                    <br />
+                    <br />
+                    Cliquez pour plus d'infos.
+                  </Box>
+                }
+              />
+            )}
+          </Flex>
         </Flex>
       </Flex>
       <DevenirSection chiffresIJOffre={chiffresIJOffre} />
@@ -88,6 +75,12 @@ export const Dashboard = ({
         chiffresEntreeOffre={chiffresEntreeOffre}
       />
       <EffectifSection chiffresEntreeOffre={chiffresEntreeOffre} />
+      <InformationDonneeIncompletes
+        codeRegion={codeRegion}
+        formation={formation}
+        chiffresIJOffre={chiffresIJOffre}
+        chiffresEntreeOffre={chiffresEntreeOffre}
+      />
     </Flex>
   );
 };
