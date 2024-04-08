@@ -12,6 +12,8 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["metier-en-tension"]: "56b86d2e-65cb-4ec8-9923-c93d760e131e",
   ["inserjeunes"]: "e957b00e-64d8-4011-9ff4-58593d48bc71",
   ["domaine-de-formation-nsf"]: "c8b0d613-40dd-4fac-ab1b-e2be8fadd306",
+  ["voeux"]: "974813b0-5bd5-481a-b372-eefc1d647984",
+  ["taux-de-demande"]: "cfbbe0d1-b44f-45b6-b38e-b6f7c4a60039",
 };
 
 export type GlossaireEntryKey = keyof typeof GLOSSAIRE_ENTRIES_KEYS;

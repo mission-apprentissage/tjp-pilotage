@@ -1,4 +1,4 @@
-import { Badge, Flex, Text } from "@chakra-ui/react";
+import { Badge, Box, Flex, Text } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
 import { ChiffresEntreeOffre } from "../../types";
@@ -8,21 +8,27 @@ export const EffectifSection = ({
   chiffresEntreeOffre,
 }: {
   chiffresEntreeOffre?: ChiffresEntreeOffre;
-}) => {
-  return (
-    <>
-      <Flex direction={"row"} justifyContent={"space-between"}>
-        <Text
-          fontSize={14}
-          fontWeight={700}
-          textTransform={"uppercase"}
-          lineHeight={"24px"}
-        >
-          Nombre d'élèves par année
-        </Text>
-        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
-      </Flex>
-      <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
-    </>
-  );
-};
+}) => (
+  <Box>
+    <Flex
+      direction={"row"}
+      justifyContent={"flex-start"}
+      gap={"8px"}
+      alignItems={"center"}
+      mb={4}
+    >
+      <Text
+        fontSize={14}
+        fontWeight={700}
+        textTransform={"uppercase"}
+        lineHeight={"24px"}
+      >
+        Nombre d'élèves par année
+      </Text>
+      <Badge variant="info" maxH={5}>
+        Rentrée {CURRENT_RENTREE}
+      </Badge>
+    </Flex>
+    <NombreElevesParAnnee chiffresEntreeOffre={chiffresEntreeOffre} />
+  </Box>
+);
