@@ -40,6 +40,24 @@ const brownCafeCremeStyle = defineStyle({
   bgColor: "brownCafeCreme.950",
 });
 
+const lavanderStyle = defineStyle({
+  color: "bluefrance.113",
+  bgColor: "bluefrance.925",
+});
+
+const greyStyle = defineStyle({
+  color: "grey.425",
+  bgColor: "grey.925",
+});
+
+const neutralStyle = defineStyle({
+  color: "grey.425",
+  bgColor: "grey.1000_active",
+  borderColor: "grey.425",
+  borderWidth: "1px",
+  borderStyle: "solid",
+});
+
 export const badgeTheme = defineStyleConfig({
   baseStyle: {
     display: "inline-flex",
@@ -85,6 +103,9 @@ export const badgeTheme = defineStyleConfig({
     purpleGlycine: purpleGlycineStyle,
     pinkTuile: pinkTuileStyle,
     brownCafeCreme: brownCafeCremeStyle,
+    lavander: lavanderStyle,
+    grey: greyStyle,
+    neutral: neutralStyle,
   },
   defaultProps: {
     size: "md",

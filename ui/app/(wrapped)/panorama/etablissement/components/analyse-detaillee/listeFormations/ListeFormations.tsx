@@ -8,42 +8,49 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import _ from "lodash";
+import { CURRENT_RENTREE } from "shared";
+
+import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
 
 import {
-  formatAnneeCommuneLibelle,
-  formatTypeFamilleCourt,
-  formatTypeFamilleLong,
-} from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
-
+  BadgeTypeFamille,
+  TypeFamilleKeys,
+} from "../../../../../../../components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
+import { themeColors } from "../../../../../../../theme/themeColors";
 import { Formation } from "../types";
+
+const LabelNumberOfFormations = ({
+  formations,
+}: {
+  formations?: Array<Formation>;
+}) => (
+  <Text>
+    <strong>{formations?.length ?? 0}</strong> Formation
+    {(formations?.length ?? 0) > 1 ? "s" : ""}
+  </Text>
+);
 
 export const ListeFormations = ({
   formations,
   offre,
   setOffre,
-  nbOffres,
 }: {
   formations?: Array<Formation>;
   offre: string;
   setOffre: (offre: string) => void;
-  nbOffres: Record<string, number>;
 }) => {
   const formattedFormations = _.chain(formations)
     .orderBy("ordreFormation", "desc")
     .groupBy("libelleNiveauDiplome")
     .value();
 
-  const totalNbOffres = Object.values(nbOffres).reduce(
-    (acc, nbOffres) => acc + nbOffres,
-    0
-  );
-
   return (
     <Box
       borderRightWidth={1}
       borderRightColor={"grey.925"}
       overflowY={"auto"}
-      h={"85rem"}
+      h={"90rem"}
     >
       <Flex
         flex={1}
@@ -51,11 +58,8 @@ export const ListeFormations = ({
         justifyContent={"space-between"}
         me={2}
       >
-        <Flex>
-          <Text fontWeight={700}>{totalNbOffres}</Text>
-          <Text>&nbsp;Formation(s)</Text>
-        </Flex>
-        <Badge variant="info">Rentrée 2023</Badge>
+        <LabelNumberOfFormations formations={formations} />
+        <Badge variant="info">Rentrée {CURRENT_RENTREE}</Badge>
       </Flex>
       <List>
         {Object.keys(formattedFormations).map((codeNiveauDiplome) => (
@@ -63,7 +67,7 @@ export const ListeFormations = ({
             <Text
               fontWeight={"bold"}
               my={"3"}
-            >{`${codeNiveauDiplome} (${nbOffres[codeNiveauDiplome]})`}</Text>
+            >{`${codeNiveauDiplome} (${formattedFormations[codeNiveauDiplome].length})`}</Text>
             <List>
               {formattedFormations[codeNiveauDiplome].map((formation) => (
                 <ListItem
@@ -74,16 +78,34 @@ export const ListeFormations = ({
                   onClick={() => {
                     setOffre(formation.offre);
                   }}
-                  bgColor={offre === formation.offre ? "grey.1000_active" : ""}
-                  borderLeftColor={
-                    offre === formation.offre ? "bluefrance.113" : ""
-                  }
+                  bgColor={offre === formation.offre ? "bluefrance.925" : ""}
                   _hover={{
-                    bgColor: "rgba(0, 0, 0, 0.04)",
+                    backgroundColor:
+                      offre === formation.offre
+                        ? "bluefrance.925_hover"
+                        : "grey.1000_active",
                   }}
-                  borderLeft={offre === formation.offre ? "2px" : ""}
+                  fontWeight={offre === formation.offre ? "bold" : ""}
+                  position={"relative"}
                 >
-                  <Flex direction="row" justify={"space-between"}>
+                  <Flex
+                    direction="row"
+                    justify={"space-between"}
+                    _before={{
+                      content: "''",
+                      width: "0",
+                      height: "60%",
+                      left: "0",
+                      borderLeft:
+                        offre === formation.offre
+                          ? `3px solid ${themeColors.bluefrance[113]}`
+                          : "",
+                      top: "50%",
+                      transform: "translateY(-50%)",
+                      position: "absolute",
+                    }}
+                    paddingLeft={"2px"}
+                  >
                     <Tooltip
                       label={formatAnneeCommuneLibelle(
                         formation.libelleFormation
@@ -98,38 +120,16 @@ export const ListeFormations = ({
                         textOverflow={"ellipsis"}
                         overflow={"hidden"}
                         isTruncated={true}
+                        _firstLetter={{ textTransform: "uppercase" }}
                       >
                         {formatAnneeCommuneLibelle(formation.libelleFormation)}
                       </Text>
                     </Tooltip>
                     <Flex direction="row" gap={1}>
-                      {(formation.typeFamille === "2nde_commune" ||
-                        formation.typeFamille === "1ere_commune") && (
-                        <Tooltip
-                          label={formatTypeFamilleLong(formation.typeFamille)}
-                        >
-                          <Badge variant={"info"} size="xs">
-                            {formatTypeFamilleCourt(formation.typeFamille)}
-                          </Badge>
-                        </Tooltip>
-                      )}
-                      {(formation.typeFamille === "specialite" ||
-                        formation.typeFamille === "option") && (
-                        <Tooltip
-                          label={formatTypeFamilleLong(formation.typeFamille)}
-                        >
-                          <Badge variant={"purpleGlycine"} size="xs">
-                            {formatTypeFamilleCourt(formation.typeFamille)}
-                          </Badge>
-                        </Tooltip>
-                      )}
-                      {formation.voie === "apprentissage" && (
-                        <Tooltip label={"Apprentissage"}>
-                          <Badge variant={"new"} size="xs">
-                            Appr
-                          </Badge>
-                        </Tooltip>
-                      )}
+                      <BadgeVoieApprentissage voie={formation.voie} />
+                      <BadgeTypeFamille
+                        typeFamille={formation.typeFamille as TypeFamilleKeys}
+                      />
                     </Flex>
                   </Flex>
                 </ListItem>

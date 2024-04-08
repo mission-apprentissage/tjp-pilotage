@@ -4,6 +4,8 @@ import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import qs from "qs";
 
+import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+
 import { client } from "../../../../../api.client";
 
 export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
@@ -35,12 +37,12 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250}>
       <Button
-        isDisabled={!hasPermissionEnvoi}
+        isDisabled={!hasPermissionEnvoi || isSaisieDisabled()}
         mb="4"
         variant="createButton"
         size={"md"}
         width={"100%"}
-        as={hasPermissionEnvoi ? NextLink : undefined}
+        as={hasPermissionEnvoi && !isSaisieDisabled() ? NextLink : undefined}
         href="/intentions/saisie/new"
       >
         Nouvelle demande
