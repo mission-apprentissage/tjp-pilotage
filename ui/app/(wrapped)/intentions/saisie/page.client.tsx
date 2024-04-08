@@ -209,7 +209,7 @@ export const PageClient = () => {
               <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
               <Text fontWeight={400}>
                 La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-                demandes pour la campagne de saisie 2024 très bientôt.
+                demandes pour la campagne de saisie 2024 d'ici le 15 avril.
               </Text>
             </Flex>
           )}

@@ -67,7 +67,7 @@ export default () => {
   );
 
   const [rentreeScolaireFilter, setRentreeScolaireFilter] =
-    useState<string>("2024");
+    useState<string>("2025");
 
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
