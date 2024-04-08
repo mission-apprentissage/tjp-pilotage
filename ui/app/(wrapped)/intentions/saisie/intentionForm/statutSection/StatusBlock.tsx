@@ -19,7 +19,13 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
         control={control}
         rules={{ required: "Le type de demande est obligatoire." }}
         render={({ field: { onChange, name, value } }) => (
-          <Select w="xs" onChange={onChange} name={name} value={value}>
+          <Select
+            w="xs"
+            onChange={onChange}
+            name={name}
+            value={value}
+            disabled={disabled}
+          >
             <option value="draft">Projet de demande</option>
             <option value="submitted">Validée</option>
             <option value="refused">Refusée</option>

@@ -1,14 +1,6 @@
 "use client";
 
-import {
-  Box,
-  Container,
-  Heading,
-  HStack,
-  Stack,
-  Text,
-  VStack,
-} from "@chakra-ui/react";
+import { Box, Container, HStack, Stack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
 
@@ -67,15 +59,10 @@ const AlertPerdir = () => {
         </HStack>
         <Box paddingX="8px" paddingY="16px" flexGrow={1}>
           <VStack spacing="4px" alignItems="start">
-            <Heading as="h3" fontSize="20px" fontWeight={700} textAlign="left">
-              Information chefs d’établissement
-            </Heading>
             <Text fontSize="16px">
-              Votre accès à Orion sera disponible au cours du premier trimestre
-              2024, accompagné d’un Espace établissement dédié. Si vous le
-              souhaitez, vous pouvez nous faire part de vos suggestions en
-              écrivant à <b>orion@inserjeunes.beta.gouv.fr</b>. Vos retours
-              seront précieux !
+              Chers utilisateurs, le mode connecté permet d’accéder aux
+              informations de la transformation de la carte ; il est réservé aux
+              régions académiques, pour le moment.
             </Text>
           </VStack>
         </Box>

@@ -1,14 +1,18 @@
 import { sql } from "kysely";
+import { z } from "zod";
 
 import { cleanNull } from "../../../../../utils/noNull";
+import { FormationSchema } from "../getAnalyseDetailleeEtablissement.schema";
 import { getBase } from "./base.dep";
 
 export const getFormations = async ({
   uai,
   codeNiveauDiplome,
+  voie,
 }: {
   uai: string;
   codeNiveauDiplome?: string[];
+  voie?: string[];
 }) =>
   getBase({ uai })
     .select((eb) => [
@@ -24,8 +28,10 @@ export const getFormations = async ({
       "libelleDispositif",
       "dataFormation.codeNiveauDiplome",
       "dataFormation.cfd",
+      "dataFormation.dateOuverture",
       "codeDispositif",
       "dataFormation.typeFamille",
+      "dispositif.libelleDispositif",
     ])
     .orderBy([
       "libelleNiveauDiplome asc",
@@ -34,12 +40,14 @@ export const getFormations = async ({
     ])
     .$call((q) => {
       if (codeNiveauDiplome?.length)
-        return q.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
+        q = q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
+
+      if (voie?.length) {
+        q = q.where("formationEtablissement.voie", "in", voie);
+      }
+
       return q;
     })
+    .$castTo<z.infer<typeof FormationSchema>>()
     .execute()
     .then(cleanNull);
