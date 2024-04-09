@@ -21,8 +21,8 @@ export const isTypeDiminution = (typeDemande: string) =>
 export const isTypeCompensation = (typeDemande: string) =>
   ["augmentation_compensation", "ouverture_compensation"].includes(typeDemande);
 
-const isTransfertApprentissage = (motif: string[]) =>
-  motif.includes("transfert_apprentissage");
+export const isTypeTransfert = (typeDemande: string) =>
+  ["transfert"].includes(typeDemande);
 
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
@@ -51,7 +51,7 @@ export const demandeValidators: Record<
     }
   },
   mixte: (demande) => {
-    if (isTransfertApprentissage(demande.motif) && !demande.mixte) {
+    if (isTypeTransfert(demande.typeDemande) && !demande.mixte) {
       return "Dans le cas d'un transfert vers l'apprentissage, la demande doit être mixte";
     }
   },
@@ -83,6 +83,12 @@ export const demandeValidators: Record<
       demande.capaciteScolaireActuelle === 0
     ) {
       return "La capacité scolaire actuelle devrait être supérieure à 0 dans le cas d'une formation existante";
+    }
+    if (
+      isTypeTransfert(demande.typeDemande) &&
+      demande.capaciteScolaireActuelle === 0
+    ) {
+      return "La capacité scolaire actuelle ne peut être à 0 dans le cas d'un transfert vers l'apprentissage";
     }
   },
   capaciteScolaire: (demande) => {
@@ -127,6 +133,17 @@ export const demandeValidators: Record<
         return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
       }
     }
+    if (isTypeTransfert(demande.typeDemande)) {
+      if (demande.capaciteScolaire === 0)
+        return "La capacité scolaire devrait être supérieure à 0 dans le cas d'un transfert vers l'apprentissage";
+
+      if (
+        isPositiveNumber(demande.capaciteScolaireActuelle) &&
+        demande.capaciteScolaire >= demande.capaciteScolaireActuelle
+      ) {
+        return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
+      }
+    }
   },
   capaciteApprentissageActuelle: (demande) => {
     if (!isPositiveNumber(demande.capaciteApprentissageActuelle)) {
@@ -137,9 +154,9 @@ export const demandeValidators: Record<
       return "Le champ capacité en apprentissage actuelle doit être à 0";
     }
     if (
-      (isTypeDiminution(demande.typeDemande) ||
-        isTypeFermeture(demande.typeDemande)) &&
-      isTransfertApprentissage(demande.motif)
+      isTypeDiminution(demande.typeDemande) ||
+      isTypeFermeture(demande.typeDemande) ||
+      isTypeTransfert(demande.typeDemande)
     )
       return;
 
@@ -172,19 +189,6 @@ export const demandeValidators: Record<
       return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une ouverture";
     }
     if (
-      (isTypeDiminution(demande.typeDemande) ||
-        isTypeFermeture(demande.typeDemande)) &&
-      isTransfertApprentissage(demande.motif)
-    ) {
-      if (
-        isPositiveNumber(demande.capaciteApprentissageActuelle) &&
-        demande.capaciteApprentissage <= demande.capaciteApprentissageActuelle
-      ) {
-        return "La capacité en apprentissage doit être supérieure à la capacité actuelle en apprentissage dans le cas d'un transfert vers l'apprentissage";
-      }
-      return;
-    }
-    if (
       isTypeFermeture(demande.typeDemande) &&
       demande.capaciteApprentissage !== 0
     ) {
@@ -202,7 +206,6 @@ export const demandeValidators: Record<
         return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'une augmentation";
       }
     }
-
     if (isTypeDiminution(demande.typeDemande)) {
       if (demande.capaciteApprentissage === 0)
         return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une diminution";
@@ -212,6 +215,17 @@ export const demandeValidators: Record<
         demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
       ) {
         return "La capacité en apprentissage devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
+      }
+    }
+    if (isTypeTransfert(demande.typeDemande)) {
+      if (demande.capaciteApprentissage === 0)
+        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'un transfert vers l'apprentissage";
+
+      if (
+        isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+        demande.capaciteApprentissageActuelle >= demande.capaciteApprentissage
+      ) {
+        return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
       }
     }
   },
@@ -260,7 +274,7 @@ export const demandeValidators: Record<
       !demande.mixte &&
       demande.capaciteScolaireColoree === 0
     ) {
-      return "La capacité scolaire colorée doit être supérieur à 0";
+      return "La capacité scolaire colorée doit être supérieure à 0";
     }
 
     if (

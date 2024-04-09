@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
@@ -12,6 +13,19 @@ import { getDemandesSchema } from "./getDemandes.schema";
 export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
   user: RequestUser;
 }
+
+export const getCampagneQuery = async (anneeCampagne: string) => {
+  const campagne = await kdb
+    .selectFrom("campagne")
+    .selectAll()
+    .where("annee", "=", anneeCampagne)
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
+    });
+
+  return campagne;
+};
 
 export const getDemandesQuery = async (
   { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,

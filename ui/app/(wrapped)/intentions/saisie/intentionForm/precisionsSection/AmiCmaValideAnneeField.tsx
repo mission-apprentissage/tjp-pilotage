@@ -4,8 +4,7 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  NumberInput,
-  NumberInputField,
+  Input,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
@@ -19,30 +18,32 @@ export const AmiCmaValideAnneeField = chakra(
       watch,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("amiCmaValide");
+    const visible = watch("amiCmaValide") && watch("amiCma");
 
     return (
       <Collapse in={visible} unmountOnExit>
         <FormControl
           className={className}
           isInvalid={!!errors.amiCmaValideAnnee}
-          isRequired
         >
           <FormLabel>En quelle année a t-il été validé ?</FormLabel>
-          <NumberInput>
-            <NumberInputField
+          {visible && (
+            <Input
+              w="xs"
               {...register("amiCmaValideAnnee", {
                 shouldUnregister: true,
                 disabled: disabled,
-                setValueAs: (value) => value.toString(),
+                required:
+                  "Veuillez préciser l'année de validation de votre financement AMI/CMA",
                 validate: (value) => {
-                  if (value === undefined) return "Le champ est obligatoire";
+                  if (value === undefined)
+                    return "Veuillez préciser l'année de validation de votre financement AMI/CMA";
                   if (new RegExp(/^[0-9]{4}$/).test(value) === false)
                     return "Veuillez remplir une année valide.";
                 },
               })}
             />
-          </NumberInput>
+          )}
 
           {errors.amiCmaValideAnnee && (
             <FormErrorMessage>

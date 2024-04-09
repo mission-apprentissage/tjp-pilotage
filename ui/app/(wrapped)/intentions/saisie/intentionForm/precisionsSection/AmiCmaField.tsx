@@ -32,6 +32,7 @@ export const AmiCmaField = chakra(
           }}
           render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
+              ms={6}
               isDisabled={disabled}
               as={Stack}
               onBlur={onBlur}

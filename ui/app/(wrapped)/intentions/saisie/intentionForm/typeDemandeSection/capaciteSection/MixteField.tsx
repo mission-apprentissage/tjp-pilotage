@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { toBoolean } from "../../utils/toBoolean";
-import { IntentionForms } from "../defaultFormValues";
+import { toBoolean } from "../../../utils/toBoolean";
+import { IntentionForms } from "../../defaultFormValues";
 
-export const ColorationField = chakra(
+export const MixteField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
@@ -20,28 +20,19 @@ export const ColorationField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl
-        className={className}
-        isInvalid={!!errors.coloration}
-        isRequired
-      >
-        <FormLabel>Coloration</FormLabel>
+      <FormControl className={className} isInvalid={!!errors.mixte} isRequired>
+        <FormLabel>S’agit-il d’une formation mixte ?</FormLabel>
         <Controller
-          name="coloration"
+          name="mixte"
           control={control}
-          shouldUnregister={true}
           disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({
-            field: { onChange, ref, name, onBlur, value, disabled },
-          }) => (
+          render={({ field: { onChange, value, ref, disabled } }) => (
             <RadioGroup
               as={Stack}
-              name={name}
-              onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
               isDisabled={disabled}
@@ -55,8 +46,8 @@ export const ColorationField = chakra(
             </RadioGroup>
           )}
         />
-        {errors.coloration && (
-          <FormErrorMessage>{errors.coloration.message}</FormErrorMessage>
+        {errors.mixte && (
+          <FormErrorMessage>{errors.mixte?.message}</FormErrorMessage>
         )}
       </FormControl>
     );

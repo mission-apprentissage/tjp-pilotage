@@ -12,7 +12,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
-export const MixteField = chakra(
+export const ColorationField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
@@ -20,19 +20,29 @@ export const MixteField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.mixte} isRequired>
-        <FormLabel>S’agit-il d’une formation mixte ?</FormLabel>
+      <FormControl
+        className={className}
+        isInvalid={!!errors.coloration}
+        isRequired
+      >
+        <FormLabel>Coloration</FormLabel>
         <Controller
-          name="mixte"
+          name="coloration"
           control={control}
+          shouldUnregister={true}
           disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({ field: { onChange, value, ref, disabled } }) => (
+          render={({
+            field: { onChange, ref, name, onBlur, value, disabled },
+          }) => (
             <RadioGroup
+              ms={6}
               as={Stack}
+              name={name}
+              onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
               isDisabled={disabled}
@@ -46,8 +56,8 @@ export const MixteField = chakra(
             </RadioGroup>
           )}
         />
-        {errors.mixte && (
-          <FormErrorMessage>{errors.mixte?.message}</FormErrorMessage>
+        {errors.coloration && (
+          <FormErrorMessage>{errors.coloration.message}</FormErrorMessage>
         )}
       </FormControl>
     );
