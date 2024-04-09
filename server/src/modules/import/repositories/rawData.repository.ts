@@ -6,6 +6,7 @@ import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
 import { Departements_academies_regions } from "../fileTypes/Departements_academies_regions";
 import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
+import { Domaine_Professionnel } from "../fileTypes/DomaineProfessionnel";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
 import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
@@ -48,6 +49,7 @@ export type LineTypes = {
   n_categorie_specialite_: NSF_Categorie_Specialite;
   n_domaine_specialite_: NSF_Domaine_Specialite;
   n_groupe_specialite_: NSF_Groupe_Specialite;
+  domaine_professionnel: Domaine_Professionnel;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
