@@ -1,5 +1,6 @@
 import _ from "lodash";
 
+import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import {
   dependencies,
   GetScopedStatsPilotageIntentionsType,
@@ -75,21 +76,30 @@ const getStatsPilotageIntentionsFactory =
       getStatsPilotageIntentionsQuery:
         dependencies.getStatsPilotageIntentionsQuery,
       getFiltersQuery: dependencies.getFiltersQuery,
+      getCurrentCampagneQuery,
     }
   ) =>
   async (activeFilters: QuerySchema) => {
+    const currentCampagne = await getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
     const [filters, draft, submitted, all] = await Promise.all([
-      deps.getFiltersQuery(activeFilters),
+      deps.getFiltersQuery({
+        ...activeFilters,
+        anneeCampagne,
+      }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
         statut: "draft",
+        anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
         statut: "submitted",
+        anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
+        anneeCampagne,
       }),
     ]);
 
@@ -101,6 +111,7 @@ const getStatsPilotageIntentionsFactory =
         activeFilters.orderBy
       ),
       all: formatResult(all, activeFilters.order, activeFilters.orderBy),
+      campagne: currentCampagne,
       filters,
     };
   };

@@ -2,16 +2,16 @@ import { Insertable } from "kysely";
 
 import { DB, kdb } from "../../../../db/db";
 
-export const updateCampagne = async ({
+export const updateCampagneQuery = async ({
   campagneId,
-  data,
+  campagne,
 }: {
   campagneId: string;
-  data: Insertable<DB["campagne"]>;
+  campagne: Insertable<DB["campagne"]>;
 }) => {
   await kdb
     .updateTable("campagne")
-    .set({ ...data })
+    .set({ ...campagne })
     .where("id", "=", campagneId)
     .execute();
 };

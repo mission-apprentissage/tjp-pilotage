@@ -1,7 +1,6 @@
 import { usePlausible } from "next-plausible";
 import { useCallback, useState } from "react";
 import { ScopeEnum } from "shared";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 
@@ -22,7 +21,7 @@ export const usePilotageIntentionsHook = () => {
   >({
     defaultValues: {
       scope: ScopeEnum.region,
-      campagne: CURRENT_ANNEE_CAMPAGNE,
+      campagne: undefined,
     },
   });
   const [order, setOrder] = useStateParams<
@@ -68,6 +67,9 @@ export const usePilotageIntentionsHook = () => {
     {
       keepPreviousData: true,
       staleTime: 10000000,
+      onSuccess: (data) => {
+        if (!filters.campagne) setFilters({ campagne: data.campagne.annee });
+      },
     }
   );
 

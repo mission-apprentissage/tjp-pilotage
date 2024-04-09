@@ -1,7 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -52,7 +51,7 @@ const getDemandesRestitutionIntentionsQuery = async ({
   user,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
   offset = 0,
   limit = 20,
   order = "desc",
@@ -61,9 +60,10 @@ const getDemandesRestitutionIntentionsQuery = async ({
   const demandes = await kdb
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", campagne)
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        return eb;
+      })
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
@@ -333,7 +333,7 @@ const getFilters = async ({
   uai,
   compensation,
   user,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
@@ -448,8 +448,8 @@ const getFilters = async ({
   };
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
-    if (!campagne) return sql<true>`true`;
-    return eb("campagne.annee", "=", campagne);
+    if (!anneeCampagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", anneeCampagne);
   };
 
   const geoFiltersBase = kdb
@@ -511,6 +511,15 @@ const getFilters = async ({
     })
     .execute();
 
+  const campagnesFilters = kdb
+    .selectFrom("campagne")
+    .select(["campagne.annee as label", "campagne.annee as value"])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
+    .where("campagne.annee", "is not", null)
+    .execute();
+
   const filtersBase = kdb
     .selectFrom("latestDemandeView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
@@ -533,11 +542,6 @@ const getFilters = async ({
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
-
-  const campagnesFilters = filtersBase
-    .select(["campagne.annee as label", "campagne.annee as value"])
-    .where("campagne.annee", "is not", null)
-    .execute();
 
   const communesFilters = filtersBase
     .select([

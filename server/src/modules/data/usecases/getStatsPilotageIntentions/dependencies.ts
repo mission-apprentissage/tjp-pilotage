@@ -1,6 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE, RENTREE_INTENTIONS, Scope, ScopeEnum } from "shared";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -107,7 +106,7 @@ interface GenericFilter {
   codeNiveauDiplome?: string[];
   CPC?: string[];
   codeNsf?: string[];
-  campagne: string;
+  anneeCampagne: string;
 }
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
@@ -120,7 +119,7 @@ const genericOnDemandes =
     codeNiveauDiplome,
     CPC,
     codeNsf,
-    campagne = CURRENT_ANNEE_CAMPAGNE,
+    anneeCampagne,
   }: GenericFilter) =>
   (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
@@ -128,7 +127,7 @@ const genericOnDemandes =
       .innerJoin("campagne", (join) =>
         join
           .onRef("campagne.id", "=", "demande.campagneId")
-          .on("campagne.annee", "=", campagne)
+          .on("campagne.annee", "=", anneeCampagne)
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
       .select((es) => [
@@ -177,7 +176,7 @@ const getNationalData = async (filters: GenericFilter) => {
     .innerJoin("campagne", (join) =>
       join
         .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", filters.campagne)
+        .on("campagne.annee", "=", filters.anneeCampagne)
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .select((es) => [
@@ -410,7 +409,7 @@ const getStatsPilotageIntentionsQuery = async ({
   CPC,
   codeNsf,
   scope,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: {
   statut?: "draft" | "submitted";
   rentreeScolaire?: string;
@@ -418,7 +417,7 @@ const getStatsPilotageIntentionsQuery = async ({
   CPC?: string[];
   codeNsf?: string[];
   scope: Scope;
-  campagne?: string;
+  anneeCampagne: string;
 }) => {
   switch (scope) {
     case ScopeEnum.academie:
@@ -428,7 +427,7 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        campagne,
+        anneeCampagne,
       });
 
     case ScopeEnum.departement:
@@ -438,7 +437,7 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        campagne,
+        anneeCampagne,
       });
     case ScopeEnum.region:
       return getRegionData({
@@ -447,7 +446,7 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        campagne,
+        anneeCampagne,
       });
     case ScopeEnum.national:
     default:
@@ -457,7 +456,7 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        campagne,
+        anneeCampagne,
       });
   }
 };
@@ -468,14 +467,14 @@ const getFiltersQuery = async ({
   codeNiveauDiplome,
   CPC,
   nsf,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: {
   statut?: "draft" | "submitted";
   rentreeScolaire?: string;
   codeNiveauDiplome?: string[];
   CPC?: string[];
   nsf?: string[];
-  campagne?: string;
+  anneeCampagne: string;
 }) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
@@ -505,7 +504,7 @@ const getFiltersQuery = async ({
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
     if (!nsf) return sql<true>`true`;
-    return eb("campagne.annee", "=", campagne);
+    return eb("campagne.annee", "=", anneeCampagne);
   };
 
   const base = kdb
@@ -534,8 +533,12 @@ const getFiltersQuery = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const campagnesFilters = await base
-    .select(["campagne.annee as value", "campagne.annee as label"])
+  const campagnesFilters = await kdb
+    .selectFrom("campagne")
+    .select(["campagne.annee as label", "campagne.annee as value"])
+    .distinct()
+    .$castTo<{ label: string; value: string }>()
+    .orderBy("label", "asc")
     .where("campagne.annee", "is not", null)
     .execute();
 

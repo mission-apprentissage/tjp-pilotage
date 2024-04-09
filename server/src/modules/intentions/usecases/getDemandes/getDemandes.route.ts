@@ -3,8 +3,8 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { getDemandes } from "./getDemandes.query";
 import { getDemandesSchema } from "./getDemandes.schema";
+import { getDemandesUsecase } from "./getDemandes.usecase";
 
 export const getDemandesRoute = (server: Server) => {
   return createRoute("/demandes", {
@@ -15,13 +15,13 @@ export const getDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { search, campagne, ...filters } = request.query;
+        const { search, ...filters } = request.query;
         if (!request.user) throw Boom.forbidden();
-        const result = await getDemandes({
+
+        const result = await getDemandesUsecase({
           user: request.user,
           ...filters,
           search,
-          campagne,
         });
         response.status(200).send(result);
       },

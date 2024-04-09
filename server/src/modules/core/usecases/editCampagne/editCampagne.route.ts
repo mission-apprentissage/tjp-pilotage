@@ -2,8 +2,8 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../utils/hasPermission";
-import { updateCampagne } from "./editCampagne.query";
 import { editCampagneSchema } from "./editCampagne.schema";
+import { editCampagneUsecase } from "./editCampagne.usecase";
 
 export const editCampagneRoute = (server: Server) => {
   return createRoute("/campagnes/:campagneId", {
@@ -14,11 +14,10 @@ export const editCampagneRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("campagnes/ecriture"),
       handler: async (request, response) => {
-        await updateCampagne({
+        await editCampagneUsecase({
           campagneId: request.params.campagneId,
-          data: request.body,
+          campagne: request.body,
         });
-
         response.code(200).send();
       },
     });

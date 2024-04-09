@@ -1,10 +1,10 @@
 import { kdb } from "../../../../../db/db";
-import { isDemandeFromLatestCampagne } from "../../../../utils/isDemandeFromLatestCampagne.query";
+import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 
 export const hasAlreadyBeenImported = async ({ numero }: { numero: string }) =>
   await kdb
     .selectFrom("demande")
-    .where(isDemandeFromLatestCampagne)
+    .where(isDemandeCampagneEnCours)
     .where("numeroHistorique", "=", numero)
     .selectAll()
     .executeTakeFirst();

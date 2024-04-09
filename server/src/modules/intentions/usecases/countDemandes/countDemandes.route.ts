@@ -3,8 +3,8 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { countDemandes } from "./countDemandes.query";
 import { countDemandesSchema } from "./countDemandes.schema";
+import { countDemandesUsecase } from "./countDemandes.usecase";
 
 export const countDemandesRoute = (server: Server) => {
   return createRoute("/demandes/count", {
@@ -15,12 +15,12 @@ export const countDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { campagne } = request.query;
+        const { anneeCampagne } = request.query;
         if (!request.user) throw Boom.forbidden();
 
-        const result = await countDemandes({
+        const result = await countDemandesUsecase({
           user: request.user,
-          campagne,
+          anneeCampagne,
         });
         response.status(200).send(result);
       },

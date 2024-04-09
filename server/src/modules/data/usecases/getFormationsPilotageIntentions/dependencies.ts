@@ -4,7 +4,6 @@ import {
   MILLESIMES_IJ,
   RENTREE_INTENTIONS,
 } from "shared";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -91,7 +90,7 @@ const getFormationsPilotageIntentionsQuery = ({
   tauxPression,
   codeNiveauDiplome,
   codeNsf,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
   orderBy,
   order,
 }: Filters) => {
@@ -105,9 +104,10 @@ const getFormationsPilotageIntentionsQuery = ({
   return kdb
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", campagne)
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        return eb;
+      })
     )
     .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")

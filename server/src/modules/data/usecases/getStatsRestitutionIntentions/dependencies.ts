@@ -1,6 +1,5 @@
 import { sql } from "kysely";
 import { jsonBuildObject } from "kysely/helpers/postgres";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -43,14 +42,15 @@ const getStatsRestitutionIntentionsQuery = async ({
   user,
   voie,
   codeNsf,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
+  anneeCampagne,
 }: Filters) => {
   const countDemandes = await kdb
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", campagne)
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        return eb;
+      })
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")

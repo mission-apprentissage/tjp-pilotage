@@ -1,18 +1,29 @@
 import { cleanNull } from "../../../../utils/noNull";
-import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
+import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies, Filters } from "./dependencies";
 
 const getDemandesRestitutionIntentionsFactory =
-  ({
-    getDemandesRestitutionIntentionsQuery = dependencies.getDemandesRestitutionIntentionsQuery,
-    getFilters = dependencies.getFilters,
-  }) =>
+  (
+    deps = {
+      getDemandesRestitutionIntentionsQuery:
+        dependencies.getDemandesRestitutionIntentionsQuery,
+      getFilters: dependencies.getFilters,
+      getCurrentCampagneQuery,
+      getStatsSortieParRegionsEtNiveauDiplomeQuery,
+    }
+  ) =>
   async (activeFilters: Filters) => {
+    const campagne = await deps.getCurrentCampagneQuery();
+    const anneeCampagne = activeFilters?.anneeCampagne ?? campagne.annee;
     const [{ count, demandes }, filters, statsSortie] = await Promise.all([
-      getDemandesRestitutionIntentionsQuery(activeFilters),
-      getFilters(activeFilters),
-      getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
+      deps.getDemandesRestitutionIntentionsQuery({
+        ...activeFilters,
+        anneeCampagne,
+      }),
+      deps.getFilters({ ...activeFilters, anneeCampagne }),
+      deps.getStatsSortieParRegionsEtNiveauDiplomeQuery(activeFilters),
     ]);
 
     return {
@@ -32,8 +43,9 @@ const getDemandesRestitutionIntentionsFactory =
               : "Hors quadrant",
         })
       ),
+      campagne,
     };
   };
 
 export const getDemandesRestitutionIntentionsUsecase =
-  getDemandesRestitutionIntentionsFactory({});
+  getDemandesRestitutionIntentionsFactory();

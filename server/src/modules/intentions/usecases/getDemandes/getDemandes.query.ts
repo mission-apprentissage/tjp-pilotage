@@ -1,12 +1,11 @@
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import { isDemandeFromLatestCampagne } from "../../../utils/isDemandeFromLatestCampagne.query";
+import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
 import { getDemandesSchema } from "./getDemandes.schema";
 
@@ -14,16 +13,10 @@ export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
   user: RequestUser;
 }
 
-export const getDemandes = async ({
-  statut,
-  search,
-  user,
-  offset = 0,
-  limit = 20,
-  order,
-  orderBy,
-  campagne = CURRENT_ANNEE_CAMPAGNE,
-}: Filters) => {
+export const getDemandesQuery = async (
+  { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
+  anneeCampagne: string
+) => {
   const cleanSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
   const search_array = cleanSearch.split(" ") ?? [];
@@ -50,9 +43,10 @@ export const getDemandes = async ({
     )
     .leftJoin("user", "user.id", "demande.createurId")
     .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", campagne)
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        return eb;
+      })
     )
     .selectAll("demande")
     .select((eb) => [
@@ -66,7 +60,6 @@ export const getDemandes = async ({
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",
-      "campagne.statut as statutCampagne",
       sql<string>`count(*) over()`.as("count"),
       jsonObjectFrom(
         eb
@@ -85,7 +78,7 @@ export const getDemandes = async ({
         .selectFrom("demande as demandeImportee")
         .select(["demandeImportee.numero"])
         .whereRef("demandeImportee.numeroHistorique", "=", "demande.numero")
-        .where(isDemandeFromLatestCampagne(eb, "demandeImportee"))
+        .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
         .limit(1)
         .as("numeroDemandeImportee"),
     ])

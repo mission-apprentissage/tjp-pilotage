@@ -68,10 +68,16 @@ export const PrimaryFiltersSection = ({
                     width={[null, null, "72"]}
                     size="md"
                     variant={"newInput"}
-                    value={activeFilters.campagne?.toString() ?? ""}
-                    onChange={(e) => handleFilters("campagne", e.target.value)}
+                    value={
+                      activeFilters.anneeCampagne?.toString() ??
+                      data?.campagne?.annee ??
+                      ""
+                    }
+                    onChange={(e) =>
+                      handleFilters("anneeCampagne", e.target.value)
+                    }
                     borderBottomColor={
-                      activeFilters.campagne != undefined ? "info.525" : ""
+                      activeFilters.anneeCampagne != undefined ? "info.525" : ""
                     }
                   >
                     {data?.filters.campagnes?.map((option) => (

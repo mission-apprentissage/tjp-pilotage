@@ -5,7 +5,6 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
@@ -66,44 +65,6 @@ export default () => {
     );
   };
 
-  const { codeRegionFilter, setCodeRegionFilter } = useContext(
-    CodeRegionFilterContext
-  );
-
-  const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
-
-  const [statutFilter, setStatutFilter] = useState<
-    ("draft" | "submitted" | "refused")[] | undefined
-  >(["draft", "submitted"]);
-
-  const [campagneFilter, setCampagneFilter] = useState<string>(
-    CURRENT_ANNEE_CAMPAGNE
-  );
-
-  useEffect(() => {
-    if (
-      filters?.codeRegion === undefined &&
-      filters?.codeAcademie === undefined &&
-      filters?.codeDepartement === undefined &&
-      codeRegionFilter !== ""
-    ) {
-      filters.codeRegion = [codeRegionFilter];
-    }
-    if (
-      filters?.rentreeScolaire === undefined &&
-      rentreeScolaireFilter !== ""
-    ) {
-      filters.rentreeScolaire = rentreeScolaireFilter;
-    }
-    if (filters?.statut === undefined && statutFilter !== undefined) {
-      filters.statut = statutFilter;
-    }
-    if (filters?.campagne === undefined && campagneFilter != "") {
-      filters.campagne = campagneFilter;
-    }
-    setSearchParams({ filters: filters });
-  }, []);
-
   const trackEvent = usePlausible();
   const filterTracker =
     (filterName: keyof FiltersDemandesRestitutionIntentions) => () => {
@@ -132,17 +93,18 @@ export default () => {
     type: keyof FiltersDemandesRestitutionIntentions,
     value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
   ) => {
-    if (type === "codeRegion" && value != null) {
-      setCodeRegionFilter((value as string[])[0] ?? "");
-    }
-    if (type === "rentreeScolaire" && value != null)
-      setRentreeScolaireFilter((value as string[])[0] ?? "");
-    if (type === "statut" && value != null)
-      setStatutFilter([
-        (value as string[])[0] as "draft" | "submitted" | "refused",
-      ]);
-    if (type === "campagne" && value != null)
-      setCampagneFilter((value as string[])[0] ?? "");
+    if (value != null)
+      switch (type) {
+        case "codeRegion":
+          setCodeRegionFilter((value as string[])[0] ?? "");
+          break;
+        case "rentreeScolaire":
+          setRentreeScolaireFilter((value as string[])[0] ?? "");
+          break;
+        case "statut":
+          setStatutFilter(value as ("draft" | "submitted" | "refused")[]);
+          break;
+      }
   };
 
   const handleFilters = (
@@ -190,6 +152,37 @@ export default () => {
         staleTime: 10000000,
       }
     );
+
+  const { codeRegionFilter, setCodeRegionFilter } = useContext(
+    CodeRegionFilterContext
+  );
+
+  const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
+
+  const [statutFilter, setStatutFilter] = useState<
+    ("draft" | "submitted" | "refused")[] | undefined
+  >(["draft", "submitted"]);
+
+  useEffect(() => {
+    if (
+      filters?.codeRegion === undefined &&
+      filters?.codeAcademie === undefined &&
+      filters?.codeDepartement === undefined &&
+      codeRegionFilter !== ""
+    ) {
+      filters.codeRegion = [codeRegionFilter];
+    }
+    if (
+      filters?.rentreeScolaire === undefined &&
+      rentreeScolaireFilter !== ""
+    ) {
+      filters.rentreeScolaire = rentreeScolaireFilter;
+    }
+    if (filters?.statut === undefined && statutFilter !== undefined) {
+      filters.statut = statutFilter;
+    }
+    setSearchParams({ filters: filters });
+  }, []);
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">
