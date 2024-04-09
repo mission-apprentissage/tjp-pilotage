@@ -1,11 +1,13 @@
+import { uniq } from "lodash";
 import { usePlausible } from "next-plausible";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { CURRENT_IJ_MILLESIME, VoieEnum } from "shared";
 import { CURRENT_RENTREE } from "shared/time/CURRENT_RENTREE";
 
 import { client } from "../../../../../../api.client";
 import { useStateParams } from "../../../../../../utils/useFilters";
 import { useEtablissementContext } from "../../context/etablissementContext";
+import { DisplayTypeEnum } from "./tabs/displayTypeEnum";
 import {
   AnalyseDetaillee,
   ChiffresEntree,
@@ -69,59 +71,65 @@ function selectFormationWithMostValues(
   return formationWithMostValues[0];
 }
 
-function shouldSetDefaultVoieFilterToApprentissage(data?: AnalyseDetaillee) {
-  if (data && data.formations) {
-    const hasAnyScolaireFormation = Object.values(data.formations).some(
-      (f) => f.voie === VoieEnum.scolaire
-    );
-    const hasAnyApprentissageFormation = Object.values(data.formations).some(
-      (f) => f.voie === VoieEnum.apprentissage
-    );
-
-    return !hasAnyScolaireFormation && hasAnyApprentissageFormation;
+function setDefaultVoieFilter(filters: Filters, data?: AnalyseDetaillee) {
+  if (filters.voie.length > 0) {
+    return filters.voie;
   }
 
-  return false;
+  if (!data?.formations) {
+    return [];
+  }
+
+  const hasAnyScolaireFormation = Object.values(data.formations).some(
+    (f) => f.voie === VoieEnum.scolaire
+  );
+
+  if (hasAnyScolaireFormation) {
+    return [VoieEnum.scolaire];
+  }
+
+  const hasAnyApprentissageFormation = Object.values(data.formations).some(
+    (f) => f.voie === VoieEnum.apprentissage
+  );
+
+  if (hasAnyApprentissageFormation) {
+    return [VoieEnum.apprentissage];
+  }
+  return [];
 }
 
-function shouldSelectDefaultFormation(params: Params, data?: AnalyseDetaillee) {
-  const hasFormations =
-    data?.formations && Object.keys(data.formations).length > 0;
-  const hasCodeNiveauDiplomeFilter =
-    (params.filters.codeNiveauDiplome?.length || 0) > 0;
-  const hasVoieFilter = (params.filters.voie?.length || 0) > 0;
+function filterFormations(data: AnalyseDetaillee, filters: Filters) {
+  const { codeNiveauDiplome, voie } = filters;
+  return Object.values(data.formations ?? {}).reduce((acc, f) => {
+    if (
+      ((codeNiveauDiplome ?? []).length === 0 ||
+        codeNiveauDiplome?.includes(f.codeNiveauDiplome)) &&
+      ((voie ?? []).length === 0 ||
+        voie?.includes("all") ||
+        voie?.includes(f.voie))
+    ) {
+      acc[f.offre] = f;
+    }
+    return acc;
+  }, {} as Formations);
+}
 
-  if (
-    hasFormations &&
-    (!params.offre || hasCodeNiveauDiplomeFilter || hasVoieFilter)
-  ) {
-    const isOffreInFilteredListOfFormations = Object.values(
-      data.formations
-    ).some(
-      (f) =>
-        (params.filters.codeNiveauDiplome?.includes(f.codeNiveauDiplome) ||
-          params.filters.voie?.includes(f.voie)) &&
-        f.offre === params.offre
-    );
-
-    return !isOffreInFilteredListOfFormations;
-  }
-
-  return false;
+function shouldSelectDefaultFormation(params: Params, formations?: Formations) {
+  return !params.offre || formations?.[params.offre] === undefined;
 }
 
 export const useAnalyseDetaillee = () => {
   const trackEvent = usePlausible();
   const { uai, setAnalyseDetaillee } = useEtablissementContext();
-
+  const [filteredDatas, setFilteredDatas] = useState<AnalyseDetaillee | null>();
   const [searchParams, setSearchParams] = useStateParams<Params>({
     defaultValues: {
       filters: {
         codeNiveauDiplome: [],
-        voie: [VoieEnum.scolaire],
+        voie: [],
       },
       offre: "",
-      displayType: "dashboard",
+      displayType: DisplayTypeEnum.dashboard,
     },
   });
 
@@ -130,7 +138,6 @@ export const useAnalyseDetaillee = () => {
     .useQuery(
       {
         params: { uai },
-        query: searchParams.filters,
       },
       {
         keepPreviousData: true,
@@ -139,10 +146,13 @@ export const useAnalyseDetaillee = () => {
     );
 
   const displayDashboard = () =>
-    setSearchParams({ ...searchParams, displayType: "dashboard" });
+    setSearchParams({
+      ...searchParams,
+      displayType: DisplayTypeEnum.dashboard,
+    });
 
   const displayQuadrant = () =>
-    setSearchParams({ ...searchParams, displayType: "quadrant" });
+    setSearchParams({ ...searchParams, displayType: DisplayTypeEnum.quadrant });
 
   const setOffre = (offre: string) => {
     filterTracker("offre", offre);
@@ -170,50 +180,53 @@ export const useAnalyseDetaillee = () => {
       });
     };
 
+  // Définie un filtre par défaut sur la voie
   useEffect(() => {
-    if (shouldSelectDefaultFormation(searchParams, data)) {
-      const { codeNiveauDiplome, voie } = searchParams.filters;
-      const filteredFormations = Object.values(data!.formations).reduce(
-        (acc, f) => {
-          if (
-            ((codeNiveauDiplome ?? []).length === 0 ||
-              codeNiveauDiplome?.includes(f.codeNiveauDiplome)) &&
-            ((voie ?? []).length === 0 || voie?.includes(f.voie))
-          ) {
-            acc[f.offre] = f;
-          }
-          return acc;
-        },
-        {} as Formations
-      );
+    handleFilters("voie", setDefaultVoieFilter(searchParams.filters, data));
+  }, [data]);
 
-      const selectedOffre = selectFormationWithMostValues(
-        filteredFormations,
-        data!.chiffresIJ,
-        data!.chiffresEntree
-      );
+  // Choix de la selection de la formation par défaut
+  useEffect(() => {
+    if (Object.keys(filteredDatas?.formations ?? {}).length > 0) {
+      if (
+        shouldSelectDefaultFormation(searchParams, filteredDatas?.formations)
+      ) {
+        setSearchParams({
+          ...searchParams,
+          offre: selectFormationWithMostValues(
+            filteredDatas!.formations,
+            data!.chiffresIJ,
+            data!.chiffresEntree
+          ),
+        });
+      }
+    }
+  }, [filteredDatas, searchParams]);
 
-      setSearchParams({
-        ...searchParams,
-        offre: selectedOffre,
+  // Filtre les formations disponibles en fonction des filters : voie et code niveau diplome
+  useEffect(() => {
+    if (data) {
+      const filteredFormations = filterFormations(data, searchParams.filters);
+
+      setFilteredDatas({
+        ...data,
+        formations: filteredFormations,
       });
     }
   }, [data, searchParams]);
 
   useEffect(() => {
-    if (shouldSetDefaultVoieFilterToApprentissage(data)) {
-      handleFilters("voie", [VoieEnum.apprentissage]);
+    if (!isLoading && filteredDatas) {
+      setAnalyseDetaillee(filteredDatas);
     }
-  }, [data]);
-
-  useEffect(() => {
-    if (!isLoading && data) {
-      setAnalyseDetaillee(data);
-    }
-  }, [data, isLoading]);
+  }, [filteredDatas, isLoading]);
 
   return {
-    ...data,
+    ...filteredDatas,
+    filters: {
+      diplomes: filteredDatas?.filters?.diplomes ?? [],
+      voies: uniq(Object.values(data?.formations ?? {}).map((f) => f.voie)),
+    },
     isLoading,
     displayDashboard,
     displayQuadrant,
