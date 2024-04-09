@@ -48,11 +48,7 @@ export const getAnalyseDetailleeEtablissementFactory =
       getPositionQuadrant,
     }
   ) =>
-  async (activeFilters: {
-    uai: string;
-    codeNiveauDiplome?: string[];
-    voie?: string[];
-  }) => {
+  async (activeFilters: { uai: string }) => {
     const [
       formations,
       etablissement,
