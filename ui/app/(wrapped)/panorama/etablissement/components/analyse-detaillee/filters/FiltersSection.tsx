@@ -1,4 +1,4 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex, Select, Text } from "@chakra-ui/react";
 import { Voie, VoieEnum } from "shared";
 
 import { Multiselect } from "@/components/Multiselect";
@@ -14,6 +14,13 @@ const extractVoieOptions = (voies?: Voie[]) => {
 
   if (!voies?.length || voies.includes(VoieEnum.apprentissage)) {
     options.push({ value: VoieEnum.apprentissage, label: "Apprentissage" });
+  }
+
+  if (
+    voies?.includes(VoieEnum.scolaire) &&
+    voies?.includes(VoieEnum.apprentissage)
+  ) {
+    options.push({ value: "all", label: "Toutes" });
   }
 
   return options;
@@ -53,17 +60,17 @@ export const FiltersSection = ({
         <Text fontSize={14} fontWeight={400} lineHeight={"24px"}>
           Voie
         </Text>
-        <Multiselect
-          onClose={filterTracker("voie")}
-          width="20rem"
-          variant={"newInput"}
-          onChange={(selected) => handleFilters("voie", selected)}
-          options={extractVoieOptions(filtersData?.voies)}
-          value={filters.voie ?? []}
-          size="md"
+        <Select
+          value={filters.voie?.[0] ?? "all"}
+          onChange={(e) => handleFilters("voie", [e.target.value])}
+          width="24rem"
         >
-          Toutes
-        </Multiselect>
+          {extractVoieOptions(filtersData?.voies).map((option) => (
+            <option key={option.value} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </Select>
       </Flex>
     </Flex>
   );

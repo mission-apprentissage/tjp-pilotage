@@ -6,6 +6,7 @@ import { FiltersSection } from "../filters/FiltersSection";
 import { useAnalyseDetaillee } from "../hook";
 import { ListeFormations } from "../listeFormations/ListeFormations";
 import { QuadrantSection } from "../quadrant/QuadrantSection";
+import { DisplayTypeEnum } from "./displayTypeEnum";
 
 export const TabsContent = (params: ReturnType<typeof useAnalyseDetaillee>) => {
   const {
@@ -42,14 +43,15 @@ export const TabsContent = (params: ReturnType<typeof useAnalyseDetaillee>) => {
         <GridItem colSpan={6}>
           {feature.etablissementQuadrant ? (
             <>
-              {displayType === "dashboard" ? (
+              {displayType === DisplayTypeEnum.dashboard && (
                 <Dashboard
                   codeRegion={etablissement?.codeRegion}
                   formation={formations?.[offre]}
                   chiffresIJOffre={chiffresIJ?.[offre]}
                   chiffresEntreeOffre={chiffresEntree?.[offre]}
                 />
-              ) : (
+              )}
+              {displayType === DisplayTypeEnum.quadrant && (
                 <QuadrantSection
                   formations={Object.values(formations ?? {})}
                   currentFormation={formations?.[offre]}

@@ -1,9 +1,17 @@
+import { voie } from "shared/enum/voieEnum";
+import { z } from "zod";
+
 import { client } from "@/api.client";
 
 export type Query =
   (typeof client.inferArgs)["[GET]/etablissement/:uai/analyse-detaillee"]["query"];
 
-export type Filters = Pick<Query, "codeNiveauDiplome" | "voie">;
+const filtersSchema = z.object({
+  codeNiveauDiplome: z.array(z.string()),
+  voie: z.array(z.enum([...voie.options, "all"] as const)),
+});
+
+export type Filters = z.infer<typeof filtersSchema>;
 export type AnalyseDetaillee =
   (typeof client.infer)["[GET]/etablissement/:uai/analyse-detaillee"];
 export type Formations = AnalyseDetaillee["formations"];
