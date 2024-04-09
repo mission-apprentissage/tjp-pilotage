@@ -19,6 +19,7 @@ import { NSF_Groupe_Specialite } from "../fileTypes/NSFGroupeSpecialite";
 import { Offres_apprentissage } from "../fileTypes/Offres_apprentissage";
 import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { Regroupement } from "../fileTypes/Regroupement";
+import { Rome } from "../fileTypes/Rome";
 import { StructureDenseignement } from "../fileTypes/Structures_denseignement";
 import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
@@ -50,6 +51,7 @@ export type LineTypes = {
   n_domaine_specialite_: NSF_Domaine_Specialite;
   n_groupe_specialite_: NSF_Groupe_Specialite;
   domaine_professionnel: Domaine_Professionnel;
+  rome: Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
