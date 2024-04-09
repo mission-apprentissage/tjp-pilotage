@@ -69,6 +69,10 @@ export const getDemandesSchema = {
           statut: z.string(),
         })
       ),
+      currentCampagne: z.object({
+        annee: z.string(),
+        statut: z.string(),
+      }),
       campagne: z.object({
         annee: z.string(),
         statut: z.string(),

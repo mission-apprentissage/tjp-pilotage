@@ -197,7 +197,6 @@ export const IntentionForm = ({
                   formId={formId}
                   disabled={isFormDisabled}
                   errors={errors}
-                  formMetadata={formMetadata}
                   footerActions={
                     <>
                       <Box justifyContent={"center"} ref={statusComponentRef}>

@@ -43,6 +43,7 @@ export const createDemandeQuery = ({
       compensationCfd: null,
       compensationCodeDispositif: null,
       compensationRentreeScolaire: null,
+      amiCma: null,
       createurId: user.id,
       statut: "draft",
       typeDemande:

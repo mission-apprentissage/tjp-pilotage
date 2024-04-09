@@ -76,7 +76,6 @@ export const MotifField = chakra(
                       ref={ref}
                       disabled={disabled}
                       name={name}
-                      isRequired={false}
                       key={value}
                       onBlur={onBlur}
                       value={value}

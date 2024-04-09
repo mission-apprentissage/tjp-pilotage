@@ -28,7 +28,11 @@ export const BesoinRHField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.motif} isRequired>
+      <FormControl
+        className={className}
+        isInvalid={!!errors.besoinRH}
+        isRequired
+      >
         <FormLabel>Sur le plan RH, identifiez-vous des besoins ?</FormLabel>
         <Controller
           name="besoinRH"
@@ -46,7 +50,7 @@ export const BesoinRHField = chakra(
                       ref={ref}
                       disabled={disabled}
                       name={name}
-                      isRequired={false}
+                      required={false}
                       key={value}
                       onBlur={onBlur}
                       value={value}

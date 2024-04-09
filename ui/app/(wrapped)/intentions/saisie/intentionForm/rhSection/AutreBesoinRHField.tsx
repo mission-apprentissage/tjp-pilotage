@@ -24,18 +24,14 @@ export const AutreBesoinRHField = chakra(
 
     return (
       <Collapse in={visible} unmountOnExit>
-        <FormControl
-          className={className}
-          isInvalid={!!errors.autreMotif}
-          isRequired
-        >
+        <FormControl className={className} isInvalid={!!errors.autreBesoinRH}>
           <FormLabel>Autre besoin RH</FormLabel>
           {visible && (
             <Textarea
               {...register("autreBesoinRH", {
                 shouldUnregister: true,
                 disabled,
-                required: "Veuillez préciser votre motif",
+                required: "Veuillez préciser votre besoin RH",
               })}
             />
           )}
