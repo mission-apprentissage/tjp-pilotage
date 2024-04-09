@@ -11,7 +11,6 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
@@ -57,6 +56,7 @@ export const Header = ({
   searchDemande,
   setSearchDemande,
   campagnes,
+  campagne,
 }: {
   searchParams: {
     search?: string;
@@ -70,9 +70,13 @@ export const Header = ({
   searchDemande?: string;
   setSearchDemande: (search: string) => void;
   campagnes?: Campagnes;
+  campagne?: {
+    annee: string;
+    statut: string;
+  };
 }) => {
   const trackEvent = usePlausible();
-  const campagne = searchParams.campagne ?? CURRENT_ANNEE_CAMPAGNE;
+  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
 
   const onClickSearchDemande = () => {
     setSearchParams({ search: searchDemande });
@@ -90,10 +94,12 @@ export const Header = ({
             <Flex direction="row">
               <Text my={"auto"}>
                 Campagne{" "}
-                {campagnes?.find((c) => c.annee === campagne)?.annee ?? ""}
+                {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ?? ""}
               </Text>
               <CampagneStatutTag
-                statut={campagnes?.find((c) => c.annee === campagne)?.statut}
+                statut={
+                  campagnes?.find((c) => c.annee === anneeCampagne)?.statut
+                }
               />
             </Flex>
           </MenuButton>

@@ -182,7 +182,11 @@ export const PageClient = () => {
         minHeight={0}
         py={4}
       >
-        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
+        <MenuIntention
+          hasPermissionEnvoi={hasPermissionEnvoi}
+          isRecapView
+          campagne={data?.campagne}
+        />
         <Box
           display={["none", null, "unset"]}
           borderLeft="solid 1px"
@@ -204,6 +208,7 @@ export const PageClient = () => {
             searchDemande={searchDemande}
             setSearchDemande={setSearchDemande}
             campagnes={data?.campagnes}
+            campagne={data?.campagne}
           />
           {data?.demandes.length ? (
             <>
@@ -364,7 +369,7 @@ export const PageClient = () => {
                               demande.dateModification
                             ).toLocaleString()}
                           </Td>
-                          {demande.statutCampagne === "terminée" && (
+                          {data?.campagne.statut === "terminée" && (
                             <Td>
                               {demande.numeroDemandeImportee ? (
                                 <Button

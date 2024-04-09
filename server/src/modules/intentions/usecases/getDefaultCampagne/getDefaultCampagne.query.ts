@@ -3,7 +3,7 @@ import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { kdb } from "../../../../db/db";
 
-export const getCurrentCampagne = async () => {
+export const getDefaultCampagneQuery = async () => {
   return kdb
     .selectFrom("campagne")
     .selectAll()

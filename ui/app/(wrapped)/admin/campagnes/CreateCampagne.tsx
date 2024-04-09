@@ -14,11 +14,13 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  UnorderedList,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { AxiosError } from "axios";
 import { DatepickerConfigs, SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
 
@@ -71,6 +73,8 @@ export const CreateCampagne = ({
 
   const queryClient = useQueryClient();
 
+  const [serverErrors, setServerErrors] = useState<Record<string, string>>();
+
   const {
     mutate: createCampagne,
     isLoading,
@@ -79,6 +83,11 @@ export const CreateCampagne = ({
     onSuccess: () => {
       queryClient.invalidateQueries(["[GET]/campagnes"]);
       onClose();
+    },
+    //@ts-ignore
+    onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
+      const errors = e.response?.data.errors;
+      setServerErrors(errors);
     },
   });
 
@@ -180,7 +189,15 @@ export const CreateCampagne = ({
           </FormControl>
           {isError && (
             <Alert status="error">
-              <AlertDescription>Erreur lors de la création</AlertDescription>
+              {serverErrors ? (
+                <UnorderedList>
+                  {Object.entries(serverErrors).map(([key, msg]) => (
+                    <li key={key}>{msg}</li>
+                  ))}
+                </UnorderedList>
+              ) : (
+                <AlertDescription>Erreur lors de la création</AlertDescription>
+              )}
             </Alert>
           )}
         </ModalBody>

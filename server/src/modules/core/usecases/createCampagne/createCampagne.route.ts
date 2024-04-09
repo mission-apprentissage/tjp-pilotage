@@ -14,7 +14,7 @@ export const createCampagneRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("campagnes/ecriture"),
       handler: async (request, response) => {
-        createCampagne(request.body);
+        await createCampagne(request.body);
 
         response.code(200).send();
       },

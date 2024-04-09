@@ -1,4 +1,4 @@
-import { getStatsSortieParRegions } from "../../queries/getStatsSortie/getStatsSortie";
+import { getStatsSortieParRegionsQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
@@ -7,7 +7,7 @@ export const getDataForPanoramaEtablissementFactory =
     deps = {
       getFormationsEtablissement: dependencies.getFormationsEtablissement,
       getStatsEtablissement: dependencies.getStatsEtablissement,
-      getStatsSortieParRegions: getStatsSortieParRegions,
+      getStatsSortieParRegionsQuery,
       getPositionQuadrant,
     }
   ) =>
@@ -19,7 +19,7 @@ export const getDataForPanoramaEtablissementFactory =
       await Promise.all([
         deps.getFormationsEtablissement(activeFilters),
         deps.getStatsEtablissement(activeFilters),
-        deps.getStatsSortieParRegions({}),
+        deps.getStatsSortieParRegionsQuery({}),
       ]);
 
     return {

@@ -1,9 +1,8 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { DB } from "../../db/db";
 
-export const isDemandeFromLatestCampagne = (
+export const isDemandeCampagneEnCours = (
   eb: ExpressionBuilder<DB, "demande">,
   alias?: string
 ) => {
@@ -15,6 +14,6 @@ export const isDemandeFromLatestCampagne = (
     eb
       .selectFrom("campagne")
       .select("id")
-      .where("campagne.annee", "=", CURRENT_ANNEE_CAMPAGNE)
+      .where("campagne.statut", "=", "en_cours")
   );
 };

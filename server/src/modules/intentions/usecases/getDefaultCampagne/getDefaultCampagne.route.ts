@@ -3,8 +3,8 @@ import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { getCurrentCampagne } from "./getCurrentCampagne.query";
-import { getCurrentCampagneSchema } from "./getCurrentCampagne.schema";
+import { getCurrentCampagneSchema } from "./getDefaultCampagne.schema";
+import { getDefaultCampagneUsecase } from "./getDefaultCampagne.usecase";
 
 export const getCurrentCampagneRoute = (server: Server) => {
   return createRoute("/campagne/current", {
@@ -16,7 +16,7 @@ export const getCurrentCampagneRoute = (server: Server) => {
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
         if (!request.user) throw Boom.forbidden();
-        const campagne = await getCurrentCampagne();
+        const campagne = await getDefaultCampagneUsecase();
         response.status(200).send(campagne);
       },
     });

@@ -46,7 +46,6 @@ const DemandesItem = z.object({
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
   userName: z.string().optional(),
-  statutCampagne: z.string(),
   numeroDemandeImportee: z.string().optional(),
 });
 
@@ -70,6 +69,10 @@ export const getDemandesSchema = {
           statut: z.string(),
         })
       ),
+      campagne: z.object({
+        annee: z.string(),
+        statut: z.string(),
+      }),
     }),
   },
 };

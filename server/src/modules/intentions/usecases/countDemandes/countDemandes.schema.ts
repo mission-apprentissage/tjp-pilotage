@@ -2,7 +2,7 @@ import { z } from "zod";
 
 export const countDemandesSchema = {
   querystring: z.object({
-    campagne: z.string().optional(),
+    anneeCampagne: z.string().optional(),
   }),
   response: {
     200: z.object({

@@ -66,6 +66,10 @@ export const getStatsPilotageIntentionsSchema = {
       draft: StatsTransfoSchema,
       submitted: StatsTransfoSchema,
       all: StatsTransfoSchema,
+      campagne: z.object({
+        annee: z.string(),
+        statut: z.string(),
+      }),
       filters: z.object({
         campagnes: z.array(OptionSchema),
         rentreesScolaires: z.array(OptionSchema),
