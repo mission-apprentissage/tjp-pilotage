@@ -9,6 +9,7 @@ export const importLienEmploiFormationFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     createDomaineProfessionnel = importLienEmploiFormationDeps.createDomaineProfessionnel,
+    createRome = importLienEmploiFormationDeps.createRome,
   }) =>
   async () => {
     console.log(`Import des domaines professionnels`);
@@ -27,9 +28,29 @@ export const importLienEmploiFormationFactory =
           libelleDomaineProfessionnel: item.libelle_domaine_professionnel,
         };
 
-        console.log(item);
-
         await createDomaineProfessionnel(data);
+
+        countDomaineProfessionnel++;
+        process.stdout.write(`\r${countDomaineProfessionnel}`);
+      },
+      { parallel: 20 }
+    );
+
+    await streamIt(
+      (countRome) =>
+        findRawDatas({
+          type: "rome",
+          offset: countRome,
+          limit: 20,
+        }),
+      async (item) => {
+        const data: Insertable<DB["rome"]> = {
+          codeRome: item.code_rome,
+          libelleRome: item.libelle_rome,
+          codeDomaineProfessionnel: item.code_rome.substring(0, 3),
+        };
+
+        await createRome(data);
 
         countDomaineProfessionnel++;
         process.stdout.write(`\r${countDomaineProfessionnel}`);

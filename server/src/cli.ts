@@ -169,6 +169,7 @@ cli
       ...getImports("n_domaine_specialite_"),
       ...getImports("n_groupe_specialite_"),
       ...getImports("domaine_professionnel"),
+      ...getImports("rome"),
     };
 
     if (filename) {

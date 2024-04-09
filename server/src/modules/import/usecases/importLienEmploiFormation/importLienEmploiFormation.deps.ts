@@ -14,6 +14,15 @@ const createDomaineProfessionnel = async (
     .execute();
 };
 
+const createRome = async (rome: Insertable<DB["rome"]>) => {
+  return kdb
+    .insertInto("rome")
+    .values(rome)
+    .onConflict((oc) => oc.column("codeRome").doUpdateSet(rome))
+    .execute();
+};
+
 export const importLienEmploiFormation = {
   createDomaineProfessionnel,
+  createRome,
 };

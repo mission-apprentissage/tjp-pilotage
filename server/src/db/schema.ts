@@ -280,6 +280,12 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface Rome {
+  codeRome: string;
+  libelleRome: string | null;
+  codeDomaineProfessionnel: string | null;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -322,5 +328,6 @@ export interface DB {
   nsf: Nsf;
   rawData: RawData;
   region: Region;
+  rome: Rome;
   user: User;
 }
