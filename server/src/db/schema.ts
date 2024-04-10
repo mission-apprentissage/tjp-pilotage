@@ -169,10 +169,26 @@ export interface Demande {
   campagneId: string | null;
   id: Generated<string>;
   numeroHistorique: string | null;
-  besoinRH: string[] | null;
   autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
+  recrutementsRH: boolean | null;
+  recrutementRH: boolean | null;
+  nbRecrutementRH: number | null;
+  discipline1RecrutementRH: string | null;
+  discipline2RecrutementRH: string | null;
+  reconversionRH: boolean | null;
+  nbReconversionRH: number | null;
+  discipline1ReconversionRH: string | null;
+  discipline2ReconversionRH: string | null;
+  professeurAssocieRH: boolean | null;
+  nbProfesseurAssocieRH: number | null;
+  discipline1ProfesseurAssocieRH: string | null;
+  discipline2ProfesseurAssocieRH: string | null;
+  formationRH: boolean | null;
+  nbFormationRH: number | null;
+  discipline1FormationRH: string | null;
+  discipline2FormationRH: string | null;
 }
 
 export interface Departement {
@@ -358,6 +374,26 @@ export interface LatestDemandeView {
   campagneId: string | null;
   id: string | null;
   numeroHistorique: string | null;
+  autreBesoinRH: string | null;
+  amiCmaValide: boolean | null;
+  amiCmaValideAnnee: string | null;
+  recrutementsRH: boolean | null;
+  recrutementRH: boolean | null;
+  nbRecrutementRH: number | null;
+  discipline1RecrutementRH: string | null;
+  discipline2RecrutementRH: string | null;
+  reconversionRH: boolean | null;
+  nbReconversionRH: number | null;
+  discipline1ReconversionRH: string | null;
+  discipline2ReconversionRH: string | null;
+  professeurAssocieRH: boolean | null;
+  nbProfesseurAssocieRH: number | null;
+  discipline1ProfesseurAssocieRH: string | null;
+  discipline2ProfesseurAssocieRH: string | null;
+  formationRH: boolean | null;
+  nbFormationRH: number | null;
+  discipline1FormationRH: string | null;
+  discipline2FormationRH: string | null;
 }
 
 export interface NiveauDiplome {

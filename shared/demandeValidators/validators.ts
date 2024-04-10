@@ -24,6 +24,9 @@ export const isTypeCompensation = (typeDemande: string) =>
 export const isTypeTransfert = (typeDemande: string) =>
   ["transfert"].includes(typeDemande);
 
+export const isTypeColoration = (typeDemande: string) =>
+  ["coloration"].includes(typeDemande);
+
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
   if (value === undefined) return false;
@@ -96,12 +99,12 @@ export const demandeValidators: Record<
       return "La capacité scolaire doit être un nombre entier positif";
     }
 
-    if (
-      isTypeOuverture(demande.typeDemande) &&
-      demande.capaciteScolaire === 0
-    ) {
-      return "La capacité scolaire devrait être supérieure à 0 dans le cas d'une ouverture";
-    }
+    // if (
+    //   isTypeOuverture(demande.typeDemande) &&
+    //   demande.capaciteScolaire === 0
+    // ) {
+    //   return "La capacité scolaire devrait être supérieure à 0 dans le cas d'une ouverture";
+    // }
 
     if (
       isTypeFermeture(demande.typeDemande) &&
@@ -144,6 +147,14 @@ export const demandeValidators: Record<
         return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
       }
     }
+    if (
+      isTypeColoration(demande.typeDemande) &&
+      isPositiveNumber(demande.capaciteScolaire) &&
+      isPositiveNumber(demande.capaciteScolaireActuelle) &&
+      demande.capaciteScolaireActuelle > demande.capaciteScolaire
+    ) {
+      return "La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'une coloration.";
+    }
   },
   capaciteApprentissageActuelle: (demande) => {
     if (!isPositiveNumber(demande.capaciteApprentissageActuelle)) {
@@ -178,43 +189,41 @@ export const demandeValidators: Record<
       return "La capacité en apprentissage doit être un nombre entier positif";
     }
     if (!demande.mixte) {
-      if (demande.capaciteApprentissage === 0) return;
-      return "Le champ capacité en apprentissage doit être à 0";
+      return;
     }
-
     if (
       isTypeOuverture(demande.typeDemande) &&
       demande.capaciteApprentissage === 0
     ) {
-      return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une ouverture";
+      return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une ouverture mixte";
     }
     if (
       isTypeFermeture(demande.typeDemande) &&
       demande.capaciteApprentissage !== 0
     ) {
-      return "La capacité en apprentissage devrait être à 0 dans le cas d'une fermeture";
+      return "La capacité en apprentissage devrait être à 0 dans le cas d'une fermeture mixte";
     }
 
     if (isTypeAugmentation(demande.typeDemande)) {
       if (demande.capaciteApprentissage === 0)
-        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une augmentation";
+        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une augmentation mixte";
 
       if (
         isPositiveNumber(demande.capaciteApprentissageActuelle) &&
         demande.capaciteApprentissage <= demande.capaciteApprentissageActuelle
       ) {
-        return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'une augmentation";
+        return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'une augmentation mixte";
       }
     }
     if (isTypeDiminution(demande.typeDemande)) {
       if (demande.capaciteApprentissage === 0)
-        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une diminution";
+        return "La capacité en apprentissage devrait être supérieure à 0 dans le cas d'une diminution mixte";
 
       if (
         isPositiveNumber(demande.capaciteApprentissageActuelle) &&
         demande.capaciteApprentissage > demande.capaciteApprentissageActuelle
       ) {
-        return "La capacité en apprentissage devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
+        return "La capacité en apprentissage devrait être inférieure à la capacité actuelle dans le cas d'une diminution mixte";
       }
     }
     if (isTypeTransfert(demande.typeDemande)) {
@@ -228,11 +237,28 @@ export const demandeValidators: Record<
         return "La capacité en apprentissage devrait être supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
       }
     }
+    if (
+      isTypeColoration(demande.typeDemande) &&
+      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+      isPositiveNumber(demande.capaciteApprentissage) &&
+      demande.capaciteApprentissageActuelle > demande.capaciteApprentissage
+    ) {
+      return "La capacité en apprentissage devrait être supérieure ou égale à la capacité actuelle dans le cas d'une coloration.";
+    }
   },
   capaciteApprentissageColoree: (demande) => {
+    if (
+      (isTypeColoration(demande.typeDemande) || demande.coloration) &&
+      demande.mixte &&
+      !isPositiveNumber(demande.capaciteScolaireColoree)
+    ) {
+      return "La capacité en apprentssage colorée doit être supérieure à 0.";
+    }
+
     if (!isPositiveNumber(demande.capaciteApprentissageColoree)) {
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
     }
+
     if (!demande.mixte || !demande.coloration) {
       if (demande.capaciteApprentissageColoree === 0) return;
       return "Le champ capacité en apprentissage colorée doit être vide";
@@ -254,9 +280,17 @@ export const demandeValidators: Record<
     }
   },
   capaciteScolaireColoree: (demande) => {
+    if (
+      (isTypeColoration(demande.typeDemande) || demande.coloration) &&
+      !isPositiveNumber(demande.capaciteScolaireColoree)
+    ) {
+      return "La capacité scolaire colorée doit être supérieure à 0.";
+    }
+
     if (!isPositiveNumber(demande.capaciteScolaireColoree)) {
       return "La capacité scolaire colorée doit être un nombre entier positif";
     }
+
     if (!demande.coloration) {
       if (demande.capaciteScolaireColoree === 0) return;
       return "Le champ scolaire colorée doit être à 0";
@@ -282,12 +316,24 @@ export const demandeValidators: Record<
       isPositiveNumber(demande.capaciteScolaire) &&
       demande.capaciteScolaireColoree > demande.capaciteScolaire
     ) {
-      return "La capacité colorée ne peut pas être supérieure à la capacité";
+      return "La capacité scolaire colorée ne peut pas être supérieure à la capacité";
+    }
+  },
+  sommeCapacite: (demande) => {
+    if (
+      isTypeFermeture(demande.typeDemande) ||
+      !isTypeColoration(demande.typeDemande)
+    )
+      return;
+
+    if (!demande.capaciteApprentissage && !demande.capaciteScolaire) {
+      return "La somme des capacités doit être supérieure à 0";
     }
   },
   sommeCapaciteColoree: (demande) => {
     if (
       isTypeFermeture(demande.typeDemande) ||
+      !isTypeColoration(demande.typeDemande) ||
       !demande.coloration ||
       !demande.mixte
     )

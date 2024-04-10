@@ -6,8 +6,6 @@ import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/prec
 import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
 import { AmiCmaValideField } from "./AmiCmaValideField";
-import { ColorationField } from "./ColorationField";
-import { LibelleColorationField } from "./LibelleColorationField";
 
 export const PrecisionsSection = ({ disabled }: { disabled: boolean }) => (
   <>
@@ -18,8 +16,6 @@ export const PrecisionsSection = ({ disabled }: { disabled: boolean }) => (
     <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
       <MotifField disabled={disabled} maxW="752px" mb="4" />
       <AutreMotifField disabled={disabled} mb="4" maxW="752px" />
-      <ColorationField disabled={disabled} />
-      <LibelleColorationField disabled={disabled} maxW="752px" mb="4" />
       <AmiCmaField disabled={disabled} />
       <AmiCmaValideField disabled={disabled} />
       <AmiCmaValideAnneeField disabled={disabled} />

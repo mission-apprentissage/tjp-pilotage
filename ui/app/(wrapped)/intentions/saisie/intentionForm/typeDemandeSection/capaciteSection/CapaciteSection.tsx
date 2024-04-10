@@ -3,9 +3,13 @@ import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../../defaultFormValues";
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
+import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
+import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
+import { ColorationField } from "./ColorationField";
+import { LibelleColorationField } from "./LibelleColorationField";
 import { MixteField } from "./MixteField";
 
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
@@ -35,6 +39,8 @@ const differenceCapacité = (
 export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   const { watch } = useFormContext<IntentionForms>();
 
+  const coloration = watch("coloration");
+
   const [capaciteScolaire, capaciteScolaireActuelle] = watch([
     "capaciteScolaire",
     "capaciteScolaireActuelle",
@@ -58,6 +64,8 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   return (
     <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
       <MixteField disabled={disabled} />
+      <ColorationField disabled={disabled} />
+      <LibelleColorationField disabled={disabled} />
       <Table maxW={752} columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
@@ -68,6 +76,11 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Th textAlign={"end"} p={2} pe={0}>
               Nouvelle capacité
             </Th>
+            {coloration && (
+              <Th textAlign={"end"} p={2} pe={0}>
+                Dont colorée
+              </Th>
+            )}
             <Th textAlign={"end"} p={2} pe={0}>
               Nouvelle place
             </Th>
@@ -88,6 +101,15 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Td p={0} border={"none"}>
               <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
             </Td>
+            {coloration && (
+              <Td p={0} border={"none"}>
+                <CapaciteScolaireColoreeField
+                  disabled={disabled}
+                  maxW={240}
+                  flex={1}
+                />
+              </Td>
+            )}
             <Td p={0} border={"none"}>
               <ConstanteField value={nouvellesPlacesScolaire} />
             </Td>
@@ -110,6 +132,15 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
                 flex={1}
               />
             </Td>
+            {coloration && (
+              <Td p={0} border={"none"}>
+                <CapaciteApprentissageColoreeField
+                  disabled={disabled}
+                  maxW={240}
+                  flex={1}
+                />
+              </Td>
+            )}
             <Td p={0} border={"none"}>
               <ConstanteField value={nouvellesPlacesApprentissage} />
             </Td>

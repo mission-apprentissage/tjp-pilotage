@@ -10,6 +10,8 @@ export const getMotifsTypeDemande = (typeDemande: TypeDemande): MotifLabel[] =>
   getMotifs()[typeDemande];
 export const getLabelsMotifsOuverture = () => motifsOuverture;
 export const getLabelsMotifsFermeture = () => motifsFermeture;
+export const getLabelsMotifsTransfert = () => motifsTransfert;
+export const getLabelsMotifsColoration = () => motifsColoration;
 
 export const MOTIFS_LABELS = {
   taux_insertion_satisfaisant: "Taux d’insertion satisfaisant",
@@ -77,10 +79,20 @@ const motifsTransfert: MotifLabel[] = [
   "autre",
 ];
 
+const motifsColoration: MotifLabel[] = [
+  "effectif_faible_scolaire",
+  "mixite_peu_attractive",
+  "insertion_professionnelle_insuffisante",
+  "formation_situation_fragilite",
+  "disponibilite_fonciere_insuffisante",
+  "autre",
+];
+
 const motifs: Record<TypeDemande, MotifLabel[]> = {
   ouverture_nette: motifsOuverture,
   augmentation_nette: motifsOuverture,
   fermeture: motifsFermeture,
   diminution: motifsFermeture,
   transfert: motifsTransfert,
+  coloration: motifsColoration,
 };

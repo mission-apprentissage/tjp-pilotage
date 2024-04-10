@@ -28,6 +28,9 @@ export const isTypeCompensation = (typeDemande: TypeDemande) =>
 export const isTypeTransfert = (typeDemande: TypeDemande) =>
   typeDemande === "transfert";
 
+export const isTypeColoration = (typeDemande: TypeDemande) =>
+  typeDemande === "coloration";
+
 export const getTypeDemandeLabel = (typeDemande?: TypeDemande): string =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].label : "";
 
@@ -182,6 +185,27 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     label: "Transfert",
     campagnes: ["2024"],
     desc: "Utiliser ce formulaire pour les transferts de place entre la voie scolaire et l'apprentissage.",
+    exemple: (
+      <>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour un transfert :
+        </Text>
+        <Text mb="1">
+          Je transfère une partie des places en voie scolaire d'un BAC PRO
+          Menuisier Fabricant vers l'apprentissage.
+        </Text>
+        <Text>
+          Pour ouvrir une section entière en apprentissage j'utilise le type
+          demande "Ouverture nette".
+        </Text>
+      </>
+    ),
+  },
+  coloration: {
+    value: "coloration",
+    label: "Coloration",
+    campagnes: ["2024"],
+    desc: "Utiliser ce formulaire pour colorer une formation existante.",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
