@@ -139,14 +139,14 @@ export const Quadrant = function <
   }));
 
   const moyennes = {
-    insertion: (() => {
+    poursuite: (() => {
       if (dimensions?.includes("tauxPoursuite")) {
         if (meanPoursuite) return meanPoursuite * 100;
         return undefined;
       }
       return 50;
     })(),
-    poursuite: (() => {
+    insertion: (() => {
       if (dimensions?.includes("tauxInsertion")) {
         if (meanInsertion) return meanInsertion * 100;
         return undefined;
@@ -201,7 +201,7 @@ export const Quadrant = function <
           axisLine: {
             onZero: false,
             symbol: ["none", "arrow"],
-            show: dimensions?.includes("tauxInsertion"),
+            show: dimensions?.includes("tauxPoursuite"),
           },
         },
       ],
