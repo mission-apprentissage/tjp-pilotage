@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { toBoolean } from "../../../utils/toBoolean";
-import { IntentionForms } from "../../defaultFormValues";
+import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { toBoolean } from "@/app/(wrapped)/intentions/saisie/utils/toBoolean";
 
-export const MixteField = chakra(
+export const ProfesseurAssocieRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
@@ -20,23 +20,28 @@ export const MixteField = chakra(
     } = useFormContext<IntentionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.mixte} isRequired>
-        <FormLabel>S’agit-il d’une formation mixte ?</FormLabel>
+      <FormControl
+        className={className}
+        isInvalid={!!errors.professeurAssocieRH}
+        isRequired
+      >
+        <FormLabel>Un professeur associé ?</FormLabel>
         <Controller
-          name="mixte"
+          name="professeurAssocieRH"
           control={control}
           disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",
           }}
-          render={({ field: { onChange, value, ref, disabled } }) => (
+          render={({ field: { onChange, value, onBlur, ref, disabled } }) => (
             <RadioGroup
               ms={6}
+              isDisabled={disabled}
               as={Stack}
+              onBlur={onBlur}
               onChange={(v) => onChange(toBoolean(v))}
               value={JSON.stringify(value)}
-              isDisabled={disabled}
             >
               <Radio ref={ref} value="true">
                 Oui
@@ -47,8 +52,10 @@ export const MixteField = chakra(
             </RadioGroup>
           )}
         />
-        {errors.mixte && (
-          <FormErrorMessage>{errors.mixte?.message}</FormErrorMessage>
+        {errors.professeurAssocieRH && (
+          <FormErrorMessage>
+            {errors.professeurAssocieRH?.message}
+          </FormErrorMessage>
         )}
       </FormControl>
     );

@@ -209,17 +209,20 @@ export const IntentionForm = ({
                           }
                           isLoading={isSubmitting}
                           variant="primary"
-                          onClick={handleSubmit((values) =>
-                            submitDemande({
-                              body: {
-                                demande: {
-                                  numero: formId,
-                                  ...values,
-                                  statut: formId ? values.statut : "draft",
+                          onClick={
+                            // () => console.log(form.getValues())
+                            handleSubmit((values) =>
+                              submitDemande({
+                                body: {
+                                  demande: {
+                                    numero: formId,
+                                    ...values,
+                                    statut: formId ? values.statut : "draft",
+                                  },
                                 },
-                              },
-                            })
-                          )}
+                              })
+                            )
+                          }
                           leftIcon={<CheckIcon />}
                         >
                           {formId

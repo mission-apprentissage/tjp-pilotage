@@ -74,6 +74,28 @@ export const InformationsBlock = ({
       {formId && (
         <>
           <StatusBlock disabled={disabled} />
+          {errors && (
+            <>
+              <Alert mt="8" alignItems="flex-start" status="error">
+                <AlertIcon />
+                <Box>
+                  <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+                  <AlertDescription mt="2">
+                    <UnorderedList>
+                      {Object.entries(errors).map(([key, msg]) => (
+                        <li key={key}>{msg}</li>
+                      ))}
+                    </UnorderedList>
+                  </AlertDescription>
+                </Box>
+              </Alert>
+              {!formId && footerActions && (
+                <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+                  {footerActions}
+                </Flex>
+              )}
+            </>
+          )}
           <Box bg="white" p="6" mt="6" borderRadius={6}>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
@@ -134,28 +156,6 @@ export const InformationsBlock = ({
               {footerActions && <Flex>{footerActions}</Flex>}
             </Flex>
           </Box>
-          {errors && (
-            <>
-              <Alert mt="8" alignItems="flex-start" status="error">
-                <AlertIcon />
-                <Box>
-                  <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-                  <AlertDescription mt="2">
-                    <UnorderedList>
-                      {Object.entries(errors).map(([key, msg]) => (
-                        <li key={key}>{msg}</li>
-                      ))}
-                    </UnorderedList>
-                  </AlertDescription>
-                </Box>
-              </Alert>
-              {!formId && footerActions && (
-                <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-                  {footerActions}
-                </Flex>
-              )}
-            </>
-          )}
         </>
       )}
     </>

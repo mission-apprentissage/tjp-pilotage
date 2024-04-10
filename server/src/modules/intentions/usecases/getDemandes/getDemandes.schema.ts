@@ -47,6 +47,22 @@ const DemandesItem = z.object({
   capaciteApprentissageColoree: z.coerce.number().optional(),
   userName: z.string().optional(),
   numeroDemandeImportee: z.string().optional(),
+  recrutementRH: z.boolean().optional(),
+  nbRecrutementRH: z.coerce.number().optional(),
+  discipline1RecrutementRH: z.string().optional(),
+  discipline2RecrutementRH: z.string().optional(),
+  reconversionRH: z.boolean().optional(),
+  nbReconversionRH: z.coerce.number().optional(),
+  discipline1ReconversionRH: z.string().optional(),
+  discipline2ReconversionRH: z.string().optional(),
+  professeurAssocieRH: z.boolean().optional(),
+  nbProfesseurAssocieRH: z.coerce.number().optional(),
+  discipline1ProfesseurAssocieRH: z.string().optional(),
+  discipline2ProfesseurAssocieRH: z.string().optional(),
+  formationRH: z.boolean().optional(),
+  nbFormationRH: z.coerce.number().optional(),
+  discipline1FormationRH: z.string().optional(),
+  discipline2FormationRH: z.string().optional(),
 });
 
 export const getDemandesSchema = {
