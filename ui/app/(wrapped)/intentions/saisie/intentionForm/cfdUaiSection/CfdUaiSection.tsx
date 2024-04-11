@@ -182,8 +182,8 @@ export const CfdUaiSection = ({
         />
         <DispositifBlock options={dispositifs} active={active && !disabled} />
         {isFCIL && <LibelleFCILField active={active}></LibelleFCILField>}
-        <Flex flexDirection={"row"} justifyContent={"space-between"}>
-          <Flex flexDirection="column" w="100%" maxW="752px">
+        <Flex direction={"row"} justify={"space-between"}>
+          <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">
               <UaiBlock
                 formMetadata={formMetadata}
@@ -195,7 +195,7 @@ export const CfdUaiSection = ({
               minH={16}
               mt={"auto"}
               align="flex-end"
-              justifyContent={"space-between"}
+              justify={"space-between"}
             >
               {!disabled && (
                 <Button

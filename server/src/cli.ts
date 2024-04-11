@@ -13,6 +13,7 @@ import { importConstatRentree } from "./modules/import/usecases/importConstatRen
 import { importDataEtablissements } from "./modules/import/usecases/importDataEtablissements/importDataEtablissements.usecase";
 import { importDataFormations } from "./modules/import/usecases/importDataFormations/importDataFormations.usecase";
 import { importDiplomesProfessionnels } from "./modules/import/usecases/importDiplomesProfessionnels/importDiplomesProfessionnels.usecase";
+import { importDiscipline } from "./modules/import/usecases/importDiscipline/importDiscipline.usecase";
 import { importDispositifs } from "./modules/import/usecases/importDispositifs/importDispositifs.usecase";
 import { importFamillesMetiers } from "./modules/import/usecases/importFamillesMetiers/importFamillesMetiers.usecase";
 import { importFormations } from "./modules/import/usecases/importFormationEtablissement/importFormationEtablissements.usecase";
@@ -173,6 +174,7 @@ cli
       ...getImports("n_categorie_specialite_"),
       ...getImports("n_domaine_specialite_"),
       ...getImports("n_groupe_specialite_"),
+      ...getImports("n_matiere_"),
     };
 
     if (filename) {
@@ -200,6 +202,7 @@ cli
       importDiplomesProfessionnels,
       importIndicateursRegion,
       importIndicateursDepartement,
+      importDiscipline,
       refreshViews,
     };
 
