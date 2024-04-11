@@ -203,6 +203,13 @@ export interface DiplomeProfessionnel {
   voie: string | null;
 }
 
+export interface Discipline {
+  codeDiscipline: string;
+  libelleDiscipline: string | null;
+  dateOuverture: Timestamp | null;
+  dateFermeture: Timestamp | null;
+}
+
 export interface Dispositif {
   codeDispositif: string;
   codeNiveauDiplome: string;
@@ -442,6 +449,7 @@ export interface DB {
   demande: Demande;
   departement: Departement;
   diplomeProfessionnel: DiplomeProfessionnel;
+  discipline: Discipline;
   dispositif: Dispositif;
   etablissement: Etablissement;
   familleMetier: FamilleMetier;
