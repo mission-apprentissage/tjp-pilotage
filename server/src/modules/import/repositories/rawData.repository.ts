@@ -9,6 +9,7 @@ import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
 import { Domaine_Professionnel } from "../fileTypes/DomaineProfessionnel";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
 import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
+import { Metier } from "../fileTypes/Metier";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
 import { NMefLine } from "../fileTypes/NMef";
@@ -52,6 +53,7 @@ export type LineTypes = {
   n_groupe_specialite_: NSF_Groupe_Specialite;
   domaine_professionnel: Domaine_Professionnel;
   rome: Rome;
+  metier: Metier;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

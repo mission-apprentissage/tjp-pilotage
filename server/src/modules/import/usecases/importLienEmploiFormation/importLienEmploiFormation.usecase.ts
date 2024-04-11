@@ -10,11 +10,12 @@ export const importLienEmploiFormationFactory =
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
     createDomaineProfessionnel = importLienEmploiFormationDeps.createDomaineProfessionnel,
     createRome = importLienEmploiFormationDeps.createRome,
+    createMetier = importLienEmploiFormationDeps.createMetier,
   }) =>
   async () => {
     console.log(`Import des domaines professionnels`);
 
-    let countDomaineProfessionnel = 0;
+    let domainesProfessionnels = 0;
     await streamIt(
       (countDomaineProfessionnel) =>
         findRawDatas({
@@ -30,12 +31,14 @@ export const importLienEmploiFormationFactory =
 
         await createDomaineProfessionnel(data);
 
-        countDomaineProfessionnel++;
-        process.stdout.write(`\r${countDomaineProfessionnel}`);
+        domainesProfessionnels++;
+        process.stdout.write(`\r${domainesProfessionnels}`);
       },
       { parallel: 20 }
     );
 
+    console.log(`\nImport des fiches ROME`);
+    let rome = 0;
     await streamIt(
       (countRome) =>
         findRawDatas({
@@ -52,8 +55,32 @@ export const importLienEmploiFormationFactory =
 
         await createRome(data);
 
-        countDomaineProfessionnel++;
-        process.stdout.write(`\r${countDomaineProfessionnel}`);
+        rome++;
+        process.stdout.write(`\r${rome}`);
+      },
+      { parallel: 20 }
+    );
+
+    console.log(`\nImport des métiers`);
+    let metiers = 0;
+    await streamIt(
+      (countMetier) =>
+        findRawDatas({
+          type: "metier",
+          offset: countMetier,
+          limit: 20,
+        }),
+      async (item) => {
+        const data: Insertable<DB["metier"]> = {
+          codeRome: item.code_rome.trim(),
+          libelleMetier: item.libelle_appellation_long.trim(),
+          codeMetier: item.code_ogr.trim(),
+        };
+
+        await createMetier(data);
+
+        metiers++;
+        process.stdout.write(`\r${metiers}`);
       },
       { parallel: 20 }
     );

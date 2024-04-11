@@ -259,6 +259,12 @@ export interface IndicateurSortie {
   cfdContinuum: string | null;
 }
 
+export interface Metier {
+  codeMetier: string;
+  codeRome: string | null;
+  libelleMetier: string | null;
+}
+
 export interface NiveauDiplome {
   codeNiveauDiplome: string;
   libelleNiveauDiplome: string | null;
@@ -324,6 +330,7 @@ export interface DB {
   indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
+  metier: Metier;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;
