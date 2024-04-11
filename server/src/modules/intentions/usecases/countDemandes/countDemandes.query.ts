@@ -16,7 +16,7 @@ export interface Filters
 }
 export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
   const countDemandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (anneeCampagne) {
