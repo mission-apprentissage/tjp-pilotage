@@ -50,6 +50,23 @@ export const STATS_DEMANDES_COLUMNS = {
   nbEtablissement: "Nb établissement",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
+  recrutementRH: "Recrutement ?",
+  nbRecrutementRH: "Nombre de recrutements",
+  disciplinesRecrutementRH: "Disciplines des recrutements",
+  reconversionRH: "Reconversion ?",
+  nbReconversionRH: "Nombre de reconversions",
+  disciplinesReconversionRH: "Disciplines des reconversions",
+  professeurAssocieRH: "Professeur associé ?",
+  nbProfesseurAssocieRH: "Nombre de professeurs associés",
+  disciplinesProfesseurAssocieRH: "Disciplines des professeurs associés",
+  formationRH: "Formation ?",
+  nbFormationRH: "Nombre de formations",
+  disciplinesFormationRH: "Disciplines des formations",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number]
+  (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number] & {
+    disciplinesRecrutementRH: string;
+    disciplinesReconversionRH: string;
+    disciplinesProfesseurAssocieRH: string;
+    disciplinesFormationRH: string;
+  }
 >;
