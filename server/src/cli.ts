@@ -170,6 +170,7 @@ cli
       ...getImports("n_groupe_specialite_"),
       ...getImports("domaine_professionnel"),
       ...getImports("rome"),
+      ...getImports("metier"),
     };
 
     if (filename) {
