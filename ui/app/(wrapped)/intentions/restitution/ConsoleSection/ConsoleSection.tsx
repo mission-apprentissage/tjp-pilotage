@@ -318,10 +318,86 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("pression")}
+                  onClick={() => handleOrder("numero")}
                 >
                   <OrderIcon {...order} column="numero" />
                   {STATS_DEMANDES_COLUMNS.numero}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("recrutementRH")}
+                >
+                  <OrderIcon {...order} column="recrutementRH" />
+                  {STATS_DEMANDES_COLUMNS.recrutementRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbRecrutementRH")}
+                >
+                  <OrderIcon {...order} column="nbRecrutementRH" />
+                  {STATS_DEMANDES_COLUMNS.nbRecrutementRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesRecrutementRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("reconversionRH")}
+                >
+                  <OrderIcon {...order} column="reconversionRH" />
+                  {STATS_DEMANDES_COLUMNS.reconversionRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbReconversionRH")}
+                >
+                  <OrderIcon {...order} column="nbReconversionRH" />
+                  {STATS_DEMANDES_COLUMNS.nbReconversionRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesReconversionRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("professeurAssocieRH")}
+                >
+                  <OrderIcon {...order} column="professeurAssocieRH" />
+                  {STATS_DEMANDES_COLUMNS.professeurAssocieRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbProfesseurAssocieRH")}
+                >
+                  <OrderIcon {...order} column="nbProfesseurAssocieRH" />
+                  {STATS_DEMANDES_COLUMNS.nbProfesseurAssocieRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesProfesseurAssocieRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("formationRH")}
+                >
+                  <OrderIcon {...order} column="formationRH" />
+                  {STATS_DEMANDES_COLUMNS.formationRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbFormationRH")}
+                >
+                  <OrderIcon {...order} column="nbFormationRH" />
+                  {STATS_DEMANDES_COLUMNS.nbFormationRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesFormationRH}
                 </Th>
               </Tr>
             </Thead>
