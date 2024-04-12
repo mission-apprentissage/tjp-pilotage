@@ -197,6 +197,7 @@ export const IntentionForm = ({
                   formId={formId}
                   disabled={isFormDisabled}
                   errors={errors}
+                  campagne={campagne}
                   footerActions={
                     <>
                       <Box justifyContent={"center"} ref={statusComponentRef}>
@@ -209,20 +210,17 @@ export const IntentionForm = ({
                           }
                           isLoading={isSubmitting}
                           variant="primary"
-                          onClick={
-                            // () => console.log(form.getValues())
-                            handleSubmit((values) =>
-                              submitDemande({
-                                body: {
-                                  demande: {
-                                    numero: formId,
-                                    ...values,
-                                    statut: formId ? values.statut : "draft",
-                                  },
+                          onClick={handleSubmit((values) =>
+                            submitDemande({
+                              body: {
+                                demande: {
+                                  numero: formId,
+                                  ...values,
+                                  statut: formId ? values.statut : "draft",
                                 },
-                              })
-                            )
-                          }
+                              },
+                            })
+                          )}
                           leftIcon={<CheckIcon />}
                         >
                           {formId

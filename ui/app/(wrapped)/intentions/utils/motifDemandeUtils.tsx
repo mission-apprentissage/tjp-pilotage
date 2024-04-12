@@ -40,6 +40,12 @@ export const MOTIFS_LABELS = {
     "Insertion professionnelle insuffisante",
   formation_situation_fragilite: "Formation en situation de fragilité",
   disponibilite_fonciere_insuffisante: "Disponibilité foncière insuffisante",
+  perspective_insertion_professionnelle:
+    "Perspectives d’insertion professionnelle",
+  mise_en_place_partenariat:
+    "Mise en place ou poursuite d’un partenariat (préciser en commentaire)",
+  favorise_attractivite_formation: "Favorise l’attractivité de la formation",
+  projet_specifique_local: "Projet spécifique local",
   autre: "Autre motif (veuillez préciser)",
 };
 
@@ -80,11 +86,10 @@ const motifsTransfert: MotifLabel[] = [
 ];
 
 const motifsColoration: MotifLabel[] = [
-  "effectif_faible_scolaire",
-  "mixite_peu_attractive",
-  "insertion_professionnelle_insuffisante",
-  "formation_situation_fragilite",
-  "disponibilite_fonciere_insuffisante",
+  "perspective_insertion_professionnelle",
+  "mise_en_place_partenariat",
+  "favorise_attractivite_formation",
+  "projet_specifique_local",
   "autre",
 ];
 

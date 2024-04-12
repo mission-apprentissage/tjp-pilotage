@@ -11,7 +11,10 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import {
+  isTypeColoration,
+  isTypeFermeture,
+} from "../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const CapaciteScolaireField = chakra(
@@ -33,6 +36,8 @@ export const CapaciteScolaireField = chakra(
 
     const typeDemande = watch("typeDemande");
     const fermeture = isTypeFermeture(typeDemande);
+    const coloration = isTypeColoration(typeDemande);
+    const isReadOnly = disabled || fermeture || coloration;
 
     return (
       <FormControl
@@ -51,7 +56,7 @@ export const CapaciteScolaireField = chakra(
               <NumberInput
                 step={1}
                 flex={1}
-                isReadOnly={disabled || fermeture}
+                isReadOnly={isReadOnly}
                 onChange={onChange}
                 ref={ref}
                 name={name}
@@ -77,10 +82,12 @@ export const CapaciteScolaireField = chakra(
                 />
                 <NumberInputStepper>
                   <NumberIncrementStepper
-                    opacity={disabled || fermeture ? "0.3" : "1"}
-                    cursor={disabled || fermeture ? "not-allowed" : "pointer"}
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                   />
                   <NumberDecrementStepper
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                     _disabled={{
                       opacity: "0.3",
                       cursor: "not-allowed",

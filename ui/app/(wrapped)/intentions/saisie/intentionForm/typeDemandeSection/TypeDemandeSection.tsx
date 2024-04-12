@@ -3,22 +3,21 @@ import { useFormContext } from "react-hook-form";
 
 import { getTypeDemandeExemple } from "../../../utils/typeDemandeUtils";
 import { InfoBox } from "../../components/InfoBox";
+import { Campagne } from "../../types";
 import { IntentionForms } from "../defaultFormValues";
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
 export const TypeDemandeSection = ({
   disabled,
-  formId,
+  campagne,
 }: {
   disabled: boolean;
-  formId?: string;
+  campagne?: Campagne;
 }) => {
-  const { watch, getValues } = useFormContext<IntentionForms>();
+  const { watch } = useFormContext<IntentionForms>();
 
   const [typeDemande] = watch(["typeDemande"]);
-  const isRentreeScolaireDisabled =
-    disabled || (!!getValues("rentreeScolaire") && !!formId);
 
   return (
     <>
@@ -26,12 +25,8 @@ export const TypeDemandeSection = ({
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <RentreeScolaireField
-        disabled={isRentreeScolaireDisabled}
-        mb="6"
-        maxW="752px"
-      />
-      <Flex align="flex-start" flexDir={["column", null, "row"]}>
+      <RentreeScolaireField disabled={disabled} campagne={campagne} />
+      <Flex align="flex-start" flexDir={["column", null, "row"]} mt={6}>
         <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
         <Fade in={typeDemande != undefined}>
           {typeDemande && (

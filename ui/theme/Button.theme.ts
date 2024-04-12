@@ -96,8 +96,6 @@ const selectButton = defineStyle({
   textAlign: "left",
   justifyContent: "space-between",
   verticalAlign: "baseline",
-  borderWidth: "1px",
-  borderColor: "grey.900",
   borderRadius: "4px",
   padding: 2,
   _active: {

@@ -34,6 +34,7 @@ export const CapaciteApprentissageActuelleField = chakra(
 
     const typeDemande = watch("typeDemande");
     const ouverture = isTypeOuverture(typeDemande);
+    const isReadOnly = disabled || ouverture;
 
     return (
       <FormControl
@@ -53,7 +54,7 @@ export const CapaciteApprentissageActuelleField = chakra(
               <NumberInput
                 step={1}
                 flex={1}
-                isReadOnly={disabled || ouverture}
+                isReadOnly={isReadOnly}
                 onChange={onChange}
                 ref={ref}
                 name={name}
@@ -80,12 +81,12 @@ export const CapaciteApprentissageActuelleField = chakra(
                 />
                 <NumberInputStepper>
                   <NumberIncrementStepper
-                    opacity={disabled || ouverture ? "0.3" : "1"}
-                    cursor={disabled || ouverture ? "not-allowed" : "pointer"}
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                   />
                   <NumberDecrementStepper
-                    opacity={disabled || ouverture ? "0.3" : "1"}
-                    cursor={disabled || ouverture ? "not-allowed" : "pointer"}
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                     _disabled={{
                       opacity: "0.3",
                       cursor: "not-allowed",
