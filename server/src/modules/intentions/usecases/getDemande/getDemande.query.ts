@@ -19,7 +19,7 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
   user: RequestUser;
 }
 
-export const findDemande = async ({ numero, user }: Filters) => {
+export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await kdb
     .selectFrom("latestDemandeView as demande")
     .selectAll()

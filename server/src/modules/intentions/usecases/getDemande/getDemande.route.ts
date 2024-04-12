@@ -4,8 +4,8 @@ import { getPermissionScope, guardScope } from "shared";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { findDemande } from "./getDemande.query";
 import { getDemandeSchema } from "./getDemande.schema";
+import { getDemandeUsecase } from "./getDemande.usecase";
 
 export const getDemandeRoute = (server: Server) => {
   return createRoute("/demande/:numero", {
@@ -18,7 +18,7 @@ export const getDemandeRoute = (server: Server) => {
       handler: async (request, response) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();
-        const demande = await findDemande({
+        const demande = await getDemandeUsecase({
           numero: request.params.numero,
           user,
         });

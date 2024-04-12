@@ -18,8 +18,8 @@ export default () => {
     }
   );
 
-  const { data: currentCampagne } = client
-    .ref("[GET]/campagne/current")
+  const { data: defaultCampagne } = client
+    .ref("[GET]/campagne/default")
     .useQuery({});
 
   if (isLoading && !!numero) return <IntentionSpinner />;
@@ -28,26 +28,29 @@ export default () => {
       {numero ? (
         data && (
           <IntentionForm
-            disabled={currentCampagne?.statut !== "en cours"}
+            disabled={defaultCampagne?.statut !== "en cours"}
             defaultValues={{
               cfd: data?.compensationCfd,
               codeDispositif: data?.compensationCodeDispositif,
               uai: data?.compensationUai,
               rentreeScolaire: data?.compensationRentreeScolaire,
+              campagneId: data?.campagneId,
             }}
             formMetadata={{
               etablissement: data?.metadata?.etablissementCompensation,
               formation: data?.metadata?.formationCompensation,
             }}
-            campagne={currentCampagne}
+            campagne={defaultCampagne}
           />
         )
       ) : (
         <IntentionForm
-          disabled={currentCampagne?.statut !== "en cours"}
-          defaultValues={{}}
+          disabled={defaultCampagne?.statut !== "en cours"}
+          defaultValues={{
+            campagneId: defaultCampagne?.id,
+          }}
           formMetadata={{}}
-          campagne={currentCampagne}
+          campagne={defaultCampagne}
         />
       )}
     </GuardPermission>

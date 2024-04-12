@@ -88,10 +88,12 @@ export const getDemandesSchema = {
       currentCampagne: z.object({
         annee: z.string(),
         statut: z.string(),
+        id: z.string(),
       }),
       campagne: z.object({
         annee: z.string(),
         statut: z.string(),
+        id: z.string(),
       }),
     }),
   },

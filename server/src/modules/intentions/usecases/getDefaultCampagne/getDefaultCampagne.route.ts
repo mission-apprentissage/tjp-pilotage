@@ -7,7 +7,7 @@ import { getCurrentCampagneSchema } from "./getDefaultCampagne.schema";
 import { getDefaultCampagneUsecase } from "./getDefaultCampagne.usecase";
 
 export const getCurrentCampagneRoute = (server: Server) => {
-  return createRoute("/campagne/current", {
+  return createRoute("/campagne/default", {
     method: "GET",
     schema: getCurrentCampagneSchema,
   }).handle((props) => {

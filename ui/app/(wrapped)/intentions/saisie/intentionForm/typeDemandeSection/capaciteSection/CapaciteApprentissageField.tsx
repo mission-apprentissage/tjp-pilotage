@@ -1,7 +1,6 @@
 import {
   chakra,
   FormControl,
-  FormErrorMessage,
   NumberDecrementStepper,
   NumberIncrementStepper,
   NumberInput,
@@ -102,11 +101,6 @@ export const CapaciteApprentissageField = chakra(
             );
           }}
         />
-        {errors.capaciteApprentissage && (
-          <FormErrorMessage>
-            {errors.capaciteApprentissage.message}
-          </FormErrorMessage>
-        )}
       </FormControl>
     );
   }
