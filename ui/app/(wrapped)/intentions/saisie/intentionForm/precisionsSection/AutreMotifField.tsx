@@ -20,7 +20,8 @@ export const AutreMotifField = chakra(
 
     const [motif] = watch(["motif"]);
 
-    const visible = motif?.includes("autre");
+    const visible =
+      motif?.includes("autre") || motif?.includes("mise_en_place_partenariat");
 
     return (
       <Collapse in={visible} unmountOnExit>
@@ -29,7 +30,7 @@ export const AutreMotifField = chakra(
           isInvalid={!!errors.autreMotif}
           isRequired
         >
-          <FormLabel>Autre motif</FormLabel>
+          <FormLabel>Autre motif ou précision</FormLabel>
           {visible && (
             <Textarea
               {...register("autreMotif", {

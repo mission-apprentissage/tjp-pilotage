@@ -1,5 +1,5 @@
 import { CSSObjectWithLabel } from "react-select";
-import AsyncSelect from "react-select/async";
+import AsyncCreatableSelect from "react-select/async-creatable";
 
 import { client } from "../../../../../api.client";
 
@@ -34,7 +34,7 @@ export const DisciplineAutoCompleteInput = ({
   };
 
   return (
-    <AsyncSelect
+    <AsyncCreatableSelect
       name={name}
       styles={selectStyle}
       components={{
@@ -69,6 +69,7 @@ export const DisciplineAutoCompleteInput = ({
       }
       placeholder="Libellé ou code"
       isDisabled={active === false}
+      formatCreateLabel={(inputValue) => `Créer la discipline "${inputValue}"`}
     />
   );
 };

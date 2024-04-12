@@ -90,6 +90,9 @@ export const Header = ({
             variant={"selectButton"}
             rightIcon={<ChevronDownIcon />}
             w={"100%"}
+            borderWidth="1px"
+            borderStyle="solid"
+            borderColor="grey.900"
           >
             <Flex direction="row">
               <Text my={"auto"}>

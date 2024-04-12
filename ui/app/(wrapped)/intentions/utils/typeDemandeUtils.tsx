@@ -209,15 +209,16 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour un transfert :
+          Exemple pour une coloration :
         </Text>
         <Text mb="1">
-          Je transfère une partie des places en voie scolaire d'un BAC PRO
-          Menuisier Fabricant vers l'apprentissage.
+          Je colore pour la prochaine rentrée un nombre de places d’une
+          formation déjà ouverte dans l’établissement.
         </Text>
         <Text>
-          Pour ouvrir une section entière en apprentissage j'utilise le type
-          demande "Ouverture nette".
+          Si la formation n’est pas ouverte sur l’établissement actuellement,
+          j’utilise le type de demande “Ouverture nette” et je coche Coloration
+          dans la section “Précisions sur votre demande”
         </Text>
       </>
     ),

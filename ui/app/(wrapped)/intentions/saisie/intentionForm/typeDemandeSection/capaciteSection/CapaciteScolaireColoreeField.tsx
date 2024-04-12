@@ -10,8 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeFermeture } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { IntentionForms } from "../../defaultFormValues";
 
@@ -32,8 +33,10 @@ export const CapaciteScolaireColoreeField = chakra(
         }).unsubscribe
     );
 
-    const [coloration, typeDemande] = watch(["coloration", "typeDemande"]);
+    const [typeDemande] = watch("typeDemande");
     const fermeture = isTypeFermeture(typeDemande);
+    const coloration = isTypeColoration(typeDemande) || watch("coloration");
+    const isReadOnly = disabled || fermeture || !coloration;
     if (!coloration) return <></>;
     if (fermeture) return <></>;
 
@@ -55,7 +58,7 @@ export const CapaciteScolaireColoreeField = chakra(
               <NumberInput
                 step={1}
                 flex={1}
-                isReadOnly={disabled || fermeture || !coloration}
+                isReadOnly={isReadOnly}
                 onChange={onChange}
                 ref={ref}
                 name={name}
@@ -63,6 +66,7 @@ export const CapaciteScolaireColoreeField = chakra(
                 key={value}
                 onBlur={onBlur}
                 value={value}
+                min={0}
                 defaultValue={0}
               >
                 <NumberInputField
@@ -81,20 +85,12 @@ export const CapaciteScolaireColoreeField = chakra(
                 />
                 <NumberInputStepper>
                   <NumberIncrementStepper
-                    opacity={disabled || fermeture || !coloration ? "0.3" : "1"}
-                    cursor={
-                      disabled || fermeture || !coloration
-                        ? "not-allowed"
-                        : "pointer"
-                    }
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                   />
                   <NumberDecrementStepper
-                    opacity={disabled || fermeture || !coloration ? "0.3" : "1"}
-                    cursor={
-                      disabled || fermeture || !coloration
-                        ? "not-allowed"
-                        : "pointer"
-                    }
+                    opacity={isReadOnly ? "0.3" : "1"}
+                    cursor={isReadOnly ? "not-allowed" : "pointer"}
                     _disabled={{
                       opacity: "0.3",
                       cursor: "not-allowed",

@@ -1,6 +1,10 @@
 import { Flex, Input, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
+import {
+  isTypeColoration,
+  isTypeFermeture,
+} from "../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../../defaultFormValues";
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
@@ -40,6 +44,9 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   const { watch } = useFormContext<IntentionForms>();
 
   const coloration = watch("coloration");
+  const typeDemande = watch("typeDemande");
+  const fermeture = isTypeFermeture(typeDemande);
+  const showColoration = coloration && !fermeture;
 
   const [capaciteScolaire, capaciteScolaireActuelle] = watch([
     "capaciteScolaire",
@@ -51,10 +58,12 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   ]);
 
   const nouvellesPlacesScolaire = (() => {
+    if (isTypeColoration(typeDemande)) return "-";
     return differenceCapacité(capaciteScolaire, capaciteScolaireActuelle);
   })();
 
   const nouvellesPlacesApprentissage = (() => {
+    if (isTypeColoration(typeDemande)) return "-";
     return differenceCapacité(
       capaciteApprentissage,
       capaciteApprentissageActuelle
@@ -76,7 +85,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Th textAlign={"end"} p={2} pe={0}>
               Nouvelle capacité
             </Th>
-            {coloration && (
+            {showColoration && (
               <Th textAlign={"end"} p={2} pe={0}>
                 Dont colorée
               </Th>
@@ -101,7 +110,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Td p={0} border={"none"}>
               <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
             </Td>
-            {coloration && (
+            {showColoration && (
               <Td p={0} border={"none"}>
                 <CapaciteScolaireColoreeField
                   disabled={disabled}
@@ -132,7 +141,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
                 flex={1}
               />
             </Td>
-            {coloration && (
+            {showColoration && (
               <Td p={0} border={"none"}>
                 <CapaciteApprentissageColoreeField
                   disabled={disabled}

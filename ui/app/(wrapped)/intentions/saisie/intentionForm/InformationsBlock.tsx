@@ -24,8 +24,9 @@ import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { client } from "@/api.client";
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
+import { Campagne } from "../types";
+import { IntentionForms } from "./defaultFormValues";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
 import { RHSection } from "./rhSection/RHSection";
@@ -37,11 +38,13 @@ export const InformationsBlock = ({
   disabled,
   errors,
   footerActions,
+  campagne,
 }: {
   formId?: string;
   disabled: boolean;
   errors?: Record<string, string>;
   footerActions: ReactNode;
+  campagne?: Campagne;
 }) => {
   const { push } = useRouter();
   const { setValue } = useFormContext<IntentionForms>();
@@ -59,7 +62,7 @@ export const InformationsBlock = ({
   return (
     <>
       <Box bg="white" p="6" mt="6" mb="6" borderRadius={6}>
-        <TypeDemandeSection disabled={disabled} formId={formId} />
+        <TypeDemandeSection disabled={disabled} campagne={campagne} />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <PrecisionsSection disabled={disabled} />
@@ -74,28 +77,6 @@ export const InformationsBlock = ({
       {formId && (
         <>
           <StatusBlock disabled={disabled} />
-          {errors && (
-            <>
-              <Alert mt="8" alignItems="flex-start" status="error">
-                <AlertIcon />
-                <Box>
-                  <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-                  <AlertDescription mt="2">
-                    <UnorderedList>
-                      {Object.entries(errors).map(([key, msg]) => (
-                        <li key={key}>{msg}</li>
-                      ))}
-                    </UnorderedList>
-                  </AlertDescription>
-                </Box>
-              </Alert>
-              {!formId && footerActions && (
-                <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-                  {footerActions}
-                </Flex>
-              )}
-            </>
-          )}
           <Box bg="white" p="6" mt="6" borderRadius={6}>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
@@ -157,6 +138,28 @@ export const InformationsBlock = ({
             </Flex>
           </Box>
         </>
+      )}
+      {errors && (
+        <>
+          <Alert mt="8" alignItems="flex-start" status="error">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+              <AlertDescription mt="2">
+                <UnorderedList>
+                  {Object.entries(errors).map(([key, msg]) => (
+                    <li key={key}>{msg}</li>
+                  ))}
+                </UnorderedList>
+              </AlertDescription>
+            </Box>
+          </Alert>
+        </>
+      )}
+      {!formId && footerActions && (
+        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+          {footerActions}
+        </Flex>
       )}
     </>
   );
