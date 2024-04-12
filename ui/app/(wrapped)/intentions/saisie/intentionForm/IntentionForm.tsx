@@ -205,7 +205,6 @@ export const IntentionForm = ({
                           isDisabled={
                             disabled ||
                             isActionsDisabled ||
-                            !form.formState.isDirty ||
                             campagne?.statut != "en cours"
                           }
                           isLoading={isSubmitting}
@@ -217,6 +216,7 @@ export const IntentionForm = ({
                                   numero: formId,
                                   ...values,
                                   statut: formId ? values.statut : "draft",
+                                  campagneId: values.campagneId ?? campagne?.id,
                                 },
                               },
                             })

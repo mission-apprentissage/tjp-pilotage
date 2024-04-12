@@ -1,4 +1,15 @@
-import { Flex, Input, Table, Tbody, Td, Th, Thead, Tr } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  FormErrorMessage,
+  Input,
+  Table,
+  Tbody,
+  Td,
+  Th,
+  Thead,
+  Tr,
+} from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
 import {
@@ -41,7 +52,10 @@ const differenceCapacité = (
 };
 
 export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
-  const { watch } = useFormContext<IntentionForms>();
+  const {
+    watch,
+    formState: { errors },
+  } = useFormContext<IntentionForms>();
 
   const coloration = watch("coloration");
   const typeDemande = watch("typeDemande");
@@ -156,7 +170,36 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
           </Tr>
         </Tbody>
       </Table>
-      {}
+      <Box mb={5}>
+        {errors.capaciteScolaire && (
+          <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>
+        )}
+        {errors.capaciteScolaireActuelle && (
+          <FormErrorMessage>
+            {errors.capaciteScolaireActuelle.message}
+          </FormErrorMessage>
+        )}
+        {errors.capaciteScolaireColoree && (
+          <FormErrorMessage>
+            {errors.capaciteScolaireColoree.message}
+          </FormErrorMessage>
+        )}
+        {errors.capaciteApprentissage && (
+          <FormErrorMessage>
+            {errors.capaciteApprentissage.message}
+          </FormErrorMessage>
+        )}
+        {errors.capaciteApprentissageActuelle && (
+          <FormErrorMessage>
+            {errors.capaciteApprentissageActuelle.message}
+          </FormErrorMessage>
+        )}
+        {errors.capaciteApprentissageColoree && (
+          <FormErrorMessage>
+            {errors.capaciteApprentissageColoree.message}
+          </FormErrorMessage>
+        )}
+      </Box>
     </Flex>
   );
 };

@@ -32,6 +32,7 @@ function RadioCard({
   desc,
   selected,
   disabled,
+  invalid,
   ...props
 }: {
   value: string;
@@ -39,6 +40,7 @@ function RadioCard({
   desc: ReactNode;
   selected: boolean;
   disabled: boolean;
+  invalid: boolean;
 } & ComponentProps<"div">) {
   const bf113 = useToken("colors", "bluefrance.113");
 
@@ -56,6 +58,7 @@ function RadioCard({
         bg: "blueecume.925",
         boxShadow: `0 0 0 2px ${bf113}`,
       }}
+      borderColor={invalid ? "red" : "inherit"}
       p={4}
       opacity={disabled ? "0.5" : "1"}
     >
@@ -139,6 +142,7 @@ export const TypeDemandeField = chakra(
                           !isTypeFermeture(item.value) &&
                           !isTypeDiminution(item.value))
                       }
+                      invalid={!!errors.typeDemande}
                       onClick={() => onChange(item.value)}
                     />
                   )

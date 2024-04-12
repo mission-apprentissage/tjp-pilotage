@@ -81,6 +81,7 @@ const DemandeSchema = z.object({
   discipline2FormationRH: z.string().optional(),
   campagneId: z.string(),
   campagne: z.object({
+    id: z.string().optional(),
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),

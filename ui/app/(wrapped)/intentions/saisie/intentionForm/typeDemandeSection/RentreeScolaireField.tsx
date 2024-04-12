@@ -48,6 +48,7 @@ export const RentreeScolaireField = ({
           })}
           placeholder="Sélectionner une option"
           disabled={disabled}
+          isInvalid={!!errors.rentreeScolaire}
         >
           {campagne && campagne?.annee != "2024" && (
             <option value="2024">2024</option>
