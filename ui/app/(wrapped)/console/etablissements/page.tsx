@@ -319,24 +319,6 @@ export default function Etablissements() {
           CPC
         </Multiselect>
         <Multiselect
-          onClose={filterTracker("cpcSecteur")}
-          width="12rem"
-          onChange={(selected) => handleFilters("cpcSecteur", selected)}
-          options={data?.filters.cpcSecteurs}
-          value={filters.cpcSecteur ?? []}
-        >
-          CPC Secteur
-        </Multiselect>
-        <Multiselect
-          onClose={filterTracker("cpcSousSecteur")}
-          width="12rem"
-          onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
-          options={data?.filters.cpcSousSecteurs}
-          value={filters.cpcSousSecteur ?? []}
-        >
-          CPC Sous Secteur
-        </Multiselect>
-        <Multiselect
           onClose={filterTracker("codeNsf")}
           width="12rem"
           onChange={(selected) => handleFilters("codeNsf", selected)}
