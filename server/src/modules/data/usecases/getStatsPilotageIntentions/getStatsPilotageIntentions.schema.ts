@@ -27,7 +27,7 @@ const ScopedStatsTransfoSchema = z.object({
 });
 
 const QuerySchema = z.object({
-  rentreeScolaire: z.string().optional(),
+  rentreeScolaire: z.array(z.string()).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),

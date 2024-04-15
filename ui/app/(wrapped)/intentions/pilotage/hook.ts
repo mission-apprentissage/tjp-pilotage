@@ -68,7 +68,8 @@ export const usePilotageIntentionsHook = () => {
       keepPreviousData: true,
       staleTime: 10000000,
       onSuccess: (data) => {
-        if (!filters.campagne) setFilters({ campagne: data.campagne.annee });
+        if (!filters.campagne)
+          setFilters({ ...filters, campagne: data.campagne.annee });
       },
     }
   );

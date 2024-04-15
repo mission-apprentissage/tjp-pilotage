@@ -7,7 +7,6 @@ import {
   IconButton,
   Table,
   TableContainer,
-  Tag,
   Tbody,
   Td,
   Th,
@@ -17,42 +16,13 @@ import {
 } from "@chakra-ui/react";
 import { toDate } from "date-fns";
 import { useMemo, useState } from "react";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { CreateCampagne } from "./CreateCampagne";
 import { EditCampagne } from "./EditCampagne";
-
-const CampagneStatutTag = ({ statut }: { statut?: string }) => {
-  switch (statut) {
-    case CampagneStatutEnum["en cours"]:
-      return (
-        <Tag size="lg" colorScheme={"green"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    case CampagneStatutEnum["en attente"]:
-      return (
-        <Tag size="lg" colorScheme={"purple"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    case CampagneStatutEnum["terminée"]:
-      return (
-        <Tag size="lg" colorScheme={"red"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    default:
-      return (
-        <Tag size="lg" colorScheme={"yellow"} ml={2}>
-          {statut}
-        </Tag>
-      );
-  }
-};
 
 export default () => {
   const { data: campagnes } = client.ref("[GET]/campagnes").useQuery({});

@@ -6,6 +6,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
@@ -102,6 +103,9 @@ export default () => {
         case "rentreeScolaire":
           setRentreeScolaireFilter((value as string[])[0] ?? "");
           break;
+        case "campagne":
+          setCampagneFilter((value as string[])[0] ?? "");
+          break;
         case "statut":
           setStatutFilter(value as ("draft" | "submitted" | "refused")[]);
           break;
@@ -159,6 +163,9 @@ export default () => {
   );
 
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
+  const [campagneFilter, setCampagneFilter] = useState<string>(
+    CURRENT_ANNEE_CAMPAGNE
+  );
 
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
@@ -172,6 +179,9 @@ export default () => {
       codeRegionFilter !== ""
     ) {
       filters.codeRegion = [codeRegionFilter];
+    }
+    if (filters?.campagne === undefined && campagneFilter !== "") {
+      filters.campagne = campagneFilter;
     }
     if (
       filters?.rentreeScolaire === undefined &&

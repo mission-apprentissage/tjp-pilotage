@@ -7,47 +7,17 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Tag,
   Text,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
 import { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
-
-const CampagneStatutTag = ({ statut }: { statut?: string }) => {
-  switch (statut) {
-    case CampagneStatutEnum["en cours"]:
-      return (
-        <Tag size="md" colorScheme={"green"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    case CampagneStatutEnum["en attente"]:
-      return (
-        <Tag size="md" colorScheme={"purple"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    case CampagneStatutEnum["terminée"]:
-      return (
-        <Tag size="md" colorScheme={"red"} ml={2}>
-          {statut}
-        </Tag>
-      );
-    default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={2}>
-          {statut}
-        </Tag>
-      );
-  }
-};
 
 const EXPORT_LIMIT = 1_000_000;
 export const Header = ({

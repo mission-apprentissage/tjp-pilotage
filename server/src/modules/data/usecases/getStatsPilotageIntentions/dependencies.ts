@@ -1,5 +1,6 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE, RENTREE_INTENTIONS, Scope, ScopeEnum } from "shared";
+import { CURRENT_RENTREE, RENTREE_INTENTIONS, ScopeEnum } from "shared";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { DB } from "../../../../db/schema";
@@ -10,6 +11,7 @@ import {
   notPerimetreIJDepartement,
   notPerimetreIJRegion,
 } from "../../utils/notPerimetreIJ";
+import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
 
 const selectPlacesTransformees = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.coalesce(
@@ -100,13 +102,9 @@ const genericOnConstatRentree =
       });
   };
 
-interface GenericFilter {
+export interface Filters
+  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
   statut?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  codeNsf?: string[];
-  anneeCampagne: string;
 }
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
@@ -115,19 +113,20 @@ const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
 const genericOnDemandes =
   ({
     statut,
-    rentreeScolaire = RENTREE_INTENTIONS,
+    rentreeScolaire,
     codeNiveauDiplome,
     CPC,
     codeNsf,
-    anneeCampagne,
-  }: GenericFilter) =>
+    campagne,
+  }: Filters) =>
   (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
       .selectFrom("latestDemandeView as demande")
       .innerJoin("campagne", (join) =>
-        join
-          .onRef("campagne.id", "=", "demande.campagneId")
-          .on("campagne.annee", "=", anneeCampagne)
+        join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+          if (campagne) return eb.on("campagne.annee", "=", campagne);
+          return eb;
+        })
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
       .select((es) => [
@@ -140,11 +139,11 @@ const genericOnDemandes =
       ])
       .where(isDemandeNotDeletedOrRefused)
       .$call((eb) => {
-        if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+        if (rentreeScolaire)
           return eb.where(
             "demande.rentreeScolaire",
-            "=",
-            parseInt(rentreeScolaire)
+            "in",
+            rentreeScolaire.map((rentree) => parseInt(rentree))
           );
         return eb;
       })
@@ -170,13 +169,15 @@ const genericOnDemandes =
         return q.where("demande.statut", "=", statut);
       });
 
-const getNationalData = async (filters: GenericFilter) => {
+const getNationalData = async (filters: Filters) => {
   return kdb
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
-      join
-        .onRef("campagne.id", "=", "demande.campagneId")
-        .on("campagne.annee", "=", filters.anneeCampagne)
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (filters.campagne)
+          return eb.on("campagne.annee", "=", filters.campagne);
+        return eb;
+      })
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .select((es) => [
@@ -194,11 +195,11 @@ const getNationalData = async (filters: GenericFilter) => {
     ])
     .where(isDemandeNotDeletedOrRefused)
     .$call((eb) => {
-      if (filters.rentreeScolaire && !Number.isNaN(filters.rentreeScolaire))
+      if (filters.rentreeScolaire)
         return eb.where(
           "demande.rentreeScolaire",
-          "=",
-          parseInt(filters.rentreeScolaire)
+          "in",
+          filters.rentreeScolaire.map((rentree) => parseInt(rentree))
         );
       return eb;
     })
@@ -228,7 +229,7 @@ const getNationalData = async (filters: GenericFilter) => {
     .then(cleanNull);
 };
 
-const getRegionData = async (filters: GenericFilter) => {
+const getRegionData = async (filters: Filters) => {
   return kdb
     .selectFrom("region")
     .leftJoin(
@@ -280,7 +281,7 @@ const getRegionData = async (filters: GenericFilter) => {
     .then(cleanNull);
 };
 
-const getAcademieData = async (filters: GenericFilter) => {
+const getAcademieData = async (filters: Filters) => {
   return kdb
     .selectFrom("academie")
     .leftJoin(
@@ -334,7 +335,7 @@ const getAcademieData = async (filters: GenericFilter) => {
     .then(cleanNull);
 };
 
-const getDepartementData = async (filters: GenericFilter) => {
+const getDepartementData = async (filters: Filters) => {
   return kdb
     .selectFrom("departement")
     .leftJoin(
@@ -404,21 +405,13 @@ const getDepartementData = async (filters: GenericFilter) => {
 
 const getStatsPilotageIntentionsQuery = async ({
   statut,
-  rentreeScolaire = RENTREE_INTENTIONS,
+  rentreeScolaire = [RENTREE_INTENTIONS],
   codeNiveauDiplome,
   CPC,
   codeNsf,
   scope,
-  anneeCampagne,
-}: {
-  statut?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  codeNsf?: string[];
-  scope: Scope;
-  anneeCampagne: string;
-}) => {
+  campagne,
+}: Filters) => {
   switch (scope) {
     case ScopeEnum.academie:
       return getAcademieData({
@@ -427,7 +420,8 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        anneeCampagne,
+        campagne,
+        scope,
       });
 
     case ScopeEnum.departement:
@@ -437,7 +431,8 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        anneeCampagne,
+        campagne,
+        scope,
       });
     case ScopeEnum.region:
       return getRegionData({
@@ -446,7 +441,8 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        anneeCampagne,
+        campagne,
+        scope,
       });
     case ScopeEnum.national:
     default:
@@ -456,35 +452,32 @@ const getStatsPilotageIntentionsQuery = async ({
         codeNiveauDiplome,
         CPC,
         codeNsf,
-        anneeCampagne,
+        campagne,
+        scope,
       });
   }
 };
 
 const getFiltersQuery = async ({
   statut,
-  rentreeScolaire = RENTREE_INTENTIONS,
+  rentreeScolaire = [RENTREE_INTENTIONS],
   codeNiveauDiplome,
   CPC,
-  nsf,
-  anneeCampagne,
-}: {
-  statut?: "draft" | "submitted";
-  rentreeScolaire?: string;
-  codeNiveauDiplome?: string[];
-  CPC?: string[];
-  nsf?: string[];
-  anneeCampagne: string;
-}) => {
+  codeNsf,
+  campagne,
+}: Filters) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
     return eb("demande.statut", "=", statut);
   };
 
   const inRentreeScolaire = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!rentreeScolaire || Number.isNaN(rentreeScolaire))
-      return sql<true>`true`;
-    return eb("demande.rentreeScolaire", "=", parseInt(rentreeScolaire));
+    if (!rentreeScolaire) return sql<true>`true`;
+    return eb(
+      "demande.rentreeScolaire",
+      "in",
+      rentreeScolaire.map((rentree) => parseInt(rentree))
+    );
   };
 
   const inCodeNiveauDiplome = (eb: ExpressionBuilder<DB, "dataFormation">) => {
@@ -498,13 +491,13 @@ const getFiltersQuery = async ({
   };
 
   const inFiliere = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!nsf) return sql<true>`true`;
-    return eb("dataFormation.codeNsf", "in", nsf);
+    if (!codeNsf) return sql<true>`true`;
+    return eb("dataFormation.codeNsf", "in", codeNsf);
   };
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
-    if (!nsf) return sql<true>`true`;
-    return eb("campagne.annee", "=", anneeCampagne);
+    if (!campagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", campagne);
   };
 
   const base = kdb

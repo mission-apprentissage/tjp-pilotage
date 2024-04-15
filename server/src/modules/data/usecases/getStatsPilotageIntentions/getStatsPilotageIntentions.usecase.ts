@@ -4,9 +4,9 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import {
   dependencies,
+  Filters,
   GetScopedStatsPilotageIntentionsType,
 } from "./dependencies";
-import { QuerySchema } from "./getStatsPilotageIntentions.schema";
 
 const formatTauxTransformation = (
   transformes: number,
@@ -80,27 +80,27 @@ const getStatsPilotageIntentionsFactory =
       getCurrentCampagneQuery,
     }
   ) =>
-  async (activeFilters: QuerySchema) => {
+  async (activeFilters: Filters) => {
     const currentCampagne = await getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
     const [filters, draft, submitted, all] = await Promise.all([
       deps.getFiltersQuery({
         ...activeFilters,
-        anneeCampagne,
+        campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
         statut: DemandeStatutEnum.draft,
-        anneeCampagne,
+        campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
         statut: DemandeStatutEnum.submitted,
-        anneeCampagne,
+        campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        anneeCampagne,
+        campagne: anneeCampagne,
       }),
     ]);
 

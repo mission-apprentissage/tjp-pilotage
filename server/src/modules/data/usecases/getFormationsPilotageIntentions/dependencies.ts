@@ -1,9 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
-import {
-  CURRENT_IJ_MILLESIME,
-  MILLESIMES_IJ,
-  RENTREE_INTENTIONS,
-} from "shared";
+import { CURRENT_IJ_MILLESIME, MILLESIMES_IJ } from "shared";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -82,7 +78,7 @@ const selectNbEtablissements = (
 const getFormationsPilotageIntentionsQuery = ({
   statut,
   type,
-  rentreeScolaire = RENTREE_INTENTIONS,
+  rentreeScolaire,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   codeRegion,
   codeAcademie,
@@ -90,7 +86,7 @@ const getFormationsPilotageIntentionsQuery = ({
   tauxPression,
   codeNiveauDiplome,
   codeNsf,
-  anneeCampagne,
+  campagne,
   orderBy,
   order,
 }: Filters) => {
@@ -105,7 +101,7 @@ const getFormationsPilotageIntentionsQuery = ({
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
@@ -177,11 +173,11 @@ const getFormationsPilotageIntentionsQuery = ({
       }).as("continuum"),
     ])
     .$call((eb) => {
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
+      if (rentreeScolaire)
         return eb.where(
           "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
+          "in",
+          rentreeScolaire.map((rentree) => parseInt(rentree))
         );
       return eb;
     })
