@@ -19,6 +19,7 @@ export const [editCampagneUsecase] = inject(
       const campagneEnCours = await deps.getCampagneEnCours();
       if (
         campagneEnCours &&
+        campagneEnCours.id !== campagneId &&
         campagne.statut === CampagneStatutEnum["en cours"]
       ) {
         throw Boom.badRequest("Une campagne est déjà en cours", {

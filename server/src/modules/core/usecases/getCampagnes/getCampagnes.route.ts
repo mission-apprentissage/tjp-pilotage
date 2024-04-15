@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -14,8 +13,7 @@ export const getCampagnesRoute = (server: Server) => {
     server.route({
       ...props,
       preHandler: hasPermissionHandler("campagnes/lecture"),
-      handler: async (request, response) => {
-        if (!request.user) throw Boom.forbidden();
+      handler: async (_request, response) => {
         const campagnes = await getCampagnes();
         response.status(200).send(campagnes);
       },

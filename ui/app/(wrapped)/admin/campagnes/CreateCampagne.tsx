@@ -5,7 +5,6 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -13,6 +12,11 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   UnorderedList,
 } from "@chakra-ui/react";
@@ -23,6 +27,7 @@ import { toDate } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { z } from "zod";
 
 import { client } from "@/api.client";
@@ -93,17 +98,25 @@ export const CreateCampagne = ({
         <ModalBody>
           <FormControl mb="4" isInvalid={!!errors.annee} isRequired>
             <FormLabel>Année</FormLabel>
-            <Input
-              type="text"
-              {...register("annee", {
-                validate: (annee) =>
-                  z
-                    .string()
-                    .regex(/^\d{4}$/)
-                    .safeParse(annee).success ||
-                  "Veuillez saisir une année valide",
-              })}
-            />
+            <NumberInput
+              defaultValue={parseInt(CURRENT_ANNEE_CAMPAGNE)}
+              min={parseInt(CURRENT_ANNEE_CAMPAGNE)}
+            >
+              <NumberInputField
+                {...register("annee", {
+                  validate: (annee) =>
+                    z.coerce
+                      .string()
+                      .regex(/^\d{4}$/)
+                      .safeParse(annee).success ||
+                    "Veuillez saisir une année valide",
+                })}
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
             {!!errors.annee && (
               <FormErrorMessage>{errors.annee.message}</FormErrorMessage>
             )}

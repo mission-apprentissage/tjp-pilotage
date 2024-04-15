@@ -7,7 +7,7 @@ import { generateId } from "../../utils/generateId";
 export const updateDemandeWithHistory = async (
   demande: Insertable<DB["demande"]>
 ) =>
-  await kdb
+  kdb
     .insertInto("demande")
     .values({
       ...(_.omit(demande, ["id", "dateModification"]) as Insertable<
