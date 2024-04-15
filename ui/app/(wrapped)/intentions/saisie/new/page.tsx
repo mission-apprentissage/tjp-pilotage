@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "../../../../../api.client";
 import { GuardPermission } from "../../../../../utils/security/GuardPermission";
@@ -28,7 +29,9 @@ export default () => {
       {numero ? (
         data && (
           <IntentionForm
-            disabled={defaultCampagne?.statut !== "en cours"}
+            disabled={
+              defaultCampagne?.statut !== CampagneStatutEnum["en cours"]
+            }
             defaultValues={{
               cfd: data?.compensationCfd,
               codeDispositif: data?.compensationCodeDispositif,
@@ -45,7 +48,7 @@ export default () => {
         )
       ) : (
         <IntentionForm
-          disabled={defaultCampagne?.statut !== "en cours"}
+          disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
           defaultValues={{
             campagneId: defaultCampagne?.id,
           }}

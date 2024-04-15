@@ -1,4 +1,5 @@
 import _ from "lodash";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import {
@@ -89,12 +90,12 @@ const getStatsPilotageIntentionsFactory =
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: "draft",
+        statut: DemandeStatutEnum.draft,
         anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: "submitted",
+        statut: DemandeStatutEnum.submitted,
         anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({

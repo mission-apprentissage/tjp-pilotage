@@ -1,4 +1,5 @@
 import { sql } from "kysely";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -29,35 +30,37 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = 'draft'
+          CASE WHEN ${eb.ref("demande.statut")} = '${DemandeStatutEnum.draft}'
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as("draft")
+      )`.as(DemandeStatutEnum.draft)
     )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = 'submitted'
+          CASE WHEN ${eb.ref("demande.statut")} = '${
+            DemandeStatutEnum.submitted
+          }'
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as("submitted")
+      )`.as(DemandeStatutEnum.submitted)
     )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = 'refused'
+          CASE WHEN ${eb.ref("demande.statut")} = '${DemandeStatutEnum.refused}'
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as("refused")
+      )`.as(DemandeStatutEnum.refused)
     )
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))

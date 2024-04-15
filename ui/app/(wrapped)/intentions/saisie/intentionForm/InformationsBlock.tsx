@@ -22,6 +22,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -114,7 +115,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("statut", "refused");
+                        setValue("statut", DemandeStatutEnum.refused);
                         onClose();
                       }}
                       variant={"secondary"}

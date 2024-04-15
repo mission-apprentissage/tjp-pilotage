@@ -15,6 +15,8 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import {
   IntentionForms,
@@ -55,7 +57,7 @@ export const IntentionForm = ({
     defaultValues,
     mode: "onTouched",
     reValidateMode: "onChange",
-    disabled: campagne?.statut != "en cours",
+    disabled: campagne?.statut !== CampagneStatutEnum["en cours"],
   });
 
   const { getValues, handleSubmit } = form;
@@ -73,16 +75,16 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case "draft":
+        case DemandeStatutEnum.draft:
           message = "Projet de demande enregistré avec succès";
           break;
-        case "submitted":
+        case DemandeStatutEnum.submitted:
           message = "Demande validée avec succès";
           break;
-        case "refused":
+        case DemandeStatutEnum.refused:
           message = "Demande refusée avec succès";
           break;
-        case "deleted":
+        case DemandeStatutEnum.deleted:
           message = "Demande supprimée avec succès";
           break;
       }
@@ -205,7 +207,7 @@ export const IntentionForm = ({
                           isDisabled={
                             disabled ||
                             isActionsDisabled ||
-                            campagne?.statut != "en cours"
+                            campagne?.statut !== CampagneStatutEnum["en cours"]
                           }
                           isLoading={isSubmitting}
                           variant="primary"
@@ -215,7 +217,9 @@ export const IntentionForm = ({
                                 demande: {
                                   numero: formId,
                                   ...values,
-                                  statut: formId ? values.statut : "draft",
+                                  statut: formId
+                                    ? values.statut
+                                    : DemandeStatutEnum.draft,
                                   campagneId: values.campagneId ?? campagne?.id,
                                 },
                               },

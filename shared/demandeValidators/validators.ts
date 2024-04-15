@@ -1,6 +1,8 @@
 import { Args, ZodTypeProvider } from "@http-wizard/core";
 import { Router } from "server";
 
+import { DemandeStatutEnum } from "../enum/demandeStatutEnum";
+
 type Demande = Args<
   Router["[POST]/demande/submit"]["schema"],
   ZodTypeProvider
@@ -347,7 +349,10 @@ export const demandeValidators: Record<
       return "La rentrée scolaire de compensation est obligatoire";
   },
   motifRefus: (demande) => {
-    if (demande.statut === "refused" && !demande.motifRefus?.length) {
+    if (
+      demande.statut === DemandeStatutEnum.refused &&
+      !demande.motifRefus?.length
+    ) {
       return "Le champ 'motif refus' est obligatoire";
     }
   },

@@ -1,5 +1,6 @@
 import { Box, Divider, Select, Text } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
@@ -26,9 +27,9 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
             value={value}
             disabled={disabled}
           >
-            <option value="draft">Projet de demande</option>
-            <option value="submitted">Validée</option>
-            <option value="refused">Refusée</option>
+            <option value={DemandeStatutEnum.draft}>Projet de demande</option>
+            <option value={DemandeStatutEnum.submitted}>Validée</option>
+            <option value={DemandeStatutEnum.refused}>Refusée</option>
           </Select>
         )}
       />

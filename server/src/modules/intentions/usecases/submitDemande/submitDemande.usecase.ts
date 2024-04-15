@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
@@ -62,13 +63,13 @@ const validateDemande = (demande: Demande) => {
 const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
-    case "draft":
+    case DemandeStatutEnum.draft:
       logger.info("Projet de demande enregistré", { demande: demande });
       break;
-    case "submitted":
+    case DemandeStatutEnum.submitted:
       logger.info("Demande validée", { demande: demande });
       break;
-    case "refused":
+    case DemandeStatutEnum.refused:
       logger.info("Demande refusée", { demande: demande });
       break;
   }

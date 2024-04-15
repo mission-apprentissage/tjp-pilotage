@@ -4,6 +4,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import qs from "qs";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -85,7 +86,7 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: "submitted",
+              statut: DemandeStatutEnum.submitted,
             },
           })}
           width={"100%"}
@@ -96,7 +97,9 @@ export const MenuIntention = ({
         >
           <Text
             fontWeight={
-              isRecapView && statut === "submitted" ? "bold" : "normal"
+              isRecapView && statut === DemandeStatutEnum.submitted
+                ? "bold"
+                : "normal"
             }
           >
             Demandes validées
@@ -110,7 +113,7 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: "draft",
+              statut: DemandeStatutEnum.draft,
             },
           })}
           width={"100%"}
@@ -118,7 +121,11 @@ export const MenuIntention = ({
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
         >
           <Text
-            fontWeight={isRecapView && statut === "draft" ? "bold" : "normal"}
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum.draft
+                ? "bold"
+                : "normal"
+            }
           >
             Projets de demandes
           </Text>
@@ -131,7 +138,7 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: "refused",
+              statut: DemandeStatutEnum.refused,
             },
           })}
           width={"100%"}
@@ -141,7 +148,11 @@ export const MenuIntention = ({
           }
         >
           <Text
-            fontWeight={isRecapView && statut === "refused" ? "bold" : "normal"}
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum.refused
+                ? "bold"
+                : "normal"
+            }
           >
             Demandes refusées
           </Text>

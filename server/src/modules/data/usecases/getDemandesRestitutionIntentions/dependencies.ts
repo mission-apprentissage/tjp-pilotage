@@ -1,6 +1,8 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { VoieEnum } from "shared/enum/voieEnum";
 import { z } from "zod";
 
 import { DB, kdb } from "../../../../db/db";
@@ -993,25 +995,25 @@ const getFilters = async ({
     statuts: [
       {
         label: "Projet",
-        value: "draft",
+        value: DemandeStatutEnum.draft,
       },
       {
         label: "Validée",
-        value: "submitted",
+        value: DemandeStatutEnum.submitted,
       },
       {
         label: "Refusée",
-        value: "refused",
+        value: DemandeStatutEnum.refused,
       },
     ],
     voies: [
       {
         label: "Scolaire",
-        value: "scolaire",
+        value: VoieEnum.scolaire,
       },
       {
         label: "Apprentissage",
-        value: "apprentissage",
+        value: VoieEnum.apprentissage,
       },
     ],
   };
