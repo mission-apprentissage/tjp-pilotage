@@ -53,7 +53,7 @@ const getDemandesRestitutionIntentionsQuery = async ({
   user,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
-  anneeCampagne,
+  campagne,
   offset = 0,
   limit = 20,
   order = "desc",
@@ -63,7 +63,7 @@ const getDemandesRestitutionIntentionsQuery = async ({
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
@@ -335,7 +335,7 @@ const getFilters = async ({
   uai,
   compensation,
   user,
-  anneeCampagne,
+  campagne,
 }: Filters) => {
   const inCodeRegion = (eb: ExpressionBuilder<DB, "region">) => {
     if (!codeRegion) return sql<boolean>`${isRegionVisible({ user })}`;
@@ -450,8 +450,8 @@ const getFilters = async ({
   };
 
   const inCampagne = (eb: ExpressionBuilder<DB, "campagne">) => {
-    if (!anneeCampagne) return sql<true>`true`;
-    return eb("campagne.annee", "=", anneeCampagne);
+    if (!campagne) return sql<true>`true`;
+    return eb("campagne.annee", "=", campagne);
   };
 
   const geoFiltersBase = kdb
@@ -515,9 +515,9 @@ const getFilters = async ({
 
   const campagnesFilters = kdb
     .selectFrom("campagne")
-    .select(["campagne.annee as label", "campagne.annee as value"])
+    .select(["campagne.annee as label", "campagne.annee as value", "statut"])
     .distinct()
-    .$castTo<{ label: string; value: string }>()
+    .$castTo<{ label: string; value: string; statut: string }>()
     .orderBy("label", "asc")
     .where("campagne.annee", "is not", null)
     .execute();

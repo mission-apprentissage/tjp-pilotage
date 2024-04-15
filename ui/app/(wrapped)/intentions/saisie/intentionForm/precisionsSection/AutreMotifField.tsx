@@ -20,7 +20,7 @@ export const AutreMotifField = chakra(
       watch,
     } = useFormContext<IntentionForms>();
 
-    const [motif] = watch(["motif"]);
+    const motif = watch("motif");
 
     const visible = getMotifsTriggerAutre().some((m) => motif?.includes(m));
 

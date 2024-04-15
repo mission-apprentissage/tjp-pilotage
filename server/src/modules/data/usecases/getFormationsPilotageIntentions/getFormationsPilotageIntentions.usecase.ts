@@ -14,10 +14,10 @@ const getQuadrantPilotageIntentionsFactory =
   ) =>
   async (activeFilters: Filters) => {
     const campagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = activeFilters.anneeCampagne ?? campagne.annee;
+    const anneeCampagne = activeFilters.campagne ?? campagne.annee;
     const [formations, statsSortie] = await Promise.all([
       deps.getFormationsPilotageIntentionsQuery({
-        anneeCampagne,
+        campagne: anneeCampagne,
         ...activeFilters,
       }),
       getStatsSortieQuery(activeFilters),

@@ -205,12 +205,20 @@ export const FiltersSection = ({
       <SimpleGrid columns={[1, null, 4]} py={3} spacing={8}>
         <Box flex={[1, null, "unset"]}>
           <FormLabel>Rentrée scolaire</FormLabel>
-          <Select width={"100%"} size="md" variant="newInput">
-            <option>2024</option>
-            <option disabled>2025</option>
-            <option disabled>2026</option>
-            <option disabled>2027</option>
-          </Select>
+          <Multiselect
+            onClose={filterTracker("rentreeScolaire")}
+            width={"100%"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) =>
+              handleFilters({ rentreeScolaire: selected })
+            }
+            options={data?.filters?.rentreesScolaires ?? []}
+            value={activeFilters.rentreeScolaire ?? []}
+            disabled={!data?.filters?.rentreesScolaires?.length}
+          >
+            TOUS ({data?.filters?.rentreesScolaires?.length ?? 0})
+          </Multiselect>
         </Box>
         <Box display={["none", null, "block"]}>
           <FormLabel>Diplôme</FormLabel>

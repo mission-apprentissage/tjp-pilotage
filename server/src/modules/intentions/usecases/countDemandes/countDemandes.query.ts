@@ -30,7 +30,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = '${DemandeStatutEnum.draft}'
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.draft}
           THEN 1
           ELSE 0
           END
@@ -41,9 +41,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = '${
-            DemandeStatutEnum.submitted
-          }'
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.submitted}
           THEN 1
           ELSE 0
           END
@@ -54,7 +52,7 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = '${DemandeStatutEnum.refused}'
+          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.refused}
           THEN 1
           ELSE 0
           END

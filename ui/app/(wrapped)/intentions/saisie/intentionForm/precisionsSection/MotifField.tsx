@@ -2,6 +2,7 @@ import {
   chakra,
   Checkbox,
   CheckboxGroup,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeColoration } from "shared/demandeValidators/validators";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
@@ -50,7 +52,7 @@ export const MotifField = chakra(
         }).unsubscribe
     );
 
-    const [typeDemande] = watch(["typeDemande"]);
+    const [typeDemande, coloration] = watch(["typeDemande", "coloration"]);
     if (!typeDemande) return <></>;
 
     return (
@@ -86,6 +88,31 @@ export const MotifField = chakra(
                     </Checkbox>
                   ))}
                 </Stack>
+                {coloration && !isTypeColoration(typeDemande) && (
+                  <Flex direction={"column"} mt={8}>
+                    <FormLabel>
+                      Merci de préciser le(s) motif(s) de votre coloration
+                    </FormLabel>
+                    <Stack spacing={[3]} ms={6}>
+                      {getMotifOptions("coloration")?.map(
+                        ({ value, label }) => (
+                          <Checkbox
+                            ref={ref}
+                            disabled={disabled}
+                            name={name}
+                            key={value}
+                            onBlur={onBlur}
+                            value={value}
+                            _checked={{ fontWeight: "bold !important" }}
+                            fontWeight={"400 !important"}
+                          >
+                            {label}
+                          </Checkbox>
+                        )
+                      )}
+                    </Stack>
+                  </Flex>
+                )}
               </CheckboxGroup>
             );
           }}

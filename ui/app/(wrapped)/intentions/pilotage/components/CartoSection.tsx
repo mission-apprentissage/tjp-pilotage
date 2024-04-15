@@ -110,7 +110,7 @@ export const CartoSection = ({
           : undefined,
       code: territoire.code,
     }));
-  }, [scope, data]);
+  }, [scope, data, filters]);
 
   const handleClickOnTerritoire = useCallback(
     (code: string | undefined) =>

@@ -48,7 +48,7 @@ const generateRestitutionUrl = (
   scope?: SelectedScope,
   filters?: {
     tauxPression?: "faible" | "eleve";
-    status?: "draft" | "submitted";
+    statut?: "draft" | "submitted";
     type?: "ouverture" | "fermeture";
     order?: Partial<OrderFormationsPilotageIntentions>;
   }
@@ -107,12 +107,12 @@ export const QuadrantSection = ({
     prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
-      status: undefined,
+      statut: undefined,
       type: undefined,
       order: undefined,
     } as {
       tauxPression?: "eleve" | "faible";
-      status?: "submitted" | "draft";
+      statut?: "submitted" | "draft";
       type?: "ouverture" | "fermeture";
       order?: Partial<OrderFormationsPilotageIntentions>;
     },
@@ -127,7 +127,7 @@ export const QuadrantSection = ({
   const mergedFilters = {
     ...otherFilters,
     tauxPression: filters.tauxPression,
-    status: filters.status,
+    statut: filters.statut,
     type: filters.type,
     codeRegion: scope?.type === ScopeEnum.region ? scope.value : undefined,
     codeAcademie: scope?.type === ScopeEnum.academie ? scope.value : undefined,
@@ -517,13 +517,13 @@ export const QuadrantSection = ({
                   onChange={(v) =>
                     setFilters({
                       ...filters,
-                      status: (v || undefined) as
+                      statut: (v || undefined) as
                         | "submitted"
                         | "draft"
                         | undefined,
                     })
                   }
-                  value={filters.status ?? ""}
+                  value={filters.statut ?? ""}
                 >
                   <Radio value="">Toutes</Radio>
                   <Radio value={DemandeStatutEnum.submitted}>Validées</Radio>

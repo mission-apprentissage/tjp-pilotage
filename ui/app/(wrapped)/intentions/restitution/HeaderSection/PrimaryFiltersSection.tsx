@@ -1,12 +1,20 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Flex,
   FormLabel,
   LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Select,
   Skeleton,
+  Text,
 } from "@chakra-ui/react";
 
+import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { Multiselect } from "@/components/Multiselect";
 
 import {
@@ -64,28 +72,54 @@ export const PrimaryFiltersSection = ({
               <Flex gap={4}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">CAMPAGNE</FormLabel>
-                  <Select
-                    width={[null, null, "72"]}
-                    size="md"
-                    variant={"newInput"}
-                    value={
-                      activeFilters.anneeCampagne?.toString() ??
-                      data?.campagne?.annee ??
-                      ""
-                    }
-                    onChange={(e) =>
-                      handleFilters("anneeCampagne", e.target.value)
-                    }
-                    borderBottomColor={
-                      activeFilters.anneeCampagne != undefined ? "info.525" : ""
-                    }
-                  >
-                    {data?.filters.campagnes?.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
+                  <Flex direction={"column"} gap={1}>
+                    <Menu gutter={0} matchWidth={true} autoSelect={false}>
+                      <MenuButton
+                        as={Button}
+                        variant={"selectButton"}
+                        rightIcon={<ChevronDownIcon />}
+                        width={[null, null, "72"]}
+                        size="md"
+                        borderWidth="1px"
+                        borderStyle="solid"
+                        borderColor="grey.900"
+                        bg={"white"}
+                      >
+                        <Flex direction="row">
+                          <Text my={"auto"}>
+                            {data?.filters.campagnes?.find(
+                              (c) => c.value === activeFilters.campagne
+                            )?.value ?? ""}
+                          </Text>
+                          {activeFilters.campagne && (
+                            <CampagneStatutTag
+                              statut={
+                                data?.filters.campagnes?.find(
+                                  (c) => c.value === activeFilters.campagne
+                                )?.statut
+                              }
+                            />
+                          )}
+                        </Flex>
+                      </MenuButton>
+                      <MenuList py={0} borderTopRadius={0}>
+                        {data?.filters.campagnes?.map((campagne) => (
+                          <MenuItem
+                            p={2}
+                            key={campagne.value}
+                            onClick={() =>
+                              handleFilters("campagne", campagne.value)
+                            }
+                          >
+                            <Flex direction="row">
+                              <Text my={"auto"}>Campagne {campagne.value}</Text>
+                              <CampagneStatutTag statut={campagne.statut} />
+                            </Flex>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </Menu>
+                  </Flex>
                 </Box>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>

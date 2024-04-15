@@ -118,16 +118,12 @@ export const demandeValidators: Record<
     ) {
       return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'une diminution";
     }
-    if (isTypeTransfert(demande.typeDemande)) {
-      if (demande.capaciteScolaire === 0)
-        return "La capacité scolaire devrait être supérieure à 0 dans le cas d'un transfert vers l'apprentissage";
-
-      if (
-        isPositiveNumber(demande.capaciteScolaireActuelle) &&
-        demande.capaciteScolaire >= demande.capaciteScolaireActuelle
-      )
-        return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
-    }
+    if (
+      isTypeTransfert(demande.typeDemande) &&
+      isPositiveNumber(demande.capaciteScolaireActuelle) &&
+      demande.capaciteScolaire >= demande.capaciteScolaireActuelle
+    )
+      return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
   },
   /**
    *
@@ -312,12 +308,12 @@ export const demandeValidators: Record<
   /**
    * La somme des capacités colorées doit être :
    * - supérieure à 0 dans le cas d'une coloration qui n'est pas une fermeture
+   * - inférieure à la somme des capacités actuelles
    */
   sommeCapaciteColoree: (demande) => {
     if (
       isTypeFermeture(demande.typeDemande) ||
-      !isTypeColoration(demande.typeDemande) ||
-      !demande.coloration
+      (!isTypeColoration(demande.typeDemande) && !demande.coloration)
     )
       return;
 

@@ -107,7 +107,7 @@ export const FiltersSchema = z.object({
   compensation: z.string().optional(),
   positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
-  anneeCampagne: z.string().optional(),
+  campagne: z.string().optional(),
   order: z.enum(["asc", "desc"]).optional(),
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
@@ -139,7 +139,13 @@ export const getDemandesRestitutionIntentionsSchema = {
         colorations: z.array(OptionSchema),
         compensations: z.array(OptionSchema),
         voies: z.array(OptionSchema),
-        campagnes: z.array(OptionSchema),
+        campagnes: z.array(
+          z.object({
+            label: z.coerce.string(),
+            value: z.coerce.string(),
+            statut: z.coerce.string(),
+          })
+        ),
       }),
       demandes: z.array(DemandeSchema),
       campagne: z.object({

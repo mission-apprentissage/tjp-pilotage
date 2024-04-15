@@ -16,13 +16,13 @@ const getDemandesRestitutionIntentionsFactory =
   ) =>
   async (activeFilters: Filters) => {
     const campagne = await deps.getCurrentCampagneQuery();
-    const anneeCampagne = activeFilters?.anneeCampagne ?? campagne.annee;
+    const anneeCampagne = activeFilters?.campagne ?? campagne.annee;
     const [{ count, demandes }, filters, statsSortie] = await Promise.all([
       deps.getDemandesRestitutionIntentionsQuery({
         ...activeFilters,
-        anneeCampagne,
+        campagne: anneeCampagne,
       }),
-      deps.getFilters({ ...activeFilters, anneeCampagne }),
+      deps.getFilters({ ...activeFilters, campagne: anneeCampagne }),
       deps.getStatsSortieParRegionsEtNiveauDiplomeQuery(activeFilters),
     ]);
 
