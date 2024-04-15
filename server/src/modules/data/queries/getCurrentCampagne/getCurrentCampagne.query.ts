@@ -1,4 +1,5 @@
 import Boom from "@hapi/boom";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { kdb } from "../../../../db/db";
 
@@ -20,7 +21,7 @@ export const getCurrentCampagneQuery = async () => {
   return kdb
     .selectFrom("campagne")
     .selectAll()
-    .where("statut", "=", "en cours")
+    .where("statut", "=", CampagneStatutEnum["en cours"])
     .executeTakeFirstOrThrow()
     .catch(() => {
       // Si aucune campagne en cours, on renvoie la dernière campagne

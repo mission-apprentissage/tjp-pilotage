@@ -12,6 +12,7 @@ export const getLabelsMotifsOuverture = () => motifsOuverture;
 export const getLabelsMotifsFermeture = () => motifsFermeture;
 export const getLabelsMotifsTransfert = () => motifsTransfert;
 export const getLabelsMotifsColoration = () => motifsColoration;
+export const getMotifsTriggerAutre = () => motifsTriggerAutre;
 
 export const MOTIFS_LABELS = {
   taux_insertion_satisfaisant: "Taux d’insertion satisfaisant",
@@ -92,6 +93,8 @@ const motifsColoration: MotifLabel[] = [
   "projet_specifique_local",
   "autre",
 ];
+
+const motifsTriggerAutre: MotifLabel[] = ["autre", "mise_en_place_partenariat"];
 
 const motifs: Record<TypeDemande, MotifLabel[]> = {
   ouverture_nette: motifsOuverture,

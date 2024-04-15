@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { getCampagneEnCours } from "../../queries/getCampagneEnCours";
 import { getSimilarCampagne } from "../../queries/getSimilarCampagne";
@@ -26,7 +27,7 @@ export const [createCampagne, createCampagneFactory] = inject(
       );
     }
     const campagneEnCours = await deps.getCampagneEnCours();
-    if (campagneEnCours && campagne.statut === "en cours") {
+    if (campagneEnCours && campagne.statut === CampagneStatutEnum["en cours"]) {
       throw Boom.badRequest("Une campagne est déjà en cours", {
         id: campagneEnCours.id,
         errors: {

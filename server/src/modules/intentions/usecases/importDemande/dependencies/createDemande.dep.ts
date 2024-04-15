@@ -1,5 +1,6 @@
 import { Insertable } from "kysely";
 import _ from "lodash";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB, kdb } from "../../../../../db/db";
 import { RequestUser } from "../../../../core/model/User";
@@ -45,7 +46,7 @@ export const createDemandeQuery = ({
       compensationRentreeScolaire: null,
       amiCma: null,
       createurId: user.id,
-      statut: "draft",
+      statut: DemandeStatutEnum.draft,
       typeDemande:
         demande.typeDemande === "augmentation_compensation"
           ? "augmentation_nette"

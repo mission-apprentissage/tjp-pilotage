@@ -26,6 +26,8 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
@@ -45,19 +47,19 @@ const PAGE_SIZE = 30;
 
 const TagDemande = ({ statut }: { statut: string }) => {
   switch (statut) {
-    case "draft":
+    case DemandeStatutEnum.draft:
       return (
         <Tag size="sm" colorScheme={"orange"}>
           Projet de demande
         </Tag>
       );
-    case "submitted":
+    case DemandeStatutEnum.submitted:
       return (
         <Tag size="sm" colorScheme={"green"}>
           Demande validée
         </Tag>
       );
-    case "refused":
+    case DemandeStatutEnum.refused:
       return (
         <Tag size="sm" colorScheme={"red"}>
           Demande refusée
@@ -369,7 +371,8 @@ export const PageClient = () => {
                               demande.dateModification
                             ).toLocaleString()}
                           </Td>
-                          {data?.campagne.statut === "terminée" && (
+                          {data?.campagne.statut ===
+                            CampagneStatutEnum["terminée"] && (
                             <Td>
                               {demande.numeroDemandeImportee ? (
                                 <Button

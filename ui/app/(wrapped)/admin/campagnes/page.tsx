@@ -17,6 +17,7 @@ import {
 } from "@chakra-ui/react";
 import { toDate } from "date-fns";
 import { useMemo, useState } from "react";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import { GuardPermission } from "@/utils/security/GuardPermission";
@@ -26,19 +27,19 @@ import { EditCampagne } from "./EditCampagne";
 
 const CampagneStatutTag = ({ statut }: { statut?: string }) => {
   switch (statut) {
-    case "en cours":
+    case CampagneStatutEnum["en cours"]:
       return (
         <Tag size="lg" colorScheme={"green"} ml={2}>
           {statut}
         </Tag>
       );
-    case "en attente":
+    case CampagneStatutEnum["en attente"]:
       return (
         <Tag size="lg" colorScheme={"purple"} ml={2}>
           {statut}
         </Tag>
       );
-    case "terminée":
+    case CampagneStatutEnum["terminée"]:
       return (
         <Tag size="lg" colorScheme={"red"} ml={2}>
           {statut}

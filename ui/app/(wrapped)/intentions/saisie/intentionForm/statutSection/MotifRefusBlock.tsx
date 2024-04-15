@@ -10,6 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import {
@@ -29,7 +30,7 @@ export const MotifRefusBlock = chakra(
     } = useFormContext<IntentionForms>();
 
     const statut = watch("statut");
-    const visible = statut === "refused";
+    const visible = statut === DemandeStatutEnum.refused;
 
     useEffect(
       () =>

@@ -6,6 +6,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
@@ -24,6 +25,11 @@ export const RentreeScolaireField = ({
     formState: { errors },
     register,
   } = useFormContext<IntentionForms>();
+
+  const rentreeScolaireOptions = [1, 2, 3, 4, 5].map(
+    (offsetRentree: number) =>
+      parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE) + offsetRentree
+  );
 
   return (
     <FormControl
@@ -50,13 +56,11 @@ export const RentreeScolaireField = ({
           disabled={disabled}
           isInvalid={!!errors.rentreeScolaire}
         >
-          {campagne && campagne?.annee != "2024" && (
-            <option value="2024">2024</option>
-          )}
-          <option value="2025">2025</option>
-          <option value="2026">2026</option>
-          <option value="2027">2027</option>
-          <option value="2023">2028</option>
+          {rentreeScolaireOptions.map((rentreeScolaireOption) => (
+            <option key={rentreeScolaireOption} value={rentreeScolaireOption}>
+              {rentreeScolaireOption}
+            </option>
+          ))}
         </Select>
       </Tooltip>
       {errors.rentreeScolaire && (

@@ -22,6 +22,7 @@ import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -525,8 +526,8 @@ export const QuadrantSection = ({
                   value={filters.status ?? ""}
                 >
                   <Radio value="">Toutes</Radio>
-                  <Radio value="submitted">Validées</Radio>
-                  <Radio value="draft">Projets</Radio>
+                  <Radio value={DemandeStatutEnum.submitted}>Validées</Radio>
+                  <Radio value={DemandeStatutEnum.draft}>Projets</Radio>
                 </RadioGroup>
               </FormControl>
             </Box>

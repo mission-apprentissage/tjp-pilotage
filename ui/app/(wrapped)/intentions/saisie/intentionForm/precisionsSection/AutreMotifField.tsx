@@ -10,6 +10,8 @@ import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
+import { getMotifsTriggerAutre } from "../../../utils/motifDemandeUtils";
+
 export const AutreMotifField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
@@ -20,8 +22,7 @@ export const AutreMotifField = chakra(
 
     const [motif] = watch(["motif"]);
 
-    const visible =
-      motif?.includes("autre") || motif?.includes("mise_en_place_partenariat");
+    const visible = getMotifsTriggerAutre().some((m) => motif?.includes(m));
 
     return (
       <Collapse in={visible} unmountOnExit>

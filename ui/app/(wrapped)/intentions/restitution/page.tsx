@@ -5,6 +5,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { TableFooter } from "@/components/TableFooter";
@@ -161,7 +162,7 @@ export default () => {
 
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
-  >(["draft", "submitted"]);
+  >([DemandeStatutEnum.draft, DemandeStatutEnum.submitted]);
 
   useEffect(() => {
     if (

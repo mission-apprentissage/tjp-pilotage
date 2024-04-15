@@ -1,3 +1,4 @@
+import { demandeStatut } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 export const submitDemandeSchema = {
@@ -57,7 +58,7 @@ export const submitDemandeSchema = {
   response: {
     200: z.object({
       id: z.string(),
-      statut: z.enum(["draft", "submitted", "refused", "deleted"]),
+      statut: demandeStatut,
     }),
   },
 };

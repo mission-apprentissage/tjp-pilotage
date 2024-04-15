@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
@@ -23,7 +24,8 @@ export const getDemandeRoute = (server: Server) => {
           user,
         });
         if (!demande) return response.status(404).send();
-        if (demande.statut === "deleted") throw Boom.forbidden();
+        if (demande.statut === DemandeStatutEnum.deleted)
+          throw Boom.forbidden();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
         const canEdit = guardScope(scope?.default, {

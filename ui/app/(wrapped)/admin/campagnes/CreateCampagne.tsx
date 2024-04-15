@@ -18,33 +18,15 @@ import {
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { AxiosError } from "axios";
-import { DatepickerConfigs, SingleDatepicker } from "chakra-dayzed-datepicker";
+import { SingleDatepicker } from "chakra-dayzed-datepicker";
 import { toDate } from "date-fns";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { z } from "zod";
 
-import { client } from "../../../../api.client";
-
-const DATE_PICKER_CONFIG = {
-  dateFormat: "dd/MM/yyyy",
-  dayNames: ["Dim", "Lun", "Mar", "Mer", "Jeu", "Ven", "Sam"],
-  monthNames: [
-    "Janvier",
-    "Février",
-    "Mars",
-    "Avril",
-    "Mai",
-    "Juin",
-    "Juillet",
-    "Août",
-    "Septembre",
-    "Octobre",
-    "Novembre",
-    "Décembre",
-  ],
-  firstDayOfWeek: 1,
-} as DatepickerConfigs;
+import { client } from "@/api.client";
+import { getDatePickerConfig } from "@/utils/getDatePickerConfig";
 
 export const CreateCampagne = ({
   isOpen,
@@ -133,7 +115,7 @@ export const CreateCampagne = ({
                 required: "Veuillez saisir un statut",
               })}
             >
-              {["en attente", "en cours", "terminée"].map((statut) => (
+              {Object.keys(CampagneStatutEnum).map((statut) => (
                 <option key={statut} value={statut}>
                   {statut}
                 </option>
@@ -159,7 +141,7 @@ export const CreateCampagne = ({
               maxDate={
                 getValues("dateFin") ? toDate(getValues("dateFin")) : undefined
               }
-              configs={DATE_PICKER_CONFIG}
+              configs={getDatePickerConfig()}
             />
             {!!errors.dateDebut && (
               <FormErrorMessage>{errors.dateDebut.message}</FormErrorMessage>
@@ -181,7 +163,7 @@ export const CreateCampagne = ({
                   ? toDate(getValues("dateDebut"))
                   : undefined
               }
-              configs={DATE_PICKER_CONFIG}
+              configs={getDatePickerConfig()}
             />
             {!!errors.dateFin && (
               <FormErrorMessage>{errors.dateFin.message}</FormErrorMessage>

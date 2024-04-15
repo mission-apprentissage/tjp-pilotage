@@ -9,9 +9,6 @@
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "^6.13.2",
     "@typescript-eslint/parser": "^6.13.2",
-    "chakra-dayzed-datepicker": "^0.2.10",
-    "date-fns": "^3.6.0",
-    "dayzed": "^3.2.3",
     "eslint": "8.55.0",
     "eslint-config-next": "14.0.3",
     "eslint-import-resolver-typescript": "^3.6.1",

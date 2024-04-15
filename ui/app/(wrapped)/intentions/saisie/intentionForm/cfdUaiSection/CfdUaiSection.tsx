@@ -13,6 +13,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -25,19 +27,19 @@ import { UaiBlock } from "./UaiBlock";
 
 const TagDemande = ({ statut }: { statut?: string }) => {
   switch (statut) {
-    case "draft":
+    case DemandeStatutEnum.draft:
       return (
         <Tag size="md" colorScheme={"yellow"} ml={4}>
           Projet de demande
         </Tag>
       );
-    case "submitted":
+    case DemandeStatutEnum.submitted:
       return (
         <Tag size="md" colorScheme={"green"} ml={4}>
           Demande validée
         </Tag>
       );
-    case "refused":
+    case DemandeStatutEnum.refused:
       return (
         <Tag size="md" colorScheme={"red"} ml={4}>
           Demande refusée
@@ -55,19 +57,19 @@ const TagDemande = ({ statut }: { statut?: string }) => {
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
-    case "en cours":
+    case CampagneStatutEnum["en cours"]:
       return (
         <Tag size="md" colorScheme={"green"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
-    case "en attente":
+    case CampagneStatutEnum["en attente"]:
       return (
         <Tag size="md" colorScheme={"purple"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
-    case "terminée":
+    case CampagneStatutEnum["terminée"]:
       return (
         <Tag size="md" colorScheme={"red"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})

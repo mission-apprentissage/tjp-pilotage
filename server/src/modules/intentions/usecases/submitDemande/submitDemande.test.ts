@@ -1,3 +1,5 @@
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+
 import { submitDemandeFactory } from "./submitDemande.usecase";
 
 type Deps = Parameters<typeof submitDemandeFactory>[0];
@@ -72,7 +74,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          statut: "submitted",
+          statut: DemandeStatutEnum.submitted,
         },
       })
     ).rejects.toThrow("Code uai non valide");
@@ -89,7 +91,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          statut: "submitted",
+          statut: DemandeStatutEnum.submitted,
         },
       })
     ).rejects.toThrow("Code diplome non valide");
@@ -103,7 +105,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         demande: {
           ...demande,
-          statut: "refused",
+          statut: DemandeStatutEnum.refused,
           motifRefus: undefined,
         },
       })
@@ -124,7 +126,7 @@ describe("submitDemande usecase", () => {
           ...demande,
           mixte: true,
           capaciteApprentissage: undefined,
-          statut: "submitted",
+          statut: DemandeStatutEnum.submitted,
         },
       })
     ).rejects.toThrow("Forbidden");
@@ -142,14 +144,14 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
-        statut: "draft",
+        statut: DemandeStatutEnum.draft,
         numero: undefined,
       },
     });
     expect(deps.createDemandeQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...demande,
-        statut: "draft",
+        statut: DemandeStatutEnum.draft,
         id: expect.stringMatching(".+"),
         numero: expect.stringMatching(".+"),
         dateModification: expect.any(Date),
@@ -169,14 +171,14 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
-        statut: "submitted",
+        statut: DemandeStatutEnum.submitted,
         numero: "numero-id",
       },
     });
     expect(deps.createDemandeQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...demande,
-        statut: "submitted",
+        statut: DemandeStatutEnum.submitted,
         numero: "numero-id",
         id: expect.stringMatching(".+"),
         dateModification: expect.any(Date),

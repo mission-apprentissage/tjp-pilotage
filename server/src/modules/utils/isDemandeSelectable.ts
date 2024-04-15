@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { ExpressionBuilder, sql } from "kysely";
 import { getPermissionScope } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
@@ -11,7 +12,7 @@ export const isDemandeSelectable =
     const { filter, draftFilter } = getDemandeSelectableFilters(user);
     return eb.or([
       eb.and([
-        eb("demande.statut", "=", "draft"),
+        eb("demande.statut", "=", DemandeStatutEnum.draft),
         draftFilter.userId
           ? eb("demande.createurId", "=", draftFilter.userId)
           : sql<boolean>`true`,
@@ -20,7 +21,7 @@ export const isDemandeSelectable =
           : sql<boolean>`true`,
       ]),
       eb.and([
-        eb("demande.statut", "!=", "draft"),
+        eb("demande.statut", "!=", DemandeStatutEnum.draft),
         filter.codeRegion
           ? eb("demande.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
@@ -51,8 +52,12 @@ const getDemandeSelectableFilters = (
 };
 
 export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb("demande.statut", "!=", "deleted");
+  eb("demande.statut", "!=", DemandeStatutEnum.deleted);
 
 export const isDemandeNotDeletedOrRefused = (
   eb: ExpressionBuilder<DB, "demande">
-) => eb("demande.statut", "not in", ["deleted", "refused"]);
+) =>
+  eb("demande.statut", "not in", [
+    DemandeStatutEnum.deleted,
+    DemandeStatutEnum.refused,
+  ]);
