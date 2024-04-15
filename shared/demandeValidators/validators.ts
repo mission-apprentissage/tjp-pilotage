@@ -227,11 +227,11 @@ export const demandeValidators: Record<
    * - supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration
    */
   capaciteApprentissageColoree: (demande) => {
-    if (!isPositiveNumber(demande.capaciteScolaireColoree))
+    if (!isPositiveNumber(demande.capaciteApprentissageColoree))
       return "La capacité en apprentissage colorée doit être un nombre entier positif";
     if (
       isTypeFermeture(demande.typeDemande) &&
-      demande.capaciteScolaireColoree !== 0
+      demande.capaciteApprentissageColoree !== 0
     )
       return "La capacité en apprentissage colorée doit être à 0 dans le cas d'une fermeture";
     if (
@@ -246,6 +246,13 @@ export const demandeValidators: Record<
       demande.capaciteApprentissageColoree === 0
     )
       return "La capacité en apprentissage colorée doit être supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration";
+    if (
+      isTypeColoration(demande.typeDemande) &&
+      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+      demande.capaciteApprentissageColoree >
+        demande.capaciteApprentissageActuelle
+    )
+      return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
   },
   /**
    *
@@ -269,7 +276,11 @@ export const demandeValidators: Record<
    * - inférieure à la somme des capacités actuelles dans le cas d'une diminution
    */
   sommeCapacite: (demande) => {
-    if (isTypeFermeture(demande.typeDemande)) return;
+    if (
+      isTypeFermeture(demande.typeDemande) ||
+      isTypeColoration(demande.typeDemande)
+    )
+      return;
 
     if (!demande.capaciteApprentissage && !demande.capaciteScolaire) {
       return "La somme des capacités doit être supérieure à 0";
@@ -313,6 +324,16 @@ export const demandeValidators: Record<
       !demande.capaciteScolaireColoree
     )
       return "La somme des capacités colorées doit être supérieure à 0";
+
+    if (
+      isPositiveNumber(demande.capaciteApprentissageColoree) &&
+      isPositiveNumber(demande.capaciteScolaireColoree) &&
+      isPositiveNumber(demande.capaciteApprentissageActuelle) &&
+      isPositiveNumber(demande.capaciteScolaireActuelle) &&
+      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree >
+        demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
+    )
+      return "La somme des capacités colorées doit être inférieure à la somme des capacités actuelles";
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;

@@ -1,3 +1,4 @@
+import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
@@ -27,6 +28,7 @@ export const UaiAutocomplete = ({
 
   return (
     <AsyncSelect
+      instanceId={useId()}
       name={name}
       styles={selectStyle}
       components={{
