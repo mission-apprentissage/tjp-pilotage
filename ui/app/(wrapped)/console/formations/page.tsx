@@ -288,26 +288,6 @@ export default function Formations() {
         </Multiselect>
         <Multiselect
           display={["none", null, "flex"]}
-          width="12rem"
-          onClose={filterTracker("cpcSecteur")}
-          onChange={(selected) => handleFilters("cpcSecteur", selected)}
-          options={data?.filters.cpcSecteurs}
-          value={filters.cpcSecteur ?? []}
-        >
-          CPC Secteur
-        </Multiselect>
-        <Multiselect
-          display={["none", null, "flex"]}
-          width="12rem"
-          onClose={filterTracker("cpcSousSecteur")}
-          onChange={(selected) => handleFilters("cpcSousSecteur", selected)}
-          options={data?.filters.cpcSousSecteurs}
-          value={filters.cpcSousSecteur ?? []}
-        >
-          CPC Sous Secteur
-        </Multiselect>
-        <Multiselect
-          display={["none", null, "flex"]}
           onClose={filterTracker("codeNsf")}
           width="12rem"
           onChange={(selected) => handleFilters("codeNsf", selected)}
