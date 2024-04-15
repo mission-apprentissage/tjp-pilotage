@@ -43,15 +43,11 @@ export const CapaciteApprentissageColoreeField = chakra(
       <FormControl
         className={className}
         isInvalid={!!errors.capaciteApprentissageColoree}
-        isRequired
       >
         <Controller
           name="capaciteApprentissageColoree"
           shouldUnregister
           control={control}
-          rules={{
-            required: "Le champ est obligatoire",
-          }}
           render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
               <NumberInput
@@ -61,7 +57,6 @@ export const CapaciteApprentissageColoreeField = chakra(
                 onChange={onChange}
                 ref={ref}
                 name={name}
-                isRequired={false}
                 key={value}
                 onBlur={onBlur}
                 value={value}
@@ -78,6 +73,7 @@ export const CapaciteApprentissageColoreeField = chakra(
                   _readOnly={{
                     opacity: "0.5",
                     cursor: "not-allowed",
+                    pointerEvents: "none",
                   }}
                   py={6}
                 />

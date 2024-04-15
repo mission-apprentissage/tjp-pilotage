@@ -1,9 +1,10 @@
+import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
 import { client } from "../../../../../api.client";
 
-export const DisciplineAutoCompleteInput = ({
+export const DisciplineAutocompleteInput = ({
   name,
   defaultValue,
   active,
@@ -35,6 +36,7 @@ export const DisciplineAutoCompleteInput = ({
 
   return (
     <AsyncCreatableSelect
+      instanceId={useId()}
       name={name}
       styles={selectStyle}
       components={{

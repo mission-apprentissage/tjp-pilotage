@@ -9,8 +9,7 @@ import {
 import { useState } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { DisciplineAutoCompleteInput } from "@/app/(wrapped)/intentions/saisie/components/DisciplineAutoComplete";
-
+import { DisciplineAutocompleteInput } from "../../../components/DisciplineAutoComplete";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const DisciplinesProfesseurAssocieRHField = ({
@@ -53,7 +52,7 @@ export const DisciplinesProfesseurAssocieRHField = ({
             control={control}
             rules={{ required: "Ce champ est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
-              <DisciplineAutoCompleteInput
+              <DisciplineAutocompleteInput
                 name={name}
                 active={!disabled}
                 inError={!!errors.discipline1ProfesseurAssocieRH}
@@ -71,7 +70,7 @@ export const DisciplinesProfesseurAssocieRHField = ({
               control={control}
               rules={{ required: "Ce champ est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
-                <DisciplineAutoCompleteInput
+                <DisciplineAutocompleteInput
                   name={name}
                   active={!disabled}
                   inError={!!errors.discipline2ProfesseurAssocieRH}
