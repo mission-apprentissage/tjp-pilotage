@@ -171,6 +171,7 @@ cli
       ...getImports("domaine_professionnel"),
       ...getImports("rome"),
       ...getImports("metier"),
+      ...getImports("formation_rome"),
     };
 
     if (filename) {
