@@ -4,9 +4,9 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("metier")
     .addColumn("codeMetier", "varchar(6)", (cb) => cb.notNull())
-    .addPrimaryKeyConstraint("codeMetier_pkey", ["codeMetier"])
+    .addPrimaryKeyConstraint("codeMetier_pk", ["codeMetier"])
     .addColumn("codeRome", "varchar(5)", (cb) => cb.notNull())
-    .addForeignKeyConstraint("fk_rome", ["codeRome"], "rome", ["codeRome"])
+    .addForeignKeyConstraint("rome_fk", ["codeRome"], "rome", ["codeRome"])
     .addColumn("libelleMetier", "varchar", (cb) => cb.notNull())
     .execute();
 };
