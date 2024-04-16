@@ -163,7 +163,7 @@ export const PageClient = () => {
     return colors[userName.charCodeAt(1) % colors.length];
   };
 
-  const { mutateAsync: importDemande } = client
+  const { mutateAsync: importDemande, isLoading: isSubmitting } = client
     .ref("[POST]/demande/import/:numero")
     .useMutation({
       onSuccess: (demande) => {
@@ -176,6 +176,8 @@ export const PageClient = () => {
         });
       },
     });
+
+  const [isImporting, setIsImporting] = useState(false);
 
   if (isLoading) return <IntentionSpinner />;
 
@@ -393,6 +395,7 @@ export const PageClient = () => {
                                   leftIcon={<Icon icon="ri:import-line" />}
                                   variant={"newInput"}
                                   onClick={(e) => {
+                                    setIsImporting(true);
                                     if (demande.numeroDemandeImportee) return;
                                     e.preventDefault();
                                     e.stopPropagation();
@@ -400,7 +403,11 @@ export const PageClient = () => {
                                       params: { numero: demande.numero },
                                     });
                                   }}
-                                  isDisabled={!!demande.numeroDemandeImportee}
+                                  isDisabled={
+                                    !!demande.numeroDemandeImportee ||
+                                    isSubmitting ||
+                                    isImporting
+                                  }
                                 >
                                   Dupliquer cette demande
                                 </Button>
