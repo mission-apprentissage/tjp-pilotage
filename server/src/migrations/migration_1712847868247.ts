@@ -5,7 +5,7 @@ import { DB } from "../db/schema";
 export const up = async (db: Kysely<DB>) => {
   await db.schema
     .createTable("formationRome")
-    .addColumn("cfd", "varchar(8)")
+    .addColumn("cfd", "varchar(8)", (cb) => cb.notNull())
     .addUniqueConstraint("formationRome_unique_constraint", ["cfd"])
     .addForeignKeyConstraint(
       "fk_formationRomeDataFormation",
@@ -13,7 +13,7 @@ export const up = async (db: Kysely<DB>) => {
       "dataFormation",
       ["cfd"]
     )
-    .addColumn("codeRome", "varchar(5)")
+    .addColumn("codeRome", "varchar(5)", (cb) => cb.notNull())
     .addForeignKeyConstraint("fk_formationRomeRome", ["codeRome"], "rome", [
       "codeRome",
     ])

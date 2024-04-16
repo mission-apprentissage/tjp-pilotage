@@ -3,10 +3,10 @@ import { Kysely } from "kysely";
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("rome")
-    .addColumn("codeRome", "varchar(5)")
+    .addColumn("codeRome", "varchar(5)", (cb) => cb.notNull())
     .addPrimaryKeyConstraint("codeRome_pkey", ["codeRome"])
-    .addColumn("libelleRome", "varchar")
-    .addColumn("codeDomaineProfessionnel", "varchar(3)")
+    .addColumn("libelleRome", "varchar", (cb) => cb.notNull())
+    .addColumn("codeDomaineProfessionnel", "varchar(3)", (cb) => cb.notNull())
     .addForeignKeyConstraint(
       "fk_codeDomaineProfessionnel",
       ["codeDomaineProfessionnel"],

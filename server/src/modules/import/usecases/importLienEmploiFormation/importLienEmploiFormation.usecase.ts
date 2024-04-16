@@ -127,7 +127,7 @@ export const importLienEmploiFormationFactory =
           for (let i = 0; i < codesRome.length; i++) {
             const codeRome = codesRome[i];
 
-            if (codeRome !== "") {
+            if (codeRome) {
               const data: Insertable<DB["formationRome"]> = {
                 codeRome: codeRome,
                 cfd: formation.cfd,
