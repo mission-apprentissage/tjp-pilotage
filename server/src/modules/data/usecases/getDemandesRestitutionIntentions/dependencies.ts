@@ -518,7 +518,7 @@ const getFilters = async ({
     .select(["campagne.annee as label", "campagne.annee as value", "statut"])
     .distinct()
     .$castTo<{ label: string; value: string; statut: string }>()
-    .orderBy("label", "asc")
+    .orderBy("label", "desc")
     .where("campagne.annee", "is not", null)
     .execute();
 
