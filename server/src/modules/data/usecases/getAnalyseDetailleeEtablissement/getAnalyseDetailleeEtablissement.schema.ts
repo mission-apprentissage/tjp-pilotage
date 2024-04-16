@@ -84,10 +84,6 @@ export const getAnalyseDetailleeEtablissementSchema = {
   params: z.object({
     uai: z.string(),
   }),
-  querystring: z.object({
-    codeNiveauDiplome: z.array(z.string()).optional(),
-    voie: z.array(voie).optional(),
-  }),
   response: {
     200: z.object({
       etablissement: EtablissementSchema,
