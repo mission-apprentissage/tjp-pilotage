@@ -80,7 +80,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         </Text>
         <Text>J’ouvre des places sur un BAC Pro Aéronautique.</Text>
         <Text>
-          J'indique le motif ; je peux préciser qu'il s'agit d'une coloration
+          J'indique le motif ; je peux préciser qu'il s'agit d'une coloration.
         </Text>
       </>
     ),
@@ -218,7 +218,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
         <Text>
           Si la formation n’est pas ouverte sur l’établissement actuellement,
           j’utilise le type de demande “Ouverture nette” et je coche Coloration
-          dans la section “Précisions sur votre demande”
+          dans la section “Précisions sur votre demande”.
         </Text>
       </>
     ),
