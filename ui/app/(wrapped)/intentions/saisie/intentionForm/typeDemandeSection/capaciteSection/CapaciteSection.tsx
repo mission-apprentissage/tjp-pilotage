@@ -105,7 +105,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               </Th>
             )}
             <Th textAlign={"end"} p={2} pe={0}>
-              Nouvelle place
+              Écart
             </Th>
           </Tr>
         </Thead>
