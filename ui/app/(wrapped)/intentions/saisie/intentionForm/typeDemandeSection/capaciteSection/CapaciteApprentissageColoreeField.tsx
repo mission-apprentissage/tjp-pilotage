@@ -1,28 +1,16 @@
-import {
-  chakra,
-  FormControl,
-  NumberDecrementStepper,
-  NumberIncrementStepper,
-  NumberInput,
-  NumberInputField,
-  NumberInputStepper,
-} from "@chakra-ui/react";
+import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
-import { Controller, useFormContext } from "react-hook-form";
+import { useFormContext } from "react-hook-form";
 import { isTypeFermeture } from "shared/demandeValidators/validators";
 
+import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
 import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 import { IntentionForms } from "../../defaultFormValues";
 
 export const CapaciteApprentissageColoreeField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
-    const {
-      formState: { errors },
-      control,
-      watch,
-      setValue,
-    } = useFormContext<IntentionForms>();
+    const { watch, setValue } = useFormContext<IntentionForms>();
 
     useEffect(
       () =>
@@ -40,62 +28,11 @@ export const CapaciteApprentissageColoreeField = chakra(
     if (fermeture) return <></>;
 
     return (
-      <FormControl
+      <CapaciteField
+        name={"capaciteApprentissageColoree"}
         className={className}
-        isInvalid={!!errors.capaciteApprentissageColoree}
-      >
-        <Controller
-          name="capaciteApprentissageColoree"
-          shouldUnregister
-          control={control}
-          render={({ field: { onChange, value, onBlur, ref, name } }) => {
-            return (
-              <NumberInput
-                step={1}
-                flex={1}
-                isReadOnly={isReadOnly}
-                onChange={onChange}
-                ref={ref}
-                name={name}
-                key={value}
-                onBlur={onBlur}
-                value={value}
-                min={0}
-                defaultValue={0}
-              >
-                <NumberInputField
-                  textAlign={"end"}
-                  fontSize={"16px"}
-                  fontWeight={700}
-                  borderWidth={"1px"}
-                  borderColor={"gray.200"}
-                  borderRadius={4}
-                  _readOnly={{
-                    opacity: "0.5",
-                    cursor: "not-allowed",
-                    pointerEvents: "none",
-                  }}
-                  py={6}
-                />
-                <NumberInputStepper>
-                  <NumberIncrementStepper
-                    opacity={isReadOnly ? "0.3" : "1"}
-                    cursor={isReadOnly ? "not-allowed" : "pointer"}
-                  />
-                  <NumberDecrementStepper
-                    opacity={isReadOnly ? "0.3" : "1"}
-                    cursor={isReadOnly ? "not-allowed" : "pointer"}
-                    _disabled={{
-                      opacity: "0.3",
-                      cursor: "not-allowed",
-                    }}
-                  />
-                </NumberInputStepper>
-              </NumberInput>
-            );
-          }}
-        />
-      </FormControl>
+        isReadOnly={isReadOnly}
+      />
     );
   }
 );
