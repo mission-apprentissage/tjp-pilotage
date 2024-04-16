@@ -50,7 +50,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   ouverture_nette: {
     value: "ouverture_nette",
     label: "Ouverture nette",
-    campagnes: ["2023", "2024"],
+    campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour tout cas de création d'une formation en voie scolaire ou apprentissage.",
     exemple: (
       <>
@@ -71,7 +71,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   augmentation_nette: {
     value: "augmentation_nette",
     label: "Augmentation nette",
-    campagnes: ["2023", "2024"],
+    campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existante. Ne pas utiliser pour des places déjà ouvertes sur l'établissement.",
     exemple: (
       <>
@@ -88,7 +88,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   fermeture: {
     value: "fermeture",
     label: "Fermeture",
-    campagnes: ["2023", "2024"],
+    campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture ou pour les fermetures nettes.",
     exemple: (
       <>
@@ -163,7 +163,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   diminution: {
     value: "diminution",
     label: "Diminution",
-    campagnes: ["2023", "2024"],
+    campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour renseigner les places fermées en compensation d'une ouverture, ou pour les diminutions nettes.",
     exemple: (
       <>
@@ -183,7 +183,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   transfert: {
     value: "transfert",
     label: "Transfert",
-    campagnes: ["2024"],
+    campagnes: ["2024", "2025"],
     desc: "Utiliser ce formulaire pour les transferts de place entre la voie scolaire et l'apprentissage.",
     exemple: (
       <>
@@ -204,7 +204,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   coloration: {
     value: "coloration",
     label: "Coloration",
-    campagnes: ["2024"],
+    campagnes: ["2024", "2025"],
     desc: "Utiliser ce formulaire pour colorer une formation existante.",
     exemple: (
       <>

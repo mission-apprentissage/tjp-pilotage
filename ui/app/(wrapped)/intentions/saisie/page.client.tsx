@@ -135,6 +135,11 @@ export const PageClient = () => {
 
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
+  const isCampagneEnCours =
+    data?.campagne?.statut === CampagneStatutEnum["en cours"];
+  const isDisabled =
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
   const getAvatarBgColor = (userName: string) => {
@@ -422,10 +427,10 @@ export const PageClient = () => {
                 <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                 {hasPermissionEnvoi && (
                   <Button
-                    isDisabled={isSaisieDisabled()}
+                    isDisabled={isDisabled}
                     variant="createButton"
                     size={"lg"}
-                    as={!isSaisieDisabled() ? NextLink : undefined}
+                    as={!isDisabled ? NextLink : undefined}
                     href="/intentions/saisie/new"
                     px={3}
                     mt={12}
