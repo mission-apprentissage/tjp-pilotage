@@ -14,12 +14,20 @@ const createDomaineProfessionnel = async (
     .execute();
 };
 
+const deleteDomaineProfessionnel = async () => {
+  return kdb.deleteFrom("domaineProfessionnel").execute();
+};
+
 const createRome = async (rome: Insertable<DB["rome"]>) => {
   return kdb
     .insertInto("rome")
     .values(rome)
     .onConflict((oc) => oc.column("codeRome").doUpdateSet(rome))
     .execute();
+};
+
+const deleteRome = async () => {
+  return kdb.deleteFrom("rome").execute();
 };
 
 const createMetier = async (data: Insertable<DB["metier"]>) => {
@@ -30,6 +38,10 @@ const createMetier = async (data: Insertable<DB["metier"]>) => {
     .execute();
 };
 
+const deleteMetier = async () => {
+  return kdb.deleteFrom("metier").execute();
+};
+
 const selectDataFormationCfd = async ({ offset = 0 }: { offset?: number }) => {
   return kdb
     .selectFrom("dataFormation")
@@ -37,6 +49,10 @@ const selectDataFormationCfd = async ({ offset = 0 }: { offset?: number }) => {
     .offset(offset)
     .orderBy("cfd", "asc")
     .execute();
+};
+
+const deleteFormationRome = async () => {
+  return kdb.deleteFrom("formationRome").execute();
 };
 
 const createFormationRome = async (data: Insertable<DB["formationRome"]>) => {
@@ -53,4 +69,8 @@ export const importLienEmploiFormation = {
   createMetier,
   selectDataFormationCfd,
   createFormationRome,
+  deleteDomaineProfessionnel,
+  deleteRome,
+  deleteMetier,
+  deleteFormationRome,
 };
