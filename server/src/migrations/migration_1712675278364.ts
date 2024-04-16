@@ -3,11 +3,11 @@ import { Kysely } from "kysely";
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("domaineProfessionnel")
-    .addColumn("codeDomaineProfessionnel", "varchar(3)")
+    .addColumn("codeDomaineProfessionnel", "varchar(3)", (cb) => cb.notNull())
     .addUniqueConstraint("codeDomaineProfessionnel", [
       "codeDomaineProfessionnel",
     ])
-    .addColumn("libelleDomaineProfessionnel", "varchar")
+    .addColumn("libelleDomaineProfessionnel", "varchar", (cb) => cb.notNull())
     .execute();
 };
 
