@@ -8,79 +8,131 @@ import { importLienEmploiFormation as importLienEmploiFormationDeps } from "./im
 export const importLienEmploiFormationFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
+    findRawData = dataDI.rawDataRepository.findRawData,
     createDomaineProfessionnel = importLienEmploiFormationDeps.createDomaineProfessionnel,
     createRome = importLienEmploiFormationDeps.createRome,
     createMetier = importLienEmploiFormationDeps.createMetier,
+    selectDataFormationCfd = importLienEmploiFormationDeps.selectDataFormationCfd,
+    createFormationRome = importLienEmploiFormationDeps.createFormationRome,
   }) =>
   async () => {
-    console.log(`Import des domaines professionnels`);
+    // console.log(`Import des domaines professionnels`);
 
-    let domainesProfessionnels = 0;
-    await streamIt(
-      (countDomaineProfessionnel) =>
-        findRawDatas({
-          type: "domaine_professionnel",
-          offset: countDomaineProfessionnel,
-          limit: 20,
-        }),
-      async (item) => {
-        const data: Insertable<DB["domaineProfessionnel"]> = {
-          codeDomaineProfessionnel: item.code_domaine_professionnel,
-          libelleDomaineProfessionnel: item.libelle_domaine_professionnel,
-        };
+    // let domainesProfessionnels = 0;
+    // await streamIt(
+    //   (countDomaineProfessionnel) =>
+    //     findRawDatas({
+    //       type: "domaine_professionnel",
+    //       offset: countDomaineProfessionnel,
+    //       limit: 20,
+    //     }),
+    //   async (item) => {
+    //     const data: Insertable<DB["domaineProfessionnel"]> = {
+    //       codeDomaineProfessionnel: item.code_domaine_professionnel,
+    //       libelleDomaineProfessionnel: item.libelle_domaine_professionnel,
+    //     };
 
-        await createDomaineProfessionnel(data);
+    //     await createDomaineProfessionnel(data);
 
-        domainesProfessionnels++;
-        process.stdout.write(`\r${domainesProfessionnels}`);
-      },
-      { parallel: 20 }
-    );
+    //     domainesProfessionnels++;
+    //     process.stdout.write(`\r${domainesProfessionnels}`);
+    //   },
+    //   { parallel: 20 }
+    // );
 
-    console.log(`\nImport des fiches ROME`);
-    let rome = 0;
-    await streamIt(
-      (countRome) =>
-        findRawDatas({
-          type: "rome",
-          offset: countRome,
-          limit: 20,
-        }),
-      async (item) => {
-        const data: Insertable<DB["rome"]> = {
-          codeRome: item.code_rome,
-          libelleRome: item.libelle_rome,
-          codeDomaineProfessionnel: item.code_rome.substring(0, 3),
-        };
+    // console.log(`\nImport des fiches ROME`);
+    // let rome = 0;
+    // await streamIt(
+    //   (countRome) =>
+    //     findRawDatas({
+    //       type: "rome",
+    //       offset: countRome,
+    //       limit: 20,
+    //     }),
+    //   async (item) => {
+    //     const data: Insertable<DB["rome"]> = {
+    //       codeRome: item.code_rome,
+    //       libelleRome: item.libelle_rome,
+    //       codeDomaineProfessionnel: item.code_rome.substring(0, 3),
+    //     };
 
-        await createRome(data);
+    //     await createRome(data);
 
-        rome++;
-        process.stdout.write(`\r${rome}`);
-      },
-      { parallel: 20 }
-    );
+    //     rome++;
+    //     process.stdout.write(`\r${rome}`);
+    //   },
+    //   { parallel: 20 }
+    // );
 
-    console.log(`\nImport des métiers`);
-    let metiers = 0;
+    // console.log(`\nImport des métiers`);
+    // let metiers = 0;
+    // await streamIt(
+    //   (countMetier) =>
+    //     findRawDatas({
+    //       type: "metier",
+    //       offset: countMetier,
+    //       limit: 20,
+    //     }),
+    //   async (item) => {
+    //     const data: Insertable<DB["metier"]> = {
+    //       codeRome: item.code_rome.trim(),
+    //       libelleMetier: item.libelle_appellation_long.trim(),
+    //       codeMetier: item.code_ogr.trim(),
+    //     };
+
+    //     await createMetier(data);
+
+    //     metiers++;
+    //     process.stdout.write(`\r${metiers}`);
+    //   },
+    //   { parallel: 20 }
+    // );
+
+    let formationRomeCount = 0;
+    console.log(`\nImport des formationsRome`);
     await streamIt(
       (countMetier) =>
-        findRawDatas({
-          type: "metier",
+        selectDataFormationCfd({
           offset: countMetier,
-          limit: 20,
         }),
-      async (item) => {
-        const data: Insertable<DB["metier"]> = {
-          codeRome: item.code_rome.trim(),
-          libelleMetier: item.libelle_appellation_long.trim(),
-          codeMetier: item.code_ogr.trim(),
-        };
+      async (formation) => {
+        const formationRome = await findRawData({
+          type: "formation_rome",
+          filter: {
+            Code_Scolarité: formation.cfd,
+          },
+        });
 
-        await createMetier(data);
+        if (formationRome !== undefined) {
+          const codesRome = [
+            formationRome.Code_Rome_1,
+            formationRome.Code_Rome_2,
+            formationRome.Code_Rome_3,
+            formationRome.Code_Rome_4,
+            formationRome.Code_Rome_5,
+          ];
 
-        metiers++;
-        process.stdout.write(`\r${metiers}`);
+          for (let i = 0; i < codesRome.length; i++) {
+            const codeRome = codesRome[i];
+
+            if (codeRome !== "") {
+              const data: Insertable<DB["formationRome"]> = {
+                codeRome: codeRome,
+                cfd: formation.cfd,
+              };
+
+              try {
+                await createFormationRome(data);
+              } catch (err) {
+                console.log(
+                  `\nProblème en ajoutant le couple CFD ${data.cfd} / Rome ${data.codeRome}. Il est probable que le CFD ou le code Rome n'existe pas dans notre base.`
+                );
+              }
+              formationRomeCount++;
+            }
+          }
+        }
+        process.stdout.write(`\r${formationRomeCount}`);
       },
       { parallel: 20 }
     );

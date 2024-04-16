@@ -30,8 +30,27 @@ const createMetier = async (data: Insertable<DB["metier"]>) => {
     .execute();
 };
 
+const selectDataFormationCfd = async ({ offset = 0 }: { offset?: number }) => {
+  return kdb
+    .selectFrom("dataFormation")
+    .select(["cfd"])
+    .offset(offset)
+    .orderBy("cfd", "asc")
+    .execute();
+};
+
+const createFormationRome = async (data: Insertable<DB["formationRome"]>) => {
+  return kdb
+    .insertInto("formationRome")
+    .values(data)
+    .onConflict((oc) => oc.column("cfd").doUpdateSet(data))
+    .execute();
+};
+
 export const importLienEmploiFormation = {
   createDomaineProfessionnel,
   createRome,
   createMetier,
+  selectDataFormationCfd,
+  createFormationRome,
 };

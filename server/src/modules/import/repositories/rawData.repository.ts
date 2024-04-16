@@ -8,6 +8,7 @@ import { Departements_academies_regions } from "../fileTypes/Departements_academ
 import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
 import { Domaine_Professionnel } from "../fileTypes/DomaineProfessionnel";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
+import { Formation_Rome } from "../fileTypes/FormationRome";
 import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
 import { Metier } from "../fileTypes/Metier";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
@@ -54,6 +55,7 @@ export type LineTypes = {
   domaine_professionnel: Domaine_Professionnel;
   rome: Rome;
   metier: Metier;
+  formation_rome: Formation_Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

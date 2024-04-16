@@ -204,6 +204,11 @@ export interface FormationNonMaterializedView {
   codeNsf: string | null;
 }
 
+export interface FormationRome {
+  cfd: string | null;
+  codeRome: string | null;
+}
+
 export interface IndicateurDepartement {
   codeDepartement: string;
   rentreeScolaire: string;
@@ -324,6 +329,7 @@ export interface DB {
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
+  formationRome: FormationRome;
   indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
