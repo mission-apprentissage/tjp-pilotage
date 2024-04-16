@@ -1,6 +1,6 @@
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import PageClient from "./page.client";
+import PageClient from "./client";
 
 export default ({
   params,
