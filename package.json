@@ -44,7 +44,8 @@
     "import:ij": "yarn workspace server cli importIJ",
     "import:formations": "yarn workspace server cli importFormations",
     "migrate:up": "yarn workspace server cli migrateDB",
-    "migrate:down": "yarn workspace server cli migrateDownDB"
+    "migrate:down": "yarn workspace server cli migrateDownDB",
+    "cli": "yarn workspace server cli"
   },
   "workspaces": [
     "ui",

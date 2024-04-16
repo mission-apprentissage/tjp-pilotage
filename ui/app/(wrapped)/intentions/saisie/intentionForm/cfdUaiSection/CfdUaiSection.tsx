@@ -13,30 +13,33 @@ import {
 } from "@chakra-ui/react";
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
+import { Campagne } from "../../types";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
-const TagDemande = ({ status }: { status?: string }) => {
-  switch (status) {
-    case "draft":
+const TagDemande = ({ statut }: { statut?: string }) => {
+  switch (statut) {
+    case DemandeStatutEnum.draft:
       return (
         <Tag size="md" colorScheme={"yellow"} ml={4}>
           Projet de demande
         </Tag>
       );
-    case "submitted":
+    case DemandeStatutEnum.submitted:
       return (
         <Tag size="md" colorScheme={"green"} ml={4}>
           Demande validée
         </Tag>
       );
-    case "refused":
+    case DemandeStatutEnum.refused:
       return (
         <Tag size="md" colorScheme={"red"} ml={4}>
           Demande refusée
@@ -51,7 +54,38 @@ const TagDemande = ({ status }: { status?: string }) => {
   }
 };
 
+const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
+  if (!campagne) return null;
+  switch (campagne.statut) {
+    case CampagneStatutEnum["en cours"]:
+      return (
+        <Tag size="md" colorScheme={"green"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    case CampagneStatutEnum["en attente"]:
+      return (
+        <Tag size="md" colorScheme={"purple"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    case CampagneStatutEnum["terminée"]:
+      return (
+        <Tag size="md" colorScheme={"red"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+    default:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Campagne {campagne.annee} ({campagne.statut})
+        </Tag>
+      );
+  }
+};
+
 export const CfdUaiSection = ({
+  campagne,
   formId,
   active,
   disabled,
@@ -64,11 +98,12 @@ export const CfdUaiSection = ({
   isCFDUaiSectionValid,
   statusComponentRef,
 }: {
+  campagne?: Campagne;
   formId?: string;
   active: boolean;
   disabled?: boolean;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   onEditUaiCfdSection: () => void;
   isFCIL: boolean;
   setIsFCIL: (isFcil: boolean) => void;
@@ -122,7 +157,8 @@ export const CfdUaiSection = ({
       >
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
-          <TagDemande status={defaultValues.status} />
+          <TagCampagne campagne={campagne} />
+          <TagDemande statut={defaultValues.statut} />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
@@ -133,22 +169,27 @@ export const CfdUaiSection = ({
               onClick={() => anchorToStatus()}
             />
           )}
+          {disabled && (
+            <Tag size="lg" colorScheme={"red"} ml={"auto"}>
+              Mode consultation
+            </Tag>
+          )}
         </Heading>
         <Divider pt="4" mb="4" />
         <CfdBlock
           formMetaData={formMetadata}
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
-          active={active}
+          active={active && !disabled}
         />
-        <DispositifBlock options={dispositifs} active={active} />
+        <DispositifBlock options={dispositifs} active={active && !disabled} />
         {isFCIL && <LibelleFCILField active={active}></LibelleFCILField>}
-        <Flex flexDirection={"row"} justifyContent={"space-between"}>
-          <Flex flexDirection="column" w="100%" maxW="752px">
+        <Flex direction={"row"} justify={"space-between"}>
+          <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">
               <UaiBlock
                 formMetadata={formMetadata}
-                active={active}
+                active={active && !disabled}
                 setUaiInfo={setUaiInfo}
               />
             </Box>
@@ -156,7 +197,7 @@ export const CfdUaiSection = ({
               minH={16}
               mt={"auto"}
               align="flex-end"
-              justifyContent={"space-between"}
+              justify={"space-between"}
             >
               {!disabled && (
                 <Button

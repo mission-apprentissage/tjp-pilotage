@@ -11,22 +11,26 @@ const makeMigrator = () => {
   });
 };
 
-export const migrateDownDB = async () => {
+export const migrateDownDB = async (numberOfMigrations: number) => {
   const migrator = makeMigrator();
-  const { results, error } = await migrator.migrateDown();
-  results?.forEach((it) => {
-    if (it.status === "Success") {
-      console.log(
-        `migration "${it.migrationName}" was executed successfully (DOWN)`
-      );
-    } else if (it.status === "Error") {
-      console.error(`failed to execute migration "${it.migrationName}" (DOWN)`);
+  for (let i = 0; i < numberOfMigrations; i++) {
+    const { results, error } = await migrator.migrateDown();
+    results?.forEach((it) => {
+      if (it.status === "Success") {
+        console.log(
+          `migration "${it.migrationName}" was executed successfully (DOWN)`
+        );
+      } else if (it.status === "Error") {
+        console.error(
+          `failed to execute migration "${it.migrationName}" (DOWN)`
+        );
+      }
+    });
+    if (error) {
+      console.error("failed to migrate down");
+      console.error(error);
+      process.exit(1);
     }
-  });
-  if (error) {
-    console.error("failed to migrate down");
-    console.error(error);
-    process.exit(1);
   }
 };
 

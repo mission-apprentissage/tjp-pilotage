@@ -1,10 +1,10 @@
-import { kdb } from "../../../../db/db";
+import { Insertable } from "kysely";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-export const deleteDemandeQuery = async (id: string) => {
-  await kdb
-    .updateTable("demande")
-    .set({ status: "deleted" })
-    .set({ updatedAt: new Date() })
-    .where("id", "=", id)
-    .execute();
+import { Demande } from "../../../../db/schema";
+import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHistory.query";
+
+export const deleteDemandeQuery = async (demande?: Insertable<Demande>) => {
+  if (demande)
+    updateDemandeWithHistory({ ...demande, statut: DemandeStatutEnum.deleted });
 };

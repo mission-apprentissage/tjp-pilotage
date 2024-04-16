@@ -9,6 +9,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  useDisclosure,
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
@@ -111,10 +112,16 @@ const NavMenuButton = chakra(
     children,
     className,
     segment,
+    isOpen,
+    onMouseEnter,
+    onMouseLeave,
   }: {
     children: ReactNode;
     className?: string;
     segment: string | null;
+    isOpen?: boolean;
+    onMouseEnter?: () => void;
+    onMouseLeave?: () => void;
   }) => {
     const segments = useSelectedLayoutSegments();
     const isActive =
@@ -129,13 +136,15 @@ const NavMenuButton = chakra(
         px={[2, null, 4]}
         py={[2, null, 4]}
         borderRadius="unset"
-        bg="unset"
+        bg={isOpen ? "blueecume.950" : "unset"}
         height="100%"
         color="bluefrance.113"
         borderBottomWidth={3}
         borderColor={isActive ? "bluefrance.113" : "transparent"}
         _hover={{ textDecoration: "unset", bg: "blueecume.950" }}
         as={Button}
+        onMouseEnter={onMouseEnter}
+        onMouseLeave={onMouseLeave}
         rightIcon={<ChevronDownIcon />}
       >
         {children}
@@ -152,14 +161,61 @@ export const Nav = () => {
     hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
     hasPermission(auth?.user.role, "restitution-intentions/lecture");
 
+  const {
+    isOpen: isMenuPanoramaOpen,
+    onOpen: onMenuPanoramaOpen,
+    onClose: onMenuPanoramaClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isMenuIntentionOpen,
+    onOpen: onMenuIntentionOpen,
+    onClose: onMenuIntentionClose,
+  } = useDisclosure();
+
   return (
     <Flex direction={"row"} align="center" flexWrap="wrap" width={"100%"}>
       <NavLink mr="4" href="/" segment={null}>
         Accueil
       </NavLink>
-      <NavLink mr="4" href="/panorama" segment="panorama">
-        Panorama
-      </NavLink>
+      <Menu gutter={0} matchWidth={true} isOpen={isMenuPanoramaOpen}>
+        <NavMenuButton
+          segment="panorama"
+          isOpen={isMenuPanoramaOpen}
+          onMouseEnter={onMenuPanoramaOpen}
+          onMouseLeave={onMenuPanoramaClose}
+        >
+          Panorama
+        </NavMenuButton>
+        <MenuList
+          p="0"
+          borderTop="unset"
+          onMouseEnter={onMenuPanoramaOpen}
+          onMouseLeave={onMenuPanoramaClose}
+        >
+          <MenuItem p="0">
+            <NavMenuLink href="/panorama/region" segment="panorama-region">
+              Région
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/departement"
+              segment="panorama-departement"
+            >
+              Département
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/etablissement"
+              segment="panorama-etablissement"
+            >
+              Établissement
+            </NavMenuLink>
+          </MenuItem>
+        </MenuList>
+      </Menu>
       <NavLink
         mr="4"
         href={
@@ -176,11 +232,22 @@ export const Nav = () => {
         Console
       </NavLink>
       {hasIntentionsMenu && (
-        <Menu gutter={0} matchWidth={true}>
-          <NavMenuButton segment="intentions">
+        <Menu gutter={0} matchWidth={true} isOpen={isMenuIntentionOpen}>
+          <NavMenuButton
+            segment="intentions"
+            isOpen={isMenuIntentionOpen}
+            onMouseEnter={onMenuIntentionOpen}
+            onMouseLeave={onMenuIntentionClose}
+          >
             Recueil des demandes
           </NavMenuButton>
-          <MenuList p="0" borderTop="unset" w="100%">
+          <MenuList
+            p="0"
+            borderTop="unset"
+            w="100%"
+            onMouseEnter={onMenuIntentionOpen}
+            onMouseLeave={onMenuIntentionClose}
+          >
             {hasPermission(auth?.user.role, "intentions/lecture") && (
               <MenuItem p="0" w="100%">
                 <NavMenuLink
@@ -225,6 +292,11 @@ export const Nav = () => {
       {hasPermission(auth?.user.role, "users/lecture") && (
         <NavLink href="/admin/users" segment="admin/users">
           Utilisateurs
+        </NavLink>
+      )}
+      {hasPermission(auth?.user.role, "campagnes/lecture") && (
+        <NavLink href="/admin/campagnes" segment="admin/campagnes">
+          Campagnes
         </NavLink>
       )}
       <NavLink

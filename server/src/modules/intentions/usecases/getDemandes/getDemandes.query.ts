@@ -1,35 +1,42 @@
+import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
-import {
-  isDemandeNotDeleted,
-  isDemandeSelectable,
-} from "../../../utils/isDemandeSelectable";
+import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
+import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
+import { getDemandesSchema } from "./getDemandes.schema";
 
-export const findDemandes = async ({
-  status,
-  search,
-  user,
-  offset = 0,
-  limit = 20,
-  orderBy = { order: "desc", column: "createdAt" },
-}: {
-  status?: "draft" | "submitted" | "refused";
-  search?: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-  offset?: number;
-  limit?: number;
-  orderBy?: { order: "asc" | "desc"; column: string };
-}) => {
+export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
+  user: RequestUser;
+}
+
+export const getCampagneQuery = async (anneeCampagne: string) => {
+  const campagne = await kdb
+    .selectFrom("campagne")
+    .selectAll()
+    .where("annee", "=", anneeCampagne)
+    .executeTakeFirstOrThrow()
+    .catch(() => {
+      throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
+    });
+
+  return campagne;
+};
+
+export const getDemandesQuery = async (
+  { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
+  anneeCampagne: string
+) => {
   const cleanSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
   const search_array = cleanSearch.split(" ") ?? [];
 
   const demandes = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .leftJoin(
@@ -43,8 +50,18 @@ export const findDemandes = async ({
       "dataEtablissement.codeAcademie"
     )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin("dispositif", "dispositif.codeDispositif", "demande.dispositifId")
+    .leftJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
     .leftJoin("user", "user.id", "demande.createurId")
+    .innerJoin("campagne", (join) =>
+      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
+        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        return eb;
+      })
+    )
     .selectAll("demande")
     .select((eb) => [
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
@@ -64,16 +81,23 @@ export const findDemandes = async ({
           .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
           .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
           .whereRef(
-            "demandeCompensee.dispositifId",
+            "demandeCompensee.codeDispositif",
             "=",
-            "demande.compensationDispositifId"
+            "demande.compensationCodeDispositif"
           )
-          .select(["demandeCompensee.id", "demandeCompensee.typeDemande"])
+          .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
           .limit(1)
       ).as("demandeCompensee"),
+      eb
+        .selectFrom("demande as demandeImportee")
+        .select(["demandeImportee.numero"])
+        .whereRef("demandeImportee.numeroHistorique", "=", "demande.numero")
+        .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
+        .limit(1)
+        .as("numeroDemandeImportee"),
     ])
     .$call((eb) => {
-      if (status) return eb.where("demande.status", "=", status);
+      if (statut) return eb.where("demande.statut", "=", statut);
       return eb;
     })
     .$call((eb) => {
@@ -83,7 +107,7 @@ export const findDemandes = async ({
             search_array.map((search_word) =>
               eb(
                 sql`concat(
-                  unaccent(${eb.ref("demande.id")}),
+                  unaccent(${eb.ref("demande.numero")}),
                   ' ',
                   unaccent(${eb.ref("demande.cfd")}),
                   ' ',
@@ -108,16 +132,22 @@ export const findDemandes = async ({
       return eb;
     })
     .$call((q) => {
-      if (!orderBy) return q;
+      if (!orderBy || !order) return q;
       return q.orderBy(
-        sql.ref(orderBy.column),
-        sql`${sql.raw(orderBy.order)} NULLS LAST`
+        sql`${sql.ref(orderBy)}`,
+        sql`${sql.raw(order)} NULLS LAST`
       );
     })
-    .where(isDemandeNotDeleted)
+    .orderBy("updatedAt desc")
     .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
+    .execute();
+
+  const campagnes = await kdb
+    .selectFrom("campagne")
+    .selectAll()
+    .orderBy("annee desc")
     .execute();
 
   return {
@@ -126,10 +156,11 @@ export const findDemandes = async ({
         ...demande,
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
-        idCompensation: demande.demandeCompensee?.id,
+        numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })
     ),
     count: parseInt(demandes[0]?.count) || 0,
+    campagnes: campagnes.map(cleanNull),
   };
 };

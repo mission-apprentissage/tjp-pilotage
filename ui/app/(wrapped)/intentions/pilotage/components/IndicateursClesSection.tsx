@@ -14,15 +14,17 @@ import {
 } from "@chakra-ui/react";
 import { ReactNode, useMemo } from "react";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { client } from "../../../../../api.client";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { client } from "@/api.client";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import {
-  Filters,
+  FiltersStatsPilotageIntentions,
   Indicateur,
-  Order,
-  ScopedTransformationStats,
+  OrderStatsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
   Status,
 } from "../types";
 import { isTerritoireSelected } from "../utils/isTerritoireSelected";
@@ -250,7 +252,7 @@ const StatCard = ({
 
 function generatePercentageDataOr(
   code: string,
-  data?: ScopedTransformationStats,
+  data?: StatsPilotageIntentions,
   or: string = "-"
 ) {
   return (status: Status, indicateur: Indicateur): string => {
@@ -273,7 +275,7 @@ function generatePercentageDataOr(
   };
 }
 
-function generateGetScopedData(code: string, data?: ScopedTransformationStats) {
+function generateGetScopedData(code: string, data?: StatsPilotageIntentions) {
   return (status: Status, indicateur: Indicateur): number => {
     return Number.parseFloat(
       (data?.[status]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
@@ -288,14 +290,14 @@ export const IndicateursClesSection = ({
   filters,
   order,
 }: {
-  data?: ScopedTransformationStats;
+  data?: StatsPilotageIntentions;
   isLoading: boolean;
   scope: SelectedScope;
-  filters: Partial<Filters>;
-  order: Partial<Order>;
+  filters: Partial<FiltersStatsPilotageIntentions>;
+  order: Partial<OrderStatsPilotageIntentions>;
 }) => {
   const { data: nationalStats, isLoading: isLoadingNationalStats } = client
-    .ref("[GET]/pilotage-transformation/get-scoped-transformations-stats")
+    .ref("[GET]/pilotage-intentions/stats")
     .useQuery(
       {
         query: {
@@ -367,7 +369,10 @@ export const IndicateursClesSection = ({
                       fontWeight="800"
                       color="bluefrance.113"
                     >
-                      {getPercentageDataOr("submitted", "tauxTransformation")}
+                      {getPercentageDataOr(
+                        DemandeStatutEnum.submitted,
+                        "tauxTransformation"
+                      )}
                     </Text>
                   </Flex>
                   <Flex flexDirection="column" gap={2}>
@@ -376,14 +381,22 @@ export const IndicateursClesSection = ({
                     </Text>
                     <ProgressBar
                       percentage={
-                        (getScopedData("submitted", "tauxTransformation") / 6) *
+                        (getScopedData(
+                          DemandeStatutEnum.submitted,
+                          "tauxTransformation"
+                        ) /
+                          6) *
                         100
                       }
                     />
                     <Text>
                       {`
                       ${(
-                        (getScopedData("submitted", "tauxTransformation") / 6) *
+                        (getScopedData(
+                          DemandeStatutEnum.submitted,
+                          "tauxTransformation"
+                        ) /
+                          6) *
                         100
                       ).toFixed(0)}% de l'objectif`}
                     </Text>
@@ -401,7 +414,10 @@ export const IndicateursClesSection = ({
                       fontWeight="800"
                       color="bluefrance.113"
                     >
-                      {getPercentageDataOr("draft", "tauxTransformation")}
+                      {getPercentageDataOr(
+                        DemandeStatutEnum.draft,
+                        "tauxTransformation"
+                      )}
                     </Text>
                   </Flex>
                   <Flex flexDirection="column" gap={2}>
@@ -410,13 +426,22 @@ export const IndicateursClesSection = ({
                     </Text>
                     <ProgressBar
                       percentage={
-                        (getScopedData("draft", "tauxTransformation") / 6) * 100
+                        (getScopedData(
+                          DemandeStatutEnum.draft,
+                          "tauxTransformation"
+                        ) /
+                          6) *
+                        100
                       }
                     />
                     <Text>
                       {`
                       ${(
-                        (getScopedData("draft", "tauxTransformation") / 6) *
+                        (getScopedData(
+                          DemandeStatutEnum.draft,
+                          "tauxTransformation"
+                        ) /
+                          6) *
                         100
                       ).toFixed(0)}% de l'objectif`}
                     </Text>
@@ -462,22 +487,31 @@ export const IndicateursClesSection = ({
                 </Flex>
                 <ProgressBar
                   percentage={
-                    (getScopedData("submitted", "placesOuvertes") /
+                    (getScopedData(
+                      DemandeStatutEnum.submitted,
+                      "placesOuvertes"
+                    ) /
                       getScopedData("all", "placesOuvertes")) *
                     100
                   }
                   leftLabel="Validées"
-                  rightLabel={getScopedData("submitted", "placesOuvertes")}
+                  rightLabel={getScopedData(
+                    DemandeStatutEnum.submitted,
+                    "placesOuvertes"
+                  )}
                   colorScheme="green.submitted"
                 />
                 <ProgressBar
                   percentage={
-                    (getScopedData("draft", "placesOuvertes") /
+                    (getScopedData(DemandeStatutEnum.draft, "placesOuvertes") /
                       getScopedData("all", "placesOuvertes")) *
                     100
                   }
                   leftLabel="En projet"
-                  rightLabel={getScopedData("draft", "placesOuvertes")}
+                  rightLabel={getScopedData(
+                    DemandeStatutEnum.draft,
+                    "placesOuvertes"
+                  )}
                   colorScheme="orange.draft"
                 />
               </Flex>
@@ -495,22 +529,31 @@ export const IndicateursClesSection = ({
                 </Flex>
                 <ProgressBar
                   percentage={
-                    (getScopedData("submitted", "placesFermees") /
+                    (getScopedData(
+                      DemandeStatutEnum.submitted,
+                      "placesFermees"
+                    ) /
                       getScopedData("all", "placesFermees")) *
                     100
                   }
                   leftLabel="Validées"
-                  rightLabel={getScopedData("submitted", "placesFermees")}
+                  rightLabel={getScopedData(
+                    DemandeStatutEnum.submitted,
+                    "placesFermees"
+                  )}
                   colorScheme="green.submitted"
                 />
                 <ProgressBar
                   percentage={
-                    (getScopedData("draft", "placesFermees") /
+                    (getScopedData(DemandeStatutEnum.draft, "placesFermees") /
                       getScopedData("all", "placesFermees")) *
                     100
                   }
                   leftLabel="En projet"
-                  rightLabel={getScopedData("draft", "placesFermees")}
+                  rightLabel={getScopedData(
+                    DemandeStatutEnum.draft,
+                    "placesFermees"
+                  )}
                   colorScheme="orange.draft"
                 />
               </Flex>

@@ -3,7 +3,7 @@ import { client } from "@/api.client";
 import { ExportColumns } from "../../../../utils/downloadExport";
 
 export const STATS_DEMANDES_COLUMNS = {
-  id: "N° demande",
+  numero: "N° demande",
   cfd: "CFD",
   libelleFormation: "Formation",
   codeDispositif: "Code Dispositif",
@@ -22,7 +22,7 @@ export const STATS_DEMANDES_COLUMNS = {
   poursuitePedagogique: "Poursuite pédagogique ?",
   commentaire: "Commentaire",
   libelleNsf: "Domaine de formation (NSF)",
-  status: "Status",
+  statut: "Statut",
   codeRegion: "CodeRegion",
   libelleRegion: "Région",
   codeAcademie: "CodeAcadémie",
@@ -32,7 +32,7 @@ export const STATS_DEMANDES_COLUMNS = {
   createdAt: "Date de création",
   updatedAt: "Date de dernière modification",
   compensationCfd: "CFD compensé",
-  compensationDispositifId: "Dispositif compensé",
+  compensationCodeDispositif: "Dispositif compensé",
   compensationUai: "UAI compensé",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
@@ -50,6 +50,23 @@ export const STATS_DEMANDES_COLUMNS = {
   nbEtablissement: "Nb établissement",
   motifRefus: "Motif(s) de refus",
   autreMotifRefus: "Autre motif de refus",
+  recrutementRH: "Recrutement(s) ?",
+  nbRecrutementRH: "Nombre de recrutements",
+  disciplinesRecrutementRH: "Disciplines des recrutements",
+  reconversionRH: "Reconversion(s) ?",
+  nbReconversionRH: "Nombre de reconversions",
+  disciplinesReconversionRH: "Disciplines des reconversions",
+  professeurAssocieRH: "Professeur(s) associé(s) ?",
+  nbProfesseurAssocieRH: "Nombre de professeurs associés",
+  disciplinesProfesseurAssocieRH: "Disciplines des professeurs associés",
+  formationRH: "Formation(s) ?",
+  nbFormationRH: "Nombre de formations",
+  disciplinesFormationRH: "Disciplines des formations",
 } satisfies ExportColumns<
-  (typeof client.infer)["[GET]/intentions/stats"]["demandes"][number]
+  (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number] & {
+    disciplinesRecrutementRH: string;
+    disciplinesReconversionRH: string;
+    disciplinesProfesseurAssocieRH: string;
+    disciplinesFormationRH: string;
+  }
 >;

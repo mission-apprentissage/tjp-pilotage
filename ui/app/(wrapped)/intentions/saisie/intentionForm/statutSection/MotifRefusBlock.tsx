@@ -10,14 +10,15 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import {
   getMotifsRefusTypeDemande,
   MotifRefusLabel,
   MOTIFS_REFUS_LABELS,
-} from "@/app/(wrapped)/utils/motifRefusDemandeUtils";
-import { TypeDemande } from "@/app/(wrapped)/utils/typeDemandeUtils";
+} from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
+import { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 
 export const MotifRefusBlock = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -28,13 +29,13 @@ export const MotifRefusBlock = chakra(
       setValue,
     } = useFormContext<IntentionForms>();
 
-    const status = watch("status");
-    const visible = status === "refused";
+    const statut = watch("statut");
+    const visible = statut === DemandeStatutEnum.refused;
 
     useEffect(
       () =>
         watch((_, { name }) => {
-          if (name !== "status") return;
+          if (name !== "statut") return;
           setValue("motifRefus", []);
           setValue("autreMotifRefus", "");
         }).unsubscribe

@@ -1,34 +1,23 @@
-import { Box, Divider, Fade, Flex, Heading } from "@chakra-ui/react";
+import { Divider, Fade, Flex, Heading } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { client } from "@/api.client";
-import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/typeDemandeSection/MotifField";
-
-import {
-  getTypeDemandeExemple,
-  getTypeDemandeLabel,
-  isTypeCompensation,
-} from "../../../../utils/typeDemandeUtils";
+import { getTypeDemandeExemple } from "../../../utils/typeDemandeUtils";
 import { InfoBox } from "../../components/InfoBox";
+import { Campagne } from "../../types";
 import { IntentionForms } from "../defaultFormValues";
-import { AutreMotif } from "./AutreMotifField";
-import { CompensationSection } from "./CompensationSection";
+import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
 export const TypeDemandeSection = ({
-  formMetadata,
   disabled,
-  formId,
+  campagne,
 }: {
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
-  disabled?: boolean;
-  formId?: string;
+  disabled: boolean;
+  campagne?: Campagne;
 }) => {
-  const { watch, getValues } = useFormContext<IntentionForms>();
+  const { watch } = useFormContext<IntentionForms>();
 
   const [typeDemande] = watch(["typeDemande"]);
-  const isRentreeScolaireDisabled =
-    disabled || (!!getValues("rentreeScolaire") && !!formId);
 
   return (
     <>
@@ -36,12 +25,8 @@ export const TypeDemandeSection = ({
         Type de demande
       </Heading>
       <Divider pt="4" mb="4" />
-      <RentreeScolaireField
-        disabled={isRentreeScolaireDisabled}
-        mb="6"
-        maxW="752px"
-      />
-      <Flex align="flex-start" flexDir={["column", null, "row"]}>
+      <RentreeScolaireField disabled={disabled} campagne={campagne} />
+      <Flex align="flex-start" flexDir={["column", null, "row"]} mt={6}>
         <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
         <Fade in={typeDemande != undefined}>
           {typeDemande && (
@@ -57,35 +42,7 @@ export const TypeDemandeSection = ({
           )}
         </Fade>
       </Flex>
-      {isTypeCompensation(typeDemande) && (
-        <Flex
-          bg="blueecume.925"
-          mb="6"
-          p="6"
-          align="flex-start"
-          boxShadow="0 0 0 2px bluefrance.113"
-        >
-          <Box flexDirection={"column"} flex="2" maxW="752px">
-            <CompensationSection
-              disabled={disabled}
-              formMetadata={formMetadata}
-            />
-          </Box>
-          <InfoBox flex="1" mt="8" ml="6">
-            Dans le cadre de votre
-            {` ${getTypeDemandeLabel(typeDemande).toLowerCase()}, `}
-            veuillez saisir le code diplôme et l’établissement s'il est
-            différent. <br />
-            Nous ferons le lien automatiquement entre la demande
-            {` d'${getTypeDemandeLabel(typeDemande).toLowerCase()} `}
-            et la demande de fermeture / diminution pour le code diplôme et
-            l’UAI renseignés
-          </InfoBox>
-        </Flex>
-      )}
-
-      <MotifField disabled={disabled} maxW="752px" mb="6" />
-      <AutreMotif disabled={disabled} mb="6" maxW="752px" />
+      <CapaciteSection disabled={disabled} />
     </>
   );
 };
