@@ -308,7 +308,8 @@ export const demandeValidators: Record<
   /**
    * La somme des capacités colorées doit être :
    * - supérieure à 0 dans le cas d'une coloration qui n'est pas une fermeture
-   * - inférieure à la somme des capacités actuelles
+   * - inférieure ou égale à la somme des capacités dans le cas d'une ouverture
+   * - inférieure ou égale à la somme des capacités actuelles dans le cas d'une formation existante (non ouverture)
    */
   sommeCapaciteColoree: (demande) => {
     if (
@@ -322,8 +323,19 @@ export const demandeValidators: Record<
       !demande.capaciteScolaireColoree
     )
       return "La somme des capacités colorées doit être supérieure à 0";
+    if (
+      isTypeOuverture(demande.typeDemande) &&
+      isPositiveNumber(demande.capaciteApprentissageColoree) &&
+      isPositiveNumber(demande.capaciteScolaireColoree) &&
+      isPositiveNumber(demande.capaciteApprentissage) &&
+      isPositiveNumber(demande.capaciteScolaire) &&
+      demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree >
+        demande.capaciteApprentissage + demande.capaciteScolaire
+    )
+      return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
 
     if (
+      !isTypeOuverture(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
       isPositiveNumber(demande.capaciteApprentissageActuelle) &&
@@ -331,7 +343,7 @@ export const demandeValidators: Record<
       demande.capaciteApprentissageColoree + demande.capaciteScolaireColoree >
         demande.capaciteApprentissageActuelle + demande.capaciteScolaireActuelle
     )
-      return "La somme des capacités colorées doit être inférieure à la somme des capacités actuelles";
+      return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
   },
   compensation: (demande) => {
     if (!isTypeCompensation(demande.typeDemande)) return;

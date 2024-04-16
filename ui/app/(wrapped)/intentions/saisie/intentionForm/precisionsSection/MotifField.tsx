@@ -21,6 +21,7 @@ import {
 } from "../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
+  isTypeFermeture,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
 
@@ -88,31 +89,33 @@ export const MotifField = chakra(
                     </Checkbox>
                   ))}
                 </Stack>
-                {coloration && !isTypeColoration(typeDemande) && (
-                  <Flex direction={"column"} mt={8}>
-                    <FormLabel>
-                      Merci de préciser le(s) motif(s) de votre coloration
-                    </FormLabel>
-                    <Stack spacing={[3]} ms={6}>
-                      {getMotifOptions("coloration")?.map(
-                        ({ value, label }) => (
-                          <Checkbox
-                            ref={ref}
-                            disabled={disabled}
-                            name={name}
-                            key={value}
-                            onBlur={onBlur}
-                            value={value}
-                            _checked={{ fontWeight: "bold !important" }}
-                            fontWeight={"400 !important"}
-                          >
-                            {label}
-                          </Checkbox>
-                        )
-                      )}
-                    </Stack>
-                  </Flex>
-                )}
+                {coloration &&
+                  !isTypeColoration(typeDemande) &&
+                  !isTypeFermeture(typeDemande) && (
+                    <Flex direction={"column"} mt={8}>
+                      <FormLabel>
+                        Merci de préciser le(s) motif(s) de votre coloration
+                      </FormLabel>
+                      <Stack spacing={[3]} ms={6}>
+                        {getMotifOptions("coloration")?.map(
+                          ({ value, label }) => (
+                            <Checkbox
+                              ref={ref}
+                              disabled={disabled}
+                              name={name}
+                              key={value}
+                              onBlur={onBlur}
+                              value={value}
+                              _checked={{ fontWeight: "bold !important" }}
+                              fontWeight={"400 !important"}
+                            >
+                              {label}
+                            </Checkbox>
+                          )
+                        )}
+                      </Stack>
+                    </Flex>
+                  )}
               </CheckboxGroup>
             );
           }}

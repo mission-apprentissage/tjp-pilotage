@@ -4,6 +4,7 @@ import _ from "lodash";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import qs from "qs";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
@@ -19,7 +20,7 @@ export const MenuIntention = ({
 }: {
   isRecapView?: boolean;
   hasPermissionEnvoi: boolean;
-  campagne?: { annee: string };
+  campagne?: { annee: string; statut: string };
 }) => {
   const queryParams = useSearchParams();
   const searchParams: {
@@ -30,6 +31,9 @@ export const MenuIntention = ({
   const statut =
     searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
+  const isDisabled =
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
     {
@@ -46,7 +50,7 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
-        isDisabled={!hasPermissionEnvoi || isSaisieDisabled()}
+        isDisabled={isDisabled}
         mb="4"
         variant="createButton"
         size={"md"}
