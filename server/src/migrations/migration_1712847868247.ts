@@ -6,15 +6,15 @@ export const up = async (db: Kysely<DB>) => {
   await db.schema
     .createTable("formationRome")
     .addColumn("cfd", "varchar(8)", (cb) => cb.notNull())
-    .addUniqueConstraint("formationRome_unique_constraint", ["cfd"])
+    .addUniqueConstraint("formationRome_unique", ["cfd"])
     .addForeignKeyConstraint(
-      "fk_formationRomeDataFormation",
+      "formationRomeDataFormation_fk",
       ["cfd"],
       "dataFormation",
       ["cfd"]
     )
     .addColumn("codeRome", "varchar(5)", (cb) => cb.notNull())
-    .addForeignKeyConstraint("fk_formationRomeRome", ["codeRome"], "rome", [
+    .addForeignKeyConstraint("formationRomeRome_fk", ["codeRome"], "rome", [
       "codeRome",
     ])
     .execute();

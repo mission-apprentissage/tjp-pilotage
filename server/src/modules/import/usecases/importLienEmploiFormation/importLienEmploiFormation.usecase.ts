@@ -47,7 +47,9 @@ export const importLienEmploiFormationFactory =
         await createDomaineProfessionnel(data);
 
         domainesProfessionnels++;
-        process.stdout.write(`\r${domainesProfessionnels}`);
+        process.stdout.write(
+          `\r${domainesProfessionnels} domaines professionnels ajoutés`
+        );
       },
       { parallel: 20 }
     );
@@ -71,7 +73,7 @@ export const importLienEmploiFormationFactory =
         await createRome(data);
 
         rome++;
-        process.stdout.write(`\r${rome}`);
+        process.stdout.write(`\r${rome} fiches ROME ajoutées`);
       },
       { parallel: 20 }
     );
@@ -95,7 +97,7 @@ export const importLienEmploiFormationFactory =
         await createMetier(data);
 
         metiers++;
-        process.stdout.write(`\r${metiers}`);
+        process.stdout.write(`\r${metiers} métiers ajoutés`);
       },
       { parallel: 20 }
     );
@@ -137,14 +139,14 @@ export const importLienEmploiFormationFactory =
                 await createFormationRome(data);
               } catch (err) {
                 console.log(
-                  `\nProblème en ajoutant le couple CFD ${data.cfd} / Rome ${data.codeRome}. Il est probable que le CFD ou le code Rome n'existe pas dans notre base.`
+                  `\nProblème en ajoutant le couple CFD ${data.cfd} / ROME ${data.codeRome}. Il est probable que le CFD ou le code ROME n'existe pas dans notre base.`
                 );
               }
               formationRomeCount++;
             }
           }
         }
-        process.stdout.write(`\r${formationRomeCount}`);
+        process.stdout.write(`\r${formationRomeCount} formationRome ajoutées`);
       },
       { parallel: 20 }
     );

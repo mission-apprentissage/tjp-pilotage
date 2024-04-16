@@ -4,11 +4,11 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createTable("rome")
     .addColumn("codeRome", "varchar(5)", (cb) => cb.notNull())
-    .addPrimaryKeyConstraint("codeRome_pkey", ["codeRome"])
+    .addPrimaryKeyConstraint("codeRome_pk", ["codeRome"])
     .addColumn("libelleRome", "varchar", (cb) => cb.notNull())
     .addColumn("codeDomaineProfessionnel", "varchar(3)", (cb) => cb.notNull())
     .addForeignKeyConstraint(
-      "fk_codeDomaineProfessionnel",
+      "codeDomaineProfessionnel_fk",
       ["codeDomaineProfessionnel"],
       "domaineProfessionnel",
       ["codeDomaineProfessionnel"]
