@@ -212,6 +212,63 @@ export default function Home() {
           </VStack>
         </Box>
       </Hero>
+      <VStack
+        paddingY="64px"
+        spacing="48px"
+        paddingX={{
+          base: "24px",
+          lg: "120px",
+        }}
+      >
+        <EditorialTitle>À propos d'Inserjeunes</EditorialTitle>
+        <Stack
+          direction={{
+            base: "column",
+            lg: "row",
+          }}
+        >
+          <HStack
+            width={{
+              base: "100%",
+              lg: "50%",
+            }}
+            paddingBottom={{
+              base: "16px",
+              lg: "0px",
+            }}
+            justifyContent="center"
+          >
+            <Img src="/illustrations/mission-inserjeunes.svg" />
+          </HStack>
+          <VStack
+            alignItems="start"
+            width={{
+              base: "100%",
+              lg: "50%",
+            }}
+            gap="16px"
+          >
+            <Text>
+              InserJeunes est un <b>dispositif statistique interministériel</b>,
+              instauré par la loi « pour la liberté de choisir son avenir
+              professionnel » de septembre 2018.
+            </Text>
+            <Text>
+              Il est construit par{" "}
+              <b>
+                rapprochement de bases administratives relatives à la scolarité
+              </b>{" "}
+              (remontées administratives des inscriptions) et à <b>l’emploi</b>
+              (notamment la déclaration sociale nominative des entreprises).
+            </Text>
+            <Text>
+              Ces données publiées à partir de <b>début 2021</b> apportent un
+              degré de <b>précision et de robustesse</b> que ne permettaient pas
+              les précédentes données issues d’enquêtes.
+            </Text>
+          </VStack>
+        </Stack>
+      </VStack>
       <VStack paddingY="64px" spacing="48px">
         <EditorialTitle>Questions fréquentes</EditorialTitle>
         <Box width="70%">
