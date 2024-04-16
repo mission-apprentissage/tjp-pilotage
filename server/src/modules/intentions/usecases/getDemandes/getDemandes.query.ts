@@ -138,7 +138,7 @@ export const getDemandesQuery = async (
         sql`${sql.raw(order)} NULLS LAST`
       );
     })
-    .orderBy("dateModification desc")
+    .orderBy("updatedAt desc")
     .where(isDemandeSelectable({ user }))
     .offset(offset)
     .limit(limit)
@@ -154,8 +154,8 @@ export const getDemandesQuery = async (
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
-        dateCreation: demande.dateCreation?.toISOString(),
-        dateModification: demande.dateModification?.toISOString(),
+        createdAt: demande.createdAt?.toISOString(),
+        updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })

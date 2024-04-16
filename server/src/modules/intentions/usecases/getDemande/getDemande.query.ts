@@ -149,7 +149,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
     .where("demande.numero", "=", numero)
-    .orderBy("dateCreation", "asc")
+    .orderBy("createdAt", "asc")
     .limit(1)
     .executeTakeFirst();
 
@@ -174,7 +174,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           demande.metadata.etablissementCompensation
         ),
       }),
-      dateCreation: demande.dateCreation?.toISOString(),
+      createdAt: demande.createdAt?.toISOString(),
       campagne: cleanNull({
         ...demande.campagne,
       }),

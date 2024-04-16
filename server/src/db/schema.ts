@@ -150,7 +150,7 @@ export interface Demande {
   codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
-  dateCreation: Generated<Timestamp>;
+  createdAt: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -162,7 +162,7 @@ export interface Demande {
   compensationCfd: string | null;
   compensationCodeDispositif: string | null;
   compensationRentreeScolaire: number | null;
-  dateModification: Timestamp;
+  updatedAt: Timestamp;
   libelleFCIL: string | null;
   motifRefus: string[] | null;
   autreMotifRefus: string | null;
@@ -362,7 +362,7 @@ export interface LatestDemandeView {
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string | null;
-  dateCreation: Timestamp | null;
+  createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
   capaciteScolaireColoree: number | null;
@@ -374,7 +374,7 @@ export interface LatestDemandeView {
   compensationCfd: string | null;
   compensationCodeDispositif: string | null;
   compensationRentreeScolaire: number | null;
-  dateModification: Timestamp | null;
+  updatedAt: Timestamp | null;
   libelleFCIL: string | null;
   motifRefus: string[] | null;
   autreMotifRefus: string | null;
