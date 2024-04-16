@@ -154,7 +154,7 @@ describe("submitDemande usecase", () => {
         statut: DemandeStatutEnum.draft,
         id: expect.stringMatching(".+"),
         numero: expect.stringMatching(".+"),
-        dateModification: expect.any(Date),
+        updatedAt: expect.any(Date),
       })
     );
   });
@@ -181,7 +181,7 @@ describe("submitDemande usecase", () => {
         statut: DemandeStatutEnum.submitted,
         numero: "numero-id",
         id: expect.stringMatching(".+"),
-        dateModification: expect.any(Date),
+        updatedAt: expect.any(Date),
       })
     );
   });

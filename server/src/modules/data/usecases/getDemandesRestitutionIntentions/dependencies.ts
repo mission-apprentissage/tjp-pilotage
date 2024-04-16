@@ -57,7 +57,7 @@ const getDemandesRestitutionIntentionsQuery = async ({
   offset = 0,
   limit = 20,
   order = "desc",
-  orderBy = "dateCreation",
+  orderBy = "createdAt",
 }: Filters) => {
   const demandes = await kdb
     .selectFrom("latestDemandeView as demande")
@@ -304,8 +304,8 @@ const getDemandesRestitutionIntentionsQuery = async ({
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
-        dateCreation: demande.dateCreation?.toISOString(),
-        dateModification: demande.dateModification?.toISOString(),
+        createdAt: demande.createdAt?.toISOString(),
+        updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,
         typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
       })

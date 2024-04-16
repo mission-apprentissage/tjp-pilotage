@@ -267,10 +267,10 @@ export const PageClient = () => {
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("dateCreation")}
+                        onClick={() => handleOrder("createdAt")}
                       >
-                        <OrderIcon {...order} column="dateCreation" />
-                        {DEMANDES_COLUMNS.dateCreation}
+                        <OrderIcon {...order} column="createdAt" />
+                        {DEMANDES_COLUMNS.createdAt}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -282,10 +282,10 @@ export const PageClient = () => {
                       </Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("dateModification")}
+                        onClick={() => handleOrder("updatedAt")}
                       >
-                        <OrderIcon {...order} column="dateModification" />
-                        {DEMANDES_COLUMNS.dateModification}
+                        <OrderIcon {...order} column="updatedAt" />
+                        {DEMANDES_COLUMNS.updatedAt}
                       </Th>
                     </Tr>
                   </Thead>
@@ -351,7 +351,7 @@ export const PageClient = () => {
                             <TagDemande statut={demande.statut} />
                           </Td>
                           <Td>
-                            {new Date(demande.dateCreation).toLocaleString()}
+                            {new Date(demande.createdAt).toLocaleString()}
                           </Td>
                           <Td w="15" textAlign={"center"}>
                             <Tooltip label={demande.userName}>
@@ -367,9 +367,7 @@ export const PageClient = () => {
                             </Tooltip>
                           </Td>
                           <Td textAlign={"center"}>
-                            {new Date(
-                              demande.dateModification
-                            ).toLocaleString()}
+                            {new Date(demande.updatedAt).toLocaleString()}
                           </Td>
                           {data?.campagne.statut ===
                             CampagneStatutEnum["terminée"] && (

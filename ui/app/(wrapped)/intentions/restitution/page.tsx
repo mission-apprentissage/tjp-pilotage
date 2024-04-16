@@ -227,19 +227,20 @@ export default () => {
               "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
-                dateCreation: new Date(demande.dateCreation).toLocaleDateString(
+                createdAt: new Date(demande.createdAt).toLocaleDateString(
                   "fr-FR",
                   {
                     hour: "2-digit",
                     minute: "2-digit",
                   }
                 ),
-                dateModification: new Date(
-                  demande.dateModification
-                ).toLocaleDateString("fr-FR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }),
+                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
               })),
               STATS_DEMANDES_COLUMNS
             );
@@ -255,19 +256,20 @@ export default () => {
               "demandes_stats_export",
               data.demandes.map((demande) => ({
                 ...demande,
-                dateCreation: new Date(demande.dateCreation).toLocaleDateString(
+                createdAt: new Date(demande.createdAt).toLocaleDateString(
                   "fr-FR",
                   {
                     hour: "2-digit",
                     minute: "2-digit",
                   }
                 ),
-                dateModification: new Date(
-                  demande.dateModification
-                ).toLocaleDateString("fr-FR", {
-                  hour: "2-digit",
-                  minute: "2-digit",
-                }),
+                updatedAt: new Date(demande.updatedAt).toLocaleDateString(
+                  "fr-FR",
+                  {
+                    hour: "2-digit",
+                    minute: "2-digit",
+                  }
+                ),
               })),
               STATS_DEMANDES_COLUMNS
             );

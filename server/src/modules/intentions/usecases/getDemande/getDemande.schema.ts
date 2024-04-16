@@ -31,7 +31,7 @@ const MetadataSchema = z.object({
 
 const DemandeSchema = z.object({
   numero: z.string(),
-  dateCreation: z.string(),
+  createdAt: z.string(),
   statut: z.enum(["draft", "submitted", "refused"]).optional(),
   uai: z.string(),
   cfd: z.string(),

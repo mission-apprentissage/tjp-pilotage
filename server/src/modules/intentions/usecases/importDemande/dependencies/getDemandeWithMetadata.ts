@@ -153,7 +153,7 @@ export const getDemandeWithMetadata = async (id: string) => {
           demande.metadata.etablissementCompensation
         ),
       }),
-      dateCreation: demande.dateCreation?.toISOString(),
+      createdAt: demande.createdAt?.toISOString(),
       codeDispositif,
     })
   );

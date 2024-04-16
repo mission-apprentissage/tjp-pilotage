@@ -22,6 +22,7 @@ export const up = async (db: Kysely<unknown>) => {
           // @ts-ignore
           sq
             .selectFrom("demande" as never)
+            // @ts-ignore
             .select([
               sql<number>`max("demande"."dateModification")`.as(
                 "dateDerniereModification"
@@ -73,6 +74,7 @@ export const down = async (db: Kysely<unknown>) => {
           // @ts-ignore
           sq
             .selectFrom("demande" as never)
+            // @ts-ignore
             .select([
               sql<number>`max("demande"."dateModification")`.as(
                 "dateDerniereModification"

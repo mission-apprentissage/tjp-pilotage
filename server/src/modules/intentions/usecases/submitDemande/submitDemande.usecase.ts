@@ -169,7 +169,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
         createurId: currentDemande?.createurId ?? user.id,
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
-        dateModification: new Date(),
+        updatedAt: new Date(),
       });
 
       logDemande(created);
