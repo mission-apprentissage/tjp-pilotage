@@ -1,6 +1,6 @@
 "use client";
 
-import { LinkIcon, Search2Icon, WarningTwoIcon } from "@chakra-ui/icons";
+import { ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -8,7 +8,6 @@ import {
   Center,
   Container,
   Flex,
-  Input,
   Table,
   TableContainer,
   Tag,
@@ -19,49 +18,48 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useToast,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
-import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { OrderIcon } from "@/components/OrderIcon";
 import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
+import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
-
-export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "status">;
-export type Order = Pick<Query, "order" | "orderBy">;
+import { Filters, Order } from "./types";
 
 const PAGE_SIZE = 30;
-const EXPORT_LIMIT = 1_000_000;
 
-const TagDemande = ({ status }: { status: string }) => {
-  switch (status) {
-    case "draft":
+const TagDemande = ({ statut }: { statut: string }) => {
+  switch (statut) {
+    case DemandeStatutEnum.draft:
       return (
         <Tag size="sm" colorScheme={"orange"}>
           Projet de demande
         </Tag>
       );
-    case "submitted":
+    case DemandeStatutEnum.submitted:
       return (
         <Tag size="sm" colorScheme={"green"}>
           Demande validée
         </Tag>
       );
-    case "refused":
+    case DemandeStatutEnum.refused:
       return (
         <Tag size="sm" colorScheme={"red"}>
           Demande refusée
@@ -73,6 +71,7 @@ const TagDemande = ({ status }: { status: string }) => {
 };
 
 export const PageClient = () => {
+  const toast = useToast();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -80,14 +79,22 @@ export const PageClient = () => {
     search?: string;
     order?: Partial<Order>;
     page?: string;
+    campagne?: string;
     action?: "draft" | "submitted" | "refused";
   } = qs.parse(queryParams.toString());
+
+  const filters = searchParams.filters ?? {};
+  const search = searchParams.search ?? "";
+  const order = searchParams.order ?? { order: "asc" };
+  const campagne = searchParams.campagne;
+  const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
   const setSearchParams = (params: {
     filters?: typeof filters;
     search?: typeof search;
     order?: typeof order;
     page?: typeof page;
+    campagne?: typeof campagne;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -110,17 +117,13 @@ export const PageClient = () => {
     });
   };
 
-  const filters = searchParams.filters ?? {};
-  const search = searchParams.search ?? "";
-  const order = searchParams.order ?? { order: "asc" };
-  const page = searchParams.page ? parseInt(searchParams.page) : 0;
-
   const getDemandesQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     search,
     ...order,
     offset: qOffset,
     limit: qLimit,
+    campagne,
   });
 
   const { data, isLoading } = client.ref("[GET]/demandes").useQuery(
@@ -130,24 +133,14 @@ export const PageClient = () => {
     { keepPreviousData: true, staleTime: 0 }
   );
 
-  const nouvelleCompensation = (
-    demandeCompensee: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
-  ) => {
-    router.push(
-      createParametrizedUrl(`${location.pathname}/new`, {
-        intentionId: demandeCompensee.id,
-        compensation: true,
-      })
-    );
-  };
-
   const hasPermissionEnvoi = usePermission("intentions/ecriture");
 
-  const [searchDemande, setSearchDemande] = useState<string>(search);
+  const isCampagneEnCours =
+    data?.campagne?.statut === CampagneStatutEnum["en cours"];
+  const isDisabled =
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
 
-  const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
-  };
+  const [searchDemande, setSearchDemande] = useState<string>(search);
 
   const getAvatarBgColor = (userName: string) => {
     const colors = [
@@ -169,6 +162,21 @@ export const PageClient = () => {
     ];
     return colors[userName.charCodeAt(1) % colors.length];
   };
+
+  const { mutateAsync: importDemande } = client
+    .ref("[POST]/demande/import/:numero")
+    .useMutation({
+      onSuccess: (demande) => {
+        router.push(`/intentions/saisie/${demande.numero}`);
+      },
+      onError: (error) => {
+        toast({
+          variant: "error",
+          title: error.message,
+        });
+      },
+    });
+
   if (isLoading) return <IntentionSpinner />;
 
   return (
@@ -181,7 +189,11 @@ export const PageClient = () => {
         minHeight={0}
         py={4}
       >
-        <MenuIntention hasPermissionEnvoi={hasPermissionEnvoi} isRecapView />
+        <MenuIntention
+          hasPermissionEnvoi={hasPermissionEnvoi}
+          isRecapView
+          campagne={data?.campagne}
+        />
         <Box
           display={["none", null, "unset"]}
           borderLeft="solid 1px"
@@ -196,75 +208,15 @@ export const PageClient = () => {
           minHeight={0}
           minW={0}
         >
-          {isSaisieDisabled() && (
-            <Flex
-              borderLeftWidth={5}
-              borderLeftColor={"bluefrance.113"}
-              bgColor={"grey.975"}
-              direction={"column"}
-              gap={2}
-              padding={5}
-              mb={8}
-            >
-              <Text fontWeight={700}>Campagne de saisie 2023 terminée</Text>
-              <Text fontWeight={400}>
-                La campagne de saisie 2023 est terminée, vous pourrez saisir vos
-                demandes pour la campagne de saisie 2024 d'ici le 15 avril.
-              </Text>
-            </Flex>
-          )}
-          <Flex
-            flexDirection={["column", null, "row"]}
-            justifyContent={"space-between"}
-          >
-            <Flex>
-              <Input
-                type="text"
-                placeholder="Rechercher par diplôme, établissement, numéro,..."
-                w="sm"
-                mr={2}
-                value={searchDemande}
-                onChange={(e) => setSearchDemande(e.target.value)}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter") onClickSearchDemande();
-                }}
-              />
-              <Button
-                bgColor={"bluefrance.113"}
-                size={"md"}
-                onClick={() => onClickSearchDemande()}
-              >
-                <Search2Icon color="white" />
-              </Button>
-            </Flex>
-            <Flex mr="auto" ms={2}>
-              <ExportMenuButton
-                onExportCsv={async () => {
-                  trackEvent("saisie_demandes:export");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: getDemandesQueryParameters(EXPORT_LIMIT),
-                  });
-                  downloadCsv(
-                    "export_saisie_demandes",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
-                onExportExcel={async () => {
-                  trackEvent("saisie_demandes:export-excel");
-                  const data = await client.ref("[GET]/demandes").query({
-                    query: getDemandesQueryParameters(EXPORT_LIMIT),
-                  });
-                  downloadExcel(
-                    "export_saisie_demandes",
-                    data.demandes,
-                    DEMANDES_COLUMNS
-                  );
-                }}
-                variant="solid"
-              />
-            </Flex>
-          </Flex>
+          <Header
+            searchParams={searchParams}
+            setSearchParams={setSearchParams}
+            getDemandesQueryParameters={getDemandesQueryParameters}
+            searchDemande={searchDemande}
+            setSearchDemande={setSearchDemande}
+            campagnes={data?.campagnes}
+            campagne={data?.campagne}
+          />
           {data?.demandes.length ? (
             <>
               <TableContainer overflowY="auto" flex={1}>
@@ -311,13 +263,12 @@ export const PageClient = () => {
                         <OrderIcon {...order} column="typeDemande" />
                         {DEMANDES_COLUMNS.typeDemande}
                       </Th>
-                      <Th>compensation</Th>
                       <Th
                         cursor="pointer"
-                        onClick={() => handleOrder("status")}
+                        onClick={() => handleOrder("statut")}
                       >
-                        <OrderIcon {...order} column="status" />
-                        {DEMANDES_COLUMNS.status}
+                        <OrderIcon {...order} column="statut" />
+                        {DEMANDES_COLUMNS.statut}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -350,15 +301,15 @@ export const PageClient = () => {
                       ) => (
                         <Tr
                           height={"60px"}
-                          key={demande.id}
+                          key={demande.numero}
                           cursor={isSaisieDisabled() ? "initial" : "pointer"}
                           whiteSpace={"pre"}
                           onClick={() => {
                             if (isSaisieDisabled()) return;
-                            router.push(`/intentions/saisie/${demande.id}`);
+                            router.push(`/intentions/saisie/${demande.numero}`);
                           }}
                         >
-                          <Td>{demande.id}</Td>
+                          <Td>{demande.numero}</Td>
                           <Td>
                             <Text
                               textOverflow={"ellipsis"}
@@ -401,69 +352,8 @@ export const PageClient = () => {
                                 : null}
                             </Text>
                           </Td>
-                          <Td>
-                            {demande.compensationCfd &&
-                            demande.compensationDispositifId &&
-                            demande.compensationUai ? (
-                              demande.idCompensation ? (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  leftIcon={<LinkIcon focusable={true} />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    router.push(
-                                      `/intentions/saisie/${demande.idCompensation}?compensation=true`
-                                    );
-                                  }}
-                                >
-                                  <Box textAlign="left">
-                                    <Box whiteSpace="nowrap">
-                                      {`${
-                                        demande.typeCompensation
-                                          ? getTypeDemandeLabel(
-                                              demande.typeCompensation
-                                            )
-                                          : "Demande"
-                                      } liée `}
-                                    </Box>
-                                    <Text textDecoration="underline">
-                                      {demande.idCompensation}
-                                    </Text>
-                                  </Box>
-                                </Button>
-                              ) : (
-                                <Button
-                                  _hover={{ bg: "gray.200" }}
-                                  variant="ghost"
-                                  whiteSpace={"break-spaces"}
-                                  size="xs"
-                                  py="2"
-                                  height="auto"
-                                  fontWeight="normal"
-                                  color="red.500"
-                                  leftIcon={<WarningTwoIcon />}
-                                  onClick={(e) => {
-                                    e.stopPropagation();
-                                    nouvelleCompensation(demande);
-                                  }}
-                                >
-                                  <Box textAlign="left" whiteSpace="nowrap">
-                                    Aucune demande liée <br /> identifiée
-                                  </Box>
-                                </Button>
-                              )
-                            ) : (
-                              <></>
-                            )}
-                          </Td>
                           <Td align="center" w={0}>
-                            <TagDemande status={demande.status} />
+                            <TagDemande statut={demande.statut} />
                           </Td>
                           <Td>
                             {new Date(demande.createdAt).toLocaleString()}
@@ -484,6 +374,39 @@ export const PageClient = () => {
                           <Td textAlign={"center"}>
                             {new Date(demande.updatedAt).toLocaleString()}
                           </Td>
+                          {data?.campagne.statut ===
+                            CampagneStatutEnum["terminée"] && (
+                            <Td>
+                              {demande.numeroDemandeImportee ? (
+                                <Button
+                                  as={NextLink}
+                                  variant="link"
+                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                  leftIcon={<ExternalLinkIcon />}
+                                  me={"auto"}
+                                >
+                                  Demande dupliquée{" "}
+                                  {demande.numeroDemandeImportee}
+                                </Button>
+                              ) : (
+                                <Button
+                                  leftIcon={<Icon icon="ri:import-line" />}
+                                  variant={"newInput"}
+                                  onClick={(e) => {
+                                    if (demande.numeroDemandeImportee) return;
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    importDemande({
+                                      params: { numero: demande.numero },
+                                    });
+                                  }}
+                                  isDisabled={!!demande.numeroDemandeImportee}
+                                >
+                                  Dupliquer cette demande
+                                </Button>
+                              )}
+                            </Td>
+                          )}
                         </Tr>
                       )
                     )}
@@ -504,10 +427,10 @@ export const PageClient = () => {
                 <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
                 {hasPermissionEnvoi && (
                   <Button
-                    isDisabled={isSaisieDisabled()}
+                    isDisabled={isDisabled}
                     variant="createButton"
                     size={"lg"}
-                    as={!isSaisieDisabled() ? NextLink : undefined}
+                    as={!isDisabled ? NextLink : undefined}
                     href="/intentions/saisie/new"
                     px={3}
                     mt={12}

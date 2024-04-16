@@ -16,9 +16,13 @@ import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
+import { displayPercentage } from "@/utils/displayPercent";
 
-import { displayPercentage } from "../../../../../utils/displayPercent";
-import { Order, ScopedTransformationStats, SelectedScope } from "../types";
+import {
+  OrderStatsPilotageIntentions,
+  SelectedScope,
+  StatsPilotageIntentions,
+} from "../types";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>
@@ -63,9 +67,9 @@ export const ScopedTable = ({
   isLoading: boolean;
   title: string;
   scopeColumnTitle: string;
-  data: ScopedTransformationStats | undefined;
-  handleOrder: (column: Order["orderBy"]) => void;
-  order: Partial<Order>;
+  data: StatsPilotageIntentions | undefined;
+  handleOrder: (column: OrderStatsPilotageIntentions["orderBy"]) => void;
+  order: Partial<OrderStatsPilotageIntentions>;
   scope: SelectedScope;
 }) => {
   const customPalette = [
@@ -258,10 +262,10 @@ const getColumnTitle = (scope: SelectedScope) =>
   })[scope.type];
 
 export const VueTauxTransformationSection = (props: {
-  handleOrder: (column: Order["orderBy"]) => void;
-  order: Partial<Order>;
+  handleOrder: (column: OrderStatsPilotageIntentions["orderBy"]) => void;
+  order: Partial<OrderStatsPilotageIntentions>;
   scope: SelectedScope;
-  data: ScopedTransformationStats | undefined;
+  data: StatsPilotageIntentions | undefined;
   isLoading: boolean;
 }) => (
   <ScopedTable

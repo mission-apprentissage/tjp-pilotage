@@ -89,7 +89,30 @@ const externalLink = defineStyle({
   w: "fit-content",
 });
 
+const selectButton = defineStyle({
+  ...commonButtonStyle,
+  fontSize: "14px",
+  fontWeight: 400,
+  textAlign: "left",
+  justifyContent: "space-between",
+  verticalAlign: "baseline",
+  borderRadius: "4px",
+  padding: 2,
+  _active: {
+    borderBottom: "none",
+    borderBottomRadius: 0,
+  },
+});
+
 export const buttonTheme = defineStyleConfig({
-  variants: { primary, input, newInput, secondary, createButton, externalLink },
+  variants: {
+    primary,
+    input,
+    newInput,
+    secondary,
+    createButton,
+    externalLink,
+    selectButton,
+  },
   baseStyle: {},
 });

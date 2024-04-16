@@ -1,5 +1,4 @@
 #Override containers for azure environments
-version: "2.4"
 services:
   reverse_proxy:
     build:

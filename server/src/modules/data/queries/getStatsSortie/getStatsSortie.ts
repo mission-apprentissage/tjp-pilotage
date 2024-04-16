@@ -69,7 +69,7 @@ const getStatsSortieBase = ({
   return statsSortie;
 };
 
-export const getStatsSortieParNiveauDiplome = async ({
+export const getStatsSortieParNiveauDiplomeQuery = async ({
   codeRegion,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
@@ -99,7 +99,7 @@ export const getStatsSortieParNiveauDiplome = async ({
   );
 };
 
-export const getStatsSortieParRegionsEtNiveauDiplome = async ({
+export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
   codeRegion,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
@@ -139,7 +139,7 @@ export const getStatsSortieParRegionsEtNiveauDiplome = async ({
   );
 };
 
-export const getStatsSortieParRegions = async ({
+export const getStatsSortieParRegionsQuery = async ({
   codeRegion,
   codeDepartement,
   codeNiveauDiplome,
@@ -172,7 +172,7 @@ export const getStatsSortieParRegions = async ({
   );
 };
 
-export const getStatsSortie = async ({
+export const getStatsSortieQuery = async ({
   codeRegion,
   codeDepartement,
   codeNiveauDiplome,

@@ -1,14 +1,26 @@
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Box,
+  Button,
   Flex,
   FormLabel,
   LightMode,
+  Menu,
+  MenuButton,
+  MenuItem,
+  MenuList,
   Select,
   Skeleton,
+  Text,
 } from "@chakra-ui/react";
 
-import { Multiselect } from "../../../../../components/Multiselect";
-import { Filters, StatsIntentions } from "../types";
+import { CampagneStatutTag } from "@/components/CampagneStatutTag";
+import { Multiselect } from "@/components/Multiselect";
+
+import {
+  DemandesRestitutionIntentions,
+  FiltersDemandesRestitutionIntentions,
+} from "../types";
 
 export const PrimaryFiltersSection = ({
   activeFilters,
@@ -17,11 +29,16 @@ export const PrimaryFiltersSection = ({
   isLoading,
   data,
 }: {
-  activeFilters: Filters;
-  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
-  filterTracker: (filterName: keyof Filters) => () => void;
+  activeFilters: FiltersDemandesRestitutionIntentions;
+  handleFilters: (
+    type: keyof FiltersDemandesRestitutionIntentions,
+    value: FiltersDemandesRestitutionIntentions[keyof FiltersDemandesRestitutionIntentions]
+  ) => void;
+  filterTracker: (
+    filterName: keyof FiltersDemandesRestitutionIntentions
+  ) => () => void;
   isLoading: boolean;
-  data?: StatsIntentions;
+  data?: DemandesRestitutionIntentions;
 }) => {
   return (
     <>
@@ -53,6 +70,57 @@ export const PrimaryFiltersSection = ({
               w="100%"
             >
               <Flex gap={4}>
+                <Box justifyContent={"start"}>
+                  <FormLabel color="white">CAMPAGNE</FormLabel>
+                  <Flex direction={"column"} gap={1}>
+                    <Menu gutter={0} matchWidth={true} autoSelect={false}>
+                      <MenuButton
+                        as={Button}
+                        variant={"selectButton"}
+                        rightIcon={<ChevronDownIcon />}
+                        width={[null, null, "72"]}
+                        size="md"
+                        borderWidth="1px"
+                        borderStyle="solid"
+                        borderColor="grey.900"
+                        bg={"white"}
+                      >
+                        <Flex direction="row">
+                          <Text my={"auto"}>
+                            {data?.filters.campagnes?.find(
+                              (c) => c.value === activeFilters.campagne
+                            )?.value ?? ""}
+                          </Text>
+                          {activeFilters.campagne && (
+                            <CampagneStatutTag
+                              statut={
+                                data?.filters.campagnes?.find(
+                                  (c) => c.value === activeFilters.campagne
+                                )?.statut
+                              }
+                            />
+                          )}
+                        </Flex>
+                      </MenuButton>
+                      <MenuList py={0} borderTopRadius={0}>
+                        {data?.filters.campagnes?.map((campagne) => (
+                          <MenuItem
+                            p={2}
+                            key={campagne.value}
+                            onClick={() =>
+                              handleFilters("campagne", campagne.value)
+                            }
+                          >
+                            <Flex direction="row">
+                              <Text my={"auto"}>Campagne {campagne.value}</Text>
+                              <CampagneStatutTag statut={campagne.statut} />
+                            </Flex>
+                          </MenuItem>
+                        ))}
+                      </MenuList>
+                    </Menu>
+                  </Flex>
+                </Box>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
                   <Select
@@ -77,6 +145,8 @@ export const PrimaryFiltersSection = ({
                     ))}
                   </Select>
                 </Box>
+              </Flex>
+              <Flex gap={4} display={["none", null, "flex"]}>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RÉGION</FormLabel>
                   <Multiselect
@@ -93,8 +163,6 @@ export const PrimaryFiltersSection = ({
                     TOUTES ({data?.filters.regions.length ?? 0})
                   </Multiselect>
                 </Box>
-              </Flex>
-              <Flex gap={4} display={["none", null, "flex"]}>
                 <Box justifyContent={"start"}>
                   <FormLabel color="white">ACADÉMIE</FormLabel>
                   <Multiselect

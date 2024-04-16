@@ -3,13 +3,14 @@ import { Td } from "@chakra-ui/react";
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
-import { getMotifLabel, MotifLabel } from "../../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel } from "../../../utils/typeDemandeUtils";
-import { StatsIntentions } from "../types";
+import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { DemandesRestitutionIntentions } from "../types";
+
 export const LineContent = ({
   demande,
 }: {
-  demande: StatsIntentions["demandes"][0];
+  demande: DemandesRestitutionIntentions["demandes"][0];
 }) => {
   const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
     return motif ? (
@@ -84,7 +85,47 @@ export const LineContent = ({
         {demande.commentaire}
       </Td>
       <Td>{demande.positionQuadrant}</Td>
-      <Td>{demande.id}</Td>
+      <Td>{demande.numero}</Td>
+      <Td>{demande.recrutementRH ? "Oui" : "Non"}</Td>
+      <Td>{demande.nbRecrutementRH}</Td>
+      <Td>
+        {demande.discipline1RecrutementRH &&
+          `${demande.discipline1RecrutementRH} ${
+            demande.discipline2RecrutementRH
+              ? `- ${demande.discipline2RecrutementRH}`
+              : ""
+          }`}
+      </Td>
+      <Td>{demande.reconversionRH ? "Oui" : "Non"}</Td>
+      <Td>{demande.nbReconversionRH}</Td>
+      <Td>
+        {demande.discipline1ReconversionRH &&
+          `${demande.discipline1ReconversionRH} ${
+            demande.discipline2ReconversionRH
+              ? `- ${demande.discipline2ReconversionRH}`
+              : ""
+          }`}
+      </Td>
+      <Td>{demande.professeurAssocieRH ? "Oui" : "Non"}</Td>
+      <Td>{demande.nbProfesseurAssocieRH}</Td>
+      <Td>
+        {demande.discipline1ProfesseurAssocieRH &&
+          `${demande.discipline1ProfesseurAssocieRH} ${
+            demande.discipline2ProfesseurAssocieRH
+              ? `- ${demande.discipline2ProfesseurAssocieRH}`
+              : ""
+          }`}
+      </Td>
+      <Td>{demande.formationRH ? "Oui" : "Non"}</Td>
+      <Td>{demande.nbFormationRH}</Td>
+      <Td>
+        {demande.discipline1FormationRH &&
+          `${demande.discipline1FormationRH} ${
+            demande.discipline2FormationRH
+              ? `- ${demande.discipline2FormationRH}`
+              : ""
+          }`}
+      </Td>
     </>
   );
 };

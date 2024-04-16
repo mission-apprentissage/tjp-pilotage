@@ -1,14 +1,12 @@
 import { kdb } from "../../../db/db";
 import { cleanNull } from "../../../utils/noNull";
-import { isDemandeNotDeleted } from "../../utils/isDemandeSelectable";
 
-export const findOneDemande = async (id: string) => {
+export const findOneDemande = async (numero: string) => {
   return cleanNull(
     await kdb
-      .selectFrom("demande")
+      .selectFrom("latestDemandeView as demande")
       .selectAll()
-      .where("id", "=", id)
-      .where(isDemandeNotDeleted)
+      .where("numero", "=", numero)
       .executeTakeFirst()
   );
 };

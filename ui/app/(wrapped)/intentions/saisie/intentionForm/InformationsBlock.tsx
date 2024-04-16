@@ -6,7 +6,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Divider,
   Flex,
   Modal,
   ModalBody,
@@ -23,11 +22,15 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode } from "react";
 import { useFormContext } from "react-hook-form";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 
-import { CapaciteSection } from "./capaciteSection/CapaciteSection";
+import { Campagne } from "../types";
+import { IntentionForms } from "./defaultFormValues";
+import { ObservationsSection } from "./observationsSection/ObservationsSection";
+import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
+import { RHSection } from "./rhSection/RHSection";
 import { StatusBlock } from "./statutSection/StatusBlock";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -35,14 +38,14 @@ export const InformationsBlock = ({
   formId,
   disabled,
   errors,
-  formMetadata,
   footerActions,
+  campagne,
 }: {
   formId?: string;
   disabled: boolean;
   errors?: Record<string, string>;
-  formMetadata?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
   footerActions: ReactNode;
+  campagne?: Campagne;
 }) => {
   const { push } = useRouter();
   const { setValue } = useFormContext<IntentionForms>();
@@ -51,8 +54,8 @@ export const InformationsBlock = ({
     mutationFn: async () => {
       if (!formId) return;
       await client
-        .ref("[DELETE]/demande/:id")
-        .query({ params: { id: formId } })
+        .ref("[DELETE]/demande/:numero")
+        .query({ params: { numero: formId } })
         .then(() => push("/intentions/saisie?action=deleted"));
     },
   });
@@ -60,36 +63,18 @@ export const InformationsBlock = ({
   return (
     <>
       <Box bg="white" p="6" mt="6" mb="6" borderRadius={6}>
-        <TypeDemandeSection
-          disabled={disabled}
-          formMetadata={formMetadata}
-          formId={formId}
-        />
+        <TypeDemandeSection disabled={disabled} campagne={campagne} />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <CapaciteSection disabled={disabled} />
-        <Divider mt={8}></Divider>
-        {errors && (
-          <Alert mt="8" alignItems="flex-start" status="error">
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-              <AlertDescription mt="2">
-                <UnorderedList>
-                  {Object.entries(errors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              </AlertDescription>
-            </Box>
-          </Alert>
-        )}
-        {!formId && footerActions && (
-          <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-            {footerActions}
-          </Flex>
-        )}
+        <PrecisionsSection disabled={disabled} />
       </Box>
+      <Box bg="white" p="6" mt="6" borderRadius={6}>
+        <RHSection disabled={disabled} />
+      </Box>
+      <Box bg="white" p="6" mt="6" borderRadius={6}>
+        <ObservationsSection disabled={disabled} />
+      </Box>
+
       {formId && (
         <>
           <StatusBlock disabled={disabled} />
@@ -130,7 +115,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("status", "refused");
+                        setValue("statut", DemandeStatutEnum.refused);
                         onClose();
                       }}
                       variant={"secondary"}
@@ -154,6 +139,28 @@ export const InformationsBlock = ({
             </Flex>
           </Box>
         </>
+      )}
+      {errors && (
+        <>
+          <Alert mt="8" alignItems="flex-start" status="error">
+            <AlertIcon />
+            <Box>
+              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+              <AlertDescription mt="2">
+                <UnorderedList>
+                  {Object.entries(errors).map(([key, msg]) => (
+                    <li key={key}>{msg}</li>
+                  ))}
+                </UnorderedList>
+              </AlertDescription>
+            </Box>
+          </Alert>
+        </>
+      )}
+      {!formId && footerActions && (
+        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+          {footerActions}
+        </Flex>
       )}
     </>
   );
