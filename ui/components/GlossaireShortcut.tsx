@@ -11,14 +11,12 @@ export const GlossaireShortcut = chakra(
     glossaireEntryKey,
     iconSize,
     tooltip,
-    maxWidthTooltip = 180,
   }: {
     className?: string;
     label?: string;
     glossaireEntryKey?: GlossaireEntryKey;
     iconSize?: ResponsiveValue<number | string>;
     tooltip?: React.ReactNode;
-    maxWidthTooltip?: string | number;
   }) => {
     const { openGlossaire } = useGlossaireContext();
     return (
@@ -31,7 +29,7 @@ export const GlossaireShortcut = chakra(
           openGlossaire(glossaireEntryKey);
         }}
       >
-        <Tooltip label={tooltip} maxWidth={maxWidthTooltip}>
+        <Tooltip label={tooltip}>
           <QuestionOutlineIcon height={iconSize} width={iconSize} />
         </Tooltip>
         {label && <Text marginLeft={2}>{label}</Text>}

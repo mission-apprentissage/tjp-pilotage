@@ -34,7 +34,6 @@ export const Graph = memo(
       return (
         <Tooltip
           isDisabled={!continuum}
-          maxWidth={250}
           p="3"
           label={
             <>

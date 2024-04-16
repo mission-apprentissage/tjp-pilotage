@@ -50,7 +50,6 @@ export const Dashboard = ({
             {formation?.voie === "apprentissage" && (
               <GlossaireShortcut
                 ml={2}
-                maxWidthTooltip={300}
                 tooltip={
                   <Box>
                     Cette mention signale que la formation est enseignée en
