@@ -15,7 +15,7 @@ export const TooltipIcon = chakra(
     placement?: Placement;
   }) => {
     return (
-      <Tooltip maxWidth={180} label={label} placement={placement}>
+      <Tooltip label={label} placement={placement}>
         <QuestionOutlineIcon
           cursor="pointer"
           className={className}
