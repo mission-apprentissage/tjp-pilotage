@@ -5,15 +5,7 @@ import { cleanNull } from "../../../../../utils/noNull";
 import { FormationSchema } from "../getAnalyseDetailleeEtablissement.schema";
 import { getBase } from "./base.dep";
 
-export const getFormations = async ({
-  uai,
-  codeNiveauDiplome,
-  voie,
-}: {
-  uai: string;
-  codeNiveauDiplome?: string[];
-  voie?: string[];
-}) =>
+export const getFormations = async ({ uai }: { uai: string }) =>
   getBase({ uai })
     .select((eb) => [
       sql<string>`CONCAT(
@@ -38,16 +30,6 @@ export const getFormations = async ({
       "libelleFormation asc",
       "libelleDispositif",
     ])
-    .$call((q) => {
-      if (codeNiveauDiplome?.length)
-        q = q.where("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
-
-      if (voie?.length) {
-        q = q.where("formationEtablissement.voie", "in", voie);
-      }
-
-      return q;
-    })
     .$castTo<z.infer<typeof FormationSchema>>()
     .execute()
     .then(cleanNull);
