@@ -26,7 +26,7 @@ export const AmiCmaValideField = chakra(
     return (
       <Collapse in={visible} unmountOnExit>
         <FormControl className={className} isInvalid={!!errors.amiCmaValide}>
-          <FormLabel>Le financement est-il validé</FormLabel>
+          <FormLabel>Le financement est-il validé ?</FormLabel>
           {visible && (
             <Controller
               name="amiCmaValide"
