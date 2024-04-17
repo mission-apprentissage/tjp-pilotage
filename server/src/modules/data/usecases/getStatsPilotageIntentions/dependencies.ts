@@ -1,5 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE, RENTREE_INTENTIONS, ScopeEnum } from "shared";
+import { CURRENT_RENTREE, ScopeEnum } from "shared";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -405,7 +405,7 @@ const getDepartementData = async (filters: Filters) => {
 
 const getStatsPilotageIntentionsQuery = async ({
   statut,
-  rentreeScolaire = [RENTREE_INTENTIONS],
+  rentreeScolaire,
   codeNiveauDiplome,
   CPC,
   codeNsf,
@@ -460,7 +460,7 @@ const getStatsPilotageIntentionsQuery = async ({
 
 const getFiltersQuery = async ({
   statut,
-  rentreeScolaire = [RENTREE_INTENTIONS],
+  rentreeScolaire,
   codeNiveauDiplome,
   CPC,
   codeNsf,
