@@ -42,13 +42,13 @@ const getStatsRestitutionIntentionsQuery = async ({
   user,
   voie,
   codeNsf,
-  anneeCampagne,
+  campagne,
 }: Filters) => {
   const countDemandes = await kdb
     .selectFrom("latestDemandeView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
+        if (campagne) return eb.on("campagne.annee", "=", campagne);
         return eb;
       })
     )
