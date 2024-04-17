@@ -3,6 +3,7 @@
 import {
   Accordion,
   Box,
+  Container,
   Heading,
   HStack,
   Img,
@@ -26,10 +27,11 @@ import { LandingAccordionItem } from "./components/LandingAccordionItem";
 import { LandingFooter } from "./components/LandingFooter";
 
 export default function Home() {
-  const nombreEtablissements = 2966;
-  const nombreEleves = 802987;
-  const tauxDInsertion = 42;
-  const nombrePlacesDeFormation = 3670;
+  const nombreFormations = 509;
+  const nombreEtablissements = 2952;
+  const nombreEleves = 808209;
+  const tauxDInsertion = 43;
+  const nombrePlacesDeFormation = 2595;
 
   const { auth } = useAuth();
 
@@ -163,12 +165,12 @@ export default function Home() {
         <Box paddingY="64px">
           <VStack spacing="48px">
             <EditorialTitle>
-              La voie professionnelle initiale en chiffres
+              La voie professionnelle initiale scolaire en 2023
             </EditorialTitle>
             <Stack
               alignItems="start"
               justifyContent="center"
-              spacing="80px"
+              spacing="24px"
               direction={{ base: "column", md: "row" }}
               flexWrap="wrap"
               paddingX={{
@@ -176,6 +178,14 @@ export default function Home() {
                 md: "16px",
               }}
             >
+              <AnimatedNumber
+                from={0}
+                to={nombreFormations}
+                NumberLabel={({ number }) => <>{number}</>}
+                subtitle="formations"
+                animateOnViewportEnter
+                duration={1000}
+              />
               <AnimatedNumber
                 from={0}
                 to={nombreEtablissements}
@@ -196,7 +206,7 @@ export default function Home() {
                 from={0}
                 to={nombrePlacesDeFormation}
                 NumberLabel={({ number }) => <>{`+ ${number}`}</>}
-                subtitle="places de formations prévues en 2024 par rapport à 2023"
+                subtitle="places de formations prévues pour la rentrée scolaire 2024"
                 animateOnViewportEnter
                 duration={1000}
               />
@@ -212,63 +222,61 @@ export default function Home() {
           </VStack>
         </Box>
       </Hero>
-      <VStack
-        paddingY="64px"
-        spacing="48px"
-        paddingX={{
-          base: "24px",
-          lg: "120px",
-        }}
-      >
-        <EditorialTitle>À propos d'Inserjeunes</EditorialTitle>
-        <Stack
-          direction={{
-            base: "column",
-            lg: "row",
-          }}
-        >
-          <HStack
-            width={{
-              base: "100%",
-              lg: "50%",
+      <Container maxWidth={"container.xl"} px={0}>
+        <VStack paddingY="64px" spacing="48px" paddingX="24px">
+          <EditorialTitle>À propos d'Inserjeunes</EditorialTitle>
+          <Stack
+            direction={{
+              base: "column",
+              lg: "row",
             }}
-            paddingBottom={{
-              base: "16px",
-              lg: "0px",
-            }}
-            justifyContent="center"
           >
-            <Img src="/illustrations/mission-inserjeunes.svg" />
-          </HStack>
-          <VStack
-            alignItems="start"
-            width={{
-              base: "100%",
-              lg: "50%",
-            }}
-            gap="16px"
-          >
-            <Text>
-              InserJeunes est un <b>dispositif statistique interministériel</b>,
-              instauré par la loi « pour la liberté de choisir son avenir
-              professionnel » de septembre 2018.
-            </Text>
-            <Text>
-              Il est construit par{" "}
-              <b>
-                rapprochement de bases administratives relatives à la scolarité
-              </b>{" "}
-              (remontées administratives des inscriptions) et à <b>l’emploi</b>
-              (notamment la déclaration sociale nominative des entreprises).
-            </Text>
-            <Text>
-              Ces données publiées à partir de <b>début 2021</b> apportent un
-              degré de <b>précision et de robustesse</b> que ne permettaient pas
-              les précédentes données issues d’enquêtes.
-            </Text>
-          </VStack>
-        </Stack>
-      </VStack>
+            <HStack
+              width={{
+                base: "100%",
+                lg: "50%",
+              }}
+              paddingBottom={{
+                base: "16px",
+                lg: "0px",
+              }}
+              justifyContent="center"
+            >
+              <Img src="/illustrations/mission-inserjeunes.svg" />
+            </HStack>
+            <VStack
+              alignItems="start"
+              width={{
+                base: "100%",
+                lg: "50%",
+              }}
+              gap="16px"
+            >
+              <Text>
+                InserJeunes est un{" "}
+                <b>dispositif statistique interministériel</b>, instauré par la
+                loi « pour la liberté de choisir son avenir professionnel » de
+                septembre 2018.
+              </Text>
+              <Text>
+                Il est construit par{" "}
+                <b>
+                  rapprochement de bases administratives relatives à la
+                  scolarité
+                </b>{" "}
+                (remontées administratives des inscriptions) et à{" "}
+                <b>l’emploi</b>
+                (notamment la déclaration sociale nominative des entreprises).
+              </Text>
+              <Text>
+                Ces données publiées à partir de <b>début 2021</b> apportent un
+                degré de <b>précision et de robustesse</b> que ne permettaient
+                pas les précédentes données issues d’enquêtes.
+              </Text>
+            </VStack>
+          </Stack>
+        </VStack>
+      </Container>
       <VStack paddingY="64px" spacing="48px">
         <EditorialTitle>Questions fréquentes</EditorialTitle>
         <Box width="70%">
