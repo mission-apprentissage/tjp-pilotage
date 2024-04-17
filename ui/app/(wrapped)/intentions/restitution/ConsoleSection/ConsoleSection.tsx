@@ -17,7 +17,10 @@ import { OrderIcon } from "../../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
-import { Order, StatsIntentions } from "../types";
+import {
+  DemandesRestitutionIntentions,
+  OrderDemandesRestitutionIntentions,
+} from "../types";
 import { LineContent } from "./LineContent";
 
 const Loader = () => (
@@ -63,10 +66,10 @@ export const ConsoleSection = ({
   order,
   handleOrder,
 }: {
-  data?: StatsIntentions;
+  data?: DemandesRestitutionIntentions;
   isLoading: boolean;
-  order: Order;
-  handleOrder: (column: Order["orderBy"]) => void;
+  order: OrderDemandesRestitutionIntentions;
+  handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
 }) => {
   const router = useRouter();
   return (
@@ -315,25 +318,101 @@ export const ConsoleSection = ({
                 <Th
                   cursor="pointer"
                   pb="4"
-                  onClick={() => handleOrder("pression")}
+                  onClick={() => handleOrder("numero")}
                 >
-                  <OrderIcon {...order} column="id" />
-                  {STATS_DEMANDES_COLUMNS.id}
+                  <OrderIcon {...order} column="numero" />
+                  {STATS_DEMANDES_COLUMNS.numero}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("recrutementRH")}
+                >
+                  <OrderIcon {...order} column="recrutementRH" />
+                  {STATS_DEMANDES_COLUMNS.recrutementRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbRecrutementRH")}
+                >
+                  <OrderIcon {...order} column="nbRecrutementRH" />
+                  {STATS_DEMANDES_COLUMNS.nbRecrutementRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesRecrutementRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("reconversionRH")}
+                >
+                  <OrderIcon {...order} column="reconversionRH" />
+                  {STATS_DEMANDES_COLUMNS.reconversionRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbReconversionRH")}
+                >
+                  <OrderIcon {...order} column="nbReconversionRH" />
+                  {STATS_DEMANDES_COLUMNS.nbReconversionRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesReconversionRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("professeurAssocieRH")}
+                >
+                  <OrderIcon {...order} column="professeurAssocieRH" />
+                  {STATS_DEMANDES_COLUMNS.professeurAssocieRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbProfesseurAssocieRH")}
+                >
+                  <OrderIcon {...order} column="nbProfesseurAssocieRH" />
+                  {STATS_DEMANDES_COLUMNS.nbProfesseurAssocieRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesProfesseurAssocieRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("formationRH")}
+                >
+                  <OrderIcon {...order} column="formationRH" />
+                  {STATS_DEMANDES_COLUMNS.formationRH}
+                </Th>
+                <Th
+                  cursor="pointer"
+                  pb="4"
+                  onClick={() => handleOrder("nbFormationRH")}
+                >
+                  <OrderIcon {...order} column="nbFormationRH" />
+                  {STATS_DEMANDES_COLUMNS.nbFormationRH}
+                </Th>
+                <Th cursor="pointer" pb="4">
+                  {STATS_DEMANDES_COLUMNS.disciplinesFormationRH}
                 </Th>
               </Tr>
             </Thead>
             <Tbody>
               <Fragment>
                 {data?.demandes.map(
-                  (demande: StatsIntentions["demandes"][0]) => {
+                  (demande: DemandesRestitutionIntentions["demandes"][0]) => {
                     return (
-                      <Fragment key={`${demande.id}`}>
+                      <Fragment key={`${demande.numero}`}>
                         <Tr
                           h="12"
                           _hover={{ bg: "blueecume.925" }}
                           cursor={"pointer"}
                           onClick={() =>
-                            router.push(`/intentions/saisie/${demande.id}`)
+                            router.push(`/intentions/saisie/${demande.numero}`)
                           }
                         >
                           <LineContent demande={demande} />

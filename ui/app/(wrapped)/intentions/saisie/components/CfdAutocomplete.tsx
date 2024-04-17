@@ -1,4 +1,5 @@
 import { Flex, Tag } from "@chakra-ui/react";
+import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
@@ -30,6 +31,7 @@ export const CfdAutocompleteInput = ({
 
   return (
     <AsyncSelect
+      instanceId={useId()}
       name={name}
       styles={selectStyle}
       components={{

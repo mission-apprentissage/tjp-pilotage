@@ -1,14 +1,15 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
-import { findDemande } from "./getDemande.query";
 import { getDemandeSchema } from "./getDemande.schema";
+import { getDemandeUsecase } from "./getDemande.usecase";
 
 export const getDemandeRoute = (server: Server) => {
-  return createRoute("/demande/:id", {
+  return createRoute("/demande/:numero", {
     method: "GET",
     schema: getDemandeSchema,
   }).handle((props) => {
@@ -18,9 +19,13 @@ export const getDemandeRoute = (server: Server) => {
       handler: async (request, response) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();
-        const demande = await findDemande({ id: request.params.id, user });
+        const demande = await getDemandeUsecase({
+          numero: request.params.numero,
+          user,
+        });
         if (!demande) return response.status(404).send();
-        if (demande.status === "deleted") throw Boom.forbidden();
+        if (demande.statut === DemandeStatutEnum.deleted)
+          throw Boom.forbidden();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");
         const canEdit = guardScope(scope?.default, {
@@ -28,10 +33,9 @@ export const getDemandeRoute = (server: Server) => {
           region: () => user.codeRegion === demande.codeRegion,
           national: () => true,
         });
-
         response.status(200).send({
           ...demande,
-          status: demande.status,
+          statut: demande.statut,
           canEdit,
         });
       },

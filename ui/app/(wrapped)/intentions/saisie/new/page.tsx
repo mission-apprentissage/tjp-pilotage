@@ -1,6 +1,7 @@
 "use client";
 
 import { useSearchParams } from "next/navigation";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "../../../../../api.client";
 import { GuardPermission } from "../../../../../utils/security/GuardPermission";
@@ -8,37 +9,52 @@ import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 export default () => {
   const queryParams = useSearchParams();
-  const intentionId = queryParams.get("intentionId");
+  const numero = queryParams.get("numero");
 
-  const { data, isLoading } = client.ref("[GET]/demande/:id").useQuery(
-    { params: { id: intentionId ?? "" } },
+  const { data, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
+    { params: { numero: numero ?? "" } },
     {
-      enabled: !!intentionId,
+      enabled: !!numero,
       cacheTime: 0,
     }
   );
 
-  if (isLoading && !!intentionId) return <IntentionSpinner />;
+  const { data: defaultCampagne } = client
+    .ref("[GET]/campagne/default")
+    .useQuery({});
+
+  if (isLoading && !!numero) return <IntentionSpinner />;
   return (
     <GuardPermission permission="intentions/ecriture">
-      {intentionId ? (
+      {numero ? (
         data && (
           <IntentionForm
-            disabled={false}
+            disabled={
+              defaultCampagne?.statut !== CampagneStatutEnum["en cours"]
+            }
             defaultValues={{
               cfd: data?.compensationCfd,
-              dispositifId: data?.compensationDispositifId,
+              codeDispositif: data?.compensationCodeDispositif,
               uai: data?.compensationUai,
               rentreeScolaire: data?.compensationRentreeScolaire,
+              campagneId: data?.campagneId,
             }}
             formMetadata={{
               etablissement: data?.metadata?.etablissementCompensation,
               formation: data?.metadata?.formationCompensation,
             }}
+            campagne={defaultCampagne}
           />
         )
       ) : (
-        <IntentionForm disabled={false} defaultValues={{}} formMetadata={{}} />
+        <IntentionForm
+          disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
+          defaultValues={{
+            campagneId: defaultCampagne?.id,
+          }}
+          formMetadata={{}}
+          campagne={defaultCampagne}
+        />
       )}
     </GuardPermission>
   );

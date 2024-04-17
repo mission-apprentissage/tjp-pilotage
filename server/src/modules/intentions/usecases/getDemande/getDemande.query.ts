@@ -4,6 +4,7 @@ import {
   jsonBuildObject,
   jsonObjectFrom,
 } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
@@ -12,18 +13,24 @@ import {
   isDemandeNotDeleted,
   isDemandeSelectable,
 } from "../../../utils/isDemandeSelectable";
+import { getDemandeSchema } from "./getDemande.schema";
 
-export const findDemande = async ({
-  id,
-  user,
-}: {
-  id: string;
-  user: Pick<RequestUser, "id" | "role" | "codeRegion">;
-}) => {
+export interface Filters extends z.infer<typeof getDemandeSchema.params> {
+  user: RequestUser;
+}
+
+export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await kdb
-    .selectFrom("demande")
+    .selectFrom("latestDemandeView as demande")
     .selectAll()
     .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom("campagne")
+          .selectAll("campagne")
+          .whereRef("campagne.id", "=", "demande.campagneId")
+          .limit(1)
+      ).as("campagne"),
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
@@ -141,15 +148,15 @@ export const findDemande = async ({
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
-    .where("id", "=", id)
+    .where("demande.numero", "=", numero)
     .orderBy("createdAt", "asc")
     .limit(1)
     .executeTakeFirst();
 
   const codeDispositif =
-    demande?.dispositifId &&
+    demande?.codeDispositif &&
     demande.metadata.formation?.dispositifs.find(
-      (item) => item.codeDispositif === demande?.dispositifId
+      (item) => item.codeDispositif === demande?.codeDispositif
     )?.codeDispositif;
 
   return (
@@ -168,6 +175,9 @@ export const findDemande = async ({
         ),
       }),
       createdAt: demande.createdAt?.toISOString(),
+      campagne: cleanNull({
+        ...demande.campagne,
+      }),
       codeDispositif,
     })
   );

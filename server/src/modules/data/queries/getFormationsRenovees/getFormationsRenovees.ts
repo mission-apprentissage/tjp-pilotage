@@ -5,7 +5,7 @@ import { kdb } from "../../../../db/db";
 import { getDateRentreeScolaire } from "../../services/getRentreeScolaire";
 import { isScolaireFormationHistorique } from "../../utils/isScolaire";
 
-export const getFormationsRenoveesEnseignees = async ({
+export const getFormationsRenoveesEnseigneesQuery = async ({
   rentreeScolaire = [CURRENT_RENTREE],
 }: {
   rentreeScolaire?: string[];
@@ -34,7 +34,7 @@ export const getFormationsRenoveesEnseignees = async ({
     .then((res) => res.map((r) => r.cfd));
 };
 
-export const getFormationsRenoveesRentreeScolaire = async ({
+export const getFormationsRenoveesRentreeScolaireQuery = async ({
   rentreeScolaire = [CURRENT_RENTREE],
 }: {
   rentreeScolaire?: string[];

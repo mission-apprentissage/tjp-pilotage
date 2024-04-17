@@ -22,7 +22,7 @@ export const CfdBlock = ({
     info?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"]
   ) => void;
   setIsFCIL: (isFcil: boolean) => void;
-  formMetaData?: (typeof client.infer)["[GET]/demande/:id"]["metadata"];
+  formMetaData?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   active: boolean;
 }) => {
   const {
