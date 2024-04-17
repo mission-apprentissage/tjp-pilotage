@@ -20,7 +20,7 @@ export const CapaciteApprentissageColoreeField = chakra(
         }).unsubscribe
     );
 
-    const [typeDemande] = watch("typeDemande");
+    const typeDemande = watch("typeDemande");
     const fermeture = isTypeFermeture(typeDemande);
     const coloration = isTypeColoration(typeDemande) || watch("coloration");
     const isReadOnly = disabled || fermeture || !coloration;
