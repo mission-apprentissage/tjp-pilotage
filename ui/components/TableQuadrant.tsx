@@ -193,7 +193,7 @@ export const TableQuadrant = ({
                   <Td whiteSpace="normal" color={getTdColor(formation)}>
                     {formation.libelleFormation}
                   </Td>
-                  <Td textAlign={"center"} color={getTdColor(formation)}>
+                  <Td textAlign={"center"}>
                     <TableBadge
                       sx={getTauxPressionStyle(
                         formation.tauxPression !== undefined

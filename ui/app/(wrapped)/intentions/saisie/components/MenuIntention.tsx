@@ -1,33 +1,46 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import _ from "lodash";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
 import qs from "qs";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
+import { client } from "@/api.client";
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import { client } from "../../../../../api.client";
-
-export type Query = (typeof client.inferArgs)["[GET]/demandes"]["query"];
-export type Filters = Pick<Query, "status">;
+import { Filters } from "../types";
+import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 export const MenuIntention = ({
   isRecapView = false,
   hasPermissionEnvoi,
+  campagne,
 }: {
   isRecapView?: boolean;
   hasPermissionEnvoi: boolean;
+  campagne?: { annee: string; statut: string };
 }) => {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
+    campagne?: string;
   } = qs.parse(queryParams.toString());
 
-  const status =
-    searchParams.filters === undefined ? "none" : searchParams.filters?.status;
+  const statut =
+    searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
+  const anneeCampagne = searchParams.campagne ?? campagne?.annee;
+  const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
+  const isDisabled =
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
-    {},
+    {
+      query: {
+        anneeCampagne,
+      },
+    },
     {
       keepPreviousData: true,
       staleTime: 0,
@@ -35,9 +48,9 @@ export const MenuIntention = ({
   );
 
   return (
-    <Flex direction="column" pr={[null, null, 4]} minW={250}>
+    <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
-        isDisabled={!hasPermissionEnvoi || isSaisieDisabled()}
+        isDisabled={isDisabled}
         mb="4"
         variant="createButton"
         size={"md"}
@@ -47,18 +60,24 @@ export const MenuIntention = ({
       >
         Nouvelle demande
       </Button>
+
       <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ..._.omit(searchParams.filters, ["statut"]),
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
         >
           <Text
-            fontWeight={isRecapView && status === "none" ? "bold" : "normal"}
+            fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
           >
             Toutes
           </Text>
@@ -67,7 +86,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=submitted"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum.submitted,
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -76,7 +101,9 @@ export const MenuIntention = ({
         >
           <Text
             fontWeight={
-              isRecapView && status === "submitted" ? "bold" : "normal"
+              isRecapView && statut === DemandeStatutEnum.submitted
+                ? "bold"
+                : "normal"
             }
           >
             Demandes validées
@@ -86,13 +113,23 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=draft"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum.draft,
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
         >
           <Text
-            fontWeight={isRecapView && status === "draft" ? "bold" : "normal"}
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum.draft
+                ? "bold"
+                : "normal"
+            }
           >
             Projets de demandes
           </Text>
@@ -101,7 +138,13 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href="/intentions/saisie?filters[status]=refused"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum.refused,
+            },
+          })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -109,7 +152,11 @@ export const MenuIntention = ({
           }
         >
           <Text
-            fontWeight={isRecapView && status === "refused" ? "bold" : "normal"}
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum.refused
+                ? "bold"
+                : "normal"
+            }
           >
             Demandes refusées
           </Text>

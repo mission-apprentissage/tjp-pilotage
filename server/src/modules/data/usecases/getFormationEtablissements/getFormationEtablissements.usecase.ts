@@ -1,5 +1,5 @@
-import { getFormationsRenoveesEnseignees } from "../../queries/getFormationsRenovees/getFormationsRenovees";
-import { getStatsSortieParRegionsEtNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getFormationsRenoveesEnseigneesQuery } from "../../queries/getFormationsRenovees/getFormationsRenovees";
+import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
@@ -9,8 +9,8 @@ const getFormationEtablissementsFactory =
       findFormationEtablissementsInDb:
         dependencies.findFormationEtablissementsInDb,
       findFiltersInDb: dependencies.findFiltersInDb,
-      getFormationsRenoveesEnseignees,
-      getStatsSortieParRegionsEtNiveauDiplome,
+      getFormationsRenoveesEnseigneesQuery,
+      getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
   ) =>
   async (activeFilters: {
@@ -38,8 +38,8 @@ const getFormationEtablissementsFactory =
     ] = await Promise.all([
       deps.findFormationEtablissementsInDb(activeFilters),
       deps.findFiltersInDb(activeFilters),
-      deps.getStatsSortieParRegionsEtNiveauDiplome(activeFilters),
-      deps.getFormationsRenoveesEnseignees(activeFilters),
+      deps.getStatsSortieParRegionsEtNiveauDiplomeQuery(activeFilters),
+      deps.getFormationsRenoveesEnseigneesQuery(activeFilters),
     ]);
 
     return {

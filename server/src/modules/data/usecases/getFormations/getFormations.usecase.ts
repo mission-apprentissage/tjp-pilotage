@@ -1,5 +1,5 @@
-import { getFormationsRenoveesRentreeScolaire } from "../../queries/getFormationsRenovees/getFormationsRenovees";
-import { getStatsSortieParNiveauDiplome } from "../../queries/getStatsSortie/getStatsSortie";
+import { getFormationsRenoveesRentreeScolaireQuery } from "../../queries/getFormationsRenovees/getFormationsRenovees";
+import { getStatsSortieParNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies, Filters } from "./dependencies";
 
@@ -8,8 +8,8 @@ const getFormationsFactory =
     deps = {
       findFormationsInDb: dependencies.findFormationsInDb,
       findFiltersInDb: dependencies.findFiltersInDb,
-      getStatsSortieParNiveauDiplome,
-      getFormationsRenoveesRentreeScolaire,
+      getStatsSortieParNiveauDiplomeQuery,
+      getFormationsRenoveesRentreeScolaireQuery,
     }
   ) =>
   async (activeFilters: Partial<Filters>) => {
@@ -21,8 +21,8 @@ const getFormationsFactory =
     ] = await Promise.all([
       deps.findFormationsInDb(activeFilters),
       deps.findFiltersInDb(activeFilters),
-      deps.getStatsSortieParNiveauDiplome(activeFilters),
-      deps.getFormationsRenoveesRentreeScolaire(activeFilters),
+      deps.getStatsSortieParNiveauDiplomeQuery(activeFilters),
+      deps.getFormationsRenoveesRentreeScolaireQuery(activeFilters),
     ]);
 
     return {

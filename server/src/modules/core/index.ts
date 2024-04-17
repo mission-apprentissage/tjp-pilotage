@@ -1,8 +1,11 @@
 import { Server } from "../../server";
 import { activateUserRoute } from "./usecases/activateUser/activateUser.route";
 import { checkActivationTokenRoute } from "./usecases/checkActivationToken/checkActivationToken.route";
+import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.route";
 import { createUserRoute } from "./usecases/createUser/createUser.route";
+import { editCampagneRoute } from "./usecases/editCampagne/editCampagne.route";
 import { editUserRoute } from "./usecases/editUser/editUser.route";
+import { getCampagnesRoute } from "./usecases/getCampagnes/getCampagnes.route";
 import { getDneAuthorizationUrlRoute } from "./usecases/getDneUrl/getDneUrl.route";
 import { getUsersRoute } from "./usecases/getUsers/getUsers.route";
 import { homeRoute } from "./usecases/home/home.route";
@@ -29,6 +32,9 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...createUserRoute(server),
     ...getDneAuthorizationUrlRoute(server),
     ...redirectDneRoute(server),
+    ...getCampagnesRoute(server),
+    ...editCampagneRoute(server),
+    ...createCampagneRoute(server),
   };
 };
 

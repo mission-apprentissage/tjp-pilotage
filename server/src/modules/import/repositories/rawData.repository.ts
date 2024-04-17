@@ -13,6 +13,7 @@ import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
 import { Metier } from "../fileTypes/Metier";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
+import { NMatiere } from "../fileTypes/NMatiere";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
 import { NSF_Categorie_Specialite } from "../fileTypes/NSFCategorieSpecialite";
@@ -56,6 +57,7 @@ export type LineTypes = {
   rome: Rome;
   metier: Metier;
   formation_rome: Formation_Rome;
+  n_matiere_: NMatiere;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

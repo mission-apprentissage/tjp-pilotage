@@ -1,0 +1,33 @@
+import Boom from "@hapi/boom";
+import { createRoute } from "@http-wizard/core";
+
+import { Server } from "../../../../server";
+import { hasPermissionHandler } from "../../../core";
+import { importDemandeSchema } from "./importDemande.schema";
+import { importDemande } from "./importDemande.usecase";
+
+export const importDemandeRoute = (server: Server) => {
+  return createRoute("/demande/import/:numero", {
+    method: "POST",
+    schema: importDemandeSchema,
+  }).handle((props) => {
+    server.route({
+      ...props,
+      preHandler: hasPermissionHandler("intentions/lecture"),
+      handler: async (request, response) => {
+        const user = request.user;
+        if (!user) throw Boom.forbidden();
+
+        const demande = await importDemande({
+          numero: request.params.numero,
+          user,
+        });
+        if (!demande) return response.status(404).send();
+
+        const result = response.status(200).send(demande);
+
+        return result;
+      },
+    });
+  });
+};

@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-import { getStatsSortieParRegions } from "../../queries/getStatsSortie/getStatsSortie";
+import { getStatsSortieParRegionsQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import {
   getChiffresEntree,
@@ -44,15 +44,11 @@ export const getAnalyseDetailleeEtablissementFactory =
       getChiffresEntree,
       getChiffresIj,
       getFilters,
-      getStatsSortieParRegions,
+      getStatsSortieParRegionsQuery,
       getPositionQuadrant,
     }
   ) =>
-  async (activeFilters: {
-    uai: string;
-    codeNiveauDiplome?: string[];
-    voie?: string[];
-  }) => {
+  async (activeFilters: { uai: string }) => {
     const [
       formations,
       etablissement,
@@ -66,7 +62,7 @@ export const getAnalyseDetailleeEtablissementFactory =
       deps.getChiffresEntree(activeFilters),
       deps.getChiffresIj(activeFilters),
       deps.getFilters(activeFilters),
-      deps.getStatsSortieParRegions({}),
+      deps.getStatsSortieParRegionsQuery({}),
     ]);
 
     const formationsObject: Record<string, (typeof formations)[0]> = {};

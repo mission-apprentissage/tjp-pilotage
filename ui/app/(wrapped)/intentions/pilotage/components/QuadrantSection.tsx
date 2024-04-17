@@ -22,8 +22,10 @@ import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "@/components/InfoBlock";
 import { Quadrant } from "@/components/Quadrant";
@@ -33,12 +35,11 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { useStateParams } from "@/utils/useFilters";
 
-import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
 import {
-  Filters,
-  OrderFormationsTransformationStats,
-  ScopedTransformationStats,
+  FiltersStatsPilotageIntentions,
+  OrderFormationsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
 } from "../types";
 
 const generateRestitutionUrl = (
@@ -47,9 +48,9 @@ const generateRestitutionUrl = (
   scope?: SelectedScope,
   filters?: {
     tauxPression?: "faible" | "eleve";
-    status?: "draft" | "submitted";
+    statut?: "draft" | "submitted";
     type?: "ouverture" | "fermeture";
-    order?: Partial<OrderFormationsTransformationStats>;
+    order?: Partial<OrderFormationsPilotageIntentions>;
   }
 ) => {
   const urlFilters: Record<string, unknown> = {
@@ -91,8 +92,8 @@ export const QuadrantSection = ({
   scopeFilters,
 }: {
   scope?: SelectedScope;
-  parentFilters: Partial<Filters>;
-  scopeFilters?: ScopedTransformationStats["filters"];
+  parentFilters: Partial<FiltersStatsPilotageIntentions>;
+  scopeFilters?: StatsPilotageIntentions["filters"];
 }) => {
   const trackEvent = usePlausible();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
@@ -106,14 +107,14 @@ export const QuadrantSection = ({
     prefix: "quadrant",
     defaultValues: {
       tauxPression: undefined,
-      status: undefined,
+      statut: undefined,
       type: undefined,
       order: undefined,
     } as {
       tauxPression?: "eleve" | "faible";
-      status?: "submitted" | "draft";
+      statut?: "submitted" | "draft";
       type?: "ouverture" | "fermeture";
-      order?: Partial<OrderFormationsTransformationStats>;
+      order?: Partial<OrderFormationsPilotageIntentions>;
     },
   });
 
@@ -126,7 +127,7 @@ export const QuadrantSection = ({
   const mergedFilters = {
     ...otherFilters,
     tauxPression: filters.tauxPression,
-    status: filters.status,
+    statut: filters.statut,
     type: filters.type,
     codeRegion: scope?.type === ScopeEnum.region ? scope.value : undefined,
     codeAcademie: scope?.type === ScopeEnum.academie ? scope.value : undefined,
@@ -135,7 +136,7 @@ export const QuadrantSection = ({
   };
 
   const { data: { formations, stats } = {} } = client
-    .ref("[GET]/pilotage-transformation/formations")
+    .ref("[GET]/pilotage-intentions/formations")
     .useQuery(
       {
         query: {
@@ -168,7 +169,7 @@ export const QuadrantSection = ({
   };
 
   const handleOrder = (
-    column: OrderFormationsTransformationStats["orderBy"]
+    column: OrderFormationsPilotageIntentions["orderBy"]
   ) => {
     trackEvent("tableau-quadrant-intentions:ordre", {
       props: { colonne: column },
@@ -467,7 +468,7 @@ export const QuadrantSection = ({
                         order={order}
                         handleOrder={(column?: string) =>
                           handleOrder(
-                            column as OrderFormationsTransformationStats["orderBy"]
+                            column as OrderFormationsPilotageIntentions["orderBy"]
                           )
                         }
                       />
@@ -516,17 +517,17 @@ export const QuadrantSection = ({
                   onChange={(v) =>
                     setFilters({
                       ...filters,
-                      status: (v || undefined) as
+                      statut: (v || undefined) as
                         | "submitted"
                         | "draft"
                         | undefined,
                     })
                   }
-                  value={filters.status ?? ""}
+                  value={filters.statut ?? ""}
                 >
                   <Radio value="">Toutes</Radio>
-                  <Radio value="submitted">Validées</Radio>
-                  <Radio value="draft">Projets</Radio>
+                  <Radio value={DemandeStatutEnum.submitted}>Validées</Radio>
+                  <Radio value={DemandeStatutEnum.draft}>Projets</Radio>
                 </RadioGroup>
               </FormControl>
             </Box>
