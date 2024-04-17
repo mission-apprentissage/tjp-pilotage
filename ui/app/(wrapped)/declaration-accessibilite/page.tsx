@@ -31,6 +31,9 @@ export default function DeclarationAccessibilite() {
               À cette fin, nous mettons en œuvre la stratégie et les actions
               suivantes&nbsp;:{" "}
               <Link
+                style={{
+                  textDecoration: "underline",
+                }}
                 as={NextLink}
                 href="https://beta.gouv.fr/accessibilite/schema-pluriannuel"
               >
@@ -44,7 +47,17 @@ export default function DeclarationAccessibilite() {
             <strong>Orion</strong>
             <span>
               {" "}
-              (<span>https://orion.inserjeunes.beta.gouv.fr/</span>)
+              (
+              <Link
+                style={{
+                  textDecoration: "underline",
+                }}
+                as={NextLink}
+                href="https://orion.inserjeunes.beta.gouv.fr/"
+              >
+                https://orion.inserjeunes.beta.gouv.fr/
+              </Link>
+              )
             </span>
             .
           </Text>
@@ -71,13 +84,23 @@ export default function DeclarationAccessibilite() {
           <UnorderedList>
             <ListItem>
               E-mail&nbsp;:{" "}
-              <Link href="mailto:orion@inserjeunes.beta.gouv.fr">
+              <Link
+                style={{
+                  textDecoration: "underline",
+                }}
+                href="mailto:orion@inserjeunes.beta.gouv.fr"
+              >
                 orion@inserjeunes.beta.gouv.fr
               </Link>
             </ListItem>
             <ListItem>
               Formulaire de contact&nbsp;:{" "}
-              <Link href="https://aide.orion.inserjeunes.beta.gouv.fr">
+              <Link
+                style={{
+                  textDecoration: "underline",
+                }}
+                href="https://aide.orion.inserjeunes.beta.gouv.fr"
+              >
                 https://aide.orion.inserjeunes.beta.gouv.fr
               </Link>
             </ListItem>
@@ -96,13 +119,23 @@ export default function DeclarationAccessibilite() {
           <UnorderedList>
             <ListItem>
               Écrire un message au{" "}
-              <Link href="https://formulaire.defenseurdesdroits.fr/">
+              <Link
+                style={{
+                  textDecoration: "underline",
+                }}
+                href="https://formulaire.defenseurdesdroits.fr/"
+              >
                 Défenseur des droits
               </Link>
             </ListItem>
             <ListItem>
               Contacter{" "}
-              <Link href="https://www.defenseurdesdroits.fr/saisir/delegues">
+              <Link
+                style={{
+                  textDecoration: "underline",
+                }}
+                href="https://www.defenseurdesdroits.fr/saisir/delegues"
+              >
                 le délégué du Défenseur des droits dans votre région
               </Link>
             </ListItem>
@@ -118,7 +151,12 @@ export default function DeclarationAccessibilite() {
           <Text>
             Cette déclaration d’accessibilité a été créé le{" "}
             <span>16 avril 2024</span> grâce au{" "}
-            <Link href="https://betagouv.github.io/a11y-generateur-declaration/#create">
+            <Link
+              style={{
+                textDecoration: "underline",
+              }}
+              href="https://betagouv.github.io/a11y-generateur-declaration/#create"
+            >
               Générateur de Déclaration d’Accessibilité de BetaGouv
             </Link>
             .
