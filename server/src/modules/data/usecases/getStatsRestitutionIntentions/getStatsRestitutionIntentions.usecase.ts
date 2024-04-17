@@ -11,10 +11,9 @@ const getStatsRestitutionIntentionsFactory =
   ) =>
   async (activeFilters: Filters) => {
     const anneeCampagne =
-      activeFilters.anneeCampagne ??
-      (await deps.getCurrentCampagneQuery()).annee;
+      activeFilters.campagne ?? (await deps.getCurrentCampagneQuery()).annee;
     const countRestitutionIntentions = deps.getStatsRestitutionIntentionsQuery({
-      anneeCampagne,
+      campagne: anneeCampagne,
       ...activeFilters,
     });
 

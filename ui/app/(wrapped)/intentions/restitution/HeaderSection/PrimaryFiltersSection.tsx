@@ -136,7 +136,7 @@ export const PrimaryFiltersSection = ({
                         ? "info.525"
                         : ""
                     }
-                    placeholder="TOUTES"
+                    placeholder={`TOUTES (${data?.filters.rentreesScolaires?.length})`}
                   >
                     {data?.filters.rentreesScolaires?.map((option) => (
                       <option key={option.value} value={option.value}>
