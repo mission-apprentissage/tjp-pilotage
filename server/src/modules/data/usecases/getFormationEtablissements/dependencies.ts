@@ -52,8 +52,6 @@ const findFormationEtablissementsInDb = async ({
   uai,
   secteur,
   cpc,
-  cpcSecteur,
-  cpcSousSecteur,
   codeNsf,
   withAnneeCommune,
 }: {
@@ -72,8 +70,6 @@ const findFormationEtablissementsInDb = async ({
   uai?: string[];
   secteur?: string[];
   cpc?: string[];
-  cpcSecteur?: string[];
-  cpcSousSecteur?: string[];
   codeNsf?: string[];
   withAnneeCommune?: string;
   orderBy?: { column: string; order: "asc" | "desc" };
@@ -310,14 +306,6 @@ const findFormationEtablissementsInDb = async ({
       return q.where("formationView.cpc", "in", cpc);
     })
     .$call((q) => {
-      if (!cpcSecteur) return q;
-      return q.where("formationView.cpcSecteur", "in", cpcSecteur);
-    })
-    .$call((q) => {
-      if (!cpcSousSecteur) return q;
-      return q.where("formationView.cpcSousSecteur", "in", cpcSousSecteur);
-    })
-    .$call((q) => {
       if (!codeNsf) return q;
       return q.where("formationView.codeNsf", "in", codeNsf);
     })
@@ -383,8 +371,6 @@ const findFiltersInDb = async ({
   cfd,
   uai,
   cpc,
-  cpcSecteur,
-  cpcSousSecteur,
   rentreeScolaire = [CURRENT_RENTREE],
 }: {
   codeRegion?: string[];
@@ -397,8 +383,6 @@ const findFiltersInDb = async ({
   cfdFamille?: string[];
   uai?: string[];
   cpc?: string[];
-  cpcSecteur?: string[];
-  cpcSousSecteur?: string[];
   rentreeScolaire?: string[];
 }) => {
   const base = kdb
@@ -488,16 +472,6 @@ const findFiltersInDb = async ({
   ) => {
     if (!dispositifId) return sql<true>`true`;
     return eb("formationEtablissement.dispositifId", "in", dispositifId);
-  };
-
-  const inCpc = (eb: ExpressionBuilder<DB, "formationView">) => {
-    if (!cpc) return sql<true>`true`;
-    return eb("formationView.cpc", "in", cpc);
-  };
-
-  const inCpcSecteur = (eb: ExpressionBuilder<DB, "formationView">) => {
-    if (!cpcSecteur) return sql<true>`true`;
-    return eb("formationView.cpcSecteur", "in", cpcSecteur);
   };
 
   const regions = await base
@@ -649,38 +623,6 @@ const findFiltersInDb = async ({
     })
     .execute();
 
-  const cpcSecteurs = await base
-    .select([
-      "formationView.cpcSecteur as label",
-      "formationView.cpcSecteur as value",
-    ])
-    .where("formationView.cpcSecteur", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([inCpc(eb)]),
-        cpcSecteur
-          ? eb("formationView.cpcSecteur", "in", cpcSecteur)
-          : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const cpcSousSecteurs = await base
-    .select([
-      "formationView.cpcSousSecteur as label",
-      "formationView.cpcSousSecteur as value",
-    ])
-    .where("formationView.cpcSousSecteur", "is not", null)
-    .where((eb) =>
-      eb.or([
-        eb.and([inCpc(eb), inCpcSecteur(eb)]),
-        cpcSousSecteur
-          ? eb("formationView.cpcSousSecteur", "in", cpcSousSecteur)
-          : sql<boolean>`false`,
-      ])
-    )
-    .execute();
-
   const libellesNsf = await base
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
@@ -698,8 +640,6 @@ const findFiltersInDb = async ({
     familles: familles.map(cleanNull),
     formations: formations.map(cleanNull),
     cpcs: cpcs.map(cleanNull),
-    cpcSecteurs: cpcSecteurs.map(cleanNull),
-    cpcSousSecteurs: cpcSousSecteurs.map(cleanNull),
     libellesNsf: libellesNsf.map(cleanNull),
   };
 };
