@@ -29,7 +29,7 @@ export const FiltersSchema = z.object({
   positionQuadrant: z.string().optional(),
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   codeNsf: z.array(z.string()).optional(),
-  anneeCampagne: z.string().optional(),
+  campagne: z.string().optional(),
 });
 
 export const getStatsRestitutionIntentionsSchema = {
