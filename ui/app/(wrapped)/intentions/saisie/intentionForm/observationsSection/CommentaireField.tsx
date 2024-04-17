@@ -20,6 +20,7 @@ export const CommentaireField = chakra(
       <FormControl className={className} isInvalid={!!errors.commentaire}>
         <FormLabel>Commentaires / Observations sur la demande</FormLabel>
         <Textarea
+          variant="grey"
           height={150}
           {...register("commentaire", { shouldUnregister: true, disabled })}
         />
