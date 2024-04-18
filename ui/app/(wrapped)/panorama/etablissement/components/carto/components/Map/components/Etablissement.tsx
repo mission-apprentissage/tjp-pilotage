@@ -1,3 +1,4 @@
+import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import {
   CircleLayer,
@@ -17,6 +18,7 @@ export const Etablissement = () => {
   const { current: map } = useMap();
   const { etablissementMap, hoverUai, setActiveUai, setHoverUai } =
     useEtablissementMapContext();
+  const trackEvent = usePlausible();
 
   const etablissement = etablissementMap?.etablissement;
   const showEtablissement =
@@ -116,6 +118,13 @@ export const Etablissement = () => {
       });
       if (features.length > 0 && features[0] !== undefined) {
         setHoverUai(features[0].properties?.uai);
+
+        trackEvent("cartographie-etablissement:interaction", {
+          props: {
+            type: "cartographie-etablissement-hover",
+            uai: features[0].properties.uai,
+          },
+        });
       }
     }
   };

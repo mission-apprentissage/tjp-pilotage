@@ -57,7 +57,9 @@ export const EtablissementMap = () => {
         >
           <ListeEtablissementsProches />
           <Box ref={mapContainer}>
-            <Map uai={uai} {...mapDimensions} />
+            {mapDimensions.height !== 0 && mapDimensions.width !== 0 && (
+              <Map uai={uai} {...mapDimensions} />
+            )}
           </Box>
         </Grid>
       </Stack>

@@ -1,4 +1,5 @@
 import { Flex, Select, Text } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
 import { Voie, VoieEnum } from "shared";
 
 import { Multiselect } from "@/components/Multiselect";
@@ -37,6 +38,18 @@ export const FiltersSection = ({
   handleFilters: (key: keyof Filters, value: string[]) => void;
   filterTracker: (filterName: keyof Filters) => () => void;
 }) => {
+  const trackEvent = usePlausible();
+
+  const onChangeFilter = (type: keyof Filters, value: string[]) => {
+    handleFilters(type, value);
+    trackEvent("analyse-detailee-etablissement:interaction", {
+      props: {
+        type: "filter",
+        value: value,
+      },
+    });
+  };
+
   return (
     <Flex gap={"16px"} mt={"24px"} mb={"-12px"}>
       <Flex direction={"column"} gap={"8px"}>
@@ -47,7 +60,7 @@ export const FiltersSection = ({
           onClose={filterTracker("codeNiveauDiplome")}
           width="24rem"
           variant={"newInput"}
-          onChange={(selected) => handleFilters("codeNiveauDiplome", selected)}
+          onChange={(selected) => onChangeFilter("codeNiveauDiplome", selected)}
           options={filtersData?.diplomes ?? []}
           value={filters.codeNiveauDiplome ?? []}
           size="md"
@@ -62,7 +75,7 @@ export const FiltersSection = ({
         </Text>
         <Select
           value={filters.voie?.[0] ?? "all"}
-          onChange={(e) => handleFilters("voie", [e.target.value])}
+          onChange={(e) => onChangeFilter("voie", [e.target.value])}
           width="24rem"
         >
           {extractVoieOptions(filtersData?.voies).map((option) => (
