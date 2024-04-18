@@ -32,46 +32,27 @@ export const DisciplinesReconversionRHField = ({
     !!discipline2ReconversionRH
   );
 
-  if (!visible) return null;
-
   return (
-    <Flex flex={1}>
-      <FormControl
-        className={className}
-        isInvalid={
-          !!errors.discipline1ReconversionRH ||
-          !!errors.discipline2ReconversionRH
-        }
-      >
-        <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
-        <Flex direction={"row"} gap={2}>
-          <Controller
-            name="discipline1ReconversionRH"
-            control={control}
-            rules={{ required: "Ce champ est obligatoire" }}
-            render={({ field: { onChange, value, name } }) => (
-              <DisciplineAutocompleteInput
-                name={name}
-                active={!disabled}
-                inError={!!errors.discipline1ReconversionRH}
-                defaultValue={{ label: value, value: value ?? "" }}
-                onChange={(v) => {
-                  onChange(v?.value);
-                }}
-              />
-            )}
-          />
-
-          {hasDoubleDiscipline ? (
+    visible && (
+      <Flex flex={1}>
+        <FormControl
+          className={className}
+          isInvalid={
+            !!errors.discipline1ReconversionRH ||
+            !!errors.discipline2ReconversionRH
+          }
+        >
+          <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
+          <Flex direction={"row"} gap={2}>
             <Controller
-              name="discipline2ReconversionRH"
+              name="discipline1ReconversionRH"
               control={control}
               rules={{ required: "Ce champ est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
                 <DisciplineAutocompleteInput
                   name={name}
                   active={!disabled}
-                  inError={!!errors.discipline2ReconversionRH}
+                  inError={!!errors.discipline1ReconversionRH}
                   defaultValue={{ label: value, value: value ?? "" }}
                   onChange={(v) => {
                     onChange(v?.value);
@@ -79,27 +60,46 @@ export const DisciplinesReconversionRHField = ({
                 />
               )}
             />
-          ) : (
-            <Button
-              w={56}
-              leftIcon={<AddIcon />}
-              onClick={() => setDoubleDiscipline(true)}
-            >
-              Ajouter une discipline
-            </Button>
+
+            {hasDoubleDiscipline ? (
+              <Controller
+                name="discipline2ReconversionRH"
+                control={control}
+                rules={{ required: "Ce champ est obligatoire" }}
+                render={({ field: { onChange, value, name } }) => (
+                  <DisciplineAutocompleteInput
+                    name={name}
+                    active={!disabled}
+                    inError={!!errors.discipline2ReconversionRH}
+                    defaultValue={{ label: value, value: value ?? "" }}
+                    onChange={(v) => {
+                      onChange(v?.value);
+                    }}
+                  />
+                )}
+              />
+            ) : (
+              <Button
+                w={56}
+                leftIcon={<AddIcon />}
+                onClick={() => setDoubleDiscipline(true)}
+              >
+                Ajouter une discipline
+              </Button>
+            )}
+          </Flex>
+          {errors.discipline1ReconversionRH && (
+            <FormErrorMessage>
+              {errors.discipline1ReconversionRH.message}
+            </FormErrorMessage>
           )}
-        </Flex>
-        {errors.discipline1ReconversionRH && (
-          <FormErrorMessage>
-            {errors.discipline1ReconversionRH.message}
-          </FormErrorMessage>
-        )}
-        {errors.discipline2ReconversionRH && (
-          <FormErrorMessage>
-            {errors.discipline2ReconversionRH.message}
-          </FormErrorMessage>
-        )}
-      </FormControl>
-    </Flex>
+          {errors.discipline2ReconversionRH && (
+            <FormErrorMessage>
+              {errors.discipline2ReconversionRH.message}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+      </Flex>
+    )
   );
 };

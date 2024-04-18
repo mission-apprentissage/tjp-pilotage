@@ -1,6 +1,5 @@
 import {
   chakra,
-  Collapse,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -25,69 +24,69 @@ export const NbFormationRHField = chakra(
     const visible = watch("formationRH");
 
     return (
-      <Collapse in={visible} unmountOnExit>
+      visible && (
         <FormControl className={className} isInvalid={!!errors.nbFormationRH}>
           <FormLabel>Combien de formations ?</FormLabel>
-          {visible && (
-            <Controller
-              name="nbFormationRH"
-              shouldUnregister
-              control={control}
-              rules={{
-                required: "Le champ est obligatoire",
-              }}
-              render={({ field: { onChange, value, onBlur, ref, name } }) => (
-                <NumberInput
-                  step={1}
-                  flex={1}
-                  isReadOnly={disabled}
-                  onChange={onChange}
-                  ref={ref}
-                  name={name}
-                  isRequired={false}
-                  key={value}
-                  onBlur={onBlur}
-                  value={value}
-                  min={0}
-                  defaultValue={0}
-                  size={"md"}
-                  w={56}
-                >
-                  <NumberInputField
-                    textAlign={"end"}
-                    fontSize={"16px"}
-                    fontWeight={700}
-                    borderWidth={"1px"}
-                    borderColor={"gray.200"}
-                    borderRadius={4}
-                    _readOnly={{
-                      opacity: "0.5",
+          <Controller
+            name="nbFormationRH"
+            shouldUnregister
+            control={control}
+            rules={{
+              required: "Le champ est obligatoire",
+            }}
+            render={({ field: { onChange, value, onBlur, ref, name } }) => (
+              <NumberInput
+                step={1}
+                flex={1}
+                isReadOnly={disabled}
+                onChange={onChange}
+                ref={ref}
+                name={name}
+                isRequired={false}
+                key={value}
+                onBlur={onBlur}
+                value={value}
+                min={0}
+                defaultValue={0}
+                size={"md"}
+                w={56}
+                bgColor={"white"}
+              >
+                <NumberInputField
+                  textAlign={"end"}
+                  fontSize={"16px"}
+                  fontWeight={700}
+                  borderWidth={"1px"}
+                  borderColor={"gray.200"}
+                  borderRadius={4}
+                  _readOnly={{
+                    opacity: "0.5",
+                    cursor: "not-allowed",
+                  }}
+                />
+                <NumberInputStepper>
+                  <NumberIncrementStepper
+                    opacity={disabled ? "0.3" : "1"}
+                    cursor={disabled ? "not-allowed" : "pointer"}
+                  />
+                  <NumberDecrementStepper
+                    opacity={disabled ? "0.3" : "1"}
+                    cursor={disabled ? "not-allowed" : "pointer"}
+                    _disabled={{
+                      opacity: "0.3",
                       cursor: "not-allowed",
                     }}
                   />
-                  <NumberInputStepper>
-                    <NumberIncrementStepper
-                      opacity={disabled ? "0.3" : "1"}
-                      cursor={disabled ? "not-allowed" : "pointer"}
-                    />
-                    <NumberDecrementStepper
-                      opacity={disabled ? "0.3" : "1"}
-                      cursor={disabled ? "not-allowed" : "pointer"}
-                      _disabled={{
-                        opacity: "0.3",
-                        cursor: "not-allowed",
-                      }}
-                    />
-                  </NumberInputStepper>
-                </NumberInput>
-              )}
-            />
-          )}
+                </NumberInputStepper>
+              </NumberInput>
+            )}
+          />
+
           {errors.nbFormationRH && (
             <FormErrorMessage>{errors.nbFormationRH.message}</FormErrorMessage>
           )}
         </FormControl>
-      </Collapse>
+      )
     );
   }
 );

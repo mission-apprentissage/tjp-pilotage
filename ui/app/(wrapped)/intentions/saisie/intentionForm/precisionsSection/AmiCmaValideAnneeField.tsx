@@ -1,6 +1,5 @@
 import {
   chakra,
-  Collapse,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -21,37 +20,36 @@ export const AmiCmaValideAnneeField = chakra(
     const visible = watch("amiCmaValide") && watch("amiCma");
 
     return (
-      <Collapse in={visible} unmountOnExit>
+      visible && (
         <FormControl
           className={className}
           isInvalid={!!errors.amiCmaValideAnnee}
         >
           <FormLabel>En quelle année a t-il été validé ?</FormLabel>
-          {visible && (
-            <Input
-              w="xs"
-              {...register("amiCmaValideAnnee", {
-                shouldUnregister: true,
-                disabled: disabled,
-                required:
-                  "Veuillez préciser l'année de validation de votre financement AMI/CMA",
-                validate: (value) => {
-                  if (value === undefined)
-                    return "Veuillez préciser l'année de validation de votre financement AMI/CMA";
-                  if (new RegExp(/^[0-9]{4}$/).test(value) === false)
-                    return "Veuillez remplir une année valide.";
-                },
-              })}
-            />
-          )}
-
+          <Input
+            w="xs"
+            bgColor={"white"}
+            border={"1px solid"}
+            {...register("amiCmaValideAnnee", {
+              shouldUnregister: true,
+              disabled: disabled,
+              required:
+                "Veuillez préciser l'année de validation de votre financement AMI/CMA",
+              validate: (value) => {
+                if (value === undefined)
+                  return "Veuillez préciser l'année de validation de votre financement AMI/CMA";
+                if (new RegExp(/^[0-9]{4}$/).test(value) === false)
+                  return "Veuillez remplir une année valide.";
+              },
+            })}
+          />
           {errors.amiCmaValideAnnee && (
             <FormErrorMessage>
               {errors.amiCmaValideAnnee.message}
             </FormErrorMessage>
           )}
         </FormControl>
-      </Collapse>
+      )
     );
   }
 );
