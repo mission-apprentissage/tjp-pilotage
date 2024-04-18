@@ -18,3 +18,19 @@ export const isDemandeCampagneEnCours = (
       .where("campagne.statut", "=", CampagneStatutEnum["en cours"])
   );
 };
+
+export const isDemandeExpeCampagneEnCours = (
+  eb: ExpressionBuilder<DB, "demandeExpe">,
+  alias?: string
+) => {
+  const tableName = alias ? alias : "demandeExpe";
+
+  return eb(
+    sql<string>`${sql.table(tableName)}."campagneId"`,
+    "=",
+    eb
+      .selectFrom("campagne")
+      .select("id")
+      .where("campagne.statut", "=", CampagneStatutEnum["en cours"])
+  );
+};

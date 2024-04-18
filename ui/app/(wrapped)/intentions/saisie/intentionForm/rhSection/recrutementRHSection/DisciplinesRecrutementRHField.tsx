@@ -1,6 +1,7 @@
 import { AddIcon } from "@chakra-ui/icons";
 import {
   Button,
+  chakra,
   Flex,
   FormControl,
   FormErrorMessage,
@@ -12,27 +13,24 @@ import { Controller, useFormContext } from "react-hook-form";
 import { DisciplineAutocompleteInput } from "../../../components/DisciplineAutoComplete";
 import { IntentionForms } from "../../defaultFormValues";
 
-export const DisciplinesRecrutementRHField = ({
-  disabled,
-  className,
-}: {
-  disabled?: boolean;
-  className?: string;
-}) => {
-  const {
-    formState: { errors },
-    watch,
-    control,
-  } = useFormContext<IntentionForms>();
+export const DisciplinesRecrutementRHField = chakra(
+  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+    const {
+      formState: { errors },
+      watch,
+      control,
+    } = useFormContext<IntentionForms>();
 
-  const visible = watch("recrutementRH");
-  const discipline2RecrutementRH = watch("discipline2RecrutementRH");
+    const visible = watch("recrutementRH");
+    const discipline2RecrutementRH = watch("discipline2RecrutementRH");
 
-  const [hasDoubleDiscipline, setDoubleDiscipline] = useState<boolean>(
-    !!discipline2RecrutementRH
-  );
-  return (
-    visible && (
+    const [hasDoubleDiscipline, setDoubleDiscipline] = useState<boolean>(
+      !!discipline2RecrutementRH
+    );
+
+    if (!visible) return null;
+
+    return (
       <Flex flex={1}>
         <FormControl
           className={className}
@@ -99,6 +97,6 @@ export const DisciplinesRecrutementRHField = ({
           )}
         </FormControl>
       </Flex>
-    )
-  );
-};
+    );
+  }
+);

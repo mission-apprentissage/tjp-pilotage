@@ -22,72 +22,68 @@ export const NbRecrutementRHField = chakra(
     } = useFormContext<IntentionForms>();
 
     const visible = watch("recrutementRH");
-
+    if (!visible) return null;
     return (
-      visible && (
-        <FormControl className={className} isInvalid={!!errors.nbRecrutementRH}>
-          <FormLabel>Combien de recrutements ?</FormLabel>
-          <Controller
-            name="nbRecrutementRH"
-            shouldUnregister
-            control={control}
-            rules={{
-              required: "Le champ est obligatoire",
-            }}
-            render={({ field: { onChange, value, onBlur, ref, name } }) => (
-              <NumberInput
-                step={1}
-                flex={1}
-                isReadOnly={disabled}
-                onChange={onChange}
-                ref={ref}
-                name={name}
-                isRequired={false}
-                key={name}
-                onBlur={onBlur}
-                value={value}
-                min={0}
-                defaultValue={0}
-                size={"md"}
-                w={56}
-                bgColor={"white"}
-              >
-                <NumberInputField
-                  textAlign={"end"}
-                  fontSize={"16px"}
-                  fontWeight={700}
-                  borderWidth={"1px"}
-                  borderColor={"gray.200"}
-                  borderRadius={4}
-                  _readOnly={{
-                    opacity: "0.5",
+      <FormControl className={className} isInvalid={!!errors.nbRecrutementRH}>
+        <FormLabel>Combien de recrutements ?</FormLabel>
+        <Controller
+          name="nbRecrutementRH"
+          shouldUnregister
+          control={control}
+          rules={{
+            required: "Le champ est obligatoire",
+          }}
+          render={({ field: { onChange, value, onBlur, ref, name } }) => (
+            <NumberInput
+              step={1}
+              flex={1}
+              isReadOnly={disabled}
+              onChange={onChange}
+              ref={ref}
+              name={name}
+              isRequired={false}
+              key={name}
+              onBlur={onBlur}
+              value={value}
+              min={0}
+              defaultValue={0}
+              size={"md"}
+              w={56}
+              bgColor={"white"}
+            >
+              <NumberInputField
+                textAlign={"end"}
+                fontSize={"16px"}
+                fontWeight={700}
+                borderWidth={"1px"}
+                borderColor={"gray.200"}
+                borderRadius={4}
+                _readOnly={{
+                  opacity: "0.5",
+                  cursor: "not-allowed",
+                }}
+              />
+              <NumberInputStepper>
+                <NumberIncrementStepper
+                  opacity={disabled ? "0.3" : "1"}
+                  cursor={disabled ? "not-allowed" : "pointer"}
+                />
+                <NumberDecrementStepper
+                  opacity={disabled ? "0.3" : "1"}
+                  cursor={disabled ? "not-allowed" : "pointer"}
+                  _disabled={{
+                    opacity: "0.3",
                     cursor: "not-allowed",
                   }}
                 />
-                <NumberInputStepper>
-                  <NumberIncrementStepper
-                    opacity={disabled ? "0.3" : "1"}
-                    cursor={disabled ? "not-allowed" : "pointer"}
-                  />
-                  <NumberDecrementStepper
-                    opacity={disabled ? "0.3" : "1"}
-                    cursor={disabled ? "not-allowed" : "pointer"}
-                    _disabled={{
-                      opacity: "0.3",
-                      cursor: "not-allowed",
-                    }}
-                  />
-                </NumberInputStepper>
-              </NumberInput>
-            )}
-          />
-          {errors.nbRecrutementRH && (
-            <FormErrorMessage>
-              {errors.nbRecrutementRH.message}
-            </FormErrorMessage>
+              </NumberInputStepper>
+            </NumberInput>
           )}
-        </FormControl>
-      )
+        />
+        {errors.nbRecrutementRH && (
+          <FormErrorMessage>{errors.nbRecrutementRH.message}</FormErrorMessage>
+        )}
+      </FormControl>
     );
   }
 );
