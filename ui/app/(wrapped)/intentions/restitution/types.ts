@@ -1,4 +1,4 @@
-import { client } from "../../../../api.client";
+import { client } from "@/api.client";
 
 export type DemandesRestitutionIntentions =
   (typeof client.infer)["[GET]/restitution-intentions/demandes"];

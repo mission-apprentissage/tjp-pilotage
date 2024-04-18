@@ -12,8 +12,6 @@ import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeColoration } from "shared/demandeValidators/validators";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-
 import {
   getMotifsTypeDemande,
   MotifLabel,
@@ -24,6 +22,7 @@ import {
   isTypeFermeture,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
+import { IntentionForms } from "../defaultFormValues";
 
 const getMotifOptions = (typeDemande: TypeDemande) => {
   return Object.entries(MOTIFS_LABELS)
@@ -79,7 +78,7 @@ export const MotifField = chakra(
                       ref={ref}
                       disabled={disabled}
                       name={name}
-                      key={value}
+                      key={`${name}_${label}`}
                       onBlur={onBlur}
                       value={value}
                       _checked={{ fontWeight: "bold !important" }}
@@ -102,8 +101,7 @@ export const MotifField = chakra(
                             <Checkbox
                               ref={ref}
                               disabled={disabled}
-                              name={name}
-                              key={value}
+                              key={`${name}_${label}_coloration`}
                               onBlur={onBlur}
                               value={value}
                               _checked={{ fontWeight: "bold !important" }}

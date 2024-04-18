@@ -26,21 +26,15 @@ import { FormProvider, useForm } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import {
-  IntentionForms,
-  PartialIntentionForms,
-} from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import {
-  SCROLL_OFFSET,
-  STICKY_OFFSET,
-} from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import { client } from "@/api.client";
+import { Breadcrumb } from "@/components/Breadcrumb";
 
-import { client } from "../../../../../api.client";
-import { Breadcrumb } from "../../../../../components/Breadcrumb";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
+import { Campagne } from "../types";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
+import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
 
 export const CampagneContext = createContext<{

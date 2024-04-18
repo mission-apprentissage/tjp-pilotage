@@ -1,4 +1,4 @@
-import { Box, Button, Flex, Img } from "@chakra-ui/react";
+import { Box, Button, Flex } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 
@@ -65,34 +65,6 @@ export const MenuFormulaire = ({
           leftIcon={<Icon icon="ri:parent-line" color="black" />}
         >
           Ressources Humaines
-        </Button>
-        <Button
-          onClick={() => jumpToAnchor("travauxEtEquipements")}
-          width={"100%"}
-          justifyContent={"start"}
-          fontSize={16}
-          fontWeight={700}
-          px={4}
-          py={3}
-          bg={"bluefrance.975"}
-          _hover={{ bg: "blueecume.925_hover" }}
-          leftIcon={<Img src="/icons/travauxEtEquipements.svg" />}
-        >
-          Travaux et équipements
-        </Button>
-        <Button
-          onClick={() => jumpToAnchor("internatEtRestauration")}
-          width={"100%"}
-          justifyContent={"start"}
-          fontSize={16}
-          fontWeight={700}
-          px={4}
-          py={3}
-          bg={"bluefrance.975"}
-          _hover={{ bg: "blueecume.925_hover" }}
-          leftIcon={<Icon icon="ri:list-unordered" color="black" />}
-        >
-          Internat et restauration
         </Button>
         <Button
           onClick={() => jumpToAnchor("commentaireEtPiecesJointes")}

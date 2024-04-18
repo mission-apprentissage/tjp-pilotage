@@ -2,7 +2,7 @@ import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncCreatableSelect from "react-select/async-creatable";
 
-import { client } from "../../../../../api.client";
+import { client } from "@/api.client";
 
 export const DisciplineAutocompleteInput = ({
   name,

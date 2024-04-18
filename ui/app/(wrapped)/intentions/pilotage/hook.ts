@@ -3,8 +3,8 @@ import { useCallback, useState } from "react";
 import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
+import { useStateParams } from "@/utils/useFilters";
 
-import { useStateParams } from "../../../../utils/useFilters";
 import {
   FiltersEventsStatsPilotageIntentions,
   FiltersStatsPilotageIntentions,

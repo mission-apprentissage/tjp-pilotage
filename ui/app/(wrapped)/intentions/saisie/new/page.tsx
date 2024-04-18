@@ -3,8 +3,9 @@
 import { useSearchParams } from "next/navigation";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
-import { client } from "../../../../../api.client";
-import { GuardPermission } from "../../../../../utils/security/GuardPermission";
+import { client } from "@/api.client";
+import { GuardPermission } from "@/utils/security/GuardPermission";
+
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 export default () => {
