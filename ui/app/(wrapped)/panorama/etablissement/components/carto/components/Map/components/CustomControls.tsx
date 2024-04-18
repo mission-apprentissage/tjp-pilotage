@@ -1,3 +1,4 @@
+import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import { useMap } from "react-map-gl/maplibre";
 
@@ -33,6 +34,7 @@ export const MAP_IMAGES = {
 export const CustomControls = () => {
   const { current: map } = useMap();
   const { etablissementMap, setBbox, setMap } = useEtablissementMapContext();
+  const trackEvent = usePlausible();
 
   const loadImageOnMap = async (image: { path: string; name: string }) => {
     if (!map?.isStyleLoaded()) {
@@ -78,6 +80,7 @@ export const CustomControls = () => {
   // Lors du chargement du filtre / rechargement d'une nouvelle liste
   useEffect(() => {
     if (map !== undefined) {
+      map.off("moveend", onZoomEnd);
       if (etablissementMap !== undefined) {
         map.setCenter({
           lng: etablissementMap.center.lng,
@@ -92,6 +95,7 @@ export const CustomControls = () => {
         zoom,
         animate: false,
       });
+      map.on("moveend", onZoomEnd);
     }
   }, [etablissementMap]);
 
@@ -103,6 +107,11 @@ export const CustomControls = () => {
         minLat: bounds.toArray()[0][1],
         maxLng: bounds.toArray()[1][0],
         maxLat: bounds.toArray()[1][1],
+      });
+      trackEvent("cartographie-etablissement:interaction", {
+        props: {
+          type: "cartographie-zoom",
+        },
       });
     }
   };

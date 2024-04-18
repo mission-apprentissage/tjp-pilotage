@@ -8,6 +8,7 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import _ from "lodash";
+import { usePlausible } from "next-plausible";
 import { CURRENT_RENTREE } from "shared";
 
 import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/panorama/etablissement/components/analyse-detaillee/formatData";
@@ -40,10 +41,21 @@ export const ListeFormations = ({
   offre: string;
   setOffre: (offre: string) => void;
 }) => {
+  const trackEvent = usePlausible();
   const formattedFormations = _.chain(formations)
     .orderBy("ordreFormation", "desc")
     .groupBy("libelleNiveauDiplome")
     .value();
+
+  const onClick = (selectedOffre: string) => {
+    setOffre(selectedOffre);
+    trackEvent("analyse-detailee-etablissement:interaction", {
+      props: {
+        type: "liste-formations-click",
+        selected_offre: selectedOffre,
+      },
+    });
+  };
 
   return (
     <Box
@@ -76,7 +88,7 @@ export const ListeFormations = ({
                   p={"8px 16px 8px 8px"}
                   cursor={"pointer"}
                   onClick={() => {
-                    setOffre(formation.offre);
+                    onClick(formation.offre);
                   }}
                   bgColor={offre === formation.offre ? "bluefrance.925" : ""}
                   _hover={{
