@@ -34,46 +34,27 @@ export const DisciplinesProfesseurAssocieRHField = ({
     !!discipline2ProfesseurAssocieRH
   );
 
-  if (!visible) return null;
-
   return (
-    <Flex flex={1}>
-      <FormControl
-        className={className}
-        isInvalid={
-          !!errors.discipline1ProfesseurAssocieRH ||
-          !!errors.discipline2ProfesseurAssocieRH
-        }
-      >
-        <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
-        <Flex direction={"row"} gap={2}>
-          <Controller
-            name="discipline1ProfesseurAssocieRH"
-            control={control}
-            rules={{ required: "Ce champ est obligatoire" }}
-            render={({ field: { onChange, value, name } }) => (
-              <DisciplineAutocompleteInput
-                name={name}
-                active={!disabled}
-                inError={!!errors.discipline1ProfesseurAssocieRH}
-                defaultValue={{ label: value, value: value ?? "" }}
-                onChange={(v) => {
-                  onChange(v?.value);
-                }}
-              />
-            )}
-          />
-
-          {hasDoubleDiscipline ? (
+    visible && (
+      <Flex flex={1}>
+        <FormControl
+          className={className}
+          isInvalid={
+            !!errors.discipline1ProfesseurAssocieRH ||
+            !!errors.discipline2ProfesseurAssocieRH
+          }
+        >
+          <FormLabel>Dans quelle(s) discipline(s) ?</FormLabel>
+          <Flex direction={"row"} gap={2}>
             <Controller
-              name="discipline2ProfesseurAssocieRH"
+              name="discipline1ProfesseurAssocieRH"
               control={control}
               rules={{ required: "Ce champ est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
                 <DisciplineAutocompleteInput
                   name={name}
                   active={!disabled}
-                  inError={!!errors.discipline2ProfesseurAssocieRH}
+                  inError={!!errors.discipline1ProfesseurAssocieRH}
                   defaultValue={{ label: value, value: value ?? "" }}
                   onChange={(v) => {
                     onChange(v?.value);
@@ -81,27 +62,46 @@ export const DisciplinesProfesseurAssocieRHField = ({
                 />
               )}
             />
-          ) : (
-            <Button
-              w={56}
-              leftIcon={<AddIcon />}
-              onClick={() => setDoubleDiscipline(true)}
-            >
-              Ajouter une discipline
-            </Button>
+
+            {hasDoubleDiscipline ? (
+              <Controller
+                name="discipline2ProfesseurAssocieRH"
+                control={control}
+                rules={{ required: "Ce champ est obligatoire" }}
+                render={({ field: { onChange, value, name } }) => (
+                  <DisciplineAutocompleteInput
+                    name={name}
+                    active={!disabled}
+                    inError={!!errors.discipline2ProfesseurAssocieRH}
+                    defaultValue={{ label: value, value: value ?? "" }}
+                    onChange={(v) => {
+                      onChange(v?.value);
+                    }}
+                  />
+                )}
+              />
+            ) : (
+              <Button
+                w={56}
+                leftIcon={<AddIcon />}
+                onClick={() => setDoubleDiscipline(true)}
+              >
+                Ajouter une discipline
+              </Button>
+            )}
+          </Flex>
+          {errors.discipline1ProfesseurAssocieRH && (
+            <FormErrorMessage>
+              {errors.discipline1ProfesseurAssocieRH.message}
+            </FormErrorMessage>
           )}
-        </Flex>
-        {errors.discipline1ProfesseurAssocieRH && (
-          <FormErrorMessage>
-            {errors.discipline1ProfesseurAssocieRH.message}
-          </FormErrorMessage>
-        )}
-        {errors.discipline2ProfesseurAssocieRH && (
-          <FormErrorMessage>
-            {errors.discipline2ProfesseurAssocieRH.message}
-          </FormErrorMessage>
-        )}
-      </FormControl>
-    </Flex>
+          {errors.discipline2ProfesseurAssocieRH && (
+            <FormErrorMessage>
+              {errors.discipline2ProfesseurAssocieRH.message}
+            </FormErrorMessage>
+          )}
+        </FormControl>
+      </Flex>
+    )
   );
 };

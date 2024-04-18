@@ -1,7 +1,15 @@
 "use client";
 
 import { CheckIcon } from "@chakra-ui/icons";
-import { Box, Button, Collapse, Container, useToast } from "@chakra-ui/react";
+import {
+  Box,
+  Button,
+  Container,
+  Grid,
+  GridItem,
+  useToast,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { AxiosError } from "axios";
 import { usePathname, useRouter } from "next/navigation";
 import {
@@ -22,10 +30,16 @@ import {
   IntentionForms,
   PartialIntentionForms,
 } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import {
+  SCROLL_OFFSET,
+  STICKY_OFFSET,
+} from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
 import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { client } from "../../../../../api.client";
 import { Breadcrumb } from "../../../../../components/Breadcrumb";
+import { Conseils } from "../components/Conseils";
+import { MenuFormulaire } from "../components/MenuFormulaire";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { InformationsBlock } from "./InformationsBlock";
 
@@ -122,6 +136,7 @@ export const IntentionForm = ({
   };
 
   const [step, setStep] = useState(isCFDUaiSectionValid(getValues()) ? 2 : 1);
+  const step1Ref = useRef<HTMLDivElement>(null);
   const step2Ref = useRef<HTMLDivElement>(null);
 
   const onEditUaiCfdSection = () => setStep(1);
@@ -145,12 +160,30 @@ export const IntentionForm = ({
   const { setCampagne } = useContext(CampagneContext);
 
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
+
+  const typeDemandeRef = useRef<HTMLDivElement>(null);
+  const motifsEtPrecisionsRef = useRef<HTMLDivElement>(null);
+  const ressourcesHumainesRef = useRef<HTMLDivElement>(null);
+  const travauxEtEquipementsRef = useRef<HTMLDivElement>(null);
+  const internatEtRestaurationRef = useRef<HTMLDivElement>(null);
+  const commentaireEtPiecesJointesRef = useRef<HTMLDivElement>(null);
+
+  const anchorsRefs = {
+    typeDemande: typeDemandeRef,
+    motifsEtPrecisions: motifsEtPrecisionsRef,
+    ressourcesHumaines: ressourcesHumainesRef,
+    travauxEtEquipements: travauxEtEquipementsRef,
+    internatEtRestauration: internatEtRestaurationRef,
+    commentaireEtPiecesJointes: commentaireEtPiecesJointesRef,
+  } as Record<string, React.RefObject<HTMLDivElement>>;
+
   return (
     <>
       <CampagneContext.Provider value={campagneValue}>
         <FormProvider {...form}>
           <Box
-            flex={1}
+            ref={step1Ref}
+            scrollMarginTop={SCROLL_OFFSET}
             bg="blueecume.925"
             as="form"
             noValidate
@@ -194,48 +227,97 @@ export const IntentionForm = ({
                 statusComponentRef={statusComponentRef}
                 campagne={campagne}
               />
-              <Collapse in={step === 2} animateOpacity ref={step2Ref}>
-                <InformationsBlock
-                  formId={formId}
-                  disabled={isFormDisabled}
-                  errors={errors}
-                  campagne={campagne}
-                  footerActions={
-                    <>
-                      <Box justifyContent={"center"} ref={statusComponentRef}>
-                        <Button
-                          isDisabled={
-                            disabled ||
-                            isActionsDisabled ||
-                            campagne?.statut !== CampagneStatutEnum["en cours"]
-                          }
-                          isLoading={isSubmitting}
-                          variant="primary"
-                          onClick={handleSubmit((values) =>
-                            submitDemande({
-                              body: {
-                                demande: {
-                                  numero: formId,
-                                  ...values,
-                                  statut: formId
-                                    ? values.statut
-                                    : DemandeStatutEnum.draft,
-                                  campagneId: values.campagneId ?? campagne?.id,
-                                },
-                              },
-                            })
-                          )}
-                          leftIcon={<CheckIcon />}
-                        >
-                          {formId
-                            ? "Sauvegarder les modifications"
-                            : "Enregistrer le projet de demande"}
-                        </Button>
+              {step === 2 && (
+                <Box ref={step2Ref}>
+                  <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
+                    <GridItem>
+                      <Box
+                        position="sticky"
+                        z-index="sticky"
+                        top={STICKY_OFFSET}
+                        textAlign={"start"}
+                      >
+                        <MenuFormulaire refs={anchorsRefs} />
+                        <Box position="relative">
+                          <Conseils />
+                        </Box>
                       </Box>
-                    </>
-                  }
-                />
-              </Collapse>
+                    </GridItem>
+                    <GridItem colSpan={2}>
+                      <InformationsBlock
+                        refs={anchorsRefs}
+                        formId={formId}
+                        disabled={isFormDisabled}
+                        errors={errors}
+                        campagne={campagne}
+                        footerActions={
+                          <>
+                            <Box
+                              justifyContent={"center"}
+                              ref={statusComponentRef}
+                            >
+                              <Button
+                                isDisabled={
+                                  disabled ||
+                                  isActionsDisabled ||
+                                  campagne?.statut !==
+                                    CampagneStatutEnum["en cours"]
+                                }
+                                isLoading={isSubmitting}
+                                variant="primary"
+                                onClick={handleSubmit((values) =>
+                                  submitDemande({
+                                    body: {
+                                      demande: {
+                                        numero: formId,
+                                        ...values,
+                                        statut: formId
+                                          ? values.statut
+                                          : DemandeStatutEnum.draft,
+                                        campagneId:
+                                          values.campagneId ?? campagne?.id,
+                                      },
+                                    },
+                                  })
+                                )}
+                                leftIcon={<CheckIcon />}
+                              >
+                                {formId
+                                  ? "Sauvegarder les modifications"
+                                  : "Enregistrer le projet de demande"}
+                              </Button>
+                            </Box>
+                          </>
+                        }
+                      />
+                      <Button
+                        variant={"ghost"}
+                        mt={6}
+                        borderRadius={"unset"}
+                        borderBottom={"1px solid"}
+                        borderColor={"bluefrance.113"}
+                        color={"bluefrance.113"}
+                        _hover={{
+                          backgroundColor: "unset",
+                        }}
+                        p={1}
+                        h="fit-content"
+                        fontWeight={400}
+                        fontSize={16}
+                        leftIcon={<Icon icon="ri:arrow-up-fill" />}
+                        onClick={() =>
+                          step1Ref.current?.scrollIntoView({
+                            behavior: "smooth",
+                            block: "start",
+                          })
+                        }
+                      >
+                        Haut de page
+                      </Button>
+                    </GridItem>
+                  </Grid>
+                </Box>
+              )}
             </Container>
           </Box>
         </FormProvider>

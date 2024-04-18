@@ -1,48 +1,43 @@
-import { Divider, Fade, Flex, Heading } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import { Divider, Flex, Heading } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
+import { RefObject } from "react";
 
-import { getTypeDemandeExemple } from "../../../utils/typeDemandeUtils";
-import { InfoBox } from "../../components/InfoBox";
+import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
+
 import { Campagne } from "../../types";
-import { IntentionForms } from "../defaultFormValues";
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
 export const TypeDemandeSection = ({
   disabled,
   campagne,
+  typeDemandeRef,
 }: {
   disabled: boolean;
   campagne?: Campagne;
+  typeDemandeRef: RefObject<HTMLDivElement>;
 }) => {
-  const { watch } = useFormContext<IntentionForms>();
-
-  const [typeDemande] = watch(["typeDemande"]);
-
   return (
-    <>
+    <Flex
+      ref={typeDemandeRef}
+      scrollMarginTop={SCROLL_OFFSET}
+      direction={"column"}
+      gap={6}
+    >
       <Heading as="h2" fontSize="xl">
-        Type de demande
+        <Flex direction={"row"} gap={3}>
+          <Icon
+            icon="ri:article-line"
+            color="black"
+            style={{ marginTop: "auto" }}
+          />
+          Type de demande
+        </Flex>
       </Heading>
-      <Divider pt="4" mb="4" />
+      <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <Flex align="flex-start" flexDir={["column", null, "row"]} mt={6}>
-        <TypeDemandeField disabled={disabled} maxWidth="752px" mb="6" />
-        <Fade in={typeDemande != undefined}>
-          {typeDemande && (
-            <InfoBox
-              flex="1"
-              mt={[null, null, "10"]}
-              ml={[null, null, "6"]}
-              mb={[6, null, 0]}
-              maxW="440px"
-            >
-              {getTypeDemandeExemple(typeDemande)}
-            </InfoBox>
-          )}
-        </Fade>
-      </Flex>
+      <TypeDemandeField disabled={disabled} maxWidth="752px" />
       <CapaciteSection disabled={disabled} />
-    </>
+    </Flex>
   );
 };
