@@ -56,6 +56,13 @@ export interface DB extends Omit<DBSchema, "latestDemandeView"> {
     >;
   };
 }
+export interface DB extends Omit<DBSchema, "latestDemandeExpeView"> {
+  latestDemandeExpeView: {
+    [K in keyof DBSchema["latestDemandeExpeView"]]: NonNullable<
+      DBSchema["latestDemandeExpeView"][K]
+    >;
+  };
+}
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),

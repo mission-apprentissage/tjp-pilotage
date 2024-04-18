@@ -30,30 +30,16 @@ const MetadataSchema = z.object({
 });
 
 const DemandeSchema = z.object({
-  numero: z.string(),
-  createdAt: z.string(),
-  statut: z.enum(["draft", "submitted", "refused"]).optional(),
   uai: z.string(),
   cfd: z.string(),
   codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
+  // Type de demande
   rentreeScolaire: z.coerce.number(),
   typeDemande: z.string(),
-  compensationUai: z.string().optional(),
-  compensationCfd: z.string().optional(),
-  compensationCodeDispositif: z.string().optional(),
-  compensationRentreeScolaire: z.coerce.number().optional(),
-  motif: z.array(z.string()),
-  autreMotif: z.string().optional(),
-  besoinRH: z.array(z.string()).optional(),
-  autreBesoinRH: z.string().optional(),
-  libelleColoration: z.string().optional(),
   coloration: z.boolean(),
-  amiCma: z.boolean(),
-  amiCmaValide: z.boolean().optional(),
-  amiCmaValideAnnee: z.string().optional(),
-  poursuitePedagogique: z.boolean().optional(),
-  commentaire: z.string().optional(),
+  libelleColoration: z.string().optional(),
+  // Capacité
   mixte: z.boolean().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
@@ -61,8 +47,13 @@ const DemandeSchema = z.object({
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
-  motifRefus: z.array(z.string()).optional(),
-  autreMotifRefus: z.string().optional(),
+  // Précisions
+  motif: z.array(z.string()),
+  autreMotif: z.string().optional(),
+  amiCma: z.boolean(),
+  amiCmaValide: z.boolean().optional(),
+  amiCmaValideAnnee: z.string().optional(),
+  //RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),
   discipline1RecrutementRH: z.string().optional(),
@@ -79,12 +70,27 @@ const DemandeSchema = z.object({
   nbFormationRH: z.coerce.number().optional(),
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
+  // Observations / commentaires
+  commentaire: z.string().optional(),
+  // Statut
+  statut: z.enum(["draft", "submitted", "refused"]).optional(),
+  motifRefus: z.array(z.string()).optional(),
+  autreMotifRefus: z.string().optional(),
+  // Autre
+  numero: z.string(),
+  createdAt: z.string(),
   campagneId: z.string(),
   campagne: z.object({
     id: z.string().optional(),
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),
+  // Historique
+  poursuitePedagogique: z.boolean().optional(),
+  compensationUai: z.string().optional(),
+  compensationCfd: z.string().optional(),
+  compensationCodeDispositif: z.string().optional(),
+  compensationRentreeScolaire: z.coerce.number().optional(),
 });
 
 export const getDemandeSchema = {

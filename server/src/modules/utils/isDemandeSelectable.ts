@@ -61,3 +61,60 @@ export const isDemandeNotDeletedOrRefused = (
     DemandeStatutEnum.deleted,
     DemandeStatutEnum.refused,
   ]);
+
+export const isDemandeExpeSelectable =
+  ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
+  (eb: ExpressionBuilder<DB, "demandeExpe">) => {
+    const { filter, draftFilter } = getDemandeExpeSelectableFilters(user);
+    return eb.or([
+      eb.and([
+        eb("demandeExpe.statut", "=", DemandeStatutEnum.draft),
+        draftFilter.userId
+          ? eb("demandeExpe.createurId", "=", draftFilter.userId)
+          : sql<boolean>`true`,
+        draftFilter.codeRegion
+          ? eb("demandeExpe.codeRegion", "=", draftFilter.codeRegion)
+          : sql<boolean>`true`,
+      ]),
+      eb.and([
+        eb("demandeExpe.statut", "!=", DemandeStatutEnum.draft),
+        filter.codeRegion
+          ? eb("demandeExpe.codeRegion", "=", filter.codeRegion)
+          : sql<boolean>`true`,
+      ]),
+    ]);
+  };
+
+const getDemandeExpeSelectableFilters = (
+  user?: Pick<RequestUser, "id" | "role" | "codeRegion">
+) => {
+  if (!user) throw new Error("missing variable user");
+  const scope = getPermissionScope(user?.role, "intentions/lecture");
+  if (!scope?.draft) throw Boom.forbidden();
+
+  const draftFilter = {
+    national: {},
+    region: { codeRegion: user.codeRegion },
+    user: { userId: user.id },
+  }[scope?.draft];
+
+  const filter = {
+    national: {},
+    region: { codeRegion: user.codeRegion },
+    user: { userId: user.id },
+  }[scope?.default];
+
+  return { filter, draftFilter };
+};
+
+export const isDemandeExpeNotDeleted = (
+  eb: ExpressionBuilder<DB, "demandeExpe">
+) => eb("demandeExpe.statut", "!=", DemandeStatutEnum.deleted);
+
+export const isDemandeExpeNotDeletedOrRefused = (
+  eb: ExpressionBuilder<DB, "demandeExpe">
+) =>
+  eb("demandeExpe.statut", "not in", [
+    DemandeStatutEnum.deleted,
+    DemandeStatutEnum.refused,
+  ]);
