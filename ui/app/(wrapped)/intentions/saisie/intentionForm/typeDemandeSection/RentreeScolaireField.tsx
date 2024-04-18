@@ -8,9 +8,8 @@ import {
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-
 import { Campagne } from "../../types";
+import { IntentionForms } from "../defaultFormValues";
 
 export const RentreeScolaireField = ({
   disabled,

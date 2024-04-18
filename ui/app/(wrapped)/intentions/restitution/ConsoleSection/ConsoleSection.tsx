@@ -13,8 +13,9 @@ import {
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
-import { OrderIcon } from "../../../../../components/OrderIcon";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
+import { OrderIcon } from "@/components/OrderIcon";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import { TauxPressionScale } from "../../../components/TauxPressionScale";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import {

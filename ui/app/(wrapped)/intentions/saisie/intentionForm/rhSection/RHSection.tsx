@@ -3,10 +3,8 @@ import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { QuestionBlock } from "@/app/(wrapped)/intentions/saisie/components/QuestionBlock";
-import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/precisionsSection/MotifField";
-import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-
+import { QuestionBlock } from "../../components/QuestionBlock";
+import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
 import { DisciplinesFormationRHField } from "./formationRHSection/DisciplinesFormationRHField";
 import { FormationRHField } from "./formationRHSection/FormationRHField";
@@ -59,7 +57,6 @@ export const RHSection = ({
         <Heading as="h3" fontSize={"14px"} fontWeight={700} mb={2}>
           Sur le plan des ressources humaines, le projet implique t-il :{" "}
         </Heading>
-        <MotifField disabled={disabled} maxW="752px" mb="4" />
         <QuestionBlock active={!!recrutementRH}>
           <RecrutementRHField disabled={disabled} />
           <NbRecrutementRHField disabled={disabled} minW="20rem" />

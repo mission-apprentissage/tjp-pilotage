@@ -3,7 +3,7 @@ import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../api.client";
+import { client } from "@/api.client";
 
 export const cfdRegex = /^[0-9]{8}$/;
 

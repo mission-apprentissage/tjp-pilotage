@@ -3,9 +3,8 @@ import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeFermeture } from "shared/demandeValidators/validators";
 
-import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-
+import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
+import { CapaciteField } from "../../../components/CapaciteField";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const CapaciteScolaireColoreeField = chakra(

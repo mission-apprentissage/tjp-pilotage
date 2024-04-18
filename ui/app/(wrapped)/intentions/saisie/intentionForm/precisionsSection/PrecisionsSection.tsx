@@ -3,15 +3,14 @@ import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { AutreMotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/precisionsSection/AutreMotifField";
-import { MotifField } from "@/app/(wrapped)/intentions/saisie/intentionForm/precisionsSection/MotifField";
-import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
-
 import { QuestionBlock } from "../../components/QuestionBlock";
+import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
 import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
 import { AmiCmaValideField } from "./AmiCmaValideField";
+import { AutreMotifField } from "./AutreMotifField";
+import { MotifField } from "./MotifField";
 
 export const PrecisionsSection = ({
   disabled,
@@ -43,12 +42,12 @@ export const PrecisionsSection = ({
       <Divider pt="4" mb="4" />
       <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
         <MotifField disabled={disabled} maxW="752px" mb="4" />
+        <AutreMotifField disabled={disabled} mb="4" maxW="752px" />
         <QuestionBlock active={!!amiCma}>
           <AmiCmaField disabled={disabled} />
           <AmiCmaValideField disabled={disabled} />
           <AmiCmaValideAnneeField disabled={disabled} />
         </QuestionBlock>
-        <AutreMotifField disabled={disabled} mb="4" maxW="752px" />
       </Flex>
     </Flex>
   );

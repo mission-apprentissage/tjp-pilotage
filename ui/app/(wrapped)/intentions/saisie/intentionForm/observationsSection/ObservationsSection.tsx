@@ -2,8 +2,8 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 
-import { CommentaireField } from "@/app/(wrapped)/intentions/saisie/intentionForm/observationsSection/CommentaireField";
-import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
+import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
+import { CommentaireField } from "./CommentaireField";
 
 export const ObservationsSection = ({
   disabled,

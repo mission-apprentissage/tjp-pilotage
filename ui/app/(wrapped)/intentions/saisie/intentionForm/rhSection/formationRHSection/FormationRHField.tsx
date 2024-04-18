@@ -9,8 +9,8 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { toBoolean } from "@/app/(wrapped)/intentions/saisie/utils/toBoolean";
+import { toBoolean } from "../../../utils/toBoolean";
+import { IntentionForms } from "../../defaultFormValues";
 
 export const FormationRHField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

@@ -12,12 +12,13 @@ import {
 import { usePlausible } from "next-plausible";
 
 import { client } from "@/api.client";
-import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
-import { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+
+import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
+import { Campagnes, Filters } from "../types";
+import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 const EXPORT_LIMIT = 1_000_000;
 export const Header = ({

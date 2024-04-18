@@ -1,6 +1,7 @@
 import { NotionAPI } from "notion-client";
 
-import { GuardPermission } from "../../../../../utils/security/GuardPermission";
+import { GuardPermission } from "@/utils/security/GuardPermission";
+
 import { DocumentationClient } from "./page.client";
 
 export const revalidate = 60;

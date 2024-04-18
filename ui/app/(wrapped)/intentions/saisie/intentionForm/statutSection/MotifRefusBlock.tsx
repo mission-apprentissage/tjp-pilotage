@@ -12,13 +12,13 @@ import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
 import {
   getMotifsRefusTypeDemande,
   MotifRefusLabel,
   MOTIFS_REFUS_LABELS,
-} from "@/app/(wrapped)/intentions/utils/motifRefusDemandeUtils";
-import { TypeDemande } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+} from "../../../utils/motifRefusDemandeUtils";
+import { TypeDemande } from "../../../utils/typeDemandeUtils";
+import { IntentionForms } from "../defaultFormValues";
 
 export const MotifRefusBlock = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
@@ -86,7 +86,7 @@ export const MotifRefusBlock = chakra(
                         disabled={disabled}
                         name={name}
                         isRequired={false}
-                        key={value}
+                        key={`${name}_${label}`}
                         onBlur={onBlur}
                         value={value}
                       >
