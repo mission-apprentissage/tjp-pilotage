@@ -1,20 +1,7 @@
-import { ChevronDownIcon } from "@chakra-ui/icons";
-import {
-  Box,
-  Button,
-  Card,
-  CardBody,
-  Flex,
-  Heading,
-  Img,
-  Link,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
-  SimpleGrid,
-  Text,
-} from "@chakra-ui/react";
+import { Box, Heading, SimpleGrid } from "@chakra-ui/react";
+import { usePlausible } from "next-plausible";
+
+import { InfoCard } from "./InfoCard";
 
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",
@@ -32,88 +19,6 @@ const lienDares: Record<string, string> = {
   93: "https://dares.travail-emploi.gouv.fr/publication/paca-quelles-difficultes-de-recrutement-dici-2030",
 };
 
-const InfoCard = ({
-  title,
-  description,
-  links,
-  img,
-  sourceText,
-}: {
-  title: string;
-  description: string;
-  links: { label?: string; href: string } | { label?: string; href: string }[];
-  img: string;
-  sourceText?: string;
-}) => {
-  return (
-    <Card bg="grey.975">
-      <CardBody>
-        <Flex align="center" height="100%">
-          <Flex
-            direction="column"
-            align="flex-start"
-            mr="4"
-            flex={1}
-            height="100%"
-          >
-            <Heading as="h4" fontSize={20}>
-              {title}
-            </Heading>
-            <Text flex={1} mt={2}>
-              {description}
-            </Text>
-            {Array.isArray(links) && (
-              <Menu>
-                <MenuButton
-                  mt={4}
-                  as={Button}
-                  variant="primary"
-                  rightIcon={<ChevronDownIcon />}
-                >
-                  Accéder à l'information
-                </MenuButton>
-                <MenuList>
-                  {links.map(({ href, label }) => (
-                    <MenuItem
-                      _hover={{ textDecoration: "none" }}
-                      as={Link}
-                      href={href}
-                      key={href}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {label}
-                    </MenuItem>
-                  ))}
-                </MenuList>
-              </Menu>
-            )}
-            {!Array.isArray(links) && (
-              <Button
-                mt={4}
-                _hover={{ textDecoration: "none" }}
-                variant="primary"
-                as={Link}
-                href={links.href}
-                target="_blank"
-                rel="noreferrer"
-              >
-                Accéder à l'information
-              </Button>
-            )}
-            {sourceText && (
-              <Text mt="2" fontSize="xs" color="grey">
-                {sourceText}
-              </Text>
-            )}
-          </Flex>
-          <Img width={["70px", null, "160px"]} src={img} objectFit="contain" />
-        </Flex>
-      </CardBody>
-    </Card>
-  );
-};
-
 export const InfoSection = ({
   codeRegion,
   codeDepartement,
@@ -124,6 +29,21 @@ export const InfoSection = ({
   codeDepartement = codeDepartement?.startsWith("0")
     ? codeDepartement.substring(1)
     : codeDepartement;
+
+  const trackEvent = usePlausible();
+
+  const linkTracker = (filterName: string) => () => {
+    if (codeDepartement) {
+      trackEvent("panorama-departement:liens-utile", {
+        props: { filter_name: filterName },
+      });
+    }
+    if (codeRegion) {
+      trackEvent("panorama-region:liens-utile", {
+        props: { filter_name: filterName },
+      });
+    }
+  };
 
   return (
     <>
@@ -144,32 +64,43 @@ export const InfoSection = ({
       <Box pb={12} mt={2} as="section" maxWidth={"container.xl"}>
         <SimpleGrid spacing={3} columns={[1, null, 2]}>
           <InfoCard
-            title="Projection métiers 2030"
-            description="Retrouvez le dernier rapport de votre région"
-            links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
-            img="/phone_man.png"
-            sourceText="* Source: DARES"
-          />
-          <InfoCard
-            title="Métiers en tension 2021"
-            description="Retrouvez le dernier rapport de votre région"
+            title="Data emploi : les métiers"
+            description={`Consultez les métiers les plus recherchés par les recruteurs dans votre ${
+              codeDepartement ? "département" : "région"
+            }`}
             links={{
-              href: "https://dares.travail-emploi.gouv.fr/publication/les-tensions-sur-le-marche-du-travail-en-2021",
+              href: `https://dataemploi.pole-emploi.fr/metier/${
+                codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
+              }`,
             }}
             img="/looking_man.png"
-            sourceText="* Source: DARES"
+            sourceText="* Source: France Travail"
+            linkTracker={linkTracker}
           />
           <InfoCard
-            title="Data emploi"
-            description="Retrouvez les informations essentielles pour décrypter le marché du travail sur votre territoire"
+            title="Data emploi : les secteurs"
+            description={`Visualisez les secteurs les plus représentés dans votre ${
+              codeDepartement ? "département" : "région"
+            }`}
             links={{
-              href: `https://dataemploi.pole-emploi.fr/panorama/${
+              href: `https://dataemploi.pole-emploi.fr/secteur/${
                 codeDepartement ? `DEP/${codeDepartement}` : `REG/${codeRegion}`
               }`,
             }}
             img="/dashboard_girl.png"
-            sourceText="* Source: Pole Emploi"
+            sourceText="* Source: France Travail"
+            linkTracker={linkTracker}
           />
+          {codeRegion && lienDares[codeRegion] && (
+            <InfoCard
+              title="Projection métiers 2030"
+              description="Retrouvez le dernier rapport de votre région"
+              links={{ href: (codeRegion && lienDares[codeRegion]) ?? "" }}
+              img="/graphs_statistics2.png"
+              sourceText="* Source: DARES"
+              linkTracker={linkTracker}
+            />
+          )}
         </SimpleGrid>
       </Box>
     </>
