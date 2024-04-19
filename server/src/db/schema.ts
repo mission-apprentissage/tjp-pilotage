@@ -172,7 +172,6 @@ export interface Demande {
   autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
-  recrutementsRH: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -268,8 +267,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  ancienCFD: string;
   cfd: string;
+  ancienCFD: string;
   voie: string;
 }
 
@@ -344,7 +343,7 @@ export interface IndicateurSortie {
   cfdContinuum: string | null;
 }
 
-export interface LatestDemandeView {
+export interface LatestDemandeNonMaterializedView {
   numero: string | null;
   cfd: string | null;
   codeDispositif: string | null;
@@ -384,7 +383,6 @@ export interface LatestDemandeView {
   autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
-  recrutementsRH: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -463,7 +461,7 @@ export interface DB {
   indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
-  latestDemandeView: LatestDemandeView;
+  latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;
