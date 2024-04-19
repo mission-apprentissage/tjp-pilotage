@@ -1,4 +1,5 @@
 import { Box, FormLabel, Select, SimpleGrid, Skeleton } from "@chakra-ui/react";
+import { ChangeEvent } from "react";
 import { Scope, ScopeEnum } from "shared";
 
 import { Multiselect } from "@/components/Multiselect";
@@ -45,6 +46,7 @@ export const FiltersSection = ({
   isLoading,
   data,
   scope,
+  findDefaultRentreeScolaireForCampagne,
 }: {
   activeFilters: Partial<FiltersStatsPilotageIntentions>;
   handleFilters: (filter: Partial<FiltersStatsPilotageIntentions>) => void;
@@ -54,11 +56,35 @@ export const FiltersSection = ({
   isLoading: boolean;
   data?: StatsPilotageIntentions;
   scope: SelectedScope;
+  findDefaultRentreeScolaireForCampagne: (
+    campagne: string
+  ) => string | undefined;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   if (isLoading) {
     return <Loader />;
   }
+
+  const isDefaultRentreeScolaire =
+    activeFilters.rentreeScolaire?.length === 1 &&
+    activeFilters.rentreeScolaire[0] ===
+      findDefaultRentreeScolaireForCampagne(activeFilters.campagne || "");
+
+  const onCampagneChange = (e: ChangeEvent<HTMLSelectElement>) => {
+    filterTracker("campagne");
+    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
+      e.target.value
+    );
+
+    if (rentreeScolaire !== undefined && isDefaultRentreeScolaire) {
+      handleFilters({
+        campagne: e.target.value,
+        rentreeScolaire: [rentreeScolaire],
+      });
+    } else {
+      handleFilters({ campagne: e.target.value });
+    }
+  };
 
   return (
     <Box borderRadius={4}>
@@ -73,10 +99,7 @@ export const FiltersSection = ({
             borderBottomColor={
               scope.type === ScopeEnum.region ? "info.525" : ""
             }
-            onChange={(e) => {
-              filterTracker("campagne");
-              handleFilters({ campagne: e.target.value });
-            }}
+            onChange={(e) => onCampagneChange(e)}
             placeholder="Choisir une campagne"
           >
             {data?.filters?.campagnes?.map((option) => (
