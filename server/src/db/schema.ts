@@ -172,7 +172,6 @@ export interface Demande {
   autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
-  recrutementsRH: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -343,8 +342,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  ancienCFD: string;
   cfd: string;
+  ancienCFD: string;
   voie: string;
 }
 
@@ -493,8 +492,7 @@ export interface LatestDemandeExpeView {
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
 }
-
-export interface LatestDemandeView {
+export interface LatestDemandeNonMaterializedView {
   numero: string | null;
   cfd: string | null;
   codeDispositif: string | null;
@@ -534,7 +532,6 @@ export interface LatestDemandeView {
   autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
-  recrutementsRH: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -615,7 +612,7 @@ export interface DB {
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   latestDemandeExpeView: LatestDemandeExpeView;
-  latestDemandeView: LatestDemandeView;
+  latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;
