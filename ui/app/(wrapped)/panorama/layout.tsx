@@ -13,6 +13,7 @@ import { useSelectedLayoutSegment } from "next/navigation";
 import { ReactNode } from "react";
 
 import { Breadcrumb } from "../../../components/Breadcrumb";
+import { LandingFooter } from "../components/LandingFooter";
 
 const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
@@ -89,6 +90,7 @@ export default function PanoramaLayout({ children }: { children: ReactNode }) {
           </TabPanels>
         </Tabs>
       </Container>
+      <LandingFooter />
     </>
   );
 }
