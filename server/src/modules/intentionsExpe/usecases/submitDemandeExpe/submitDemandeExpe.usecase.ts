@@ -90,7 +90,7 @@ export const [submitDemandeExpeUsecase, submitDemandeExpeFactory] = inject(
       demandeExpe,
       user,
     }: {
-      user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+      user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       demandeExpe: demandeExpe;
     }) => {
       const currentDemande = demandeExpe.numero
@@ -103,11 +103,9 @@ export const [submitDemandeExpeUsecase, submitDemandeExpeFactory] = inject(
       if (!dataEtablissement) throw Boom.badRequest("Code uai non valide");
       if (!dataEtablissement.codeRegion) throw Boom.badData();
 
-      const scope = getPermissionScope(user.role, "intentions/ecriture");
+      const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
       const isAllowed = guardScope(scope?.default, {
-        user: () =>
-          user.codeRegion === dataEtablissement.codeRegion &&
-          (!currentDemande || user.id === currentDemande?.createurId),
+        uai: () => user.uais?.includes(demandeExpe.uai) ?? false,
         region: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });

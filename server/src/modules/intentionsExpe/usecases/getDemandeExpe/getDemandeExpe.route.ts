@@ -15,7 +15,7 @@ export const getDemandeExpeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
+      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();
@@ -27,9 +27,12 @@ export const getDemandeExpeRoute = (server: Server) => {
         if (demandeExpe.statut === DemandeStatutEnum.deleted)
           throw Boom.forbidden();
 
-        const scope = getPermissionScope(user.role, "intentions/ecriture");
+        const scope = getPermissionScope(
+          user.role,
+          "intentions-perdir/ecriture"
+        );
         const canEdit = guardScope(scope?.default, {
-          user: () => user.id === demandeExpe.createurId,
+          uai: () => user.uais?.includes(demandeExpe.uai) ?? false,
           region: () => user.codeRegion === demandeExpe.codeRegion,
           national: () => true,
         });

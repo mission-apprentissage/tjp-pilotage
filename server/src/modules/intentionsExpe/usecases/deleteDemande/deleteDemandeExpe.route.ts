@@ -13,7 +13,7 @@ export const deleteDemandeExpeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/ecriture"),
+      preHandler: hasPermissionHandler("intentions-perdir/ecriture"),
       handler: async (request, response) => {
         const user = request.user as RequestUser;
         await deleteDemande({ numero: request.params.numero, user });

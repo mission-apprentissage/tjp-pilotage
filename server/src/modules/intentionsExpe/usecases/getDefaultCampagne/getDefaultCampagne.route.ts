@@ -12,7 +12,7 @@ export const getCurrentCampagneRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
+      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (_request, response) => {
         const campagne = await getDefaultCampagneUsecase();
         response.status(200).send(campagne);

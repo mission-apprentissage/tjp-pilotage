@@ -22,7 +22,7 @@ const importDemandeExpeFactory =
     numero,
     user,
   }: {
-    user: Pick<RequestUser, "id" | "codeRegion" | "role">;
+    user: Pick<RequestUser, "id" | "codeRegion" | "role" | "uais">;
     numero: string;
   }) => {
     const [demandeExpe, campagne, alreadyImportedDemandeExpe] =
@@ -66,11 +66,9 @@ const importDemandeExpeFactory =
       );
     }
 
-    const scope = getPermissionScope(user.role, "intentions/ecriture");
+    const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
     const isAllowed = guardScope(scope?.default, {
-      user: () =>
-        user.codeRegion === demandeExpe.codeRegion &&
-        (!demandeExpe || user.id === demandeExpe?.createurId),
+      uai: () => user.uais?.includes(demandeExpe.uai) ?? false,
       region: () => user.codeRegion === demandeExpe.codeRegion,
       national: () => true,
     });

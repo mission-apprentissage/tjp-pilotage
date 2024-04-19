@@ -41,13 +41,13 @@ export const PrecisionsSection = ({
       </Heading>
       <Divider pt="4" mb="4" />
       <Flex gap="6" mb="6" direction={"column"}>
-        <MotifField disabled={disabled} maxW="752px" mb="4" />
+        <MotifField disabled={disabled} mb="4" />
+        <AutreMotifField disabled={disabled} mb="4" />
         <QuestionBlock active={!!amiCma}>
           <AmiCmaField disabled={disabled} />
           <AmiCmaValideField disabled={disabled} />
           <AmiCmaValideAnneeField disabled={disabled} />
         </QuestionBlock>
-        <AutreMotifField disabled={disabled} mb="4" maxW="752px" />
       </Flex>
     </Flex>
   );
