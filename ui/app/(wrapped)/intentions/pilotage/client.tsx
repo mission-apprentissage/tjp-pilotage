@@ -23,6 +23,7 @@ export const PilotageIntentionsClient = () => {
     handleFilters,
     handleIndicateurChange,
     handleOrder,
+    findDefaultRentreeScolaireForCampagne,
   } = usePilotageIntentionsHook();
 
   return (
@@ -35,6 +36,9 @@ export const PilotageIntentionsClient = () => {
           isLoading={isLoading}
           data={scopedStats}
           scope={scope}
+          findDefaultRentreeScolaireForCampagne={
+            findDefaultRentreeScolaireForCampagne
+          }
         />
         <Box>
           <Flex gap={8} mt={10} flexDirection={["column", null, "row"]}>
