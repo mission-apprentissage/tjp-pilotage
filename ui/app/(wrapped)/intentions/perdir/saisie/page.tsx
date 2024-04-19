@@ -4,7 +4,7 @@ import { PageClient } from "./page.client";
 
 export default () => {
   return (
-    <GuardPermission permission="intentions/lecture">
+    <GuardPermission permission="intentions-perdir/lecture">
       <PageClient />
     </GuardPermission>
   );

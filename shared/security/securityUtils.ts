@@ -8,6 +8,16 @@ type KOfUnion<T> = {
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 
+export const hasRole = ({
+  user,
+  role,
+}: {
+  user?: { role?: keyof typeof PERMISSIONS };
+  role: keyof typeof PERMISSIONS;
+}) => {
+  return user?.role === role;
+};
+
 export const hasPermission = (
   role: keyof typeof PERMISSIONS | undefined,
   permission: Permission

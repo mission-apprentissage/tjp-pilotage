@@ -13,7 +13,7 @@ export const importDemandeExpeRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/lecture"),
+      preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();

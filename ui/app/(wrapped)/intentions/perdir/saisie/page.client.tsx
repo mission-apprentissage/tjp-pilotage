@@ -133,7 +133,7 @@ export const PageClient = () => {
     { keepPreviousData: true, staleTime: 0 }
   );
 
-  const hasPermissionEnvoi = usePermission("intentions/ecriture");
+  const hasPermissionEnvoi = usePermission("intentions-perdir/ecriture");
 
   const isCampagneEnCours =
     data?.campagne?.statut === CampagneStatutEnum["en cours"];

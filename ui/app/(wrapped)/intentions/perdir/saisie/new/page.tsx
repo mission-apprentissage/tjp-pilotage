@@ -12,7 +12,7 @@ export default () => {
     .useQuery({});
 
   return (
-    <GuardPermission permission="intentions/ecriture">
+    <GuardPermission permission="intentions-perdir/ecriture">
       <IntentionForm
         disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
         defaultValues={{

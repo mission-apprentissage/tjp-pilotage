@@ -69,8 +69,10 @@ export const isDemandeExpeSelectable =
     return eb.or([
       eb.and([
         eb("demandeExpe.statut", "=", DemandeStatutEnum.draft),
-        draftFilter.userId
-          ? eb("demandeExpe.createurId", "=", draftFilter.userId)
+        draftFilter.uais
+          ? eb.or(
+              draftFilter.uais.map((uai) => eb("demandeExpe.uai", "=", uai))
+            )
           : sql<boolean>`true`,
         draftFilter.codeRegion
           ? eb("demandeExpe.codeRegion", "=", draftFilter.codeRegion)
@@ -78,6 +80,9 @@ export const isDemandeExpeSelectable =
       ]),
       eb.and([
         eb("demandeExpe.statut", "!=", DemandeStatutEnum.draft),
+        filter.uais
+          ? eb.or(filter.uais.map((uai) => eb("demandeExpe.uai", "=", uai)))
+          : sql<boolean>`true`,
         filter.codeRegion
           ? eb("demandeExpe.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
@@ -86,22 +91,22 @@ export const isDemandeExpeSelectable =
   };
 
 const getDemandeExpeSelectableFilters = (
-  user?: Pick<RequestUser, "id" | "role" | "codeRegion">
+  user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">
 ) => {
   if (!user) throw new Error("missing variable user");
-  const scope = getPermissionScope(user?.role, "intentions/lecture");
+  const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
   if (!scope?.draft) throw Boom.forbidden();
 
   const draftFilter = {
     national: {},
     region: { codeRegion: user.codeRegion },
-    user: { userId: user.id },
+    uai: { uais: user.uais },
   }[scope?.draft];
 
   const filter = {
     national: {},
     region: { codeRegion: user.codeRegion },
-    user: { userId: user.id },
+    uai: { uais: user.uais },
   }[scope?.default];
 
   return { filter, draftFilter };

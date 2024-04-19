@@ -13,14 +13,14 @@ export const deleteDemandeFactory =
     user,
   }: {
     numero: string;
-    user: Pick<RequestUser, "id" | "role" | "codeRegion">;
+    user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
   }) => {
     const demandeExpe = await deps.findOneDemandeExpe(numero);
     if (!demandeExpe) throw Boom.notFound();
 
-    const scope = getPermissionScope(user.role, "intentions/ecriture");
+    const scope = getPermissionScope(user.role, "intentions-perdir/ecriture");
     const isAllowed = guardScope(scope?.default, {
-      user: () => user.id === demandeExpe.createurId,
+      uai: () => user.uais?.includes(demandeExpe.uai) ?? false,
       region: () => user.codeRegion === demandeExpe.codeRegion,
       national: () => true,
     });

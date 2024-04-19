@@ -5,6 +5,7 @@ import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaul
 import { getDemandeExpeRoute } from "./usecases/getDemandeExpe/getDemandeExpe.route";
 import { getDemandesExpeRoute } from "./usecases/getDemandesExpe/getDemandesExpe.route";
 import { importDemandeExpeRoute } from "./usecases/importDemandeExpe/importDemandeExpe.route";
+import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
 import { submitDemandeExpeRoute } from "./usecases/submitDemandeExpe/submitDemandeExpe.route";
 
 export const registerIntentionsExpeModule = ({
@@ -20,5 +21,6 @@ export const registerIntentionsExpeModule = ({
     ...deleteDemandeExpeRoute(server),
     ...importDemandeExpeRoute(server),
     ...getCurrentCampagneRoute(server),
+    ...searchEtablissementPerdirRoute(server),
   };
 };

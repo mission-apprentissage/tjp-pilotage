@@ -13,7 +13,7 @@ export const submitDemandeExpeRoute = ({ server }: { server: Server }) => {
   }).handle((props) => {
     server.route({
       ...props,
-      preHandler: hasPermissionHandler("intentions/ecriture"),
+      preHandler: hasPermissionHandler("intentions-perdir/ecriture"),
       handler: async (request, response) => {
         const { demande } = request.body;
         if (!request.user) throw Boom.unauthorized();

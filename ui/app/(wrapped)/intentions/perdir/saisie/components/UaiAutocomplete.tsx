@@ -1,8 +1,10 @@
 import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
+import { hasRole } from "shared";
 
 import { client } from "@/api.client";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const UaiAutocomplete = ({
   name,
@@ -16,7 +18,7 @@ export const UaiAutocomplete = ({
   active?: boolean;
   inError: boolean;
   onChange: (
-    value?: (typeof client.infer)["[GET]/etablissement/search/:search"][number]
+    value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
   ) => void;
 }) => {
   const selectStyle = {
@@ -25,6 +27,8 @@ export const UaiAutocomplete = ({
       borderColor: inError ? "red" : undefined,
     }),
   };
+  const { auth } = useAuth();
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 
   return (
     <AsyncSelect
@@ -42,12 +46,13 @@ export const UaiAutocomplete = ({
         defaultValue &&
         ({
           ...defaultValue,
-        } as (typeof client.infer)["[GET]/etablissement/search/:search"][0])
+        } as (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][0])
       }
+      defaultOptions={isPerdir}
       loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 3)
+        if (inputValue.length >= 3 || isPerdir)
           return client
-            .ref("[GET]/etablissement/search/:search")
+            .ref("[GET]/etablissement/perdir/search/:search")
             .query({ params: { search: inputValue }, query: {} });
       }}
       loadingMessage={({ inputValue }) =>
@@ -58,7 +63,7 @@ export const UaiAutocomplete = ({
       isClearable={true}
       noOptionsMessage={({ inputValue }) =>
         inputValue
-          ? "Pas d'établissement correspondant"
+          ? "Pas d'établissement correspondant à votre UAI"
           : "Commencez à écrire..."
       }
       placeholder="UAI, nom de l'établissement ou commune"
