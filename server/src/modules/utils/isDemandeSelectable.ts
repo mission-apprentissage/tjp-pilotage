@@ -62,35 +62,33 @@ export const isDemandeNotDeletedOrRefused = (
     DemandeStatutEnum.refused,
   ]);
 
-export const isDemandeExpeSelectable =
+export const isIntentionSelectable =
   ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
-  (eb: ExpressionBuilder<DB, "demandeExpe">) => {
-    const { filter, draftFilter } = getDemandeExpeSelectableFilters(user);
+  (eb: ExpressionBuilder<DB, "intention">) => {
+    const { filter, draftFilter } = getIntentionSelectableFilters(user);
     return eb.or([
       eb.and([
-        eb("demandeExpe.statut", "=", DemandeStatutEnum.draft),
+        eb("intention.statut", "=", DemandeStatutEnum.draft),
         draftFilter.uais
-          ? eb.or(
-              draftFilter.uais.map((uai) => eb("demandeExpe.uai", "=", uai))
-            )
+          ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai)))
           : sql<boolean>`true`,
         draftFilter.codeRegion
-          ? eb("demandeExpe.codeRegion", "=", draftFilter.codeRegion)
+          ? eb("intention.codeRegion", "=", draftFilter.codeRegion)
           : sql<boolean>`true`,
       ]),
       eb.and([
-        eb("demandeExpe.statut", "!=", DemandeStatutEnum.draft),
+        eb("intention.statut", "!=", DemandeStatutEnum.draft),
         filter.uais
-          ? eb.or(filter.uais.map((uai) => eb("demandeExpe.uai", "=", uai)))
+          ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai)))
           : sql<boolean>`true`,
         filter.codeRegion
-          ? eb("demandeExpe.codeRegion", "=", filter.codeRegion)
+          ? eb("intention.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
       ]),
     ]);
   };
 
-const getDemandeExpeSelectableFilters = (
+const getIntentionSelectableFilters = (
   user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">
 ) => {
   if (!user) throw new Error("missing variable user");
@@ -112,14 +110,13 @@ const getDemandeExpeSelectableFilters = (
   return { filter, draftFilter };
 };
 
-export const isDemandeExpeNotDeleted = (
-  eb: ExpressionBuilder<DB, "demandeExpe">
-) => eb("demandeExpe.statut", "!=", DemandeStatutEnum.deleted);
+export const isIntentionNotDeleted = (eb: ExpressionBuilder<DB, "intention">) =>
+  eb("intention.statut", "!=", DemandeStatutEnum.deleted);
 
-export const isDemandeExpeNotDeletedOrRefused = (
-  eb: ExpressionBuilder<DB, "demandeExpe">
+export const isIntentionNotDeletedOrRefused = (
+  eb: ExpressionBuilder<DB, "intention">
 ) =>
-  eb("demandeExpe.statut", "not in", [
+  eb("intention.statut", "not in", [
     DemandeStatutEnum.deleted,
     DemandeStatutEnum.refused,
   ]);

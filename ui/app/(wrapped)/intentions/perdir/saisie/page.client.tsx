@@ -39,7 +39,7 @@ import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
-import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
+import { INTENTIONS_COLUMNS } from "./INTENTIONS_COLUMNS";
 import { Filters, Order } from "./types";
 import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
@@ -104,7 +104,7 @@ export const PageClient = () => {
   const trackEvent = usePlausible();
 
   const handleOrder = (column: Order["orderBy"]) => {
-    trackEvent("demandes:ordre", { props: { colonne: column } });
+    trackEvent("intentions:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
       setSearchParams({ order: { order: "desc", orderBy: column } });
       return;
@@ -117,7 +117,7 @@ export const PageClient = () => {
     });
   };
 
-  const getDemandesQueryParameters = (qLimit: number, qOffset?: number) => ({
+  const getIntentionsQueryParameters = (qLimit: number, qOffset?: number) => ({
     ...filters,
     search,
     ...order,
@@ -126,9 +126,9 @@ export const PageClient = () => {
     campagne,
   });
 
-  const { data, isLoading } = client.ref("[GET]/demandes/expe").useQuery(
+  const { data, isLoading } = client.ref("[GET]/intentions").useQuery(
     {
-      query: getDemandesQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
+      query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
     { keepPreviousData: true, staleTime: 0 }
   );
@@ -140,7 +140,7 @@ export const PageClient = () => {
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
 
-  const [searchDemande, setSearchDemande] = useState<string>(search);
+  const [searchIntention, setSearchIntention] = useState<string>(search);
 
   const getAvatarBgColor = (userName: string) => {
     const colors = [
@@ -164,10 +164,10 @@ export const PageClient = () => {
   };
 
   const { mutateAsync: importDemande, isLoading: isSubmitting } = client
-    .ref("[POST]/demande/expe/import/:numero")
+    .ref("[POST]/intention/import/:numero")
     .useMutation({
-      onSuccess: (demande) => {
-        router.push(`/intentions/perdir/saisie/${demande.numero}`);
+      onSuccess: (intention) => {
+        router.push(`/intentions/perdir/saisie/${intention.numero}`);
       },
       onError: (error) => {
         toast({
@@ -213,13 +213,13 @@ export const PageClient = () => {
           <Header
             searchParams={searchParams}
             setSearchParams={setSearchParams}
-            getDemandesQueryParameters={getDemandesQueryParameters}
-            searchDemande={searchDemande}
-            setSearchDemande={setSearchDemande}
+            getIntentionsQueryParameters={getIntentionsQueryParameters}
+            searchIntention={searchIntention}
+            setSearchIntention={setSearchIntention}
             campagnes={data?.campagnes}
             campagne={data?.campagne}
           />
-          {data?.demandes.length ? (
+          {data?.intentions.length ? (
             <>
               <TableContainer overflowY="auto" flex={1}>
                 <Table
@@ -242,42 +242,42 @@ export const PageClient = () => {
                         onClick={() => handleOrder("libelleFormation")}
                       >
                         <OrderIcon {...order} column="libelleFormation" />
-                        {DEMANDES_COLUMNS.libelleFormation}
+                        {INTENTIONS_COLUMNS.libelleFormation}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("libelleEtablissement")}
                       >
                         <OrderIcon {...order} column="libelleEtablissement" />
-                        {DEMANDES_COLUMNS.libelleEtablissement}
+                        {INTENTIONS_COLUMNS.libelleEtablissement}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("libelleDepartement")}
                       >
                         <OrderIcon {...order} column="libelleDepartement" />
-                        {DEMANDES_COLUMNS.libelleDepartement}
+                        {INTENTIONS_COLUMNS.libelleDepartement}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("typeDemande")}
                       >
                         <OrderIcon {...order} column="typeDemande" />
-                        {DEMANDES_COLUMNS.typeDemande}
+                        {INTENTIONS_COLUMNS.typeDemande}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("statut")}
                       >
                         <OrderIcon {...order} column="statut" />
-                        {DEMANDES_COLUMNS.statut}
+                        {INTENTIONS_COLUMNS.statut}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("createdAt")}
                       >
                         <OrderIcon {...order} column="createdAt" />
-                        {DEMANDES_COLUMNS.createdAt}
+                        {INTENTIONS_COLUMNS.createdAt}
                       </Th>
                       <Th
                         cursor="pointer"
@@ -285,33 +285,35 @@ export const PageClient = () => {
                         w="15"
                       >
                         <OrderIcon {...order} column="userName" />
-                        {DEMANDES_COLUMNS.userName}
+                        {INTENTIONS_COLUMNS.userName}
                       </Th>
                       <Th
                         cursor="pointer"
                         onClick={() => handleOrder("updatedAt")}
                       >
                         <OrderIcon {...order} column="updatedAt" />
-                        {DEMANDES_COLUMNS.updatedAt}
+                        {INTENTIONS_COLUMNS.updatedAt}
                       </Th>
                     </Tr>
                   </Thead>
                   <Tbody>
-                    {data?.demandes.map(
+                    {data?.intentions.map(
                       (
-                        demande: (typeof client.infer)["[GET]/demandes/expe"]["demandes"][0]
+                        intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]
                       ) => (
                         <Tr
                           height={"60px"}
-                          key={demande.numero}
+                          key={intention.numero}
                           cursor={isSaisieDisabled() ? "initial" : "pointer"}
                           whiteSpace={"pre"}
                           onClick={() => {
                             if (isSaisieDisabled()) return;
-                            router.push(`/intentions/saisie/${demande.numero}`);
+                            router.push(
+                              `/intentions/perdir/saisie/${intention.numero}`
+                            );
                           }}
                         >
-                          <Td>{demande.numero}</Td>
+                          <Td>{intention.numero}</Td>
                           <Td>
                             <Text
                               textOverflow={"ellipsis"}
@@ -319,7 +321,7 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.libelleFormation}
+                              {intention.libelleFormation}
                             </Text>
                           </Td>
                           <Td>
@@ -329,7 +331,7 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.libelleEtablissement}
+                              {intention.libelleEtablissement}
                             </Text>
                           </Td>
                           <Td>
@@ -339,7 +341,7 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.libelleDepartement}
+                              {intention.libelleDepartement}
                             </Text>
                           </Td>
                           <Td>
@@ -349,46 +351,46 @@ export const PageClient = () => {
                               whiteSpace={"break-spaces"}
                               noOfLines={2}
                             >
-                              {demande.typeDemande
-                                ? getTypeDemandeLabel(demande.typeDemande)
+                              {intention.typeDemande
+                                ? getTypeDemandeLabel(intention.typeDemande)
                                 : null}
                             </Text>
                           </Td>
                           <Td align="center" w={0}>
-                            <TagDemande statut={demande.statut} />
+                            <TagDemande statut={intention.statut} />
                           </Td>
                           <Td>
-                            {new Date(demande.createdAt).toLocaleString()}
+                            {new Date(intention.createdAt).toLocaleString()}
                           </Td>
                           <Td w="15" textAlign={"center"}>
-                            <Tooltip label={demande.userName}>
+                            <Tooltip label={intention.userName}>
                               <Avatar
-                                name={demande.userName}
+                                name={intention.userName}
                                 colorScheme={getAvatarBgColor(
-                                  demande.userName ?? ""
+                                  intention.userName ?? ""
                                 )}
-                                bg={getAvatarBgColor(demande.userName ?? "")}
+                                bg={getAvatarBgColor(intention.userName ?? "")}
                                 color={"white"}
                                 position={"unset"}
                               />
                             </Tooltip>
                           </Td>
                           <Td textAlign={"center"}>
-                            {new Date(demande.updatedAt).toLocaleString()}
+                            {new Date(intention.updatedAt).toLocaleString()}
                           </Td>
                           {data?.campagne.statut ===
                             CampagneStatutEnum["terminée"] && (
                             <Td>
-                              {demande.numeroDemandeImportee ? (
+                              {intention.numeroDemandeImportee ? (
                                 <Button
                                   as={NextLink}
                                   variant="link"
-                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                  href={`/intentions/saisie/${intention.numeroDemandeImportee}`}
                                   leftIcon={<ExternalLinkIcon />}
                                   me={"auto"}
                                 >
-                                  Demande dupliquée{" "}
-                                  {demande.numeroDemandeImportee}
+                                  intention dupliquée{" "}
+                                  {intention.numeroDemandeImportee}
                                 </Button>
                               ) : (
                                 <Button
@@ -396,20 +398,20 @@ export const PageClient = () => {
                                   variant={"newInput"}
                                   onClick={(e) => {
                                     setIsImporting(true);
-                                    if (demande.numeroDemandeImportee) return;
+                                    if (intention.numeroDemandeImportee) return;
                                     e.preventDefault();
                                     e.stopPropagation();
                                     importDemande({
-                                      params: { numero: demande.numero },
+                                      params: { numero: intention.numero },
                                     });
                                   }}
                                   isDisabled={
-                                    !!demande.numeroDemandeImportee ||
+                                    !!intention.numeroDemandeImportee ||
                                     isSubmitting ||
                                     isImporting
                                   }
                                 >
-                                  Dupliquer cette demande
+                                  Dupliquer cette intention
                                 </Button>
                               )}
                             </Td>
@@ -431,7 +433,7 @@ export const PageClient = () => {
           ) : (
             <Center mt={12}>
               <Flex flexDirection={"column"}>
-                <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
+                <Text fontSize={"2xl"}>Pas de intention à afficher</Text>
                 {hasPermissionEnvoi && (
                   <Button
                     isDisabled={isDisabled}
@@ -443,7 +445,7 @@ export const PageClient = () => {
                     mt={12}
                     mx={"auto"}
                   >
-                    Nouvelle demande
+                    Nouvelle intention
                   </Button>
                 )}
               </Flex>

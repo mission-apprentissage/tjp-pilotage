@@ -9,7 +9,7 @@ export default ({
     numero: string;
   };
 }) => (
-  <GuardPermission permission="intentions/lecture">
+  <GuardPermission permission="intentions-perdir/lecture">
     <PageClient params={params}></PageClient>
   </GuardPermission>
 );

@@ -21,7 +21,7 @@ export default () => {
   );
 
   const { data: defaultCampagne } = client
-    .ref("[GET]/campagne/default")
+    .ref("[GET]/demande/campagne/default")
     .useQuery({});
 
   if (isLoading && !!numero) return <IntentionSpinner />;
