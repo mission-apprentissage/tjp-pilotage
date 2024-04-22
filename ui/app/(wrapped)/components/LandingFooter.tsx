@@ -154,7 +154,7 @@ export const LandingFooter = () => {
               href="/declaration-accessibilite"
               onClick={() => trackEvent("footer:declaration-accessibilite")}
             >
-              Déclaration d'accessibilité
+              Accessibilité : non conforme
             </Link>
           </Box>
           <Box>
