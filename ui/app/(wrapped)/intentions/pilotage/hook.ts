@@ -11,6 +11,7 @@ import {
   IndicateurType,
   OrderStatsPilotageIntentions,
   SelectedScope,
+  StatsPilotageIntentions,
 } from "./types";
 
 export const usePilotageIntentionsHook = () => {
@@ -68,11 +69,39 @@ export const usePilotageIntentionsHook = () => {
       keepPreviousData: true,
       staleTime: 10000000,
       onSuccess: (data) => {
-        if (!filters.campagne)
-          setFilters({ ...filters, campagne: data.campagne.annee });
+        if (!filters.campagne) {
+          const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
+            data.campagne.annee,
+            data.filters.rentreesScolaires
+          );
+          if (rentreeScolaire) {
+            setFilters({
+              ...filters,
+              campagne: data.campagne.annee,
+              rentreeScolaire: [rentreeScolaire],
+            });
+          } else {
+            setFilters({ ...filters, campagne: data.campagne.annee });
+          }
+        }
       },
     }
   );
+
+  const findDefaultRentreeScolaireForCampagne = (
+    annee: string,
+    rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
+  ) => {
+    if (rentreesScolaires) {
+      const rentreeScolaire = rentreesScolaires.find(
+        (r) => parseInt(r.value) === parseInt(annee) + 1
+      );
+
+      if (rentreeScolaire) return rentreeScolaire.value;
+    }
+
+    return undefined;
+  };
 
   const indicateurOptions = [
     {
@@ -112,5 +141,10 @@ export const usePilotageIntentionsHook = () => {
     handleOrder,
     isLoading: isLoadingScopedTransformationsStats,
     scopedStats: scopedTransformationsStats,
+    findDefaultRentreeScolaireForCampagne: (campagne: string) =>
+      findDefaultRentreeScolaireForCampagne(
+        campagne,
+        scopedTransformationsStats?.filters.rentreesScolaires || []
+      ),
   };
 };
