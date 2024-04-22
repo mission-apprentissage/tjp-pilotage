@@ -8,11 +8,10 @@ import { importLienEmploiFormation as importLienEmploiFormationDeps } from "./im
 export const importLienEmploiFormationFactory =
   ({
     findRawDatas = dataDI.rawDataRepository.findRawDatas,
-    findRawData = dataDI.rawDataRepository.findRawData,
     createDomaineProfessionnel = importLienEmploiFormationDeps.createDomaineProfessionnel,
     createRome = importLienEmploiFormationDeps.createRome,
     createMetier = importLienEmploiFormationDeps.createMetier,
-    selectDataFormationCfd = importLienEmploiFormationDeps.selectDataFormationCfd,
+    selectDiplomeProCfd = importLienEmploiFormationDeps.selectDiplomeProCfd,
     createFormationRome = importLienEmploiFormationDeps.createFormationRome,
     deleteDomaineProfessionnel = importLienEmploiFormationDeps.deleteDomaineProfessionnel,
     deleteRome = importLienEmploiFormationDeps.deleteRome,
@@ -105,19 +104,21 @@ export const importLienEmploiFormationFactory =
     console.log(`\nImport des formationsRome`);
     let formationRomeCount = 0;
     await streamIt(
-      (countMetier) =>
-        selectDataFormationCfd({
-          offset: countMetier,
+      (diplomeProCfd) =>
+        selectDiplomeProCfd({
+          offset: diplomeProCfd,
+          limit: 10000,
         }),
       async (formation) => {
-        const formationRome = await findRawData({
+        const formationsRome = await findRawDatas({
           type: "formation_rome",
           filter: {
             Code_Scolarité: formation.cfd,
           },
+          limit: 100,
         });
 
-        if (formationRome !== undefined) {
+        for (const formationRome of formationsRome) {
           const codesRome = [
             formationRome.Code_Rome_1,
             formationRome.Code_Rome_2,
@@ -126,9 +127,7 @@ export const importLienEmploiFormationFactory =
             formationRome.Code_Rome_5,
           ];
 
-          for (let i = 0; i < codesRome.length; i++) {
-            const codeRome = codesRome[i];
-
+          for (const codeRome of codesRome) {
             if (codeRome) {
               const data: Insertable<DB["formationRome"]> = {
                 codeRome: codeRome,

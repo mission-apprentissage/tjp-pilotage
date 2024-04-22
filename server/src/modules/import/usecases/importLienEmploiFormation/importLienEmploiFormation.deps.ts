@@ -42,11 +42,19 @@ const deleteMetier = async () => {
   return kdb.deleteFrom("metier").execute();
 };
 
-const selectDataFormationCfd = async ({ offset = 0 }: { offset?: number }) => {
+const selectDiplomeProCfd = async ({
+  offset = 0,
+  limit,
+}: {
+  offset?: number;
+  limit: number;
+}) => {
   return kdb
-    .selectFrom("dataFormation")
-    .select(["cfd"])
+    .selectFrom("diplomeProfessionnel")
+    .select("cfd")
+    .distinct()
     .offset(offset)
+    .limit(limit)
     .orderBy("cfd", "asc")
     .execute();
 };
@@ -59,7 +67,7 @@ const createFormationRome = async (data: Insertable<DB["formationRome"]>) => {
   return kdb
     .insertInto("formationRome")
     .values(data)
-    .onConflict((oc) => oc.column("cfd").doUpdateSet(data))
+    .onConflict((oc) => oc.columns(["cfd", "codeRome"]).doUpdateSet(data))
     .execute();
 };
 
@@ -67,7 +75,7 @@ export const importLienEmploiFormation = {
   createDomaineProfessionnel,
   createRome,
   createMetier,
-  selectDataFormationCfd,
+  selectDiplomeProCfd,
   createFormationRome,
   deleteDomaineProfessionnel,
   deleteRome,

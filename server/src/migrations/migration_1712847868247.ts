@@ -6,7 +6,6 @@ export const up = async (db: Kysely<DB>) => {
   await db.schema
     .createTable("formationRome")
     .addColumn("cfd", "varchar(8)", (cb) => cb.notNull())
-    .addUniqueConstraint("formationRome_unique", ["cfd"])
     .addForeignKeyConstraint(
       "formationRomeDataFormation_fk",
       ["cfd"],
@@ -17,6 +16,7 @@ export const up = async (db: Kysely<DB>) => {
     .addForeignKeyConstraint("formationRomeRome_fk", ["codeRome"], "rome", [
       "codeRome",
     ])
+    .addUniqueConstraint("formationRome_unique", ["cfd", "codeRome"])
     .execute();
 };
 
