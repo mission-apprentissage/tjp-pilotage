@@ -55,7 +55,7 @@ export const IntentionForm = ({
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/demande/expe/:numero"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
   campagne?: Campagne;
 }) => {
   const toast = useToast();
@@ -76,7 +76,7 @@ export const IntentionForm = ({
     isLoading: isSubmitting,
     mutateAsync: submitDemande,
     isSuccess: isSuccess,
-  } = client.ref("[POST]/demande/expe/submit").useMutation({
+  } = client.ref("[POST]/intention/submit").useMutation({
     onSuccess: (body) => {
       push(`/intentions/perdir/saisie`);
 
@@ -183,7 +183,7 @@ export const IntentionForm = ({
             noValidate
             onSubmit={handleSubmit((values) =>
               submitDemande({
-                body: { demande: { numero: formId, ...values } },
+                body: { intention: { numero: formId, ...values } },
               })
             )}
           >
@@ -266,7 +266,7 @@ export const IntentionForm = ({
                                 onClick={handleSubmit((values) =>
                                   submitDemande({
                                     body: {
-                                      demande: {
+                                      intention: {
                                         numero: formId,
                                         ...values,
                                         statut: formId

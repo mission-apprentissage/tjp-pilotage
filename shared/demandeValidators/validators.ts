@@ -50,11 +50,6 @@ export const demandeValidators: Record<
       return "Le champ 'autre motif' est obligatoire";
     }
   },
-  autreBesoinRH: (demande) => {
-    if (demande.besoinRH?.includes("autre") && !demande.autreBesoinRH) {
-      return "Le champ 'autre besoin rh' est obligatoire";
-    }
-  },
   poursuitePedagogique: (demande) => {
     if (isTypeFermeture(demande.typeDemande) && demande.poursuitePedagogique) {
       return "Le champ 'poursuite pédagogique' devrait être à non";

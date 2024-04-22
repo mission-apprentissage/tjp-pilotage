@@ -35,19 +35,17 @@ export const MenuIntention = ({
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
 
-  const { data: countDemandes } = client
-    .ref("[GET]/demandes/expe/count")
-    .useQuery(
-      {
-        query: {
-          anneeCampagne,
-        },
+  const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
+    {
+      query: {
+        anneeCampagne,
       },
-      {
-        keepPreviousData: true,
-        staleTime: 0,
-      }
-    );
+    },
+    {
+      keepPreviousData: true,
+      staleTime: 0,
+    }
+  );
 
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>

@@ -56,10 +56,19 @@ export interface DB extends Omit<DBSchema, "latestDemandeNonMaterializedView"> {
     >;
   };
 }
-export interface DB extends Omit<DBSchema, "latestDemandeExpeView"> {
-  latestDemandeExpeView: {
-    [K in keyof DBSchema["latestDemandeExpeView"]]: NonNullable<
-      DBSchema["latestDemandeExpeView"][K]
+export interface DB
+  extends Omit<DBSchema, "latestIntentionNonMaterializedView"> {
+  latestIntentionView: {
+    [K in keyof DBSchema["latestIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestIntentionNonMaterializedView"][K]
+    >;
+  };
+}
+export interface DB
+  extends Omit<DBSchema, "latestDemandeIntentionNonMaterializedView"> {
+  latestDemandeIntentionView: {
+    [K in keyof DBSchema["latestDemandeIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestDemandeIntentionNonMaterializedView"][K]
     >;
   };
 }

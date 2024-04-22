@@ -13,7 +13,7 @@ export default ({
     numero: string;
   };
 }) => {
-  const { data, isLoading } = client.ref("[GET]/demande/expe/:numero").useQuery(
+  const { data, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
     { params: { numero: numero } },
     {
       cacheTime: 0,

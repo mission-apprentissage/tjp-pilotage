@@ -16,7 +16,7 @@ import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
-import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
+import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
@@ -24,9 +24,9 @@ const EXPORT_LIMIT = 1_000_000;
 export const Header = ({
   searchParams,
   setSearchParams,
-  getDemandesQueryParameters,
-  searchDemande,
-  setSearchDemande,
+  getIntentionsQueryParameters,
+  searchIntention,
+  setSearchIntention,
   campagnes,
   campagne,
 }: {
@@ -35,12 +35,12 @@ export const Header = ({
     campagne?: string;
   };
   setSearchParams: (params: { search?: string; campagne?: string }) => void;
-  getDemandesQueryParameters: (
+  getIntentionsQueryParameters: (
     qLimit: number,
     qOffset?: number
   ) => Partial<Filters>;
-  searchDemande?: string;
-  setSearchDemande: (search: string) => void;
+  searchIntention?: string;
+  setSearchIntention: (search: string) => void;
   campagnes?: Campagnes;
   campagne?: {
     annee: string;
@@ -50,8 +50,8 @@ export const Header = ({
   const trackEvent = usePlausible();
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
 
-  const onClickSearchDemande = () => {
-    setSearchParams({ search: searchDemande });
+  const onClickSearchIntention = () => {
+    setSearchParams({ search: searchIntention });
   };
   return (
     <Flex gap={2} mb={2}>
@@ -126,16 +126,16 @@ export const Header = ({
             placeholder="Rechercher par diplôme, établissement, numéro,..."
             w="sm"
             mr={2}
-            value={searchDemande}
-            onChange={(e) => setSearchDemande(e.target.value)}
+            value={searchIntention}
+            onChange={(e) => setSearchIntention(e.target.value)}
             onKeyDown={(e) => {
-              if (e.key === "Enter") onClickSearchDemande();
+              if (e.key === "Enter") onClickSearchIntention();
             }}
           />
           <Button
             bgColor={"bluefrance.113"}
             size={"md"}
-            onClick={() => onClickSearchDemande()}
+            onClick={() => onClickSearchIntention()}
           >
             <Search2Icon color="white" />
           </Button>
@@ -145,23 +145,23 @@ export const Header = ({
             onExportCsv={async () => {
               trackEvent("saisie_demandes:export");
               const data = await client.ref("[GET]/demandes").query({
-                query: getDemandesQueryParameters(EXPORT_LIMIT),
+                query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadCsv(
                 "export_saisie_demandes",
                 data.demandes,
-                DEMANDES_COLUMNS
+                INTENTIONS_COLUMNS
               );
             }}
             onExportExcel={async () => {
               trackEvent("saisie_demandes:export-excel");
               const data = await client.ref("[GET]/demandes").query({
-                query: getDemandesQueryParameters(EXPORT_LIMIT),
+                query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadExcel(
                 "export_saisie_demandes",
                 data.demandes,
-                DEMANDES_COLUMNS
+                INTENTIONS_COLUMNS
               );
             }}
             variant="solid"

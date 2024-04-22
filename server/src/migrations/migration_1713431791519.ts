@@ -45,7 +45,7 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
-    .createTable("demandeExpe")
+    .createTable("intention")
     .addColumn("numero", "varchar(8)", (c) => c.notNull())
     .addColumn("cfd", "varchar(8)")
     .addColumn("codeDispositif", "varchar(3)")
@@ -127,14 +127,14 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
-    .alterTable("demandeExpe")
-    .addPrimaryKeyConstraint("demandeExpe_pkey", ["id"])
+    .alterTable("intention")
+    .addPrimaryKeyConstraint("intention_pkey", ["id"])
     .execute();
 
   await db.schema
-    .alterTable("demandeExpe")
+    .alterTable("intention")
     .addForeignKeyConstraint(
-      "demandeExpe_campagneId_fk",
+      "intention_campagneId_fk",
       ["campagneId"],
       "campagne",
       ["id"]
@@ -142,8 +142,8 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
-    .alterTable("demandeExpe")
-    .addUniqueConstraint("demandeExpe_unique_constraint", [
+    .alterTable("intention")
+    .addUniqueConstraint("intention_unique_constraint", [
       "uai",
       "cfd",
       "codeDispositif",
@@ -153,14 +153,14 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
-    .alterTable("demandeExpe")
-    .addForeignKeyConstraint("fk_demandeExpe_user", ["createurId"], "user", [
+    .alterTable("intention")
+    .addForeignKeyConstraint("fk_intention_user", ["createurId"], "user", [
       "id",
     ])
     .execute();
 
   await db.schema
-    .createView("latestDemandeExpeView")
+    .createView("latestIntentionView")
     .as(
       // ts-ignore is mandatory here because we refresh views in this migration
       // types are not yet infered from kysely codegen
@@ -169,38 +169,34 @@ export const up = async (db: Kysely<unknown>) => {
         .selectFrom((sq) =>
           // @ts-ignore
           sq
-            .selectFrom("demandeExpe" as never)
+            .selectFrom("intention" as never)
             // @ts-ignore
             .select([
-              sql<number>`max("demandeExpe"."updatedAt")`.as("lastUpdatedAt"),
+              sql<number>`max("intention"."updatedAt")`.as("lastUpdatedAt"),
               "numero",
             ])
             .distinct()
             .groupBy("numero")
-            .as("latestDemandesExpe")
+            .as("latestIntention")
         )
         // @ts-ignore
-        .leftJoin("demandeExpe", (join) =>
+        .leftJoin("intention", (join) =>
           join
-            .onRef("latestDemandesExpe.numero", "=", "demandeExpe.numero")
-            .onRef(
-              "latestDemandesExpe.lastUpdatedAt",
-              "=",
-              "demandeExpe.updatedAt"
-            )
+            .onRef("latestIntention.numero", "=", "intention.numero")
+            .onRef("latestIntention.lastUpdatedAt", "=", "intention.updatedAt")
         )
         // @ts-ignore
-        .selectAll("demandeExpe")
+        .selectAll("intention")
         // @ts-ignore
-        .where("demandeExpe.statut", "!=", "deleted")
+        .where("intention.statut", "!=", "deleted")
     )
     .execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema.dropView("latestDemandeExpeView").execute();
+  await db.schema.dropView("latestIntentionView").execute();
 
-  await db.schema.dropTable("demandeExpe").execute();
+  await db.schema.dropTable("intention").execute();
 
   // Drop view to enable altering the view column "statut" type
   await db.schema.dropView("latestDemandeView").execute();

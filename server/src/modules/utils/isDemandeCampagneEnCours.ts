@@ -19,11 +19,11 @@ export const isDemandeCampagneEnCours = (
   );
 };
 
-export const isDemandeExpeCampagneEnCours = (
-  eb: ExpressionBuilder<DB, "demandeExpe">,
+export const isIntentionCampagneEnCours = (
+  eb: ExpressionBuilder<DB, "intention">,
   alias?: string
 ) => {
-  const tableName = alias ? alias : "demandeExpe";
+  const tableName = alias ? alias : "intention";
 
   return eb(
     sql<string>`${sql.table(tableName)}."campagneId"`,
