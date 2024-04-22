@@ -132,7 +132,7 @@ export default () => {
     limit: qLimit,
   });
 
-  const { data, isLoading: isLoading } = client
+  const { data, isLoading } = client
     .ref("[GET]/restitution-intentions/demandes")
     .useQuery(
       {

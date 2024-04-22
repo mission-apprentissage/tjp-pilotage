@@ -3,15 +3,13 @@ import { client } from "@/api.client";
 export type DemandesRestitutionIntentions =
   (typeof client.infer)["[GET]/restitution-intentions/demandes"];
 
-export type DemandesRestitutionIntentionsQuery =
+export type FiltersDemandesRestitutionIntentions =
   (typeof client.inferArgs)["[GET]/restitution-intentions/demandes"]["query"];
 
 export type OrderDemandesRestitutionIntentions = Pick<
-  DemandesRestitutionIntentionsQuery,
+  FiltersDemandesRestitutionIntentions,
   "order" | "orderBy"
 >;
-export type FiltersDemandesRestitutionIntentions =
-  DemandesRestitutionIntentionsQuery;
 
 export type IndicateurType = "insertion" | "poursuite";
 

@@ -75,7 +75,7 @@ export const IntentionForm = ({
   const {
     isLoading: isSubmitting,
     mutateAsync: submitDemande,
-    isSuccess: isSuccess,
+    isSuccess,
   } = client.ref("[POST]/intention/submit").useMutation({
     onSuccess: (body) => {
       push(`/intentions/perdir/saisie`);
@@ -172,154 +172,147 @@ export const IntentionForm = ({
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
   return (
-    <>
-      <CampagneContext.Provider value={campagneValue}>
-        <FormProvider {...form}>
-          <Box
-            ref={step1Ref}
-            scrollMarginTop={SCROLL_OFFSET}
-            bg="blueecume.925"
-            as="form"
-            noValidate
-            onSubmit={handleSubmit((values) =>
-              submitDemande({
-                body: { intention: { numero: formId, ...values } },
-              })
-            )}
-          >
-            <Container maxW={"container.xl"} pt="4" mb={24}>
-              <Breadcrumb
-                ml={4}
-                mb={4}
-                pages={[
-                  { title: "Accueil", to: "/" },
-                  { title: "Recueil des demandes", to: "/intentions" },
-                  pathname === "/intentions/perdir/saisie/new"
-                    ? {
-                        title: "Nouvelle demande",
-                        to: "/intentions/perdir/saisie/new",
-                        active: true,
-                      }
-                    : {
-                        title: `Demande n°${formId}`,
-                        to: `/intentions/perdir/saisie/${formId}`,
-                        active: true,
-                      },
-                ]}
-              />
-              <CfdUaiSection
-                formId={formId}
-                defaultValues={defaultValues}
-                formMetadata={formMetadata}
-                onEditUaiCfdSection={onEditUaiCfdSection}
-                active={step === 1}
-                disabled={isFormDisabled}
-                isFCIL={isFCIL}
-                setIsFCIL={setIsFCIL}
-                isCFDUaiSectionValid={isCFDUaiSectionValid}
-                submitCFDUAISection={submitCFDUAISection}
-                statusComponentRef={statusComponentRef}
-                campagne={campagne}
-              />
-              {step === 2 && (
-                <Box>
-                  <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
-                    <GridItem>
-                      <Box
-                        position="sticky"
-                        z-index="sticky"
-                        top={STICKY_OFFSET}
-                        textAlign={"start"}
-                      >
-                        <MenuFormulaire refs={anchorsRefs} />
-                        <Box position="relative">
-                          <Conseils />
-                        </Box>
-                      </Box>
-                    </GridItem>
-                    <GridItem
-                      colSpan={2}
-                      ref={step2Ref}
-                      scrollMarginTop={SCROLL_OFFSET}
+    <CampagneContext.Provider value={campagneValue}>
+      <FormProvider {...form}>
+        <Box
+          ref={step1Ref}
+          scrollMarginTop={SCROLL_OFFSET}
+          bg="blueecume.925"
+          as="form"
+          noValidate
+          onSubmit={handleSubmit((values) =>
+            submitDemande({
+              body: { intention: { numero: formId, ...values } },
+            })
+          )}
+        >
+          <Container maxW={"container.xl"} pt="4" mb={24}>
+            <Breadcrumb
+              ml={4}
+              mb={4}
+              pages={[
+                { title: "Accueil", to: "/" },
+                { title: "Recueil des demandes", to: "/intentions" },
+                pathname === "/intentions/perdir/saisie/new"
+                  ? {
+                      title: "Nouvelle demande",
+                      to: "/intentions/perdir/saisie/new",
+                      active: true,
+                    }
+                  : {
+                      title: `Demande n°${formId}`,
+                      to: `/intentions/perdir/saisie/${formId}`,
+                      active: true,
+                    },
+              ]}
+            />
+            <CfdUaiSection
+              formId={formId}
+              defaultValues={defaultValues}
+              formMetadata={formMetadata}
+              onEditUaiCfdSection={onEditUaiCfdSection}
+              active={step === 1}
+              disabled={isFormDisabled}
+              isFCIL={isFCIL}
+              setIsFCIL={setIsFCIL}
+              isCFDUaiSectionValid={isCFDUaiSectionValid}
+              submitCFDUAISection={submitCFDUAISection}
+              statusComponentRef={statusComponentRef}
+              campagne={campagne}
+            />
+            {step === 2 && (
+              <Box>
+                <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
+                  <GridItem>
+                    <Box
+                      position="sticky"
+                      z-index="sticky"
+                      top={STICKY_OFFSET}
+                      textAlign={"start"}
                     >
-                      <InformationsBlock
-                        refs={anchorsRefs}
-                        formId={formId}
-                        disabled={isFormDisabled}
-                        errors={errors}
-                        campagne={campagne}
-                        footerActions={
-                          <>
-                            <Box
-                              justifyContent={"center"}
-                              ref={statusComponentRef}
-                            >
-                              <Button
-                                isDisabled={
-                                  disabled ||
-                                  isActionsDisabled ||
-                                  campagne?.statut !==
-                                    CampagneStatutEnum["en cours"]
-                                }
-                                isLoading={isSubmitting}
-                                variant="primary"
-                                onClick={handleSubmit((values) =>
-                                  submitDemande({
-                                    body: {
-                                      intention: {
-                                        numero: formId,
-                                        ...values,
-                                        statut: formId
-                                          ? values.statut
-                                          : DemandeStatutEnum.draft,
-                                        campagneId:
-                                          values.campagneId ?? campagne?.id,
-                                      },
-                                    },
-                                  })
-                                )}
-                                leftIcon={<CheckIcon />}
-                              >
-                                {formId
-                                  ? "Sauvegarder les modifications"
-                                  : "Enregistrer le projet de demande"}
-                              </Button>
-                            </Box>
-                          </>
-                        }
-                      />
-                      <Button
-                        variant={"ghost"}
-                        mt={6}
-                        borderRadius={"unset"}
-                        borderBottom={"1px solid"}
-                        borderColor={"bluefrance.113"}
-                        color={"bluefrance.113"}
-                        _hover={{
-                          backgroundColor: "unset",
-                        }}
-                        p={1}
-                        h="fit-content"
-                        fontWeight={400}
-                        fontSize={16}
-                        leftIcon={<Icon icon="ri:arrow-up-fill" />}
-                        onClick={() =>
-                          step1Ref.current?.scrollIntoView({
-                            behavior: "smooth",
-                            block: "start",
-                          })
-                        }
-                      >
-                        Haut de page
-                      </Button>
-                    </GridItem>
-                  </Grid>
-                </Box>
-              )}
-            </Container>
-          </Box>
-        </FormProvider>
-      </CampagneContext.Provider>
-    </>
+                      <MenuFormulaire refs={anchorsRefs} />
+                      <Box position="relative">
+                        <Conseils />
+                      </Box>
+                    </Box>
+                  </GridItem>
+                  <GridItem
+                    colSpan={2}
+                    ref={step2Ref}
+                    scrollMarginTop={SCROLL_OFFSET}
+                  >
+                    <InformationsBlock
+                      refs={anchorsRefs}
+                      formId={formId}
+                      disabled={isFormDisabled}
+                      errors={errors}
+                      campagne={campagne}
+                      footerActions={
+                        <Box justifyContent={"center"} ref={statusComponentRef}>
+                          <Button
+                            isDisabled={
+                              disabled ||
+                              isActionsDisabled ||
+                              campagne?.statut !==
+                                CampagneStatutEnum["en cours"]
+                            }
+                            isLoading={isSubmitting}
+                            variant="primary"
+                            onClick={handleSubmit((values) =>
+                              submitDemande({
+                                body: {
+                                  intention: {
+                                    numero: formId,
+                                    ...values,
+                                    statut: formId
+                                      ? values.statut
+                                      : DemandeStatutEnum.draft,
+                                    campagneId:
+                                      values.campagneId ?? campagne?.id,
+                                  },
+                                },
+                              })
+                            )}
+                            leftIcon={<CheckIcon />}
+                          >
+                            {formId
+                              ? "Sauvegarder les modifications"
+                              : "Enregistrer le projet de demande"}
+                          </Button>
+                        </Box>
+                      }
+                    />
+                    <Button
+                      variant={"ghost"}
+                      mt={6}
+                      borderRadius={"unset"}
+                      borderBottom={"1px solid"}
+                      borderColor={"bluefrance.113"}
+                      color={"bluefrance.113"}
+                      _hover={{
+                        backgroundColor: "unset",
+                      }}
+                      p={1}
+                      h="fit-content"
+                      fontWeight={400}
+                      fontSize={16}
+                      leftIcon={<Icon icon="ri:arrow-up-fill" />}
+                      onClick={() =>
+                        step1Ref.current?.scrollIntoView({
+                          behavior: "smooth",
+                          block: "start",
+                        })
+                      }
+                    >
+                      Haut de page
+                    </Button>
+                  </GridItem>
+                </Grid>
+              </Box>
+            )}
+          </Container>
+        </Box>
+      </FormProvider>
+    </CampagneContext.Provider>
   );
 };

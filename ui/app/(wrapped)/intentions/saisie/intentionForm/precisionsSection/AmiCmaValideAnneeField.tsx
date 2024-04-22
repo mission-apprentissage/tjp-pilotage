@@ -35,7 +35,7 @@ export const AmiCmaValideAnneeField = chakra(
             validate: (value) => {
               if (value === undefined)
                 return "Veuillez préciser l'année de validation de votre financement AMI/CMA";
-              if (new RegExp(/^[0-9]{4}$/).test(value) === false)
+              if (new RegExp(/^\d{4}$/).test(value) === false)
                 return "Veuillez remplir une année valide.";
             },
           })}
