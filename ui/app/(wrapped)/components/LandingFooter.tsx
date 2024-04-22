@@ -148,6 +148,27 @@ export const LandingFooter = () => {
               Statistiques
             </Link>
           </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/declaration-accessibilite"
+              onClick={() => trackEvent("footer:declaration-accessibilite")}
+            >
+              Accessibilité : non conforme
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="https://beta.gouv.fr/accessibilite/schema-pluriannuel"
+              target="_blank"
+              onClick={() =>
+                trackEvent("footer:schéma-pluriannuel-accessibilite")
+              }
+            >
+              Schéma pluriannuel d’accessibilité
+            </Link>
+          </Box>
         </HStack>
         <Box width="100%">
           <Text color={themeDefinition.colors.grey[425]} fontSize="12px">

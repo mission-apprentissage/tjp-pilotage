@@ -1,9 +1,9 @@
 import { Box, Divider, Flex, SimpleGrid, Text } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 
+import { InfoCard } from "../../../../components/InfoCard";
 import { AnalyseDetailleeType } from "../../../context/etablissementContext";
 import { Filters } from "../../analyse-detaillee/types";
-import { InfoCard } from "./InfoCard";
 
 const lienDares: Record<string, string> = {
   84: "https://dares.travail-emploi.gouv.fr/publication/auvergne-rhone-alpes-quelles-difficultes-de-recrutement-dici-2030",

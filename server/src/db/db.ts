@@ -49,10 +49,10 @@ export interface DB extends Omit<DBSchema, "formationNonMaterializedView"> {
     >;
   };
 }
-export interface DB extends Omit<DBSchema, "latestDemandeView"> {
+export interface DB extends Omit<DBSchema, "latestDemandeNonMaterializedView"> {
   latestDemandeView: {
-    [K in keyof DBSchema["latestDemandeView"]]: NonNullable<
-      DBSchema["latestDemandeView"][K]
+    [K in keyof DBSchema["latestDemandeNonMaterializedView"]]: NonNullable<
+      DBSchema["latestDemandeNonMaterializedView"][K]
     >;
   };
 }

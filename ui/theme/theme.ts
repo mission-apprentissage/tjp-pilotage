@@ -15,6 +15,7 @@ import { sliderTheme } from "./Slider.theme";
 import { tableTheme } from "./Table.theme";
 import { tabsTheme } from "./Tabs.theme";
 import { tagTheme } from "./Tag.theme";
+import { textareaTheme } from "./Textarea.theme";
 import { tooltipTheme } from "./Tooltip.theme";
 
 export const themeDefinition = {
@@ -47,6 +48,7 @@ export const themeDefinition = {
     Tag: tagTheme,
     Checkbox: checkboxTheme,
     Badge: badgeTheme,
+    Textarea: textareaTheme,
   },
 };
 
