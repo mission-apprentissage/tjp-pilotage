@@ -5,7 +5,34 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
-export const cfdRegex = /^[0-9]{8}$/;
+export const cfdRegex = /^\d{8}$/;
+
+const OptionLabel = ({
+  option,
+}: {
+  option: (typeof client.infer)["[GET]/diplome/search/:search"][number];
+}) => {
+  return (
+    <Flex>
+      {option.label}{" "}
+      {option.isSpecialite && (
+        <Tag colorScheme={"blue"} size={"md"} ms={2}>
+          Spécialité
+        </Tag>
+      )}
+      {option.isOption && (
+        <Tag colorScheme={"blue"} size={"md"} ms={2}>
+          Option
+        </Tag>
+      )}
+      {option.dateFermeture && (
+        <Tag colorScheme={"red"} size={"md"} ms={2}>
+          Fermeture au {option.dateFermeture}
+        </Tag>
+      )}
+    </Flex>
+  );
+};
 
 export const CfdAutocompleteInput = ({
   name,
@@ -28,6 +55,10 @@ export const CfdAutocompleteInput = ({
       borderColor: inError ? "red" : undefined,
     }),
   };
+
+  const formatOptionLabel = (
+    option: (typeof client.infer)["[GET]/diplome/search/:search"][number]
+  ) => <OptionLabel option={option} />;
 
   return (
     <AsyncSelect
@@ -62,28 +93,7 @@ export const CfdAutocompleteInput = ({
             .ref("[GET]/diplome/search/:search")
             .query({ params: { search } });
       }}
-      formatOptionLabel={(option) => {
-        return (
-          <Flex>
-            {option.label}{" "}
-            {option.isSpecialite && (
-              <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                Spécialité
-              </Tag>
-            )}
-            {option.isOption && (
-              <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                Option
-              </Tag>
-            )}
-            {option.dateFermeture && (
-              <Tag colorScheme={"red"} size={"md"} ms={2}>
-                Fermeture au {option.dateFermeture}
-              </Tag>
-            )}
-          </Flex>
-        );
-      }}
+      formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3
           ? "Recherche..."

@@ -5,7 +5,7 @@ import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
 import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel, TypeDemande } from "../../utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -31,7 +31,7 @@ export const SecondaryFiltersSection = ({
 
   const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
     if (motifLabel === "autre") return "Autre";
-    return getMotifLabel(motifLabel as MotifLabel);
+    return getMotifLabel(motifLabel);
   };
   return (
     <Box borderRadius={4} mb={8} display={["none", null, "block"]}>
@@ -184,9 +184,7 @@ export const SecondaryFiltersSection = ({
                 (typeDemande: { value: string; label: string }) => {
                   return {
                     value: typeDemande.value,
-                    label: getTypeDemandeLabel(
-                      typeDemande.value as TypeDemande
-                    ),
+                    label: getTypeDemandeLabel(typeDemande.value),
                   };
                 }
               )}

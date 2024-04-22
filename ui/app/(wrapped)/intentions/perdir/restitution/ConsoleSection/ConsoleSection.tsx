@@ -35,7 +35,7 @@ const Loader = () => (
     <Table variant="simple" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          <Tr key={i} h="12">
+          <Tr key={`loader_RestitutionPerdirConsoleSection_option_${i}`} h="12">
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
             </Td>

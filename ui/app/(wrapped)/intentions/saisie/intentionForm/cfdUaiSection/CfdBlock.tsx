@@ -48,7 +48,7 @@ export const CfdBlock = ({
             render={({ field: { onChange, value, name } }) => (
               <CfdAutocompleteInput
                 name={name}
-                inError={errors.cfd ? true : false}
+                inError={!!errors.cfd}
                 defaultValue={
                   value && formMetaData?.formation?.libelleFormation
                     ? {
