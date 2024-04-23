@@ -3,11 +3,7 @@ import { sql } from "kysely";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 
-export const findManyInDisciplineQuery = async ({
-  search,
-}: {
-  search: string;
-}) => {
+export const searchDisciplineQuery = async ({ search }: { search: string }) => {
   const search_array = search.split(" ");
 
   const disciplines = await kdb

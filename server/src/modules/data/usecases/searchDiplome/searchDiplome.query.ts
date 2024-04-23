@@ -4,11 +4,7 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 
-export const findManyInDataFormationQuery = async ({
-  search,
-}: {
-  search: string;
-}) => {
+export const searchDiplomeQuery = async ({ search }: { search: string }) => {
   const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const search_array = cleanSearch.split(" ");
 

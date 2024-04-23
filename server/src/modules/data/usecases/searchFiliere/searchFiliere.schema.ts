@@ -1,6 +1,6 @@
 import { z } from "zod";
 
-export const searchDisciplineSchema = {
+export const searchFiliereSchema = {
   params: z.object({
     search: z.string(),
   }),
