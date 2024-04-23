@@ -1,12 +1,12 @@
 import { inject } from "injecti";
 
-import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep";
+import { searchDiplomeQuery } from "./searchDiplome.query";
 
 export const [searchDiplome] = inject(
-  { findManyInDataFormationQuery },
+  { searchDiplomeQuery },
   (deps) =>
     async ({ search }: { search: string }) => {
-      const formations = await deps.findManyInDataFormationQuery({ search });
+      const formations = await deps.searchDiplomeQuery({ search });
       return formations;
     }
 );

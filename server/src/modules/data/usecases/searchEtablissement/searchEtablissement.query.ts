@@ -5,7 +5,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getDateRentreeScolaire } from "../../services/getRentreeScolaire";
 
-export const findManyInDataEtablissementsQuery = async ({
+export const searchEtablissementQuery = async ({
   search,
   filtered,
   codeRegion,

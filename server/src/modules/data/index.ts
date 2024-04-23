@@ -22,6 +22,7 @@ import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestituti
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { searchDisciplineRoute } from "./usecases/searchDiscipline/searchDiscipline.route";
 import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
+import { searchFiliereRoute } from "./usecases/searchFiliere/searchFiliere.route";
 
 export const registerFormationModule = ({ server }: { server: Server }) => {
   return {
@@ -48,5 +49,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...getDataForEtablissementMapListRoute({ server }),
     ...searchDiplomeRoute({ server }),
     ...searchDisciplineRoute(server),
+    ...searchFiliereRoute(server),
   };
 };

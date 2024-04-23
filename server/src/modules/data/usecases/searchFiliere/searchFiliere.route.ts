@@ -1,19 +1,19 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
-import { searchDisciplineSchema } from "./searchDiscipline.schema";
-import { searchDisciplineUsecase } from "./searchDiscipline.usecase";
+import { searchFiliereSchema } from "./searchFiliere.schema";
+import { searchFiliereUsecase } from "./searchFiliere.usecase";
 
-export const searchDisciplineRoute = (server: Server) => {
-  return createRoute("/discipline/search/:search", {
+export const searchFiliereRoute = (server: Server) => {
+  return createRoute("/filiere/search/:search", {
     method: "GET",
-    schema: searchDisciplineSchema,
+    schema: searchFiliereSchema,
   }).handle((props) => {
     server.route({
       ...props,
       handler: async (request, response) => {
         const { search } = request.params;
-        const result = await searchDisciplineUsecase({
+        const result = await searchFiliereUsecase({
           search,
         });
         response.status(200).send(result);
