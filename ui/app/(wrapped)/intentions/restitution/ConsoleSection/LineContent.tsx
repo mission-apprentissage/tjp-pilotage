@@ -30,7 +30,16 @@ export const LineContent = ({
 
   return (
     <>
-      <Td pr="0" py="1">
+      <Td
+        pr="0"
+        py="1"
+        position="sticky"
+        left={0}
+        zIndex={"docked"}
+        background="white"
+        minW={200}
+        maxW={200}
+      >
         {getTypeDemandeLabel(demande.typeDemande)}
       </Td>
       <Td
@@ -39,6 +48,10 @@ export const LineContent = ({
         whiteSpace="normal"
         textOverflow={"ellipsis"}
         isTruncated={true}
+        position="sticky"
+        left={200}
+        zIndex={"docked"}
+        background="white"
       >
         {handleMotifLabel(demande.motif, demande.autreMotif)}
       </Td>
@@ -68,12 +81,8 @@ export const LineContent = ({
         <GraphWrapper value={demande.devenirFavorable} />
       </Td>
       <Td textAlign="center">
-        <TableBadge
-          sx={getTauxPressionStyle(
-            demande.pression !== undefined ? demande.pression : undefined
-          )}
-        >
-          {demande.pression !== undefined ? demande.pression : "-"}
+        <TableBadge sx={getTauxPressionStyle(demande.pression)}>
+          {demande.pression ?? "-"}
         </TableBadge>
       </Td>
       <Td minW={300} maxW={300} whiteSpace="normal">

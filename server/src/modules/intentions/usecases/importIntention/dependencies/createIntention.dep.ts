@@ -15,6 +15,16 @@ export const createIntentionQuery = ({
   campagne: { id: string };
   user: Pick<RequestUser, "id">;
 }) => {
+  const getTypeDemande = (intention: Insertable<DB["intention"]>) => {
+    if (intention.typeDemande === "augmentation_compensation") {
+      return "augmentation_nette";
+    }
+    if (intention.typeDemande === "ouverture_compensation") {
+      return "ouverture_nette";
+    }
+    return intention.typeDemande;
+  };
+
   return kdb
     .insertInto("intention")
     .values({
@@ -39,12 +49,7 @@ export const createIntentionQuery = ({
       amiCma: null,
       createurId: user.id,
       statut: DemandeStatutEnum.draft,
-      typeDemande:
-        intention.typeDemande === "augmentation_compensation"
-          ? "augmentation_nette"
-          : intention.typeDemande === "ouverture_compensation"
-          ? "ouverture_nette"
-          : intention.typeDemande,
+      typeDemande: getTypeDemande(intention),
     })
     .returning("id")
     .executeTakeFirst();

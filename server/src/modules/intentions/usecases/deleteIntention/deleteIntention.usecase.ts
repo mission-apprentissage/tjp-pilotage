@@ -26,7 +26,7 @@ export const deleteIntentionFactory =
     });
     if (!isAllowed) throw Boom.forbidden();
     await deps.deleteIntentionQuery(intention);
-    logger.info("Intention supprimée", { numero, intention: intention });
+    logger.info("Demande supprimée", { numero, intention: intention });
   };
 
 export const deleteIntentionUsecase = deleteIntentionFactory();

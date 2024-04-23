@@ -26,7 +26,7 @@ export const DisciplinesProfesseurAssocieRHField = chakra(
       "discipline2ProfesseurAssocieRH"
     );
 
-    const [hasDoubleDiscipline, setDoubleDiscipline] = useState<boolean>(
+    const [hasDoubleDiscipline, setHasDoubleDiscipline] = useState<boolean>(
       !!discipline2ProfesseurAssocieRH
     );
     if (!visible) return null;
@@ -80,7 +80,7 @@ export const DisciplinesProfesseurAssocieRHField = chakra(
               <Button
                 w={56}
                 leftIcon={<AddIcon />}
-                onClick={() => setDoubleDiscipline(true)}
+                onClick={() => setHasDoubleDiscipline(true)}
               >
                 Ajouter une discipline
               </Button>

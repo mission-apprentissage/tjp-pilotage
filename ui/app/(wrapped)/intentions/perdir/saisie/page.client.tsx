@@ -182,277 +182,272 @@ export const PageClient = () => {
   if (isLoading) return <IntentionSpinner />;
 
   return (
-    <>
-      <Container
-        maxWidth="100%"
+    <Container
+      maxWidth="100%"
+      flex={1}
+      flexDirection={["column", null, "row"]}
+      display={"flex"}
+      minHeight={0}
+      py={4}
+    >
+      <MenuIntention
+        hasPermissionEnvoi={hasPermissionEnvoi}
+        isRecapView
+        campagne={data?.campagne}
+      />
+      <Box
+        display={["none", null, "unset"]}
+        borderLeft="solid 1px"
+        borderColor="gray.100"
+        height="100%"
+        mr={4}
+      />
+      <Flex
         flex={1}
-        flexDirection={["column", null, "row"]}
-        display={"flex"}
+        flexDirection="column"
+        overflow="visible"
         minHeight={0}
-        py={4}
+        minW={0}
       >
-        <MenuIntention
-          hasPermissionEnvoi={hasPermissionEnvoi}
-          isRecapView
+        <Header
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          getIntentionsQueryParameters={getIntentionsQueryParameters}
+          searchIntention={searchIntention}
+          setSearchIntention={setSearchIntention}
+          campagnes={data?.campagnes}
           campagne={data?.campagne}
         />
-        <Box
-          display={["none", null, "unset"]}
-          borderLeft="solid 1px"
-          borderColor="gray.100"
-          height="100%"
-          mr={4}
-        />
-        <Flex
-          flex={1}
-          flexDirection="column"
-          overflow="visible"
-          minHeight={0}
-          minW={0}
-        >
-          <Header
-            searchParams={searchParams}
-            setSearchParams={setSearchParams}
-            getIntentionsQueryParameters={getIntentionsQueryParameters}
-            searchIntention={searchIntention}
-            setSearchIntention={setSearchIntention}
-            campagnes={data?.campagnes}
-            campagne={data?.campagne}
-          />
-          {data?.intentions.length ? (
-            <>
-              <TableContainer overflowY="auto" flex={1}>
-                <Table
-                  sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-                  size="md"
-                  variant="striped"
-                  fontSize="14px"
-                  gap="0"
+        {data?.intentions.length ? (
+          <>
+            <TableContainer overflowY="auto" flex={1}>
+              <Table
+                sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
+                size="md"
+                variant="striped"
+                fontSize="14px"
+                gap="0"
+              >
+                <Thead
+                  position="sticky"
+                  top="0"
+                  boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                  bg="white"
                 >
-                  <Thead
-                    position="sticky"
-                    top="0"
-                    boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                    bg="white"
-                  >
-                    <Tr>
-                      <Th>n° demande</Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleFormation")}
+                  <Tr>
+                    <Th>n° demande</Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleFormation")}
+                    >
+                      <OrderIcon {...order} column="libelleFormation" />
+                      {INTENTIONS_COLUMNS.libelleFormation}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleEtablissement")}
+                    >
+                      <OrderIcon {...order} column="libelleEtablissement" />
+                      {INTENTIONS_COLUMNS.libelleEtablissement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleDepartement")}
+                    >
+                      <OrderIcon {...order} column="libelleDepartement" />
+                      {INTENTIONS_COLUMNS.libelleDepartement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("typeDemande")}
+                    >
+                      <OrderIcon {...order} column="typeDemande" />
+                      {INTENTIONS_COLUMNS.typeDemande}
+                    </Th>
+                    <Th cursor="pointer" onClick={() => handleOrder("statut")}>
+                      <OrderIcon {...order} column="statut" />
+                      {INTENTIONS_COLUMNS.statut}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("createdAt")}
+                    >
+                      <OrderIcon {...order} column="createdAt" />
+                      {INTENTIONS_COLUMNS.createdAt}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("userName")}
+                      w="15"
+                    >
+                      <OrderIcon {...order} column="userName" />
+                      {INTENTIONS_COLUMNS.userName}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("updatedAt")}
+                    >
+                      <OrderIcon {...order} column="updatedAt" />
+                      {INTENTIONS_COLUMNS.updatedAt}
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data?.intentions.map(
+                    (
+                      intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]
+                    ) => (
+                      <Tr
+                        height={"60px"}
+                        key={intention.numero}
+                        cursor={isSaisieDisabled() ? "initial" : "pointer"}
+                        whiteSpace={"pre"}
+                        onClick={() => {
+                          if (isSaisieDisabled()) return;
+                          router.push(
+                            `/intentions/perdir/saisie/${intention.numero}`
+                          );
+                        }}
                       >
-                        <OrderIcon {...order} column="libelleFormation" />
-                        {INTENTIONS_COLUMNS.libelleFormation}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleEtablissement")}
-                      >
-                        <OrderIcon {...order} column="libelleEtablissement" />
-                        {INTENTIONS_COLUMNS.libelleEtablissement}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleDepartement")}
-                      >
-                        <OrderIcon {...order} column="libelleDepartement" />
-                        {INTENTIONS_COLUMNS.libelleDepartement}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("typeDemande")}
-                      >
-                        <OrderIcon {...order} column="typeDemande" />
-                        {INTENTIONS_COLUMNS.typeDemande}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("statut")}
-                      >
-                        <OrderIcon {...order} column="statut" />
-                        {INTENTIONS_COLUMNS.statut}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("createdAt")}
-                      >
-                        <OrderIcon {...order} column="createdAt" />
-                        {INTENTIONS_COLUMNS.createdAt}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("userName")}
-                        w="15"
-                      >
-                        <OrderIcon {...order} column="userName" />
-                        {INTENTIONS_COLUMNS.userName}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("updatedAt")}
-                      >
-                        <OrderIcon {...order} column="updatedAt" />
-                        {INTENTIONS_COLUMNS.updatedAt}
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {data?.intentions.map(
-                      (
-                        intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]
-                      ) => (
-                        <Tr
-                          height={"60px"}
-                          key={intention.numero}
-                          cursor={isSaisieDisabled() ? "initial" : "pointer"}
-                          whiteSpace={"pre"}
-                          onClick={() => {
-                            if (isSaisieDisabled()) return;
-                            router.push(
-                              `/intentions/perdir/saisie/${intention.numero}`
-                            );
-                          }}
-                        >
-                          <Td>{intention.numero}</Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {intention.libelleFormation}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {intention.libelleEtablissement}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {intention.libelleDepartement}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {intention.typeDemande
-                                ? getTypeDemandeLabel(intention.typeDemande)
-                                : null}
-                            </Text>
-                          </Td>
-                          <Td align="center" w={0}>
-                            <TagDemande statut={intention.statut} />
-                          </Td>
-                          <Td>
-                            {new Date(intention.createdAt).toLocaleString()}
-                          </Td>
-                          <Td w="15" textAlign={"center"}>
-                            <Tooltip label={intention.userName}>
-                              <Avatar
-                                name={intention.userName}
-                                colorScheme={getAvatarBgColor(
-                                  intention.userName ?? ""
-                                )}
-                                bg={getAvatarBgColor(intention.userName ?? "")}
-                                color={"white"}
-                                position={"unset"}
-                              />
-                            </Tooltip>
-                          </Td>
-                          <Td textAlign={"center"}>
-                            {new Date(intention.updatedAt).toLocaleString()}
-                          </Td>
-                          {data?.campagne.statut ===
-                            CampagneStatutEnum["terminée"] && (
-                            <Td>
-                              {intention.numeroDemandeImportee ? (
-                                <Button
-                                  as={NextLink}
-                                  variant="link"
-                                  href={`/intentions/saisie/${intention.numeroDemandeImportee}`}
-                                  leftIcon={<ExternalLinkIcon />}
-                                  me={"auto"}
-                                >
-                                  intention dupliquée{" "}
-                                  {intention.numeroDemandeImportee}
-                                </Button>
-                              ) : (
-                                <Button
-                                  leftIcon={<Icon icon="ri:import-line" />}
-                                  variant={"newInput"}
-                                  onClick={(e) => {
-                                    setIsImporting(true);
-                                    if (intention.numeroDemandeImportee) return;
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    importDemande({
-                                      params: { numero: intention.numero },
-                                    });
-                                  }}
-                                  isDisabled={
-                                    !!intention.numeroDemandeImportee ||
-                                    isSubmitting ||
-                                    isImporting
-                                  }
-                                >
-                                  Dupliquer cette intention
-                                </Button>
+                        <Td>{intention.numero}</Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {intention.libelleFormation}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {intention.libelleEtablissement}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {intention.libelleDepartement}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {intention.typeDemande
+                              ? getTypeDemandeLabel(intention.typeDemande)
+                              : null}
+                          </Text>
+                        </Td>
+                        <Td align="center" w={0}>
+                          <TagDemande statut={intention.statut} />
+                        </Td>
+                        <Td>
+                          {new Date(intention.createdAt).toLocaleString()}
+                        </Td>
+                        <Td w="15" textAlign={"center"}>
+                          <Tooltip label={intention.userName}>
+                            <Avatar
+                              name={intention.userName}
+                              colorScheme={getAvatarBgColor(
+                                intention.userName ?? ""
                               )}
-                            </Td>
-                          )}
-                        </Tr>
-                      )
-                    )}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-              <TableFooter
-                pl="4"
-                page={page}
-                pageSize={PAGE_SIZE}
-                count={data?.count}
-                onPageChange={(newPage) => setSearchParams({ page: newPage })}
-              />
-            </>
-          ) : (
-            <Center mt={12}>
-              <Flex flexDirection={"column"}>
-                <Text fontSize={"2xl"}>Pas de intention à afficher</Text>
-                {hasPermissionEnvoi && (
-                  <Button
-                    isDisabled={isDisabled}
-                    variant="createButton"
-                    size={"lg"}
-                    as={!isDisabled ? NextLink : undefined}
-                    href="/intentions/perdir/saisie/new"
-                    px={3}
-                    mt={12}
-                    mx={"auto"}
-                  >
-                    Nouvelle intention
-                  </Button>
-                )}
-              </Flex>
-            </Center>
-          )}
-        </Flex>
-      </Container>
-    </>
+                              bg={getAvatarBgColor(intention.userName ?? "")}
+                              color={"white"}
+                              position={"unset"}
+                            />
+                          </Tooltip>
+                        </Td>
+                        <Td textAlign={"center"}>
+                          {new Date(intention.updatedAt).toLocaleString()}
+                        </Td>
+                        {data?.campagne.statut ===
+                          CampagneStatutEnum["terminée"] && (
+                          <Td>
+                            {intention.numeroDemandeImportee ? (
+                              <Button
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/saisie/${intention.numeroDemandeImportee}`}
+                                leftIcon={<ExternalLinkIcon />}
+                                me={"auto"}
+                              >
+                                intention dupliquée{" "}
+                                {intention.numeroDemandeImportee}
+                              </Button>
+                            ) : (
+                              <Button
+                                leftIcon={<Icon icon="ri:import-line" />}
+                                variant={"newInput"}
+                                onClick={(e) => {
+                                  setIsImporting(true);
+                                  if (intention.numeroDemandeImportee) return;
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  importDemande({
+                                    params: { numero: intention.numero },
+                                  });
+                                }}
+                                isDisabled={
+                                  !!intention.numeroDemandeImportee ||
+                                  isSubmitting ||
+                                  isImporting
+                                }
+                              >
+                                Dupliquer cette intention
+                              </Button>
+                            )}
+                          </Td>
+                        )}
+                      </Tr>
+                    )
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+            <TableFooter
+              pl="4"
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) => setSearchParams({ page: newPage })}
+            />
+          </>
+        ) : (
+          <Center mt={12}>
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
+              {hasPermissionEnvoi && (
+                <Button
+                  isDisabled={isDisabled}
+                  variant="createButton"
+                  size={"lg"}
+                  as={!isDisabled ? NextLink : undefined}
+                  href="/intentions/perdir/saisie/new"
+                  px={3}
+                  mt={12}
+                  mx={"auto"}
+                >
+                  Nouvelle demande
+                </Button>
+              )}
+            </Flex>
+          </Center>
+        )}
+      </Flex>
+    </Container>
   );
 };

@@ -24,7 +24,7 @@ export const DisciplinesReconversionRHField = chakra(
     const visible = watch("reconversionRH");
     const discipline2ReconversionRH = watch("discipline2ReconversionRH");
 
-    const [hasDoubleDiscipline, setDoubleDiscipline] = useState<boolean>(
+    const [hasDoubleDiscipline, setHasDoubleDiscipline] = useState<boolean>(
       !!discipline2ReconversionRH
     );
     if (!visible) return null;
@@ -78,7 +78,7 @@ export const DisciplinesReconversionRHField = chakra(
               <Button
                 w={56}
                 leftIcon={<AddIcon />}
-                onClick={() => setDoubleDiscipline(true)}
+                onClick={() => setHasDoubleDiscipline(true)}
               >
                 Ajouter une discipline
               </Button>

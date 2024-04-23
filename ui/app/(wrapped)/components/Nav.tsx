@@ -283,10 +283,8 @@ export const Nav = () => {
                 </NavMenuLink>
               </MenuItem>
             )}
-            {hasPermission(
-              auth?.user.role,
-              "restitution-intentions/lecture"
-            ) && (
+            {hasPermission(auth?.user.role, "intentions/lecture") &&
+            !isPerdir ? (
               <MenuItem p="0">
                 <NavMenuLink
                   href="/intentions/restitution"
@@ -295,6 +293,17 @@ export const Nav = () => {
                   Restitution
                 </NavMenuLink>
               </MenuItem>
+            ) : (
+              hasPermission(auth?.user.role, "intentions-perdir/lecture") && (
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/perdir/restitution"
+                    segment="saisie-restitution-intentions"
+                  >
+                    Restitution
+                  </NavMenuLink>
+                </MenuItem>
+              )
             )}
           </MenuList>
         </Menu>

@@ -10,7 +10,7 @@ export const revalidate = 60;
 export function DocumentationClient({
   recordMap,
 }: {
-  recordMap: ExtendedRecordMap;
+  readonly recordMap: ExtendedRecordMap;
 }) {
   return (
     <>

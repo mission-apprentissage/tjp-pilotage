@@ -3,6 +3,7 @@ import { useCallback, useState } from "react";
 import { ScopeEnum } from "shared";
 
 import { client } from "@/api.client";
+import { StatsPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage/types";
 import { useStateParams } from "@/utils/useFilters";
 
 import {
@@ -74,6 +75,21 @@ export const usePilotageIntentionsHook = () => {
     }
   );
 
+  const findDefaultRentreeScolaireForCampagne = (
+    annee: string,
+    rentreesScolaires: StatsPilotageIntentions["filters"]["rentreesScolaires"]
+  ) => {
+    if (rentreesScolaires) {
+      const rentreeScolaire = rentreesScolaires.find(
+        (r) => parseInt(r.value) === parseInt(annee) + 1
+      );
+
+      if (rentreeScolaire) return rentreeScolaire.value;
+    }
+
+    return undefined;
+  };
+
   const indicateurOptions = [
     {
       label: "Taux de transformation",
@@ -112,5 +128,10 @@ export const usePilotageIntentionsHook = () => {
     handleOrder,
     isLoading: isLoadingScopedTransformationsStats,
     scopedStats: scopedTransformationsStats,
+    findDefaultRentreeScolaireForCampagne: (campagne: string) =>
+      findDefaultRentreeScolaireForCampagne(
+        campagne,
+        scopedTransformationsStats?.filters.rentreesScolaires || []
+      ),
   };
 };

@@ -7,7 +7,7 @@ export const isDemandeCampagneEnCours = (
   eb: ExpressionBuilder<DB, "demande">,
   alias?: string
 ) => {
-  const tableName = alias ? alias : "demande";
+  const tableName = alias ?? "demande";
 
   return eb(
     sql<string>`${sql.table(tableName)}."campagneId"`,
@@ -23,7 +23,7 @@ export const isIntentionCampagneEnCours = (
   eb: ExpressionBuilder<DB, "intention">,
   alias?: string
 ) => {
-  const tableName = alias ? alias : "intention";
+  const tableName = alias ?? "intention";
 
   return eb(
     sql<string>`${sql.table(tableName)}."campagneId"`,

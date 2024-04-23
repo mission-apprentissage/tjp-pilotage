@@ -62,15 +62,15 @@ const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
     case DemandeStatutEnum.draft:
-      logger.info("Projet de intention enregistré", {
+      logger.info("Projet de demande enregistré", {
         intention: intention,
       });
       break;
     case DemandeStatutEnum.submitted:
-      logger.info("intention validée", { intention: intention });
+      logger.info("Demande validée", { intention: intention });
       break;
     case DemandeStatutEnum.refused:
-      logger.info("intention refusée", { intention: intention });
+      logger.info("Demande refusée", { intention: intention });
       break;
   }
 };
@@ -114,15 +114,15 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         notNumero: intention.numero,
       });
       if (sameDemande) {
-        logger.info("intention similaire existante", {
+        logger.info("Demande similaire existante", {
           sameDemande,
           intention,
         });
-        throw Boom.badRequest("intention similaire existante", {
+        throw Boom.badRequest("Demande similaire existante", {
           id: sameDemande.id,
           errors: {
             same_demande:
-              "Une intention similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
+              "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
           },
         });
       }
@@ -148,7 +148,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
 
       const errors = validateDemande(cleanNull(demandeData));
       if (errors) {
-        logger.info("intention incorrecte", {
+        logger.info("Demande incorrecte", {
           errors,
           intention: demandeData,
         });
