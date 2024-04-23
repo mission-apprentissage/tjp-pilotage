@@ -9,6 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { InlineIcon } from "@iconify/react";
+import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
@@ -63,6 +64,7 @@ export const CustomListItem = ({
   withDivider,
   children,
 }: CustomListItemProps) => {
+  const trackEvent = usePlausible();
   const { hoverUai, setHoverUai, map, activeUai, setActiveUai } =
     useEtablissementMapContext();
   const [hover, setHover] = useState(false);
@@ -141,14 +143,34 @@ export const CustomListItem = ({
     return "Données indisponibles";
   })();
 
+  const onEtablissementHover = () => {
+    trackEvent("cartographie-etablissement:interaction", {
+      props: {
+        type: "cartographie-etablissement-list-hover",
+        uai: etablissement.uai,
+      },
+    });
+    setHoverUai(etablissement.uai);
+  };
+
+  const onEtablissementClick = () => {
+    trackEvent("cartographie-etablissement:interaction", {
+      props: {
+        type: "cartographie-etablissement-list-click",
+        uai: etablissement.uai,
+      },
+    });
+    flyToEtablissement();
+  };
+
   return (
     <>
       <ListItem
         padding="16px"
         backgroundColor={backgroundColor}
         _hover={{ cursor: "pointer" }}
-        onMouseOver={() => setHoverUai(etablissement.uai)}
-        onClick={() => flyToEtablissement()}
+        onMouseEnter={() => onEtablissementHover()}
+        onClick={() => onEtablissementClick()}
       >
         <VStack>
           <HStack justifyContent={"space-between"} width="100%">
@@ -156,7 +178,7 @@ export const CustomListItem = ({
               <Text
                 fontWeight={700}
                 _hover={{ textDecoration: "underline" }}
-                onMouseOver={() => setHover(true)}
+                onMouseEnter={() => setHover(true)}
                 onMouseLeave={() => setHover(false)}
                 onClick={() =>
                   window.open(
