@@ -104,7 +104,6 @@ export const TauxPression = ({
                   formation dans l'établissement.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
-                <TauxPressionScale />
               </Box>
             }
             glossaireEntryKey="taux-de-demande"
