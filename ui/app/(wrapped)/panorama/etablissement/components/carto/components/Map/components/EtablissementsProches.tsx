@@ -1,3 +1,4 @@
+import { usePlausible } from "next-plausible";
 import { useEffect } from "react";
 import {
   CircleLayer,
@@ -18,6 +19,7 @@ export const EtablissementsProches = () => {
   const { current: map } = useMap();
   const { etablissementsProches, hoverUai, setHoverUai } =
     useEtablissementMapContext();
+  const trackEvent = usePlausible();
 
   const geojson = {
     type: "FeatureCollection",
@@ -140,6 +142,12 @@ export const EtablissementsProches = () => {
               : [-1, -1],
           zoom: clusterZoom,
         });
+        trackEvent("cartographie-etablissement:interaction", {
+          props: {
+            type: "cartographie-etablissement-cluster-click",
+            uai: features[0].properties.uai,
+          },
+        });
       }
     }
   };
@@ -160,6 +168,12 @@ export const EtablissementsProches = () => {
 
       if (features.length > 0 && features[0] !== undefined) {
         setHoverUai(features[0].properties.uai);
+        trackEvent("cartographie-etablissement:interaction", {
+          props: {
+            type: "cartographie-etablissement-hover",
+            uai: features[0].properties.uai,
+          },
+        });
       }
     }
   };
