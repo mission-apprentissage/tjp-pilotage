@@ -63,59 +63,7 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai:
-    | "1ORD"
-    | "9999"
-    | "ADLE"
-    | "AGRI"
-    | "AIDE"
-    | "APPL"
-    | "CDES"
-    | "CDP"
-    | "CFA"
-    | "CFIS"
-    | "CFPA"
-    | "CLG"
-    | "CNED"
-    | "CONT"
-    | "CSAV"
-    | "DIV"
-    | "EFE"
-    | "EME"
-    | "EREA"
-    | "ERPD"
-    | "ETRA"
-    | "EUR"
-    | "EXP"
-    | "FORP"
-    | "GRET"
-    | "HOSP"
-    | "IEN"
-    | "ING"
-    | "IO"
-    | "IUFM"
-    | "JS"
-    | "LP"
-    | "LYC"
-    | "ONIS"
-    | "OUS"
-    | "PBAC"
-    | "PRES"
-    | "PRSU"
-    | "RECH"
-    | "RECT"
-    | "SDEN"
-    | "SEP"
-    | "SERV"
-    | "SES"
-    | "SET"
-    | "SGT"
-    | "SMUT"
-    | "SOC"
-    | "SPEC"
-    | "SSEF"
-    | "TSGE"
-    | "UNIV";
+  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
 }
 
 export interface DataFormation {
@@ -214,6 +162,11 @@ export interface Dispositif {
   libelleDispositif: string;
 }
 
+export interface DomaineProfessionnel {
+  codeDomaineProfessionnel: string;
+  libelleDomaineProfessionnel: string;
+}
+
 export interface Etablissement {
   id: Generated<string>;
   UAI: string;
@@ -285,6 +238,11 @@ export interface FormationNonMaterializedView {
   typeFamille: "1ere_commune" | "2nde_commune" | "option" | "specialite" | null;
   voie: string | null;
   codeNsf: string | null;
+}
+
+export interface FormationRome {
+  cfd: string;
+  codeRome: string;
 }
 
 export interface IndicateurDepartement {
@@ -624,6 +582,12 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
 }
 
+export interface Metier {
+  codeMetier: string;
+  codeRome: string;
+  libelleMetier: string;
+}
+
 export interface NiveauDiplome {
   codeNiveauDiplome: string;
   libelleNiveauDiplome: string | null;
@@ -643,6 +607,12 @@ export interface RawData {
 export interface Region {
   codeRegion: string;
   libelleRegion: string;
+}
+
+export interface Rome {
+  codeRome: string;
+  libelleRome: string;
+  codeDomaineProfessionnel: string;
 }
 
 export interface User {
@@ -672,12 +642,14 @@ export interface DB {
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;
   dispositif: Dispositif;
+  domaineProfessionnel: DomaineProfessionnel;
   etablissement: Etablissement;
   familleMetier: FamilleMetier;
   formation: Formation;
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
+  formationRome: FormationRome;
   indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
@@ -688,9 +660,11 @@ export interface DB {
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
+  metier: Metier;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;
   region: Region;
+  rome: Rome;
   user: User;
 }

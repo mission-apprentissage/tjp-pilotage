@@ -20,6 +20,7 @@ import { importFormations } from "./modules/import/usecases/importFormationEtabl
 import { importIJData } from "./modules/import/usecases/importIJData/importIJData.usecase";
 import { importIndicateursDepartement } from "./modules/import/usecases/importIndicateursDepartement/importIndicateursDepartement.usecase";
 import { importIndicateursRegion } from "./modules/import/usecases/importIndicateursRegion/importIndicateursRegion.usecase";
+import { importLienEmploiFormation } from "./modules/import/usecases/importLienEmploiFormation/importLienEmploiFormation.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
@@ -174,6 +175,10 @@ cli
       ...getImports("n_categorie_specialite_"),
       ...getImports("n_domaine_specialite_"),
       ...getImports("n_groupe_specialite_"),
+      ...getImports("domaine_professionnel"),
+      ...getImports("rome"),
+      ...getImports("metier"),
+      ...getImports("formation_rome"),
       ...getImports("n_matiere_"),
     };
 
@@ -202,6 +207,7 @@ cli
       importDiplomesProfessionnels,
       importIndicateursRegion,
       importIndicateursDepartement,
+      importLienEmploiFormation,
       importDiscipline,
       refreshViews,
     };
