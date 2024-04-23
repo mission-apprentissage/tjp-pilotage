@@ -2,8 +2,7 @@ import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
 import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { DB } from "../../../../db/schema";
+import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import {
