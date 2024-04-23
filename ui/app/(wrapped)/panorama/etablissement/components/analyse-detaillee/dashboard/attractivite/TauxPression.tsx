@@ -1,7 +1,5 @@
 import { Box, Text, useToken } from "@chakra-ui/react";
 
-import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
-
 import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
@@ -117,7 +115,6 @@ export const TauxPression = ({
                   la formation dans l'établissement.
                 </Text>
                 <Text>Cliquez pour plus d'infos.</Text>
-                <TauxPressionScale />
               </Box>
             }
             glossaireEntryKey="taux-de-pression"
