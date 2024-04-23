@@ -215,6 +215,11 @@ export interface Dispositif {
   libelleDispositif: string;
 }
 
+export interface DomaineProfessionnel {
+  codeDomaineProfessionnel: string | null;
+  libelleDomaineProfessionnel: string | null;
+}
+
 export interface Etablissement {
   id: Generated<string>;
   UAI: string;
@@ -288,6 +293,11 @@ export interface FormationNonMaterializedView {
   codeNsf: string | null;
 }
 
+export interface FormationRome {
+  cfd: string | null;
+  codeRome: string | null;
+}
+
 export interface IndicateurDepartement {
   codeDepartement: string;
   rentreeScolaire: string;
@@ -341,6 +351,11 @@ export interface IndicateurSortie {
   nbInsertion12mois: number | null;
   nbInsertion24mois: number | null;
   cfdContinuum: string | null;
+}
+export interface Metier {
+  codeMetier: string;
+  codeRome: string | null;
+  libelleMetier: string | null;
 }
 
 export interface LatestDemandeNonMaterializedView {
@@ -422,6 +437,12 @@ export interface Region {
   libelleRegion: string;
 }
 
+export interface Rome {
+  codeRome: string;
+  libelleRome: string | null;
+  codeDomaineProfessionnel: string | null;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -449,22 +470,26 @@ export interface DB {
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;
   dispositif: Dispositif;
+  domaineProfessionnel: DomaineProfessionnel;
   etablissement: Etablissement;
   familleMetier: FamilleMetier;
   formation: Formation;
   formationEtablissement: FormationEtablissement;
   formationHistorique: FormationHistorique;
   formationNonMaterializedView: FormationNonMaterializedView;
+  formationRome: FormationRome;
   indicateurDepartement: IndicateurDepartement;
   indicateurEntree: IndicateurEntree;
   indicateurEtablissement: IndicateurEtablissement;
   indicateurRegion: IndicateurRegion;
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
+  metier: Metier;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
   rawData: RawData;
   region: Region;
+  rome: Rome;
   user: User;
 }
