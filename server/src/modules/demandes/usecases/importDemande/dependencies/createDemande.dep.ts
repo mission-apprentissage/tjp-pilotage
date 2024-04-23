@@ -15,6 +15,15 @@ export const createDemandeQuery = ({
   campagne: { id: string };
   user: Pick<RequestUser, "id">;
 }) => {
+  const getTypeDemande = (demande: Insertable<DB["demande"]>) => {
+    if (demande.typeDemande === "augmentation_compensation") {
+      return "augmentation_nette";
+    }
+    if (demande.typeDemande === "ouverture_compensation") {
+      return "ouverture_nette";
+    }
+    return demande.typeDemande;
+  };
   return kdb
     .insertInto("demande")
     .values({
@@ -47,12 +56,7 @@ export const createDemandeQuery = ({
       amiCma: null,
       createurId: user.id,
       statut: DemandeStatutEnum.draft,
-      typeDemande:
-        demande.typeDemande === "augmentation_compensation"
-          ? "augmentation_nette"
-          : demande.typeDemande === "ouverture_compensation"
-          ? "ouverture_nette"
-          : demande.typeDemande,
+      typeDemande: getTypeDemande(demande),
     })
     .returning("id")
     .executeTakeFirst();

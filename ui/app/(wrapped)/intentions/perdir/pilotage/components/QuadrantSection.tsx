@@ -427,7 +427,8 @@ export const QuadrantSection = ({
                         return acc + (placesFermees ?? 0);
                       if (filters.type === "ouverture")
                         return acc + (placesOuvertes ?? 0);
-                      return acc + (placesOuvertes + placesFermees ?? 0);
+                      const total = placesOuvertes + placesFermees;
+                      return acc + (total ?? 0);
                     },
                     0
                   ) ?? "-"}{" "}

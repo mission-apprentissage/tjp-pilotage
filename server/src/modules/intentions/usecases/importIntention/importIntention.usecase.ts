@@ -32,32 +32,32 @@ const importIntentionFactory =
     ]);
 
     if (alreadyImportedIntention) {
-      throw Boom.badRequest("Cette intention a déjà été importée", {
+      throw Boom.badRequest("Cette demande a déjà été importée", {
         id: alreadyImportedIntention.id,
         errors: {
-          same_demande: "Cette intention a déjà été importée.",
+          same_demande: "Cette demande a déjà été importée.",
         },
       });
     }
 
     if (!campagne) {
       throw Boom.badData(
-        "Aucune campagne en cours dans laquelle importer la intention",
+        "Aucune campagne en cours dans laquelle importer la demande",
         {
           errors: {
             aucune_campagne_en_cours:
-              "Aucune campagne en cours dans laquelle importer la intention.",
+              "Aucune campagne en cours dans laquelle importer la demande.",
           },
         }
       );
     }
 
     if (!intention) {
-      throw Boom.badRequest("Aucune intention correspondant au numéro fourni", {
+      throw Boom.badRequest("Aucune demande correspondant au numéro fourni", {
         errors: {
           numero: numero,
           aucune_demande_correspondante:
-            "Aucune intention correspondant au numéro fourni.",
+            "Aucune demande correspondant au numéro fourni.",
         },
       });
     }
