@@ -45,6 +45,11 @@ export const up = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
+    .alterTable("demande")
+    .addColumn("amiCmaEnCoursValidation", "boolean")
+    .execute();
+
+  await db.schema
     .createTable("intention")
     .addColumn("numero", "varchar(8)", (c) => c.notNull())
     .addColumn("cfd", "varchar(8)")
@@ -85,6 +90,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("numeroHistorique", "varchar(8)")
     .addColumn("amiCmaValide", "boolean")
     .addColumn("amiCmaValideAnnee", "varchar(4)")
+    .addColumn("amiCmaEnCoursValidation", "boolean")
     .addColumn("recrutementRH", "boolean")
     .addColumn("nbRecrutementRH", "integer")
     .addColumn("discipline1RecrutementRH", "varchar")
@@ -101,7 +107,6 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("nbFormationRH", "integer")
     .addColumn("discipline1FormationRH", "varchar")
     .addColumn("discipline2FormationRH", "varchar")
-    .addColumn("amiCmaValideEnCours", "boolean")
     .addColumn("partenairesEconomiquesImpliques", "boolean")
     .addColumn("partenaireEconomique1", "varchar")
     .addColumn("partenaireEconomique2", "varchar")
@@ -111,13 +116,8 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("besoinRHPrecisions", "varchar")
     .addColumn("travauxAmenagement", "boolean")
     .addColumn("travauxAmenagementDescription", "varchar")
-    .addColumn("travauxAmenagementParEtablissement", "boolean")
-    .addColumn("travauxAmenagementReseaux", "boolean")
-    .addColumn("travauxAmenagementReseauxDescription", "varchar")
     .addColumn("achatEquipement", "boolean")
     .addColumn("achatEquipementDescription", "varchar")
-    .addColumn("coutEquipement", "integer")
-    .addColumn("equipementPrecisions", "varchar")
     .addColumn("augmentationCapaciteAccueilHebergement", "boolean")
     .addColumn("augmentationCapaciteAccueilHebergementPlaces", "integer")
     .addColumn("augmentationCapaciteAccueilHebergementPrecisions", "varchar")

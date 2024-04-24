@@ -7,34 +7,42 @@ import {
   RadioGroup,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
-export const TravauxAmenagementParEtablissementField = chakra(
+export const AmiCmaEnCoursValidationField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
     const {
       formState: { errors },
       control,
       watch,
+      getValues,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("travauxAmenagement");
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "amiCmaValide") return;
+          if (getValues("amiCmaValide") === false) return;
+          setValue("amiCmaEnCoursValidation", false);
+        }).unsubscribe
+    );
+
+    const visible = watch("amiCma");
     if (!visible) return null;
 
     return (
       <FormControl
         className={className}
-        isInvalid={!!errors.travauxAmenagementParEtablissement}
-        isRequired
+        isInvalid={!!errors.amiCmaEnCoursValidation}
       >
-        <FormLabel>
-          Les travaux peuvent-ils être réalisés par l'établissement (sans
-          sollicitation de la Région) ?
-        </FormLabel>
+        <FormLabel>En cours de validation ?</FormLabel>
         <Controller
-          name="travauxAmenagementParEtablissement"
+          name="amiCmaEnCoursValidation"
           control={control}
           disabled={disabled}
           rules={{
@@ -59,9 +67,9 @@ export const TravauxAmenagementParEtablissementField = chakra(
             </RadioGroup>
           )}
         />
-        {errors.travauxAmenagementParEtablissement && (
+        {errors.amiCmaEnCoursValidation && (
           <FormErrorMessage>
-            {errors.travauxAmenagementParEtablissement?.message}
+            {errors.amiCmaEnCoursValidation?.message}
           </FormErrorMessage>
         )}
       </FormControl>

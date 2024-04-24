@@ -7,6 +7,7 @@ import {
   RadioGroup,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { toBoolean } from "../../utils/toBoolean";
@@ -18,7 +19,18 @@ export const AmiCmaValideField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
+      getValues,
     } = useFormContext<IntentionForms>();
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "amiCmaEnCoursValidation") return;
+          if (getValues("amiCmaEnCoursValidation") === false) return;
+          setValue("amiCmaValide", false);
+        }).unsubscribe
+    );
 
     const visible = watch("amiCma");
     if (!visible) return null;

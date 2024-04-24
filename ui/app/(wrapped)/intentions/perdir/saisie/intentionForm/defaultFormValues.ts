@@ -27,7 +27,7 @@ export type IntentionForms = {
   amiCma: boolean;
   amiCmaValide?: boolean;
   amiCmaValideAnnee?: string;
-  amiCmaValideEnCours?: boolean;
+  amiCmaEnCoursValidation?: boolean;
   partenairesEconomiquesImpliques: boolean;
   partenaireEconomique1?: string;
   partenaireEconomique2?: string;
@@ -55,21 +55,14 @@ export type IntentionForms = {
   // Travaux et équipements
   travauxAmenagement: boolean;
   travauxAmenagementDescription?: string;
-  travauxAmenagementParEtablissement?: boolean;
-  travauxAmenagementReseaux?: boolean;
-  travauxAmenagementReseauxDescription?: string;
   achatEquipement: boolean;
   achatEquipementDescription?: string;
-  coutEquipement?: number;
-  equipementPrecisions?: string;
   // Internat et restauration
   augmentationCapaciteAccueilHebergement: boolean;
   augmentationCapaciteAccueilHebergementPlaces?: number;
-  augmentationCapaciteAccueilHebergementPrecision?: boolean;
   augmentationCapaciteAccueilHebergementPrecisions?: string;
   augmentationCapaciteAccueilRestauration: boolean;
   augmentationCapaciteAccueilRestaurationPlaces?: number;
-  augmentationCapaciteAccueilRestaurationPrecision?: boolean;
   augmentationCapaciteAccueilRestaurationPrecisions?: string;
   // Observations / commentaires
   commentaire?: string;

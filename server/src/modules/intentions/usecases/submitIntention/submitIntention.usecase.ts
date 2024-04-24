@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { z } from "zod";
 
 import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
@@ -12,43 +13,11 @@ import { findOneDataFormation } from "../../repositories/findOneDataFormation.qu
 import { findOneIntention } from "../../repositories/findOneIntention.query";
 import { findOneSimilarIntention } from "../../repositories/findOneSimilarIntention.query";
 import { createIntentionQuery } from "./createIntention.query";
+import { submitIntentionSchema } from "./submitIntention.schema";
 
-type intention = {
-  id?: string;
-  numero?: string;
-  uai: string;
-  typeDemande: string;
-  cfd: string;
-  codeDispositif: string;
-  libelleFCIL?: string;
-  compensationCfd?: string;
-  compensationCodeDispositif?: string;
-  compensationUai?: string;
-  compensationRentreeScolaire?: number;
-  motif: string[];
-  autreMotif?: string;
-  rentreeScolaire: number;
-  amiCma: boolean;
-  amiCmaValide?: boolean;
-  amiCmaValideAnnee?: string;
-  libelleColoration?: string;
-  poursuitePedagogique?: boolean;
-  commentaire?: string;
-  coloration: boolean;
-  mixte?: boolean;
-  capaciteScolaire?: number;
-  capaciteScolaireActuelle?: number;
-  capaciteScolaireColoree?: number;
-  capaciteApprentissage?: number;
-  capaciteApprentissageActuelle?: number;
-  capaciteApprentissageColoree?: number;
-  statut: "draft" | "submitted" | "refused";
-  motifRefus?: string[];
-  autreMotifRefus?: string;
-  campagneId: string;
-};
+type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 
-const validateDemande = (intention: intention) => {
+const validateDemande = (intention: Intention) => {
   let errors: Record<string, string> = {};
   for (const [key, validator] of Object.entries(demandeValidators)) {
     const error = validator(intention);
@@ -89,7 +58,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       user,
     }: {
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-      intention: intention;
+      intention: Intention;
     }) => {
       const currentDemande = intention.numero
         ? await deps.findOneIntention(intention.numero)

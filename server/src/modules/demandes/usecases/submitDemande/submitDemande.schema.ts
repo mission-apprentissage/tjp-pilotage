@@ -22,6 +22,7 @@ export const submitDemandeSchema = {
       amiCma: z.boolean(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
+      amiCmaEnCoursValidation: z.boolean().optional(),
       poursuitePedagogique: z.boolean().optional(),
       commentaire: z.string().optional(),
       mixte: z.boolean().optional(),

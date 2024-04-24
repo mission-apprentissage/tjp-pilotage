@@ -1,4 +1,11 @@
-import { Permission, PERMISSIONS } from "./permissions";
+import { Permission, PERMISSIONS, Role } from "./permissions";
+
+const CODES_REGIONS_EXPE = [
+  //Occitanie
+  "76",
+  // AURA
+  "84",
+];
 
 // eslint-disable-next-line  @typescript-eslint/no-explicit-any
 type KeyOfUnion<T> = T extends any ? keyof T : never;
@@ -8,18 +15,27 @@ type KOfUnion<T> = {
   [D in KeyOfUnion<T>]: T extends { [Ks in D]: any } ? T[D] : never;
 };
 
+export const isUserInRegionsExperimentation = ({
+  user,
+}: {
+  user?: { codeRegion?: string };
+}) => {
+  if (!user?.codeRegion) return false;
+  return CODES_REGIONS_EXPE.includes(user.codeRegion);
+};
+
 export const hasRole = ({
   user,
   role,
 }: {
-  user?: { role?: keyof typeof PERMISSIONS };
-  role: keyof typeof PERMISSIONS;
+  user?: { role?: Role };
+  role: Role;
 }) => {
   return user?.role === role;
 };
 
 export const hasPermission = (
-  role: keyof typeof PERMISSIONS | undefined,
+  role: Role | undefined,
   permission: Permission
 ) => {
   if (!role) return false;
@@ -28,7 +44,7 @@ export const hasPermission = (
 };
 
 export const getPermissionScope = <P extends Permission>(
-  role: keyof typeof PERMISSIONS | undefined,
+  role: Role | undefined,
   permission: P
 ) => {
   if (!role) return;
