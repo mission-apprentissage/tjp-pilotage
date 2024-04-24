@@ -1,6 +1,6 @@
 import z from "zod";
 
-import { getStatsSortieParRegionsQuery } from "../../queries/getStatsSortie/getStatsSortie";
+import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 import { getDataForPanoramaRegionSchema } from "./getDataForPanoramaRegion.schema";
@@ -10,7 +10,7 @@ export const getDataForPanoramaRegionFactory =
     deps = {
       getFormationsRegion: dependencies.getFormationsRegion,
       getFilters: dependencies.getFilters,
-      getStatsSortieParRegionsQuery,
+      getStatsSortieQuery,
       getPositionQuadrant,
     }
   ) =>
@@ -20,7 +20,7 @@ export const getDataForPanoramaRegionFactory =
     const [formations, filters, statsSortie] = await Promise.all([
       deps.getFormationsRegion(activeFilters),
       deps.getFilters(activeFilters),
-      deps.getStatsSortieParRegionsQuery(activeFilters),
+      deps.getStatsSortieQuery(activeFilters),
     ]);
 
     return {

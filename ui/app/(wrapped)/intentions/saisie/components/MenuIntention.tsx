@@ -1,4 +1,3 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 import _ from "lodash";
 import NextLink from "next/link";
@@ -160,19 +159,6 @@ export const MenuIntention = ({
           >
             Demandes refusées
           </Text>
-        </Button>
-
-        <Button
-          variant="ghost"
-          mb="2"
-          as={NextLink}
-          size="sm"
-          mt="auto"
-          href="/intentions/saisie/documentation"
-          width={"100%"}
-          leftIcon={<QuestionOutlineIcon />}
-        >
-          Documentation
         </Button>
       </VStack>
     </Flex>

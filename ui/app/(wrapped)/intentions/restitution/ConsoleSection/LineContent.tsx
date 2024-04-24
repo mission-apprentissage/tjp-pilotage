@@ -30,16 +30,7 @@ export const LineContent = ({
 
   return (
     <>
-      <Td
-        pr="0"
-        py="1"
-        position="sticky"
-        left={0}
-        zIndex={"docked"}
-        background="white"
-        minW={200}
-        maxW={200}
-      >
+      <Td pr="0" py="1" position="sticky" left={0}>
         {getTypeDemandeLabel(demande.typeDemande)}
       </Td>
       <Td
@@ -48,10 +39,6 @@ export const LineContent = ({
         whiteSpace="normal"
         textOverflow={"ellipsis"}
         isTruncated={true}
-        position="sticky"
-        left={200}
-        zIndex={"docked"}
-        background="white"
       >
         {handleMotifLabel(demande.motif, demande.autreMotif)}
       </Td>
