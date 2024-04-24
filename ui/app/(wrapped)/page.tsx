@@ -35,7 +35,7 @@ export default function Home() {
   const { auth } = useAuth();
 
   return (
-    <Box zIndex="0">
+    <Box zIndex="0" mb={20}>
       <Box overflow="hidden">
         <Hero>
           <VStack
@@ -264,8 +264,8 @@ export default function Home() {
                   scolarité
                 </b>{" "}
                 (remontées administratives des inscriptions) et à{" "}
-                <b>l’emploi</b>
-                (notamment la déclaration sociale nominative des entreprises).
+                <b>l’emploi</b> (notamment la déclaration sociale nominative des
+                entreprises).
               </Text>
               <Text>
                 Ces données publiées à partir de <b>début 2021</b> apportent un
