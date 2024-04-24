@@ -3,28 +3,29 @@ import { Td } from "@chakra-ui/react";
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
-import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import {
+  getMotifLabel,
+  MotifCampagne,
+  MotifLabel,
+} from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { DemandesRestitutionIntentions } from "../types";
 
 export const LineContent = ({
   demande,
+  campagne,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
+  campagne?: string;
 }) => {
   const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
-    return motif ? (
-      `(${motif.length}) ${motif.map(
-        (motifLabel: string, index: number) =>
-          `${
-            motifLabel === "autre"
-              ? `Autre : ${autreMotif}\n`
-              : getMotifLabel(motifLabel as MotifLabel)
-          }${motif && motif.length - 1 > index ? ", " : ""}`
-      )}`
-    ) : (
-      <></>
+    if (!motif) return;
+    const formattedMotifs = motif?.map((motif) =>
+      motif === "autre"
+        ? `Autre : ${autreMotif}`
+        : getMotifLabel(motif as MotifLabel, campagne as MotifCampagne)
     );
+    return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
   };
 
   return (

@@ -212,6 +212,7 @@ export default () => {
           isLoading={isLoading}
           handleOrder={handleOrder}
           order={order}
+          campagne={filters.campagne}
         />
         <TableFooter
           mb={36}
