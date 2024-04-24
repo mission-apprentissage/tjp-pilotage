@@ -53,6 +53,7 @@ const DemandeSchema = z.object({
   amiCma: z.boolean(),
   amiCmaValide: z.boolean().optional(),
   amiCmaValideAnnee: z.string().optional(),
+  amiCmaEnCoursValidation: z.boolean().optional(),
   //RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),

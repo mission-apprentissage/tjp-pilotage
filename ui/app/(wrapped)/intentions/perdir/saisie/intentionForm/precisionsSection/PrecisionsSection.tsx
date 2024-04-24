@@ -8,6 +8,7 @@ import { NomCmqField } from "@/app/(wrapped)/intentions/perdir/saisie/intentionF
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
+import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
 import { AmiCmaValideAnneeField } from "./AmiCmaValideAnneeField";
 import { AmiCmaValideField } from "./AmiCmaValideField";
@@ -55,7 +56,10 @@ export const PrecisionsSection = ({
         <AutreMotifField disabled={disabled} mb="4" />
         <QuestionBlock active={!!amiCma}>
           <AmiCmaField disabled={disabled} />
-          <AmiCmaValideField disabled={disabled} />
+          <Flex direction={"row"}>
+            <AmiCmaValideField disabled={disabled} />
+            <AmiCmaEnCoursValidationField disabled={disabled} />
+          </Flex>
           <AmiCmaValideAnneeField disabled={disabled} />
         </QuestionBlock>
         <QuestionBlock active={!!partenairesEconomiquesImpliques}>

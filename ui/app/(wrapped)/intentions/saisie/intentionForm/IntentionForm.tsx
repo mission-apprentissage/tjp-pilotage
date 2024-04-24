@@ -2,11 +2,16 @@
 
 import { CheckIcon } from "@chakra-ui/icons";
 import {
+  Alert,
+  AlertDescription,
+  AlertIcon,
+  AlertTitle,
   Box,
   Button,
   Container,
   Grid,
   GridItem,
+  UnorderedList,
   useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
@@ -234,6 +239,23 @@ export const IntentionForm = ({
                       <Box position="relative">
                         <Conseils />
                       </Box>
+                      <Box position="relative">
+                        {errors && (
+                          <Alert mt="8" alignItems="flex-start" status="error">
+                            <AlertIcon />
+                            <Box>
+                              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+                              <AlertDescription mt="2">
+                                <UnorderedList>
+                                  {Object.entries(errors).map(([key, msg]) => (
+                                    <li key={key}>{msg}</li>
+                                  ))}
+                                </UnorderedList>
+                              </AlertDescription>
+                            </Box>
+                          </Alert>
+                        )}
+                      </Box>
                     </Box>
                   </GridItem>
                   <GridItem colSpan={2}>
@@ -241,7 +263,6 @@ export const IntentionForm = ({
                       refs={anchorsRefs}
                       formId={formId}
                       disabled={isFormDisabled}
-                      errors={errors}
                       campagne={campagne}
                       footerActions={
                         <Box justifyContent={"center"} ref={statusComponentRef}>

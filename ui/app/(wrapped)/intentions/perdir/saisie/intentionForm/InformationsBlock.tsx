@@ -1,10 +1,5 @@
 import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
   Button,
   Flex,
   Modal,
@@ -15,7 +10,6 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
@@ -41,14 +35,12 @@ export const InformationsBlock = ({
   refs,
   formId,
   disabled,
-  errors,
   footerActions,
   campagne,
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
-  errors?: Record<string, string>;
   footerActions: ReactNode;
   campagne?: Campagne;
 }) => {
@@ -169,23 +161,6 @@ export const InformationsBlock = ({
               {footerActions && <Flex>{footerActions}</Flex>}
             </Flex>
           </SectionBlock>
-        </>
-      )}
-      {errors && (
-        <>
-          <Alert mt="8" alignItems="flex-start" status="error">
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-              <AlertDescription mt="2">
-                <UnorderedList>
-                  {Object.entries(errors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              </AlertDescription>
-            </Box>
-          </Alert>
         </>
       )}
       {!formId && footerActions && (

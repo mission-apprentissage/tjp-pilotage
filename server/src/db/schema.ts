@@ -63,7 +63,59 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
+  typeUai:
+    | "1ORD"
+    | "9999"
+    | "ADLE"
+    | "AGRI"
+    | "AIDE"
+    | "APPL"
+    | "CDES"
+    | "CDP"
+    | "CFA"
+    | "CFIS"
+    | "CFPA"
+    | "CLG"
+    | "CNED"
+    | "CONT"
+    | "CSAV"
+    | "DIV"
+    | "EFE"
+    | "EME"
+    | "EREA"
+    | "ERPD"
+    | "ETRA"
+    | "EUR"
+    | "EXP"
+    | "FORP"
+    | "GRET"
+    | "HOSP"
+    | "IEN"
+    | "ING"
+    | "IO"
+    | "IUFM"
+    | "JS"
+    | "LP"
+    | "LYC"
+    | "ONIS"
+    | "OUS"
+    | "PBAC"
+    | "PRES"
+    | "PRSU"
+    | "RECH"
+    | "RECT"
+    | "SDEN"
+    | "SEP"
+    | "SERV"
+    | "SES"
+    | "SET"
+    | "SGT"
+    | "SMUT"
+    | "SOC"
+    | "SPEC"
+    | "SSEF"
+    | "TSGE"
+    | "UNIV";
 }
 
 export interface DataFormation {
@@ -135,6 +187,7 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
 }
 
 export interface Departement {
@@ -334,6 +387,7 @@ export interface Intention {
   numeroHistorique: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -350,7 +404,6 @@ export interface Intention {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaValideEnCours: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -360,13 +413,8 @@ export interface Intention {
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
-  travauxAmenagementParEtablissement: boolean | null;
-  travauxAmenagementReseaux: boolean | null;
-  travauxAmenagementReseauxDescription: string | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
-  coutEquipement: number | null;
-  equipementPrecisions: string | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;
@@ -387,6 +435,9 @@ export interface LatestDemandeIntentionNonMaterializedView {
   coloration: boolean | null;
   libelleColoration: string | null;
   amiCma: boolean | null;
+  amiCmaValide: boolean | null;
+  amiCmaEnCoursValidation: boolean | null;
+  amiCmaValideAnnee: string | null;
   statut: "deleted" | "draft" | "refused" | "submitted" | null;
   commentaire: string | null;
   codeRegion: string | null;
@@ -407,8 +458,6 @@ export interface LatestDemandeIntentionNonMaterializedView {
   campagneId: string | null;
   id: string | null;
   numeroHistorique: string | null;
-  amiCmaValide: boolean | null;
-  amiCmaValideAnnee: string | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -425,7 +474,6 @@ export interface LatestDemandeIntentionNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaValideEnCours: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -435,13 +483,8 @@ export interface LatestDemandeIntentionNonMaterializedView {
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
-  travauxAmenagementParEtablissement: boolean | null;
-  travauxAmenagementReseaux: boolean | null;
-  travauxAmenagementReseauxDescription: string | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
-  coutEquipement: number | null;
-  equipementPrecisions: string | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;
@@ -505,6 +548,7 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
 }
 
 export interface LatestIntentionNonMaterializedView {
@@ -541,6 +585,7 @@ export interface LatestIntentionNonMaterializedView {
   numeroHistorique: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   recrutementRH: boolean | null;
   nbRecrutementRH: number | null;
   discipline1RecrutementRH: string | null;
@@ -557,7 +602,6 @@ export interface LatestIntentionNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaValideEnCours: boolean | null;
   partenairesEconomiquesImpliques: boolean | null;
   partenaireEconomique1: string | null;
   partenaireEconomique2: string | null;
@@ -567,13 +611,8 @@ export interface LatestIntentionNonMaterializedView {
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
-  travauxAmenagementParEtablissement: boolean | null;
-  travauxAmenagementReseaux: boolean | null;
-  travauxAmenagementReseauxDescription: string | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
-  coutEquipement: number | null;
-  equipementPrecisions: string | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;

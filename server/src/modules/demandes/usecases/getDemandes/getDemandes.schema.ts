@@ -34,6 +34,7 @@ const DemandesItem = z.object({
   amiCma: z.boolean().optional(),
   amiCmaValide: z.boolean().optional(),
   amiCmaValideAnnee: z.string().optional(),
+  amiCmaEnCoursValidation: z.boolean().optional(),
   poursuitePedagogique: z.boolean().optional(),
   commentaire: z.string().optional(),
   mixte: z.boolean().optional(),

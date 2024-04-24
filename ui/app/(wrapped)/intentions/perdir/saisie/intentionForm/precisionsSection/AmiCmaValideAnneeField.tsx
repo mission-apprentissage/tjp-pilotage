@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
@@ -15,9 +16,22 @@ export const AmiCmaValideAnneeField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("amiCmaValide") && watch("amiCma");
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "amiCmaEnCoursValidation") return;
+          setValue("amiCmaValideAnnee", undefined);
+        }).unsubscribe
+    );
+
+    const [amiCmaValide, amiCmaEnCoursValidation] = watch([
+      "amiCmaValide",
+      "amiCmaEnCoursValidation",
+    ]);
+    const visible = amiCmaValide && !amiCmaEnCoursValidation;
     if (!visible) return null;
 
     return (

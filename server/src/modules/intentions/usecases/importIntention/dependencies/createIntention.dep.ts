@@ -38,6 +38,8 @@ export const createIntentionQuery = ({
         "campagneId",
         "createurId",
         "statut",
+        "motifRefus",
+        "autreMotifRefus",
         "typeDemande",
       ]) as Insertable<DB["intention"]>),
       id: generateId(),

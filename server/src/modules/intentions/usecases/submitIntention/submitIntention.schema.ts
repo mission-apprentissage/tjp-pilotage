@@ -27,7 +27,7 @@ export const submitIntentionSchema = {
       amiCma: z.boolean(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
-      amiCmaValideEnCours: z.boolean().optional(),
+      amiCmaEnCoursValidation: z.boolean().optional(),
       partenairesEconomiquesImpliques: z.boolean().optional(),
       partenaireEconomique1: z.string().optional(),
       partenaireEconomique2: z.string().optional(),
@@ -55,13 +55,8 @@ export const submitIntentionSchema = {
       // Travaux et équipements
       travauxAmenagement: z.boolean(),
       travauxAmenagementDescription: z.string().optional(),
-      travauxAmenagementParEtablissement: z.boolean().optional(),
-      travauxAmenagementReseaux: z.boolean().optional(),
-      travauxAmenagementReseauxDescription: z.string().optional(),
       achatEquipement: z.boolean(),
       achatEquipementDescription: z.string().optional(),
-      coutEquipement: z.coerce.number().optional(),
-      equipementPrecisions: z.string().optional(),
       // Internat et restauration
       augmentationCapaciteAccueilHebergement: z.boolean(),
       augmentationCapaciteAccueilHebergementPlaces: z.coerce

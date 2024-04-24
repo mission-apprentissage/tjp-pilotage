@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Container, Flex } from "@chakra-ui/react";
+import { Container } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -9,11 +9,11 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
-import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
+import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
@@ -25,24 +25,6 @@ import {
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
-
-const TableHeader = ({
-  page,
-  pageSize,
-  count = 0,
-}: {
-  page: number;
-  pageSize: number;
-  count?: number;
-}) => {
-  return (
-    <Flex align="center" py="1.5" justifyContent={"end"}>
-      <Box mr="4">
-        {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur {count}
-      </Box>
-    </Flex>
-  );
-};
 
 export default () => {
   const router = useRouter();
@@ -206,15 +188,7 @@ export default () => {
           isLoading={isLoading || isLoadingCount}
           data={data}
         />
-        <TableHeader page={page} pageSize={PAGE_SIZE} count={data?.count} />
-        <ConsoleSection
-          data={data}
-          isLoading={isLoading}
-          handleOrder={handleOrder}
-          order={order}
-        />
-        <TableFooter
-          mb={36}
+        <TableHeader
           pl="4"
           onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
@@ -306,6 +280,12 @@ export default () => {
           pageSize={PAGE_SIZE}
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
+        />
+        <ConsoleSection
+          data={data}
+          isLoading={isLoading}
+          handleOrder={handleOrder}
+          order={order}
         />
       </Container>
     </GuardPermission>

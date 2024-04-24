@@ -1,5 +1,4 @@
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
 
 import { submitIntentionFactory } from "./submitIntention.usecase";
 
@@ -52,9 +51,9 @@ const intention = {
   capaciteApprentissageColoree: 2,
   //RH
   recrutementRH: false,
-  nbRecrutementRH: z.coerce.number().optional(),
-  discipline1RecrutementRH: z.string().optional(),
-  discipline2RecrutementRH: z.string().optional(),
+  nbRecrutementRH: 1,
+  discipline1RecrutementRH: "discipline1RecrutementRH",
+  discipline2RecrutementRH: "discipline2RecrutementRH",
   reconversionRH: false,
   professeurAssocieRH: false,
   formationRH: false,

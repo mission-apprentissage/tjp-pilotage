@@ -48,9 +48,10 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { draft: "uai", default: "uai" },
     "intentions-perdir/ecriture": { default: "uai" },
     "restitution-intentions/lecture": { default: "uai" },
+    "pilotage-intentions/lecture": { default: "uai" },
   },
 } satisfies {
   [R: string]: {
-    [s: string]: Record<string | "defaultScope", Scope>;
+    [s: string]: Record<string, Scope>;
   };
 };
