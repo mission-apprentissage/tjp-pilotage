@@ -27,11 +27,11 @@ import { client } from "@/api.client";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "@/app/(wrapped)/console/etablissements/FORMATION_ETABLISSEMENT_COLUMNS";
 import { Multiselect } from "@/components/Multiselect";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
+import { TableHeader } from "../../../../components/TableHeader";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -356,6 +356,34 @@ export default function Etablissements() {
             <Spinner />
           </Center>
         )}
+        <TableHeader
+          onExportCsv={async () => {
+            const data = await client.ref("[GET]/etablissements").query({
+              query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+            });
+            trackEvent("etablissements:export");
+            downloadCsv(
+              "etablissement_export",
+              data.etablissements,
+              FORMATION_ETABLISSEMENT_COLUMNS
+            );
+          }}
+          onExportExcel={async () => {
+            const data = await client.ref("[GET]/etablissements").query({
+              query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+            });
+            trackEvent("etablissements:export-excel");
+            downloadExcel(
+              "etablissement_export",
+              data.etablissements,
+              FORMATION_ETABLISSEMENT_COLUMNS
+            );
+          }}
+          page={page}
+          pageSize={PAGE_SIZE}
+          count={data?.count}
+          onPageChange={(newPage) => setSearchParams({ page: newPage })}
+        />
         <TableContainer overflowY="auto">
           <Table variant="simple" size={"sm"}>
             <Thead
@@ -760,34 +788,6 @@ export default function Etablissements() {
           </Table>
         </TableContainer>
       </Flex>
-      <TableFooter
-        onExportCsv={async () => {
-          const data = await client.ref("[GET]/etablissements").query({
-            query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-          });
-          trackEvent("etablissements:export");
-          downloadCsv(
-            "etablissement_export",
-            data.etablissements,
-            FORMATION_ETABLISSEMENT_COLUMNS
-          );
-        }}
-        onExportExcel={async () => {
-          const data = await client.ref("[GET]/etablissements").query({
-            query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-          });
-          trackEvent("etablissements:export-excel");
-          downloadExcel(
-            "etablissement_export",
-            data.etablissements,
-            FORMATION_ETABLISSEMENT_COLUMNS
-          );
-        }}
-        page={page}
-        pageSize={PAGE_SIZE}
-        count={data?.count}
-        onPageChange={(newPage) => setSearchParams({ page: newPage })}
-      />
     </>
   );
 }
