@@ -34,7 +34,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
         )}
       />
       <MotifRefusBlock disabled={disabled} mb="6" mt={6} />
-      <AutreMotifRefusField disabled={disabled} mb="6" maxW="752px" />
+      <AutreMotifRefusField disabled={disabled} mb="6" mt={6} maxW="752px" />
     </Box>
   );
 };

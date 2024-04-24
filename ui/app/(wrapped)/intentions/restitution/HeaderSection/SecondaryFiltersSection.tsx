@@ -4,7 +4,11 @@ import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import {
+  getMotifLabel,
+  MotifCampagne,
+  MotifLabel,
+} from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel, TypeDemande } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
@@ -31,7 +35,10 @@ export const SecondaryFiltersSection = ({
 
   const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
     if (motifLabel === "autre") return "Autre";
-    return getMotifLabel(motifLabel as MotifLabel);
+    return getMotifLabel(
+      motifLabel as MotifLabel,
+      activeFilters.campagne as MotifCampagne
+    );
   };
   return (
     <Box borderRadius={4} mb={8} display={["none", null, "block"]}>
