@@ -89,15 +89,17 @@ export const IndicateursSection = ({
           </AspectRatio>
         </Flex>
         <Box flex={1}>
-          <Text>
-            Retrouvez ici les principaux indicateurs (chiffres {CURRENT_RENTREE}
-            ) sur votre territoire.
+          <Flex direction={"row"}>
+            <Text>
+              Retrouvez ici les principaux indicateurs (chiffres{" "}
+              {CURRENT_RENTREE}) sur votre territoire.
+            </Text>
             <GlossaireShortcut
               display={"inline"}
               marginInline={1}
               iconSize={"16px"}
             />
-          </Text>
+          </Flex>
           <SimpleGrid spacing={3} columns={[2]} mt="4">
             <Center fontSize="2xl" fontWeight="bold">
               {labelRegion ?? "-"}
