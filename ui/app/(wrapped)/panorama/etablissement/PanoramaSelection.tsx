@@ -15,7 +15,11 @@ import { useContext, useEffect } from "react";
 import { UaiFilterContext } from "../../../layoutClient";
 import { UaiForm } from "./UaiForm";
 
-export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
+export function PanoramaSelection({
+  wrongUai,
+}: {
+  readonly wrongUai?: string;
+}) {
   const router = useRouter();
   const { uaiFilter, setUaiFilter } = useContext(UaiFilterContext);
 
@@ -38,6 +42,7 @@ export function PanoramaSelection({ wrongUai }: { wrongUai?: string }) {
       pt="6"
       bg="grey.975"
       maxWidth={"container.xl"}
+      h={"100%"}
     >
       <Flex align="center" direction="column">
         <UaiForm

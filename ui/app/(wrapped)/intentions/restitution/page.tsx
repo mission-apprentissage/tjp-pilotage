@@ -179,7 +179,7 @@ export default () => {
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">
-      <Container maxWidth={"100%"} py="4" pt={8} bg="blueecume.925">
+      <Container maxWidth={"100%"} h={"100%"} py="4" pt={8} bg="blueecume.925">
         <HeaderSection
           countData={countData}
           activeFilters={filters}

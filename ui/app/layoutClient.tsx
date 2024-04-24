@@ -29,10 +29,10 @@ import { GlossaireProvider } from "./(wrapped)/glossaire/glossaireContext";
 import { GlossaireEntries } from "./(wrapped)/glossaire/types";
 
 interface RootLayoutClientProps {
-  children: React.ReactNode;
-  auth?: Auth;
-  changelog: Changelog;
-  glossaire: GlossaireEntries;
+  readonly children: React.ReactNode;
+  readonly auth?: Auth;
+  readonly changelog: Changelog;
+  readonly glossaire: GlossaireEntries;
 }
 
 const useCrisp = () => {
