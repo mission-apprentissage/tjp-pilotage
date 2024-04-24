@@ -18,7 +18,7 @@ import { CodeRegionFilterContext } from "../../../layoutClient";
 export function PanoramaSelection({
   regionOptions,
 }: {
-  regionOptions: (typeof client.infer)["[GET]/regions"];
+  readonly regionOptions: (typeof client.infer)["[GET]/regions"];
 }) {
   const router = useRouter();
   const { codeRegionFilter, setCodeRegionFilter } = useContext(
@@ -44,6 +44,7 @@ export function PanoramaSelection({
       pt="6"
       bg="grey.975"
       maxWidth={"container.xl"}
+      h={"100%"}
     >
       <Flex align="center" direction="column">
         <FormControl margin="auto" maxW="300px">
