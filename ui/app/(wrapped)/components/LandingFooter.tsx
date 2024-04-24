@@ -36,10 +36,7 @@ export const LandingFooter = () => {
   const trackEvent = usePlausible();
 
   return (
-    <VStack
-      borderTop="1px"
-      borderTopColor={themeDefinition.colors.bluefrance[113]}
-    >
+    <VStack mt={"auto"} boxShadow="0px -5px 15px -5px rgba(0,0,18,0.16)">
       <Stack
         borderBottom="1px"
         borderBottomColor={themeDefinition.colors.grey[900]}
@@ -121,7 +118,7 @@ export const LandingFooter = () => {
           wrap="wrap"
         >
           <Box>
-            <Link as={NextLink} href="/cgu">
+            <Link as={NextLink} href="/mentions-legales">
               Mentions légales
             </Link>
           </Box>

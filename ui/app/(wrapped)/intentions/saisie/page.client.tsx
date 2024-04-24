@@ -32,7 +32,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -182,275 +181,261 @@ export const PageClient = () => {
   if (isLoading) return <IntentionSpinner />;
 
   return (
-    <>
-      <Container
-        maxWidth="100%"
+    <Container
+      maxWidth="100%"
+      flex={1}
+      flexDirection={["column", null, "row"]}
+      display={"flex"}
+      minHeight={0}
+      py={4}
+    >
+      <MenuIntention
+        hasPermissionEnvoi={hasPermissionEnvoi}
+        isRecapView
+        campagne={data?.campagne}
+      />
+      <Box
+        display={["none", null, "unset"]}
+        borderLeft="solid 1px"
+        borderColor="gray.100"
+        height="100%"
+        mr={4}
+      />
+      <Flex
         flex={1}
-        flexDirection={["column", null, "row"]}
-        display={"flex"}
+        flexDirection="column"
+        overflow="visible"
         minHeight={0}
-        py={4}
+        minW={0}
       >
-        <MenuIntention
-          hasPermissionEnvoi={hasPermissionEnvoi}
-          isRecapView
+        <Header
+          searchParams={searchParams}
+          setSearchParams={setSearchParams}
+          getDemandesQueryParameters={getDemandesQueryParameters}
+          searchDemande={searchDemande}
+          setSearchDemande={setSearchDemande}
+          campagnes={data?.campagnes}
           campagne={data?.campagne}
+          page={page}
+          count={data?.count}
+          onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <Box
-          display={["none", null, "unset"]}
-          borderLeft="solid 1px"
-          borderColor="gray.100"
-          height="100%"
-          mr={4}
-        />
-        <Flex
-          flex={1}
-          flexDirection="column"
-          overflow="visible"
-          minHeight={0}
-          minW={0}
-        >
-          <Header
-            searchParams={searchParams}
-            setSearchParams={setSearchParams}
-            getDemandesQueryParameters={getDemandesQueryParameters}
-            searchDemande={searchDemande}
-            setSearchDemande={setSearchDemande}
-            campagnes={data?.campagnes}
-            campagne={data?.campagne}
-          />
-          {data?.demandes.length ? (
-            <>
-              <TableContainer overflowY="auto" flex={1}>
-                <Table
-                  sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-                  size="md"
-                  variant="striped"
-                  fontSize="14px"
-                  gap="0"
-                >
-                  <Thead
-                    position="sticky"
-                    top="0"
-                    boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                    bg="white"
+        {data?.demandes.length ? (
+          <TableContainer overflowY="auto" flex={1}>
+            <Table
+              sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
+              size="md"
+              variant="striped"
+              fontSize="14px"
+              gap="0"
+            >
+              <Thead
+                position="sticky"
+                top="0"
+                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                bg="white"
+                zIndex={2}
+              >
+                <Tr>
+                  <Th>n° demande</Th>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("libelleFormation")}
                   >
-                    <Tr>
-                      <Th>n° demande</Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleFormation")}
-                      >
-                        <OrderIcon {...order} column="libelleFormation" />
-                        {DEMANDES_COLUMNS.libelleFormation}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleEtablissement")}
-                      >
-                        <OrderIcon {...order} column="libelleEtablissement" />
-                        {DEMANDES_COLUMNS.libelleEtablissement}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("libelleDepartement")}
-                      >
-                        <OrderIcon {...order} column="libelleDepartement" />
-                        {DEMANDES_COLUMNS.libelleDepartement}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("typeDemande")}
-                      >
-                        <OrderIcon {...order} column="typeDemande" />
-                        {DEMANDES_COLUMNS.typeDemande}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("statut")}
-                      >
-                        <OrderIcon {...order} column="statut" />
-                        {DEMANDES_COLUMNS.statut}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("createdAt")}
-                      >
-                        <OrderIcon {...order} column="createdAt" />
-                        {DEMANDES_COLUMNS.createdAt}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("userName")}
-                        w="15"
-                      >
-                        <OrderIcon {...order} column="userName" />
-                        {DEMANDES_COLUMNS.userName}
-                      </Th>
-                      <Th
-                        cursor="pointer"
-                        onClick={() => handleOrder("updatedAt")}
-                      >
-                        <OrderIcon {...order} column="updatedAt" />
-                        {DEMANDES_COLUMNS.updatedAt}
-                      </Th>
-                    </Tr>
-                  </Thead>
-                  <Tbody>
-                    {data?.demandes.map(
-                      (
-                        demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
-                      ) => (
-                        <Tr
-                          height={"60px"}
-                          key={demande.numero}
-                          cursor={isSaisieDisabled() ? "initial" : "pointer"}
-                          whiteSpace={"pre"}
-                          onClick={() => {
-                            if (isSaisieDisabled()) return;
-                            router.push(`/intentions/saisie/${demande.numero}`);
-                          }}
+                    <OrderIcon {...order} column="libelleFormation" />
+                    {DEMANDES_COLUMNS.libelleFormation}
+                  </Th>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("libelleEtablissement")}
+                  >
+                    <OrderIcon {...order} column="libelleEtablissement" />
+                    {DEMANDES_COLUMNS.libelleEtablissement}
+                  </Th>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("libelleDepartement")}
+                  >
+                    <OrderIcon {...order} column="libelleDepartement" />
+                    {DEMANDES_COLUMNS.libelleDepartement}
+                  </Th>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("typeDemande")}
+                  >
+                    <OrderIcon {...order} column="typeDemande" />
+                    {DEMANDES_COLUMNS.typeDemande}
+                  </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("statut")}>
+                    <OrderIcon {...order} column="statut" />
+                    {DEMANDES_COLUMNS.statut}
+                  </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
+                    <OrderIcon {...order} column="createdAt" />
+                    {DEMANDES_COLUMNS.createdAt}
+                  </Th>
+                  <Th
+                    cursor="pointer"
+                    onClick={() => handleOrder("userName")}
+                    w="15"
+                  >
+                    <OrderIcon {...order} column="userName" />
+                    {DEMANDES_COLUMNS.userName}
+                  </Th>
+                  <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
+                    <OrderIcon {...order} column="updatedAt" />
+                    {DEMANDES_COLUMNS.updatedAt}
+                  </Th>
+                  {data?.campagne.statut === CampagneStatutEnum["terminée"] && (
+                    <Th />
+                  )}
+                </Tr>
+              </Thead>
+              <Tbody>
+                {data?.demandes.map(
+                  (
+                    demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
+                  ) => (
+                    <Tr
+                      height={"60px"}
+                      position={"relative"}
+                      zIndex={1}
+                      key={demande.numero}
+                      cursor={isSaisieDisabled() ? "initial" : "pointer"}
+                      whiteSpace={"pre"}
+                      onClick={() => {
+                        if (isSaisieDisabled()) return;
+                        router.push(`/intentions/saisie/${demande.numero}`);
+                      }}
+                    >
+                      <Td>{demande.numero}</Td>
+                      <Td>
+                        <Text
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"break-spaces"}
+                          noOfLines={2}
                         >
-                          <Td>{demande.numero}</Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
+                          {demande.libelleFormation}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"break-spaces"}
+                          noOfLines={2}
+                        >
+                          {demande.libelleEtablissement}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"break-spaces"}
+                          noOfLines={2}
+                        >
+                          {demande.libelleDepartement}
+                        </Text>
+                      </Td>
+                      <Td>
+                        <Text
+                          textOverflow={"ellipsis"}
+                          overflow={"hidden"}
+                          whiteSpace={"break-spaces"}
+                          noOfLines={2}
+                        >
+                          {demande.typeDemande
+                            ? getTypeDemandeLabel(demande.typeDemande)
+                            : null}
+                        </Text>
+                      </Td>
+                      <Td align="center" w={0}>
+                        <TagDemande statut={demande.statut} />
+                      </Td>
+                      <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
+                      <Td w="15" textAlign={"center"}>
+                        <Tooltip label={demande.userName}>
+                          <Avatar
+                            name={demande.userName}
+                            colorScheme={getAvatarBgColor(
+                              demande.userName ?? ""
+                            )}
+                            bg={getAvatarBgColor(demande.userName ?? "")}
+                            color={"white"}
+                            position={"unset"}
+                          />
+                        </Tooltip>
+                      </Td>
+                      <Td textAlign={"center"}>
+                        {new Date(demande.updatedAt).toLocaleString()}
+                      </Td>
+                      {data?.campagne.statut ===
+                        CampagneStatutEnum["terminée"] && (
+                        <Td>
+                          {demande.numeroDemandeImportee ? (
+                            <Button
+                              as={NextLink}
+                              variant="link"
+                              href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                              leftIcon={<ExternalLinkIcon />}
+                              me={"auto"}
                             >
-                              {demande.libelleFormation}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
+                              Demande dupliquée {demande.numeroDemandeImportee}
+                            </Button>
+                          ) : (
+                            <Button
+                              leftIcon={<Icon icon="ri:import-line" />}
+                              variant={"newInput"}
+                              onClick={(e) => {
+                                setIsImporting(true);
+                                if (demande.numeroDemandeImportee) return;
+                                e.preventDefault();
+                                e.stopPropagation();
+                                importDemande({
+                                  params: { numero: demande.numero },
+                                });
+                              }}
+                              isDisabled={
+                                !!demande.numeroDemandeImportee ||
+                                isSubmitting ||
+                                isImporting
+                              }
                             >
-                              {demande.libelleEtablissement}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {demande.libelleDepartement}
-                            </Text>
-                          </Td>
-                          <Td>
-                            <Text
-                              textOverflow={"ellipsis"}
-                              overflow={"hidden"}
-                              whiteSpace={"break-spaces"}
-                              noOfLines={2}
-                            >
-                              {demande.typeDemande
-                                ? getTypeDemandeLabel(demande.typeDemande)
-                                : null}
-                            </Text>
-                          </Td>
-                          <Td align="center" w={0}>
-                            <TagDemande statut={demande.statut} />
-                          </Td>
-                          <Td>
-                            {new Date(demande.createdAt).toLocaleString()}
-                          </Td>
-                          <Td w="15" textAlign={"center"}>
-                            <Tooltip label={demande.userName}>
-                              <Avatar
-                                name={demande.userName}
-                                colorScheme={getAvatarBgColor(
-                                  demande.userName ?? ""
-                                )}
-                                bg={getAvatarBgColor(demande.userName ?? "")}
-                                color={"white"}
-                                position={"unset"}
-                              />
-                            </Tooltip>
-                          </Td>
-                          <Td textAlign={"center"}>
-                            {new Date(demande.updatedAt).toLocaleString()}
-                          </Td>
-                          {data?.campagne.statut ===
-                            CampagneStatutEnum["terminée"] && (
-                            <Td>
-                              {demande.numeroDemandeImportee ? (
-                                <Button
-                                  as={NextLink}
-                                  variant="link"
-                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                  leftIcon={<ExternalLinkIcon />}
-                                  me={"auto"}
-                                >
-                                  Demande dupliquée{" "}
-                                  {demande.numeroDemandeImportee}
-                                </Button>
-                              ) : (
-                                <Button
-                                  leftIcon={<Icon icon="ri:import-line" />}
-                                  variant={"newInput"}
-                                  onClick={(e) => {
-                                    setIsImporting(true);
-                                    if (demande.numeroDemandeImportee) return;
-                                    e.preventDefault();
-                                    e.stopPropagation();
-                                    importDemande({
-                                      params: { numero: demande.numero },
-                                    });
-                                  }}
-                                  isDisabled={
-                                    !!demande.numeroDemandeImportee ||
-                                    isSubmitting ||
-                                    isImporting
-                                  }
-                                >
-                                  Dupliquer cette demande
-                                </Button>
-                              )}
-                            </Td>
+                              Dupliquer cette demande
+                            </Button>
                           )}
-                        </Tr>
-                      )
-                    )}
-                  </Tbody>
-                </Table>
-              </TableContainer>
-              <TableFooter
-                pl="4"
-                page={page}
-                pageSize={PAGE_SIZE}
-                count={data?.count}
-                onPageChange={(newPage) => setSearchParams({ page: newPage })}
-              />
-            </>
-          ) : (
-            <Center mt={12}>
-              <Flex flexDirection={"column"}>
-                <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-                {hasPermissionEnvoi && (
-                  <Button
-                    isDisabled={isDisabled}
-                    variant="createButton"
-                    size={"lg"}
-                    as={!isDisabled ? NextLink : undefined}
-                    href="/intentions/saisie/new"
-                    px={3}
-                    mt={12}
-                    mx={"auto"}
-                  >
-                    Nouvelle demande
-                  </Button>
+                        </Td>
+                      )}
+                    </Tr>
+                  )
                 )}
-              </Flex>
-            </Center>
-          )}
-        </Flex>
-      </Container>
-    </>
+              </Tbody>
+            </Table>
+          </TableContainer>
+        ) : (
+          <Center mt={12}>
+            <Flex flexDirection={"column"}>
+              <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
+              {hasPermissionEnvoi && (
+                <Button
+                  isDisabled={isDisabled}
+                  variant="createButton"
+                  size={"lg"}
+                  as={!isDisabled ? NextLink : undefined}
+                  href="/intentions/saisie/new"
+                  px={3}
+                  mt={12}
+                  mx={"auto"}
+                >
+                  Nouvelle demande
+                </Button>
+              )}
+            </Flex>
+          </Center>
+        )}
+      </Flex>
+    </Container>
   );
 };
