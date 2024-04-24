@@ -120,48 +120,50 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   };
 
   return (
-    <Container maxWidth={"container.xl"} bg="blueecume.925" py="4">
-      <FiltersSection
-        activeFilters={filters}
-        handleFilters={handleFilters}
-        filterTracker={filterTracker}
-        isLoading={isLoading}
-        data={data}
-      />
-      <Box>
-        <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
-          <Box flex={1}>
-            <IndicateursClesSection data={data} isLoading={isLoading} />
-            <EvolutionIndicateursClesSection
-              data={data}
-              isLoading={isLoading}
-              isFiltered={isFiltered}
-              codeRegion={filters.codeRegion}
+    <Box bg="blueecume.950">
+      <Container maxWidth={"container.xl"} py="4">
+        <FiltersSection
+          activeFilters={filters}
+          handleFilters={handleFilters}
+          filterTracker={filterTracker}
+          isLoading={isLoading}
+          data={data}
+        />
+        <Box>
+          <Flex gap={8} mt={8} flexDirection={["column", null, "row"]}>
+            <Box flex={1}>
+              <IndicateursClesSection data={data} isLoading={isLoading} />
+              <EvolutionIndicateursClesSection
+                data={data}
+                isLoading={isLoading}
+                isFiltered={isFiltered}
+                codeRegion={filters.codeRegion}
+                indicateur={indicateur}
+                handleIndicateurChange={handleIndicateurChange}
+                indicateurOptions={indicateurOptions}
+              />
+            </Box>
+            <CartoSection
+              data={dataRegions}
+              isLoading={isLoadingRegions}
               indicateur={indicateur}
               handleIndicateurChange={handleIndicateurChange}
               indicateurOptions={indicateurOptions}
-            />
-          </Box>
-          <CartoSection
-            data={dataRegions}
-            isLoading={isLoadingRegions}
-            indicateur={indicateur}
-            handleIndicateurChange={handleIndicateurChange}
-            indicateurOptions={indicateurOptions}
-            activeFilters={filters}
-            handleFilters={handleFilters}
-          ></CartoSection>
-        </Flex>
-        <SimpleGrid spacing={5} columns={[1]} mt={14}>
-          <VueRegionAcademieSection
-            data={dataRegions}
-            order={order}
-            isLoading={isLoadingRegions}
-            handleOrder={handleOrder}
-            codeRegion={filters.codeRegion}
-          ></VueRegionAcademieSection>
-        </SimpleGrid>
-      </Box>
-    </Container>
+              activeFilters={filters}
+              handleFilters={handleFilters}
+            ></CartoSection>
+          </Flex>
+          <SimpleGrid spacing={5} columns={[1]} mt={14}>
+            <VueRegionAcademieSection
+              data={dataRegions}
+              order={order}
+              isLoading={isLoadingRegions}
+              handleOrder={handleOrder}
+              codeRegion={filters.codeRegion}
+            ></VueRegionAcademieSection>
+          </SimpleGrid>
+        </Box>
+      </Container>
+    </Box>
   );
 });
