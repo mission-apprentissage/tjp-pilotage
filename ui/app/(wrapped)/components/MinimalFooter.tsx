@@ -11,13 +11,11 @@ import {
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 
-import { themeDefinition } from "../../../theme/theme";
-
 export const MinimalFooter = () => {
   const trackEvent = usePlausible();
 
   return (
-    <VStack mt={"auto"} boxShadow="0px -5px 15px -5px rgba(0,0,18,0.16)">
+    <VStack mt={"auto"} borderTop="1px" borderTopColor={"grey.900"}>
       <Stack
         padding={{
           base: "16px",
@@ -29,14 +27,12 @@ export const MinimalFooter = () => {
         <HStack
           width="100%"
           fontSize="12px"
-          color={themeDefinition.colors.grey[425]}
+          color={"grey.425"}
           gap={{
             base: "8px 8px",
             md: "16px",
           }}
-          divider={
-            <StackDivider borderColor={themeDefinition.colors.grey[900]} />
-          }
+          divider={<StackDivider borderColor={"grey.900"} />}
           wrap="wrap"
         >
           <Box>
