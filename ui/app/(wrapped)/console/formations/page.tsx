@@ -26,11 +26,11 @@ import { client } from "@/api.client";
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { Multiselect } from "@/components/Multiselect";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
+import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import {
@@ -327,6 +327,34 @@ export default function Formations() {
             <Spinner />
           </Center>
         )}
+        <TableHeader
+          onExportCsv={async () => {
+            trackEvent("formations:export");
+            const data = await client.ref("[GET]/formations").query({
+              query: getFormationsQueryParameters(EXPORT_LIMIT),
+            });
+            downloadCsv(
+              "formations_export",
+              data.formations,
+              FORMATION_COLUMNS
+            );
+          }}
+          onExportExcel={async () => {
+            const data = await client.ref("[GET]/formations").query({
+              query: getFormationsQueryParameters(EXPORT_LIMIT),
+            });
+            trackEvent("formations:export-excel");
+            downloadExcel(
+              "formations_export",
+              data.formations,
+              FORMATION_COLUMNS
+            );
+          }}
+          page={page}
+          pageSize={PAGE_SIZE}
+          count={data?.count}
+          onPageChange={(newPage) => setSearchParams({ page: newPage })}
+        />
         <TableContainer overflowY="auto" flex={1} position="relative">
           <Table variant="simple" size={"sm"}>
             <Thead
@@ -615,30 +643,6 @@ export default function Formations() {
           </Table>
         </TableContainer>
       </Flex>
-      <TableFooter
-        onExportCsv={async () => {
-          trackEvent("formations:export");
-          const data = await client.ref("[GET]/formations").query({
-            query: getFormationsQueryParameters(EXPORT_LIMIT),
-          });
-          downloadCsv("formations_export", data.formations, FORMATION_COLUMNS);
-        }}
-        onExportExcel={async () => {
-          const data = await client.ref("[GET]/formations").query({
-            query: getFormationsQueryParameters(EXPORT_LIMIT),
-          });
-          trackEvent("formations:export-excel");
-          downloadExcel(
-            "formations_export",
-            data.formations,
-            FORMATION_COLUMNS
-          );
-        }}
-        page={page}
-        pageSize={PAGE_SIZE}
-        count={data?.count}
-        onPageChange={(newPage) => setSearchParams({ page: newPage })}
-      />
     </>
   );
 }
