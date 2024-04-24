@@ -23,7 +23,6 @@ import { useMemo, useState } from "react";
 import { client } from "@/api.client";
 import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
 import {
   downloadCsv,
   downloadExcel,
@@ -32,6 +31,7 @@ import {
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 
+import { TableHeader } from "../../../../components/TableHeader";
 import { CreateUser } from "./CreateUser";
 
 const Columns = {
@@ -92,6 +92,8 @@ export default () => {
         <>
           <Flex px={4} py="2">
             <Box
+              mt={"auto"}
+              mb={1.5}
               as="form"
               flex={1}
               onSubmit={() => setFilters({ ...filters, search })}
@@ -104,6 +106,8 @@ export default () => {
               <Button hidden type="submit" />
             </Box>
             <Button
+              mt={"auto"}
+              mb={1.5}
               variant="primary"
               ml="4"
               leftIcon={<AddIcon />}
@@ -114,7 +118,30 @@ export default () => {
             >
               Ajouter un utilisateur
             </Button>
+            <TableHeader
+              mt={"auto"}
+              pl="4"
+              page={filters.page}
+              pageSize={10}
+              count={data.count}
+              onPageChange={(newPage) =>
+                setFilters({ ...filters, page: newPage })
+              }
+              onExportCsv={async () => {
+                const data = await client.ref("[GET]/users").query({
+                  query: { ...filters, ...order, limit: 1000000 },
+                });
+                downloadCsv("users_export", data.users, Columns);
+              }}
+              onExportExcel={async () => {
+                const data = await client.ref("[GET]/users").query({
+                  query: { ...filters, ...order, limit: 1000000 },
+                });
+                downloadExcel("users_export", data.users, Columns);
+              }}
+            />
           </Flex>
+
           <TableContainer overflowY="auto" flex={1}>
             <Table
               sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
@@ -214,27 +241,6 @@ export default () => {
               </Box>
             )}
           </TableContainer>
-          <TableFooter
-            pl="4"
-            page={filters.page}
-            pageSize={10}
-            count={data.count}
-            onPageChange={(newPage) =>
-              setFilters({ ...filters, page: newPage })
-            }
-            onExportCsv={async () => {
-              const data = await client.ref("[GET]/users").query({
-                query: { ...filters, ...order, limit: 1000000 },
-              });
-              downloadCsv("users_export", data.users, Columns);
-            }}
-            onExportExcel={async () => {
-              const data = await client.ref("[GET]/users").query({
-                query: { ...filters, ...order, limit: 1000000 },
-              });
-              downloadExcel("users_export", data.users, Columns);
-            }}
-          />
           {user && isOpen && (
             <EditUser isOpen={isOpen} onClose={onClose} user={user} />
           )}

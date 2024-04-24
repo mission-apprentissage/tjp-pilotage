@@ -4,8 +4,6 @@ import { NotionAPI } from "notion-client";
 
 import { Doc } from "@/app/_components/NotionDoc";
 
-import { LandingFooter } from "../components/LandingFooter";
-
 export const revalidate = 60;
 
 const fetchData = async () => {
@@ -18,10 +16,5 @@ const fetchData = async () => {
 
 export default async function Ressources() {
   const recordMap = await fetchData();
-  return (
-    <>
-      <Doc recordMap={recordMap} />
-      <LandingFooter />
-    </>
-  );
+  return <Doc recordMap={recordMap} />;
 }

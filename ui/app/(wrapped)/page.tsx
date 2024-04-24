@@ -24,7 +24,6 @@ import { Card } from "./components/Card";
 import { EditorialTitle } from "./components/EditorialTitle";
 import { Hero } from "./components/Hero";
 import { LandingAccordionItem } from "./components/LandingAccordionItem";
-import { LandingFooter } from "./components/LandingFooter";
 
 export default function Home() {
   const nombreFormations = 509;
@@ -336,7 +335,6 @@ export default function Home() {
           </Accordion>
         </Box>
       </VStack>
-      <LandingFooter />
     </Box>
   );
 }
