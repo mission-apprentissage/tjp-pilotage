@@ -19,7 +19,7 @@ import { CodeDepartementFilterContext } from "../../../layoutClient";
 export function PanoramaSelection({
   departementsOptions,
 }: {
-  departementsOptions: (typeof client.infer)["[GET]/departements"];
+  readonly departementsOptions: (typeof client.infer)["[GET]/departements"];
 }) {
   const router = useRouter();
   const { codeDepartementFilter, setCodeDepartementFilter } = useContext(
@@ -45,6 +45,7 @@ export function PanoramaSelection({
       pt="6"
       bg="grey.975"
       maxWidth={"container.xl"}
+      h={"100%"}
     >
       <Flex align="center" direction="column">
         <FormControl margin="auto" maxW="300px">
