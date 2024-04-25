@@ -11,7 +11,10 @@ import {
   countFermeturesSco,
   countOuvertures,
   countOuverturesApprentissage,
+  countOuverturesApprentissageColoree,
+  countOuverturesColoree,
   countOuverturesSco,
+  countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
@@ -100,6 +103,17 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(${countFermeturesApprentissage(eb)}),0
         )`,
       }).as("fermetures")
+    )
+    .select((eb) =>
+      jsonBuildObject({
+        total: sql<number>`COALESCE(SUM(${countOuverturesColoree(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(
+          SUM(${countOuverturesScolaireColoree(eb)}),0
+        )`,
+        apprentissage: sql<number>`COALESCE(
+          SUM(${countOuverturesApprentissageColoree(eb)}),0
+        )`,
+      }).as("coloration")
     )
     .select((eb) =>
       jsonBuildObject({
