@@ -11,6 +11,27 @@ import {
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { DemandesRestitutionIntentions } from "../types";
 
+const handleMotifLabel = ({
+  motifs,
+  autreMotif,
+  campagne,
+}: {
+  motifs?: string[];
+  campagne?: string;
+  autreMotif?: string;
+}) => {
+  if (!motifs) return undefined;
+  const formattedMotifs = motifs?.map((motif) =>
+    motif === "autre"
+      ? `Autre : ${autreMotif}`
+      : getMotifLabel({
+          motif: motif as MotifLabel,
+          campagne: campagne as MotifCampagne,
+        })
+  );
+  return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
+};
+
 export const LineContent = ({
   demande,
   campagne,
@@ -18,16 +39,6 @@ export const LineContent = ({
   demande: DemandesRestitutionIntentions["demandes"][0];
   campagne?: string;
 }) => {
-  const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
-    if (!motif) return;
-    const formattedMotifs = motif?.map((motif) =>
-      motif === "autre"
-        ? `Autre : ${autreMotif}`
-        : getMotifLabel(motif as MotifLabel, campagne as MotifCampagne)
-    );
-    return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
-  };
-
   return (
     <>
       <Td pr="0" py="1">
@@ -40,7 +51,11 @@ export const LineContent = ({
         textOverflow={"ellipsis"}
         isTruncated={true}
       >
-        {handleMotifLabel(demande.motif, demande.autreMotif)}
+        {handleMotifLabel({
+          motifs: demande.motif,
+          autreMotif: demande.autreMotif,
+          campagne: campagne,
+        })}
       </Td>
       <Td>{demande.niveauDiplome}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">
