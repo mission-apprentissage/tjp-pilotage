@@ -103,6 +103,11 @@ export const CountersSection = ({
           icon={"places_fermees"}
           value={countData?.fermetures}
         />
+        <CountCard
+          label="Places colorées"
+          icon={"coloration"}
+          value={countData?.coloration}
+        />
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
