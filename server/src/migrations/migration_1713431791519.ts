@@ -201,6 +201,11 @@ export const down = async (db: Kysely<unknown>) => {
   // Drop view to enable altering the view column "statut" type
   await db.schema.dropView("latestDemandeView").execute();
 
+  await db.schema
+    .alterTable("demande")
+    .dropColumn("amiCmaEnCoursValidation")
+    .execute();
+
   await db.executeQuery(
     sql`
       ALTER TABLE "demande" ALTER COLUMN "statut" TYPE "varchar" USING "statut"::text;
