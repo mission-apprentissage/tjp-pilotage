@@ -32,6 +32,8 @@ export const createDemandeQuery = ({
         "compensationRentreeScolaire",
         "createurId",
         "statut",
+        "motifRefus",
+        "autreMotifRefus",
         "typeDemande",
       ]) as Insertable<DB["demande"]>),
       id: generateId(),
