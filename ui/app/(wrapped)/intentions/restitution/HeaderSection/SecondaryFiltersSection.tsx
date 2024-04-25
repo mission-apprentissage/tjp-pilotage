@@ -1,5 +1,6 @@
 import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
 
+import { getTypeDemandeLabelFiltre } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
@@ -9,7 +10,7 @@ import {
   MotifCampagne,
   MotifLabel,
 } from "../../utils/motifDemandeUtils";
-import { getTypeDemandeLabel, TypeDemande } from "../../utils/typeDemandeUtils";
+import { TypeDemande } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -197,7 +198,7 @@ export const SecondaryFiltersSection = ({
                 (typeDemande: { value: string; label: string }) => {
                   return {
                     value: typeDemande.value,
-                    label: getTypeDemandeLabel(
+                    label: getTypeDemandeLabelFiltre(
                       typeDemande.value as TypeDemande
                     ),
                   };
