@@ -67,6 +67,7 @@ export const InformationsBlock = ({
       <SectionBlock>
         <PrecisionsSection
           motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
+          campagne={campagne}
           disabled={disabled}
         />
       </SectionBlock>

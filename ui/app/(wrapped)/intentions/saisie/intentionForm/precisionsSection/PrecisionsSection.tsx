@@ -5,6 +5,7 @@ import { useFormContext } from "react-hook-form";
 
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
+import { Campagne } from "../../types";
 import { IntentionForms } from "../defaultFormValues";
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
@@ -16,9 +17,11 @@ import { MotifField } from "./MotifField";
 export const PrecisionsSection = ({
   disabled,
   motifsEtPrecisionsRef,
+  campagne,
 }: {
   disabled: boolean;
   motifsEtPrecisionsRef: RefObject<HTMLDivElement>;
+  campagne?: Campagne;
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
@@ -42,7 +45,12 @@ export const PrecisionsSection = ({
       </Heading>
       <Divider pt="4" mb="4" />
       <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
-        <MotifField disabled={disabled} maxW="752px" mb="4" />
+        <MotifField
+          disabled={disabled}
+          maxW="752px"
+          mb="4"
+          campagne={campagne}
+        />
         <AutreMotifField disabled={disabled} mb="4" maxW="752px" />
         <QuestionBlock active={!!amiCma}>
           <AmiCmaField disabled={disabled} />

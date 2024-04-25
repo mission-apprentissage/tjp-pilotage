@@ -29,7 +29,7 @@ export const AutreMotifRefusField = chakra(
           isInvalid={!!errors.autreMotifRefus}
           isRequired
         >
-          <FormLabel>Autre motif</FormLabel>
+          <FormLabel>Autre motif de refus</FormLabel>
           {visible && (
             <Textarea
               {...register("autreMotifRefus", {

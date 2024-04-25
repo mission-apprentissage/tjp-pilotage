@@ -66,11 +66,13 @@ export const ConsoleSection = ({
   isLoading,
   order,
   handleOrder,
+  campagne,
 }: {
   data?: DemandesRestitutionIntentions;
   isLoading: boolean;
   order: OrderDemandesRestitutionIntentions;
   handleOrder: (column: OrderDemandesRestitutionIntentions["orderBy"]) => void;
+  campagne?: string;
 }) => {
   const router = useRouter();
   return (
@@ -416,7 +418,7 @@ export const ConsoleSection = ({
                             router.push(`/intentions/saisie/${demande.numero}`)
                           }
                         >
-                          <LineContent demande={demande} />
+                          <LineContent demande={demande} campagne={campagne} />
                         </Tr>
                       </Fragment>
                     );
