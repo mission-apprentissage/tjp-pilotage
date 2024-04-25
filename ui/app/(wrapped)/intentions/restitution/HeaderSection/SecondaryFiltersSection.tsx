@@ -15,6 +15,20 @@ import {
   FiltersDemandesRestitutionIntentions,
 } from "../types";
 
+const handleMotifLabelFilter = ({
+  motifLabel,
+  campagne,
+}: {
+  motifLabel: string;
+  campagne?: string;
+}) => {
+  if (motifLabel === "autre") return "Autre";
+  return getMotifLabel({
+    motif: motifLabel as MotifLabel,
+    campagne: campagne as MotifCampagne,
+  });
+};
+
 export const SecondaryFiltersSection = ({
   activeFilters,
   handleFilters,
@@ -32,14 +46,6 @@ export const SecondaryFiltersSection = ({
   data?: DemandesRestitutionIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
-
-  const handleMotifLabelFilter = (motifLabel: MotifLabel) => {
-    if (motifLabel === "autre") return "Autre";
-    return getMotifLabel(
-      motifLabel as MotifLabel,
-      activeFilters.campagne as MotifCampagne
-    );
-  };
   return (
     <Box borderRadius={4} mb={8} display={["none", null, "block"]}>
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
@@ -215,7 +221,10 @@ export const SecondaryFiltersSection = ({
                 (motif: { value: string; label: string }) => {
                   return {
                     value: motif.value,
-                    label: handleMotifLabelFilter(motif.value as MotifLabel),
+                    label: handleMotifLabelFilter({
+                      motifLabel: motif.value,
+                      campagne: activeFilters.campagne,
+                    }),
                   };
                 }
               )}

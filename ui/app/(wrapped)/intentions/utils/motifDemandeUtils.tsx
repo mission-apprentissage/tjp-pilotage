@@ -123,10 +123,16 @@ const motifs: Record<TypeDemande, MotifLabel[]> = {
   coloration: motifsColoration as MotifLabel[],
 };
 
-export const getMotifLabel = (
-  motif: MotifLabel,
-  campagne: MotifCampagne = CURRENT_ANNEE_CAMPAGNE
-): string => MOTIFS_LABELS[campagne][motif];
+export const getMotifLabel = ({
+  motif,
+  campagne = CURRENT_ANNEE_CAMPAGNE,
+}: {
+  motif: MotifLabel;
+  campagne?: MotifCampagne;
+}): string => {
+  console.log(campagne, MOTIFS_LABELS[campagne]);
+  return MOTIFS_LABELS[campagne][motif];
+};
 
 export const getMotifs = () => motifs;
 export const getMotifsCampagne = (

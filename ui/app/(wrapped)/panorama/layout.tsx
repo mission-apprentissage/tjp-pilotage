@@ -20,36 +20,42 @@ const getTabIndex = (segment: string | null) => {
   if (segment === "etablissement") return 2;
 };
 
-export default function PanoramaLayout({ children }: { children: ReactNode }) {
+export default function PanoramaLayout({
+  children,
+}: {
+  readonly children: ReactNode;
+}) {
   const segment = useSelectedLayoutSegment();
   const tabIndex = getTabIndex(segment);
 
+  const getPages = () => {
+    if (segment === "region")
+      return [
+        { title: "Accueil", to: "/" },
+        { title: "Panorama régional", to: "/panorama/region", active: true },
+      ];
+    if (segment === "departement")
+      return [
+        { title: "Accueil", to: "/" },
+        {
+          title: "Panorama départemental",
+          to: "/panorama/departement",
+          active: true,
+        },
+      ];
+    return [
+      { title: "Accueil", to: "/" },
+      {
+        title: "Panorama établissement",
+        to: "/panorama/etablissement",
+        active: true,
+      },
+    ];
+  };
+
   return (
-    <Container maxWidth={"container.xl"} py="4">
-      <Breadcrumb
-        mb={4}
-        ml={4}
-        pages={[
-          { title: "Accueil", to: "/" },
-          segment === "region"
-            ? {
-                title: "Panorama régional",
-                to: "/panorama/region",
-                active: true,
-              }
-            : segment === "departement"
-            ? {
-                title: "Panorama départemental",
-                to: "/panorama/departement",
-                active: true,
-              }
-            : {
-                title: "Panorama établissement",
-                to: "/panorama/etablissement",
-                active: true,
-              },
-        ]}
-      />
+    <Container maxWidth={"container.xl"} py="4" pb={20}>
+      <Breadcrumb mb={4} ml={4} pages={getPages()} />
       <Tabs
         isLazy={true}
         index={tabIndex}
