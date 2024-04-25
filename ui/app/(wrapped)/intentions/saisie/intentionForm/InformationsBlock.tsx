@@ -66,7 +66,7 @@ export const InformationsBlock = ({
         <TypeDemandeSection disabled={disabled} campagne={campagne} />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <PrecisionsSection disabled={disabled} />
+        <PrecisionsSection disabled={disabled} campagne={campagne} />
       </Box>
       <Box bg="white" p="6" mt="6" borderRadius={6}>
         <RHSection disabled={disabled} />

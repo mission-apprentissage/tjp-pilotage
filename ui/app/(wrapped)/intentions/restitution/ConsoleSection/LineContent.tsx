@@ -3,30 +3,42 @@ import { Td } from "@chakra-ui/react";
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
-import { getMotifLabel, MotifLabel } from "../../utils/motifDemandeUtils";
+import {
+  getMotifLabel,
+  MotifCampagne,
+  MotifLabel,
+} from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { DemandesRestitutionIntentions } from "../types";
 
+const handleMotifLabel = ({
+  motifs,
+  autreMotif,
+  campagne,
+}: {
+  motifs?: string[];
+  campagne?: string;
+  autreMotif?: string;
+}) => {
+  if (!motifs) return undefined;
+  const formattedMotifs = motifs?.map((motif) =>
+    motif === "autre"
+      ? `Autre : ${autreMotif}`
+      : getMotifLabel({
+          motif: motif as MotifLabel,
+          campagne: campagne as MotifCampagne,
+        })
+  );
+  return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
+};
+
 export const LineContent = ({
   demande,
+  campagne,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
+  campagne?: string;
 }) => {
-  const handleMotifLabel = (motif?: string[], autreMotif?: string) => {
-    return motif ? (
-      `(${motif.length}) ${motif.map(
-        (motifLabel: string, index: number) =>
-          `${
-            motifLabel === "autre"
-              ? `Autre : ${autreMotif}\n`
-              : getMotifLabel(motifLabel as MotifLabel)
-          }${motif && motif.length - 1 > index ? ", " : ""}`
-      )}`
-    ) : (
-      <></>
-    );
-  };
-
   return (
     <>
       <Td pr="0" py="1">
@@ -39,7 +51,11 @@ export const LineContent = ({
         textOverflow={"ellipsis"}
         isTruncated={true}
       >
-        {handleMotifLabel(demande.motif, demande.autreMotif)}
+        {handleMotifLabel({
+          motifs: demande.motif,
+          autreMotif: demande.autreMotif,
+          campagne: campagne,
+        })}
       </Td>
       <Td>{demande.niveauDiplome}</Td>
       <Td minW={300} maxW={300} whiteSpace="normal">

@@ -11,11 +11,14 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeColoration } from "shared/demandeValidators/validators";
+import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import {
   getMotifsTypeDemande,
+  MotifCampagne,
   MotifLabel,
   MOTIFS_LABELS,
 } from "../../../utils/motifDemandeUtils";
@@ -25,8 +28,11 @@ import {
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
 
-const getMotifOptions = (typeDemande: TypeDemande) => {
-  return Object.entries(MOTIFS_LABELS)
+const getMotifOptions = (
+  typeDemande: TypeDemande,
+  campagne: string = CURRENT_ANNEE_CAMPAGNE
+) => {
+  return Object.entries(MOTIFS_LABELS[campagne as MotifCampagne])
     .filter(
       ([key]) => getMotifsTypeDemande(typeDemande)?.includes(key as MotifLabel)
     )
@@ -37,7 +43,15 @@ const getMotifOptions = (typeDemande: TypeDemande) => {
 };
 
 export const MotifField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  ({
+    disabled,
+    campagne,
+    className,
+  }: {
+    disabled?: boolean;
+    campagne?: Campagne;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       control,
@@ -74,20 +88,22 @@ export const MotifField = chakra(
             return (
               <CheckboxGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]} ms={6}>
-                  {getMotifOptions(typeDemande)?.map(({ value, label }) => (
-                    <Checkbox
-                      ref={ref}
-                      disabled={disabled}
-                      name={name}
-                      key={value}
-                      onBlur={onBlur}
-                      value={value}
-                      _checked={{ fontWeight: "bold !important" }}
-                      fontWeight={"400 !important"}
-                    >
-                      {label}
-                    </Checkbox>
-                  ))}
+                  {getMotifOptions(typeDemande, campagne?.annee)?.map(
+                    ({ value, label }) => (
+                      <Checkbox
+                        ref={ref}
+                        disabled={disabled}
+                        name={name}
+                        key={value}
+                        onBlur={onBlur}
+                        value={value}
+                        _checked={{ fontWeight: "bold !important" }}
+                        fontWeight={"400 !important"}
+                      >
+                        {label}
+                      </Checkbox>
+                    )
+                  )}
                 </Stack>
                 {coloration &&
                   !isTypeColoration(typeDemande) &&
