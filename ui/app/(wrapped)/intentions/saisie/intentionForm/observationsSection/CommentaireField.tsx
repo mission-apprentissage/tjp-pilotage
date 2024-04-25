@@ -23,6 +23,7 @@ export const CommentaireField = chakra(
           variant="grey"
           height={150}
           {...register("commentaire", { shouldUnregister: true, disabled })}
+          placeholder="Merci de détailler les éléments de contexte du projet : développement économique ou démographique du territoire, prospectives étayées, partenariats noués, typologie d’élèves accueillis…"
         />
         {errors.commentaire && (
           <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>
