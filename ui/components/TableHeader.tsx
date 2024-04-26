@@ -12,6 +12,7 @@ export const TableHeader = chakra(
     onExportCsv,
     onExportExcel,
     className,
+    ColonneFilter,
   }: {
     pageSize: number;
     page: number;
@@ -20,9 +21,11 @@ export const TableHeader = chakra(
     onExportCsv?: () => Promise<void>;
     onExportExcel?: () => Promise<void>;
     className?: string;
+    ColonneFilter?: React.ReactNode;
   }) => {
     return (
       <Flex align="center" py="1.5" className={className}>
+        {ColonneFilter}
         <Flex ml="auto">
           {(onExportCsv || onExportExcel) && (
             <ExportMenuButton

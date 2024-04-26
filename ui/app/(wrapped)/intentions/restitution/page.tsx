@@ -1,6 +1,6 @@
 "use client";
 
-import { Container } from "@chakra-ui/react";
+import { chakra, Container, Flex, FormLabel } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -13,15 +13,72 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
+import { Multiselect } from "../../../../components/Multiselect";
 import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
-import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
+import {
+  GROUPED_STATS_DEMANDES_COLUMNS,
+  STATS_DEMANDES_COLUMNS,
+} from "./STATS_DEMANDES_COLUMN";
 import {
   FiltersDemandesRestitutionIntentions,
   OrderDemandesRestitutionIntentions,
 } from "./types";
+
+const ColonneFiltersSection = chakra(
+  ({
+    colonneFilters,
+    setColonneFilters,
+  }: {
+    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+    setColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS)[]) => void;
+  }) => {
+    const handleColonneFilters = (
+      value: (keyof typeof STATS_DEMANDES_COLUMNS)[]
+    ) => {
+      setColonneFilters(value);
+    };
+
+    return (
+      <Flex justifyContent={"start"} direction="row">
+        <FormLabel mt={"auto"}>Colonnes</FormLabel>
+        <Multiselect
+          width={"48"}
+          size="md"
+          variant={"newInput"}
+          onChange={(selected) =>
+            handleColonneFilters(
+              selected as (keyof typeof STATS_DEMANDES_COLUMNS)[]
+            )
+          }
+          options={Object.entries(STATS_DEMANDES_COLUMNS)?.map(
+            ([value, label]) => {
+              return {
+                value,
+                label,
+              };
+            }
+          )}
+          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS).reduce(
+            (acc, [group, options]) => {
+              acc[group] = Object.entries(options).map(([value, label]) => ({
+                label,
+                value,
+              }));
+              return acc;
+            },
+            {} as Record<string, { label: string; value: string }[]>
+          )}
+          value={colonneFilters ?? []}
+        >
+          TOUTES ({Object.keys(STATS_DEMANDES_COLUMNS).length ?? 0})
+        </Multiselect>
+      </Flex>
+    );
+  }
+);
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -149,6 +206,14 @@ export default () => {
     CURRENT_ANNEE_CAMPAGNE
   );
 
+  const [colonneFilters, setColonneFilters] = useState<
+    (keyof typeof STATS_DEMANDES_COLUMNS)[]
+  >(
+    Object.keys(
+      STATS_DEMANDES_COLUMNS
+    ) as (keyof typeof STATS_DEMANDES_COLUMNS)[]
+  );
+
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
   >([DemandeStatutEnum.draft, DemandeStatutEnum.submitted]);
@@ -190,6 +255,12 @@ export default () => {
         />
         <TableHeader
           pl="4"
+          ColonneFilter={
+            <ColonneFiltersSection
+              colonneFilters={colonneFilters}
+              setColonneFilters={setColonneFilters}
+            />
+          }
           onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
             const data = await client
@@ -286,6 +357,7 @@ export default () => {
           isLoading={isLoading}
           handleOrder={handleOrder}
           order={order}
+          colonneFilters={colonneFilters}
         />
       </Container>
     </GuardPermission>

@@ -130,7 +130,6 @@ export const getMotifLabel = ({
   motif: MotifLabel;
   campagne?: MotifCampagne;
 }): string => {
-  console.log(campagne, MOTIFS_LABELS[campagne]);
   return MOTIFS_LABELS[campagne][motif];
 };
 

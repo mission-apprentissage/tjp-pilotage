@@ -1,4 +1,6 @@
-import { Td } from "@chakra-ui/react";
+import { chakra, Td } from "@chakra-ui/react";
+
+import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
@@ -32,19 +34,54 @@ const handleMotifLabel = ({
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
 
+const ConditionalTd = chakra(
+  ({
+    className,
+    colonneFilters,
+    colonne,
+    children,
+    isNumeric = false,
+  }: {
+    className?: string;
+    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+    colonne: keyof typeof STATS_DEMANDES_COLUMNS;
+    children: React.ReactNode;
+    isNumeric?: boolean;
+  }) => {
+    if (colonneFilters.includes(colonne))
+      return (
+        <Td className={className} isNumeric={isNumeric}>
+          {children}
+        </Td>
+      );
+    return null;
+  }
+);
+
 export const LineContent = ({
   demande,
   campagne,
+  colonneFilters,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
   campagne?: string;
+  colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
   return (
     <>
-      <Td pr="0" py="1" position="sticky" left={0}>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"motif"}
+        pr="0"
+        py="1"
+        position="sticky"
+        left={0}
+      >
         {getTypeDemandeLabel(demande.typeDemande)}
-      </Td>
-      <Td
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"motif"}
         minW={400}
         maxW={400}
         whiteSpace="normal"
@@ -56,88 +93,217 @@ export const LineContent = ({
           autreMotif: demande.autreMotif,
           campagne: campagne,
         })}
-      </Td>
-      <Td>{demande.niveauDiplome}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"}>
+        {demande.niveauDiplome}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleFormation"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+      >
         {demande.libelleFormation}
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleEtablissement"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+      >
         {demande.libelleEtablissement}
-      </Td>
-      <Td>{demande.commune}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"commune"}>
+        {demande.commune}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleNsf"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+      >
         {demande.libelleNsf}
-      </Td>
-      <Td isNumeric>{demande.nbEtablissement}</Td>
-      <Td>{demande.libelleRegion}</Td>
-      <Td>{demande.libelleDepartement}</Td>
-      <Td isNumeric>{demande.differenceCapaciteScolaire ?? 0}</Td>
-      <Td isNumeric>{demande.differenceCapaciteApprentissage ?? 0}</Td>
-      <Td textAlign="center">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbEtablissement"}
+        isNumeric
+      >
+        {demande.nbEtablissement}
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"}>
+        {demande.libelleRegion}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleDepartement"}
+      >
+        {demande.libelleDepartement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"differenceCapaciteScolaire"}
+        isNumeric
+      >
+        {demande.differenceCapaciteScolaire ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"differenceCapaciteApprentissage"}
+        isNumeric
+      >
+        {demande.differenceCapaciteApprentissage ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxInsertion"}
+        textAlign="center"
+      >
         <GraphWrapper value={demande.tauxInsertion} />
-      </Td>
-      <Td textAlign="center">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxPoursuite"}
+        textAlign="center"
+      >
         <GraphWrapper value={demande.tauxPoursuite} />
-      </Td>
-      <Td textAlign="center">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"devenirFavorable"}
+        textAlign="center"
+      >
         <GraphWrapper value={demande.devenirFavorable} />
-      </Td>
-      <Td textAlign="center">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"pression"}
+        textAlign="center"
+      >
         <TableBadge sx={getTauxPressionStyle(demande.pression)}>
           {demande.pression ?? "-"}
         </TableBadge>
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleColoration"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+      >
         {demande.libelleColoration}
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleFCIL"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+      >
         {demande.libelleFCIL}
-      </Td>
-      <Td minW={600} maxW={600} textOverflow={"ellipsis"} isTruncated={true}>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"commentaire"}
+        minW={600}
+        maxW={600}
+        textOverflow={"ellipsis"}
+        isTruncated={true}
+      >
         {demande.commentaire}
-      </Td>
-      <Td>{demande.positionQuadrant}</Td>
-      <Td>{demande.numero}</Td>
-      <Td>{demande.recrutementRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbRecrutementRH}</Td>
-      <Td>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"positionQuadrant"}
+      >
+        {demande.positionQuadrant}
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"numero"}>
+        {demande.numero}
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"recrutementRH"}>
+        {demande.recrutementRH ? "Oui" : "Non"}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbRecrutementRH"}
+      >
+        {demande.nbRecrutementRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"disciplinesRecrutementRH"}
+      >
         {demande.discipline1RecrutementRH &&
           `${demande.discipline1RecrutementRH} ${
             demande.discipline2RecrutementRH
               ? `- ${demande.discipline2RecrutementRH}`
               : ""
           }`}
-      </Td>
-      <Td>{demande.reconversionRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbReconversionRH}</Td>
-      <Td>
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"reconversionRH"}>
+        {demande.reconversionRH ? "Oui" : "Non"}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbReconversionRH"}
+      >
+        {demande.nbReconversionRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"disciplinesReconversionRH"}
+      >
         {demande.discipline1ReconversionRH &&
           `${demande.discipline1ReconversionRH} ${
             demande.discipline2ReconversionRH
               ? `- ${demande.discipline2ReconversionRH}`
               : ""
           }`}
-      </Td>
-      <Td>{demande.professeurAssocieRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbProfesseurAssocieRH}</Td>
-      <Td>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"professeurAssocieRH"}
+      >
+        {demande.professeurAssocieRH ? "Oui" : "Non"}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbProfesseurAssocieRH"}
+      >
+        {demande.nbProfesseurAssocieRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"disciplinesProfesseurAssocieRH"}
+      >
         {demande.discipline1ProfesseurAssocieRH &&
           `${demande.discipline1ProfesseurAssocieRH} ${
             demande.discipline2ProfesseurAssocieRH
               ? `- ${demande.discipline2ProfesseurAssocieRH}`
               : ""
           }`}
-      </Td>
-      <Td>{demande.formationRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbFormationRH}</Td>
-      <Td>
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"formationRH"}>
+        {demande.formationRH ? "Oui" : "Non"}
+      </ConditionalTd>
+      <ConditionalTd colonneFilters={colonneFilters} colonne={"nbFormationRH"}>
+        {demande.nbFormationRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"disciplinesFormationRH"}
+      >
         {demande.discipline1FormationRH &&
           `${demande.discipline1FormationRH} ${
             demande.discipline2FormationRH
               ? `- ${demande.discipline2FormationRH}`
               : ""
           }`}
-      </Td>
+      </ConditionalTd>
     </>
   );
 };
