@@ -74,8 +74,6 @@ export const LineContent = ({
         colonne={"motif"}
         pr="0"
         py="1"
-        position="sticky"
-        left={0}
       >
         {getTypeDemandeLabel(demande.typeDemande)}
       </ConditionalTd>
