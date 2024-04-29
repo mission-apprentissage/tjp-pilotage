@@ -1,4 +1,5 @@
 import { chakra, Td } from "@chakra-ui/react";
+import { CSSProperties } from "react";
 
 import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 
@@ -37,12 +38,14 @@ const handleMotifLabel = ({
 const ConditionalTd = chakra(
   ({
     className,
+    style,
     colonneFilters,
     colonne,
     children,
     isNumeric = false,
   }: {
     className?: string;
+    style?: CSSProperties;
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
     children: React.ReactNode;
@@ -50,7 +53,7 @@ const ConditionalTd = chakra(
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Td className={className} isNumeric={isNumeric}>
+        <Td style={style} className={className} isNumeric={isNumeric}>
           {children}
         </Td>
       );
@@ -71,7 +74,31 @@ export const LineContent = ({
     <>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"motif"}
+        colonne={"libelleEtablissement"}
+        minW={300}
+        maxW={300}
+        whiteSpace="normal"
+        left={0}
+        position="sticky"
+        bg="white"
+        zIndex={"sticky"}
+      >
+        {demande.libelleEtablissement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"commune"}
+        left={300}
+        position="sticky"
+        bg="white"
+        zIndex={"sticky"}
+        boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
+      >
+        {demande.commune}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"typeDemande"}
         pr="0"
         py="1"
       >
@@ -103,18 +130,6 @@ export const LineContent = ({
         whiteSpace="normal"
       >
         {demande.libelleFormation}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleEtablissement"}
-        minW={300}
-        maxW={300}
-        whiteSpace="normal"
-      >
-        {demande.libelleEtablissement}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"commune"}>
-        {demande.commune}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -215,15 +230,13 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
+        isNumeric
         colonne={"positionQuadrant"}
       >
         {demande.positionQuadrant}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"numero"}>
         {demande.numero}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"recrutementRH"}>
-        {demande.recrutementRH ? "Oui" : "Non"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -241,9 +254,6 @@ export const LineContent = ({
               ? `- ${demande.discipline2RecrutementRH}`
               : ""
           }`}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"reconversionRH"}>
-        {demande.reconversionRH ? "Oui" : "Non"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -264,12 +274,6 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"professeurAssocieRH"}
-      >
-        {demande.professeurAssocieRH ? "Oui" : "Non"}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbProfesseurAssocieRH"}
       >
         {demande.nbProfesseurAssocieRH}
@@ -284,9 +288,6 @@ export const LineContent = ({
               ? `- ${demande.discipline2ProfesseurAssocieRH}`
               : ""
           }`}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"formationRH"}>
-        {demande.formationRH ? "Oui" : "Non"}
       </ConditionalTd>
       <ConditionalTd colonneFilters={colonneFilters} colonne={"nbFormationRH"}>
         {demande.nbFormationRH}
