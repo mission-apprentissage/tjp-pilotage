@@ -1,3 +1,4 @@
+import { Text } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
 import { getTypeDemandeExemple } from "../../utils/typeDemandeUtils";
@@ -8,11 +9,28 @@ export const Conseils = () => {
   const { watch } = useFormContext<IntentionForms>();
 
   const typeDemande = watch("typeDemande");
-  if (!typeDemande) return null;
+
+  const commentaire = watch("commentaire");
+
+  if (!typeDemande && !commentaire) return null;
 
   return (
-    <InfoBox flex="1" mt={6}>
-      {getTypeDemandeExemple(typeDemande)}
-    </InfoBox>
+    <>
+      {typeDemande && (
+        <InfoBox flex="1" mt={6}>
+          {getTypeDemandeExemple(typeDemande)}
+        </InfoBox>
+      )}
+      {commentaire && (
+        <InfoBox flex="1" mt={6}>
+          <Text mb="3" fontWeight="bold">
+            Champ commentaire :{" "}
+          </Text>
+          Merci de détailler les éléments de contexte du projet : développement
+          économique ou démographique du territoire, prospectives étayées,
+          partenariats noués, typologie d’élèves accueillis…
+        </InfoBox>
+      )}
+    </>
   );
 };

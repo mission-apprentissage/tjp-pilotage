@@ -4,8 +4,10 @@ import { RefObject } from "react";
 
 export const MenuFormulaire = ({
   refs,
+  isTypeDemandeNotFermetureOuDiminution,
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
+  isTypeDemandeNotFermetureOuDiminution?: boolean;
 }) => {
   const jumpToAnchor = (anchor: string) => {
     refs[anchor]?.current?.scrollIntoView({ behavior: "smooth" });
@@ -66,34 +68,38 @@ export const MenuFormulaire = ({
         >
           Ressources Humaines
         </Button>
-        <Button
-          onClick={() => jumpToAnchor("travauxEtEquipements")}
-          width={"100%"}
-          justifyContent={"start"}
-          fontSize={16}
-          fontWeight={700}
-          px={4}
-          py={3}
-          bg={"bluefrance.975"}
-          _hover={{ bg: "blueecume.925_hover" }}
-          leftIcon={<Img src="/icons/travauxEtEquipements.svg" />}
-        >
-          Travaux et équipements
-        </Button>
-        <Button
-          onClick={() => jumpToAnchor("internatEtRestauration")}
-          width={"100%"}
-          justifyContent={"start"}
-          fontSize={16}
-          fontWeight={700}
-          px={4}
-          py={3}
-          bg={"bluefrance.975"}
-          _hover={{ bg: "blueecume.925_hover" }}
-          leftIcon={<Icon icon="ri:restaurant-line" color="black" />}
-        >
-          Internat et restauration
-        </Button>
+        {isTypeDemandeNotFermetureOuDiminution && (
+          <>
+            <Button
+              onClick={() => jumpToAnchor("travauxEtEquipements")}
+              width={"100%"}
+              justifyContent={"start"}
+              fontSize={16}
+              fontWeight={700}
+              px={4}
+              py={3}
+              bg={"bluefrance.975"}
+              _hover={{ bg: "blueecume.925_hover" }}
+              leftIcon={<Img src="/icons/travauxEtEquipements.svg" />}
+            >
+              Travaux et équipements
+            </Button>
+            <Button
+              onClick={() => jumpToAnchor("internatEtRestauration")}
+              width={"100%"}
+              justifyContent={"start"}
+              fontSize={16}
+              fontWeight={700}
+              px={4}
+              py={3}
+              bg={"bluefrance.975"}
+              _hover={{ bg: "blueecume.925_hover" }}
+              leftIcon={<Icon icon="ri:restaurant-line" color="black" />}
+            >
+              Internat et restauration
+            </Button>
+          </>
+        )}
         <Button
           onClick={() => jumpToAnchor("commentaireEtPiecesJointes")}
           width={"100%"}

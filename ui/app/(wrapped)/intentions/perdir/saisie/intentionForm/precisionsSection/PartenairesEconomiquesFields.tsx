@@ -10,7 +10,9 @@ import {
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const PartenairesEconomiquesFields = chakra(
@@ -21,8 +23,22 @@ export const PartenairesEconomiquesFields = chakra(
       register,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("partenairesEconomiquesImpliques");
-    const partenaireEconomique2 = watch("partenaireEconomique2");
+    const [
+      typeDemande,
+      partenairesEconomiquesImpliques,
+      partenaireEconomique2,
+    ] = watch([
+      "typeDemande",
+      "partenairesEconomiquesImpliques",
+      "partenaireEconomique2",
+    ]);
+
+    const visible =
+      partenairesEconomiquesImpliques &&
+      !isTypeFermeture(typeDemande) &&
+      !isTypeDiminution(typeDemande);
+
+    if (!visible) return null;
 
     const [hasDoublePartenaire, setHasDoublePartenaire] = useState<boolean>(
       !!partenaireEconomique2

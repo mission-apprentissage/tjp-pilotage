@@ -2,6 +2,7 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { demandeValidators, getPermissionScope, guardScope } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { z } from "zod";
 
 import { logger } from "../../../../logger";
 import { cleanNull } from "../../../../utils/noNull";
@@ -12,41 +13,9 @@ import { findOneDataFormation } from "../../repositories/findOneDataFormation.qu
 import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { findOneSimilarDemande } from "../../repositories/findOneSimilarDemande.query";
 import { createDemandeQuery } from "./createDemandeQuery.dep";
+import { submitDemandeSchema } from "./submitDemande.schema";
 
-type Demande = {
-  id?: string;
-  numero?: string;
-  uai: string;
-  typeDemande: string;
-  cfd: string;
-  codeDispositif: string;
-  libelleFCIL?: string;
-  compensationCfd?: string;
-  compensationCodeDispositif?: string;
-  compensationUai?: string;
-  compensationRentreeScolaire?: number;
-  motif: string[];
-  autreMotif?: string;
-  rentreeScolaire: number;
-  amiCma: boolean;
-  amiCmaValide?: boolean;
-  amiCmaValideAnnee?: string;
-  libelleColoration?: string;
-  poursuitePedagogique?: boolean;
-  commentaire?: string;
-  coloration: boolean;
-  mixte?: boolean;
-  capaciteScolaire?: number;
-  capaciteScolaireActuelle?: number;
-  capaciteScolaireColoree?: number;
-  capaciteApprentissage?: number;
-  capaciteApprentissageActuelle?: number;
-  capaciteApprentissageColoree?: number;
-  statut: "draft" | "submitted" | "refused";
-  motifRefus?: string[];
-  autreMotifRefus?: string;
-  campagneId: string;
-};
+type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
 
 const validateDemande = (demande: Demande) => {
   let errors: Record<string, string> = {};

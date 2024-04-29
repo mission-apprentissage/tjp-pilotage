@@ -3,8 +3,6 @@ import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { NomCmqField } from "@/app/(wrapped)/intentions/perdir/saisie/intentionForm/precisionsSection/NomCmqField";
-
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
@@ -16,6 +14,7 @@ import { AutreMotifField } from "./AutreMotifField";
 import { CmqImpliqueField } from "./CmqImpliqueField";
 import { FiliereCmqField } from "./FiliereCmqField";
 import { MotifField } from "./MotifField";
+import { NomCmqField } from "./NomCmqField";
 import { PartenaireEconomiqueField } from "./PartenaireEconomiqueField";
 import { PartenairesEconomiquesFields } from "./PartenairesEconomiquesFields";
 
@@ -68,7 +67,7 @@ export const PrecisionsSection = ({
         </QuestionBlock>
         <QuestionBlock active={!!cmqImplique}>
           <CmqImpliqueField disabled={disabled} />
-          <Flex direction={"row"} gap="2">
+          <Flex direction={"row"}>
             <FiliereCmqField disabled={disabled} />
             <NomCmqField disabled={disabled} />
           </Flex>

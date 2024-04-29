@@ -14,12 +14,14 @@ import {
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { ReactNode, RefObject } from "react";
+import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
+import { isTypeFermeture } from "../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
 import { Campagne } from "../types";
 import { IntentionForms } from "./defaultFormValues";
@@ -45,7 +47,7 @@ export const InformationsBlock = ({
   campagne?: Campagne;
 }) => {
   const { push } = useRouter();
-  const { setValue } = useFormContext<IntentionForms>();
+  const { setValue, watch } = useFormContext<IntentionForms>();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const { isLoading: isDeleting, mutateAsync: deleteDemande } = useMutation({
     mutationFn: async () => {
@@ -56,6 +58,57 @@ export const InformationsBlock = ({
         .then(() => push("/intentions/saisie?action=deleted"));
     },
   });
+
+  useEffect(
+    () =>
+      watch(({ typeDemande }, { name }) => {
+        if (
+          name != "typeDemande" ||
+          (typeDemande &&
+            !isTypeFermeture(typeDemande) &&
+            !isTypeDiminution(typeDemande))
+        )
+          return;
+        setValue("amiCma", undefined);
+        setValue("amiCmaValide", undefined);
+        setValue("amiCmaValideAnnee", undefined);
+        setValue("amiCmaEnCoursValidation", undefined);
+        setValue("cmqImplique", undefined);
+        setValue("nomCmq", undefined);
+        setValue("partenairesEconomiquesImpliques", undefined);
+        setValue("partenaireEconomique1", undefined);
+        setValue("partenaireEconomique2", undefined);
+        setValue("achatEquipement", undefined);
+        setValue("achatEquipementDescription", undefined);
+        setValue("travauxAmenagement", undefined);
+        setValue("travauxAmenagementDescription", undefined);
+        setValue("augmentationCapaciteAccueilHebergement", undefined);
+        setValue("augmentationCapaciteAccueilHebergementPlaces", undefined);
+        setValue("augmentationCapaciteAccueilHebergementPrecisions", undefined);
+        setValue("augmentationCapaciteAccueilRestauration", undefined);
+        setValue("augmentationCapaciteAccueilRestaurationPlaces", undefined);
+        setValue(
+          "augmentationCapaciteAccueilRestaurationPrecisions",
+          undefined
+        );
+        setValue("recrutementRH", undefined);
+        setValue("nbRecrutementRH", undefined);
+        setValue("discipline1RecrutementRH", undefined);
+        setValue("discipline2RecrutementRH", undefined);
+        setValue("professeurAssocieRH", undefined);
+        setValue("nbProfesseurAssocieRH", undefined);
+        setValue("discipline1ProfesseurAssocieRH", undefined);
+        setValue("discipline2ProfesseurAssocieRH", undefined);
+        setValue("formationRH", undefined);
+        setValue("nbFormationRH", undefined);
+        setValue("discipline1FormationRH", undefined);
+        setValue("discipline2FormationRH", undefined);
+      }).unsubscribe
+  );
+
+  const typeDemande = watch("typeDemande");
+  const sectionsTravauxInternatEtRestaurationVisible =
+    !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
     <Flex direction="column" gap={6} mt={6}>
@@ -78,18 +131,22 @@ export const InformationsBlock = ({
           disabled={disabled}
         />
       </SectionBlock>
-      <SectionBlock>
-        <TravauxEtEquipementsSection
-          travauxEtEquipementsRef={refs["travauxEtEquipements"]}
-          disabled={disabled}
-        />
-      </SectionBlock>
-      <SectionBlock>
-        <InternatEtRestaurationSection
-          internatEtRestaurationRef={refs["internatEtRestauration"]}
-          disabled={disabled}
-        />
-      </SectionBlock>
+      {sectionsTravauxInternatEtRestaurationVisible && (
+        <>
+          <SectionBlock>
+            <TravauxEtEquipementsSection
+              travauxEtEquipementsRef={refs["travauxEtEquipements"]}
+              disabled={disabled}
+            />
+          </SectionBlock>
+          <SectionBlock>
+            <InternatEtRestaurationSection
+              internatEtRestaurationRef={refs["internatEtRestauration"]}
+              disabled={disabled}
+            />
+          </SectionBlock>
+        </>
+      )}
       <SectionBlock>
         <ObservationsSection
           commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]}

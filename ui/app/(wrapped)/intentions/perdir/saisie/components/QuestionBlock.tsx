@@ -19,7 +19,7 @@ export const QuestionBlock = chakra(
         maxW={"626px"}
         p={active ? 4 : 0}
       >
-        <Flex direction="column" gap={6}>
+        <Flex direction="column" gap={active ? 6 : 0}>
           {children}
         </Flex>
       </Box>

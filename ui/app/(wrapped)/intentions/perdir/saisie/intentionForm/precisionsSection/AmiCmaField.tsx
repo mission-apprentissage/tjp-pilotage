@@ -8,7 +8,9 @@ import {
   Stack,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -17,7 +19,14 @@ export const AmiCmaField = chakra(
     const {
       formState: { errors },
       control,
+      watch,
     } = useFormContext<IntentionForms>();
+
+    const typeDemande = watch("typeDemande");
+
+    const visible =
+      !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
+    if (!visible) return null;
 
     return (
       <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>
