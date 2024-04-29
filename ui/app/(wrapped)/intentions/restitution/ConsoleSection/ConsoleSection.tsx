@@ -14,7 +14,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
-import { Fragment } from "react";
+import { CSSProperties, Fragment } from "react";
 
 import { OrderIcon } from "@/components/OrderIcon";
 import { TooltipIcon } from "@/components/TooltipIcon";
@@ -68,12 +68,14 @@ const ConditionalTh = chakra(
   ({
     className,
     children,
+    style,
     colonnesFilters,
     colonne,
     onClick,
     isNumeric = false,
   }: {
     className?: string;
+    style?: CSSProperties;
     children: React.ReactNode;
     colonnesFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
@@ -84,6 +86,7 @@ const ConditionalTh = chakra(
       return (
         <Th
           className={className}
+          style={style}
           isNumeric={isNumeric}
           onClick={() =>
             onClick &&
@@ -127,6 +130,7 @@ export const ConsoleSection = ({
         </Box>
       </Center>
     );
+
   return (
     <Flex
       borderRadius={4}
@@ -146,6 +150,39 @@ export const ConsoleSection = ({
             zIndex={1}
           >
             <Tr>
+              <ConditionalTh
+                colonnesFilters={colonneFilters}
+                colonne={"libelleEtablissement"}
+                order={order}
+                onClick={handleOrder}
+                cursor="pointer"
+                pb="4"
+                minW={300}
+                maxW={300}
+                position="sticky"
+                bg="white"
+                zIndex={"sticky"}
+                left="0"
+              >
+                <OrderIcon {...order} column="libelleEtablissement" />
+                {STATS_DEMANDES_COLUMNS.libelleEtablissement}
+              </ConditionalTh>
+              <ConditionalTh
+                colonnesFilters={colonneFilters}
+                colonne={"commune"}
+                order={order}
+                onClick={handleOrder}
+                cursor="pointer"
+                pb="4"
+                left={300}
+                position="sticky"
+                bg="white"
+                zIndex={"sticky"}
+                boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
+              >
+                <OrderIcon {...order} column="commune" />
+                {STATS_DEMANDES_COLUMNS.commune}
+              </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}
                 colonne={"typeDemande"}
@@ -187,28 +224,6 @@ export const ConsoleSection = ({
               >
                 <OrderIcon {...order} column="libelleFormation" />
                 {STATS_DEMANDES_COLUMNS.libelleFormation}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
-                colonne={"libelleEtablissement"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="libelleEtablissement" />
-                {STATS_DEMANDES_COLUMNS.libelleEtablissement}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
-                colonne={"commune"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="commune" />
-                {STATS_DEMANDES_COLUMNS.commune}
               </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}
@@ -273,8 +288,6 @@ export const ConsoleSection = ({
                 isNumeric
                 cursor="pointer"
                 pb="4"
-                minW={150}
-                maxW={150}
                 whiteSpace="normal"
               >
                 <OrderIcon {...order} column="differenceCapaciteScolaire" />
@@ -288,8 +301,6 @@ export const ConsoleSection = ({
                 isNumeric
                 cursor="pointer"
                 pb="4"
-                minW={150}
-                maxW={150}
                 whiteSpace="normal"
               >
                 <OrderIcon
@@ -420,6 +431,7 @@ export const ConsoleSection = ({
                 colonne={"positionQuadrant"}
                 order={order}
                 pb={4}
+                isNumeric
               >
                 {STATS_DEMANDES_COLUMNS.positionQuadrant}
                 <TooltipIcon
@@ -437,17 +449,6 @@ export const ConsoleSection = ({
               >
                 <OrderIcon {...order} column="numero" />
                 {STATS_DEMANDES_COLUMNS.numero}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
-                colonne={"recrutementRH"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="recrutementRH" />
-                {STATS_DEMANDES_COLUMNS.recrutementRH}
               </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}
@@ -471,17 +472,6 @@ export const ConsoleSection = ({
               </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}
-                colonne={"reconversionRH"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="reconversionRH" />
-                {STATS_DEMANDES_COLUMNS.reconversionRH}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
                 colonne={"nbReconversionRH"}
                 order={order}
                 onClick={handleOrder}
@@ -499,17 +489,6 @@ export const ConsoleSection = ({
                 pb="4"
               >
                 {STATS_DEMANDES_COLUMNS.disciplinesReconversionRH}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
-                colonne={"professeurAssocieRH"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="professeurAssocieRH" />
-                {STATS_DEMANDES_COLUMNS.professeurAssocieRH}
               </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}
@@ -531,17 +510,6 @@ export const ConsoleSection = ({
                 pb="4"
               >
                 {STATS_DEMANDES_COLUMNS.disciplinesProfesseurAssocieRH}
-              </ConditionalTh>
-              <ConditionalTh
-                colonnesFilters={colonneFilters}
-                colonne={"formationRH"}
-                order={order}
-                onClick={handleOrder}
-                cursor="pointer"
-                pb="4"
-              >
-                <OrderIcon {...order} column="formationRH" />
-                {STATS_DEMANDES_COLUMNS.formationRH}
               </ConditionalTh>
               <ConditionalTh
                 colonnesFilters={colonneFilters}

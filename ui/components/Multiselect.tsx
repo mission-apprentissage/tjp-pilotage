@@ -129,6 +129,7 @@ export const Multiselect = chakra(
   ({
     children,
     options = [],
+    defaultOptions,
     groupedOptions,
     onChange,
     onClose,
@@ -141,6 +142,7 @@ export const Multiselect = chakra(
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
+    defaultOptions?: { label: string; value: string }[];
     groupedOptions?: Record<string, { label: string; value: string }[]>;
     onChange?: (value: string[]) => void;
     onClose?: () => void;
@@ -155,6 +157,7 @@ export const Multiselect = chakra(
       return (
         <GroupedMultiselect
           groupedOptions={groupedOptions}
+          defaultOptions={defaultOptions}
           onChange={onChange}
           onClose={onClose}
           className={className}
@@ -339,6 +342,7 @@ const GroupedMultiselect = chakra(
   ({
     children,
     groupedOptions = {},
+    defaultOptions,
     onChange,
     onClose,
     className,
@@ -350,6 +354,7 @@ const GroupedMultiselect = chakra(
   }: {
     children: ReactNode;
     groupedOptions: Record<string, { label: string; value: string }[]>;
+    readonly defaultOptions?: { label: string; value: string }[];
     onChange?: (value: string[]) => void;
     onClose?: () => void;
     className?: string;
@@ -360,6 +365,11 @@ const GroupedMultiselect = chakra(
     variant?: string;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
+
+    const getDefaultMapOptions = () => {
+      if (!defaultOptions) return new Map();
+      return new Map(defaultOptions.map(({ value, label }) => [value, label]));
+    };
 
     const map = useMemo(() => {
       return new Map(
@@ -385,39 +395,11 @@ const GroupedMultiselect = chakra(
       setSearch(value);
     };
 
-    const [preparedOptions, setPreparedOptions] = useState<
-      Record<string, { label: string; value: string }[]>
-    >({});
-
-    const prepareOptions = () => {
-      const selectedOptions: Record<
-        string,
-        { label: string; value: string }[]
-      > = {};
-      const restOptions: Record<string, { label: string; value: string }[]> =
-        {};
-      Object.keys(groupedOptions).forEach((key) => {
-        const selectedGroupOptions = groupedOptions[key].filter((option) =>
-          map.get(option.value)
-        );
-        const restGroupOptions = groupedOptions[key].filter(
-          (option) => !map.get(option.value)
-        );
-        if (selectedGroupOptions.length > 0) {
-          selectedOptions[key] = selectedGroupOptions;
-        }
-        if (restGroupOptions.length > 0) {
-          restOptions[key] = restGroupOptions;
-        }
-      });
-      setPreparedOptions({ ...selectedOptions, ...restOptions });
-    };
-
     const filterOptions = () => {
       return search
-        ? Object.keys(preparedOptions).reduce(
+        ? Object.keys(groupedOptions).reduce(
             (acc, key) => {
-              const filteredOptions = preparedOptions[key].filter(
+              const filteredOptions = groupedOptions[key].filter(
                 (item) =>
                   removeAccents(item.label?.toLowerCase()).includes(
                     removeAccents(search.toLowerCase())
@@ -433,11 +415,11 @@ const GroupedMultiselect = chakra(
             },
             {} as Record<string, { label: string; value: string }[]>
           )
-        : preparedOptions;
+        : groupedOptions;
     };
 
     const filteredOptions = useMemo(filterOptions, [
-      preparedOptions,
+      groupedOptions,
       search,
       map,
     ]);
@@ -466,7 +448,6 @@ const GroupedMultiselect = chakra(
       <Menu
         isLazy={true}
         onOpen={() => {
-          prepareOptions();
           handleSearch("");
           setTimeout(() => inputRef.current?.focus(), 100);
         }}
@@ -492,7 +473,7 @@ const GroupedMultiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList zIndex={3} maxWidth={450} pt="0">
+          <MenuList zIndex={"tooltip"} maxWidth={450} pt="0">
             <Flex borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}
@@ -505,24 +486,46 @@ const GroupedMultiselect = chakra(
                 py="2"
                 variant="unstyled"
               />
-              <Button
-                onClick={() => {
-                  stateValue.current = new Map();
-                  onChange?.(Array.from(new Map().keys()));
-                }}
-                bgColor={"transparent"}
-              >
-                {map.size > 0 && (
-                  <Text
-                    fontSize={12}
-                    fontWeight={"normal"}
-                    color="bluefrance.113"
-                    p={2}
-                  >
-                    Tout décocher
-                  </Text>
-                )}
-              </Button>
+              {defaultOptions ? (
+                <Button
+                  onClick={() => {
+                    const mapDefaultOptions = getDefaultMapOptions();
+                    if (!mapDefaultOptions) return;
+                    onChange?.(Array.from(mapDefaultOptions.keys()));
+                  }}
+                  bgColor={"transparent"}
+                >
+                  {map.size > 0 && (
+                    <Text
+                      fontSize={12}
+                      fontWeight={"normal"}
+                      color="bluefrance.113"
+                      p={2}
+                    >
+                      Réinitialiser
+                    </Text>
+                  )}
+                </Button>
+              ) : (
+                <Button
+                  onClick={() => {
+                    stateValue.current = new Map();
+                    onChange?.(Array.from(new Map().keys()));
+                  }}
+                  bgColor={"transparent"}
+                >
+                  {map.size > 0 && (
+                    <Text
+                      fontSize={12}
+                      fontWeight={"normal"}
+                      color="bluefrance.113"
+                      p={2}
+                    >
+                      Tout décocher
+                    </Text>
+                  )}
+                </Button>
+              )}
             </Flex>
             <Flex
               direction="column"

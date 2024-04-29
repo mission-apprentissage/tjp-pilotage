@@ -19,8 +19,10 @@ import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import {
-  GROUPED_STATS_DEMANDES_COLUMNS,
+  GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL,
   STATS_DEMANDES_COLUMNS,
+  STATS_DEMANDES_COLUMNS_DEFAULT,
+  STATS_DEMANDES_COLUMNS_OPTIONAL,
 } from "./STATS_DEMANDES_COLUMN";
 import {
   FiltersDemandesRestitutionIntentions,
@@ -32,11 +34,13 @@ const ColonneFiltersSection = chakra(
     colonneFilters,
     setColonneFilters,
   }: {
-    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
-    setColonneFilters: (value: (keyof typeof STATS_DEMANDES_COLUMNS)[]) => void;
+    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
+    setColonneFilters: (
+      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+    ) => void;
   }) => {
     const handleColonneFilters = (
-      value: (keyof typeof STATS_DEMANDES_COLUMNS)[]
+      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
     ) => {
       setColonneFilters(value);
     };
@@ -50,18 +54,12 @@ const ColonneFiltersSection = chakra(
           variant={"newInput"}
           onChange={(selected) =>
             handleColonneFilters(
-              selected as (keyof typeof STATS_DEMANDES_COLUMNS)[]
+              selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
             )
           }
-          options={Object.entries(STATS_DEMANDES_COLUMNS)?.map(
-            ([value, label]) => {
-              return {
-                value,
-                label,
-              };
-            }
-          )}
-          groupedOptions={Object.entries(GROUPED_STATS_DEMANDES_COLUMNS).reduce(
+          groupedOptions={Object.entries(
+            GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL
+          ).reduce(
             (acc, [group, options]) => {
               acc[group] = Object.entries(options).map(([value, label]) => ({
                 label,
@@ -71,9 +69,17 @@ const ColonneFiltersSection = chakra(
             },
             {} as Record<string, { label: string; value: string }[]>
           )}
+          defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(
+            ([value, label]) => {
+              return {
+                label,
+                value,
+              };
+            }
+          )}
           value={colonneFilters ?? []}
         >
-          TOUTES ({Object.keys(STATS_DEMANDES_COLUMNS).length ?? 0})
+          TOUTES ({Object.keys(STATS_DEMANDES_COLUMNS_OPTIONAL).length ?? 0})
         </Multiselect>
       </Flex>
     );
@@ -207,11 +213,11 @@ export default () => {
   );
 
   const [colonneFilters, setColonneFilters] = useState<
-    (keyof typeof STATS_DEMANDES_COLUMNS)[]
+    (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
   >(
     Object.keys(
-      STATS_DEMANDES_COLUMNS
-    ) as (keyof typeof STATS_DEMANDES_COLUMNS)[]
+      STATS_DEMANDES_COLUMNS_DEFAULT
+    ) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
   );
 
   const [statutFilter, setStatutFilter] = useState<
