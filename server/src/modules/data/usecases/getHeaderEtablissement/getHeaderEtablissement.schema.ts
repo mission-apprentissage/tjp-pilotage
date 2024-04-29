@@ -3,7 +3,7 @@ import { z } from "zod";
 const informationsSchema = z.object({
   libelleEtablissement: z.string(),
   uai: z.string(),
-  adresse: z.string(),
+  adresse: z.string().optional(),
   commune: z.string().optional(),
   codePostal: z.string().optional(),
   libelleDepartement: z.string().optional(),
