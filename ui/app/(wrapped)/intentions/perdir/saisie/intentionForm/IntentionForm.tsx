@@ -28,12 +28,14 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
+import { isTypeFermeture } from "../../utils/typeDemandeUtils";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
@@ -176,6 +178,12 @@ export const IntentionForm = ({
     commentaireEtPiecesJointes: commentaireEtPiecesJointesRef,
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
+  const typeDemande = form.watch("typeDemande");
+  const isTypeDemandeNotFermetureOuDiminution =
+    !!typeDemande &&
+    !isTypeFermeture(typeDemande) &&
+    !isTypeDiminution(typeDemande);
+
   return (
     <CampagneContext.Provider value={campagneValue}>
       <FormProvider {...form}>
@@ -235,7 +243,12 @@ export const IntentionForm = ({
                       top={STICKY_OFFSET}
                       textAlign={"start"}
                     >
-                      <MenuFormulaire refs={anchorsRefs} />
+                      <MenuFormulaire
+                        refs={anchorsRefs}
+                        isTypeDemandeNotFermetureOuDiminution={
+                          isTypeDemandeNotFermetureOuDiminution
+                        }
+                      />
                       <Box position="relative">
                         <Conseils />
                       </Box>

@@ -9,6 +9,9 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
+
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/perdir/utils/typeDemandeUtils";
 
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
@@ -26,13 +29,16 @@ export const AmiCmaEnCoursValidationField = chakra(
     useEffect(
       () =>
         watch((_, { name }) => {
-          if (name !== "amiCmaValide") return;
-          if (getValues("amiCmaValide") === false) return;
-          setValue("amiCmaEnCoursValidation", false);
+          if (name !== "amiCmaValide" && name !== "amiCma") return;
+          if (name === "amiCma") setValue("amiCmaEnCoursValidation", undefined);
+          if (name === "amiCmaValide" && getValues("amiCmaValide") === true)
+            setValue("amiCmaEnCoursValidation", false);
         }).unsubscribe
     );
 
-    const visible = watch("amiCma");
+    const [typeDemande, amiCma] = watch(["typeDemande", "amiCma"]);
+    const visible =
+      !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande) && amiCma;
     if (!visible) return null;
 
     return (

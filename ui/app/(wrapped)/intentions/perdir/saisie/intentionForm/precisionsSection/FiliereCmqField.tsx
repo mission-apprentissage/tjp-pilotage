@@ -6,7 +6,9 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { DisciplineAutocompleteInput } from "../../components/DisciplineAutoComplete";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -18,7 +20,12 @@ export const FiliereCmqField = chakra(
       control,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("cmqImplique");
+    const [typeDemande, cmqImplique] = watch(["typeDemande", "cmqImplique"]);
+
+    const visible =
+      cmqImplique &&
+      !isTypeFermeture(typeDemande) &&
+      !isTypeDiminution(typeDemande);
     if (!visible) return null;
 
     return (

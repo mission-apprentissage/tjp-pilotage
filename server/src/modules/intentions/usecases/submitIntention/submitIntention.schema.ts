@@ -24,7 +24,7 @@ export const submitIntentionSchema = {
       // Précisions
       motif: z.array(z.string()),
       autreMotif: z.string().optional(),
-      amiCma: z.boolean(),
+      amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
       amiCmaEnCoursValidation: z.boolean().optional(),
@@ -35,7 +35,7 @@ export const submitIntentionSchema = {
       filiereCmq: z.string().optional(),
       nomCmq: z.string().optional(),
       //RH
-      recrutementRH: z.boolean(),
+      recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
       discipline1RecrutementRH: z.string().optional(),
       discipline2RecrutementRH: z.string().optional(),
@@ -43,27 +43,27 @@ export const submitIntentionSchema = {
       nbReconversionRH: z.coerce.number().optional(),
       discipline1ReconversionRH: z.string().optional(),
       discipline2ReconversionRH: z.string().optional(),
-      professeurAssocieRH: z.boolean(),
+      professeurAssocieRH: z.boolean().optional(),
       nbProfesseurAssocieRH: z.coerce.number().optional(),
       discipline1ProfesseurAssocieRH: z.string().optional(),
       discipline2ProfesseurAssocieRH: z.string().optional(),
-      formationRH: z.boolean(),
+      formationRH: z.boolean().optional(),
       nbFormationRH: z.coerce.number().optional(),
       discipline1FormationRH: z.string().optional(),
       discipline2FormationRH: z.string().optional(),
       besoinRHPrecisions: z.string().optional(),
       // Travaux et équipements
-      travauxAmenagement: z.boolean(),
+      travauxAmenagement: z.boolean().optional(),
       travauxAmenagementDescription: z.string().optional(),
-      achatEquipement: z.boolean(),
+      achatEquipement: z.boolean().optional(),
       achatEquipementDescription: z.string().optional(),
       // Internat et restauration
-      augmentationCapaciteAccueilHebergement: z.boolean(),
+      augmentationCapaciteAccueilHebergement: z.boolean().optional(),
       augmentationCapaciteAccueilHebergementPlaces: z.coerce
         .number()
         .optional(),
       augmentationCapaciteAccueilHebergementPrecisions: z.string().optional(),
-      augmentationCapaciteAccueilRestauration: z.boolean(),
+      augmentationCapaciteAccueilRestauration: z.boolean().optional(),
       augmentationCapaciteAccueilRestaurationPlaces: z.coerce
         .number()
         .optional(),

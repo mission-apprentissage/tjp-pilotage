@@ -2,7 +2,9 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
 
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
@@ -28,13 +30,22 @@ export const RHSection = ({
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
-  const [recrutementRH, reconversionRH, professeurAssocieRH, formationRH] =
-    watch([
-      "recrutementRH",
-      "reconversionRH",
-      "professeurAssocieRH",
-      "formationRH",
-    ]);
+  const [
+    typeDemande,
+    recrutementRH,
+    reconversionRH,
+    professeurAssocieRH,
+    formationRH,
+  ] = watch([
+    "typeDemande",
+    "recrutementRH",
+    "reconversionRH",
+    "professeurAssocieRH",
+    "formationRH",
+  ]);
+
+  const sectionsRecrutementProfesseurAssocieFormationVisibles =
+    !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
     <Flex
@@ -57,26 +68,32 @@ export const RHSection = ({
         <Heading as="h3" fontSize={"14px"} fontWeight={700} mb={2}>
           Sur le plan des ressources humaines, le projet implique t-il :{" "}
         </Heading>
-        <QuestionBlock active={!!recrutementRH}>
-          <RecrutementRHField disabled={disabled} />
-          <NbRecrutementRHField disabled={disabled} minW="20rem" />
-          <DisciplinesRecrutementRHField disabled={disabled} />
-        </QuestionBlock>
+        {sectionsRecrutementProfesseurAssocieFormationVisibles && (
+          <QuestionBlock active={!!recrutementRH}>
+            <RecrutementRHField disabled={disabled} />
+            <NbRecrutementRHField disabled={disabled} minW="20rem" />
+            <DisciplinesRecrutementRHField disabled={disabled} />
+          </QuestionBlock>
+        )}
         <QuestionBlock active={!!reconversionRH}>
           <ReconversionRHField disabled={disabled} />
           <NbReconversionRHField disabled={disabled} minW="20rem" />
           <DisciplinesReconversionRHField disabled={disabled} />
         </QuestionBlock>
-        <QuestionBlock active={!!professeurAssocieRH}>
-          <ProfesseurAssocieRHField disabled={disabled} />
-          <NbProfesseurAssocieRHField disabled={disabled} minW="20rem" />
-          <DisciplinesProfesseurAssocieRHField disabled={disabled} />
-        </QuestionBlock>
-        <QuestionBlock active={!!formationRH}>
-          <FormationRHField disabled={disabled} />
-          <NbFormationRHField disabled={disabled} minW="20rem" />
-          <DisciplinesFormationRHField disabled={disabled} />
-        </QuestionBlock>
+        {sectionsRecrutementProfesseurAssocieFormationVisibles && (
+          <>
+            <QuestionBlock active={!!professeurAssocieRH}>
+              <ProfesseurAssocieRHField disabled={disabled} />
+              <NbProfesseurAssocieRHField disabled={disabled} minW="20rem" />
+              <DisciplinesProfesseurAssocieRHField disabled={disabled} />
+            </QuestionBlock>
+            <QuestionBlock active={!!formationRH}>
+              <FormationRHField disabled={disabled} />
+              <NbFormationRHField disabled={disabled} minW="20rem" />
+              <DisciplinesFormationRHField disabled={disabled} />
+            </QuestionBlock>
+          </>
+        )}
       </Flex>
     </Flex>
   );

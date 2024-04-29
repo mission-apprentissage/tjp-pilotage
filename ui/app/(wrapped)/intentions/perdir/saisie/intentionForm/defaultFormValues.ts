@@ -24,18 +24,18 @@ export type IntentionForms = {
   // Précisions
   motif: string[];
   autreMotif?: string;
-  amiCma: boolean;
+  amiCma?: boolean;
   amiCmaValide?: boolean;
   amiCmaValideAnnee?: string;
   amiCmaEnCoursValidation?: boolean;
-  partenairesEconomiquesImpliques: boolean;
+  partenairesEconomiquesImpliques?: boolean;
   partenaireEconomique1?: string;
   partenaireEconomique2?: string;
-  cmqImplique: boolean;
+  cmqImplique?: boolean;
   filiereCmq?: string;
   nomCmq?: string;
   //RH
-  recrutementRH: boolean;
+  recrutementRH?: boolean;
   nbRecrutementRH?: number;
   discipline1RecrutementRH?: string;
   discipline2RecrutementRH?: string;
@@ -43,25 +43,25 @@ export type IntentionForms = {
   nbReconversionRH?: number;
   discipline1ReconversionRH?: string;
   discipline2ReconversionRH?: string;
-  professeurAssocieRH: boolean;
+  professeurAssocieRH?: boolean;
   nbProfesseurAssocieRH?: number;
   discipline1ProfesseurAssocieRH?: string;
   discipline2ProfesseurAssocieRH?: string;
-  formationRH: boolean;
+  formationRH?: boolean;
   nbFormationRH?: number;
   discipline1FormationRH?: string;
   discipline2FormationRH?: string;
   besoinRHPrecisions?: string;
   // Travaux et équipements
-  travauxAmenagement: boolean;
+  travauxAmenagement?: boolean;
   travauxAmenagementDescription?: string;
-  achatEquipement: boolean;
+  achatEquipement?: boolean;
   achatEquipementDescription?: string;
   // Internat et restauration
-  augmentationCapaciteAccueilHebergement: boolean;
+  augmentationCapaciteAccueilHebergement?: boolean;
   augmentationCapaciteAccueilHebergementPlaces?: number;
   augmentationCapaciteAccueilHebergementPrecisions?: string;
-  augmentationCapaciteAccueilRestauration: boolean;
+  augmentationCapaciteAccueilRestauration?: boolean;
   augmentationCapaciteAccueilRestaurationPlaces?: number;
   augmentationCapaciteAccueilRestaurationPrecisions?: string;
   // Observations / commentaires

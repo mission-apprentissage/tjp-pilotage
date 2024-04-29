@@ -7,7 +7,11 @@ import {
   RadioGroup,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
+
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/perdir/utils/typeDemandeUtils";
 
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
@@ -18,9 +22,26 @@ export const AmiCmaValideField = chakra(
       formState: { errors },
       control,
       watch,
+      getValues,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const visible = watch("amiCma");
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "amiCmaEnCoursValidation" && name !== "amiCma") return;
+          if (name === "amiCma") setValue("amiCmaValide", undefined);
+          if (
+            name === "amiCmaEnCoursValidation" &&
+            getValues("amiCmaEnCoursValidation") === true
+          )
+            setValue("amiCmaValide", false);
+        }).unsubscribe
+    );
+
+    const [typeDemande, amiCma] = watch(["typeDemande", "amiCma"]);
+    const visible =
+      !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande) && amiCma;
     if (!visible) return null;
 
     return (

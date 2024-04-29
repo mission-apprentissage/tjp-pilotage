@@ -19,7 +19,7 @@ export const submitDemandeSchema = {
       autreMotif: z.string().optional(),
       libelleColoration: z.string().optional(),
       coloration: z.boolean(),
-      amiCma: z.boolean(),
+      amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),
       amiCmaValideAnnee: z.string().optional(),
       amiCmaEnCoursValidation: z.boolean().optional(),
