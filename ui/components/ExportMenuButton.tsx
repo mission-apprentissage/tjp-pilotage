@@ -68,7 +68,7 @@ export const ExportMenuButton = ({
     );
   }
   return (
-    <Menu>
+    <Menu gutter={0}>
       <MenuButton
         as={Button}
         variant={variant}
@@ -77,7 +77,7 @@ export const ExportMenuButton = ({
       >
         Exporter
       </MenuButton>
-      <MenuList p={0}>
+      <MenuList p={0} zIndex={"tooltip"}>
         <ExportButton onExport={handleExportCsv} />
         <ExportButton onExport={handleExportExcel} type={"excel"} />
       </MenuList>
