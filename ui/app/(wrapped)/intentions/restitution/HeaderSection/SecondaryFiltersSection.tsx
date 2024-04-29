@@ -1,4 +1,5 @@
-import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
+import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 
 import { getTypeDemandeLabelFiltre } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
@@ -34,6 +35,7 @@ export const SecondaryFiltersSection = ({
   activeFilters,
   handleFilters,
   filterTracker,
+  resetFilters,
   data,
 }: {
   activeFilters: FiltersDemandesRestitutionIntentions;
@@ -44,6 +46,7 @@ export const SecondaryFiltersSection = ({
   filterTracker: (
     filterName: keyof FiltersDemandesRestitutionIntentions
   ) => () => void;
+  resetFilters: () => void;
   data?: DemandesRestitutionIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
@@ -96,6 +99,23 @@ export const SecondaryFiltersSection = ({
               disabled={data?.filters.diplomes.length === 0}
             >
               TOUS ({data?.filters.diplomes.length ?? 0})
+            </Multiselect>
+          </Box>
+          <Box justifyContent={"start"}>
+            <FormLabel>Département</FormLabel>
+            <Multiselect
+              onClose={filterTracker("codeDepartement")}
+              width={"48"}
+              size="md"
+              variant={"newInput"}
+              onChange={(selected) =>
+                handleFilters("codeDepartement", selected)
+              }
+              options={data?.filters.departements}
+              value={activeFilters.codeDepartement ?? []}
+              disabled={data?.filters.departements.length === 0}
+            >
+              TOUS ({data?.filters.departements.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -156,7 +176,7 @@ export const SecondaryFiltersSection = ({
             </FormLabel>
             <Multiselect
               onClose={filterTracker("codeNsf")}
-              width={"48"}
+              width={"72"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("codeNsf", selected)}
@@ -315,6 +335,15 @@ export const SecondaryFiltersSection = ({
               ))}
             </Select>
           </Box>
+          <Button
+            variant="externalLink"
+            border={"none"}
+            leftIcon={<Icon icon={"ri:refresh-line"} />}
+            mt={"auto"}
+            onClick={() => resetFilters()}
+          >
+            Réinitialiser les filtres
+          </Button>
         </Flex>
       </Flex>
     </Box>

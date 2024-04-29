@@ -104,6 +104,29 @@ export default () => {
     });
   };
 
+  const resetFilters = () => {
+    setSearchParams({
+      filters: {
+        ...filters,
+        codeDepartement: [],
+        commune: [],
+        typeDemande: [],
+        motif: [],
+        cfdFamille: [],
+        codeNsf: [],
+        uai: [],
+        cfd: [],
+        dispositif: [],
+        coloration: undefined,
+        amiCMA: undefined,
+        secteur: undefined,
+        voie: undefined,
+        CPC: undefined,
+        statut: statutFilter,
+      },
+    });
+  };
+
   const getIntentionsStatsQueryParameters = (
     qLimit: number,
     qOffset?: number
@@ -143,7 +166,6 @@ export default () => {
   const { codeRegionFilter, setCodeRegionFilter } = useContext(
     CodeRegionFilterContext
   );
-
   const [rentreeScolaireFilter, setRentreeScolaireFilter] = useState<string>();
   const [campagneFilter, setCampagneFilter] = useState<string>(
     CURRENT_ANNEE_CAMPAGNE
@@ -185,6 +207,7 @@ export default () => {
           activeFilters={filters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
+          resetFilters={resetFilters}
           isLoading={isLoading || isLoadingCount}
           data={data}
         />

@@ -6,18 +6,22 @@ import {
   Flex,
   Img,
   Text,
+  useToken,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 
 import { StatsRestitutionIntentions } from "../types";
 
 const CountCard = ({
   label,
   icon,
+  iconSrc,
   subLabel,
   value,
 }: {
   label: string;
-  icon: string;
+  icon?: React.ReactNode;
+  iconSrc?: string;
   subLabel?: string;
   value?: {
     total?: number;
@@ -30,7 +34,10 @@ const CountCard = ({
     <CardHeader px={3} pt={2} pb={1}>
       <Flex flexDirection="column" minH="42px">
         <Flex>
-          <Img src={`/icons/${icon}.svg`} height="20px" me={2}></Img>
+          {iconSrc && (
+            <Img src={`/icons/${iconSrc}.svg`} height="20px" me={2}></Img>
+          )}
+          {icon}
           <Text fontSize="lg" fontWeight="bold" lineHeight={"20px"}>
             {label}
           </Text>
@@ -84,6 +91,8 @@ export const CountersSection = ({
 }: {
   countData?: StatsRestitutionIntentions;
 }) => {
+  const colorationColor = useToken("colors", "purpleglycine.850_active");
+
   return (
     <Flex
       flexDirection={"row"}
@@ -96,29 +105,37 @@ export const CountersSection = ({
         <CountCard
           label="Places ouvertes"
           value={countData?.ouvertures}
-          icon={"places_ouvertes"}
+          iconSrc={"places_ouvertes"}
         />
         <CountCard
           label="Places fermées"
-          icon={"places_fermees"}
+          iconSrc={"places_fermees"}
           value={countData?.fermetures}
         />
         <CountCard
-          label="Places colorées"
-          icon={"coloration"}
+          label="Colorations"
+          subLabel="Pl. ouvertes + existantes"
+          icon={
+            <Icon
+              icon="ri:account-pin-box-fill"
+              height="22px"
+              color={colorationColor}
+              style={{ marginRight: "0.5rem" }}
+            />
+          }
           value={countData?.coloration}
         />
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
           label="AMI / CMA"
-          icon={"places_ami-cma"}
+          iconSrc={"places_ami-cma"}
           subLabel="Places ouvertes"
           value={countData?.amiCMAs}
         />
         <CountCard
           label="FCIL"
-          icon={"places_fcil"}
+          iconSrc={"places_fcil"}
           subLabel="Places ouvertes"
           value={countData?.FCILs}
         />
