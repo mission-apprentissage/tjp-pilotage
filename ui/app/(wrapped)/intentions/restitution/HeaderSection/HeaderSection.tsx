@@ -42,6 +42,7 @@ export const HeaderSection = ({
   activeFilters,
   handleFilters,
   filterTracker,
+  resetFilters,
   isLoading,
   data,
   countData,
@@ -54,6 +55,7 @@ export const HeaderSection = ({
   filterTracker: (
     filterName: keyof FiltersDemandesRestitutionIntentions
   ) => () => void;
+  resetFilters: () => void;
   isLoading: boolean;
   data?: DemandesRestitutionIntentions;
   countData?: StatsRestitutionIntentions;
@@ -77,6 +79,7 @@ export const HeaderSection = ({
           activeFilters={activeFilters}
           handleFilters={handleFilters}
           filterTracker={filterTracker}
+          resetFilters={resetFilters}
           data={data}
         />
       </Flex>

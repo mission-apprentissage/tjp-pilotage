@@ -180,23 +180,6 @@ export const PrimaryFiltersSection = ({
                     TOUTES ({data?.filters.academies.length ?? 0})
                   </Multiselect>
                 </Box>
-                <Box justifyContent={"start"}>
-                  <FormLabel color="white">DÉPARTEMENT</FormLabel>
-                  <Multiselect
-                    onClose={filterTracker("codeDepartement")}
-                    width={"72"}
-                    size="md"
-                    variant={"newInput"}
-                    onChange={(selected) =>
-                      handleFilters("codeDepartement", selected)
-                    }
-                    options={data?.filters.departements}
-                    value={activeFilters.codeDepartement ?? []}
-                    disabled={data?.filters.departements.length === 0}
-                  >
-                    TOUS ({data?.filters.departements.length ?? 0})
-                  </Multiselect>
-                </Box>
               </Flex>
             </Flex>
           </LightMode>
