@@ -2,6 +2,7 @@ import { Container, Flex } from "@chakra-ui/react";
 
 import { Multiselect } from "@/components/Multiselect";
 
+import { getStickyNavHeight } from "../../utils/getStickyNavOffset";
 import { FiltersPanoramaFormation } from "../types";
 export const FiltersSection = ({
   handleFilters,
@@ -21,7 +22,7 @@ export const FiltersSection = ({
       maxW="container.xl"
       position="sticky"
       bg="white"
-      top="0"
+      top={getStickyNavHeight()}
       borderBottom="1px solid"
       borderColor="grey.900"
       zIndex="2"

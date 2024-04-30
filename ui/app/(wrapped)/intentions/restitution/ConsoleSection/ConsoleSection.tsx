@@ -87,7 +87,7 @@ export const ConsoleSection = ({
         <Loader />
       ) : (
         <TableContainer overflowY="auto" flex={1} position="relative">
-          <Table variant="simple" size={"sm"}>
+          <Table variant="simple" size={"sm"} p={0}>
             <Thead
               position="sticky"
               top="0"

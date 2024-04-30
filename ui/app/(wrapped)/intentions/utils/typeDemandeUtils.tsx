@@ -31,6 +31,12 @@ export const isTypeTransfert = (typeDemande: TypeDemande) =>
 export const isTypeColoration = (typeDemande: TypeDemande) =>
   typeDemande === "coloration";
 
+export const getTypeDemandeLabelFiltre = (typeDemande?: TypeDemande): string =>
+  typeDemande
+    ? TYPES_DEMANDES_OPTIONS[typeDemande].labelFiltre ??
+      TYPES_DEMANDES_OPTIONS[typeDemande].label
+    : "";
+
 export const getTypeDemandeLabel = (typeDemande?: TypeDemande): string =>
   typeDemande ? TYPES_DEMANDES_OPTIONS[typeDemande].label : "";
 
@@ -41,6 +47,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   string,
   {
     value: string;
+    labelFiltre?: string;
     label: string;
     campagnes: Array<string>;
     desc: string;
@@ -203,6 +210,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   },
   coloration: {
     value: "coloration",
+    labelFiltre: "Coloration / formations existantes",
     label: "Coloration",
     campagnes: ["2024", "2025"],
     desc: "Utiliser ce formulaire pour colorer une formation existante.",
