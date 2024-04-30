@@ -35,21 +35,15 @@ const getDemandesRestitutionIntentionsQuery = async ({
   codeRegion,
   rentreeScolaire,
   typeDemande,
-  motif,
   cfd,
   codeNiveauDiplome,
-  dispositif,
-  CPC,
   codeNsf,
   coloration,
   amiCMA,
   secteur,
-  cfdFamille,
   codeDepartement,
   codeAcademie,
-  commune,
   uai,
-  compensation,
   user,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
@@ -173,10 +167,6 @@ const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
-      return eb;
-    })
-    .$call((eb) => {
       if (uai) return eb.where("dataEtablissement.uai", "in", uai);
       return eb;
     })
@@ -186,17 +176,6 @@ const getDemandesRestitutionIntentionsQuery = async ({
           "demande.rentreeScolaire",
           "=",
           parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (motif)
-        return eb.where((eb) =>
-          eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-            )
-          )
         );
       return eb;
     })
@@ -219,21 +198,7 @@ const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (dispositif)
-        return eb.where("demande.codeDispositif", "in", dispositif);
-      return eb;
-    })
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
       if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfdFamille)
-        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
       return eb;
     })
     .$call((eb) => {
@@ -252,14 +217,6 @@ const getDemandesRestitutionIntentionsQuery = async ({
           "=",
           amiCMA === "true" ? sql<true>`true` : sql<false>`false`
         );
-      return eb;
-    })
-    .$call((eb) => {
-      if (compensation)
-        return eb.where("demande.typeDemande", "in", [
-          "ouverture_compensation",
-          "augmentation_compensation",
-        ]);
       return eb;
     })
     .$call((eb) => {
@@ -319,21 +276,15 @@ const getFilters = async ({
   codeRegion,
   rentreeScolaire,
   typeDemande,
-  motif,
   cfd,
   codeNiveauDiplome,
-  dispositif,
-  CPC,
   codeNsf,
   coloration,
   amiCMA,
   secteur,
-  cfdFamille,
   codeDepartement,
   codeAcademie,
-  commune,
   uai,
-  compensation,
   user,
   campagne,
 }: Filters) => {
@@ -353,11 +304,6 @@ const getFilters = async ({
   const inCodeAcademie = (eb: ExpressionBuilder<DB, "academie">) => {
     if (!codeAcademie) return sql<true>`true`;
     return eb("academie.codeAcademie", "in", codeAcademie);
-  };
-
-  const inCommune = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
-    if (!commune) return sql<true>`true`;
-    return eb("dataEtablissement.commune", "in", commune);
   };
 
   const inEtablissement = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
@@ -381,36 +327,14 @@ const getFilters = async ({
     return eb("dataFormation.codeNiveauDiplome", "in", codeNiveauDiplome);
   };
 
-  const inCPC = (eb: ExpressionBuilder<DB, "dataFormation">) => {
-    if (!CPC) return sql<true>`true`;
-    return eb("dataFormation.cpc", "in", CPC);
-  };
-
   const inCodeNsf = (eb: ExpressionBuilder<DB, "dataFormation">) => {
     if (!codeNsf) return sql<true>`true`;
     return eb("dataFormation.codeNsf", "in", codeNsf);
   };
 
-  const inFamilleMetier = (eb: ExpressionBuilder<DB, "familleMetier">) => {
-    if (!cfdFamille) return sql<true>`true`;
-    return eb("familleMetier.cfdFamille", "in", cfdFamille);
-  };
-
-  const inCodeDispositif = (eb: ExpressionBuilder<DB, "dispositif">) => {
-    if (!dispositif) return sql<true>`true`;
-    return eb("dispositif.codeDispositif", "in", dispositif);
-  };
-
   const inTypeDemande = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!typeDemande) return sql<true>`true`;
     return eb("demande.typeDemande", "in", typeDemande);
-  };
-
-  const inMotifDemande = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!motif) return sql<true>`true`;
-    return eb.or(
-      motif.map((m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`)
-    );
   };
 
   const inColoration = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -434,14 +358,6 @@ const getFilters = async ({
   const inSecteur = (eb: ExpressionBuilder<DB, "dataEtablissement">) => {
     if (!secteur) return sql<true>`true`;
     return eb("dataEtablissement.secteur", "=", secteur);
-  };
-
-  const inCompensation = (eb: ExpressionBuilder<DB, "demande">) => {
-    if (!compensation) return sql<true>`true`;
-    return eb("demande.typeDemande", "in", [
-      "ouverture_compensation",
-      "augmentation_compensation",
-    ]);
   };
 
   const inStatut = (eb: ExpressionBuilder<DB, "demande">) => {
@@ -545,42 +461,6 @@ const getFilters = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const communesFilters = filtersBase
-    .select([
-      "dataEtablissement.commune as label",
-      "dataEtablissement.commune as value",
-    ])
-    .where("dataEtablissement.commune", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inTypeDemande(eb),
-          inMotifDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
-          inCodeNsf(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inCompensation(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        commune
-          ? eb("dataEtablissement.commune", "in", commune)
-          : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
   const etablissementsFilters = filtersBase
     .select([
       "dataEtablissement.libelleEtablissement as label",
@@ -593,20 +473,14 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inRentreeScolaire(eb),
           inTypeDemande(eb),
-          inMotifDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
           inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
@@ -627,20 +501,14 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inEtablissement(eb),
           inTypeDemande(eb),
-          inMotifDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
           inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
@@ -660,101 +528,19 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inEtablissement(eb),
           inRentreeScolaire(eb),
-          inMotifDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
           inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
         typeDemande
           ? eb("demande.typeDemande", "in", typeDemande)
-          : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const motifsDemandeFilters = filtersBase
-    .select([
-      sql`unnest(demande.motif)`.as("label"),
-      sql`unnest(demande.motif)`.as("value"),
-    ])
-    .where("demande.motif", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inCommune(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
-          inCodeNsf(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inCompensation(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        motif
-          ? eb.or(
-              motif.map(
-                (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-              )
-            )
-          : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const dispositifsFilters = await filtersBase
-    .select([
-      "dispositif.libelleDispositif as label",
-      "dispositif.codeDispositif as value",
-    ])
-    .where("dispositif.codeDispositif", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inCommune(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inMotifDemande(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
-          inCodeNsf(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inCompensation(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        dispositif
-          ? eb("dispositif.codeDispositif", "in", dispositif)
           : sql<boolean>`false`,
       ]);
     })
@@ -772,20 +558,14 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inEtablissement(eb),
           inRentreeScolaire(eb),
-          inMotifDemande(eb),
           inTypeDemande(eb),
           inCfd(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
           inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
@@ -813,91 +593,18 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inEtablissement(eb),
           inRentreeScolaire(eb),
-          inMotifDemande(eb),
           inTypeDemande(eb),
           inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inFamilleMetier(eb),
-          inCPC(eb),
           inCodeNsf(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
         cfd ? eb("dataFormation.cfd", "in", cfd) : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const famillesFilters = await filtersBase
-    .select([
-      "familleMetier.libelleFamille as label",
-      "familleMetier.cfdFamille as value",
-    ])
-    .where("familleMetier.cfdFamille", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inCommune(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inMotifDemande(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inCPC(eb),
-          inCodeNsf(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inCompensation(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        cfdFamille
-          ? eb("familleMetier.cfdFamille", "in", cfdFamille)
-          : sql<boolean>`false`,
-      ]);
-    })
-    .execute();
-
-  const CPCFilters = await filtersBase
-    .select(["dataFormation.cpc as label", "dataFormation.cpc as value"])
-    .where("dataFormation.cpc", "is not", null)
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inCommune(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inMotifDemande(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inCodeNsf(eb),
-          inFamilleMetier(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inCompensation(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        CPC ? eb("dataFormation.cpcSecteur", "in", CPC) : sql<boolean>`false`,
       ]);
     })
     .execute();
@@ -912,20 +619,14 @@ const getFilters = async ({
           inCodeRegion(eb),
           inCodeDepartement(eb),
           inCodeAcademie(eb),
-          inCommune(eb),
           inEtablissement(eb),
           inRentreeScolaire(eb),
-          inMotifDemande(eb),
           inTypeDemande(eb),
           inCfd(eb),
           inCodeNiveauDiplome(eb),
-          inCodeDispositif(eb),
-          inCPC(eb),
-          inFamilleMetier(eb),
           inColoration(eb),
           inAmiCMA(eb),
           inSecteur(eb),
-          inCompensation(eb),
           inStatut(eb),
           inCampagne(eb),
         ]),
@@ -940,16 +641,11 @@ const getFilters = async ({
     regions: (await regionsFilters).map(cleanNull),
     rentreesScolaires: (await rentreesScolairesFilters).map(cleanNull),
     typesDemande: (await typesDemandeFilters).map(cleanNull),
-    motifs: (await motifsDemandeFilters).map(cleanNull),
-    dispositifs: (await dispositifsFilters).map(cleanNull),
     diplomes: (await diplomesFilters).map(cleanNull),
     formations: (await formationsFilters).map(cleanNull),
-    familles: (await famillesFilters).map(cleanNull),
-    CPCs: (await CPCFilters).map(cleanNull),
     libellesNsf: (await libellesNsf).map(cleanNull),
     departements: (await departementsFilters).map(cleanNull),
     academies: (await academiesFilters).map(cleanNull),
-    communes: (await communesFilters).map(cleanNull),
     etablissements: (await etablissementsFilters).map(cleanNull),
     campagnes: (await campagnesFilters).map(cleanNull),
     secteurs: [
