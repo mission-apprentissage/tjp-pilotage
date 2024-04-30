@@ -147,6 +147,8 @@ export const CfdUaiSection = ({
     statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
+  console.log(getValues());
+
   return (
     <DarkMode>
       <Box

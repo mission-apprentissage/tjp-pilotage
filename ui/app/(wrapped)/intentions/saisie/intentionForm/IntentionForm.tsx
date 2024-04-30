@@ -145,6 +145,12 @@ export const IntentionForm = ({
   const { setCampagne } = useContext(CampagneContext);
 
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
+
+  console.log({
+    isValid: form.formState.isValid,
+    isDirty: form.formState.isDirty,
+    errors,
+  });
   return (
     <>
       <CampagneContext.Provider value={campagneValue}>
@@ -154,11 +160,34 @@ export const IntentionForm = ({
             bg="blueecume.925"
             as="form"
             noValidate
-            onSubmit={handleSubmit((values) =>
+            onSubmit={handleSubmit((values) => {
+              const { files, ...datas } = values;
+              const formData = new FormData();
+
+              if (files && files?.length > 0) {
+                formData.append("files", files[0]);
+              }
+
+              formData.append(
+                "datas",
+                JSON.stringify({ demande: { numero: formId, ...datas } })
+              );
+
+              // submitDemande({ body: formData });
+
+              console.log("submitDemande", {
+                demande: { numero: formId, ...datas },
+              });
+
               submitDemande({
-                body: { demande: { numero: formId, ...values } },
-              })
-            )}
+                body: {
+                  datas: JSON.stringify({
+                    demande: { numero: formId, ...datas },
+                  }),
+                  files: [],
+                },
+              });
+            })}
           >
             <Container maxW={"container.xl"} pt="4" mb={24}>
               <Breadcrumb
@@ -211,20 +240,42 @@ export const IntentionForm = ({
                           }
                           isLoading={isSubmitting}
                           variant="primary"
-                          onClick={handleSubmit((values) =>
-                            submitDemande({
-                              body: {
+                          onClick={handleSubmit((values) => {
+                            console.log("SUBMIT !!!!");
+                            const { files, ...datas } = values;
+                            const formData = new FormData();
+
+                            if (files && files?.length > 0) {
+                              Array.from(files).forEach((file, index) => {
+                                console.log(`file${index}`, {
+                                  ...file,
+                                });
+                                formData.append(`file${index}`, file);
+                              });
+                            }
+
+                            formData.append(
+                              "datas",
+                              JSON.stringify({
                                 demande: {
                                   numero: formId,
-                                  ...values,
+                                  ...datas,
                                   statut: formId
                                     ? values.statut
                                     : DemandeStatutEnum.draft,
                                   campagneId: values.campagneId ?? campagne?.id,
                                 },
-                              },
-                            })
-                          )}
+                              })
+                            );
+
+                            console.log("submitDemande", {
+                              demande: { numero: formId, ...datas },
+                            });
+
+                            submitDemande({
+                              body: formData,
+                            });
+                          })}
                           leftIcon={<CheckIcon />}
                         >
                           {formId
