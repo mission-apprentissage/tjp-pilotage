@@ -46,6 +46,7 @@ export type IntentionForms = {
   discipline2FormationRH?: string;
   // Observations / commentaires
   commentaire?: string;
+  files?: FileList;
   // Statut
   statut: "draft" | "submitted" | "refused";
   motifRefus?: string[];

@@ -1,61 +1,46 @@
 "use client";
 
-import { useSearchParams } from "next/navigation";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "../../../../../api.client";
 import { GuardPermission } from "../../../../../utils/security/GuardPermission";
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
+
 export default () => {
-  const queryParams = useSearchParams();
-  const numero = queryParams.get("numero");
-
-  const { data, isLoading } = client.ref("[GET]/demande/:numero").useQuery(
-    { params: { numero: numero ?? "" } },
-    {
-      enabled: !!numero,
-      cacheTime: 0,
-    }
-  );
-
-  const { data: defaultCampagne } = client
+  const { data: defaultCampagne, isLoading } = client
     .ref("[GET]/campagne/default")
     .useQuery({});
 
-  if (isLoading && !!numero) return <IntentionSpinner />;
+  if (isLoading) {
+    return <IntentionSpinner />;
+  }
+
   return (
     <GuardPermission permission="intentions/ecriture">
-      {numero ? (
-        data && (
-          <IntentionForm
-            disabled={
-              defaultCampagne?.statut !== CampagneStatutEnum["en cours"]
-            }
-            defaultValues={{
-              cfd: data?.compensationCfd,
-              codeDispositif: data?.compensationCodeDispositif,
-              uai: data?.compensationUai,
-              rentreeScolaire: data?.compensationRentreeScolaire,
-              campagneId: data?.campagneId,
-            }}
-            formMetadata={{
-              etablissement: data?.metadata?.etablissementCompensation,
-              formation: data?.metadata?.formationCompensation,
-            }}
-            campagne={defaultCampagne}
-          />
-        )
-      ) : (
-        <IntentionForm
-          disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
-          defaultValues={{
-            campagneId: defaultCampagne?.id,
-          }}
-          formMetadata={{}}
-          campagne={defaultCampagne}
-        />
-      )}
+      <IntentionForm
+        disabled={defaultCampagne?.statut !== CampagneStatutEnum["en cours"]}
+        defaultValues={{
+          campagneId: defaultCampagne?.id,
+          // TO DELETE
+          cfd: "40031112",
+          codeDispositif: "247",
+          uai: "0261265J",
+          recrutementRH: false,
+          formationRH: false,
+          professeurAssocieRH: false,
+          amiCma: false,
+          mixte: false,
+          coloration: false,
+          capaciteScolaireActuelle: 10,
+          capaciteScolaire: 12,
+          typeDemande: "ouverture_nette",
+          rentreeScolaire: 2025,
+          reconversionRH: false,
+        }}
+        formMetadata={{}}
+        campagne={defaultCampagne}
+      />
     </GuardPermission>
   );
 };

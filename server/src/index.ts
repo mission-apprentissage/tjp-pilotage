@@ -1,4 +1,5 @@
 import fastifyCors from "@fastify/cors";
+import fastifyMultipart from "@fastify/multipart";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
@@ -38,7 +39,28 @@ server.register(fastifySwaggerUi, {
   },
 });
 
+server.register(fastifyMultipart, { attachFieldsToBody: true });
+
 server.setErrorHandler((error, _, reply) => {
+  if (error instanceof ZodError) {
+    logger.error(error.message, {
+      error,
+      details: error.format(),
+    });
+
+    if (process.env.PILOTAGE_ENV === "production") {
+      reply.status(500).send({ error: "internal error", statusCode: 500 });
+      return;
+    }
+
+    reply.status(400).send({
+      error: "bad request",
+      statusCode: 400,
+      details: error.flatten(),
+    });
+    return;
+  }
+
   if ("details" in error && error.details instanceof ZodError) {
     logger.error(error.message, {
       error,
@@ -107,6 +129,24 @@ export type Router = ReturnType<typeof registerRoutes>;
 server.register(async (instance: Server) => registerRoutes(instance), {
   prefix: "/api",
 });
+
+server.register(async (instance: Server) =>
+  instance.post("/api/upload", async (request, response) => {
+    console.log({ body: request.body });
+
+    const parts = request.files();
+    for await (const file of parts) {
+      console.log({ file });
+      if (file.type === "file") {
+        console.log({ file: file });
+      } else {
+        console.log({ field: file });
+      }
+    }
+
+    response.status(200).send("ok");
+  })
+);
 
 const cb = (error: Error | null) => {
   if (error) {
