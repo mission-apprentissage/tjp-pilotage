@@ -28,20 +28,14 @@ const getStatsRestitutionIntentionsQuery = async ({
   codeRegion,
   rentreeScolaire,
   typeDemande,
-  motif,
   cfd,
   codeNiveauDiplome,
-  codeDispositif,
-  CPC,
   coloration,
   amiCMA,
   secteur,
-  cfdFamille,
   codeDepartement,
   codeAcademie,
-  commune,
   uai,
-  compensation,
   user,
   voie,
   codeNsf,
@@ -218,10 +212,6 @@ const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
-      return eb;
-    })
-    .$call((eb) => {
       if (uai) return eb.where("dataEtablissement.uai", "in", uai);
       return eb;
     })
@@ -231,17 +221,6 @@ const getStatsRestitutionIntentionsQuery = async ({
           "demande.rentreeScolaire",
           "=",
           parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (motif)
-        return eb.where((eb) =>
-          eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-            )
-          )
         );
       return eb;
     })
@@ -264,20 +243,6 @@ const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeDispositif)
-        return eb.where("demande.codeDispositif", "in", codeDispositif);
-      return eb;
-    })
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfdFamille)
-        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
-      return eb;
-    })
-    .$call((eb) => {
       if (coloration)
         return eb.where(
           "demande.coloration",
@@ -293,14 +258,6 @@ const getStatsRestitutionIntentionsQuery = async ({
           "=",
           amiCMA === "true" ? sql<true>`true` : sql<false>`false`
         );
-      return eb;
-    })
-    .$call((eb) => {
-      if (compensation)
-        return eb.where("demande.typeDemande", "in", [
-          "ouverture_compensation",
-          "augmentation_compensation",
-        ]);
       return eb;
     })
     .$call((eb) => {
