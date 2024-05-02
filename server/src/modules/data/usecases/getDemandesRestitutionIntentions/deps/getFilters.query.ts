@@ -1,320 +1,13 @@
 import { ExpressionBuilder, sql } from "kysely";
-import { jsonObjectFrom } from "kysely/helpers/postgres";
-import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE, MILLESIMES_IJ } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { VoieEnum } from "shared/enum/voieEnum";
-import { z } from "zod";
 
-import { DB, kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import {
-  countDifferenceCapaciteApprentissage,
-  countDifferenceCapaciteScolaire,
-} from "../../../utils/countCapacite";
-import { isDemandeNotDeleted } from "../../../utils/isDemandeSelectable";
-import {
-  isIntentionVisible,
-  isRegionVisible,
-} from "../../../utils/isIntentionVisible";
-import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
-import { nbEtablissementFormationRegion } from "../../utils/nbEtablissementFormationRegion";
-import { selectTauxDevenirFavorable } from "../../utils/tauxDevenirFavorable";
-import { selectTauxInsertion6mois } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuite } from "../../utils/tauxPoursuite";
-import { selectTauxPressionParFormationEtParRegionDemande } from "../../utils/tauxPression";
-import { FiltersSchema } from "./getDemandesRestitutionIntentions.schema";
+import { DB, kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { isRegionVisible } from "../../../../utils/isIntentionVisible";
+import { Filters } from "../getDemandesRestitutionIntentions.usecase";
 
-export interface Filters extends z.infer<typeof FiltersSchema> {
-  user: RequestUser;
-  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
-}
-
-const getDemandesRestitutionIntentionsQuery = async ({
-  statut,
-  codeRegion,
-  rentreeScolaire,
-  typeDemande,
-  motif,
-  cfd,
-  codeNiveauDiplome,
-  dispositif,
-  CPC,
-  codeNsf,
-  coloration,
-  amiCMA,
-  secteur,
-  cfdFamille,
-  codeDepartement,
-  codeAcademie,
-  commune,
-  uai,
-  compensation,
-  user,
-  millesimeSortie = CURRENT_IJ_MILLESIME,
-  voie,
-  campagne,
-  offset = 0,
-  limit = 20,
-  order = "desc",
-  orderBy = "createdAt",
-}: Filters) => {
-  const demandes = await kdb
-    .selectFrom("latestDemandeView as demande")
-    .innerJoin("campagne", (join) =>
-      join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
-        if (campagne) return eb.on("campagne.annee", "=", campagne);
-        return eb;
-      })
-    )
-    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
-    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
-    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin(
-      "dispositif",
-      "dispositif.codeDispositif",
-      "demande.codeDispositif"
-    )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
-    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
-    .leftJoin(
-      "academie",
-      "academie.codeAcademie",
-      "dataEtablissement.codeAcademie"
-    )
-    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
-    .leftJoin(
-      "niveauDiplome",
-      "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
-    )
-    .leftJoin("indicateurRegionSortie", (join) =>
-      join
-        .onRef("indicateurRegionSortie.cfd", "=", "demande.cfd")
-        .onRef("indicateurRegionSortie.codeRegion", "=", "demande.codeRegion")
-        .onRef(
-          "indicateurRegionSortie.dispositifId",
-          "=",
-          "demande.codeDispositif"
-        )
-        .on("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-        .on(isScolaireIndicateurRegionSortie)
-    )
-    .selectAll("demande")
-    .select((eb) => [
-      "niveauDiplome.codeNiveauDiplome as codeNiveauDiplome",
-      "niveauDiplome.libelleNiveauDiplome as niveauDiplome",
-      "dataFormation.libelleFormation",
-      "nsf.libelleNsf as libelleNsf",
-      "dataEtablissement.libelleEtablissement",
-      "dataEtablissement.commune as commune",
-      "dispositif.libelleDispositif",
-      "region.libelleRegion as libelleRegion",
-      "departement.libelleDepartement",
-      "departement.codeDepartement as codeDepartement",
-      "academie.libelleAcademie",
-      "academie.codeAcademie as codeAcademie",
-      countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
-      countDifferenceCapaciteApprentissage(eb).as(
-        "differenceCapaciteApprentissage"
-      ),
-      sql<string>`count(*) over()`.as("count"),
-      jsonObjectFrom(
-        eb
-          .selectFrom(["demande as demandeCompensee"])
-          .whereRef("demandeCompensee.cfd", "=", "demande.compensationCfd")
-          .whereRef("demandeCompensee.uai", "=", "demande.compensationUai")
-          .whereRef(
-            "demandeCompensee.codeDispositif",
-            "=",
-            "demande.compensationCodeDispositif"
-          )
-          .select(["demandeCompensee.numero", "demandeCompensee.typeDemande"])
-          .limit(1)
-      ).as("demandeCompensee"),
-      selectTauxInsertion6mois("indicateurRegionSortie").as("tauxInsertion"),
-      selectTauxPoursuite("indicateurRegionSortie").as("tauxPoursuite"),
-      selectTauxDevenirFavorable("indicateurRegionSortie").as(
-        "devenirFavorable"
-      ),
-      selectTauxPressionParFormationEtParRegionDemande({
-        eb,
-        rentreeScolaire: CURRENT_RENTREE,
-      }).as("pression"),
-      nbEtablissementFormationRegion({
-        eb,
-        rentreeScolaire: CURRENT_RENTREE,
-      }).as("nbEtablissement"),
-    ])
-    .$call((eb) => {
-      if (statut) return eb.where("demande.statut", "in", statut);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeRegion) return eb.where("demande.codeRegion", "in", codeRegion);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeDepartement)
-        return eb.where(
-          "dataEtablissement.codeDepartement",
-          "in",
-          codeDepartement
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeAcademie)
-        return eb.where("dataEtablissement.codeAcademie", "in", codeAcademie);
-      return eb;
-    })
-    .$call((eb) => {
-      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
-      return eb;
-    })
-    .$call((eb) => {
-      if (uai) return eb.where("dataEtablissement.uai", "in", uai);
-      return eb;
-    })
-    .$call((eb) => {
-      if (rentreeScolaire && !Number.isNaN(rentreeScolaire))
-        return eb.where(
-          "demande.rentreeScolaire",
-          "=",
-          parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (motif)
-        return eb.where((eb) =>
-          eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-            )
-          )
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (typeDemande)
-        return eb.where("demande.typeDemande", "in", typeDemande);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfd) return eb.where("demande.cfd", "in", cfd);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeNiveauDiplome)
-        return eb.where(
-          "dataFormation.codeNiveauDiplome",
-          "in",
-          codeNiveauDiplome
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (dispositif)
-        return eb.where("demande.codeDispositif", "in", dispositif);
-      return eb;
-    })
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfdFamille)
-        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
-      return eb;
-    })
-    .$call((eb) => {
-      if (coloration)
-        return eb.where(
-          "demande.coloration",
-          "=",
-          coloration === "true" ? sql<true>`true` : sql<false>`false`
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (amiCMA)
-        return eb.where(
-          "demande.amiCma",
-          "=",
-          amiCMA === "true" ? sql<true>`true` : sql<false>`false`
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (compensation)
-        return eb.where("demande.typeDemande", "in", [
-          "ouverture_compensation",
-          "augmentation_compensation",
-        ]);
-      return eb;
-    })
-    .$call((eb) => {
-      if (secteur) return eb.where("dataEtablissement.secteur", "=", secteur);
-      return eb;
-    })
-    .$call((eb) => {
-      if (voie === "apprentissage") {
-        return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref(
-              "demande.capaciteApprentissage"
-            )} - ${ebw.ref("demande.capaciteApprentissageActuelle")}) > 1`
-        );
-      }
-
-      if (voie === "scolaire") {
-        return eb.where(
-          ({ eb: ebw }) =>
-            sql<boolean>`abs(${ebw.ref("demande.capaciteScolaire")} - ${ebw.ref(
-              "demande.capaciteScolaireActuelle"
-            )}) > 1`
-        );
-      }
-
-      return eb;
-    })
-    .$call((q) => {
-      if (!orderBy || !order) return q;
-      return q.orderBy(
-        sql`${sql.ref(orderBy)}`,
-        sql`${sql.raw(order)} NULLS LAST`
-      );
-    })
-    .where(isDemandeNotDeleted)
-    .where(isIntentionVisible({ user }))
-    .offset(offset)
-    .limit(limit)
-    .execute();
-
-  return {
-    demandes: demandes.map((demande) =>
-      cleanNull({
-        ...demande,
-        createdAt: demande.createdAt?.toISOString(),
-        updatedAt: demande.updatedAt?.toISOString(),
-        numeroCompensation: demande.demandeCompensee?.numero,
-        typeCompensation: demande.demandeCompensee?.typeDemande ?? undefined,
-      })
-    ),
-    count: parseInt(demandes[0]?.count) || 0,
-  };
-};
-
-const getFilters = async ({
+export const getFilters = async ({
   statut,
   codeRegion,
   rentreeScolaire,
@@ -462,14 +155,14 @@ const getFilters = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const regionsFilters = geoFiltersBase
+  const regionsFilters = await geoFiltersBase
     .select(["region.libelleRegion as label", "region.codeRegion as value"])
     .where("region.codeRegion", "is not", null)
     .where("region.codeRegion", "not in", ["99", "00"])
     .where(isRegionVisible({ user }))
     .execute();
 
-  const departementsFilters = geoFiltersBase
+  const departementsFilters = await geoFiltersBase
     .select([
       "departement.libelleDepartement as label",
       "departement.codeDepartement as value",
@@ -486,7 +179,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const academiesFilters = geoFiltersBase
+  const academiesFilters = await geoFiltersBase
     .select([
       "academie.libelleAcademie as label",
       "academie.codeAcademie as value",
@@ -513,7 +206,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const campagnesFilters = kdb
+  const campagnesFilters = await kdb
     .selectFrom("campagne")
     .select(["campagne.annee as label", "campagne.annee as value", "statut"])
     .distinct()
@@ -545,7 +238,7 @@ const getFilters = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const communesFilters = filtersBase
+  const communesFilters = await filtersBase
     .select([
       "dataEtablissement.commune as label",
       "dataEtablissement.commune as value",
@@ -581,7 +274,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const etablissementsFilters = filtersBase
+  const etablissementsFilters = await filtersBase
     .select([
       "dataEtablissement.libelleEtablissement as label",
       "dataEtablissement.uai as value",
@@ -615,7 +308,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const rentreesScolairesFilters = filtersBase
+  const rentreesScolairesFilters = await filtersBase
     .select([
       "demande.rentreeScolaire as label",
       "demande.rentreeScolaire as value",
@@ -651,7 +344,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const typesDemandeFilters = filtersBase
+  const typesDemandeFilters = await filtersBase
     .select(["demande.typeDemande as label", "demande.typeDemande as value"])
     .where("demande.typeDemande", "is not", null)
     .where((eb) => {
@@ -684,7 +377,7 @@ const getFilters = async ({
     })
     .execute();
 
-  const motifsDemandeFilters = filtersBase
+  const motifsDemandeFilters = await filtersBase
     .select([
       sql`unnest(demande.motif)`.as("label"),
       sql`unnest(demande.motif)`.as("value"),
@@ -937,21 +630,21 @@ const getFilters = async ({
     .execute();
 
   const filters = {
-    regions: (await regionsFilters).map(cleanNull),
-    rentreesScolaires: (await rentreesScolairesFilters).map(cleanNull),
-    typesDemande: (await typesDemandeFilters).map(cleanNull),
-    motifs: (await motifsDemandeFilters).map(cleanNull),
-    dispositifs: (await dispositifsFilters).map(cleanNull),
-    diplomes: (await diplomesFilters).map(cleanNull),
-    formations: (await formationsFilters).map(cleanNull),
-    familles: (await famillesFilters).map(cleanNull),
-    CPCs: (await CPCFilters).map(cleanNull),
-    libellesNsf: (await libellesNsf).map(cleanNull),
-    departements: (await departementsFilters).map(cleanNull),
-    academies: (await academiesFilters).map(cleanNull),
-    communes: (await communesFilters).map(cleanNull),
-    etablissements: (await etablissementsFilters).map(cleanNull),
-    campagnes: (await campagnesFilters).map(cleanNull),
+    regions: regionsFilters.map(cleanNull),
+    rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
+    typesDemande: typesDemandeFilters.map(cleanNull),
+    motifs: motifsDemandeFilters.map(cleanNull),
+    dispositifs: dispositifsFilters.map(cleanNull),
+    diplomes: diplomesFilters.map(cleanNull),
+    formations: formationsFilters.map(cleanNull),
+    familles: famillesFilters.map(cleanNull),
+    CPCs: CPCFilters.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
+    departements: departementsFilters.map(cleanNull),
+    academies: academiesFilters.map(cleanNull),
+    communes: communesFilters.map(cleanNull),
+    etablissements: etablissementsFilters.map(cleanNull),
+    campagnes: campagnesFilters.map(cleanNull),
     secteurs: [
       {
         label: "Public",
@@ -1021,9 +714,4 @@ const getFilters = async ({
   return {
     ...filters,
   };
-};
-
-export const dependencies = {
-  getDemandesRestitutionIntentionsQuery,
-  getFilters,
 };

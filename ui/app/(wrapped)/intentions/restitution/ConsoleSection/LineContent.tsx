@@ -1,8 +1,6 @@
 import { chakra, Td } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
-import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
-
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
@@ -12,6 +10,7 @@ import {
   MotifLabel,
 } from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import { DemandesRestitutionIntentions } from "../types";
 
 const handleMotifLabel = ({
@@ -53,7 +52,13 @@ const ConditionalTd = chakra(
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Td style={style} className={className} isNumeric={isNumeric}>
+        <Td
+          style={style}
+          className={className}
+          isNumeric={isNumeric}
+          border={"none"}
+          whiteSpace={"normal"}
+        >
           {children}
         </Td>
       );
@@ -65,10 +70,12 @@ export const LineContent = ({
   demande,
   campagne,
   colonneFilters,
+  getCellColor,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
   campagne?: string;
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+  getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
 }) => {
   return (
     <>
@@ -77,11 +84,11 @@ export const LineContent = ({
         colonne={"libelleEtablissement"}
         minW={300}
         maxW={300}
-        whiteSpace="normal"
         left={0}
         position="sticky"
         bg="white"
-        zIndex={"sticky"}
+        zIndex={1}
+        bgColor={getCellColor("libelleEtablissement")}
       >
         {demande.libelleEtablissement}
       </ConditionalTd>
@@ -91,16 +98,57 @@ export const LineContent = ({
         left={300}
         position="sticky"
         bg="white"
-        zIndex={"sticky"}
+        zIndex={1}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
+        bgColor={getCellColor("commune")}
       >
         {demande.commune}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleRegion"}
+        bgColor={getCellColor("libelleRegion")}
+      >
+        {demande.libelleRegion}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleAcademie"}
+        bgColor={getCellColor("libelleAcademie")}
+      >
+        {demande.libelleAcademie}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleNsf"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleNsf")}
+      >
+        {demande.libelleNsf}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleFormation"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleFormation")}
+      >
+        {demande.libelleFormation}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"niveauDiplome"}
+        bgColor={getCellColor("niveauDiplome")}
+      >
+        {demande.niveauDiplome}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"typeDemande"}
         pr="0"
         py="1"
+        bgColor={getCellColor("typeDemande")}
       >
         {getTypeDemandeLabel(demande.typeDemande)}
       </ConditionalTd>
@@ -109,9 +157,9 @@ export const LineContent = ({
         colonne={"motif"}
         minW={400}
         maxW={400}
-        whiteSpace="normal"
         textOverflow={"ellipsis"}
         isTruncated={true}
+        bgColor={getCellColor("motif")}
       >
         {handleMotifLabel({
           motifs: demande.motif,
@@ -119,47 +167,11 @@ export const LineContent = ({
           campagne: campagne,
         })}
       </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"niveauDiplome"}>
-        {demande.niveauDiplome}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleFormation"}
-        minW={300}
-        maxW={300}
-        whiteSpace="normal"
-      >
-        {demande.libelleFormation}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleNsf"}
-        minW={300}
-        maxW={300}
-        whiteSpace="normal"
-      >
-        {demande.libelleNsf}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"nbEtablissement"}
-        isNumeric
-      >
-        {demande.nbEtablissement}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"libelleRegion"}>
-        {demande.libelleRegion}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"libelleDepartement"}
-      >
-        {demande.libelleDepartement}
-      </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteScolaire"}
         isNumeric
+        bgColor={getCellColor("differenceCapaciteScolaire")}
       >
         {demande.differenceCapaciteScolaire ?? 0}
       </ConditionalTd>
@@ -167,45 +179,16 @@ export const LineContent = ({
         colonneFilters={colonneFilters}
         colonne={"differenceCapaciteApprentissage"}
         isNumeric
+        bgColor={getCellColor("differenceCapaciteApprentissage")}
       >
         {demande.differenceCapaciteApprentissage ?? 0}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"tauxInsertion"}
-        textAlign="center"
-      >
-        <GraphWrapper value={demande.tauxInsertion} />
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"tauxPoursuite"}
-        textAlign="center"
-      >
-        <GraphWrapper value={demande.tauxPoursuite} />
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"devenirFavorable"}
-        textAlign="center"
-      >
-        <GraphWrapper value={demande.devenirFavorable} />
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
-        colonne={"pression"}
-        textAlign="center"
-      >
-        <TableBadge sx={getTauxPressionStyle(demande.pression)}>
-          {demande.pression ?? "-"}
-        </TableBadge>
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"libelleColoration"}
         minW={300}
         maxW={300}
-        whiteSpace="normal"
+        bgColor={getCellColor("libelleColoration")}
       >
         {demande.libelleColoration}
       </ConditionalTd>
@@ -214,94 +197,173 @@ export const LineContent = ({
         colonne={"libelleFCIL"}
         minW={300}
         maxW={300}
-        whiteSpace="normal"
+        bgColor={getCellColor("libelleFCIL")}
       >
         {demande.libelleFCIL}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"commentaire"}
+        colonne={"numero"}
         minW={600}
         maxW={600}
         textOverflow={"ellipsis"}
         isTruncated={true}
+        bgColor={getCellColor("numero")}
       >
         {demande.commentaire}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        isNumeric
-        colonne={"positionQuadrant"}
+        colonne={"numero"}
+        bgColor={getCellColor("numero")}
       >
-        {demande.positionQuadrant}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"numero"}>
         {demande.numero}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
+        isNumeric
+        colonne={"positionQuadrant"}
+        bgColor={getCellColor("positionQuadrant")}
+      >
+        {demande.positionQuadrant}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxInsertionRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxInsertionRegional")}
+      >
+        <GraphWrapper value={demande.tauxInsertionRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxPoursuiteRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxPoursuiteRegional")}
+      >
+        <GraphWrapper value={demande.tauxPoursuiteRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxDevenirFavorableRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxDevenirFavorableRegional")}
+      >
+        <GraphWrapper value={demande.tauxDevenirFavorableRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxPressionRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxPressionRegional")}
+      >
+        <TableBadge sx={getTauxPressionStyle(demande.tauxPressionRegional)}>
+          {demande.tauxPressionRegional ?? "-"}
+        </TableBadge>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbEtablissement"}
+        isNumeric
+        bgColor={getCellColor("nbEtablissement")}
+      >
+        {demande.nbEtablissement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
         colonne={"nbRecrutementRH"}
+        bgColor={getCellColor("nbRecrutementRH")}
       >
         {demande.nbRecrutementRH}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"disciplinesRecrutementRH"}
-      >
-        {demande.discipline1RecrutementRH &&
-          `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH
-              ? `- ${demande.discipline2RecrutementRH}`
-              : ""
-          }`}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbReconversionRH"}
+        bgColor={getCellColor("nbReconversionRH")}
       >
         {demande.nbReconversionRH}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"disciplinesReconversionRH"}
-      >
-        {demande.discipline1ReconversionRH &&
-          `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH
-              ? `- ${demande.discipline2ReconversionRH}`
-              : ""
-          }`}
-      </ConditionalTd>
-      <ConditionalTd
-        colonneFilters={colonneFilters}
         colonne={"nbProfesseurAssocieRH"}
+        bgColor={getCellColor("nbProfesseurAssocieRH")}
       >
         {demande.nbProfesseurAssocieRH}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"disciplinesProfesseurAssocieRH"}
+        colonne={"nbFormationRH"}
+        bgColor={getCellColor("nbFormationRH")}
       >
-        {demande.discipline1ProfesseurAssocieRH &&
-          `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH
-              ? `- ${demande.discipline2ProfesseurAssocieRH}`
-              : ""
-          }`}
-      </ConditionalTd>
-      <ConditionalTd colonneFilters={colonneFilters} colonne={"nbFormationRH"}>
         {demande.nbFormationRH}
+      </ConditionalTd>
+
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"travauxAmenagement"}
+        bgColor={getCellColor("travauxAmenagement")}
+      >
+        {demande.travauxAmenagement}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"disciplinesFormationRH"}
+        colonne={"achatEquipement"}
+        bgColor={getCellColor("achatEquipement")}
       >
-        {demande.discipline1FormationRH &&
-          `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH
-              ? `- ${demande.discipline2FormationRH}`
-              : ""
-          }`}
+        {demande.achatEquipement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergement"}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergement")}
+      >
+        {demande.augmentationCapaciteAccueilHebergement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergementPlaces"}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPlaces")}
+      >
+        {demande.augmentationCapaciteAccueilHebergementPlaces}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
+        bgColor={getCellColor(
+          "augmentationCapaciteAccueilHebergementPrecisions"
+        )}
+      >
+        {demande.augmentationCapaciteAccueilHebergementPrecisions}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestauration"}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
+      >
+        {demande.augmentationCapaciteAccueilRestauration}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestaurationPlaces"}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPlaces")}
+      >
+        {demande.augmentationCapaciteAccueilRestaurationPlaces}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
+        bgColor={getCellColor(
+          "augmentationCapaciteAccueilRestaurationPrecisions"
+        )}
+      >
+        {demande.augmentationCapaciteAccueilRestaurationPrecisions}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"statut"}
+        bgColor={getCellColor("statut")}
+      >
+        {demande.statut}
       </ConditionalTd>
     </>
   );
