@@ -197,7 +197,7 @@ export const getFilters = async ({
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
 
-  const etablissementsFilters = filtersBase
+  const etablissementsFilters = await filtersBase
     .select([
       "dataEtablissement.libelleEtablissement as label",
       "dataEtablissement.uai as value",
@@ -374,16 +374,16 @@ export const getFilters = async ({
     .execute();
 
   const filters = {
-    regions: (await regionsFilters).map(cleanNull),
-    rentreesScolaires: (await rentreesScolairesFilters).map(cleanNull),
-    typesDemande: (await typesDemandeFilters).map(cleanNull),
-    diplomes: (await diplomesFilters).map(cleanNull),
-    formations: (await formationsFilters).map(cleanNull),
-    libellesNsf: (await libellesNsf).map(cleanNull),
-    departements: (await departementsFilters).map(cleanNull),
-    academies: (await academiesFilters).map(cleanNull),
-    etablissements: (await etablissementsFilters).map(cleanNull),
-    campagnes: (await campagnesFilters).map(cleanNull),
+    regions: regionsFilters.map(cleanNull),
+    rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
+    typesDemande: typesDemandeFilters.map(cleanNull),
+    diplomes: diplomesFilters.map(cleanNull),
+    formations: formationsFilters.map(cleanNull),
+    libellesNsf: libellesNsf.map(cleanNull),
+    departements: departementsFilters.map(cleanNull),
+    academies: academiesFilters.map(cleanNull),
+    etablissements: etablissementsFilters.map(cleanNull),
+    campagnes: campagnesFilters.map(cleanNull),
     secteurs: [
       {
         label: "Public",
