@@ -2,9 +2,7 @@ import fastifyCors from "@fastify/cors";
 import fastifySwagger from "@fastify/swagger";
 import fastifySwaggerUi from "@fastify/swagger-ui";
 import Boom from "@hapi/boom";
-import * as Sentry from "@sentry/node";
 import { jsonSchemaTransform } from "fastify-type-provider-zod";
-import { EnvEnum } from "shared/enum/envEnum";
 import { ZodError } from "zod";
 
 import { config } from "../config/config";
@@ -17,15 +15,6 @@ import { registerFormationModule } from "./modules/data";
 import { registerGlossaireModule } from "./modules/glossaire";
 import { registerIntentionsModule } from "./modules/intentions";
 import { Server, server } from "./server";
-
-Sentry.init({
-  dsn: config.sentry.dsn,
-  tracesSampleRate: 1.0,
-  environment: config.env,
-  enabled: config.env !== EnvEnum.dev && config.env !== EnvEnum.test,
-});
-
-Sentry.setTag("app", "server");
 
 server.register(fastifyCors, {});
 
@@ -50,8 +39,6 @@ server.register(fastifySwaggerUi, {
 });
 
 server.setErrorHandler((error, _, reply) => {
-  Sentry.captureException(error);
-
   if ("details" in error && error.details instanceof ZodError) {
     logger.error(error.message, {
       error,
@@ -86,7 +73,7 @@ server.setErrorHandler((error, _, reply) => {
     return;
   }
 
-  if (config.env === EnvEnum.dev) {
+  if (config.env === "dev") {
     reply.status(500).send({
       error: error.name,
       statusCode: 500,
@@ -130,7 +117,7 @@ const cb = (error: Error | null) => {
   }
 };
 
-if (config.env !== EnvEnum.dev) {
+if (config.env !== "dev") {
   migrateToLatest(true).then(() => {
     server.listen({ port: 5000, host: "0.0.0.0" }, cb);
   });
