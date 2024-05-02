@@ -22,21 +22,15 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   codeRegion,
   rentreeScolaire,
   typeDemande,
-  motif,
   cfd,
   codeNiveauDiplome,
-  dispositif,
-  CPC,
   codeNsf,
   coloration,
   amiCMA,
   secteur,
-  cfdFamille,
   codeDepartement,
   codeAcademie,
-  commune,
   uai,
-  compensation,
   user,
   millesimeSortie = CURRENT_IJ_MILLESIME,
   voie,
@@ -149,10 +143,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
-      return eb;
-    })
-    .$call((eb) => {
       if (uai) return eb.where("dataEtablissement.uai", "in", uai);
       return eb;
     })
@@ -162,17 +152,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           "demande.rentreeScolaire",
           "=",
           parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (motif)
-        return eb.where((eb) =>
-          eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-            )
-          )
         );
       return eb;
     })
@@ -195,21 +174,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (dispositif)
-        return eb.where("demande.codeDispositif", "in", dispositif);
-      return eb;
-    })
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
       if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfdFamille)
-        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
       return eb;
     })
     .$call((eb) => {
@@ -228,14 +193,6 @@ export const getDemandesRestitutionIntentionsQuery = async ({
           "=",
           amiCMA === "true" ? sql<true>`true` : sql<false>`false`
         );
-      return eb;
-    })
-    .$call((eb) => {
-      if (compensation)
-        return eb.where("demande.typeDemande", "in", [
-          "ouverture_compensation",
-          "augmentation_compensation",
-        ]);
       return eb;
     })
     .$call((eb) => {

@@ -42,7 +42,7 @@ export const Coordonnees = ({
           mr={"16px"}
         />
         <Flex direction={"column"}>
-          <Text color={textDisabled}>{adresse}</Text>
+          {adresse && <Text color={textDisabled}>{adresse}</Text>}
           <Text color={textDisabled}>
             {codePostal} {commune} - {libelleDepartement} ({codeDepartement})
           </Text>

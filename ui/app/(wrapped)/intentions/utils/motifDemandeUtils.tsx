@@ -115,12 +115,12 @@ const motifsTriggerAutre = [
 ] as MotifLabel[];
 
 const motifs: Record<TypeDemande, MotifLabel[]> = {
-  ouverture_nette: motifsOuverture as MotifLabel[],
-  augmentation_nette: motifsOuverture as MotifLabel[],
-  fermeture: motifsFermeture as MotifLabel[],
-  diminution: motifsFermeture as MotifLabel[],
-  transfert: motifsTransfert as MotifLabel[],
-  coloration: motifsColoration as MotifLabel[],
+  ouverture_nette: motifsOuverture,
+  augmentation_nette: motifsOuverture,
+  fermeture: motifsFermeture,
+  diminution: motifsFermeture,
+  transfert: motifsTransfert,
+  coloration: motifsColoration,
 };
 
 export const getMotifLabel = ({
