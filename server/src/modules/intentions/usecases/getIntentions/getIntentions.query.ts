@@ -7,6 +7,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import { isIntentionSelectable } from "../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { getIntentionsSchema } from "./getIntentions.schema";
 
 export interface Filters
@@ -31,9 +32,7 @@ export const getIntentionsQuery = async (
   { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
   anneeCampagne: string
 ) => {
-  const cleanSearch =
-    search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
-  const search_array = cleanSearch.split(" ") ?? [];
+  const search_array = getNormalizedSearchArray(search);
 
   const intentions = await kdb
     .selectFrom("latestIntentionView as intention")
@@ -109,9 +108,7 @@ export const getIntentionsQuery = async (
                   unaccent(${eb.ref("user.lastname")})
                 )`,
                 "ilike",
-                `%${search_word
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")}%`
+                `%${search_word}%`
               )
             )
           )

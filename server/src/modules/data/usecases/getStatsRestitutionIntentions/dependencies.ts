@@ -55,7 +55,23 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
+    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNiveauDiplome"
+    )
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`
@@ -206,7 +222,19 @@ const getStatsRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.commune")}),
+                  ' ',
+                  unaccent(${eb.ref("region.libelleRegion")}),
+                  ' ',
+                  unaccent(${eb.ref("academie.libelleAcademie")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
                 `%${search_word}%`

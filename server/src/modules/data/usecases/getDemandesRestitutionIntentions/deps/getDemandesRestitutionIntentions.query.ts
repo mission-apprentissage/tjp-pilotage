@@ -59,18 +59,17 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "dispositif.codeDispositif",
       "demande.codeDispositif"
     )
-    .leftJoin(
-      "departement",
-      "departement.codeDepartement",
-      "dataEtablissement.codeDepartement"
-    )
     .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
     .leftJoin(
       "academie",
       "academie.codeAcademie",
       "dataEtablissement.codeAcademie"
     )
-    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
@@ -136,7 +135,19 @@ export const getDemandesRestitutionIntentionsQuery = async ({
                   ' ',
                   unaccent(${eb.ref("dataFormation.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.commune")}),
+                  ' ',
+                  unaccent(${eb.ref("region.libelleRegion")}),
+                  ' ',
+                  unaccent(${eb.ref("academie.libelleAcademie")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelleDepartement")})
                 )`,
                 "ilike",
                 `%${search_word}%`

@@ -3,10 +3,10 @@ import { jsonArrayFrom } from "kysely/helpers/postgres";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 
 export const searchDiplomeQuery = async ({ search }: { search: string }) => {
-  const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const search_array = cleanSearch.split(" ");
+  const search_array = getNormalizedSearchArray(search);
 
   const formations = await kdb
     .selectFrom("dataFormation")
@@ -46,9 +46,7 @@ export const searchDiplomeQuery = async ({ search }: { search: string }) => {
                   unaccent(${eb.ref("familleMetier.libelleFamille")})
                 )`,
               "ilike",
-              `%${search_word
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")}%`
+              `%${search_word}%`
             )
           )
         ),

@@ -8,6 +8,7 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { getDemandesSchema } from "./getDemandes.schema";
 
 export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
@@ -31,9 +32,7 @@ export const getDemandesQuery = async (
   { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
   anneeCampagne: string
 ) => {
-  const cleanSearch =
-    search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
-  const search_array = cleanSearch.split(" ") ?? [];
+  const search_array = getNormalizedSearchArray(search);
 
   const demandes = await kdb
     .selectFrom("latestDemandeView as demande")
@@ -122,9 +121,7 @@ export const getDemandesQuery = async (
                   unaccent(${eb.ref("user.lastname")})
                 )`,
                 "ilike",
-                `%${search_word
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")}%`
+                `%${search_word}%`
               )
             )
           )

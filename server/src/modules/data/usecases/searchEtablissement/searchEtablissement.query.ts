@@ -3,6 +3,7 @@ import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { getDateRentreeScolaire } from "../../services/getRentreeScolaire";
 
 export const searchEtablissementQuery = async ({
@@ -14,7 +15,7 @@ export const searchEtablissementQuery = async ({
   filtered?: boolean;
   codeRegion?: string;
 }) => {
-  const search_array = search.split(" ");
+  const search_array = getNormalizedSearchArray(search);
 
   const etablissements = await kdb
     .selectFrom("dataEtablissement")
@@ -45,9 +46,7 @@ export const searchEtablissementQuery = async ({
                 )}),
                   ' ',${eb.ref("dataEtablissement.commune")})`,
                 "ilike",
-                `%${search_word
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")}%`
+                `%${search_word}%`
               )
             )
           ),
