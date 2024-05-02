@@ -2,9 +2,10 @@ import { sql } from "kysely";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 
 export const searchFiliereQuery = async ({ search }: { search: string }) => {
-  const search_array = search.split(" ");
+  const search_array = getNormalizedSearchArray(search);
 
   const filieres = await kdb
     .selectFrom("nsf")
@@ -19,9 +20,7 @@ export const searchFiliereQuery = async ({ search }: { search: string }) => {
               eb(
                 sql`unaccent(${eb.ref("nsf.libelleNsf")})`,
                 "ilike",
-                `%${search_word
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, "")}%`
+                `%${search_word}%`
               )
             )
           ),
