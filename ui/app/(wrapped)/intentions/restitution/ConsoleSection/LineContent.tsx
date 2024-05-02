@@ -1,6 +1,8 @@
 import { chakra, Td } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
+import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+
 import { GraphWrapper } from "../../../../../components/GraphWrapper";
 import { TableBadge } from "../../../../../components/TableBadge";
 import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
@@ -9,9 +11,15 @@ import {
   MotifCampagne,
   MotifLabel,
 } from "../../utils/motifDemandeUtils";
+import {
+  getMotifRefusLabel,
+  MotifRefusLabel,
+} from "../../utils/motifRefusDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import { DemandesRestitutionIntentions } from "../types";
+
+const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
 
 const handleMotifLabel = ({
   motifs,
@@ -22,7 +30,7 @@ const handleMotifLabel = ({
   campagne?: string;
   autreMotif?: string;
 }) => {
-  if (!motifs) return undefined;
+  if (!motifs || motifs.length === 0) return undefined;
   const formattedMotifs = motifs?.map((motif) =>
     motif === "autre"
       ? `Autre : ${autreMotif}`
@@ -30,6 +38,22 @@ const handleMotifLabel = ({
           motif: motif as MotifLabel,
           campagne: campagne as MotifCampagne,
         })
+  );
+  return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
+};
+
+const handleMotifRefusLabel = ({
+  motifsRefus,
+  autreMotifRefus,
+}: {
+  motifsRefus?: string[];
+  autreMotifRefus?: string;
+}) => {
+  if (!motifsRefus || motifsRefus.length === 0) return undefined;
+  const formattedMotifs = motifsRefus?.map((motif) =>
+    motif === "autre"
+      ? `Autre : ${autreMotifRefus}`
+      : getMotifRefusLabel(motif as MotifRefusLabel)
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
@@ -203,12 +227,19 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
-        colonne={"numero"}
-        minW={600}
-        maxW={600}
+        colonne={"amiCma"}
+        bgColor={getCellColor("amiCma")}
+      >
+        {formatBooleanValue(demande.amiCma)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"commentaire"}
+        minW={400}
+        maxW={400}
         textOverflow={"ellipsis"}
         isTruncated={true}
-        bgColor={getCellColor("numero")}
+        bgColor={getCellColor("commentaire")}
       >
         {demande.commentaire}
       </ConditionalTd>
@@ -303,21 +334,21 @@ export const LineContent = ({
         colonne={"travauxAmenagement"}
         bgColor={getCellColor("travauxAmenagement")}
       >
-        {demande.travauxAmenagement}
+        {formatBooleanValue(demande.travauxAmenagement)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"achatEquipement"}
         bgColor={getCellColor("achatEquipement")}
       >
-        {demande.achatEquipement}
+        {formatBooleanValue(demande.achatEquipement)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"augmentationCapaciteAccueilHebergement"}
         bgColor={getCellColor("augmentationCapaciteAccueilHebergement")}
       >
-        {demande.augmentationCapaciteAccueilHebergement}
+        {formatBooleanValue(demande.augmentationCapaciteAccueilHebergement)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -340,7 +371,7 @@ export const LineContent = ({
         colonne={"augmentationCapaciteAccueilRestauration"}
         bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
       >
-        {demande.augmentationCapaciteAccueilRestauration}
+        {formatBooleanValue(demande.augmentationCapaciteAccueilRestauration)}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -363,7 +394,17 @@ export const LineContent = ({
         colonne={"statut"}
         bgColor={getCellColor("statut")}
       >
-        {demande.statut}
+        {formatStatut(demande.statut)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"motifRefus"}
+        bgColor={getCellColor("motifRefus")}
+      >
+        {handleMotifRefusLabel({
+          motifsRefus: demande.motifRefus,
+          autreMotifRefus: demande.autreMotifRefus,
+        })}
       </ConditionalTd>
     </>
   );

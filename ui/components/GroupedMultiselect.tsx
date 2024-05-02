@@ -236,7 +236,7 @@ export const GroupedMultiselect = chakra(
       const options = groupedOptions[groupLabel].options;
       if (options) {
         const values = options.map((option) => option.value);
-        const allOptionsSelected = values.every((value) => value in map);
+        const allOptionsSelected = values.every((value) => map.has(value));
         if (allOptionsSelected) {
           onChange?.(value.filter((val) => !values.includes(val)));
         } else {

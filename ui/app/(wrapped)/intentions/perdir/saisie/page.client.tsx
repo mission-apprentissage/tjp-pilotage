@@ -217,6 +217,9 @@ export const PageClient = () => {
           setSearchIntention={setSearchIntention}
           campagnes={data?.campagnes}
           campagne={data?.campagne}
+          page={page}
+          count={data?.count}
+          onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
         {data?.intentions.length ? (
           <>

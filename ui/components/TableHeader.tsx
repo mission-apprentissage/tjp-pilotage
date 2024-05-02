@@ -13,6 +13,7 @@ export const TableHeader = chakra(
     onExportExcel,
     className,
     ColonneFilter,
+    SearchInput,
   }: {
     pageSize: number;
     page: number;
@@ -22,38 +23,42 @@ export const TableHeader = chakra(
     onExportExcel?: () => Promise<void>;
     className?: string;
     ColonneFilter?: React.ReactNode;
+    SearchInput?: React.ReactNode;
   }) => {
     return (
-      <Flex align="center" py="1.5" className={className}>
-        {ColonneFilter}
-        <Flex ml="auto">
+      <Flex align="center" py="1.5" px={0} className={className} gap={4}>
+        {SearchInput}
+        <Flex ms={ColonneFilter ? "none" : "auto"}>
           {(onExportCsv || onExportExcel) && (
             <ExportMenuButton
               onExportCsv={onExportCsv}
               onExportExcel={onExportExcel}
-              variant="solid"
+              variant="externalLink"
             />
           )}
         </Flex>
-        <Box mx="4">
-          {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
-          {count}
-        </Box>
-        <IconButton
-          isDisabled={page === 0}
-          onClick={() => onPageChange(page - 1)}
-          size="sm"
-          aria-label="Page précédente"
-          icon={<ArrowLeftIcon />}
-        />
-        <IconButton
-          isDisabled={(page + 1) * pageSize >= count}
-          onClick={() => onPageChange(page + 1)}
-          ml="2"
-          size="sm"
-          aria-label="Page suivante"
-          icon={<ArrowRightIcon />}
-        />
+        {ColonneFilter}
+        <Flex ms={ColonneFilter ? "auto" : "none"} mt={"auto"}>
+          <Box mx="4">
+            {page * pageSize} - {Math.min((page + 1) * pageSize, count)} sur{" "}
+            {count}
+          </Box>
+          <IconButton
+            isDisabled={page === 0}
+            onClick={() => onPageChange(page - 1)}
+            size="sm"
+            aria-label="Page précédente"
+            icon={<ArrowLeftIcon />}
+          />
+          <IconButton
+            isDisabled={(page + 1) * pageSize >= count}
+            onClick={() => onPageChange(page + 1)}
+            ml="2"
+            size="sm"
+            aria-label="Page suivante"
+            icon={<ArrowRightIcon />}
+          />
+        </Flex>
       </Flex>
     );
   }
