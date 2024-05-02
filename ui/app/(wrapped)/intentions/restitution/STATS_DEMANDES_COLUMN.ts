@@ -40,21 +40,14 @@ export const STATS_DEMANDES_COLUMNS = {
   amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
   commentaire: "Commentaire",
   numero: "N° demande",
-  statut: "Statut",
-  poursuitePedagogique: "Poursuite pédagogique ?",
   createdAt: "Date de création",
   updatedAt: "Date de dernière modification",
-  compensationCfd: "CFD compensé",
-  compensationCodeDispositif: "Dispositif compensé",
-  compensationUai: "UAI compensé",
-  motifRefus: "Motif(s) de refus",
-  autreMotifRefus: "Autre motif de refus",
   // Devenir favorable de la formation
   positionQuadrant: "Position dans le quadrant",
-  tauxInsertion: "Tx d'emploi à 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  devenirFavorable: "Tx de devenir favorable régional",
-  pression: "Tx de pression régional",
+  tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
+  tauxPoursuiteRegional: "Tx de poursuite d'études régional",
+  tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
+  tauxPressionRegional: "Tx de pression régional",
   nbEtablissement: "Nb établissement",
   // RH
   nbRecrutementRH: "Nombre de recrutements",
@@ -65,6 +58,28 @@ export const STATS_DEMANDES_COLUMNS = {
   disciplinesProfesseurAssocieRH: "Disciplines des professeurs associés",
   nbFormationRH: "Nombre de formations",
   disciplinesFormationRH: "Disciplines des formations",
+  // Travaux et achats
+  travauxAmenagement: "Travaux ou aménagement ?",
+  travauxAmenagementDescription: "Description des travaux et aménagement",
+  achatEquipement: "Achat d'équipement ?",
+  achatEquipementDescription: "Description des achats d'équipement",
+  // Hébergement
+  augmentationCapaciteAccueilHebergement:
+    "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces:
+    "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions:
+    "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration:
+    "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces:
+    "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions:
+    "Précisions sur l'augmentation de la capacité de restauration",
+  // Statut
+  statut: "Statut",
+  motifRefus: "Motif(s) de refus",
+  autreMotifRefus: "Autre motif de refus",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/restitution-intentions/demandes"]["demandes"][number] & {
     disciplinesRecrutementRH: string;
@@ -94,17 +109,40 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   amiCma: "AMI/CMA ?",
   commentaire: "Commentaire",
   numero: "N° demande",
-  statut: "Statut",
+  // devenir favorable
   positionQuadrant: "Position dans le quadrant",
-  tauxInsertion: "Tx d'emploi à 6 mois régional",
-  tauxPoursuite: "Tx de poursuite d'études régional",
-  devenirFavorable: "Tx de devenir favorable régional",
-  pression: "Tx de pression régional",
+  tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
+  tauxPoursuiteRegional: "Tx de poursuite d'études régional",
+  tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
+  tauxPressionRegional: "Tx de pression régional",
+  // RH
   nbEtablissement: "Nb établissement",
   nbRecrutementRH: "Nombre de recrutements",
   nbReconversionRH: "Nombre de reconversions",
   nbProfesseurAssocieRH: "Nombre de professeurs associés",
   nbFormationRH: "Nombre de formations",
+  // Travaux et achats
+  travauxAmenagement: "Travaux ou aménagement ?",
+  travauxAmenagementDescription: "Description des travaux et aménagement",
+  achatEquipement: "Achat d'équipement ?",
+  achatEquipementDescription: "Description des achats d'équipement",
+  // Hébergement
+  augmentationCapaciteAccueilHebergement:
+    "Besoin d'augmentation de la capacité d'hébergement ?",
+  augmentationCapaciteAccueilHebergementPlaces:
+    "Nombre de places d'hébergement supplémentaires",
+  augmentationCapaciteAccueilHebergementPrecisions:
+    "Précisions sur l'augmentation de la capacité d'hébergement",
+  augmentationCapaciteAccueilRestauration:
+    "Besoin d'augmentation de la capacité de restauration ?",
+  augmentationCapaciteAccueilRestaurationPlaces:
+    "Nombre de places de restauration supplémentaires",
+  augmentationCapaciteAccueilRestaurationPrecisions:
+    "Précisions sur l'augmentation de la capacité de restauration",
+  // Statut
+  statut: "Statut",
+  motifRefus: "Motif(s) de refus",
+  autreMotifRefus: "Autre motif de refus",
 } as Partial<typeof STATS_DEMANDES_COLUMNS>;
 
 export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
@@ -118,166 +156,6 @@ export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
   typeDemande: "Type de demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-  statut: "Statut",
   positionQuadrant: "Position dans le quadrant",
+  statut: "Statut",
 } as Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>;
-
-export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
-  string,
-  Partial<typeof STATS_DEMANDES_COLUMNS>
-> = {
-  // établissement
-  ["établissement"]: {
-    uai: "UAI",
-    libelleEtablissement: "Établissement",
-    commune: "Commune",
-    codeRegion: "CodeRegion",
-    libelleRegion: "Région",
-    codeAcademie: "CodeAcadémie",
-    libelleAcademie: "Académie",
-    codeDepartement: "CodeDepartement",
-    libelleDepartement: "Département",
-  },
-  // formation
-  ["formation"]: {
-    cfd: "CFD",
-    libelleNsf: "Domaine de formation (NSF)",
-    libelleFormation: "Formation",
-    codeDispositif: "Code Dispositif",
-    libelleDispositif: "Dispositif",
-    niveauDiplome: "Diplôme",
-  },
-  // demande
-  ["demande"]: {
-    typeDemande: "Type de demande",
-    motif: "Motif(s) de la demande",
-    autreMotif: "Autre motif",
-    rentreeScolaire: "RS",
-    differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-    capaciteScolaireActuelle: "Capacité scolaire actuelle",
-    capaciteScolaire: "Capacité scolaire",
-    capaciteScolaireColoree: "Capacité scolaire coloree",
-    differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-    capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
-    capaciteApprentissage: "Capacité apprentissage",
-    capaciteApprentissageColoree: "Capacité apprentissage coloree",
-    libelleColoration: "Libellé coloration",
-    libelleFCIL: "Libellé FCIL",
-    amiCma: "AMI/CMA ?",
-    amiCmaValide: "Financement AMI/CMA validé ?",
-    amiCmaEnCoursValidation: "Financement AMI/CMA en cours de validation ?",
-    amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
-    commentaire: "Commentaire",
-    numero: "N° demande",
-    statut: "Statut",
-    poursuitePedagogique: "Poursuite pédagogique ?",
-    createdAt: "Date de création",
-    updatedAt: "Date de dernière modification",
-    compensationCfd: "CFD compensé",
-    compensationCodeDispositif: "Dispositif compensé",
-    compensationUai: "UAI compensé",
-    motifRefus: "Motif(s) de refus",
-    autreMotifRefus: "Autre motif de refus",
-  },
-  // Devenir favorable de la formation
-  ["devenir favorable de la formation"]: {
-    positionQuadrant: "Position dans le quadrant",
-    tauxInsertion: "Tx d'emploi à 6 mois régional",
-    tauxPoursuite: "Tx de poursuite d'études régional",
-    devenirFavorable: "Tx de devenir favorable régional",
-    pression: "Tx de pression régional",
-    nbEtablissement: "Nb établissement",
-  },
-  // RH
-  ["RH"]: {
-    recrutementRH: "Recrutement(s) ?",
-    nbRecrutementRH: "Nombre de recrutements",
-    disciplinesRecrutementRH: "Disciplines des recrutements",
-    reconversionRH: "Reconversion(s) ?",
-    nbReconversionRH: "Nombre de reconversions",
-    disciplinesReconversionRH: "Disciplines des reconversions",
-    professeurAssocieRH: "Professeur(s) associé(s) ?",
-    nbProfesseurAssocieRH: "Nombre de professeurs associés",
-    disciplinesProfesseurAssocieRH: "Disciplines des professeurs associés",
-    formationRH: "Formation(s) ?",
-    nbFormationRH: "Nombre de formations",
-    disciplinesFormationRH: "Disciplines des formations",
-  },
-} as Record<string, Partial<typeof STATS_DEMANDES_COLUMNS>>;
-
-export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
-  string,
-  Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>
-> = {
-  // établissement
-  ["établissement"]: {
-    libelleEtablissement: "Établissement",
-    commune: "Commune",
-    libelleRegion: "Région",
-    libelleAcademie: "Académie",
-  },
-  // formation
-  ["formation"]: {
-    libelleNsf: "Domaine de formation (NSF)",
-    libelleFormation: "Formation",
-    niveauDiplome: "Diplôme",
-  },
-  // demande
-  ["demande"]: {
-    typeDemande: "Type de demande",
-    motif: "Motif(s) de la demande",
-    autreMotif: "Autre motif",
-    differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-    differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-    libelleColoration: "Libellé coloration",
-    libelleFCIL: "Libellé FCIL",
-    amiCma: "AMI/CMA ?",
-    commentaire: "Commentaire",
-    numero: "N° demande",
-    statut: "Statut",
-  },
-  // Devenir favorable de la formation
-  ["devenir favorable de la formation"]: {
-    positionQuadrant: "Position dans le quadrant",
-    tauxInsertion: "Tx d'emploi à 6 mois régional",
-    tauxPoursuite: "Tx de poursuite d'études régional",
-    devenirFavorable: "Tx de devenir favorable régional",
-    pression: "Tx de pression régional",
-    nbEtablissement: "Nb établissement",
-  },
-  // RH
-  ["RH"]: {
-    nbRecrutementRH: "Nombre de recrutements",
-    nbReconversionRH: "Nombre de reconversions",
-    nbProfesseurAssocieRH: "Nombre de professeurs associés",
-    nbFormationRH: "Nombre de formations",
-  },
-} as Record<string, Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>>;
-
-export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
-  string,
-  Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT>
-> = {
-  // établissement
-  ["établissement"]: {
-    libelleEtablissement: "Établissement",
-    commune: "Commune",
-  },
-  // formation
-  ["formation"]: {
-    libelleNsf: "Domaine de formation (NSF)",
-    libelleFormation: "Formation",
-    niveauDiplome: "Diplôme",
-  },
-  // demande
-  ["demande"]: {
-    typeDemande: "Type de demande",
-    differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-    differenceCapaciteApprentissage: "Nombre de places en apprentissage",
-    statut: "Statut",
-  },
-  // Devenir favorable de la formation
-  ["devenir favorable de la formation"]: {
-    positionQuadrant: "Position dans le quadrant",
-  },
-} as Record<string, Partial<typeof STATS_DEMANDES_COLUMNS_DEFAULT>>;

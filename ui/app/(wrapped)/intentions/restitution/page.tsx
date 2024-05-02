@@ -1,6 +1,7 @@
 "use client";
 
-import { chakra, Container, Flex, FormLabel } from "@chakra-ui/react";
+import { Button, chakra, Container, Flex } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -13,13 +14,13 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
-import { Multiselect } from "../../../../components/Multiselect";
+import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
 import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
+import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
 import {
-  GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL,
   STATS_DEMANDES_COLUMNS,
   STATS_DEMANDES_COLUMNS_DEFAULT,
   STATS_DEMANDES_COLUMNS_OPTIONAL,
@@ -47,8 +48,7 @@ const ColonneFiltersSection = chakra(
 
     return (
       <Flex justifyContent={"start"} direction="row">
-        <FormLabel mt={"auto"}>Colonnes</FormLabel>
-        <Multiselect
+        <GroupedMultiselect
           width={"48"}
           size="md"
           variant={"newInput"}
@@ -60,14 +60,20 @@ const ColonneFiltersSection = chakra(
           groupedOptions={Object.entries(
             GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL
           ).reduce(
-            (acc, [group, options]) => {
-              acc[group] = Object.entries(options).map(([value, label]) => ({
-                label,
-                value,
-              }));
+            (acc, [group, { color, options }]) => {
+              acc[group] = {
+                color,
+                options: Object.entries(options).map(([value, label]) => ({
+                  label,
+                  value,
+                })),
+              };
               return acc;
             },
-            {} as Record<string, { label: string; value: string }[]>
+            {} as Record<
+              string,
+              { color: string; options: { label: string; value: string }[] }
+            >
           )}
           defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(
             ([value, label]) => {
@@ -78,9 +84,16 @@ const ColonneFiltersSection = chakra(
             }
           )}
           value={colonneFilters ?? []}
-        >
-          TOUTES ({Object.keys(STATS_DEMANDES_COLUMNS_OPTIONAL).length ?? 0})
-        </Multiselect>
+          customButton={
+            <Button
+              variant={"link"}
+              leftIcon={<Icon icon={"ri:table-line"} />}
+              color="bluefrance.113"
+            >
+              Modifier l'affichage des colonnes
+            </Button>
+          }
+        ></GroupedMultiselect>
       </Flex>
     );
   }

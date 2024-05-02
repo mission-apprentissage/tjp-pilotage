@@ -8,9 +8,6 @@ import {
   Input,
   Menu,
   MenuButton,
-  MenuDivider,
-  MenuGroup,
-  MenuItemOption,
   MenuList,
   Portal,
   Text,
@@ -129,8 +126,6 @@ export const Multiselect = chakra(
   ({
     children,
     options = [],
-    defaultOptions,
-    groupedOptions,
     onChange,
     onClose,
     className,
@@ -142,8 +137,6 @@ export const Multiselect = chakra(
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
-    defaultOptions?: { label: string; value: string }[];
-    groupedOptions?: Record<string, { label: string; value: string }[]>;
     onChange?: (value: string[]) => void;
     onClose?: () => void;
     className?: string;
@@ -153,23 +146,6 @@ export const Multiselect = chakra(
     hasDefaultValue?: boolean;
     variant?: string;
   }) => {
-    if (groupedOptions)
-      return (
-        <GroupedMultiselect
-          groupedOptions={groupedOptions}
-          defaultOptions={defaultOptions}
-          onChange={onChange}
-          onClose={onClose}
-          className={className}
-          disabled={disabled}
-          value={value}
-          size={size}
-          hasDefaultValue={hasDefaultValue}
-          variant={variant}
-        >
-          {children}
-        </GroupedMultiselect>
-      );
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
     const map = useMemo(() => {
@@ -320,261 +296,6 @@ export const Multiselect = chakra(
                 </InputWapper>
               ))}
               {filteredOptions.length > limit && (
-                <Box px="3">
-                  <Button
-                    size="sm"
-                    w="100%"
-                    onClick={() => setLimit(limit + 100)}
-                  >
-                    Afficher plus
-                  </Button>
-                </Box>
-              )}
-            </Flex>
-          </MenuList>
-        </Portal>
-      </Menu>
-    );
-  }
-);
-
-const GroupedMultiselect = chakra(
-  ({
-    children,
-    groupedOptions = {},
-    defaultOptions,
-    onChange,
-    onClose,
-    className,
-    disabled,
-    value,
-    size,
-    hasDefaultValue = true,
-    variant = "input",
-  }: {
-    children: ReactNode;
-    groupedOptions: Record<string, { label: string; value: string }[]>;
-    readonly defaultOptions?: { label: string; value: string }[];
-    onChange?: (value: string[]) => void;
-    onClose?: () => void;
-    className?: string;
-    disabled?: boolean;
-    value: string[];
-    size?: "sm" | "md";
-    hasDefaultValue?: boolean;
-    variant?: string;
-  }) => {
-    const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
-
-    const getDefaultMapOptions = () => {
-      if (!defaultOptions) return new Map();
-      return new Map(defaultOptions.map(({ value, label }) => [value, label]));
-    };
-
-    const map = useMemo(() => {
-      return new Map(
-        value.map((val) => {
-          return [
-            val,
-            (stateValue.current?.get?.(val) ||
-              groupedOptions[
-                Object.keys(groupedOptions).find((key) =>
-                  groupedOptions[key].find(({ value }) => val === value)
-                ) as string
-              ]?.find(({ value }) => val === value)?.label) ??
-              val,
-          ];
-        })
-      );
-    }, [value, groupedOptions, stateValue.current]);
-
-    const [search, setSearch] = useState("");
-
-    const handleSearch = async (value: string) => {
-      ref.current?.scrollTo({ top: 0 });
-      setSearch(value);
-    };
-
-    const filterOptions = () => {
-      return search
-        ? Object.keys(groupedOptions).reduce(
-            (acc, key) => {
-              const filteredOptions = groupedOptions[key].filter(
-                (item) =>
-                  removeAccents(item.label?.toLowerCase()).includes(
-                    removeAccents(search.toLowerCase())
-                  ) ||
-                  removeAccents(item.value?.toLowerCase()).includes(
-                    removeAccents(search.toLowerCase())
-                  )
-              );
-              if (filteredOptions.length > 0) {
-                acc[key] = filteredOptions;
-              }
-              return acc;
-            },
-            {} as Record<string, { label: string; value: string }[]>
-          )
-        : groupedOptions;
-    };
-
-    const filteredOptions = useMemo(filterOptions, [
-      groupedOptions,
-      search,
-      map,
-    ]);
-    const ref = useRef<HTMLDivElement>(null);
-    const inputRef = useRef<HTMLInputElement>(null);
-
-    const [limit, setLimit] = useState(150);
-
-    const showDefaultValue = () =>
-      hasDefaultValue && Object.keys(groupedOptions).length === 1;
-
-    const selectGroupOptions = (groupLabel: string) => {
-      const options = groupedOptions[groupLabel];
-      if (options) {
-        const values = options.map((option) => option.value);
-        const allOptionsSelected = values.every((value) => value in map);
-        if (allOptionsSelected) {
-          onChange?.(value.filter((val) => !values.includes(val)));
-        } else {
-          onChange?.([...new Set([...value, ...values])]);
-        }
-      }
-    };
-
-    return (
-      <Menu
-        isLazy={true}
-        onOpen={() => {
-          handleSearch("");
-          setTimeout(() => inputRef.current?.focus(), 100);
-        }}
-        onClose={() => {
-          setLimit(150);
-          onClose?.();
-        }}
-        closeOnSelect={false}
-      >
-        <MenuButton
-          as={Button}
-          size={size ?? "sm"}
-          isDisabled={disabled || showDefaultValue()}
-          pointerEvents={disabled ? "none" : "unset"}
-          className={className}
-          variant={variant}
-          borderColor={value.length ? "info.525" : "grey.950"}
-          borderWidth={value.length ? "1.5px" : "1px"}
-          rightIcon={<ChevronDownIcon />}
-        >
-          <ButtonContent selected={Array.from(map.values())}>
-            {showDefaultValue() ? Object.keys(groupedOptions)[0] : children}
-          </ButtonContent>
-        </MenuButton>
-        <Portal>
-          <MenuList zIndex={"tooltip"} maxWidth={450} pt="0">
-            <Flex borderBottom="1px solid" borderBottomColor="grey.900">
-              <Input
-                ref={inputRef}
-                placeholder="Rechercher dans la liste"
-                value={search}
-                onInput={(e) =>
-                  handleSearch((e.target as HTMLInputElement).value)
-                }
-                px="3"
-                py="2"
-                variant="unstyled"
-              />
-              {defaultOptions ? (
-                <Button
-                  onClick={() => {
-                    const mapDefaultOptions = getDefaultMapOptions();
-                    if (!mapDefaultOptions) return;
-                    onChange?.(Array.from(mapDefaultOptions.keys()));
-                  }}
-                  bgColor={"transparent"}
-                >
-                  {map.size > 0 && (
-                    <Text
-                      fontSize={12}
-                      fontWeight={"normal"}
-                      color="bluefrance.113"
-                      p={2}
-                    >
-                      Réinitialiser
-                    </Text>
-                  )}
-                </Button>
-              ) : (
-                <Button
-                  onClick={() => {
-                    stateValue.current = new Map();
-                    onChange?.(Array.from(new Map().keys()));
-                  }}
-                  bgColor={"transparent"}
-                >
-                  {map.size > 0 && (
-                    <Text
-                      fontSize={12}
-                      fontWeight={"normal"}
-                      color="bluefrance.113"
-                      p={2}
-                    >
-                      Tout décocher
-                    </Text>
-                  )}
-                </Button>
-              )}
-            </Flex>
-            <Flex
-              direction="column"
-              ref={ref}
-              maxHeight={300}
-              overflow="auto"
-              sx={{ "> *": { px: "3", py: "1.5" } }}
-            >
-              {Object.keys(filteredOptions).map((groupLabel) => (
-                <Box key={groupLabel} p={0}>
-                  <MenuGroup
-                    title={groupLabel}
-                    fontSize={12}
-                    textTransform={"uppercase"}
-                    fontWeight={700}
-                    lineHeight={"20px"}
-                    onClick={() => selectGroupOptions(groupLabel)}
-                    cursor={"pointer"}
-                  >
-                    {filteredOptions[groupLabel].map(({ value, label }) => (
-                      <MenuItemOption key={value}>
-                        <InputWapper
-                          checked={!!map.get(value)}
-                          onChange={({ checked, label, value }) => {
-                            const newMap = new Map(map);
-                            if (checked) {
-                              newMap.set(value, label);
-                            } else {
-                              newMap.delete(value);
-                            }
-                            stateValue.current = newMap;
-                            onChange?.(Array.from(newMap.keys()));
-                          }}
-                          value={value}
-                        >
-                          {label}
-                        </InputWapper>
-                      </MenuItemOption>
-                    ))}
-                  </MenuGroup>
-                  <MenuDivider mb={0} />
-                </Box>
-              ))}
-              {Object.keys(filteredOptions).length === 0 && (
-                <Text px="3" py="1.5" color="gray.500" textAlign="center">
-                  Aucun résultat trouvé.
-                </Text>
-              )}
-              {Object.keys(filteredOptions).length > limit && (
                 <Box px="3">
                   <Button
                     size="sm"
