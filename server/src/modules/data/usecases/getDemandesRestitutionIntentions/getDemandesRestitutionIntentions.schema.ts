@@ -123,6 +123,7 @@ export const FiltersSchema = z.object({
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),
+  search: z.string().optional(),
 });
 
 export const getDemandesRestitutionIntentionsSchema = {

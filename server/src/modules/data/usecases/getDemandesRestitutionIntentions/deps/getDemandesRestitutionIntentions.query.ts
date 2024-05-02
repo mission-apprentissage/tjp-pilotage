@@ -9,6 +9,7 @@ import {
 } from "../../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
 import { isIntentionVisible } from "../../../../utils/isIntentionVisible";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
 import { selectTauxDevenirFavorable } from "../../../utils/tauxDevenirFavorable";
@@ -39,7 +40,9 @@ export const getDemandesRestitutionIntentionsQuery = async ({
   limit = 20,
   order = "desc",
   orderBy = "createdAt",
+  search,
 }: Filters) => {
+  const search_array = getNormalizedSearchArray(search);
   const demandes = await kdb
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
@@ -120,6 +123,29 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
     ])
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("demande.numero")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.cfd")}),
+                  ' ',
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "in", statut);
       return eb;

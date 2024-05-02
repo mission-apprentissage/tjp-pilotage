@@ -23,6 +23,7 @@ export const FiltersSchema = z.object({
   voie: z.enum(["scolaire", "apprentissage"]).optional(),
   codeNsf: z.array(z.string()).optional(),
   campagne: z.string().optional(),
+  search: z.string().optional(),
 });
 
 export const getStatsRestitutionIntentionsSchema = {

@@ -15,6 +15,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
 import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
+import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
@@ -86,7 +87,7 @@ const ColonneFiltersSection = chakra(
           value={colonneFilters ?? []}
           customButton={
             <Button
-              variant={"link"}
+              variant={"externalLink"}
               leftIcon={<Icon icon={"ri:table-line"} />}
               color="bluefrance.113"
             >
@@ -109,16 +110,19 @@ export default () => {
     filters?: Partial<FiltersDemandesRestitutionIntentions>;
     order?: Partial<OrderDemandesRestitutionIntentions>;
     page?: string;
+    search?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
 
   const setSearchParams = (params: {
     filters?: typeof filters;
     order?: typeof order;
     page?: typeof page;
+    search?: typeof search;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -195,6 +199,7 @@ export default () => {
         voie: undefined,
         statut: statutFilter,
       },
+      search: "",
     });
   };
 
@@ -204,6 +209,7 @@ export default () => {
   ) => ({
     ...filters,
     ...order,
+    search,
     offset: qOffset,
     limit: qLimit,
   });
@@ -226,6 +232,7 @@ export default () => {
       {
         query: {
           ...filters,
+          search,
         },
       },
       {
@@ -254,6 +261,8 @@ export default () => {
     ("draft" | "submitted" | "refused")[] | undefined
   >([DemandeStatutEnum.draft, DemandeStatutEnum.submitted]);
 
+  const [searchIntention, setSearchIntention] = useState<string>(search);
+
   useEffect(() => {
     if (
       filters?.codeRegion === undefined &&
@@ -278,6 +287,14 @@ export default () => {
     setSearchParams({ filters: filters });
   }, []);
 
+  const onClickSearch = () => {
+    setSearchParams({
+      filters: filters,
+      order: order,
+      search: searchIntention,
+    });
+  };
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20}>
@@ -291,7 +308,14 @@ export default () => {
           data={data}
         />
         <TableHeader
-          pl="4"
+          SearchInput={
+            <SearchInput
+              placeholder="Rechercher un numéro, établissement, formation..."
+              onChange={setSearchIntention}
+              value={searchIntention}
+              onClick={onClickSearch}
+            />
+          }
           ColonneFilter={
             <ColonneFiltersSection
               colonneFilters={colonneFilters}

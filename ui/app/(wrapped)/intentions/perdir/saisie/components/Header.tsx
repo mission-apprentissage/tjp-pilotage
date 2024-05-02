@@ -1,8 +1,7 @@
-import { ChevronDownIcon, Search2Icon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -14,13 +13,17 @@ import { usePlausible } from "next-plausible";
 import { client } from "@/api.client";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { TablePageHandler } from "@/components/TablePageHandler";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
+import { SearchInput } from "../../../../../../components/SearchInput";
 import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 const EXPORT_LIMIT = 1_000_000;
+const PAGE_SIZE = 30;
+
 export const Header = ({
   searchParams,
   setSearchParams,
@@ -29,6 +32,9 @@ export const Header = ({
   setSearchIntention,
   campagnes,
   campagne,
+  page,
+  count,
+  onPageChange,
 }: {
   searchParams: {
     search?: string;
@@ -46,6 +52,9 @@ export const Header = ({
     annee: string;
     statut: string;
   };
+  page: number;
+  count?: number;
+  onPageChange: (newPage: number) => void;
 }) => {
   const trackEvent = usePlausible();
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
@@ -120,26 +129,12 @@ export const Header = ({
         flexDirection={["column", null, "row"]}
         justifyContent={"space-between"}
       >
-        <Flex>
-          <Input
-            type="text"
-            placeholder="Rechercher par diplôme, établissement, numéro,..."
-            w="sm"
-            mr={2}
-            value={searchIntention}
-            onChange={(e) => setSearchIntention(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onClickSearchIntention();
-            }}
-          />
-          <Button
-            bgColor={"bluefrance.113"}
-            size={"md"}
-            onClick={() => onClickSearchIntention()}
-          >
-            <Search2Icon color="white" />
-          </Button>
-        </Flex>
+        <SearchInput
+          value={searchIntention}
+          onChange={setSearchIntention}
+          onClick={onClickSearchIntention}
+          placeholder="Rechercher par diplôme, établissement, numéro,..."
+        />
         <Flex mr="auto" ms={2}>
           <ExportMenuButton
             onExportCsv={async () => {
@@ -164,9 +159,17 @@ export const Header = ({
                 INTENTIONS_COLUMNS
               );
             }}
-            variant="solid"
+            variant="externalLink"
           />
         </Flex>
+        <TablePageHandler
+          ms={"auto"}
+          mt={"auto"}
+          page={page}
+          pageSize={PAGE_SIZE}
+          count={count}
+          onPageChange={onPageChange}
+        />
       </Flex>
     </Flex>
   );

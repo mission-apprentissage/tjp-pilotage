@@ -17,6 +17,7 @@ import {
   countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
@@ -40,7 +41,10 @@ const getStatsRestitutionIntentionsQuery = async ({
   voie,
   codeNsf,
   campagne,
+  search,
 }: Filters) => {
+  const search_array = getNormalizedSearchArray(search);
+
   const countDemandes = await kdb
     .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
@@ -189,6 +193,29 @@ const getStatsRestitutionIntentionsQuery = async ({
         )`,
       }).as("FCILs")
     )
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("demande.numero")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.cfd")}),
+                  ' ',
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "in", statut);
       return eb;

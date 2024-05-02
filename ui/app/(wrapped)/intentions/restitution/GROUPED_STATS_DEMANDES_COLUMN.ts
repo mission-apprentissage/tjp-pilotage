@@ -48,7 +48,6 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     options: {
       typeDemande: "Type de demande",
       motif: "Motif(s) de la demande",
-      autreMotif: "Autre motif",
       rentreeScolaire: "RS",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       capaciteScolaireActuelle: "Capacité scolaire actuelle",
@@ -135,7 +134,6 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     options: {
       statut: "Statut",
       motifRefus: "Motif(s) de refus",
-      autreMotifRefus: "Autre motif de refus",
     },
   },
 } as Record<
@@ -176,7 +174,6 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     options: {
       typeDemande: "Type de demande",
       motif: "Motif(s) de la demande",
-      autreMotif: "Autre motif",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
       libelleColoration: "Libellé coloration",
@@ -192,7 +189,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     options: {
       positionQuadrant: "Position dans le quadrant",
       tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
-      tauxPoursuitRegional: "Tx de poursuite d'études régional",
+      tauxPoursuiteRegional: "Tx de poursuite d'études régional",
       tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
       tauxPressionRegional: "Tx de pression régional",
       nbEtablissement: "Nb établissement",
@@ -242,7 +239,6 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     options: {
       statut: "Statut",
       motifRefus: "Motif(s) de refus",
-      autreMotifRefus: "Autre motif de refus",
     },
   },
 } as Record<

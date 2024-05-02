@@ -31,14 +31,21 @@ const ConditionalTh = chakra(
           className={className}
           style={style}
           isNumeric={isNumeric}
-          minW={170}
+          maxW={170}
           p={2}
           cursor={onClick ? "pointer" : "default"}
-          whiteSpace="normal"
+          whiteSpace="nowrap"
           onClick={() =>
             onClick &&
             onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
           }
+          fontSize={12}
+          fontWeight={700}
+          lineHeight={"20px"}
+          textTransform={"uppercase"}
+          textOverflow={"ellipsis"}
+          alignSelf={"stretch"}
+          isTruncated
         >
           {children}
         </Th>
@@ -220,15 +227,15 @@ export const HeadLineContent = ({
       <ConditionalTh
         colonneFilters={colonneFilters}
         colonne={"positionQuadrant"}
-        pb={4}
         isNumeric
         bgColor={getCellColor("positionQuadrant")}
       >
-        {STATS_DEMANDES_COLUMNS.positionQuadrant}
         <TooltipIcon
-          ml="1"
+          mt={"auto"}
+          me="1"
           label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
         />
+        {STATS_DEMANDES_COLUMNS.positionQuadrant}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -251,8 +258,6 @@ export const HeadLineContent = ({
         colonne={"tauxPoursuiteRegional"}
         onClick={handleOrder}
         textAlign="center"
-        minW={250}
-        maxW={250}
         bgColor={getCellColor("tauxPoursuiteRegional")}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
@@ -267,8 +272,6 @@ export const HeadLineContent = ({
         colonne={"tauxDevenirFavorableRegional"}
         onClick={handleOrder}
         textAlign="center"
-        minW={220}
-        maxW={220}
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
@@ -283,8 +286,6 @@ export const HeadLineContent = ({
         colonne={"tauxPressionRegional"}
         onClick={handleOrder}
         textAlign="center"
-        minW={170}
-        maxW={170}
         bgColor={getCellColor("tauxPressionRegional")}
       >
         <OrderIcon {...order} column="tauxPressionRegional" />
@@ -457,6 +458,13 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="statut" />
         {STATS_DEMANDES_COLUMNS.statut}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"motifRefus"}
+        bgColor={getCellColor("motifRefus")}
+      >
+        {STATS_DEMANDES_COLUMNS.motifRefus}
       </ConditionalTh>
     </>
   );
