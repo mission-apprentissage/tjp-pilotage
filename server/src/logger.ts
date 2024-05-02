@@ -3,7 +3,6 @@ import { randomUUID } from "crypto";
 import { FastifyRequest, HookHandlerDoneFunction } from "fastify";
 import { FastifyReplyType } from "fastify/types/type-provider";
 import fp from "fastify-plugin";
-import { EnvEnum } from "shared/enum/envEnum";
 import winston from "winston";
 import Transport from "winston-transport";
 
@@ -82,7 +81,7 @@ const winstonLogger = winston.createLogger({
     winston.format.timestamp({ format: () => new Date().toISOString() }),
     winston.format.json()
   ),
-  silent: config.env === EnvEnum.test,
+  silent: config.env === "test",
   transports: [
     new winston.transports.Console({ format: winston.format.prettyPrint() }),
     ...(config.slack.token
