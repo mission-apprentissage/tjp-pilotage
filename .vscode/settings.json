@@ -36,7 +36,7 @@
   "typescript.preferences.importModuleSpecifier": "relative",
   "typescript.tsdk": "node_modules/typescript/lib",
   "sonarlint.connectedMode.project": {
-    "connectionId": "Orion",
-    "projectKey": "mission-apprentissage_tjp-pilotage"
+    "connectionId": "http-localhost-9000",
+    "projectKey": "Orion"
   }
 }
