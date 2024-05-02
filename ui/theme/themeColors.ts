@@ -148,6 +148,7 @@ export const themeColors = {
     494: "#A558A0",
     "494_hover": "#d282cd",
     "494_active": "#db9cd6",
+    "850_active": "#F767EF",
   },
   pilotage: {
     red: "#FA9293",

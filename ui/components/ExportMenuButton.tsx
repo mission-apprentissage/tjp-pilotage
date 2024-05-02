@@ -77,7 +77,7 @@ export const ExportMenuButton = ({
       >
         Exporter
       </MenuButton>
-      <MenuList p={0} zIndex={100000}>
+      <MenuList p={0} zIndex={"tooltip"}>
         <ExportButton onExport={handleExportCsv} />
         <ExportButton onExport={handleExportExcel} type={"excel"} />
       </MenuList>

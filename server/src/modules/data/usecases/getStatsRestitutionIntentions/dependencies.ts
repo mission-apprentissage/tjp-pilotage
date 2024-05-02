@@ -11,7 +11,10 @@ import {
   countFermeturesSco,
   countOuvertures,
   countOuverturesApprentissage,
+  countOuverturesApprentissageColoree,
+  countOuverturesColoree,
   countOuverturesSco,
+  countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
 import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
@@ -25,27 +28,21 @@ const getStatsRestitutionIntentionsQuery = async ({
   codeRegion,
   rentreeScolaire,
   typeDemande,
-  motif,
   cfd,
   codeNiveauDiplome,
-  codeDispositif,
-  CPC,
   coloration,
   amiCMA,
   secteur,
-  cfdFamille,
   codeDepartement,
   codeAcademie,
-  commune,
   uai,
-  compensation,
   user,
   voie,
   codeNsf,
   campagne,
 }: Filters) => {
   const countDemandes = await kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -100,6 +97,17 @@ const getStatsRestitutionIntentionsQuery = async ({
           SUM(${countFermeturesApprentissage(eb)}),0
         )`,
       }).as("fermetures")
+    )
+    .select((eb) =>
+      jsonBuildObject({
+        total: sql<number>`COALESCE(SUM(${countOuverturesColoree(eb)}),0)`,
+        scolaire: sql<number>`COALESCE(
+          SUM(${countOuverturesScolaireColoree(eb)}),0
+        )`,
+        apprentissage: sql<number>`COALESCE(
+          SUM(${countOuverturesApprentissageColoree(eb)}),0
+        )`,
+      }).as("coloration")
     )
     .select((eb) =>
       jsonBuildObject({
@@ -204,10 +212,6 @@ const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (commune) return eb.where("dataEtablissement.commune", "in", commune);
-      return eb;
-    })
-    .$call((eb) => {
       if (uai) return eb.where("dataEtablissement.uai", "in", uai);
       return eb;
     })
@@ -217,17 +221,6 @@ const getStatsRestitutionIntentionsQuery = async ({
           "demande.rentreeScolaire",
           "=",
           parseInt(rentreeScolaire)
-        );
-      return eb;
-    })
-    .$call((eb) => {
-      if (motif)
-        return eb.where((eb) =>
-          eb.or(
-            motif.map(
-              (m) => sql<boolean>`${m} = any(${eb.ref("demande.motif")})`
-            )
-          )
         );
       return eb;
     })
@@ -250,20 +243,6 @@ const getStatsRestitutionIntentionsQuery = async ({
       return eb;
     })
     .$call((eb) => {
-      if (codeDispositif)
-        return eb.where("demande.codeDispositif", "in", codeDispositif);
-      return eb;
-    })
-    .$call((eb) => {
-      if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-      return eb;
-    })
-    .$call((eb) => {
-      if (cfdFamille)
-        return eb.where("familleMetier.cfdFamille", "in", cfdFamille);
-      return eb;
-    })
-    .$call((eb) => {
       if (coloration)
         return eb.where(
           "demande.coloration",
@@ -279,14 +258,6 @@ const getStatsRestitutionIntentionsQuery = async ({
           "=",
           amiCMA === "true" ? sql<true>`true` : sql<false>`false`
         );
-      return eb;
-    })
-    .$call((eb) => {
-      if (compensation)
-        return eb.where("demande.typeDemande", "in", [
-          "ouverture_compensation",
-          "augmentation_compensation",
-        ]);
       return eb;
     })
     .$call((eb) => {

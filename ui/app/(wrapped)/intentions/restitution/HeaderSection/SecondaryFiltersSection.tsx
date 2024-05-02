@@ -1,38 +1,21 @@
-import { Box, Flex, FormLabel, Select } from "@chakra-ui/react";
+import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import {
-  getMotifLabel,
-  MotifCampagne,
-  MotifLabel,
-} from "../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
 } from "../types";
 
-const handleMotifLabelFilter = ({
-  motifLabel,
-  campagne,
-}: {
-  motifLabel: string;
-  campagne?: string;
-}) => {
-  if (motifLabel === "autre") return "Autre";
-  return getMotifLabel({
-    motif: motifLabel as MotifLabel,
-    campagne: campagne as MotifCampagne,
-  });
-};
-
 export const SecondaryFiltersSection = ({
   activeFilters,
   handleFilters,
   filterTracker,
+  resetFilters,
   data,
 }: {
   activeFilters: FiltersDemandesRestitutionIntentions;
@@ -43,6 +26,7 @@ export const SecondaryFiltersSection = ({
   filterTracker: (
     filterName: keyof FiltersDemandesRestitutionIntentions
   ) => () => void;
+  resetFilters: () => void;
   data?: DemandesRestitutionIntentions;
 }) => {
   const { openGlossaire } = useGlossaireContext();
@@ -51,40 +35,48 @@ export const SecondaryFiltersSection = ({
       <Flex justifyContent={"start"} flexDirection={"column"} gap={4} py={3}>
         <Flex justifyContent={"start"} gap={4}>
           <Box justifyContent={"start"}>
-            <FormLabel>Commune</FormLabel>
+            <FormLabel>
+              Domaine de formation (NSF)
+              <TooltipIcon
+                ml="1"
+                label="cliquez pour plus d'infos."
+                onClick={() => openGlossaire("domaine-de-formation-nsf")}
+              />
+            </FormLabel>
             <Multiselect
-              onClose={filterTracker("commune")}
-              width={"48"}
+              onClose={filterTracker("codeNsf")}
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("commune", selected)}
-              options={data?.filters.communes}
-              value={activeFilters.commune ?? []}
-              disabled={data?.filters.communes.length === 0}
+              onChange={(selected) => handleFilters("codeNsf", selected)}
+              options={data?.filters.libellesNsf}
+              value={activeFilters.codeNsf ?? []}
+              disabled={data?.filters.libellesNsf.length === 0}
+              hasDefaultValue={false}
             >
-              TOUTES ({data?.filters.communes.length ?? 0})
+              TOUS ({data?.filters.libellesNsf.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Établissement</FormLabel>
+            <FormLabel>Formation</FormLabel>
             <Multiselect
-              onClose={filterTracker("uai")}
-              width={"48"}
+              onClose={filterTracker("cfd")}
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("uai", selected)}
-              options={data?.filters.etablissements}
-              value={activeFilters.uai ?? []}
-              disabled={data?.filters.etablissements.length === 0}
+              onChange={(selected) => handleFilters("cfd", selected)}
+              options={data?.filters.formations}
+              value={activeFilters.cfd ?? []}
+              disabled={data?.filters.formations.length === 0}
             >
-              TOUS ({data?.filters.etablissements.length ?? 0})
+              TOUTES ({data?.filters.formations.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Diplôme</FormLabel>
             <Multiselect
               onClose={filterTracker("codeNiveauDiplome")}
-              width={"48"}
+              width={"64"}
               size="md"
               variant={"newInput"}
               onChange={(selected) =>
@@ -98,74 +90,56 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Formation</FormLabel>
+            <FormLabel>Département</FormLabel>
             <Multiselect
-              onClose={filterTracker("cfd")}
-              width={"48"}
+              onClose={filterTracker("codeDepartement")}
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("cfd", selected)}
-              options={data?.filters.formations}
-              value={activeFilters.cfd ?? []}
-              disabled={data?.filters.formations.length === 0}
+              onChange={(selected) =>
+                handleFilters("codeDepartement", selected)
+              }
+              options={data?.filters.departements}
+              value={activeFilters.codeDepartement ?? []}
+              disabled={data?.filters.departements.length === 0}
             >
-              TOUTES ({data?.filters.formations.length ?? 0})
+              TOUS ({data?.filters.departements.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>CPC</FormLabel>
+            <FormLabel>Établissement</FormLabel>
             <Multiselect
-              onClose={filterTracker("CPC")}
-              width={"48"}
+              onClose={filterTracker("uai")}
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("CPC", selected)}
-              options={data?.filters.CPCs}
-              value={activeFilters.CPC ?? []}
-              disabled={data?.filters.CPCs.length === 0}
-              hasDefaultValue={false}
+              onChange={(selected) => handleFilters("uai", selected)}
+              options={data?.filters.etablissements}
+              value={activeFilters.uai ?? []}
+              disabled={data?.filters.etablissements.length === 0}
             >
-              TOUS ({data?.filters.CPCs.length ?? 0})
+              TOUS ({data?.filters.etablissements.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Famille</FormLabel>
-            <Multiselect
-              onClose={filterTracker("cfdFamille")}
-              width={"48"}
+            <FormLabel>Secteur</FormLabel>
+            <Select
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("cfdFamille", selected)}
-              options={data?.filters.familles}
-              value={activeFilters.cfdFamille ?? []}
-              disabled={data?.filters.familles.length === 0}
-              hasDefaultValue={false}
+              value={activeFilters.secteur ?? ""}
+              onChange={(e) => handleFilters("secteur", e.target.value)}
+              borderBottomColor={
+                activeFilters.secteur != undefined ? "info.525" : ""
+              }
+              placeholder="Public / privé"
             >
-              TOUS ({data?.filters.familles.length ?? 0})
-            </Multiselect>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>
-              Domaine de formation (NSF)
-              <TooltipIcon
-                ml="1"
-                label="cliquez pour plus d'infos."
-                onClick={() => openGlossaire("domaine-de-formation-nsf")}
-              />
-            </FormLabel>
-            <Multiselect
-              onClose={filterTracker("codeNsf")}
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              onChange={(selected) => handleFilters("codeNsf", selected)}
-              options={data?.filters.libellesNsf}
-              value={activeFilters.codeNsf ?? []}
-              disabled={data?.filters.libellesNsf.length === 0}
-              hasDefaultValue={false}
-            >
-              TOUS ({data?.filters.libellesNsf.length ?? 0})
-            </Multiselect>
+              {data?.filters.secteurs?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
           </Box>
         </Flex>
         <Flex justifyContent={"start"} gap={4}>
@@ -173,7 +147,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Statut</FormLabel>
             <Multiselect
               onClose={filterTracker("statut")}
-              width={"48"}
+              width={"64"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("statut", selected)}
@@ -189,7 +163,7 @@ export const SecondaryFiltersSection = ({
             <FormLabel>Type de demande</FormLabel>
             <Multiselect
               onClose={filterTracker("typeDemande")}
-              width={"48"}
+              width={"64"}
               size="md"
               variant={"newInput"}
               onChange={(selected) => handleFilters("typeDemande", selected)}
@@ -208,34 +182,29 @@ export const SecondaryFiltersSection = ({
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
-            <FormLabel>Motif(s)</FormLabel>
-            <Multiselect
-              onClose={filterTracker("motif")}
-              width={"48"}
+            <FormLabel>Voie</FormLabel>
+            <Select
+              width={"64"}
               size="md"
               variant={"newInput"}
-              onChange={(selected) => handleFilters("motif", selected)}
-              options={data?.filters.motifs.map(
-                (motif: { value: string; label: string }) => {
-                  return {
-                    value: motif.value,
-                    label: handleMotifLabelFilter({
-                      motifLabel: motif.value,
-                      campagne: activeFilters.campagne,
-                    }),
-                  };
-                }
-              )}
-              value={activeFilters.motif ?? []}
-              disabled={data?.filters.motifs.length === 0}
+              value={activeFilters.voie ?? ""}
+              onChange={(e) => handleFilters("voie", e.target.value)}
+              borderBottomColor={
+                activeFilters.voie != undefined ? "info.525" : ""
+              }
+              placeholder="TOUTES"
             >
-              TOUS ({data?.filters.motifs.length ?? 0})
-            </Multiselect>
+              {data?.filters.voies?.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </Select>
           </Box>
           <Box justifyContent={"start"}>
             <FormLabel>Coloration</FormLabel>
             <Select
-              width={"48"}
+              width={"64"}
               size="md"
               variant={"newInput"}
               value={activeFilters.coloration?.toString() ?? ""}
@@ -255,7 +224,7 @@ export const SecondaryFiltersSection = ({
           <Box justifyContent={"start"}>
             <FormLabel>AMI/CMA</FormLabel>
             <Select
-              width={"48"}
+              width={"64"}
               size="md"
               variant={"newInput"}
               value={activeFilters.amiCMA?.toString() ?? ""}
@@ -272,46 +241,15 @@ export const SecondaryFiltersSection = ({
               ))}
             </Select>
           </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>Secteur</FormLabel>
-            <Select
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.secteur ?? ""}
-              onChange={(e) => handleFilters("secteur", e.target.value)}
-              borderBottomColor={
-                activeFilters.secteur != undefined ? "info.525" : ""
-              }
-              placeholder="Public / privé"
-            >
-              {data?.filters.secteurs?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Box>
-          <Box justifyContent={"start"}>
-            <FormLabel>Voie</FormLabel>
-            <Select
-              width={"48"}
-              size="md"
-              variant={"newInput"}
-              value={activeFilters.voie ?? ""}
-              onChange={(e) => handleFilters("voie", e.target.value)}
-              borderBottomColor={
-                activeFilters.voie != undefined ? "info.525" : ""
-              }
-              placeholder="TOUTES"
-            >
-              {data?.filters.voies?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-          </Box>
+          <Button
+            variant="externalLink"
+            border={"none"}
+            leftIcon={<Icon icon={"ri:refresh-line"} />}
+            mt={"auto"}
+            onClick={() => resetFilters()}
+          >
+            Réinitialiser les filtres
+          </Button>
         </Flex>
       </Flex>
     </Box>
