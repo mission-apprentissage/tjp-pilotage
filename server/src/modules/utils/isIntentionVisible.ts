@@ -6,11 +6,7 @@ import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
 
 export const isIntentionVisible =
-  ({
-    user,
-  }: {
-    user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-  }) =>
+  ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
     const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
@@ -24,11 +20,7 @@ export const isIntentionVisible =
   };
 
 export const isRegionVisible =
-  ({
-    user,
-  }: {
-    user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
-  }) =>
+  ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "region">) => {
     const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
@@ -38,9 +30,7 @@ export const isRegionVisible =
     ]);
   };
 
-const getIntentionsVisiblesFilters = (
-  user?: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">
-) => {
+const getIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(
     user?.role,
