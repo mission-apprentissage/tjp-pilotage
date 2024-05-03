@@ -109,6 +109,8 @@ export const down = async (db: Kysely<unknown>) => {
   )}`.execute(db);
   await sql`DROP FUNCTION refresh_latest_demande_view()`.execute(db);
 
+  await db.schema.dropIndex("latestDemandeView_index").ifExists().execute();
+
   await db.schema
     .dropView("latestDemandeView")
     .materialized()

@@ -29,7 +29,10 @@ const Loader = () => (
     <Table variant="striped" size={"sm"}>
       <Tbody>
         {new Array(7).fill(0).map((_, i) => (
-          <Tr key={i} bg={"grey.975"}>
+          <Tr
+            key={`loader_PilotageTauxTransformationSection_option_${i}`}
+            bg={"grey.975"}
+          >
             <Td>
               <Skeleton opacity={0.3} height="16px" width={"100%"} />
             </Td>

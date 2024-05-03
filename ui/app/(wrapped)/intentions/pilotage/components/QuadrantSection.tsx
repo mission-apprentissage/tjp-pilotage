@@ -10,13 +10,19 @@ import {
   FormLabel,
   Heading,
   Link,
+  Popover,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
   Radio,
   RadioGroup,
   Select,
   Skeleton,
   Stack,
   Text,
+  VStack,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
@@ -41,6 +47,14 @@ import {
   SelectedScope,
   StatsPilotageIntentions,
 } from "../types";
+
+const EFFECTIF_SIZES = [
+  { max: 15, size: 6 },
+  { max: 80, size: 14 },
+  { max: 150, size: 18 },
+  { max: 350, size: 22 },
+  { max: 10000000, size: 30 },
+];
 
 const generateRestitutionUrl = (
   cfd: string,
@@ -146,7 +160,7 @@ export const QuadrantSection = ({
       },
       {
         keepPreviousData: true,
-        staleTime: 10000000,
+        staleTime: 100000000,
       }
     );
 
@@ -416,23 +430,57 @@ export const QuadrantSection = ({
               )}
             </Box>
             <Box flex="1">
-              <Flex justify="flex-end">
-                <Text color="grey" fontSize="sm" textAlign="left">
-                  {formations?.length ?? "-"} certifications,
-                </Text>
-                <Text ml="2" color="grey" fontSize="sm" textAlign="right">
-                  {formations?.reduce(
-                    (acc, { placesOuvertes, placesFermees }) => {
-                      if (filters.type === "fermeture")
-                        return acc + (placesFermees ?? 0);
-                      if (filters.type === "ouverture")
-                        return acc + (placesOuvertes ?? 0);
-                      return acc + (placesOuvertes + placesFermees ?? 0);
-                    },
-                    0
-                  ) ?? "-"}{" "}
-                  places
-                </Text>
+              <Flex justify={"space-between"} flex={1}>
+                <Flex>
+                  <Text color="grey" fontSize="sm" textAlign="left">
+                    {formations?.length ?? "-"} certifications,
+                  </Text>
+                  <Text ml="2" color="grey" fontSize="sm" textAlign="right">
+                    {formations?.reduce(
+                      (acc, { placesOuvertes, placesFermees }) => {
+                        if (filters.type === "fermeture")
+                          return acc + (placesFermees ?? 0);
+                        if (filters.type === "ouverture")
+                          return acc + (placesOuvertes ?? 0);
+                        const total = placesOuvertes + placesFermees;
+                        return acc + (total ?? 0);
+                      },
+                      0
+                    ) ?? "-"}{" "}
+                    places
+                  </Text>
+                </Flex>
+                <Flex>
+                  <Popover>
+                    <PopoverTrigger>
+                      <Flex cursor="pointer">
+                        <Icon
+                          icon="ri:eye-line"
+                          color="grey.425"
+                          width={"14px"}
+                        />
+                        <Text
+                          ms={2}
+                          color="grey.425"
+                          textDecoration={"underline"}
+                          lineHeight={"14px"}
+                        >
+                          Légende
+                        </Text>
+                      </Flex>
+                    </PopoverTrigger>
+                    <PopoverContent
+                      _focusVisible={{ outline: "none" }}
+                      p="3"
+                      minW={"sm"}
+                    >
+                      <>
+                        <PopoverCloseButton />
+                        <InfoTooltipContent />
+                      </>
+                    </PopoverContent>
+                  </Popover>
+                </Flex>
               </Flex>
               <AspectRatio flex={1} ratio={1}>
                 <>
@@ -450,12 +498,7 @@ export const QuadrantSection = ({
                           codeDispositif: formation.codeDispositif ?? "",
                           effectif: formation.differencePlaces,
                         }))}
-                        effectifSizes={[
-                          { max: 15, size: 6 },
-                          { max: 60, size: 12 },
-                          { max: 150, size: 20 },
-                          { max: 100000, size: 30 },
-                        ]}
+                        effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
                       <TableQuadrant
@@ -537,3 +580,36 @@ export const QuadrantSection = ({
     </>
   );
 };
+
+const InfoTooltipContent = () => (
+  <Box minW={"md"}>
+    <Text mt="4" mb="2" fontSize="sm" fontWeight="bold">
+      Légende:
+    </Text>
+    <VStack align="flex-start" spacing={2}>
+      {EFFECTIF_SIZES.map(({ max, size }, i) => (
+        <Flex key={max} align="center">
+          <Box
+            borderRadius={100}
+            width={`${size}px`}
+            height={`${size}px`}
+            mx={`${28 - size / 2}`}
+            border="1px solid black"
+          />
+          <Text flex={1} ml="4" fontSize="sm">
+            {max !== 10000000 && (
+              <>
+                Nombre de places changées {"<"} {max}
+              </>
+            )}
+            {max === 10000000 && (
+              <>
+                Nombre de places changées {">"} {EFFECTIF_SIZES[i - 1].max}
+              </>
+            )}
+          </Text>
+        </Flex>
+      ))}
+    </VStack>
+  </Box>
+);

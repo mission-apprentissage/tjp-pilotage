@@ -17,6 +17,7 @@ import {
   countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
 import { isIntentionVisible } from "../../../utils/isIntentionVisible";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
 
 export interface Filters extends z.infer<typeof FiltersSchema> {
@@ -40,9 +41,12 @@ const getStatsRestitutionIntentionsQuery = async ({
   voie,
   codeNsf,
   campagne,
+  search,
 }: Filters) => {
+  const search_array = getNormalizedSearchArray(search);
+
   const countDemandes = await kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (campagne) return eb.on("campagne.annee", "=", campagne);
@@ -51,7 +55,23 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("familleMetier", "familleMetier.cfd", "demande.cfd")
+    .leftJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
+    .leftJoin("region", "region.codeRegion", "dataEtablissement.codeRegion")
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
+    .leftJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "dataFormation.codeNiveauDiplome"
+    )
     .select((eb) =>
       jsonBuildObject({
         total: sql<number>`
@@ -189,6 +209,41 @@ const getStatsRestitutionIntentionsQuery = async ({
         )`,
       }).as("FCILs")
     )
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("demande.numero")}),
+                  ' ',
+                  unaccent(${eb.ref("demande.cfd")}),
+                  ' ',
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
+                  ' ',
+                  unaccent(${eb.ref("nsf.libelleNsf")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.commune")}),
+                  ' ',
+                  unaccent(${eb.ref("region.libelleRegion")}),
+                  ' ',
+                  unaccent(${eb.ref("academie.libelleAcademie")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelleDepartement")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "in", statut);
       return eb;

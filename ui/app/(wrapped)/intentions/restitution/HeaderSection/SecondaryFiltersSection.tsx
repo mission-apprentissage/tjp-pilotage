@@ -1,12 +1,11 @@
 import { Box, Button, Flex, FormLabel, Select } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 
-import { getTypeDemandeLabelFiltre } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
 import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
-import { TypeDemande } from "../../utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
@@ -172,9 +171,7 @@ export const SecondaryFiltersSection = ({
                 (typeDemande: { value: string; label: string }) => {
                   return {
                     value: typeDemande.value,
-                    label: getTypeDemandeLabelFiltre(
-                      typeDemande.value as TypeDemande
-                    ),
+                    label: getTypeDemandeLabel(typeDemande.value),
                   };
                 }
               )}

@@ -1,20 +1,26 @@
 import { Server } from "../../server";
-import { countDemandesRoute } from "./usecases/countDemandes/countDemandes.route";
-import { deleteDemandeRoute } from "./usecases/deleteDemande/deleteDemande.route";
+import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
+import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
-import { getDemandeRoute } from "./usecases/getDemande/getDemande.route";
-import { getDemandesRoute } from "./usecases/getDemandes/getDemandes.route";
-import { importDemandeRoute } from "./usecases/importDemande/importDemande.route";
-import { submitDemandeRoute } from "./usecases/submitDemande/submitDemande.route";
+import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
+import { getIntentionsRoute } from "./usecases/getIntentions/getIntentions.route";
+import { importIntentionRoute } from "./usecases/importIntention/importIntention.route";
+import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
+import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
 
-export const registerIntentionsModule = ({ server }: { server: Server }) => {
+export const registerIntentionsExpeModule = ({
+  server,
+}: {
+  server: Server;
+}) => {
   return {
-    ...submitDemandeRoute({ server }),
-    ...getDemandeRoute(server),
-    ...getDemandesRoute(server),
-    ...countDemandesRoute(server),
-    ...deleteDemandeRoute(server),
-    ...importDemandeRoute(server),
+    ...submitIntentionRoute({ server }),
+    ...getIntentionRoute(server),
+    ...getIntentionsRoute(server),
+    ...countIntentionsRoute(server),
+    ...deleteIntentionRoute(server),
+    ...importIntentionRoute(server),
     ...getCurrentCampagneRoute(server),
+    ...searchEtablissementPerdirRoute(server),
   };
 };

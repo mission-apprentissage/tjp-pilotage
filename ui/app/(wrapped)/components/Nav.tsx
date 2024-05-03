@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
-import { hasPermission } from "shared";
+import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -158,8 +158,15 @@ export const Nav = () => {
   const { uaiFilter } = useContext(UaiFilterContext);
   const hasIntentionsMenu =
     hasPermission(auth?.user.role, "intentions/lecture") ||
+    hasPermission(auth?.user.role, "intentions-perdir/lecture") ||
     hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
     hasPermission(auth?.user.role, "restitution-intentions/lecture");
+
+  const shouldDisplayIntentionMenu =
+    hasRole({ user: auth?.user, role: "perdir" }) ||
+    isUserInRegionsExperimentation({
+      user: auth?.user,
+    });
 
   const {
     isOpen: isMenuPanoramaOpen,
@@ -248,7 +255,8 @@ export const Nav = () => {
             onMouseEnter={onMenuIntentionOpen}
             onMouseLeave={onMenuIntentionClose}
           >
-            {hasPermission(auth?.user.role, "intentions/lecture") && (
+            {hasPermission(auth?.user.role, "intentions/lecture") &&
+            !shouldDisplayIntentionMenu ? (
               <MenuItem p="0" w="100%">
                 <NavMenuLink
                   href="/intentions/saisie"
@@ -257,6 +265,17 @@ export const Nav = () => {
                   Formulaire
                 </NavMenuLink>
               </MenuItem>
+            ) : (
+              hasPermission(auth?.user.role, "intentions-perdir/lecture") && (
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/perdir/saisie"
+                    segment="saisie-intentions-perdir"
+                  >
+                    Formulaire
+                  </NavMenuLink>
+                </MenuItem>
+              )
             )}
             {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
               <MenuItem p="0">
@@ -268,11 +287,9 @@ export const Nav = () => {
                 </NavMenuLink>
               </MenuItem>
             )}
-            {hasPermission(
-              auth?.user.role,
-              "restitution-intentions/lecture"
-            ) && (
-              <MenuItem p="0">
+            {(hasPermission(auth?.user.role, "intentions/lecture") ||
+              hasPermission(auth?.user.role, "intentions-perdir/lecture")) && (
+              <MenuItem p="0" w="100%">
                 <NavMenuLink
                   href="/intentions/restitution"
                   segment="restitution-intentions"
