@@ -1,6 +1,7 @@
 "use client";
 
-import { Container } from "@chakra-ui/react";
+import { Button, chakra, Container, Flex } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -13,15 +14,91 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 
+import { GroupedMultiselect } from "../../../../components/GroupedMultiselect";
+import { SearchInput } from "../../../../components/SearchInput";
 import { TableHeader } from "../../../../components/TableHeader";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleSection } from "./ConsoleSection/ConsoleSection";
+import { GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL } from "./GROUPED_STATS_DEMANDES_COLUMN";
 import { HeaderSection } from "./HeaderSection/HeaderSection";
-import { STATS_DEMANDES_COLUMNS } from "./STATS_DEMANDES_COLUMN";
+import {
+  STATS_DEMANDES_COLUMNS,
+  STATS_DEMANDES_COLUMNS_DEFAULT,
+  STATS_DEMANDES_COLUMNS_OPTIONAL,
+} from "./STATS_DEMANDES_COLUMN";
 import {
   FiltersDemandesRestitutionIntentions,
   OrderDemandesRestitutionIntentions,
 } from "./types";
+
+const ColonneFiltersSection = chakra(
+  ({
+    colonneFilters,
+    setColonneFilters,
+  }: {
+    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
+    setColonneFilters: (
+      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+    ) => void;
+  }) => {
+    const handleColonneFilters = (
+      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+    ) => {
+      setColonneFilters(value);
+    };
+
+    return (
+      <Flex justifyContent={"start"} direction="row">
+        <GroupedMultiselect
+          width={"48"}
+          size="md"
+          variant={"newInput"}
+          onChange={(selected) =>
+            handleColonneFilters(
+              selected as (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+            )
+          }
+          groupedOptions={Object.entries(
+            GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL
+          ).reduce(
+            (acc, [group, { color, options }]) => {
+              acc[group] = {
+                color,
+                options: Object.entries(options).map(([value, label]) => ({
+                  label,
+                  value,
+                })),
+              };
+              return acc;
+            },
+            {} as Record<
+              string,
+              { color: string; options: { label: string; value: string }[] }
+            >
+          )}
+          defaultOptions={Object.entries(STATS_DEMANDES_COLUMNS_DEFAULT)?.map(
+            ([value, label]) => {
+              return {
+                label,
+                value,
+              };
+            }
+          )}
+          value={colonneFilters ?? []}
+          customButton={
+            <Button
+              variant={"externalLink"}
+              leftIcon={<Icon icon={"ri:table-line"} />}
+              color="bluefrance.113"
+            >
+              Modifier l'affichage des colonnes
+            </Button>
+          }
+        ></GroupedMultiselect>
+      </Flex>
+    );
+  }
+);
 
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
@@ -33,16 +110,19 @@ export default () => {
     filters?: Partial<FiltersDemandesRestitutionIntentions>;
     order?: Partial<OrderDemandesRestitutionIntentions>;
     page?: string;
+    search?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
+  const search = searchParams.search ?? "";
 
   const setSearchParams = (params: {
     filters?: typeof filters;
     order?: typeof order;
     page?: typeof page;
+    search?: typeof search;
   }) => {
     router.replace(
       createParametrizedUrl(location.pathname, { ...searchParams, ...params })
@@ -119,6 +199,7 @@ export default () => {
         voie: undefined,
         statut: statutFilter,
       },
+      search: "",
     });
   };
 
@@ -128,11 +209,12 @@ export default () => {
   ) => ({
     ...filters,
     ...order,
+    search,
     offset: qOffset,
     limit: qLimit,
   });
 
-  const { data, isLoading: isLoading } = client
+  const { data, isLoading } = client
     .ref("[GET]/restitution-intentions/demandes")
     .useQuery(
       {
@@ -150,6 +232,7 @@ export default () => {
       {
         query: {
           ...filters,
+          search,
         },
       },
       {
@@ -166,9 +249,19 @@ export default () => {
     CURRENT_ANNEE_CAMPAGNE
   );
 
+  const [colonneFilters, setColonneFilters] = useState<
+    (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+  >(
+    Object.keys(
+      STATS_DEMANDES_COLUMNS_DEFAULT
+    ) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
+  );
+
   const [statutFilter, setStatutFilter] = useState<
     ("draft" | "submitted" | "refused")[] | undefined
   >([DemandeStatutEnum.draft, DemandeStatutEnum.submitted]);
+
+  const [searchIntention, setSearchIntention] = useState<string>(search);
 
   useEffect(() => {
     if (
@@ -194,6 +287,14 @@ export default () => {
     setSearchParams({ filters: filters });
   }, []);
 
+  const onClickSearch = () => {
+    setSearchParams({
+      filters: filters,
+      order: order,
+      search: searchIntention,
+    });
+  };
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20}>
@@ -207,7 +308,20 @@ export default () => {
           data={data}
         />
         <TableHeader
-          pl="4"
+          SearchInput={
+            <SearchInput
+              placeholder="Rechercher un numéro, établissement, formation..."
+              onChange={setSearchIntention}
+              value={searchIntention}
+              onClick={onClickSearch}
+            />
+          }
+          ColonneFilter={
+            <ColonneFiltersSection
+              colonneFilters={colonneFilters}
+              setColonneFilters={setColonneFilters}
+            />
+          }
           onExportCsv={async () => {
             trackEvent("restitution-demandes:export");
             const data = await client
@@ -304,6 +418,7 @@ export default () => {
           isLoading={isLoading}
           handleOrder={handleOrder}
           order={order}
+          colonneFilters={colonneFilters}
         />
       </Container>
     </GuardPermission>

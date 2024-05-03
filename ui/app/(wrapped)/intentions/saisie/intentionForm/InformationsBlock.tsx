@@ -1,10 +1,5 @@
 import { ArrowForwardIcon, DeleteIcon } from "@chakra-ui/icons";
 import {
-  Alert,
-  AlertDescription,
-  AlertIcon,
-  AlertTitle,
-  Box,
   Button,
   Flex,
   Modal,
@@ -15,17 +10,17 @@ import {
   ModalHeader,
   ModalOverlay,
   Text,
-  UnorderedList,
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
-import { ReactNode } from "react";
+import { ReactNode, RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
+import { SectionBlock } from "../components/SectionBlock";
 import { Campagne } from "../types";
 import { IntentionForms } from "./defaultFormValues";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
@@ -35,15 +30,15 @@ import { StatusBlock } from "./statutSection/StatusBlock";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
+  refs,
   formId,
   disabled,
-  errors,
   footerActions,
   campagne,
 }: {
+  refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
-  errors?: Record<string, string>;
   footerActions: ReactNode;
   campagne?: Campagne;
 }) => {
@@ -61,24 +56,39 @@ export const InformationsBlock = ({
   });
 
   return (
-    <>
-      <Box bg="white" p="6" mt="6" mb="6" borderRadius={6}>
-        <TypeDemandeSection disabled={disabled} campagne={campagne} />
-      </Box>
-      <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <PrecisionsSection disabled={disabled} campagne={campagne} />
-      </Box>
-      <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <RHSection disabled={disabled} />
-      </Box>
-      <Box bg="white" p="6" mt="6" borderRadius={6}>
-        <ObservationsSection disabled={disabled} />
-      </Box>
-
+    <Flex direction="column" gap={6} mt={6}>
+      <SectionBlock>
+        <TypeDemandeSection
+          typeDemandeRef={refs["typeDemande"]}
+          disabled={disabled}
+          campagne={campagne}
+        />
+      </SectionBlock>
+      <SectionBlock>
+        <PrecisionsSection
+          motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
+          campagne={campagne}
+          disabled={disabled}
+        />
+      </SectionBlock>
+      <SectionBlock>
+        <RHSection
+          ressourcesHumainesRef={refs["ressourcesHumaines"]}
+          disabled={disabled}
+        />
+      </SectionBlock>
+      <SectionBlock>
+        <ObservationsSection
+          commentaireEtPiecesJointesRef={refs["commentaireEtPiecesJointes"]}
+          disabled={disabled}
+        />
+      </SectionBlock>
       {formId && (
         <>
-          <StatusBlock disabled={disabled} />
-          <Box bg="white" p="6" mt="6" borderRadius={6}>
+          <SectionBlock>
+            <StatusBlock disabled={disabled} />
+          </SectionBlock>
+          <SectionBlock>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
                 leftIcon={<DeleteIcon />}
@@ -137,24 +147,7 @@ export const InformationsBlock = ({
 
               {footerActions && <Flex>{footerActions}</Flex>}
             </Flex>
-          </Box>
-        </>
-      )}
-      {errors && (
-        <>
-          <Alert mt="8" alignItems="flex-start" status="error">
-            <AlertIcon />
-            <Box>
-              <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-              <AlertDescription mt="2">
-                <UnorderedList>
-                  {Object.entries(errors).map(([key, msg]) => (
-                    <li key={key}>{msg}</li>
-                  ))}
-                </UnorderedList>
-              </AlertDescription>
-            </Box>
-          </Alert>
+          </SectionBlock>
         </>
       )}
       {!formId && footerActions && (
@@ -162,6 +155,6 @@ export const InformationsBlock = ({
           {footerActions}
         </Flex>
       )}
-    </>
+    </Flex>
   );
 };

@@ -12,8 +12,9 @@ import { registerChangelogModule } from "./modules/changelog";
 import { extractUserInRequest, registerCoreModule } from "./modules/core";
 import { userLastSeenAt } from "./modules/core/utils/lastSeenAt/userLastSeenAt";
 import { registerFormationModule } from "./modules/data";
+import { registerIntentionsModule } from "./modules/demandes";
 import { registerGlossaireModule } from "./modules/glossaire";
-import { registerIntentionsModule } from "./modules/intentions";
+import { registerIntentionsExpeModule } from "./modules/intentions";
 import { Server, server } from "./server";
 
 server.register(fastifyCors, {});
@@ -97,6 +98,7 @@ const registerRoutes = (instance: Server) => {
     ...registerCoreModule({ server: instance }),
     ...registerFormationModule({ server: instance }),
     ...registerIntentionsModule({ server: instance }),
+    ...registerIntentionsExpeModule({ server: instance }),
     ...registerChangelogModule({ server: instance }),
     ...registerGlossaireModule({ server: instance }),
   };

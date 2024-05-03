@@ -1,3 +1,13 @@
-import { redirect } from "next/navigation";
+"use client";
 
-export default () => redirect("/intentions/saisie");
+import { redirect } from "next/navigation";
+import { hasRole } from "shared";
+
+import { useAuth } from "@/utils/security/useAuth";
+
+export default () => {
+  const { auth } = useAuth();
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
+
+  isPerdir ? redirect("/intentions/perdir") : redirect("/intentions/saisie");
+};

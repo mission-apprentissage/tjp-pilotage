@@ -26,6 +26,7 @@ export type IntentionForms = {
   libelleColoration?: string;
   amiCma: boolean;
   amiCmaValide?: boolean;
+  amiCmaEnCoursValidation?: boolean;
   amiCmaValideAnnee?: string;
   //RH
   recrutementRH: boolean;

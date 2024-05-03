@@ -83,8 +83,7 @@ const externalLink = defineStyle({
   color: "bluefrance.113",
   fontWeight: 500,
   fontSize: "14px",
-  borderWidth: "1px",
-  borderColor: "grey.900",
+  border: "none",
   padding: 2,
   w: "fit-content",
 });

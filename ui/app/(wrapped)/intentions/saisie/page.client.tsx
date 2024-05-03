@@ -30,7 +30,6 @@ import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { usePermission } from "@/utils/security/usePermission";
@@ -41,6 +40,7 @@ import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import { Filters, Order } from "./types";
+import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
 
