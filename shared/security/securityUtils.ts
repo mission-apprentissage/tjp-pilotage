@@ -1,4 +1,4 @@
-import { Permission, PERMISSIONS, Role } from "./permissions";
+import { HIERARCHY, Permission, PERMISSIONS, Role } from "./permissions";
 
 const CODES_REGIONS_EXPE = [
   //Occitanie
@@ -57,6 +57,7 @@ export const getPermissionScope = <P extends Permission>(
   if (!permissionScope) return;
 
   type D = KOfUnion<typeof userPermissions>[P];
+  // @ts-ignore
   return permissionScope as { [DS in KeyOfUnion<D>]: KOfUnion<D>[DS] };
 };
 
@@ -66,4 +67,22 @@ export function guardScope<S extends string>(
 ): scope is Exclude<S, undefined> {
   if (!scope) return false;
   return guards[scope]();
+}
+
+export function getHierarchy(role: Role): Array<Role> {
+  if (HIERARCHY[role]) {
+    return HIERARCHY[role].sub;
+  }
+  return [];
+}
+
+export function hasRightOverRole({
+  sourceRole,
+  targetRole,
+}: {
+  sourceRole: Role;
+  targetRole: Role;
+}) {
+  const roleHierarchy = getHierarchy(sourceRole);
+  return roleHierarchy.includes(targetRole);
 }
