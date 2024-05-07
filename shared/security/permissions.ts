@@ -54,8 +54,14 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "region" },
     "intentions-perdir/ecriture": { default: "region" },
   },
+  expert_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+  },
   perdir: {
-    "intentions-perdir/lecture": { draft: "uai", default: "uai" },
+    "intentions-perdir/lecture": { draft: "uai", default: "region" },
     "intentions-perdir/ecriture": { default: "uai" },
     "restitution-intentions/lecture": { default: "uai" },
     "pilotage-intentions/lecture": { default: "uai" },
@@ -81,7 +87,7 @@ export const HIERARCHY: {
     scope: "national",
   },
   admin_region: {
-    sub: ["gestionnaire_region", "pilote_region"],
+    sub: ["gestionnaire_region", "pilote_region", "expert_region"],
     scope: "region",
   },
   pilote_region: {
@@ -89,6 +95,10 @@ export const HIERARCHY: {
     scope: "region",
   },
   gestionnaire_region: {
+    sub: [],
+    scope: "region",
+  },
+  expert_region: {
     sub: [],
     scope: "region",
   },
