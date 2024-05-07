@@ -1,3 +1,4 @@
+import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -14,7 +15,13 @@ export const createUserRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("users/ecriture"),
       handler: async (request, response) => {
-        await createUser(request.body);
+        const { user } = request;
+        if (!user) throw Boom.unauthorized();
+
+        await createUser({
+          body: request.body,
+          requestUser: user,
+        });
         response.code(200).send();
       },
     });

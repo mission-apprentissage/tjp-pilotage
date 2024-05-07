@@ -14,10 +14,10 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "users/lecture": {},
-    "users/ecriture": {},
-    "campagnes/lecture": {},
-    "campagnes/ecriture": {},
+    "users/lecture": { default: "national" },
+    "users/ecriture": { default: "national" },
+    "campagnes/lecture": { default: "national" },
+    "campagnes/ecriture": { default: "national" },
     "intentions-perdir/lecture": { default: "national" },
     "intentions-perdir/ecriture": { default: "national" },
   },
@@ -28,6 +28,16 @@ export const PERMISSIONS = {
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
+  },
+  admin_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions/ecriture": { default: "region" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/ecriture": { default: "region" },
+    "users/lecture": { default: "region" },
+    "users/ecriture": { default: "region" },
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -54,4 +64,36 @@ export const PERMISSIONS = {
   [R: string]: {
     [s: string]: Record<string, Scope>;
   };
+};
+
+export const HIERARCHY: {
+  [key in Role]: {
+    sub: Array<Role>;
+    scope: Scope;
+  };
+} = {
+  admin: {
+    sub: Object.keys(PERMISSIONS) as Array<Role>,
+    scope: "national",
+  },
+  pilote: {
+    sub: [],
+    scope: "national",
+  },
+  admin_region: {
+    sub: ["gestionnaire_region", "pilote_region"],
+    scope: "region",
+  },
+  pilote_region: {
+    sub: [],
+    scope: "region",
+  },
+  gestionnaire_region: {
+    sub: [],
+    scope: "region",
+  },
+  perdir: {
+    sub: [],
+    scope: "uai",
+  },
 };
