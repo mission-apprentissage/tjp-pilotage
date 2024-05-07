@@ -24,14 +24,17 @@ export const [createUser, createUserFactory] = inject(
       requestUser,
     }: {
       body: BodySchema;
-      requestUser: RequestUser;
+      requestUser?: RequestUser;
     }) => {
       const { email, firstname, lastname, role, codeRegion } = body;
       if (!email.match(emailRegex)) throw Boom.badRequest("email is not valid");
-      if (!canCreateRole({ requestUser, role: body.role }))
-        throw Boom.unauthorized("cannot create user with this role");
-      if (!verifyScope({ requestUser, body }))
-        throw Boom.unauthorized("cannot create user within this scope");
+
+      if (requestUser) {
+        if (!canCreateRole({ requestUser, role: body.role }))
+          throw Boom.unauthorized("cannot create user with this role");
+        if (!verifyScope({ requestUser, body }))
+          throw Boom.unauthorized("cannot create user within this scope");
+      }
 
       const formattedEmail = email.toLowerCase();
 
