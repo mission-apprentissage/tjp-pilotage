@@ -19,10 +19,11 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { PERMISSIONS } from "shared";
+import { getHierarchy, Role } from "shared";
 import { z } from "zod";
 
 import { client } from "../../../../api.client";
+import { useAuth } from "../../../../utils/security/useAuth";
 
 export const EditUser = ({
   isOpen,
@@ -33,6 +34,7 @@ export const EditUser = ({
   onClose: () => void;
   user: (typeof client.infer)["[GET]/users"]["users"][number];
 }) => {
+  const { auth } = useAuth();
   const {
     register,
     formState: { errors },
@@ -68,6 +70,17 @@ export const EditUser = ({
       onClose();
     },
   });
+
+  const roles = getHierarchy(auth?.user?.role as Role);
+  const filteredRegions = (() => {
+    if (!regions) return [];
+    if (auth?.user?.role === "admin_region") {
+      return regions.filter(
+        (region) => region.value === auth?.user?.codeRegion
+      );
+    }
+    return regions;
+  })();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -127,7 +140,7 @@ export const EditUser = ({
                 required: "Veuillez choisir un role",
               })}
             >
-              {Object.keys(PERMISSIONS).map((role) => (
+              {roles.map((role) => (
                 <option key={role} value={role}>
                   {role}
                 </option>
@@ -141,7 +154,7 @@ export const EditUser = ({
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
               <option value="">Aucune</option>
-              {regions?.map((region) => (
+              {filteredRegions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}
                 </option>
