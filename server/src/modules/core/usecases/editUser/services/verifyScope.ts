@@ -1,6 +1,6 @@
 import { RequestUser } from "../../../model/User";
 import { getScopeFilterForUser } from "../../getUsers/getScopeFilterForUser.dep";
-import { BodySchema } from "../createUser.schema";
+import { BodySchema } from "../editUser.schema";
 
 export function verifyScope({
   body,
@@ -17,9 +17,7 @@ export function verifyScope({
     case "national":
       return true;
     case "region":
-      return (
-        body.codeRegion !== undefined && scopeFilter.includes(body.codeRegion)
-      );
+      return body.codeRegion !== null && scopeFilter.includes(body.codeRegion);
     default:
       return false;
   }
