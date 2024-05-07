@@ -89,6 +89,19 @@ export default () => {
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const canEditUser = (
+    user: (typeof client.infer)["[GET]/users"]["users"][number]
+  ) => {
+    return (
+      auth?.user?.role &&
+      user.role &&
+      hasRightOverRole({
+        sourceRole: auth.user.role,
+        targetRole: user.role,
+      })
+    );
+  };
+
   return (
     <GuardPermission permission="users/lecture">
       {data?.users && (
@@ -222,22 +235,19 @@ export default () => {
                         new Date(user.createdAt).toLocaleString()}
                     </Td>
                     <Td isNumeric>
-                      <IconButton
-                        position="unset"
-                        variant="ghost"
-                        onClick={() => {
-                          setUserId(user.id);
-                          onOpen();
-                        }}
-                        aria-label="editer"
-                      >
-                        {auth?.user?.role &&
-                          user.role &&
-                          hasRightOverRole({
-                            sourceRole: auth.user.role,
-                            targetRole: user.role,
-                          }) && <EditIcon />}
-                      </IconButton>
+                      {canEditUser(user) && (
+                        <IconButton
+                          position="unset"
+                          variant="ghost"
+                          onClick={() => {
+                            setUserId(user.id);
+                            onOpen();
+                          }}
+                          aria-label="editer"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      )}
                     </Td>
                   </Tr>
                 ))}
