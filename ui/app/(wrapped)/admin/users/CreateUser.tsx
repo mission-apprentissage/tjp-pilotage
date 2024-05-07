@@ -73,9 +73,10 @@ export const CreateUser = ({
   ) => createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
 
   const roles = getHierarchy(auth?.user?.role as Role);
+  const isAdminRegion = auth?.user?.role === "admin_region";
   const filteredRegions = (() => {
     if (!regions) return [];
-    if (auth?.user?.role === "admin_region") {
+    if (isAdminRegion) {
       return regions.filter(
         (region) => region.value === auth?.user?.codeRegion
       );
@@ -145,7 +146,7 @@ export const CreateUser = ({
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
-              <option value="">Aucune</option>
+              {!isAdminRegion && <option value="">Aucune</option>}
               {filteredRegions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}
