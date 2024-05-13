@@ -3,9 +3,9 @@ import { inject } from "injecti";
 
 import { RequestUser } from "../../model/User";
 import { BodySchema } from "./editUser.schema";
-import { canCreateRole } from "./services/canCreateRole";
-import { verifyScope } from "./services/verifyScope";
 import { updateUser } from "./updateUser.dep";
+import { canEditRole } from "./utils/canEditRole";
+import { canEditUserInScope } from "./utils/canEditUserInScope";
 
 export const [editUser, editUserFactory] = inject(
   { updateUser },
@@ -19,9 +19,9 @@ export const [editUser, editUserFactory] = inject(
       data: BodySchema;
       requestUser: RequestUser;
     }) => {
-      if (!canCreateRole({ requestUser, role: data.role }))
+      if (!canEditRole({ requestUser, role: data.role }))
         throw Boom.unauthorized("cannot edit user with this role");
-      if (!verifyScope({ requestUser, body: data }))
+      if (!canEditUserInScope({ requestUser, body: data }))
         throw Boom.unauthorized("cannot edit user within this scope");
       return await deps.updateUser({ userId, data });
     }

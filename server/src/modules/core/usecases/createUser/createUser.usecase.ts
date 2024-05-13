@@ -9,8 +9,8 @@ import { shootTemplate } from "../../services/mailer/mailer";
 import { BodySchema } from "./createUser.schema";
 import { findUserQuery } from "./findUserQuery.dep";
 import { insertUserQuery } from "./insertUserQuery.dep";
-import { canCreateRole } from "./services/canCreateRole";
-import { verifyScope } from "./services/verifyScope";
+import { canCreateRole } from "./utils/canCreateRole";
+import { canCreateUserInScope } from "./utils/canCreateUserInScope";
 
 export const [createUser, createUserFactory] = inject(
   {
@@ -32,7 +32,7 @@ export const [createUser, createUserFactory] = inject(
       if (requestUser) {
         if (!canCreateRole({ requestUser, role: body.role }))
           throw Boom.unauthorized("cannot create user with this role");
-        if (!verifyScope({ requestUser, body }))
+        if (!canCreateUserInScope({ requestUser, body }))
           throw Boom.unauthorized("cannot create user within this scope");
       }
 
