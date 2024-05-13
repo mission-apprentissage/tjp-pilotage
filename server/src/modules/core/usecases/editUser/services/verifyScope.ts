@@ -1,5 +1,5 @@
 import { RequestUser } from "../../../model/User";
-import { getScopeFilterForUser } from "../../getUsers/getScopeFilterForUser.dep";
+import { getScopeFilterForUser } from "../../../utils/getScopeFilterForUser";
 import { BodySchema } from "../editUser.schema";
 
 export function verifyScope({
