@@ -34,7 +34,7 @@ export const FiliereCmqField = chakra(
           className={className}
           isInvalid={!!errors.filiereCmq || !!errors.discipline2FormationRH}
         >
-          <FormLabel>Précisez la filière d'activité du campus ?</FormLabel>
+          <FormLabel>Précisez la filière d'activité du campus</FormLabel>
           <Flex direction={"row"} gap={2}>
             <Controller
               name="filiereCmq"

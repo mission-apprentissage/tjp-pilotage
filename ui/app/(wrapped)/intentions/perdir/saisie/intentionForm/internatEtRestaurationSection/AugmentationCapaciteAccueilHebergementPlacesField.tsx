@@ -29,7 +29,7 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
         className={className}
         isInvalid={!!errors.augmentationCapaciteAccueilHebergementPlaces}
       >
-        <FormLabel>Combien de place ?</FormLabel>
+        <FormLabel>Combien de places ?</FormLabel>
         <Controller
           name="augmentationCapaciteAccueilHebergementPlaces"
           shouldUnregister

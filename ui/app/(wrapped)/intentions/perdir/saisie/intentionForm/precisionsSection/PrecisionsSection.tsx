@@ -2,6 +2,9 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
+import { isTypeDiminution } from "shared/demandeValidators/validators";
+
+import { isTypeFermeture } from "@/app/(wrapped)/intentions/perdir/utils/typeDemandeUtils";
 
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
@@ -27,11 +30,16 @@ export const PrecisionsSection = ({
 }) => {
   const { watch } = useFormContext<IntentionForms>();
 
-  const [amiCma, partenairesEconomiquesImpliques, cmqImplique] = watch([
-    "amiCma",
-    "partenairesEconomiquesImpliques",
-    "cmqImplique",
-  ]);
+  const [typeDemande, amiCma, partenairesEconomiquesImpliques, cmqImplique] =
+    watch([
+      "typeDemande",
+      "amiCma",
+      "partenairesEconomiquesImpliques",
+      "cmqImplique",
+    ]);
+
+  const sectionsAmiCmaPartenairesEcoCMQVisibles =
+    !isTypeFermeture(typeDemande) && !isTypeDiminution(typeDemande);
 
   return (
     <Flex
@@ -50,28 +58,32 @@ export const PrecisionsSection = ({
         </Flex>
       </Heading>
       <Divider pt="4" mb="4" />
-      <Flex gap="6" mb="6" direction={"column"}>
-        <MotifField disabled={disabled} mb="4" />
-        <AutreMotifField disabled={disabled} mb="4" />
-        <QuestionBlock active={!!amiCma}>
-          <AmiCmaField disabled={disabled} />
-          <Flex direction={"row"}>
-            <AmiCmaValideField disabled={disabled} />
-            <AmiCmaEnCoursValidationField disabled={disabled} />
-          </Flex>
-          <AmiCmaValideAnneeField disabled={disabled} />
-        </QuestionBlock>
-        <QuestionBlock active={!!partenairesEconomiquesImpliques}>
-          <PartenaireEconomiqueField disabled={disabled} />
-          <PartenairesEconomiquesFields disabled={disabled} />
-        </QuestionBlock>
-        <QuestionBlock active={!!cmqImplique}>
-          <CmqImpliqueField disabled={disabled} />
-          <Flex direction={"row"}>
-            <FiliereCmqField disabled={disabled} />
-            <NomCmqField disabled={disabled} />
-          </Flex>
-        </QuestionBlock>
+      <Flex gap="6" mb="4" direction={"column"}>
+        <MotifField disabled={disabled} />
+        <AutreMotifField disabled={disabled} />
+        {sectionsAmiCmaPartenairesEcoCMQVisibles && (
+          <>
+            <QuestionBlock active={!!amiCma}>
+              <AmiCmaField disabled={disabled} />
+              <Flex direction={"row"}>
+                <AmiCmaValideField disabled={disabled} />
+                <AmiCmaEnCoursValidationField disabled={disabled} />
+              </Flex>
+              <AmiCmaValideAnneeField disabled={disabled} />
+            </QuestionBlock>
+            <QuestionBlock active={!!partenairesEconomiquesImpliques}>
+              <PartenaireEconomiqueField disabled={disabled} />
+              <PartenairesEconomiquesFields disabled={disabled} />
+            </QuestionBlock>
+            <QuestionBlock active={!!cmqImplique}>
+              <CmqImpliqueField disabled={disabled} />
+              <Flex direction={"row"}>
+                <FiliereCmqField disabled={disabled} />
+                <NomCmqField disabled={disabled} />
+              </Flex>
+            </QuestionBlock>
+          </>
+        )}
       </Flex>
     </Flex>
   );

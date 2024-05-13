@@ -33,8 +33,8 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
           </Select>
         )}
       />
-      <MotifRefusBlock disabled={disabled} mb="6" mt={6} />
-      <AutreMotifRefusField disabled={disabled} mb="6" maxW="752px" />
+      <MotifRefusBlock disabled={disabled} my={6} />
+      <AutreMotifRefusField disabled={disabled} mb="6" />
     </Flex>
   );
 };

@@ -85,11 +85,11 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   })();
 
   return (
-    <Flex maxW="752px" gap="6" mb="6" direction={"column"}>
+    <Flex gap="6" mb="4" direction={"column"}>
       <MixteField disabled={disabled} />
       <ColorationField disabled={disabled} />
       <LibelleColorationField disabled={disabled} />
-      <Table maxW={752} columnGap={1} rowGap={1}>
+      <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
             <Th w={"30%"}></Th>
@@ -170,7 +170,7 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
           </Tr>
         </Tbody>
       </Table>
-      <Box mb={5}>
+      <Box>
         {errors.capaciteScolaire && (
           <FormErrorMessage>{errors.capaciteScolaire.message}</FormErrorMessage>
         )}

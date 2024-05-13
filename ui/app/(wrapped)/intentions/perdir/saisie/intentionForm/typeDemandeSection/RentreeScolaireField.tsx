@@ -35,7 +35,6 @@ export const RentreeScolaireField = ({
       className={className}
       isInvalid={!!errors.rentreeScolaire}
       isRequired
-      maxW="752px"
     >
       <FormLabel>Rentrée scolaire</FormLabel>
       <Tooltip
