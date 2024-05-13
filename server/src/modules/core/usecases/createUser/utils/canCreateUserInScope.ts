@@ -2,7 +2,7 @@ import { RequestUser } from "../../../model/User";
 import { getScopeFilterForUser } from "../../../utils/getScopeFilterForUser";
 import { BodySchema } from "../createUser.schema";
 
-export function verifyScope({
+export function canCreateUserInScope({
   body,
   requestUser,
 }: {

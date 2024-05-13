@@ -2,7 +2,7 @@ import { hasRightOverRole, Role } from "shared";
 
 import { RequestUser } from "../../../model/User";
 
-export function canCreateRole({
+export function canEditRole({
   requestUser,
   role,
 }: {
