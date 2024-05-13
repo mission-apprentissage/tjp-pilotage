@@ -34,19 +34,13 @@ import {
 const ColonneFiltersSection = chakra(
   ({
     colonneFilters,
-    setColonneFilters,
+    handleColonneFilters,
   }: {
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
-    setColonneFilters: (
+    handleColonneFilters: (
       value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
     ) => void;
   }) => {
-    const handleColonneFilters = (
-      value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
-    ) => {
-      setColonneFilters(value);
-    };
-
     return (
       <Flex justifyContent={"start"} direction="row">
         <GroupedMultiselect
@@ -108,18 +102,21 @@ export default () => {
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<FiltersDemandesRestitutionIntentions>;
+    columns?: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[];
     order?: Partial<OrderDemandesRestitutionIntentions>;
     page?: string;
     search?: string;
   } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
 
   const filters = searchParams.filters ?? {};
+  const columns = searchParams.columns ?? [];
   const order = searchParams.order ?? { order: "asc" };
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
   const search = searchParams.search ?? "";
 
   const setSearchParams = (params: {
     filters?: typeof filters;
+    columns?: typeof columns;
     order?: typeof order;
     page?: typeof page;
     search?: typeof search;
@@ -184,20 +181,28 @@ export default () => {
     });
   };
 
+  const handleColonneFilters = (
+    value: (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
+  ) => {
+    setSearchParams({ columns: value });
+    setColonneFilters(value);
+  };
+
   const resetFilters = () => {
     setSearchParams({
       filters: {
         ...filters,
-        codeDepartement: [],
-        typeDemande: [],
         codeNsf: [],
-        uai: [],
         cfd: [],
+        codeNiveauDiplome: [],
+        codeDepartement: [],
+        uai: [],
+        secteur: undefined,
+        statut: statutFilter,
+        typeDemande: [],
+        voie: undefined,
         coloration: undefined,
         amiCMA: undefined,
-        secteur: undefined,
-        voie: undefined,
-        statut: statutFilter,
       },
       search: "",
     });
@@ -252,9 +257,11 @@ export default () => {
   const [colonneFilters, setColonneFilters] = useState<
     (keyof typeof STATS_DEMANDES_COLUMNS_OPTIONAL)[]
   >(
-    Object.keys(
-      STATS_DEMANDES_COLUMNS_DEFAULT
-    ) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
+    (columns.length
+      ? columns
+      : Object.keys(
+          STATS_DEMANDES_COLUMNS_DEFAULT
+        )) as (keyof typeof STATS_DEMANDES_COLUMNS_DEFAULT)[]
   );
 
   const [statutFilter, setStatutFilter] = useState<
@@ -319,7 +326,7 @@ export default () => {
           ColonneFilter={
             <ColonneFiltersSection
               colonneFilters={colonneFilters}
-              setColonneFilters={setColonneFilters}
+              handleColonneFilters={handleColonneFilters}
             />
           }
           onExportCsv={async () => {

@@ -36,7 +36,7 @@ export const STATS_DEMANDES_COLUMNS = {
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
   amiCmaValide: "Financement AMI/CMA validé ?",
-  amiCmaEnCoursValidation: "Financement AMI/CMA en cours de validation ?",
+  amiCmaEnCoursValidation: "Demande de financement AMI/CMA en cours ?",
   amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
   commentaire: "Commentaire",
   numero: "N° demande",

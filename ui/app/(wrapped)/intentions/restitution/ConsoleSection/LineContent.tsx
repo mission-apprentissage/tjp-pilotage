@@ -58,6 +58,20 @@ const handleMotifRefusLabel = ({
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
 
+const handleCommune = ({
+  commune,
+  codeDepartement,
+}: {
+  commune?: string;
+  codeDepartement?: string;
+}) => {
+  const formattedCodeDepartement =
+    codeDepartement?.substring(0, 1) === "0"
+      ? codeDepartement?.substring(1)
+      : codeDepartement;
+  return `${commune} (${formattedCodeDepartement})`;
+};
+
 const ConditionalTd = chakra(
   ({
     className,
@@ -126,7 +140,10 @@ export const LineContent = ({
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
         bgColor={getCellColor("commune")}
       >
-        {demande.commune}
+        {handleCommune({
+          commune: demande.commune,
+          codeDepartement: demande.codeDepartement,
+        })}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

@@ -11,6 +11,18 @@ import {
   FiltersDemandesRestitutionIntentions,
 } from "../types";
 
+const handleDepartementLabel = ({
+  value,
+  label,
+}: {
+  value: string;
+  label: string;
+}) => {
+  const formattedCodeDepartement =
+    value.substring(0, 1) === "0" ? value.substring(1) : value;
+  return `${label} (${formattedCodeDepartement})`;
+};
+
 export const SecondaryFiltersSection = ({
   activeFilters,
   handleFilters,
@@ -99,7 +111,10 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) =>
                 handleFilters("codeDepartement", selected)
               }
-              options={data?.filters.departements}
+              options={data?.filters.departements.map((departement) => ({
+                label: handleDepartementLabel(departement),
+                value: departement.value,
+              }))}
               value={activeFilters.codeDepartement ?? []}
               disabled={data?.filters.departements.length === 0}
             >
