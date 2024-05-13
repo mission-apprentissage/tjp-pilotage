@@ -2,10 +2,11 @@ import { chakra, Td } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { formatCommuneLibelleWithCodeDepartement } from "@/app/(wrapped)/utils/formatLibelle";
+import { GraphWrapper } from "@/components/GraphWrapper";
+import { TableBadge } from "@/components/TableBadge";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { TableBadge } from "../../../../../components/TableBadge";
-import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import {
   getMotifLabel,
   MotifCampagne,
@@ -56,20 +57,6 @@ const handleMotifRefusLabel = ({
       : getMotifRefusLabel(motif as MotifRefusLabel)
   );
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
-};
-
-const handleCommune = ({
-  commune,
-  codeDepartement,
-}: {
-  commune?: string;
-  codeDepartement?: string;
-}) => {
-  const formattedCodeDepartement =
-    codeDepartement?.substring(0, 1) === "0"
-      ? codeDepartement?.substring(1)
-      : codeDepartement;
-  return `${commune} (${formattedCodeDepartement})`;
 };
 
 const ConditionalTd = chakra(
@@ -140,7 +127,7 @@ export const LineContent = ({
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
         bgColor={getCellColor("commune")}
       >
-        {handleCommune({
+        {formatCommuneLibelleWithCodeDepartement({
           commune: demande.commune,
           codeDepartement: demande.codeDepartement,
         })}

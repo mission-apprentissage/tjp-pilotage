@@ -17,7 +17,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { formatAnneeCommuneLibelle } from "../../../utils/formatAnneeCommuneLibelle";
+import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
 import { Line } from "../types";
 
 export const EtablissementLineContent = ({
@@ -74,7 +74,7 @@ export const EtablissementLineContent = ({
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
     <Td minW={450} whiteSpace="normal">
       <Flex>
-        {formatAnneeCommuneLibelle(line)}
+        {formatAnneeCommuneLibelle(line, "long", "sm")}
         {line.formationRenovee && (
           <Flex
             ms={2}
