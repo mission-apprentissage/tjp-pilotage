@@ -1,7 +1,7 @@
 import { getPermissionScope, Permission } from "shared";
 import { Scope } from "shared/security/permissions";
 
-import { RequestUser } from "../../model/User";
+import { RequestUser } from "../model/User";
 
 interface ScopeWithFilter {
   scope: Scope;
@@ -26,7 +26,7 @@ export const getScopeFilterForUser = (
         }
         break;
       default:
-        scopeWithFilter.scopeFilter = [""];
+        scopeWithFilter.scopeFilter = [];
         break;
     }
 

@@ -2,8 +2,8 @@ import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
+import { getScopeFilterForUser } from "../../utils/getScopeFilterForUser";
 import { hasPermissionHandler } from "../../utils/hasPermission";
-import { getScopeFilterForUser } from "./getScopeFilterForUser.dep";
 import { getUsersSchema } from "./getUsers.schema";
 import { getUsers } from "./getUsers.usecase";
 
