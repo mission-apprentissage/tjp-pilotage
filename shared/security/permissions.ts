@@ -33,17 +33,21 @@ export const PERMISSIONS = {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "intentions/ecriture": { default: "region" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
     "users/lecture": { default: "region" },
     "users/ecriture": { default: "region" },
   },
+  region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+  },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "intentions/ecriture": { default: "region" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
   },
@@ -87,7 +91,11 @@ export const HIERARCHY: {
     scope: "national",
   },
   admin_region: {
-    sub: ["gestionnaire_region", "pilote_region", "expert_region"],
+    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region"],
+    scope: "region",
+  },
+  region: {
+    sub: [],
     scope: "region",
   },
   pilote_region: {
