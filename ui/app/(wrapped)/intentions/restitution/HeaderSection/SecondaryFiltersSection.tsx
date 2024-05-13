@@ -5,23 +5,12 @@ import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
   FiltersDemandesRestitutionIntentions,
 } from "../types";
-
-const handleDepartementLabel = ({
-  value,
-  label,
-}: {
-  value: string;
-  label: string;
-}) => {
-  const formattedCodeDepartement =
-    value.substring(0, 1) === "0" ? value.substring(1) : value;
-  return `${label} (${formattedCodeDepartement})`;
-};
 
 export const SecondaryFiltersSection = ({
   activeFilters,
@@ -112,7 +101,10 @@ export const SecondaryFiltersSection = ({
                 handleFilters("codeDepartement", selected)
               }
               options={data?.filters.departements.map((departement) => ({
-                label: handleDepartementLabel(departement),
+                label: formatDepartementLibelleWithCodeDepartement({
+                  libelleDepartement: departement.label,
+                  codeDepartement: departement.value,
+                }),
                 value: departement.value,
               }))}
               value={activeFilters.codeDepartement ?? []}
