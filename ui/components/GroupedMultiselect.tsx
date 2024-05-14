@@ -257,6 +257,9 @@ export const GroupedMultiselect = chakra(
           onClose?.();
         }}
         closeOnSelect={false}
+        flip={false}
+        preventOverflow={false}
+        placement={"top"}
       >
         {customButton ? (
           <MenuButton as={Flex} cursor={"pointer"} h={"fit-content"}>
@@ -280,7 +283,7 @@ export const GroupedMultiselect = chakra(
           </MenuButton>
         )}
         <Portal>
-          <MenuList zIndex={"tooltip"} maxWidth={450} pt="0">
+          <MenuList zIndex={"sticky"} maxWidth={450} pt="0">
             <Flex borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}

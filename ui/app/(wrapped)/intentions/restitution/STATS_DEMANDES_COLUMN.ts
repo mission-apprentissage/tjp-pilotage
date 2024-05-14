@@ -24,14 +24,14 @@ export const STATS_DEMANDES_COLUMNS = {
   motif: "Motif(s) de la demande",
   autreMotif: "Autre motif",
   rentreeScolaire: "RS",
-  differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   capaciteScolaireActuelle: "Capacité scolaire actuelle",
   capaciteScolaire: "Capacité scolaire",
-  capaciteScolaireColoree: "Capacité scolaire coloree",
-  differenceCapaciteApprentissage: "Nombre de places en apprentissage",
   capaciteApprentissageActuelle: "Capacité apprentissage actuelle",
   capaciteApprentissage: "Capacité apprentissage",
-  capaciteApprentissageColoree: "Capacité apprentissage coloree",
+  differenceCapaciteScolaire: "Places en voie scolaire",
+  differenceCapaciteApprentissage: "Places en apprentissage",
+  capaciteScolaireColoree: "Places colorées en voie scolaire",
+  capaciteApprentissageColoree: "Places colorées en apprentissage",
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
@@ -92,31 +92,36 @@ export const STATS_DEMANDES_COLUMNS = {
 export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   typeof STATS_DEMANDES_COLUMNS
 > = {
+  // établissement
   libelleEtablissement: "Établissement",
   commune: "Commune",
   libelleRegion: "Région",
   libelleAcademie: "Académie",
+  libelleDepartement: "Département",
+  // formation
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
   niveauDiplome: "Diplôme",
+  // demande
   typeDemande: "Type de demande",
   motif: "Motif(s) de la demande",
-  autreMotif: "Autre motif",
-  differenceCapaciteScolaire: "Nombre de places en voie scolaire",
-  differenceCapaciteApprentissage: "Nombre de places en apprentissage",
+  differenceCapaciteScolaire: "Places en voie scolaire",
+  differenceCapaciteApprentissage: "Places en apprentissage",
+  capaciteScolaireColoree: "Places colorées en voie scolaire",
+  capaciteApprentissageColoree: "Places colorées en apprentissage",
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
   commentaire: "Commentaire",
   numero: "N° demande",
-  // devenir favorable
+  // Devenir favorable de la formation
   positionQuadrant: "Position dans le quadrant",
   tauxInsertionRegional: "Tx d'emploi à 6 mois régional",
   tauxPoursuiteRegional: "Tx de poursuite d'études régional",
   tauxDevenirFavorableRegional: "Tx de devenir favorable régional",
   tauxPressionRegional: "Tx de pression régional",
-  // RH
   nbEtablissement: "Nb établissement",
+  // RH
   nbRecrutementRH: "Nombre de recrutements",
   nbReconversionRH: "Nombre de reconversions",
   nbProfesseurAssocieRH: "Nombre de professeurs associés",

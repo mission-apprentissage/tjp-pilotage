@@ -46,6 +46,10 @@ const ConditionalTh = chakra(
           textOverflow={"ellipsis"}
           alignSelf={"stretch"}
           isTruncated
+          _hover={{
+            width: "auto",
+            maxWidth: "none",
+          }}
         >
           {children}
         </Th>
@@ -178,6 +182,26 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="differenceCapaciteApprentissage" />
         {STATS_DEMANDES_COLUMNS.differenceCapaciteApprentissage}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"capaciteScolaireColoree"}
+        onClick={handleOrder}
+        isNumeric
+        bgColor={getCellColor("capaciteScolaireColoree")}
+      >
+        <OrderIcon {...order} column="capaciteScolaireColoree" />
+        {STATS_DEMANDES_COLUMNS.capaciteScolaireColoree}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"capaciteApprentissageColoree"}
+        onClick={handleOrder}
+        isNumeric
+        bgColor={getCellColor("capaciteApprentissageColoree")}
+      >
+        <OrderIcon {...order} column="capaciteApprentissageColoree" />
+        {STATS_DEMANDES_COLUMNS.capaciteApprentissageColoree}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
