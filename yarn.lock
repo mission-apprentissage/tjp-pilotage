@@ -3292,6 +3292,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fastify/static@npm:^7.0.4":
+  version: 7.0.4
+  resolution: "@fastify/static@npm:7.0.4"
+  dependencies:
+    "@fastify/accept-negotiator": ^1.0.0
+    "@fastify/send": ^2.0.0
+    content-disposition: ^0.5.3
+    fastify-plugin: ^4.0.0
+    fastq: ^1.17.0
+    glob: ^10.3.4
+  checksum: 68210eb5730f3e6d103e2779c393febb972fbd403a2bcff6c1a2be22c3c17ed6555e2812a726e08fff8fd2d39b343a227ac8bf9c90500f5ea8a62ba31123bc48
+  languageName: node
+  linkType: hard
+
 "@fastify/swagger-ui@npm:^1.6.0":
   version: 1.10.2
   resolution: "@fastify/swagger-ui@npm:1.10.2"
@@ -10769,8 +10783,8 @@ __metadata:
   linkType: hard
 
 "fast-json-stringify@npm:^5.7.0, fast-json-stringify@npm:^5.8.0":
-  version: 5.15.1
-  resolution: "fast-json-stringify@npm:5.15.1"
+  version: 5.16.0
+  resolution: "fast-json-stringify@npm:5.16.0"
   dependencies:
     "@fastify/merge-json-schemas": ^0.1.0
     ajv: ^8.10.0
@@ -10779,7 +10793,7 @@ __metadata:
     fast-uri: ^2.1.0
     json-schema-ref-resolver: ^1.0.1
     rfdc: ^1.2.0
-  checksum: 2bdf6206097180a0749fd7c24033ee49b596eff1a1cace1b9785a85bcec81e6272a2ac721556ad1ba2c7bb061e325c0cb0e61805d2efcc70d0c3de374cd9c6eb
+  checksum: b2eaf3843d6337d65c31f90afb0db9a19d710e363c9d57fec3c1a50087189264174efcbde6c96eb5cbff1be2f739a59284bd7ce1a87dcb38e600e250051581ea
   languageName: node
   linkType: hard
 
@@ -10905,7 +10919,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"fastq@npm:^1.17.1, fastq@npm:^1.6.0":
+"fastq@npm:^1.17.0, fastq@npm:^1.17.1, fastq@npm:^1.6.0":
   version: 1.17.1
   resolution: "fastq@npm:1.17.1"
   dependencies:
@@ -11542,7 +11556,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.15, glob@npm:^10.3.3":
+"glob@npm:^10.2.2, glob@npm:^10.3.10, glob@npm:^10.3.15, glob@npm:^10.3.3, glob@npm:^10.3.4":
   version: 10.3.16
   resolution: "glob@npm:10.3.16"
   dependencies:
@@ -17856,12 +17870,12 @@ __metadata:
   linkType: hard
 
 "postcss-selector-parser@npm:^6.0.10":
-  version: 6.0.16
-  resolution: "postcss-selector-parser@npm:6.0.16"
+  version: 6.1.0
+  resolution: "postcss-selector-parser@npm:6.1.0"
   dependencies:
     cssesc: ^3.0.0
     util-deprecate: ^1.0.2
-  checksum: e1cd68e33a39e3dc1e1e5bd8717be5bbe3cc23a4cecb466c3acb2f3a77daad7a47df4d6137a76f8db74cf160d2fb16b2cfdb4ccbebdfda844690f8d545fe281d
+  checksum: 449f614e6706421be307d8638183c61ba45bc3b460fe3815df8971dbb4d59c4087181940d879daee4a7a2daf3d86e915db1cce0c006dd68ca75b4087079273bd
   languageName: node
   linkType: hard
 
@@ -19578,6 +19592,7 @@ __metadata:
     "@aws-sdk/s3-request-presigner": ^3.574.0
     "@fastify/cors": ^8.2.0
     "@fastify/multipart": ^8.2.0
+    "@fastify/static": ^7.0.4
     "@fastify/swagger": ^8.3.1
     "@fastify/swagger-ui": ^1.6.0
     "@fastify/type-provider-typebox": ^3.5.0
