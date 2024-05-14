@@ -9,8 +9,8 @@
   "types": "src/index.ts",
   "scripts": {
     "start": "node --enable-source-maps dist/index.js",
-    "dev": "tsup src/index.ts --watch . --watch ../shared --ignore-watch **/logs --ignore-watch **/upload --onSuccess 'yarn run copyPublic && yarn run start'",
-    "dev:debug": "tsup src/index.ts --watch . --watch ../shared --ignore-watch **/logs --ignore-watch **/upload --onSuccess 'yarn run copyPublic && yarn run start -- --inspect'",
+    "dev": "tsup --onSuccess 'yarn run copyPublic && yarn run start'",
+    "dev:debug": "tsup --onSuccess 'yarn run copyPublic && yarn run start -- --inspect'",
     "copyPublic": "cp -a public/. dist",
     "build": "tsup src/index.ts",
     "typecheck": "tsc",
@@ -23,6 +23,7 @@
     "@aws-sdk/s3-request-presigner": "^3.574.0",
     "@fastify/cors": "^8.2.0",
     "@fastify/multipart": "^8.2.0",
+    "@fastify/static": "^7.0.4",
     "@fastify/swagger": "^8.3.1",
     "@fastify/swagger-ui": "^1.6.0",
     "@fastify/type-provider-typebox": "^3.5.0",

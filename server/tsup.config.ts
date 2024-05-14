@@ -11,4 +11,7 @@ export default defineConfig({
   noExternal: ["shared"],
   clean: true,
   publicDir: false,
+  watch: ["src", "../shared"],
+  ignoreWatch: ["public/**/*"],
+  entryPoints: ["src/index.ts"],
 });
