@@ -9,7 +9,7 @@ import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
-import { DisciplineAutocompleteInput } from "../../components/DisciplineAutoComplete";
+import { FiliereAutoCompleteInput } from "../../components/FiliereAutoComplete";
 import { IntentionForms } from "../defaultFormValues";
 
 export const FiliereCmqField = chakra(
@@ -41,7 +41,7 @@ export const FiliereCmqField = chakra(
               control={control}
               rules={{ required: "Ce champ est obligatoire" }}
               render={({ field: { onChange, value, name } }) => (
-                <DisciplineAutocompleteInput
+                <FiliereAutoCompleteInput
                   name={name}
                   active={!disabled}
                   inError={!!errors.filiereCmq}

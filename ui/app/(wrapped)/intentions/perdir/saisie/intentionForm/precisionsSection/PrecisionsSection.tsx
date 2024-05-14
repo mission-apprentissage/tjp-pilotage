@@ -77,10 +77,8 @@ export const PrecisionsSection = ({
             </QuestionBlock>
             <QuestionBlock active={!!cmqImplique}>
               <CmqImpliqueField disabled={disabled} />
-              <Flex direction={"row"}>
-                <FiliereCmqField disabled={disabled} />
-                <NomCmqField disabled={disabled} />
-              </Flex>
+              <FiliereCmqField disabled={disabled} />
+              <NomCmqField disabled={disabled} />
             </QuestionBlock>
           </>
         )}
