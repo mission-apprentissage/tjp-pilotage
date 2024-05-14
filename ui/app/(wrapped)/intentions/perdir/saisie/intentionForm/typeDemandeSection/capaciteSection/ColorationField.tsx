@@ -10,7 +10,7 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
-import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
+import { isTypeColoration } from "../../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../../utils/toBoolean";
 import { IntentionForms } from "../../defaultFormValues";
 

@@ -31,11 +31,10 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { TableFooter } from "@/components/TableFooter";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
+import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -421,13 +420,6 @@ export const PageClient = () => {
                 </Tbody>
               </Table>
             </TableContainer>
-            <TableFooter
-              pl="4"
-              page={page}
-              pageSize={PAGE_SIZE}
-              count={data?.count}
-              onPageChange={(newPage) => setSearchParams({ page: newPage })}
-            />
           </>
         ) : (
           <Center mt={12}>

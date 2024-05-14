@@ -10,7 +10,7 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
