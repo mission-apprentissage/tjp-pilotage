@@ -12,7 +12,7 @@ import { useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const PartenairesEconomiquesFields = chakra(

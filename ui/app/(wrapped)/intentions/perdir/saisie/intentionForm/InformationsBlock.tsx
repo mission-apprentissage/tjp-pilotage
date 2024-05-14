@@ -21,7 +21,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
-import { isTypeFermeture } from "../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
 import { Campagne } from "../types";
 import { IntentionForms } from "./defaultFormValues";
@@ -123,6 +123,7 @@ export const InformationsBlock = ({
         <PrecisionsSection
           motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}
           disabled={disabled}
+          campagne={campagne}
         />
       </SectionBlock>
       <SectionBlock>

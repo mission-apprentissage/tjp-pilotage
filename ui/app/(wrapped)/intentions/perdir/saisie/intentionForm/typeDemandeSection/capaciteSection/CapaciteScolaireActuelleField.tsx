@@ -2,7 +2,7 @@ import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
-import { isTypeOuverture } from "../../../../utils/typeDemandeUtils";
+import { isTypeOuverture } from "../../../../../utils/typeDemandeUtils";
 import { CapaciteField } from "../../../components/CapaciteField";
 import { IntentionForms } from "../../defaultFormValues";
 

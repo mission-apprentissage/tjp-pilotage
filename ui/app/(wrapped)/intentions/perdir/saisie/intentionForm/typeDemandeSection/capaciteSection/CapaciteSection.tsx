@@ -15,7 +15,7 @@ import { useFormContext } from "react-hook-form";
 import {
   isTypeColoration,
   isTypeFermeture,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../../defaultFormValues";
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";

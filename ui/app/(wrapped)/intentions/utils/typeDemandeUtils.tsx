@@ -62,7 +62,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour une ouverture nette :
+          Exemple pour une ouverture :
         </Text>
         <Text>
           J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
@@ -83,7 +83,7 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour une augmentation nette :
+          Exemple pour une augmentation :
         </Text>
         <Text>J’ouvre des places sur un BAC Pro Aéronautique.</Text>
         <Text>

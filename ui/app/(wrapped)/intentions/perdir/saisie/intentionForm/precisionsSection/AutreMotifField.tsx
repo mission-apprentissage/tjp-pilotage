@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { getMotifsTriggerAutre } from "../../../utils/motifDemandeUtils";
+import { getMotifsTriggerAutre } from "../../../../utils/motifDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AutreMotifField = chakra(

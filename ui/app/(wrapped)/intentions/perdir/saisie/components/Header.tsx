@@ -162,15 +162,15 @@ export const Header = ({
             variant="externalLink"
           />
         </Flex>
-        <TablePageHandler
-          ms={"auto"}
-          mt={"auto"}
-          page={page}
-          pageSize={PAGE_SIZE}
-          count={count}
-          onPageChange={onPageChange}
-        />
       </Flex>
+      <TablePageHandler
+        ms={"auto"}
+        mt={"auto"}
+        page={page}
+        pageSize={PAGE_SIZE}
+        count={count}
+        onPageChange={onPageChange}
+      />
     </Flex>
   );
 };

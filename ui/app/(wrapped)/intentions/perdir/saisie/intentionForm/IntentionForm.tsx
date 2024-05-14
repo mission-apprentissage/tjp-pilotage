@@ -35,7 +35,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
-import { isTypeFermeture } from "../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
