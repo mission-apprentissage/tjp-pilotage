@@ -11,8 +11,7 @@ import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "@/app/(wrapped)/intentions/perdir/utils/typeDemandeUtils";
-
+import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -46,7 +45,7 @@ export const AmiCmaEnCoursValidationField = chakra(
         className={className}
         isInvalid={!!errors.amiCmaEnCoursValidation}
       >
-        <FormLabel>En cours de validation ?</FormLabel>
+        <FormLabel>Demande en cours ?</FormLabel>
         <Controller
           name="amiCmaEnCoursValidation"
           control={control}

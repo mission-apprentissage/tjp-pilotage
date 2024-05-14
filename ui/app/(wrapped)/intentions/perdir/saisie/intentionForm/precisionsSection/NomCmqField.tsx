@@ -4,10 +4,10 @@ import {
   FormControl,
   FormErrorMessage,
   FormLabel,
-  Input,
 } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import { Controller, useFormContext } from "react-hook-form";
 
+import { CampusAutocompleteInput } from "../../components/CampusAutoComplete";
 import { IntentionForms } from "../defaultFormValues";
 
 export const NomCmqField = chakra(
@@ -15,7 +15,7 @@ export const NomCmqField = chakra(
     const {
       formState: { errors },
       watch,
-      register,
+      control,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("cmqImplique");
@@ -24,17 +24,23 @@ export const NomCmqField = chakra(
     return (
       <Flex flex={1}>
         <FormControl className={className} isInvalid={!!errors.nomCmq}>
-          <Flex direction={"column"}>
-            <FormLabel>Précisez le campus</FormLabel>
-            <Input
-              w="xs"
-              bgColor={"white"}
-              border={"1px solid"}
-              required
-              {...register("nomCmq", {
-                shouldUnregister: true,
-                disabled: disabled,
-              })}
+          <FormLabel>Précisez le campus</FormLabel>
+          <Flex direction={"row"} gap={2}>
+            <Controller
+              name="nomCmq"
+              control={control}
+              rules={{ required: "Ce champ est obligatoire" }}
+              render={({ field: { onChange, value, name } }) => (
+                <CampusAutocompleteInput
+                  name={name}
+                  active={!disabled}
+                  inError={!!errors.nomCmq}
+                  defaultValue={{ label: value, value: value ?? "" }}
+                  onChange={(v) => {
+                    onChange(v?.value);
+                  }}
+                />
+              )}
             />
           </Flex>
           {errors.nomCmq && (

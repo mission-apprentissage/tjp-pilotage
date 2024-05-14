@@ -28,6 +28,6 @@ export const ObservationsSection = ({
       </Flex>
     </Heading>
     <Divider pt="4" mb="4" />
-    <CommentaireField disabled={disabled} maxW={752} />
+    <CommentaireField disabled={disabled} />
   </Flex>
 );

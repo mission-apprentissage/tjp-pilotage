@@ -28,11 +28,6 @@ export const searchDisciplineQuery = async ({ search }: { search: string }) => {
             )
           ),
         ]),
-        eb.or([
-          eb("discipline.dateFermeture", "is", null),
-          eb("discipline.dateFermeture", ">", sql<Date>`now()`),
-        ]),
-        eb("discipline.dateOuverture", "<", sql<Date>`now()`),
       ])
     )
     .limit(60)

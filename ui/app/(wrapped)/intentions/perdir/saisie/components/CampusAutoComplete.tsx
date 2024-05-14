@@ -1,10 +1,10 @@
 import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
-import AsyncCreatableSelect from "react-select/async-creatable";
+import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
-export const FiliereAutoCompleteInput = ({
+export const CampusAutocompleteInput = ({
   name,
   defaultValue,
   active,
@@ -16,7 +16,7 @@ export const FiliereAutoCompleteInput = ({
   active?: boolean;
   inError: boolean;
   onChange: (
-    value?: (typeof client.infer)["[GET]/filiere/search/:search"][number]
+    value?: (typeof client.infer)["[GET]/campus/search/:search"][number]
   ) => void;
 }) => {
   const selectStyle = {
@@ -35,7 +35,7 @@ export const FiliereAutoCompleteInput = ({
   };
 
   return (
-    <AsyncCreatableSelect
+    <AsyncSelect
       instanceId={useId()}
       name={name}
       styles={selectStyle}
@@ -50,12 +50,12 @@ export const FiliereAutoCompleteInput = ({
         defaultValue &&
         ({
           ...defaultValue,
-        } as (typeof client.infer)["[GET]/filiere/search/:search"][number])
+        } as (typeof client.infer)["[GET]/campus/search/:search"][number])
       }
       loadOptions={(inputValue: string) => {
         if (inputValue.length >= 1)
           return client
-            .ref("[GET]/filiere/search/:search")
+            .ref("[GET]/campus/search/:search")
             .query({ params: { search: inputValue } });
       }}
       loadingMessage={({ inputValue }) =>
@@ -65,11 +65,10 @@ export const FiliereAutoCompleteInput = ({
       }
       isClearable={true}
       noOptionsMessage={({ inputValue }) =>
-        inputValue ? "Pas de filière correspondante" : "Commencez à écrire..."
+        inputValue ? "Pas de campus correspondant" : "Commencez à écrire..."
       }
-      placeholder="Filière"
+      placeholder="Nom"
       isDisabled={active === false}
-      formatCreateLabel={(inputValue) => `Créer la filière "${inputValue}"`}
     />
   );
 };

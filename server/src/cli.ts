@@ -179,7 +179,7 @@ cli
       ...getImports("rome"),
       ...getImports("metier"),
       ...getImports("formation_rome"),
-      ...getImports("n_matiere_"),
+      ...getImports("discipline"),
     };
 
     if (filename) {

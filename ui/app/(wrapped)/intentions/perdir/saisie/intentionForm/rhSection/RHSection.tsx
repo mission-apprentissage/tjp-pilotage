@@ -4,7 +4,7 @@ import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { QuestionBlock } from "../../components/QuestionBlock";
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
@@ -64,7 +64,7 @@ export const RHSection = ({
         </Flex>
       </Heading>
       <Divider pt="4" mb="4" />
-      <Flex gap={6} mb="6" direction={"column"}>
+      <Flex gap={6} mb="4" direction={"column"}>
         <Heading as="h3" fontSize={"14px"} fontWeight={700} mb={2}>
           Sur le plan des ressources humaines, le projet implique t-il :{" "}
         </Heading>

@@ -5,7 +5,7 @@ import { useFormContext } from "react-hook-form";
 import {
   isTypeColoration,
   isTypeFermeture,
-} from "../../../../utils/typeDemandeUtils";
+} from "../../../../../utils/typeDemandeUtils";
 import { CapaciteField } from "../../../components/CapaciteField";
 import { IntentionForms } from "../../defaultFormValues";
 

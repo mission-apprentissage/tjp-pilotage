@@ -2,10 +2,11 @@ import { chakra, Td } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { formatCommuneLibelleWithCodeDepartement } from "@/app/(wrapped)/utils/formatLibelle";
+import { GraphWrapper } from "@/components/GraphWrapper";
+import { TableBadge } from "@/components/TableBadge";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { TableBadge } from "../../../../../components/TableBadge";
-import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
 import {
   getMotifLabel,
   MotifCampagne,
@@ -126,7 +127,10 @@ export const LineContent = ({
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
         bgColor={getCellColor("commune")}
       >
-        {demande.commune}
+        {formatCommuneLibelleWithCodeDepartement({
+          commune: demande.commune,
+          codeDepartement: demande.codeDepartement,
+        })}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

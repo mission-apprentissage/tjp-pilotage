@@ -61,7 +61,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
       libelleFCIL: "Libellé FCIL",
       amiCma: "AMI/CMA ?",
       amiCmaValide: "Financement AMI/CMA validé ?",
-      amiCmaEnCoursValidation: "Financement AMI/CMA en cours de validation ?",
+      amiCmaEnCoursValidation: "Demande de financement AMI/CMA en cours ?",
       amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
       commentaire: "Commentaire",
       numero: "N° demande",
@@ -109,8 +109,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     },
   },
   // Hébergement
-  ["hébergement"]: {
-    color: "#FEEF7C",
+  ["hébergement et restauration"]: {
+    color: "#FEE7FC",
     cellColor: "#FEF3FD",
     options: {
       augmentationCapaciteAccueilHebergement:
@@ -216,8 +216,8 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     },
   },
   // Hébergement
-  ["hébergement"]: {
-    color: "#FEEF7C",
+  ["hébergement et restauration"]: {
+    color: "#FEE7FC",
     options: {
       augmentationCapaciteAccueilHebergement:
         "Besoin d'augmentation de la capacité d'hébergement ?",

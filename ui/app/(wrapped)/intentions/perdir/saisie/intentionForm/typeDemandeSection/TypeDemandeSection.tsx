@@ -35,7 +35,7 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <TypeDemandeField disabled={disabled} maxWidth="752px" />
+      <TypeDemandeField disabled={disabled} />
       <CapaciteSection disabled={disabled} />
     </Flex>
   );
