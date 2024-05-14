@@ -4,7 +4,11 @@ import { VoieEnum } from "shared/enum/voieEnum";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
-import { isRegionVisible } from "../../../../utils/isIntentionVisible";
+import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
+import {
+  isIntentionVisible,
+  isRegionVisible,
+} from "../../../../utils/isIntentionVisible";
 import { Filters } from "../getDemandesRestitutionIntentions.usecase";
 
 export const getFilters = async ({
@@ -175,7 +179,7 @@ export const getFilters = async ({
     .execute();
 
   const filtersBase = kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("region", "region.codeRegion", "demande.codeRegion")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
@@ -193,6 +197,8 @@ export const getFilters = async ({
     .leftJoin("departement", "departement.codeRegion", "demande.codeRegion")
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
+    .where(isDemandeNotDeleted)
+    .where(isIntentionVisible({ user }))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
@@ -426,11 +432,11 @@ export const getFilters = async ({
     ],
     statuts: [
       {
-        label: "Projet",
+        label: "Brouillon",
         value: DemandeStatutEnum.draft,
       },
       {
-        label: "Validée",
+        label: "Acceptée",
         value: DemandeStatutEnum.submitted,
       },
       {

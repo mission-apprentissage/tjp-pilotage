@@ -1,5 +1,4 @@
 import { chakra, Td } from "@chakra-ui/react";
-import { CSSProperties } from "react";
 
 import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatCommuneLibelleWithCodeDepartement } from "@/app/(wrapped)/utils/formatLibelle";
@@ -62,14 +61,12 @@ const handleMotifRefusLabel = ({
 const ConditionalTd = chakra(
   ({
     className,
-    style,
     colonneFilters,
     colonne,
     children,
     isNumeric = false,
   }: {
     className?: string;
-    style?: CSSProperties;
     colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
     colonne: keyof typeof STATS_DEMANDES_COLUMNS;
     children: React.ReactNode;
@@ -78,11 +75,11 @@ const ConditionalTd = chakra(
     if (colonneFilters.includes(colonne))
       return (
         <Td
-          style={style}
           className={className}
           isNumeric={isNumeric}
           border={"none"}
           whiteSpace={"normal"}
+          _groupHover={{ bgColor: "blueecume.850 !important" }}
         >
           {children}
         </Td>
@@ -111,7 +108,6 @@ export const LineContent = ({
         maxW={300}
         left={0}
         position="sticky"
-        bg="white"
         zIndex={1}
         bgColor={getCellColor("libelleEtablissement")}
       >
@@ -122,7 +118,6 @@ export const LineContent = ({
         colonne={"commune"}
         left={300}
         position="sticky"
-        bg="white"
         zIndex={1}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
         bgColor={getCellColor("commune")}
@@ -210,6 +205,22 @@ export const LineContent = ({
         bgColor={getCellColor("differenceCapaciteApprentissage")}
       >
         {demande.differenceCapaciteApprentissage ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"capaciteScolaireColoree"}
+        isNumeric
+        bgColor={getCellColor("capaciteScolaireColoree")}
+      >
+        {demande.capaciteScolaireColoree ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"capaciteApprentissageColoree"}
+        isNumeric
+        bgColor={getCellColor("capaciteApprentissageColoree")}
+      >
+        {demande.capaciteApprentissageColoree ?? 0}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
