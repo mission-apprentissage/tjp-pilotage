@@ -16,8 +16,8 @@ import {
   getMotifsRefusTypeDemande,
   MotifRefusLabel,
   MOTIFS_REFUS_LABELS,
-} from "../../../utils/motifRefusDemandeUtils";
-import { TypeDemande } from "../../../utils/typeDemandeUtils";
+} from "../../../../utils/motifRefusDemandeUtils";
+import { TypeDemande } from "../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 
 export const MotifRefusBlock = chakra(

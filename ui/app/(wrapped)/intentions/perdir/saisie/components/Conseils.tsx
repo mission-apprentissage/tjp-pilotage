@@ -1,7 +1,7 @@
 import { Text } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { getTypeDemandeExemple } from "../../utils/typeDemandeUtils";
+import { getTypeDemandeExemple } from "../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../intentionForm/defaultFormValues";
 import { InfoBox } from "./InfoBox";
 

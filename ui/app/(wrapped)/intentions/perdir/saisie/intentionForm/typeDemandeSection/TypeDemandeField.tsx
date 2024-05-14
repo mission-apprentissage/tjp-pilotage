@@ -21,7 +21,7 @@ import {
   isTypeFermeture,
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
-} from "../../../utils/typeDemandeUtils";
+} from "../../../../utils/typeDemandeUtils";
 import { IntentionForms } from "../defaultFormValues";
 import { CampagneContext } from "../IntentionForm";
 

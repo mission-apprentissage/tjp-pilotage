@@ -5,6 +5,7 @@ import { Multiselect } from "@/components/Multiselect";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import {
   DemandesRestitutionIntentions,
@@ -99,7 +100,13 @@ export const SecondaryFiltersSection = ({
               onChange={(selected) =>
                 handleFilters("codeDepartement", selected)
               }
-              options={data?.filters.departements}
+              options={data?.filters.departements.map((departement) => ({
+                label: formatDepartementLibelleWithCodeDepartement({
+                  libelleDepartement: departement.label,
+                  codeDepartement: departement.value,
+                }),
+                value: departement.value,
+              }))}
               value={activeFilters.codeDepartement ?? []}
               disabled={data?.filters.departements.length === 0}
             >

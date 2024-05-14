@@ -10,7 +10,7 @@ import {
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/demandeValidators/validators";
 
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
@@ -34,9 +34,7 @@ export const CmqImpliqueField = chakra(
         isInvalid={!!errors.cmqImplique}
         isRequired
       >
-        <FormLabel>
-          Un CMQ (Campus des métiers et des qualifications) est-il impliqué ?
-        </FormLabel>
+        <FormLabel>Un CMQ est-il impliqué ?</FormLabel>
         <Controller
           name="cmqImplique"
           control={control}

@@ -40,7 +40,7 @@ export const AmiCmaEnCoursValidationField = chakra(
         className={className}
         isInvalid={!!errors.amiCmaEnCoursValidation}
       >
-        <FormLabel>En cours de validation ?</FormLabel>
+        <FormLabel>Demande en cours ?</FormLabel>
         <Controller
           name="amiCmaEnCoursValidation"
           control={control}
