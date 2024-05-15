@@ -1,4 +1,4 @@
-import { Flex, Tag } from "@chakra-ui/react";
+import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
@@ -13,20 +13,48 @@ const OptionLabel = ({
   option: (typeof client.infer)["[GET]/diplome/search/:search"][number];
 }) => {
   return (
-    <Flex>
-      {option.label}{" "}
+    <Flex gap={2}>
+      <Text
+        textOverflow={"ellipsis"}
+        overflow={"hidden"}
+        maxW={"75%"}
+        w="fit-content"
+      >
+        {option.label}
+      </Text>
       {option.isSpecialite && (
-        <Tag colorScheme={"blue"} size={"md"} ms={2}>
+        <Tag
+          colorScheme={"blue"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
           Spécialité
         </Tag>
       )}
       {option.isOption && (
-        <Tag colorScheme={"blue"} size={"md"} ms={2}>
+        <Tag
+          colorScheme={"blue"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
           Option
         </Tag>
       )}
       {option.dateFermeture && (
-        <Tag colorScheme={"red"} size={"md"} ms={2}>
+        <Tag
+          colorScheme={"red"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
           Fermeture au {option.dateFermeture}
         </Tag>
       )}
