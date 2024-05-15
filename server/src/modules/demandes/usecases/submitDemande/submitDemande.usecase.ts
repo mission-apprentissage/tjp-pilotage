@@ -30,13 +30,13 @@ const validateDemande = (demande: Demande) => {
 const logDemande = (demande?: { statut: string }) => {
   if (!demande) return;
   switch (demande.statut) {
-    case DemandeStatutEnum.draft:
+    case DemandeStatutEnum["proposition"]:
       logger.info("Projet de demande enregistré", { demande: demande });
       break;
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       logger.info("Demande validée", { demande: demande });
       break;
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       logger.info("Demande refusée", { demande: demande });
       break;
   }

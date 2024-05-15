@@ -51,7 +51,7 @@ export const InformationsBlock = ({
       await client
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
-        .then(() => push("/intentions/saisie?action=deleted"));
+        .then(() => push("/intentions/saisie?action=supprimée"));
     },
   });
 
@@ -125,7 +125,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("statut", DemandeStatutEnum.refused);
+                        setValue("statut", DemandeStatutEnum["refusée"]);
                         onClose();
                       }}
                       variant={"secondary"}

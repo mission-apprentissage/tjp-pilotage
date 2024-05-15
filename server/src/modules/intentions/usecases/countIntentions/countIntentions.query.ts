@@ -35,37 +35,54 @@ export const countIntentionsQuery = async ({
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum.draft}
-          THEN 1
-          ELSE 0
-          END
-        ),
-        0
-      )`.as(DemandeStatutEnum.draft)
-    )
-    .select((eb) =>
-      sql<number>`COALESCE(
-        SUM(
           CASE WHEN ${eb.ref("intention.statut")} = ${
-            DemandeStatutEnum.submitted
+            DemandeStatutEnum["proposition"]
           }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum.submitted)
+      )`.as(DemandeStatutEnum["proposition"])
     )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("intention.statut")} = ${DemandeStatutEnum.refused}
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["demande validée"]
+          }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum.refused)
+      )`.as(DemandeStatutEnum["demande validée"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["refusée"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["refusée"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["brouillon"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["brouillon"])
     )
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))

@@ -27,19 +27,19 @@ import { UaiBlock } from "./UaiBlock";
 
 const TagDemande = ({ statut }: { statut?: string }) => {
   switch (statut) {
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       return (
         <Tag size="md" colorScheme={"green"} ml={4}>
           Demande validée
         </Tag>
       );
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       return (
         <Tag size="md" colorScheme={"red"} ml={4}>
           Demande refusée
         </Tag>
       );
-    case DemandeStatutEnum.draft:
+    case DemandeStatutEnum["proposition"]:
     default:
       return (
         <Tag size="md" colorScheme={"yellow"} ml={4}>

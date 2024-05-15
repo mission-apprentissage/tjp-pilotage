@@ -8,6 +8,7 @@ import {
   Center,
   Container,
   Flex,
+  IconButton,
   Table,
   TableContainer,
   Tag,
@@ -19,6 +20,7 @@ import {
   Tooltip,
   Tr,
   useToast,
+  useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import NextLink from "next/link";
@@ -27,13 +29,17 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { formatStatut } from "../../utils/statutUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
@@ -44,29 +50,19 @@ import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
 
-const TagDemande = ({ statut }: { statut: string }) => {
-  switch (statut) {
-    case DemandeStatutEnum.draft:
-      return (
-        <Tag size="sm" colorScheme={"orange"}>
-          Projet de demande
-        </Tag>
-      );
-    case DemandeStatutEnum.submitted:
-      return (
-        <Tag size="sm" colorScheme={"green"}>
-          Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum.refused:
-      return (
-        <Tag size="sm" colorScheme={"red"}>
-          Demande refusée
-        </Tag>
-      );
-    default:
-      return <></>;
-  }
+const TagDemande = ({ statut }: { statut: DemandeStatutType }) => {
+  const getColorStatut = (statut: DemandeStatutType) => {
+    if (statut === DemandeStatutEnum["proposition"]) return "pink";
+    if (statut === DemandeStatutEnum["brouillon"]) return "orange";
+    if (statut === DemandeStatutEnum["demande validée"]) return "green";
+    if (statut === DemandeStatutEnum["refusée"]) return "red";
+  };
+
+  return (
+    <Tag size="sm" colorScheme={getColorStatut(statut)}>
+      {formatStatut(statut)}
+    </Tag>
+  );
 };
 
 export const PageClient = () => {
@@ -79,7 +75,7 @@ export const PageClient = () => {
     order?: Partial<Order>;
     page?: string;
     campagne?: string;
-    action?: "draft" | "submitted" | "refused";
+    action?: Exclude<DemandeStatutType, "supprimée">;
   } = qs.parse(queryParams.toString());
 
   const filters = searchParams.filters ?? {};
@@ -161,6 +157,7 @@ export const PageClient = () => {
     ];
     return colors[userName.charCodeAt(1) % colors.length];
   };
+  const bluefrance113 = useToken("colors", "bluefrance.113");
 
   const { mutateAsync: importDemande, isLoading: isSubmitting } = client
     .ref("[POST]/intention/import/:numero")
@@ -292,6 +289,7 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="updatedAt" />
                       {INTENTIONS_COLUMNS.updatedAt}
                     </Th>
+                    <Th>actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -375,6 +373,31 @@ export const PageClient = () => {
                         </Td>
                         <Td textAlign={"center"}>
                           {new Date(intention.updatedAt).toLocaleString()}
+                        </Td>
+                        <Td textAlign={"center"}>
+                          <Flex>
+                            <IconButton
+                              as={NextLink}
+                              variant="link"
+                              href={`/intentions/perdir/synthese/${intention.numero}`}
+                              onClick={(e) => {
+                                e.preventDefault();
+                                e.stopPropagation();
+                                router.push(
+                                  `/intentions/perdir/synthese/${intention.numero}`
+                                );
+                              }}
+                              aria-label="Voir la demande"
+                              icon={
+                                <Icon
+                                  icon="ri:eye-line"
+                                  width={"24px"}
+                                  color={bluefrance113}
+                                />
+                              }
+                              me={"auto"}
+                            />
+                          </Flex>
                         </Td>
                         {data?.campagne.statut ===
                           CampagneStatutEnum["terminée"] && (

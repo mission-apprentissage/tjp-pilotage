@@ -2,7 +2,7 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 

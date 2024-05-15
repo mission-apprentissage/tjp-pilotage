@@ -57,7 +57,7 @@ export const createDemandeQuery = ({
       compensationRentreeScolaire: null,
       amiCma: null,
       createurId: user.id,
-      statut: DemandeStatutEnum.draft,
+      statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(demande),
     })
     .returning("id")

@@ -83,19 +83,19 @@ const getStatsPilotageIntentionsFactory =
   async (activeFilters: Filters) => {
     const currentCampagne = await getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
-    const [filters, draft, submitted, all] = await Promise.all([
+    const [filters, propositions, validees, all] = await Promise.all([
       deps.getFiltersQuery({
         ...activeFilters,
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum.draft,
+        statut: DemandeStatutEnum["proposition"],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum.submitted,
+        statut: DemandeStatutEnum["demande validée"],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
@@ -105,9 +105,13 @@ const getStatsPilotageIntentionsFactory =
     ]);
 
     return {
-      draft: formatResult(draft, activeFilters.order, activeFilters.orderBy),
-      submitted: formatResult(
-        submitted,
+      ["proposition"]: formatResult(
+        propositions,
+        activeFilters.order,
+        activeFilters.orderBy
+      ),
+      ["demande validée"]: formatResult(
+        validees,
         activeFilters.order,
         activeFilters.orderBy
       ),

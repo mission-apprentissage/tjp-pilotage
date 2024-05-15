@@ -16,8 +16,8 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 
@@ -29,7 +29,6 @@ import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/I
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
 import { RHSection } from "./rhSection/RHSection";
-import { StatusBlock } from "./statutSection/StatusBlock";
 import { TravauxEtEquipementsSection } from "./travauxEtEquipementsSection/TravauxEtEquipementsSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -55,7 +54,7 @@ export const InformationsBlock = ({
       await client
         .ref("[DELETE]/demande/:numero")
         .query({ params: { numero: formId } })
-        .then(() => push("/intentions/saisie?action=deleted"));
+        .then(() => push("/intentions/saisie?action=supprimée"));
     },
   });
 
@@ -157,9 +156,6 @@ export const InformationsBlock = ({
       {formId && (
         <>
           <SectionBlock>
-            <StatusBlock disabled={disabled} />
-          </SectionBlock>
-          <SectionBlock>
             <Flex justifyContent={"space-between"} flexDir={"row"}>
               <Button
                 leftIcon={<DeleteIcon />}
@@ -196,7 +192,7 @@ export const InformationsBlock = ({
                       colorScheme="blue"
                       mr={3}
                       onClick={() => {
-                        setValue("statut", DemandeStatutEnum.refused);
+                        setValue("statut", DemandeStatutEnum["refusée"]);
                         onClose();
                       }}
                       variant={"secondary"}

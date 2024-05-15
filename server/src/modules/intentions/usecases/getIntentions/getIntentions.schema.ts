@@ -1,3 +1,4 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const IntentionsItem = z.object({
@@ -74,7 +75,7 @@ const IntentionsItem = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: z.string(),
+  statut: DemandeStatutZodType,
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre
@@ -88,7 +89,7 @@ const IntentionsItem = z.object({
 
 export const getIntentionsSchema = {
   querystring: z.object({
-    statut: z.enum(["draft", "submitted", "refused"]).optional(),
+    statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: IntentionsItem.keyof().optional(),

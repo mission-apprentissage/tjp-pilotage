@@ -63,7 +63,59 @@ export interface DataEtablissement {
   codeDepartement: string | null;
   codeAcademie: string | null;
   codeRegion: string | null;
-  typeUai: "1ORD" | "9999" | "ADLE" | "AGRI" | "AIDE" | "APPL" | "CDES" | "CDP" | "CFA" | "CFIS" | "CFPA" | "CLG" | "CNED" | "CONT" | "CSAV" | "DIV" | "EFE" | "EME" | "EREA" | "ERPD" | "ETRA" | "EUR" | "EXP" | "FORP" | "GRET" | "HOSP" | "IEN" | "ING" | "IO" | "IUFM" | "JS" | "LP" | "LYC" | "ONIS" | "OUS" | "PBAC" | "PRES" | "PRSU" | "RECH" | "RECT" | "SDEN" | "SEP" | "SERV" | "SES" | "SET" | "SGT" | "SMUT" | "SOC" | "SPEC" | "SSEF" | "TSGE" | "UNIV";
+  typeUai:
+    | "1ORD"
+    | "9999"
+    | "ADLE"
+    | "AGRI"
+    | "AIDE"
+    | "APPL"
+    | "CDES"
+    | "CDP"
+    | "CFA"
+    | "CFIS"
+    | "CFPA"
+    | "CLG"
+    | "CNED"
+    | "CONT"
+    | "CSAV"
+    | "DIV"
+    | "EFE"
+    | "EME"
+    | "EREA"
+    | "ERPD"
+    | "ETRA"
+    | "EUR"
+    | "EXP"
+    | "FORP"
+    | "GRET"
+    | "HOSP"
+    | "IEN"
+    | "ING"
+    | "IO"
+    | "IUFM"
+    | "JS"
+    | "LP"
+    | "LYC"
+    | "ONIS"
+    | "OUS"
+    | "PBAC"
+    | "PRES"
+    | "PRSU"
+    | "RECH"
+    | "RECT"
+    | "SDEN"
+    | "SEP"
+    | "SERV"
+    | "SES"
+    | "SET"
+    | "SGT"
+    | "SMUT"
+    | "SOC"
+    | "SPEC"
+    | "SSEF"
+    | "TSGE"
+    | "UNIV";
 }
 
 export interface DataFormation {
@@ -94,7 +146,16 @@ export interface Demande {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted";
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée";
   codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
@@ -154,8 +215,6 @@ export interface DiplomeProfessionnel {
 export interface Discipline {
   codeDiscipline: string;
   libelleDiscipline: string | null;
-  dateOuverture: Timestamp | null;
-  dateFermeture: Timestamp | null;
 }
 
 export interface Dispositif {
@@ -315,7 +374,16 @@ export interface Intention {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted";
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée";
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string;
@@ -387,7 +455,17 @@ export interface LatestDemandeIntentionNonMaterializedView {
   amiCmaValide: boolean | null;
   amiCmaEnCoursValidation: boolean | null;
   amiCmaValideAnnee: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée"
+    | null;
   commentaire: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
@@ -456,7 +534,17 @@ export interface LatestDemandeNonMaterializedView {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée"
+    | null;
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string | null;
@@ -514,7 +602,17 @@ export interface LatestIntentionNonMaterializedView {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée"
+    | null;
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string | null;

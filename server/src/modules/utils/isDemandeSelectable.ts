@@ -12,7 +12,7 @@ export const isDemandeSelectable =
     const { filter, draftFilter } = getDemandeSelectableFilters(user);
     return eb.or([
       eb.and([
-        eb("demande.statut", "=", DemandeStatutEnum.draft),
+        eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
         draftFilter.userId
           ? eb("demande.createurId", "=", draftFilter.userId)
           : sql<boolean>`true`,
@@ -21,7 +21,7 @@ export const isDemandeSelectable =
           : sql<boolean>`true`,
       ]),
       eb.and([
-        eb("demande.statut", "!=", DemandeStatutEnum.draft),
+        eb("demande.statut", "!=", DemandeStatutEnum["proposition"]),
         filter.codeRegion
           ? eb("demande.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
@@ -50,14 +50,14 @@ const getDemandeSelectableFilters = (user?: RequestUser) => {
 };
 
 export const isDemandeNotDeleted = (eb: ExpressionBuilder<DB, "demande">) =>
-  eb("demande.statut", "!=", DemandeStatutEnum.deleted);
+  eb("demande.statut", "!=", DemandeStatutEnum["supprimée"]);
 
 export const isDemandeNotDeletedOrRefused = (
   eb: ExpressionBuilder<DB, "demande">
 ) =>
   eb("demande.statut", "not in", [
-    DemandeStatutEnum.deleted,
-    DemandeStatutEnum.refused,
+    DemandeStatutEnum["supprimée"],
+    DemandeStatutEnum["refusée"],
   ]);
 
 export const isIntentionSelectable =
@@ -66,7 +66,7 @@ export const isIntentionSelectable =
     const { filter, draftFilter } = getIntentionSelectableFilters(user);
     return eb.or([
       eb.and([
-        eb("intention.statut", "=", DemandeStatutEnum.draft),
+        eb("intention.statut", "=", DemandeStatutEnum["proposition"]),
         draftFilter.uais
           ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai)))
           : sql<boolean>`true`,
@@ -75,7 +75,7 @@ export const isIntentionSelectable =
           : sql<boolean>`true`,
       ]),
       eb.and([
-        eb("intention.statut", "!=", DemandeStatutEnum.draft),
+        eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
         filter.uais
           ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai)))
           : sql<boolean>`true`,
@@ -109,12 +109,12 @@ const getIntentionSelectableFilters = (
 };
 
 export const isIntentionNotDeleted = (eb: ExpressionBuilder<DB, "intention">) =>
-  eb("intention.statut", "!=", DemandeStatutEnum.deleted);
+  eb("intention.statut", "!=", DemandeStatutEnum["supprimée"]);
 
 export const isIntentionNotDeletedOrRefused = (
   eb: ExpressionBuilder<DB, "intention">
 ) =>
   eb("intention.statut", "not in", [
-    DemandeStatutEnum.deleted,
-    DemandeStatutEnum.refused,
+    DemandeStatutEnum["supprimée"],
+    DemandeStatutEnum["refusée"],
   ]);

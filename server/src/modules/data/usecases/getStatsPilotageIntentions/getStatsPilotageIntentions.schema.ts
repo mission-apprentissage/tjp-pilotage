@@ -63,8 +63,8 @@ export const getStatsPilotageIntentionsSchema = {
   querystring: QuerySchema,
   response: {
     200: z.object({
-      draft: StatsTransfoSchema,
-      submitted: StatsTransfoSchema,
+      ["proposition"]: StatsTransfoSchema,
+      ["demande validée"]: StatsTransfoSchema,
       all: StatsTransfoSchema,
       campagne: z.object({
         annee: z.string(),

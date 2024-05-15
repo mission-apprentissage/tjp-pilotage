@@ -28,7 +28,10 @@ import NextLink from "next/link";
 import { usePlausible } from "next-plausible";
 import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
@@ -62,7 +65,7 @@ const generateRestitutionUrl = (
   scope?: SelectedScope,
   filters?: {
     tauxPression?: "faible" | "eleve";
-    statut?: "draft" | "submitted";
+    statut?: Extract<DemandeStatutType, "demande validée" | "proposition">;
     type?: "ouverture" | "fermeture";
     order?: Partial<OrderFormationsPilotageIntentions>;
   }
@@ -126,7 +129,7 @@ export const QuadrantSection = ({
       order: undefined,
     } as {
       tauxPression?: "eleve" | "faible";
-      statut?: "submitted" | "draft";
+      statut?: Extract<DemandeStatutType, "demande validée" | "proposition">;
       type?: "ouverture" | "fermeture";
       order?: Partial<OrderFormationsPilotageIntentions>;
     },
@@ -561,16 +564,22 @@ export const QuadrantSection = ({
                     setFilters({
                       ...filters,
                       statut: (v || undefined) as
-                        | "submitted"
-                        | "draft"
+                        | Extract<
+                            DemandeStatutType,
+                            "demande validée" | "proposition"
+                          >
                         | undefined,
                     })
                   }
                   value={filters.statut ?? ""}
                 >
                   <Radio value="">Toutes</Radio>
-                  <Radio value={DemandeStatutEnum.submitted}>Validées</Radio>
-                  <Radio value={DemandeStatutEnum.draft}>Projets</Radio>
+                  <Radio value={DemandeStatutEnum["demande validée"]}>
+                    Validées
+                  </Radio>
+                  <Radio value={DemandeStatutEnum["proposition"]}>
+                    Projets
+                  </Radio>
                 </RadioGroup>
               </FormControl>
             </Box>

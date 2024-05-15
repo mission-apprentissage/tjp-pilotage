@@ -7,9 +7,9 @@ export const countDemandesSchema = {
   response: {
     200: z.object({
       total: z.number(),
-      draft: z.number(),
-      submitted: z.number(),
-      refused: z.number(),
+      ["proposition"]: z.number(),
+      ["demande validée"]: z.number(),
+      ["refusée"]: z.number(),
     }),
   },
 };

@@ -1,12 +1,17 @@
 import { z } from "zod";
 
-export const demandeStatut = z.enum([
-  "draft",
-  "submitted",
-  "refused",
-  "deleted",
+export const DemandeStatutZodType = z.enum([
+  "proposition",
+  "demande validée",
+  "refusée",
+  "supprimée",
+  "brouillon",
+  "dossier complet",
+  "dossier incomplet",
+  "projet de demande",
+  "prêt pour le vote",
 ]);
 
-export const DemandeStatutEnum = demandeStatut.Enum;
+export const DemandeStatutEnum = DemandeStatutZodType.Enum;
 
-export type DemandeStatut = z.infer<typeof demandeStatut>;
+export type DemandeStatutType = z.infer<typeof DemandeStatutZodType>;

@@ -1,3 +1,4 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const EtablissementMetadataSchema = z
@@ -91,7 +92,7 @@ const IntentionSchema = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: z.enum(["draft", "submitted", "refused"]).optional(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre

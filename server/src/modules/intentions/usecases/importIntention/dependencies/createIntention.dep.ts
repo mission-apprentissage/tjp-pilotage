@@ -50,7 +50,7 @@ export const createIntentionQuery = ({
       campagneId: campagne.id,
       amiCma: null,
       createurId: user.id,
-      statut: DemandeStatutEnum.draft,
+      statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(intention),
     })
     .returning("id")
