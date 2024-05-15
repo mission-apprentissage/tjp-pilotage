@@ -1,4 +1,5 @@
 import { Scope } from "shared";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -58,7 +59,9 @@ export type SelectedScope = {
   type: Scope;
   value?: string;
 };
-export type Status = "submitted" | "draft" | "all";
+export type Status =
+  | Extract<DemandeStatutType, "demande validée" | "proposition">
+  | "all";
 export type Indicateur =
   | "tauxTransformation"
   | "countDemande"

@@ -10,8 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeColoration } from "shared/demandeValidators/validators";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
+import { isTypeColoration } from "shared/validators/demandeValidators";
 
 import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 import { MotifCampagne } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";

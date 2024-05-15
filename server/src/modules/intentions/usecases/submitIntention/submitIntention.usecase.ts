@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { demandeValidators, getPermissionScope, guardScope } from "shared";
+import { getPermissionScope, guardScope, intentionValidators } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
@@ -19,7 +19,7 @@ type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 
 const validateDemande = (intention: Intention) => {
   let errors: Record<string, string> = {};
-  for (const [key, validator] of Object.entries(demandeValidators)) {
+  for (const [key, validator] of Object.entries(intentionValidators)) {
     const error = validator(intention);
     if (!error) continue;
     errors = { ...errors, [key]: error };
@@ -30,15 +30,15 @@ const validateDemande = (intention: Intention) => {
 const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
-    case DemandeStatutEnum.draft:
+    case DemandeStatutEnum["proposition"]:
       logger.info("Projet de demande enregistré", {
         intention: intention,
       });
       break;
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       logger.info("Demande validée", { intention: intention });
       break;
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       logger.info("Demande refusée", { intention: intention });
       break;
   }

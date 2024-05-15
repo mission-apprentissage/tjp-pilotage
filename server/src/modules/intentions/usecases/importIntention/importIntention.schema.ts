@@ -1,4 +1,4 @@
-import { demandeStatut } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const EtablissementMetadataSchema = z
@@ -31,7 +31,7 @@ const MetadataSchema = z.object({
 const IntentionSchema = z.object({
   numero: z.string(),
   createdAt: z.string(),
-  statut: demandeStatut.optional(),
+  statut: DemandeStatutZodType.optional(),
   uai: z.string(),
   cfd: z.string(),
   codeDispositif: z.string(),

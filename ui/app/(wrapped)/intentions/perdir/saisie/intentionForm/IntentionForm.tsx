@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   Grid,
   GridItem,
   UnorderedList,
@@ -28,9 +29,9 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -90,16 +91,16 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case DemandeStatutEnum.draft:
+        case DemandeStatutEnum["proposition"]:
           message = "Projet de demande enregistré avec succès";
           break;
-        case DemandeStatutEnum.submitted:
+        case DemandeStatutEnum["demande validée"]:
           message = "Demande validée avec succès";
           break;
-        case DemandeStatutEnum.refused:
+        case DemandeStatutEnum["refusée"]:
           message = "Demande refusée avec succès";
           break;
-        case DemandeStatutEnum.deleted:
+        case DemandeStatutEnum["supprimée"]:
           message = "Demande supprimée avec succès";
           break;
       }
@@ -282,7 +283,36 @@ export const IntentionForm = ({
                       disabled={isFormDisabled}
                       campagne={campagne}
                       footerActions={
-                        <Box justifyContent={"center"} ref={statusComponentRef}>
+                        <Flex direction="row" gap={4} ref={statusComponentRef}>
+                          {defaultValues.statut !=
+                            DemandeStatutEnum.proposition && (
+                            <Button
+                              isDisabled={
+                                disabled ||
+                                isActionsDisabled ||
+                                campagne?.statut !==
+                                  CampagneStatutEnum["en cours"]
+                              }
+                              isLoading={isSubmitting}
+                              variant="draft"
+                              onClick={handleSubmit((values) =>
+                                submitDemande({
+                                  body: {
+                                    intention: {
+                                      numero: formId,
+                                      ...values,
+                                      statut: DemandeStatutEnum["brouillon"],
+                                      campagneId:
+                                        values.campagneId ?? campagne?.id,
+                                    },
+                                  },
+                                })
+                              )}
+                              leftIcon={<CheckIcon />}
+                            >
+                              Enregistrer en tant que brouillon
+                            </Button>
+                          )}
                           <Button
                             isDisabled={
                               disabled ||
@@ -300,7 +330,7 @@ export const IntentionForm = ({
                                     ...values,
                                     statut: formId
                                       ? values.statut
-                                      : DemandeStatutEnum.draft,
+                                      : DemandeStatutEnum["proposition"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -309,11 +339,9 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId
-                              ? "Sauvegarder les modifications"
-                              : "Enregistrer le projet de demande"}
+                            Soumettre ma demande
                           </Button>
-                        </Box>
+                        </Flex>
                       }
                     />
                     <Button

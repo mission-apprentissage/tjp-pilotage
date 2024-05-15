@@ -90,18 +90,47 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.submitted,
+              statut: DemandeStatutEnum["brouillon"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.submitted}</Text>
+            <Text fontWeight={"normal"}>{countDemandes?.["brouillon"]}</Text>
           }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.submitted
+              isRecapView && statut === DemandeStatutEnum["brouillon"]
+                ? "bold"
+                : "normal"
+            }
+          >
+            Brouillons
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["demande validée"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={"auto"}
+          rightIcon={
+            <Text fontWeight={"normal"}>
+              {countDemandes?.["demande validée"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["demande validée"]
                 ? "bold"
                 : "normal"
             }
@@ -117,21 +146,23 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.draft,
+              statut: DemandeStatutEnum["proposition"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
-          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
+          rightIcon={
+            <Text fontWeight={"normal"}>{countDemandes?.["proposition"]}</Text>
+          }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.draft
+              isRecapView && statut === DemandeStatutEnum["proposition"]
                 ? "bold"
                 : "normal"
             }
           >
-            Projets de demandes
+            Propositions
           </Text>
         </Button>
         <Button
@@ -142,18 +173,18 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.refused,
+              statut: DemandeStatutEnum["refusée"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.refused}</Text>
+            <Text fontWeight={"normal"}>{countDemandes?.["refusée"]}</Text>
           }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.refused
+              isRecapView && statut === DemandeStatutEnum["refusée"]
                 ? "bold"
                 : "normal"
             }

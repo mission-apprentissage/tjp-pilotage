@@ -27,9 +27,13 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
             value={value}
             disabled={disabled}
           >
-            <option value={DemandeStatutEnum.draft}>Projet de demande</option>
-            <option value={DemandeStatutEnum.submitted}>Validée</option>
-            <option value={DemandeStatutEnum.refused}>Refusée</option>
+            <option value={DemandeStatutEnum["proposition"]}>
+              Projet de demande
+            </option>
+            <option value={DemandeStatutEnum["demande validée"]}>
+              Validée
+            </option>
+            <option value={DemandeStatutEnum["refusée"]}>Refusée</option>
           </Select>
         )}
       />

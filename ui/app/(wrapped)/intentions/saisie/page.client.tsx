@@ -27,7 +27,10 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -46,19 +49,19 @@ const PAGE_SIZE = 30;
 
 const TagDemande = ({ statut }: { statut: string }) => {
   switch (statut) {
-    case DemandeStatutEnum.draft:
+    case DemandeStatutEnum["proposition"]:
       return (
         <Tag size="sm" colorScheme={"orange"}>
           Projet de demande
         </Tag>
       );
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       return (
         <Tag size="sm" colorScheme={"green"}>
           Demande validée
         </Tag>
       );
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       return (
         <Tag size="sm" colorScheme={"red"}>
           Demande refusée
@@ -79,7 +82,7 @@ export const PageClient = () => {
     order?: Partial<Order>;
     page?: string;
     campagne?: string;
-    action?: "draft" | "submitted" | "refused";
+    action?: Exclude<DemandeStatutType, "supprimée">;
   } = qs.parse(queryParams.toString());
 
   const filters = searchParams.filters ?? {};

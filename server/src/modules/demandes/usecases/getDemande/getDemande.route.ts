@@ -24,7 +24,7 @@ export const getDemandeRoute = (server: Server) => {
           user,
         });
         if (!demande) return response.status(404).send();
-        if (demande.statut === DemandeStatutEnum.deleted)
+        if (demande.statut === DemandeStatutEnum["supprimée"])
           throw Boom.forbidden();
 
         const scope = getPermissionScope(user.role, "intentions/ecriture");

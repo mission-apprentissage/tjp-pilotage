@@ -34,6 +34,15 @@ const secondary = defineStyle({
   },
 });
 
+const draft = defineStyle({
+  ...primary,
+  bg: "orangeterrebattue.645",
+  _hover: {
+    bg: "orangeterrebattue.645_hover",
+    _disabled: { bg: "orangeterrebattue.645" },
+  },
+});
+
 const createButton = defineStyle({
   ...commonButtonStyle,
   bg: "blueecume.400_hover",
@@ -112,6 +121,7 @@ export const buttonTheme = defineStyleConfig({
     createButton,
     externalLink,
     selectButton,
+    draft,
   },
   baseStyle: {},
 });

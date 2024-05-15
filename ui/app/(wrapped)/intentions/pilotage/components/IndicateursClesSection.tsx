@@ -370,7 +370,7 @@ export const IndicateursClesSection = ({
                       color="bluefrance.113"
                     >
                       {getPercentageDataOr(
-                        DemandeStatutEnum.submitted,
+                        DemandeStatutEnum["demande validée"],
                         "tauxTransformation"
                       )}
                     </Text>
@@ -382,7 +382,7 @@ export const IndicateursClesSection = ({
                     <ProgressBar
                       percentage={
                         (getScopedData(
-                          DemandeStatutEnum.submitted,
+                          DemandeStatutEnum["demande validée"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -393,7 +393,7 @@ export const IndicateursClesSection = ({
                       {`
                       ${(
                         (getScopedData(
-                          DemandeStatutEnum.submitted,
+                          DemandeStatutEnum["demande validée"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -415,7 +415,7 @@ export const IndicateursClesSection = ({
                       color="bluefrance.113"
                     >
                       {getPercentageDataOr(
-                        DemandeStatutEnum.draft,
+                        DemandeStatutEnum["proposition"],
                         "tauxTransformation"
                       )}
                     </Text>
@@ -427,7 +427,7 @@ export const IndicateursClesSection = ({
                     <ProgressBar
                       percentage={
                         (getScopedData(
-                          DemandeStatutEnum.draft,
+                          DemandeStatutEnum["proposition"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -438,7 +438,7 @@ export const IndicateursClesSection = ({
                       {`
                       ${(
                         (getScopedData(
-                          DemandeStatutEnum.draft,
+                          DemandeStatutEnum["proposition"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -488,7 +488,7 @@ export const IndicateursClesSection = ({
                 <ProgressBar
                   percentage={
                     (getScopedData(
-                      DemandeStatutEnum.submitted,
+                      DemandeStatutEnum["demande validée"],
                       "placesOuvertes"
                     ) /
                       getScopedData("all", "placesOuvertes")) *
@@ -496,20 +496,23 @@ export const IndicateursClesSection = ({
                   }
                   leftLabel="Validées"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum.submitted,
+                    DemandeStatutEnum["demande validée"],
                     "placesOuvertes"
                   )}
                   colorScheme="green.submitted"
                 />
                 <ProgressBar
                   percentage={
-                    (getScopedData(DemandeStatutEnum.draft, "placesOuvertes") /
+                    (getScopedData(
+                      DemandeStatutEnum["proposition"],
+                      "placesOuvertes"
+                    ) /
                       getScopedData("all", "placesOuvertes")) *
                     100
                   }
                   leftLabel="En projet"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum.draft,
+                    DemandeStatutEnum["proposition"],
                     "placesOuvertes"
                   )}
                   colorScheme="orange.draft"
@@ -530,7 +533,7 @@ export const IndicateursClesSection = ({
                 <ProgressBar
                   percentage={
                     (getScopedData(
-                      DemandeStatutEnum.submitted,
+                      DemandeStatutEnum["demande validée"],
                       "placesFermees"
                     ) /
                       getScopedData("all", "placesFermees")) *
@@ -538,23 +541,26 @@ export const IndicateursClesSection = ({
                   }
                   leftLabel="Validées"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum.submitted,
+                    DemandeStatutEnum["demande validée"],
                     "placesFermees"
                   )}
                   colorScheme="green.submitted"
                 />
                 <ProgressBar
                   percentage={
-                    (getScopedData(DemandeStatutEnum.draft, "placesFermees") /
+                    (getScopedData(
+                      DemandeStatutEnum["proposition"],
+                      "placesFermees"
+                    ) /
                       getScopedData("all", "placesFermees")) *
                     100
                   }
                   leftLabel="En projet"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum.draft,
+                    DemandeStatutEnum["proposition"],
                     "placesFermees"
                   )}
-                  colorScheme="orange.draft"
+                  colorScheme="orange.submitted"
                 />
               </Flex>
             </StatCard>

@@ -1,4 +1,5 @@
 import { ExpressionBuilder, sql } from "kysely";
+import _ from "lodash";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { VoieEnum } from "shared/enum/voieEnum";
 
@@ -373,6 +374,31 @@ export const getFilters = async ({
     })
     .execute();
 
+  const statutsFilters = await filtersBase
+    .select(["demande.statut as value", "demande.statut as label"])
+    .where("demande.statut", "<>", DemandeStatutEnum["refusée"])
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inEtablissement(eb),
+          inRentreeScolaire(eb),
+          inTypeDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+          inStatut(eb),
+          inCampagne(eb),
+        ]),
+        statut ? eb("demande.statut", "in", statut) : sql<boolean>`false`,
+      ]);
+    })
+    .execute();
+
   const filters = {
     regions: regionsFilters.map(cleanNull),
     rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
@@ -384,6 +410,12 @@ export const getFilters = async ({
     academies: academiesFilters.map(cleanNull),
     etablissements: etablissementsFilters.map(cleanNull),
     campagnes: campagnesFilters.map(cleanNull),
+    statuts: statutsFilters.map(({ value, label }) =>
+      cleanNull({
+        value,
+        label: _.capitalize(label),
+      })
+    ),
     secteurs: [
       {
         label: "Public",
@@ -422,20 +454,6 @@ export const getFilters = async ({
       {
         label: "Non",
         value: "false",
-      },
-    ],
-    statuts: [
-      {
-        label: "Projet",
-        value: DemandeStatutEnum.draft,
-      },
-      {
-        label: "Validée",
-        value: DemandeStatutEnum.submitted,
-      },
-      {
-        label: "Refusée",
-        value: DemandeStatutEnum.refused,
       },
     ],
     voies: [
