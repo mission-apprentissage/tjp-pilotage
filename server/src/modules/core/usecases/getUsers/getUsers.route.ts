@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -17,12 +16,11 @@ export const getUsersRoute = (server: Server) => {
       preHandler: hasPermissionHandler("users/lecture"),
       handler: async (request, response) => {
         const { user } = request;
-        if (!user) throw Boom.unauthorized();
 
         const { order, orderBy, ...rest } = request.query;
         const { scope, scopeFilter } = getScopeFilterForUser(
           "users/lecture",
-          user
+          user!
         );
 
         const users = await getUsers({
