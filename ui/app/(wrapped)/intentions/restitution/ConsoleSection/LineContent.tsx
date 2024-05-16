@@ -116,7 +116,7 @@ export const LineContent = ({
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"commune"}
-        left={300}
+        left={colonneFilters.includes("libelleEtablissement") ? 300 : 0}
         position="sticky"
         zIndex={1}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}

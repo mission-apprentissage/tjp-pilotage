@@ -1,4 +1,4 @@
-import { Box, chakra, Th } from "@chakra-ui/react";
+import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
 import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
@@ -27,32 +27,30 @@ const ConditionalTh = chakra(
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Th
-          className={className}
-          style={style}
-          isNumeric={isNumeric}
-          maxW={170}
-          p={2}
-          cursor={onClick ? "pointer" : "default"}
-          whiteSpace="nowrap"
-          onClick={() =>
-            onClick &&
-            onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
-          }
-          fontSize={12}
-          fontWeight={700}
-          lineHeight={"20px"}
-          textTransform={"uppercase"}
-          textOverflow={"ellipsis"}
-          alignSelf={"stretch"}
-          isTruncated
-          _hover={{
-            width: "auto",
-            maxWidth: "none",
-          }}
-        >
-          {children}
-        </Th>
+        <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
+          <Th
+            className={className}
+            style={style}
+            isNumeric={isNumeric}
+            maxW={170}
+            p={2}
+            cursor={onClick ? "pointer" : "default"}
+            whiteSpace="nowrap"
+            onClick={() =>
+              onClick &&
+              onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
+            }
+            fontSize={12}
+            fontWeight={700}
+            lineHeight={"20px"}
+            textTransform={"uppercase"}
+            textOverflow={"ellipsis"}
+            alignSelf={"stretch"}
+            isTruncated
+          >
+            {children}
+          </Th>
+        </Tooltip>
       );
     return null;
   }
@@ -89,7 +87,7 @@ export const HeadLineContent = ({
         colonneFilters={colonneFilters}
         colonne={"commune"}
         onClick={handleOrder}
-        left={300}
+        left={colonneFilters.includes("libelleEtablissement") ? 300 : 0}
         position="sticky"
         zIndex={"sticky"}
         boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
