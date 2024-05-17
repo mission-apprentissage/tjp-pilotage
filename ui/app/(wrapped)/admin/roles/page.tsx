@@ -79,15 +79,20 @@ export default () => {
                 <Tr
                   borderBottom={`1px solid ${themeDefinition.colors.grey[850]}`}
                 >
-                  <Th position="sticky">Rôle</Th>
+                  <Th position="sticky" borderBottom={"none"}>
+                    Rôle
+                  </Th>
                   <Th
                     borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                     position="sticky"
+                    borderBottom={"none"}
                   >
                     Description
                   </Th>
                   {PERMISSION_GROUPS.map((p) => (
-                    <Th key={p}>{PERMISSION_GROUP_LABELS[p]}</Th>
+                    <Th key={p} borderBottom={"none"}>
+                      {PERMISSION_GROUP_LABELS[p]}
+                    </Th>
                   ))}
                 </Tr>
               </Thead>
@@ -100,14 +105,14 @@ export default () => {
                         ? themeDefinition.colors.bluefrance[950]
                         : "transparent"
                     }
-                    borderTopWidth="0px"
-                    borderBottomWidth="0px"
+                    borderRadius="4px"
                   >
                     <Td
                       position="sticky"
                       textTransform={"uppercase"}
                       fontSize="14px"
                       fontWeight={700}
+                      borderBottom={"none"}
                     >
                       {ROLES_LABELS[role].label}
                     </Td>
@@ -115,6 +120,7 @@ export default () => {
                       borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                       position="sticky"
                       maxWidth="300px"
+                      borderBottom={"none"}
                     >
                       <Tooltip label={ROLES_LABELS[role].description}>
                         <Text textOverflow={"ellipsis"} isTruncated>
@@ -123,7 +129,7 @@ export default () => {
                       </Tooltip>
                     </Td>
                     {PERMISSION_GROUPS.map((label) => (
-                      <Td key={label}>
+                      <Td key={label} borderBottom={"none"}>
                         <PermissionBadge
                           rights={getPermissionsFromGroup(
                             getPermissionsForRole(role),
