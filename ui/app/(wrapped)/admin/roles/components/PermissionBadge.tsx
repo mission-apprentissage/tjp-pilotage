@@ -64,7 +64,7 @@ const PermissionBadge = ({
   }
 
   return (
-    <Badge variant={getVariant()} size="sm">
+    <Badge variant={getVariant()} size="md">
       {icons} {formatScopeLabel(scope)}
     </Badge>
   );
