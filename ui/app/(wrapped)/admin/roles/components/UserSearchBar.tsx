@@ -15,9 +15,11 @@ type OptionType = {
 };
 
 const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
-  const role = props.getValue()[0].value.role!;
-  const firstName = props.getValue()[0].value.firstname!;
-  const lastName = props.getValue()[0].value.lastname!;
+  const value = props.getValue()[0].value;
+  const role = value.role!;
+  const firstName = value.firstname!;
+  const lastName = value.lastname!;
+  const codeRegion = value.codeRegion;
 
   return (
     <components.SingleValue {...props}>
@@ -26,7 +28,7 @@ const SingleValue = ({ ...props }: SingleValueProps<OptionType>) => {
           {firstName} {lastName}{" "}
         </Text>
         <Badge variant="info" size="sm">
-          {ROLES_LABELS[role].label}
+          {ROLES_LABELS[role](codeRegion).label}
         </Badge>
       </HStack>
     </components.SingleValue>
