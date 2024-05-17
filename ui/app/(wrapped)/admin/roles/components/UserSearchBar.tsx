@@ -1,9 +1,11 @@
 import { Badge, HStack, Skeleton, Text } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useEffect } from "react";
 import { components, CSSObjectWithLabel, SingleValueProps } from "react-select";
 import AsyncSelect from "react-select/async";
 
 import { client } from "../../../../../api.client";
+import { themeDefinition } from "../../../../../theme/theme";
 import { useAuth } from "../../../../../utils/security/useAuth";
 import { ROLES_LABELS } from "../const";
 
@@ -71,11 +73,27 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
               width: "25rem",
               borderColor: undefined,
               zIndex: "2",
+              overflow: "hidden",
             }),
             menu: (provided) => ({ ...provided, zIndex: 9999 }),
           }}
           components={{
-            DropdownIndicator: () => null,
+            DropdownIndicator: () => (
+              <HStack
+                padding="8px"
+                bgColor={themeDefinition.colors.bluefrance[113]}
+                height="100%"
+                justifyContent="center"
+                cursor="pointer"
+              >
+                <Icon
+                  icon="ri:search-line"
+                  color="white"
+                  height="18px"
+                  width="18px"
+                ></Icon>
+              </HStack>
+            ),
             IndicatorSeparator: () => null,
             SingleValue,
           }}
@@ -107,7 +125,7 @@ const UserSearchBar = ({ updateUser, user }: UserSearchBarProps) => {
           isClearable={true}
           noOptionsMessage={({ inputValue }) =>
             inputValue
-              ? "Pas d'établissement correspondant"
+              ? "Pas d'utilisateur correspondant"
               : "Commencez à écrire..."
           }
           placeholder="Email de l'utilisateur"
