@@ -79,18 +79,30 @@ export default () => {
                 <Tr
                   borderBottom={`1px solid ${themeDefinition.colors.grey[850]}`}
                 >
-                  <Th position="sticky" borderBottom={"none"}>
+                  <Th
+                    position="sticky"
+                    borderBottom={"none"}
+                    fontSize="12px"
+                    fontWeight={700}
+                  >
                     Rôle
                   </Th>
                   <Th
                     borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                     position="sticky"
                     borderBottom={"none"}
+                    fontSize="12px"
+                    fontWeight={700}
                   >
                     Description
                   </Th>
                   {PERMISSION_GROUPS.map((p) => (
-                    <Th key={p} borderBottom={"none"}>
+                    <Th
+                      key={p}
+                      borderBottom={"none"}
+                      fontSize="12px"
+                      fontWeight={700}
+                    >
                       {PERMISSION_GROUP_LABELS[p]}
                     </Th>
                   ))}
