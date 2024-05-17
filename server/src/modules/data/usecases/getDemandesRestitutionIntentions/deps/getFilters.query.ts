@@ -432,7 +432,7 @@ export const getFilters = async ({
     ],
     statuts: [
       {
-        label: "Brouillon",
+        label: "Projet de demande",
         value: DemandeStatutEnum.draft,
       },
       {
