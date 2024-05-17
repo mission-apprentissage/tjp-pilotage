@@ -1,9 +1,9 @@
 export const formatStatut = (statut: string) => {
   switch (statut) {
     case "draft":
-      return "Brouillon";
+      return "Projet de demande";
     case "submitted":
-      return "Acceptée";
+      return "Validée";
     case "refused":
       return "Refusée";
     case "deleted":
