@@ -69,8 +69,6 @@ export const Step = ({
   dateDebut,
   dateFin,
   description,
-  statut,
-  current = false,
   incomplet = false,
 }: {
   etape: number;
@@ -79,8 +77,6 @@ export const Step = ({
   dateDebut: string;
   dateFin: string;
   description: string;
-  statut?: string;
-  current?: boolean;
   incomplet?: boolean;
 }) => {
   return (
@@ -101,17 +97,17 @@ export const Step = ({
       <Text
         fontSize="lg"
         fontWeight="bold"
-        color={current ? "black" : "grey.625"}
+        color={currentEtape >= etape ? "black" : "grey.625"}
       >
         {titre}
       </Text>
       <Flex direction={"row"}>
-        {statut && (
-          <Tag size={"md"} me={2}>
-            {statut}
+        {currentEtape === etape && (
+          <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
+            En cours
           </Tag>
         )}
-        <Text color={current ? "black" : "grey.625"}>
+        <Text color={currentEtape >= etape ? "black" : "grey.625"}>
           du {dateDebut} au {dateFin}
         </Text>
       </Flex>

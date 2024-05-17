@@ -6,6 +6,7 @@ import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
 import { getIntentionsRoute } from "./usecases/getIntentions/getIntentions.route";
 import { importIntentionRoute } from "./usecases/importIntention/importIntention.route";
 import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
+import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
 import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
 
 export const registerIntentionsExpeModule = ({
@@ -22,5 +23,6 @@ export const registerIntentionsExpeModule = ({
     ...importIntentionRoute(server),
     ...getCurrentCampagneRoute(server),
     ...searchEtablissementPerdirRoute(server),
+    ...submitChangementStatutRoute({ server }),
   };
 };

@@ -18,8 +18,9 @@ export const PERMISSIONS = {
     "users/ecriture": {},
     "campagnes/lecture": {},
     "campagnes/ecriture": {},
-    "intentions-perdir/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
+    "intentions-perdir-statut/ecriture": { default: "national" },
   },
   pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
@@ -28,6 +29,7 @@ export const PERMISSIONS = {
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
+    "intentions-perdir-statut/ecriture": { default: "national" },
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -36,13 +38,15 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "region" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
   },
   gestionnaire_region: {
     "intentions/lecture": { draft: "user", default: "region" },
     "intentions/ecriture": { default: "user" },
     "restitution-intentions/lecture": { default: "region" },
-    "intentions-perdir/lecture": { default: "region" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
   },
   perdir: {
     "intentions-perdir/lecture": { draft: "uai", default: "uai" },

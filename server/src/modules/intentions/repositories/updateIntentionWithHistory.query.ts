@@ -15,4 +15,4 @@ export const updateIntentionWithHistory = async (
       updatedAt: new Date(),
     })
     .returningAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();

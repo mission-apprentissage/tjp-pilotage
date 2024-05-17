@@ -42,6 +42,36 @@ export interface ChangeLog {
   oldVal: Json | null;
 }
 
+export interface ChangementStatut {
+  id: Generated<string>;
+  userId: string | null;
+  intentionNumero: string;
+  statutPrecedent:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée"
+    | null;
+  statut:
+    | "brouillon"
+    | "demande validée"
+    | "dossier complet"
+    | "dossier incomplet"
+    | "prêt pour le vote"
+    | "projet de demande"
+    | "proposition"
+    | "refusée"
+    | "supprimée";
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  commentaire: string | null;
+}
+
 export interface ConstatRentree {
   rentreeScolaire: string | null;
   mefstat11: string | null;
@@ -721,6 +751,7 @@ export interface DB {
   academie: Academie;
   campagne: Campagne;
   changeLog: ChangeLog;
+  changementStatut: ChangementStatut;
   constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
