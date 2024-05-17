@@ -25,7 +25,7 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 import { themeDefinition } from "../../../../theme/theme";
 import { PermissionBadge } from "./components/PermissionBadge";
 import { User, UserSearchBar } from "./components/UserSearchBar";
-import { PERMISSION_GROUP_LABELS, ROLES_LABELS } from "./const";
+import { OVERRIDES, PERMISSION_GROUP_LABELS, ROLES_LABELS } from "./const";
 
 const ROLES = Object.keys(ROLES_LABELS) as Array<keyof typeof PERMISSIONS>;
 const ALL_PERMISSIONS: Array<Permission> = [];
@@ -45,9 +45,11 @@ const getPermissionsFromGroup = (
   permissions: Array<Permission>,
   group: string
 ) => {
-  return permissions
-    .filter((p) => p.split("/")[0] === group)
-    .map((p) => p.split("/")[1]);
+  return permissions.filter((p) => p.split("/")[0] === group);
+};
+
+const formatPermissions = (permissions: Array<Permission>) => {
+  return permissions.map((p) => p.split("/")[1]);
 };
 
 const getScopeFromGroup = (role: Role, group: string): Scope => {
@@ -57,6 +59,25 @@ const getScopeFromGroup = (role: Role, group: string): Scope => {
   )[0] as Permission;
 
   return getPermissionScope(role, permission)?.default ?? "national";
+};
+
+const formatRights = (role: Role, label: string, user?: User) => {
+  const permissions = getPermissionsFromGroup(
+    getPermissionsForRole(role),
+    label
+  );
+
+  const overridePermissions = permissions.filter((p) => {
+    const roleOverrides = OVERRIDES[role];
+    const permissionOverride =
+      roleOverrides !== undefined ? roleOverrides[p] : undefined;
+    if (permissionOverride && user) {
+      return permissionOverride(user.codeRegion);
+    }
+    return true;
+  });
+
+  return formatPermissions(overridePermissions);
 };
 
 export default () => {
@@ -155,10 +176,7 @@ export default () => {
                     {PERMISSION_GROUPS.map((label) => (
                       <Td key={label} borderBottom={"none"}>
                         <PermissionBadge
-                          rights={getPermissionsFromGroup(
-                            getPermissionsForRole(role),
-                            label
-                          )}
+                          rights={formatRights(role, label, selectedUser)}
                           scope={getScopeFromGroup(role, label)}
                         />
                       </Td>

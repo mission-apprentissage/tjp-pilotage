@@ -1,4 +1,4 @@
-import { CODES_REGIONS_EXPE, PERMISSIONS } from "shared";
+import { CODES_REGIONS_EXPE, Permission, PERMISSIONS, Role } from "shared";
 
 export const ROLES_LABELS: {
   [key in keyof typeof PERMISSIONS]: (filter?: string) => {
@@ -36,7 +36,6 @@ export const ROLES_LABELS: {
       "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il peut émettre un avis Expert ; il voit tous les avis déposés par les experts uniquement. Il a accès à la console de restitution et à la page de pilotage.",
   }),
   perdir: (codeRegion) => {
-    console.log(codeRegion);
     if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
       return {
         label: "Perdir RA Test",
@@ -66,4 +65,27 @@ export const PERMISSION_GROUP_LABELS: {
   users: "Utilisateurs",
   campagnes: "Campagnes",
   "intentions-perdir": "Saisie par les perdirs",
+};
+
+export const OVERRIDES: {
+  [key in Role]?: {
+    [p in Permission]?: (filter?: string) => boolean;
+  };
+} = {
+  perdir: {
+    "intentions-perdir/ecriture": (codeRegion) => {
+      if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
+        return true;
+      }
+
+      return false;
+    },
+    "intentions-perdir/lecture": (codeRegion) => {
+      if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
+        return true;
+      }
+
+      return false;
+    },
+  },
 };
