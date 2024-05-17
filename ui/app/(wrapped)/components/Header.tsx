@@ -43,7 +43,7 @@ export const Header = () => {
   return (
     <>
       <VStack
-        zIndex="banner"
+        zIndex="overlay"
         spacing="0"
         divider={
           <Box
@@ -109,7 +109,7 @@ export const Header = () => {
         position="sticky"
         top={0}
         left={0}
-        zIndex="sticky"
+        zIndex="banner"
         backgroundColor="white"
       >
         <Container maxWidth={"container.xl"} px={0}>
