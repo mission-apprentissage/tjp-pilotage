@@ -13,9 +13,11 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
+import { hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 
+import { useAuth } from "../../../../../utils/security/useAuth";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import {
   DemandesRestitutionIntentions,
@@ -79,6 +81,12 @@ export const ConsoleSection = ({
   colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
 }) => {
   const router = useRouter();
+  const { auth } = useAuth();
+  const showFormulairePerdir =
+    hasRole({ user: auth?.user, role: "perdir" }) ||
+    isUserInRegionsExperimentation({
+      user: auth?.user,
+    });
 
   const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find(
@@ -138,11 +146,15 @@ export const ConsoleSection = ({
                     <Fragment key={`${demande.numero}`}>
                       <Tr
                         h="12"
-                        _hover={{ bg: "blueecume.925" }}
                         cursor={"pointer"}
                         onClick={() =>
-                          router.push(`/intentions/saisie/${demande.numero}`)
+                          router.push(
+                            `/intentions/${
+                              showFormulairePerdir ? "perdir/" : ""
+                            }saisie/${demande.numero}`
+                          )
                         }
+                        role="group"
                       >
                         <LineContent
                           demande={demande}
