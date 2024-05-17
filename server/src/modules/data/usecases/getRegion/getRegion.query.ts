@@ -11,8 +11,16 @@ import {
   notSpecialite,
 } from "../../utils/notAnneeCommune";
 import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
-import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
-import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
+import {
+  selectDenominateurInsertion6moisAgg,
+  selectNumerateurInsertion6MoisAgg,
+  selectTauxInsertion6moisAgg,
+} from "../../utils/tauxInsertion6mois";
+import {
+  selectDenominateurPoursuiteAgg,
+  selectNumerateurPoursuiteAgg,
+  selectTauxPoursuiteAgg,
+} from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
@@ -48,6 +56,9 @@ export const getRegionStats = async ({
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
+    // .where((eb) =>
+    //   notHistoriqueUnlessCoExistantIndicateurRegionSortie(eb, rentreeScolaire)
+    // )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where(
@@ -59,6 +70,18 @@ export const getRegionStats = async ({
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+      selectDenominateurInsertion6moisAgg("indicateurRegionSortie").as(
+        "denominateurInsertion6mois"
+      ),
+      selectNumerateurInsertion6MoisAgg("indicateurRegionSortie").as(
+        "numerateurInsertion6mois"
+      ),
+      selectDenominateurPoursuiteAgg("indicateurRegionSortie").as(
+        "denominateurPoursuite"
+      ),
+      selectNumerateurPoursuiteAgg("indicateurRegionSortie").as(
+        "numerateurPoursuite"
+      ),
     ])
     .executeTakeFirst();
 

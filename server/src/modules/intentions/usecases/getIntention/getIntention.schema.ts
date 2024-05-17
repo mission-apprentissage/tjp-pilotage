@@ -93,6 +93,7 @@ const IntentionSchema = z.object({
   commentaire: z.string().optional(),
   // Statut
   statut: DemandeStatutZodType.exclude(["supprimée"]),
+  commentaireStatut: z.string().optional(),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre
@@ -104,6 +105,16 @@ const IntentionSchema = z.object({
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),
+  changementsStatut: z.array(
+    z.object({
+      userId: z.string(),
+      userRole: z.string().optional(),
+      statut: DemandeStatutZodType,
+      updatedAt: z.string(),
+      userFullName: z.string(),
+      commentaire: z.string().optional(),
+    })
+  ),
 });
 
 export const getIntentionSchema = {

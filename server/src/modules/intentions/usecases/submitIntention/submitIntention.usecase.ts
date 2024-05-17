@@ -17,7 +17,7 @@ import { submitIntentionSchema } from "./submitIntention.schema";
 
 type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 
-const validateDemande = (intention: Intention) => {
+const validateIntention = (intention: Intention) => {
   let errors: Record<string, string> = {};
   for (const [key, validator] of Object.entries(intentionValidators)) {
     const error = validator(intention);
@@ -60,7 +60,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intention: Intention;
     }) => {
-      const currentDemande = intention.numero
+      const currentIntention = intention.numero
         ? await deps.findOneIntention(intention.numero)
         : undefined;
 
@@ -78,17 +78,17 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      const sameDemande = await deps.findOneSimilarIntention({
+      const sameIntention = await deps.findOneSimilarIntention({
         ...intention,
         notNumero: intention.numero,
       });
-      if (sameDemande) {
+      if (sameIntention) {
         logger.info("Demande similaire existante", {
-          sameDemande,
+          sameIntention,
           intention,
         });
         throw Boom.badRequest("Demande similaire existante", {
-          id: sameDemande.id,
+          id: sameIntention.id,
           errors: {
             same_demande:
               "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
@@ -99,8 +99,8 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       const dataFormation = await deps.findOneDataFormation({ cfd });
       if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
 
-      const demandeData = {
-        ...currentDemande,
+      const intentionData = {
+        ...currentIntention,
         libelleColoration: null,
         libelleFCIL: null,
         autreMotif: null,
@@ -115,20 +115,20 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         ...intention,
       };
 
-      const errors = validateDemande(cleanNull(demandeData));
+      const errors = validateIntention(cleanNull(intentionData));
       if (errors) {
-        logger.info("Demande incorrecte", {
+        logger.info("Intention incorrecte", {
           errors,
-          intention: demandeData,
+          intention: intentionData,
         });
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
       const created = await deps.createIntentionQuery({
-        ...demandeData,
-        id: currentDemande?.id ?? generateId(),
-        numero: currentDemande?.numero ?? generateShortId(),
-        createurId: currentDemande?.createurId ?? user.id,
+        ...intentionData,
+        id: currentIntention?.id ?? generateId(),
+        numero: currentIntention?.numero ?? generateShortId(),
+        createurId: currentIntention?.createurId ?? user.id,
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),

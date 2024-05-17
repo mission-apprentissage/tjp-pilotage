@@ -56,72 +56,64 @@ export default ({
     });
 
   if (isLoading) return <SyntheseSpinner />;
+  if (!intention) return null;
 
   return (
-    <>
-      {intention && (
-        <>
-          {intention.statut === DemandeStatutEnum["dossier incomplet"] && (
-            <InformationHeader
-              status="warning"
-              message={
-                "Dossier incomplet, merci de vous référer aux commentaires du gestionnaire"
-              }
-            />
-          )}
-          {intention.statut === DemandeStatutEnum["projet de demande"] && (
-            <InformationHeader
-              status="success"
-              message={"La proposition a passé l'étape 1 avec succès !"}
-            />
-          )}
-          {intention.statut === DemandeStatutEnum["prêt pour le vote"] && (
-            <InformationHeader
-              status="success"
-              message={"La proposition a passé l'étape 2 avec succès !"}
-            />
-          )}
-          <Container
-            maxWidth={"100%"}
-            px={24}
-            pt={8}
-            pb={20}
-            bg="blueecume.925"
-          >
-            <Breadcrumb
-              ml={4}
-              mb={4}
-              pages={[
-                { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions" },
-                {
-                  title: `Demande n°${intention?.numero}`,
-                  to: `/intentions/perdir/synthese/${intention?.numero}`,
-                  active: true,
-                },
-              ]}
-            />
-            <Flex direction={"column"} gap={8}>
-              <StepperSection intention={intention} />
-              <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-                <GridItem colSpan={3}>
-                  <MainSection
-                    displayType={
-                      searchParams.displayType ??
-                      DisplayTypeEnum.commentairesEtAvis
-                    }
-                    displaySynthese={displaySynthese}
-                    displayCommentairesEtAvis={displayCommentairesEtAvis}
-                  />
-                </GridItem>
-                <GridItem colSpan={1}>
-                  <ActionsSection />
-                </GridItem>
-              </Grid>
-            </Flex>
-          </Container>
-        </>
+    <Flex direction="column">
+      {intention.statut === DemandeStatutEnum["dossier incomplet"] && (
+        <InformationHeader
+          status="warning"
+          message={
+            "Dossier incomplet, merci de vous référer aux consignes du gestionnaire"
+          }
+        />
       )}
-    </>
+      {intention.statut === DemandeStatutEnum["projet de demande"] && (
+        <InformationHeader
+          status="success"
+          message={"La proposition a passé l'étape 1 avec succès !"}
+        />
+      )}
+      {intention.statut === DemandeStatutEnum["prêt pour le vote"] && (
+        <InformationHeader
+          status="success"
+          message={"La proposition a passé l'étape 2 avec succès !"}
+        />
+      )}
+      <Container maxWidth={"100%"} pt={4} pb={20} px={24} bg="blueecume.925">
+        <Breadcrumb
+          py={2}
+          ml={4}
+          mb={4}
+          pages={[
+            { title: "Accueil", to: "/" },
+            { title: "Recueil des demandes", to: "/intentions" },
+            {
+              title: `Demande n°${intention?.numero}`,
+              to: `/intentions/perdir/synthese/${intention?.numero}`,
+              active: true,
+            },
+          ]}
+        />
+        <Flex direction={"column"} gap={8}>
+          <StepperSection intention={intention} />
+          <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
+            <GridItem colSpan={3}>
+              <MainSection
+                intention={intention}
+                displayType={
+                  searchParams.displayType ?? DisplayTypeEnum.commentairesEtAvis
+                }
+                displaySynthese={displaySynthese}
+                displayCommentairesEtAvis={displayCommentairesEtAvis}
+              />
+            </GridItem>
+            <GridItem colSpan={1}>
+              <ActionsSection intention={intention} />
+            </GridItem>
+          </Grid>
+        </Flex>
+      </Container>
+    </Flex>
   );
 };

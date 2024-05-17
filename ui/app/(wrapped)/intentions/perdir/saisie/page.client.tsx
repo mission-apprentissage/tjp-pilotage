@@ -37,6 +37,7 @@ import {
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { formatStatut } from "../../utils/statutUtils";
@@ -355,9 +356,7 @@ export const PageClient = () => {
                         <Td align="center" w={0}>
                           <TagDemande statut={intention.statut} />
                         </Td>
-                        <Td>
-                          {new Date(intention.createdAt).toLocaleString()}
-                        </Td>
+                        <Td>{formatDate({ date: intention.createdAt })}</Td>
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={intention.userName}>
                             <Avatar
@@ -372,7 +371,7 @@ export const PageClient = () => {
                           </Tooltip>
                         </Td>
                         <Td textAlign={"center"}>
-                          {new Date(intention.updatedAt).toLocaleString()}
+                          {formatDate({ date: intention.updatedAt })}
                         </Td>
                         <Td textAlign={"center"}>
                           <Flex>

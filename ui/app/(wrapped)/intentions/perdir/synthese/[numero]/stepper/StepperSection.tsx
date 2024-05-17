@@ -21,7 +21,6 @@ export const StepperSection = ({
             titre="Revue de la proposition"
             dateDebut="03/06/2024"
             dateFin="15/08/2024"
-            statut="En cours"
             description="Vérification de la complétude du dossier et première évaluation de la faisabilité"
             incomplet={
               intention.statut === DemandeStatutEnum["dossier incomplet"]

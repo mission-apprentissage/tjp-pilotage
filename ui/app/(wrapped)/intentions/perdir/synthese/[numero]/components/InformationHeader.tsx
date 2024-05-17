@@ -37,22 +37,22 @@ export const InformationHeader = ({
           backgroundColor={bgColors[status]}
           color={colors[status]}
           width="100%"
-          paddingY="12px"
+          paddingY={4}
+          px={24}
         >
           <Stack
-            maxWidth={"container.xl"}
             margin="auto"
             display="flex"
             flexDirection="row"
             justifyContent="space-between"
             flexWrap="nowrap"
-            spacing="16px"
+            spacing={4}
             padding="4px 8px"
           >
             <Icon icon="ri:information-fill" fontSize="24px" />
             <Text
               flexGrow={1}
-              fontSize="16px"
+              fontSize={16}
               fontWeight={700}
               display={{
                 base: "none",

@@ -22,20 +22,12 @@ export const TabsSection = ({
       display="flex"
       flex="1"
       flexDirection="column"
-      variant="enclosed-colored"
+      variant="blue-border"
       minHeight="0"
       width={"100%"}
     >
       <TabList>
-        <Tab
-          as={Button}
-          onClick={() => displaySynthese()}
-          color={"black"}
-          h={"40px"}
-          w={"fit-content"}
-          _hover={{ bg: "bluefrance.975_hover" }}
-          bg={"bluefrance.975"}
-        >
+        <Tab as={Button} onClick={() => displaySynthese()}>
           <Flex
             direction={"row"}
             justify={"center"}
@@ -47,15 +39,7 @@ export const TabsSection = ({
             <Text>Synthèse</Text>
           </Flex>
         </Tab>
-        <Tab
-          as={Button}
-          onClick={() => displayCommentairesEtAvis()}
-          color={"black"}
-          h={"40px"}
-          w={"fit-content"}
-          bg={"bluefrance.975"}
-          _hover={{ bg: "bluefrance.975_hover" }}
-        >
+        <Tab as={Button} onClick={() => displayCommentairesEtAvis()}>
           <Flex
             direction={"row"}
             justify={"center"}

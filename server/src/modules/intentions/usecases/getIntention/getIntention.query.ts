@@ -22,6 +22,11 @@ export interface Filters extends z.infer<typeof getIntentionSchema.params> {
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const intention = await kdb
     .selectFrom("latestIntentionView as intention")
+    .leftJoin("changementStatut", (join) =>
+      join
+        .onRef("changementStatut.intentionNumero", "=", "intention.numero")
+        .onRef("changementStatut.statut", "=", "intention.statut")
+    )
     .selectAll()
     .select((eb) => [
       jsonObjectFrom(
@@ -90,12 +95,34 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ),
       }).as("metadata"),
     ])
+    .select("changementStatut.commentaire as commentaireStatut")
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where("intention.numero", "=", numero)
-    .orderBy("createdAt", "asc")
     .limit(1)
     .executeTakeFirst();
+
+  const changementsStatut = await kdb
+    .selectFrom("changementStatut")
+    .innerJoin("user", "user.id", "changementStatut.userId")
+    .where("changementStatut.intentionNumero", "=", numero)
+    .distinctOn([
+      "changementStatut.updatedAt",
+      "changementStatut.statut",
+      "changementStatut.statutPrecedent",
+    ])
+    .orderBy("changementStatut.updatedAt", "desc")
+    .select((eb) => [
+      "changementStatut.statut",
+      "changementStatut.updatedAt",
+      "user.id as userId",
+      "user.role as userRole",
+      "changementStatut.commentaire",
+      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
+        "user.lastname"
+      )})`.as("userFullName"),
+    ])
+    .execute();
 
   const codeDispositif =
     intention?.codeDispositif &&
@@ -117,6 +144,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ...intention.campagne,
       }),
       codeDispositif,
+      changementsStatut: changementsStatut.map((item) => ({
+        ...item,
+        updatedAt: item.updatedAt?.toISOString(),
+      })),
     })
   );
 };

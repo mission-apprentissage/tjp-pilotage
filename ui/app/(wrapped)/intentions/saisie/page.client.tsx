@@ -35,6 +35,7 @@ import {
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
@@ -357,7 +358,7 @@ export const PageClient = () => {
                       <Td align="center" w={0}>
                         <TagDemande statut={demande.statut} />
                       </Td>
-                      <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
+                      <Td>{formatDate({ date: demande.createdAt })}</Td>
                       <Td w="15" textAlign={"center"}>
                         <Tooltip label={demande.userName}>
                           <Avatar
@@ -372,7 +373,7 @@ export const PageClient = () => {
                         </Tooltip>
                       </Td>
                       <Td textAlign={"center"}>
-                        {new Date(demande.updatedAt).toLocaleString()}
+                        {formatDate({ date: demande.updatedAt })}
                       </Td>
                       {data?.campagne.statut ===
                         CampagneStatutEnum["terminée"] && (

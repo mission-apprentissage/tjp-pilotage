@@ -4,7 +4,7 @@ import { DB } from "../../../../db/db";
 import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
 
 export const createIntentionQuery = async (
-  demande: Insertable<DB["intention"]>
+  intention: Insertable<DB["intention"]>
 ) => {
-  return updateIntentionWithHistory({ ...demande });
+  return updateIntentionWithHistory({ ...intention });
 };
