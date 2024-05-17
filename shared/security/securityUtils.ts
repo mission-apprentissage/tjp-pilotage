@@ -1,6 +1,6 @@
 import { HIERARCHY, Permission, PERMISSIONS, Role } from "./permissions";
 
-const CODES_REGIONS_EXPE = [
+export const CODES_REGIONS_EXPE = [
   //Occitanie
   "76",
   // AURA

@@ -126,7 +126,7 @@ export default () => {
                       fontWeight={700}
                       borderBottom={"none"}
                     >
-                      {ROLES_LABELS[role].label}
+                      {ROLES_LABELS[role](selectedUser?.codeRegion).label}
                     </Td>
                     <Td
                       borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
@@ -134,13 +134,21 @@ export default () => {
                       maxWidth="300px"
                       borderBottom={"none"}
                     >
-                      <Tooltip label={ROLES_LABELS[role].description}>
+                      <Tooltip
+                        label={
+                          ROLES_LABELS[role](selectedUser?.codeRegion)
+                            .description
+                        }
+                      >
                         <Text
                           textOverflow={"ellipsis"}
                           isTruncated
                           height="200%"
                         >
-                          {ROLES_LABELS[role].description}
+                          {
+                            ROLES_LABELS[role](selectedUser?.codeRegion)
+                              .description
+                          }
                         </Text>
                       </Tooltip>
                     </Td>
