@@ -63,7 +63,7 @@ export default () => {
   const [selectedUser, setSelectedUser] = useState<User>();
 
   return (
-    <GuardPermission permission="users/ecriture">
+    <GuardPermission permission="users/lecture">
       <Box py="16px" px="64px" width="100%" display={"block"}>
         <VStack gap="16px" width="100%">
           <HStack gap="22px" width="100%" px="8px">
@@ -123,7 +123,11 @@ export default () => {
                       borderBottom={"none"}
                     >
                       <Tooltip label={ROLES_LABELS[role].description}>
-                        <Text textOverflow={"ellipsis"} isTruncated>
+                        <Text
+                          textOverflow={"ellipsis"}
+                          isTruncated
+                          height="200%"
+                        >
                           {ROLES_LABELS[role].description}
                         </Text>
                       </Tooltip>
