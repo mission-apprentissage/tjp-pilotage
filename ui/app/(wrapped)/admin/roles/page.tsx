@@ -201,7 +201,7 @@ export default () => {
                       </Tooltip>
                     </Td>
                     {PERMISSION_GROUPS.map((label) => (
-                      <Td key={label} borderBottom={"none"}>
+                      <Td key={role + label} borderBottom={"none"}>
                         <PermissionBadge
                           rights={formatRights(role, label, selectedUser)}
                           scope={getScopeFromGroup(role, label)}

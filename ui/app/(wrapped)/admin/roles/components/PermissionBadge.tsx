@@ -2,6 +2,9 @@ import { Badge, Box } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { Scope } from "shared/security/permissions";
 
+// Compteur pour id unique
+let i = 0;
+
 const formatScopeLabel = (scope: Scope) => {
   switch (scope) {
     case "national":
@@ -48,16 +51,18 @@ const PermissionBadge = ({
   }
 
   if (rights.includes("lecture")) {
+    i++;
     icons.push(
-      <Box pr="4px">
+      <Box pr="4px" key={`${i}-permission-badge-icon`}>
         <Icon icon="ri:eye-fill" />
       </Box>
     );
   }
 
   if (rights.includes("ecriture")) {
+    i++;
     icons.push(
-      <Box pr="4px">
+      <Box pr="4px" key={`${i}-permission-badge-icon`}>
         <Icon icon="ri:pencil-fill" />
       </Box>
     );
