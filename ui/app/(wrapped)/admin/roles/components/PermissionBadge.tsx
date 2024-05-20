@@ -38,7 +38,7 @@ const PermissionBadge = ({
 
   if (rights.length === 0) {
     return (
-      <Badge variant="grey" size="sm">
+      <Badge variant="grey" size="md">
         <Box pr="4px">
           <Icon icon="ri:eye-off-fill" />
         </Box>

@@ -102,6 +102,12 @@ export default () => {
                 >
                   <Th
                     position="sticky"
+                    zIndex="200"
+                    backgroundColor="white"
+                    left="0"
+                    // Obligé de mettre min & maxWidth ici parce que width est surchargé par chakra
+                    maxWidth="200px"
+                    minWidth="200px"
                     borderBottom={"none"}
                     fontSize="12px"
                     fontWeight={700}
@@ -111,6 +117,10 @@ export default () => {
                   <Th
                     borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                     position="sticky"
+                    zIndex="200"
+                    backgroundColor="white"
+                    left="200px"
+                    width="275px"
                     borderBottom={"none"}
                     fontSize="12px"
                     fontWeight={700}
@@ -142,6 +152,14 @@ export default () => {
                   >
                     <Td
                       position="sticky"
+                      zIndex="200"
+                      bgColor={
+                        role === selectedUser?.role
+                          ? themeDefinition.colors.bluefrance[950]
+                          : "white"
+                      }
+                      left="0"
+                      width="200px"
                       textTransform={"uppercase"}
                       fontSize="14px"
                       fontWeight={700}
@@ -152,8 +170,16 @@ export default () => {
                     <Td
                       borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                       position="sticky"
+                      zIndex="200"
+                      bgColor={
+                        role === selectedUser?.role
+                          ? themeDefinition.colors.bluefrance[950]
+                          : "white"
+                      }
+                      left="200px"
                       maxWidth="300px"
                       borderBottom={"none"}
+                      paddingRight="12px"
                     >
                       <Tooltip
                         label={
@@ -165,6 +191,7 @@ export default () => {
                           textOverflow={"ellipsis"}
                           isTruncated
                           height="200%"
+                          width="100%"
                         >
                           {
                             ROLES_LABELS[role](selectedUser?.codeRegion)
