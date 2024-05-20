@@ -81,7 +81,20 @@ const formatRights = (role: Role, label: string, user?: User) => {
 };
 
 export default () => {
+  const [hoverRole, setHoverRole] = useState<Role | undefined>();
   const [selectedUser, setSelectedUser] = useState<User>();
+
+  const getBgColor = (role: Role) => {
+    if (role === selectedUser?.role) {
+      return themeDefinition.colors.bluefrance[950];
+    }
+
+    if (role === hoverRole) {
+      return themeDefinition.colors.blueecume[925];
+    }
+
+    return "white";
+  };
 
   return (
     <GuardPermission permission="users/lecture">
@@ -143,21 +156,15 @@ export default () => {
                 {ROLES.map((role) => (
                   <Tr
                     key={role}
-                    bgColor={
-                      role === selectedUser?.role
-                        ? themeDefinition.colors.bluefrance[950]
-                        : "transparent"
-                    }
+                    bgColor={getBgColor(role)}
+                    onMouseOver={() => setHoverRole(role)}
+                    onMouseLeave={() => setHoverRole(undefined)}
                     borderRadius="4px"
                   >
                     <Td
                       position="sticky"
                       zIndex="200"
-                      bgColor={
-                        role === selectedUser?.role
-                          ? themeDefinition.colors.bluefrance[950]
-                          : "white"
-                      }
+                      bgColor={getBgColor(role)}
                       left="0"
                       width="200px"
                       textTransform={"uppercase"}
@@ -171,11 +178,7 @@ export default () => {
                       borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                       position="sticky"
                       zIndex="200"
-                      bgColor={
-                        role === selectedUser?.role
-                          ? themeDefinition.colors.bluefrance[950]
-                          : "white"
-                      }
+                      bgColor={getBgColor(role)}
                       left="200px"
                       maxWidth="300px"
                       borderBottom={"none"}
