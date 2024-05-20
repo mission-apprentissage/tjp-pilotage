@@ -10,7 +10,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: 18
-          cache: 'yarn'
+          cache: "yarn"
 
       - uses: actions/cache@v2
         with:
@@ -34,6 +34,6 @@ jobs:
           NEXT_PUBLIC_BASE_URL: ${{ vars.BASE_URL }}
           NEXT_PUBLIC_ENV: ${{ vars.ENV }}
           NEXT_PUBLIC_SENTRY_DSN: ${{ vars.SENTRY_DSN }}
-          SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
-          SENTRY_RELEASE: ${{ steps.branch_name.outputs.branch }}
+          NEXT_PUBLIC_SENTRY_AUTH_TOKEN: ${{ secrets.SENTRY_AUTH_TOKEN }}
+          NEXT_PUBLIC_SENTRY_RELEASE: ci-${{ steps.branch_name.outputs.branch }}
         run: make build

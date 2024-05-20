@@ -15,8 +15,8 @@ module.exports = withSentryConfig(
     org: "betagouv",
     project: "orion-ui",
     url: "https://sentry.incubateur.net/",
-    authToken: process.env.SENTRY_AUTH_TOKEN,
-    release: process.env.SENTRY_RELEASE?.replace("/", "-").replace(" ", "-"),
+    authToken: process.env.NEXT_PUBLIC_SENTRY_AUTH_TOKEN,
+    release: process.env.NEXT_PUBLIC_SENTRY_RELEASE?.replace("/", "-").replace(" ", "-"),
   },
   {
     widenClientFileUpload: true,
