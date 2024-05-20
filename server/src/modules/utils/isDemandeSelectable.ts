@@ -13,9 +13,6 @@ export const isDemandeSelectable =
     return eb.or([
       eb.and([
         eb("demande.statut", "=", DemandeStatutEnum.draft),
-        draftFilter.userId
-          ? eb("demande.createurId", "=", draftFilter.userId)
-          : sql<boolean>`true`,
         draftFilter.codeRegion
           ? eb("demande.codeRegion", "=", draftFilter.codeRegion)
           : sql<boolean>`true`,
@@ -25,6 +22,7 @@ export const isDemandeSelectable =
         filter.codeRegion
           ? eb("demande.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
+        filter.uais ? eb("demande.uai", "in", filter.uais) : sql<boolean>`true`,
       ]),
     ]);
   };
@@ -38,12 +36,14 @@ const getDemandeSelectableFilters = (user?: RequestUser) => {
     national: {},
     region: { codeRegion: user.codeRegion },
     user: { userId: user.id },
+    uai: { uais: user.uais ?? [] },
   }[scope?.draft];
 
   const filter = {
     national: {},
     region: { codeRegion: user.codeRegion },
     user: { userId: user.id },
+    uai: { uais: user.uais ?? [] },
   }[scope?.default];
 
   return { filter, draftFilter };
@@ -76,9 +76,6 @@ export const isIntentionSelectable =
       ]),
       eb.and([
         eb("intention.statut", "!=", DemandeStatutEnum.draft),
-        filter.uais
-          ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai)))
-          : sql<boolean>`true`,
         filter.codeRegion
           ? eb("intention.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
