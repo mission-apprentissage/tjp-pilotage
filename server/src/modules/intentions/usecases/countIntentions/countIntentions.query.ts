@@ -49,6 +49,19 @@ export const countIntentionsQuery = async ({
       sql<number>`COALESCE(
         SUM(
           CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["projet de demande"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["projet de demande"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
             DemandeStatutEnum["demande validée"]
           }
           THEN 1

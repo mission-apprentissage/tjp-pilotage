@@ -25,7 +25,7 @@ import {
   OrderStatsPilotageIntentions,
   SelectedScope,
   StatsPilotageIntentions,
-  Status,
+  Statut,
 } from "../types";
 import { isTerritoireSelected } from "../utils/isTerritoireSelected";
 
@@ -255,11 +255,11 @@ function generatePercentageDataOr(
   data?: StatsPilotageIntentions,
   or: string = "-"
 ) {
-  return (status: Status, indicateur: Indicateur): string => {
+  return (statut: Statut, indicateur: Indicateur): string => {
     if (
-      typeof data?.[status]?.[`_${code}`]?.[indicateur] === "undefined" ||
+      typeof data?.[statut]?.[`_${code}`]?.[indicateur] === "undefined" ||
       (indicateur === "tauxTransformation" &&
-        data?.[status]?.[`_${code}`].effectif === 0)
+        data?.[statut]?.[`_${code}`].effectif === 0)
     ) {
       return or;
     }
@@ -269,16 +269,16 @@ function generatePercentageDataOr(
       maximumFractionDigits: 1,
     }).format(
       Number.parseFloat(
-        (data?.[status]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
+        (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
       ) / 100
     );
   };
 }
 
 function generateGetScopedData(code: string, data?: StatsPilotageIntentions) {
-  return (status: Status, indicateur: Indicateur): number => {
+  return (statut: Statut, indicateur: Indicateur): number => {
     return Number.parseFloat(
-      (data?.[status]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
+      (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
     );
   };
 }
@@ -415,7 +415,7 @@ export const IndicateursClesSection = ({
                       color="bluefrance.113"
                     >
                       {getPercentageDataOr(
-                        DemandeStatutEnum["proposition"],
+                        DemandeStatutEnum["projet de demande"],
                         "tauxTransformation"
                       )}
                     </Text>
@@ -427,7 +427,7 @@ export const IndicateursClesSection = ({
                     <ProgressBar
                       percentage={
                         (getScopedData(
-                          DemandeStatutEnum["proposition"],
+                          DemandeStatutEnum["projet de demande"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -438,7 +438,7 @@ export const IndicateursClesSection = ({
                       {`
                       ${(
                         (getScopedData(
-                          DemandeStatutEnum["proposition"],
+                          DemandeStatutEnum["projet de demande"],
                           "tauxTransformation"
                         ) /
                           6) *
@@ -504,7 +504,7 @@ export const IndicateursClesSection = ({
                 <ProgressBar
                   percentage={
                     (getScopedData(
-                      DemandeStatutEnum["proposition"],
+                      DemandeStatutEnum["projet de demande"],
                       "placesOuvertes"
                     ) /
                       getScopedData("all", "placesOuvertes")) *
@@ -512,7 +512,7 @@ export const IndicateursClesSection = ({
                   }
                   leftLabel="En projet"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum["proposition"],
+                    DemandeStatutEnum["projet de demande"],
                     "placesOuvertes"
                   )}
                   colorScheme="orange.draft"
@@ -549,7 +549,7 @@ export const IndicateursClesSection = ({
                 <ProgressBar
                   percentage={
                     (getScopedData(
-                      DemandeStatutEnum["proposition"],
+                      DemandeStatutEnum["projet de demande"],
                       "placesFermees"
                     ) /
                       getScopedData("all", "placesFermees")) *
@@ -557,7 +557,7 @@ export const IndicateursClesSection = ({
                   }
                   leftLabel="En projet"
                   rightLabel={getScopedData(
-                    DemandeStatutEnum["proposition"],
+                    DemandeStatutEnum["projet de demande"],
                     "placesFermees"
                   )}
                   colorScheme="orange.submitted"

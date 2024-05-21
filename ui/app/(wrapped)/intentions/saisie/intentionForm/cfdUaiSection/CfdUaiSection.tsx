@@ -27,7 +27,7 @@ import { UaiBlock } from "./UaiBlock";
 
 const TagDemande = ({ statut }: { statut?: string }) => {
   switch (statut) {
-    case DemandeStatutEnum["proposition"]:
+    case DemandeStatutEnum["projet de demande"]:
       return (
         <Tag size="md" colorScheme={"yellow"} ml={4}>
           Projet de demande

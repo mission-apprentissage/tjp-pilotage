@@ -15,5 +15,5 @@ export const formatDate = ({
   const [datePart, timePart] = new Date(date)
     .toLocaleString("fr-FR", options)
     .split(" ");
-  return `${datePart}${dateTimeSeparator}${timePart}`;
+  return `${datePart}${dateTimeSeparator}${timePart ?? ""}`;
 };

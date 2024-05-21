@@ -1,5 +1,6 @@
 import { Server } from "../../server";
 import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
+import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
 import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
@@ -24,5 +25,6 @@ export const registerIntentionsExpeModule = ({
     ...getCurrentCampagneRoute(server),
     ...searchEtablissementPerdirRoute(server),
     ...submitChangementStatutRoute({ server }),
+    ...deleteChangementStatutRoute(server),
   };
 };

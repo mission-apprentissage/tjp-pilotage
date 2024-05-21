@@ -382,27 +382,11 @@ export const getFilters = async ({
 
   const statutsFilters = await filtersBase
     .select(["demande.statut as value", "demande.statut as label"])
-    .where("demande.statut", "<>", DemandeStatutEnum["refusée"])
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-        statut ? eb("demande.statut", "in", statut) : sql<boolean>`false`,
-      ]);
-    })
+    .where("demande.statut", "not in", [
+      DemandeStatutEnum["supprimée"],
+      DemandeStatutEnum["brouillon"],
+    ])
+
     .execute();
 
   const filters = {

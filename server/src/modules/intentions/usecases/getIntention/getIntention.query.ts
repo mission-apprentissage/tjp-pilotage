@@ -112,12 +112,10 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "changementStatut.statutPrecedent",
     ])
     .orderBy("changementStatut.updatedAt", "desc")
+    .selectAll("changementStatut")
     .select((eb) => [
-      "changementStatut.statut",
-      "changementStatut.updatedAt",
       "user.id as userId",
       "user.role as userRole",
-      "changementStatut.commentaire",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
         "user.lastname"
       )})`.as("userFullName"),

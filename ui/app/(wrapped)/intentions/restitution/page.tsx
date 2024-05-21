@@ -172,7 +172,7 @@ export default () => {
           setStatutFilter(
             value as Extract<
               DemandeStatutType,
-              "proposition" | "demande validée" | "refusée"
+              "projet de demande" | "demande validée" | "refusée"
             >[]
           );
           break;
@@ -275,10 +275,13 @@ export default () => {
   const [statutFilter, setStatutFilter] = useState<
     | Extract<
         DemandeStatutType,
-        "proposition" | "demande validée" | "refusée"
+        "projet de demande" | "demande validée" | "refusée"
       >[]
     | undefined
-  >([DemandeStatutEnum["proposition"], DemandeStatutEnum["demande validée"]]);
+  >([
+    DemandeStatutEnum["projet de demande"],
+    DemandeStatutEnum["demande validée"],
+  ]);
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 

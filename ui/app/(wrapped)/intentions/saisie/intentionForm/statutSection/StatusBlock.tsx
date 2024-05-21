@@ -27,7 +27,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
             value={value}
             disabled={disabled}
           >
-            <option value={DemandeStatutEnum["proposition"]}>
+            <option value={DemandeStatutEnum["projet de demande"]}>
               Projet de demande
             </option>
             <option value={DemandeStatutEnum["demande validée"]}>

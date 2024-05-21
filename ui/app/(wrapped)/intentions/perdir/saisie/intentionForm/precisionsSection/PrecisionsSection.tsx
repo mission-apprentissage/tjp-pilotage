@@ -7,8 +7,8 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { QuestionBlock } from "../../components/QuestionBlock";
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";

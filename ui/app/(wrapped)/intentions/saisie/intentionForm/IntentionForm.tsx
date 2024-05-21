@@ -88,7 +88,7 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case DemandeStatutEnum["proposition"]:
+        case DemandeStatutEnum["projet de demande"]:
           message = "Projet de demande enregistré avec succès";
           break;
         case DemandeStatutEnum["demande validée"]:
@@ -283,7 +283,7 @@ export const IntentionForm = ({
                                     ...values,
                                     statut: formId
                                       ? values.statut
-                                      : DemandeStatutEnum["proposition"],
+                                      : DemandeStatutEnum["projet de demande"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

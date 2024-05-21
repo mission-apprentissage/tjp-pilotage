@@ -60,6 +60,21 @@ export const isDemandeNotDeletedOrRefused = (
     DemandeStatutEnum["refusée"],
   ]);
 
+export const isIntentionBrouillonVisible =
+  ({ user }: { user: RequestUser }) =>
+  (eb: ExpressionBuilder<DB, "intention">) => {
+    const { draftFilter } = getIntentionSelectableFilters(user);
+    return eb.or([
+      eb.and([
+        eb("intention.statut", "=", DemandeStatutEnum["brouillon"]),
+        draftFilter.uais
+          ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai)))
+          : sql<boolean>`false`,
+      ]),
+      eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
+    ]);
+  };
+
 export const isIntentionSelectable =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "intention">) => {

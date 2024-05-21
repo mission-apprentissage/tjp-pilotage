@@ -56,9 +56,6 @@ export const getRegionStats = async ({
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
     .where(notHistoriqueIndicateurRegionSortie)
-    // .where((eb) =>
-    //   notHistoriqueUnlessCoExistantIndicateurRegionSortie(eb, rentreeScolaire)
-    // )
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where(

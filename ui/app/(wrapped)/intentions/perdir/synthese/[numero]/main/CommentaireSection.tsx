@@ -1,21 +1,27 @@
 import {
   Avatar,
   Box,
+  Button,
   chakra,
   Flex,
   Highlight,
   Tag,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useState } from "react";
 import { Role } from "shared";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
+import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
 
 import { formatRole } from "../../../../utils/roleUtils";
 import { formatStatut } from "../../../../utils/statutUtils";
+import { CommentaireForm } from "./CommentaireForm";
 
 const StatutTag = chakra(
   ({
@@ -67,14 +73,39 @@ export const CommentaireSection = chakra(
     changementStatut,
   }: {
     changementStatut: {
-      statut: DemandeStatutType;
+      id: string;
+      intentionNumero: string;
       userId: string;
       userRole?: string;
       userFullName: string;
-      updatedAt: string;
+      statutPrecedent?: Exclude<DemandeStatutType, "supprimée">;
+      statut: Exclude<DemandeStatutType, "supprimée">;
       commentaire?: string;
+      updatedAt: string;
     };
   }) => {
+    const [isModifying, setIsModifying] = useState(false);
+
+    const queryClient = useQueryClient();
+    const toast = useToast();
+
+    const { isLoading: isDeleting, mutateAsync: submitDeleteChangementStatut } =
+      useMutation({
+        mutationFn: async () => {
+          await client
+            .ref("[DELETE]/intention/statut/:id")
+            .query({ params: { id: changementStatut.id } })
+            .then(() => {
+              queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+              toast({
+                variant: "left-accent",
+                status: "success",
+                title: "Le changement de statut a bien été supprimé",
+              });
+            });
+        },
+      });
+
     return (
       <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6}>
         <Flex direction={"column"} gap={2} p={2}>
@@ -123,7 +154,12 @@ export const CommentaireSection = chakra(
             </Text>
           </Flex>
 
-          {changementStatut.commentaire ? (
+          {isModifying ? (
+            <CommentaireForm
+              changementStatut={changementStatut}
+              setIsModifying={setIsModifying}
+            />
+          ) : changementStatut.commentaire ? (
             <Text
               fontSize={16}
               fontWeight={500}
@@ -142,6 +178,28 @@ export const CommentaireSection = chakra(
               Pas d'observation renseignée
             </Text>
           )}
+          <Flex direction={"row"} gap={6}>
+            <Button
+              isLoading={isDeleting || isModifying}
+              variant={"link"}
+              color="bluefrance.113"
+              fontSize={12}
+              fontWeight={400}
+              onClick={() => submitDeleteChangementStatut()}
+            >
+              Supprimer
+            </Button>
+            <Button
+              variant={"link"}
+              color="bluefrance.113"
+              fontSize={12}
+              fontWeight={400}
+              isLoading={isDeleting || isModifying}
+              onClick={() => setIsModifying(true)}
+            >
+              Modifier
+            </Button>
+          </Flex>
         </Flex>
       </Box>
     );

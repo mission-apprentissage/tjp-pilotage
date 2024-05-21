@@ -37,9 +37,9 @@ import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
-import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
 import { Campagne } from "../types";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";

@@ -19,12 +19,12 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema
     .alterTable("changementStatut")
-    .addUniqueConstraint("changementStatut_unique_constraint", [
-      "userId",
-      "intentionNumero",
-      "statutPrecedent",
-      "statut",
-    ])
+    .addUniqueConstraint(
+      "changementStatut_unique_constraint",
+      ["userId", "intentionNumero", "statutPrecedent", "statut"],
+      (builder) => builder.nullsNotDistinct()
+    )
+
     .execute();
 };
 

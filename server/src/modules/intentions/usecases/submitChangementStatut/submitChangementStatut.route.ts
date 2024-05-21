@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -16,10 +15,9 @@ export const submitChangementStatutRoute = ({ server }: { server: Server }) => {
       preHandler: hasPermissionHandler("intentions-perdir-statut/ecriture"),
       handler: async (request, response) => {
         const { changementStatut } = request.body;
-        if (!request.user) throw Boom.unauthorized();
 
         const result = await submitChangementStatutUsecase({
-          user: request.user,
+          user: request.user!,
           changementStatut,
         });
         response.status(200).send(result);

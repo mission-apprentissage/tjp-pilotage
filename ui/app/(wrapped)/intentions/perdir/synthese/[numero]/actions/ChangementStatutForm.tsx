@@ -33,6 +33,8 @@ import { client } from "@/api.client";
 import { formatStatut, getOrderStatut } from "../../../../utils/statutUtils";
 
 type ChangementStatutForm = {
+  id: string;
+  userId: string;
   intentionNumero: string;
   statutPrecedent?: Exclude<DemandeStatutType, "supprimée">;
   statut: Exclude<DemandeStatutType, "supprimée">;
@@ -137,9 +139,6 @@ export const ChangementStatutForm = ({
               required: "Le statut est obligatoire",
               validate: (value) => {
                 if (value === intention.statut) {
-                  // setError("statut", {
-                  //   message: "Le statut n'a pas changé",
-                  // });
                   return "Le statut n'a pas changé";
                 }
               },
@@ -180,11 +179,6 @@ export const ChangementStatutForm = ({
           />
         </FormControl>
         <Button
-          // isDisabled={
-          //   // disabled ||
-          //   // isActionsDisabled ||
-          //   // campagne?.statut !== CampagneStatutEnum["en cours"]
-          // }
           isLoading={isSubmitting}
           variant="primary"
           onClick={() => {
