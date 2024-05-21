@@ -14,7 +14,7 @@ services:
       - /opt/pilotage/data/ssl:/ssl:ro
 
   metabase:
-    image: metabase/metabase:v0.49.9
+    image: metabase/metabase:v0.49.11
     container_name: pilotage_metabase
     mem_limit: 2g
     volumes:
