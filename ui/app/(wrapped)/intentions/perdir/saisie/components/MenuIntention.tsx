@@ -1,5 +1,13 @@
 import { QuestionOutlineIcon } from "@chakra-ui/icons";
-import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import {
+  Button,
+  Divider,
+  Flex,
+  Text,
+  useToken,
+  VStack,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -47,6 +55,8 @@ export const MenuIntention = ({
     }
   );
 
+  const bluefrance113 = useToken("colors", "bluefrance.113");
+
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
@@ -73,69 +83,25 @@ export const MenuIntention = ({
             },
           })}
           width={"100%"}
-          iconSpacing={"auto"}
-          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
-        >
-          <Text
-            fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
-          >
-            Toutes
-          </Text>
-        </Button>
-        <Button
-          bgColor={"unset"}
-          as={NextLink}
-          size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["brouillon"],
-            },
-          })}
-          width={"100%"}
-          iconSpacing={"auto"}
-          rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.["brouillon"]}</Text>
+          iconSpacing={2}
+          leftIcon={
+            <Icon icon={"ri:stack-line"} color={bluefrance113} width={"24px"} />
           }
-        >
-          <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["brouillon"]
-                ? "bold"
-                : "normal"
-            }
-          >
-            Brouillons
-          </Text>
-        </Button>
-        <Button
-          bgColor={"unset"}
-          as={NextLink}
-          size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["demande validée"],
-            },
-          })}
-          width={"100%"}
-          iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>
-              {countDemandes?.["demande validée"]}
+            <Text
+              fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
+              fontSize={14}
+            >
+              {countDemandes?.total}
             </Text>
           }
         >
           <Text
-            fontWeight={
-              isRecapView && statut === DemandeStatutEnum["demande validée"]
-                ? "bold"
-                : "normal"
-            }
+            fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
+            fontSize={14}
+            me={"auto"}
           >
-            Demandes validées
+            Toutes
           </Text>
         </Button>
         <Button
@@ -150,9 +116,25 @@ export const MenuIntention = ({
             },
           })}
           width={"100%"}
-          iconSpacing={"auto"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-unknow-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.["proposition"]}</Text>
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["proposition"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["proposition"]}
+            </Text>
           }
         >
           <Text
@@ -161,8 +143,100 @@ export const MenuIntention = ({
                 ? "bold"
                 : "normal"
             }
+            fontSize={14}
+            me={"auto"}
           >
             Propositions
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["projet de demande"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-text-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["projet de demande"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["projet de demande"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["projet de demande"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Projet de demande
+          </Text>
+        </Button>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["demande validée"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:checkbox-circle-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["demande validée"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["demande validée"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["demande validée"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Demandes validées
           </Text>
         </Button>
         <Button
@@ -177,9 +251,25 @@ export const MenuIntention = ({
             },
           })}
           width={"100%"}
-          iconSpacing={"auto"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:close-circle-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.["refusée"]}</Text>
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["refusée"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["refusée"]}
+            </Text>
           }
         >
           <Text
@@ -188,8 +278,55 @@ export const MenuIntention = ({
                 ? "bold"
                 : "normal"
             }
+            fontSize={14}
+            me={"auto"}
           >
             Demandes refusées
+          </Text>
+        </Button>
+        <Divider />
+        <Text fontSize={12} color="grey.425" mt={2}>
+          Visible par vous uniquement
+        </Text>
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["brouillon"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon icon={"ri:draft-line"} color={bluefrance113} width={"24px"} />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["brouillon"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["brouillon"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["brouillon"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Brouillons
           </Text>
         </Button>
 

@@ -144,14 +144,14 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       demande: {
         ...demande,
-        statut: DemandeStatutEnum["proposition"],
+        statut: DemandeStatutEnum["projet de demande"],
         numero: undefined,
       },
     });
     expect(deps.createDemandeQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...demande,
-        statut: DemandeStatutEnum["proposition"],
+        statut: DemandeStatutEnum["projet de demande"],
         id: expect.stringMatching(".+"),
         numero: expect.stringMatching(".+"),
         updatedAt: expect.any(Date),

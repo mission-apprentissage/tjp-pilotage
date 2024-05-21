@@ -3,6 +3,7 @@ import { Flex } from "@chakra-ui/react";
 import { client } from "@/api.client";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
 import { ChangementStatutForm } from "./ChangementStatutForm";
 
 export const ActionsSection = ({
@@ -15,7 +16,7 @@ export const ActionsSection = ({
   );
 
   return (
-    <Flex direction={"column"} gap={6}>
+    <Flex direction={"column"} gap={6} top={STICKY_OFFSET} position={"sticky"}>
       {hasPermissionModificationStatut && (
         <ChangementStatutForm intention={intention} />
       )}

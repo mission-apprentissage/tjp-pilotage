@@ -90,7 +90,7 @@ const getStatsPilotageIntentionsFactory =
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum["proposition"],
+        statut: DemandeStatutEnum["projet de demande"],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
@@ -105,7 +105,7 @@ const getStatsPilotageIntentionsFactory =
     ]);
 
     return {
-      ["proposition"]: formatResult(
+      ["projet de demande"]: formatResult(
         propositions,
         activeFilters.order,
         activeFilters.orderBy

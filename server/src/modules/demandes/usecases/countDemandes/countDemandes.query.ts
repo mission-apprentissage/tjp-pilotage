@@ -31,14 +31,14 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
       sql<number>`COALESCE(
         SUM(
           CASE WHEN ${eb.ref("demande.statut")} = ${
-            DemandeStatutEnum["proposition"]
+            DemandeStatutEnum["projet de demande"]
           }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum["proposition"])
+      )`.as(DemandeStatutEnum["projet de demande"])
     )
     .select((eb) =>
       sql<number>`COALESCE(

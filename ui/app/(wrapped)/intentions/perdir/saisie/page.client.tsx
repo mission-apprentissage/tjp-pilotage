@@ -53,7 +53,7 @@ const PAGE_SIZE = 30;
 
 const TagDemande = ({ statut }: { statut: DemandeStatutType }) => {
   const getColorStatut = (statut: DemandeStatutType) => {
-    if (statut === DemandeStatutEnum["proposition"]) return "pink";
+    if (statut === DemandeStatutEnum["projet de demande"]) return "pink";
     if (statut === DemandeStatutEnum["brouillon"]) return "orange";
     if (statut === DemandeStatutEnum["demande validée"]) return "green";
     if (statut === DemandeStatutEnum["refusée"]) return "red";
@@ -235,7 +235,13 @@ export const PageClient = () => {
                   bg="white"
                 >
                   <Tr>
-                    <Th>n° demande</Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("updatedAt")}
+                    >
+                      <OrderIcon {...order} column="updatedAt" />
+                      {INTENTIONS_COLUMNS.updatedAt}
+                    </Th>
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("libelleFormation")}
@@ -257,23 +263,17 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="libelleDepartement" />
                       {INTENTIONS_COLUMNS.libelleDepartement}
                     </Th>
+                    <Th cursor="pointer" onClick={() => handleOrder("statut")}>
+                      <OrderIcon {...order} column="statut" />
+                      {INTENTIONS_COLUMNS.statut}
+                    </Th>
+                    <Th textAlign={"center"}>actions</Th>
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("typeDemande")}
                     >
                       <OrderIcon {...order} column="typeDemande" />
                       {INTENTIONS_COLUMNS.typeDemande}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("statut")}>
-                      <OrderIcon {...order} column="statut" />
-                      {INTENTIONS_COLUMNS.statut}
-                    </Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("createdAt")}
-                    >
-                      <OrderIcon {...order} column="createdAt" />
-                      {INTENTIONS_COLUMNS.createdAt}
                     </Th>
                     <Th
                       cursor="pointer"
@@ -283,14 +283,6 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="userName" />
                       {INTENTIONS_COLUMNS.userName}
                     </Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("updatedAt")}
-                    >
-                      <OrderIcon {...order} column="updatedAt" />
-                      {INTENTIONS_COLUMNS.updatedAt}
-                    </Th>
-                    <Th>actions</Th>
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -310,7 +302,16 @@ export const PageClient = () => {
                           );
                         }}
                       >
-                        <Td>{intention.numero}</Td>
+                        <Td textAlign={"center"}>
+                          {formatDate({
+                            date: intention.updatedAt,
+                            options: {
+                              dateStyle: "short",
+                              timeStyle: "short",
+                            },
+                            dateTimeSeparator: " à ",
+                          })}
+                        </Td>
                         <Td>
                           <Text
                             textOverflow={"ellipsis"}
@@ -333,6 +334,7 @@ export const PageClient = () => {
                         </Td>
                         <Td>
                           <Text
+                            textAlign={"center"}
                             textOverflow={"ellipsis"}
                             overflow={"hidden"}
                             whiteSpace={"break-spaces"}
@@ -341,8 +343,62 @@ export const PageClient = () => {
                             {intention.libelleDepartement}
                           </Text>
                         </Td>
+                        <Td textAlign={"center"} w={0}>
+                          <TagDemande statut={intention.statut} />
+                        </Td>
+                        <Td textAlign={"center"}>
+                          <Flex direction={"row"} gap={2}>
+                            <Tooltip label="Voir la demande">
+                              <IconButton
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/perdir/synthese/${intention.numero}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push(
+                                    `/intentions/perdir/synthese/${intention.numero}`
+                                  );
+                                }}
+                                aria-label="Voir la demande"
+                                icon={
+                                  <Icon
+                                    icon="ri:eye-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                                me={"auto"}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Modifier la demande">
+                              <IconButton
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/perdir/saisie/${intention.numero}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push(
+                                    `/intentions/perdir/saisie/${intention.numero}`
+                                  );
+                                }}
+                                aria-label="Modifier la demande"
+                                icon={
+                                  <Icon
+                                    icon="ri:pencil-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                                me={"auto"}
+                              />
+                            </Tooltip>
+                          </Flex>
+                        </Td>
                         <Td>
                           <Text
+                            textAlign={"center"}
                             textOverflow={"ellipsis"}
                             overflow={"hidden"}
                             whiteSpace={"break-spaces"}
@@ -353,10 +409,6 @@ export const PageClient = () => {
                               : null}
                           </Text>
                         </Td>
-                        <Td align="center" w={0}>
-                          <TagDemande statut={intention.statut} />
-                        </Td>
-                        <Td>{formatDate({ date: intention.createdAt })}</Td>
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={intention.userName}>
                             <Avatar
@@ -369,34 +421,6 @@ export const PageClient = () => {
                               position={"unset"}
                             />
                           </Tooltip>
-                        </Td>
-                        <Td textAlign={"center"}>
-                          {formatDate({ date: intention.updatedAt })}
-                        </Td>
-                        <Td textAlign={"center"}>
-                          <Flex>
-                            <IconButton
-                              as={NextLink}
-                              variant="link"
-                              href={`/intentions/perdir/synthese/${intention.numero}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                router.push(
-                                  `/intentions/perdir/synthese/${intention.numero}`
-                                );
-                              }}
-                              aria-label="Voir la demande"
-                              icon={
-                                <Icon
-                                  icon="ri:eye-line"
-                                  width={"24px"}
-                                  color={bluefrance113}
-                                />
-                              }
-                              me={"auto"}
-                            />
-                          </Flex>
                         </Td>
                         {data?.campagne.statut ===
                           CampagneStatutEnum["terminée"] && (

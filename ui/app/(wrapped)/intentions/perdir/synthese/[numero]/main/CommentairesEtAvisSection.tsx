@@ -108,9 +108,9 @@ export const CommentairesEtAvisSection = ({
                     }}
                   >
                     {`${etape.changementsStatut
-                      ?.length} changements de statut par ${getNombreDifferentsContributeurs(
+                      ?.length} changement(s) de statut par ${getNombreDifferentsContributeurs(
                       etape.changementsStatut
-                    )} contributeu`}
+                    )} contributeur(s)`}
                   </Highlight>
                 </Text>
               </Flex>

@@ -118,18 +118,20 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum["proposition"],
+              statut: DemandeStatutEnum["projet de demande"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.["proposition"]}</Text>
+            <Text fontWeight={"normal"}>
+              {countDemandes?.["projet de demande"]}
+            </Text>
           }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum["proposition"]
+              isRecapView && statut === DemandeStatutEnum["projet de demande"]
                 ? "bold"
                 : "normal"
             }

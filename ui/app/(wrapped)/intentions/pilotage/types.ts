@@ -59,8 +59,8 @@ export type SelectedScope = {
   type: Scope;
   value?: string;
 };
-export type Status =
-  | Extract<DemandeStatutType, "demande validée" | "proposition">
+export type Statut =
+  | Extract<DemandeStatutType, "demande validée" | "projet de demande">
   | "all";
 export type Indicateur =
   | "tauxTransformation"

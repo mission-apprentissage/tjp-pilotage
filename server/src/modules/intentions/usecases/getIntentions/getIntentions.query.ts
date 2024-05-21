@@ -6,7 +6,10 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
-import { isIntentionSelectable } from "../../../utils/isDemandeSelectable";
+import {
+  isIntentionBrouillonVisible,
+  isIntentionSelectable,
+} from "../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { getIntentionsSchema } from "./getIntentions.schema";
 
@@ -124,6 +127,7 @@ export const getIntentionsQuery = async (
     })
     .orderBy("updatedAt desc")
     .where(isIntentionSelectable({ user }))
+    .where(isIntentionBrouillonVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();

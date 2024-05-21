@@ -1,7 +1,7 @@
 import { Divider, Flex, Heading, Img } from "@chakra-ui/react";
 import { RefObject } from "react";
 
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
+import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AchatEquipementDescriptionField } from "./AchatEquipementDescriptionField";
 import { AchatEquipementField } from "./AchatEquipementField";
 import { TravauxAmenagementDescriptionField } from "./TravauxAmenagementDescriptionField";

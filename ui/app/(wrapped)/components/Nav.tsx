@@ -168,6 +168,11 @@ export const Nav = () => {
       user: auth?.user,
     });
 
+  const shouldDisplayBothIntentionMenus = hasRole({
+    user: auth?.user,
+    role: "admin",
+  });
+
   const {
     isOpen: isMenuPanoramaOpen,
     onOpen: onMenuPanoramaOpen,
@@ -256,26 +261,25 @@ export const Nav = () => {
             onMouseLeave={onMenuIntentionClose}
           >
             {hasPermission(auth?.user.role, "intentions/lecture") &&
-            !shouldDisplayIntentionMenu ? (
-              <MenuItem p="0" w="100%">
-                <NavMenuLink
-                  href="/intentions/saisie"
-                  segment="saisie-intentions"
-                >
-                  Formulaire
-                </NavMenuLink>
-              </MenuItem>
-            ) : (
-              hasPermission(auth?.user.role, "intentions-perdir/lecture") && (
+              !shouldDisplayIntentionMenu && (
                 <MenuItem p="0" w="100%">
                   <NavMenuLink
-                    href="/intentions/perdir/saisie"
-                    segment="saisie-intentions-perdir"
+                    href="/intentions/saisie"
+                    segment="saisie-intentions"
                   >
                     Formulaire
                   </NavMenuLink>
                 </MenuItem>
-              )
+              )}
+            {hasPermission(auth?.user.role, "intentions-perdir/lecture") && (
+              <MenuItem p="0" w="100%">
+                <NavMenuLink
+                  href="/intentions/perdir/saisie"
+                  segment="saisie-intentions-perdir"
+                >
+                  Formulaire {shouldDisplayBothIntentionMenus ? "(EXPE)" : ""}
+                </NavMenuLink>
+              </MenuItem>
             )}
             {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
               <MenuItem p="0">

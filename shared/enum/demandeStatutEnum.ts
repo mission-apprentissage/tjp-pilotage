@@ -1,15 +1,15 @@
 import { z } from "zod";
 
 export const DemandeStatutZodType = z.enum([
-  "proposition",
-  "demande validée",
-  "refusée",
-  "supprimée",
-  "brouillon",
-  "dossier complet",
-  "dossier incomplet",
-  "projet de demande",
-  "prêt pour le vote",
+  "brouillon", // Brouillon visible uniquement de l'utilisateur dont elle émane
+  "proposition", // Proposition dont la complétude doit être inspectée
+  "dossier complet", // Proposition complète
+  "dossier incomplet", // Proposition incomplète
+  "projet de demande", // Proposition dont la complétude a été étudiée ayant fait l'objet d'avis préalable et qui devra être soumise à avis
+  "prêt pour le vote", // Proposition soumise à avis consultatifs et prête pour le vote
+  "demande validée", // Proposition ayant reçu un avis favorable
+  "refusée", // Proposition ayant reçu un avis défavorable
+  "supprimée", // Proposition supprimée
 ]);
 
 export const DemandeStatutEnum = DemandeStatutZodType.Enum;

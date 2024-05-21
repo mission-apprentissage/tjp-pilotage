@@ -107,9 +107,12 @@ const IntentionSchema = z.object({
   }),
   changementsStatut: z.array(
     z.object({
+      id: z.string(),
+      intentionNumero: z.string(),
       userId: z.string(),
       userRole: z.string().optional(),
-      statut: DemandeStatutZodType,
+      statutPrecedent: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+      statut: DemandeStatutZodType.exclude(["supprimée"]),
       updatedAt: z.string(),
       userFullName: z.string(),
       commentaire: z.string().optional(),
