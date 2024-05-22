@@ -6,6 +6,7 @@ import { z } from "zod";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
@@ -151,6 +152,7 @@ export const getDemandesQuery = async (
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
+        statut: castDemandeStatutWithoutSupprimee(demande.statut),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,

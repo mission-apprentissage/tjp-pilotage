@@ -7,6 +7,7 @@ import {
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 
 export const getDemandeWithMetadata = async (id: string) => {
   const demande = await kdb
@@ -91,6 +92,7 @@ export const getDemandeWithMetadata = async (id: string) => {
         formation: cleanNull(demande.metadata.formation),
         etablissement: cleanNull(demande.metadata.etablissement),
       }),
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
       createdAt: demande.createdAt?.toISOString(),
       codeDispositif,
     })

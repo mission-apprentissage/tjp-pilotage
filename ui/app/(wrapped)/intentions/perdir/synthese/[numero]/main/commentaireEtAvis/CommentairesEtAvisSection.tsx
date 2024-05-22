@@ -12,7 +12,7 @@ import { Fragment } from "react";
 
 import { client } from "@/api.client";
 
-import { getStepWorkflow } from "../../../../utils/statutUtils";
+import { getStepWorkflow } from "../../../../../utils/statutUtils";
 import { CommentaireSection } from "./CommentaireSection";
 
 const StepIcon = chakra(

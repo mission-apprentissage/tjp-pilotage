@@ -1,7 +1,6 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 import { getPermissionScope, guardScope } from "shared";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
@@ -24,8 +23,6 @@ export const getIntentionRoute = (server: Server) => {
           user,
         });
         if (!intention) return response.status(404).send();
-        if (intention.statut === DemandeStatutEnum["supprimée"])
-          throw Boom.forbidden();
 
         const scope = getPermissionScope(
           user.role,

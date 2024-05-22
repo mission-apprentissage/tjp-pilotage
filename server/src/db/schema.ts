@@ -46,27 +46,8 @@ export interface ChangementStatut {
   id: Generated<string>;
   userId: string | null;
   intentionNumero: string;
-  statutPrecedent:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée"
-    | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée";
+  statutPrecedent: string | null;
+  statut: string;
   createdAt: Generated<Timestamp>;
   updatedAt: Timestamp;
   commentaire: string | null;
@@ -176,16 +157,7 @@ export interface Demande {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée";
+  statut: string;
   codeRegion: string;
   codeAcademie: string | null;
   createurId: string;
@@ -404,16 +376,7 @@ export interface Intention {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée";
+  statut: string;
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string;
@@ -485,17 +448,7 @@ export interface LatestDemandeIntentionNonMaterializedView {
   amiCmaValide: boolean | null;
   amiCmaEnCoursValidation: boolean | null;
   amiCmaValideAnnee: string | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée"
-    | null;
+  statut: string | null;
   commentaire: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
@@ -564,17 +517,7 @@ export interface LatestDemandeNonMaterializedView {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée"
-    | null;
+  statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string | null;
@@ -632,17 +575,7 @@ export interface LatestIntentionNonMaterializedView {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut:
-    | "brouillon"
-    | "demande validée"
-    | "dossier complet"
-    | "dossier incomplet"
-    | "prêt pour le vote"
-    | "projet de demande"
-    | "proposition"
-    | "refusée"
-    | "supprimée"
-    | null;
+  statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
   createurId: string | null;

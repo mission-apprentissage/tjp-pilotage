@@ -3,9 +3,10 @@ import { Icon } from "@iconify/react";
 import NextLink from "next/link";
 
 import { client } from "@/api.client";
-import { CommentairesEtAvisSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/CommentairesEtAvisSection";
+import { CommentairesEtAvisSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/commentaireEtAvis/CommentairesEtAvisSection";
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/displayTypeEnum";
 
+import { SyntheseSection } from "./synthese/SyntheseSection";
 import { TabsSection } from "./TabsSection";
 
 export const MainSection = ({
@@ -60,7 +61,7 @@ export const MainSection = ({
       </Flex>
       <Flex mt={8}>
         {displayType === DisplayTypeEnum.synthese ? (
-          <> TODO Synthèse</>
+          <SyntheseSection intention={intention} />
         ) : displayType === DisplayTypeEnum.commentairesEtAvis ? (
           <CommentairesEtAvisSection intention={intention} />
         ) : null}

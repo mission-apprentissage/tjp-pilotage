@@ -4,11 +4,17 @@ import {
   jsonBuildObject,
   jsonObjectFrom,
 } from "kysely/helpers/postgres";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
+import {
+  countDifferenceCapaciteApprentissageIntention,
+  countDifferenceCapaciteScolaireIntention,
+} from "../../../utils/countCapacite";
 import {
   isIntentionNotDeleted,
   isIntentionSelectable,
@@ -26,6 +32,19 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       join
         .onRef("changementStatut.intentionNumero", "=", "intention.numero")
         .onRef("changementStatut.statut", "=", "intention.statut")
+    )
+    .innerJoin("user", "user.id", "intention.createurId")
+    .innerJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "intention.codeDispositif"
+    )
+    .innerJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
+    .innerJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
     )
     .selectAll()
     .select((eb) => [
@@ -96,6 +115,22 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       }).as("metadata"),
     ])
     .select("changementStatut.commentaire as commentaireStatut")
+    .select((eb) => [
+      countDifferenceCapaciteScolaireIntention(eb).as(
+        "differenceCapaciteScolaire"
+      ),
+      countDifferenceCapaciteApprentissageIntention(eb).as(
+        "differenceCapaciteApprentissage"
+      ),
+      "dispositif.libelleDispositif as libelleDispositif",
+      "dataFormation.libelleFormation",
+      "dataEtablissement.libelleEtablissement",
+      "departement.libelleDepartement",
+      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
+        "user.lastname"
+      )})`.as("userFullName"),
+      "user.role as userRole",
+    ])
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where("intention.numero", "=", numero)
@@ -105,7 +140,17 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const changementsStatut = await kdb
     .selectFrom("changementStatut")
     .innerJoin("user", "user.id", "changementStatut.userId")
-    .where("changementStatut.intentionNumero", "=", numero)
+    .where((w) =>
+      w.and([
+        w("changementStatut.intentionNumero", "=", numero),
+        w("changementStatut.statut", "<>", DemandeStatutEnum["supprimée"]),
+        w(
+          "changementStatut.statutPrecedent",
+          "<>",
+          DemandeStatutEnum["supprimée"]
+        ),
+      ])
+    )
     .distinctOn([
       "changementStatut.updatedAt",
       "changementStatut.statut",
@@ -120,7 +165,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         "user.lastname"
       )})`.as("userFullName"),
     ])
-    .execute();
+    .execute()
+    .then((rows) =>
+      rows.filter(
+        (changementStatut) =>
+          changementStatut.statut !== DemandeStatutEnum["supprimée"] &&
+          changementStatut.statutPrecedent !== DemandeStatutEnum["supprimée"]
+      )
+    );
 
   const codeDispositif =
     intention?.codeDispositif &&
@@ -138,13 +190,19 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         etablissement: cleanNull(intention.metadata.etablissement),
       }),
       createdAt: intention.createdAt?.toISOString(),
+      updatedAt: intention.updatedAt?.toISOString(),
       campagne: cleanNull({
         ...intention.campagne,
       }),
+      statut: castDemandeStatutWithoutSupprimee(intention.statut),
       codeDispositif,
-      changementsStatut: changementsStatut.map((item) => ({
-        ...item,
-        updatedAt: item.updatedAt?.toISOString(),
+      changementsStatut: changementsStatut.map((changementStatut) => ({
+        ...changementStatut,
+        statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
+        statutPrecedent: castDemandeStatutWithoutSupprimee(
+          changementStatut.statutPrecedent
+        ),
+        updatedAt: changementStatut.updatedAt?.toISOString(),
       })),
     })
   );

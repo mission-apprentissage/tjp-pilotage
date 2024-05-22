@@ -18,7 +18,7 @@ const DemandesItem = z.object({
   createdAt: z.string(),
   updatedAt: z.string(),
   createurId: z.string(),
-  statut: z.string(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
   typeDemande: z.string().optional(),
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),
