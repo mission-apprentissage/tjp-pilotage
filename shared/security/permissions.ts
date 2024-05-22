@@ -14,10 +14,10 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "users/lecture": {},
-    "users/ecriture": {},
-    "campagnes/lecture": {},
-    "campagnes/ecriture": {},
+    "users/lecture": { default: "national" },
+    "users/ecriture": { default: "national" },
+    "campagnes/lecture": { default: "national" },
+    "campagnes/ecriture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
     "intentions-perdir-statut/ecriture": { default: "national" },
@@ -31,26 +31,49 @@ export const PERMISSIONS = {
     "intentions-perdir/ecriture": { default: "national" },
     "intentions-perdir-statut/ecriture": { default: "national" },
   },
-  pilote_region: {
+  admin_region: {
     "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "intentions/ecriture": { default: "region" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/ecriture": { default: "region" },
+    "users/lecture": { default: "region" },
+    "users/ecriture": { default: "region" },
+  },
+  region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+  },
+  pilote_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
   },
   gestionnaire_region: {
-    "intentions/lecture": { draft: "user", default: "region" },
-    "intentions/ecriture": { default: "user" },
+    "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
   },
+  expert_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+  },
   perdir: {
-    "intentions-perdir/lecture": { draft: "uai", default: "uai" },
-    "intentions-perdir/ecriture": { default: "uai" },
+    "intentions/lecture": { default: "uai" },
+    "intentions-perdir/lecture": { draft: "uai", default: "region" },
+    "intentions-perdir/ecriture": { default: "uai", draft: "user" },
     "restitution-intentions/lecture": { default: "uai" },
     "pilotage-intentions/lecture": { default: "uai" },
   },
@@ -58,4 +81,44 @@ export const PERMISSIONS = {
   [R: string]: {
     [s: string]: Record<string, Scope>;
   };
+};
+
+export const HIERARCHY: {
+  [key in Role]: {
+    sub: Array<Role>;
+    scope: Scope;
+  };
+} = {
+  admin: {
+    sub: Object.keys(PERMISSIONS) as Array<Role>,
+    scope: "national",
+  },
+  pilote: {
+    sub: [],
+    scope: "national",
+  },
+  admin_region: {
+    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region"],
+    scope: "region",
+  },
+  region: {
+    sub: [],
+    scope: "region",
+  },
+  pilote_region: {
+    sub: [],
+    scope: "region",
+  },
+  gestionnaire_region: {
+    sub: [],
+    scope: "region",
+  },
+  expert_region: {
+    sub: [],
+    scope: "region",
+  },
+  perdir: {
+    sub: [],
+    scope: "uai",
+  },
 };

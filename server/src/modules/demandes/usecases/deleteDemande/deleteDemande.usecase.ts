@@ -20,7 +20,6 @@ export const deleteDemandeFactory =
 
     const scope = getPermissionScope(user.role, "intentions/ecriture");
     const isAllowed = guardScope(scope?.default, {
-      user: () => user.id === demande.createdBy,
       region: () => user.codeRegion === demande.codeRegion,
       national: () => true,
     });
