@@ -58,6 +58,11 @@ const neutralStyle = defineStyle({
   borderStyle: "solid",
 });
 
+const draftStyle = defineStyle({
+  color: "yellowTournesol.407",
+  bgColor: "yellowTournesol.950",
+});
+
 export const badgeTheme = defineStyleConfig({
   baseStyle: {
     display: "inline-flex",
@@ -106,6 +111,7 @@ export const badgeTheme = defineStyleConfig({
     lavander: lavanderStyle,
     grey: greyStyle,
     neutral: neutralStyle,
+    draft: draftStyle,
   },
   defaultProps: {
     size: "md",

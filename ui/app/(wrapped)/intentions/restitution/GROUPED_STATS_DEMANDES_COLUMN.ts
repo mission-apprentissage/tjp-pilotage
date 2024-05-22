@@ -4,6 +4,8 @@ import {
   STATS_DEMANDES_COLUMNS_OPTIONAL,
 } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 
+import { themeDefinition } from "../../../../theme/theme";
+
 export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   string,
   {
@@ -85,7 +87,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
   },
   // RH
   ["implications RH"]: {
-    color: "#FEECC2",
+    color: themeDefinition.colors.yellowTournesol[950],
     cellColor: "#FEF6E3",
     options: {
       nbRecrutementRH: "Nombre de recrutements",
@@ -201,7 +203,7 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
   },
   // RH
   ["implications RH"]: {
-    color: "#FEECC2",
+    color: themeDefinition.colors.yellowTournesol[950],
     options: {
       nbRecrutementRH: "Nombre de recrutements",
       nbReconversionRH: "Nombre de reconversions",
