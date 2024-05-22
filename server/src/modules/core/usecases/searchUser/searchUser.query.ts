@@ -3,6 +3,7 @@ import { Scope } from "shared/security/permissions";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { getNormalizedSearch } from "../../../utils/normalizeSearch";
 
 export const searchUserQuery = async ({
   search,
@@ -16,7 +17,7 @@ export const searchUserQuery = async ({
   const users = await kdb
     .selectFrom("user")
     .selectAll()
-    .where("email", "ilike", `%${search}%`)
+    .where("email", "ilike", `%${getNormalizedSearch(search).trim()}%`)
     .$call((q) => {
       if (scope === "region") {
         return q.where("user.codeRegion", "in", scopeFilter);
