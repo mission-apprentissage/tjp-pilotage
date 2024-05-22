@@ -81,20 +81,7 @@ const formatRights = (role: Role, label: string, user?: User) => {
 };
 
 export default () => {
-  const [hoverRole, setHoverRole] = useState<Role | undefined>();
   const [selectedUser, setSelectedUser] = useState<User>();
-
-  const getBgColor = (role: Role) => {
-    if (role === selectedUser?.role) {
-      return themeDefinition.colors.bluefrance[950];
-    }
-
-    if (role === hoverRole) {
-      return themeDefinition.colors.blueecume[925];
-    }
-
-    return "white";
-  };
 
   return (
     <GuardPermission permission="users/lecture">
@@ -156,15 +143,20 @@ export default () => {
                 {ROLES.map((role) => (
                   <Tr
                     key={role}
-                    bgColor={getBgColor(role)}
-                    onMouseOver={() => setHoverRole(role)}
-                    onMouseLeave={() => setHoverRole(undefined)}
+                    bgColor={
+                      role === selectedUser?.role
+                        ? themeDefinition.colors.bluefrance[950]
+                        : "white"
+                    }
+                    _hover={{
+                      backgroundColor: themeDefinition.colors.blueecume[925],
+                    }}
                     borderRadius="4px"
                   >
                     <Td
                       position="sticky"
                       zIndex="200"
-                      bgColor={getBgColor(role)}
+                      bgColor="inherit"
                       left="0"
                       width="200px"
                       textTransform={"uppercase"}
@@ -178,7 +170,7 @@ export default () => {
                       borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                       position="sticky"
                       zIndex="200"
-                      bgColor={getBgColor(role)}
+                      bgColor="inherit"
                       left="200px"
                       maxWidth="300px"
                       borderBottom={"none"}
