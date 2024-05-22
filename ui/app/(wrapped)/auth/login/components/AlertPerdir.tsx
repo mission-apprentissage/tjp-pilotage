@@ -60,9 +60,10 @@ const AlertPerdir = () => {
         <Box paddingX="8px" paddingY="16px" flexGrow={1}>
           <VStack spacing="4px" alignItems="start">
             <Text fontSize="16px">
-              Chers utilisateurs, le mode connecté permet d’accéder aux
-              informations de la transformation de la carte ; il est réservé aux
-              régions académiques, pour le moment.
+              Chers utilisateurs, le mode connecté est réservé aux Recteurs et
+              DRAFPIC (d'autres accès seront fournis directement par les RA dans
+              quelques semaines). Les chefs d’établissement se connectent via le
+              portail Arena (enquête et pilotage).
             </Text>
           </VStack>
         </Box>
