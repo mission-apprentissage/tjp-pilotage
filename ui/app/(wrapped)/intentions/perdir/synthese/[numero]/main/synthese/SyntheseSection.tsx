@@ -129,7 +129,7 @@ export const SyntheseSection = ({
               </Text>
               <Text
                 w={"64"}
-              >{`${intention.userFullName} (${intention.userRole})`}</Text>
+              >{`${intention.createdBy?.fullname} (${intention.createdBy?.role})`}</Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={"44"} fontWeight={700}>
@@ -144,7 +144,7 @@ export const SyntheseSection = ({
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={"44"} fontWeight={700}>
-                Modifiée le
+                Dernière modification
               </Text>
               <Text w={"64"} fontSize={14}>
                 {formatDate({
@@ -153,14 +153,16 @@ export const SyntheseSection = ({
                 })}
               </Text>
             </Flex>
-            <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
-                Auteur
-              </Text>
-              <Text
-                w={"64"}
-              >{`${intention.userFullName} (${intention.userRole})`}</Text>
-            </Flex>
+            {intention.updatedBy && (
+              <Flex direction={"row"} gap={4}>
+                <Text w={"44"} fontWeight={700}>
+                  Modifié par
+                </Text>
+                <Text
+                  w={"64"}
+                >{`${intention.updatedBy?.fullname} (${intention.updatedBy?.role})`}</Text>
+              </Flex>
+            )}
           </Flex>
           <Flex
             direction={"column"}

@@ -48,21 +48,43 @@ export const up = async (db: Kysely<unknown>) => {
 
   await db.schema
     .alterTable("demande")
-    .alterColumn("statut", (c) => c.setDataType("varchar"))
+    .addColumn("updatedBy", "uuid")
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .renameColumn("createurId", "createdBy")
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .addForeignKeyConstraint(
+      "fk_demande_updatedBy_user",
+      ["updatedBy"],
+      "user",
+      ["id"]
+    )
     .execute();
 
   await db.schema
     .alterTable("intention")
-    .alterColumn("statut", (c) => c.setDataType("varchar"))
+    .addColumn("updatedBy", "uuid")
     .execute();
 
   await db.schema
-    .alterTable("changementStatut")
-    .alterColumn("statut", (c) => c.setDataType("varchar"))
-    .alterColumn("statutPrecedent", (c) => c.setDataType("varchar"))
+    .alterTable("intention")
+    .renameColumn("createurId", "createdBy")
     .execute();
 
-  await db.schema.dropType("demandeStatut").execute();
+  await db.schema
+    .alterTable("intention")
+    .addForeignKeyConstraint(
+      "fk_intention_updatedBy_user",
+      ["updatedBy"],
+      "user",
+      ["id"]
+    )
+    .execute();
 
   await db.schema
     .createView("latestDemandeView")
@@ -143,7 +165,7 @@ export const up = async (db: Kysely<unknown>) => {
       "uai",
       "codeRegion",
       "codeAcademie",
-      "createurId",
+      "createdBy",
       "codeDispositif",
     ])
     .execute();
@@ -227,7 +249,7 @@ export const up = async (db: Kysely<unknown>) => {
       "uai",
       "codeRegion",
       "codeAcademie",
-      "createurId",
+      "createdBy",
       "codeDispositif",
     ])
     .execute();
@@ -235,7 +257,6 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createView("demandeIntentionView")
     .as(
-      // @ts-ignore
       kdb
         .selectFrom("intention")
         .select([
@@ -257,7 +278,8 @@ export const up = async (db: Kysely<unknown>) => {
           "commentaire",
           "codeRegion",
           "codeAcademie",
-          "createurId",
+          "createdBy",
+          "updatedBy",
           "createdAt",
           "capaciteScolaire",
           "capaciteScolaireActuelle",
@@ -308,7 +330,6 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
-          // @ts-ignore
           kdb
             .selectFrom("demande")
             .select([
@@ -330,7 +351,8 @@ export const up = async (db: Kysely<unknown>) => {
               "commentaire",
               "codeRegion",
               "codeAcademie",
-              "createurId",
+              "createdBy",
+              "updatedBy",
               "createdAt",
               "capaciteScolaire",
               "capaciteScolaireActuelle",
@@ -405,7 +427,7 @@ export const up = async (db: Kysely<unknown>) => {
       "uai",
       "codeRegion",
       "codeAcademie",
-      "createurId",
+      "createdBy",
       "codeDispositif",
     ])
     .execute();
@@ -509,7 +531,7 @@ export const up = async (db: Kysely<unknown>) => {
       "uai",
       "codeRegion",
       "codeAcademie",
-      "createurId",
+      "createdBy",
       "codeDispositif",
     ])
     .execute();
@@ -560,28 +582,28 @@ export const down = async (db: Kysely<unknown>) => {
     .execute();
 
   await db.schema
-    .createType("demandeStatut")
-    .asEnum([
-      "projet de demande",
-      "demande validée",
-      "refusée",
-      "supprimée",
-      "brouillon",
-      "dossier complet",
-      "dossier incomplet",
-      "proposition",
-      "prêt pour le vote",
-    ])
+    .alterTable("intention")
+    .dropConstraint("fk_intention_updatedBy_user")
     .execute();
 
-  await db.executeQuery(
-    sql`
-    ALTER TABLE "demande" ALTER COLUMN "statut" TYPE "demandeStatut" USING "statut"::"demandeStatut";
-    ALTER TABLE "intention" ALTER COLUMN "statut" TYPE "demandeStatut" USING "statut"::"demandeStatut";
-    ALTER TABLE "changementStatut" ALTER COLUMN "statut" TYPE "demandeStatut" USING "statut"::"demandeStatut";
-    ALTER TABLE "changementStatut" ALTER COLUMN "statutPrecedent" TYPE "demandeStatut" USING "statutPrecedent"::"demandeStatut";
-  `.compile(db)
-  );
+  await db.schema
+    .alterTable("intention")
+    .renameColumn("createdBy", "createurId")
+    .execute();
+
+  await db.schema.alterTable("intention").dropColumn("updatedBy").execute();
+
+  await db.schema
+    .alterTable("demande")
+    .dropConstraint("fk_demande_updatedBy_user")
+    .execute();
+
+  await db.schema.alterTable("demande").dropColumn("updatedBy").execute();
+
+  await db.schema
+    .alterTable("demande")
+    .renameColumn("createdBy", "createurId")
+    .execute();
 
   await db.schema
     .createView("latestDemandeView")

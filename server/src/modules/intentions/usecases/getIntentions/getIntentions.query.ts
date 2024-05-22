@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
+import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -58,7 +59,7 @@ export const getIntentionsQuery = async (
       "dispositif.codeDispositif",
       "intention.codeDispositif"
     )
-    .leftJoin("user", "user.id", "intention.createurId")
+    .leftJoin("user", "user.id", "intention.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
@@ -70,7 +71,6 @@ export const getIntentionsQuery = async (
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
-      "user.lastname as nomCreateur",
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
@@ -85,6 +85,32 @@ export const getIntentionsQuery = async (
         .where(isIntentionCampagneEnCours(eb, "demandeImportee"))
         .limit(1)
         .as("numeroDemandeImportee"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("intention.createdBy", "is not", null)
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("intention.updatedBy", "is not", null)
+      ).as("updatedBy"),
     ])
     .$call((eb) => {
       if (statut) return eb.where("intention.statut", "=", statut);

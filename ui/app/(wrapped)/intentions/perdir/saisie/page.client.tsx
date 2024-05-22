@@ -347,7 +347,7 @@ export const PageClient = () => {
                           <TagDemande statut={intention.statut} />
                         </Td>
                         <Td textAlign={"center"}>
-                          <Flex direction={"row"} gap={2}>
+                          <Flex direction={"row"} gap={0}>
                             <Tooltip label="Voir la demande">
                               <IconButton
                                 as={NextLink}

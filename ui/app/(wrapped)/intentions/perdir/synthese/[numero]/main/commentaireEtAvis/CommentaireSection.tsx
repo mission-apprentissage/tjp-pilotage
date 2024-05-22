@@ -14,7 +14,10 @@ import { Icon } from "@iconify/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Role } from "shared";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
@@ -23,6 +26,15 @@ import { formatRole } from "../../../../../utils/roleUtils";
 import { formatStatut } from "../../../../../utils/statutUtils";
 import { CommentaireForm } from "./CommentaireForm";
 
+const TagIcon = chakra(({ statut }: { statut: DemandeStatutType }) =>
+  statut === DemandeStatutEnum["refusée"] ||
+  statut === DemandeStatutEnum["dossier incomplet"] ? (
+    <Icon icon={"ri:close-circle-fill"} />
+  ) : (
+    <Icon icon={"ep:success-filled"} />
+  )
+);
+
 const StatutTag = chakra(
   ({
     className,
@@ -30,21 +42,43 @@ const StatutTag = chakra(
   }: {
     className?: string;
     statut: DemandeStatutType;
-  }) => (
-    <Tag
-      className={className}
-      size={"md"}
-      variant={"solid"}
-      bgColor={"success.950"}
-      color={"success.425"}
-      gap={1}
-      fontSize={12}
-      fontWeight={700}
-    >
-      <Icon icon={"ep:success-filled"} />
-      {formatStatut(statut)}
-    </Tag>
-  )
+  }) => {
+    const getBgColor = (statut: DemandeStatutType) => {
+      if (statut === DemandeStatutEnum["refusée"]) {
+        return "error.950";
+      }
+      if (statut === DemandeStatutEnum["dossier incomplet"]) {
+        return "warning.950";
+      }
+      return "success.950";
+    };
+
+    const getColor = (statut: DemandeStatutType) => {
+      if (statut === DemandeStatutEnum["refusée"]) {
+        return "error.425";
+      }
+      if (statut === DemandeStatutEnum["dossier incomplet"]) {
+        return "warning.425";
+      }
+      return "success.425";
+    };
+
+    return (
+      <Tag
+        className={className}
+        size={"md"}
+        variant={"solid"}
+        bgColor={getBgColor(statut)}
+        color={getColor(statut)}
+        gap={1}
+        fontSize={12}
+        fontWeight={700}
+      >
+        <TagIcon statut={statut} />
+        {formatStatut(statut)}
+      </Tag>
+    );
+  }
 );
 
 const RoleTag = chakra(

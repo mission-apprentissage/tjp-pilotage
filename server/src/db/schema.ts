@@ -160,7 +160,7 @@ export interface Demande {
   statut: string;
   codeRegion: string;
   codeAcademie: string | null;
-  createurId: string;
+  createdBy: string;
   createdAt: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -200,6 +200,7 @@ export interface Demande {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  updatedBy: string | null;
 }
 
 export interface Departement {
@@ -379,7 +380,7 @@ export interface Intention {
   statut: string;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string;
+  createdBy: string;
   createdAt: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -431,6 +432,7 @@ export interface Intention {
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
+  updatedBy: string | null;
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
@@ -452,7 +454,8 @@ export interface LatestDemandeIntentionNonMaterializedView {
   commentaire: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -520,7 +523,7 @@ export interface LatestDemandeNonMaterializedView {
   statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -560,6 +563,7 @@ export interface LatestDemandeNonMaterializedView {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  updatedBy: string | null;
 }
 
 export interface LatestIntentionNonMaterializedView {
@@ -578,7 +582,7 @@ export interface LatestIntentionNonMaterializedView {
   statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -630,6 +634,7 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
+  updatedBy: string | null;
 }
 
 export interface Metier {

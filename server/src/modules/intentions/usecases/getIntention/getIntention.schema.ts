@@ -4,6 +4,12 @@ import {
 } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
+
 const EtablissementMetadataSchema = z
   .object({
     libelleEtablissement: z.string().optional(),
@@ -109,8 +115,8 @@ const IntentionSchema = z.object({
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),
-  userFullName: z.string(),
-  userRole: z.string(),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
   libelleEtablissement: z.string(),
   libelleDepartement: z.string(),
   libelleFormation: z.string(),

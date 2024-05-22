@@ -15,6 +15,7 @@ import {
   ModalHeader,
   ModalOverlay,
   Select,
+  Text,
   Textarea,
   useDisclosure,
   useToast,
@@ -30,7 +31,11 @@ import {
 
 import { client } from "@/api.client";
 
-import { formatStatut, getOrderStatut } from "../../../../utils/statutUtils";
+import {
+  formatStatut,
+  getOrderStatut,
+  getStepWorkflow,
+} from "../../../../utils/statutUtils";
 
 type ChangementStatutForm = {
   id: string;
@@ -39,6 +44,22 @@ type ChangementStatutForm = {
   statutPrecedent?: Exclude<DemandeStatutType, "supprimée">;
   statut: Exclude<DemandeStatutType, "supprimée">;
   commentaire?: string;
+};
+
+const isStatutDisabled = ({
+  statutPrecedent,
+  statut,
+}: {
+  statutPrecedent?: DemandeStatutType;
+  statut: DemandeStatutType;
+}) => {
+  if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4)
+    return true;
+  if (statut === DemandeStatutEnum["refusée"]) return false;
+  return (
+    getOrderStatut(statutPrecedent) > getOrderStatut(statut) ||
+    getStepWorkflow(statut) - getStepWorkflow(statutPrecedent) > 1
+  );
 };
 
 export const ChangementStatutForm = ({
@@ -153,9 +174,10 @@ export const ChangementStatutForm = ({
                 <option
                   key={statut}
                   value={statut}
-                  // disabled={
-                  //   getOrderStatut(statut) < getOrderStatut(intention.statut)
-                  // }
+                  disabled={isStatutDisabled({
+                    statutPrecedent: intention.statut,
+                    statut,
+                  })}
                 >
                   {formatStatut(statut)}
                 </option>
@@ -211,6 +233,12 @@ export const ChangementStatutForm = ({
                   intention.statut
                 )} vers ${formatStatut(getValues("statut"))} ?`}
               </Highlight>
+              {getStepWorkflow(getValues("statut")) >
+                getStepWorkflow(intention.statut) && (
+                <Text color="red" mt={2}>
+                  Attention, ce changement est irréversible
+                </Text>
+              )}
             </ModalBody>
 
             <ModalFooter>

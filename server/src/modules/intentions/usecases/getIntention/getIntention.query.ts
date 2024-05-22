@@ -33,7 +33,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         .onRef("changementStatut.intentionNumero", "=", "intention.numero")
         .onRef("changementStatut.statut", "=", "intention.statut")
     )
-    .innerJoin("user", "user.id", "intention.createurId")
+    .innerJoin("user", "user.id", "intention.createdBy")
     .innerJoin(
       "dispositif",
       "dispositif.codeDispositif",
@@ -48,6 +48,30 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     )
     .selectAll()
     .select((eb) => [
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+      ).as("updatedBy"),
       jsonObjectFrom(
         eb
           .selectFrom("campagne")
@@ -126,10 +150,6 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
-      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
-        "user.lastname"
-      )})`.as("userFullName"),
-      "user.role as userRole",
     ])
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
