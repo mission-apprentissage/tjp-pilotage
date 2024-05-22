@@ -31,7 +31,7 @@ const MetadataSchema = z.object({
 const IntentionSchema = z.object({
   numero: z.string(),
   createdAt: z.string(),
-  statut: DemandeStatutZodType.optional(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
   uai: z.string(),
   cfd: z.string(),
   codeDispositif: z.string(),

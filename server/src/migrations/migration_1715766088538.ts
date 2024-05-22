@@ -19,10 +19,10 @@ export const up = async (db: Kysely<unknown>) => {
 export const down = async (db: Kysely<unknown>) => {
   await db.executeQuery(
     sql`
-      ALTER TYPE "demandeStatut" RENAME VALUE 'projet de demande' TO 'draft';
-      ALTER TYPE "demandeStatut" RENAME VALUE 'demande validée' TO 'submitted';
-      ALTER TYPE "demandeStatut" RENAME VALUE 'refusée' TO 'refused';
-      ALTER TYPE "demandeStatut" RENAME VALUE 'supprimée' TO 'deleted';
-    `.compile(db)
+        ALTER TYPE "demandeStatut" RENAME VALUE 'projet de demande' TO 'draft';
+        ALTER TYPE "demandeStatut" RENAME VALUE 'demande validée' TO 'submitted';
+        ALTER TYPE "demandeStatut" RENAME VALUE 'refusée' TO 'refused';
+        ALTER TYPE "demandeStatut" RENAME VALUE 'supprimée' TO 'deleted';
+        `.compile(db)
   );
 };

@@ -18,13 +18,13 @@ export const importIntentionRoute = (server: Server) => {
         const user = request.user;
         if (!user) throw Boom.forbidden();
 
-        const demande = await importIntentionUsecase({
+        const intention = await importIntentionUsecase({
           numero: request.params.numero,
           user,
         });
-        if (!demande) return response.status(404).send();
+        if (!intention) return response.status(404).send();
 
-        const result = response.status(200).send(demande);
+        const result = response.status(200).send(intention);
 
         return result;
       },

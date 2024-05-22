@@ -1,4 +1,7 @@
-import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutZodType,
+} from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const EtablissementMetadataSchema = z
@@ -99,20 +102,31 @@ const IntentionSchema = z.object({
   // Autre
   numero: z.string(),
   createdAt: z.string(),
+  updatedAt: z.string(),
   campagneId: z.string(),
   campagne: z.object({
     id: z.string().optional(),
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),
+  userFullName: z.string(),
+  userRole: z.string(),
+  libelleEtablissement: z.string(),
+  libelleDepartement: z.string(),
+  libelleFormation: z.string(),
+  libelleDispositif: z.string(),
+  differenceCapaciteScolaire: z.coerce.number().optional(),
+  differenceCapaciteApprentissage: z.coerce.number().optional(),
   changementsStatut: z.array(
     z.object({
       id: z.string(),
       intentionNumero: z.string(),
       userId: z.string(),
       userRole: z.string().optional(),
-      statutPrecedent: DemandeStatutZodType.exclude(["supprimée"]).optional(),
-      statut: DemandeStatutZodType.exclude(["supprimée"]),
+      statutPrecedent: DemandeStatutZodType.exclude([
+        DemandeStatutEnum["supprimée"],
+      ]).optional(),
+      statut: DemandeStatutZodType.exclude([DemandeStatutEnum["supprimée"]]),
       updatedAt: z.string(),
       userFullName: z.string(),
       commentaire: z.string().optional(),

@@ -19,8 +19,8 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
 
-import { formatRole } from "../../../../utils/roleUtils";
-import { formatStatut } from "../../../../utils/statutUtils";
+import { formatRole } from "../../../../../utils/roleUtils";
+import { formatStatut } from "../../../../../utils/statutUtils";
 import { CommentaireForm } from "./CommentaireForm";
 
 const StatutTag = chakra(

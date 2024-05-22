@@ -5,6 +5,7 @@ import { z } from "zod";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import {
   isIntentionBrouillonVisible,
@@ -142,6 +143,7 @@ export const getIntentionsQuery = async (
     intentions: intentions.map((intention) =>
       cleanNull({
         ...intention,
+        statut: castDemandeStatutWithoutSupprimee(intention.statut),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
       })
