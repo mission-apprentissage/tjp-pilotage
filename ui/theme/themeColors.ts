@@ -128,8 +128,11 @@ export const themeColors = {
   },
   orange: {
     draft: "#FEEBCA",
-    dark: "#716043",
     warning: "#FF6F4C",
+  },
+  yellowTournesol: {
+    950: "#FEECC2",
+    407: "#716043",
   },
   green: {
     submitted: "#C8F6D6",
