@@ -12,7 +12,10 @@ import { Fragment } from "react";
 
 import { client } from "@/api.client";
 
-import { getStepWorkflow } from "../../../../../utils/statutUtils";
+import {
+  getOrderStatut,
+  getStepWorkflow,
+} from "../../../../../utils/statutUtils";
 import { CommentaireSection } from "./CommentaireSection";
 
 const StepIcon = chakra(
@@ -42,9 +45,13 @@ export const CommentairesEtAvisSection = ({
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
   const getChangementStatutByEtape = (etape: 1 | 2 | 3) => {
-    return intention?.changementsStatut?.filter(
-      (changementStatut) => getStepWorkflow(changementStatut.statut) === etape
-    );
+    return intention?.changementsStatut
+      ?.filter((changementStatut) => {
+        if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4)
+          return true;
+        return getStepWorkflow(changementStatut.statut) === etape;
+      })
+      .sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut));
   };
 
   const getNombreDifferentsContributeurs = (

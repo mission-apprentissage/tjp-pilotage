@@ -39,7 +39,7 @@ export const createDemandeQuery = ({
         "compensationCfd",
         "compensationCodeDispositif",
         "compensationRentreeScolaire",
-        "createurId",
+        "createdBy",
         "statut",
         "motifRefus",
         "autreMotifRefus",
@@ -56,7 +56,7 @@ export const createDemandeQuery = ({
       compensationCodeDispositif: null,
       compensationRentreeScolaire: null,
       amiCma: null,
-      createurId: user.id,
+      createdBy: user.id,
       statut: DemandeStatutEnum["projet de demande"],
       typeDemande: getTypeDemande(demande),
     })

@@ -72,7 +72,7 @@ export const [submitDemande, submitDemandeFactory] = inject(
       const isAllowed = guardScope(scope?.default, {
         user: () =>
           user.codeRegion === dataEtablissement.codeRegion &&
-          (!currentDemande || user.id === currentDemande?.createurId),
+          (!currentDemande || user.id === currentDemande?.createdBy),
         region: () => user.codeRegion === dataEtablissement.codeRegion,
         national: () => true,
       });
@@ -133,7 +133,8 @@ export const [submitDemande, submitDemandeFactory] = inject(
         ...demandeData,
         id: currentDemande?.id ?? generateId(),
         numero: currentDemande?.numero ?? generateShortId(),
-        createurId: currentDemande?.createurId ?? user.id,
+        createdBy: currentDemande?.createdBy ?? user.id,
+        updatedBy: user.id,
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),

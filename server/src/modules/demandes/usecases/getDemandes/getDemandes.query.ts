@@ -55,7 +55,7 @@ export const getDemandesQuery = async (
       "dispositif.codeDispositif",
       "demande.codeDispositif"
     )
-    .leftJoin("user", "user.id", "demande.createurId")
+    .leftJoin("user", "user.id", "demande.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
@@ -67,7 +67,6 @@ export const getDemandesQuery = async (
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
-      "user.lastname as nomCreateur",
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",

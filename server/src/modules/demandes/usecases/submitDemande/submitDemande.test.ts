@@ -22,7 +22,7 @@ const valideDeps = {
     Promise.resolve({
       numero: "numero-id",
       codeRegion: "codeRegion",
-      createurId: "user-id",
+      createdBy: "user-id",
     } as AwaitedResult<Deps["findOneDemande"]>),
   findOneSimilarDemande: () => Promise.resolve(),
 } as Deps;
@@ -32,7 +32,7 @@ const demande = {
   numero: "numero-id",
   uai: "demande-uai",
   cfd: "demande-cfd",
-  createurId: "user-id",
+  createdBy: "user-id",
   codeDispositif: "codeDispositif",
   rentreeScolaire: 2025,
   typeDemande: "augmentation",

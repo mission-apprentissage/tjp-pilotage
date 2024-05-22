@@ -14,7 +14,7 @@ export const isDemandeSelectable =
       eb.and([
         eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
         draftFilter.userId
-          ? eb("demande.createurId", "=", draftFilter.userId)
+          ? eb("demande.createdBy", "=", draftFilter.userId)
           : sql<boolean>`true`,
         draftFilter.codeRegion
           ? eb("demande.codeRegion", "=", draftFilter.codeRegion)
@@ -67,9 +67,14 @@ export const isIntentionBrouillonVisible =
     return eb.or([
       eb.and([
         eb("intention.statut", "=", DemandeStatutEnum["brouillon"]),
-        draftFilter.uais
-          ? eb.or(draftFilter.uais.map((uai) => eb("intention.uai", "=", uai)))
-          : sql<boolean>`false`,
+        eb.or([
+          draftFilter.uais
+            ? eb.or(
+                draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))
+              )
+            : sql<boolean>`false`,
+          eb("intention.createdBy", "=", user.id),
+        ]),
       ]),
       eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
     ]);

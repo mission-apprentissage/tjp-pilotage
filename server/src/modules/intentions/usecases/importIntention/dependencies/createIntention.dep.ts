@@ -36,7 +36,7 @@ export const createIntentionQuery = ({
         "rentreeScolaire",
         "updatedAt",
         "campagneId",
-        "createurId",
+        "createdBy",
         "statut",
         "motifRefus",
         "autreMotifRefus",
@@ -49,7 +49,7 @@ export const createIntentionQuery = ({
       updatedAt: new Date(),
       campagneId: campagne.id,
       amiCma: null,
-      createurId: user.id,
+      createdBy: user.id,
       statut: DemandeStatutEnum["proposition"],
       typeDemande: getTypeDemande(intention),
     })

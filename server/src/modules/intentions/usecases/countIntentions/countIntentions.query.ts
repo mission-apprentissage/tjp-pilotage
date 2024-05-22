@@ -6,6 +6,7 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import {
+  isIntentionBrouillonVisible,
   isIntentionNotDeleted,
   isIntentionSelectable,
 } from "../../../utils/isDemandeSelectable";
@@ -99,6 +100,7 @@ export const countIntentionsQuery = async ({
     )
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
+    .where(isIntentionBrouillonVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 

@@ -36,6 +36,7 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 
+import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
@@ -94,14 +95,8 @@ export const IntentionForm = ({
         case DemandeStatutEnum["proposition"]:
           message = "Projet de demande enregistré avec succès";
           break;
-        case DemandeStatutEnum["demande validée"]:
-          message = "Demande validée avec succès";
-          break;
-        case DemandeStatutEnum["refusée"]:
-          message = "Demande refusée avec succès";
-          break;
-        case DemandeStatutEnum["supprimée"]:
-          message = "Demande supprimée avec succès";
+        case DemandeStatutEnum["brouillon"]:
+          message = "Brouillon enregistré avec succès";
           break;
       }
 
@@ -119,13 +114,19 @@ export const IntentionForm = ({
     },
   });
 
-  const isActionsDisabled = isSuccess || isSubmitting;
-
   const [isFCIL, setIsFCIL] = useState<boolean>(
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isFormDisabled = disabled || form.formState.disabled;
+  const isActionsDisabled =
+    isSuccess ||
+    isSubmitting ||
+    (!!defaultValues.statut && getStepWorkflow(defaultValues.statut) > 1);
+
+  const isFormDisabled =
+    disabled ||
+    form.formState.disabled ||
+    (!!defaultValues.statut && getStepWorkflow(defaultValues.statut) > 1);
 
   const isCFDUaiSectionValid = ({
     cfd,
@@ -328,9 +329,7 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: formId
-                                      ? values.statut
-                                      : DemandeStatutEnum["proposition"],
+                                    statut: DemandeStatutEnum["proposition"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -339,7 +338,11 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            Soumettre ma demande
+                            {formId &&
+                            defaultValues.statut !=
+                              DemandeStatutEnum["brouillon"]
+                              ? "Mettre à jour ma proposition"
+                              : "Valider ma proposition"}
                           </Button>
                         </Flex>
                       }

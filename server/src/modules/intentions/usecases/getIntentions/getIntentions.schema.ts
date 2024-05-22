@@ -1,6 +1,12 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
+
 const IntentionsItem = z.object({
   // Formation
   libelleFormation: z.string().optional(),
@@ -85,6 +91,8 @@ const IntentionsItem = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   campagneId: z.string(),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
 });
 
 export const getIntentionsSchema = {

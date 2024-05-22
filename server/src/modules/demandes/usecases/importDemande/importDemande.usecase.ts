@@ -66,7 +66,7 @@ export const [importDemande, importDemandeFactory] = inject(
       const isAllowed = guardScope(scope?.default, {
         user: () =>
           user.codeRegion === demande.codeRegion &&
-          (!demande || user.id === demande?.createurId),
+          (!demande || user.id === demande?.createdBy),
         region: () => user.codeRegion === demande.codeRegion,
         national: () => true,
       });
