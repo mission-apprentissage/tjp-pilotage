@@ -46,7 +46,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
-    .selectAll()
+    .selectAll("intention")
     .select((eb) => [
       jsonObjectFrom(
         eb
@@ -137,9 +137,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
             .limit(1)
         ),
       }).as("metadata"),
-    ])
-    .select("changementStatut.commentaire as commentaireStatut")
-    .select((eb) => [
+      "changementStatut.commentaire as commentaireStatut",
       countDifferenceCapaciteScolaireIntention(eb).as(
         "differenceCapaciteScolaire"
       ),
@@ -185,14 +183,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         "user.lastname"
       )})`.as("userFullName"),
     ])
-    .execute()
-    .then((rows) =>
-      rows.filter(
-        (changementStatut) =>
-          changementStatut.statut !== DemandeStatutEnum["supprimée"] &&
-          changementStatut.statutPrecedent !== DemandeStatutEnum["supprimée"]
-      )
-    );
+    .execute();
 
   const codeDispositif =
     intention?.codeDispositif &&
