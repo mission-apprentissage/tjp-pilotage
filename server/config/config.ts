@@ -1,6 +1,7 @@
 import dotenv from "dotenv";
 import env from "env-var";
 import path from "path";
+import { environments } from "shared/enum/envEnum";
 
 if (process.env.NODE_ENV === "test") {
   dotenv.config({
@@ -67,9 +68,9 @@ export const config = {
     signingSecret: env.get("PILOTAGE_SLACK_SIGNING_SECRET").asString(),
     chanel: env.get("PILOTAGE_SLACK_CHANEL").asString(),
   },
-  env: env.get("PILOTAGE_ENV").required().asString(),
   host: env.get("PILOTAGE_HOST").asString(),
   gitRevision: env.get("PILOTAGE_GIT_REVISION").asString(),
+  env: env.get("PILOTAGE_ENV").required().asEnum(environments),
   sql: {
     logLevel: env.get("PILOTAGE_SQL_LOG_LEVEL").asString(),
   },
@@ -84,5 +85,9 @@ export const config = {
     bucket: env.get("PILOTAGE_S3_BUCKET").asString(),
     accessKey: env.get("PILOTAGE_S3_ACCESS_KEY").asString(),
     secretKey: env.get("PILOTAGE_S3_SECRET_KEY").asString(),
+  },
+  sentry: {
+    dsn: env.get("SENTRY_DSN").required().asString(),
+    token: env.get("SENTRY_AUTH_TOKEN").required().asString(),
   },
 };

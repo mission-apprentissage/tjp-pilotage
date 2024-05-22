@@ -60,12 +60,8 @@ const extractUaisRep = (userInfo: UserinfoResponse<ExtraUserInfo>) => {
       }) as unknown as Array<string>
     );
 
-    const verifiedDelegations = delegations.filter((del) =>
-      perdirOnUais.includes(del)
-    );
-
-    if (verifiedDelegations.length > 0) {
-      uais.push(...verifiedDelegations);
+    if (delegations.length > 0) {
+      uais.push(...delegations);
     }
   }
   return uais;

@@ -64,9 +64,6 @@ export const [importDemande, importDemandeFactory] = inject(
 
       const scope = getPermissionScope(user.role, "intentions/ecriture");
       const isAllowed = guardScope(scope?.default, {
-        user: () =>
-          user.codeRegion === demande.codeRegion &&
-          (!demande || user.id === demande?.createdBy),
         region: () => user.codeRegion === demande.codeRegion,
         national: () => true,
       });

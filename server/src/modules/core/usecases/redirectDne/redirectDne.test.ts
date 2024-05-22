@@ -275,7 +275,7 @@ describe("redirectDne usecase", () => {
     ).rejects.toThrow();
   });
 
-  it("should not create the user with the correct role if there is a authorization delegation, but no perdir role on uai", async () => {
+  it("should create the user with the correct role if there is a authorization delegation, but no perdir role on uai", async () => {
     const ssoUserInfo = {
       FrEduRne: ["XXXXXXXK$UAJ$PU$ADM$0693045K$T3$LP$320"],
       FrEduResDel: [
@@ -303,15 +303,27 @@ describe("redirectDne usecase", () => {
     };
     const redirectDne = redirectDneFactory(deps);
 
-    await expect(() =>
-      redirectDne({
-        codeVerifierJwt: jwt.sign(
-          { code_verifier: "code_verifier" },
-          "codeVerifierJwtSecret"
-        ),
-        url: "localhost?code=mycode",
-      })
-    ).rejects.toThrow();
+    const result = await redirectDne({
+      codeVerifierJwt: jwt.sign(
+        { code_verifier: "code_verifier" },
+        "codeVerifierJwtSecret"
+      ),
+      url: "localhost?code=mycode",
+    });
+
+    expect(deps.createUserInDB).toHaveBeenCalledWith({
+      user: expect.objectContaining({
+        email: ssoUserInfo.email,
+        firstname: ssoUserInfo.given_name,
+        lastname: ssoUserInfo.family_name,
+        role: "perdir",
+        uais: ["0693045K"],
+        codeRegion: "75",
+      }),
+    });
+    expect(result).toMatchObject({
+      token: expect.stringMatching(""),
+    });
   });
 
   it("should not create the user if authorization delegation is past or future", async () => {

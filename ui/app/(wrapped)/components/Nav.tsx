@@ -162,6 +162,10 @@ export const Nav = () => {
     hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
     hasPermission(auth?.user.role, "restitution-intentions/lecture");
 
+  const hasAdminMenu =
+    hasPermission(auth?.user.role, "users/lecture") ||
+    hasPermission(auth?.user.role, "campagnes/lecture");
+
   const shouldDisplayIntentionMenu =
     hasRole({ user: auth?.user, role: "perdir" }) ||
     isUserInRegionsExperimentation({
@@ -183,6 +187,12 @@ export const Nav = () => {
     isOpen: isMenuIntentionOpen,
     onOpen: onMenuIntentionOpen,
     onClose: onMenuIntentionClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isMenuAdminOpen,
+    onOpen: onMenuAdminOpen,
+    onClose: onMenuAdminClose,
   } = useDisclosure();
 
   return (
@@ -310,16 +320,49 @@ export const Nav = () => {
           Pilotage de la réforme
         </NavLink>
       )}
-      {hasPermission(auth?.user.role, "users/lecture") && (
-        <NavLink href="/admin/users" segment="admin/users">
-          Utilisateurs
-        </NavLink>
+
+      {hasAdminMenu && (
+        <Menu gutter={0} matchWidth={true} isOpen={isMenuAdminOpen}>
+          <NavMenuButton
+            segment="admin"
+            isOpen={isMenuAdminOpen}
+            onMouseEnter={onMenuAdminOpen}
+            onMouseLeave={onMenuAdminClose}
+          >
+            Admin
+          </NavMenuButton>
+          <MenuList
+            p="0"
+            borderTop="unset"
+            w="100%"
+            onMouseEnter={onMenuAdminOpen}
+            onMouseLeave={onMenuAdminClose}
+          >
+            {hasPermission(auth?.user.role, "users/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/users" segment="admin/users">
+                  Utilisateurs
+                </NavMenuLink>
+              </MenuItem>
+            )}
+            {hasPermission(auth?.user.role, "campagnes/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/campagnes" segment="admin/campagnes">
+                  Campagnes
+                </NavMenuLink>
+              </MenuItem>
+            )}
+            {hasPermission(auth?.user.role, "users/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/roles" segment="admin/roles">
+                  Rôles
+                </NavMenuLink>
+              </MenuItem>
+            )}
+          </MenuList>
+        </Menu>
       )}
-      {hasPermission(auth?.user.role, "campagnes/lecture") && (
-        <NavLink href="/admin/campagnes" segment="admin/campagnes">
-          Campagnes
-        </NavLink>
-      )}
+
       <NavLink
         href="/ressources"
         segment="ressources"
