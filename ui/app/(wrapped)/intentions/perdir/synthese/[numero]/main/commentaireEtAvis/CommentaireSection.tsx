@@ -10,76 +10,17 @@ import {
   Tooltip,
   useToast,
 } from "@chakra-ui/react";
-import { Icon } from "@iconify/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Role } from "shared";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
 
 import { formatRole } from "../../../../../utils/roleUtils";
-import { formatStatut } from "../../../../../utils/statutUtils";
+import { StatutTag } from "../../../../components/StatutTag";
 import { CommentaireForm } from "./CommentaireForm";
-
-const TagIcon = chakra(({ statut }: { statut: DemandeStatutType }) =>
-  statut === DemandeStatutEnum["refusée"] ||
-  statut === DemandeStatutEnum["dossier incomplet"] ? (
-    <Icon icon={"ri:close-circle-fill"} />
-  ) : (
-    <Icon icon={"ep:success-filled"} />
-  )
-);
-
-const StatutTag = chakra(
-  ({
-    className,
-    statut,
-  }: {
-    className?: string;
-    statut: DemandeStatutType;
-  }) => {
-    const getBgColor = (statut: DemandeStatutType) => {
-      if (statut === DemandeStatutEnum["refusée"]) {
-        return "error.950";
-      }
-      if (statut === DemandeStatutEnum["dossier incomplet"]) {
-        return "warning.950";
-      }
-      return "success.950";
-    };
-
-    const getColor = (statut: DemandeStatutType) => {
-      if (statut === DemandeStatutEnum["refusée"]) {
-        return "error.425";
-      }
-      if (statut === DemandeStatutEnum["dossier incomplet"]) {
-        return "warning.425";
-      }
-      return "success.425";
-    };
-
-    return (
-      <Tag
-        className={className}
-        size={"md"}
-        variant={"solid"}
-        bgColor={getBgColor(statut)}
-        color={getColor(statut)}
-        gap={1}
-        fontSize={12}
-        fontWeight={700}
-      >
-        <TagIcon statut={statut} />
-        {formatStatut(statut)}
-      </Tag>
-    );
-  }
-);
 
 const RoleTag = chakra(
   ({ className, role }: { className?: string; role?: Role }) => {
@@ -157,7 +98,14 @@ export const CommentaireSection = chakra(
               </Flex>
               <Flex direction={"column"}>
                 <Flex direction={"row"} gap={2}>
-                  <StatutTag statut={changementStatut.statut} />
+                  <StatutTag
+                    statut={changementStatut.statut}
+                    size={"md"}
+                    gap={1}
+                    fontSize={12}
+                    fontWeight={700}
+                    hasIcon={true}
+                  />
                   <RoleTag role={changementStatut.userRole as Role} />
                 </Flex>
                 <Text fontSize={12} fontWeight={400} lineHeight={"20px"}>
