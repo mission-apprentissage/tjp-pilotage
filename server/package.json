@@ -9,10 +9,9 @@
   "types": "src/index.ts",
   "scripts": {
     "start": "node --enable-source-maps dist/index.js",
-    "dev": "tsup --onSuccess 'yarn run copyPublic && yarn run start'",
-    "dev:debug": "tsup --onSuccess 'yarn run copyPublic && yarn run start -- --inspect'",
+    "dev": "TSUP_DEV=true tsup",
+    "build": "tsup",
     "copyPublic": "cp -a public/. dist",
-    "build": "tsup src/index.ts",
     "typecheck": "tsc",
     "cli": "ts-node -T src/cli.ts ",
     "kysely": "npx kysely-codegen --schema public --out-file=./src/db/schema.ts --dialect postgres",
