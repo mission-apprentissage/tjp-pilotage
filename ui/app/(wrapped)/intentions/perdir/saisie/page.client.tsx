@@ -11,7 +11,6 @@ import {
   IconButton,
   Table,
   TableContainer,
-  Tag,
   Tbody,
   Td,
   Text,
@@ -29,10 +28,7 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
@@ -40,8 +36,8 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { formatStatut } from "../../utils/statutUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { StatutTag } from "../components/StatutTag";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
@@ -50,21 +46,6 @@ import { Filters, Order } from "./types";
 import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
-
-const TagDemande = ({ statut }: { statut: DemandeStatutType }) => {
-  const getColorStatut = (statut: DemandeStatutType) => {
-    if (statut === DemandeStatutEnum["projet de demande"]) return "pink";
-    if (statut === DemandeStatutEnum["brouillon"]) return "orange";
-    if (statut === DemandeStatutEnum["demande validée"]) return "green";
-    if (statut === DemandeStatutEnum["refusée"]) return "red";
-  };
-
-  return (
-    <Tag size="sm" colorScheme={getColorStatut(statut)}>
-      {formatStatut(statut)}
-    </Tag>
-  );
-};
 
 export const PageClient = () => {
   const toast = useToast();
@@ -344,7 +325,7 @@ export const PageClient = () => {
                           </Text>
                         </Td>
                         <Td textAlign={"center"} w={0}>
-                          <TagDemande statut={intention.statut} />
+                          <StatutTag statut={intention.statut} />
                         </Td>
                         <Td textAlign={"center"}>
                           <Flex direction={"row"} gap={0}>

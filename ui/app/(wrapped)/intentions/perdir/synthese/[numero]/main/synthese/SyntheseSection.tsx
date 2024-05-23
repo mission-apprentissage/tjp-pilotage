@@ -76,66 +76,66 @@ export const SyntheseSection = ({
         <Flex direction={"column"} gap={6}>
           <Flex
             direction={"column"}
-            gap={2}
+            gap={3}
             bgColor={"grey.975"}
             p={4}
             h="fit-content"
           >
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Établissement
               </Text>
               <Tooltip label={intention.libelleEtablissement}>
-                <Text w={"64"} maxW={"56"} fontSize={14} isTruncated={false}>
+                <Text w={["64", "72", "80", "96"]} fontSize={14} noOfLines={2}>
                   {intention.libelleEtablissement}
                 </Text>
               </Tooltip>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Département
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {intention.libelleDepartement}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Diplôme
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {intention.libelleFormation}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Dispositif
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {intention.libelleDispositif}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Inspecteur référent
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {intention.libelleDispositif}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Auteur
               </Text>
               <Text
-                w={"64"}
+                w={["64", "72", "80", "96"]}
               >{`${intention.createdBy?.fullname} (${intention.createdBy?.role})`}</Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Créée le
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: intention.createdAt,
                   options: { dateStyle: "short" },
@@ -143,10 +143,10 @@ export const SyntheseSection = ({
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
-              <Text w={"44"} fontWeight={700}>
+              <Text w={["44", "48", "52"]} fontWeight={700}>
                 Dernière modification
               </Text>
-              <Text w={"64"} fontSize={14}>
+              <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: intention.updatedAt,
                   options: { dateStyle: "short" },
@@ -155,11 +155,11 @@ export const SyntheseSection = ({
             </Flex>
             {intention.updatedBy && (
               <Flex direction={"row"} gap={4}>
-                <Text w={"44"} fontWeight={700}>
+                <Text w={["44", "48", "52"]} fontWeight={700}>
                   Modifié par
                 </Text>
                 <Text
-                  w={"64"}
+                  w={["64", "72", "80", "96"]}
                 >{`${intention.updatedBy?.fullname} (${intention.updatedBy?.role})`}</Text>
               </Flex>
             )}
@@ -200,7 +200,7 @@ export const SyntheseSection = ({
             <Text fontSize={14}>{intention.rentreeScolaire}</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Coloration</Text>
+            <Text>Coloration ?</Text>
             <Text fontSize={14}>{formatBoolean(intention.coloration)}</Text>
           </Flex>
           {intention.coloration && (
@@ -265,7 +265,7 @@ export const SyntheseSection = ({
             <Text fontWeight={700}>Précisions</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>AMI/CMA</Text>
+            <Text>AMI/CMA ?</Text>
             <Text>{formatBoolean(intention.amiCma)}</Text>
           </Flex>
           {intention.amiCma && intention.amiCmaValide && (
@@ -276,7 +276,7 @@ export const SyntheseSection = ({
           )}
           {intention.amiCma && intention.amiCmaEnCoursValidation && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
-              <Text>Financement en cours de validation</Text>
+              <Text>Financement en cours de validation ?</Text>
               <Text>{formatBoolean(intention.amiCmaEnCoursValidation)}</Text>
             </Flex>
           )}
@@ -393,7 +393,7 @@ export const SyntheseSection = ({
             <Text fontWeight={700}>Travaux et équipements</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Travaux</Text>
+            <Text>Travaux ?</Text>
             <Text>{formatBoolean(intention.travauxAmenagement)}</Text>
           </Flex>
           {intention.travauxAmenagement && (
@@ -403,7 +403,7 @@ export const SyntheseSection = ({
             </Flex>
           )}
           <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Achats d'équipement</Text>
+            <Text>Achats d'équipement ?</Text>
             <Text>{formatBoolean(intention.achatEquipement)}</Text>
           </Flex>
           {intention.achatEquipement && (
