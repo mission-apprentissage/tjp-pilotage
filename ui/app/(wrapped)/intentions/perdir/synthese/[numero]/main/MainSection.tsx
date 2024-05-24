@@ -48,10 +48,10 @@ export const MainSection = ({
               icon={<Icon width="24px" icon="ri:device-line" />}
             />
           </Tooltip>
-          <Tooltip label="Favori">
+          <Tooltip label="Suivre la demande">
             <IconButton
               isDisabled
-              aria-label="Mettre la demande en favori"
+              aria-label="Suivre la demande"
               color={"bluefrance.113"}
               bgColor={"transparent"}
               icon={<Icon width="24px" icon="ri:bookmark-line" />}

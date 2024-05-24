@@ -5,10 +5,8 @@ import {
   chakra,
   Flex,
   Highlight,
-  Tag,
   Text,
   Tooltip,
-  useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -18,30 +16,9 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
 
-import { formatRole } from "../../../../../utils/roleUtils";
+import { RoleTag } from "../../../../components/RoleTag";
 import { StatutTag } from "../../../../components/StatutTag";
 import { CommentaireForm } from "./CommentaireForm";
-
-const RoleTag = chakra(
-  ({ className, role }: { className?: string; role?: Role }) => {
-    if (!role) return null;
-    return (
-      <Tag
-        className={className}
-        size={"md"}
-        variant={"solid"}
-        bgColor={"info.950"}
-        color={"info.text"}
-        gap={1}
-        fontSize={12}
-        fontWeight={700}
-        textTransform={"uppercase"}
-      >
-        {formatRole(role)}
-      </Tag>
-    );
-  }
-);
 
 export const CommentaireSection = chakra(
   ({
@@ -62,25 +39,25 @@ export const CommentaireSection = chakra(
     const [isModifying, setIsModifying] = useState(false);
 
     const queryClient = useQueryClient();
-    const toast = useToast();
 
-    const { isLoading: isDeleting, mutateAsync: submitDeleteChangementStatut } =
-      useMutation({
-        mutationFn: async () => {
-          await client
-            .ref("[DELETE]/intention/statut/:id")
-            .query({ params: { id: changementStatut.id } })
-            .then(() => {
-              queryClient.invalidateQueries(["[GET]/intention/:numero"]);
-              toast({
-                variant: "left-accent",
-                status: "success",
-                title: "Le changement de statut a bien été supprimé",
-              });
-            });
-        },
-      });
-
+    const {
+      isLoading: isDeleting,
+      mutateAsync: submitDeleteChangementStatutCommentaire,
+    } = useMutation({
+      mutationFn: async () => {
+        await client.ref("[POST]/intention/statut/submit").query({
+          body: {
+            changementStatut: {
+              ...changementStatut,
+              commentaire: "",
+            },
+          },
+        });
+      },
+      onSuccess: () => {
+        queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+      },
+    });
     return (
       <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6}>
         <Flex direction={"column"} gap={2} p={2}>
@@ -160,28 +137,30 @@ export const CommentaireSection = chakra(
               Pas d'observation renseignée
             </Text>
           )}
-          <Flex direction={"row"} gap={6}>
-            <Button
-              isLoading={isDeleting || isModifying}
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              onClick={() => submitDeleteChangementStatut()}
-            >
-              Supprimer
-            </Button>
-            <Button
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              isLoading={isDeleting || isModifying}
-              onClick={() => setIsModifying(true)}
-            >
-              Modifier
-            </Button>
-          </Flex>
+          {!isDeleting && !isModifying && (
+            <Flex direction={"row"} gap={6}>
+              <Button
+                isLoading={isDeleting || isModifying}
+                variant={"link"}
+                color="bluefrance.113"
+                fontSize={12}
+                fontWeight={400}
+                onClick={() => submitDeleteChangementStatutCommentaire()}
+              >
+                Supprimer
+              </Button>
+              <Button
+                variant={"link"}
+                color="bluefrance.113"
+                fontSize={12}
+                fontWeight={400}
+                isLoading={isDeleting || isModifying}
+                onClick={() => setIsModifying(true)}
+              >
+                Modifier
+              </Button>
+            </Flex>
+          )}
         </Flex>
       </Box>
     );

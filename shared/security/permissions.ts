@@ -40,6 +40,7 @@ export const PERMISSIONS = {
     "intentions-perdir/ecriture": { default: "region" },
     "users/lecture": { default: "region" },
     "users/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
   },
   region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -72,8 +73,8 @@ export const PERMISSIONS = {
   },
   perdir: {
     "intentions/lecture": { default: "uai" },
-    "intentions-perdir/lecture": { draft: "uai", default: "region" },
-    "intentions-perdir/ecriture": { default: "uai", draft: "user" },
+    "intentions-perdir/lecture": { default: "uai", draft: "uai" },
+    "intentions-perdir/ecriture": { default: "uai", draft: "uai" },
     "restitution-intentions/lecture": { default: "uai" },
     "pilotage-intentions/lecture": { default: "uai" },
   },

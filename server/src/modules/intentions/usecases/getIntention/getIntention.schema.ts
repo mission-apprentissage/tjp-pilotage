@@ -119,6 +119,7 @@ const IntentionSchema = z.object({
   updatedBy: UserSchema.optional(),
   libelleEtablissement: z.string(),
   libelleDepartement: z.string(),
+  codeDepartement: z.string(),
   libelleFormation: z.string(),
   libelleDispositif: z.string(),
   differenceCapaciteScolaire: z.coerce.number().optional(),

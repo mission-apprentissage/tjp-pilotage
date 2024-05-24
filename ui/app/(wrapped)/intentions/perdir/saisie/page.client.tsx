@@ -1,16 +1,25 @@
 "use client";
 
-import { ExternalLinkIcon } from "@chakra-ui/icons";
+import { ArrowForwardIcon, ExternalLinkIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
   Button,
   Center,
+  chakra,
   Container,
   Flex,
   IconButton,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Table,
   TableContainer,
+  Tag,
   Tbody,
   Td,
   Text,
@@ -18,10 +27,12 @@ import {
   Thead,
   Tooltip,
   Tr,
+  useDisclosure,
   useToast,
   useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -36,6 +47,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
 import { Header } from "./components/Header";
@@ -48,8 +60,10 @@ import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
+  const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
+  const { isOpen, onOpen, onClose } = useDisclosure();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
@@ -107,7 +121,7 @@ export const PageClient = () => {
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { keepPreviousData: true, staleTime: 0 }
+    { cacheTime: 0 }
   );
 
   const hasPermissionEnvoi = usePermission("intentions-perdir/ecriture");
@@ -155,6 +169,32 @@ export const PageClient = () => {
       },
     });
 
+  const { mutate: deleteIntention } = client
+    .ref("[DELETE]/intention/:numero")
+    .useMutation({
+      onMutate: () => {
+        setIsDeleting(true);
+      },
+      onSuccess: (_body) => {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: "La demande a bien été supprimée",
+        });
+        // Wait until view is updated before invalidating queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
+          queryClient.invalidateQueries([
+            "[GET]/intentions/count",
+            "[GET]/intentions",
+          ]);
+          setIsDeleting(false);
+          onClose();
+        }, 500);
+      },
+    });
+
+  const [isDeleting, setIsDeleting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
 
   if (isLoading) return <IntentionSpinner />;
@@ -244,7 +284,11 @@ export const PageClient = () => {
                       <OrderIcon {...order} column="libelleDepartement" />
                       {INTENTIONS_COLUMNS.libelleDepartement}
                     </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("statut")}>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("statut")}
+                      textAlign={"center"}
+                    >
                       <OrderIcon {...order} column="statut" />
                       {INTENTIONS_COLUMNS.statut}
                     </Th>
@@ -274,14 +318,7 @@ export const PageClient = () => {
                       <Tr
                         height={"60px"}
                         key={intention.numero}
-                        cursor={isSaisieDisabled() ? "initial" : "pointer"}
                         whiteSpace={"pre"}
-                        onClick={() => {
-                          if (isSaisieDisabled()) return;
-                          router.push(
-                            `/intentions/perdir/saisie/${intention.numero}`
-                          );
-                        }}
                       >
                         <Td textAlign={"center"}>
                           {formatDate({
@@ -294,24 +331,28 @@ export const PageClient = () => {
                           })}
                         </Td>
                         <Td>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {intention.libelleFormation}
-                          </Text>
+                          <Tooltip label={intention.libelleFormation}>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {intention.libelleFormation}
+                            </Text>
+                          </Tooltip>
                         </Td>
                         <Td>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {intention.libelleEtablissement}
-                          </Text>
+                          <Tooltip label={intention.libelleEtablissement}>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {intention.libelleEtablissement}
+                            </Text>
+                          </Tooltip>
                         </Td>
                         <Td>
                           <Text
@@ -321,11 +362,14 @@ export const PageClient = () => {
                             whiteSpace={"break-spaces"}
                             noOfLines={2}
                           >
-                            {intention.libelleDepartement}
+                            {formatDepartementLibelleWithCodeDepartement({
+                              libelleDepartement: intention.libelleDepartement,
+                              codeDepartement: intention.codeDepartement,
+                            })}
                           </Text>
                         </Td>
                         <Td textAlign={"center"} w={0}>
-                          <StatutTag statut={intention.statut} />
+                          <StatutTag statut={intention.statut} size="md" />
                         </Td>
                         <Td textAlign={"center"}>
                           <Flex direction={"row"} gap={0}>
@@ -375,20 +419,56 @@ export const PageClient = () => {
                                 me={"auto"}
                               />
                             </Tooltip>
+                            <Tooltip
+                              label="Supprimer la demande"
+                              closeOnScroll={true}
+                            >
+                              <IconButton
+                                variant={"link"}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  onOpen();
+                                }}
+                                aria-label="Supprimer la demande"
+                                icon={
+                                  <Icon
+                                    icon="ri:delete-bin-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                                me={"auto"}
+                              />
+                            </Tooltip>
+                            <Tooltip label="Suivre la demande">
+                              <IconButton
+                                isDisabled
+                                aria-label="Suivre la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={
+                                  <Icon width="24px" icon="ri:bookmark-line" />
+                                }
+                              />
+                            </Tooltip>
+                            <ModalDeleteIntention
+                              isOpen={isOpen}
+                              onClose={onClose}
+                              numero={intention.numero}
+                              isDeleting={isDeleting}
+                              deleteIntention={() => {
+                                deleteIntention({
+                                  params: { numero: intention.numero },
+                                });
+                              }}
+                            />
                           </Flex>
                         </Td>
-                        <Td>
-                          <Text
-                            textAlign={"center"}
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {intention.typeDemande
-                              ? getTypeDemandeLabel(intention.typeDemande)
-                              : null}
-                          </Text>
+                        <Td textAlign={"center"}>
+                          <Tag colorScheme="blue" size={"md"} h="fit-content">
+                            {getTypeDemandeLabel(intention.typeDemande)}
+                          </Tag>
                         </Td>
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={intention.userName}>
@@ -473,3 +553,62 @@ export const PageClient = () => {
     </Container>
   );
 };
+
+const ModalDeleteIntention = chakra(
+  ({
+    isOpen,
+    onClose,
+    numero,
+    isDeleting,
+    deleteIntention,
+  }: {
+    isOpen: boolean;
+    onClose: () => void;
+    numero: string;
+    isDeleting: boolean;
+    deleteIntention: () => void;
+  }) => {
+    return (
+      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+        <ModalOverlay bgColor="rgba(0, 0, 0, 0.12)" />
+        <ModalContent p="4">
+          <ModalCloseButton title="Fermer" />
+          <ModalHeader>
+            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+            Confirmer la suppression de l'intention n°{numero}
+          </ModalHeader>
+          <ModalBody>
+            <Text color="red" mt={2}>
+              Attention, ce changement est irréversible
+            </Text>
+          </ModalBody>
+
+          {isDeleting ? (
+            <Center>
+              <IntentionSpinner />
+            </Center>
+          ) : (
+            <ModalFooter>
+              <Button
+                colorScheme="blue"
+                mr={3}
+                variant={"secondary"}
+                onClick={() => onClose()}
+              >
+                Annuler
+              </Button>
+
+              <Button
+                isLoading={isDeleting}
+                variant="primary"
+                onClick={() => deleteIntention()}
+              >
+                Confirmer la suppression
+              </Button>
+            </ModalFooter>
+          )}
+        </ModalContent>
+      </Modal>
+    );
+  }
+);

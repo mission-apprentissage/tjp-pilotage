@@ -211,7 +211,7 @@ export const ChangementStatutForm = ({
           leftIcon={<CheckIcon />}
           width={"100%"}
         >
-          Enregister
+          Enregistrer
         </Button>
         <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
           <ModalOverlay />

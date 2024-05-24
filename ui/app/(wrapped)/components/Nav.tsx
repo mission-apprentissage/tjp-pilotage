@@ -166,11 +166,9 @@ export const Nav = () => {
     hasPermission(auth?.user.role, "users/lecture") ||
     hasPermission(auth?.user.role, "campagnes/lecture");
 
-  const shouldDisplayIntentionMenu =
-    hasRole({ user: auth?.user, role: "perdir" }) ||
-    isUserInRegionsExperimentation({
-      user: auth?.user,
-    });
+  const shouldDisplayIntentionMenu = isUserInRegionsExperimentation({
+    user: auth?.user,
+  });
 
   const shouldDisplayBothIntentionMenus = hasRole({
     user: auth?.user,

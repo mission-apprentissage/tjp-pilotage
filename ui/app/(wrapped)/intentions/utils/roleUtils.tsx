@@ -10,6 +10,12 @@ export const formatRole = (role: Role): string => {
       return "Pilote région";
     case "gestionnaire_region":
       return "Gestionnaire région";
+    case "region":
+      return "Utilisateur région";
+    case "expert_region":
+      return "Gestionnaire région";
+    case "admin_region":
+      return "Admin région";
     case "perdir":
       return "Perdir";
     default:
