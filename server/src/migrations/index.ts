@@ -69,6 +69,7 @@ import * as migration_1715766088538 from "./migration_1715766088538";
 import * as migration_1715846458385 from "./migration_1715846458385";
 import * as migration_1716370088988 from "./migration_1716370088988";
 import * as migration_1716380677559 from "./migration_1716380677559";
+import * as migration_1716468825446 from "./migration_1716468825446";
 
 type Migration = {
   up: (db: Kysely<any>) => Promise<void>;
@@ -145,4 +146,5 @@ export const migrations: Migrations = {
   migration_1715846458385,
   migration_1716370088988,
   migration_1716380677559,
+  migration_1716468825446,
 };
