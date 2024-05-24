@@ -74,6 +74,7 @@ export const getIntentionsQuery = async (
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",

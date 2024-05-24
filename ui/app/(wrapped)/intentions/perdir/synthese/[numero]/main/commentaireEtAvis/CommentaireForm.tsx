@@ -90,7 +90,7 @@ export const CommentaireForm = chakra(
             leftIcon={<CheckIcon />}
             width={"100%"}
           >
-            Enregister
+            Enregistrer
           </Button>
         </Flex>
       </FormProvider>

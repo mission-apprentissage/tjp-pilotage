@@ -148,6 +148,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
+      "departement.codeDepartement",
     ])
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))

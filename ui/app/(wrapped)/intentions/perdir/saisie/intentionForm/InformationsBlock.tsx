@@ -52,7 +52,7 @@ export const InformationsBlock = ({
     mutationFn: async () => {
       if (!formId) return;
       await client
-        .ref("[DELETE]/demande/:numero")
+        .ref("[DELETE]/intention/:numero")
         .query({ params: { numero: formId } })
         .then(() => push("/intentions/saisie?action=supprimée"));
     },

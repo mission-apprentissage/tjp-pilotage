@@ -10,10 +10,13 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
+import { Role } from "shared";
 
 import { client } from "@/api.client";
+import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 
 import { formatDate } from "../../../../../../../../utils/formatDate";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../utils/formatLibelle";
 import {
   getMotifLabel,
   MotifLabel,
@@ -21,7 +24,7 @@ import {
 import { getTypeDemandeLabel } from "../../../../../utils/typeDemandeUtils";
 
 const formatDifferenceCapacite = (difference?: number) => {
-  if (!difference) return "0";
+  if (!difference) return "+0";
   if (difference > 0) return `+${difference}`;
   return `-${difference}`;
 };
@@ -96,16 +99,21 @@ export const SyntheseSection = ({
                 Département
               </Text>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
-                {intention.libelleDepartement}
+                {formatDepartementLibelleWithCodeDepartement({
+                  libelleDepartement: intention.libelleDepartement,
+                  codeDepartement: intention.codeDepartement,
+                })}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
                 Diplôme
               </Text>
-              <Text w={["64", "72", "80", "96"]} fontSize={14}>
-                {intention.libelleFormation}
-              </Text>
+              <Tooltip label={intention.libelleFormation}>
+                <Text w={["64", "72", "80", "96"]} fontSize={14}>
+                  {intention.libelleFormation}
+                </Text>
+              </Tooltip>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
@@ -120,16 +128,17 @@ export const SyntheseSection = ({
                 Inspecteur référent
               </Text>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
-                {intention.libelleDispositif}
+                $inspecteur référent
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
                 Auteur
               </Text>
-              <Text
-                w={["64", "72", "80", "96"]}
-              >{`${intention.createdBy?.fullname} (${intention.createdBy?.role})`}</Text>
+              <Flex w={["64", "72", "80", "96"]} direction={"row"} gap={2}>
+                <Text>{intention.createdBy?.fullname}</Text>
+                <RoleTag role={intention.createdBy?.role as Role} />
+              </Flex>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
@@ -138,18 +147,20 @@ export const SyntheseSection = ({
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: intention.createdAt,
-                  options: { dateStyle: "short" },
+                  options: { dateStyle: "short", timeStyle: "short" },
+                  dateTimeSeparator: " - ",
                 })}
               </Text>
             </Flex>
             <Flex direction={"row"} gap={4}>
               <Text w={["44", "48", "52"]} fontWeight={700}>
-                Dernière modification
+                Dernière modification le
               </Text>
               <Text w={["64", "72", "80", "96"]} fontSize={14}>
                 {formatDate({
                   date: intention.updatedAt,
-                  options: { dateStyle: "short" },
+                  options: { dateStyle: "short", timeStyle: "short" },
+                  dateTimeSeparator: " - ",
                 })}
               </Text>
             </Flex>

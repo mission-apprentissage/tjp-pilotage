@@ -86,11 +86,11 @@ export const CommentairesEtAvisSection = ({
       <Heading as="h2" fontSize={18} fontWeight={700}>
         Consulter les avis et commentaires sur la demande
       </Heading>
+      <Divider />
       {etapes
         .filter((etape) => etape.changementsStatut)
         .map((etape) => (
           <Flex key={etape.label} direction={"column"} gap={10}>
-            <Divider />
             <Flex direction="row" gap={1}>
               <StepIcon numero={etape.numero} mb={"auto"} />
               <Flex ml={4} direction={"column"} gap={0} mb={"auto"}>

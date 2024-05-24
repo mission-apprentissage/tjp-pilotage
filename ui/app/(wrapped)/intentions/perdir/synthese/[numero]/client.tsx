@@ -102,7 +102,7 @@ export default ({
               <MainSection
                 intention={intention}
                 displayType={
-                  searchParams.displayType ?? DisplayTypeEnum.commentairesEtAvis
+                  searchParams.displayType ?? DisplayTypeEnum.synthese
                 }
                 displaySynthese={displaySynthese}
                 displayCommentairesEtAvis={displayCommentairesEtAvis}
