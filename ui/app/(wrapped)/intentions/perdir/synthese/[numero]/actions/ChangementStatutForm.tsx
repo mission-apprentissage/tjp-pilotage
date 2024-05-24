@@ -35,6 +35,7 @@ import {
   formatStatut,
   getOrderStatut,
   getStepWorkflow,
+  isStatutStepWorkflowEnabled,
 } from "../../../../utils/statutUtils";
 
 type ChangementStatutForm = {
@@ -169,6 +170,7 @@ export const ChangementStatutForm = ({
           >
             {Object.values(DemandeStatutEnum)
               .filter((statut) => statut !== DemandeStatutEnum["supprimée"])
+              .filter((statut) => isStatutStepWorkflowEnabled(statut))
               .sort((a, b) => getOrderStatut(a) - getOrderStatut(b))
               .map((statut) => (
                 <option

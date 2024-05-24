@@ -15,6 +15,7 @@ import { client } from "@/api.client";
 import {
   getOrderStatut,
   getStepWorkflow,
+  isStepWorkflowEnabled,
 } from "../../../../../utils/statutUtils";
 import { CommentaireSection } from "./CommentaireSection";
 
@@ -81,56 +82,66 @@ export const CommentairesEtAvisSection = ({
     },
   ];
 
+  console.log(etapes);
+
   return (
     <Flex direction={"column"} gap={10}>
       <Heading as="h2" fontSize={18} fontWeight={700}>
         Consulter les avis et commentaires sur la demande
       </Heading>
       <Divider />
-      {etapes
-        .filter((etape) => etape.changementsStatut)
-        .map((etape) => (
-          <Flex key={etape.label} direction={"column"} gap={10}>
-            <Flex direction="row" gap={1}>
-              <StepIcon numero={etape.numero} mb={"auto"} />
-              <Flex ml={4} direction={"column"} gap={0} mb={"auto"}>
-                <Text fontSize={18} fontWeight={700} lineHeight={"21px"}>
-                  {etape.label}
-                </Text>
-                <Text
-                  fontSize={14}
-                  fontWeight={400}
-                  lineHeight={"24px"}
-                  color={"grey.200"}
-                >
-                  <Highlight
-                    query={[
-                      etape.changementsStatut?.length.toString() ?? "",
-                      getNombreDifferentsContributeurs(
-                        etape.changementsStatut
-                      ).toString(),
-                    ]}
-                    styles={{
-                      fontWeight: 700,
-                    }}
+
+      {etapes.filter((etape) => etape?.changementsStatut?.length).length ? (
+        etapes
+          .filter((etape) => etape?.changementsStatut?.length)
+          .filter((etape) => isStepWorkflowEnabled(etape.numero))
+          .map((etape) => (
+            <Flex key={etape.label} direction={"column"} gap={10}>
+              <Flex direction="row" gap={1}>
+                <StepIcon numero={etape.numero} mb={"auto"} />
+                <Flex ml={4} direction={"column"} gap={0} mb={"auto"}>
+                  <Text fontSize={18} fontWeight={700} lineHeight={"21px"}>
+                    {etape.label}
+                  </Text>
+                  <Text
+                    fontSize={14}
+                    fontWeight={400}
+                    lineHeight={"24px"}
+                    color={"grey.200"}
                   >
-                    {`${etape.changementsStatut
-                      ?.length} changement(s) de statut par ${getNombreDifferentsContributeurs(
-                      etape.changementsStatut
-                    )} contributeur(s)`}
-                  </Highlight>
-                </Text>
+                    <Highlight
+                      query={[
+                        etape.changementsStatut?.length.toString() ?? "",
+                        getNombreDifferentsContributeurs(
+                          etape.changementsStatut
+                        ).toString(),
+                      ]}
+                      styles={{
+                        fontWeight: 700,
+                      }}
+                    >
+                      {`${etape.changementsStatut
+                        ?.length} changement(s) de statut par ${getNombreDifferentsContributeurs(
+                        etape.changementsStatut
+                      )} contributeur(s)`}
+                    </Highlight>
+                  </Text>
+                </Flex>
+              </Flex>
+              <Flex direction={"column"} gap={10}>
+                {etape.changementsStatut?.map((changementStatut) => (
+                  <Fragment key={changementStatut.updatedAt}>
+                    <CommentaireSection changementStatut={changementStatut} />
+                  </Fragment>
+                ))}
               </Flex>
             </Flex>
-            <Flex direction={"column"} gap={10}>
-              {etape.changementsStatut?.map((changementStatut) => (
-                <Fragment key={changementStatut.updatedAt}>
-                  <CommentaireSection changementStatut={changementStatut} />
-                </Fragment>
-              ))}
-            </Flex>
-          </Flex>
-        ))}
+          ))
+      ) : (
+        <Heading as="h3" fontSize={16} fontWeight={700}>
+          Pas encore de changement de statut sur la demande
+        </Heading>
+      )}
     </Flex>
   );
 };

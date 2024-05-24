@@ -31,7 +31,7 @@ const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
     case DemandeStatutEnum["proposition"]:
-      logger.info("Projet de demande enregistré", {
+      logger.info("Proposition enregistrée", {
         intention: intention,
       });
       break;
