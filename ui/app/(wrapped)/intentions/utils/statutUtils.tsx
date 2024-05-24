@@ -70,3 +70,22 @@ export const getStepWorkflow = (statut?: DemandeStatutType): number => {
       return 0;
   }
 };
+
+export const isStatutStepWorkflowEnabled = (
+  statut?: DemandeStatutType
+): boolean => {
+  return isStepWorkflowEnabled(getStepWorkflow(statut));
+};
+
+export const isStepWorkflowEnabled = (step: number): boolean => {
+  switch (step) {
+    case 0:
+    case 1:
+    case 2:
+      return true;
+    case 3:
+    case 4:
+    default:
+      return false;
+  }
+};

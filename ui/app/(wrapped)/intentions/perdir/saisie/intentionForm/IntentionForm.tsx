@@ -93,7 +93,7 @@ export const IntentionForm = ({
 
       switch (body.statut) {
         case DemandeStatutEnum["proposition"]:
-          message = "Projet de demande enregistré avec succès";
+          message = "Proposition enregistrée avec succès";
           break;
         case DemandeStatutEnum["brouillon"]:
           message = "Brouillon enregistré avec succès";
