@@ -78,7 +78,7 @@ export const MenuFormulaire = ({
           _hover={{ bg: "blueecume.925_hover" }}
           leftIcon={<Icon icon="ri:chat-3-line" color="black" />}
         >
-          Commentaire et pièce(s) jointe(s)
+          Commentaire
         </Button>
       </Flex>
     </Box>
