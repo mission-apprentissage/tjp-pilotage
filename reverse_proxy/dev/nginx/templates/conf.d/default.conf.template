@@ -103,7 +103,7 @@ server {
         proxy_pass_header Authorization;
     }
 
-    location ~ ^/api/intention/files/(.*)$ {
+    location ~ ^/api/intention/[A-Za-z0-9]+/files/?$ {
         proxy_pass http://host.docker.internal:5000;
 
         proxy_set_header Host $host;
