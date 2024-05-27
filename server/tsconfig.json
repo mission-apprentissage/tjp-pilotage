@@ -1,6 +1,6 @@
 {
   "include": ["src", "../shared"],
-  "exclude": ["**/node_modules", "public/upload/**"],
+  "exclude": ["**/node_modules", "public/**/*"],
   "compilerOptions": {
     "strictPropertyInitialization": false,
     "declarationMap": true,
