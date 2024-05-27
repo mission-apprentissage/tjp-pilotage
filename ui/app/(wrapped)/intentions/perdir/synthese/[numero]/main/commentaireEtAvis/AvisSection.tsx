@@ -63,6 +63,7 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
               <Flex direction={"row"} gap={2}>
                 <AvisStatutTag
                   hasIcon
+                  size={"md"}
                   statutAvis={avis.statutAvis}
                   typeAvis={avis.typeAvis}
                 />
