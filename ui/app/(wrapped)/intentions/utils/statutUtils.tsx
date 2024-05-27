@@ -53,8 +53,6 @@ export const getOrderStatut = (statut?: DemandeStatutType): number => {
 
 export const getStepWorkflow = (statut?: DemandeStatutType): number => {
   switch (statut) {
-    case DemandeStatutEnum["brouillon"]:
-      return 0;
     case DemandeStatutEnum["proposition"]:
     case DemandeStatutEnum["dossier incomplet"]:
     case DemandeStatutEnum["dossier complet"]:
@@ -64,8 +62,9 @@ export const getStepWorkflow = (statut?: DemandeStatutType): number => {
     case DemandeStatutEnum["prêt pour le vote"]:
       return 3;
     case DemandeStatutEnum["demande validée"]:
-    case DemandeStatutEnum["refusée"]:
       return 4;
+    case DemandeStatutEnum["brouillon"]:
+    case DemandeStatutEnum["refusée"]:
     default:
       return 0;
   }
