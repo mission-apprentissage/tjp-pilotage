@@ -4,7 +4,7 @@ import { useIntentionFilesContext } from "./filesContext";
 import { FilesField } from "./FilesField";
 import { UploadField } from "./UploadField";
 
-export const FilesSection = () => {
+export const FilesSection = ({ disabled }: { disabled: boolean }) => {
   const { newFiles, addNewFiles, files, deleteFile, downloadFile } =
     useIntentionFilesContext();
 
@@ -15,11 +15,16 @@ export const FilesSection = () => {
       justifyContent={"start"}
       rowGap={4}
     >
-      <UploadField setNewFiles={addNewFiles} newFiles={newFiles} />
+      <UploadField
+        setNewFiles={addNewFiles}
+        newFiles={newFiles}
+        disabled={disabled}
+      />
       <FilesField
         files={files}
         deleteFile={deleteFile}
         downloadFile={downloadFile}
+        disabled={disabled}
       />
     </Flex>
   );

@@ -31,7 +31,7 @@ export const ObservationsSection = ({
     </Heading>
     <Divider pt="4" mb="4" />
     <CommentaireField disabled={disabled} />
-    <FilesSection />
+    <FilesSection disabled={disabled} />
     <RequiredField />
   </Flex>
 );
