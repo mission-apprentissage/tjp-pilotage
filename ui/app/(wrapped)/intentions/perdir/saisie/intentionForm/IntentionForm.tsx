@@ -35,6 +35,7 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
+import { LinkButton } from "@/components/LinkButton";
 
 import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
@@ -45,6 +46,7 @@ import { Campagne } from "../types";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
+import { useIntentionFilesContext } from "./observationsSection/filesSection/filesContext";
 
 export const CampagneContext = createContext<{
   campagne?: Campagne;
@@ -70,6 +72,7 @@ export const IntentionForm = ({
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
+  const { handleFiles } = useIntentionFilesContext();
   const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
@@ -86,11 +89,8 @@ export const IntentionForm = ({
     mutateAsync: submitDemande,
     isSuccess,
   } = client.ref("[POST]/intention/submit").useMutation({
-    onSuccess: (body) => {
-      push(`/intentions/perdir/saisie`);
-
+    onSuccess: async (body) => {
       let message: string | null = null;
-
       switch (body.statut) {
         case DemandeStatutEnum["proposition"]:
           message = "Proposition enregistrée avec succès";
@@ -106,6 +106,10 @@ export const IntentionForm = ({
           title: message,
         });
       }
+
+      await handleFiles(body.numero);
+
+      push(`/intentions/perdir/saisie`);
     },
     //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
@@ -347,20 +351,8 @@ export const IntentionForm = ({
                         </Flex>
                       }
                     />
-                    <Button
-                      variant={"ghost"}
+                    <LinkButton
                       mt={6}
-                      borderRadius={"unset"}
-                      borderBottom={"1px solid"}
-                      borderColor={"bluefrance.113"}
-                      color={"bluefrance.113"}
-                      _hover={{
-                        backgroundColor: "unset",
-                      }}
-                      p={1}
-                      h="fit-content"
-                      fontWeight={400}
-                      fontSize={16}
                       leftIcon={<Icon icon="ri:arrow-up-fill" />}
                       onClick={() =>
                         step1Ref.current?.scrollIntoView({
@@ -370,7 +362,7 @@ export const IntentionForm = ({
                       }
                     >
                       Haut de page
-                    </Button>
+                    </LinkButton>
                   </GridItem>
                 </Grid>
               </Box>
