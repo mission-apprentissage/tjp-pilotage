@@ -24,6 +24,19 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface Avis {
+  id: Generated<string>;
+  userId: string | null;
+  intentionNumero: string;
+  statutAvis: string;
+  typeAvis: string;
+  userFonction: string | null;
+  isVisibleParTous: boolean;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  commentaire: string | null;
+}
+
 export interface Campagne {
   id: Generated<string>;
   annee: string;
@@ -687,6 +700,7 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  avis: Avis;
   campagne: Campagne;
   changeLog: ChangeLog;
   changementStatut: ChangementStatut;

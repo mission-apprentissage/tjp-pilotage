@@ -21,6 +21,7 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
     "intentions-perdir-statut/ecriture": { default: "national" },
+    "intentions-perdir-avis/ecriture": { default: "national" },
   },
   pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
@@ -30,6 +31,7 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
     "intentions-perdir-statut/ecriture": { default: "national" },
+    "intentions-perdir-avis/ecriture": { default: "national" },
   },
   admin_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -41,12 +43,14 @@ export const PERMISSIONS = {
     "users/lecture": { default: "region" },
     "users/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   region: {
     "intentions/lecture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -55,6 +59,7 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   gestionnaire_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -64,6 +69,7 @@ export const PERMISSIONS = {
     "intentions-perdir/lecture": { default: "region", draft: "region" },
     "intentions-perdir/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   expert_region: {
     "intentions/lecture": { default: "region", draft: "region" },

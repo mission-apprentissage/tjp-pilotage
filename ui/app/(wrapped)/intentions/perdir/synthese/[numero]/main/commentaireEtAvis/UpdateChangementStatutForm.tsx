@@ -16,7 +16,7 @@ type ChangementStatutForm = {
   commentaire?: string;
 };
 
-export const CommentaireForm = chakra(
+export const UpdateChangementStatutForm = chakra(
   ({
     changementStatut,
     setIsModifying,

@@ -14,40 +14,16 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
+import { StatutTag } from "../../../components/StatutTag";
 import { Campagne } from "../../types";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
 import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
-
-const TagDemande = ({ statut }: { statut?: string }) => {
-  switch (statut) {
-    case DemandeStatutEnum["demande validée"]:
-      return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
-          Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum["refusée"]:
-      return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
-          Demande refusée
-        </Tag>
-      );
-    case DemandeStatutEnum["proposition"]:
-    default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
-          Projet de demande
-        </Tag>
-      );
-  }
-};
 
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
@@ -153,7 +129,7 @@ export const CfdUaiSection = ({
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
-          <TagDemande statut={defaultValues.statut} />
+          {defaultValues.statut && <StatutTag statut={defaultValues.statut} />}
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
