@@ -283,14 +283,14 @@ export const AvisForm = ({
               <Highlight
                 query={[
                   getValues("statutAvis"),
-                  getValues("typeAvis"),
                   getValues("userFonction"),
+                  getTypeAvis(intention.statut),
                   intention.numero!,
                 ]}
                 styles={{ fontWeight: 700 }}
               >
-                {`Souhaitez-vous déposer un avis ${getValues(
-                  "typeAvis"
+                {`Souhaitez-vous déposer un avis ${getTypeAvis(
+                  intention.statut
                 )} ${getValues("statutAvis")} en tant que ${getValues(
                   "userFonction"
                 )} pour la demande ${intention.numero} ?`}
@@ -313,10 +313,12 @@ export const AvisForm = ({
                 isLoading={isSubmitting}
                 variant="primary"
                 onClick={handleSubmit((values) => {
-                  console.log(values);
                   submitAvis({
                     body: {
-                      avis: values,
+                      avis: {
+                        ...values,
+                        typeAvis: getTypeAvis(intention.statut),
+                      },
                     },
                   });
                 })}

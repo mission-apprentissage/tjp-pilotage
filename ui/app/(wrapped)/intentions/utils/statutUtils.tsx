@@ -103,19 +103,16 @@ export const getStepWorkflowAvis = (typeAvis: AvisTypeType): number => {
   }
 };
 
-export const getTypeAvis = (
-  statut?: DemandeStatutType
-): AvisTypeType | undefined => {
+export const getTypeAvis = (statut?: DemandeStatutType): AvisTypeType => {
   switch (getStepWorkflow(statut)) {
-    case 1:
-      return AvisTypeEnum["préalable"];
     case 2:
       return AvisTypeEnum["consultatif"];
     case 3:
     case 4:
       return AvisTypeEnum["final"];
     case 0:
+    case 1:
     default:
-      return undefined;
+      return AvisTypeEnum["préalable"];
   }
 };
