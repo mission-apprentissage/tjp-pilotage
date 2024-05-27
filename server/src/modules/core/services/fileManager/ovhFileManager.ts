@@ -7,7 +7,6 @@ import {
   S3Client,
 } from "@aws-sdk/client-s3";
 import { getSignedUrl } from "@aws-sdk/s3-request-presigner";
-import { humanFileSize } from "shared/utils/humanFileSize";
 
 import { config } from "../../../../../config/config";
 import { FileManager, FileType } from "./fileManager";
@@ -36,11 +35,13 @@ const mapperToFileType = (content: _Object): FileType | undefined => {
 
   return {
     path: content.Key,
-    name: nameWithoutExtension,
+    name: filename,
+    nameWithoutExtension,
     extension: extension ?? "",
     type: "file",
-    size: humanFileSize(content.Size),
+    size: content.Size,
     lastModified: content.LastModified.toISOString(),
+    isUploaded: true,
   };
 };
 
@@ -72,6 +73,8 @@ export const ovhFileManagerFactory = (
           `Une erreur est survenue lors de l'ajout d'un fichier au dossier suivant: ${filepath}`,
           error
         );
+
+        throw new Error((error as Error).message);
       }
     },
     listFiles: async (filepath: string): Promise<FileType[]> => {
@@ -96,7 +99,7 @@ export const ovhFileManagerFactory = (
           error
         );
 
-        return [];
+        throw new Error((error as Error).message);
       }
     },
     deleteFile: async (filepath: string) => {
@@ -116,9 +119,11 @@ export const ovhFileManagerFactory = (
           `Une erreur est survenue lors de la suppression du fichier suivant: ${filepath}`,
           error
         );
+
+        throw new Error((error as Error).message);
       }
     },
-    getDownloadUrl: async (filepath: string): Promise<string | undefined> => {
+    getDownloadUrl: async (filepath: string): Promise<string> => {
       try {
         if (!filepath) {
           throw new Error("No filepath provided to get download url.");
@@ -135,7 +140,7 @@ export const ovhFileManagerFactory = (
           `Une erreur est survenue en générant l'url de téléchargement du fichier suivant: ${filepath}`,
           error
         );
-        return undefined;
+        throw new Error((error as Error).message);
       }
     },
   };

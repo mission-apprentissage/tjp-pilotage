@@ -4,6 +4,8 @@ import { RefObject } from "react";
 
 import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { CommentaireField } from "./CommentaireField";
+import { FilesSection } from "./filesSection/FilesSection";
+import { RequiredField } from "./RequiredField";
 
 export const ObservationsSection = ({
   disabled,
@@ -29,5 +31,7 @@ export const ObservationsSection = ({
     </Heading>
     <Divider pt="4" mb="4" />
     <CommentaireField disabled={disabled} />
+    <FilesSection />
+    <RequiredField />
   </Flex>
 );

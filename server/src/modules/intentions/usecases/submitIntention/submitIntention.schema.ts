@@ -83,6 +83,7 @@ export const submitIntentionSchema = {
     200: z.object({
       id: z.string(),
       statut: DemandeStatutZodType,
+      numero: z.string(),
     }),
   },
 };
