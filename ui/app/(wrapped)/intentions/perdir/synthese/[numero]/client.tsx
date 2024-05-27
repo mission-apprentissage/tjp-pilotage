@@ -59,35 +59,44 @@ export default ({
   if (!intention) return null;
 
   return (
-    <Flex direction="column">
-      {intention.statut === DemandeStatutEnum["dossier incomplet"] && (
-        <InformationHeader
-          status="warning"
-          message={
-            "Dossier incomplet, merci de vous référer aux consignes du gestionnaire"
-          }
-        />
-      )}
-      {intention.statut === DemandeStatutEnum["projet de demande"] && (
-        <InformationHeader
-          status="success"
-          message={"La proposition a passé l'étape 1 avec succès !"}
-        />
-      )}
-      {intention.statut === DemandeStatutEnum["prêt pour le vote"] && (
-        <InformationHeader
-          status="success"
-          message={"La proposition a passé l'étape 2 avec succès !"}
-        />
-      )}
-      <Container maxWidth={"100%"} pt={4} pb={20} px={24} bg="blueecume.925">
+    <Flex width={"100%"} bg="blueecume.925">
+      <Flex
+        align="center"
+        as={Container}
+        direction="column"
+        maxWidth={"container.xl"}
+        pt={4}
+        pb={20}
+      >
+        {intention.statut === DemandeStatutEnum["dossier incomplet"] && (
+          <InformationHeader
+            status="warning"
+            message={
+              "Dossier incomplet, merci de vous référer aux consignes du gestionnaire"
+            }
+          />
+        )}
+        {intention.statut === DemandeStatutEnum["projet de demande"] && (
+          <InformationHeader
+            status="success"
+            message={"La proposition a passé l'étape 1 avec succès !"}
+          />
+        )}
+        {intention.statut === DemandeStatutEnum["prêt pour le vote"] && (
+          <InformationHeader
+            status="success"
+            message={"La proposition a passé l'étape 2 avec succès !"}
+          />
+        )}
         <Breadcrumb
+          textAlign={"start"}
           py={2}
           ml={4}
           mb={4}
+          me="auto"
           pages={[
             { title: "Accueil", to: "/" },
-            { title: "Recueil des demandes", to: "/intentions" },
+            { title: "Recueil des demandes", to: "/intentions/perdir" },
             {
               title: `Demande n°${intention?.numero}`,
               to: `/intentions/perdir/synthese/${intention?.numero}`,
@@ -113,7 +122,7 @@ export default ({
             </GridItem>
           </Grid>
         </Flex>
-      </Container>
+      </Flex>
     </Flex>
   );
 };

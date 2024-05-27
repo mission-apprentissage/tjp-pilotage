@@ -48,7 +48,13 @@ export const StepperSection = ({
           />
         </GridItem>
         <GridItem>
-          <Img src="/illustrations/steps-intentions.svg" alt="" mx={"auto"} />
+          <Img
+            src={`/illustrations/step-${getStepWorkflow(
+              intention.statut
+            )}-workflow-intentions.svg`}
+            alt="Illustration de l'étape en cours"
+            m={"auto"}
+          />
         </GridItem>
       </Grid>
     </Flex>
