@@ -18,6 +18,7 @@ const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
   if (segment === "departement") return 1;
   if (segment === "etablissement") return 2;
+  if (segment === "lien-emploi-formation") return 3;
 };
 
 export default function PanoramaLayout({
@@ -40,6 +41,15 @@ export default function PanoramaLayout({
         {
           title: "Panorama départemental",
           to: "/panorama/departement",
+          active: true,
+        },
+      ];
+    if (segment === "lien-emploi-formation")
+      return [
+        { title: "Accueil", to: "/" },
+        {
+          title: "Lien emploi formation",
+          to: "/panorama/lien-emploi-formation",
           active: true,
         },
       ];
@@ -74,6 +84,9 @@ export default function PanoramaLayout({
           </Tab>
           <Tab as={Link} href="/panorama/etablissement">
             Établissement
+          </Tab>
+          <Tab as={Link} href="/panorama/lien-emploi-formation">
+            Lien emploi formation
           </Tab>
         </TabList>
         <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">

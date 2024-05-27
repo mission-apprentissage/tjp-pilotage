@@ -5,6 +5,7 @@ import { createCampagneRoute } from "./usecases/createCampagne/createCampagne.ro
 import { createUserRoute } from "./usecases/createUser/createUser.route";
 import { editCampagneRoute } from "./usecases/editCampagne/editCampagne.route";
 import { editUserRoute } from "./usecases/editUser/editUser.route";
+import { generateMetabaseDashboardUrlRoute } from "./usecases/generateMetabaseDashboardUrl/generateMetabaseDashboardUrl.route";
 import { getCampagnesRoute } from "./usecases/getCampagnes/getCampagnes.route";
 import { getDneAuthorizationUrlRoute } from "./usecases/getDneUrl/getDneUrl.route";
 import { getUsersRoute } from "./usecases/getUsers/getUsers.route";
@@ -35,6 +36,7 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...getCampagnesRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
+    ...generateMetabaseDashboardUrlRoute({ server }),
   };
 };
 

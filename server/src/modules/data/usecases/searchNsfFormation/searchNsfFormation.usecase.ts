@@ -2,7 +2,7 @@ import { inject } from "injecti";
 import { z } from "zod";
 
 import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep";
-import { searchDiplomeSchema } from "./searchDiplome.schema";
+import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 export const [searchDiplome] = inject(
   { findManyInDataFormationQuery },
@@ -12,7 +12,7 @@ export const [searchDiplome] = inject(
       filters,
     }: {
       search: string;
-      filters: z.infer<typeof searchDiplomeSchema.querystring>;
+      filters: z.infer<typeof searchNsfFormationSchema.querystring>;
     }) => {
       const formations = await deps.findManyInDataFormationQuery({
         search,
