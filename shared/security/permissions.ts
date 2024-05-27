@@ -19,7 +19,7 @@ export const PERMISSIONS = {
     "campagnes/lecture": { default: "national" },
     "campagnes/ecriture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
-    "intentions-perdir/ecriture": { default: "national" },
+    "intentions-perdir/ecriture": { default: "national", draft: "national" },
     "intentions-perdir-statut/ecriture": { default: "national" },
   },
   pilote: {

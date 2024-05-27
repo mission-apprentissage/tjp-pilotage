@@ -1,19 +1,30 @@
 import * as fs from "fs";
 import path from "path";
-import { humanFileSize } from "shared/utils/humanFileSize";
 
-import { localFilePathManager } from "../filePathManager/localFilePathManager";
+import { config } from "../../../../../config/config";
 import { FileManager, FileType } from "./fileManager";
 
-export const localFileManagerFactory = (
-  deps = {
-    filePathManager: localFilePathManager,
-    humanFileSizeTransformer: humanFileSize,
-  }
-): FileManager => {
+const mapperToFileType = (filepath: string, entry: fs.Dirent): FileType => {
+  const fullPath = path.join(filepath, entry.name);
+  const stats = fs.statSync(fullPath);
+  const extension = path.extname(entry.name).replace(".", "");
+
+  return {
+    path: fullPath,
+    name: entry.name,
+    extension,
+    type: "file",
+    size: stats.size,
+    lastModified: stats.mtime.toISOString(),
+    isUploaded: true,
+    nameWithoutExtension: path.basename(entry.name, `.${extension}`),
+  };
+};
+
+export const localFileManagerFactory = (): FileManager => {
   return {
     uploadFile: async (filepath: string, file: Buffer) => {
-      const folderPath = path.basename(filepath);
+      const folderPath = path.dirname(filepath);
 
       if (!fs.existsSync(folderPath)) {
         fs.mkdirSync(folderPath, { recursive: true });
@@ -37,18 +48,7 @@ export const localFileManagerFactory = (
             continue;
           }
 
-          const fullPath = path.join(filepath, entry.name);
-          const stats = fs.statSync(fullPath);
-          const extension = path.extname(entry.name);
-
-          filesDetails.push({
-            path: fullPath,
-            name: path.basename(entry.name, extension),
-            extension,
-            type: "file",
-            size: deps.humanFileSizeTransformer(stats.size),
-            lastModified: stats.mtime.toISOString(),
-          });
+          filesDetails.push(mapperToFileType(filepath, entry));
         }
 
         return filesDetails;
@@ -66,8 +66,13 @@ export const localFileManagerFactory = (
         fs.unlinkSync(filepath);
       }
     },
-    getDownloadUrl: async (filepath: string): Promise<string | undefined> => {
-      return filepath;
+    getDownloadUrl: async (filepath: string): Promise<string> => {
+      return encodeURI(
+        `http://${config.host}/public/upload/${filepath.replace(
+          "./public/upload/",
+          ""
+        )}`
+      );
     },
   };
 };

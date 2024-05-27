@@ -2,13 +2,17 @@ import { Server } from "../../server";
 import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
 import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
+import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
 import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
 import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
+import { getIntentionFileDownloadUrlRoute } from "./usecases/getIntentionFileDownloadUrl/getIntentionFileDownloadUrl.route";
+import { getIntentionFilesRoute } from "./usecases/getIntentionFiles/getIntentionFiles.route";
 import { getIntentionsRoute } from "./usecases/getIntentions/getIntentions.route";
 import { importIntentionRoute } from "./usecases/importIntention/importIntention.route";
 import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
 import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
 import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
+import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
 export const registerIntentionsExpeModule = ({
   server,
@@ -26,5 +30,9 @@ export const registerIntentionsExpeModule = ({
     ...searchEtablissementPerdirRoute(server),
     ...submitChangementStatutRoute({ server }),
     ...deleteChangementStatutRoute(server),
+    ...uploadIntentionFilesRoute(server),
+    ...getIntentionFilesRoute(server),
+    ...deleteIntentionFilesRoute(server),
+    ...getIntentionFileDownloadUrlRoute(server),
   };
 };
