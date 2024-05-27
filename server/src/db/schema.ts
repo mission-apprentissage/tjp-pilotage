@@ -446,6 +446,7 @@ export interface Intention {
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
+  inspecteurReferent: string | null;
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
@@ -506,6 +507,7 @@ export interface LatestDemandeIntentionNonMaterializedView {
   cmqImplique: boolean | null;
   filiereCmq: string | null;
   nomCmq: string | null;
+  inspecteurReferent: string | null;
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
@@ -648,6 +650,7 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
+  inspecteurReferent: string | null;
 }
 
 export interface Metier {

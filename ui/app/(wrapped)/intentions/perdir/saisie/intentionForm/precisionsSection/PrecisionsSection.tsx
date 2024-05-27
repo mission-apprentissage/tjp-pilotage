@@ -17,6 +17,7 @@ import { AmiCmaValideField } from "./AmiCmaValideField";
 import { AutreMotifField } from "./AutreMotifField";
 import { CmqImpliqueField } from "./CmqImpliqueField";
 import { FiliereCmqField } from "./FiliereCmqField";
+import { InspecteurReferentField } from "./InspecteurReferentField";
 import { MotifField } from "./MotifField";
 import { NomCmqField } from "./NomCmqField";
 import { PartenaireEconomiqueField } from "./PartenaireEconomiqueField";
@@ -84,6 +85,7 @@ export const PrecisionsSection = ({
             </QuestionBlock>
           </>
         )}
+        <InspecteurReferentField disabled={disabled} />
       </Flex>
     </Flex>
   );

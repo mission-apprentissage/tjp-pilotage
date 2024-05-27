@@ -8,14 +8,21 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
+import { hasRole, Role } from "shared";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 export const InformationHeader = ({
-  status = "info",
-  message,
+  user,
+  statut,
 }: {
-  status?: "success" | "warning" | "info";
-  message: string;
+  user?: { role?: Role };
+  statut?: DemandeStatutType;
 }) => {
+  const isPerdir = hasRole({ user, role: "perdir" });
+
   const bgColors = {
     success: "success.950",
     warning: "orangeterrebattue.850",
@@ -30,12 +37,41 @@ export const InformationHeader = ({
 
   const [shouldDisplay, setShouldDisplay] = useState(true);
 
+  const getInformationHeaderStatus = (statut?: DemandeStatutType) => {
+    switch (statut) {
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "warning";
+      case DemandeStatutEnum["projet de demande"]:
+        return "success";
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "success";
+      default:
+        return "info";
+    }
+  };
+  const getInformationHeaderMessage = (statut?: DemandeStatutType) => {
+    switch (statut) {
+      case DemandeStatutEnum["dossier incomplet"]:
+        return "Dossier incomplet, merci de vous référer aux consignes du gestionnaire";
+      case DemandeStatutEnum["projet de demande"]:
+        return "La proposition a passé l'étape 1 avec succès !";
+      case DemandeStatutEnum["prêt pour le vote"]:
+        return "La proposition a passé l'étape 2 avec succès !";
+      default:
+        return null;
+    }
+  };
+
+  if (!isPerdir) {
+    return <></>;
+  }
+
   return (
     <Collapse in={shouldDisplay}>
       <VStack>
         <Box
-          backgroundColor={bgColors[status]}
-          color={colors[status]}
+          backgroundColor={bgColors[getInformationHeaderStatus(statut)]}
+          color={colors[getInformationHeaderStatus(statut)]}
           width="100%"
           paddingY={4}
           px={24}
@@ -59,7 +95,7 @@ export const InformationHeader = ({
                 md: "block",
               }}
             >
-              {message}
+              {getInformationHeaderMessage(statut)}
             </Text>
             <CloseButton
               onClick={() => {

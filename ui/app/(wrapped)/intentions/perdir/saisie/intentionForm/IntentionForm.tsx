@@ -29,6 +29,7 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
@@ -36,6 +37,7 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
@@ -69,6 +71,7 @@ export const IntentionForm = ({
   formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
   campagne?: Campagne;
 }) => {
+  const { auth } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -122,15 +125,15 @@ export const IntentionForm = ({
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isActionsDisabled =
-    isSuccess ||
-    isSubmitting ||
-    (!!defaultValues.statut && getStepWorkflow(defaultValues.statut) > 1);
+  const isDisabledForPerdir =
+    hasRole({ user: auth?.user, role: "perdir" }) &&
+    !!defaultValues.statut &&
+    getStepWorkflow(defaultValues.statut) > 1;
+
+  const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
 
   const isFormDisabled =
-    disabled ||
-    form.formState.disabled ||
-    (!!defaultValues.statut && getStepWorkflow(defaultValues.statut) > 1);
+    disabled || form.formState.disabled || isDisabledForPerdir;
 
   const isCFDUaiSectionValid = ({
     cfd,
@@ -333,7 +336,12 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: DemandeStatutEnum["proposition"],
+                                    statut: hasRole({
+                                      user: auth?.user,
+                                      role: "perdir",
+                                    })
+                                      ? DemandeStatutEnum["proposition"]
+                                      : values.statut,
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

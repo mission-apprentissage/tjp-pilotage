@@ -3,12 +3,12 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
+import { useAuth } from "../../../../../../utils/security/useAuth";
 import { ActionsSection } from "./actions/ActionsSection";
 import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
@@ -23,6 +23,7 @@ export default ({
     numero: string;
   };
 }) => {
+  const { auth } = useAuth();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -59,7 +60,8 @@ export default ({
   if (!intention) return null;
 
   return (
-    <Flex width={"100%"} bg="blueecume.925">
+    <Flex width={"100%"} bg="blueecume.925" direction="column">
+      <InformationHeader user={auth?.user} statut={intention.statut} />
       <Flex
         align="center"
         as={Container}
@@ -68,26 +70,6 @@ export default ({
         pt={4}
         pb={20}
       >
-        {intention.statut === DemandeStatutEnum["dossier incomplet"] && (
-          <InformationHeader
-            status="warning"
-            message={
-              "Dossier incomplet, merci de vous référer aux consignes du gestionnaire"
-            }
-          />
-        )}
-        {intention.statut === DemandeStatutEnum["projet de demande"] && (
-          <InformationHeader
-            status="success"
-            message={"La proposition a passé l'étape 1 avec succès !"}
-          />
-        )}
-        {intention.statut === DemandeStatutEnum["prêt pour le vote"] && (
-          <InformationHeader
-            status="success"
-            message={"La proposition a passé l'étape 2 avec succès !"}
-          />
-        )}
         <Breadcrumb
           textAlign={"start"}
           py={2}
