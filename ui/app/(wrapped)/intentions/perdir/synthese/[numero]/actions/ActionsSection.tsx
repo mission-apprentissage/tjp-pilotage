@@ -4,6 +4,7 @@ import { client } from "@/api.client";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
+import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
 import { EditoSection } from "./EditoSection";
 
@@ -19,7 +20,10 @@ export const ActionsSection = ({
   return (
     <Flex direction={"column"} gap={6} top={STICKY_OFFSET} position={"sticky"}>
       {hasPermissionModificationStatut ? (
-        <ChangementStatutForm intention={intention} />
+        <>
+          <AvisForm intention={intention} />
+          <ChangementStatutForm intention={intention} />
+        </>
       ) : (
         <EditoSection />
       )}

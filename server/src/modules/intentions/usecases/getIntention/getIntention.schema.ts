@@ -1,3 +1,5 @@
+import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
+import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
 import {
   DemandeStatutEnum,
   DemandeStatutZodType,
@@ -137,6 +139,21 @@ const IntentionSchema = z.object({
       updatedAt: z.string(),
       userFullName: z.string(),
       commentaire: z.string().optional(),
+    })
+  ),
+  avis: z.array(
+    z.object({
+      id: z.string(),
+      intentionNumero: z.string(),
+      userId: z.string(),
+      userRole: z.string().optional(),
+      typeAvis: AvisTypeZodType,
+      isVisibleParTous: z.boolean(),
+      statutAvis: AvisStatutZodType,
+      updatedAt: z.string(),
+      userFullName: z.string(),
+      commentaire: z.string().optional(),
+      userFonction: z.string().optional(),
     })
   ),
 });

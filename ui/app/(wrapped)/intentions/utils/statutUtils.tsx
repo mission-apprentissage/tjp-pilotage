@@ -1,3 +1,4 @@
+import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
 import {
   DemandeStatutEnum,
   DemandeStatutType,
@@ -86,5 +87,35 @@ export const isStepWorkflowEnabled = (step: number): boolean => {
     case 4:
     default:
       return false;
+  }
+};
+
+export const getStepWorkflowAvis = (typeAvis: AvisTypeType): number => {
+  switch (typeAvis) {
+    case AvisTypeEnum["préalable"]:
+      return 1;
+    case AvisTypeEnum["consultatif"]:
+      return 2;
+    case AvisTypeEnum["final"]:
+      return 3;
+    default:
+      return 0;
+  }
+};
+
+export const getTypeAvis = (
+  statut?: DemandeStatutType
+): AvisTypeType | undefined => {
+  switch (getStepWorkflow(statut)) {
+    case 1:
+      return AvisTypeEnum["préalable"];
+    case 2:
+      return AvisTypeEnum["consultatif"];
+    case 3:
+    case 4:
+      return AvisTypeEnum["final"];
+    case 0:
+    default:
+      return undefined;
   }
 };

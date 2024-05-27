@@ -75,8 +75,8 @@ export const SyntheseSection = ({
         </Flex>
       </Flex>
       <Divider />
-      <Flex direction={"row"} gap={6}>
-        <Flex direction={"column"} gap={6}>
+      <Flex direction={"row"} gap={4}>
+        <Flex direction={"column"} gap={6} maxW={"50%"}>
           <Flex
             direction={"column"}
             gap={3}
@@ -224,7 +224,7 @@ export const SyntheseSection = ({
             <Text>Mixité scolaire / apprentissage</Text>
             <Text fontSize={14}>{formatBoolean(intention.mixte)}</Text>
           </Flex>
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontWeight={700}>Nb de places ouvertes en voie scolaire</Text>
             <Text fontWeight={700}>
@@ -243,7 +243,7 @@ export const SyntheseSection = ({
             <Text>Dont place(s) colorée(s)</Text>
             <Text>{intention.capaciteScolaireColoree}</Text>
           </Flex>
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontWeight={700}>Nb de places ouvertes en apprentissage</Text>
             <Text fontWeight={700}>
@@ -264,14 +264,14 @@ export const SyntheseSection = ({
             <Text>Dont place(s) colorée(s)</Text>
             <Text>{intention.capaciteApprentissageColoree}</Text>
           </Flex>
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontWeight={700}>Motif(s)</Text>
           </Flex>
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text>{formatMotifArray(intention.motif)}</Text>
           </Flex>
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontWeight={700}>Précisions</Text>
           </Flex>
@@ -291,7 +291,7 @@ export const SyntheseSection = ({
               <Text>{formatBoolean(intention.amiCmaEnCoursValidation)}</Text>
             </Flex>
           )}
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Text fontWeight={700}>Observations sur la demande</Text>
           </Flex>
@@ -302,7 +302,8 @@ export const SyntheseSection = ({
                 : "Aucune"}
             </Text>
           </Flex>
-          <Flex mt={8} direction={"row"} gap={4}>
+          <Divider my={3} />
+          <Flex direction={"row"} gap={4}>
             <Icon
               icon="ri:parent-line"
               color="black"
@@ -394,7 +395,7 @@ export const SyntheseSection = ({
               </Flex>
             </>
           )}
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4}>
             <Img
               src={"/icons/travauxEtEquipements.svg"}
@@ -423,7 +424,7 @@ export const SyntheseSection = ({
               <Text>{intention.achatEquipementDescription}</Text>
             </Flex>
           )}
-          <Divider />
+          <Divider my={3} />
           <Flex direction={"row"} gap={4}>
             <Icon
               icon="ri:restaurant-line"
