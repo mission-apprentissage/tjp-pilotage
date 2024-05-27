@@ -36,6 +36,7 @@ export type IntentionForms = {
   cmqImplique?: boolean;
   filiereCmq?: string;
   nomCmq?: string;
+  inspecteurReferent?: string;
   //RH
   recrutementRH?: boolean;
   nbRecrutementRH?: number;

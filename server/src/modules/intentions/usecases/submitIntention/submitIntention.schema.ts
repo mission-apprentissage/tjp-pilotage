@@ -34,6 +34,7 @@ export const submitIntentionSchema = {
       cmqImplique: z.boolean().optional(),
       filiereCmq: z.string().optional(),
       nomCmq: z.string().optional(),
+      inspecteurReferent: z.string().optional(),
       //RH
       recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
