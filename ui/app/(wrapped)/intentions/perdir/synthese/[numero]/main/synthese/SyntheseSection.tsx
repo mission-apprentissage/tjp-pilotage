@@ -26,7 +26,7 @@ import { getTypeDemandeLabel } from "../../../../../utils/typeDemandeUtils";
 const formatDifferenceCapacite = (difference?: number) => {
   if (!difference) return "+0";
   if (difference > 0) return `+${difference}`;
-  return `-${difference}`;
+  return difference;
 };
 
 const formatBoolean = (value?: boolean) => {
