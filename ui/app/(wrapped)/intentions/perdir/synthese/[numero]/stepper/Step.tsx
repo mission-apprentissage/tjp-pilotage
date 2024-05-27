@@ -103,13 +103,22 @@ export const Step = ({
       </Text>
       <Flex direction={"row"}>
         {currentEtape === etape && (
-          <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
-            En cours
-          </Tag>
+          <>
+            <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
+              En cours
+            </Tag>
+            <Text color={currentEtape >= etape ? "black" : "grey.625"}>
+              depuis le {dateDebut}
+            </Text>
+          </>
         )}
-        <Text color={currentEtape >= etape ? "black" : "grey.625"}>
-          du {dateDebut} au {dateFin}
-        </Text>
+        {currentEtape > etape && (
+          <>
+            <Text color={currentEtape >= etape ? "black" : "grey.625"}>
+              du {dateDebut} au {dateFin}
+            </Text>
+          </>
+        )}
       </Flex>
       <Text fontSize={"12px"} fontWeight={400} color={"grey.625"}>
         {description}

@@ -286,6 +286,7 @@ export const IntentionForm = ({
                     scrollMarginTop={SCROLL_OFFSET}
                   >
                     <InformationsBlock
+                      user={auth?.user}
                       refs={anchorsRefs}
                       formId={formId}
                       disabled={isFormDisabled}
@@ -336,12 +337,15 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: hasRole({
-                                      user: auth?.user,
-                                      role: "perdir",
-                                    })
-                                      ? DemandeStatutEnum["proposition"]
-                                      : values.statut,
+                                    statut:
+                                      hasRole({
+                                        user: auth?.user,
+                                        role: "perdir",
+                                      }) ||
+                                      defaultValues.statut ===
+                                        DemandeStatutEnum["brouillon"]
+                                        ? DemandeStatutEnum["proposition"]
+                                        : values.statut,
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

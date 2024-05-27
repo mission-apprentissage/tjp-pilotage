@@ -16,6 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
+import { hasRole, Role } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
@@ -33,12 +34,14 @@ import { TravauxEtEquipementsSection } from "./travauxEtEquipementsSection/Trava
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
+  user,
   refs,
   formId,
   disabled,
   footerActions,
   campagne,
 }: {
+  user?: { role?: Role };
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
@@ -181,24 +184,39 @@ export const InformationsBlock = ({
                       associées. Il est conseillé de réserver cette action à une
                       erreur de saisie ou un doublon.
                     </Text>
-                    <Text>
-                      Si vous souhaitez refuser la demande, vous pouvez la
-                      conserver et modifier son statut en “Demande refusée”.
-                    </Text>
+                    {!hasRole({ user, role: "perdir" }) && (
+                      <Text>
+                        Si vous souhaitez refuser la demande, vous pouvez la
+                        conserver et modifier son statut en “Demande refusée”.
+                      </Text>
+                    )}
                   </ModalBody>
 
                   <ModalFooter>
-                    <Button
-                      colorScheme="blue"
-                      mr={3}
-                      onClick={() => {
-                        setValue("statut", DemandeStatutEnum["refusée"]);
-                        onClose();
-                      }}
-                      variant={"secondary"}
-                    >
-                      Passer en "Demande refusée"
-                    </Button>
+                    {!hasRole({ user, role: "perdir" }) ? (
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={() => {
+                          setValue("statut", DemandeStatutEnum["refusée"]);
+                          onClose();
+                        }}
+                        variant={"secondary"}
+                      >
+                        Passer en "Demande refusée"
+                      </Button>
+                    ) : (
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={() => {
+                          onClose();
+                        }}
+                        variant={"secondary"}
+                      >
+                        Annuler
+                      </Button>
+                    )}
                     <Button
                       variant="primary"
                       onClick={() => {
