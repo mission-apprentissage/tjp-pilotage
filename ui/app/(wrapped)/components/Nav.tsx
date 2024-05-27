@@ -194,14 +194,14 @@ export const Nav = () => {
           onMouseLeave={onMenuPanoramaClose}
         >
           <MenuItem p="0">
-            <NavMenuLink href="/panorama/region" segment="panorama-region">
+            <NavMenuLink href="/panorama/region" segment="panorama/region">
               Région
             </NavMenuLink>
           </MenuItem>
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/departement"
-              segment="panorama-departement"
+              segment="panorama/departement"
             >
               Département
             </NavMenuLink>
@@ -209,9 +209,17 @@ export const Nav = () => {
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/etablissement"
-              segment="panorama-etablissement"
+              segment="panorama/etablissement"
             >
               Établissement
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/lien-emploi-formation"
+              segment="panorama/lien-emploi-formation"
+            >
+              Lien emploi formation
             </NavMenuLink>
           </MenuItem>
         </MenuList>

@@ -83,4 +83,7 @@ export const config = {
     dsn: env.get("SENTRY_DSN").required().asString(),
     token: env.get("SENTRY_AUTH_TOKEN").required().asString(),
   },
+  metabase: {
+    token: env.get("METABASE_AUTH_TOKEN").required().asString(),
+  },
 };
