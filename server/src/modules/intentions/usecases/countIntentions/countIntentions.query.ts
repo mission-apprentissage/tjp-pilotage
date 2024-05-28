@@ -98,6 +98,45 @@ export const countIntentionsQuery = async ({
         0
       )`.as(DemandeStatutEnum["brouillon"])
     )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["dossier complet"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["dossier complet"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["dossier incomplet"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["dossier incomplet"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("intention.statut")} = ${
+            DemandeStatutEnum["prêt pour le vote"]
+          }
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as(DemandeStatutEnum["prêt pour le vote"])
+    )
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where(isIntentionBrouillonVisible({ user }))
