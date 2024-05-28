@@ -157,7 +157,7 @@ export const UpdateAvisForm = chakra(
                       : undefined
                   }
                   placeholder="Sélectionner une option"
-                  options={FONCTIONS.map((fonction) => ({
+                  options={FONCTIONS[avis.typeAvis].map((fonction) => ({
                     label: fonction.toUpperCase(),
                     value: fonction,
                   }))}

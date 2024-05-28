@@ -1,6 +1,6 @@
 import { inject } from "injecti";
+import { hasRole } from "shared";
 
-import { useRole } from "../../../../../../ui/utils/security/useRole";
 import { RequestUser } from "../../../core/model/User";
 import { searchEtablissementPerdirQuery } from "./searchEtablissementPerdir.query";
 
@@ -20,7 +20,7 @@ export const [searchEtablissementPerdirUsecase] = inject(
         search,
         filtered,
         codeRegion: user?.codeRegion,
-        uais: useRole("perdir") ? user?.uais : undefined,
+        uais: hasRole({ user, role: "perdir" }) ? user?.uais : undefined,
       });
       const suggestions = etablissements.map((etablissement) => ({
         value: etablissement.uai,
