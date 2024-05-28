@@ -18,6 +18,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
+import { StatutTag } from "../../../components/StatutTag";
 import { Campagne } from "../../types";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
@@ -25,54 +26,40 @@ import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
-const TagDemande = ({ statut }: { statut?: string }) => {
-  switch (statut) {
-    case DemandeStatutEnum["demande validée"]:
-      return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
-          Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum["refusée"]:
-      return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
-          Demande refusée
-        </Tag>
-      );
-    case DemandeStatutEnum["proposition"]:
-    default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
-          Projet de demande
-        </Tag>
-      );
-  }
-};
-
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
     case CampagneStatutEnum["en cours"]:
       return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
+        <Tag size="md" color={"success.425"} bgColor={"success.950"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["en attente"]:
       return (
-        <Tag size="md" colorScheme={"purple"} ml={4}>
+        <Tag
+          size="md"
+          ml={4}
+          bgColor={"purpleGlycine.950"}
+          color={"purpleGlycine.319"}
+        >
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["terminée"]:
       return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
+        <Tag size="md" ml={4} color={"error.425"} bgColor={"error.950"}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     default:
       return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
+        <Tag
+          size="md"
+          ml={4}
+          color={"yellowTournesol.407"}
+          bgColor={"yellowTournesol.950"}
+        >
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
@@ -153,7 +140,11 @@ export const CfdUaiSection = ({
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
-          <TagDemande statut={defaultValues.statut} />
+          <StatutTag
+            statut={defaultValues.statut ?? DemandeStatutEnum["brouillon"]}
+            ml={4}
+            size={"md"}
+          />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
