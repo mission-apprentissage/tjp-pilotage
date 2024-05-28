@@ -128,7 +128,7 @@ export const CountersSection = ({
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
-          label="Certifications spéciales"
+          label="Certif. spéciales"
           iconSrc={"places_ami-cma"}
           subLabel="Places ouvertes"
           value={countData?.amiCMAs}
