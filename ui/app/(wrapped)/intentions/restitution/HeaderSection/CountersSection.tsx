@@ -53,7 +53,7 @@ const CountCard = ({
           </Text>
         </Flex>
         <Flex flexDirection="column" justifyContent={"end"}>
-          <Flex justify={"space-between"} pb="2">
+          <Flex justify={"space-between"} pb="2" mt={"auto"}>
             <Text
               justifyContent="start"
               fontSize="12"
@@ -128,7 +128,7 @@ export const CountersSection = ({
       </Flex>
       <Flex gap={4} width="100%">
         <CountCard
-          label="AMI / CMA"
+          label="Certifications spéciales"
           iconSrc={"places_ami-cma"}
           subLabel="Places ouvertes"
           value={countData?.amiCMAs}
