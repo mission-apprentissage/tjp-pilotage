@@ -7,6 +7,7 @@ import {
   Highlight,
   Text,
   Tooltip,
+  useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
@@ -14,16 +15,32 @@ import { useState } from "react";
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
 import { formatDate } from "@/utils/formatDate";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
+import { useRole } from "@/utils/security/useRole";
 
 import { FonctionTag } from "../../../../components/FonctionTag";
 import { Avis } from "../../../../types";
 import { UpdateAvisForm } from "./UpdateAvisForm";
 
 export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
+  const { auth } = useAuth();
+  const toast = useToast();
+
   const hasPermissionModificationAvis = usePermission(
     "intentions-perdir-avis/ecriture"
   );
+
+  const hasPermissionSuppressionAvis = () => {
+    if (usePermission("intentions-perdir-avis/ecriture")) {
+      if (useRole("expert_region")) {
+        if (avis.userId === auth?.user.id) return true;
+        return false;
+      } else return true;
+    }
+    return false;
+  };
+
   const [isModifying, setIsModifying] = useState(false);
 
   const queryClient = useQueryClient();
@@ -31,19 +48,22 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
   const { isLoading: isDeleting, mutateAsync: submitDeleteAvisCommentaire } =
     useMutation({
       mutationFn: async () => {
-        await client.ref("[POST]/intention/avis/submit").query({
-          body: {
-            avis: {
-              ...avis,
-              commentaire: "",
-            },
+        await client.ref("[DELETE]/intention/avis/:id").query({
+          params: {
+            id: avis.id,
           },
         });
       },
       onSuccess: () => {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: "Avis supprimé",
+        });
         queryClient.invalidateQueries(["[GET]/intention/:numero"]);
       },
     });
+
   return (
     <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6}>
       <Flex direction={"column"} gap={2} p={2}>
@@ -119,16 +139,18 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
         )}
         {hasPermissionModificationAvis && !isDeleting && !isModifying && (
           <Flex direction={"row"} gap={6}>
-            <Button
-              isLoading={isDeleting || isModifying}
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              onClick={() => submitDeleteAvisCommentaire()}
-            >
-              Supprimer
-            </Button>
+            {hasPermissionSuppressionAvis() && (
+              <Button
+                isLoading={isDeleting || isModifying}
+                variant={"link"}
+                color="bluefrance.113"
+                fontSize={12}
+                fontWeight={400}
+                onClick={() => submitDeleteAvisCommentaire()}
+              >
+                Supprimer
+              </Button>
+            )}
             <Button
               variant={"link"}
               color="bluefrance.113"

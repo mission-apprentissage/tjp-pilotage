@@ -1,5 +1,6 @@
 import { Server } from "../../server";
 import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
+import { deleteAvisRoute } from "./usecases/deleteAvis/deleteAvis.route";
 import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
@@ -36,5 +37,6 @@ export const registerIntentionsExpeModule = ({
     ...getIntentionFilesRoute(server),
     ...deleteIntentionFilesRoute(server),
     ...getIntentionFileDownloadUrlRoute(server),
+    ...deleteAvisRoute(server),
   };
 };
