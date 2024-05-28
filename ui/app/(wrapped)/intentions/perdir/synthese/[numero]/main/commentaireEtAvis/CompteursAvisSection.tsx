@@ -39,6 +39,9 @@ export const CompteursAvisSection = chakra(
               <AvisStatutTag
                 statutAvis="défavorable"
                 w={"fit-content"}
+                size={"md"}
+                textTransform={"uppercase"}
+                gap={2}
                 hasIcon
               />
               <Text fontSize={32} fontWeight={700}>
@@ -57,7 +60,14 @@ export const CompteursAvisSection = chakra(
               borderRadius={4}
             >
               <Text fontSize={14}>Avis exprimé(s)</Text>
-              <AvisStatutTag statutAvis="réservé" w={"fit-content"} hasIcon />
+              <AvisStatutTag
+                statutAvis="réservé"
+                w={"fit-content"}
+                size={"md"}
+                textTransform={"uppercase"}
+                gap={2}
+                hasIcon
+              />
               <Text fontSize={32} fontWeight={700}>
                 {getNbAvisStatutAvis("réservé")}
               </Text>
@@ -74,7 +84,14 @@ export const CompteursAvisSection = chakra(
               borderRadius={4}
             >
               <Text fontSize={14}>Avis exprimé(s)</Text>
-              <AvisStatutTag statutAvis="favorable" w={"fit-content"} hasIcon />
+              <AvisStatutTag
+                statutAvis="favorable"
+                w={"fit-content"}
+                size={"md"}
+                textTransform={"uppercase"}
+                gap={2}
+                hasIcon
+              />
               <Text fontSize={32} fontWeight={700}>
                 {getNbAvisStatutAvis("favorable")}
               </Text>

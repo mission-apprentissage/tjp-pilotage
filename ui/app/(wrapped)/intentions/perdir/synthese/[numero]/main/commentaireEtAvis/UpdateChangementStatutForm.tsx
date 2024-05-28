@@ -64,7 +64,7 @@ export const UpdateChangementStatutForm = chakra(
               body: { changementStatut: values },
             })
           )}
-          width={"100%"}
+          width={"50%"}
         >
           <FormControl isInvalid={!!errors.commentaire} isRequired>
             <Textarea
