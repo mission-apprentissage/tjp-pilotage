@@ -16,7 +16,7 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
@@ -90,9 +90,8 @@ export const UpdateAvisForm = chakra(
               body: { avis: values },
             })
           )}
-          width={"40%"}
+          width={"50%"}
         >
-          4.5 3.5 14
           <FormControl isInvalid={!!errors.statutAvis} isRequired>
             <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
               Avis sur la proposition
@@ -193,11 +192,11 @@ export const UpdateAvisForm = chakra(
               rows={8}
             />
           </FormControl>
-          <FormControl gap={3}>
+          <FormControl>
             <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
               Visible par
             </FormLabel>
-            <Flex direction={"column"} gap={3} mt={2}>
+            <Flex direction={"column"} gap={3} my={2}>
               <Flex direction={"row"} gap={3}>
                 <RoleVisibleTag role={"Administrateurs"} isChecked={true} />
                 <RoleVisibleTag role={"Pilotes"} isChecked={true} />
@@ -205,30 +204,40 @@ export const UpdateAvisForm = chakra(
               <Flex direction={"row"} gap={3}>
                 <RoleVisibleTag
                   role={"Experts"}
-                  isChecked={!!isVisibleParTous}
+                  isChecked={
+                    !!isVisibleParTous ||
+                    avis.typeAvis != AvisTypeEnum["consultatif"]
+                  }
                 />
                 <RoleVisibleTag
                   role={"PERDIR"}
-                  isChecked={!!isVisibleParTous}
+                  isChecked={
+                    !!isVisibleParTous ||
+                    avis.typeAvis != AvisTypeEnum["consultatif"]
+                  }
                 />
                 <RoleVisibleTag
                   role={"Région"}
-                  isChecked={!!isVisibleParTous}
+                  isChecked={
+                    !!isVisibleParTous ||
+                    avis.typeAvis != AvisTypeEnum["consultatif"]
+                  }
                 />
               </Flex>
             </Flex>
-            <Checkbox
-              mt={3}
-              size="lg"
-              {...register("isVisibleParTous", {
-                required: false,
-              })}
-              whiteSpace={"nowrap"}
-            >
-              <Text fontSize={"14px"} fontWeight={400}>
-                Rendre cet avis visible de tous
-              </Text>
-            </Checkbox>
+            {avis.typeAvis === AvisTypeEnum["consultatif"] && (
+              <Checkbox
+                size="lg"
+                {...register("isVisibleParTous", {
+                  required: false,
+                })}
+                whiteSpace={"nowrap"}
+              >
+                <Text fontSize={"14px"} fontWeight={400}>
+                  Rendre cet avis visible de tous
+                </Text>
+              </Checkbox>
+            )}
           </FormControl>
           <Button
             isLoading={isSubmitting}

@@ -26,7 +26,7 @@ import { Controller, FormProvider, useForm } from "react-hook-form";
 import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
-import { AvisTypeType } from "shared/enum/avisTypeEnum";
+import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
@@ -61,7 +61,8 @@ export const AvisForm = ({
       statutAvis: undefined,
       typeAvis: getTypeAvis(intention.statut),
       commentaire: undefined,
-      isVisibleParTous: undefined,
+      isVisibleParTous:
+        getTypeAvis(intention.statut) !== AvisTypeEnum["consultatif"],
       userFonction: undefined,
     },
     mode: "onTouched",
@@ -230,33 +231,57 @@ export const AvisForm = ({
             rows={8}
           />
         </FormControl>
-        <FormControl mt={3}>
-          <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
-            Cet avis est visible uniquement par les administrateurs et pilotes.
-            Vous avez la possibilité de rendre votre avis visible de tous en
-            cochant la case ci-dessous.
-          </FormLabel>
-          <Checkbox
-            size="lg"
-            {...register("isVisibleParTous", {
-              required: false,
-            })}
-            whiteSpace={"nowrap"}
-          >
-            <Text fontSize={"14px"} fontWeight={400}>
-              Rendre cet avis visible de tous
-            </Text>
-          </Checkbox>
-        </FormControl>
+        {getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"] ? (
+          <FormControl mt={3}>
+            <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
+              Cet avis est visible uniquement par les administrateurs et
+              pilotes. Vous avez la possibilité de rendre votre avis visible de
+              tous en cochant la case ci-dessous.
+            </FormLabel>
+            <Checkbox
+              size="lg"
+              {...register("isVisibleParTous", {
+                required: false,
+              })}
+              whiteSpace={"nowrap"}
+            >
+              <Text fontSize={"14px"} fontWeight={400}>
+                Rendre cet avis visible de tous
+              </Text>
+            </Checkbox>
+          </FormControl>
+        ) : (
+          <Text mt={3}>{`Cet avis ${getTypeAvis(
+            intention.statut
+          )} sera visible de toutes les parties prenantes`}</Text>
+        )}
         <Flex direction={"column"} gap={3} mt={2}>
           <Flex direction={"row"} gap={3}>
             <RoleVisibleTag role={"Administrateurs"} isChecked={true} />
             <RoleVisibleTag role={"Pilotes"} isChecked={true} />
           </Flex>
           <Flex direction={"row"} gap={3}>
-            <RoleVisibleTag role={"Experts"} isChecked={!!isVisibleParTous} />
-            <RoleVisibleTag role={"PERDIR"} isChecked={!!isVisibleParTous} />
-            <RoleVisibleTag role={"Région"} isChecked={!!isVisibleParTous} />
+            <RoleVisibleTag
+              role={"Experts"}
+              isChecked={
+                !!isVisibleParTous ||
+                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
+              }
+            />
+            <RoleVisibleTag
+              role={"PERDIR"}
+              isChecked={
+                !!isVisibleParTous ||
+                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
+              }
+            />
+            <RoleVisibleTag
+              role={"Région"}
+              isChecked={
+                !!isVisibleParTous ||
+                getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]
+              }
+            />
           </Flex>
         </Flex>
         <Button
