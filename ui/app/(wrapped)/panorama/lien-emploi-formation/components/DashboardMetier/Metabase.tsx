@@ -4,7 +4,7 @@ import { useRef } from "react";
 import { client } from "../../../../../../api.client";
 
 interface DashboardProps {
-  domaineProfessionnel: string;
+  domaineProfessionnel?: string;
   metier: string;
   dashboardId: number;
 }
@@ -22,7 +22,7 @@ const Metabase = ({
         body: {
           dashboard: dashboardId,
           filters: {
-            domaine_pro: domaineProfessionnel,
+            domaine_pro: domaineProfessionnel ?? null,
             metier,
           },
         },

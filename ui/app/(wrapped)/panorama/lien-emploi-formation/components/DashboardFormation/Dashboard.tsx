@@ -41,9 +41,9 @@ const DashboardFormation = () => {
         </Box>
       </HStack>
       <Divider />
-      {selectedNsf && selectedFormation && (
+      {selectedFormation && (
         <Metabase
-          domaineFormation={selectedNsf.label}
+          domaineFormation={selectedNsf?.label}
           formation={selectedFormation.label}
           dashboardId={98}
         />
