@@ -27,14 +27,14 @@ export const ActionsSection = ({
 
   /**
    * Les pilotes régionaux ne peuvent pas donner d'avis préalable
-   * Les experts régionaux ne peuvent pas donner d'avis consultatif
+   * Les experts régionaux ne peuvent donner que des avis consultatif
    * @returns {boolean}
    */
   const canSubmitAvis = () => {
     if (
-      (useRole("pilote_region") &&
-        getTypeAvis(intention.statut) === AvisTypeEnum["préalable"]) ||
       (useRole("expert_region") &&
+        getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]) ||
+      (useRole("region") &&
         getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"])
     )
       return false;

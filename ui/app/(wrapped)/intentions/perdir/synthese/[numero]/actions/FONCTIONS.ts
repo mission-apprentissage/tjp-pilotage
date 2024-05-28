@@ -4,8 +4,6 @@ export const FONCTIONS = {
   préalable: ["région", "région académique"],
   consultatif: [
     "inspecteur",
-    "inspecteur IEN",
-    "inspecteur IA/IPR",
     "DO CMQ",
     "conseiller en formation professionnelle",
     "coordonnateur de CFA-A",
@@ -13,7 +11,9 @@ export const FONCTIONS = {
     "services DOS",
     "DASEN",
     "région",
-    "région académique",
+    "DRAFPIC",
+    "SGRA",
+    "recteur",
   ],
-  final: ["DRAIO", "services DOS", "DASEN", "région", "région académique"],
+  final: ["région", "CSA", "recteur"],
 } as Record<AvisTypeType, string[]>;
