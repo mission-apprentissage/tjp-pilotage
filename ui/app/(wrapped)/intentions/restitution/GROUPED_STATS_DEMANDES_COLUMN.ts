@@ -280,6 +280,10 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_DEFAULT: Record<
       typeDemande: "Type de demande",
       differenceCapaciteScolaire: "Nombre de places en voie scolaire",
       differenceCapaciteApprentissage: "Nombre de places en apprentissage",
+      capaciteScolaireColoree: "Nombre de places colorées en voie scolaire",
+      capaciteApprentissageColoree:
+        "Nombre de places colorées en apprentissage",
+      libelleColoration: "Libellé coloration",
     },
   },
   // Devenir favorable de la formation
