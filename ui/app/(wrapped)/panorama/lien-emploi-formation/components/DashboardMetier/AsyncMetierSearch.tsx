@@ -29,17 +29,16 @@ const AsyncMetierSearch = ({
     .ref("[GET]/metier/search/:search")
     .useQuery({ params: { search: "" }, query: { codeDomaineProfessionnel } });
 
-  const isDisabled = codeDomaineProfessionnel === undefined;
-
   const openSelect = () => {
-    if (selectElementRef.current && !isDisabled)
+    if (selectElementRef.current) {
       selectElementRef.current.openMenu("first");
+    }
   };
 
   return (
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
-        Formation
+        Métier
       </Text>
       <AsyncSelect
         ref={selectElementRef}
@@ -67,12 +66,9 @@ const AsyncMetierSearch = ({
         }
         isClearable={true}
         noOptionsMessage={({ inputValue }) =>
-          inputValue
-            ? "Pas de formation correspondante"
-            : "Commencez à écrire..."
+          inputValue ? "Pas de métier correspondant" : "Commencez à écrire..."
         }
-        placeholder="Libellé formation"
-        isDisabled={isDisabled}
+        placeholder="Libellé métier"
       />
     </>
   );

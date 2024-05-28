@@ -45,9 +45,9 @@ const DashboardMetier = () => {
         </Box>
       </HStack>
       <Divider />
-      {selectedDomainePRofessionnel && selectedMetier && (
+      {selectedMetier && (
         <Metabase
-          domaineProfessionnel={selectedDomainePRofessionnel.label}
+          domaineProfessionnel={selectedDomainePRofessionnel?.label}
           metier={selectedMetier.label}
           dashboardId={100}
         />

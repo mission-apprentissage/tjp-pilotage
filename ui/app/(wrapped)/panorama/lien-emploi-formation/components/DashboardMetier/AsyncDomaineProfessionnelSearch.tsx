@@ -37,7 +37,7 @@ const AsyncDomaineProfessionnelSearch = ({
   return (
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
-        Domaine de formation
+        Domaine professionnel
       </Text>
       <AsyncSelect
         ref={selectElementRef}

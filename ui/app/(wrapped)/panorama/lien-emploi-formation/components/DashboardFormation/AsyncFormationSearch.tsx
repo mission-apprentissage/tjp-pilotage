@@ -29,11 +29,8 @@ const AsyncFormationSearch = ({
     .ref("[GET]/nsf-diplome/search/:search")
     .useQuery({ params: { search: "" }, query: { codeNsf } });
 
-  const isDisabled = codeNsf === undefined;
-
   const openSelect = () => {
-    if (selectElementRef.current && !isDisabled)
-      selectElementRef.current.openMenu("first");
+    if (selectElementRef.current) selectElementRef.current.openMenu("first");
   };
 
   return (
@@ -71,7 +68,6 @@ const AsyncFormationSearch = ({
             : "Commencez à écrire..."
         }
         placeholder="Libellé formation"
-        isDisabled={isDisabled}
       />
     </>
   );
