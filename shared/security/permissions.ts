@@ -30,8 +30,6 @@ export const PERMISSIONS = {
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "national" },
-    "intentions-perdir-statut/ecriture": { default: "national" },
-    "intentions-perdir-avis/ecriture": { default: "national" },
   },
   admin_region: {
     "intentions/lecture": { default: "region", draft: "region" },
@@ -76,6 +74,7 @@ export const PERMISSIONS = {
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   perdir: {
     "intentions/lecture": { default: "uai" },

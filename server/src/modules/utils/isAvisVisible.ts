@@ -14,7 +14,7 @@ export const isAvisVisible =
           .select((eb) =>
             sql<boolean>`${eb("user.role", "in", [
               "admin",
-              "admin_ra",
+              "admin_region",
               "gestionnaire",
               "gestionnaire_region",
               "pilote",
