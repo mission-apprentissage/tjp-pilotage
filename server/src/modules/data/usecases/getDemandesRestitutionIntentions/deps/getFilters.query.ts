@@ -386,7 +386,25 @@ export const getFilters = async ({
       DemandeStatutEnum["supprimée"],
       DemandeStatutEnum["brouillon"],
     ])
-
+    .where((eb) => {
+      return eb.or([
+        eb.and([
+          inCodeRegion(eb),
+          inCodeDepartement(eb),
+          inCodeAcademie(eb),
+          inEtablissement(eb),
+          inRentreeScolaire(eb),
+          inTypeDemande(eb),
+          inCfd(eb),
+          inCodeNiveauDiplome(eb),
+          inColoration(eb),
+          inAmiCMA(eb),
+          inSecteur(eb),
+          inStatut(eb),
+          inCampagne(eb),
+        ]),
+      ]);
+    })
     .execute();
 
   const filters = {

@@ -148,10 +148,12 @@ export const AvisForm = ({
                     : undefined
                 }
                 placeholder="Sélectionner une option"
-                options={FONCTIONS.map((fonction) => ({
-                  label: fonction.toUpperCase(),
-                  value: fonction,
-                }))}
+                options={FONCTIONS[getTypeAvis(intention.statut)].map(
+                  (fonction) => ({
+                    label: fonction.toUpperCase(),
+                    value: fonction,
+                  })
+                )}
                 formatOptionLabel={(option: { label: string }) =>
                   option.label.startsWith("Créer la fonction") ? (
                     option.label

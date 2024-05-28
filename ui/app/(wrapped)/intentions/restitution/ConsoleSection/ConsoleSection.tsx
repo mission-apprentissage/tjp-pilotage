@@ -13,11 +13,12 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import { hasRole, isUserInRegionsExperimentation } from "shared";
+import { isUserInRegionsExperimentation } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 
 import { useAuth } from "../../../../../utils/security/useAuth";
+import { useRole } from "../../../../../utils/security/useRole";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import {
   DemandesRestitutionIntentions,
@@ -83,7 +84,7 @@ export const ConsoleSection = ({
   const router = useRouter();
   const { auth } = useAuth();
   const showFormulairePerdir =
-    hasRole({ user: auth?.user, role: "perdir" }) ||
+    useRole("perdir") ||
     isUserInRegionsExperimentation({
       user: auth?.user,
     });
