@@ -72,6 +72,7 @@ export const MenuIntention = ({
       </Button>
 
       <VStack flex="1" align="flex-start" spacing={2}>
+        {/* Toutes */}
         <Button
           bgColor={"unset"}
           as={NextLink}
@@ -104,6 +105,98 @@ export const MenuIntention = ({
             Toutes
           </Text>
         </Button>
+
+        {/* Dossiers complets */}
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["dossier complet"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon icon={"ri:task-line"} color={bluefrance113} width={"24px"} />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["dossier complet"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["dossier complet"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["dossier complet"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Dossiers complets
+          </Text>
+        </Button>
+
+        {/* Dossiers incomplets */}
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["dossier incomplet"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-warning-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["dossier incomplet"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["dossier incomplet"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["dossier incomplet"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Dossiers incomplets
+          </Text>
+        </Button>
+
+        {/* Propositions */}
         <Button
           bgColor={"unset"}
           as={NextLink}
@@ -149,6 +242,8 @@ export const MenuIntention = ({
             Propositions
           </Text>
         </Button>
+
+        {/* Projet de demande */}
         <Button
           bgColor={"unset"}
           as={NextLink}
@@ -194,6 +289,55 @@ export const MenuIntention = ({
             Projet de demande
           </Text>
         </Button>
+
+        {/* Prêts pour le vote */}
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              statut: DemandeStatutEnum["prêt pour le vote"],
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon
+              icon={"ri:file-user-line"}
+              color={bluefrance113}
+              width={"24px"}
+            />
+          }
+          rightIcon={
+            <Text
+              fontWeight={
+                isRecapView && statut === DemandeStatutEnum["prêt pour le vote"]
+                  ? "bold"
+                  : "normal"
+              }
+              fontSize={14}
+            >
+              {countDemandes?.["prêt pour le vote"]}
+            </Text>
+          }
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["prêt pour le vote"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Prêt pour le vote
+          </Text>
+        </Button>
+
+        {/* Demandes validées */}
         <Button
           bgColor={"unset"}
           as={NextLink}
@@ -284,6 +428,7 @@ export const MenuIntention = ({
             Demandes refusées
           </Text>
         </Button>
+
         <Divider />
         <Text fontSize={12} color="grey.425" mt={2}>
           Visible par vous uniquement
