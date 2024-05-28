@@ -27,7 +27,7 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
     }) => {
       const scope = getPermissionScope(
         user.role,
-        "intentions-perdir-statut/ecriture"
+        "intentions-perdir-avis/ecriture"
       );
 
       const intentionData = await findOneIntention(avis.intentionNumero);

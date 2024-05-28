@@ -23,5 +23,6 @@ export const isAvisVisible =
           ),
       ]),
       eb("avis.isVisibleParTous", "=", sql<boolean>`true`),
+      eb("avis.userId", "=", user.id),
     ]);
   };
