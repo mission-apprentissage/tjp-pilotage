@@ -29,6 +29,7 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
@@ -36,8 +37,8 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
+import { useAuth } from "@/utils/security/useAuth";
 
-import { useRole } from "../../../../../../utils/security/useRole";
 import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
@@ -70,6 +71,7 @@ export const IntentionForm = ({
   formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
   campagne?: Campagne;
 }) => {
+  const { auth } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -124,7 +126,10 @@ export const IntentionForm = ({
   );
 
   const isDisabledForPerdir =
-    useRole("perdir") &&
+    hasRole({
+      user: auth?.user,
+      role: "perdir",
+    }) &&
     !!defaultValues.statut &&
     getStepWorkflow(defaultValues.statut) > 1;
 
@@ -335,7 +340,10 @@ export const IntentionForm = ({
                                     numero: formId,
                                     ...values,
                                     statut:
-                                      useRole("perdir") ||
+                                      hasRole({
+                                        user: auth?.user,
+                                        role: "perdir",
+                                      }) ||
                                       defaultValues.statut ===
                                         DemandeStatutEnum["brouillon"]
                                         ? DemandeStatutEnum["proposition"]

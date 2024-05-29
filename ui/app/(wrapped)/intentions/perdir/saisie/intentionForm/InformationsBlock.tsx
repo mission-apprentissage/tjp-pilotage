@@ -189,7 +189,6 @@ export const InformationsBlock = ({
                       </Text>
                     )}
                   </ModalBody>
-
                   <ModalFooter>
                     {!useRole("perdir") ? (
                       <Button
