@@ -334,9 +334,12 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: useRole("perdir")
-                                      ? DemandeStatutEnum["proposition"]
-                                      : values.statut,
+                                    statut:
+                                      useRole("perdir") ||
+                                      defaultValues.statut ===
+                                        DemandeStatutEnum["brouillon"]
+                                        ? DemandeStatutEnum["proposition"]
+                                        : values.statut,
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

@@ -14,6 +14,7 @@ import {
 import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -30,25 +31,35 @@ const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   switch (campagne.statut) {
     case CampagneStatutEnum["en cours"]:
       return (
-        <Tag size="md" colorScheme={"green"} ml={4}>
+        <Tag size="md" color={"success.425"} bgColor={"success.950"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["en attente"]:
       return (
-        <Tag size="md" colorScheme={"purple"} ml={4}>
+        <Tag
+          size="md"
+          ml={4}
+          bgColor={"purpleGlycine.950"}
+          color={"purpleGlycine.319"}
+        >
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["terminée"]:
       return (
-        <Tag size="md" colorScheme={"red"} ml={4}>
+        <Tag size="md" ml={4} color={"error.425"} bgColor={"error.950"}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     default:
       return (
-        <Tag size="md" colorScheme={"yellow"} ml={4}>
+        <Tag
+          size="md"
+          ml={4}
+          color={"yellowTournesol.407"}
+          bgColor={"yellowTournesol.950"}
+        >
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
@@ -129,7 +140,11 @@ export const CfdUaiSection = ({
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
-          {defaultValues.statut && <StatutTag statut={defaultValues.statut} />}
+          <StatutTag
+            statut={defaultValues.statut ?? DemandeStatutEnum["brouillon"]}
+            ml={4}
+            size={"md"}
+          />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
