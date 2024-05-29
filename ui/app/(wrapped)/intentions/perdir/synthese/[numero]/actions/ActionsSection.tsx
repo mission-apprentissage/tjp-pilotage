@@ -26,7 +26,7 @@ export const ActionsSection = ({
   );
 
   /**
-   * Les pilotes régionaux ne peuvent pas donner d'avis préalable
+   * Les user région ne peuvent pas donner d'avis consultatif
    * Les experts régionaux ne peuvent donner que des avis consultatif
    * @returns {boolean}
    */

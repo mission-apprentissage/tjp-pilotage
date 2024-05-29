@@ -31,15 +31,19 @@ import {
 import { FormProvider, useForm } from "react-hook-form";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import { useAuth } from "@/utils/security/useAuth";
+import { useRole } from "@/utils/security/useRole";
 
-import { getStepWorkflow } from "../../../utils/statutUtils";
+import { formatStatut, getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
@@ -93,15 +97,7 @@ export const IntentionForm = ({
     isSuccess,
   } = client.ref("[POST]/intention/submit").useMutation({
     onSuccess: async (body) => {
-      let message: string | null = null;
-      switch (body.statut) {
-        case DemandeStatutEnum["proposition"]:
-          message = "Proposition enregistrée avec succès";
-          break;
-        case DemandeStatutEnum["brouillon"]:
-          message = "Brouillon enregistré avec succès";
-          break;
-      }
+      const message = `${formatStatut(body.statut)} enregistré(e) avec succès`;
 
       if (message) {
         toast({
@@ -168,7 +164,7 @@ export const IntentionForm = ({
     setStep(2);
   };
 
-  const statusComponentRef = useRef<HTMLDivElement>(null);
+  const statutComponentRef = useRef<HTMLDivElement>(null);
 
   const { setCampagne } = useContext(CampagneContext);
 
@@ -195,6 +191,50 @@ export const IntentionForm = ({
     !!typeDemande &&
     !isTypeFermeture(typeDemande) &&
     !isTypeDiminution(typeDemande);
+
+  const getStatutSubmit = (
+    statut?: Exclude<DemandeStatutType, "supprimée">
+  ): Exclude<DemandeStatutType, "supprimée"> => {
+    if (useRole("perdir") || useRole("expert_region")) {
+      return DemandeStatutEnum["proposition"];
+    } else {
+      if (
+        statut === DemandeStatutEnum["brouillon"] ||
+        statut === DemandeStatutEnum["proposition"]
+      ) {
+        return DemandeStatutEnum["projet de demande"];
+      }
+    }
+    return DemandeStatutEnum["proposition"];
+  };
+
+  const getLabelSubmit = (
+    statut: Exclude<DemandeStatutType, "supprimée">,
+    statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
+  ): string => {
+    if (
+      !statutPrecedent ||
+      statutPrecedent === DemandeStatutEnum["brouillon"]
+    ) {
+      return "Enregistrer ma proposition";
+    }
+    if (statut === DemandeStatutEnum["proposition"]) {
+      return "Mettre à jour ma proposition";
+    }
+    if (statut === DemandeStatutEnum["projet de demande"]) {
+      return "Valider mon projet de demande";
+    }
+    return "Enregistrer ma proposition";
+  };
+
+  const canSubmitBrouillon = (
+    statut?: Exclude<DemandeStatutType, "supprimée">
+  ): boolean => {
+    if (useRole("perdir") || useRole("expert_region")) {
+      return statut === undefined || statut === DemandeStatutEnum["brouillon"];
+    }
+    return false;
+  };
 
   return (
     <CampagneContext.Provider value={campagneValue}>
@@ -242,7 +282,7 @@ export const IntentionForm = ({
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
-              statusComponentRef={statusComponentRef}
+              statutComponentRef={statutComponentRef}
               campagne={campagne}
             />
             {step === 2 && (
@@ -294,9 +334,8 @@ export const IntentionForm = ({
                       disabled={isFormDisabled}
                       campagne={campagne}
                       footerActions={
-                        <Flex direction="row" gap={4} ref={statusComponentRef}>
-                          {defaultValues.statut !=
-                            DemandeStatutEnum.proposition && (
+                        <Flex direction="row" gap={4} ref={statutComponentRef}>
+                          {canSubmitBrouillon() && (
                             <Button
                               isDisabled={
                                 disabled ||
@@ -339,15 +378,7 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut:
-                                      hasRole({
-                                        user: auth?.user,
-                                        role: "perdir",
-                                      }) ||
-                                      defaultValues.statut ===
-                                        DemandeStatutEnum["brouillon"]
-                                        ? DemandeStatutEnum["proposition"]
-                                        : values.statut,
+                                    statut: getStatutSubmit(values.statut),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -356,11 +387,10 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId &&
-                            defaultValues.statut !=
-                              DemandeStatutEnum["brouillon"]
-                              ? "Mettre à jour ma proposition"
-                              : "Valider ma proposition"}
+                            {getLabelSubmit(
+                              getStatutSubmit(defaultValues.statut),
+                              defaultValues.statut
+                            )}
                           </Button>
                         </Flex>
                       }
