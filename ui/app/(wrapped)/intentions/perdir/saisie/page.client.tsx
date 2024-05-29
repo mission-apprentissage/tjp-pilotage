@@ -47,6 +47,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { useRole } from "../../../../../utils/security/useRole";
 import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
@@ -196,6 +197,10 @@ export const PageClient = () => {
 
   const [isDeleting, setIsDeleting] = useState(false);
   const [isImporting, setIsImporting] = useState(false);
+
+  const canDelete = () => {
+    return !useRole("expert_region") && !useRole("region");
+  };
 
   if (isLoading) return <IntentionSpinner />;
 
@@ -415,28 +420,30 @@ export const PageClient = () => {
                               me={"auto"}
                             />
                           </Tooltip>
-                          <Tooltip
-                            label="Supprimer la demande"
-                            closeOnScroll={true}
-                          >
-                            <IconButton
-                              variant={"link"}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                onOpen();
-                              }}
-                              aria-label="Supprimer la demande"
-                              icon={
-                                <Icon
-                                  icon="ri:delete-bin-line"
-                                  width={"24px"}
-                                  color={bluefrance113}
-                                />
-                              }
-                              me={"auto"}
-                            />
-                          </Tooltip>
+                          {canDelete() && (
+                            <Tooltip
+                              label="Supprimer la demande"
+                              closeOnScroll={true}
+                            >
+                              <IconButton
+                                variant={"link"}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  onOpen();
+                                }}
+                                aria-label="Supprimer la demande"
+                                icon={
+                                  <Icon
+                                    icon="ri:delete-bin-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                                me={"auto"}
+                              />
+                            </Tooltip>
+                          )}
                           <Tooltip label="Suivre la demande">
                             <IconButton
                               isDisabled
