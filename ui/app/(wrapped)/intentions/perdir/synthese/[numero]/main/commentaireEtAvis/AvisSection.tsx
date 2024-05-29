@@ -11,13 +11,13 @@ import {
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
+import { hasRole } from "shared";
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
 import { formatDate } from "@/utils/formatDate";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
-import { useRole } from "@/utils/security/useRole";
 
 import { FonctionTag } from "../../../../components/FonctionTag";
 import { Avis } from "../../../../types";
@@ -29,7 +29,10 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
 
   const hasPermissionModificationAvis = () => {
     if (usePermission("intentions-perdir-avis/ecriture")) {
-      if (useRole("expert_region") || useRole("region")) {
+      if (
+        hasRole({ user: auth?.user, role: "expert_region" }) ||
+        hasRole({ user: auth?.user, role: "region" })
+      ) {
         if (avis.createdBy === auth?.user.id) return true;
         return false;
       } else return true;

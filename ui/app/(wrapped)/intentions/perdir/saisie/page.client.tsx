@@ -38,6 +38,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
@@ -45,9 +46,9 @@ import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { formatDate } from "@/utils/formatDate";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { useRole } from "../../../../../utils/security/useRole";
 import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
@@ -61,6 +62,7 @@ import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 const PAGE_SIZE = 30;
 
 export const PageClient = () => {
+  const { auth } = useAuth();
   const queryClient = useQueryClient();
   const toast = useToast();
   const router = useRouter();
@@ -199,7 +201,10 @@ export const PageClient = () => {
   const [isImporting, setIsImporting] = useState(false);
 
   const canDelete = () => {
-    return !useRole("expert_region") && !useRole("region");
+    return (
+      !hasRole({ user: auth?.user, role: "expert_region" }) &&
+      !hasRole({ user: auth?.user, role: "region" })
+    );
   };
 
   if (isLoading) return <IntentionSpinner />;
@@ -372,7 +377,7 @@ export const PageClient = () => {
                       <Td textAlign={"center"} w={0}>
                         <StatutTag statut={intention.statut} size="md" />
                       </Td>
-                      <Td textAlign={"center"}>
+                      <Td textAlign={"center"} zIndex={"dropdown"}>
                         <Flex direction={"row"} gap={0}>
                           <Tooltip label="Voir la demande">
                             <IconButton
@@ -397,29 +402,31 @@ export const PageClient = () => {
                               me={"auto"}
                             />
                           </Tooltip>
-                          <Tooltip label="Modifier la demande">
-                            <IconButton
-                              as={NextLink}
-                              variant="link"
-                              href={`/intentions/perdir/saisie/${intention.numero}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                router.push(
-                                  `/intentions/perdir/saisie/${intention.numero}`
-                                );
-                              }}
-                              aria-label="Modifier la demande"
-                              icon={
-                                <Icon
-                                  icon="ri:pencil-line"
-                                  width={"24px"}
-                                  color={bluefrance113}
-                                />
-                              }
-                              me={"auto"}
-                            />
-                          </Tooltip>
+                          {hasPermissionEnvoi && (
+                            <Tooltip label="Modifier la demande">
+                              <IconButton
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/perdir/saisie/${intention.numero}`}
+                                onClick={(e) => {
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  router.push(
+                                    `/intentions/perdir/saisie/${intention.numero}`
+                                  );
+                                }}
+                                aria-label="Modifier la demande"
+                                icon={
+                                  <Icon
+                                    icon="ri:pencil-line"
+                                    width={"24px"}
+                                    color={bluefrance113}
+                                  />
+                                }
+                                me={"auto"}
+                              />
+                            </Tooltip>
+                          )}
                           {canDelete() && (
                             <Tooltip
                               label="Supprimer la demande"

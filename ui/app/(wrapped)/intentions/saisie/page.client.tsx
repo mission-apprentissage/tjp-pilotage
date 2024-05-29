@@ -136,12 +136,12 @@ export const PageClient = () => {
     { keepPreviousData: true, staleTime: 0 }
   );
 
-  const hasPermissionEnvoi = usePermission("intentions/ecriture");
+  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
   const isCampagneEnCours =
     data?.campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -194,7 +194,7 @@ export const PageClient = () => {
       py={4}
     >
       <MenuIntention
-        hasPermissionEnvoi={hasPermissionEnvoi}
+        hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
       />
@@ -422,7 +422,7 @@ export const PageClient = () => {
           <Center mt={12}>
             <Flex flexDirection={"column"}>
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {hasPermissionEnvoi && (
+              {hasPermissionSubmitIntention && (
                 <Button
                   isDisabled={isDisabled}
                   variant="createButton"

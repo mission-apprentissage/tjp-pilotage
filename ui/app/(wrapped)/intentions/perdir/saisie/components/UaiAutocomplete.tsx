@@ -1,10 +1,10 @@
 import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
+import { hasRole } from "shared";
 
 import { client } from "@/api.client";
-
-import { useRole } from "../../../../../../utils/security/useRole";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const UaiAutocomplete = ({
   name,
@@ -21,13 +21,14 @@ export const UaiAutocomplete = ({
     value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
   ) => void;
 }) => {
+  const { auth } = useAuth();
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
       borderColor: inError ? "red" : undefined,
     }),
   };
-  const isPerdir = useRole("perdir");
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 
   return (
     <AsyncSelect
