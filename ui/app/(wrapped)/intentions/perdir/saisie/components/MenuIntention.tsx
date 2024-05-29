@@ -1,4 +1,3 @@
-import { QuestionOutlineIcon } from "@chakra-ui/icons";
 import {
   Button,
   Divider,
@@ -473,19 +472,6 @@ export const MenuIntention = ({
           >
             Brouillons
           </Text>
-        </Button>
-
-        <Button
-          variant="ghost"
-          mb="2"
-          as={NextLink}
-          size="sm"
-          mt="auto"
-          href="/intentions/perdir/saisie/documentation"
-          width={"100%"}
-          leftIcon={<QuestionOutlineIcon />}
-        >
-          Documentation
         </Button>
       </VStack>
     </Flex>
