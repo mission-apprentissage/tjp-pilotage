@@ -16,7 +16,7 @@ export const createChangementStatutQuery = async (
     })
     .onConflict((oc) =>
       oc
-        .columns(["userId", "intentionNumero", "statutPrecedent", "statut"])
+        .columns(["createdBy", "intentionNumero", "statutPrecedent", "statut"])
         .doUpdateSet(changementStatut)
     )
     .returningAll()

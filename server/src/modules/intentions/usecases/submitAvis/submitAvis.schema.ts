@@ -11,6 +11,8 @@ export const submitAvisSchema = {
       commentaire: z.string().optional(),
       userFonction: z.string().optional(),
       isVisibleParTous: z.boolean(),
+      createdBy: z.string().optional(),
+      updatedBy: z.string().optional(),
     }),
   }),
   response: {
@@ -22,6 +24,8 @@ export const submitAvisSchema = {
       commentaire: z.string().optional(),
       userFonction: z.string().optional(),
       isVisibleParTous: z.boolean(),
+      createdBy: z.string().optional(),
+      updatedBy: z.string().optional(),
     }),
   },
 };

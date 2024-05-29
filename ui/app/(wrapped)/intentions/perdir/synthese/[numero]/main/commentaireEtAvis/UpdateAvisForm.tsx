@@ -28,7 +28,8 @@ import { RoleVisibleTag } from "../../../../components/RoleVisibleTag";
 
 type AvisForm = {
   id: string;
-  userId: string;
+  createdBy: string;
+  updatedBy?: string;
   intentionNumero: string;
   statutAvis: AvisStatutType;
   typeAvis: AvisTypeType;

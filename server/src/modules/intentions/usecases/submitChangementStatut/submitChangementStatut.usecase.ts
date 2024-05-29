@@ -46,7 +46,7 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] =
 
         const newChangementStatut = {
           ...changementStatut,
-          userId: user.id,
+          createdBy: user.id,
           createdAt: new Date(),
           updatedAt: new Date(),
         };

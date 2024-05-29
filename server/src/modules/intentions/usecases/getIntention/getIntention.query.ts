@@ -161,7 +161,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
 
   const changementsStatut = await kdb
     .selectFrom("changementStatut")
-    .innerJoin("user", "user.id", "changementStatut.userId")
+    .innerJoin("user", "user.id", "changementStatut.createdBy")
     .where((w) =>
       w.and([
         w("changementStatut.intentionNumero", "=", numero),
@@ -181,7 +181,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .orderBy("changementStatut.updatedAt", "desc")
     .selectAll("changementStatut")
     .select((eb) => [
-      "user.id as userId",
+      "user.id as createdBy",
       "user.role as userRole",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
         "user.lastname"
@@ -191,18 +191,18 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
 
   const avis = await kdb
     .selectFrom("avis")
-    .innerJoin("user", "user.id", "avis.userId")
+    .innerJoin("user", "user.id", "avis.createdBy")
     .where("avis.intentionNumero", "=", numero)
     .distinctOn([
       "avis.updatedAt",
       "avis.typeAvis",
       "avis.statutAvis",
-      "avis.userId",
+      "avis.createdBy",
     ])
     .orderBy("avis.updatedAt", "desc")
     .selectAll("avis")
     .select((eb) => [
-      "user.id as userId",
+      "user.id as createdBy",
       "user.role as userRole",
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
         "user.lastname"
