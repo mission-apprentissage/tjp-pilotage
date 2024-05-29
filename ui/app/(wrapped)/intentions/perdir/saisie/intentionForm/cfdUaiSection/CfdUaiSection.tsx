@@ -78,7 +78,7 @@ export const CfdUaiSection = ({
   setIsFCIL,
   submitCFDUAISection,
   isCFDUaiSectionValid,
-  statusComponentRef,
+  statutComponentRef,
 }: {
   campagne?: Campagne;
   formId?: string;
@@ -91,7 +91,7 @@ export const CfdUaiSection = ({
   setIsFCIL: (isFcil: boolean) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<IntentionForms>) => boolean;
-  statusComponentRef?: React.RefObject<HTMLDivElement>;
+  statutComponentRef?: React.RefObject<HTMLDivElement>;
 }) => {
   const { watch, getValues } = useFormContext<IntentionForms>();
 
@@ -126,7 +126,7 @@ export const CfdUaiSection = ({
   }, [watch, getValues, isCFDUaiSectionValid]);
 
   const anchorToStatus = () => {
-    statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
+    statutComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
