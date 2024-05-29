@@ -202,6 +202,7 @@ export const PageClient = () => {
 
   const canDelete = () => {
     return (
+      hasPermissionEnvoi &&
       !hasRole({ user: auth?.user, role: "expert_region" }) &&
       !hasRole({ user: auth?.user, role: "region" })
     );
