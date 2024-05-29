@@ -8,7 +8,6 @@ import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
-import { useAuth } from "../../../../../../utils/security/useAuth";
 import { ActionsSection } from "./actions/ActionsSection";
 import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
@@ -23,7 +22,6 @@ export default ({
     numero: string;
   };
 }) => {
-  const { auth } = useAuth();
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -61,7 +59,7 @@ export default ({
 
   return (
     <Flex width={"100%"} bg="blueecume.925" direction="column">
-      <InformationHeader user={auth?.user} statut={intention.statut} />
+      <InformationHeader statut={intention.statut} />
       <Flex
         align="center"
         as={Container}

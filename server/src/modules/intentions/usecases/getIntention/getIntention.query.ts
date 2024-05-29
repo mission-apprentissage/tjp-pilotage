@@ -11,10 +11,13 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
+import { castAvisStatut } from "../../../utils/castStatutAvis";
+import { castAvisType } from "../../../utils/castTypeAvis";
 import {
   countDifferenceCapaciteApprentissageIntention,
   countDifferenceCapaciteScolaireIntention,
 } from "../../../utils/countCapacite";
+import { isAvisVisible } from "../../../utils/isAvisVisible";
 import {
   isIntentionNotDeleted,
   isIntentionSelectable,
@@ -186,6 +189,28 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     ])
     .execute();
 
+  const avis = await kdb
+    .selectFrom("avis")
+    .innerJoin("user", "user.id", "avis.userId")
+    .where("avis.intentionNumero", "=", numero)
+    .distinctOn([
+      "avis.updatedAt",
+      "avis.typeAvis",
+      "avis.statutAvis",
+      "avis.userId",
+    ])
+    .orderBy("avis.updatedAt", "desc")
+    .selectAll("avis")
+    .select((eb) => [
+      "user.id as userId",
+      "user.role as userRole",
+      sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
+        "user.lastname"
+      )})`.as("userFullName"),
+    ])
+    .where(isAvisVisible({ user }))
+    .execute();
+
   const codeDispositif =
     intention?.codeDispositif &&
     intention.metadata.formation?.dispositifs.find(
@@ -215,6 +240,12 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
           changementStatut.statutPrecedent
         ),
         updatedAt: changementStatut.updatedAt?.toISOString(),
+      })),
+      avis: avis.map((avis) => ({
+        ...avis,
+        updatedAt: avis.updatedAt?.toISOString(),
+        statutAvis: castAvisStatut(avis.statutAvis),
+        typeAvis: castAvisType(avis.typeAvis),
       })),
     })
   );

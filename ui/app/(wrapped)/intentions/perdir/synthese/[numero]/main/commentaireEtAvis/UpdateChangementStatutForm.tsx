@@ -16,7 +16,7 @@ type ChangementStatutForm = {
   commentaire?: string;
 };
 
-export const CommentaireForm = chakra(
+export const UpdateChangementStatutForm = chakra(
   ({
     changementStatut,
     setIsModifying,
@@ -64,7 +64,7 @@ export const CommentaireForm = chakra(
               body: { changementStatut: values },
             })
           )}
-          width={"100%"}
+          width={"50%"}
         >
           <FormControl isInvalid={!!errors.commentaire} isRequired>
             <Textarea

@@ -6,10 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
@@ -169,12 +166,7 @@ export default () => {
           setCampagneFilter((value as string[])[0] ?? "");
           break;
         case "statut":
-          setStatutFilter(
-            value as Extract<
-              DemandeStatutType,
-              "projet de demande" | "demande validée" | "refusée"
-            >[]
-          );
+          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
           break;
       }
   };
@@ -273,15 +265,8 @@ export default () => {
   );
 
   const [statutFilter, setStatutFilter] = useState<
-    | Extract<
-        DemandeStatutType,
-        "projet de demande" | "demande validée" | "refusée"
-      >[]
-    | undefined
-  >([
-    DemandeStatutEnum["projet de demande"],
-    DemandeStatutEnum["demande validée"],
-  ]);
+    Exclude<DemandeStatutType, "supprimée">[] | undefined
+  >();
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 

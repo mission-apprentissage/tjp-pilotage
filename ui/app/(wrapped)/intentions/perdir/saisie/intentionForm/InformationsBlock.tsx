@@ -16,12 +16,12 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { hasRole, Role } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 
+import { useRole } from "../../../../../../utils/security/useRole";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SectionBlock } from "../components/SectionBlock";
 import { Campagne } from "../types";
@@ -34,14 +34,12 @@ import { TravauxEtEquipementsSection } from "./travauxEtEquipementsSection/Trava
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
 export const InformationsBlock = ({
-  user,
   refs,
   formId,
   disabled,
   footerActions,
   campagne,
 }: {
-  user?: { role?: Role };
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
@@ -184,16 +182,15 @@ export const InformationsBlock = ({
                       associées. Il est conseillé de réserver cette action à une
                       erreur de saisie ou un doublon.
                     </Text>
-                    {!hasRole({ user, role: "perdir" }) && (
+                    {!useRole("perdir") && (
                       <Text>
                         Si vous souhaitez refuser la demande, vous pouvez la
                         conserver et modifier son statut en “Demande refusée”.
                       </Text>
                     )}
                   </ModalBody>
-
                   <ModalFooter>
-                    {!hasRole({ user, role: "perdir" }) ? (
+                    {!useRole("perdir") ? (
                       <Button
                         colorScheme="blue"
                         mr={3}
