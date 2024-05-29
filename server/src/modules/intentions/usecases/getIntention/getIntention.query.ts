@@ -192,6 +192,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const avis = await kdb
     .selectFrom("avis")
     .innerJoin("user", "user.id", "avis.createdBy")
+    .leftJoin("user as updatedByUser", "updatedByUser.id", "avis.updatedBy")
     .where("avis.intentionNumero", "=", numero)
     .distinctOn([
       "avis.updatedAt",
@@ -207,6 +208,9 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       sql<string>`CONCAT(${eb.ref("user.firstname")},' ',${eb.ref(
         "user.lastname"
       )})`.as("userFullName"),
+      sql<string>`CONCAT(${eb.ref("updatedByUser.firstname")},' ',${eb.ref(
+        "updatedByUser.lastname"
+      )})`.as("updatedByFullName"),
     ])
     .where(isAvisVisible({ user }))
     .execute();
@@ -243,7 +247,9 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       })),
       avis: avis.map((avis) => ({
         ...avis,
+        createdAt: avis.createdAt?.toISOString(),
         updatedAt: avis.updatedAt?.toISOString(),
+        updatedByFullName: avis.updatedByFullName.trim() ?? null,
         statutAvis: castAvisStatut(avis.statutAvis),
         typeAvis: castAvisType(avis.typeAvis),
       })),

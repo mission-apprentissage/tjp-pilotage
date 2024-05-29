@@ -1,3 +1,4 @@
+import { ArrowForwardIcon } from "@chakra-ui/icons";
 import {
   Avatar,
   Box,
@@ -5,8 +6,16 @@ import {
   chakra,
   Flex,
   Highlight,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
   Text,
   Tooltip,
+  useDisclosure,
   useToast,
 } from "@chakra-ui/react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
@@ -43,6 +52,8 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
   const [isModifying, setIsModifying] = useState(false);
 
   const queryClient = useQueryClient();
+
+  const { isOpen, onOpen, onClose } = useDisclosure();
 
   const { isLoading: isDeleting, mutateAsync: submitDeleteAvisCommentaire } =
     useMutation({
@@ -105,14 +116,31 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
             fontStyle={"italic"}
             color="grey.425"
           >
-            {`Publié le ${formatDate({
-              date: avis.updatedAt,
-              options: {
-                dateStyle: "short",
-                timeStyle: "short",
-              },
-              dateTimeSeparator: " - ",
-            })}`}
+            {avis.updatedAt === avis.createdAt ||
+            avis.updatedByFullName === "" ? (
+              `Publié le ${formatDate({
+                date: avis.createdAt,
+                options: {
+                  dateStyle: "short",
+                  timeStyle: "short",
+                },
+                dateTimeSeparator: " - ",
+              })}`
+            ) : (
+              <Highlight
+                query={avis.updatedByFullName ?? ""}
+                styles={{ color: "bluefrance.113" }}
+              >
+                {`Modifié le ${formatDate({
+                  date: avis.updatedAt,
+                  options: {
+                    dateStyle: "short",
+                    timeStyle: "short",
+                  },
+                  dateTimeSeparator: " - ",
+                })} par ${avis.updatedByFullName}`}
+              </Highlight>
+            )}
           </Text>
         </Flex>
         {isModifying ? (
@@ -144,7 +172,7 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
               color="bluefrance.113"
               fontSize={12}
               fontWeight={400}
-              onClick={() => submitDeleteAvisCommentaire()}
+              onClick={() => onOpen()}
             >
               Supprimer
             </Button>
@@ -161,6 +189,47 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
           </Flex>
         )}
       </Flex>
+      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+        <ModalOverlay />
+        <ModalContent p="4">
+          <ModalCloseButton title="Fermer" />
+          <ModalHeader>
+            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+            Confirmer la suppression de l'avis
+          </ModalHeader>
+          <ModalBody>
+            <Highlight
+              query={[avis.typeAvis, avis.statutAvis, avis.userFullName]}
+              styles={{ fontWeight: 700 }}
+            >
+              {`Confirmez-vous vouloir supprimer l'avis ${avis.typeAvis} ${avis.statutAvis} de ${avis.userFullName} ?`}
+            </Highlight>
+            <Text color="red" mt={2}>
+              Attention, cette action est irréversible
+            </Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                onClose();
+              }}
+              variant={"secondary"}
+            >
+              Annuler
+            </Button>
+            <Button
+              isLoading={isDeleting}
+              variant="primary"
+              onClick={() => submitDeleteAvisCommentaire()}
+            >
+              Confirmer la suppression
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Box>
   );
 });

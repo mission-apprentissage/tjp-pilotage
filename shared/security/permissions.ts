@@ -29,7 +29,6 @@ export const PERMISSIONS = {
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "national", draft: "national" },
-    "intentions-perdir/ecriture": { default: "national" },
   },
   admin_region: {
     "intentions/lecture": { default: "region", draft: "region" },
