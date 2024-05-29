@@ -165,6 +165,6 @@ export const down = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .where("demande.statut", "!=", "supprimée")
     )
-    .ifNotExists()
+    .materialized()
     .execute();
 };
