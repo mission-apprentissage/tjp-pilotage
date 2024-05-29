@@ -6,7 +6,6 @@ import {
   Tag,
   Text,
   Tooltip,
-  useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import _ from "lodash";
@@ -22,6 +21,7 @@ import {
   MotifLabel,
 } from "../../../../../utils/motifDemandeUtils";
 import { getTypeDemandeLabel } from "../../../../../utils/typeDemandeUtils";
+import { FilesSection } from "./files/FilesSection";
 
 const formatDifferenceCapacite = (difference?: number) => {
   if (!difference) return "+0";
@@ -57,8 +57,6 @@ export const SyntheseSection = ({
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
-  const bluefrance113 = useToken("colors", "bluefrance.113");
-
   return (
     <Flex direction={"column"} gap={6} w="100%">
       <Flex direction={"row"} justify={"space-between"}>
@@ -178,31 +176,7 @@ export const SyntheseSection = ({
               </Flex>
             )}
           </Flex>
-          <Flex
-            direction={"column"}
-            gap={2}
-            bgColor={"grey.975"}
-            p={4}
-            h="fit-content"
-          >
-            <Heading as={"h6"} fontSize={14}>
-              Pièce jointe
-            </Heading>
-            <Flex direction={"row"} gap={8}>
-              <Img src={"/illustrations/piece-jointe-visualization.svg"}></Img>
-              <Flex direction={"column"} width={"100%"}>
-                <Text>$nom fichier</Text>
-                <Flex direction={"row"} justify={"space-between"}>
-                  <Text>{`$type fichier - $taille fichier`}</Text>
-                  <Icon
-                    icon={"ri:download-line"}
-                    color={bluefrance113}
-                    style={{ marginTop: "auto" }}
-                  />
-                </Flex>
-              </Flex>
-            </Flex>
-          </Flex>
+          <FilesSection numero={intention.numero!} />
         </Flex>
         <Flex direction={"column"} gap={3} p={4} flex={1}>
           <Flex direction={"row"} gap={4} justify={"space-between"}>

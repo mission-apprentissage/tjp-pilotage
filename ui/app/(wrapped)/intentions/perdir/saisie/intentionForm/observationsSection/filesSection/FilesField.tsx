@@ -10,15 +10,17 @@ export const FilesField = ({
   files,
   deleteFile,
   downloadFile,
+  disabled,
 }: {
   files: FileType[];
   deleteFile: (file: FileType) => void;
   downloadFile: (file: FileType) => Promise<void>;
+  disabled: boolean;
 }) => {
   const greyColor = useToken("colors", "grey.425");
 
   return (
-    <Flex direction="column" rowGap={6}>
+    <Flex direction="column" rowGap={6} maxWidth={"100%"}>
       {files.map((file) => (
         <Flex key={file.name} direction={"column"} gap={1}>
           <Flex direction={"row"} gap={2} alignItems={"start"}>
@@ -26,7 +28,13 @@ export const FilesField = ({
               onClick={() => downloadFile(file)}
               rightIcon={<Icon icon="ri:download-line" />}
             >
-              {file.nameWithoutExtension}
+              <Text
+                overflow={"hidden"}
+                textOverflow={"ellipsis"}
+                whiteSpace={"nowrap"}
+              >
+                {file.nameWithoutExtension}
+              </Text>
             </LinkButton>
             <IconButton
               variant="ghost"
@@ -37,6 +45,7 @@ export const FilesField = ({
               width={"20px"}
               height={"20px"}
               onClick={() => deleteFile(file)}
+              disabled={disabled}
             />
           </Flex>
           <Flex
