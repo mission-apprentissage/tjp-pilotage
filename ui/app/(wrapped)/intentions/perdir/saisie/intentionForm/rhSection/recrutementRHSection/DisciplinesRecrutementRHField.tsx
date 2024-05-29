@@ -61,7 +61,6 @@ export const DisciplinesRecrutementRHField = chakra(
               <Controller
                 name="discipline2RecrutementRH"
                 control={control}
-                rules={{ required: "Ce champ est obligatoire" }}
                 render={({ field: { onChange, value, name } }) => (
                   <DisciplineAutocompleteInput
                     name={name}

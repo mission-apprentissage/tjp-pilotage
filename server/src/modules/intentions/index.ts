@@ -1,5 +1,6 @@
 import { Server } from "../../server";
 import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
+import { deleteAvisRoute } from "./usecases/deleteAvis/deleteAvis.route";
 import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
 import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
 import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
@@ -10,6 +11,7 @@ import { getIntentionFilesRoute } from "./usecases/getIntentionFiles/getIntentio
 import { getIntentionsRoute } from "./usecases/getIntentions/getIntentions.route";
 import { importIntentionRoute } from "./usecases/importIntention/importIntention.route";
 import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
+import { submitAvisRoute } from "./usecases/submitAvis/submitAvis.route";
 import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
 import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
 import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
@@ -30,9 +32,11 @@ export const registerIntentionsExpeModule = ({
     ...searchEtablissementPerdirRoute(server),
     ...submitChangementStatutRoute({ server }),
     ...deleteChangementStatutRoute(server),
+    ...submitAvisRoute({ server }),
     ...uploadIntentionFilesRoute(server),
     ...getIntentionFilesRoute(server),
     ...deleteIntentionFilesRoute(server),
     ...getIntentionFileDownloadUrlRoute(server),
+    ...deleteAvisRoute(server),
   };
 };

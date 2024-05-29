@@ -126,7 +126,10 @@ export const IntentionForm = ({
   );
 
   const isDisabledForPerdir =
-    hasRole({ user: auth?.user, role: "perdir" }) &&
+    hasRole({
+      user: auth?.user,
+      role: "perdir",
+    }) &&
     !!defaultValues.statut &&
     getStepWorkflow(defaultValues.statut) > 1;
 
@@ -286,7 +289,6 @@ export const IntentionForm = ({
                     scrollMarginTop={SCROLL_OFFSET}
                   >
                     <InformationsBlock
-                      user={auth?.user}
                       refs={anchorsRefs}
                       formId={formId}
                       disabled={isFormDisabled}

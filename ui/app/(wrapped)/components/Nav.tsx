@@ -15,12 +15,13 @@ import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
-import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
+import { hasPermission, isUserInRegionsExperimentation } from "shared";
 
 import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 
+import { useRole } from "../../../utils/security/useRole";
 import { Glossaire } from "../glossaire/Glossaire";
 
 const NavLink = chakra(
@@ -170,10 +171,7 @@ export const Nav = () => {
     user: auth?.user,
   });
 
-  const shouldDisplayBothIntentionMenus = hasRole({
-    user: auth?.user,
-    role: "admin",
-  });
+  const shouldDisplayBothIntentionMenus = useRole("admin");
 
   const {
     isOpen: isMenuPanoramaOpen,

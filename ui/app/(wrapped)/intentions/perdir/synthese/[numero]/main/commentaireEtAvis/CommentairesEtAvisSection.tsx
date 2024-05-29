@@ -15,9 +15,13 @@ import { client } from "@/api.client";
 import {
   getOrderStatut,
   getStepWorkflow,
+  getStepWorkflowAvis,
   isStepWorkflowEnabled,
 } from "../../../../../utils/statutUtils";
+import { Avis, ChangementStatut } from "../../../../types";
+import { AvisSection } from "./AvisSection";
 import { CommentaireSection } from "./CommentaireSection";
+import { CompteursAvisSection } from "./CompteursAvisSection";
 
 const StepIcon = chakra(
   ({ className, numero }: { className?: string; numero: number }) => (
@@ -45,6 +49,21 @@ export const CommentairesEtAvisSection = ({
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
+  const getCommentairesEtAvisByEtape = (etape: 1 | 2 | 3) => {
+    const changementsStatut = getChangementStatutByEtape(etape);
+    const avis = getAvisByEtape(etape);
+    if (changementsStatut === undefined && avis === undefined) return [];
+    if (avis === undefined)
+      return _.orderBy(changementsStatut, (item) => item.updatedAt, "desc");
+    if (changementsStatut === undefined)
+      return _.orderBy(avis, (item) => item.updatedAt, "desc");
+    return _.orderBy(
+      [...changementsStatut, ...avis],
+      (item) => item.updatedAt,
+      "desc"
+    );
+  };
+
   const getChangementStatutByEtape = (etape: 1 | 2 | 3) => {
     return intention?.changementsStatut
       ?.filter((changementStatut) => {
@@ -55,12 +74,19 @@ export const CommentairesEtAvisSection = ({
       .sort((a, b) => getOrderStatut(b.statut) - getOrderStatut(a.statut));
   };
 
+  const getAvisByEtape = (etape: 1 | 2 | 3) => {
+    return intention?.avis?.filter((avis) => {
+      if (etape === 3 && getStepWorkflowAvis(avis.typeAvis) === 4) return true;
+      return getStepWorkflowAvis(avis.typeAvis) === etape;
+    });
+  };
+
   const getNombreDifferentsContributeurs = (
-    changementsStatut?: Array<{ userId: string }>
+    commentairesEtAvis?: Array<{ userId: string }>
   ) => {
-    if (!changementsStatut) return 0;
+    if (!commentairesEtAvis) return 0;
     return _.uniq(
-      changementsStatut.map((changementStatut) => changementStatut.userId)
+      commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.userId)
     ).length;
   };
 
@@ -68,30 +94,31 @@ export const CommentairesEtAvisSection = ({
     {
       numero: 3,
       label: "Les arbitrages et décisions de vote",
-      changementsStatut: getChangementStatutByEtape(3),
+      commentairesEtAvis: getCommentairesEtAvisByEtape(3),
     },
     {
       numero: 2,
       label: "Les avis de la phase d'instruction de projet",
-      changementsStatut: getChangementStatutByEtape(2),
+      commentairesEtAvis: getCommentairesEtAvisByEtape(2),
     },
     {
       numero: 1,
       label: "Les avis de la phase de revue des propositions",
-      changementsStatut: getChangementStatutByEtape(1),
+      commentairesEtAvis: getCommentairesEtAvisByEtape(1),
     },
   ];
 
   return (
-    <Flex direction={"column"} gap={10}>
+    <Flex direction={"column"} gap={10} width={"100%"}>
       <Heading as="h2" fontSize={18} fontWeight={700}>
         Consulter les avis et commentaires sur la demande
       </Heading>
+      <CompteursAvisSection intention={intention} />
       <Divider />
 
-      {etapes.filter((etape) => etape?.changementsStatut?.length).length ? (
+      {etapes.filter((etape) => etape?.commentairesEtAvis?.length).length ? (
         etapes
-          .filter((etape) => etape?.changementsStatut?.length)
+          .filter((etape) => etape?.commentairesEtAvis?.length)
           .filter((etape) => isStepWorkflowEnabled(etape.numero))
           .map((etape) => (
             <Flex key={etape.label} direction={"column"} gap={10}>
@@ -109,27 +136,33 @@ export const CommentairesEtAvisSection = ({
                   >
                     <Highlight
                       query={[
-                        etape.changementsStatut?.length.toString() ?? "",
+                        etape.commentairesEtAvis?.length.toString() ?? "",
                         getNombreDifferentsContributeurs(
-                          etape.changementsStatut
+                          etape.commentairesEtAvis
                         ).toString(),
                       ]}
                       styles={{
                         fontWeight: 700,
                       }}
                     >
-                      {`${etape.changementsStatut
-                        ?.length} changement(s) de statut par ${getNombreDifferentsContributeurs(
-                        etape.changementsStatut
+                      {`${etape.commentairesEtAvis
+                        ?.length} changement(s) de statut ou avis par ${getNombreDifferentsContributeurs(
+                        etape.commentairesEtAvis
                       )} contributeur(s)`}
                     </Highlight>
                   </Text>
                 </Flex>
               </Flex>
               <Flex direction={"column"} gap={10}>
-                {etape.changementsStatut?.map((changementStatut) => (
-                  <Fragment key={changementStatut.updatedAt}>
-                    <CommentaireSection changementStatut={changementStatut} />
+                {etape.commentairesEtAvis?.map((commentaireEtAvis) => (
+                  <Fragment key={commentaireEtAvis.updatedAt}>
+                    {Object.hasOwn(commentaireEtAvis, "statut") ? (
+                      <CommentaireSection
+                        changementStatut={commentaireEtAvis as ChangementStatut}
+                      />
+                    ) : (
+                      <AvisSection avis={commentaireEtAvis as Avis} />
+                    )}
                   </Fragment>
                 ))}
               </Flex>

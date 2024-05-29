@@ -242,7 +242,6 @@ export const ChangementStatutForm = ({
                 </Text>
               )}
             </ModalBody>
-
             <ModalFooter>
               <Button
                 colorScheme="blue"
@@ -254,7 +253,6 @@ export const ChangementStatutForm = ({
               >
                 Annuler
               </Button>
-
               <Button
                 isLoading={isSubmitting}
                 variant="primary"

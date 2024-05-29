@@ -11,33 +11,23 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Role } from "shared";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { formatDate } from "@/utils/formatDate";
+import { usePermission } from "@/utils/security/usePermission";
 
 import { RoleTag } from "../../../../components/RoleTag";
 import { StatutTag } from "../../../../components/StatutTag";
-import { CommentaireForm } from "./CommentaireForm";
+import { ChangementStatut } from "../../../../types";
+import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
-  ({
-    changementStatut,
-  }: {
-    changementStatut: {
-      id: string;
-      intentionNumero: string;
-      userId: string;
-      userRole?: string;
-      userFullName: string;
-      statutPrecedent?: Exclude<DemandeStatutType, "supprimée">;
-      statut: Exclude<DemandeStatutType, "supprimée">;
-      commentaire?: string;
-      updatedAt: string;
-    };
-  }) => {
+  ({ changementStatut }: { changementStatut: ChangementStatut }) => {
+    const hasPermissionModificationStatut = usePermission(
+      "intentions-perdir-statut/ecriture"
+    );
     const [isModifying, setIsModifying] = useState(false);
-
+    UpdateChangementStatutForm;
     const queryClient = useQueryClient();
 
     const {
@@ -58,6 +48,7 @@ export const CommentaireSection = chakra(
         queryClient.invalidateQueries(["[GET]/intention/:numero"]);
       },
     });
+
     return (
       <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6}>
         <Flex direction={"column"} gap={2} p={2}>
@@ -114,7 +105,7 @@ export const CommentaireSection = chakra(
           </Flex>
 
           {isModifying ? (
-            <CommentaireForm
+            <UpdateChangementStatutForm
               changementStatut={changementStatut}
               setIsModifying={setIsModifying}
             />
@@ -137,7 +128,7 @@ export const CommentaireSection = chakra(
               Pas d'observation renseignée
             </Text>
           )}
-          {!isDeleting && !isModifying && (
+          {hasPermissionModificationStatut && !isDeleting && !isModifying && (
             <Flex direction={"row"} gap={6}>
               <Button
                 isLoading={isDeleting || isModifying}

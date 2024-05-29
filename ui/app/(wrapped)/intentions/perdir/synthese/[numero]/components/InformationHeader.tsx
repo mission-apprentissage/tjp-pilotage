@@ -8,20 +8,19 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useState } from "react";
-import { hasRole, Role } from "shared";
 import {
   DemandeStatutEnum,
   DemandeStatutType,
 } from "shared/enum/demandeStatutEnum";
 
+import { useRole } from "../../../../../../../utils/security/useRole";
+
 export const InformationHeader = ({
-  user,
   statut,
 }: {
-  user?: { role?: Role };
   statut?: DemandeStatutType;
 }) => {
-  const isPerdir = hasRole({ user, role: "perdir" });
+  const isPerdir = useRole("perdir");
 
   const bgColors = {
     success: "success.950",
