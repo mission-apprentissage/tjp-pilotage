@@ -1,7 +1,7 @@
 import { iframeResizer } from "iframe-resizer";
 import { useRef } from "react";
 
-import { client } from "../../../../../../api.client";
+import { client } from "@/api.client";
 
 interface DashboardProps {
   domaineFormation?: string;
