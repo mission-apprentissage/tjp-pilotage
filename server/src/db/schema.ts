@@ -26,7 +26,7 @@ export interface Academie {
 
 export interface Avis {
   id: Generated<string>;
-  userId: string | null;
+  createdBy: string | null;
   intentionNumero: string;
   statutAvis: string;
   typeAvis: string;
@@ -35,6 +35,7 @@ export interface Avis {
   createdAt: Generated<Timestamp>;
   updatedAt: Timestamp;
   commentaire: string | null;
+  updatedBy: string | null;
 }
 
 export interface Campagne {
@@ -57,7 +58,7 @@ export interface ChangeLog {
 
 export interface ChangementStatut {
   id: Generated<string>;
-  userId: string | null;
+  createdBy: string | null;
   intentionNumero: string;
   statutPrecedent: string | null;
   statut: string;

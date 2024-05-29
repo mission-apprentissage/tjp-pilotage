@@ -9,7 +9,7 @@ import { client } from "@/api.client";
 
 type ChangementStatutForm = {
   id: string;
-  userId: string;
+  createdBy: string;
   intentionNumero: string;
   statutPrecedent?: Exclude<DemandeStatutType, "supprimée">;
   statut: Exclude<DemandeStatutType, "supprimée">;

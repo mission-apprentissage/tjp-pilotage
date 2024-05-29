@@ -41,7 +41,8 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
 
       const newAvis = {
         ...avis,
-        userId: user.id,
+        createdBy: avis.createdBy ?? user.id,
+        updatedBy: user.id,
         createdAt: new Date(),
         updatedAt: new Date(),
       };

@@ -30,7 +30,7 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
   const hasPermissionModificationAvis = () => {
     if (usePermission("intentions-perdir-avis/ecriture")) {
       if (useRole("expert_region") || useRole("region")) {
-        if (avis.userId === auth?.user.id) return true;
+        if (avis.createdBy === auth?.user.id) return true;
         return false;
       } else return true;
     }

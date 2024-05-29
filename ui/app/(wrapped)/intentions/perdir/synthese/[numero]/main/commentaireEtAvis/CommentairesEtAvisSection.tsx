@@ -82,11 +82,11 @@ export const CommentairesEtAvisSection = ({
   };
 
   const getNombreDifferentsContributeurs = (
-    commentairesEtAvis?: Array<{ userId: string }>
+    commentairesEtAvis?: Array<{ createdBy: string }>
   ) => {
     if (!commentairesEtAvis) return 0;
     return _.uniq(
-      commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.userId)
+      commentairesEtAvis.map((commentaireEtAvis) => commentaireEtAvis.createdBy)
     ).length;
   };
 

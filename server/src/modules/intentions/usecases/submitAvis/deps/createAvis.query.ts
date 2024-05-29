@@ -15,7 +15,7 @@ export const createAvisQuery = async (avis: Insertable<DB["avis"]>) => {
     })
     .onConflict((oc) =>
       oc
-        .columns(["userId", "intentionNumero", "userFonction", "typeAvis"])
+        .columns(["createdBy", "intentionNumero", "userFonction", "typeAvis"])
         .doUpdateSet(avis)
     )
     .returningAll()

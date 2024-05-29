@@ -38,7 +38,7 @@ import { FONCTIONS } from "./FONCTIONS";
 
 type AvisForm = {
   id: string;
-  userId: string;
+  createdBy: string;
   intentionNumero: string;
   statutAvis: AvisStatutType;
   typeAvis: AvisTypeType;

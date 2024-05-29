@@ -131,7 +131,7 @@ const IntentionSchema = z.object({
     z.object({
       id: z.string(),
       intentionNumero: z.string(),
-      userId: z.string(),
+      createdBy: z.string(),
       userRole: z.string().optional(),
       statutPrecedent: DemandeStatutZodType.exclude([
         DemandeStatutEnum["supprimée"],
@@ -146,7 +146,8 @@ const IntentionSchema = z.object({
     z.object({
       id: z.string(),
       intentionNumero: z.string(),
-      userId: z.string(),
+      createdBy: z.string(),
+      updatedBy: z.string().optional(),
       userRole: z.string().optional(),
       typeAvis: AvisTypeZodType,
       isVisibleParTous: z.boolean(),
