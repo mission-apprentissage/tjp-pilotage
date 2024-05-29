@@ -154,80 +154,89 @@ export const InformationsBlock = ({
           disabled={disabled}
         />
       </SectionBlock>
-      <SectionBlock>
-        <Flex justifyContent={"space-between"} flexDir={"row"}>
-          {formId && (
-            <Button
-              leftIcon={<DeleteIcon />}
-              variant="ghost"
-              color="bluefrance.113"
-              onClick={onOpen}
-              isDisabled={disabled}
-            >
-              Supprimer la demande
-            </Button>
-          )}
-          {footerActions && <Flex ms={"auto"}>{footerActions}</Flex>}
+      {formId && (
+        <>
+          <SectionBlock>
+            <Flex justifyContent={"space-between"} flexDir={"row"}>
+              <Button
+                leftIcon={<DeleteIcon />}
+                variant="ghost"
+                color="bluefrance.113"
+                onClick={onOpen}
+                isDisabled={disabled}
+              >
+                Supprimer la demande
+              </Button>
+              <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+                <ModalOverlay />
+                <ModalContent p="4">
+                  <ModalCloseButton title="Fermer" />
+                  <ModalHeader>
+                    <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+                    Confirmer la suppression de la demande
+                  </ModalHeader>
+                  <ModalBody>
+                    <Text mb={4}>
+                      Cette action est irréversible, elle supprime
+                      définitivement la demande et l’ensemble des données
+                      associées. Il est conseillé de réserver cette action à une
+                      erreur de saisie ou un doublon.
+                    </Text>
+                    {!useRole("perdir") && (
+                      <Text>
+                        Si vous souhaitez refuser la demande, vous pouvez la
+                        conserver et modifier son statut en “Demande refusée”.
+                      </Text>
+                    )}
+                  </ModalBody>
+                  <ModalFooter>
+                    {!useRole("perdir") ? (
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={() => {
+                          setValue("statut", DemandeStatutEnum["refusée"]);
+                          onClose();
+                        }}
+                        variant={"secondary"}
+                      >
+                        Passer en "Demande refusée"
+                      </Button>
+                    ) : (
+                      <Button
+                        colorScheme="blue"
+                        mr={3}
+                        onClick={() => {
+                          onClose();
+                        }}
+                        variant={"secondary"}
+                      >
+                        Annuler
+                      </Button>
+                    )}
+                    <Button
+                      variant="primary"
+                      onClick={() => {
+                        deleteDemande();
+                      }}
+                      isLoading={isDeleting}
+                    >
+                      Supprimer définitivement
+                    </Button>
+                  </ModalFooter>
+                </ModalContent>
+              </Modal>
+
+              {footerActions && <Flex>{footerActions}</Flex>}
+            </Flex>
+          </SectionBlock>
+        </>
+      )}
+      {!formId && footerActions && (
+        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
+          {footerActions}
         </Flex>
-      </SectionBlock>
-      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-        <ModalOverlay />
-        <ModalContent p="4">
-          <ModalCloseButton title="Fermer" />
-          <ModalHeader>
-            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
-            Confirmer la suppression de la demande
-          </ModalHeader>
-          <ModalBody>
-            <Text mb={4}>
-              Cette action est irréversible, elle supprime définitivement la
-              demande et l’ensemble des données associées. Il est conseillé de
-              réserver cette action à une erreur de saisie ou un doublon.
-            </Text>
-            {!useRole("perdir") && (
-              <Text>
-                Si vous souhaitez refuser la demande, vous pouvez la conserver
-                et modifier son statut en “Demande refusée”.
-              </Text>
-            )}
-          </ModalBody>
-          <ModalFooter>
-            {!useRole("perdir") ? (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={() => {
-                  setValue("statut", DemandeStatutEnum["refusée"]);
-                  onClose();
-                }}
-                variant={"secondary"}
-              >
-                Passer en "Demande refusée"
-              </Button>
-            ) : (
-              <Button
-                colorScheme="blue"
-                mr={3}
-                onClick={() => {
-                  onClose();
-                }}
-                variant={"secondary"}
-              >
-                Annuler
-              </Button>
-            )}
-            <Button
-              variant="primary"
-              onClick={() => {
-                deleteDemande();
-              }}
-              isLoading={isDeleting}
-            >
-              Supprimer définitivement
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
+      )}
     </Flex>
   );
 };
