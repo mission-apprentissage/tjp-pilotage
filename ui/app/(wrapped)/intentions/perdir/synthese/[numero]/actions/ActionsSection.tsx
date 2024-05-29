@@ -1,11 +1,12 @@
 import { Flex } from "@chakra-ui/react";
+import { hasRole } from "shared";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { useRole } from "../../../../../../../utils/security/useRole";
 import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
@@ -16,7 +17,8 @@ export const ActionsSection = ({
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
-  const isPerdir = useRole("perdir");
+  const { auth } = useAuth();
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
   const hasPermissionModificationStatut = usePermission(
     "intentions-perdir-statut/ecriture"
   );
@@ -32,9 +34,9 @@ export const ActionsSection = ({
    */
   const canSubmitAvis = () => {
     if (
-      (useRole("expert_region") &&
+      (hasRole({ user: auth?.user, role: "expert_region" }) &&
         getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]) ||
-      (useRole("region") &&
+      (hasRole({ user: auth?.user, role: "region" }) &&
         getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"])
     )
       return false;

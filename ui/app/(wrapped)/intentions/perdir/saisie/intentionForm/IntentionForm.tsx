@@ -41,9 +41,8 @@ import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
 import { useAuth } from "@/utils/security/useAuth";
-import { useRole } from "@/utils/security/useRole";
 
-import { formatStatut, getStepWorkflow } from "../../../utils/statutUtils";
+import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
@@ -97,7 +96,22 @@ export const IntentionForm = ({
     isSuccess,
   } = client.ref("[POST]/intention/submit").useMutation({
     onSuccess: async (body) => {
-      const message = `${formatStatut(body.statut)} enregistré(e) avec succès`;
+      let message = undefined;
+      switch (body.statut) {
+        case DemandeStatutEnum["brouillon"]:
+          message =
+            "Votre demande a bien été enregistrée en tant que brouillon";
+          break;
+        case DemandeStatutEnum["proposition"]:
+          message = "Votre proposition a bien été enregistrée";
+          break;
+        case DemandeStatutEnum["projet de demande"]:
+          message = "Votre projet de demande a bien été enregistré";
+          break;
+        default:
+          message = "Votre demande a bien été enregistrée";
+          break;
+      }
 
       if (message) {
         toast({
@@ -192,24 +206,21 @@ export const IntentionForm = ({
     !isTypeFermeture(typeDemande) &&
     !isTypeDiminution(typeDemande);
 
-  const getStatutSubmit = (
-    statut?: Exclude<DemandeStatutType, "supprimée">
-  ): Exclude<DemandeStatutType, "supprimée"> => {
-    if (useRole("perdir") || useRole("expert_region")) {
+  const getStatutSubmit = (): Extract<
+    DemandeStatutType,
+    "proposition" | "projet de demande"
+  > => {
+    if (
+      hasRole({ user: auth?.user, role: "perdir" }) ||
+      hasRole({ user: auth?.user, role: "expert_region" })
+    ) {
       return DemandeStatutEnum["proposition"];
-    } else {
-      if (
-        statut === DemandeStatutEnum["brouillon"] ||
-        statut === DemandeStatutEnum["proposition"]
-      ) {
-        return DemandeStatutEnum["projet de demande"];
-      }
     }
-    return DemandeStatutEnum["proposition"];
+    return DemandeStatutEnum["projet de demande"];
   };
 
   const getLabelSubmit = (
-    statut: Exclude<DemandeStatutType, "supprimée">,
+    statut: Extract<DemandeStatutType, "proposition" | "projet de demande">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
     if (
@@ -230,7 +241,10 @@ export const IntentionForm = ({
   const canSubmitBrouillon = (
     statut?: Exclude<DemandeStatutType, "supprimée">
   ): boolean => {
-    if (useRole("perdir") || useRole("expert_region")) {
+    if (
+      hasRole({ user: auth?.user, role: "perdir" }) ||
+      hasRole({ user: auth?.user, role: "expert_region" })
+    ) {
       return statut === undefined || statut === DemandeStatutEnum["brouillon"];
     }
     return false;
@@ -378,7 +392,7 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: getStatutSubmit(values.statut),
+                                    statut: getStatutSubmit(),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -388,7 +402,7 @@ export const IntentionForm = ({
                             leftIcon={<CheckIcon />}
                           >
                             {getLabelSubmit(
-                              getStatutSubmit(defaultValues.statut),
+                              getStatutSubmit(),
                               defaultValues.statut
                             )}
                           </Button>
