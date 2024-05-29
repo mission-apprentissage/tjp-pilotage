@@ -27,9 +27,13 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
   const { auth } = useAuth();
   const toast = useToast();
 
-  const hasPermissionModificationAvis = () => {
+  const hasPermissionModificationAvis = usePermission(
+    "intentions-perdir-avis/ecriture"
+  );
+
+  const hasPermissionSuppressionAvis = () => {
     if (usePermission("intentions-perdir-avis/ecriture")) {
-      if (useRole("expert_region") || useRole("region")) {
+      if (useRole("expert_region")) {
         if (avis.userId === auth?.user.id) return true;
         return false;
       } else return true;
@@ -133,18 +137,20 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
             Pas d'observation renseignée
           </Text>
         )}
-        {hasPermissionModificationAvis() && !isDeleting && !isModifying && (
+        {hasPermissionModificationAvis && !isDeleting && !isModifying && (
           <Flex direction={"row"} gap={6}>
-            <Button
-              isLoading={isDeleting || isModifying}
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              onClick={() => submitDeleteAvisCommentaire()}
-            >
-              Supprimer
-            </Button>
+            {hasPermissionSuppressionAvis() && (
+              <Button
+                isLoading={isDeleting || isModifying}
+                variant={"link"}
+                color="bluefrance.113"
+                fontSize={12}
+                fontWeight={400}
+                onClick={() => submitDeleteAvisCommentaire()}
+              >
+                Supprimer
+              </Button>
+            )}
             <Button
               variant={"link"}
               color="bluefrance.113"
