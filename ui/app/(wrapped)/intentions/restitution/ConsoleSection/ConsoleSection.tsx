@@ -16,9 +16,9 @@ import { Fragment } from "react";
 import { isUserInRegionsExperimentation } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
+import { useAuth } from "@/utils/security/useAuth";
+import { useRole } from "@/utils/security/useRole";
 
-import { useAuth } from "../../../../../utils/security/useAuth";
-import { useRole } from "../../../../../utils/security/useRole";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import {
   DemandesRestitutionIntentions,
