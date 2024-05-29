@@ -7,54 +7,57 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
-import { FormationOption } from "./Dashboard";
+import { MetierOption } from "../page";
 
-interface AsyncFormationSearchProps {
-  codeNsf?: string;
-  formation?: FormationOption;
-  onSelectFormation: (option?: FormationOption) => void;
+interface AsyncMetierSearchProps {
+  codeDomaineProfessionnel?: string;
+  metier?: MetierOption;
+  onSelectMetier: (option?: MetierOption) => void;
 }
 
-type Option = FormationOption | string;
+type Option = MetierOption | string;
 
-const AsyncFormationSearch = ({
-  codeNsf,
-  formation,
-  onSelectFormation,
-}: AsyncFormationSearchProps) => {
+const AsyncMetierSearch = ({
+  codeDomaineProfessionnel,
+  metier,
+  onSelectMetier,
+}: AsyncMetierSearchProps) => {
   const selectElementRef =
     useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
 
   const { data: defaultFormations } = client
-    .ref("[GET]/nsf-diplome/search/:search")
-    .useQuery({ params: { search: "" }, query: { codeNsf } });
+    .ref("[GET]/metier/search/:search")
+    .useQuery({ params: { search: "" }, query: { codeDomaineProfessionnel } });
 
   const openSelect = () => {
-    if (selectElementRef.current) selectElementRef.current.openMenu("first");
+    if (selectElementRef.current) {
+      selectElementRef.current.openMenu("first");
+    }
   };
 
   return (
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
-        Formation
+        Métier
       </Text>
       <AsyncSelect
         ref={selectElementRef}
         instanceId={useId()}
-        name={"select-diplome"}
+        name={"select-metier"}
         components={{
           IndicatorSeparator: () => null,
         }}
         defaultOptions={defaultFormations ?? []}
-        value={formation ?? ""}
+        value={metier ?? ""}
         onChange={(selected) => {
           if (typeof selected !== "string")
-            onSelectFormation(selected ?? undefined);
+            onSelectMetier(selected ?? undefined);
         }}
         loadOptions={(inputValue: string) => {
-          return client
-            .ref("[GET]/nsf-diplome/search/:search")
-            .query({ params: { search: inputValue }, query: { codeNsf } });
+          return client.ref("[GET]/metier/search/:search").query({
+            params: { search: inputValue },
+            query: { codeDomaineProfessionnel },
+          });
         }}
         loadingMessage={({ inputValue }) =>
           inputValue.length >= 3
@@ -63,14 +66,12 @@ const AsyncFormationSearch = ({
         }
         isClearable={true}
         noOptionsMessage={({ inputValue }) =>
-          inputValue
-            ? "Pas de formation correspondante"
-            : "Commencez à écrire..."
+          inputValue ? "Pas de métier correspondant" : "Commencez à écrire..."
         }
-        placeholder="Libellé formation"
+        placeholder="Libellé métier"
       />
     </>
   );
 };
 
-export { AsyncFormationSearch };
+export default AsyncMetierSearch;

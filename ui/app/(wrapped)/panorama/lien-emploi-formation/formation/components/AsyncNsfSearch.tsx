@@ -7,7 +7,7 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
-import { NsfOption } from "./Dashboard";
+import { NsfOption } from "../page";
 
 interface AsyncNsfSearchProps {
   nsf?: NsfOption;
@@ -21,6 +21,7 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
   const openSelect = () => {
     if (selectElementRef.current) selectElementRef.current.openMenu("first");
   };
+
   const { data: defaultNsfValues } = client
     .ref("[GET]/nsf/search/:search")
     .useQuery({ params: { search: "" } });

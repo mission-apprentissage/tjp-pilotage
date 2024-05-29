@@ -7,7 +7,7 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
-import { DomaineProfessionnelOption } from "./Dashboard";
+import { DomaineProfessionnelOption } from "../page";
 
 interface AsyncNsfSearchProps {
   domaineProfessionnel?: DomaineProfessionnelOption;
