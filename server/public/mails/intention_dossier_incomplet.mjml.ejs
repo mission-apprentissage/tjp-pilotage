@@ -1,0 +1,26 @@
+<mjml>
+  <%- include('./common/head.ejs'); %>
+  <mj-body background-color="#f9fafc">
+    <%- include('./common/header.ejs'); %>
+    <mj-wrapper padding="10px 20px">
+      <mj-section background-color="#ffffff" padding-top="0">
+        <mj-column>
+          <mj-text>
+            Bonjour,
+            <br />
+            <br />
+            La proposition concernant la formation “<%= data.libelleFormation %>” est incomplète,
+            merci de vous connecter à Orion et de consulter l’onglet “Avis et commentaires”
+            afin de prendre connaissance des précisions attendues de la part de votre gestionnaire en région académique.
+            <br />
+            <br />
+            Cordialement,
+            <br />
+            <br />
+            L’équipe Orion
+          </mj-text>
+        </mj-column>
+      </mj-section>
+    </mj-wrapper>
+  </mj-body>
+</mjml>
