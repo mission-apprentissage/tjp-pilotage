@@ -11,6 +11,7 @@ export const submitAvisSchema = {
       commentaire: z.string().optional(),
       userFonction: z.string().optional(),
       isVisibleParTous: z.boolean(),
+      createdAt: z.string().optional(),
       createdBy: z.string().optional(),
       updatedBy: z.string().optional(),
     }),
