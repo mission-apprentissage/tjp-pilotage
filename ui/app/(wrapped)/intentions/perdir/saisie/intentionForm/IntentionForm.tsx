@@ -223,6 +223,9 @@ export const IntentionForm = ({
     statut: Extract<DemandeStatutType, "proposition" | "projet de demande">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
+    if (statut === DemandeStatutEnum["projet de demande"]) {
+      return "Valider mon projet de demande";
+    }
     if (
       !statutPrecedent ||
       statutPrecedent === DemandeStatutEnum["brouillon"]
@@ -231,9 +234,6 @@ export const IntentionForm = ({
     }
     if (statut === DemandeStatutEnum["proposition"]) {
       return "Mettre à jour ma proposition";
-    }
-    if (statut === DemandeStatutEnum["projet de demande"]) {
-      return "Valider mon projet de demande";
     }
     return "Enregistrer ma proposition";
   };
