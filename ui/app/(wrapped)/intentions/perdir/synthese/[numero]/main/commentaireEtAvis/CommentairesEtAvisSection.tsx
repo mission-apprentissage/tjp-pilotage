@@ -108,8 +108,6 @@ export const CommentairesEtAvisSection = ({
     },
   ];
 
-  console.log(etapes);
-
   return (
     <Flex direction={"column"} gap={10} width={"100%"}>
       <Heading as="h2" fontSize={18} fontWeight={700}>
