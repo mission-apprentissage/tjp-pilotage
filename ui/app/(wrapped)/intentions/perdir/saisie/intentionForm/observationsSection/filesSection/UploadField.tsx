@@ -24,9 +24,11 @@ const validateFiles = (value?: FileList) => {
 export const UploadField = ({
   setNewFiles,
   newFiles,
+  disabled,
 }: {
   setNewFiles: (files: FileList | null) => void;
   newFiles: File[];
+  disabled: boolean;
 }) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -73,8 +75,9 @@ export const UploadField = ({
             accept={ACCEPTED_FILES_TYPES}
             ref={fileInputRef}
             onChange={handleFileChange}
+            disabled={disabled}
           />
-          <Button>Parcourir</Button>
+          <Button isDisabled={disabled}>Parcourir</Button>
         </InputGroup>
         <Flex ml={"8px"}>
           {!newFiles || newFiles.length === 0 ? (
