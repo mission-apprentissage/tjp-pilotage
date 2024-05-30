@@ -560,7 +560,7 @@ export const IndicateursClesSection = ({
                     DemandeStatutEnum["projet de demande"],
                     "placesFermees"
                   )}
-                  colorScheme="orange.submitted"
+                  colorScheme="orange.draft"
                 />
               </Flex>
             </StatCard>
