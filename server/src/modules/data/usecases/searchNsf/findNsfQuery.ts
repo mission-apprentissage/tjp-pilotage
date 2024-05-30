@@ -15,6 +15,7 @@ export const findNsfQuery = async ({ search }: { search: string }) => {
       "ilike",
       `%${normalizedSearch}%`
     )
+    .orderBy("libelleNsf asc")
     .limit(20)
     .execute();
 

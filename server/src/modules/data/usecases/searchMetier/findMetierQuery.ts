@@ -36,6 +36,7 @@ export const findMetierQuery = async ({
     .where("metier.libelleMetier", "is not", null)
     .select(["metier.libelleMetier as label", "metier.codeMetier as value"])
     .$castTo<{ label: string; value: string }>()
+    .orderBy("metier.libelleMetier asc")
     .limit(20)
     .execute()
     .then(cleanNull);
