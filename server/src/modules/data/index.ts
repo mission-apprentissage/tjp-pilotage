@@ -58,7 +58,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...searchNsfDiplomeRoute({ server }),
     ...searchMetierRoute({ server }),
     ...searchDomaineProfessionnelRoute({ server }),
-    ...searchDisciplineRoute(server),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
   };
