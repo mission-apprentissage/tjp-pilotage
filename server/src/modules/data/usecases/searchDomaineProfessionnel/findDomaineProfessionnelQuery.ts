@@ -11,7 +11,7 @@ export const findDomaineProfessionnelQuery = async ({
   const normalizedSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
 
-  const disciplines = await kdb
+  const domainesProfessionels = await kdb
     .selectFrom("domaineProfessionnel")
     .select([
       "domaineProfessionnel.codeDomaineProfessionnel as value",
@@ -35,5 +35,5 @@ export const findDomaineProfessionnelQuery = async ({
     .limit(20)
     .execute();
 
-  return disciplines.map(cleanNull);
+  return domainesProfessionels.map(cleanNull);
 };

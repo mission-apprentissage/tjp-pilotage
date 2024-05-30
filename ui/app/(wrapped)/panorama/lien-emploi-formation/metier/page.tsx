@@ -54,7 +54,7 @@ const DashboardMetier = () => {
         label: metierSearchParam,
         value: codeMetierSearchParam,
       });
-    } else {
+    } else if (!metierSearchParam) {
       setSelectedMetier(undefined);
     }
   }, [searchParams]);
