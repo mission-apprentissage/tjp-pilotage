@@ -60,35 +60,27 @@ const DashboardFormation = () => {
   }, [searchParams]);
 
   const onUpdateNsf = (nsf?: NsfOption) => {
-    setSelectedNsf(nsf ?? undefined);
-    setSelectedFormation(undefined);
     router.replace(
       createParametrizedUrl(location.pathname, {
         domaine_formation: nsf ? encodeURI(nsf.label) : undefined,
         code_domaine_formation: nsf ? encodeURI(nsf.value) : undefined,
-        formation: selectedFormation
-          ? encodeURI(selectedFormation.label)
-          : undefined,
-        code_formation: selectedFormation
-          ? encodeURI(selectedFormation.value)
-          : undefined,
+        formation: undefined,
+        code_formation: undefined,
       })
     );
   };
 
   const onUpdateFormation = (formation?: FormationOption) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, {
-        domaine_formation: selectedNsf
-          ? encodeURI(selectedNsf.label)
-          : undefined,
-        code_domaine_formation: selectedNsf
-          ? encodeURI(selectedNsf.value)
-          : undefined,
-        formation: formation ? encodeURI(formation.label) : undefined,
-        code_formation: formation ? encodeURI(formation.value) : undefined,
-      })
-    );
+    if (selectedNsf) {
+      router.replace(
+        createParametrizedUrl(location.pathname, {
+          domaine_formation: encodeURI(selectedNsf.label),
+          code_domaine_formation: encodeURI(selectedNsf.value),
+          formation: formation ? encodeURI(formation.label) : undefined,
+          code_formation: formation ? encodeURI(formation.value) : undefined,
+        })
+      );
+    }
   };
 
   return (
