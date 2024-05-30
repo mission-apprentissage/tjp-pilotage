@@ -14,7 +14,12 @@ export const createUserRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("users/ecriture"),
       handler: async (request, response) => {
-        await createUser(request.body);
+        const { user } = request;
+
+        await createUser({
+          body: request.body,
+          requestUser: user!,
+        });
         response.code(200).send();
       },
     });

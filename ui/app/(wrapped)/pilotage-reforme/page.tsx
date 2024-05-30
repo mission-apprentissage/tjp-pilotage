@@ -68,7 +68,7 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
     });
   };
 
-  const { data, isLoading: isLoading } = client
+  const { data, isLoading } = client
     .ref("[GET]/pilotage-reforme/stats")
     .useQuery(
       {

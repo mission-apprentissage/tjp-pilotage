@@ -1,6 +1,5 @@
 import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
-import { z } from "zod";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -17,7 +16,7 @@ import {
   notPerimetreIJDepartement,
   notPerimetreIJRegion,
 } from "../../../utils/notPerimetreIJ";
-import { getStatsPilotageIntentionsSchema } from "../getStatsPilotageIntentions.schema";
+import { Filters } from "../getStatsPilotageIntentions.usecase";
 
 const genericOnConstatRentree =
   ({
@@ -58,11 +57,6 @@ const genericOnConstatRentree =
         return eb;
       });
   };
-
-export interface Filters
-  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
-  statut?: "draft" | "submitted";
-}
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.numero");

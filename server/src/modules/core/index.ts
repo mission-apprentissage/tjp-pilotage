@@ -13,6 +13,7 @@ import { loginRoute } from "./usecases/login/login.route";
 import { logoutRoute } from "./usecases/logout/logout.route";
 import { redirectDneRoute } from "./usecases/redirectDne/redirectDne.route";
 import { resetPasswordRoute } from "./usecases/resetPassword/resetPassword.route";
+import { searchUserRoute } from "./usecases/searchUser/searchUser.route";
 import { sendResetPasswordRoute } from "./usecases/sendResetPassword/sendResetPassword.route";
 import { whoAmIRoute } from "./usecases/whoAmI/whoAmI.route";
 export { extractUserInRequest } from "./utils/extractUserInRequest/extractUserInRequest";
@@ -35,6 +36,7 @@ export const registerCoreModule = ({ server }: { server: Server }) => {
     ...getCampagnesRoute(server),
     ...editCampagneRoute(server),
     ...createCampagneRoute(server),
+    ...searchUserRoute(server),
   };
 };
 
