@@ -29,12 +29,20 @@ import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
-import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import {
+  getStepWorkflow,
+  getTypeAvis,
+} from "@/app/(wrapped)/intentions/utils/statutUtils";
 
 import { AvisStatutTag } from "../../../components/AvisStatutTag";
 import { FonctionTag } from "../../../components/FonctionTag";
 import { RoleVisibleTag } from "../../../components/RoleVisibleTag";
 import { FONCTIONS } from "./FONCTIONS";
+
+type Option = {
+  readonly label: string;
+  readonly value: string;
+};
 
 type AvisForm = {
   id: string;
@@ -124,18 +132,21 @@ export const AvisForm = ({
         )}
       >
         <Heading as="h2" fontSize={18} fontWeight={700} mb={4}>
-          Exprimer un vote {getTypeAvis(intention.statut)}
+          Exprimer un {getStepWorkflow(intention.statut) > 1 ? "vote" : "avis"}{" "}
+          {getTypeAvis(intention.statut)}
         </Heading>
         <FormControl isInvalid={!!errors.userFonction} isRequired>
           <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
-            Exprimer un vote en tant que
+            Exprimer un{" "}
+            {getStepWorkflow(intention.statut) > 1 ? "vote" : "avis"} en tant
+            que
           </FormLabel>
           <Controller
             name="userFonction"
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
-              <CreatableSelect
+              <CreatableSelect<Option>
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
@@ -183,7 +194,7 @@ export const AvisForm = ({
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
-              <Select
+              <Select<Option>
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
