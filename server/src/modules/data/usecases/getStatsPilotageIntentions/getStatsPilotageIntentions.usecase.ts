@@ -1,12 +1,20 @@
 import _ from "lodash";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import {
-  dependencies,
-  Filters,
-  GetScopedStatsPilotageIntentionsType,
-} from "./dependencies";
+import { getFiltersQuery } from "./deps/getFilters.query";
+import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
+import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
+
+export interface Filters
+  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
+  statut?: "draft" | "submitted";
+}
+
+export type GetScopedStatsPilotageIntentionsType = Awaited<
+  ReturnType<typeof getStatsPilotageIntentionsQuery>
+>;
 
 const formatTauxTransformation = (
   transformes: number,
@@ -78,9 +86,8 @@ const formatResult = (
 const getStatsPilotageIntentionsFactory =
   (
     deps = {
-      getStatsPilotageIntentionsQuery:
-        dependencies.getStatsPilotageIntentionsQuery,
-      getFiltersQuery: dependencies.getFiltersQuery,
+      getStatsPilotageIntentionsQuery: getStatsPilotageIntentionsQuery,
+      getFiltersQuery: getFiltersQuery,
       getCurrentCampagneQuery,
     }
   ) =>
