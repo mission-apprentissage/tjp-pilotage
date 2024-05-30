@@ -68,7 +68,7 @@ export const Entry = ({ changelogEntry }: EntryProps) => {
                 }
                 color={
                   type.label === "Données"
-                    ? themeDefinition.colors.orange.dark
+                    ? themeDefinition.colors.yellowTournesol[407]
                     : themeDefinition.colors.info[525]
                 }
               >

@@ -1,20 +1,42 @@
 import { Server } from "../../server";
-import { countDemandesRoute } from "./usecases/countDemandes/countDemandes.route";
-import { deleteDemandeRoute } from "./usecases/deleteDemande/deleteDemande.route";
+import { countIntentionsRoute } from "./usecases/countIntentions/countIntentions.route";
+import { deleteAvisRoute } from "./usecases/deleteAvis/deleteAvis.route";
+import { deleteChangementStatutRoute } from "./usecases/deleteChangementStatut/deleteChangementStatut.route";
+import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention.route";
+import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
 import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
-import { getDemandeRoute } from "./usecases/getDemande/getDemande.route";
-import { getDemandesRoute } from "./usecases/getDemandes/getDemandes.route";
-import { importDemandeRoute } from "./usecases/importDemande/importDemande.route";
-import { submitDemandeRoute } from "./usecases/submitDemande/submitDemande.route";
+import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
+import { getIntentionFileDownloadUrlRoute } from "./usecases/getIntentionFileDownloadUrl/getIntentionFileDownloadUrl.route";
+import { getIntentionFilesRoute } from "./usecases/getIntentionFiles/getIntentionFiles.route";
+import { getIntentionsRoute } from "./usecases/getIntentions/getIntentions.route";
+import { importIntentionRoute } from "./usecases/importIntention/importIntention.route";
+import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPerdir/searchEtablissementPerdir.route";
+import { submitAvisRoute } from "./usecases/submitAvis/submitAvis.route";
+import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
+import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
+import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
-export const registerIntentionsModule = ({ server }: { server: Server }) => {
+export const registerIntentionsExpeModule = ({
+  server,
+}: {
+  server: Server;
+}) => {
   return {
-    ...submitDemandeRoute({ server }),
-    ...getDemandeRoute(server),
-    ...getDemandesRoute(server),
-    ...countDemandesRoute(server),
-    ...deleteDemandeRoute(server),
-    ...importDemandeRoute(server),
+    ...submitIntentionRoute({ server }),
+    ...getIntentionRoute(server),
+    ...getIntentionsRoute(server),
+    ...countIntentionsRoute(server),
+    ...deleteIntentionRoute(server),
+    ...importIntentionRoute(server),
     ...getCurrentCampagneRoute(server),
+    ...searchEtablissementPerdirRoute(server),
+    ...submitChangementStatutRoute({ server }),
+    ...deleteChangementStatutRoute(server),
+    ...submitAvisRoute({ server }),
+    ...uploadIntentionFilesRoute(server),
+    ...getIntentionFilesRoute(server),
+    ...deleteIntentionFilesRoute(server),
+    ...getIntentionFileDownloadUrlRoute(server),
+    ...deleteAvisRoute(server),
   };
 };

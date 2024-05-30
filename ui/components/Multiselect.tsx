@@ -12,7 +12,7 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
-import {
+import React, {
   ChangeEventHandler,
   memo,
   ReactNode,
