@@ -132,8 +132,8 @@ const genericOnDemandes =
         selectPlacesOuvertesScolaire(es).as("placesOuvertesScolaire"),
         selectPlacesFermeesScolaire(es).as("placesFermeesScolaire"),
         selectPlacesOuvertesApprentissage(es).as("placesOuvertesApprentissage"),
-        selectPlacesTransformees(es).as("transformes"),
         selectPlacesFermeesApprentissage(es).as("placesFermeesApprentissage"),
+        selectPlacesTransformees(es).as("transformes"),
         selectNbDemandes(es).as("countDemande"),
       ])
       .where(isDemandeNotDeletedOrRefused)
