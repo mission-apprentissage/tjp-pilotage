@@ -46,6 +46,9 @@ export type TemplatePayloads = {
     };
     activationToken: string;
   };
+  intention_dossier_incomplet: {
+    libelleFormation: string;
+  };
 };
 
 function createTransporter(smtp: SMTPTransport & { secure: boolean }) {

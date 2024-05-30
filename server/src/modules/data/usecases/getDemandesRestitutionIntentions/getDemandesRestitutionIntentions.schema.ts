@@ -1,4 +1,4 @@
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -7,39 +7,28 @@ const OptionSchema = z.object({
 });
 
 const DemandeSchema = z.object({
-  numero: z.string(),
-  cfd: z.string().optional(),
-  libelleFormation: z.string().optional(),
-  codeDispositif: z.string().optional(),
-  libelleDispositif: z.string().optional(),
-  niveauDiplome: z.string().optional(),
-  uai: z.string().optional(),
+  // Établissement
   libelleEtablissement: z.string().optional(),
+  uai: z.string(),
   commune: z.string().optional(),
-  rentreeScolaire: z.coerce.number().optional(),
-  typeDemande: z.string().optional(),
-  motif: z.array(z.string()).optional(),
-  autreMotif: z.string().optional(),
-  coloration: z.boolean().optional(),
-  libelleColoration: z.string().optional(),
-  libelleFCIL: z.string().optional(),
-  amiCma: z.boolean().optional(),
-  poursuitePedagogique: z.boolean().optional(),
-  commentaire: z.string().optional(),
-  libelleNsf: z.string().optional(),
-  statut: z.string(),
-  codeRegion: z.string().optional(),
+  codeRegion: z.string(),
   libelleRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   libelleAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
-  createdAt: z.string(),
-  updatedAt: z.string(),
-  numeroCompensation: z.string().optional(),
-  compensationCfd: z.string().optional(),
-  compensationCodeDispositif: z.string().optional(),
-  compensationUai: z.string().optional(),
+  // Formation
+  libelleNsf: z.string().optional(),
+  libelleFormation: z.string().optional(),
+  niveauDiplome: z.string().optional(),
+  libelleDispositif: z.string().optional(),
+  codeDispositif: z.string(),
+  cfd: z.string(),
+  // Demande
+  typeDemande: z.string(),
+  motif: z.array(z.string()),
+  autreMotif: z.string().optional(),
+  rentreeScolaire: z.coerce.number().optional(),
   differenceCapaciteScolaire: z.coerce.number().optional(),
   capaciteScolaireActuelle: z.coerce.number().optional(),
   capaciteScolaire: z.coerce.number().optional(),
@@ -48,33 +37,61 @@ const DemandeSchema = z.object({
   capaciteApprentissageActuelle: z.coerce.number().optional(),
   capaciteApprentissage: z.coerce.number().optional(),
   capaciteApprentissageColoree: z.coerce.number().optional(),
-  tauxInsertion: z.coerce.number().optional(),
-  tauxPoursuite: z.coerce.number().optional(),
-  devenirFavorable: z.coerce.number().optional(),
-  pression: z.coerce.number().optional(),
-  nbEtablissement: z.coerce.number().optional(),
+  coloration: z.boolean(),
+  libelleColoration: z.string().optional(),
+  libelleFCIL: z.string().optional(),
+  amiCma: z.boolean().optional(),
+  amiCmaValide: z.boolean().optional(),
+  amiCmaValideAnnee: z.string().optional(),
+  amiCmaEnCoursValidation: z.boolean().optional(),
+  partenairesEconomiquesImpliques: z.boolean().optional(),
+  partenaireEconomique1: z.string().optional(),
+  partenaireEconomique2: z.string().optional(),
+  cmqImplique: z.boolean().optional(),
+  filiereCmq: z.string().optional(),
+  nomCmq: z.string().optional(),
+  commentaire: z.string().optional(),
+  numero: z.string(),
+  // Devenir favorable de la formation
   positionQuadrant: z.string().optional(),
-  tauxInsertionMoyen: z.coerce.number().optional(),
-  tauxPoursuiteMoyen: z.coerce.number().optional(),
-  voie: z.string().optional(),
-  motifRefus: z.array(z.string()).optional(),
-  autreMotifRefus: z.string().optional(),
-  recrutementRH: z.boolean().optional(),
+  tauxInsertionRegional: z.coerce.number().optional(),
+  tauxPoursuiteRegional: z.coerce.number().optional(),
+  tauxDevenirFavorableRegional: z.coerce.number().optional(),
+  tauxPressionRegional: z.coerce.number().optional(),
+  nbEtablissement: z.coerce.number().optional(),
+  //RH
   nbRecrutementRH: z.coerce.number().optional(),
   discipline1RecrutementRH: z.string().optional(),
   discipline2RecrutementRH: z.string().optional(),
-  reconversionRH: z.boolean().optional(),
   nbReconversionRH: z.coerce.number().optional(),
   discipline1ReconversionRH: z.string().optional(),
   discipline2ReconversionRH: z.string().optional(),
-  professeurAssocieRH: z.boolean().optional(),
   nbProfesseurAssocieRH: z.coerce.number().optional(),
   discipline1ProfesseurAssocieRH: z.string().optional(),
   discipline2ProfesseurAssocieRH: z.string().optional(),
-  formationRH: z.boolean().optional(),
   nbFormationRH: z.coerce.number().optional(),
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
+  besoinRHPrecisions: z.string().optional(),
+  // Travaux et équipements
+  travauxAmenagement: z.boolean().optional(),
+  travauxAmenagementDescription: z.string().optional(),
+  achatEquipement: z.boolean().optional(),
+  achatEquipementDescription: z.string().optional(),
+  // Internat et restauration
+  augmentationCapaciteAccueilHebergement: z.boolean().optional(),
+  augmentationCapaciteAccueilHebergementPlaces: z.coerce.number().optional(),
+  augmentationCapaciteAccueilHebergementPrecisions: z.string().optional(),
+  augmentationCapaciteAccueilRestauration: z.boolean().optional(),
+  augmentationCapaciteAccueilRestaurationPlaces: z.coerce.number().optional(),
+  augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
+  // Statut demande
+  statut: DemandeStatutZodType,
+  motifRefus: z.array(z.string()).optional(),
+  autreMotifRefus: z.string().optional(),
+  updatedAt: z.string(),
+  createdAt: z.string(),
+  campagneId: z.string(),
 });
 
 export const FiltersSchema = z.object({
@@ -84,15 +101,7 @@ export const FiltersSchema = z.object({
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
   typeDemande: z.array(z.string()).optional(),
-  statut: z
-    .array(
-      z.enum([
-        DemandeStatutEnum.draft,
-        DemandeStatutEnum.submitted,
-        DemandeStatutEnum.refused,
-      ])
-    )
-    .optional(),
+  statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
@@ -106,6 +115,7 @@ export const FiltersSchema = z.object({
   orderBy: DemandeSchema.keyof().optional(),
   offset: z.coerce.number().optional(),
   limit: z.coerce.number().optional(),
+  search: z.string().optional(),
 });
 
 export const getDemandesRestitutionIntentionsSchema = {

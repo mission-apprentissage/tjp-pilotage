@@ -305,7 +305,7 @@ export default function Formations() {
                 event.target.checked.toString() ?? "false"
               );
             }}
-            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            isChecked={searchParams.withAnneeCommune !== "false"}
             whiteSpace={"nowrap"}
           >
             <Text fontSize={"14px"}>
@@ -620,16 +620,14 @@ export default function Formations() {
                   {historiqueId?.cfd === line.cfd &&
                     historiqueId.codeDispositif === line.codeDispositif && (
                       <>
-                        {historique &&
-                          historique.map((historiqueLine) => (
-                            <Tr
-                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
-                              bg={"grey.975"}
-                            >
-                              <FormationLineContent line={historiqueLine} />
-                            </Tr>
-                          ))}
-
+                        {historique?.map((historiqueLine) => (
+                          <Tr
+                            key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
+                            bg={"grey.975"}
+                          >
+                            <FormationLineContent line={historiqueLine} />
+                          </Tr>
+                        ))}
                         {historique && !historique.length && (
                           <FormationLinePlaceholder />
                         )}

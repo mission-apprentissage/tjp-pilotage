@@ -14,9 +14,12 @@ export const editUserRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("users/ecriture"),
       handler: async (request, response) => {
+        const { user } = request;
+
         await editUser({
           userId: request.params.userId,
           data: request.body,
+          requestUser: user!,
         });
         response.code(200).send();
       },

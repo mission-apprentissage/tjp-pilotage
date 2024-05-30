@@ -8,7 +8,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { IntentionForms } from "../../intentionForm/defaultFormValues";
 
 export const AutreMotifRefusField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

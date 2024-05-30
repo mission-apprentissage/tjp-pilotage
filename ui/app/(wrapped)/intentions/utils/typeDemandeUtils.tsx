@@ -56,13 +56,13 @@ export const TYPES_DEMANDES_OPTIONS: Record<
 > = {
   ouverture_nette: {
     value: "ouverture_nette",
-    label: "Ouverture nette",
+    label: "Ouverture",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour tout cas de création d'une formation en voie scolaire ou apprentissage.",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour une ouverture nette :
+          Exemple pour une ouverture :
         </Text>
         <Text>
           J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
@@ -77,13 +77,13 @@ export const TYPES_DEMANDES_OPTIONS: Record<
   },
   augmentation_nette: {
     value: "augmentation_nette",
-    label: "Augmentation nette",
+    label: "Augmentation",
     campagnes: ["2023", "2024", "2025"],
     desc: "Utiliser ce formulaire pour toute augmentation de capacité d'accueil sur une formation existante. Ne pas utiliser pour des places déjà ouvertes sur l'établissement.",
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour une augmentation nette :
+          Exemple pour une augmentation :
         </Text>
         <Text>J’ouvre des places sur un BAC Pro Aéronautique.</Text>
         <Text>

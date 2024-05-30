@@ -133,7 +133,7 @@ export const useAnalyseDetaillee = () => {
     },
   });
 
-  const { data, isLoading: isLoading } = client
+  const { data, isLoading } = client
     .ref("[GET]/etablissement/:uai/analyse-detaillee")
     .useQuery(
       {

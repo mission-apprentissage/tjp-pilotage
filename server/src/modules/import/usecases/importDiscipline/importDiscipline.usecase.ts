@@ -1,6 +1,5 @@
 import { inject } from "injecti";
 import { Insertable } from "kysely";
-import { DateTime } from "luxon";
 
 import { DB } from "../../../../db/schema";
 import { rawDataRepository } from "../../repositories/rawData.repository";
@@ -17,26 +16,14 @@ export const [importDiscipline] = inject(
     await streamIt(
       (offset) =>
         deps.findRawDatas({
-          type: "n_matiere_",
+          type: "discipline",
           offset,
           limit: 10000,
         }),
       async (disciplineLine, count) => {
         const discipline: Insertable<DB["discipline"]> = {
-          libelleDiscipline: disciplineLine["LIBELLE_70"],
-          codeDiscipline: disciplineLine["MATIERE"],
-          dateOuverture: disciplineLine.DATE_OUVERTURE
-            ? DateTime.fromFormat(
-                disciplineLine.DATE_OUVERTURE,
-                "dd/LL/yyyy"
-              ).toJSDate()
-            : undefined,
-          dateFermeture: disciplineLine.DATE_FERMETURE
-            ? DateTime.fromFormat(
-                disciplineLine.DATE_FERMETURE,
-                "dd/LL/yyyy"
-              ).toJSDate()
-            : undefined,
+          libelleDiscipline: disciplineLine.libelleDiscipline,
+          codeDiscipline: disciplineLine.codeDiscipline,
         };
 
         try {

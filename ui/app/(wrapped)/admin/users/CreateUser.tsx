@@ -18,10 +18,11 @@ import {
 import { useQueryClient } from "@tanstack/react-query";
 import { useEffect } from "react";
 import { useForm } from "react-hook-form";
-import { PERMISSIONS } from "shared";
+import { getHierarchy, Role } from "shared";
 import { z } from "zod";
 
 import { client } from "../../../../api.client";
+import { useAuth } from "../../../../utils/security/useAuth";
 
 export const CreateUser = ({
   isOpen,
@@ -30,6 +31,7 @@ export const CreateUser = ({
   isOpen: boolean;
   onClose: () => void;
 }) => {
+  const { auth } = useAuth();
   const {
     register,
     formState: { errors },
@@ -69,6 +71,18 @@ export const CreateUser = ({
   const onSubmit = (
     v: (typeof client.inferArgs)["[POST]/users/:userId"]["body"]
   ) => createUser({ body: { ...v, codeRegion: v.codeRegion || undefined } });
+
+  const roles = getHierarchy(auth?.user?.role as Role);
+  const isAdminRegion = auth?.user?.role === "admin_region";
+  const filteredRegions = (() => {
+    if (!regions) return [];
+    if (isAdminRegion) {
+      return regions.filter(
+        (region) => region.value === auth?.user?.codeRegion
+      );
+    }
+    return regions;
+  })();
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -119,7 +133,7 @@ export const CreateUser = ({
                 required: "Veuillez choisir un role",
               })}
             >
-              {Object.keys(PERMISSIONS).map((role) => (
+              {roles.map((role) => (
                 <option key={role} value={role}>
                   {role}
                 </option>
@@ -132,8 +146,8 @@ export const CreateUser = ({
           <FormControl mb="4" isInvalid={!!errors.codeRegion}>
             <FormLabel>Code région</FormLabel>
             <Select {...register("codeRegion")}>
-              <option value="">Aucune</option>
-              {regions?.map((region) => (
+              {!isAdminRegion && <option value="">Aucune</option>}
+              {filteredRegions?.map((region) => (
                 <option key={region.value} value={region.value}>
                   {region.label}
                 </option>

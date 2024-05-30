@@ -1,4 +1,4 @@
-export type Scope = "national" | "region" | "user";
+export type Scope = "national" | "region" | "uai" | "user";
 export type Role = keyof typeof PERMISSIONS;
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -14,33 +14,116 @@ export const PERMISSIONS = {
     "intentions/ecriture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "users/lecture": {},
-    "users/ecriture": {},
-    "campagnes/lecture": {},
-    "campagnes/ecriture": {},
+    "users/lecture": { default: "national" },
+    "users/ecriture": { default: "national" },
+    "campagnes/lecture": { default: "national" },
+    "campagnes/ecriture": { default: "national" },
+    "intentions-perdir/lecture": { default: "national", draft: "national" },
+    "intentions-perdir/ecriture": { default: "national", draft: "national" },
+    "intentions-perdir-statut/ecriture": { default: "national" },
+    "intentions-perdir-avis/ecriture": { default: "national" },
   },
   pilote: {
     "intentions/lecture": { default: "national", draft: "national" },
     "pilotage_reforme/lecture": { default: "national" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "national", draft: "national" },
+  },
+  admin_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/ecriture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "national" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/ecriture": { default: "region" },
+    "users/lecture": { default: "region" },
+    "users/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
+  },
+  region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
-    "restitution-intentions/lecture": { default: "national" },
+    "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
-    "intentions/ecriture": { default: "region" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   gestionnaire_region: {
-    "intentions/lecture": { draft: "user", default: "region" },
-    "intentions/ecriture": { default: "user" },
+    "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/ecriture": { default: "region" },
+    "intentions-perdir-statut/ecriture": { default: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
+  },
+  expert_region: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "restitution-intentions/lecture": { default: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-avis/ecriture": { default: "region" },
   },
   perdir: {
-    "pilotage-intentions/lecture": { default: "national" },
+    "intentions/lecture": { default: "uai" },
+    "intentions-perdir/lecture": { default: "uai", draft: "uai" },
+    "intentions-perdir/ecriture": { default: "uai", draft: "uai" },
+    "restitution-intentions/lecture": { default: "uai" },
+    "pilotage-intentions/lecture": { default: "uai" },
   },
 } satisfies {
   [R: string]: {
-    [s: string]: Record<string | "defaultScope", Scope>;
+    [s: string]: Record<string, Scope>;
   };
+};
+
+export const HIERARCHY: {
+  [key in Role]: {
+    sub: Array<Role>;
+    scope: Scope;
+  };
+} = {
+  admin: {
+    sub: Object.keys(PERMISSIONS) as Array<Role>,
+    scope: "national",
+  },
+  pilote: {
+    sub: [],
+    scope: "national",
+  },
+  admin_region: {
+    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region"],
+    scope: "region",
+  },
+  region: {
+    sub: [],
+    scope: "region",
+  },
+  pilote_region: {
+    sub: [],
+    scope: "region",
+  },
+  gestionnaire_region: {
+    sub: [],
+    scope: "region",
+  },
+  expert_region: {
+    sub: [],
+    scope: "region",
+  },
+  perdir: {
+    sub: [],
+    scope: "uai",
+  },
 };

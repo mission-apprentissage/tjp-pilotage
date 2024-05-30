@@ -24,13 +24,16 @@ export const selectTauxPoursuite = (
 export const selectDenominateurPoursuiteAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`
-      SUM(
-        CASE WHEN ${sql.table(
-          indicateurSortieAlias
-        )}."nbPoursuiteEtudes" IS NOT NULL
-        THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"
-        END
-      )::FLOAT`;
+          SUM(
+            CASE WHEN ${sql.table(
+              indicateurSortieAlias
+            )}."nbPoursuiteEtudes" IS NOT NULL
+            THEN ${sql.table(indicateurSortieAlias)}."effectifSortie"
+            END
+          )::FLOAT`;
+
+export const selectNumerateurPoursuiteAgg = (indicateurSortieAlias: string) =>
+  sql<number>`SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")`;
 
 export const selectTauxPoursuiteAgg = (
   indicateurSortieAlias: string

@@ -39,7 +39,6 @@ export const DispositifBlock = ({
       <FormControl
         mb="4"
         w="100%"
-        maxW="752px"
         isInvalid={!!errors.codeDispositif}
         isRequired
       >

@@ -120,6 +120,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         url: "https://www.notion.so/Quadrant-Q1-Q4",
         public_url: null,
+        in_trash: false,
       },
       {
         object: "page",
@@ -190,6 +191,7 @@ describe("Feature: Get the glossaire list of entries from Notion DB", () => {
         },
         url: "https://www.notion.so/Famille-de-Metiers",
         public_url: null,
+        in_trash: false,
       },
     ]);
 

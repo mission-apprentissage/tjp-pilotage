@@ -32,6 +32,10 @@ export const selectDenominateurInsertion6moisAgg = (
       END
     )::FLOAT`;
 
+export const selectNumerateurInsertion6MoisAgg = (
+  indicateurSortieAlias: string
+) => sql<number>`SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")`;
+
 export const selectTauxInsertion6moisAgg = (
   indicateurSortieAlias: string
 ) => sql<number>`

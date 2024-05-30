@@ -56,6 +56,22 @@ export interface DB extends Omit<DBSchema, "latestDemandeNonMaterializedView"> {
     >;
   };
 }
+export interface DB
+  extends Omit<DBSchema, "latestIntentionNonMaterializedView"> {
+  latestIntentionView: {
+    [K in keyof DBSchema["latestIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestIntentionNonMaterializedView"][K]
+    >;
+  };
+}
+export interface DB
+  extends Omit<DBSchema, "latestDemandeIntentionNonMaterializedView"> {
+  latestDemandeIntentionView: {
+    [K in keyof DBSchema["latestDemandeIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["latestDemandeIntentionNonMaterializedView"][K]
+    >;
+  };
+}
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),

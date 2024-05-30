@@ -1,12 +1,12 @@
 import { inject } from "injecti";
 
-import { findManyInDisciplineQuery } from "./findManyInDisciplineQuery";
+import { searchDisciplineQuery } from "./searchDiscipline.query";
 
 export const [searchDisciplineUsecase] = inject(
-  { findManyInDisciplineQuery },
+  { searchDisciplineQuery },
   (deps) =>
     async ({ search }: { search: string }) => {
-      const disciplines = await deps.findManyInDisciplineQuery({
+      const disciplines = await deps.searchDisciplineQuery({
         search,
       });
       return disciplines;

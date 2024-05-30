@@ -97,7 +97,9 @@ cli
 
     for (const user of users) {
       try {
-        await createUser(user);
+        await createUser({
+          body: user,
+        });
         console.log(`${user.email} created successfuly`);
       } catch (e) {
         console.log(`${user.email} failed`, (e as Error).message);
@@ -120,7 +122,7 @@ cli
       role: Role;
       codeRegion?: string;
     }) => {
-      await createUser(options);
+      await createUser({ body: options });
     }
   );
 
@@ -179,7 +181,7 @@ cli
       ...getImports("rome"),
       ...getImports("metier"),
       ...getImports("formation_rome"),
-      ...getImports("n_matiere_"),
+      ...getImports("discipline"),
     };
 
     if (filename) {
@@ -220,6 +222,10 @@ cli
       }
     }
   });
+
+cli.command("refreshViews").action(async () => {
+  await refreshViews();
+});
 
 cli.command("importIJ").action(async () => {
   await importIJData();

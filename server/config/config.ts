@@ -79,6 +79,13 @@ export const config = {
     dbChangelogId: env.get("NOTION_DB_CHANGELOG_ID").required().asString(),
     dbGlossaireId: env.get("NOTION_DB_GLOSSAIRE_ID").required().asString(),
   },
+  s3: {
+    region: env.get("PILOTAGE_S3_REGION").asString(),
+    endpoint: env.get("PILOTAGE_S3_ENDPOINT").asString(),
+    bucket: env.get("PILOTAGE_S3_BUCKET").asString(),
+    accessKey: env.get("PILOTAGE_S3_ACCESS_KEY").asString(),
+    secretKey: env.get("PILOTAGE_S3_SECRET_KEY").asString(),
+  },
   sentry: {
     dsn: env.get("SENTRY_DSN").required().asString(),
     token: env.get("SENTRY_AUTH_TOKEN").required().asString(),

@@ -6,18 +6,21 @@ import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
 
 export const isIntentionVisible =
-  ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
+  ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
     const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
       filter.codeRegion
         ? eb("demande.codeRegion", "=", filter.codeRegion)
         : sql<boolean>`true`,
+      filter.uais
+        ? eb.or(filter.uais.map((uai) => eb("demande.uai", "=", uai)))
+        : sql<boolean>`true`,
     ]);
   };
 
 export const isRegionVisible =
-  ({ user }: { user: Pick<RequestUser, "id" | "role" | "codeRegion"> }) =>
+  ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "region">) => {
     const filter = getIntentionsVisiblesFilters(user);
     return eb.and([
@@ -27,9 +30,7 @@ export const isRegionVisible =
     ]);
   };
 
-const getIntentionsVisiblesFilters = (
-  user?: Pick<RequestUser, "id" | "role" | "codeRegion">
-) => {
+const getIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(
     user?.role,
@@ -41,6 +42,7 @@ const getIntentionsVisiblesFilters = (
     national: {},
     region: { codeRegion: user.codeRegion },
     user: {},
+    uai: { uais: user.uais },
   }[scope?.default];
 
   return filter;

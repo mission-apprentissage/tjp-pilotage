@@ -11,6 +11,10 @@ import {
   FormControl,
   FormLabel,
   Heading,
+  Popover,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverTrigger,
   SimpleGrid,
   Skeleton,
   Slider,
@@ -23,6 +27,7 @@ import {
   Text,
   VStack,
 } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useSelectedLayoutSegment } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { ReactNode, useMemo, useState } from "react";
@@ -404,17 +409,47 @@ export const QuadrantSection = ({
               />
             </Flex>
 
-            <Flex alignItems={"flex-end"} justify="flex-end" gap={2}>
-              <Text color="grey" fontSize="sm" textAlign="left">
-                {filteredFormations?.length ?? "-"} certifications
-              </Text>
-              <Text ml="2" color="grey" fontSize="sm" textAlign="right">
-                {filteredFormations?.reduce(
-                  (acc, { effectif }) => acc + (effectif ?? 0),
-                  0
-                ) ?? "-"}{" "}
-                élèves
-              </Text>
+            <Flex direction={"column"} gap={2}>
+              <Flex alignItems={"flex-end"} justify="flex-end" gap={2}>
+                <Text color="grey" fontSize="sm" textAlign="left">
+                  {filteredFormations?.length ?? "-"} certifications
+                </Text>
+                -
+                <Text color="grey" fontSize="sm" textAlign="right">
+                  {filteredFormations?.reduce(
+                    (acc, { effectif }) => acc + (effectif ?? 0),
+                    0
+                  ) ?? "-"}{" "}
+                  élèves
+                </Text>
+              </Flex>
+              <Flex alignItems={"flex-end"} justify={"flex-end"}>
+                <Popover>
+                  <PopoverTrigger>
+                    <Flex cursor="pointer">
+                      <Icon
+                        icon="ri:eye-line"
+                        color="grey.425"
+                        width={"14px"}
+                      />
+                      <Text
+                        ms={2}
+                        color="grey.425"
+                        textDecoration={"underline"}
+                        lineHeight={"14px"}
+                      >
+                        Légende
+                      </Text>
+                    </Flex>
+                  </PopoverTrigger>
+                  <PopoverContent _focusVisible={{ outline: "none" }} p="3">
+                    <>
+                      <PopoverCloseButton />
+                      <InfoTooltipContent />
+                    </>
+                  </PopoverContent>
+                </Popover>
+              </Flex>
             </Flex>
           </Flex>
           <AspectRatio ratio={1} mt={2}>
@@ -438,7 +473,6 @@ export const QuadrantSection = ({
                       codeDispositif: formation.codeDispositif ?? "",
                     }))}
                     TooltipContent={FormationTooltipContent}
-                    InfoTootipContent={InfoTooltipContent}
                     effectifSizes={effectifSizes}
                   />
                 ) : (

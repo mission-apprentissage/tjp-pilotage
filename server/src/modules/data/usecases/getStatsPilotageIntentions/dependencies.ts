@@ -2,6 +2,7 @@ import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
 import { CURRENT_RENTREE, ScopeEnum } from "shared";
 import { z } from "zod";
 
+import { DemandeStatutType } from "../../../../../../shared/enum/demandeStatutEnum";
 import { DB, kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
@@ -103,7 +104,7 @@ const genericOnConstatRentree =
 
 export interface Filters
   extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
-  statut?: "draft" | "submitted";
+  statut?: Exclude<DemandeStatutType, "supprimée" | "refusée">;
 }
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>

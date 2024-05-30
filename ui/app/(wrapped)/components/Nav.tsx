@@ -15,7 +15,7 @@ import NextLink from "next/link";
 import { useSelectedLayoutSegments } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { HTMLAttributeAnchorTarget, ReactNode, useContext } from "react";
-import { hasPermission } from "shared";
+import { hasPermission, hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { UaiFilterContext } from "@/app/layoutClient";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -158,8 +158,33 @@ export const Nav = () => {
   const { uaiFilter } = useContext(UaiFilterContext);
   const hasIntentionsMenu =
     hasPermission(auth?.user.role, "intentions/lecture") ||
+    hasPermission(auth?.user.role, "intentions-perdir/lecture") ||
     hasPermission(auth?.user.role, "pilotage-intentions/lecture") ||
     hasPermission(auth?.user.role, "restitution-intentions/lecture");
+
+  const hasAdminMenu =
+    hasPermission(auth?.user.role, "users/lecture") ||
+    hasPermission(auth?.user.role, "campagnes/lecture");
+
+  const shouldDisplayIntentionExpeMenu = isUserInRegionsExperimentation({
+    user: auth?.user,
+  });
+
+  const shouldDisplayBothIntentionMenus =
+    hasRole({
+      user: auth?.user,
+      role: "admin",
+    }) || hasRole({ user: auth?.user, role: "pilote" });
+
+  const hasOnlyFormulaireIntentionMenu =
+    hasPermission(auth?.user.role, "intentions/lecture") &&
+    !shouldDisplayIntentionExpeMenu &&
+    !shouldDisplayBothIntentionMenus;
+
+  const hasOnlyFormulaireIntentionExpeMenu =
+    hasPermission(auth?.user.role, "intentions-perdir/lecture") &&
+    shouldDisplayIntentionExpeMenu &&
+    !shouldDisplayBothIntentionMenus;
 
   const {
     isOpen: isMenuPanoramaOpen,
@@ -171,6 +196,12 @@ export const Nav = () => {
     isOpen: isMenuIntentionOpen,
     onOpen: onMenuIntentionOpen,
     onClose: onMenuIntentionClose,
+  } = useDisclosure();
+
+  const {
+    isOpen: isMenuAdminOpen,
+    onOpen: onMenuAdminOpen,
+    onClose: onMenuAdminClose,
   } = useDisclosure();
 
   return (
@@ -256,15 +287,48 @@ export const Nav = () => {
             onMouseEnter={onMenuIntentionOpen}
             onMouseLeave={onMenuIntentionClose}
           >
-            {hasPermission(auth?.user.role, "intentions/lecture") && (
-              <MenuItem p="0" w="100%">
-                <NavMenuLink
-                  href="/intentions/saisie"
-                  segment="saisie-intentions"
-                >
-                  Formulaire
-                </NavMenuLink>
-              </MenuItem>
+            {shouldDisplayBothIntentionMenus ? (
+              <>
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/saisie"
+                    segment="saisie-intentions"
+                  >
+                    Formulaire
+                  </NavMenuLink>
+                </MenuItem>
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/perdir/saisie"
+                    segment="saisie-intentions-perdir"
+                  >
+                    Formulaire (EXPE)
+                  </NavMenuLink>
+                </MenuItem>
+              </>
+            ) : (
+              <>
+                {hasOnlyFormulaireIntentionMenu && (
+                  <MenuItem p="0" w="100%">
+                    <NavMenuLink
+                      href="/intentions/saisie"
+                      segment="saisie-intentions"
+                    >
+                      Formulaire
+                    </NavMenuLink>
+                  </MenuItem>
+                )}
+                {hasOnlyFormulaireIntentionExpeMenu && (
+                  <MenuItem p="0" w="100%">
+                    <NavMenuLink
+                      href="/intentions/perdir/saisie"
+                      segment="saisie-intentions-perdir"
+                    >
+                      Formulaire
+                    </NavMenuLink>
+                  </MenuItem>
+                )}
+              </>
             )}
             {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
               <MenuItem p="0">
@@ -276,11 +340,9 @@ export const Nav = () => {
                 </NavMenuLink>
               </MenuItem>
             )}
-            {hasPermission(
-              auth?.user.role,
-              "restitution-intentions/lecture"
-            ) && (
-              <MenuItem p="0">
+            {(hasPermission(auth?.user.role, "intentions/lecture") ||
+              hasPermission(auth?.user.role, "intentions-perdir/lecture")) && (
+              <MenuItem p="0" w="100%">
                 <NavMenuLink
                   href="/intentions/restitution"
                   segment="restitution-intentions"
@@ -297,16 +359,49 @@ export const Nav = () => {
           Pilotage de la réforme
         </NavLink>
       )}
-      {hasPermission(auth?.user.role, "users/lecture") && (
-        <NavLink href="/admin/users" segment="admin/users">
-          Utilisateurs
-        </NavLink>
+
+      {hasAdminMenu && (
+        <Menu gutter={0} matchWidth={true} isOpen={isMenuAdminOpen}>
+          <NavMenuButton
+            segment="admin"
+            isOpen={isMenuAdminOpen}
+            onMouseEnter={onMenuAdminOpen}
+            onMouseLeave={onMenuAdminClose}
+          >
+            Admin
+          </NavMenuButton>
+          <MenuList
+            p="0"
+            borderTop="unset"
+            w="100%"
+            onMouseEnter={onMenuAdminOpen}
+            onMouseLeave={onMenuAdminClose}
+          >
+            {hasPermission(auth?.user.role, "users/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/users" segment="admin/users">
+                  Utilisateurs
+                </NavMenuLink>
+              </MenuItem>
+            )}
+            {hasPermission(auth?.user.role, "campagnes/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/campagnes" segment="admin/campagnes">
+                  Campagnes
+                </NavMenuLink>
+              </MenuItem>
+            )}
+            {hasPermission(auth?.user.role, "users/lecture") && (
+              <MenuItem p="0">
+                <NavMenuLink href="/admin/roles" segment="admin/roles">
+                  Rôles
+                </NavMenuLink>
+              </MenuItem>
+            )}
+          </MenuList>
+        </Menu>
       )}
-      {hasPermission(auth?.user.role, "campagnes/lecture") && (
-        <NavLink href="/admin/campagnes" segment="admin/campagnes">
-          Campagnes
-        </NavLink>
-      )}
+
       <NavLink
         href="/ressources"
         segment="ressources"

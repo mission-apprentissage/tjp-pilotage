@@ -6,6 +6,7 @@ import { Chomage_regional_INSEE } from "../fileTypes/Chomage_regional_INSEE";
 import { Constat } from "../fileTypes/Constat";
 import { Departements_academies_regions } from "../fileTypes/Departements_academies_regions";
 import { DiplomeProfessionnelLine } from "../fileTypes/DiplomesProfessionnels";
+import { Discipline } from "../fileTypes/Discipline";
 import { Domaine_Professionnel } from "../fileTypes/DomaineProfessionnel";
 import { FamillesMetiersLine } from "../fileTypes/FamilleMetiers";
 import { Formation_Rome } from "../fileTypes/FormationRome";
@@ -13,7 +14,6 @@ import { LyceesACCELine } from "../fileTypes/LyceesACCELine";
 import { Metier } from "../fileTypes/Metier";
 import { NDispositifFormation } from "../fileTypes/NDispositifFormation";
 import { NFormationDiplomeLine } from "../fileTypes/NFormationDiplome";
-import { NMatiere } from "../fileTypes/NMatiere";
 import { NMefLine } from "../fileTypes/NMef";
 import { NNiveauFormationDiplome } from "../fileTypes/NNiveauFormationDiplome";
 import { NSF_Categorie_Specialite } from "../fileTypes/NSFCategorieSpecialite";
@@ -57,7 +57,7 @@ export type LineTypes = {
   rome: Rome;
   metier: Metier;
   formation_rome: Formation_Rome;
-  n_matiere_: NMatiere;
+  discipline: Discipline;
 };
 
 const findRawData = async <T extends keyof LineTypes>({

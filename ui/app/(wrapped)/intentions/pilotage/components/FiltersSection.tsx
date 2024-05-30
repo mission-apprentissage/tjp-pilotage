@@ -68,7 +68,7 @@ export const FiltersSection = ({
   const isDefaultRentreeScolaire =
     activeFilters.rentreeScolaire?.length === 1 &&
     activeFilters.rentreeScolaire[0] ===
-      findDefaultRentreeScolaireForCampagne(activeFilters.campagne || "");
+      findDefaultRentreeScolaireForCampagne(activeFilters.campagne ?? "");
 
   const onCampagneChange = (e: ChangeEvent<HTMLSelectElement>) => {
     filterTracker("campagne");

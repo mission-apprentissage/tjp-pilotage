@@ -6,8 +6,17 @@ import { Kysely, sql } from "kysely";
  */
 export const up = async (db: Kysely<unknown>) => {
   // Drop view to enable dropping the table column
-  await db.schema.dropView("latestDemandeView").execute();
-  await db.schema.alterTable("demande").dropColumn("besoinRH").execute();
+  await db.schema.dropView("latestDemandeView").ifExists().execute();
+  await db.schema
+    .dropView("latestDemandeNonMaterializedView")
+    .ifExists()
+    .execute();
+
+  await db.schema
+    .alterTable("demande")
+    .dropColumn("besoinRH")
+    .dropColumn("autreBesoinRH")
+    .execute();
 
   await db.schema
     .alterTable("demande")
@@ -72,26 +81,32 @@ export const up = async (db: Kysely<unknown>) => {
 
 export const down = async (db: Kysely<unknown>) => {
   // Drop view to enable dropping the table column
-  await db.schema.dropView("latestDemandeView").execute();
+  await db.schema.dropView("latestDemandeView").ifExists().execute();
 
   await db.schema
     .alterTable("demande")
     .addColumn("besoinRH", sql`varchar[]`)
+    .addColumn("autreBesoinRH", "varchar")
     .execute();
 
   await db.schema
     .alterTable("demande")
-    .dropColumn("nbRecrutementsRH")
-    .dropColumn("disciplinesRecrutementsRH")
-    .dropColumn("reconversionsRH")
-    .dropColumn("nbReconversionsRH")
-    .dropColumn("disciplinesReconversionsRH")
-    .dropColumn("professeursAssociesRH")
-    .dropColumn("nbProfesseursAssociesRH")
-    .dropColumn("disciplinesProfesseursAssociesRH")
-    .dropColumn("formationsRH")
-    .dropColumn("nbFormationsRH")
-    .dropColumn("disciplinesFormationsRH")
+    .dropColumn("recrutementRH")
+    .dropColumn("nbRecrutementRH")
+    .dropColumn("discipline1RecrutementRH")
+    .dropColumn("discipline2RecrutementRH")
+    .dropColumn("reconversionRH")
+    .dropColumn("nbReconversionRH")
+    .dropColumn("discipline1ReconversionRH")
+    .dropColumn("discipline2ReconversionRH")
+    .dropColumn("professeurAssocieRH")
+    .dropColumn("nbProfesseurAssocieRH")
+    .dropColumn("discipline1ProfesseurAssocieRH")
+    .dropColumn("discipline2ProfesseurAssocieRH")
+    .dropColumn("formationRH")
+    .dropColumn("nbFormationRH")
+    .dropColumn("discipline1FormationRH")
+    .dropColumn("discipline2FormationRH")
     .execute();
 
   // Refresh view to rollback new columns

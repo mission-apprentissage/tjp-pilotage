@@ -1,6 +1,5 @@
 import {
   chakra,
-  Collapse,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -8,6 +7,7 @@ import {
   RadioGroup,
   Stack,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { toBoolean } from "../../utils/toBoolean";
@@ -19,46 +19,54 @@ export const AmiCmaValideField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
+      getValues,
     } = useFormContext<IntentionForms>();
 
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "amiCmaEnCoursValidation") return;
+          if (getValues("amiCmaEnCoursValidation") === false) return;
+          setValue("amiCmaValide", false);
+        }).unsubscribe
+    );
+
     const visible = watch("amiCma");
+    if (!visible) return null;
 
     return (
-      <Collapse in={visible} unmountOnExit>
-        <FormControl className={className} isInvalid={!!errors.amiCmaValide}>
-          <FormLabel>Le financement est-il validé ?</FormLabel>
-          {visible && (
-            <Controller
-              name="amiCmaValide"
-              control={control}
-              rules={{
-                validate: (value) =>
-                  typeof value === "boolean" || "Le champ est obligatoire",
-              }}
-              render={({ field: { onChange, value, onBlur, ref } }) => (
-                <RadioGroup
-                  ms={6}
-                  isDisabled={disabled}
-                  as={Stack}
-                  onBlur={onBlur}
-                  onChange={(v) => onChange(toBoolean(v))}
-                  value={JSON.stringify(value)}
-                >
-                  <Radio ref={ref} value="true">
-                    Oui
-                  </Radio>
-                  <Radio ref={ref} value="false">
-                    Non
-                  </Radio>
-                </RadioGroup>
-              )}
-            />
+      <FormControl className={className} isInvalid={!!errors.amiCmaValide}>
+        <FormLabel>Le financement est-il validé ?</FormLabel>
+        <Controller
+          name="amiCmaValide"
+          control={control}
+          rules={{
+            validate: (value) =>
+              typeof value === "boolean" || "Le champ est obligatoire",
+          }}
+          render={({ field: { onChange, value, onBlur, ref } }) => (
+            <RadioGroup
+              ms={6}
+              isDisabled={disabled}
+              as={Stack}
+              onBlur={onBlur}
+              onChange={(v) => onChange(toBoolean(v))}
+              value={JSON.stringify(value)}
+            >
+              <Radio ref={ref} value="true">
+                Oui
+              </Radio>
+              <Radio ref={ref} value="false">
+                Non
+              </Radio>
+            </RadioGroup>
           )}
-          {errors.amiCmaValide && (
-            <FormErrorMessage>{errors.amiCmaValide?.message}</FormErrorMessage>
-          )}
-        </FormControl>
-      </Collapse>
+        />
+        {errors.amiCmaValide && (
+          <FormErrorMessage>{errors.amiCmaValide?.message}</FormErrorMessage>
+        )}
+      </FormControl>
     );
   }
 );

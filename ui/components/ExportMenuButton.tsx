@@ -39,10 +39,10 @@ export const ExportMenuButton = ({
   onExportExcel?: () => Promise<void>;
   variant?: string;
 }) => {
-  const [loading, setIsLoading] = useState<boolean>(false);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleExportCsv = async () => {
-    if (onExportCsv && !loading) {
+    if (onExportCsv && !isLoading) {
       setIsLoading(true);
       await onExportCsv();
       setIsLoading(false);
@@ -50,7 +50,7 @@ export const ExportMenuButton = ({
   };
 
   const handleExportExcel = async () => {
-    if (onExportExcel && !loading) {
+    if (onExportExcel && !isLoading) {
       setIsLoading(true);
       await onExportExcel();
       setIsLoading(false);
@@ -59,7 +59,7 @@ export const ExportMenuButton = ({
 
   if (!handleExportCsv && !handleExportExcel) return null;
 
-  if (loading) {
+  if (isLoading) {
     return (
       <Button mr="auto" variant="ghost" size="md" disabled={true}>
         <Spinner mr="2" size="sm" />

@@ -101,6 +101,7 @@ export const CreateCampagne = ({
             <NumberInput
               defaultValue={parseInt(CURRENT_ANNEE_CAMPAGNE)}
               min={parseInt(CURRENT_ANNEE_CAMPAGNE)}
+              onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField
                 {...register("annee", {

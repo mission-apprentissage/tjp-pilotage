@@ -240,7 +240,7 @@ export const CustomListItem = ({
                       <Box display="inline" mr="4px">
                         <InlineIcon
                           icon="ri:hotel-line"
-                          color={themeDefinition.colors.orange.dark}
+                          color={themeDefinition.colors.yellowTournesol[407]}
                         />
                       </Box>
                       {voie}

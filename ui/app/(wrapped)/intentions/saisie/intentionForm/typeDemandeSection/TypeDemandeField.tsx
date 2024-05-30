@@ -16,14 +16,13 @@ import { ComponentProps, ReactNode, useContext } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-
 import {
   isTypeDiminution,
   isTypeFermeture,
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
 } from "../../../utils/typeDemandeUtils";
+import { IntentionForms } from "../defaultFormValues";
 import { CampagneContext } from "../IntentionForm";
 
 function RadioCard({
