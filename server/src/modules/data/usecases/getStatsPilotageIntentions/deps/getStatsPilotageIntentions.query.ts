@@ -81,11 +81,21 @@ const genericOnDemandes =
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
       .select((es) => [
-        countOuverturesSco(es).as("placesOuvertesScolaire"),
-        countFermeturesSco(es).as("placesFermeesScolaire"),
-        countOuverturesSco(es).as("placesOuvertesApprentissage"),
-        countFermeturesApprentissage(es).as("placesFermeesApprentissage"),
-        countDifferenceCapacite(es).as("transformes"),
+        es.fn
+          .coalesce(eb.fn.sum<number>(countOuverturesSco(es)), sql`0`)
+          .as("placesOuvertesScolaire"),
+        es.fn
+          .coalesce(eb.fn.sum<number>(countFermeturesSco(es)), sql`0`)
+          .as("placesFermeesScolaire"),
+        es.fn
+          .coalesce(eb.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
+          .as("placesOuvertesApprentissage"),
+        es.fn
+          .coalesce(eb.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
+          .as("placesFermeesApprentissage"),
+        es.fn
+          .coalesce(eb.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
+          .as("transformes"),
         selectNbDemandes(es).as("countDemande"),
       ])
       .where(isDemandeNotDeletedOrRefused)
@@ -132,11 +142,21 @@ const getNationalData = async (filters: Filters) => {
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .select((es) => [
-      countOuverturesSco(es).as("placesOuvertesScolaire"),
-      countFermeturesSco(es).as("placesFermeesScolaire"),
-      countOuverturesApprentissage(es).as("placesOuvertesApprentissage"),
-      countFermeturesApprentissage(es).as("placesFermeesApprentissage"),
-      countDifferenceCapacite(es).as("transformes"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countOuverturesSco(es)), sql`0`)
+        .as("placesOuvertesScolaire"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countFermeturesSco(es)), sql`0`)
+        .as("placesFermeesScolaire"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
+        .as("placesOuvertesApprentissage"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
+        .as("placesFermeesApprentissage"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
+        .as("transformes"),
       selectNbDemandes(es).as("countDemande"),
       genericOnConstatRentree(filters)()
         .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
