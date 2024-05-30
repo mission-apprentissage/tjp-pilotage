@@ -37,6 +37,11 @@ import { FonctionTag } from "../../../components/FonctionTag";
 import { RoleVisibleTag } from "../../../components/RoleVisibleTag";
 import { FONCTIONS } from "./FONCTIONS";
 
+type Option = {
+  readonly label: string;
+  readonly value: string;
+};
+
 type AvisForm = {
   id: string;
   createdBy: string;
@@ -154,7 +159,7 @@ export const AvisForm = ({
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
-              <CreatableSelect
+              <CreatableSelect<Option>
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
@@ -202,7 +207,7 @@ export const AvisForm = ({
             control={control}
             rules={{ required: "Ce champs est obligatoire" }}
             render={({ field: { onChange, value, name } }) => (
-              <Select
+              <Select<Option>
                 name={name}
                 onChange={(selected) => {
                   onChange(selected?.value);
