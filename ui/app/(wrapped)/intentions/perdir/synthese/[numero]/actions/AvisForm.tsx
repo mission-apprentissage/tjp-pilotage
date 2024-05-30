@@ -27,6 +27,7 @@ import Select from "react-select";
 import CreatableSelect from "react-select/creatable";
 import { AvisStatutEnum, AvisStatutType } from "shared/enum/avisStatutEnum";
 import { AvisTypeEnum, AvisTypeType } from "shared/enum/avisTypeEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
@@ -107,6 +108,24 @@ export const AvisForm = ({
       },
     });
 
+  const getLabelAvis = (statut?: DemandeStatutType): string => {
+    const typeAvis = getTypeAvis(statut);
+    switch (typeAvis) {
+      case AvisTypeEnum["préalable"]:
+        return `avis préalable`;
+        break;
+      case AvisTypeEnum["consultatif"]:
+        return `avis consultatif`;
+        break;
+      case AvisTypeEnum["final"]:
+        return `vote`;
+        break;
+      default:
+        return `avis`;
+        break;
+    }
+  };
+
   return (
     <FormProvider {...form}>
       <Flex
@@ -124,11 +143,11 @@ export const AvisForm = ({
         )}
       >
         <Heading as="h2" fontSize={18} fontWeight={700} mb={4}>
-          Exprimer un vote {getTypeAvis(intention.statut)}
+          Exprimer un {getLabelAvis(intention.statut)}
         </Heading>
         <FormControl isInvalid={!!errors.userFonction} isRequired>
           <FormLabel fontSize={12} fontWeight={400} color={"grey.425"}>
-            Exprimer un vote en tant que
+            Exprimer un {getLabelAvis(intention.statut)} en tant que
           </FormLabel>
           <Controller
             name="userFonction"
