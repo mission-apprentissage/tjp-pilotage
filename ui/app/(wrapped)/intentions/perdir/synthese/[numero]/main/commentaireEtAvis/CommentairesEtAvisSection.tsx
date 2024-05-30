@@ -170,7 +170,7 @@ export const CommentairesEtAvisSection = ({
           ))
       ) : (
         <Heading as="h3" fontSize={16} fontWeight={700}>
-          Pas encore de changement de statut sur la demande
+          Pas encore de changement de statut ou d'avis sur la demande
         </Heading>
       )}
     </Flex>

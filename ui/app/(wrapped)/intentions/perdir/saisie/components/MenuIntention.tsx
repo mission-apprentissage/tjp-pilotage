@@ -70,7 +70,7 @@ export const MenuIntention = ({
         Nouvelle demande
       </Button>
 
-      <VStack flex="1" align="flex-start" spacing={2}>
+      <VStack flex="1" align="flex-start" spacing={1}>
         {/* Toutes */}
         <Button
           bgColor={"unset"}
@@ -95,6 +95,12 @@ export const MenuIntention = ({
               {countDemandes?.total}
             </Text>
           }
+          isActive={statut === "none"}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={isRecapView && statut === "none" ? "bold" : "normal"}
@@ -134,6 +140,12 @@ export const MenuIntention = ({
               {countDemandes?.["dossier complet"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["dossier complet"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -181,6 +193,12 @@ export const MenuIntention = ({
               {countDemandes?.["dossier incomplet"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["dossier incomplet"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -228,6 +246,12 @@ export const MenuIntention = ({
               {countDemandes?.["proposition"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["proposition"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -275,6 +299,12 @@ export const MenuIntention = ({
               {countDemandes?.["projet de demande"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["projet de demande"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -322,6 +352,12 @@ export const MenuIntention = ({
               {countDemandes?.["prêt pour le vote"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["prêt pour le vote"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -369,6 +405,12 @@ export const MenuIntention = ({
               {countDemandes?.["demande validée"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["demande validée"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -414,6 +456,12 @@ export const MenuIntention = ({
               {countDemandes?.["refusée"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["refusée"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={
@@ -427,9 +475,8 @@ export const MenuIntention = ({
             Demandes refusées
           </Text>
         </Button>
-
-        <Divider />
-        <Text fontSize={12} color="grey.425" mt={2}>
+        <Divider my={2} />
+        <Text fontSize={12} color="grey.425" mb={1}>
           Visible par vous uniquement
         </Text>
         <Button
@@ -460,6 +507,12 @@ export const MenuIntention = ({
               {countDemandes?.["brouillon"]}
             </Text>
           }
+          isActive={statut === DemandeStatutEnum["brouillon"]}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
         >
           <Text
             fontWeight={

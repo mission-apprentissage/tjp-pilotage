@@ -388,12 +388,30 @@ export const HeadLineContent = ({
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
+        colonne={"travauxAmenagementDescription"}
+        onClick={handleOrder}
+        bgColor={getCellColor("travauxAmenagementDescription")}
+      >
+        <OrderIcon {...order} column="travauxAmenagementDescription" />
+        {STATS_DEMANDES_COLUMNS.travauxAmenagementDescription}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
         colonne={"achatEquipement"}
         onClick={handleOrder}
         bgColor={getCellColor("achatEquipement")}
       >
         <OrderIcon {...order} column="achatEquipement" />
         {STATS_DEMANDES_COLUMNS.achatEquipement}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"achatEquipementDescription"}
+        onClick={handleOrder}
+        bgColor={getCellColor("achatEquipementDescription")}
+      >
+        <OrderIcon {...order} column="achatEquipementDescription" />
+        {STATS_DEMANDES_COLUMNS.achatEquipementDescription}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
