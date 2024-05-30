@@ -13,6 +13,7 @@ import { Metabase } from "./components/Metabase";
 
 export type NsfOption =
   (typeof client.infer)["[GET]/nsf/search/:search"][number];
+
 export type FormationOption =
   (typeof client.infer)["[GET]/nsf-diplome/search/:search"][number];
 
@@ -41,8 +42,10 @@ const DashboardFormation = () => {
         label: nsfSearchParam,
         value: codeNsfSearchParam,
       });
-    } else if (!nsfSearchParam) {
+    } else if (!nsfSearchParam || !codeNsfSearchParam) {
       setSelectedNsf(undefined);
+      setSelectedFormation(undefined);
+      return;
     }
 
     if (
@@ -53,8 +56,12 @@ const DashboardFormation = () => {
       setSelectedFormation({
         label: formationSearchParam,
         value: codeFormationSearchParam,
+        data: {
+          codeNsf: codeNsfSearchParam,
+          libelleNsf: nsfSearchParam,
+        },
       });
-    } else {
+    } else if (!formationSearchParam || !codeFormationSearchParam) {
       setSelectedFormation(undefined);
     }
   }, [searchParams]);
@@ -71,15 +78,29 @@ const DashboardFormation = () => {
   };
 
   const onUpdateFormation = (formation?: FormationOption) => {
+    if (formation) {
+      router.replace(
+        createParametrizedUrl(location.pathname, {
+          domaine_formation: encodeURI(formation.data.libelleNsf),
+          code_domaine_formation: encodeURI(formation.data.codeNsf),
+          formation: encodeURI(formation.label),
+          code_formation: encodeURI(formation.value),
+        })
+      );
+
+      return;
+    }
+
     if (selectedNsf) {
       router.replace(
         createParametrizedUrl(location.pathname, {
           domaine_formation: encodeURI(selectedNsf.label),
           code_domaine_formation: encodeURI(selectedNsf.value),
-          formation: formation ? encodeURI(formation.label) : undefined,
-          code_formation: formation ? encodeURI(formation.value) : undefined,
+          formation: undefined,
+          code_formation: undefined,
         })
       );
+      return;
     }
   };
 
