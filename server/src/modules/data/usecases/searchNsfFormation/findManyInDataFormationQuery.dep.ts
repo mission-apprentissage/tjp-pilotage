@@ -27,6 +27,7 @@ export const findManyInDataFormationQuery = async ({
       "formationView.codeNiveauDiplome"
     )
     .leftJoin("familleMetier", "formationView.cfd", "familleMetier.cfd")
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .where((eb) =>
       eb.and([
         eb.and(
@@ -65,10 +66,12 @@ export const findManyInDataFormationQuery = async ({
       }
       return q;
     })
-    .select((eb) => [
-      "formationView.cfd as value",
-      sql<string>`CONCAT(${eb.ref("formationView.libelleFormation")},
-      ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
+    .select([
+      "formationView.cfd",
+      "formationView.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "nsf.codeNsf",
+      "nsf.libelleNsf",
     ])
     .distinctOn([
       "formationView.cfd",
