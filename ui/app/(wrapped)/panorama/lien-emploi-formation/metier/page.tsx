@@ -62,8 +62,6 @@ const DashboardMetier = () => {
   const onUpdateDomaineProfessionnel = (
     domaineProfessionnel?: DomaineProfessionnelOption
   ) => {
-    setSelectedDomaineProfessionnel(domaineProfessionnel ?? undefined);
-    setSelectedMetier(undefined);
     router.replace(
       createParametrizedUrl(location.pathname, {
         domaine_pro: domaineProfessionnel
@@ -72,28 +70,23 @@ const DashboardMetier = () => {
         code_domaine_pro: domaineProfessionnel
           ? encodeURI(domaineProfessionnel.value)
           : undefined,
-        metier: selectedMetier ? encodeURI(selectedMetier.label) : undefined,
-        code_metier: selectedMetier
-          ? encodeURI(selectedMetier.value)
-          : undefined,
+        metier: undefined,
+        code_metier: undefined,
       })
     );
   };
 
   const onUpdateMetier = (metier?: MetierOption) => {
-    setSelectedMetier(metier ?? undefined);
-    router.replace(
-      createParametrizedUrl(location.pathname, {
-        domaine_pro: selectedDomaineProfessionnel
-          ? encodeURI(selectedDomaineProfessionnel.label)
-          : undefined,
-        code_domaine_pro: selectedDomaineProfessionnel
-          ? encodeURI(selectedDomaineProfessionnel.value)
-          : undefined,
-        metier: metier ? encodeURI(metier.label) : undefined,
-        code_metier: metier ? encodeURI(metier.value) : undefined,
-      })
-    );
+    if (selectedDomaineProfessionnel) {
+      router.replace(
+        createParametrizedUrl(location.pathname, {
+          domaine_pro: encodeURI(selectedDomaineProfessionnel.label),
+          code_domaine_pro: encodeURI(selectedDomaineProfessionnel.value),
+          metier: metier ? encodeURI(metier.label) : undefined,
+          code_metier: metier ? encodeURI(metier.value) : undefined,
+        })
+      );
+    }
   };
 
   return (
