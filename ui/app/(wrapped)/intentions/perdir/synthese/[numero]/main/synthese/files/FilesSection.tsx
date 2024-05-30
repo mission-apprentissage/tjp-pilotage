@@ -55,7 +55,7 @@ export const FilesSection = ({ numero }: { numero: string }) => {
     <Flex
       direction={"column"}
       gap={2}
-      bgColor={"grey.975"}
+      bgColor={"blueecume.975"}
       p={4}
       h="fit-content"
       width={"100%"}

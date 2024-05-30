@@ -4,6 +4,7 @@ import {
   Box,
   Button,
   chakra,
+  Collapse,
   Flex,
   Highlight,
   Modal,
@@ -13,6 +14,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  SlideFade,
   Text,
   Tooltip,
   useDisclosure,
@@ -54,6 +56,15 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
   const queryClient = useQueryClient();
 
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const { isOpen: isOpenDeleteAvis, onToggle: onToggleDeleteAvis } =
+    useDisclosure({
+      defaultIsOpen: true,
+    });
+
+  const { isOpen: isOpenUpdateAvis, onToggle: onToggleUpdateAvis } =
+    useDisclosure({
+      defaultIsOpen: true,
+    });
 
   const { isLoading: isDeleting, mutateAsync: submitDeleteAvisCommentaire } =
     useMutation({
@@ -70,166 +81,185 @@ export const AvisSection = chakra(({ avis }: { avis: Avis }) => {
           status: "success",
           title: "Avis supprimé",
         });
-        queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+
+        setTimeout(() => {
+          queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+        }, 500);
       },
     });
 
   return (
-    <Box borderLeftColor={"grey.900"} borderLeftWidth={"0.5px"} pl={6}>
-      <Flex direction={"column"} gap={2} p={2}>
-        <Flex direction={"column"} gap={4}>
-          <Flex direction={"row"} gap={2}>
-            <Flex mx={2}>
-              <Tooltip label={avis.userFullName} mb={"auto"}>
-                <Avatar
-                  name={avis.userFullName}
-                  bg={"blueecume.850"}
-                  color={"black"}
-                  position={"unset"}
-                />
-              </Tooltip>
-            </Flex>
-            <Flex direction={"column"}>
+    <Collapse in={isOpenDeleteAvis}>
+      <SlideFade in={isOpenUpdateAvis} offsetX="50px" reverse>
+        <Box
+          borderLeftColor={"grey.900"}
+          borderLeftWidth={"0.5px"}
+          pl={6}
+          my={5}
+        >
+          <Flex direction={"column"} gap={2} p={2}>
+            <Flex direction={"column"} gap={4}>
               <Flex direction={"row"} gap={2}>
-                <AvisStatutTag
-                  hasIcon
-                  size={"md"}
-                  statutAvis={avis.statutAvis}
-                  typeAvis={avis.typeAvis}
-                />
-                <FonctionTag fonction={avis.userFonction} />
+                <Flex mx={2}>
+                  <Tooltip label={avis.userFullName} mb={"auto"}>
+                    <Avatar
+                      name={avis.userFullName}
+                      bg={"blueecume.850"}
+                      color={"black"}
+                      position={"unset"}
+                    />
+                  </Tooltip>
+                </Flex>
+                <Flex direction={"column"}>
+                  <Flex direction={"row"} gap={2}>
+                    <AvisStatutTag
+                      hasIcon
+                      size={"md"}
+                      statutAvis={avis.statutAvis}
+                      typeAvis={avis.typeAvis}
+                    />
+                    <FonctionTag fonction={avis.userFonction} />
+                  </Flex>
+                  <Text fontSize={12} fontWeight={400} lineHeight={"20px"}>
+                    <Highlight
+                      query={avis.userFullName}
+                      styles={{ color: "bluefrance.113" }}
+                    >
+                      {`Avis saisi par ${avis.userFullName}`}
+                    </Highlight>
+                  </Text>
+                </Flex>
               </Flex>
-              <Text fontSize={12} fontWeight={400} lineHeight={"20px"}>
-                <Highlight
-                  query={avis.userFullName}
-                  styles={{ color: "bluefrance.113" }}
-                >
-                  {`Avis saisi par ${avis.userFullName}`}
-                </Highlight>
+              <Text
+                fontSize={12}
+                fontWeight={400}
+                lineHeight={"20px"}
+                fontStyle={"italic"}
+                color="grey.425"
+              >
+                {avis.updatedAt === avis.createdAt ||
+                avis.updatedByFullName === "" ? (
+                  `Publié le ${formatDate({
+                    date: avis.createdAt,
+                    options: {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    },
+                    dateTimeSeparator: " - ",
+                  })}`
+                ) : (
+                  <Highlight
+                    query={avis.updatedByFullName ?? ""}
+                    styles={{ color: "bluefrance.113" }}
+                  >
+                    {`Modifié le ${formatDate({
+                      date: avis.updatedAt,
+                      options: {
+                        dateStyle: "short",
+                        timeStyle: "short",
+                      },
+                      dateTimeSeparator: " - ",
+                    })} par ${avis.updatedByFullName}`}
+                  </Highlight>
+                )}
               </Text>
             </Flex>
-          </Flex>
-          <Text
-            fontSize={12}
-            fontWeight={400}
-            lineHeight={"20px"}
-            fontStyle={"italic"}
-            color="grey.425"
-          >
-            {avis.updatedAt === avis.createdAt ||
-            avis.updatedByFullName === "" ? (
-              `Publié le ${formatDate({
-                date: avis.createdAt,
-                options: {
-                  dateStyle: "short",
-                  timeStyle: "short",
-                },
-                dateTimeSeparator: " - ",
-              })}`
-            ) : (
-              <Highlight
-                query={avis.updatedByFullName ?? ""}
-                styles={{ color: "bluefrance.113" }}
+            {isModifying ? (
+              <UpdateAvisForm
+                avis={avis}
+                setIsModifying={setIsModifying}
+                onToggleUpdateAvis={onToggleUpdateAvis}
+              />
+            ) : avis.commentaire ? (
+              <Text
+                fontSize={16}
+                fontWeight={500}
+                lineHeight={"24px"}
+                color={"grey.50"}
               >
-                {`Modifié le ${formatDate({
-                  date: avis.updatedAt,
-                  options: {
-                    dateStyle: "short",
-                    timeStyle: "short",
-                  },
-                  dateTimeSeparator: " - ",
-                })} par ${avis.updatedByFullName}`}
-              </Highlight>
+                « {avis.commentaire} »
+              </Text>
+            ) : (
+              <Text
+                fontSize={16}
+                fontWeight={500}
+                lineHeight={"24px"}
+                color={"grey.900"}
+              >
+                Pas d'observation renseignée
+              </Text>
             )}
-          </Text>
-        </Flex>
-        {isModifying ? (
-          <UpdateAvisForm avis={avis} setIsModifying={setIsModifying} />
-        ) : avis.commentaire ? (
-          <Text
-            fontSize={16}
-            fontWeight={500}
-            lineHeight={"24px"}
-            color={"grey.50"}
-          >
-            « {avis.commentaire} »
-          </Text>
-        ) : (
-          <Text
-            fontSize={16}
-            fontWeight={500}
-            lineHeight={"24px"}
-            color={"grey.900"}
-          >
-            Pas d'observation renseignée
-          </Text>
-        )}
-        {hasPermissionModificationAvis() && !isDeleting && !isModifying && (
-          <Flex direction={"row"} gap={6}>
-            <Button
-              isLoading={isDeleting || isModifying}
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              onClick={() => onOpen()}
-            >
-              Supprimer
-            </Button>
-            <Button
-              variant={"link"}
-              color="bluefrance.113"
-              fontSize={12}
-              fontWeight={400}
-              isLoading={isDeleting || isModifying}
-              onClick={() => setIsModifying(true)}
-            >
-              Modifier
-            </Button>
+            {hasPermissionModificationAvis() && !isDeleting && !isModifying && (
+              <Flex direction={"row"} gap={6}>
+                <Button
+                  isLoading={isDeleting || isModifying}
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  onClick={() => onOpen()}
+                >
+                  Supprimer
+                </Button>
+                <Button
+                  variant={"link"}
+                  color="bluefrance.113"
+                  fontSize={12}
+                  fontWeight={400}
+                  isLoading={isDeleting || isModifying}
+                  onClick={() => setIsModifying(true)}
+                >
+                  Modifier
+                </Button>
+              </Flex>
+            )}
           </Flex>
-        )}
-      </Flex>
-      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-        <ModalOverlay />
-        <ModalContent p="4">
-          <ModalCloseButton title="Fermer" />
-          <ModalHeader>
-            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
-            Confirmer la suppression de l'avis
-          </ModalHeader>
-          <ModalBody>
-            <Highlight
-              query={[avis.typeAvis, avis.statutAvis, avis.userFullName]}
-              styles={{ fontWeight: 700 }}
-            >
-              {`Confirmez-vous vouloir supprimer l'avis ${avis.typeAvis} ${avis.statutAvis} de ${avis.userFullName} ?`}
-            </Highlight>
-            <Text color="red" mt={2}>
-              Attention, cette action est irréversible
-            </Text>
-          </ModalBody>
+          <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+            <ModalOverlay />
+            <ModalContent p="4">
+              <ModalCloseButton title="Fermer" />
+              <ModalHeader>
+                <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+                Confirmer la suppression de l'avis
+              </ModalHeader>
+              <ModalBody>
+                <Highlight
+                  query={[avis.typeAvis, avis.statutAvis, avis.userFullName]}
+                  styles={{ fontWeight: 700 }}
+                >
+                  {`Confirmez-vous vouloir supprimer l'avis ${avis.typeAvis} ${avis.statutAvis} de ${avis.userFullName} ?`}
+                </Highlight>
+                <Text color="red" mt={2}>
+                  Attention, cette action est irréversible
+                </Text>
+              </ModalBody>
 
-          <ModalFooter>
-            <Button
-              colorScheme="blue"
-              mr={3}
-              onClick={() => {
-                onClose();
-              }}
-              variant={"secondary"}
-            >
-              Annuler
-            </Button>
-            <Button
-              isLoading={isDeleting}
-              variant="primary"
-              onClick={() => submitDeleteAvisCommentaire()}
-            >
-              Confirmer la suppression
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    </Box>
+              <ModalFooter>
+                <Button
+                  colorScheme="blue"
+                  mr={3}
+                  onClick={() => {
+                    onClose();
+                  }}
+                  variant={"secondary"}
+                >
+                  Annuler
+                </Button>
+                <Button
+                  isLoading={isDeleting}
+                  variant="primary"
+                  onClick={() => {
+                    submitDeleteAvisCommentaire();
+                    onToggleDeleteAvis();
+                  }}
+                >
+                  Confirmer la suppression
+                </Button>
+              </ModalFooter>
+            </ModalContent>
+          </Modal>
+        </Box>
+      </SlideFade>
+    </Collapse>
   );
 });
