@@ -16,6 +16,8 @@ export type NsfOption =
 export type FormationOption =
   (typeof client.infer)["[GET]/nsf-diplome/search/:search"][number];
 
+// test
+
 const DashboardFormation = () => {
   const router = useRouter();
   const searchParams = useSearchParams();
