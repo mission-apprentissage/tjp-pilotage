@@ -19,10 +19,12 @@ import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
 import { getStatsPilotageIntentionsRoute } from "./usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.route";
 import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
+import { searchCampusRoute } from "./usecases/searchCampus/searchCampus.route";
 import { searchDiplomeRoute } from "./usecases/searchDiplome/searchDiplome.route";
 import { searchDisciplineRoute } from "./usecases/searchDiscipline/searchDiscipline.route";
 import { searchDomaineProfessionnelRoute } from "./usecases/searchDomaineProfessionnel/searchDomaineProfessionnel.route";
 import { searchEtablissementRoute } from "./usecases/searchEtablissement/searchEtablissement.route";
+import { searchFiliereRoute } from "./usecases/searchFiliere/searchFiliere.route";
 import { searchMetierRoute } from "./usecases/searchMetier/searchMetier.route";
 import { searchNsfRoute } from "./usecases/searchNsf/searchNsf.route";
 import { searchNsfDiplomeRoute } from "./usecases/searchNsfFormation/searchNsfFormation.route";
@@ -56,5 +58,8 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...searchNsfDiplomeRoute({ server }),
     ...searchMetierRoute({ server }),
     ...searchDomaineProfessionnelRoute({ server }),
+    ...searchDisciplineRoute(server),
+    ...searchFiliereRoute(server),
+    ...searchCampusRoute(server),
   };
 };

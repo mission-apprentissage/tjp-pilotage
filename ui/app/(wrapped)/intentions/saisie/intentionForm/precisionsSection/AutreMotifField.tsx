@@ -8,9 +8,8 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-
 import { getMotifsTriggerAutre } from "../../../utils/motifDemandeUtils";
+import { IntentionForms } from "../defaultFormValues";
 
 export const AutreMotifField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {

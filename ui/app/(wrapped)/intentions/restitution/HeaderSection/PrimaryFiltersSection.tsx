@@ -78,7 +78,7 @@ export const PrimaryFiltersSection = ({
                         as={Button}
                         variant={"selectButton"}
                         rightIcon={<ChevronDownIcon />}
-                        width={[null, null, "72"]}
+                        width={[null, null, "64"]}
                         size="md"
                         borderWidth="1px"
                         borderStyle="solid"
@@ -124,7 +124,7 @@ export const PrimaryFiltersSection = ({
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
                   <Select
-                    width={[null, null, "72"]}
+                    width={[null, null, "64"]}
                     size="md"
                     variant={"newInput"}
                     value={activeFilters.rentreeScolaire?.toString() ?? ""}
@@ -137,6 +137,7 @@ export const PrimaryFiltersSection = ({
                         : ""
                     }
                     placeholder={`TOUTES (${data?.filters.rentreesScolaires?.length})`}
+                    isDisabled={data?.filters.rentreesScolaires?.length === 0}
                   >
                     {data?.filters.rentreesScolaires?.map((option) => (
                       <option key={option.value} value={option.value}>
@@ -151,7 +152,7 @@ export const PrimaryFiltersSection = ({
                   <FormLabel color="white">RÉGION</FormLabel>
                   <Multiselect
                     onClose={filterTracker("codeRegion")}
-                    width={["100%", null, "72"]}
+                    width={["100%", null, "64"]}
                     size="md"
                     variant={"newInput"}
                     onChange={(selected) =>
@@ -167,7 +168,7 @@ export const PrimaryFiltersSection = ({
                   <FormLabel color="white">ACADÉMIE</FormLabel>
                   <Multiselect
                     onClose={filterTracker("codeAcademie")}
-                    width={"72"}
+                    width={"64"}
                     size="md"
                     variant={"newInput"}
                     onChange={(selected) =>
