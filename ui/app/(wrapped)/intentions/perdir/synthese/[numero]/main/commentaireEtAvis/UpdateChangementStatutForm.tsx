@@ -20,9 +20,11 @@ export const UpdateChangementStatutForm = chakra(
   ({
     changementStatut,
     setIsModifying,
+    onToggleUpdateChangementStatut,
   }: {
     changementStatut: ChangementStatutForm;
     setIsModifying: (value: boolean) => void;
+    onToggleUpdateChangementStatut: () => void;
   }) => {
     const queryClient = useQueryClient();
 
@@ -44,6 +46,7 @@ export const UpdateChangementStatutForm = chakra(
         onSuccess: (_body) => {
           queryClient.invalidateQueries(["[GET]/intention/:numero"]);
           setIsModifying(false);
+          onToggleUpdateChangementStatut();
         },
         //@ts-ignore
         onError: (e: AxiosError<{ errors: Record<string, string> }>) => {

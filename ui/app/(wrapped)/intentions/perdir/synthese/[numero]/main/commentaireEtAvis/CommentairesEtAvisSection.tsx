@@ -153,7 +153,7 @@ export const CommentairesEtAvisSection = ({
                   </Text>
                 </Flex>
               </Flex>
-              <Flex direction={"column"} gap={10}>
+              <Flex direction={"column"}>
                 {etape.commentairesEtAvis?.map((commentaireEtAvis) => (
                   <Fragment key={commentaireEtAvis.updatedAt}>
                     {Object.hasOwn(commentaireEtAvis, "statut") ? (

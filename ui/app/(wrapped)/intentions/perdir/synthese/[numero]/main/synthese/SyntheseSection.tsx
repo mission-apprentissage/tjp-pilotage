@@ -13,8 +13,8 @@ import { Role } from "shared";
 
 import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
+import { formatDate } from "@/utils/formatDate";
 
-import { formatDate } from "../../../../../../../../utils/formatDate";
 import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../utils/formatLibelle";
 import {
   getMotifLabel,
@@ -78,7 +78,7 @@ export const SyntheseSection = ({
           <Flex
             direction={"column"}
             gap={3}
-            bgColor={"grey.975"}
+            bgColor={"blueecume.975"}
             p={4}
             h="fit-content"
           >
@@ -175,6 +175,20 @@ export const SyntheseSection = ({
                 </Flex>
               </Flex>
             )}
+          </Flex>
+          <Flex gap={3} bgColor={"blueecume.975"} p={4} direction={"column"}>
+            <Flex>
+              <Heading as={"h6"} fontSize={14}>
+                Observations sur la demande
+              </Heading>
+            </Flex>
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text fontSize={14}>
+                {intention.commentaire && intention.commentaire.length
+                  ? intention.commentaire
+                  : "Aucune"}
+              </Text>
+            </Flex>
           </Flex>
           <FilesSection numero={intention.numero!} />
         </Flex>
@@ -280,19 +294,6 @@ export const SyntheseSection = ({
               <Text>{formatBoolean(intention.amiCmaEnCoursValidation)}</Text>
             </Flex>
           )}
-          <Divider my={3} borderColor={"grey.900"} />
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Heading as={"h6"} fontSize={14}>
-              Observations sur la demande
-            </Heading>
-          </Flex>
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text ms={"auto"} fontSize={14}>
-              {intention.commentaire && intention.commentaire.length
-                ? intention.commentaire
-                : "Aucune"}
-            </Text>
-          </Flex>
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
             <Icon

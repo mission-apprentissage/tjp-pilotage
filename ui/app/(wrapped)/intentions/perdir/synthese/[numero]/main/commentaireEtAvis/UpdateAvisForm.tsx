@@ -42,9 +42,11 @@ export const UpdateAvisForm = chakra(
   ({
     avis,
     setIsModifying,
+    onToggleUpdateAvis,
   }: {
     avis: AvisForm;
     setIsModifying: (value: boolean) => void;
+    onToggleUpdateAvis: () => void;
   }) => {
     const queryClient = useQueryClient();
 
@@ -69,6 +71,7 @@ export const UpdateAvisForm = chakra(
         onSuccess: (_body) => {
           queryClient.invalidateQueries(["[GET]/intention/:numero"]);
           setIsModifying(false);
+          onToggleUpdateAvis();
         },
         //@ts-ignore
         onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
