@@ -21,7 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { useQueryClient } from "@tanstack/react-query";
-import { AxiosError } from "axios";
+import { isAxiosError } from "axios";
 import { useEffect } from "react";
 import { FormProvider, useForm } from "react-hook-form";
 import {
@@ -72,36 +72,24 @@ export const ChangementStatutForm = ({
   const queryClient = useQueryClient();
 
   const form = useForm<ChangementStatutForm>({
-    defaultValues: {
+    mode: "onTouched",
+  });
+
+  useEffect(() => {
+    form.reset({
       intentionNumero: intention.numero,
       statutPrecedent: intention.statut,
       statut: intention.statut,
-      commentaire: intention.commentaireStatut,
-    },
-    mode: "onTouched",
-  });
+      commentaire: "",
+    });
+  }, [intention]);
 
   const {
     formState: { errors },
     register,
     handleSubmit,
     getValues,
-    setValue,
-    watch,
   } = form;
-
-  useEffect(
-    () =>
-      watch((_, { name }) => {
-        if (name !== "statut") return;
-        if (
-          getValues("statut") === intention.statut &&
-          !getValues("commentaire")
-        )
-          setValue("commentaire", intention.commentaireStatut);
-        else setValue("commentaire", undefined);
-      }).unsubscribe
-  );
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -117,6 +105,7 @@ export const ChangementStatutForm = ({
 
         onClose();
         queryClient.invalidateQueries(["[GET]/intention/:numero"]);
+
         if (message) {
           toast({
             variant: "left-accent",
@@ -125,10 +114,11 @@ export const ChangementStatutForm = ({
           });
         }
       },
-      //@ts-ignore
-      onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
-        const errors = e.response?.data.errors;
-        console.error(errors);
+      onError: (e: unknown) => {
+        if (isAxiosError<Record<string, string>>(e)) {
+          const errors = e.response?.data.errors;
+          console.error(errors);
+        }
       },
     });
 
