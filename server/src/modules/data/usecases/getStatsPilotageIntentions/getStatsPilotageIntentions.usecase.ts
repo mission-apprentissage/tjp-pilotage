@@ -35,27 +35,31 @@ const formatResult = (
       placesTransformees:
         item.placesOuvertesScolaire +
           item.placesOuvertesApprentissage +
-          item.placesFermeesScolaire || 0,
+          item.placesFermeesScolaire +
+          item.placesFermeesApprentissage || 0,
       placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
       placesFermeesScolaire: item.placesFermeesScolaire || 0,
       placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
       placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
       placesOuvertes:
         item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
-      placesFermees: item.placesFermeesScolaire || 0,
+      placesFermees:
+        item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
       ratioOuverture:
         Math.round(
           ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire) || 0) * 10000
+              item.placesFermeesScolaire +
+              item.placesFermeesApprentissage) || 0) * 10000
         ) / 100,
       ratioFermeture:
         Math.round(
           (item.placesFermeesScolaire /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire) || 0) * 10000
+              item.placesFermeesScolaire +
+              item.placesFermeesApprentissage) || 0) * 10000
         ) / 100,
       tauxTransformation: formatTauxTransformation(
         item.transformes,
