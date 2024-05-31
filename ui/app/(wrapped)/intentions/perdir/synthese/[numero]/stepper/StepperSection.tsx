@@ -49,9 +49,11 @@ export const StepperSection = ({
         </GridItem>
         <GridItem>
           <Img
-            src={`/illustrations/step-${getStepWorkflow(
-              intention.statut
-            )}-workflow-intentions.svg`}
+            src={`/illustrations/step-${
+              getStepWorkflow(intention.statut) != 0
+                ? getStepWorkflow(intention.statut)
+                : "1"
+            }-workflow-intentions.svg`}
             alt="Illustration de l'étape en cours"
             m={"auto"}
           />
