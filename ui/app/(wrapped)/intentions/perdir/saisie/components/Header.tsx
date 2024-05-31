@@ -87,7 +87,7 @@ export const Header = ({
               />
             </Flex>
           </MenuButton>
-          <MenuList py={0} borderTopRadius={0}>
+          <MenuList py={0} borderTopRadius={0} zIndex={"dropdown"}>
             {campagnes?.map((campagne) => (
               <MenuItem
                 p={2}

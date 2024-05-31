@@ -64,6 +64,7 @@ export const MenuIntention = ({
         variant="createButton"
         size={"md"}
         width={"100%"}
+        minH={"35px"}
         as={hasPermissionEnvoi && !isSaisieDisabled() ? NextLink : undefined}
         href="/intentions/perdir/saisie/new"
       >
