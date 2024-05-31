@@ -149,6 +149,13 @@ export const demandeValidators: Record<
       demande.capaciteScolaireColoree > demande.capaciteScolaireActuelle
     )
       return "La capacité scolaire colorée doit être inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante";
+    if (
+      isPositiveNumber(demande.capaciteScolaire) &&
+      isPositiveNumber(demande.capaciteScolaireColoree) &&
+      demande.coloration &&
+      demande.capaciteScolaireColoree > demande.capaciteScolaire
+    )
+      return "La capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
   },
   /**
    *
@@ -246,6 +253,13 @@ export const demandeValidators: Record<
         demande.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
+    if (
+      isPositiveNumber(demande.capaciteApprentissage) &&
+      isPositiveNumber(demande.capaciteApprentissageColoree) &&
+      demande.coloration &&
+      demande.capaciteApprentissageColoree > demande.capaciteApprentissage
+    )
+      return "La capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
   },
   /**
    *

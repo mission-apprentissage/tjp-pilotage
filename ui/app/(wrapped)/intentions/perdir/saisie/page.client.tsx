@@ -264,6 +264,7 @@ export const PageClient = () => {
                 top="0"
                 boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
                 bg="white"
+                zIndex={"1"}
               >
                 <Tr>
                   <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
@@ -378,7 +379,7 @@ export const PageClient = () => {
                       <Td textAlign={"center"} w={0}>
                         <StatutTag statut={intention.statut} size="md" />
                       </Td>
-                      <Td textAlign={"center"} zIndex={"dropdown"}>
+                      <Td textAlign={"center"}>
                         <Flex direction={"row"} gap={0}>
                           <Tooltip label="Voir la demande">
                             <IconButton

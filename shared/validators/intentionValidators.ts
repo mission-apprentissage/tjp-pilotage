@@ -144,6 +144,13 @@ export const intentionValidators: Record<
       intention.capaciteScolaireColoree > intention.capaciteScolaireActuelle
     )
       return "La capacité scolaire colorée doit être inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante";
+    if (
+      isPositiveNumber(intention.capaciteScolaire) &&
+      isPositiveNumber(intention.capaciteScolaireColoree) &&
+      intention.coloration &&
+      intention.capaciteScolaireColoree > intention.capaciteScolaire
+    )
+      return "La capacité scolaire colorée doit être inférieure ou égale à la future capacité scolaire";
   },
   /**
    *
@@ -242,6 +249,13 @@ export const intentionValidators: Record<
         intention.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
+    if (
+      isPositiveNumber(intention.capaciteApprentissage) &&
+      isPositiveNumber(intention.capaciteApprentissageColoree) &&
+      intention.coloration &&
+      intention.capaciteApprentissageColoree > intention.capaciteApprentissage
+    )
+      return "La capacité en apprentissage colorée doit être inférieure ou égale à la future capacité en apprentissage";
   },
   /**
    *
