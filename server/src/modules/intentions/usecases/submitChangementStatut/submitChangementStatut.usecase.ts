@@ -7,7 +7,7 @@ import { RequestUser } from "../../../core/model/User";
 import { findOneIntention } from "../../repositories/findOneIntention.query";
 import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
 import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
-import { shootChangmentStatutEmail } from "./deps/shootChangementStatutEmail.deps";
+import { shootChangementStatutEmail } from "./deps/shootChangementStatutEmail.deps";
 import { submitChangementStatutSchema } from "./submitChangementStatut.schema";
 
 type ChangementStatut = z.infer<
@@ -20,7 +20,7 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] =
       createChangementStatutQuery,
       updateIntentionWithHistory,
       findOneIntention,
-      shootChangmentStatutEmail,
+      shootChangementStatutEmail,
     },
     (deps) =>
       async ({
@@ -65,7 +65,7 @@ export const [submitChangementStatutUsecase, submitChangementStatutFactory] =
         const createdChangementStatut =
           await deps.createChangementStatutQuery(newChangementStatut);
 
-        await deps.shootChangmentStatutEmail(
+        await deps.shootChangementStatutEmail(
           newChangementStatut.statutPrecedent,
           newChangementStatut.statut,
           intentionData

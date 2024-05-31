@@ -11,7 +11,7 @@ import { findOneIntention } from "../../../repositories/findOneIntention.query";
 
 type IntentionData = Awaited<ReturnType<typeof findOneIntention>>;
 
-export const shootChangmentStatutEmail = async (
+export const shootChangementStatutEmail = async (
   previousStatut: DemandeStatutType | undefined,
   newStatut: DemandeStatutType,
   intention: IntentionData
