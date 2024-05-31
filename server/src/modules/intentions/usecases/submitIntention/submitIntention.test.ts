@@ -10,6 +10,7 @@ type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<
 
 const valideDeps = {
   createIntentionQuery: jest.fn((data) => Promise.resolve(data)),
+  createChangementStatutQuery: jest.fn((data) => Promise.resolve(data)),
   findOneDataEtablissement: () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<
       Deps["findOneDataEtablissement"]

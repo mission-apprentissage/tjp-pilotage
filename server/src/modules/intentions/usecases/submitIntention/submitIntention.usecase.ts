@@ -12,7 +12,8 @@ import { generateId, generateShortId } from "../../../utils/generateId";
 import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneIntention } from "../../repositories/findOneIntention.query";
 import { findOneSimilarIntention } from "../../repositories/findOneSimilarIntention.query";
-import { createIntentionQuery } from "./createIntention.query";
+import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
+import { createIntentionQuery } from "./deps/createIntention.query";
 import { submitIntentionSchema } from "./submitIntention.schema";
 
 type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
@@ -47,6 +48,7 @@ const logDemande = (intention?: { statut: string }) => {
 export const [submitIntentionUsecase, submitIntentionFactory] = inject(
   {
     createIntentionQuery,
+    createChangementStatutQuery,
     findOneDataEtablissement,
     findOneDataFormation,
     findOneIntention,
@@ -134,6 +136,17 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),
       });
+
+      if (created.statut !== currentIntention?.statut) {
+        createChangementStatutQuery({
+          id: generateId(),
+          intentionNumero: created.numero,
+          statutPrecedent: currentIntention?.statut,
+          statut: created.statut,
+          createdBy: user.id,
+          updatedAt: new Date(),
+        });
+      }
 
       logDemande(created);
       return created;

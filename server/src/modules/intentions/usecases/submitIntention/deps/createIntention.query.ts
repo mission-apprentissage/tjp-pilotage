@@ -1,7 +1,7 @@
 import { Insertable } from "kysely";
 
-import { DB } from "../../../../db/db";
-import { updateIntentionWithHistory } from "../../repositories/updateIntentionWithHistory.query";
+import { DB } from "../../../../../db/db";
+import { updateIntentionWithHistory } from "../../../repositories/updateIntentionWithHistory.query";
 
 export const createIntentionQuery = async (
   intention: Insertable<DB["intention"]>
