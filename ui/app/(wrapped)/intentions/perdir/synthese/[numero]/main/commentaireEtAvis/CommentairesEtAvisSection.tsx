@@ -9,6 +9,7 @@ import {
 } from "@chakra-ui/react";
 import _ from "lodash";
 import { Fragment } from "react";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
@@ -68,6 +69,12 @@ export const CommentairesEtAvisSection = ({
     return intention?.changementsStatut
       ?.filter((changementStatut) => {
         if (etape === 3 && getStepWorkflow(changementStatut.statut) === 4)
+          return true;
+        // Si la demande a été refusée à cette étape, on l'affiche
+        if (
+          getStepWorkflow(changementStatut.statutPrecedent) === etape &&
+          changementStatut.statut === DemandeStatutEnum["refusée"]
+        )
           return true;
         return getStepWorkflow(changementStatut.statut) === etape;
       })
