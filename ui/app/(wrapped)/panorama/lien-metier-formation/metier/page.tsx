@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -41,8 +41,13 @@ const DashboardMetier = () => {
         label: domaineProfessionnelSearchParam,
         value: codeDomaineProfessionnelSearchParam,
       });
-    } else if (!domaineProfessionnelSearchParam) {
+    } else if (
+      !domaineProfessionnelSearchParam ||
+      !codeDomaineProfessionnelSearchParam
+    ) {
       setSelectedDomaineProfessionnel(undefined);
+      setSelectedMetier(undefined);
+      return;
     }
 
     if (
@@ -53,8 +58,12 @@ const DashboardMetier = () => {
       setSelectedMetier({
         label: metierSearchParam,
         value: codeMetierSearchParam,
+        data: {
+          codeDomaineProfessionnel: codeDomaineProfessionnelSearchParam,
+          libelleDomaineProfessionnel: domaineProfessionnelSearchParam,
+        },
       });
-    } else if (!metierSearchParam) {
+    } else if (!metierSearchParam || !codeMetierSearchParam) {
       setSelectedMetier(undefined);
     }
   }, [searchParams]);
@@ -62,8 +71,6 @@ const DashboardMetier = () => {
   const onUpdateDomaineProfessionnel = (
     domaineProfessionnel?: DomaineProfessionnelOption
   ) => {
-    setSelectedDomaineProfessionnel(domaineProfessionnel ?? undefined);
-    setSelectedMetier(undefined);
     router.replace(
       createParametrizedUrl(location.pathname, {
         domaine_pro: domaineProfessionnel
@@ -72,28 +79,42 @@ const DashboardMetier = () => {
         code_domaine_pro: domaineProfessionnel
           ? encodeURI(domaineProfessionnel.value)
           : undefined,
-        metier: selectedMetier ? encodeURI(selectedMetier.label) : undefined,
-        code_metier: selectedMetier
-          ? encodeURI(selectedMetier.value)
-          : undefined,
+        metier: undefined,
+        code_metier: undefined,
       })
     );
   };
 
   const onUpdateMetier = (metier?: MetierOption) => {
-    setSelectedMetier(metier ?? undefined);
-    router.replace(
-      createParametrizedUrl(location.pathname, {
-        domaine_pro: selectedDomaineProfessionnel
-          ? encodeURI(selectedDomaineProfessionnel.label)
-          : undefined,
-        code_domaine_pro: selectedDomaineProfessionnel
-          ? encodeURI(selectedDomaineProfessionnel.value)
-          : undefined,
-        metier: metier ? encodeURI(metier.label) : undefined,
-        code_metier: metier ? encodeURI(metier.value) : undefined,
-      })
-    );
+    if (metier) {
+      router.replace(
+        createParametrizedUrl(location.pathname, {
+          domaine_pro: encodeURI(metier.data.libelleDomaineProfessionnel),
+          code_domaine_pro: encodeURI(metier.data.codeDomaineProfessionnel),
+          metier: encodeURI(metier.label),
+          code_metier: encodeURI(metier.value),
+        })
+      );
+
+      return;
+    }
+
+    if (selectedDomaineProfessionnel) {
+      router.replace(
+        createParametrizedUrl(location.pathname, {
+          domaine_pro: encodeURI(selectedDomaineProfessionnel.label),
+          code_domaine_pro: encodeURI(selectedDomaineProfessionnel.value),
+          metier: undefined,
+          code_metier: undefined,
+        })
+      );
+
+      return;
+    }
+  };
+
+  const clear = () => {
+    router.replace(location.pathname);
   };
 
   return (
@@ -102,20 +123,25 @@ const DashboardMetier = () => {
         À partir d’un métier, visualisez les formations y conduisant et l’offre
         de formation correspondante sur le territoire
       </Text>
-      <HStack justifyContent="start" width="100%">
-        <Box width="300px">
-          <AsyncDomaineProfessionnelSearch
-            onSelectDomaineProfessionnel={onUpdateDomaineProfessionnel}
-            domaineProfessionnel={selectedDomaineProfessionnel}
-          />
-        </Box>
-        <Box width="300px">
-          <AsyncMetierSearch
-            codeDomaineProfessionnel={selectedDomaineProfessionnel?.value}
-            onSelectMetier={onUpdateMetier}
-            metier={selectedMetier}
-          />
-        </Box>
+      <HStack justifyContent="space-between" width="100%" alignItems="end">
+        <HStack>
+          <Box width="300px">
+            <AsyncDomaineProfessionnelSearch
+              onSelectDomaineProfessionnel={onUpdateDomaineProfessionnel}
+              domaineProfessionnel={selectedDomaineProfessionnel}
+            />
+          </Box>
+          <Box width="300px">
+            <AsyncMetierSearch
+              codeDomaineProfessionnel={selectedDomaineProfessionnel?.value}
+              onSelectMetier={onUpdateMetier}
+              metier={selectedMetier}
+            />
+          </Box>
+        </HStack>
+        <Button variant="primary" onClick={() => clear()}>
+          Réinitialiser
+        </Button>
       </HStack>
       <Divider />
       {selectedMetier && (

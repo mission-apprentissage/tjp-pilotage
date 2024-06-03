@@ -12,6 +12,10 @@ export const searchNsfFormationSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
+        data: z.object({
+          codeNsf: z.string(),
+          libelleNsf: z.string(),
+        }),
       })
     ),
   },

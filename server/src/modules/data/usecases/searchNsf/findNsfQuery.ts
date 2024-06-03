@@ -1,7 +1,9 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
 
 export const findNsfQuery = async ({ search }: { search: string }) => {
   const normalizedSearch =
@@ -15,6 +17,10 @@ export const findNsfQuery = async ({ search }: { search: string }) => {
       "ilike",
       `%${normalizedSearch}%`
     )
+    .leftJoin("formationView", "formationView.codeNsf", "nsf.codeNsf")
+    .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
+    .orderBy("libelleNsf asc")
+    .distinct()
     .limit(20)
     .execute();
 
