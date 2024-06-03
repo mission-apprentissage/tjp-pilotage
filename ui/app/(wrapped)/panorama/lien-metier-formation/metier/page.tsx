@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -113,26 +113,35 @@ const DashboardMetier = () => {
     }
   };
 
+  const clear = () => {
+    router.replace(location.pathname);
+  };
+
   return (
     <VStack width="100%" alignItems="start" gap="16px">
       <Text>
         À partir d’un métier, visualisez les formations y conduisant et l’offre
         de formation correspondante sur le territoire
       </Text>
-      <HStack justifyContent="start" width="100%">
-        <Box width="300px">
-          <AsyncDomaineProfessionnelSearch
-            onSelectDomaineProfessionnel={onUpdateDomaineProfessionnel}
-            domaineProfessionnel={selectedDomaineProfessionnel}
-          />
-        </Box>
-        <Box width="300px">
-          <AsyncMetierSearch
-            codeDomaineProfessionnel={selectedDomaineProfessionnel?.value}
-            onSelectMetier={onUpdateMetier}
-            metier={selectedMetier}
-          />
-        </Box>
+      <HStack justifyContent="space-between" width="100%" alignItems="end">
+        <HStack>
+          <Box width="300px">
+            <AsyncDomaineProfessionnelSearch
+              onSelectDomaineProfessionnel={onUpdateDomaineProfessionnel}
+              domaineProfessionnel={selectedDomaineProfessionnel}
+            />
+          </Box>
+          <Box width="300px">
+            <AsyncMetierSearch
+              codeDomaineProfessionnel={selectedDomaineProfessionnel?.value}
+              onSelectMetier={onUpdateMetier}
+              metier={selectedMetier}
+            />
+          </Box>
+        </HStack>
+        <Button variant="primary" onClick={() => clear()}>
+          Réinitialiser
+        </Button>
       </HStack>
       <Divider />
       {selectedMetier && (
