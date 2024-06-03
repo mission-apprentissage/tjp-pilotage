@@ -34,8 +34,12 @@ export const findMetierQuery = async ({
     })
     .where("metier.libelleMetier", "ilike", `%${cleanSearch}%`)
     .where("metier.libelleMetier", "is not", null)
-    .select(["metier.libelleMetier as label", "metier.codeMetier as value"])
-    .$castTo<{ label: string; value: string }>()
+    .select([
+      "metier.libelleMetier",
+      "metier.codeMetier",
+      "domaineProfessionnel.codeDomaineProfessionnel",
+      "domaineProfessionnel.libelleDomaineProfessionnel",
+    ])
     .orderBy("metier.libelleMetier asc")
     .limit(20)
     .execute()
