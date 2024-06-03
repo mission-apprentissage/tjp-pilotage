@@ -1,6 +1,6 @@
 "use client";
 
-import { Box, Divider, HStack, Text, VStack } from "@chakra-ui/react";
+import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
@@ -104,23 +104,32 @@ const DashboardFormation = () => {
     }
   };
 
+  const clear = () => {
+    router.replace(location.pathname);
+  };
+
   return (
     <VStack width="100%" alignItems="start" gap="16px">
       <Text>
         À partir d’une formation, visualisez l’offre de formation sur le
         territoire et tous les débouchés métiers
       </Text>
-      <HStack justifyContent="start" width="100%">
-        <Box width="300px">
-          <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
-        </Box>
-        <Box width="300px">
-          <AsyncFormationSearch
-            codeNsf={selectedNsf?.value}
-            onSelectFormation={onUpdateFormation}
-            formation={selectedFormation}
-          />
-        </Box>
+      <HStack justifyContent="space-between" alignItems="end" width="100%">
+        <HStack>
+          <Box width="300px">
+            <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
+          </Box>
+          <Box width="300px">
+            <AsyncFormationSearch
+              codeNsf={selectedNsf?.value}
+              onSelectFormation={onUpdateFormation}
+              formation={selectedFormation}
+            />
+          </Box>
+        </HStack>
+        <Button variant="primary" onClick={() => clear()}>
+          Réinitialiser
+        </Button>
       </HStack>
       <Divider />
       {selectedFormation && (
