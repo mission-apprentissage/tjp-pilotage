@@ -36,15 +36,17 @@ const Metabase = ({
     }
   };
 
+  if (!data?.url) {
+    return <></>;
+  }
+
   return (
-    data?.url && (
-      <iframe
-        ref={iframeRef}
-        src={data?.url}
-        width="100%"
-        onLoad={onIFrameLoad}
-      />
-    )
+    <iframe
+      ref={iframeRef}
+      src={data?.url}
+      width="100%"
+      onLoad={onIFrameLoad}
+    />
   );
 };
 
