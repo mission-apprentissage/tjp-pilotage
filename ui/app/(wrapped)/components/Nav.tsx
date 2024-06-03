@@ -216,8 +216,8 @@ export const Nav = () => {
           </MenuItem>
           <MenuItem p="0">
             <NavMenuLink
-              href="/panorama/lien-emploi-formation"
-              segment="panorama/lien-emploi-formation"
+              href="/panorama/lien-metier-formation"
+              segment="panorama/lien-metier-formation"
             >
               Lien emploi formation
             </NavMenuLink>

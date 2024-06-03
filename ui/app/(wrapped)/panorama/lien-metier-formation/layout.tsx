@@ -28,7 +28,7 @@ const LienEmploiFormation = ({ children }: { children: React.ReactNode }) => {
         width={"100%"}
       >
         <TabList>
-          <Tab as={NextLink} href="/panorama/lien-emploi-formation/formation">
+          <Tab as={NextLink} href="/panorama/lien-metier-formation/formation">
             <Flex
               direction={"row"}
               justify={"center"}
@@ -40,7 +40,7 @@ const LienEmploiFormation = ({ children }: { children: React.ReactNode }) => {
               <Text>À partir d'une formation</Text>
             </Flex>
           </Tab>
-          <Tab as={NextLink} href="/panorama/lien-emploi-formation/metier">
+          <Tab as={NextLink} href="/panorama/lien-metier-formation/metier">
             <Flex
               direction={"row"}
               justify={"center"}
