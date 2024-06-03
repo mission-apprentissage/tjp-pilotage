@@ -15,7 +15,13 @@ export const MinimalFooter = () => {
   const trackEvent = usePlausible();
 
   return (
-    <VStack mt={"auto"} borderTop="1px" borderTopColor={"grey.900"}>
+    <VStack
+      mt={"auto"}
+      borderTop="1px"
+      borderTopColor={"grey.900"}
+      backgroundColor={"white"}
+      zIndex={10}
+    >
       <Stack
         padding={{
           base: "16px",
