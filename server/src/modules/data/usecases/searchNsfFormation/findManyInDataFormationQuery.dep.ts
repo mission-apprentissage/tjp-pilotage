@@ -1,8 +1,11 @@
 import { sql } from "kysely";
+import { CURRENT_RENTREE } from "shared";
+import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
 import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 export const findManyInDataFormationQuery = async ({
@@ -12,37 +15,28 @@ export const findManyInDataFormationQuery = async ({
   search: string;
   filters: z.infer<typeof searchNsfFormationSchema.querystring>;
 }) => {
+  console.log(getDateRentreeScolaire(CURRENT_RENTREE));
   const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
   const search_array = cleanSearch.split(" ");
 
   const formations = await kdb
-    .selectFrom("dataFormation")
+    .selectFrom("formationView")
     .leftJoin(
       "niveauDiplome",
       "niveauDiplome.codeNiveauDiplome",
-      "dataFormation.codeNiveauDiplome"
+      "formationView.codeNiveauDiplome"
     )
-    .leftJoin("familleMetier", "dataFormation.cfd", "familleMetier.cfd")
-    .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 1)`, "in", [
-      "0",
-      "3",
-      "4",
-      "5",
-    ])
-    .where((eb) => sql`LEFT(${eb.ref("dataFormation.cfd")}, 3)`, "not in", [
-      "420",
-      "430",
-      "010",
-    ])
+    .leftJoin("familleMetier", "formationView.cfd", "familleMetier.cfd")
+    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .where((eb) =>
       eb.and([
         eb.and(
           search_array.map((search_word) =>
             eb(
               sql`concat(
-                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  unaccent(${eb.ref("formationView.libelleFormation")}),
                   ' ',
-                  unaccent(${eb.ref("dataFormation.cfd")}),
+                  unaccent(${eb.ref("formationView.cfd")}),
                   ' ',
                   unaccent(${eb.ref("niveauDiplome.libelleNiveauDiplome")}),
                   ' ',
@@ -60,33 +54,32 @@ export const findManyInDataFormationQuery = async ({
           )
         ),
         eb.or([
-          eb("dataFormation.dateFermeture", "is", null),
-          eb("dataFormation.dateFermeture", ">", sql<Date>`now()`),
-        ]),
-        eb.or([
-          eb("dataFormation.typeFamille", "is", null),
-          eb("dataFormation.typeFamille", "=", "specialite"),
-          eb("dataFormation.typeFamille", "=", "option"),
+          eb("formationView.typeFamille", "is", null),
+          eb("formationView.typeFamille", "=", "specialite"),
+          eb("formationView.typeFamille", "=", "option"),
         ]),
       ])
     )
     .$call((q) => {
       if (filters.codeNsf) {
-        return q.where("dataFormation.codeNsf", "=", filters.codeNsf);
+        return q.where("formationView.codeNsf", "=", filters.codeNsf);
       }
       return q;
     })
-    .select((eb) => [
-      "dataFormation.cfd as value",
-      sql<string>`CONCAT(${eb.ref("dataFormation.libelleFormation")},
-      ' (',${eb.ref("niveauDiplome.libelleNiveauDiplome")},')')`.as("label"),
+    .select([
+      "formationView.cfd",
+      "formationView.libelleFormation",
+      "niveauDiplome.libelleNiveauDiplome",
+      "nsf.codeNsf",
+      "nsf.libelleNsf",
     ])
     .distinctOn([
-      "dataFormation.cfd",
-      "dataFormation.libelleFormation",
+      "formationView.cfd",
+      "formationView.libelleFormation",
       "niveauDiplome.libelleNiveauDiplome",
     ])
-    .orderBy(["dataFormation.libelleFormation asc"])
+    .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
+    .orderBy(["formationView.libelleFormation asc"])
     .limit(20)
     .execute()
     .then(cleanNull);

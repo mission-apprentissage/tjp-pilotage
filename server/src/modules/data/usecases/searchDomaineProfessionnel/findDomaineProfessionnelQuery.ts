@@ -32,6 +32,7 @@ export const findDomaineProfessionnelQuery = async ({
       "ilike",
       `%${normalizedSearch}%`
     )
+    .orderBy("domaineProfessionnel.libelleDomaineProfessionnel asc")
     .limit(20)
     .execute();
 
