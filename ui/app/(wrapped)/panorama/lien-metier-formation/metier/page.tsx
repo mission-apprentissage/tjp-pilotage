@@ -1,11 +1,13 @@
 "use client";
 
 import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { client } from "@/api.client";
 
+import { themeDefinition } from "../../../../../theme/theme";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { AsyncDomaineProfessionnelSearch } from "./components/AsyncDomaineProfessionnelSearch";
 import AsyncMetierSearch from "./components/AsyncMetierSearch";
@@ -113,6 +115,15 @@ const DashboardMetier = () => {
 
       return;
     }
+
+    router.replace(
+      createParametrizedUrl(location.pathname, {
+        domaine_formation: undefined,
+        code_domaine_formation: undefined,
+        formation: undefined,
+        code_formation: undefined,
+      })
+    );
   };
 
   const clear = () => {
@@ -125,7 +136,7 @@ const DashboardMetier = () => {
         À partir d’un métier, visualisez les formations y conduisant et l’offre
         de formation correspondante sur le territoire
       </Text>
-      <HStack justifyContent="space-between" width="100%" alignItems="end">
+      <HStack width="100%" alignItems="end">
         <HStack>
           <Box width="300px">
             <AsyncDomaineProfessionnelSearch
@@ -141,8 +152,16 @@ const DashboardMetier = () => {
             />
           </Box>
         </HStack>
-        <Button variant="primary" onClick={() => clear()}>
-          Réinitialiser
+        <Button
+          backgroundColor="transparent"
+          color={themeDefinition.colors.bluefrance[113]}
+          fontWeight={400}
+          onClick={() => clear()}
+        >
+          <Box pr="4px">
+            <Icon icon="ri:refresh-line" />
+          </Box>
+          <Text>Réinitialiser les filtre</Text>
         </Button>
       </HStack>
       <Divider />
