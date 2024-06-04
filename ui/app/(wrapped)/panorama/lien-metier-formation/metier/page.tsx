@@ -46,8 +46,6 @@ const DashboardMetier = () => {
       !codeDomaineProfessionnelSearchParam
     ) {
       setSelectedDomaineProfessionnel(undefined);
-      setSelectedMetier(undefined);
-      return;
     }
 
     if (
@@ -58,10 +56,6 @@ const DashboardMetier = () => {
       setSelectedMetier({
         label: metierSearchParam,
         value: codeMetierSearchParam,
-        data: {
-          codeDomaineProfessionnel: codeDomaineProfessionnelSearchParam,
-          libelleDomaineProfessionnel: domaineProfessionnelSearchParam,
-        },
       });
     } else if (!metierSearchParam || !codeMetierSearchParam) {
       setSelectedMetier(undefined);
@@ -86,11 +80,19 @@ const DashboardMetier = () => {
   };
 
   const onUpdateMetier = (metier?: MetierOption) => {
+    const domaineProfessionnelSearchParam = searchParams.get("domaine_pro");
+    const codeDomaineProfessionnelSearchParam =
+      searchParams.get("code_domaine_pro");
+
     if (metier) {
       router.replace(
         createParametrizedUrl(location.pathname, {
-          domaine_pro: encodeURI(metier.data.libelleDomaineProfessionnel),
-          code_domaine_pro: encodeURI(metier.data.codeDomaineProfessionnel),
+          domaine_pro: domaineProfessionnelSearchParam
+            ? encodeURI(domaineProfessionnelSearchParam)
+            : undefined,
+          code_domaine_pro: codeDomaineProfessionnelSearchParam
+            ? encodeURI(codeDomaineProfessionnelSearchParam)
+            : undefined,
           metier: encodeURI(metier.label),
           code_metier: encodeURI(metier.value),
         })

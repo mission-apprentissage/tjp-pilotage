@@ -27,11 +27,6 @@ export const [searchMetier] = inject(
         options.push({
           value: formation.codeMetier,
           label: formation.libelleMetier ?? "",
-          data: {
-            codeDomaineProfessionnel: formation.codeDomaineProfessionnel ?? "",
-            libelleDomaineProfessionnel:
-              formation.libelleDomaineProfessionnel ?? "",
-          },
         });
       }
 
