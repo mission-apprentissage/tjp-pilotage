@@ -12,10 +12,6 @@ export const searchMetierSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
-        data: z.object({
-          codeDomaineProfessionnel: z.string(),
-          libelleDomaineProfessionnel: z.string(),
-        }),
       })
     ),
   },

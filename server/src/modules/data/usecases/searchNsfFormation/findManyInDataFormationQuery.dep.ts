@@ -27,7 +27,6 @@ export const findManyInDataFormationQuery = async ({
       "formationView.codeNiveauDiplome"
     )
     .leftJoin("familleMetier", "formationView.cfd", "familleMetier.cfd")
-    .leftJoin("nsf", "formationView.codeNsf", "nsf.codeNsf")
     .where((eb) =>
       eb.and([
         eb.and(
@@ -70,8 +69,6 @@ export const findManyInDataFormationQuery = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "niveauDiplome.libelleNiveauDiplome",
-      "nsf.codeNsf",
-      "nsf.libelleNsf",
     ])
     .distinctOn([
       "formationView.cfd",

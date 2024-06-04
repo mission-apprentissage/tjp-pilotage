@@ -27,10 +27,6 @@ export const [searchDiplome] = inject(
         options.push({
           label: `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`,
           value: formation.cfd,
-          data: {
-            codeNsf: formation.codeNsf ?? "",
-            libelleNsf: formation.libelleNsf ?? "",
-          },
         });
       }
 
