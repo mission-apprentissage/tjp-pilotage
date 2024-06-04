@@ -1,11 +1,13 @@
 "use client";
 
 import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import { useEffect, useState } from "react";
 
 import { client } from "@/api.client";
 
+import { themeDefinition } from "../../../../../theme/theme";
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { AsyncFormationSearch } from "./components/AsyncFormationSearch";
 import { AsyncNsfSearch } from "./components/AsyncNsfSearch";
@@ -100,6 +102,15 @@ const DashboardFormation = () => {
       );
       return;
     }
+
+    router.replace(
+      createParametrizedUrl(location.pathname, {
+        domaine_formation: undefined,
+        code_domaine_formation: undefined,
+        formation: undefined,
+        code_formation: undefined,
+      })
+    );
   };
 
   const clear = () => {
@@ -112,7 +123,7 @@ const DashboardFormation = () => {
         À partir d’une formation, visualisez l’offre de formation sur le
         territoire et tous les débouchés métiers
       </Text>
-      <HStack justifyContent="space-between" alignItems="end" width="100%">
+      <HStack alignItems="end" width="100%">
         <HStack>
           <Box width="300px">
             <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
@@ -125,8 +136,16 @@ const DashboardFormation = () => {
             />
           </Box>
         </HStack>
-        <Button variant="primary" onClick={() => clear()}>
-          Réinitialiser
+        <Button
+          backgroundColor="transparent"
+          color={themeDefinition.colors.bluefrance[113]}
+          fontWeight={400}
+          onClick={() => clear()}
+        >
+          <Box pr="4px">
+            <Icon icon="ri:refresh-line" />
+          </Box>
+          <Text>Réinitialiser les filtre</Text>
         </Button>
       </HStack>
       <Divider />
