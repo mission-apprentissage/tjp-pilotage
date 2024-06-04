@@ -127,6 +127,7 @@ export const demandeValidators: Record<
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
    * - à 0 dans le cas d'une fermeture
    * - inférieure ou égale à la capacité scolaire totale dans le cas d'une coloration de formation existante
+   * - inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante
    */
   capaciteScolaireColoree: (demande) => {
     if (!isPositiveNumber(demande.capaciteScolaireColoree)) {
@@ -150,6 +151,7 @@ export const demandeValidators: Record<
     )
       return "La capacité scolaire colorée doit être inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante";
     if (
+      !isTypeColoration(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteScolaire) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
       demande.coloration &&
@@ -225,6 +227,7 @@ export const demandeValidators: Record<
    * - à 0 dans le cas d'une fermeture
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
    * - supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration
+   * - inférieure ou égale à la capacité en apprentissage actuelle dans le cas d'une coloration de formation existante
    */
   capaciteApprentissageColoree: (demande) => {
     if (!isPositiveNumber(demande.capaciteApprentissageColoree))
@@ -254,6 +257,7 @@ export const demandeValidators: Record<
     )
       return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
     if (
+      !isTypeColoration(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteApprentissage) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       demande.coloration &&
@@ -333,7 +337,8 @@ export const demandeValidators: Record<
     )
       return "La somme des capacités colorées doit être supérieure à 0";
     if (
-      isTypeOuverture(demande.typeDemande) &&
+      (isTypeOuverture(demande.typeDemande) ||
+        isTypeAugmentation(demande.typeDemande)) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
       isPositiveNumber(demande.capaciteApprentissage) &&
@@ -345,6 +350,7 @@ export const demandeValidators: Record<
 
     if (
       !isTypeOuverture(demande.typeDemande) &&
+      !isTypeAugmentation(demande.typeDemande) &&
       isPositiveNumber(demande.capaciteApprentissageColoree) &&
       isPositiveNumber(demande.capaciteScolaireColoree) &&
       isPositiveNumber(demande.capaciteApprentissageActuelle) &&
