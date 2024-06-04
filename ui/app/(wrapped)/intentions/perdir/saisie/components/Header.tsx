@@ -19,7 +19,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { SearchInput } from "../../../../../../components/SearchInput";
 import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
-import { isSaisieDisabled } from "../utils/isSaisieDisabled";
+import { isSaisieDisabled } from "../utils/canEditIntention";
 
 const EXPORT_LIMIT = 1_000_000;
 const PAGE_SIZE = 30;

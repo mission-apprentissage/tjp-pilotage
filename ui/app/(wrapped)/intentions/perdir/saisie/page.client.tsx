@@ -57,7 +57,7 @@ import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { INTENTIONS_COLUMNS } from "./INTENTIONS_COLUMNS";
 import { Filters, Order } from "./types";
-import { isSaisieDisabled } from "./utils/isSaisieDisabled";
+import { canEditIntention, isSaisieDisabled } from "./utils/canEditIntention";
 
 const PAGE_SIZE = 30;
 
@@ -127,12 +127,14 @@ export const PageClient = () => {
     { cacheTime: 0 }
   );
 
-  const hasPermissionEnvoi = usePermission("intentions-perdir/ecriture");
+  const hasPermissionSubmitIntention = usePermission(
+    "intentions-perdir/ecriture"
+  );
 
   const isCampagneEnCours =
     data?.campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -202,7 +204,7 @@ export const PageClient = () => {
 
   const canDelete = () => {
     return (
-      hasPermissionEnvoi &&
+      hasPermissionSubmitIntention &&
       !hasRole({ user: auth?.user, role: "expert_region" }) &&
       !hasRole({ user: auth?.user, role: "region" })
     );
@@ -220,7 +222,7 @@ export const PageClient = () => {
       py={4}
     >
       <MenuIntention
-        hasPermissionEnvoi={hasPermissionEnvoi}
+        hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
       />
@@ -380,7 +382,11 @@ export const PageClient = () => {
                         <StatutTag statut={intention.statut} size="md" />
                       </Td>
                       <Td textAlign={"center"}>
-                        <Flex direction={"row"} gap={0}>
+                        <Flex
+                          direction={"row"}
+                          gap={0}
+                          justifyContent={"center"}
+                        >
                           <Tooltip label="Voir la demande">
                             <IconButton
                               as={NextLink}
@@ -401,10 +407,9 @@ export const PageClient = () => {
                                   color={bluefrance113}
                                 />
                               }
-                              me={"auto"}
                             />
                           </Tooltip>
-                          {hasPermissionEnvoi && (
+                          {canEditIntention(intention) && (
                             <Tooltip label="Modifier la demande">
                               <IconButton
                                 as={NextLink}
@@ -425,7 +430,6 @@ export const PageClient = () => {
                                     color={bluefrance113}
                                   />
                                 }
-                                me={"auto"}
                               />
                             </Tooltip>
                           )}
@@ -449,7 +453,6 @@ export const PageClient = () => {
                                     color={bluefrance113}
                                   />
                                 }
-                                me={"auto"}
                               />
                             </Tooltip>
                           )}
@@ -543,7 +546,7 @@ export const PageClient = () => {
           <Center mt={12}>
             <Flex flexDirection={"column"}>
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {hasPermissionEnvoi && (
+              {hasPermissionSubmitIntention && (
                 <Button
                   isDisabled={isDisabled}
                   variant="createButton"
