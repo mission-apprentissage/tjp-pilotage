@@ -37,6 +37,7 @@ export const MenuIntention = ({
 
   const statut =
     searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
+  const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
@@ -80,7 +81,7 @@ export const MenuIntention = ({
           href={createParametrizedUrl(location.pathname, {
             ...searchParams,
             filters: {
-              ..._.omit(searchParams.filters, ["statut"]),
+              ..._.omit(searchParams.filters, ["statut", "suivies"]),
             },
           })}
           width={"100%"}
@@ -480,6 +481,50 @@ export const MenuIntention = ({
         <Text fontSize={12} color="grey.425" mb={1}>
           Visible par vous uniquement
         </Text>
+
+        <Button
+          bgColor={"unset"}
+          as={NextLink}
+          size="sm"
+          href={createParametrizedUrl(location.pathname, {
+            ...searchParams,
+            filters: {
+              ...searchParams.filters,
+              suivies: true,
+            },
+          })}
+          width={"100%"}
+          iconSpacing={2}
+          leftIcon={
+            <Icon width="24px" icon="ri:bookmark-line" color={bluefrance113} />
+          }
+          rightIcon={
+            <Text
+              fontWeight={isRecapView && suivies ? "bold" : "normal"}
+              fontSize={14}
+            >
+              {countDemandes?.["suivies"]}
+            </Text>
+          }
+          isActive={suivies}
+          _active={{
+            borderRadius: "none",
+            bg: "bluefrance.950",
+          }}
+          p={5}
+        >
+          <Text
+            fontWeight={
+              isRecapView && statut === DemandeStatutEnum["brouillon"]
+                ? "bold"
+                : "normal"
+            }
+            fontSize={14}
+            me={"auto"}
+          >
+            Demandes suivies
+          </Text>
+        </Button>
         <Button
           bgColor={"unset"}
           as={NextLink}

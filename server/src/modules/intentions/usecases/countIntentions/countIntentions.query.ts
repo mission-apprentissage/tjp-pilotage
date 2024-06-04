@@ -30,6 +30,9 @@ export const countIntentionsQuery = async ({
         return eb;
       })
     )
+    .leftJoin("suivi", (join) =>
+      join.onRef("suivi.intentionNumero", "=", "intention.numero")
+    )
     .select((eb) =>
       sql<number>`count(${eb.ref("intention.numero")})`.as("total")
     )
@@ -136,6 +139,17 @@ export const countIntentionsQuery = async ({
         ),
         0
       )`.as(DemandeStatutEnum["prêt pour le vote"])
+    )
+    .select((eb) =>
+      sql<number>`COALESCE(
+        SUM(
+          CASE WHEN ${eb.ref("suivi.userId")} = ${user.id}
+          THEN 1
+          ELSE 0
+          END
+        ),
+        0
+      )`.as("suivies")
     )
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))

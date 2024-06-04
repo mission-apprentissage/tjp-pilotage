@@ -94,11 +94,13 @@ const IntentionsItem = z.object({
   campagneId: z.string(),
   createdBy: UserSchema,
   updatedBy: UserSchema.optional(),
+  suiviId: z.string().optional(),
 });
 
 export const getIntentionsSchema = {
   querystring: z.object({
     statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+    suivies: z.coerce.boolean().optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: IntentionsItem.keyof().optional(),
