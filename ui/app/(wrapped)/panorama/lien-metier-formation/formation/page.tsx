@@ -44,8 +44,6 @@ const DashboardFormation = () => {
       });
     } else if (!nsfSearchParam || !codeNsfSearchParam) {
       setSelectedNsf(undefined);
-      setSelectedFormation(undefined);
-      return;
     }
 
     if (
@@ -56,10 +54,6 @@ const DashboardFormation = () => {
       setSelectedFormation({
         label: formationSearchParam,
         value: codeFormationSearchParam,
-        data: {
-          codeNsf: codeNsfSearchParam,
-          libelleNsf: nsfSearchParam,
-        },
       });
     } else if (!formationSearchParam || !codeFormationSearchParam) {
       setSelectedFormation(undefined);
@@ -81,8 +75,12 @@ const DashboardFormation = () => {
     if (formation) {
       router.replace(
         createParametrizedUrl(location.pathname, {
-          domaine_formation: encodeURI(formation.data.libelleNsf),
-          code_domaine_formation: encodeURI(formation.data.codeNsf),
+          domaine_formation: selectedNsf
+            ? encodeURI(selectedNsf.label)
+            : undefined,
+          code_domaine_formation: selectedNsf
+            ? encodeURI(selectedNsf.value)
+            : undefined,
           formation: encodeURI(formation.label),
           code_formation: encodeURI(formation.value),
         })

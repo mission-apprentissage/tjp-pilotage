@@ -16,11 +16,6 @@ export const findMetierQuery = async ({
   const formations = await kdb
     .selectFrom("metier")
     .leftJoin("rome", "rome.codeRome", "metier.codeRome")
-    .leftJoin(
-      "domaineProfessionnel",
-      "domaineProfessionnel.codeDomaineProfessionnel",
-      "rome.codeDomaineProfessionnel"
-    )
     .$call((q) => {
       if (filters.codeDomaineProfessionnel) {
         return q.where(
@@ -34,12 +29,7 @@ export const findMetierQuery = async ({
     })
     .where("metier.libelleMetier", "ilike", `%${cleanSearch}%`)
     .where("metier.libelleMetier", "is not", null)
-    .select([
-      "metier.libelleMetier",
-      "metier.codeMetier",
-      "domaineProfessionnel.codeDomaineProfessionnel",
-      "domaineProfessionnel.libelleDomaineProfessionnel",
-    ])
+    .select(["metier.libelleMetier", "metier.codeMetier"])
     .orderBy("metier.libelleMetier asc")
     .limit(20)
     .execute()
