@@ -122,6 +122,7 @@ export const intentionValidators: Record<
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
    * - à 0 dans le cas d'une fermeture
    * - inférieure ou égale à la capacité scolaire totale dans le cas d'une coloration de formation existante
+   * - inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante
    */
   capaciteScolaireColoree: (intention) => {
     if (!isPositiveNumber(intention.capaciteScolaireColoree)) {
@@ -145,6 +146,7 @@ export const intentionValidators: Record<
     )
       return "La capacité scolaire colorée doit être inférieure ou égale à la capacité scolaire actuelle dans le cas d'une coloration de formation existante";
     if (
+      !isTypeColoration(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteScolaire) &&
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       intention.coloration &&
@@ -221,6 +223,7 @@ export const intentionValidators: Record<
    * - à 0 dans le cas d'une fermeture
    * - à 0 quand on ne se trouve pas dans une situation de coloration (formation existante ou non)
    * - supérieure à 0 dans le cas d'un transfert vers l'apprentissage avec coloration
+   * - inférieure ou égale à la capacité en apprentissage actuelle dans le cas d'une coloration de formation existante
    */
   capaciteApprentissageColoree: (intention) => {
     if (!isPositiveNumber(intention.capaciteApprentissageColoree))
@@ -250,6 +253,7 @@ export const intentionValidators: Record<
     )
       return "La capacité en apprentissage colorée doit être inférieure ou égale à la capacité apprentissage actuelle dans le cas d'une coloration de formation existante";
     if (
+      !isTypeColoration(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteApprentissage) &&
       isPositiveNumber(intention.capaciteApprentissageColoree) &&
       intention.coloration &&
@@ -329,7 +333,8 @@ export const intentionValidators: Record<
     )
       return "La somme des capacités colorées doit être supérieure à 0";
     if (
-      isTypeOuverture(intention.typeDemande) &&
+      (isTypeOuverture(intention.typeDemande) ||
+        isTypeAugmentation(intention.typeDemande)) &&
       isPositiveNumber(intention.capaciteApprentissageColoree) &&
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissage) &&
@@ -338,10 +343,11 @@ export const intentionValidators: Record<
         intention.capaciteScolaireColoree >
         intention.capaciteApprentissage + intention.capaciteScolaire
     )
-      return "La somme des capacités colorées doit être inférieure ou égale à la somme des capacités actuelles";
+      return "La somme des capacités colorées doit être inférieure ou égale à la somme des futures capacités";
 
     if (
       !isTypeOuverture(intention.typeDemande) &&
+      !isTypeAugmentation(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteApprentissageColoree) &&
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissageActuelle) &&

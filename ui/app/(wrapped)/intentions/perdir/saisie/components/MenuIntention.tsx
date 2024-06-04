@@ -18,15 +18,15 @@ import { client } from "@/api.client";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Filters } from "../types";
-import { isSaisieDisabled } from "../utils/isSaisieDisabled";
+import { isSaisieDisabled } from "../utils/canEditIntention";
 
 export const MenuIntention = ({
   isRecapView = false,
-  hasPermissionEnvoi,
+  hasPermissionSubmitIntention,
   campagne,
 }: {
   isRecapView?: boolean;
-  hasPermissionEnvoi: boolean;
+  hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
 }) => {
   const queryParams = useSearchParams();
@@ -41,7 +41,7 @@ export const MenuIntention = ({
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
     {
@@ -66,7 +66,11 @@ export const MenuIntention = ({
         size={"md"}
         width={"100%"}
         minH={"35px"}
-        as={hasPermissionEnvoi && !isSaisieDisabled() ? NextLink : undefined}
+        as={
+          hasPermissionSubmitIntention && !isSaisieDisabled()
+            ? NextLink
+            : undefined
+        }
         href="/intentions/perdir/saisie/new"
       >
         Nouvelle demande
