@@ -199,7 +199,7 @@ export const IntentionFilesProvider = ({
   };
 
   const addNewFiles = (files: FileList | null) => {
-    setNewFiles(Array.from(files ?? []));
+    setNewFiles((f) => [...f, ...Array.from(files ?? [])]);
   };
 
   const handleFiles = async (numero: string) => {
