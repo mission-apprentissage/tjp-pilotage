@@ -104,10 +104,12 @@ export const up = async (db: Kysely<unknown>) => {
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await sql`DROP TRIGGER update_demande_refresh_materialized_view_t ON ${sql.table(
+  await sql`DROP TRIGGER IF EXISTS update_demande_refresh_materialized_view_t ON ${sql.table(
     "demande"
   )}`.execute(db);
-  await sql`DROP FUNCTION refresh_latest_demande_view()`.execute(db);
+  await sql`DROP FUNCTION IF EXISTS refresh_latest_demande_view()`.execute(db);
+
+  await db.schema.dropIndex("latestDemandeView_index").ifExists().execute();
 
   await db.schema
     .dropView("latestDemandeView")

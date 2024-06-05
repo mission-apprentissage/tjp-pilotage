@@ -10,7 +10,7 @@ import {
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
+import { IntentionForms } from "../defaultFormValues";
 
 export const LibelleFCILField = chakra(
   ({ className, active }: { className?: string; active: boolean }) => {

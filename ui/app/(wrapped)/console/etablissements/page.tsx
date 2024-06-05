@@ -335,7 +335,7 @@ export default function Etablissements() {
                 event.target.checked.toString() ?? "false"
               );
             }}
-            isChecked={searchParams.withAnneeCommune === "false" ? false : true}
+            isChecked={searchParams.withAnneeCommune !== "false"}
             whiteSpace={"nowrap"}
           >
             <Text fontSize={"14px"}>
@@ -765,15 +765,14 @@ export default function Etablissements() {
                     historiqueId.codeDispositif === line.codeDispositif &&
                     historiqueId.uai === line.uai && (
                       <>
-                        {historique &&
-                          historique.map((historiqueLine) => (
-                            <Tr
-                              key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
-                              bg={"grey.975"}
-                            >
-                              <EtablissementLineContent line={historiqueLine} />
-                            </Tr>
-                          ))}
+                        {historique?.map((historiqueLine) => (
+                          <Tr
+                            key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
+                            bg={"grey.975"}
+                          >
+                            <EtablissementLineContent line={historiqueLine} />
+                          </Tr>
+                        ))}
 
                         {historique && !historique.length && (
                           <EtablissementLinePlaceholder />

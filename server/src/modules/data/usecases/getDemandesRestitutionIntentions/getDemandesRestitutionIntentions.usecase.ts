@@ -1,15 +1,26 @@
+import { MILLESIMES_IJ } from "shared";
+import { z } from "zod";
+
 import { cleanNull } from "../../../../utils/noNull";
+import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies, Filters } from "./dependencies";
+import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
+import { getFilters } from "./deps/getFilters.query";
+import { FiltersSchema } from "./getDemandesRestitutionIntentions.schema";
+
+export interface Filters extends z.infer<typeof FiltersSchema> {
+  user: RequestUser;
+  millesimeSortie?: (typeof MILLESIMES_IJ)[number];
+}
 
 const getDemandesRestitutionIntentionsFactory =
   (
     deps = {
       getDemandesRestitutionIntentionsQuery:
-        dependencies.getDemandesRestitutionIntentionsQuery,
-      getFilters: dependencies.getFilters,
+        getDemandesRestitutionIntentionsQuery,
+      getFilters: getFilters,
       getCurrentCampagneQuery,
       getStatsSortieParRegionsEtNiveauDiplomeQuery,
     }
@@ -35,7 +46,10 @@ const getDemandesRestitutionIntentionsFactory =
           positionQuadrant:
             statsSortie && statsSortie[demande.codeRegion ?? ""]
               ? getPositionQuadrant(
-                  demande,
+                  {
+                    tauxInsertion: demande.tauxInsertionRegional,
+                    tauxPoursuite: demande.tauxPoursuiteRegional,
+                  },
                   statsSortie[demande.codeRegion ?? ""][
                     demande.codeNiveauDiplome ?? ""
                   ] || {}

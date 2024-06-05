@@ -1,4 +1,4 @@
-import { Box, Divider, Select, Text } from "@chakra-ui/react";
+import { Divider, Flex, Select, Text } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
@@ -10,7 +10,7 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
   const { control } = useFormContext<IntentionForms>();
 
   return (
-    <Box bg="white" p="6" mt="6" borderRadius={6}>
+    <Flex direction="column">
       <Text fontSize={20} mb={4} fontWeight={700}>
         Statut de la demande
       </Text>
@@ -27,14 +27,18 @@ export const StatusBlock = ({ disabled }: { disabled: boolean }) => {
             value={value}
             disabled={disabled}
           >
-            <option value={DemandeStatutEnum.draft}>Projet de demande</option>
-            <option value={DemandeStatutEnum.submitted}>Validée</option>
-            <option value={DemandeStatutEnum.refused}>Refusée</option>
+            <option value={DemandeStatutEnum["projet de demande"]}>
+              Projet de demande
+            </option>
+            <option value={DemandeStatutEnum["demande validée"]}>
+              Validée
+            </option>
+            <option value={DemandeStatutEnum["refusée"]}>Refusée</option>
           </Select>
         )}
       />
-      <MotifRefusBlock disabled={disabled} mb="6" mt={6} />
-      <AutreMotifRefusField disabled={disabled} mb="6" mt={6} maxW="752px" />
-    </Box>
+      <MotifRefusBlock disabled={disabled} my={6} />
+      <AutreMotifRefusField disabled={disabled} my={6} />
+    </Flex>
   );
 };

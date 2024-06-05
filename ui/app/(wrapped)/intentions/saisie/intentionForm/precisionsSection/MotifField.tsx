@@ -10,11 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeColoration } from "shared/demandeValidators/validators";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
-
-import { IntentionForms } from "@/app/(wrapped)/intentions/saisie/intentionForm/defaultFormValues";
-import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import { isTypeColoration } from "shared/validators/demandeValidators";
 
 import {
   getMotifsTypeDemande,
@@ -27,6 +24,8 @@ import {
   isTypeFermeture,
   TypeDemande,
 } from "../../../utils/typeDemandeUtils";
+import { Campagne } from "../../types";
+import { IntentionForms } from "../defaultFormValues";
 
 const getMotifOptions = (
   typeDemande: TypeDemande,
@@ -94,7 +93,7 @@ export const MotifField = chakra(
                         ref={ref}
                         disabled={disabled}
                         name={name}
-                        key={value}
+                        key={`${name}_${label}`}
                         onBlur={onBlur}
                         value={value}
                         _checked={{ fontWeight: "bold !important" }}
@@ -113,13 +112,12 @@ export const MotifField = chakra(
                         Merci de préciser le(s) motif(s) de votre coloration
                       </FormLabel>
                       <Stack spacing={[3]} ms={6}>
-                        {getMotifOptions("coloration")?.map(
+                        {getMotifOptions("coloration", campagne?.annee)?.map(
                           ({ value, label }) => (
                             <Checkbox
                               ref={ref}
                               disabled={disabled}
-                              name={name}
-                              key={value}
+                              key={`${name}_${label}_coloration`}
                               onBlur={onBlur}
                               value={value}
                               _checked={{ fontWeight: "bold !important" }}
