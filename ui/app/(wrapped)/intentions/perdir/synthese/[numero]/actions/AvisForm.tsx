@@ -118,16 +118,12 @@ export const AvisForm = ({
     switch (typeAvis) {
       case AvisTypeEnum["préalable"]:
         return `avis préalable`;
-        break;
       case AvisTypeEnum["consultatif"]:
         return `avis consultatif`;
-        break;
       case AvisTypeEnum["final"]:
         return `vote`;
-        break;
       default:
         return `avis`;
-        break;
     }
   };
 
@@ -315,7 +311,6 @@ export const AvisForm = ({
             form.trigger().then((isValid) => {
               if (isValid) onOpen();
             });
-            console.log(getValues());
           }}
           leftIcon={<CheckIcon />}
           width={"100%"}
