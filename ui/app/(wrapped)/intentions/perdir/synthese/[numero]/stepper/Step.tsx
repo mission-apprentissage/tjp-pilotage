@@ -74,8 +74,8 @@ export const Step = ({
   etape: number;
   currentEtape: number;
   titre: string;
-  dateDebut: string;
-  dateFin: string;
+  dateDebut?: string;
+  dateFin?: string;
   description: string;
   incomplet?: boolean;
 }) => {
@@ -94,29 +94,37 @@ export const Step = ({
           my={"auto"}
         />
       </Flex>
-      <Text
-        fontSize="lg"
-        fontWeight="bold"
-        color={currentEtape >= etape ? "black" : "grey.625"}
-      >
-        {titre}
-      </Text>
+      <Flex direction={"row"} gap={2}>
+        <Text
+          fontSize="lg"
+          fontWeight="bold"
+          color={currentEtape >= etape ? "black" : "grey.625"}
+        >
+          {titre}
+        </Text>
+        {currentEtape === etape && (
+          <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
+            En cours
+          </Tag>
+        )}
+      </Flex>
       <Flex direction={"row"}>
         {currentEtape === etape && (
           <>
-            <Tag size={"md"} me={2} bgColor={"info.950"} color={"info.text"}>
-              En cours
-            </Tag>
-            <Text color={currentEtape >= etape ? "black" : "grey.625"}>
-              depuis le {dateDebut}
-            </Text>
+            {dateDebut && (
+              <Text color={currentEtape >= etape ? "black" : "grey.625"}>
+                depuis le {dateDebut}
+              </Text>
+            )}
           </>
         )}
         {currentEtape > etape && (
           <>
-            <Text color={currentEtape >= etape ? "black" : "grey.625"}>
-              du {dateDebut} au {dateFin}
-            </Text>
+            {dateDebut && dateFin && (
+              <Text color={currentEtape >= etape ? "black" : "grey.625"}>
+                du {dateDebut} au {dateFin}
+              </Text>
+            )}
           </>
         )}
       </Flex>

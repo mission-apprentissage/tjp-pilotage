@@ -19,8 +19,6 @@ export const StepperSection = ({
             etape={1}
             currentEtape={getStepWorkflow(intention.statut)}
             titre="Revue de la proposition"
-            dateDebut="03/06/2024"
-            dateFin="15/08/2024"
             description="Vérification de la complétude du dossier et première évaluation de la faisabilité"
             incomplet={
               intention.statut === DemandeStatutEnum["dossier incomplet"]
@@ -32,8 +30,6 @@ export const StepperSection = ({
             etape={2}
             currentEtape={getStepWorkflow(intention.statut)}
             titre="Instruction du projet"
-            dateDebut="XX/XX/2024"
-            dateFin="XX/XX/2024"
             description="Éclairage de chaque dossier par des avis experts/pilotes afin de faciliter la décision"
           />
         </GridItem>
@@ -42,8 +38,6 @@ export const StepperSection = ({
             etape={3}
             currentEtape={getStepWorkflow(intention.statut)}
             titre="Phase de vote"
-            dateDebut="XX/XX/2024"
-            dateFin="XX/XX/2024"
             description="Dernière phase d'étude du dossier pour arbitrage, votes et décisions finales"
           />
         </GridItem>
