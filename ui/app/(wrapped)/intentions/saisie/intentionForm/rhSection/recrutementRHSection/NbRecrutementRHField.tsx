@@ -50,6 +50,7 @@ export const NbRecrutementRHField = chakra(
               size={"md"}
               w={56}
               bgColor={"white"}
+              onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField
                 textAlign={"end"}

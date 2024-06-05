@@ -1,4 +1,11 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
 
 const IntentionsItem = z.object({
   // Formation
@@ -41,6 +48,7 @@ const IntentionsItem = z.object({
   cmqImplique: z.boolean().optional(),
   filiereCmq: z.string().optional(),
   nomCmq: z.string().optional(),
+  inspecteurReferent: z.string().optional(),
   //RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),
@@ -74,7 +82,7 @@ const IntentionsItem = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: z.string(),
+  statut: DemandeStatutZodType,
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre
@@ -84,11 +92,15 @@ const IntentionsItem = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   campagneId: z.string(),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
+  suiviId: z.string().optional(),
 });
 
 export const getIntentionsSchema = {
   querystring: z.object({
-    statut: z.enum(["draft", "submitted", "refused"]).optional(),
+    statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
+    suivies: z.coerce.boolean().optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: IntentionsItem.keyof().optional(),

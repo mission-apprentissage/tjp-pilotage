@@ -1,4 +1,4 @@
-import { demandeStatut } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 export const submitIntentionSchema = {
@@ -34,6 +34,7 @@ export const submitIntentionSchema = {
       cmqImplique: z.boolean().optional(),
       filiereCmq: z.string().optional(),
       nomCmq: z.string().optional(),
+      inspecteurReferent: z.string().optional(),
       //RH
       recrutementRH: z.boolean().optional(),
       nbRecrutementRH: z.coerce.number().optional(),
@@ -71,7 +72,7 @@ export const submitIntentionSchema = {
       // Observations / commentaires
       commentaire: z.string().optional(),
       // Statut
-      statut: z.enum(["draft", "submitted", "refused"]),
+      statut: DemandeStatutZodType.exclude(["supprimée"]),
       motifRefus: z.array(z.string()).optional(),
       autreMotifRefus: z.string().optional(),
       // Autre
@@ -82,8 +83,8 @@ export const submitIntentionSchema = {
   response: {
     200: z.object({
       id: z.string(),
+      statut: DemandeStatutZodType,
       numero: z.string(),
-      statut: demandeStatut,
     }),
   },
 };

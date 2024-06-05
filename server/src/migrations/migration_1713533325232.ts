@@ -6,6 +6,7 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .createView("demandeIntentionView")
     .as(
+      // @ts-ignore
       kdb
         .selectFrom("intention")
         .select([
@@ -78,6 +79,7 @@ export const up = async (db: Kysely<unknown>) => {
           "augmentationCapaciteAccueilRestaurationPrecisions",
         ])
         .union(
+          // @ts-ignore
           kdb
             .selectFrom("demande")
             .select([

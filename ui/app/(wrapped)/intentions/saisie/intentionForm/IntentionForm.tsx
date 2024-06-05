@@ -88,16 +88,16 @@ export const IntentionForm = ({
       let message: string | null = null;
 
       switch (body.statut) {
-        case DemandeStatutEnum.draft:
+        case DemandeStatutEnum["projet de demande"]:
           message = "Projet de demande enregistré avec succès";
           break;
-        case DemandeStatutEnum.submitted:
+        case DemandeStatutEnum["demande validée"]:
           message = "Demande validée avec succès";
           break;
-        case DemandeStatutEnum.refused:
+        case DemandeStatutEnum["refusée"]:
           message = "Demande refusée avec succès";
           break;
-        case DemandeStatutEnum.deleted:
+        case DemandeStatutEnum["supprimée"]:
           message = "Demande supprimée avec succès";
           break;
       }
@@ -283,7 +283,7 @@ export const IntentionForm = ({
                                     ...values,
                                     statut: formId
                                       ? values.statut
-                                      : DemandeStatutEnum.draft,
+                                      : DemandeStatutEnum["projet de demande"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },

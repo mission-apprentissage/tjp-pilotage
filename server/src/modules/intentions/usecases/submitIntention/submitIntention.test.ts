@@ -10,6 +10,7 @@ type AwaitedResult<V extends (...args: any[]) => Promise<any>> = Awaited<
 
 const valideDeps = {
   createIntentionQuery: jest.fn((data) => Promise.resolve(data)),
+  createChangementStatutQuery: jest.fn((data) => Promise.resolve(data)),
   findOneDataEtablissement: () =>
     Promise.resolve({ codeRegion: "75", codeAcademie: "06" } as AwaitedResult<
       Deps["findOneDataEtablissement"]
@@ -22,7 +23,7 @@ const valideDeps = {
     Promise.resolve({
       numero: "numero-id",
       codeRegion: "codeRegion",
-      createurId: "user-id",
+      createdBy: "user-id",
     } as AwaitedResult<Deps["findOneIntention"]>),
   findOneSimilarIntention: () => Promise.resolve(),
 } as Deps;
@@ -32,7 +33,7 @@ const intention = {
   numero: "numero-id",
   uai: "intention-uai",
   cfd: "intention-cfd",
-  createurId: "user-id",
+  createdBy: "user-id",
   codeDispositif: "codeDispositif",
   rentreeScolaire: 2025,
   typeDemande: "augmentation",
@@ -88,7 +89,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         intention: {
           ...intention,
-          statut: DemandeStatutEnum.submitted,
+          statut: DemandeStatutEnum["demande validée"],
         },
       })
     ).rejects.toThrow("Code uai non valide");
@@ -105,7 +106,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         intention: {
           ...intention,
-          statut: DemandeStatutEnum.submitted,
+          statut: DemandeStatutEnum["demande validée"],
         },
       })
     ).rejects.toThrow("Code diplome non valide");
@@ -119,7 +120,7 @@ describe("submitDemande usecase", () => {
         user: gestionnaire,
         intention: {
           ...intention,
-          statut: DemandeStatutEnum.refused,
+          statut: DemandeStatutEnum["refusée"],
           motifRefus: undefined,
         },
       })
@@ -140,7 +141,7 @@ describe("submitDemande usecase", () => {
           ...intention,
           mixte: true,
           capaciteApprentissage: undefined,
-          statut: DemandeStatutEnum.submitted,
+          statut: DemandeStatutEnum["demande validée"],
         },
       })
     ).rejects.toThrow("Forbidden");
@@ -158,14 +159,14 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       intention: {
         ...intention,
-        statut: DemandeStatutEnum.draft,
+        statut: DemandeStatutEnum["proposition"],
         numero: undefined,
       },
     });
     expect(deps.createIntentionQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...intention,
-        statut: DemandeStatutEnum.draft,
+        statut: DemandeStatutEnum["proposition"],
         id: expect.stringMatching(".+"),
         numero: expect.stringMatching(".+"),
         updatedAt: expect.any(Date),
@@ -185,14 +186,14 @@ describe("submitDemande usecase", () => {
       user: gestionnaire,
       intention: {
         ...intention,
-        statut: DemandeStatutEnum.submitted,
+        statut: DemandeStatutEnum["demande validée"],
         numero: "numero-id",
       },
     });
     expect(deps.createIntentionQuery).toHaveBeenCalledWith(
       expect.objectContaining({
         ...intention,
-        statut: DemandeStatutEnum.submitted,
+        statut: DemandeStatutEnum["demande validée"],
         numero: "numero-id",
         id: expect.stringMatching(".+"),
         updatedAt: expect.any(Date),

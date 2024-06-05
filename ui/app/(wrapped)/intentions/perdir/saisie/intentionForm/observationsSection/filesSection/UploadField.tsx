@@ -3,7 +3,7 @@ import { useRef, useState } from "react";
 import { MAX_FILE_SIZE, MAX_FILE_SIZE_IN_MB } from "shared";
 
 export const ACCEPTED_FILES_TYPES =
-  ".jpg,.jpeg,.png,.pdf,.doc,.docx,application/msword,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
+  ".jpg,.jpeg,.png,.pdf,.docx,application/vnd.openxmlformats-officedocument.wordprocessingml.document";
 
 const validateFiles = (value?: FileList) => {
   if (!value || (value?.length ?? 0) < 1) {
@@ -24,9 +24,11 @@ const validateFiles = (value?: FileList) => {
 export const UploadField = ({
   setNewFiles,
   newFiles,
+  disabled,
 }: {
   setNewFiles: (files: FileList | null) => void;
   newFiles: File[];
+  disabled: boolean;
 }) => {
   const [error, setError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -73,8 +75,9 @@ export const UploadField = ({
             accept={ACCEPTED_FILES_TYPES}
             ref={fileInputRef}
             onChange={handleFileChange}
+            disabled={disabled}
           />
-          <Button>Parcourir</Button>
+          <Button isDisabled={disabled}>Parcourir</Button>
         </InputGroup>
         <Flex ml={"8px"}>
           {!newFiles || newFiles.length === 0 ? (

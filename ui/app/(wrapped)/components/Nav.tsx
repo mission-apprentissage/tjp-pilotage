@@ -166,11 +166,25 @@ export const Nav = () => {
     hasPermission(auth?.user.role, "users/lecture") ||
     hasPermission(auth?.user.role, "campagnes/lecture");
 
-  const shouldDisplayIntentionMenu =
-    hasRole({ user: auth?.user, role: "perdir" }) ||
-    isUserInRegionsExperimentation({
+  const shouldDisplayIntentionExpeMenu = isUserInRegionsExperimentation({
+    user: auth?.user,
+  });
+
+  const shouldDisplayBothIntentionMenus =
+    hasRole({
       user: auth?.user,
-    });
+      role: "admin",
+    }) || hasRole({ user: auth?.user, role: "pilote" });
+
+  const hasOnlyFormulaireIntentionMenu =
+    hasPermission(auth?.user.role, "intentions/lecture") &&
+    !shouldDisplayIntentionExpeMenu &&
+    !shouldDisplayBothIntentionMenus;
+
+  const hasOnlyFormulaireIntentionExpeMenu =
+    hasPermission(auth?.user.role, "intentions-perdir/lecture") &&
+    shouldDisplayIntentionExpeMenu &&
+    !shouldDisplayBothIntentionMenus;
 
   const {
     isOpen: isMenuPanoramaOpen,
@@ -265,27 +279,48 @@ export const Nav = () => {
             onMouseEnter={onMenuIntentionOpen}
             onMouseLeave={onMenuIntentionClose}
           >
-            {hasPermission(auth?.user.role, "intentions/lecture") &&
-            !shouldDisplayIntentionMenu ? (
-              <MenuItem p="0" w="100%">
-                <NavMenuLink
-                  href="/intentions/saisie"
-                  segment="saisie-intentions"
-                >
-                  Formulaire
-                </NavMenuLink>
-              </MenuItem>
-            ) : (
-              hasPermission(auth?.user.role, "intentions-perdir/lecture") && (
+            {shouldDisplayBothIntentionMenus ? (
+              <>
+                <MenuItem p="0" w="100%">
+                  <NavMenuLink
+                    href="/intentions/saisie"
+                    segment="saisie-intentions"
+                  >
+                    Formulaire
+                  </NavMenuLink>
+                </MenuItem>
                 <MenuItem p="0" w="100%">
                   <NavMenuLink
                     href="/intentions/perdir/saisie"
                     segment="saisie-intentions-perdir"
                   >
-                    Formulaire
+                    Formulaire (EXPE)
                   </NavMenuLink>
                 </MenuItem>
-              )
+              </>
+            ) : (
+              <>
+                {hasOnlyFormulaireIntentionMenu && (
+                  <MenuItem p="0" w="100%">
+                    <NavMenuLink
+                      href="/intentions/saisie"
+                      segment="saisie-intentions"
+                    >
+                      Formulaire
+                    </NavMenuLink>
+                  </MenuItem>
+                )}
+                {hasOnlyFormulaireIntentionExpeMenu && (
+                  <MenuItem p="0" w="100%">
+                    <NavMenuLink
+                      href="/intentions/perdir/saisie"
+                      segment="saisie-intentions-perdir"
+                    >
+                      Formulaire
+                    </NavMenuLink>
+                  </MenuItem>
+                )}
+              </>
             )}
             {hasPermission(auth?.user.role, "pilotage-intentions/lecture") && (
               <MenuItem p="0">

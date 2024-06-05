@@ -52,12 +52,12 @@ export const CampusAutocompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/campus/search/:search"][number])
       }
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 1)
-          return client
-            .ref("[GET]/campus/search/:search")
-            .query({ params: { search: inputValue } });
-      }}
+      loadOptions={(inputValue: string) =>
+        client
+          .ref("[GET]/campus/search/:search")
+          .query({ params: { search: inputValue } })
+      }
+      defaultOptions
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 1
           ? "Recherche..."

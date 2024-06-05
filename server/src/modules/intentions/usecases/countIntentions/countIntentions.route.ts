@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -16,10 +15,9 @@ export const countIntentionsRoute = (server: Server) => {
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
         const { anneeCampagne } = request.query;
-        if (!request.user) throw Boom.forbidden();
-
+        const { user } = request;
         const result = await countIntentionsUsecase({
-          user: request.user,
+          user: user!,
           anneeCampagne,
         });
         response.status(200).send(result);

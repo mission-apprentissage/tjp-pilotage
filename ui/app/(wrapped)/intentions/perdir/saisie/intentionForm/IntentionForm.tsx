@@ -9,6 +9,7 @@ import {
   Box,
   Button,
   Container,
+  Flex,
   Grid,
   GridItem,
   UnorderedList,
@@ -28,18 +29,24 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { LinkButton } from "@/components/LinkButton";
+import { useAuth } from "@/utils/security/useAuth";
 
+import { getStepWorkflow } from "../../../utils/statutUtils";
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
-import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
 import { Campagne } from "../types";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
@@ -67,6 +74,7 @@ export const IntentionForm = ({
   formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
   campagne?: Campagne;
 }) => {
+  const { auth } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
@@ -88,19 +96,20 @@ export const IntentionForm = ({
     isSuccess,
   } = client.ref("[POST]/intention/submit").useMutation({
     onSuccess: async (body) => {
-      let message: string | null = null;
+      let message = undefined;
       switch (body.statut) {
-        case DemandeStatutEnum.draft:
-          message = "Projet de demande enregistré avec succès";
+        case DemandeStatutEnum["brouillon"]:
+          message =
+            "Votre demande a bien été enregistrée en tant que brouillon";
           break;
-        case DemandeStatutEnum.submitted:
-          message = "Demande validée avec succès";
+        case DemandeStatutEnum["proposition"]:
+          message = "Votre proposition a bien été enregistrée";
           break;
-        case DemandeStatutEnum.refused:
-          message = "Demande refusée avec succès";
+        case DemandeStatutEnum["projet de demande"]:
+          message = "Votre projet de demande a bien été enregistré";
           break;
-        case DemandeStatutEnum.deleted:
-          message = "Demande supprimée avec succès";
+        default:
+          message = "Votre demande a bien été enregistrée";
           break;
       }
 
@@ -122,13 +131,22 @@ export const IntentionForm = ({
     },
   });
 
-  const isActionsDisabled = isSuccess || isSubmitting;
-
   const [isFCIL, setIsFCIL] = useState<boolean>(
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isFormDisabled = disabled || form.formState.disabled;
+  const isDisabledForPerdir =
+    hasRole({
+      user: auth?.user,
+      role: "perdir",
+    }) &&
+    !!defaultValues.statut &&
+    getStepWorkflow(defaultValues.statut) > 1;
+
+  const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
+
+  const isFormDisabled =
+    disabled || form.formState.disabled || isDisabledForPerdir;
 
   const isCFDUaiSectionValid = ({
     cfd,
@@ -160,7 +178,7 @@ export const IntentionForm = ({
     setStep(2);
   };
 
-  const statusComponentRef = useRef<HTMLDivElement>(null);
+  const statutComponentRef = useRef<HTMLDivElement>(null);
 
   const { setCampagne } = useContext(CampagneContext);
 
@@ -187,6 +205,50 @@ export const IntentionForm = ({
     !!typeDemande &&
     !isTypeFermeture(typeDemande) &&
     !isTypeDiminution(typeDemande);
+
+  const getStatutSubmit = (): Extract<
+    DemandeStatutType,
+    "proposition" | "projet de demande"
+  > => {
+    if (
+      hasRole({ user: auth?.user, role: "perdir" }) ||
+      hasRole({ user: auth?.user, role: "expert_region" })
+    ) {
+      return DemandeStatutEnum["proposition"];
+    }
+    return DemandeStatutEnum["projet de demande"];
+  };
+
+  const getLabelSubmit = (
+    statut: Extract<DemandeStatutType, "proposition" | "projet de demande">,
+    statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
+  ): string => {
+    if (statut === DemandeStatutEnum["projet de demande"]) {
+      return "Valider mon projet de demande";
+    }
+    if (
+      !statutPrecedent ||
+      statutPrecedent === DemandeStatutEnum["brouillon"]
+    ) {
+      return "Enregistrer ma proposition";
+    }
+    if (statut === DemandeStatutEnum["proposition"]) {
+      return "Mettre à jour ma proposition";
+    }
+    return "Enregistrer ma proposition";
+  };
+
+  const canSubmitBrouillon = (
+    statut?: Exclude<DemandeStatutType, "supprimée">
+  ): boolean => {
+    if (
+      hasRole({ user: auth?.user, role: "perdir" }) ||
+      hasRole({ user: auth?.user, role: "expert_region" })
+    ) {
+      return statut === undefined || statut === DemandeStatutEnum["brouillon"];
+    }
+    return false;
+  };
 
   return (
     <CampagneContext.Provider value={campagneValue}>
@@ -234,7 +296,7 @@ export const IntentionForm = ({
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
-              statusComponentRef={statusComponentRef}
+              statutComponentRef={statutComponentRef}
               campagne={campagne}
             />
             {step === 2 && (
@@ -286,7 +348,35 @@ export const IntentionForm = ({
                       disabled={isFormDisabled}
                       campagne={campagne}
                       footerActions={
-                        <Box justifyContent={"center"} ref={statusComponentRef}>
+                        <Flex direction="row" gap={4} ref={statutComponentRef}>
+                          {canSubmitBrouillon() && (
+                            <Button
+                              isDisabled={
+                                disabled ||
+                                isActionsDisabled ||
+                                campagne?.statut !==
+                                  CampagneStatutEnum["en cours"]
+                              }
+                              isLoading={isSubmitting}
+                              variant="draft"
+                              onClick={handleSubmit((values) =>
+                                submitDemande({
+                                  body: {
+                                    intention: {
+                                      numero: formId,
+                                      ...values,
+                                      statut: DemandeStatutEnum["brouillon"],
+                                      campagneId:
+                                        values.campagneId ?? campagne?.id,
+                                    },
+                                  },
+                                })
+                              )}
+                              leftIcon={<CheckIcon />}
+                            >
+                              Enregistrer en tant que brouillon
+                            </Button>
+                          )}
                           <Button
                             isDisabled={
                               disabled ||
@@ -302,9 +392,7 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: formId
-                                      ? values.statut
-                                      : DemandeStatutEnum.draft,
+                                    statut: getStatutSubmit(),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -313,11 +401,12 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {formId
-                              ? "Sauvegarder les modifications"
-                              : "Enregistrer le projet de demande"}
+                            {getLabelSubmit(
+                              getStatutSubmit(),
+                              defaultValues.statut
+                            )}
                           </Button>
-                        </Box>
+                        </Flex>
                       }
                     />
                     <LinkButton

@@ -137,6 +137,7 @@ export const PrimaryFiltersSection = ({
                         : ""
                     }
                     placeholder={`TOUTES (${data?.filters.rentreesScolaires?.length})`}
+                    isDisabled={data?.filters.rentreesScolaires?.length === 0}
                   >
                     {data?.filters.rentreesScolaires?.map((option) => (
                       <option key={option.value} value={option.value}>

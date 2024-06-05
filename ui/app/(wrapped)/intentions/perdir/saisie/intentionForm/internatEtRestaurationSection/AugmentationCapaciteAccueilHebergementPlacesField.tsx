@@ -54,6 +54,7 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
               w={56}
               bgColor={"white"}
               focusInputOnChange={false}
+              onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField
                 textAlign={"end"}

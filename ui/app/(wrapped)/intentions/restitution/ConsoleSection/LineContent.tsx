@@ -353,10 +353,24 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
+        colonne={"travauxAmenagementDescription"}
+        bgColor={getCellColor("travauxAmenagementDescription")}
+      >
+        {demande.travauxAmenagementDescription}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
         colonne={"achatEquipement"}
         bgColor={getCellColor("achatEquipement")}
       >
         {formatBooleanValue(demande.achatEquipement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"achatEquipementDescription"}
+        bgColor={getCellColor("achatEquipementDescription")}
+      >
+        {demande.achatEquipementDescription}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

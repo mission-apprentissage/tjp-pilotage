@@ -30,7 +30,7 @@ export const MotifRefusBlock = chakra(
     } = useFormContext<IntentionForms>();
 
     const statut = watch("statut");
-    const visible = statut === DemandeStatutEnum.refused;
+    const visible = statut === DemandeStatutEnum["refusée"];
 
     useEffect(
       () =>

@@ -1,4 +1,16 @@
+import { AvisStatutZodType } from "shared/enum/avisStatutEnum";
+import { AvisTypeZodType } from "shared/enum/avisTypeEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutZodType,
+} from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
+
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
 
 const EtablissementMetadataSchema = z
   .object({
@@ -58,6 +70,7 @@ const IntentionSchema = z.object({
   cmqImplique: z.boolean().optional(),
   filiereCmq: z.string().optional(),
   nomCmq: z.string().optional(),
+  inspecteurReferent: z.string().optional(),
   //RH
   recrutementRH: z.boolean().optional(),
   nbRecrutementRH: z.coerce.number().optional(),
@@ -91,24 +104,69 @@ const IntentionSchema = z.object({
   // Observations / commentaires
   commentaire: z.string().optional(),
   // Statut
-  statut: z.enum(["draft", "submitted", "refused"]).optional(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
+  commentaireStatut: z.string().optional(),
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   // Autre
   numero: z.string(),
   createdAt: z.string(),
+  updatedAt: z.string(),
   campagneId: z.string(),
   campagne: z.object({
     id: z.string().optional(),
     annee: z.coerce.string().optional(),
     statut: z.string().optional(),
   }),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
+  libelleEtablissement: z.string().optional(),
+  libelleDepartement: z.string(),
+  codeDepartement: z.string(),
+  libelleFormation: z.string(),
+  libelleDispositif: z.string(),
+  differenceCapaciteScolaire: z.coerce.number().optional(),
+  differenceCapaciteApprentissage: z.coerce.number().optional(),
+  changementsStatut: z.array(
+    z.object({
+      id: z.string(),
+      intentionNumero: z.string(),
+      createdBy: z.string(),
+      userRole: z.string().optional(),
+      statutPrecedent: DemandeStatutZodType.exclude([
+        DemandeStatutEnum["supprimée"],
+      ]).optional(),
+      statut: DemandeStatutZodType.exclude([DemandeStatutEnum["supprimée"]]),
+      updatedAt: z.string(),
+      userFullName: z.string(),
+      commentaire: z.string().optional(),
+    })
+  ),
+  avis: z.array(
+    z.object({
+      id: z.string(),
+      intentionNumero: z.string(),
+      createdBy: z.string(),
+      createdAt: z.string(),
+      userFullName: z.string(),
+      updatedBy: z.string().optional(),
+      updatedAt: z.string(),
+      updatedByFullName: z.string().optional(),
+      userRole: z.string().optional(),
+      typeAvis: AvisTypeZodType,
+      isVisibleParTous: z.boolean(),
+      statutAvis: AvisStatutZodType,
+      commentaire: z.string().optional(),
+      userFonction: z.string().optional(),
+    })
+  ),
+  suiviId: z.string().optional(),
 });
 
 export const getIntentionSchema = {
   params: z.object({ numero: z.string() }),
   response: {
-    200: IntentionSchema.partial().merge(
+    200: IntentionSchema.merge(
       z.object({
         metadata: MetadataSchema,
         canEdit: z.boolean(),

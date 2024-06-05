@@ -2,13 +2,13 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { QuestionBlock } from "../../components/QuestionBlock";
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
 import { AmiCmaEnCoursValidationField } from "./AmiCmaEnCoursValidationField";
 import { AmiCmaField } from "./AmiCmaField";
@@ -17,6 +17,7 @@ import { AmiCmaValideField } from "./AmiCmaValideField";
 import { AutreMotifField } from "./AutreMotifField";
 import { CmqImpliqueField } from "./CmqImpliqueField";
 import { FiliereCmqField } from "./FiliereCmqField";
+import { InspecteurReferentField } from "./InspecteurReferentField";
 import { MotifField } from "./MotifField";
 import { NomCmqField } from "./NomCmqField";
 import { PartenaireEconomiqueField } from "./PartenaireEconomiqueField";
@@ -84,6 +85,7 @@ export const PrecisionsSection = ({
             </QuestionBlock>
           </>
         )}
+        <InspecteurReferentField disabled={disabled} />
       </Flex>
     </Flex>
   );

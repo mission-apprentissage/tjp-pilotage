@@ -3,7 +3,6 @@ import {
   FormErrorMessage,
   FormLabel,
   Select,
-  Tooltip,
 } from "@chakra-ui/react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
@@ -37,30 +36,23 @@ export const RentreeScolaireField = ({
       isRequired
     >
       <FormLabel>Rentrée scolaire</FormLabel>
-      <Tooltip
-        label={
-          disabled
-            ? "Pour modifier la rentrée scolaire d'une demande veuillez refuser celle-ci et en créer une autre."
-            : ""
-        }
+      <Select
+        bg="white"
+        {...register("rentreeScolaire", {
+          required: "La rentrée scolaire est obligatoire",
+          disabled,
+          setValueAs: (value) => parseInt(value) || undefined,
+        })}
+        placeholder="Sélectionner une option"
+        isDisabled={disabled}
+        isInvalid={!!errors.rentreeScolaire}
       >
-        <Select
-          bg="white"
-          {...register("rentreeScolaire", {
-            required: "La rentrée scolaire est obligatoire",
-            setValueAs: (value) => parseInt(value) || undefined,
-          })}
-          placeholder="Sélectionner une option"
-          disabled={disabled}
-          isInvalid={!!errors.rentreeScolaire}
-        >
-          {rentreeScolaireOptions.map((rentreeScolaireOption) => (
-            <option key={rentreeScolaireOption} value={rentreeScolaireOption}>
-              {rentreeScolaireOption}
-            </option>
-          ))}
-        </Select>
-      </Tooltip>
+        {rentreeScolaireOptions.map((rentreeScolaireOption) => (
+          <option key={rentreeScolaireOption} value={rentreeScolaireOption}>
+            {rentreeScolaireOption}
+          </option>
+        ))}
+      </Select>
       {errors.rentreeScolaire && (
         <FormErrorMessage>{errors.rentreeScolaire.message}</FormErrorMessage>
       )}

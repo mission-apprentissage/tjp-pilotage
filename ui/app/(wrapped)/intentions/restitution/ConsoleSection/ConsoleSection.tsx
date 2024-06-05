@@ -16,8 +16,8 @@ import { Fragment } from "react";
 import { hasRole, isUserInRegionsExperimentation } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
+import { useAuth } from "@/utils/security/useAuth";
 
-import { useAuth } from "../../../../../utils/security/useAuth";
 import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import {
   DemandesRestitutionIntentions,
@@ -32,7 +32,6 @@ const Loader = () => {
       overflowY={"auto"}
       flex={1}
       position="relative"
-      height={"sm"}
       bg={"white"}
     >
       <Table variant="simple" size={"sm"}>
@@ -110,6 +109,13 @@ export const ConsoleSection = ({
             données.
           </Text>
         </Box>
+      </Center>
+    );
+
+  if (!data?.demandes || data.demandes.length === 0)
+    return (
+      <Center mt={12}>
+        <Text fontSize={18}>Aucune demande à afficher.</Text>
       </Center>
     );
 

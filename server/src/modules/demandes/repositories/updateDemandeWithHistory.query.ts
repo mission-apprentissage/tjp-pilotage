@@ -2,6 +2,7 @@ import { Insertable } from "kysely";
 import _ from "lodash";
 
 import { DB, kdb } from "../../../db/db";
+import { castDemandeStatutWithoutSupprimee } from "../../utils/castDemandeStatut";
 import { generateId } from "../../utils/generateId";
 
 export const updateDemandeWithHistory = async (
@@ -15,4 +16,8 @@ export const updateDemandeWithHistory = async (
       updatedAt: new Date(),
     })
     .returningAll()
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow()
+    .then((demande) => ({
+      ...demande,
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
+    }));

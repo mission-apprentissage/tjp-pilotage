@@ -1,3 +1,5 @@
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+
 export const defaultIntentionForms: PartialIntentionForms = {};
 
 export type PartialIntentionForms = Partial<IntentionForms>;
@@ -34,6 +36,7 @@ export type IntentionForms = {
   cmqImplique?: boolean;
   filiereCmq?: string;
   nomCmq?: string;
+  inspecteurReferent?: string;
   //RH
   recrutementRH?: boolean;
   nbRecrutementRH?: number;
@@ -67,7 +70,7 @@ export type IntentionForms = {
   // Observations / commentaires
   commentaire?: string;
   // Statut
-  statut: "draft" | "submitted" | "refused";
+  statut: Exclude<DemandeStatutType, "supprimée">;
   motifRefus?: string[];
   autreMotifRefus?: string;
   // Hidden

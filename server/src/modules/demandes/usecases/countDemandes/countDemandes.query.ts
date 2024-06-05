@@ -30,35 +30,41 @@ export const countDemandesQuery = async ({ user, anneeCampagne }: Filters) => {
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.draft}
+          CASE WHEN ${eb.ref("demande.statut")} = ${
+            DemandeStatutEnum["projet de demande"]
+          }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum.draft)
+      )`.as(DemandeStatutEnum["projet de demande"])
     )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.submitted}
+          CASE WHEN ${eb.ref("demande.statut")} = ${
+            DemandeStatutEnum["demande validée"]
+          }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum.submitted)
+      )`.as(DemandeStatutEnum["demande validée"])
     )
     .select((eb) =>
       sql<number>`COALESCE(
         SUM(
-          CASE WHEN ${eb.ref("demande.statut")} = ${DemandeStatutEnum.refused}
+          CASE WHEN ${eb.ref("demande.statut")} = ${
+            DemandeStatutEnum["refusée"]
+          }
           THEN 1
           ELSE 0
           END
         ),
         0
-      )`.as(DemandeStatutEnum.refused)
+      )`.as(DemandeStatutEnum["refusée"])
     )
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))

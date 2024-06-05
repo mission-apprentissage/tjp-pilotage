@@ -223,6 +223,10 @@ cli
     }
   });
 
+cli.command("refreshViews").action(async () => {
+  await refreshViews();
+});
+
 cli.command("importIJ").action(async () => {
   await importIJData();
 });

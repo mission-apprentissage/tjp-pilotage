@@ -6,6 +6,7 @@ export const up = async (db: Kysely<unknown>) => {
     .materialized()
     .ifExists()
     .execute();
+
   await sql`DROP TRIGGER IF EXISTS update_demande_refresh_materialized_view_t ON ${sql.table(
     "demande"
   )}`.execute(db);
@@ -42,13 +43,14 @@ export const up = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "supprimée")
     )
     .materialized()
     .execute();
 
   await db.schema
     .createView("latestDemandeNonMaterializedView")
+    .orReplace()
     .as(
       // ts-ignore is mandatory here because we refresh views in this migration
       // types are not yet infered from kysely codegen
@@ -76,7 +78,7 @@ export const up = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "supprimée")
     )
     .execute();
 
@@ -92,7 +94,7 @@ export const up = async (db: Kysely<unknown>) => {
       "uai",
       "codeRegion",
       "codeAcademie",
-      "createurId",
+      "createdBy",
       "codeDispositif",
     ])
     .execute();
@@ -161,7 +163,8 @@ export const down = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .selectAll("demande")
         // @ts-ignore
-        .where("demande.statut", "!=", "deleted")
+        .where("demande.statut", "!=", "supprimée")
     )
+    .materialized()
     .execute();
 };

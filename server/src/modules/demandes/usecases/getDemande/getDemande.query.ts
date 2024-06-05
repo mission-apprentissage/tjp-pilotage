@@ -9,6 +9,7 @@ import { z } from "zod";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import {
   isDemandeNotDeleted,
   isDemandeSelectable,
@@ -174,6 +175,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
           demande.metadata.etablissementCompensation
         ),
       }),
+      statut: castDemandeStatutWithoutSupprimee(demande.statut),
       createdAt: demande.createdAt?.toISOString(),
       campagne: cleanNull({
         ...demande.campagne,
