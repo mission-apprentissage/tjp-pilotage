@@ -4,6 +4,7 @@ export const up = async (db: Kysely<unknown>) => {
   await db.schema
     .alterTable("intention")
     .dropConstraint("intention_unique_constraint")
+    .ifExists()
     .execute();
 };
 
