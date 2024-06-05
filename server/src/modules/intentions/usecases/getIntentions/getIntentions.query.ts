@@ -34,7 +34,16 @@ export const getCampagneQuery = async (anneeCampagne: string) => {
 };
 
 export const getIntentionsQuery = async (
-  { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
+  {
+    statut,
+    suivies,
+    search,
+    user,
+    offset = 0,
+    limit = 20,
+    order,
+    orderBy,
+  }: Filters,
   anneeCampagne: string
 ) => {
   const search_array = getNormalizedSearchArray(search);
@@ -60,6 +69,11 @@ export const getIntentionsQuery = async (
       "intention.codeDispositif"
     )
     .leftJoin("user", "user.id", "intention.createdBy")
+    .leftJoin("suivi", (join) =>
+      join
+        .onRef("suivi.intentionNumero", "=", "intention.numero")
+        .on("userId", "=", user.id)
+    )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
@@ -68,6 +82,7 @@ export const getIntentionsQuery = async (
     )
     .selectAll("intention")
     .select((eb) => [
+      "suivi.id as suiviId",
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
@@ -152,6 +167,15 @@ export const getIntentionsQuery = async (
         sql`${sql.ref(orderBy)}`,
         sql`${sql.raw(order)} NULLS LAST`
       );
+    })
+    .$call((q) => {
+      if (suivies)
+        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
+          join
+            .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
+            .on("suiviUtilisateur.userId", "=", user.id)
+        );
+      return q;
     })
     .orderBy("updatedAt desc")
     .where(isIntentionSelectable({ user }))

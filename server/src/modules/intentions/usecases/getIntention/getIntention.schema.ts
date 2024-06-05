@@ -120,7 +120,7 @@ const IntentionSchema = z.object({
   }),
   createdBy: UserSchema,
   updatedBy: UserSchema.optional(),
-  libelleEtablissement: z.string(),
+  libelleEtablissement: z.string().optional(),
   libelleDepartement: z.string(),
   codeDepartement: z.string(),
   libelleFormation: z.string(),
@@ -160,12 +160,13 @@ const IntentionSchema = z.object({
       userFonction: z.string().optional(),
     })
   ),
+  suiviId: z.string().optional(),
 });
 
 export const getIntentionSchema = {
   params: z.object({ numero: z.string() }),
   response: {
-    200: IntentionSchema.partial().merge(
+    200: IntentionSchema.merge(
       z.object({
         metadata: MetadataSchema,
         canEdit: z.boolean(),

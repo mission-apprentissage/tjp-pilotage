@@ -49,8 +49,14 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
       "departement.codeDepartement",
       "dataEtablissement.codeDepartement"
     )
+    .leftJoin("suivi", (join) =>
+      join
+        .onRef("suivi.intentionNumero", "=", "intention.numero")
+        .on("userId", "=", user.id)
+    )
     .selectAll("intention")
     .select((eb) => [
+      "suivi.id as suiviId",
       jsonObjectFrom(
         eb
           .selectFrom("user")
@@ -157,7 +163,7 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .where(isIntentionSelectable({ user }))
     .where("intention.numero", "=", numero)
     .limit(1)
-    .executeTakeFirst();
+    .executeTakeFirstOrThrow();
 
   const changementsStatut = await kdb
     .selectFrom("changementStatut")
@@ -215,12 +221,6 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
     .where(isAvisVisible({ user }))
     .execute();
 
-  const codeDispositif =
-    intention?.codeDispositif &&
-    intention.metadata.formation?.dispositifs.find(
-      (item) => item.codeDispositif === intention?.codeDispositif
-    )?.codeDispositif;
-
   return (
     intention &&
     cleanNull({
@@ -236,7 +236,6 @@ export const getIntentionQuery = async ({ numero, user }: Filters) => {
         ...intention.campagne,
       }),
       statut: castDemandeStatutWithoutSupprimee(intention.statut),
-      codeDispositif,
       changementsStatut: changementsStatut.map((changementStatut) => ({
         ...changementStatut,
         statut: castDemandeStatutWithoutSupprimee(changementStatut.statut),
