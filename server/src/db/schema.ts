@@ -687,6 +687,13 @@ export interface Rome {
   codeDomaineProfessionnel: string;
 }
 
+export interface Suivi {
+  id: Generated<string>;
+  intentionNumero: string;
+  userId: string;
+  createdAt: Generated<Timestamp>;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -740,5 +747,6 @@ export interface DB {
   rawData: RawData;
   region: Region;
   rome: Rome;
+  suivi: Suivi;
   user: User;
 }

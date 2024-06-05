@@ -189,12 +189,49 @@ export const PageClient = () => {
         // Wait until view is updated before invalidating queries
         setTimeout(() => {
           queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
-          queryClient.invalidateQueries([
-            "[GET]/intentions/count",
-            "[GET]/intentions",
-          ]);
+          queryClient.invalidateQueries({
+            queryKey: ["[GET]/intentions/count"],
+          });
           setIsDeleting(false);
           onClose();
+        }, 500);
+      },
+    });
+
+  const { mutate: submitSuivi } = client
+    .ref("[POST]/intention/suivi")
+    .useMutation({
+      onSuccess: (_body) => {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: "La demande a bien été ajoutée à vos demandes suivies",
+        });
+        // Wait until view is updated before invalidating queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
+          queryClient.invalidateQueries({
+            queryKey: ["[GET]/intentions/count"],
+          });
+        }, 500);
+      },
+    });
+
+  const { mutate: deleteSuivi } = client
+    .ref("[DELETE]/intention/suivi/:id")
+    .useMutation({
+      onSuccess: (_body) => {
+        toast({
+          variant: "left-accent",
+          status: "success",
+          title: "La demande a bien été supprimée de vos demandes suivies",
+        });
+        // Wait until view is updated before invalidating queries
+        setTimeout(() => {
+          queryClient.invalidateQueries({ queryKey: ["[GET]/intentions"] });
+          queryClient.invalidateQueries({
+            queryKey: ["[GET]/intentions/count"],
+          });
         }, 500);
       },
     });
@@ -458,13 +495,26 @@ export const PageClient = () => {
                           )}
                           <Tooltip label="Suivre la demande">
                             <IconButton
-                              isDisabled
                               aria-label="Suivre la demande"
                               color={"bluefrance.113"}
                               bgColor={"transparent"}
                               icon={
-                                <Icon width="24px" icon="ri:bookmark-line" />
+                                intention.suiviId ? (
+                                  <Icon width="24px" icon="ri:bookmark-fill" />
+                                ) : (
+                                  <Icon width="24px" icon="ri:bookmark-line" />
+                                )
                               }
+                              onClick={() => {
+                                if (!intention.suiviId)
+                                  submitSuivi({
+                                    body: { intentionNumero: intention.numero },
+                                  });
+                                else
+                                  deleteSuivi({
+                                    params: { id: intention.suiviId },
+                                  });
+                              }}
                             />
                           </Tooltip>
                           <ModalDeleteIntention

@@ -16,6 +16,7 @@ export const countIntentionsSchema = {
       [DemandeStatutEnum["dossier complet"]]: z.number(),
       [DemandeStatutEnum["dossier incomplet"]]: z.number(),
       [DemandeStatutEnum["prêt pour le vote"]]: z.number(),
+      suivies: z.number(),
     }),
   },
 };
