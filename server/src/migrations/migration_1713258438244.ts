@@ -1,7 +1,7 @@
 import { Kysely, sql } from "kysely";
 
 export const up = async (db: Kysely<unknown>) => {
-  await db.schema.dropView("latestDemandeView").execute();
+  await db.schema.dropView("latestDemandeView").ifExists().execute();
 
   await db.schema
     .alterTable("demande")
@@ -44,11 +44,13 @@ export const up = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .where("demande.statut", "!=", "deleted")
     )
+    .ifNotExists()
+    .materialized()
     .execute();
 };
 
 export const down = async (db: Kysely<unknown>) => {
-  await db.schema.dropView("latestDemandeView").execute();
+  await db.schema.dropView("latestDemandeView").materialized().execute();
 
   await db.schema
     .alterTable("demande")
