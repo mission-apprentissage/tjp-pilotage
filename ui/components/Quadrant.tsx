@@ -392,11 +392,9 @@ export const Quadrant = function <
       ></Box>
 
       {InfoTootipContent && (
-        <Box position={"absolute"} top="10px" bottom="0" right="-20px">
-          <InfoTooltip>
-            <InfoTootipContent />
-          </InfoTooltip>
-        </Box>
+        <InfoTooltip>
+          <InfoTootipContent />
+        </InfoTooltip>
       )}
 
       {displayedDetail && TooltipContent && (

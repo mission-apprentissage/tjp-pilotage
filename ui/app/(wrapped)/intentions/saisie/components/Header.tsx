@@ -1,8 +1,7 @@
-import { ChevronDownIcon, Search2Icon } from "@chakra-ui/icons";
+import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
   Button,
   Flex,
-  Input,
   Menu,
   MenuButton,
   MenuItem,
@@ -12,14 +11,15 @@ import {
 import { usePlausible } from "next-plausible";
 
 import { client } from "@/api.client";
-import { DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/saisie/DEMANDES_COLUMNS";
-import { Campagnes, Filters } from "@/app/(wrapped)/intentions/saisie/types";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { TablePageHandler } from "../../../../../components/TablePageHandler";
+import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
+import { Campagnes, Filters } from "../types";
+import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 const EXPORT_LIMIT = 1_000_000;
 const PAGE_SIZE = 30;
@@ -127,24 +127,12 @@ export const Header = ({
               ))}
             </MenuList>
           </Menu>
-          <Input
-            type="text"
-            placeholder="Rechercher par diplôme, établissement, numéro,..."
-            w="sm"
-            mr={2}
+          <SearchInput
             value={searchDemande}
-            onChange={(e) => setSearchDemande(e.target.value)}
-            onKeyDown={(e) => {
-              if (e.key === "Enter") onClickSearchDemande();
-            }}
+            onChange={setSearchDemande}
+            onClick={onClickSearchDemande}
+            placeholder="Rechercher par diplôme, établissement, numéro,..."
           />
-          <Button
-            bgColor={"bluefrance.113"}
-            size={"md"}
-            onClick={() => onClickSearchDemande()}
-          >
-            <Search2Icon color="white" />
-          </Button>
           <ExportMenuButton
             onExportCsv={async () => {
               trackEvent("saisie_demandes:export");
@@ -168,7 +156,7 @@ export const Header = ({
                 DEMANDES_COLUMNS
               );
             }}
-            variant="solid"
+            variant="externalLink"
           />
           <TablePageHandler
             ms={"auto"}

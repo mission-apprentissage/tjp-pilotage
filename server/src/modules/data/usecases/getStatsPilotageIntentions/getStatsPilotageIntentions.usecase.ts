@@ -1,12 +1,23 @@
 import _ from "lodash";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
+import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import {
-  dependencies,
-  Filters,
-  GetScopedStatsPilotageIntentionsType,
-} from "./dependencies";
+import { getFiltersQuery } from "./deps/getFilters.query";
+import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
+import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
+
+export interface Filters
+  extends z.infer<typeof getStatsPilotageIntentionsSchema.querystring> {
+  statut?: Exclude<DemandeStatutType, "supprimée" | "refusée">;
+}
+
+export type GetScopedStatsPilotageIntentionsType = Awaited<
+  ReturnType<typeof getStatsPilotageIntentionsQuery>
+>;
 
 const formatTauxTransformation = (
   transformes: number,
@@ -35,27 +46,31 @@ const formatResult = (
       placesTransformees:
         item.placesOuvertesScolaire +
           item.placesOuvertesApprentissage +
-          item.placesFermeesScolaire || 0,
+          item.placesFermeesScolaire +
+          item.placesFermeesApprentissage || 0,
       placesOuvertesScolaire: item.placesOuvertesScolaire || 0,
       placesFermeesScolaire: item.placesFermeesScolaire || 0,
       placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
       placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
       placesOuvertes:
         item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
-      placesFermees: item.placesFermeesScolaire || 0,
+      placesFermees:
+        item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
       ratioOuverture:
         Math.round(
           ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire) || 0) * 10000
+              item.placesFermeesScolaire +
+              item.placesFermeesApprentissage) || 0) * 10000
         ) / 100,
       ratioFermeture:
         Math.round(
           (item.placesFermeesScolaire /
             (item.placesOuvertesScolaire +
               item.placesOuvertesApprentissage +
-              item.placesFermeesScolaire) || 0) * 10000
+              item.placesFermeesScolaire +
+              item.placesFermeesApprentissage) || 0) * 10000
         ) / 100,
       tauxTransformation: formatTauxTransformation(
         item.transformes,
@@ -74,28 +89,27 @@ const formatResult = (
 const getStatsPilotageIntentionsFactory =
   (
     deps = {
-      getStatsPilotageIntentionsQuery:
-        dependencies.getStatsPilotageIntentionsQuery,
-      getFiltersQuery: dependencies.getFiltersQuery,
+      getStatsPilotageIntentionsQuery: getStatsPilotageIntentionsQuery,
+      getFiltersQuery: getFiltersQuery,
       getCurrentCampagneQuery,
     }
   ) =>
   async (activeFilters: Filters) => {
     const currentCampagne = await getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
-    const [filters, draft, submitted, all] = await Promise.all([
+    const [filters, propositions, validees, all] = await Promise.all([
       deps.getFiltersQuery({
         ...activeFilters,
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum.draft,
+        statut: DemandeStatutEnum["projet de demande"],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
         ...activeFilters,
-        statut: DemandeStatutEnum.submitted,
+        statut: DemandeStatutEnum["demande validée"],
         campagne: anneeCampagne,
       }),
       deps.getStatsPilotageIntentionsQuery({
@@ -105,9 +119,13 @@ const getStatsPilotageIntentionsFactory =
     ]);
 
     return {
-      draft: formatResult(draft, activeFilters.order, activeFilters.orderBy),
-      submitted: formatResult(
-        submitted,
+      ["projet de demande"]: formatResult(
+        propositions,
+        activeFilters.order,
+        activeFilters.orderBy
+      ),
+      ["demande validée"]: formatResult(
+        validees,
         activeFilters.order,
         activeFilters.orderBy
       ),

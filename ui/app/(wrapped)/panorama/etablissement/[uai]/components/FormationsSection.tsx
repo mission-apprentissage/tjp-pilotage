@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 
 import { client } from "@/api.client";
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatAnneeCommuneLibelle";
+import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatLibelle";
 
 const Loader = () => (
   <TableContainer overflowY={"auto"} flex={1} position="relative" height={"sm"}>

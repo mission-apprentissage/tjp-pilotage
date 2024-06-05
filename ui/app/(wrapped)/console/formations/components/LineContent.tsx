@@ -12,7 +12,7 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatAnneeCommuneLibelle";
+import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatLibelle";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
@@ -55,7 +55,7 @@ export const FormationLineContent = ({
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
     <Td minW={450} whiteSpace={"normal"}>
       <Flex>
-        {formatAnneeCommuneLibelle(line)}
+        {formatAnneeCommuneLibelle(line, "long", "sm")}
         {line.formationRenovee && (
           <Flex
             ms={2}

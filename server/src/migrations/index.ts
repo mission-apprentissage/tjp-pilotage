@@ -59,8 +59,22 @@ import * as migration_1712764335865 from "./migration_1712764335865";
 import * as migration_1712843992624 from "./migration_1712843992624";
 import * as migration_1712847868247 from "./migration_1712847868247";
 import * as migration_1713258438244 from "./migration_1713258438244";
+import * as migration_1713431791519 from "./migration_1713431791519";
 import * as migration_1713446940558 from "./migration_1713446940558";
+import * as migration_1713532538729 from "./migration_1713532538729";
+import * as migration_1713533325232 from "./migration_1713533325232";
 import * as migration_1713798450376 from "./migration_1713798450376";
+import * as migration_1715678296263 from "./migration_1715678296263";
+import * as migration_1715766088538 from "./migration_1715766088538";
+import * as migration_1715846458385 from "./migration_1715846458385";
+import * as migration_1716370088988 from "./migration_1716370088988";
+import * as migration_1716380677559 from "./migration_1716380677559";
+import * as migration_1716468825446 from "./migration_1716468825446";
+import * as migration_1716815510390 from "./migration_1716815510390";
+import * as migration_1716819376601 from "./migration_1716819376601";
+import * as migration_1716988663473 from "./migration_1716988663473";
+import * as migration_1717144186505 from "./migration_1717144186505";
+import * as migration_1717491229364 from "./migration_1717491229364";
 
 type Migration = {
   up: (db: Kysely<any>) => Promise<void>;
@@ -127,6 +141,20 @@ export const migrations: Migrations = {
   migration_1712683612924,
   migration_1712764335865,
   migration_1713258438244,
+  migration_1713431791519,
   migration_1713446940558,
+  migration_1713532538729,
+  migration_1713533325232,
   migration_1713798450376,
+  migration_1715678296263,
+  migration_1715766088538,
+  migration_1715846458385,
+  migration_1716370088988,
+  migration_1716380677559,
+  migration_1716468825446,
+  migration_1716815510390,
+  migration_1716819376601,
+  migration_1716988663473,
+  migration_1717144186505,
+  migration_1717491229364,
 };

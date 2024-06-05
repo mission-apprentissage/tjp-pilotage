@@ -1,15 +1,25 @@
-import { Td } from "@chakra-ui/react";
+import { chakra, Td } from "@chakra-ui/react";
 
-import { GraphWrapper } from "../../../../../components/GraphWrapper";
-import { TableBadge } from "../../../../../components/TableBadge";
-import { getTauxPressionStyle } from "../../../../../utils/getBgScale";
+import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import { formatCommuneLibelleWithCodeDepartement } from "@/app/(wrapped)/utils/formatLibelle";
+import { GraphWrapper } from "@/components/GraphWrapper";
+import { TableBadge } from "@/components/TableBadge";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
+
 import {
   getMotifLabel,
   MotifCampagne,
   MotifLabel,
 } from "../../utils/motifDemandeUtils";
+import {
+  getMotifRefusLabel,
+  MotifRefusLabel,
+} from "../../utils/motifRefusDemandeUtils";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
+import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
 import { DemandesRestitutionIntentions } from "../types";
+
+const formatBooleanValue = (value?: boolean) => (value ? "Oui" : "Non");
 
 const handleMotifLabel = ({
   motifs,
@@ -20,7 +30,7 @@ const handleMotifLabel = ({
   campagne?: string;
   autreMotif?: string;
 }) => {
-  if (!motifs) return undefined;
+  if (!motifs || motifs.length === 0) return undefined;
   const formattedMotifs = motifs?.map((motif) =>
     motif === "autre"
       ? `Autre : ${autreMotif}`
@@ -32,116 +42,399 @@ const handleMotifLabel = ({
   return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
 };
 
+const handleMotifRefusLabel = ({
+  motifsRefus,
+  autreMotifRefus,
+}: {
+  motifsRefus?: string[];
+  autreMotifRefus?: string;
+}) => {
+  if (!motifsRefus || motifsRefus.length === 0) return undefined;
+  const formattedMotifs = motifsRefus?.map((motif) =>
+    motif === "autre"
+      ? `Autre : ${autreMotifRefus}`
+      : getMotifRefusLabel(motif as MotifRefusLabel)
+  );
+  return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
+};
+
+const ConditionalTd = chakra(
+  ({
+    className,
+    colonneFilters,
+    colonne,
+    children,
+    isNumeric = false,
+  }: {
+    className?: string;
+    colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+    colonne: keyof typeof STATS_DEMANDES_COLUMNS;
+    children: React.ReactNode;
+    isNumeric?: boolean;
+  }) => {
+    if (colonneFilters.includes(colonne))
+      return (
+        <Td
+          className={className}
+          isNumeric={isNumeric}
+          border={"none"}
+          whiteSpace={"normal"}
+          _groupHover={{ bgColor: "blueecume.850 !important" }}
+        >
+          {children}
+        </Td>
+      );
+    return null;
+  }
+);
+
 export const LineContent = ({
   demande,
   campagne,
+  colonneFilters,
+  getCellColor,
 }: {
   demande: DemandesRestitutionIntentions["demandes"][0];
   campagne?: string;
+  colonneFilters: (keyof typeof STATS_DEMANDES_COLUMNS)[];
+  getCellColor: (column: keyof typeof STATS_DEMANDES_COLUMNS) => string;
 }) => {
   return (
     <>
-      <Td pr="0" py="1">
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleEtablissement"}
+        minW={300}
+        maxW={300}
+        left={0}
+        position="sticky"
+        zIndex={1}
+        bgColor={getCellColor("libelleEtablissement")}
+      >
+        {demande.libelleEtablissement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"commune"}
+        left={colonneFilters.includes("libelleEtablissement") ? 300 : 0}
+        position="sticky"
+        zIndex={1}
+        boxShadow={"inset -2px 0px 0px 0px #E2E8F0"}
+        bgColor={getCellColor("commune")}
+      >
+        {formatCommuneLibelleWithCodeDepartement({
+          commune: demande.commune,
+          codeDepartement: demande.codeDepartement,
+        })}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleRegion"}
+        bgColor={getCellColor("libelleRegion")}
+      >
+        {demande.libelleRegion}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleAcademie"}
+        bgColor={getCellColor("libelleAcademie")}
+      >
+        {demande.libelleAcademie}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleNsf"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleNsf")}
+      >
+        {demande.libelleNsf}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleFormation"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleFormation")}
+      >
+        {demande.libelleFormation}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"niveauDiplome"}
+        bgColor={getCellColor("niveauDiplome")}
+      >
+        {demande.niveauDiplome}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"typeDemande"}
+        pr="0"
+        py="1"
+        bgColor={getCellColor("typeDemande")}
+      >
         {getTypeDemandeLabel(demande.typeDemande)}
-      </Td>
-      <Td
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"motif"}
         minW={400}
         maxW={400}
-        whiteSpace="normal"
         textOverflow={"ellipsis"}
         isTruncated={true}
+        bgColor={getCellColor("motif")}
       >
         {handleMotifLabel({
           motifs: demande.motif,
           autreMotif: demande.autreMotif,
           campagne: campagne,
         })}
-      </Td>
-      <Td>{demande.niveauDiplome}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
-        {demande.libelleFormation}
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
-        {demande.libelleEtablissement}
-      </Td>
-      <Td>{demande.commune}</Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
-        {demande.libelleNsf}
-      </Td>
-      <Td isNumeric>{demande.nbEtablissement}</Td>
-      <Td>{demande.libelleRegion}</Td>
-      <Td>{demande.libelleDepartement}</Td>
-      <Td isNumeric>{demande.differenceCapaciteScolaire ?? 0}</Td>
-      <Td isNumeric>{demande.differenceCapaciteApprentissage ?? 0}</Td>
-      <Td textAlign="center">
-        <GraphWrapper value={demande.tauxInsertion} />
-      </Td>
-      <Td textAlign="center">
-        <GraphWrapper value={demande.tauxPoursuite} />
-      </Td>
-      <Td textAlign="center">
-        <GraphWrapper value={demande.devenirFavorable} />
-      </Td>
-      <Td textAlign="center">
-        <TableBadge
-          sx={getTauxPressionStyle(
-            demande.pression !== undefined ? demande.pression : undefined
-          )}
-        >
-          {demande.pression !== undefined ? demande.pression : "-"}
-        </TableBadge>
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"differenceCapaciteScolaire"}
+        isNumeric
+        bgColor={getCellColor("differenceCapaciteScolaire")}
+      >
+        {demande.differenceCapaciteScolaire ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"differenceCapaciteApprentissage"}
+        isNumeric
+        bgColor={getCellColor("differenceCapaciteApprentissage")}
+      >
+        {demande.differenceCapaciteApprentissage ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"capaciteScolaireColoree"}
+        isNumeric
+        bgColor={getCellColor("capaciteScolaireColoree")}
+      >
+        {demande.capaciteScolaireColoree ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"capaciteApprentissageColoree"}
+        isNumeric
+        bgColor={getCellColor("capaciteApprentissageColoree")}
+      >
+        {demande.capaciteApprentissageColoree ?? 0}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleColoration"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleColoration")}
+      >
         {demande.libelleColoration}
-      </Td>
-      <Td minW={300} maxW={300} whiteSpace="normal">
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"libelleFCIL"}
+        minW={300}
+        maxW={300}
+        bgColor={getCellColor("libelleFCIL")}
+      >
         {demande.libelleFCIL}
-      </Td>
-      <Td minW={600} maxW={600} textOverflow={"ellipsis"} isTruncated={true}>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"amiCma"}
+        bgColor={getCellColor("amiCma")}
+      >
+        {formatBooleanValue(demande.amiCma)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"commentaire"}
+        minW={400}
+        maxW={400}
+        textOverflow={"ellipsis"}
+        isTruncated={true}
+        bgColor={getCellColor("commentaire")}
+      >
         {demande.commentaire}
-      </Td>
-      <Td>{demande.positionQuadrant}</Td>
-      <Td>{demande.numero}</Td>
-      <Td>{demande.recrutementRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbRecrutementRH}</Td>
-      <Td>
-        {demande.discipline1RecrutementRH &&
-          `${demande.discipline1RecrutementRH} ${
-            demande.discipline2RecrutementRH
-              ? `- ${demande.discipline2RecrutementRH}`
-              : ""
-          }`}
-      </Td>
-      <Td>{demande.reconversionRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbReconversionRH}</Td>
-      <Td>
-        {demande.discipline1ReconversionRH &&
-          `${demande.discipline1ReconversionRH} ${
-            demande.discipline2ReconversionRH
-              ? `- ${demande.discipline2ReconversionRH}`
-              : ""
-          }`}
-      </Td>
-      <Td>{demande.professeurAssocieRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbProfesseurAssocieRH}</Td>
-      <Td>
-        {demande.discipline1ProfesseurAssocieRH &&
-          `${demande.discipline1ProfesseurAssocieRH} ${
-            demande.discipline2ProfesseurAssocieRH
-              ? `- ${demande.discipline2ProfesseurAssocieRH}`
-              : ""
-          }`}
-      </Td>
-      <Td>{demande.formationRH ? "Oui" : "Non"}</Td>
-      <Td>{demande.nbFormationRH}</Td>
-      <Td>
-        {demande.discipline1FormationRH &&
-          `${demande.discipline1FormationRH} ${
-            demande.discipline2FormationRH
-              ? `- ${demande.discipline2FormationRH}`
-              : ""
-          }`}
-      </Td>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"numero"}
+        bgColor={getCellColor("numero")}
+      >
+        {demande.numero}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        isNumeric
+        colonne={"positionQuadrant"}
+        bgColor={getCellColor("positionQuadrant")}
+      >
+        {demande.positionQuadrant}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxInsertionRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxInsertionRegional")}
+      >
+        <GraphWrapper value={demande.tauxInsertionRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxPoursuiteRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxPoursuiteRegional")}
+      >
+        <GraphWrapper value={demande.tauxPoursuiteRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxDevenirFavorableRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxDevenirFavorableRegional")}
+      >
+        <GraphWrapper value={demande.tauxDevenirFavorableRegional} />
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"tauxPressionRegional"}
+        textAlign="center"
+        bgColor={getCellColor("tauxPressionRegional")}
+      >
+        <TableBadge sx={getTauxPressionStyle(demande.tauxPressionRegional)}>
+          {demande.tauxPressionRegional ?? "-"}
+        </TableBadge>
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbEtablissement"}
+        isNumeric
+        bgColor={getCellColor("nbEtablissement")}
+      >
+        {demande.nbEtablissement}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbRecrutementRH"}
+        bgColor={getCellColor("nbRecrutementRH")}
+      >
+        {demande.nbRecrutementRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbReconversionRH"}
+        bgColor={getCellColor("nbReconversionRH")}
+      >
+        {demande.nbReconversionRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbProfesseurAssocieRH"}
+        bgColor={getCellColor("nbProfesseurAssocieRH")}
+      >
+        {demande.nbProfesseurAssocieRH}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nbFormationRH"}
+        bgColor={getCellColor("nbFormationRH")}
+      >
+        {demande.nbFormationRH}
+      </ConditionalTd>
+
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"travauxAmenagement"}
+        bgColor={getCellColor("travauxAmenagement")}
+      >
+        {formatBooleanValue(demande.travauxAmenagement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"travauxAmenagementDescription"}
+        bgColor={getCellColor("travauxAmenagementDescription")}
+      >
+        {demande.travauxAmenagementDescription}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"achatEquipement"}
+        bgColor={getCellColor("achatEquipement")}
+      >
+        {formatBooleanValue(demande.achatEquipement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"achatEquipementDescription"}
+        bgColor={getCellColor("achatEquipementDescription")}
+      >
+        {demande.achatEquipementDescription}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergement"}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergement")}
+      >
+        {formatBooleanValue(demande.augmentationCapaciteAccueilHebergement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergementPlaces"}
+        bgColor={getCellColor("augmentationCapaciteAccueilHebergementPlaces")}
+      >
+        {demande.augmentationCapaciteAccueilHebergementPlaces}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilHebergementPrecisions"}
+        bgColor={getCellColor(
+          "augmentationCapaciteAccueilHebergementPrecisions"
+        )}
+      >
+        {demande.augmentationCapaciteAccueilHebergementPrecisions}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestauration"}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestauration")}
+      >
+        {formatBooleanValue(demande.augmentationCapaciteAccueilRestauration)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestaurationPlaces"}
+        bgColor={getCellColor("augmentationCapaciteAccueilRestaurationPlaces")}
+      >
+        {demande.augmentationCapaciteAccueilRestaurationPlaces}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"augmentationCapaciteAccueilRestaurationPrecisions"}
+        bgColor={getCellColor(
+          "augmentationCapaciteAccueilRestaurationPrecisions"
+        )}
+      >
+        {demande.augmentationCapaciteAccueilRestaurationPrecisions}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"statut"}
+        bgColor={getCellColor("statut")}
+      >
+        {formatStatut(demande.statut)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"motifRefus"}
+        bgColor={getCellColor("motifRefus")}
+      >
+        {handleMotifRefusLabel({
+          motifsRefus: demande.motifRefus,
+          autreMotifRefus: demande.autreMotifRefus,
+        })}
+      </ConditionalTd>
     </>
   );
 };

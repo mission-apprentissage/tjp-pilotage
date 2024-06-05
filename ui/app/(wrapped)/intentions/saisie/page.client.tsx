@@ -27,12 +27,15 @@ import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { isSaisieDisabled } from "@/app/(wrapped)/intentions/saisie/utils/isSaisieDisabled";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatDate } from "@/utils/formatDate";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
@@ -41,24 +44,25 @@ import { IntentionSpinner } from "./components/IntentionSpinner";
 import { MenuIntention } from "./components/MenuIntention";
 import { DEMANDES_COLUMNS } from "./DEMANDES_COLUMNS";
 import { Filters, Order } from "./types";
+import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
 
 const TagDemande = ({ statut }: { statut: string }) => {
   switch (statut) {
-    case DemandeStatutEnum.draft:
+    case DemandeStatutEnum["projet de demande"]:
       return (
         <Tag size="sm" colorScheme={"orange"}>
           Projet de demande
         </Tag>
       );
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       return (
         <Tag size="sm" colorScheme={"green"}>
           Demande validée
         </Tag>
       );
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       return (
         <Tag size="sm" colorScheme={"red"}>
           Demande refusée
@@ -79,7 +83,7 @@ export const PageClient = () => {
     order?: Partial<Order>;
     page?: string;
     campagne?: string;
-    action?: "draft" | "submitted" | "refused";
+    action?: Exclude<DemandeStatutType, "supprimée">;
   } = qs.parse(queryParams.toString());
 
   const filters = searchParams.filters ?? {};
@@ -132,12 +136,12 @@ export const PageClient = () => {
     { keepPreviousData: true, staleTime: 0 }
   );
 
-  const hasPermissionEnvoi = usePermission("intentions/ecriture");
+  const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
 
   const isCampagneEnCours =
     data?.campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const [searchDemande, setSearchDemande] = useState<string>(search);
 
@@ -190,7 +194,7 @@ export const PageClient = () => {
       py={4}
     >
       <MenuIntention
-        hasPermissionEnvoi={hasPermissionEnvoi}
+        hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
       />
@@ -354,7 +358,7 @@ export const PageClient = () => {
                       <Td align="center" w={0}>
                         <TagDemande statut={demande.statut} />
                       </Td>
-                      <Td>{new Date(demande.createdAt).toLocaleString()}</Td>
+                      <Td>{formatDate({ date: demande.createdAt })}</Td>
                       <Td w="15" textAlign={"center"}>
                         <Tooltip label={demande.userName}>
                           <Avatar
@@ -369,7 +373,7 @@ export const PageClient = () => {
                         </Tooltip>
                       </Td>
                       <Td textAlign={"center"}>
-                        {new Date(demande.updatedAt).toLocaleString()}
+                        {formatDate({ date: demande.updatedAt })}
                       </Td>
                       {data?.campagne.statut ===
                         CampagneStatutEnum["terminée"] && (
@@ -418,7 +422,7 @@ export const PageClient = () => {
           <Center mt={12}>
             <Flex flexDirection={"column"}>
               <Text fontSize={"2xl"}>Pas de demande à afficher</Text>
-              {hasPermissionEnvoi && (
+              {hasPermissionSubmitIntention && (
                 <Button
                   isDisabled={isDisabled}
                   variant="createButton"
