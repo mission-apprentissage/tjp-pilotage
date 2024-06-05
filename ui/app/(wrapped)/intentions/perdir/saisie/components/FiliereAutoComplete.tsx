@@ -52,17 +52,12 @@ export const FiliereAutoCompleteInput = ({
           ...defaultValue,
         } as (typeof client.infer)["[GET]/filiere/search/:search"][number])
       }
-      loadOptions={(inputValue: string) => {
-        if (inputValue.length >= 1)
-          return client
-            .ref("[GET]/filiere/search/:search")
-            .query({ params: { search: inputValue } });
-      }}
-      loadingMessage={({ inputValue }) =>
-        inputValue.length >= 1
-          ? "Recherche..."
-          : "Veuillez rentrer au moins 1 lettre"
+      loadOptions={(inputValue: string) =>
+        client
+          .ref("[GET]/filiere/search/:search")
+          .query({ params: { search: inputValue } })
       }
+      defaultOptions
       isClearable={true}
       noOptionsMessage={({ inputValue }) =>
         inputValue ? "Pas de filière correspondante" : "Commencez à écrire..."
