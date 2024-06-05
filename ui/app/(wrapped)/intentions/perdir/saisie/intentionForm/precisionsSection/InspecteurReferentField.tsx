@@ -25,7 +25,6 @@ export const InspecteurReferentField = chakra(
         <Input
           w="xs"
           bgColor={"white"}
-          border={"1px solid"}
           {...register("inspecteurReferent", {
             shouldUnregister: true,
             disabled: disabled,
