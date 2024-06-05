@@ -1,6 +1,6 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
-import { demandeValidators, getPermissionScope, guardScope } from "shared";
+import { getPermissionScope, guardScope, intentionValidators } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
@@ -12,14 +12,15 @@ import { generateId, generateShortId } from "../../../utils/generateId";
 import { findOneDataFormation } from "../../repositories/findOneDataFormation.query";
 import { findOneIntention } from "../../repositories/findOneIntention.query";
 import { findOneSimilarIntention } from "../../repositories/findOneSimilarIntention.query";
-import { createIntentionQuery } from "./createIntention.query";
+import { createChangementStatutQuery } from "./deps/createChangementStatut.query";
+import { createIntentionQuery } from "./deps/createIntention.query";
 import { submitIntentionSchema } from "./submitIntention.schema";
 
 type Intention = z.infer<typeof submitIntentionSchema.body>["intention"];
 
-const validateDemande = (intention: Intention) => {
+const validateIntention = (intention: Intention) => {
   let errors: Record<string, string> = {};
-  for (const [key, validator] of Object.entries(demandeValidators)) {
+  for (const [key, validator] of Object.entries(intentionValidators)) {
     const error = validator(intention);
     if (!error) continue;
     errors = { ...errors, [key]: error };
@@ -30,15 +31,15 @@ const validateDemande = (intention: Intention) => {
 const logDemande = (intention?: { statut: string }) => {
   if (!intention) return;
   switch (intention.statut) {
-    case DemandeStatutEnum.draft:
-      logger.info("Projet de demande enregistré", {
+    case DemandeStatutEnum["proposition"]:
+      logger.info("Proposition enregistrée", {
         intention: intention,
       });
       break;
-    case DemandeStatutEnum.submitted:
+    case DemandeStatutEnum["demande validée"]:
       logger.info("Demande validée", { intention: intention });
       break;
-    case DemandeStatutEnum.refused:
+    case DemandeStatutEnum["refusée"]:
       logger.info("Demande refusée", { intention: intention });
       break;
   }
@@ -47,6 +48,7 @@ const logDemande = (intention?: { statut: string }) => {
 export const [submitIntentionUsecase, submitIntentionFactory] = inject(
   {
     createIntentionQuery,
+    createChangementStatutQuery,
     findOneDataEtablissement,
     findOneDataFormation,
     findOneIntention,
@@ -60,7 +62,7 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intention: Intention;
     }) => {
-      const currentDemande = intention.numero
+      const currentIntention = intention.numero
         ? await deps.findOneIntention(intention.numero)
         : undefined;
 
@@ -78,17 +80,17 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
-      const sameDemande = await deps.findOneSimilarIntention({
+      const sameIntention = await deps.findOneSimilarIntention({
         ...intention,
         notNumero: intention.numero,
       });
-      if (sameDemande) {
+      if (sameIntention) {
         logger.info("Demande similaire existante", {
-          sameDemande,
+          sameIntention,
           intention,
         });
         throw Boom.badRequest("Demande similaire existante", {
-          id: sameDemande.id,
+          id: sameIntention.id,
           errors: {
             same_demande:
               "Une demande similaire existe avec ces mêmes champs: code diplôme, numéro établissement, dispositif et rentrée scolaire.",
@@ -99,8 +101,8 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
       const dataFormation = await deps.findOneDataFormation({ cfd });
       if (!dataFormation) throw Boom.badRequest("Code diplome non valide");
 
-      const demandeData = {
-        ...currentDemande,
+      const intentionData = {
+        ...currentIntention,
         libelleColoration: null,
         libelleFCIL: null,
         autreMotif: null,
@@ -115,24 +117,36 @@ export const [submitIntentionUsecase, submitIntentionFactory] = inject(
         ...intention,
       };
 
-      const errors = validateDemande(cleanNull(demandeData));
+      const errors = validateIntention(cleanNull(intentionData));
       if (errors) {
-        logger.info("Demande incorrecte", {
+        logger.info("Intention incorrecte", {
           errors,
-          intention: demandeData,
+          intention: intentionData,
         });
         throw Boom.badData("Donnée incorrectes", { errors });
       }
 
       const created = await deps.createIntentionQuery({
-        ...demandeData,
-        id: currentDemande?.id ?? generateId(),
-        numero: currentDemande?.numero ?? generateShortId(),
-        createurId: currentDemande?.createurId ?? user.id,
+        ...intentionData,
+        id: currentIntention?.id ?? generateId(),
+        numero: currentIntention?.numero ?? generateShortId(),
+        createdBy: currentIntention?.createdBy ?? user.id,
+        updatedBy: user.id,
         codeAcademie: dataEtablissement.codeAcademie,
         codeRegion: dataEtablissement.codeRegion,
         updatedAt: new Date(),
       });
+
+      if (created.statut !== currentIntention?.statut) {
+        createChangementStatutQuery({
+          id: generateId(),
+          intentionNumero: created.numero,
+          statutPrecedent: currentIntention?.statut,
+          statut: created.statut,
+          createdBy: user.id,
+          updatedAt: new Date(),
+        });
+      }
 
       logDemande(created);
       return created;

@@ -6,7 +6,7 @@ import {
   FormLabel,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { FiliereAutoCompleteInput } from "../../components/FiliereAutoComplete";

@@ -49,6 +49,7 @@ export const CapaciteField = ({
               value={value}
               min={0}
               defaultValue={0}
+              onFocus={(e) => e.currentTarget.select()}
             >
               <NumberInputField
                 textAlign={"end"}

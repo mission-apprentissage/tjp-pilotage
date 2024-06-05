@@ -115,7 +115,6 @@ export default () => {
                     Rôle
                   </Th>
                   <Th
-                    borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                     position="sticky"
                     zIndex="200"
                     backgroundColor="white"
@@ -124,6 +123,7 @@ export default () => {
                     borderBottom={"none"}
                     fontSize="12px"
                     fontWeight={700}
+                    boxShadow={`inset -2px 0px 0px 0px ${themeDefinition.colors.grey[850]}`}
                   >
                     Description
                   </Th>
@@ -133,6 +133,7 @@ export default () => {
                       borderBottom={"none"}
                       fontSize="12px"
                       fontWeight={700}
+                      textAlign={"center"}
                     >
                       {PERMISSION_GROUP_LABELS[p]}
                     </Th>
@@ -167,7 +168,6 @@ export default () => {
                       {ROLES_LABELS[role](selectedUser?.codeRegion).label}
                     </Td>
                     <Td
-                      borderRight={`1px solid ${themeDefinition.colors.grey[850]}`}
                       position="sticky"
                       zIndex="200"
                       bgColor="inherit"
@@ -175,6 +175,7 @@ export default () => {
                       maxWidth="300px"
                       borderBottom={"none"}
                       paddingRight="12px"
+                      boxShadow={`inset -2px 0px 0px 0px ${themeDefinition.colors.grey[850]}`}
                     >
                       <Tooltip
                         label={
@@ -196,7 +197,11 @@ export default () => {
                       </Tooltip>
                     </Td>
                     {PERMISSION_GROUPS.map((label) => (
-                      <Td key={role + label} borderBottom={"none"}>
+                      <Td
+                        key={role + label}
+                        borderBottom={"none"}
+                        textAlign="center"
+                      >
                         <PermissionBadge
                           rights={formatRights(role, label, selectedUser)}
                           scope={getScopeFromGroup(role, label)}

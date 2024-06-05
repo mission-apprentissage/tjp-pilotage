@@ -2,11 +2,11 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
+import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { QuestionBlock } from "../../components/QuestionBlock";
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { IntentionForms } from "../defaultFormValues";
 import { DisciplinesFormationRHField } from "./formationRHSection/DisciplinesFormationRHField";
 import { FormationRHField } from "./formationRHSection/FormationRHField";

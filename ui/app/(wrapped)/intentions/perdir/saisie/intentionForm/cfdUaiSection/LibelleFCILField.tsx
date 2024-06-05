@@ -26,6 +26,7 @@ export const LibelleFCILField = chakra(
           className={className}
           isInvalid={!!errors.libelleFCIL}
           isRequired
+          isDisabled={!active}
         >
           <FormLabel>Libellé du FCIL</FormLabel>
           <Flex flexDirection={"row"} justifyContent={"space-between"}>

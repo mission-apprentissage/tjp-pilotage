@@ -161,6 +161,9 @@ export const STATS_DEMANDES_COLUMNS_DEFAULT: Partial<
   typeDemande: "Type de demande",
   differenceCapaciteScolaire: "Nombre de places en voie scolaire",
   differenceCapaciteApprentissage: "Nombre de places en apprentissage",
+  capaciteScolaireColoree: "Places colorées en voie scolaire",
+  capaciteApprentissageColoree: "Places colorées en apprentissage",
+  libelleColoration: "Libellé coloration",
   positionQuadrant: "Position dans le quadrant",
   statut: "Statut",
 } as Partial<typeof STATS_DEMANDES_COLUMNS_OPTIONAL>;

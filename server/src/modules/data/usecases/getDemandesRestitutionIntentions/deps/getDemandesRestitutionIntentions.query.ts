@@ -3,6 +3,7 @@ import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
+import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 import {
   countDifferenceCapaciteApprentissage,
   countDifferenceCapaciteScolaire,
@@ -274,6 +275,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
+        statut: castDemandeStatutWithoutSupprimee(demande.statut),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
       })

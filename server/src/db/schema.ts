@@ -24,6 +24,20 @@ export interface Academie {
   codeRegion: string;
 }
 
+export interface Avis {
+  id: Generated<string>;
+  createdBy: string | null;
+  intentionNumero: string;
+  statutAvis: string;
+  typeAvis: string;
+  userFonction: string | null;
+  isVisibleParTous: boolean;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  commentaire: string | null;
+  updatedBy: string | null;
+}
+
 export interface Campagne {
   id: Generated<string>;
   annee: string;
@@ -40,6 +54,17 @@ export interface ChangeLog {
   user: Generated<string | null>;
   newVal: Json | null;
   oldVal: Json | null;
+}
+
+export interface ChangementStatut {
+  id: Generated<string>;
+  createdBy: string | null;
+  intentionNumero: string;
+  statutPrecedent: string | null;
+  statut: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Timestamp;
+  commentaire: string | null;
 }
 
 export interface ConstatRentree {
@@ -146,10 +171,10 @@ export interface Demande {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted";
+  statut: string;
   codeRegion: string;
   codeAcademie: string | null;
-  createurId: string;
+  createdBy: string;
   createdAt: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -189,6 +214,7 @@ export interface Demande {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  updatedBy: string | null;
 }
 
 export interface Departement {
@@ -206,8 +232,6 @@ export interface DiplomeProfessionnel {
 export interface Discipline {
   codeDiscipline: string;
   libelleDiscipline: string | null;
-  dateOuverture: Timestamp | null;
-  dateFermeture: Timestamp | null;
 }
 
 export interface Dispositif {
@@ -367,10 +391,10 @@ export interface Intention {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted";
+  statut: string;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string;
+  createdBy: string;
   createdAt: Generated<Timestamp>;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -422,6 +446,8 @@ export interface Intention {
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
+  updatedBy: string | null;
+  inspecteurReferent: string | null;
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
@@ -439,11 +465,12 @@ export interface LatestDemandeIntentionNonMaterializedView {
   amiCmaValide: boolean | null;
   amiCmaEnCoursValidation: boolean | null;
   amiCmaValideAnnee: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut: string | null;
   commentaire: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -481,6 +508,7 @@ export interface LatestDemandeIntentionNonMaterializedView {
   cmqImplique: boolean | null;
   filiereCmq: string | null;
   nomCmq: string | null;
+  inspecteurReferent: string | null;
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
@@ -508,10 +536,10 @@ export interface LatestDemandeNonMaterializedView {
   amiCma: boolean | null;
   poursuitePedagogique: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -551,6 +579,7 @@ export interface LatestDemandeNonMaterializedView {
   discipline2FormationRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  updatedBy: string | null;
 }
 
 export interface LatestIntentionNonMaterializedView {
@@ -566,10 +595,10 @@ export interface LatestIntentionNonMaterializedView {
   libelleColoration: string | null;
   amiCma: boolean | null;
   commentaire: string | null;
-  statut: "deleted" | "draft" | "refused" | "submitted" | null;
+  statut: string | null;
   codeRegion: string | null;
   codeAcademie: string | null;
-  createurId: string | null;
+  createdBy: string | null;
   createdAt: Timestamp | null;
   capaciteScolaire: number | null;
   capaciteScolaireActuelle: number | null;
@@ -621,6 +650,8 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestauration: boolean | null;
   augmentationCapaciteAccueilRestaurationPlaces: number | null;
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
+  updatedBy: string | null;
+  inspecteurReferent: string | null;
 }
 
 export interface Metier {
@@ -656,6 +687,13 @@ export interface Rome {
   codeDomaineProfessionnel: string;
 }
 
+export interface Suivi {
+  id: Generated<string>;
+  intentionNumero: string;
+  userId: string;
+  createdAt: Generated<Timestamp>;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -673,8 +711,10 @@ export interface User {
 
 export interface DB {
   academie: Academie;
+  avis: Avis;
   campagne: Campagne;
   changeLog: ChangeLog;
+  changementStatut: ChangementStatut;
   constatRentree: ConstatRentree;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
@@ -707,5 +747,6 @@ export interface DB {
   rawData: RawData;
   region: Region;
   rome: Rome;
+  suivi: Suivi;
   user: User;
 }

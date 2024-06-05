@@ -6,6 +6,7 @@ import { z } from "zod";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
 import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
@@ -54,7 +55,7 @@ export const getDemandesQuery = async (
       "dispositif.codeDispositif",
       "demande.codeDispositif"
     )
-    .leftJoin("user", "user.id", "demande.createurId")
+    .leftJoin("user", "user.id", "demande.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
@@ -66,7 +67,6 @@ export const getDemandesQuery = async (
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
-      "user.lastname as nomCreateur",
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
@@ -151,6 +151,7 @@ export const getDemandesQuery = async (
     demandes: demandes.map((demande) =>
       cleanNull({
         ...demande,
+        statut: castDemandeStatutWithoutSupprimee(demande.statut),
         createdAt: demande.createdAt?.toISOString(),
         updatedAt: demande.updatedAt?.toISOString(),
         numeroCompensation: demande.demandeCompensee?.numero,

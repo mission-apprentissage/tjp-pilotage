@@ -28,6 +28,9 @@ const Loader = () => (
         <Flex minW="52">
           <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
         </Flex>
+        <Flex minW="52">
+          <Skeleton opacity="0.3" width="100%" height={"100%"}></Skeleton>
+        </Flex>
       </Flex>
     </Flex>
     <Flex w="100%" gap={4} mb="8">

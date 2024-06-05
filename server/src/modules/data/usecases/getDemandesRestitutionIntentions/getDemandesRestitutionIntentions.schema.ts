@@ -1,4 +1,4 @@
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -86,7 +86,7 @@ const DemandeSchema = z.object({
   augmentationCapaciteAccueilRestaurationPlaces: z.coerce.number().optional(),
   augmentationCapaciteAccueilRestaurationPrecisions: z.string().optional(),
   // Statut demande
-  statut: z.string(),
+  statut: DemandeStatutZodType,
   motifRefus: z.array(z.string()).optional(),
   autreMotifRefus: z.string().optional(),
   updatedAt: z.string(),
@@ -101,15 +101,7 @@ export const FiltersSchema = z.object({
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
   typeDemande: z.array(z.string()).optional(),
-  statut: z
-    .array(
-      z.enum([
-        DemandeStatutEnum.draft,
-        DemandeStatutEnum.submitted,
-        DemandeStatutEnum.refused,
-      ])
-    )
-    .optional(),
+  statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),

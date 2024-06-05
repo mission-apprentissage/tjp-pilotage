@@ -146,6 +146,9 @@ export const themeColors = {
     645: "#E4794A",
     "645_hover": "#f1a892",
     "645_active": "#f4bfb1",
+    850: "#FCC0B0",
+    "850_hover": "#fb926b",
+    "850_active": "#fa7a35",
   },
   purpleglycine: {
     494: "#A558A0",

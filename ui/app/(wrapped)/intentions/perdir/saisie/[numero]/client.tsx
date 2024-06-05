@@ -5,7 +5,7 @@ import { client } from "@/api.client";
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "../intentionForm/observationsSection/filesSection/filesContext";
-import { isSaisieDisabled } from "../utils/isSaisieDisabled";
+import { canEditIntention } from "../utils/canEditIntention";
 
 export default ({
   params: { numero },
@@ -27,7 +27,7 @@ export default ({
       {data && (
         <IntentionFilesProvider numero={numero}>
           <IntentionForm
-            disabled={!data.canEdit || isSaisieDisabled()}
+            disabled={!data.canEdit || !canEditIntention(data)}
             formId={numero}
             defaultValues={data}
             formMetadata={data.metadata}

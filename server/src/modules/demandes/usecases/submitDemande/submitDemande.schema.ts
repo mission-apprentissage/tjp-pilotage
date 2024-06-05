@@ -1,4 +1,4 @@
-import { demandeStatut } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 export const submitDemandeSchema = {
@@ -32,7 +32,7 @@ export const submitDemandeSchema = {
       capaciteApprentissageActuelle: z.coerce.number().optional(),
       capaciteApprentissage: z.coerce.number().optional(),
       capaciteApprentissageColoree: z.coerce.number().optional(),
-      statut: z.enum(["draft", "submitted", "refused"]),
+      statut: DemandeStatutZodType.exclude(["supprimée"]),
       motifRefus: z.array(z.string()).optional(),
       autreMotifRefus: z.string().optional(),
       recrutementRH: z.boolean().optional(),
@@ -57,7 +57,7 @@ export const submitDemandeSchema = {
   response: {
     200: z.object({
       id: z.string(),
-      statut: demandeStatut,
+      statut: DemandeStatutZodType,
     }),
   },
 };

@@ -29,6 +29,7 @@ import {
   downloadExcel,
   ExportColumns,
 } from "@/utils/downloadExport";
+import { formatDate } from "@/utils/formatDate";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 
@@ -231,8 +232,7 @@ export default () => {
                     <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
                     <Td>
-                      {user.createdAt &&
-                        new Date(user.createdAt).toLocaleString()}
+                      {user.createdAt && formatDate({ date: user.createdAt })}
                     </Td>
                     <Td isNumeric>
                       {canEditUser(user) && (

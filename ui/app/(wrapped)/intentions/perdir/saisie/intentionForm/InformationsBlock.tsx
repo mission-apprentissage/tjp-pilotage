@@ -16,8 +16,7 @@ import { useMutation } from "@tanstack/react-query";
 import { useRouter } from "next/navigation";
 import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { client } from "@/api.client";
 
@@ -29,7 +28,6 @@ import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/I
 import { ObservationsSection } from "./observationsSection/ObservationsSection";
 import { PrecisionsSection } from "./precisionsSection/PrecisionsSection";
 import { RHSection } from "./rhSection/RHSection";
-import { StatusBlock } from "./statutSection/StatusBlock";
 import { TravauxEtEquipementsSection } from "./travauxEtEquipementsSection/TravauxEtEquipementsSection";
 import { TypeDemandeSection } from "./typeDemandeSection/TypeDemandeSection";
 
@@ -53,9 +51,9 @@ export const InformationsBlock = ({
     mutationFn: async () => {
       if (!formId) return;
       await client
-        .ref("[DELETE]/demande/:numero")
+        .ref("[DELETE]/intention/:numero")
         .query({ params: { numero: formId } })
-        .then(() => push("/intentions/saisie?action=deleted"));
+        .then(() => push("/intentions/saisie?action=supprimée"));
     },
   });
 
@@ -154,78 +152,60 @@ export const InformationsBlock = ({
           disabled={disabled}
         />
       </SectionBlock>
-      {formId && (
-        <>
-          <SectionBlock>
-            <StatusBlock disabled={disabled} />
-          </SectionBlock>
-          <SectionBlock>
-            <Flex justifyContent={"space-between"} flexDir={"row"}>
-              <Button
-                leftIcon={<DeleteIcon />}
-                variant="ghost"
-                color="bluefrance.113"
-                onClick={onOpen}
-                isDisabled={disabled}
-              >
-                Supprimer la demande
-              </Button>
-              <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
-                <ModalOverlay />
-                <ModalContent p="4">
-                  <ModalCloseButton title="Fermer" />
-                  <ModalHeader>
-                    <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
-                    Confirmer la suppression de la demande
-                  </ModalHeader>
-                  <ModalBody>
-                    <Text mb={4}>
-                      Cette action est irréversible, elle supprime
-                      définitivement la demande et l’ensemble des données
-                      associées. Il est conseillé de réserver cette action à une
-                      erreur de saisie ou un doublon.
-                    </Text>
-                    <Text>
-                      Si vous souhaitez refuser la demande, vous pouvez la
-                      conserver et modifier son statut en “Demande refusée”.
-                    </Text>
-                  </ModalBody>
-
-                  <ModalFooter>
-                    <Button
-                      colorScheme="blue"
-                      mr={3}
-                      onClick={() => {
-                        setValue("statut", DemandeStatutEnum.refused);
-                        onClose();
-                      }}
-                      variant={"secondary"}
-                    >
-                      Passer en "Demande refusée"
-                    </Button>
-                    <Button
-                      variant="primary"
-                      onClick={() => {
-                        deleteDemande();
-                      }}
-                      isLoading={isDeleting}
-                    >
-                      Supprimer définitivement
-                    </Button>
-                  </ModalFooter>
-                </ModalContent>
-              </Modal>
-
-              {footerActions && <Flex>{footerActions}</Flex>}
-            </Flex>
-          </SectionBlock>
-        </>
-      )}
-      {!formId && footerActions && (
-        <Flex justify="flex-end" mt="12" mb="4" gap={6}>
-          {footerActions}
+      <SectionBlock>
+        <Flex justifyContent={"space-between"} flexDir={"row"}>
+          {formId && (
+            <Button
+              leftIcon={<DeleteIcon />}
+              variant="ghost"
+              color="bluefrance.113"
+              onClick={onOpen}
+              isDisabled={disabled}
+            >
+              Supprimer la demande
+            </Button>
+          )}
+          {footerActions && <Flex ms={"auto"}>{footerActions}</Flex>}
         </Flex>
-      )}
+      </SectionBlock>
+      <Modal isOpen={isOpen} onClose={onClose} size={"xl"}>
+        <ModalOverlay />
+        <ModalContent p="4">
+          <ModalCloseButton title="Fermer" />
+          <ModalHeader>
+            <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
+            Confirmer la suppression de la demande
+          </ModalHeader>
+          <ModalBody>
+            <Text mb={4}>
+              Cette action est irréversible, elle supprime définitivement la
+              demande et l’ensemble des données associées. Il est conseillé de
+              réserver cette action à une erreur de saisie ou un doublon.
+            </Text>
+          </ModalBody>
+          <ModalFooter>
+            <Button
+              colorScheme="blue"
+              mr={3}
+              onClick={() => {
+                onClose();
+              }}
+              variant={"secondary"}
+            >
+              Annuler
+            </Button>
+            <Button
+              variant="primary"
+              onClick={() => {
+                deleteDemande();
+              }}
+              isLoading={isDeleting}
+            >
+              Supprimer définitivement
+            </Button>
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Flex>
   );
 };

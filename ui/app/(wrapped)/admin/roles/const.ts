@@ -65,6 +65,8 @@ export const PERMISSION_GROUP_LABELS: {
   users: "Utilisateurs",
   campagnes: "Campagnes",
   "intentions-perdir": "Saisie par les perdirs",
+  "intentions-perdir-avis": "Avis sur les intentions",
+  "intentions-perdir-statut": "Changement de statut sur les intentions",
 };
 
 export const OVERRIDES: {

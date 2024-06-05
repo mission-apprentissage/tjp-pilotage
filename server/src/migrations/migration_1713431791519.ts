@@ -7,6 +7,7 @@ export const up = async (db: Kysely<unknown>) => {
     .materialized()
     .ifExists()
     .execute();
+
   await db.schema
     .dropView("latestDemandeNonMaterializedView")
     .ifExists()
@@ -252,5 +253,6 @@ export const down = async (db: Kysely<unknown>) => {
         // @ts-ignore
         .where("demande.statut", "!=", "deleted")
     )
+    .materialized()
     .execute();
 };

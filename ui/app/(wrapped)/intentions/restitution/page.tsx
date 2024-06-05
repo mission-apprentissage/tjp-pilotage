@@ -6,7 +6,7 @@ import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
@@ -166,7 +166,7 @@ export default () => {
           setCampagneFilter((value as string[])[0] ?? "");
           break;
         case "statut":
-          setStatutFilter(value as ("draft" | "submitted" | "refused")[]);
+          setStatutFilter(value as Exclude<DemandeStatutType, "supprimée">[]);
           break;
       }
   };
@@ -265,8 +265,8 @@ export default () => {
   );
 
   const [statutFilter, setStatutFilter] = useState<
-    ("draft" | "submitted" | "refused")[] | undefined
-  >([DemandeStatutEnum.draft, DemandeStatutEnum.submitted]);
+    Exclude<DemandeStatutType, "supprimée">[] | undefined
+  >();
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
@@ -304,7 +304,7 @@ export default () => {
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">
-      <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20}>
+      <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
         <HeaderSection
           countData={countData}
           activeFilters={filters}

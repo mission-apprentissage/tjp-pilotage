@@ -2,7 +2,7 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 
-import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
+import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AugmentationCapaciteAccueilHebergementField } from "./AugmentationCapaciteAccueilHebergementField";
 import { AugmentationCapaciteAccueilHebergementPlacesField } from "./AugmentationCapaciteAccueilHebergementPlacesField";
 import { AugmentationCapaciteAccueilHebergementPrecisionsField } from "./AugmentationCapaciteAccueilHebergementPrecisionsField";

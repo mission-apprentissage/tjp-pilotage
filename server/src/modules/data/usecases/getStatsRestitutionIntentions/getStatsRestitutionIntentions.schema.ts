@@ -1,3 +1,4 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const CountCapaciteStatsDemandesSchema = z.object({
@@ -13,7 +14,7 @@ export const FiltersSchema = z.object({
   uai: z.array(z.string()).optional(),
   rentreeScolaire: z.string().optional(),
   typeDemande: z.array(z.string()).optional(),
-  statut: z.array(z.enum(["draft", "submitted", "refused"])).optional(),
+  statut: z.array(DemandeStatutZodType.exclude(["supprimée"])).optional(),
   codeNiveauDiplome: z.array(z.string()).optional(),
   cfd: z.array(z.string()).optional(),
   coloration: z.string().optional(),

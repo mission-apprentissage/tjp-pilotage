@@ -10,6 +10,6 @@ export const deleteIntentionQuery = async (
   if (intention)
     updateIntentionWithHistory({
       ...intention,
-      statut: DemandeStatutEnum.deleted,
+      statut: DemandeStatutEnum["supprimée"],
     });
 };

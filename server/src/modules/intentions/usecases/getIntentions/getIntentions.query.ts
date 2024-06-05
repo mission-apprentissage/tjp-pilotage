@@ -1,12 +1,17 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
+import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
+import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
-import { isIntentionSelectable } from "../../../utils/isDemandeSelectable";
+import {
+  isIntentionBrouillonVisible,
+  isIntentionSelectable,
+} from "../../../utils/isDemandeSelectable";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { getIntentionsSchema } from "./getIntentions.schema";
 
@@ -29,7 +34,16 @@ export const getCampagneQuery = async (anneeCampagne: string) => {
 };
 
 export const getIntentionsQuery = async (
-  { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
+  {
+    statut,
+    suivies,
+    search,
+    user,
+    offset = 0,
+    limit = 20,
+    order,
+    orderBy,
+  }: Filters,
   anneeCampagne: string
 ) => {
   const search_array = getNormalizedSearchArray(search);
@@ -54,7 +68,12 @@ export const getIntentionsQuery = async (
       "dispositif.codeDispositif",
       "intention.codeDispositif"
     )
-    .leftJoin("user", "user.id", "intention.createurId")
+    .leftJoin("user", "user.id", "intention.createdBy")
+    .leftJoin("suivi", (join) =>
+      join
+        .onRef("suivi.intentionNumero", "=", "intention.numero")
+        .on("userId", "=", user.id)
+    )
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (anneeCampagne) return eb.on("campagne.annee", "=", anneeCampagne);
@@ -63,13 +82,14 @@ export const getIntentionsQuery = async (
     )
     .selectAll("intention")
     .select((eb) => [
+      "suivi.id as suiviId",
       sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
         "user.lastname"
       )})`.as("userName"),
-      "user.lastname as nomCreateur",
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
       "departement.libelleDepartement",
+      "departement.codeDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",
@@ -81,6 +101,32 @@ export const getIntentionsQuery = async (
         .where(isIntentionCampagneEnCours(eb, "demandeImportee"))
         .limit(1)
         .as("numeroDemandeImportee"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("intention.createdBy", "is not", null)
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "intention.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+          .where("intention.updatedBy", "is not", null)
+      ).as("updatedBy"),
     ])
     .$call((eb) => {
       if (statut) return eb.where("intention.statut", "=", statut);
@@ -122,8 +168,18 @@ export const getIntentionsQuery = async (
         sql`${sql.raw(order)} NULLS LAST`
       );
     })
+    .$call((q) => {
+      if (suivies)
+        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
+          join
+            .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
+            .on("suiviUtilisateur.userId", "=", user.id)
+        );
+      return q;
+    })
     .orderBy("updatedAt desc")
     .where(isIntentionSelectable({ user }))
+    .where(isIntentionBrouillonVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();
@@ -138,6 +194,7 @@ export const getIntentionsQuery = async (
     intentions: intentions.map((intention) =>
       cleanNull({
         ...intention,
+        statut: castDemandeStatutWithoutSupprimee(intention.statut),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
       })

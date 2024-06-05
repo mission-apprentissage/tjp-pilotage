@@ -1,3 +1,4 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const DemandesItem = z.object({
@@ -16,8 +17,8 @@ const DemandesItem = z.object({
   uai: z.string().optional(),
   createdAt: z.string(),
   updatedAt: z.string(),
-  createurId: z.string(),
-  statut: z.string(),
+  createdBy: z.string(),
+  statut: DemandeStatutZodType.exclude(["supprimée"]),
   typeDemande: z.string().optional(),
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),
@@ -66,7 +67,7 @@ const DemandesItem = z.object({
 
 export const getDemandesSchema = {
   querystring: z.object({
-    statut: z.enum(["draft", "submitted", "refused"]).optional(),
+    statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
     orderBy: DemandesItem.keyof().optional(),

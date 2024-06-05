@@ -9,7 +9,7 @@ import {
 } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
-import { isTypeDiminution } from "shared/demandeValidators/validators";
+import { isTypeDiminution } from "shared/validators/demandeValidators";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";

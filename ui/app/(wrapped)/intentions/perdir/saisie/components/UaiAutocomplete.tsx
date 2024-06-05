@@ -21,13 +21,13 @@ export const UaiAutocomplete = ({
     value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
   ) => void;
 }) => {
+  const { auth } = useAuth();
   const selectStyle = {
     control: (styles: CSSObjectWithLabel) => ({
       ...styles,
       borderColor: inError ? "red" : undefined,
     }),
   };
-  const { auth } = useAuth();
   const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
 
   return (

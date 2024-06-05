@@ -6,5 +6,8 @@ import { updateDemandeWithHistory } from "../../repositories/updateDemandeWithHi
 
 export const deleteDemandeQuery = async (demande?: Insertable<Demande>) => {
   if (demande)
-    updateDemandeWithHistory({ ...demande, statut: DemandeStatutEnum.deleted });
+    updateDemandeWithHistory({
+      ...demande,
+      statut: DemandeStatutEnum["supprimée"],
+    });
 };
