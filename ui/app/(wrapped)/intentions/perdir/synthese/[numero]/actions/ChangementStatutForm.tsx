@@ -57,6 +57,11 @@ const isStatutDisabled = ({
   if (statut != statutPrecedent && getStepWorkflow(statutPrecedent) === 4)
     return true;
   if (statut === DemandeStatutEnum["refusée"]) return false;
+  if (
+    statut === DemandeStatutEnum["projet de demande"] &&
+    statutPrecedent !== DemandeStatutEnum["dossier complet"]
+  )
+    return true;
   return (
     getOrderStatut(statutPrecedent) > getOrderStatut(statut) ||
     getStepWorkflow(statut) - getStepWorkflow(statutPrecedent) > 1
@@ -161,6 +166,7 @@ export const ChangementStatutForm = ({
             {Object.values(DemandeStatutEnum)
               .filter((statut) => statut !== DemandeStatutEnum["supprimée"])
               .filter((statut) => isStatutStepWorkflowEnabled(statut))
+              .sort((a, b) => b.localeCompare(a))
               .sort((a, b) => getOrderStatut(a) - getOrderStatut(b))
               .map((statut) => (
                 <option
