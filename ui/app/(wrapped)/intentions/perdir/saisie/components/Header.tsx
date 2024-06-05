@@ -138,24 +138,24 @@ export const Header = ({
         <Flex mr="auto" ms={2}>
           <ExportMenuButton
             onExportCsv={async () => {
-              trackEvent("saisie_demandes:export");
-              const data = await client.ref("[GET]/demandes").query({
+              trackEvent("saisie_intentions_perdir:export");
+              const data = await client.ref("[GET]/intentions").query({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadCsv(
-                "export_saisie_demandes",
-                data.demandes,
+                "export_saisie_intentions",
+                data.intentions,
                 INTENTIONS_COLUMNS
               );
             }}
             onExportExcel={async () => {
-              trackEvent("saisie_demandes:export-excel");
-              const data = await client.ref("[GET]/demandes").query({
+              trackEvent("saisie_intentions_perdir:export-excel");
+              const data = await client.ref("[GET]/intentions").query({
                 query: getIntentionsQueryParameters(EXPORT_LIMIT),
               });
               downloadExcel(
-                "export_saisie_demandes",
-                data.demandes,
+                "export_saisie_intentions",
+                data.intentions,
                 INTENTIONS_COLUMNS
               );
             }}
