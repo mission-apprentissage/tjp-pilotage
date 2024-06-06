@@ -175,8 +175,7 @@ export default function Formations() {
     },
   });
 
-  const canShowQuadrantPosition =
-    filters.codeRegion?.length === 1 && filters.codeDiplome?.length === 1;
+  const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
   return (
     <>
