@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useEffect } from "react";
 
 import { client } from "@/api.client";
 
@@ -54,7 +55,7 @@ export default function Panorama({
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => {
-    setSearchParams({ ...searchParams, [type]: value });
+    setSearchParams({ codeRegion, ...searchParams, [type]: value });
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
@@ -91,6 +92,18 @@ export default function Panorama({
       },
       { keepPreviousData: true, staleTime: 10000000 }
     );
+
+  useEffect(() => {
+    // Pour les région, le 2e diplome est un bac pro
+    const defaultDiplome = data?.filters.diplomes[1].value;
+
+    if (defaultDiplome && !searchParams.codeNiveauDiplome) {
+      handleFilters(
+        "codeNiveauDiplome",
+        defaultDiplome ? [defaultDiplome] : undefined
+      );
+    }
+  }, [data]);
 
   return (
     <>

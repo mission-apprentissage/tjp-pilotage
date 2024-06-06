@@ -14,7 +14,6 @@ import {
 import { CURRENT_RENTREE } from "shared";
 
 import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
-import { Multiselect } from "../../../../components/Multiselect";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
 import { StatCard } from "./StatCard";
 
@@ -72,17 +71,23 @@ export const IndicateursSection = ({
               ))}
             </Select>
             <FormLabel mt="4">Diplôme</FormLabel>
-            <Multiselect
-              onChange={(selected) =>
-                handleFilters("codeNiveauDiplome", selected)
-              }
+            <Select
+              variant="input"
+              onChange={(e) => {
+                if (e.target.value) {
+                  handleFilters("codeNiveauDiplome", [e.target.value]);
+                }
+              }}
               width="100%"
-              options={diplomeOptions}
-              value={activeFilters.codeNiveauDiplome ?? []}
+              value={activeFilters.codeNiveauDiplome?.[0] ?? ""}
               size="md"
             >
-              Diplôme
-            </Multiselect>
+              {diplomeOptions?.map((diplome) => (
+                <option key={diplome.value} value={diplome.value}>
+                  {diplome.label}
+                </option>
+              ))}
+            </Select>
           </FormControl>
           <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
             <Img src="/graphs_statistics.png" objectFit="contain" />

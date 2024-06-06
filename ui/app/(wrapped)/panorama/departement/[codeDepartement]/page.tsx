@@ -2,6 +2,7 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useEffect } from "react";
 
 import { client } from "@/api.client";
 
@@ -95,6 +96,16 @@ export default function Panorama({
       },
       { keepPreviousData: true, staleTime: 10000000 }
     );
+
+  useEffect(() => {
+    const defaultDiplome = data?.filters.diplomes[0].value;
+    if (defaultDiplome && defaultDiplome && !searchParams.codeNiveauDiplome) {
+      handleFilters(
+        "codeNiveauDiplome",
+        defaultDiplome ? [defaultDiplome] : undefined
+      );
+    }
+  }, [data]);
 
   return (
     <>
