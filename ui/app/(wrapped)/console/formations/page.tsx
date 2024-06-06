@@ -16,6 +16,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -339,7 +340,9 @@ export default function Formations() {
             downloadCsv(
               "formations_export",
               data.formations,
-              FORMATION_COLUMNS
+              canShowQuadrantPosition
+                ? FORMATION_COLUMNS
+                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
             );
           }}
           onExportExcel={async () => {
@@ -350,7 +353,9 @@ export default function Formations() {
             downloadExcel(
               "formations_export",
               data.formations,
-              FORMATION_COLUMNS
+              canShowQuadrantPosition
+                ? FORMATION_COLUMNS
+                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
             );
           }}
           page={page}
