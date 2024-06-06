@@ -1,11 +1,10 @@
 import { chakra } from "@chakra-ui/react";
 import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
-import { isTypeFermeture } from "shared/demandeValidators/validators";
+import { isTypeFermeture } from "shared/validators/demandeValidators";
 
-import { CapaciteField } from "@/app/(wrapped)/intentions/saisie/components/CapaciteField";
-import { isTypeColoration } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
-
+import { isTypeColoration } from "../../../../utils/typeDemandeUtils";
+import { CapaciteField } from "../../../components/CapaciteField";
 import { IntentionForms } from "../../defaultFormValues";
 
 export const CapaciteApprentissageColoreeField = chakra(

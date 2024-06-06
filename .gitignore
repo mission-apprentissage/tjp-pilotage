@@ -156,3 +156,5 @@ sdk/lib
 sonar.sh
 
 **/**(draft)**
+
+.sonarlint/

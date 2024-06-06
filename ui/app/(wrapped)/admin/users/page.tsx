@@ -19,6 +19,7 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMemo, useState } from "react";
+import { hasRightOverRole } from "shared";
 
 import { client } from "@/api.client";
 import { EditUser } from "@/app/(wrapped)/admin/users/EditUser";
@@ -28,10 +29,12 @@ import {
   downloadExcel,
   ExportColumns,
 } from "@/utils/downloadExport";
+import { formatDate } from "@/utils/formatDate";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { useAuth } from "../../../../utils/security/useAuth";
 import { CreateUser } from "./CreateUser";
 
 const Columns = {
@@ -48,6 +51,7 @@ const Columns = {
 >;
 
 export default () => {
+  const { auth } = useAuth();
   const [filters, setFilters] = useStateParams<{
     page: number;
     search?: string;
@@ -85,6 +89,19 @@ export default () => {
     [data, userId]
   );
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  const canEditUser = (
+    user: (typeof client.infer)["[GET]/users"]["users"][number]
+  ) => {
+    return (
+      auth?.user?.role &&
+      user.role &&
+      hasRightOverRole({
+        sourceRole: auth.user.role,
+        targetRole: user.role,
+      })
+    );
+  };
 
   return (
     <GuardPermission permission="users/lecture">
@@ -215,21 +232,22 @@ export default () => {
                     <Td>{user.libelleRegion}</Td>
                     <Td>{user.uais}</Td>
                     <Td>
-                      {user.createdAt &&
-                        new Date(user.createdAt).toLocaleString()}
+                      {user.createdAt && formatDate({ date: user.createdAt })}
                     </Td>
                     <Td isNumeric>
-                      <IconButton
-                        position="unset"
-                        variant="ghost"
-                        onClick={() => {
-                          setUserId(user.id);
-                          onOpen();
-                        }}
-                        aria-label="editer"
-                      >
-                        <EditIcon />
-                      </IconButton>
+                      {canEditUser(user) && (
+                        <IconButton
+                          position="unset"
+                          variant="ghost"
+                          onClick={() => {
+                            setUserId(user.id);
+                            onOpen();
+                          }}
+                          aria-label="editer"
+                        >
+                          <EditIcon />
+                        </IconButton>
+                      )}
                     </Td>
                   </Tr>
                 ))}

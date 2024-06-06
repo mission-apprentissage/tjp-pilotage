@@ -1,11 +1,66 @@
-import { Flex, Tag } from "@chakra-ui/react";
+import { Flex, Tag, Text } from "@chakra-ui/react";
 import { useId } from "react";
 import { CSSObjectWithLabel } from "react-select";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../api.client";
+import { client } from "@/api.client";
 
-export const cfdRegex = /^[0-9]{8}$/;
+export const cfdRegex = /^\d{8}$/;
+
+const OptionLabel = ({
+  option,
+}: {
+  option: (typeof client.infer)["[GET]/diplome/search/:search"][number];
+}) => {
+  return (
+    <Flex gap={2}>
+      <Text
+        textOverflow={"ellipsis"}
+        overflow={"hidden"}
+        maxW={"75%"}
+        w="fit-content"
+      >
+        {option.label}
+      </Text>
+      {option.isSpecialite && (
+        <Tag
+          colorScheme={"blue"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
+          Spécialité
+        </Tag>
+      )}
+      {option.isOption && (
+        <Tag
+          colorScheme={"blue"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
+          Option
+        </Tag>
+      )}
+      {option.dateFermeture && (
+        <Tag
+          colorScheme={"red"}
+          size={"md"}
+          maxHeight={4}
+          minW={"fit-content"}
+          my={"auto"}
+          textAlign={"center"}
+        >
+          Fermeture au {option.dateFermeture}
+        </Tag>
+      )}
+    </Flex>
+  );
+};
 
 export const CfdAutocompleteInput = ({
   name,
@@ -28,6 +83,10 @@ export const CfdAutocompleteInput = ({
       borderColor: inError ? "red" : undefined,
     }),
   };
+
+  const formatOptionLabel = (
+    option: (typeof client.infer)["[GET]/diplome/search/:search"][number]
+  ) => <OptionLabel option={option} />;
 
   return (
     <AsyncSelect
@@ -62,28 +121,7 @@ export const CfdAutocompleteInput = ({
             .ref("[GET]/diplome/search/:search")
             .query({ params: { search }, query: {} });
       }}
-      formatOptionLabel={(option) => {
-        return (
-          <Flex>
-            {option.label}{" "}
-            {option.isSpecialite && (
-              <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                Spécialité
-              </Tag>
-            )}
-            {option.isOption && (
-              <Tag colorScheme={"blue"} size={"md"} ms={2}>
-                Option
-              </Tag>
-            )}
-            {option.dateFermeture && (
-              <Tag colorScheme={"red"} size={"md"} ms={2}>
-                Fermeture au {option.dateFermeture}
-              </Tag>
-            )}
-          </Flex>
-        );
-      }}
+      formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
         inputValue.length >= 3
           ? "Recherche..."
