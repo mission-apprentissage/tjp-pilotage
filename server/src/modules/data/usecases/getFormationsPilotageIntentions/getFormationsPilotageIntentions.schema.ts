@@ -1,3 +1,4 @@
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 const FormationTransformationStatsSchema = z.object({
@@ -31,7 +32,7 @@ export const getFormationsPilotageIntentionsSchema = {
     codeRegion: z.string().optional(),
     codeAcademie: z.string().optional(),
     codeDepartement: z.string().optional(),
-    statut: z.enum(["draft", "submitted"]).optional(),
+    statut: DemandeStatutZodType.exclude(["refusée", "supprimée"]).optional(),
     type: z.enum(["ouverture", "fermeture"]).optional(),
     tauxPression: z.enum(["faible", "eleve"]).optional(),
     campagne: z.string().optional(),

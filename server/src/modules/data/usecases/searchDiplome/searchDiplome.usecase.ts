@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 import { z } from "zod";
 
-import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep";
+import { findManyInDataFormationQuery } from "./searchDiplome.query";
 import { searchDiplomeSchema } from "./searchDiplome.schema";
 
 export const [searchDiplome] = inject(
@@ -18,6 +18,7 @@ export const [searchDiplome] = inject(
         search,
         filters,
       });
+
       return formations;
     }
 );

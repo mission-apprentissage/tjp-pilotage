@@ -124,6 +124,44 @@ export const countDifferenceCapaciteApprentissage = ({
     )})`,
   });
 
+export const countDifferenceCapacite = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: sql<number>`ABS(
+      ${eb.ref("demande.capaciteScolaire")}
+      -${eb.ref("demande.capaciteScolaireActuelle")})
+      +GREATEST(${eb.ref("demande.capaciteApprentissage")}
+      -${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`,
+  });
+
+export const countDifferenceCapaciteScolaireIntention = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "intention">;
+}) =>
+  exceptionColorationIntention({
+    eb,
+    count: sql<number>`(${eb.ref("intention.capaciteScolaire")} - ${eb.ref(
+      "intention.capaciteScolaireActuelle"
+    )})`,
+  });
+
+export const countDifferenceCapaciteApprentissageIntention = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "intention">;
+}) =>
+  exceptionColorationIntention({
+    eb,
+    count: sql<number>`(${eb.ref("intention.capaciteApprentissage")} - ${eb.ref(
+      "intention.capaciteApprentissageActuelle"
+    )})`,
+  });
+
 export const countOuverturesScolaireColoree = ({
   eb,
 }: {
@@ -171,6 +209,18 @@ const exceptionColoration = ({
   count: RawBuilder<number>;
 }) =>
   sql<number>`CASE WHEN ${eb.ref("demande.typeDemande")} = 'coloration'
-  THEN 0
-  ELSE ${count}
-  END`;
+    THEN 0
+    ELSE ${count}
+    END`;
+
+const exceptionColorationIntention = ({
+  eb,
+  count,
+}: {
+  eb: ExpressionBuilder<DB, "intention">;
+  count: RawBuilder<number>;
+}) =>
+  sql<number>`CASE WHEN ${eb.ref("intention.typeDemande")} = 'coloration'
+      THEN 0
+      ELSE ${count}
+      END`;

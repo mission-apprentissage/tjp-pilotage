@@ -14,11 +14,11 @@ import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 export const MenuIntention = ({
   isRecapView = false,
-  hasPermissionEnvoi,
+  hasPermissionSubmitIntention,
   campagne,
 }: {
   isRecapView?: boolean;
-  hasPermissionEnvoi: boolean;
+  hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
 }) => {
   const queryParams = useSearchParams();
@@ -32,7 +32,7 @@ export const MenuIntention = ({
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
-    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionEnvoi;
+    !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
   const { data: countDemandes } = client.ref("[GET]/demandes/count").useQuery(
     {
@@ -54,7 +54,11 @@ export const MenuIntention = ({
         variant="createButton"
         size={"md"}
         width={"100%"}
-        as={hasPermissionEnvoi && !isSaisieDisabled() ? NextLink : undefined}
+        as={
+          hasPermissionSubmitIntention && !isSaisieDisabled()
+            ? NextLink
+            : undefined
+        }
         href="/intentions/saisie/new"
       >
         Nouvelle demande
@@ -89,18 +93,20 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.submitted,
+              statut: DemandeStatutEnum["demande validée"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.submitted}</Text>
+            <Text fontWeight={"normal"}>
+              {countDemandes?.["demande validée"]}
+            </Text>
           }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.submitted
+              isRecapView && statut === DemandeStatutEnum["demande validée"]
                 ? "bold"
                 : "normal"
             }
@@ -116,16 +122,20 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.draft,
+              statut: DemandeStatutEnum["projet de demande"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
-          rightIcon={<Text fontWeight={"normal"}>{countDemandes?.draft}</Text>}
+          rightIcon={
+            <Text fontWeight={"normal"}>
+              {countDemandes?.["projet de demande"]}
+            </Text>
+          }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.draft
+              isRecapView && statut === DemandeStatutEnum["projet de demande"]
                 ? "bold"
                 : "normal"
             }
@@ -141,18 +151,18 @@ export const MenuIntention = ({
             ...searchParams,
             filters: {
               ...searchParams.filters,
-              statut: DemandeStatutEnum.refused,
+              statut: DemandeStatutEnum["refusée"],
             },
           })}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
-            <Text fontWeight={"normal"}>{countDemandes?.refused}</Text>
+            <Text fontWeight={"normal"}>{countDemandes?.["refusée"]}</Text>
           }
         >
           <Text
             fontWeight={
-              isRecapView && statut === DemandeStatutEnum.refused
+              isRecapView && statut === DemandeStatutEnum["refusée"]
                 ? "bold"
                 : "normal"
             }

@@ -128,8 +128,11 @@ export const themeColors = {
   },
   orange: {
     draft: "#FEEBCA",
-    dark: "#716043",
     warning: "#FF6F4C",
+  },
+  yellowTournesol: {
+    950: "#FEECC2",
+    407: "#716043",
   },
   green: {
     submitted: "#C8F6D6",
@@ -143,6 +146,9 @@ export const themeColors = {
     645: "#E4794A",
     "645_hover": "#f1a892",
     "645_active": "#f4bfb1",
+    850: "#FCC0B0",
+    "850_hover": "#fb926b",
+    "850_active": "#fa7a35",
   },
   purpleglycine: {
     494: "#A558A0",
