@@ -94,7 +94,8 @@ export default function Panorama({
     );
 
   useEffect(() => {
-    const defaultDiplome = data?.filters.diplomes[0].value;
+    // Pour les région, le 2e diplome est un bac pro
+    const defaultDiplome = data?.filters.diplomes[1].value;
 
     if (defaultDiplome && !searchParams.codeNiveauDiplome) {
       handleFilters(
