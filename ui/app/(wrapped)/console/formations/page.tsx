@@ -174,6 +174,9 @@ export default function Formations() {
     },
   });
 
+  const canShowQuadrantPosition =
+    filters.codeRegion?.length === 1 && filters.codeDiplome?.length === 1;
+
   return (
     <>
       <Flex justify={"flex-end"} gap={3} wrap={"wrap"} py="3">
@@ -577,24 +580,26 @@ export default function Formations() {
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
-                <Th>
-                  {FORMATION_COLUMNS.positionQuadrant}
-                  <TooltipIcon
-                    ml="1"
-                    label={
-                      <Box>
-                        <Text>
-                          Positionnement du point de la formation dans le
-                          quadrant par rapport aux moyennes régionales des taux
-                          d'emploi et de poursuite d'études appliquées au niveau
-                          de diplôme.
-                        </Text>
-                        <Text>Cliquez pour plus d'infos.</Text>
-                      </Box>
-                    }
-                    onClick={() => openGlossaire("quadrant")}
-                  />
-                </Th>
+                {canShowQuadrantPosition && (
+                  <Th>
+                    {FORMATION_COLUMNS.positionQuadrant}
+                    <TooltipIcon
+                      ml="1"
+                      label={
+                        <Box>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                    />
+                  </Th>
+                )}
               </Tr>
             </Thead>
             <Tbody>
@@ -615,6 +620,7 @@ export default function Formations() {
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
+                      canShowQuadrantPosition={canShowQuadrantPosition}
                     />
                   </Tr>
                   {historiqueId?.cfd === line.cfd &&
@@ -625,7 +631,10 @@ export default function Formations() {
                             key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                             bg={"grey.975"}
                           >
-                            <FormationLineContent line={historiqueLine} />
+                            <FormationLineContent
+                              line={historiqueLine}
+                              canShowQuadrantPosition={canShowQuadrantPosition}
+                            />
                           </Tr>
                         ))}
                         {historique && !historique.length && (
