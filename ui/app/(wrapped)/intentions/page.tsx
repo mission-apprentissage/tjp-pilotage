@@ -19,5 +19,5 @@ export default () => {
 
   FF_isPerdirPartOfExpe
     ? redirect("/intentions/perdir")
-    : redirect("/intentions/saisie");
+    : redirect("/intentions/ra");
 };

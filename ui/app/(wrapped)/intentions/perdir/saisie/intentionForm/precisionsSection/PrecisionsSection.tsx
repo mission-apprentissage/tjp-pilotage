@@ -4,7 +4,7 @@ import { RefObject } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
-import { Campagne } from "@/app/(wrapped)/intentions/saisie/types";
+import { Campagne } from "@/app/(wrapped)/intentions/ra/types";
 
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";

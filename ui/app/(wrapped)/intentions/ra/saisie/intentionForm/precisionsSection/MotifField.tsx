@@ -13,11 +13,9 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { isTypeColoration } from "shared/validators/demandeValidators";
 
-import { Campagne } from "@/app/(wrapped)/intentions/ra/types";
-import { MotifCampagne } from "@/app/(wrapped)/intentions/utils/motifDemandeUtils";
-
 import {
   getMotifsTypeDemande,
+  MotifCampagne,
   MotifLabel,
   MOTIFS_LABELS,
 } from "../../../../utils/motifDemandeUtils";
@@ -26,6 +24,7 @@ import {
   isTypeFermeture,
   TypeDemande,
 } from "../../../../utils/typeDemandeUtils";
+import { Campagne } from "../../../types";
 import { IntentionForms } from "../defaultFormValues";
 
 const getMotifOptions = (
@@ -41,15 +40,16 @@ const getMotifOptions = (
       label,
     }));
 };
+
 export const MotifField = chakra(
   ({
     disabled,
-    className,
     campagne,
+    className,
   }: {
     disabled?: boolean;
-    className?: string;
     campagne?: Campagne;
+    className?: string;
   }) => {
     const {
       formState: { errors },
@@ -112,12 +112,11 @@ export const MotifField = chakra(
                         Merci de préciser le(s) motif(s) de votre coloration
                       </FormLabel>
                       <Stack spacing={[3]} ms={6}>
-                        {getMotifOptions("coloration")?.map(
+                        {getMotifOptions("coloration", campagne?.annee)?.map(
                           ({ value, label }) => (
                             <Checkbox
                               ref={ref}
                               disabled={disabled}
-                              name={name}
                               key={`${name}_${label}_coloration`}
                               onBlur={onBlur}
                               value={value}

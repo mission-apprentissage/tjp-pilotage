@@ -1,11 +1,3 @@
-import { GuardPermission } from "@/utils/security/GuardPermission";
+import { redirect } from "next/navigation";
 
-import { PageClient } from "./page.client";
-
-export default () => {
-  return (
-    <GuardPermission permission="intentions-perdir/lecture">
-      <PageClient />
-    </GuardPermission>
-  );
-};
+export default () => redirect("/intentions/perdir");

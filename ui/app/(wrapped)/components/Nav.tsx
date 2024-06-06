@@ -291,7 +291,7 @@ export const Nav = () => {
                 </MenuItem>
                 <MenuItem p="0" w="100%">
                   <NavMenuLink
-                    href="/intentions/perdir/saisie"
+                    href="/intentions/perdir"
                     segment="saisie-intentions-perdir"
                   >
                     Formulaire (EXPE)
@@ -302,10 +302,7 @@ export const Nav = () => {
               <>
                 {hasOnlyFormulaireIntentionMenu && (
                   <MenuItem p="0" w="100%">
-                    <NavMenuLink
-                      href="/intentions/saisie"
-                      segment="saisie-intentions"
-                    >
+                    <NavMenuLink href="/intentions" segment="saisie-intentions">
                       Formulaire
                     </NavMenuLink>
                   </MenuItem>
@@ -313,7 +310,7 @@ export const Nav = () => {
                 {hasOnlyFormulaireIntentionExpeMenu && (
                   <MenuItem p="0" w="100%">
                     <NavMenuLink
-                      href="/intentions/perdir/saisie"
+                      href="/intentions/perdir"
                       segment="saisie-intentions-perdir"
                     >
                       Formulaire
