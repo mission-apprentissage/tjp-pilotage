@@ -72,6 +72,7 @@ export const IndicateursSection = ({
             </Select>
             <FormLabel mt="4">Diplôme</FormLabel>
             <Select
+              variant="input"
               onChange={(e) => {
                 if (e.target.value) {
                   handleFilters("codeNiveauDiplome", [e.target.value]);
