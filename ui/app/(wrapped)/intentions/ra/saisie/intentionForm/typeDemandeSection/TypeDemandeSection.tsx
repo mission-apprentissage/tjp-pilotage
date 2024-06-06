@@ -2,8 +2,8 @@ import { Divider, Flex, Heading } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject } from "react";
 
-import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
 import { Campagne } from "../../../types";
+import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
 import { RentreeScolaireField } from "./RentreeScolaireField";
 import { TypeDemandeField } from "./TypeDemandeField";
@@ -35,7 +35,7 @@ export const TypeDemandeSection = ({
       </Heading>
       <Divider />
       <RentreeScolaireField disabled={disabled} campagne={campagne} />
-      <TypeDemandeField disabled={disabled} />
+      <TypeDemandeField disabled={disabled} maxWidth="752px" />
       <CapaciteSection disabled={disabled} />
     </Flex>
   );

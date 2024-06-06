@@ -18,7 +18,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 
-import { StatutTag } from "../../../components/StatutTag";
 import { Campagne } from "../../../types";
 import { IntentionForms, PartialIntentionForms } from "../defaultFormValues";
 import { CfdBlock } from "./CfdBlock";
@@ -26,40 +25,59 @@ import { DispositifBlock } from "./DispositifBlock";
 import { LibelleFCILField } from "./LibelleFCILField";
 import { UaiBlock } from "./UaiBlock";
 
+const TagDemande = ({ statut }: { statut?: string }) => {
+  switch (statut) {
+    case DemandeStatutEnum["projet de demande"]:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Projet de demande
+        </Tag>
+      );
+    case DemandeStatutEnum["demande validée"]:
+      return (
+        <Tag size="md" colorScheme={"green"} ml={4}>
+          Demande validée
+        </Tag>
+      );
+    case DemandeStatutEnum["refusée"]:
+      return (
+        <Tag size="md" colorScheme={"red"} ml={4}>
+          Demande refusée
+        </Tag>
+      );
+    default:
+      return (
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
+          Projet de demande
+        </Tag>
+      );
+  }
+};
+
 const TagCampagne = ({ campagne }: { campagne?: Campagne }) => {
   if (!campagne) return null;
   switch (campagne.statut) {
     case CampagneStatutEnum["en cours"]:
       return (
-        <Tag size="md" color={"success.425"} bgColor={"success.950"} ml={4}>
+        <Tag size="md" colorScheme={"green"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["en attente"]:
       return (
-        <Tag
-          size="md"
-          ml={4}
-          bgColor={"purpleGlycine.950"}
-          color={"purpleGlycine.319"}
-        >
+        <Tag size="md" colorScheme={"purple"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     case CampagneStatutEnum["terminée"]:
       return (
-        <Tag size="md" ml={4} color={"error.425"} bgColor={"error.950"}>
+        <Tag size="md" colorScheme={"red"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
     default:
       return (
-        <Tag
-          size="md"
-          ml={4}
-          color={"yellowTournesol.407"}
-          bgColor={"yellowTournesol.950"}
-        >
+        <Tag size="md" colorScheme={"yellow"} ml={4}>
           Campagne {campagne.annee} ({campagne.statut})
         </Tag>
       );
@@ -78,7 +96,7 @@ export const CfdUaiSection = ({
   setIsFCIL,
   submitCFDUAISection,
   isCFDUaiSectionValid,
-  statutComponentRef,
+  statusComponentRef,
 }: {
   campagne?: Campagne;
   formId?: string;
@@ -91,7 +109,7 @@ export const CfdUaiSection = ({
   setIsFCIL: (isFcil: boolean) => void;
   submitCFDUAISection: () => void;
   isCFDUaiSectionValid: (_: Partial<IntentionForms>) => boolean;
-  statutComponentRef?: React.RefObject<HTMLDivElement>;
+  statusComponentRef?: React.RefObject<HTMLDivElement>;
 }) => {
   const { watch, getValues } = useFormContext<IntentionForms>();
 
@@ -126,7 +144,7 @@ export const CfdUaiSection = ({
   }, [watch, getValues, isCFDUaiSectionValid]);
 
   const anchorToStatus = () => {
-    statutComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
+    statusComponentRef?.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
@@ -140,11 +158,7 @@ export const CfdUaiSection = ({
         <Heading alignItems="baseline" display="flex" fontSize="2xl">
           {formId ? `Demande n° ${formId}` : "Nouvelle demande"}
           <TagCampagne campagne={campagne} />
-          <StatutTag
-            statut={defaultValues.statut ?? DemandeStatutEnum["brouillon"]}
-            ml={4}
-            size={"md"}
-          />
+          <TagDemande statut={defaultValues.statut} />
           {defaultValues && (
             <IconButton
               icon={<EditIcon />}
@@ -169,9 +183,7 @@ export const CfdUaiSection = ({
           active={active && !disabled}
         />
         <DispositifBlock options={dispositifs} active={active && !disabled} />
-        {isFCIL && (
-          <LibelleFCILField active={active && !disabled}></LibelleFCILField>
-        )}
+        {isFCIL && <LibelleFCILField active={active}></LibelleFCILField>}
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">

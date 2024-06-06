@@ -9,7 +9,6 @@ import {
   Box,
   Button,
   Container,
-  Flex,
   Grid,
   GridItem,
   UnorderedList,
@@ -29,29 +28,19 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
-import { isTypeDiminution } from "shared/validators/demandeValidators";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
-import { LinkButton } from "@/components/LinkButton";
-import { useAuth } from "@/utils/security/useAuth";
 
-import { getStepWorkflow } from "../../../utils/statutUtils";
-import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
-import { SCROLL_OFFSET, STICKY_OFFSET } from "../../SCROLL_OFFSETS";
 import { Campagne } from "../../types";
 import { Conseils } from "../components/Conseils";
 import { MenuFormulaire } from "../components/MenuFormulaire";
+import { SCROLL_OFFSET, STICKY_OFFSET } from "../SCROLL_OFFSETS";
 import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { IntentionForms, PartialIntentionForms } from "./defaultFormValues";
 import { InformationsBlock } from "./InformationsBlock";
-import { useIntentionFilesContext } from "./observationsSection/filesSection/filesContext";
 
 export const CampagneContext = createContext<{
   campagne?: Campagne;
@@ -71,14 +60,12 @@ export const IntentionForm = ({
   disabled?: boolean;
   formId?: string;
   defaultValues: PartialIntentionForms;
-  formMetadata?: (typeof client.infer)["[GET]/intention/:numero"]["metadata"];
+  formMetadata?: (typeof client.infer)["[GET]/demande/:numero"]["metadata"];
   campagne?: Campagne;
 }) => {
-  const { auth } = useAuth();
   const toast = useToast();
   const { push } = useRouter();
   const pathname = usePathname();
-  const { handleFiles } = useIntentionFilesContext();
   const form = useForm<IntentionForms>({
     defaultValues,
     mode: "onTouched",
@@ -94,22 +81,24 @@ export const IntentionForm = ({
     isLoading: isSubmitting,
     mutateAsync: submitDemande,
     isSuccess,
-  } = client.ref("[POST]/intention/submit").useMutation({
-    onSuccess: async (body) => {
-      let message = undefined;
+  } = client.ref("[POST]/demande/submit").useMutation({
+    onSuccess: (body) => {
+      push(`/intentions/saisie`);
+
+      let message: string | null = null;
+
       switch (body.statut) {
-        case DemandeStatutEnum["brouillon"]:
-          message =
-            "Votre demande a bien été enregistrée en tant que brouillon";
-          break;
-        case DemandeStatutEnum["proposition"]:
-          message = "Votre proposition a bien été enregistrée";
-          break;
         case DemandeStatutEnum["projet de demande"]:
-          message = "Votre projet de demande a bien été enregistré";
+          message = "Projet de demande enregistré avec succès";
           break;
-        default:
-          message = "Votre demande a bien été enregistrée";
+        case DemandeStatutEnum["demande validée"]:
+          message = "Demande validée avec succès";
+          break;
+        case DemandeStatutEnum["refusée"]:
+          message = "Demande refusée avec succès";
+          break;
+        case DemandeStatutEnum["supprimée"]:
+          message = "Demande supprimée avec succès";
           break;
       }
 
@@ -119,10 +108,6 @@ export const IntentionForm = ({
           title: message,
         });
       }
-
-      await handleFiles(body.numero);
-
-      push(`/intentions/perdir/saisie`);
     },
     //@ts-ignore
     onError: (e: AxiosError<{ errors: Record<string, string> }>) => {
@@ -131,22 +116,13 @@ export const IntentionForm = ({
     },
   });
 
+  const isActionsDisabled = isSuccess || isSubmitting;
+
   const [isFCIL, setIsFCIL] = useState<boolean>(
     formMetadata?.formation?.isFCIL ?? false
   );
 
-  const isDisabledForPerdir =
-    hasRole({
-      user: auth?.user,
-      role: "perdir",
-    }) &&
-    !!defaultValues.statut &&
-    getStepWorkflow(defaultValues.statut) > 1;
-
-  const isActionsDisabled = isSuccess || isSubmitting || isDisabledForPerdir;
-
-  const isFormDisabled =
-    disabled || form.formState.disabled || isDisabledForPerdir;
+  const isFormDisabled = disabled || form.formState.disabled;
 
   const isCFDUaiSectionValid = ({
     cfd,
@@ -178,7 +154,7 @@ export const IntentionForm = ({
     setStep(2);
   };
 
-  const statutComponentRef = useRef<HTMLDivElement>(null);
+  const statusComponentRef = useRef<HTMLDivElement>(null);
 
   const { setCampagne } = useContext(CampagneContext);
 
@@ -200,56 +176,6 @@ export const IntentionForm = ({
     commentaireEtPiecesJointes: commentaireEtPiecesJointesRef,
   } as Record<string, React.RefObject<HTMLDivElement>>;
 
-  const typeDemande = form.watch("typeDemande");
-  const isTypeDemandeNotFermetureOuDiminution =
-    !!typeDemande &&
-    !isTypeFermeture(typeDemande) &&
-    !isTypeDiminution(typeDemande);
-
-  const getStatutSubmit = (): Extract<
-    DemandeStatutType,
-    "proposition" | "projet de demande"
-  > => {
-    if (
-      hasRole({ user: auth?.user, role: "perdir" }) ||
-      hasRole({ user: auth?.user, role: "expert_region" })
-    ) {
-      return DemandeStatutEnum["proposition"];
-    }
-    return DemandeStatutEnum["projet de demande"];
-  };
-
-  const getLabelSubmit = (
-    statut: Extract<DemandeStatutType, "proposition" | "projet de demande">,
-    statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
-  ): string => {
-    if (statut === DemandeStatutEnum["projet de demande"]) {
-      return "Valider mon projet de demande";
-    }
-    if (
-      !statutPrecedent ||
-      statutPrecedent === DemandeStatutEnum["brouillon"]
-    ) {
-      return "Enregistrer ma proposition";
-    }
-    if (statut === DemandeStatutEnum["proposition"]) {
-      return "Mettre à jour ma proposition";
-    }
-    return "Enregistrer ma proposition";
-  };
-
-  const canSubmitBrouillon = (
-    statut?: Exclude<DemandeStatutType, "supprimée">
-  ): boolean => {
-    if (
-      hasRole({ user: auth?.user, role: "perdir" }) ||
-      hasRole({ user: auth?.user, role: "expert_region" })
-    ) {
-      return statut === undefined || statut === DemandeStatutEnum["brouillon"];
-    }
-    return false;
-  };
-
   return (
     <CampagneContext.Provider value={campagneValue}>
       <FormProvider {...form}>
@@ -261,7 +187,7 @@ export const IntentionForm = ({
           noValidate
           onSubmit={handleSubmit((values) =>
             submitDemande({
-              body: { intention: { numero: formId, ...values } },
+              body: { demande: { numero: formId, ...values } },
             })
           )}
         >
@@ -271,16 +197,16 @@ export const IntentionForm = ({
               mb={4}
               pages={[
                 { title: "Accueil", to: "/" },
-                { title: "Recueil des demandes", to: "/intentions/perdir" },
-                pathname === "/intentions/perdir/saisie/new"
+                { title: "Recueil des demandes", to: "/intentions" },
+                pathname === "/intentions/saisie/new"
                   ? {
                       title: "Nouvelle demande",
-                      to: "/intentions/perdir/saisie/new",
+                      to: "/intentions/saisie/new",
                       active: true,
                     }
                   : {
                       title: `Demande n°${formId}`,
-                      to: `/intentions/perdir/saisie/${formId}`,
+                      to: `/intentions/saisie/${formId}`,
                       active: true,
                     },
               ]}
@@ -296,11 +222,11 @@ export const IntentionForm = ({
               setIsFCIL={setIsFCIL}
               isCFDUaiSectionValid={isCFDUaiSectionValid}
               submitCFDUAISection={submitCFDUAISection}
-              statutComponentRef={statutComponentRef}
+              statusComponentRef={statusComponentRef}
               campagne={campagne}
             />
             {step === 2 && (
-              <Box>
+              <Box ref={step2Ref}>
                 <Grid templateColumns={"repeat(3, 1fr)"} columnGap={8}>
                   <GridItem>
                     <Box
@@ -309,16 +235,11 @@ export const IntentionForm = ({
                       top={STICKY_OFFSET}
                       textAlign={"start"}
                     >
-                      <MenuFormulaire
-                        refs={anchorsRefs}
-                        isTypeDemandeNotFermetureOuDiminution={
-                          isTypeDemandeNotFermetureOuDiminution
-                        }
-                      />
+                      <MenuFormulaire refs={anchorsRefs} />
                       <Box position="relative">
                         <Conseils />
                       </Box>
-                      <Box position={"relative"}>
+                      <Box position="relative">
                         {errors && (
                           <Alert mt="8" alignItems="flex-start" status="error">
                             <AlertIcon />
@@ -337,46 +258,14 @@ export const IntentionForm = ({
                       </Box>
                     </Box>
                   </GridItem>
-                  <GridItem
-                    colSpan={2}
-                    ref={step2Ref}
-                    scrollMarginTop={SCROLL_OFFSET}
-                  >
+                  <GridItem colSpan={2}>
                     <InformationsBlock
                       refs={anchorsRefs}
                       formId={formId}
                       disabled={isFormDisabled}
                       campagne={campagne}
                       footerActions={
-                        <Flex direction="row" gap={4} ref={statutComponentRef}>
-                          {canSubmitBrouillon() && (
-                            <Button
-                              isDisabled={
-                                disabled ||
-                                isActionsDisabled ||
-                                campagne?.statut !==
-                                  CampagneStatutEnum["en cours"]
-                              }
-                              isLoading={isSubmitting}
-                              variant="draft"
-                              onClick={handleSubmit((values) =>
-                                submitDemande({
-                                  body: {
-                                    intention: {
-                                      numero: formId,
-                                      ...values,
-                                      statut: DemandeStatutEnum["brouillon"],
-                                      campagneId:
-                                        values.campagneId ?? campagne?.id,
-                                    },
-                                  },
-                                })
-                              )}
-                              leftIcon={<CheckIcon />}
-                            >
-                              Enregistrer en tant que brouillon
-                            </Button>
-                          )}
+                        <Box justifyContent={"center"} ref={statusComponentRef}>
                           <Button
                             isDisabled={
                               disabled ||
@@ -389,10 +278,12 @@ export const IntentionForm = ({
                             onClick={handleSubmit((values) =>
                               submitDemande({
                                 body: {
-                                  intention: {
+                                  demande: {
                                     numero: formId,
                                     ...values,
-                                    statut: getStatutSubmit(),
+                                    statut: formId
+                                      ? values.statut
+                                      : DemandeStatutEnum["projet de demande"],
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -401,16 +292,27 @@ export const IntentionForm = ({
                             )}
                             leftIcon={<CheckIcon />}
                           >
-                            {getLabelSubmit(
-                              getStatutSubmit(),
-                              defaultValues.statut
-                            )}
+                            {formId
+                              ? "Sauvegarder les modifications"
+                              : "Enregistrer le projet de demande"}
                           </Button>
-                        </Flex>
+                        </Box>
                       }
                     />
-                    <LinkButton
+                    <Button
+                      variant={"ghost"}
                       mt={6}
+                      borderRadius={"unset"}
+                      borderBottom={"1px solid"}
+                      borderColor={"bluefrance.113"}
+                      color={"bluefrance.113"}
+                      _hover={{
+                        backgroundColor: "unset",
+                      }}
+                      p={1}
+                      h="fit-content"
+                      fontWeight={400}
+                      fontSize={16}
                       leftIcon={<Icon icon="ri:arrow-up-fill" />}
                       onClick={() =>
                         step1Ref.current?.scrollIntoView({
@@ -420,7 +322,7 @@ export const IntentionForm = ({
                       }
                     >
                       Haut de page
-                    </LinkButton>
+                    </Button>
                   </GridItem>
                 </Grid>
               </Box>

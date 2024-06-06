@@ -21,8 +21,8 @@ import { isTypeDiminution } from "shared/validators/demandeValidators";
 import { client } from "@/api.client";
 
 import { isTypeFermeture } from "../../../utils/typeDemandeUtils";
+import { Campagne } from "../../types";
 import { SectionBlock } from "../components/SectionBlock";
-import { Campagne } from "../types";
 import { IntentionForms } from "./defaultFormValues";
 import { InternatEtRestaurationSection } from "./internatEtRestaurationSection/InternatEtRestaurationSection";
 import { ObservationsSection } from "./observationsSection/ObservationsSection";

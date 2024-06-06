@@ -2,7 +2,7 @@
 
 import { client } from "@/api.client";
 
-import { IntentionSpinner } from "../components/IntentionSpinner";
+import { IntentionSpinner } from "../../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "../intentionForm/observationsSection/filesSection/filesContext";
 import { canEditIntention } from "../utils/canEditIntention";
