@@ -2,11 +2,13 @@ import { AspectRatio, Box } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef, useState } from "react";
 export const LineChart = ({
+  title,
   data,
   categories,
   colors,
   defaultMainKey,
 }: {
+  title: string;
   data: Record<string, number[]>;
   categories?: string[];
   colors: Record<string, string>;
@@ -26,13 +28,24 @@ export const LineChart = ({
           color: "inherit",
         },
       },
+      toolbox: {
+        top: -5,
+        feature: {
+          saveAsImage: {
+            title: "Télécharger sous format .png",
+            name: title,
+            type: "png",
+            backgroundColor: "transparent",
+          },
+        },
+      },
       legend: {
         data: Object.keys(data),
         icon: "none",
         orient: "vertical",
         right: "0%",
         bottom: 0,
-        itemGap: 15,
+        itemGap: 8,
         itemStyle: {
           color: "inherit",
         },
