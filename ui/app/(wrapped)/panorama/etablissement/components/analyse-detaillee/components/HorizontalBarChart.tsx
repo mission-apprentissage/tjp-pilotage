@@ -5,8 +5,10 @@ import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
 export const HorizontalBarChart = ({
+  title,
   data,
 }: {
+  title: string;
   data: Record<
     string,
     {
@@ -68,6 +70,16 @@ export const HorizontalBarChart = ({
           `${params?.name} : ${params?.data} élève${
             params?.data > 1 ? "s" : ""
           }`,
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {
+            title: "Télécharger sous format .png",
+            name: title,
+            type: "png",
+            backgroundColor: "transparent",
+          },
+        },
       },
       grid: {
         containLabel: true,

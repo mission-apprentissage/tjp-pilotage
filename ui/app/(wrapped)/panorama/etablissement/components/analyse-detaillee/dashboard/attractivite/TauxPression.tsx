@@ -124,6 +124,11 @@ export const TauxPression = ({
     >
       {chiffresEntreeOffre && checkDataAvailability() ? (
         <LineChart
+          title={
+            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+              ? "Taux de demande"
+              : "Taux de pression"
+          }
           data={getData()}
           categories={getCategories()}
           colors={colors}

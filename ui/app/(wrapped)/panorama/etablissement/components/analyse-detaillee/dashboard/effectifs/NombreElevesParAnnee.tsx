@@ -79,7 +79,10 @@ export const NombreElevesParAnnee = ({
       }
     >
       {checkDataAvailability() ? (
-        <HorizontalBarChart data={getHorizontalBarChartData()} />
+        <HorizontalBarChart
+          title="Nombre d'élèves par année (Constat de rentrée 2023)"
+          data={getHorizontalBarChartData()}
+        />
       ) : (
         <CounterChart />
       )}
