@@ -112,7 +112,7 @@ export const formatOptionLibelle = (
   </Flex>
 );
 
-const formatCodeDepartement = (codeDepartement?: string) =>
+export const formatCodeDepartement = (codeDepartement?: string) =>
   codeDepartement?.substring(0, 1) === "0"
     ? codeDepartement.substring(1)
     : codeDepartement;
