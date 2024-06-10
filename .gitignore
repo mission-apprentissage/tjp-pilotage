@@ -158,3 +158,6 @@ sonar.sh
 **/**(draft)**
 
 .sonarlint/
+
+# Vs code config
+.vscode/terminals.json
