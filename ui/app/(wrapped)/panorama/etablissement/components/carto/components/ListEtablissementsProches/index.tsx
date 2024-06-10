@@ -11,7 +11,8 @@ import { InlineIcon } from "@iconify/react";
 import { createRef, useEffect } from "react";
 import { useInView } from "react-intersection-observer";
 
-import { client } from "../../../../../../../../api.client";
+import { client } from "@/api.client";
+
 import { useEtablissementContext } from "../../../../context/etablissementContext";
 import { useEtablissementMapContext } from "../../context/etablissementMapContext";
 import { CustomListItem } from "./components/CustomListItem";
