@@ -159,6 +159,5 @@ sonar.sh
 
 .sonarlint/
 
-
 # Vs code config
 .vscode/terminals.json
