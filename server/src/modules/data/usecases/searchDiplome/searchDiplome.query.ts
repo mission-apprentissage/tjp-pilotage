@@ -32,6 +32,13 @@ export const searchDiplomeQuery = async ({ search }: { search: string }) => {
       "561", // MC
       "581", // FCIL
     ])
+    // exlcusion des CFD d'années communes en CAP et BAC PRO (40030002, 40020005, 50020006, 50030001)
+    .where("dataFormation.cfd", "not in", [
+      "40030002",
+      "40020005",
+      "50020006",
+      "50030001",
+    ])
     .where((eb) =>
       eb.and([
         eb.and(
