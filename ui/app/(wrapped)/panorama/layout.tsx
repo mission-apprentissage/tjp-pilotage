@@ -86,7 +86,7 @@ export default function PanoramaLayout({
             Établissement
           </Tab>
           <Tab as={Link} href="/panorama/lien-metier-formation">
-            Lien emploi formation
+            Lien métier formation
           </Tab>
         </TabList>
         <TabPanels display="flex" flexDirection="column" flex="1" minHeight="0">
