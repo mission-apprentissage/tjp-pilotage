@@ -53,7 +53,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...getDataForEtablissementMapRoute({ server }),
     ...getDataForEtablissementMapListRoute({ server }),
     ...searchDiplomeRoute({ server }),
-    ...searchDisciplineRoute({ server }),
     ...searchNsfRoute({ server }),
     ...searchNsfDiplomeRoute({ server }),
     ...searchMetierRoute({ server }),
