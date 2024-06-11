@@ -56,18 +56,17 @@ export const selectTauxPressionAgg = (
       codeNiveauDiplomeAlias,
       withTauxDemande
     )} >= 0
-    THEN ROUND(
-      (
-        SUM(${premierVoeuxAnnee(
-          sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
-          indicateurEntreeAlias
-        )})
+    THEN (
+      SUM(${premierVoeuxAnnee(
+        sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
+        indicateurEntreeAlias
+      )})
       / ${selectDenominateurPressionAgg(
         indicateurEntreeAlias,
         codeNiveauDiplomeAlias,
         withTauxDemande
       )}
-      )::NUMERIC, 2)
+      )::NUMERIC
     END
   `;
 
@@ -96,12 +95,12 @@ export const selectTauxPression = (
         CODE_NIVEAU_DIPLOME_DES_BTS
       )}' THEN NULL
       WHEN ${selectDenominateurPression(indicateurEntreeAlias)} >= 0
-      THEN ROUND((
+      THEN (
         ${premierVoeuxAnnee(
           sql`${sql.table(indicateurEntreeAlias)}."anneeDebut"::text`,
           indicateurEntreeAlias
         )}
-      / ${selectDenominateurPression(indicateurEntreeAlias)})::NUMERIC, 2)
+      / ${selectDenominateurPression(indicateurEntreeAlias)})::NUMERIC
     END
   `;
 

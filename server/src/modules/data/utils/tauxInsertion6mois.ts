@@ -17,8 +17,8 @@ export const selectTauxInsertion6mois = (
     CASE WHEN ${selectDenominateurInsertion6mois(
       indicateurSortieAlias
     )} >= ${seuil}
-    THEN ROUND((${sql.table(indicateurSortieAlias)}."nbInsertion6mois"::FLOAT
-    / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})::NUMERIC, 2)
+    THEN (${sql.table(indicateurSortieAlias)}."nbInsertion6mois"::FLOAT
+    / ${selectDenominateurInsertion6mois(indicateurSortieAlias)})::NUMERIC
     END`;
 
 export const selectDenominateurInsertion6moisAgg = (
@@ -42,8 +42,8 @@ export const selectTauxInsertion6moisAgg = (
     CASE WHEN ${selectDenominateurInsertion6moisAgg(
       indicateurSortieAlias
     )} >= ${seuil}
-    THEN ROUND((SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
-    / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})::NUMERIC,2)
+    THEN (SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
+    / ${selectDenominateurInsertion6moisAgg(indicateurSortieAlias)})::NUMERIC
     END`;
 
 export function withInsertionReg<
