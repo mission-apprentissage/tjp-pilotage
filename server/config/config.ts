@@ -78,6 +78,7 @@ export const config = {
     token: env.get("NOTION_TOKEN").required().asString(),
     dbChangelogId: env.get("NOTION_DB_CHANGELOG_ID").required().asString(),
     dbGlossaireId: env.get("NOTION_DB_GLOSSAIRE_ID").required().asString(),
+    dbEditoId: env.get("NOTION_DB_EDITO_ID").required().asString(),
   },
   s3: {
     region: env.get("PILOTAGE_S3_REGION").asString(),
