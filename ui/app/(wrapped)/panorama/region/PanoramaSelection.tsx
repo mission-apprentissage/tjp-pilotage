@@ -10,10 +10,12 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import qs from "qs";
 import { useContext, useEffect } from "react";
 
 import { client } from "../../../../api.client";
 import { CodeRegionFilterContext } from "../../../layoutClient";
+import { DEFAULT_SEARCH_PARAMS } from "../layout";
 
 export function PanoramaSelection({
   regionOptions,
@@ -27,13 +29,19 @@ export function PanoramaSelection({
 
   useEffect(() => {
     if (codeRegionFilter != "") {
-      router.push(`/panorama/region/${codeRegionFilter}`);
+      router.push(
+        `/panorama/region/${codeRegionFilter}?${qs.stringify(
+          DEFAULT_SEARCH_PARAMS
+        )}`
+      );
     }
   }, []);
 
   const onCodeRegionChanged = (codeRegion: string) => {
     setCodeRegionFilter(codeRegion);
-    router.push(`/panorama/region/${codeRegion}`);
+    router.push(
+      `/panorama/region/${codeRegion}?${qs.stringify(DEFAULT_SEARCH_PARAMS)}`
+    );
   };
 
   return (

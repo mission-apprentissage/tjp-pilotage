@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useEffect } from "react";
 
 import { client } from "@/api.client";
 
@@ -36,7 +35,6 @@ export default function Panorama({
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
     if (searchParams.orderBy !== column) {
       setSearchParams({
-        codeDepartement,
         ...searchParams,
         order: "desc",
         orderBy: column,
@@ -44,7 +42,6 @@ export default function Panorama({
       return;
     }
     setSearchParams({
-      codeDepartement,
       ...searchParams,
       order: searchParams.order === "asc" ? "desc" : "asc",
       orderBy: column,
@@ -55,11 +52,13 @@ export default function Panorama({
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => {
-    setSearchParams({ codeDepartement, ...searchParams, [type]: value });
+    setSearchParams({ ...searchParams, [type]: value });
   };
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
-    router.push(`/panorama/departement/${codeDepartement}`);
+    router.push(
+      `/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`
+    );
   };
 
   const { data: departementsOptions } = client
@@ -96,16 +95,6 @@ export default function Panorama({
       },
       { keepPreviousData: true, staleTime: 10000000 }
     );
-
-  useEffect(() => {
-    const defaultDiplome = data?.filters.diplomes[0].value;
-    if (defaultDiplome && defaultDiplome && !searchParams.codeNiveauDiplome) {
-      handleFilters(
-        "codeNiveauDiplome",
-        defaultDiplome ? [defaultDiplome] : undefined
-      );
-    }
-  }, [data]);
 
   return (
     <>
