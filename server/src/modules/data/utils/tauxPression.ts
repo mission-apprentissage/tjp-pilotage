@@ -86,7 +86,7 @@ export const selectDenominateurPression = (
 export const selectTauxPression = (
   indicateurEntreeAlias: string,
   codeNiveauDiplomeTableAlias: string,
-  withTauxDemande: boolean = true
+  withTauxDemande: boolean = false
 ) => sql<number>`
     CASE
       WHEN ${sql<boolean>`${!withTauxDemande}`} AND ${sql.table(
