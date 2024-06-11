@@ -56,6 +56,9 @@ const DashboardFormation = () => {
       setSelectedFormation({
         label: formationSearchParam,
         value: codeFormationSearchParam,
+        data: {
+          voies: [],
+        },
       });
     } else if (!formationSearchParam || !codeFormationSearchParam) {
       setSelectedFormation(undefined);
@@ -124,11 +127,11 @@ const DashboardFormation = () => {
         territoire et tous les débouchés métiers
       </Text>
       <HStack alignItems="end" width="100%">
-        <HStack>
-          <Box width="300px">
+        <HStack width="100%">
+          <Box width="500px">
             <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
           </Box>
-          <Box width="300px">
+          <Box width="500px">
             <AsyncFormationSearch
               codeNsf={selectedNsf?.value}
               onSelectFormation={onUpdateFormation}
