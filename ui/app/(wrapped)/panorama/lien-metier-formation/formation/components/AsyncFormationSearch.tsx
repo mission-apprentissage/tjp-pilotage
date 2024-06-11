@@ -1,9 +1,10 @@
 "use client";
 
-import { Text } from "@chakra-ui/react";
+import { Flex, Tag, Text, VStack } from "@chakra-ui/react";
 import { useId, useRef } from "react";
 import { GroupBase, SelectInstance } from "react-select";
 import AsyncSelect from "react-select/async";
+import { VoieEnum } from "shared";
 
 import { client } from "@/api.client";
 
@@ -16,6 +17,47 @@ interface AsyncFormationSearchProps {
 }
 
 type Option = FormationOption | string;
+
+const OptionLabel = ({ option }: { option: FormationOption }) => {
+  return (
+    <Flex gap={2}>
+      <Text
+        textOverflow={"ellipsis"}
+        overflow={"hidden"}
+        maxW={"75%"}
+        w="fit-content"
+      >
+        {option.label}
+      </Text>
+      <VStack>
+        {option?.data?.dateFermeture && (
+          <Tag
+            colorScheme={"red"}
+            size={"md"}
+            maxHeight={4}
+            minW={"fit-content"}
+            my={"auto"}
+            textAlign={"center"}
+          >
+            Fermeture au {option.data.dateFermeture}
+          </Tag>
+        )}
+        {option?.data?.voies.includes(VoieEnum.apprentissage) && (
+          <Tag
+            colorScheme={"orange"}
+            size={"md"}
+            maxHeight={4}
+            minW={"fit-content"}
+            my={"auto"}
+            textAlign={"center"}
+          >
+            Apprentissage
+          </Tag>
+        )}
+      </VStack>
+    </Flex>
+  );
+};
 
 const AsyncFormationSearch = ({
   codeNsf,
@@ -44,6 +86,13 @@ const AsyncFormationSearch = ({
         name={"select-diplome"}
         components={{
           IndicatorSeparator: () => null,
+        }}
+        formatOptionLabel={(option: FormationOption | string) => {
+          if (typeof option !== "string") {
+            return <OptionLabel option={option} />;
+          }
+
+          return <Text>{option}</Text>;
         }}
         defaultOptions={defaultFormations ?? []}
         value={formation ?? ""}

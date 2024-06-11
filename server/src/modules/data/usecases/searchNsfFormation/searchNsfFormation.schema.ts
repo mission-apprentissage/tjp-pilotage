@@ -12,6 +12,10 @@ export const searchNsfFormationSchema = {
       z.object({
         value: z.string(),
         label: z.string(),
+        data: z.object({
+          voies: z.array(z.string()),
+          dateFermeture: z.string().optional(),
+        }),
       })
     ),
   },

@@ -1,4 +1,5 @@
 import { inject } from "injecti";
+import _ from "lodash";
 import { z } from "zod";
 
 import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep";
@@ -23,10 +24,18 @@ export const [searchDiplome] = inject(
 
       const options: Array<Option> = [];
 
-      for (const formation of formations) {
+      // Dédupliquer les libellés des formations qui sont doublés
+      // et garder celle qui n'a pas de date de fermeture
+      const filteredDup = _.uniqBy(formations, "libelleFormation");
+
+      for (const formation of filteredDup) {
         options.push({
           label: `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`,
           value: formation.cfd,
+          data: {
+            voies: _.uniq(formation.voies).filter((u) => u !== undefined) ?? [],
+            dateFermeture: formation.dateFermeture,
+          },
         });
       }
 
