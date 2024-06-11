@@ -162,7 +162,7 @@ const findFormationEtablissementsInDb = async ({
       "indicateurEtablissement.valeurAjoutee",
       "anneeDebut",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
-      effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
+      effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
         "effectif1"
       ),

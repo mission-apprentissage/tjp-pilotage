@@ -168,6 +168,7 @@ export const EtablissementLineContent = ({
     <Td>{line.cpcSecteur ?? "-"}</Td>
     <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
+    <Td>{line.effectifEntree ?? "-"}</Td>
   </>
 );
 

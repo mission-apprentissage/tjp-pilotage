@@ -119,7 +119,7 @@ const findFormationsInDb = async ({
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
-      `.as("effectif"),
+      `.as("effectifEntree"),
       sql<number>`SUM(${effectifAnnee({
         alias: "indicateurEntree",
         annee: sql`'0'`,

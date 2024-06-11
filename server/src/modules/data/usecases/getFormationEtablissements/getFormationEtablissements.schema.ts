@@ -27,7 +27,7 @@ const FormationEtablissementLineSchema = z.object({
   anneeDebut: z.coerce.number().optional(),
   premiersVoeux: z.coerce.number().optional(),
   capacite: z.coerce.number().optional(),
-  effectif: z.coerce.number().optional(),
+  effectifEntree: z.coerce.number().optional(),
   effectif1: z.coerce.number().optional(),
   effectif2: z.coerce.number().optional(),
   effectif3: z.coerce.number().optional(),

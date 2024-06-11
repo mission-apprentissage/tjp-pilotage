@@ -584,6 +584,13 @@ export default function Formations() {
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectifEntree")}
+                >
+                  <OrderIcon {...order} column="effectifEntree" />
+                  {FORMATION_COLUMNS.effectifEntree}
+                </Th>
                 {canShowQuadrantPosition && (
                   <Th>
                     {FORMATION_COLUMNS.positionQuadrant}
