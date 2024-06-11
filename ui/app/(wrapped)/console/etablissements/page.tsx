@@ -735,6 +735,13 @@ export default function Etablissements() {
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectifEntree")}
+                >
+                  <OrderIcon {...order} column="effectifEntree" />
+                  {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>

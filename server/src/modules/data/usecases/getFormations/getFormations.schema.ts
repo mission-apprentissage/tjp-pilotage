@@ -16,7 +16,7 @@ export const FormationLineSchema = z.object({
   libelleNiveauDiplome: z.string().optional(),
   nbEtablissement: z.coerce.number().optional(),
   anneeDebut: z.coerce.number().optional(),
-  effectif: z.coerce.number().optional(),
+  effectifEntree: z.coerce.number().optional(),
   effectif1: z.coerce.number().optional(),
   effectif2: z.coerce.number().optional(),
   effectif3: z.coerce.number().optional(),

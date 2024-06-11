@@ -143,6 +143,7 @@ export const FormationLineContent = ({
     <Td>{line.cpcSecteur ?? "-"}</Td>
     <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
+    <Td>{line.effectifEntree ?? "-"}</Td>
     {canShowQuadrantPosition && <Td>{line.positionQuadrant}</Td>}
   </>
 );
