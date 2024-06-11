@@ -11,13 +11,15 @@ import {
 } from "../../../../../../../utils/downloadExport";
 import { formatCommuneLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 
+const EXPORT_LIMIT = 1_000_000;
+
 export const ExportList = () => {
   const trackEvent = usePlausible();
 
   const { uai } = useEtablissementContext();
   const { bbox, cfdFilter } = useEtablissementMapContext();
 
-  const { data: etablissementsList } = client
+  const { data: etablissementsList, isLoading } = client
     .ref("[GET]/etablissement/:uai/map/list")
     .useQuery({
       params: {
@@ -31,6 +33,7 @@ export const ExportList = () => {
           maxLng: "" + bbox.maxLng,
         },
         cfd: cfdFilter ? [cfdFilter] : undefined,
+        limit: EXPORT_LIMIT,
       },
     });
 
@@ -85,6 +88,7 @@ export const ExportList = () => {
         );
       }}
       variant="solid"
+      isQueryLoading={isLoading}
     />
   );
 };

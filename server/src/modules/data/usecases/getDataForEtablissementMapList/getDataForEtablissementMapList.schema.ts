@@ -28,6 +28,7 @@ export const getDataForEtablissementMapListSchema = {
       minLng: z.string(),
       maxLng: z.string(),
     }),
+    limit: z.coerce.number().optional(),
   }),
   response: {
     200: z.object({

@@ -9,7 +9,11 @@ import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
 export interface Filters extends RouteQueryString {}
 
-export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
+export const getEtablissementsProches = async ({
+  cfd,
+  bbox,
+  limit = 100,
+}: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
@@ -88,7 +92,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       }
       return q;
     })
-    .limit(100)
+    .limit(limit)
     .groupBy([
       "etablissement.UAI",
       "etablissement.codeDepartement",
