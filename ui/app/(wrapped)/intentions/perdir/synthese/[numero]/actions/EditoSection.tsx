@@ -20,20 +20,27 @@ export const EditoSection = chakra(() => {
   return (
     <Flex
       direction={"column"}
-      gap={3}
+      gap={4}
       bgColor={"white"}
       borderRadius={6}
       p={6}
       top={STICKY_OFFSET}
       position={"sticky"}
     >
-      <Heading as="h2" fontSize={18} fontWeight={700} mb={4}>
-        Edito
+      <Heading as="h2" fontSize={18} fontWeight={700}>
+        Actualités
       </Heading>
+      <Divider />
       {editoContent?.map((rowEdito, index) => {
         return (
           <Flex direction={"column"} gap={2} key={rowEdito.id}>
-            <Heading as="h3" fontSize={16} fontWeight={700}>
+            <Heading
+              as="h3"
+              fontSize={16}
+              fontWeight={700}
+              color={"grey.425"}
+              textTransform={"uppercase"}
+            >
               {rowEdito.titre}
             </Heading>
             <Heading as="h4" fontSize={14} fontWeight={400}>
@@ -45,8 +52,9 @@ export const EditoSection = chakra(() => {
                 href={rowEdito.lien}
                 variant={"externalLink"}
                 leftIcon={<LinkIcon />}
+                textDecoration={"underline"}
               >
-                Lien
+                Ouvrir le lien
               </Button>
             )}
             {editoContent.length - 1 !== index && <Divider />}
