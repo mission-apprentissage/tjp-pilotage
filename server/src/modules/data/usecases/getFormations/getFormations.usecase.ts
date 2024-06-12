@@ -28,18 +28,20 @@ const getFormationsFactory =
     return {
       count,
       filters,
-      formations: formations.map((formation) => ({
-        ...formation,
-        formationRenovee: formationsRenoveesEnseignees.includes(
-          formation.formationRenovee ?? ""
-        )
-          ? formation.formationRenovee
-          : undefined,
-        positionQuadrant: getPositionQuadrant(
-          formation,
-          statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
-        ),
-      })),
+      formations: formations.map((formation) => {
+        return {
+          ...formation,
+          formationRenovee: formationsRenoveesEnseignees.includes(
+            formation.formationRenovee ?? ""
+          )
+            ? formation.formationRenovee
+            : undefined,
+          positionQuadrant: getPositionQuadrant(
+            formation,
+            statsSortie[formation.codeNiveauDiplome ?? ""] ?? {}
+          ),
+        };
+      }),
     };
   };
 
