@@ -47,4 +47,7 @@ export type OrderPanoramaEtablissement = Pick<
 >;
 export type Order = OrderPanoramaEtablissement | OrderPanoramaFormation;
 
-export type FiltersPanoramaFormation = QueryPanoramaFormation;
+export type FiltersPanoramaFormation = Omit<
+  QueryPanoramaFormation,
+  "codeDepartement" | "codeRegion"
+>;
