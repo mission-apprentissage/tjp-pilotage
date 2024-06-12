@@ -21,6 +21,7 @@ import {
   useToast,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import { isAxiosError } from "axios";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -172,12 +173,13 @@ export const PageClient = () => {
       onSuccess: (demande) => {
         router.push(`/intentions/saisie/${demande.numero}`);
       },
-      onError: (error) => {
+      onError: (error) =>
         toast({
-          variant: "error",
-          title: error.message,
-        });
-      },
+          status: "error",
+          title:
+            (isAxiosError(error) && error.response?.data?.message) ??
+            error.message,
+        }),
     });
 
   const [isImporting, setIsImporting] = useState(false);
@@ -391,6 +393,8 @@ export const PageClient = () => {
                               href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
                               leftIcon={<ExternalLinkIcon />}
                               me={"auto"}
+                              passHref
+                              onClick={(e) => e.stopPropagation()}
                             >
                               Demande dupliquée {demande.numeroDemandeImportee}
                             </Button>
