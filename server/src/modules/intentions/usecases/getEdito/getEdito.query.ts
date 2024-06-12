@@ -9,6 +9,7 @@ const PROPERTIES = {
   LIEN: "LIEN",
   DATE_CREATION: "DATE DE CRÉATION",
   ORDER: "ORDER",
+  REGION: "RÉGION",
 };
 
 const getProperty = (
@@ -49,6 +50,7 @@ export const mapNotionDatabaseRowToEditoEntry = (
         page,
         PROPERTIES.EN_LIGNE as keyof typeof PROPERTIES
       ),
+      region: getProperty(page, PROPERTIES.REGION as keyof typeof PROPERTIES),
     });
   }
 
