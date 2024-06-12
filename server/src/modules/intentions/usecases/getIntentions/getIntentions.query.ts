@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -95,11 +96,25 @@ export const getIntentionsQuery = async (
       "dispositif.libelleDispositif as libelleDispositif",
       sql<string>`count(*) over()`.as("count"),
       eb
-        .selectFrom("intention as demandeImportee")
-        .select(["demandeImportee.numero"])
-        .whereRef("demandeImportee.numeroHistorique", "=", "intention.numero")
-        .where(isIntentionCampagneEnCours(eb, "demandeImportee"))
-        .limit(1)
+        .selectFrom(({ selectFrom }) =>
+          selectFrom("intention as intentionImportee")
+            .select(["numero", "statut", "numeroHistorique"])
+            .whereRef(
+              "intentionImportee.numeroHistorique",
+              "=",
+              "intention.numero"
+            )
+            .where(isIntentionCampagneEnCours(eb, "intentionImportee"))
+            .limit(1)
+            .orderBy("updatedAt desc")
+            .as("allIntentionImportee")
+        )
+        .select("allIntentionImportee.numero")
+        .where(
+          "allIntentionImportee.statut",
+          "<>",
+          DemandeStatutEnum["supprimée"]
+        )
         .as("numeroDemandeImportee"),
       jsonObjectFrom(
         eb

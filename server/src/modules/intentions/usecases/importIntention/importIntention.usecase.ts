@@ -5,7 +5,7 @@ import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneIntention } from "../../repositories/findOneIntention.query";
 import { createIntentionQuery } from "./dependencies/createIntention.dep";
-import { getDemandeWithMetadata } from "./dependencies/getIntentionWithMetadata";
+import { getIntentionWithMetadata } from "./dependencies/getIntentionWithMetadata";
 import { hasAlreadyBeenImported } from "./dependencies/hasAlreadyBeenImported";
 
 const importIntentionFactory =
@@ -14,7 +14,7 @@ const importIntentionFactory =
       createIntentionQuery,
       findOneIntention,
       getCurrentCampagneQuery,
-      getDemandeWithMetadata,
+      getIntentionWithMetadata,
       hasAlreadyBeenImported,
     }
   ) =>
@@ -71,17 +71,17 @@ const importIntentionFactory =
 
     if (!isAllowed) throw Boom.forbidden();
 
-    const importedDemande = await deps.createIntentionQuery({
+    const importedIntention = await deps.createIntentionQuery({
       intention,
       campagne,
       user,
     });
 
-    if (!importedDemande) {
+    if (!importedIntention) {
       return undefined;
     }
 
-    return deps.getDemandeWithMetadata(importedDemande.id);
+    return deps.getIntentionWithMetadata(importedIntention.id);
   };
 
 export const importIntentionUsecase = importIntentionFactory();
