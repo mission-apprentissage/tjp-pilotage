@@ -542,6 +542,26 @@ export default function Formations() {
                     onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
+                {canShowQuadrantPosition && (
+                  <Th>
+                    {FORMATION_COLUMNS.positionQuadrant}
+                    <TooltipIcon
+                      ml="1"
+                      label={
+                        <Box>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                    />
+                  </Th>
+                )}
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
@@ -591,26 +611,6 @@ export default function Formations() {
                   <OrderIcon {...order} column="effectifEntree" />
                   {FORMATION_COLUMNS.effectifEntree}
                 </Th>
-                {canShowQuadrantPosition && (
-                  <Th>
-                    {FORMATION_COLUMNS.positionQuadrant}
-                    <TooltipIcon
-                      ml="1"
-                      label={
-                        <Box>
-                          <Text>
-                            Positionnement du point de la formation dans le
-                            quadrant par rapport aux moyennes régionales des
-                            taux d'emploi et de poursuite d'études appliquées au
-                            niveau de diplôme.
-                          </Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Box>
-                      }
-                      onClick={() => openGlossaire("quadrant")}
-                    />
-                  </Th>
-                )}
               </Tr>
             </Thead>
             <Tbody>

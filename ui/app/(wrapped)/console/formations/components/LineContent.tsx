@@ -136,6 +136,7 @@ export const FormationLineContent = ({
         value={line.tauxDevenirFavorable}
       />
     </Td>
+    {canShowQuadrantPosition && <Td>{line.positionQuadrant}</Td>}
     <Td>{line.libelleDispositif ?? "-"}</Td>
     <Td>{line.libelleFamille ?? "-"}</Td>
     <Td>{line.cfd ?? "-"}</Td>
@@ -144,7 +145,6 @@ export const FormationLineContent = ({
     <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
     <Td>{line.effectifEntree ?? "-"}</Td>
-    {canShowQuadrantPosition && <Td>{line.positionQuadrant}</Td>}
   </>
 );
 
