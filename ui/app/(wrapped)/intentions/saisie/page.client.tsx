@@ -186,12 +186,6 @@ export const PageClient = () => {
 
   if (isLoading) return <IntentionSpinner />;
 
-  console.log({
-    isSubmitting,
-    isImporting,
-    hasPermissionSubmitIntention,
-  });
-
   return (
     <Container
       maxWidth="100%"
