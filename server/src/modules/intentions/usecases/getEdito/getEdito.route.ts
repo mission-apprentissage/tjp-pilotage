@@ -1,6 +1,7 @@
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
+import { RequestUser } from "../../../core/model/User";
 import { getEditoSchema } from "./getEdito.schema";
 import { getEditoUsecase } from "./getEdito.usecase";
 
@@ -11,8 +12,9 @@ export const getEditoRoute = (server: Server) => {
   }).handle((props) => {
     server.route({
       ...props,
-      handler: async (_request, response) => {
-        const editoContent = await getEditoUsecase();
+      handler: async (request, response) => {
+        const user = request.user as RequestUser;
+        const editoContent = await getEditoUsecase(user);
 
         response.status(200).send(editoContent);
       },

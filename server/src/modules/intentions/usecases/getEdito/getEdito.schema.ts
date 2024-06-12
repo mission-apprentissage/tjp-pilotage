@@ -8,6 +8,7 @@ export const EditoContentSchema = z.object({
   en_ligne: z.string().optional(),
   date_creation: z.string().optional(),
   order: z.string().optional(),
+  region: z.string().optional(),
 });
 export type EditoEntry = z.infer<typeof EditoContentSchema>;
 
