@@ -41,8 +41,7 @@ export const CustomControls = () => {
       setTimeout(() => loadImageOnMap(image), 200);
     } else {
       const loadedImage = await map.loadImage(image.path);
-      // Ensure getImage is accessible because race condition might trigger a user error
-      if (map?.getImage !== undefined && map.hasImage(image.name)) {
+      if (map.hasImage(image.name)) {
         map.updateImage(image.name, loadedImage.data);
       } else {
         map.addImage(image.name, loadedImage.data);
