@@ -184,6 +184,12 @@ export const PageClient = () => {
 
   if (isLoading) return <IntentionSpinner />;
 
+  console.log({
+    isSubmitting,
+    isImporting,
+    hasPermissionSubmitIntention,
+  });
+
   return (
     <Container
       maxWidth="100%"
@@ -404,7 +410,8 @@ export const PageClient = () => {
                               isDisabled={
                                 !!demande.numeroDemandeImportee ||
                                 isSubmitting ||
-                                isImporting
+                                isImporting ||
+                                !hasPermissionSubmitIntention
                               }
                             >
                               Dupliquer cette demande

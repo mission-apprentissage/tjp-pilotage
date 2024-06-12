@@ -59,6 +59,7 @@ export const PERMISSIONS = {
   },
   pilote_region: {
     "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "region" },
     "pilotage-intentions/lecture": { default: "national" },
     "intentions-perdir/lecture": { default: "region", draft: "region" },
