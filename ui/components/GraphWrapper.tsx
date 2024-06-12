@@ -1,5 +1,5 @@
 "use client";
-import { Box, chakra, Flex } from "@chakra-ui/react";
+import { Box, chakra, Flex, Tooltip } from "@chakra-ui/react";
 
 import { Graph } from "./Graph";
 
@@ -32,9 +32,11 @@ export const GraphWrapper = chakra(
             display="inline-block"
             mr="1"
           />
-          <Box textAlign="center" w="10">
-            {(value * 100).toFixed()}%
-          </Box>
+          <Tooltip label={`${Math.round(value * 100000) / 1000} %`}>
+            <Box textAlign="center" w="10">
+              {(value * 100).toFixed()}%
+            </Box>
+          </Tooltip>
         </>
       ) : (
         "-"
