@@ -128,10 +128,10 @@ const DashboardFormation = () => {
       </Text>
       <HStack alignItems="end" width="100%">
         <HStack width="100%">
-          <Box width="500px">
+          <Box width="30%">
             <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
           </Box>
-          <Box width="500px">
+          <Box width="30%">
             <AsyncFormationSearch
               codeNsf={selectedNsf?.value}
               onSelectFormation={onUpdateFormation}
