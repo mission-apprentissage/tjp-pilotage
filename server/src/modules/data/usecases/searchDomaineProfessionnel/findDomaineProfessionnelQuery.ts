@@ -5,8 +5,10 @@ import { cleanNull } from "../../../../utils/noNull";
 
 export const findDomaineProfessionnelQuery = async ({
   search,
+  limit = 100,
 }: {
   search: string;
+  limit?: number;
 }) => {
   const normalizedSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
@@ -33,7 +35,7 @@ export const findDomaineProfessionnelQuery = async ({
       `%${normalizedSearch}%`
     )
     .orderBy("domaineProfessionnel.libelleDomaineProfessionnel asc")
-    .limit(20)
+    .limit(limit)
     .execute();
 
   return domainesProfessionels.map(cleanNull);
