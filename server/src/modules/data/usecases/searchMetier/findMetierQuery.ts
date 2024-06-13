@@ -7,9 +7,11 @@ import { searchMetierSchema } from "./searchMetier.schema";
 export const findMetierQuery = async ({
   search,
   filters,
+  limit = 100,
 }: {
   search: string;
   filters: z.infer<typeof searchMetierSchema.querystring>;
+  limit?: number;
 }) => {
   const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
 
@@ -31,7 +33,7 @@ export const findMetierQuery = async ({
     .where("metier.libelleMetier", "is not", null)
     .select(["metier.libelleMetier", "metier.codeMetier"])
     .orderBy("metier.libelleMetier asc")
-    .limit(20)
+    .limit(limit)
     .execute()
     .then(cleanNull);
 

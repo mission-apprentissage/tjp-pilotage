@@ -11,9 +11,11 @@ import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 export const findManyInDataFormationQuery = async ({
   search,
   filters,
+  limit = 100,
 }: {
   search: string;
   filters: z.infer<typeof searchNsfFormationSchema.querystring>;
+  limit?: number;
 }) => {
   console.log(getDateRentreeScolaire(CURRENT_RENTREE));
   const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
@@ -97,7 +99,7 @@ export const findManyInDataFormationQuery = async ({
     ])
     .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
     .orderBy(["formationView.libelleFormation asc"])
-    .limit(20)
+    .limit(limit)
     .execute()
     .then(cleanNull);
 

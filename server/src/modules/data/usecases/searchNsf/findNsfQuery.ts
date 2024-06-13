@@ -5,7 +5,13 @@ import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
 
-export const findNsfQuery = async ({ search }: { search: string }) => {
+export const findNsfQuery = async ({
+  search,
+  limit = 100,
+}: {
+  search: string;
+  limit?: number;
+}) => {
   const normalizedSearch =
     search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
 
@@ -21,7 +27,7 @@ export const findNsfQuery = async ({ search }: { search: string }) => {
     .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
     .orderBy("libelleNsf asc")
     .distinct()
-    .limit(20)
+    .limit(limit)
     .execute();
 
   return disciplines.map(cleanNull);
