@@ -9,7 +9,7 @@ export const LineChart = ({
   defaultMainKey,
 }: {
   title: string;
-  data: Record<string, number[]>;
+  data: Record<string, Array<number | undefined>>;
   categories?: string[];
   colors: Record<string, string>;
   defaultMainKey?: string;

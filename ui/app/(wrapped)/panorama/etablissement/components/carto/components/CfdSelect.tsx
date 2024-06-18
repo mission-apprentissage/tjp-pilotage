@@ -122,12 +122,9 @@ export const CfdSelect = () => {
       ),
       "value"
     );
-    let queryResult: TCfdSearchResult[] = [];
-
-    if (search.length >= 3)
-      queryResult = await client
-        .ref("[GET]/diplome/search/:search")
-        .query({ params: { search } });
+    const queryResult: TCfdSearchResult[] = await client
+      .ref("[GET]/diplome/search/:search")
+      .query({ params: { search } });
 
     const filteredQueryResult = queryResult.filter(
       (result) =>
@@ -140,7 +137,9 @@ export const CfdSelect = () => {
         options: searchResults.map(formatSearchResultToOption),
       },
       {
-        label: `AUTRES (${filteredQueryResult.length})`,
+        label: `AUTRES (${filteredQueryResult.length}${
+          filteredQueryResult.length === 20 && "+"
+        })`,
         options: filteredQueryResult.map(formatSearchResultToOption),
       },
     ];
