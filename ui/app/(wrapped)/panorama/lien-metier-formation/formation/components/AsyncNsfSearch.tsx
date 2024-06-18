@@ -16,10 +16,12 @@ interface AsyncNsfSearchProps {
   onSelectNsf: (option?: NsfOption) => void;
 }
 
+type Option = NsfOption | string;
+
 const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
   const { openGlossaire } = useGlossaireContext();
   const selectElementRef =
-    useRef<SelectInstance<NsfOption, false, GroupBase<NsfOption>>>(null);
+    useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
 
   const openSelect = () => {
     if (selectElementRef.current) selectElementRef.current.openMenu("first");
@@ -46,9 +48,9 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
         components={{
           IndicatorSeparator: () => null,
         }}
-        value={nsf}
+        value={nsf ?? ""}
         onChange={(selected) => {
-          onSelectNsf(selected ?? undefined);
+          if (typeof selected !== "string") onSelectNsf(selected ?? undefined);
         }}
         defaultOptions={defaultNsfValues ?? []}
         loadOptions={(inputValue: string) => {
