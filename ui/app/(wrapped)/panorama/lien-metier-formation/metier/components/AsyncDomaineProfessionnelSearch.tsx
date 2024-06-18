@@ -7,6 +7,8 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
+import { TooltipIcon } from "../../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
 import { DomaineProfessionnelOption } from "../page";
 
 interface AsyncNsfSearchProps {
@@ -18,6 +20,8 @@ const AsyncDomaineProfessionnelSearch = ({
   onSelectDomaineProfessionnel,
   domaineProfessionnel,
 }: AsyncNsfSearchProps) => {
+  const { openGlossaire } = useGlossaireContext();
+
   const selectElementRef =
     useRef<
       SelectInstance<
@@ -38,6 +42,11 @@ const AsyncDomaineProfessionnelSearch = ({
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
         Domaine professionnel
+        <TooltipIcon
+          ml="1"
+          label=""
+          onClick={() => openGlossaire("domaine-professionnel-emploi")}
+        />
       </Text>
       <AsyncSelect
         ref={selectElementRef}

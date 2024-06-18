@@ -120,15 +120,15 @@ const DashboardFormation = () => {
   return (
     <VStack width="100%" alignItems="start" gap="16px">
       <Text>
-        À partir d’une formation, visualisez l’offre de formation sur le
-        territoire et tous les débouchés métiers
+        À partir d’une formation, visualisez tous les débouchés métiers et
+        l’offre de formation sur le territoire
       </Text>
       <HStack alignItems="end" width="100%">
-        <HStack width="100%">
-          <Box width="30%">
+        <HStack>
+          <Box width="300px">
             <AsyncNsfSearch onSelectNsf={onUpdateNsf} nsf={selectedNsf} />
           </Box>
-          <Box width="30%">
+          <Box width="300px">
             <AsyncFormationSearch
               codeNsf={selectedNsf?.value}
               onSelectFormation={onUpdateFormation}
@@ -145,7 +145,7 @@ const DashboardFormation = () => {
           <Box pr="4px">
             <Icon icon="ri:refresh-line" />
           </Box>
-          <Text>Réinitialiser les filtre</Text>
+          <Text>Réinitialiser les filtres</Text>
         </Button>
       </HStack>
       <Divider />
