@@ -16,6 +16,7 @@ import {
   Tr,
 } from "@chakra-ui/react";
 import { useQuery } from "@tanstack/react-query";
+import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
@@ -173,6 +174,8 @@ export default function Formations() {
       ).formations;
     },
   });
+
+  const canShowQuadrantPosition = filters.codeRegion?.length === 1;
 
   return (
     <>
@@ -336,7 +339,9 @@ export default function Formations() {
             downloadCsv(
               "formations_export",
               data.formations,
-              FORMATION_COLUMNS
+              canShowQuadrantPosition
+                ? FORMATION_COLUMNS
+                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
             );
           }}
           onExportExcel={async () => {
@@ -347,7 +352,9 @@ export default function Formations() {
             downloadExcel(
               "formations_export",
               data.formations,
-              FORMATION_COLUMNS
+              canShowQuadrantPosition
+                ? FORMATION_COLUMNS
+                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
             );
           }}
           page={page}
@@ -577,24 +584,26 @@ export default function Formations() {
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
-                <Th>
-                  {FORMATION_COLUMNS.positionQuadrant}
-                  <TooltipIcon
-                    ml="1"
-                    label={
-                      <Box>
-                        <Text>
-                          Positionnement du point de la formation dans le
-                          quadrant par rapport aux moyennes régionales des taux
-                          d'emploi et de poursuite d'études appliquées au niveau
-                          de diplôme.
-                        </Text>
-                        <Text>Cliquez pour plus d'infos.</Text>
-                      </Box>
-                    }
-                    onClick={() => openGlossaire("quadrant")}
-                  />
-                </Th>
+                {canShowQuadrantPosition && (
+                  <Th>
+                    {FORMATION_COLUMNS.positionQuadrant}
+                    <TooltipIcon
+                      ml="1"
+                      label={
+                        <Box>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                    />
+                  </Th>
+                )}
               </Tr>
             </Thead>
             <Tbody>
@@ -615,6 +624,7 @@ export default function Formations() {
                         })
                       }
                       onClickCollapse={() => setHistoriqueId(undefined)}
+                      canShowQuadrantPosition={canShowQuadrantPosition}
                     />
                   </Tr>
                   {historiqueId?.cfd === line.cfd &&
@@ -625,7 +635,10 @@ export default function Formations() {
                             key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                             bg={"grey.975"}
                           >
-                            <FormationLineContent line={historiqueLine} />
+                            <FormationLineContent
+                              line={historiqueLine}
+                              canShowQuadrantPosition={canShowQuadrantPosition}
+                            />
                           </Tr>
                         ))}
                         {historique && !historique.length && (
