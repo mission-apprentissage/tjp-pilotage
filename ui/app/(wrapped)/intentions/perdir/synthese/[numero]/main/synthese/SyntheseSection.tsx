@@ -121,6 +121,16 @@ export const SyntheseSection = ({
                 {intention.libelleDispositif}
               </Text>
             </Flex>
+            {intention.libelleFCIL && (
+              <Flex direction={"row"} gap={4}>
+                <Text w={["44", "48", "52"]} fontWeight={700}>
+                  Libellé de la FCIL
+                </Text>
+                <Text w={["64", "72", "80", "96"]} fontSize={14}>
+                  {intention.libelleFCIL}
+                </Text>
+              </Flex>
+            )}
             {intention.inspecteurReferent && (
               <Flex direction={"row"} gap={4}>
                 <Text w={["44", "48", "52"]} fontWeight={700}>
@@ -294,6 +304,27 @@ export const SyntheseSection = ({
               <Text>{formatBoolean(intention.amiCmaEnCoursValidation)}</Text>
             </Flex>
           )}
+          {intention.cmqImplique && intention.nomCmq && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text minW="fit-content">CMQ impliqué</Text>
+              <Flex direction={"column"} gap={1}>
+                <Text textAlign={"end"}>{intention.nomCmq} </Text>
+                <Text textAlign={"end"}>{`(${intention.filiereCmq})`}</Text>
+              </Flex>
+            </Flex>
+          )}
+          {intention.partenairesEconomiquesImpliques &&
+            intention.partenaireEconomique1 && (
+              <Flex direction={"row"} gap={4} justify={"space-between"}>
+                <Text>Partenaire(s) économique(s) impliqué(s)</Text>
+                <Text>
+                  {formatArray([
+                    intention.partenaireEconomique1,
+                    intention.partenaireEconomique2,
+                  ])}
+                </Text>
+              </Flex>
+            )}
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={2}>
             <Icon
