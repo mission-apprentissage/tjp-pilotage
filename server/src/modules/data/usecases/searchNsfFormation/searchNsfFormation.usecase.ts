@@ -6,6 +6,14 @@ import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep
 import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 type Option = z.infer<(typeof searchNsfFormationSchema.response)[200]>[number];
+type Formation = {
+  cfd: string;
+  libelleFormation: string;
+  libelleNiveauDiplome: string | undefined;
+};
+
+const getFormationLabel = (formation: Formation) =>
+  `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`;
 
 export const [searchDiplome] = inject(
   { findManyInDataFormationQuery },
@@ -24,18 +32,15 @@ export const [searchDiplome] = inject(
 
       const options: Array<Option> = [];
 
-      // Dédupliquer les libellés des formations qui sont doublés
-      // et garder celle qui n'a pas de date de fermeture
-      const filteredDup = _.uniqBy(formations, "libelleFormation");
+      // Déduplication des formations avec le même label
+      const filteredDup = _.uniqWith(formations, (formation1, formation2) => {
+        return getFormationLabel(formation1) === getFormationLabel(formation2);
+      });
 
       for (const formation of filteredDup) {
         options.push({
-          label: `${formation.libelleFormation} (${formation.libelleNiveauDiplome})`,
+          label: getFormationLabel(formation),
           value: formation.cfd,
-          data: {
-            voies: _.uniq(formation.voies).filter((u) => u !== undefined) ?? [],
-            dateFermeture: formation.dateFermeture,
-          },
         });
       }
 

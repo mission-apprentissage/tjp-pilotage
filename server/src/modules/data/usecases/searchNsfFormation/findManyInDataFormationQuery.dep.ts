@@ -29,11 +29,6 @@ export const findManyInDataFormationQuery = async ({
       "formationView.codeNiveauDiplome"
     )
     .leftJoin("familleMetier", "formationView.cfd", "familleMetier.cfd")
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
     .where((eb) =>
       eb.and([
         eb.and(
@@ -72,19 +67,10 @@ export const findManyInDataFormationQuery = async ({
       }
       return q;
     })
-    .select((eb) => [
+    .select([
       "formationView.cfd",
       "formationView.libelleFormation",
       "niveauDiplome.libelleNiveauDiplome",
-      eb.fn
-        .agg<string[]>("array_agg", ["formationEtablissement.voie"])
-        .as("voies"),
-      sql<string | null>`
-        case when ${eb.ref("formationView.dateFermeture")} is not null
-        then to_char(${eb.ref("formationView.dateFermeture")}, 'dd/mm/yyyy')
-        else null
-        end
-      `.as("dateFermeture"),
     ])
     .distinctOn([
       "formationView.cfd",
@@ -95,7 +81,6 @@ export const findManyInDataFormationQuery = async ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "niveauDiplome.libelleNiveauDiplome",
-      "formationView.dateFermeture",
     ])
     .where((eb) => openForRentreeScolaire(eb, CURRENT_RENTREE))
     .orderBy(["formationView.libelleFormation asc"])

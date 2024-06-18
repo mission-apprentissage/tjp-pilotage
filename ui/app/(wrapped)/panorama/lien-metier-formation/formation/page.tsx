@@ -56,9 +56,6 @@ const DashboardFormation = () => {
       setSelectedFormation({
         label: formationSearchParam,
         value: codeFormationSearchParam,
-        data: {
-          voies: [],
-        },
       });
     } else if (!formationSearchParam || !codeFormationSearchParam) {
       setSelectedFormation(undefined);
