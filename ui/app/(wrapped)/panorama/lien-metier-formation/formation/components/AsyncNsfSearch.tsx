@@ -7,6 +7,8 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
+import { TooltipIcon } from "../../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
 import { NsfOption } from "../page";
 
 interface AsyncNsfSearchProps {
@@ -15,6 +17,7 @@ interface AsyncNsfSearchProps {
 }
 
 const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
+  const { openGlossaire } = useGlossaireContext();
   const selectElementRef =
     useRef<SelectInstance<NsfOption, false, GroupBase<NsfOption>>>(null);
 
@@ -30,6 +33,11 @@ const AsyncNsfSearch = ({ onSelectNsf, nsf }: AsyncNsfSearchProps) => {
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
         Domaine de formation
+        <TooltipIcon
+          ml="1"
+          label=""
+          onClick={() => openGlossaire("domaine-de-formation-nsf")}
+        />
       </Text>
       <AsyncSelect
         ref={selectElementRef}

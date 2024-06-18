@@ -132,10 +132,7 @@ const DashboardMetier = () => {
 
   return (
     <VStack width="100%" alignItems="start" gap="16px">
-      <Text>
-        À partir d’un métier, visualisez les formations y conduisant et l’offre
-        de formation correspondante sur le territoire
-      </Text>
+      <Text>À partir d’un métier, visualisez les formations y conduisant</Text>
       <HStack width="100%" alignItems="end">
         <HStack>
           <Box width="300px">
@@ -161,7 +158,7 @@ const DashboardMetier = () => {
           <Box pr="4px">
             <Icon icon="ri:refresh-line" />
           </Box>
-          <Text>Réinitialiser les filtre</Text>
+          <Text>Réinitialiser les filtres</Text>
         </Button>
       </HStack>
       <Divider />

@@ -7,6 +7,8 @@ import AsyncSelect from "react-select/async";
 
 import { client } from "@/api.client";
 
+import { TooltipIcon } from "../../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../../glossaire/glossaireContext";
 import { MetierOption } from "../page";
 
 interface AsyncMetierSearchProps {
@@ -22,6 +24,8 @@ const AsyncMetierSearch = ({
   metier,
   onSelectMetier,
 }: AsyncMetierSearchProps) => {
+  const { openGlossaire } = useGlossaireContext();
+
   const selectElementRef =
     useRef<SelectInstance<Option, false, GroupBase<Option>>>(null);
 
@@ -39,6 +43,11 @@ const AsyncMetierSearch = ({
     <>
       <Text onClick={openSelect} pb="4px" cursor="pointer">
         Métier
+        <TooltipIcon
+          ml="1"
+          label=""
+          onClick={() => openGlossaire("metier-rome")}
+        />
       </Text>
       <AsyncSelect
         ref={selectElementRef}
