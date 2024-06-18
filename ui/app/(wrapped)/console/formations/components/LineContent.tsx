@@ -26,12 +26,14 @@ export const FormationLineContent = ({
   onClickExpend,
   onClickCollapse,
   expended = false,
+  canShowQuadrantPosition,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
+  canShowQuadrantPosition?: boolean;
 }) => (
   <>
     <Td pr="0" py="1">
@@ -137,7 +139,7 @@ export const FormationLineContent = ({
     <Td>{line.cpcSecteur ?? "-"}</Td>
     <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
-    <Td>{line.positionQuadrant}</Td>
+    {canShowQuadrantPosition && <Td>{line.positionQuadrant}</Td>}
   </>
 );
 

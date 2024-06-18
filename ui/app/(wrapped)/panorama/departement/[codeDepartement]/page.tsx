@@ -35,7 +35,6 @@ export default function Panorama({
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
     if (searchParams.orderBy !== column) {
       setSearchParams({
-        codeDepartement,
         ...searchParams,
         order: "desc",
         orderBy: column,
@@ -43,7 +42,6 @@ export default function Panorama({
       return;
     }
     setSearchParams({
-      codeDepartement,
       ...searchParams,
       order: searchParams.order === "asc" ? "desc" : "asc",
       orderBy: column,
@@ -54,11 +52,13 @@ export default function Panorama({
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => {
-    setSearchParams({ codeDepartement, ...searchParams, [type]: value });
+    setSearchParams({ ...searchParams, [type]: value });
   };
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
-    router.push(`/panorama/departement/${codeDepartement}`);
+    router.push(
+      `/panorama/departement/${codeDepartement}?${qs.stringify(searchParams)}`
+    );
   };
 
   const { data: departementsOptions } = client

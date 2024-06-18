@@ -35,7 +35,6 @@ export default function Panorama({
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
     if (searchParams.orderBy !== column) {
       setSearchParams({
-        codeRegion,
         ...searchParams,
         order: "desc",
         orderBy: column,
@@ -43,7 +42,6 @@ export default function Panorama({
       return;
     }
     setSearchParams({
-      codeRegion,
       ...searchParams,
       order: searchParams.order === "asc" ? "desc" : "asc",
       orderBy: column,
@@ -58,7 +56,7 @@ export default function Panorama({
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/region/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}?${qs.stringify(searchParams)}`);
   };
 
   const { data: regionOptions } = client.ref("[GET]/regions").useQuery(
