@@ -3,6 +3,7 @@
 import { Box, Button, Divider, HStack, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useRouter, useSearchParams } from "next/navigation";
+import { usePlausible } from "next-plausible";
 import { useEffect, useState } from "react";
 
 import { client } from "@/api.client";
@@ -26,6 +27,7 @@ const DashboardMetier = () => {
   const [selectedMetier, setSelectedMetier] = useState<
     MetierOption | undefined
   >();
+  const trackEvent = usePlausible();
 
   useEffect(() => {
     const domaineProfessionnelSearchParam = searchParams.get("domaine_pro");
@@ -67,6 +69,7 @@ const DashboardMetier = () => {
   const onUpdateDomaineProfessionnel = (
     domaineProfessionnel?: DomaineProfessionnelOption
   ) => {
+    trackEvent("lien-metier-formation/metier:select-domaine-professionnel");
     router.replace(
       createParametrizedUrl(location.pathname, {
         domaine_pro: domaineProfessionnel
@@ -82,6 +85,7 @@ const DashboardMetier = () => {
   };
 
   const onUpdateMetier = (metier?: MetierOption) => {
+    trackEvent("lien-metier-formation/metier:select-metier");
     const domaineProfessionnelSearchParam = searchParams.get("domaine_pro");
     const codeDomaineProfessionnelSearchParam =
       searchParams.get("code_domaine_pro");
@@ -127,6 +131,7 @@ const DashboardMetier = () => {
   };
 
   const clear = () => {
+    trackEvent("lien-metier-formation/metier:clear-filters");
     router.replace(location.pathname);
   };
 
