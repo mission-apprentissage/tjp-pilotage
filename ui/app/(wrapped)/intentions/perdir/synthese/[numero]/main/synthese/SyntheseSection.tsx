@@ -435,7 +435,13 @@ export const SyntheseSection = ({
             <Text>Travaux ?</Text>
             <Text>{formatBoolean(intention.travauxAmenagement)}</Text>
           </Flex>
-          {intention.travauxAmenagement && (
+          {intention.travauxAmenagementCout && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text>Coût des travaux</Text>
+              <Text>{intention.travauxAmenagementCout}€</Text>
+            </Flex>
+          )}
+          {intention.travauxAmenagementDescription && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text>Description</Text>
               <Text>{intention.travauxAmenagementDescription}</Text>
@@ -445,7 +451,13 @@ export const SyntheseSection = ({
             <Text>Achats d'équipement ?</Text>
             <Text>{formatBoolean(intention.achatEquipement)}</Text>
           </Flex>
-          {intention.achatEquipement && (
+          {intention.achatEquipementCout && (
+            <Flex direction={"row"} gap={4} justify={"space-between"}>
+              <Text>Coût des achats d'équipement</Text>
+              <Text>{intention.achatEquipementCout}€</Text>
+            </Flex>
+          )}
+          {intention.achatEquipementDescription && (
             <Flex direction={"row"} gap={4} justify={"space-between"}>
               <Text>Description</Text>
               <Text>{intention.achatEquipementDescription}</Text>
