@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { findNsfQuery } from "./findNsfQuery";
+import { findNsfQuery } from "./dependencies/findNsf.query";
 
 export const [searchNsfUsecase] = inject(
   { findNsfQuery },

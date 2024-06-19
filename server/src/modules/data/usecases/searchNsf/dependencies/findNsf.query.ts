@@ -1,9 +1,10 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearch } from "../../../../utils/normalizeSearch";
+import { openForRentreeScolaire } from "../../../utils/openForRentreeScolaire";
 
 export const findNsfQuery = async ({
   search,
@@ -12,8 +13,7 @@ export const findNsfQuery = async ({
   search: string;
   limit?: number;
 }) => {
-  const normalizedSearch =
-    search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
+  const normalizedSearch = getNormalizedSearch(search);
 
   const disciplines = await kdb
     .selectFrom("nsf")

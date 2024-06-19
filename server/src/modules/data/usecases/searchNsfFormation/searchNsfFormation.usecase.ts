@@ -2,7 +2,7 @@ import { inject } from "injecti";
 import _ from "lodash";
 import { z } from "zod";
 
-import { findManyInDataFormationQuery } from "./findManyInDataFormationQuery.dep";
+import { findManyInDataFormationQuery } from "./dependencies/findDataFormations.query";
 import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
 
 type Option = z.infer<(typeof searchNsfFormationSchema.response)[200]>[number];
