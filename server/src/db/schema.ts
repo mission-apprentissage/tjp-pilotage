@@ -212,8 +212,8 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
 
@@ -448,6 +448,8 @@ export interface Intention {
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
   inspecteurReferent: string | null;
+  achatEquipementCout: number | null;
+  travauxAmenagementCout: number | null;
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
@@ -512,8 +514,10 @@ export interface LatestDemandeIntentionNonMaterializedView {
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
+  travauxAmenagementCout: number | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
+  achatEquipementCout: number | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;
@@ -577,8 +581,8 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
 
@@ -652,6 +656,8 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
   inspecteurReferent: string | null;
+  achatEquipementCout: number | null;
+  travauxAmenagementCout: number | null;
 }
 
 export interface Metier {

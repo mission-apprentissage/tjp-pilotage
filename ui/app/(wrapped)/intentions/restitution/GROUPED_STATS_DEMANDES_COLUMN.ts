@@ -106,8 +106,10 @@ export const GROUPED_STATS_DEMANDES_COLUMNS: Record<
     cellColor: "#E5FBFD",
     options: {
       travauxAmenagement: "Travaux ou aménagement ?",
+      travauxAmenagementCout: "Coût des travaux et aménagement",
       travauxAmenagementDescription: "Description des travaux et aménagement",
       achatEquipement: "Achat d'équipement ?",
+      achatEquipementCout: "Coût des achats d'équipement",
       achatEquipementDescription: "Description des achats d'équipement",
     },
   },
@@ -216,8 +218,10 @@ export const GROUPED_STATS_DEMANDES_COLUMNS_OPTIONAL: Record<
     color: "#C7F6FC",
     options: {
       travauxAmenagement: "Travaux ou aménagement ?",
+      travauxAmenagementCout: "Coût des travaux et aménagement",
       travauxAmenagementDescription: "Description des travaux et aménagement",
       achatEquipement: "Achat d'équipement ?",
+      achatEquipementCout: "Coût des achats d'équipement",
       achatEquipementDescription: "Description des achats d'équipement",
     },
   },
