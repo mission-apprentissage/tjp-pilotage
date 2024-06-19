@@ -166,18 +166,19 @@ export const CfdUaiSection = ({
           formMetaData={formMetadata}
           setDispositifs={setDispositifs}
           setIsFCIL={setIsFCIL}
-          active={active && !disabled}
+          disabled={disabled || !active}
         />
-        <DispositifBlock options={dispositifs} active={active && !disabled} />
-        {isFCIL && (
-          <LibelleFCILField active={active && !disabled}></LibelleFCILField>
-        )}
+        <DispositifBlock options={dispositifs} disabled={disabled || !active} />
+        <LibelleFCILField
+          shouldDisplay={isFCIL}
+          disabled={disabled || !active}
+        />
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">
               <UaiBlock
                 formMetadata={formMetadata}
-                active={active && !disabled}
+                disabled={disabled || !active}
                 setUaiInfo={setUaiInfo}
               />
             </Box>

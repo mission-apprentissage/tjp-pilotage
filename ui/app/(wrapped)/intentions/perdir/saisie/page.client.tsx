@@ -68,6 +68,9 @@ export const PageClient = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const queryParams = useSearchParams();
+  const hasEditIntentionPermission = usePermission(
+    "intentions-perdir/ecriture"
+  );
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
@@ -446,7 +449,10 @@ export const PageClient = () => {
                               }
                             />
                           </Tooltip>
-                          {canEditIntention(intention) && (
+                          {canEditIntention({
+                            intention,
+                            hasEditIntentionPermission,
+                          }) && (
                             <Tooltip label="Modifier la demande">
                               <IconButton
                                 as={NextLink}

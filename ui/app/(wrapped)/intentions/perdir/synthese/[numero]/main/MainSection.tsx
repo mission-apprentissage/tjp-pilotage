@@ -6,6 +6,7 @@ import NextLink from "next/link";
 import { client } from "@/api.client";
 import { CommentairesEtAvisSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/commentaireEtAvis/CommentairesEtAvisSection";
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/displayTypeEnum";
+import { usePermission } from "@/utils/security/usePermission";
 
 import { canEditIntention } from "../../../saisie/utils/canEditIntention";
 import { SyntheseSection } from "./synthese/SyntheseSection";
@@ -24,6 +25,9 @@ export const MainSection = ({
 }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
+  const hasEditIntentionPermission = usePermission(
+    "intentions-perdir/ecriture"
+  );
 
   const { mutate: submitSuivi } = client
     .ref("[POST]/intention/suivi")
@@ -66,7 +70,7 @@ export const MainSection = ({
           displayCommentairesEtAvis={displayCommentairesEtAvis}
         />
         <Flex direction={"row"} gap={2}>
-          {canEditIntention(intention) && (
+          {canEditIntention({ intention, hasEditIntentionPermission }) && (
             <Tooltip label="Modifier la demande">
               <IconButton
                 as={NextLink}
