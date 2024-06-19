@@ -1,8 +1,9 @@
 import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { searchMetierSchema } from "./searchMetier.schema";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearch } from "../../../../utils/normalizeSearch";
+import { searchMetierSchema } from "../searchMetier.schema";
 
 export const findMetierQuery = async ({
   search,
@@ -13,8 +14,7 @@ export const findMetierQuery = async ({
   filters: z.infer<typeof searchMetierSchema.querystring>;
   limit?: number;
 }) => {
-  const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-
+  const cleanSearch = getNormalizedSearch(search);
   const formations = await kdb
     .selectFrom("metier")
     .leftJoin("rome", "rome.codeRome", "metier.codeRome")

@@ -1,7 +1,8 @@
 import { sql } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearch } from "../../../../utils/normalizeSearch";
 
 export const findDomaineProfessionnelQuery = async ({
   search,
@@ -10,8 +11,7 @@ export const findDomaineProfessionnelQuery = async ({
   search: string;
   limit?: number;
 }) => {
-  const normalizedSearch =
-    search?.normalize("NFD").replace(/[\u0300-\u036f]/g, "") ?? "";
+  const normalizedSearch = getNormalizedSearch(search);
 
   const domainesProfessionels = await kdb
     .selectFrom("domaineProfessionnel")

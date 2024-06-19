@@ -1,12 +1,12 @@
 import { sql } from "kysely";
 import { CURRENT_RENTREE } from "shared";
-import { getDateRentreeScolaire } from "shared/utils/getRentreeScolaire";
 import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { openForRentreeScolaire } from "../../utils/openForRentreeScolaire";
-import { searchNsfFormationSchema } from "./searchNsfFormation.schema";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
+import { openForRentreeScolaire } from "../../../utils/openForRentreeScolaire";
+import { searchNsfFormationSchema } from "../searchNsfFormation.schema";
 
 export const findManyInDataFormationQuery = async ({
   search,
@@ -17,9 +17,7 @@ export const findManyInDataFormationQuery = async ({
   filters: z.infer<typeof searchNsfFormationSchema.querystring>;
   limit?: number;
 }) => {
-  console.log(getDateRentreeScolaire(CURRENT_RENTREE));
-  const cleanSearch = search.normalize("NFD").replace(/[\u0300-\u036f]/g, "");
-  const search_array = cleanSearch.split(" ");
+  const search_array = getNormalizedSearchArray(search);
 
   const formations = await kdb
     .selectFrom("formationView")
@@ -48,9 +46,7 @@ export const findManyInDataFormationQuery = async ({
                   unaccent(${eb.ref("familleMetier.libelleFamille")})
                 )`,
               "ilike",
-              `%${search_word
-                .normalize("NFD")
-                .replace(/[\u0300-\u036f]/g, "")}%`
+              `%${search_word}%`
             )
           )
         ),

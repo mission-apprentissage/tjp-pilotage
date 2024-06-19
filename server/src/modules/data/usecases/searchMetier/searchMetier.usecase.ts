@@ -1,7 +1,7 @@
 import { inject } from "injecti";
 import { z } from "zod";
 
-import { findMetierQuery } from "./findMetierQuery";
+import { findMetierQuery } from "./dependencies/findMetier.query";
 import { searchMetierSchema } from "./searchMetier.schema";
 
 type Option = z.infer<(typeof searchMetierSchema.response)[200]>[number];

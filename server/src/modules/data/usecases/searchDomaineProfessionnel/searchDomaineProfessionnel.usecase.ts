@@ -1,6 +1,6 @@
 import { inject } from "injecti";
 
-import { findDomaineProfessionnelQuery } from "./findDomaineProfessionnelQuery";
+import { findDomaineProfessionnelQuery } from "./dependencies/findDomaineProfessionnel.query";
 
 export const [searchDomaineProfessionnel] = inject(
   { findDomaineProfessionnelQuery },
