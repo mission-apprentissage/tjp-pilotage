@@ -8,16 +8,37 @@ import {
   Input,
   LightMode,
 } from "@chakra-ui/react";
-import { useFormContext } from "react-hook-form";
+import { useEffect } from "react";
+import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
 
 export const LibelleFCILField = chakra(
-  ({ className, active }: { className?: string; active: boolean }) => {
+  ({
+    className,
+    disabled,
+    shouldDisplay,
+  }: {
+    className?: string;
+    disabled: boolean;
+    shouldDisplay?: boolean;
+  }) => {
     const {
+      control,
       formState: { errors },
-      register,
+      watch,
+      setValue,
     } = useFormContext<IntentionForms>();
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "cfd") return;
+          setValue("libelleFCIL", "");
+        }).unsubscribe
+    );
+
+    if (!shouldDisplay) return <></>;
 
     return (
       <LightMode>
@@ -26,20 +47,25 @@ export const LibelleFCILField = chakra(
           className={className}
           isInvalid={!!errors.libelleFCIL}
           isRequired
-          isDisabled={!active}
         >
           <FormLabel>Libellé du FCIL</FormLabel>
           <Flex flexDirection={"row"} justifyContent={"space-between"}>
             <Box color="chakra-body-text" w="100%" maxW="752px">
-              <Input
-                bgColor={"white"}
-                color="black"
-                {...register("libelleFCIL", {
-                  shouldUnregister: true,
-                  required: "Ce champ est obligatoire",
-                })}
-                placeholder="Libellé FCIL"
-                disabled={!active}
+              <Controller
+                name={"libelleFCIL"}
+                control={control}
+                rules={{ required: "Ce champ est obligatoire" }}
+                render={({ field: { onChange, value, name } }) => (
+                  <Input
+                    bgColor={"white"}
+                    color="black"
+                    value={value}
+                    name={name}
+                    onChange={onChange}
+                    placeholder="Libellé FCIL"
+                    isDisabled={disabled}
+                  />
+                )}
               />
             </Box>
           </Flex>

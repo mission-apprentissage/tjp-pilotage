@@ -14,7 +14,7 @@ import {
   DemandeStatutType,
 } from "shared/enum/demandeStatutEnum";
 
-import { useAuth } from "../../../../../../../utils/security/useAuth";
+import { useAuth } from "@/utils/security/useAuth";
 
 export const InformationHeader = ({
   statut,

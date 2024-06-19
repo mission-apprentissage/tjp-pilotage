@@ -85,6 +85,20 @@ function RadioCard({
   );
 }
 
+// const getTypeDemandeOptions = ({
+//   annee,
+//   hasFCIL,
+// }: {
+//   annee?: string;
+//   hasFCIL: boolean;
+// }) => {
+//   return Object.values(TYPES_DEMANDES_OPTIONS).filter(
+//     (item) =>
+//       shouldDisplayTypeDemande(item.value, annee ?? CURRENT_ANNEE_CAMPAGNE) &&
+//       shouldDisplayColoration(item.value, hasFCIL)
+//   );
+// };
+
 export const TypeDemandeField = chakra(
   ({
     disabled = false,
@@ -96,13 +110,17 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
+      watch,
       getValues,
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
+    const libelleFCIL = getValues("libelleFCIL");
 
     const { campagne } = useContext(CampagneContext);
-    const libelleFCIL = getValues("libelleFCIL");
+    const watchE = watch();
+    console.log("libelleFCIL", watchE);
+    console.log("dispositif", getValues("codeDispositif"));
 
     return (
       <FormControl
