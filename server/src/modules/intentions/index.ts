@@ -6,6 +6,7 @@ import { deleteIntentionRoute } from "./usecases/deleteIntention/deleteIntention
 import { deleteIntentionFilesRoute } from "./usecases/deleteIntentionFiles/deleteIntentionFiles.route";
 import { deleteSuiviRoute } from "./usecases/deleteSuivi/deleteSuivi.route";
 import { getCurrentCampagneRoute } from "./usecases/getDefaultCampagne/getDefaultCampagne.route";
+import { getEditoRoute } from "./usecases/getEdito/getEdito.route";
 import { getIntentionRoute } from "./usecases/getIntention/getIntention.route";
 import { getIntentionFileDownloadUrlRoute } from "./usecases/getIntentionFileDownloadUrl/getIntentionFileDownloadUrl.route";
 import { getIntentionFilesRoute } from "./usecases/getIntentionFiles/getIntentionFiles.route";
@@ -42,5 +43,6 @@ export const registerIntentionsExpeModule = ({
     ...deleteAvisRoute(server),
     ...submitSuiviRoute({ server }),
     ...deleteSuiviRoute(server),
+    ...getEditoRoute(server),
   };
 };

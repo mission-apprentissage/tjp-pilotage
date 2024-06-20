@@ -150,6 +150,15 @@ export const countDifferenceCapaciteScolaireIntention = ({
     )})`,
   });
 
+export const countPlacesTransformeesCampagne2023 = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  sql<number>`${countOuverturesSco(eb)} +
+    ${countOuverturesApprentissage(eb)} -
+    ${countFermeturesSco(eb)}`;
+
 export const countDifferenceCapaciteApprentissageIntention = ({
   eb,
 }: {
