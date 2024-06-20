@@ -17,6 +17,7 @@ module.exports = withSentryConfig(
     url: "https://sentry.incubateur.net/",
     authToken: process.env.NEXT_PUBLIC_SENTRY_AUTH_TOKEN,
     release: process.env.NEXT_PUBLIC_SENTRY_RELEASE?.replace("/", "-").replace(" ", "-"),
+    errorHandler: (err) => { console.warn(err) }
   },
   {
     widenClientFileUpload: true,
