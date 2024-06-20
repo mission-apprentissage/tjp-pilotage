@@ -38,7 +38,6 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   cfd: "Code formation diplôme",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
-  cpcSousSecteur: "CPC Sous Secteur",
   libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",

@@ -142,7 +142,6 @@ export const FormationLineContent = ({
     <Td>{line.cfd ?? "-"}</Td>
     <Td>{line.cpc ?? "-"}</Td>
     <Td>{line.cpcSecteur ?? "-"}</Td>
-    <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
     <Td>{line.effectifEntree ?? "-"}</Td>
   </>

@@ -719,13 +719,6 @@ export default function Etablissements() {
                   <OrderIcon {...order} column="cpcSecteur" />
                   {FORMATION_ETABLISSEMENT_COLUMNS.cpcSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("cpcSousSecteur")}
-                >
-                  <OrderIcon {...order} column="cpcSousSecteur" />
-                  {FORMATION_ETABLISSEMENT_COLUMNS.cpcSousSecteur}
-                </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
                   {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}

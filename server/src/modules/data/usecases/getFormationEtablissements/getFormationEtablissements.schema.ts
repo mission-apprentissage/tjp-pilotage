@@ -43,7 +43,6 @@ const FormationEtablissementLineSchema = z.object({
   valeurAjoutee: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
-  cpcSousSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
   continuum: z
     .object({

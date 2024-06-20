@@ -27,7 +27,6 @@ export const FormationLineSchema = z.object({
   tauxDevenirFavorable: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
-  cpcSousSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
   continuum: z
     .object({
