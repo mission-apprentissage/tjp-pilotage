@@ -183,7 +183,7 @@ const findFormationEtablissementsInDb = async ({
         "capacite3"
       ),
       premiersVoeuxAnnee({ alias: "indicateurEntree" }).as("premiersVoeux"),
-      selectTauxPression("indicateurEntree", "formationView").as(
+      selectTauxPression("indicateurEntree", "formationView", false).as(
         "tauxPression"
       ),
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuiteEtablissement"),
