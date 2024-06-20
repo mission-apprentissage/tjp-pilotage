@@ -1,11 +1,19 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
+import { searchDiplomeSchema } from "./searchDiplome.schema";
 
-export const searchDiplomeQuery = async ({ search }: { search: string }) => {
+export const findManyInDataFormationQuery = async ({
+  search,
+  filters,
+}: {
+  search: string;
+  filters: z.infer<typeof searchDiplomeSchema.querystring>;
+}) => {
   const search_array = getNormalizedSearchArray(search);
 
   const formations = await kdb
@@ -73,6 +81,12 @@ export const searchDiplomeQuery = async ({ search }: { search: string }) => {
         ]),
       ])
     )
+    .$call((q) => {
+      if (filters.codeNsf) {
+        return q.where("dataFormation.codeNsf", "=", filters.codeNsf);
+      }
+      return q;
+    })
     .select((eb) =>
       jsonArrayFrom(
         eb

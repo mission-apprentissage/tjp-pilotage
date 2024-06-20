@@ -1,12 +1,24 @@
 import { inject } from "injecti";
+import { z } from "zod";
 
-import { searchDiplomeQuery } from "./searchDiplome.query";
+import { findManyInDataFormationQuery } from "./searchDiplome.query";
+import { searchDiplomeSchema } from "./searchDiplome.schema";
 
 export const [searchDiplome] = inject(
-  { searchDiplomeQuery },
+  { findManyInDataFormationQuery },
   (deps) =>
-    async ({ search }: { search: string }) => {
-      const formations = await deps.searchDiplomeQuery({ search });
+    async ({
+      search,
+      filters,
+    }: {
+      search: string;
+      filters: z.infer<typeof searchDiplomeSchema.querystring>;
+    }) => {
+      const formations = await deps.findManyInDataFormationQuery({
+        search,
+        filters,
+      });
+
       return formations;
     }
 );
