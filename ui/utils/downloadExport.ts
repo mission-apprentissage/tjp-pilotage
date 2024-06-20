@@ -5,6 +5,7 @@ import {
 import { Parser } from "@json2csv/plainjs";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
+import _ from "lodash";
 
 export type ExportColumns<T extends object> = {
   [K in keyof T as T[K] extends string | string[] | number | boolean | undefined
@@ -52,6 +53,7 @@ export function downloadCsv<D extends object>(
         separator: ",",
       }),
       object: objectFormatter,
+      undefined: () => "",
     },
     delimiter: ";",
   });
@@ -101,7 +103,7 @@ export async function downloadExcel<D extends object>(
   };
 
   Object.entries(columns).forEach(([key, _value]) => {
-    switch (typeof data[0][key as keyof D]) {
+    switch (typeof _.get(data[0], key)) {
       case "string":
         setColumnWrapText(key);
         break;
@@ -109,6 +111,7 @@ export async function downloadExcel<D extends object>(
         setColumnWrapNumber(key);
         break;
       default:
+        setColumnWrapText(key);
         break;
     }
   });
@@ -117,7 +120,7 @@ export async function downloadExcel<D extends object>(
     worksheet.addRow(
       Object.keys(columns).reduce(
         (acc, key) => {
-          acc[key as keyof D] = dataRow[key as keyof D];
+          acc[key as keyof D] = _.get(dataRow, key);
           return acc;
         },
         {} as Record<keyof D, D[keyof D]>
