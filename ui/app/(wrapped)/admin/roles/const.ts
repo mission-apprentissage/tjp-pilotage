@@ -18,7 +18,7 @@ export const ROLES_LABELS: {
   admin_region: () => ({
     label: "Admin RA",
     description:
-      "Il se situe en académie. Il est chargé de mission ou conseiller à la formation. Il a un rôle opérationnel. Il a accès à tous les champs en saisie afin de pouvoir effectuer les saisies pour les différents acteurs si besoin.",
+      "Il se situe en Région académique. Il est chargé de mission auprès du DRAFPIC et a une très bonne connaissance des acteurs de la carte, ce qui lui permet de pouvoir administrer les différents niveaux de permission dans Orion. Il a les mêmes permissions qu'un gestionnaire pour ce qui concerne la gestion des demandes.",
   }),
   gestionnaire_region: () => ({
     label: "Gestionnaire RA",
