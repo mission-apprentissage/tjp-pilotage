@@ -119,7 +119,7 @@ export const CfdAutocompleteInput = ({
         if (search.length >= 3)
           return client
             .ref("[GET]/diplome/search/:search")
-            .query({ params: { search } });
+            .query({ params: { search }, query: {} });
       }}
       formatOptionLabel={formatOptionLabel}
       loadingMessage={({ inputValue }) =>
