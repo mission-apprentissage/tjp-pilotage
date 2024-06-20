@@ -561,9 +561,10 @@ export const PageClient = () => {
                             <Button
                               as={NextLink}
                               variant="link"
-                              href={`/intentions/saisie/${intention.numeroDemandeImportee}`}
+                              href={`/intentions/perdir/saisie/${intention.numeroDemandeImportee}`}
                               leftIcon={<ExternalLinkIcon />}
                               me={"auto"}
+                              onClick={(e) => e.stopPropagation()}
                             >
                               intention dupliquée{" "}
                               {intention.numeroDemandeImportee}
@@ -584,7 +585,8 @@ export const PageClient = () => {
                               isDisabled={
                                 !!intention.numeroDemandeImportee ||
                                 isSubmitting ||
-                                isImporting
+                                isImporting ||
+                                !hasPermissionSubmitIntention
                               }
                             >
                               Dupliquer cette intention

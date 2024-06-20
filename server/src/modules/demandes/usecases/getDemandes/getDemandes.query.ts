@@ -1,6 +1,7 @@
 import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
@@ -88,11 +89,21 @@ export const getDemandesQuery = async (
           .limit(1)
       ).as("demandeCompensee"),
       eb
-        .selectFrom("demande as demandeImportee")
-        .select(["demandeImportee.numero"])
-        .whereRef("demandeImportee.numeroHistorique", "=", "demande.numero")
-        .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
-        .limit(1)
+        .selectFrom(({ selectFrom }) =>
+          selectFrom("demande as demandeImportee")
+            .select(["numero", "statut", "numeroHistorique"])
+            .whereRef("demandeImportee.numeroHistorique", "=", "demande.numero")
+            .where(isDemandeCampagneEnCours(eb, "demandeImportee"))
+            .limit(1)
+            .orderBy("updatedAt desc")
+            .as("allDemandeImportee")
+        )
+        .select("allDemandeImportee.numero")
+        .where(
+          "allDemandeImportee.statut",
+          "<>",
+          DemandeStatutEnum["supprimée"]
+        )
         .as("numeroDemandeImportee"),
     ])
     .$call((eb) => {
