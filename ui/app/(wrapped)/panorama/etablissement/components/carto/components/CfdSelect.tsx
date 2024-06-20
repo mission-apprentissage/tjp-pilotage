@@ -127,7 +127,7 @@ export const CfdSelect = () => {
     if (search.length >= 3)
       queryResult = await client
         .ref("[GET]/diplome/search/:search")
-        .query({ params: { search } });
+        .query({ params: { search }, query: {} });
 
     const filteredQueryResult = queryResult.filter(
       (result) =>

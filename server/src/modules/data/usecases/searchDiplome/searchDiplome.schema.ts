@@ -4,6 +4,9 @@ export const searchDiplomeSchema = {
   params: z.object({
     search: z.string(),
   }),
+  querystring: z.object({
+    codeNsf: z.string().optional(),
+  }),
   response: {
     200: z.array(
       z.object({
