@@ -588,13 +588,6 @@ export default function Formations() {
                   <OrderIcon {...order} column="cpcSecteur" />
                   {FORMATION_COLUMNS.cpcSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("cpcSousSecteur")}
-                >
-                  <OrderIcon {...order} column="cpcSousSecteur" />
-                  {FORMATION_COLUMNS.cpcSousSecteur}
-                </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
                   {FORMATION_COLUMNS.libelleNsf}
