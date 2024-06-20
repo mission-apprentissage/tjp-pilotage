@@ -9,17 +9,17 @@ import { kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
 import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
 
-export const getDemandeWithMetadata = async (id: string) => {
+export const getIntentionWithMetadata = async (id: string) => {
   const demande = await kdb
-    .selectFrom("demande")
-    .selectAll("demande")
+    .selectFrom("intention")
+    .selectAll("intention")
     .select((eb) => [
       jsonBuildObject({
         etablissement: jsonObjectFrom(
           eb
             .selectFrom("dataEtablissement")
             .selectAll("dataEtablissement")
-            .whereRef("dataEtablissement.uai", "=", "demande.uai")
+            .whereRef("dataEtablissement.uai", "=", "intention.uai")
             .limit(1)
         ),
         formation: jsonObjectFrom(
@@ -68,12 +68,12 @@ export const getDemandeWithMetadata = async (id: string) => {
                   .distinctOn("codeDispositif")
               ).as("dispositifs")
             )
-            .whereRef("dataFormation.cfd", "=", "demande.cfd")
+            .whereRef("dataFormation.cfd", "=", "intention.cfd")
             .limit(1)
         ),
       }).as("metadata"),
     ])
-    .where("demande.id", "=", id)
+    .where("intention.id", "=", id)
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
