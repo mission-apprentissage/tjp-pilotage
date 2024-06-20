@@ -48,6 +48,8 @@ import { Filters, LineId, Order } from "./types";
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
+type QueryResult = (typeof client.infer)["[GET]/etablissements"];
+
 export default function Etablissements() {
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -158,6 +160,60 @@ export default function Etablissements() {
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("etablissements:filtre", { props: { filter_name: filterName } });
+  };
+
+  const getDataForExport = (data: QueryResult) => {
+    const region = data.filters.regions.find(
+      (r) => r.value === filters.codeRegion?.[0]
+    );
+
+    if (filters.codeRegion && region) {
+      const columns = {
+        ...FORMATION_ETABLISSEMENT_COLUMNS,
+        selectedCodeRegion: "Code Région sélectionné",
+        selectedRegion: "Région sélectionnée",
+      };
+
+      let etablissements = data.etablissements;
+
+      etablissements = data.etablissements.map((f) => ({
+        ...f,
+        selectedCodeRegion: region.value,
+        selectedRegion: region.label,
+      }));
+
+      return {
+        columns,
+        etablissements,
+      };
+    }
+
+    return {
+      columns: { ...FORMATION_ETABLISSEMENT_COLUMNS },
+      etablissements: data.etablissements,
+    };
+  };
+
+  const onExportCsv = async () => {
+    trackEvent("formations:export");
+    const data = await client.ref("[GET]/etablissements").query({
+      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+    });
+
+    const { columns, etablissements } = getDataForExport(data);
+
+    downloadCsv("etablissements_export", etablissements, columns);
+  };
+
+  const onExportExcel = async () => {
+    const data = await client.ref("[GET]/etablissements").query({
+      query: getEtablissementsQueryParameters(EXPORT_LIMIT),
+    });
+    trackEvent("etablissements:export-excel");
+
+    const { columns, etablissements } = getDataForExport(data);
+
+    downloadExcel("etablissements_export", etablissements, columns);
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
@@ -357,28 +413,8 @@ export default function Etablissements() {
           </Center>
         )}
         <TableHeader
-          onExportCsv={async () => {
-            const data = await client.ref("[GET]/etablissements").query({
-              query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-            });
-            trackEvent("etablissements:export");
-            downloadCsv(
-              "etablissement_export",
-              data.etablissements,
-              FORMATION_ETABLISSEMENT_COLUMNS
-            );
-          }}
-          onExportExcel={async () => {
-            const data = await client.ref("[GET]/etablissements").query({
-              query: getEtablissementsQueryParameters(EXPORT_LIMIT),
-            });
-            trackEvent("etablissements:export-excel");
-            downloadExcel(
-              "etablissement_export",
-              data.etablissements,
-              FORMATION_ETABLISSEMENT_COLUMNS
-            );
-          }}
+          onExportCsv={() => onExportCsv()}
+          onExportExcel={() => onExportExcel()}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}
