@@ -17,7 +17,7 @@ export const FORMATION_ETABLISSEMENT_COLUMNS = {
   effectif2: "Année 2",
   effectif3: "Année 3",
   capacite: "Capacité",
-  premiersVoeux: "Nb de premiers voeux",
+  premiersVoeux: "Nb de voeux",
   tauxPression: "Tx de pression",
   tauxRemplissage: "Tx de remplissage",
   tauxInsertion: "Tx d'emploi 6 mois régional",
