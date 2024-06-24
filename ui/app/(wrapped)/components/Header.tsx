@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tag,
   useToken,
   VStack,
 } from "@chakra-ui/react";
@@ -69,6 +70,19 @@ export const Header = () => {
               </Box>
             </Heading>
           </HStack>
+          {process.env.NEXT_PUBLIC_ENV &&
+            process.env.NEXT_PUBLIC_ENV !== "production" && (
+              <Tag
+                ml={4}
+                size="md"
+                backgroundColor={"info.950"}
+                color={"info.text"}
+                textTransform={"uppercase"}
+                fontWeight={700}
+              >
+                {process.env.NEXT_PUBLIC_ENV}
+              </Tag>
+            )}
           <Box ml="auto">
             {!auth && (
               <Button
