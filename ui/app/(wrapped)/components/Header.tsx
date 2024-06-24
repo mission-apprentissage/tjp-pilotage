@@ -56,12 +56,16 @@ export const Header = () => {
         borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
-          <HStack as={Link} spacing={10} align="center" href="/">
-            <Img height="70px" src="/logo_gouvernement.svg" />
+          <HStack as={Link} spacing={6} align="center" href="/">
+            <Img
+              height="70px"
+              src="/logo_gouvernement.svg"
+              alt="Logo république Française"
+            />
+            <Img height="70px" src="/logo_orion.svg" alt="Logo Orion" />
             <Heading as={"h1"} size={"md"}>
-              Orion
               <Box as="span" display={["none", null, "unset"]}>
-                , outil d’aide à la transformation de la carte des formations
+                outil d’aide à la transformation de la carte des formations
               </Box>
             </Heading>
           </HStack>
