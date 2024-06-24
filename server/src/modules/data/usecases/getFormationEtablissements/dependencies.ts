@@ -213,6 +213,9 @@ const findFormationEtablissementsInDb = async ({
         .selectFrom("formationHistorique")
         .select("formationHistorique.cfd")
         .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
+        .where("formationHistorique.ancienCFD", "in", (eb) =>
+          eb.selectFrom("formationEtablissement").select("cfd")
+        )
         .limit(1)
         .as("isFormationRenovee"),
       sql<string | null>`
