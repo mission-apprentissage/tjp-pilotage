@@ -92,7 +92,7 @@ export const EtablissementLineContent = ({
         {line.formationRenovee && (
           <Flex
             ms={2}
-            mb={"auto"}
+            my={"auto"}
             width={"fit-content"}
             h={"1.8rem"}
             whiteSpace={"nowrap"}
@@ -131,7 +131,6 @@ export const EtablissementLineContent = ({
         )}
       </Flex>
     </Td>
-
     <Td isNumeric>{line.effectif1 ?? "-"}</Td>
     <Td isNumeric>{line.effectif2 ?? "-"}</Td>
     <Td isNumeric>{line.effectif3 ?? "-"}</Td>
