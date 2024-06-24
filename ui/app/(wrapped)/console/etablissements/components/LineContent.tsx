@@ -1,11 +1,13 @@
 "use client";
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Flex,
   IconButton,
   Link,
   Skeleton,
+  Tag,
   Td,
   Text,
   Tr,
@@ -75,14 +77,38 @@ export const EtablissementLineContent = ({
     <Td minW={450} whiteSpace="normal">
       <Flex>
         {formatAnneeCommuneLibelle(line, "long", "sm")}
+        {line.isFormationRenovee && (
+          <Badge
+            size="sm"
+            ms={2}
+            my={"auto"}
+            bgColor={"greenarchipel.950"}
+            color={"greenarchipel.391"}
+            h={"fit-content"}
+            flex={"shrink"}
+          >
+            RÉNOVÉE
+          </Badge>
+        )}
         {line.formationRenovee && (
           <Flex
             ms={2}
-            mt={"auto"}
+            mb={"auto"}
             width={"fit-content"}
-            h={"1.5rem"}
+            h={"1.8rem"}
             whiteSpace={"nowrap"}
+            direction={"column"}
           >
+            {line.dateFermeture && (
+              <Tag
+                size="sm"
+                bgColor="grey.1000_active"
+                color={"grey.425"}
+                width={"fit-content"}
+              >
+                Fermeture au {line.dateFermeture}
+              </Tag>
+            )}
             <Link
               variant="text"
               as={NextLink}
