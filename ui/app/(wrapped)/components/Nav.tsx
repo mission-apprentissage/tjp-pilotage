@@ -277,14 +277,14 @@ export const Nav = () => {
           onMouseLeave={onMenuConsoleClose}
         >
           <MenuItem p="0">
-            <MenuItem p="0">
-              <NavMenuLink
-                href="/console/formations"
-                segment="/console/formations"
-              >
-                Formation
-              </NavMenuLink>
-            </MenuItem>
+            <NavMenuLink
+              href="/console/formations"
+              segment="/console/formations"
+            >
+              Formation
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
             <NavMenuLink
               href={
                 uaiFilter
