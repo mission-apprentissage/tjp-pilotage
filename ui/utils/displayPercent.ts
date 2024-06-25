@@ -1,7 +1,10 @@
-export const displayPercentage = (value?: number) => {
+export const displayPercentage = (
+  value?: number,
+  numberOfDigits: number = 2
+) => {
   return new Intl.NumberFormat("fr-FR", {
     style: "percent",
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
+    minimumFractionDigits: numberOfDigits,
+    maximumFractionDigits: numberOfDigits,
   }).format(value ?? 0);
 };
