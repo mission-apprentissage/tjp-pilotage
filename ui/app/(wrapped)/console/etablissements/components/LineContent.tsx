@@ -114,10 +114,14 @@ export const EtablissementLineContent = ({
     <Td textAlign={"center"}>
       <TableBadge
         sx={getTauxPressionStyle(
-          line.tauxPression !== undefined ? line.tauxPression : undefined
+          line.tauxPression !== undefined
+            ? Math.round(line.tauxPression * 100) / 100
+            : undefined
         )}
       >
-        {line.tauxPression !== undefined ? line.tauxPression : "-"}
+        {line.tauxPression !== undefined
+          ? Math.round(line.tauxPression * 100) / 100
+          : "-"}
       </TableBadge>
     </Td>
     <Td textAlign={"center"}>
@@ -162,8 +166,8 @@ export const EtablissementLineContent = ({
     <Td>{line.cfd ?? "-"}</Td>
     <Td>{line.cpc ?? "-"}</Td>
     <Td>{line.cpcSecteur ?? "-"}</Td>
-    <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
+    <Td>{line.effectifEntree ?? "-"}</Td>
   </>
 );
 
