@@ -138,9 +138,15 @@ export const themeColors = {
     submitted: "#C8F6D6",
   },
   greenarchipel: {
+    391: "#006A6F",
+    "391_hover": "#009fa7",
+    "391_active": "#00bbc3",
     557: "#009099",
     "557_hover": "#00c6d2",
     "557_active": "#00e0ee",
+    950: "#C7F6FC",
+    "950_hover": "#64ecf8",
+    "950_active": "#5bd8e3",
   },
   orangeterrebattue: {
     645: "#E4794A",

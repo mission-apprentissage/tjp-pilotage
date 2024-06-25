@@ -138,8 +138,8 @@ const findFormationEtablissementsInDb = async ({
         .on(isScolaireFormationHistorique)
     )
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
-    .selectAll("etablissement")
     .select((eb) => [
+      "etablissement.libelleEtablissement",
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
@@ -196,8 +196,6 @@ const findFormationEtablissementsInDb = async ({
         "isHistoriqueCoExistant"
       ),
       "formationHistorique.cfd as formationRenovee",
-    ])
-    .select((eb) =>
       eb
         .case()
         .when("indicateurSortie.cfdContinuum", "is not", null)
@@ -208,8 +206,24 @@ const findFormationEtablissementsInDb = async ({
           })
         )
         .end()
-        .as("continuumEtablissement")
-    )
+        .as("continuumEtablissement"),
+
+      eb
+        .selectFrom("formationHistorique")
+        .select("formationHistorique.cfd")
+        .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
+        .where("formationHistorique.ancienCFD", "in", (eb) =>
+          eb.selectFrom("formationEtablissement").select("cfd")
+        )
+        .limit(1)
+        .as("isFormationRenovee"),
+      sql<string | null>`
+        case when ${eb.ref("formationView.dateFermeture")} is not null
+        then to_char(${eb.ref("formationView.dateFermeture")}, 'dd/mm/yyyy')
+        else null
+        end
+      `.as("dateFermeture"),
+    ])
     .$narrowType<{
       continuumEtablissement: { cfd: string; libelleFormation: string };
     }>()
@@ -354,7 +368,12 @@ const findFormationEtablissementsInDb = async ({
 
   return {
     count: result[0]?.count ?? 0,
-    etablissements: result.map(cleanNull),
+    etablissements: result.map((etablissement) =>
+      cleanNull({
+        ...etablissement,
+        isFormationRenovee: !!etablissement.isFormationRenovee,
+      })
+    ),
   };
 };
 

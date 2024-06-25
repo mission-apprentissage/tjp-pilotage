@@ -182,6 +182,21 @@ const findFormationsInDb = async ({
         "isHistoriqueCoExistant"
       ),
       "formationHistorique.cfd as formationRenovee",
+      eb
+        .selectFrom("formationHistorique")
+        .select("formationHistorique.cfd")
+        .whereRef("formationHistorique.cfd", "=", "formationView.cfd")
+        .where("formationHistorique.ancienCFD", "in", (eb) =>
+          eb.selectFrom("formationEtablissement").select("cfd")
+        )
+        .limit(1)
+        .as("isFormationRenovee"),
+      sql<string | null>`
+          case when ${eb.ref("formationView.dateFermeture")} is not null
+          then to_char(${eb.ref("formationView.dateFermeture")}, 'dd/mm/yyyy')
+          else null
+          end
+        `.as("dateFermeture"),
     ])
     .where(notPerimetreIJEtablissement)
     .where((eb) => notHistoriqueUnlessCoExistant(eb, rentreeScolaire[0]))
@@ -301,7 +316,12 @@ const findFormationsInDb = async ({
 
   return {
     count: res[0]?.count ?? 0,
-    formations: res.map(cleanNull),
+    formations: res.map((formation) =>
+      cleanNull({
+        ...formation,
+        isFormationRenovee: !!formation.isFormationRenovee,
+      })
+    ),
   };
 };
 
