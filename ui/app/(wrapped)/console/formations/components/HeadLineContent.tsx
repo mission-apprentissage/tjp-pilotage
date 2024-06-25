@@ -199,6 +199,25 @@ export const HeadLineContent = ({
             onClick={() => openGlossaire("taux-de-devenir-favorable")}
           />
         </Th>
+        {canShowQuadrantPosition && (
+          <Th>
+            {FORMATION_COLUMNS.positionQuadrant}
+            <TooltipIcon
+              ml="1"
+              label={
+                <Box>
+                  <Text>
+                    Positionnement du point de la formation dans le quadrant par
+                    rapport aux moyennes régionales des taux d'emploi et de
+                    poursuite d'études appliquées au niveau de diplôme.
+                  </Text>
+                  <Text>Cliquez pour plus d'infos.</Text>
+                </Box>
+              }
+              onClick={() => openGlossaire("quadrant")}
+            />
+          </Th>
+        )}
         <Th cursor="pointer" onClick={() => handleOrder("libelleDispositif")}>
           <OrderIcon {...order} column="libelleDispositif" />
           {FORMATION_COLUMNS.libelleDispositif}
@@ -219,10 +238,6 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="cpcSecteur" />
           {FORMATION_COLUMNS.cpcSecteur}
         </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("cpcSousSecteur")}>
-          <OrderIcon {...order} column="cpcSousSecteur" />
-          {FORMATION_COLUMNS.cpcSousSecteur}
-        </Th>
         <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_COLUMNS.libelleNsf}
@@ -232,25 +247,10 @@ export const HeadLineContent = ({
             onClick={() => openGlossaire("domaine-de-formation-nsf")}
           />
         </Th>
-        {canShowQuadrantPosition && (
-          <Th>
-            {FORMATION_COLUMNS.positionQuadrant}
-            <TooltipIcon
-              ml="1"
-              label={
-                <Box>
-                  <Text>
-                    Positionnement du point de la formation dans le quadrant par
-                    rapport aux moyennes régionales des taux d'emploi et de
-                    poursuite d'études appliquées au niveau de diplôme.
-                  </Text>
-                  <Text>Cliquez pour plus d'infos.</Text>
-                </Box>
-              }
-              onClick={() => openGlossaire("quadrant")}
-            />
-          </Th>
-        )}
+        <Th cursor="pointer" onClick={() => handleOrder("effectifEntree")}>
+          <OrderIcon {...order} column="effectifEntree" />
+          {FORMATION_COLUMNS.effectifEntree}
+        </Th>
       </Tr>
     </Thead>
   );

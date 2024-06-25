@@ -179,7 +179,7 @@ const getFormationsEtablissement = async ({
       sql<number>`SUM(${effectifAnnee({ alias: "iep" })})`.as(
         "effectifPrecedent"
       ),
-      selectTauxPression("indicateurEntree", "formationView").as(
+      selectTauxPression("indicateurEntree", "formationView", true).as(
         "tauxPression"
       ),
     ])

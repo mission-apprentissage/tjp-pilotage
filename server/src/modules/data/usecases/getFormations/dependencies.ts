@@ -106,7 +106,6 @@ const findFormationsInDb = async ({
       "formationView.typeFamille",
       "formationView.cpc",
       "formationView.cpcSecteur",
-      "formationView.cpcSousSecteur",
       "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "familleMetier.libelleFamille",
@@ -119,7 +118,7 @@ const findFormationsInDb = async ({
       sql<number>`max("indicateurEntree"."anneeDebut")`.as("anneeDebut"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
-      `.as("effectif"),
+      `.as("effectifEntree"),
       sql<number>`SUM(${effectifAnnee({
         alias: "indicateurEntree",
         annee: sql`'0'`,
@@ -239,7 +238,6 @@ const findFormationsInDb = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
-      "formationView.cpcSousSecteur",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "indicateurEntree.rentreeScolaire",

@@ -323,10 +323,6 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="cpcSecteur" />
           {FORMATION_ETABLISSEMENT_COLUMNS.cpcSecteur}
         </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("cpcSousSecteur")}>
-          <OrderIcon {...order} column="cpcSousSecteur" />
-          {FORMATION_ETABLISSEMENT_COLUMNS.cpcSousSecteur}
-        </Th>
         <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
           <OrderIcon {...order} column="libelleNsf" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNsf}
@@ -335,6 +331,10 @@ export const HeadLineContent = ({
             label="cliquez pour plus d'infos."
             onClick={() => openGlossaire("domaine-de-formation-nsf")}
           />
+        </Th>
+        <Th cursor="pointer" onClick={() => handleOrder("effectifEntree")}>
+          <OrderIcon {...order} column="effectifEntree" />
+          {FORMATION_ETABLISSEMENT_COLUMNS.effectifEntree}
         </Th>
       </Tr>
     </Thead>

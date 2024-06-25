@@ -145,7 +145,6 @@ const findFormationEtablissementsInDb = async ({
       "formationView.codeNiveauDiplome",
       "formationView.cpc",
       "formationView.cpcSecteur",
-      "formationView.cpcSousSecteur",
       "nsf.libelleNsf",
       sql<number>`COUNT(*) OVER()`.as("count"),
       "departement.libelleDepartement",
@@ -162,7 +161,7 @@ const findFormationEtablissementsInDb = async ({
       "indicateurEtablissement.valeurAjoutee",
       "anneeDebut",
       selectTauxRemplissage("indicateurEntree").as("tauxRemplissage"),
-      effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
+      effectifAnnee({ alias: "indicateurEntree" }).as("effectifEntree"),
       effectifAnnee({ alias: "indicateurEntree", annee: sql`'0'` }).as(
         "effectif1"
       ),
@@ -334,7 +333,6 @@ const findFormationEtablissementsInDb = async ({
       "formationView.dateFermeture",
       "formationView.cpc",
       "formationView.cpcSecteur",
-      "formationView.cpcSousSecteur",
       "nsf.libelleNsf",
       "formationHistorique.cfd",
       "etablissement.id",
