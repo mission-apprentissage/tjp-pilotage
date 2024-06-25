@@ -39,6 +39,8 @@ export const findManyInDataFormationQuery = async ({
       "500", // CAP
       "561", // MC
       "581", // FCIL
+      "241", // DNMADE
+      "401", // BMA
     ])
     // exlcusion des CFD d'années communes en CAP et BAC PRO (40030002, 40020005, 50020006, 50030001)
     .where("dataFormation.cfd", "not in", [
