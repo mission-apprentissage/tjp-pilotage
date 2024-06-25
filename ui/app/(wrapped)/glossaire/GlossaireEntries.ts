@@ -14,6 +14,8 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["domaine-de-formation-nsf"]: "c8b0d613-40dd-4fac-ab1b-e2be8fadd306",
   ["voeux"]: "974813b0-5bd5-481a-b372-eefc1d647984",
   ["taux-de-demande"]: "cfbbe0d1-b44f-45b6-b38e-b6f7c4a60039",
+  ["domaine-professionnel-emploi"]: "89eb9b59-22b4-4d60-bfd7-6b022b263b71",
+  ["metier-rome"]: "9782c64b-e9bc-4fa2-9907-98af5979071b",
 };
 
 export type GlossaireEntryKey = keyof typeof GLOSSAIRE_ENTRIES_KEYS;

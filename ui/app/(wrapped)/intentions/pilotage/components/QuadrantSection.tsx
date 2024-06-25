@@ -226,6 +226,10 @@ export const QuadrantSection = ({
             </Button>
             <Flex>
               <ExportMenuButton
+                sx={{
+                  display:
+                    "none" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
+                }}
                 onExportCsv={async () => {
                   if (!formations) return;
                   downloadCsv(
