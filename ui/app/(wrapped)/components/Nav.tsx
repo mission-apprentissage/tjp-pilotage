@@ -193,6 +193,12 @@ export const Nav = () => {
   } = useDisclosure();
 
   const {
+    isOpen: isMenuConsoleOpen,
+    onOpen: onMenuConsoleOpen,
+    onClose: onMenuConsoleClose,
+  } = useDisclosure();
+
+  const {
     isOpen: isMenuIntentionOpen,
     onOpen: onMenuIntentionOpen,
     onClose: onMenuIntentionClose,
@@ -255,21 +261,47 @@ export const Nav = () => {
           </MenuItem>
         </MenuList>
       </Menu>
-      <NavLink
-        mr="4"
-        href={
-          uaiFilter
-            ? createParametrizedUrl("/console/etablissements", {
-                filters: {
-                  uai: [uaiFilter],
-                },
-              })
-            : "/console/formations"
-        }
-        segment="console"
-      >
-        Console
-      </NavLink>
+      <Menu gutter={0} matchWidth={true} isOpen={isMenuConsoleOpen}>
+        <NavMenuButton
+          segment="console"
+          isOpen={isMenuConsoleOpen}
+          onMouseEnter={onMenuConsoleOpen}
+          onMouseLeave={onMenuConsoleClose}
+        >
+          Console
+        </NavMenuButton>
+        <MenuList
+          p="0"
+          borderTop="unset"
+          onMouseEnter={onMenuConsoleOpen}
+          onMouseLeave={onMenuConsoleClose}
+        >
+          <MenuItem p="0">
+            <MenuItem p="0">
+              <NavMenuLink
+                href="/console/formations"
+                segment="/console/formations"
+              >
+                Formation
+              </NavMenuLink>
+            </MenuItem>
+            <NavMenuLink
+              href={
+                uaiFilter
+                  ? createParametrizedUrl("/console/etablissements", {
+                      filters: {
+                        uai: [uaiFilter],
+                      },
+                    })
+                  : "/console/etablissements"
+              }
+              segment="panorama/etablissement"
+            >
+              Établissement
+            </NavMenuLink>
+          </MenuItem>
+        </MenuList>
+      </Menu>
       {hasIntentionsMenu && (
         <Menu gutter={0} matchWidth={true} isOpen={isMenuIntentionOpen}>
           <NavMenuButton
