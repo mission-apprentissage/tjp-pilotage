@@ -26,6 +26,7 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
+import { getEnv, isProduction } from "../../../config.public";
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
@@ -77,19 +78,18 @@ export const Header = () => {
               </Box>
             </Heading>
           </HStack>
-          {process.env.NEXT_PUBLIC_ENV &&
-            process.env.NEXT_PUBLIC_ENV !== "production" && (
-              <Tag
-                ml={4}
-                size="md"
-                backgroundColor={"info.950"}
-                color={"info.text"}
-                textTransform={"uppercase"}
-                fontWeight={700}
-              >
-                {process.env.NEXT_PUBLIC_ENV}
-              </Tag>
-            )}
+          {getEnv() && !isProduction && (
+            <Tag
+              ml={4}
+              size="md"
+              backgroundColor={"info.950"}
+              color={"info.text"}
+              textTransform={"uppercase"}
+              fontWeight={700}
+            >
+              {getEnv()}
+            </Tag>
+          )}
           <Box ml="auto">
             {!auth && (
               <Button
