@@ -1,11 +1,19 @@
 import { sql } from "kysely";
 import { jsonArrayFrom } from "kysely/helpers/postgres";
+import { z } from "zod";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
+import { searchDiplomeSchema } from "./searchDiplome.schema";
 
-export const searchDiplomeQuery = async ({ search }: { search: string }) => {
+export const findManyInDataFormationQuery = async ({
+  search,
+  filters,
+}: {
+  search: string;
+  filters: z.infer<typeof searchDiplomeSchema.querystring>;
+}) => {
   const search_array = getNormalizedSearchArray(search);
 
   const formations = await kdb
@@ -31,6 +39,8 @@ export const searchDiplomeQuery = async ({ search }: { search: string }) => {
       "500", // CAP
       "561", // MC
       "581", // FCIL
+      "241", // DNMADE
+      "401", // BMA
     ])
     // exlcusion des CFD d'années communes en CAP et BAC PRO (40030002, 40020005, 50020006, 50030001)
     .where("dataFormation.cfd", "not in", [
@@ -73,6 +83,12 @@ export const searchDiplomeQuery = async ({ search }: { search: string }) => {
         ]),
       ])
     )
+    .$call((q) => {
+      if (filters.codeNsf) {
+        return q.where("dataFormation.codeNsf", "=", filters.codeNsf);
+      }
+      return q;
+    })
     .select((eb) =>
       jsonArrayFrom(
         eb

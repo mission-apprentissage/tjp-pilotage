@@ -19,12 +19,12 @@ export const FORMATION_COLUMNS = {
   cfd: "Code formation diplôme",
   cpc: "CPC",
   cpcSecteur: "CPC Secteur",
-  cpcSousSecteur: "CPC Sous Secteur",
   libelleNsf: "Domaine de formation (NSF)",
   "continuum.libelleFormation": "Diplôme historique",
   "continuum.cfd": "Code diplôme historique",
   positionQuadrant: "Position dans le quadrant",
   codeDispositif: "Code dispositif",
+  effectifEntree: "Effectif en entrée",
 } satisfies ExportColumns<
   (typeof client.infer)["[GET]/formations"]["formations"][number]
 >;
