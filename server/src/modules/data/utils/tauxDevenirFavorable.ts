@@ -20,9 +20,9 @@ export const selectTauxDevenirFavorable = (
     CASE WHEN ${selectDenominateurDevenirFavorable(
       indicateurSortieAlias
     )} >= ${seuil}
-    THEN ROUND(((${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
+    THEN ((${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes"
       + ${sql.table(indicateurSortieAlias)}."nbInsertion6mois")
-    / ${selectDenominateurDevenirFavorable(indicateurSortieAlias)})::NUMERIC,2)
+    / ${selectDenominateurDevenirFavorable(indicateurSortieAlias)})::NUMERIC
     END`;
 
 export const selectDenominateurDevenirFavorableAgg = (
@@ -43,12 +43,12 @@ export const selectTauxDevenirFavorableAgg = (
       CASE WHEN ${selectDenominateurDevenirFavorableAgg(
         indicateurSortieAlias
       )} >= ${seuil}
-      THEN ROUND((
+      THEN (
         (SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
         + SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois"))
       / ${selectDenominateurDevenirFavorableAgg(
         indicateurSortieAlias
-      )})::NUMERIC,2)
+      )})::NUMERIC
       END
     `;
 

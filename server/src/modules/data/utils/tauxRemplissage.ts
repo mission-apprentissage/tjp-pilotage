@@ -23,8 +23,8 @@ export const selectTauxRemplissageAgg = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     CASE WHEN ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)} >= 0
-    THEN ROUND((SUM(${selectNumerateurRemplissage(indicateurEntreeAlias)})
-    / ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)})::NUMERIC,2)
+    THEN (SUM(${selectNumerateurRemplissage(indicateurEntreeAlias)})
+    / ${selectDenominateurRemplissageAgg(indicateurEntreeAlias)})::NUMERIC
     END  `;
 
 export const selectDenominateurRemplissage = (
@@ -38,6 +38,6 @@ export const selectTauxRemplissage = (
   indicateurEntreeAlias: string
 ) => sql<number>`
     CASE WHEN ${selectDenominateurRemplissage(indicateurEntreeAlias)} >= 0
-    THEN ROUND((${effectifAnnee({ alias: indicateurEntreeAlias })}
-    / ${selectDenominateurRemplissage(indicateurEntreeAlias)})::NUMERIC,2)
+    THEN (${effectifAnnee({ alias: indicateurEntreeAlias })}
+    / ${selectDenominateurRemplissage(indicateurEntreeAlias)})::NUMERIC
     END`;

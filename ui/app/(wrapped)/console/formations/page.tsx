@@ -45,6 +45,8 @@ import { Filters, LineId, Order } from "./types";
 const PAGE_SIZE = 30;
 const EXPORT_LIMIT = 1_000_000;
 
+type QueryResult = (typeof client.infer)["[GET]/formations"];
+
 export default function Formations() {
   const router = useRouter();
   const queryParams = useSearchParams();
@@ -143,6 +145,68 @@ export default function Formations() {
 
   const filterTracker = (filterName: keyof Filters) => () => {
     trackEvent("formations:filtre", { props: { filter_name: filterName } });
+  };
+
+  const getDataForExport = (data: QueryResult) => {
+    const region = data.filters.regions.find(
+      (r) => r.value === filters.codeRegion?.[0]
+    );
+
+    if (filters.codeRegion && region) {
+      const columns = {
+        ...FORMATION_COLUMNS,
+        selectedCodeRegion: "Code Région sélectionné",
+        selectedRegion: "Région sélectionnée",
+      };
+
+      let formations = data.formations;
+
+      formations = data.formations.map((f) => ({
+        ...f,
+        selectedCodeRegion: region.value,
+        selectedRegion: region.label,
+      }));
+
+      return {
+        columns,
+        formations,
+      };
+    }
+
+    return {
+      columns: { ...FORMATION_COLUMNS },
+      formations: data.formations,
+    };
+  };
+
+  const onExportCsv = async () => {
+    trackEvent("formations:export");
+    const data = await client.ref("[GET]/formations").query({
+      query: getFormationsQueryParameters(EXPORT_LIMIT),
+    });
+
+    const { columns, formations } = getDataForExport(data);
+
+    const filteredColumns = canShowQuadrantPosition
+      ? columns
+      : _.omit(columns, "positionQuadrant");
+
+    downloadCsv("formations_export", formations, filteredColumns);
+  };
+
+  const onExportExcel = async () => {
+    const data = await client.ref("[GET]/formations").query({
+      query: getFormationsQueryParameters(EXPORT_LIMIT),
+    });
+    trackEvent("formations:export-excel");
+
+    const { columns, formations } = getDataForExport(data);
+
+    const filteredColumns = canShowQuadrantPosition
+      ? columns
+      : _.omit(columns, "positionQuadrant");
+
+    downloadExcel("formations_export", formations, filteredColumns);
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
@@ -331,32 +395,8 @@ export default function Formations() {
           </Center>
         )}
         <TableHeader
-          onExportCsv={async () => {
-            trackEvent("formations:export");
-            const data = await client.ref("[GET]/formations").query({
-              query: getFormationsQueryParameters(EXPORT_LIMIT),
-            });
-            downloadCsv(
-              "formations_export",
-              data.formations,
-              canShowQuadrantPosition
-                ? FORMATION_COLUMNS
-                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
-            );
-          }}
-          onExportExcel={async () => {
-            const data = await client.ref("[GET]/formations").query({
-              query: getFormationsQueryParameters(EXPORT_LIMIT),
-            });
-            trackEvent("formations:export-excel");
-            downloadExcel(
-              "formations_export",
-              data.formations,
-              canShowQuadrantPosition
-                ? FORMATION_COLUMNS
-                : _.omit(FORMATION_COLUMNS, "positionQuadrant")
-            );
-          }}
+          onExportCsv={() => onExportCsv()}
+          onExportExcel={() => onExportExcel()}
           page={page}
           pageSize={PAGE_SIZE}
           count={data?.count}
@@ -542,6 +582,26 @@ export default function Formations() {
                     onClick={() => openGlossaire("taux-de-devenir-favorable")}
                   />
                 </Th>
+                {canShowQuadrantPosition && (
+                  <Th>
+                    {FORMATION_COLUMNS.positionQuadrant}
+                    <TooltipIcon
+                      ml="1"
+                      label={
+                        <Box>
+                          <Text>
+                            Positionnement du point de la formation dans le
+                            quadrant par rapport aux moyennes régionales des
+                            taux d'emploi et de poursuite d'études appliquées au
+                            niveau de diplôme.
+                          </Text>
+                          <Text>Cliquez pour plus d'infos.</Text>
+                        </Box>
+                      }
+                      onClick={() => openGlossaire("quadrant")}
+                    />
+                  </Th>
+                )}
                 <Th
                   cursor="pointer"
                   onClick={() => handleOrder("libelleDispositif")}
@@ -568,13 +628,6 @@ export default function Formations() {
                   <OrderIcon {...order} column="cpcSecteur" />
                   {FORMATION_COLUMNS.cpcSecteur}
                 </Th>
-                <Th
-                  cursor="pointer"
-                  onClick={() => handleOrder("cpcSousSecteur")}
-                >
-                  <OrderIcon {...order} column="cpcSousSecteur" />
-                  {FORMATION_COLUMNS.cpcSousSecteur}
-                </Th>
                 <Th cursor="pointer" onClick={() => handleOrder("libelleNsf")}>
                   <OrderIcon {...order} column="libelleNsf" />
                   {FORMATION_COLUMNS.libelleNsf}
@@ -584,26 +637,13 @@ export default function Formations() {
                     onClick={() => openGlossaire("domaine-de-formation-nsf")}
                   />
                 </Th>
-                {canShowQuadrantPosition && (
-                  <Th>
-                    {FORMATION_COLUMNS.positionQuadrant}
-                    <TooltipIcon
-                      ml="1"
-                      label={
-                        <Box>
-                          <Text>
-                            Positionnement du point de la formation dans le
-                            quadrant par rapport aux moyennes régionales des
-                            taux d'emploi et de poursuite d'études appliquées au
-                            niveau de diplôme.
-                          </Text>
-                          <Text>Cliquez pour plus d'infos.</Text>
-                        </Box>
-                      }
-                      onClick={() => openGlossaire("quadrant")}
-                    />
-                  </Th>
-                )}
+                <Th
+                  cursor="pointer"
+                  onClick={() => handleOrder("effectifEntree")}
+                >
+                  <OrderIcon {...order} column="effectifEntree" />
+                  {FORMATION_COLUMNS.effectifEntree}
+                </Th>
               </Tr>
             </Thead>
             <Tbody>
