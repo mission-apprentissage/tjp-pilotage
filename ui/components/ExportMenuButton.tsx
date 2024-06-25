@@ -3,6 +3,7 @@ import {
   Button,
   Menu,
   MenuButton,
+  MenuButtonProps,
   MenuItem,
   MenuList,
   Spinner,
@@ -30,15 +31,19 @@ const ExportButton = ({
     </MenuItem>
   );
 };
+
+type ExportMenuButtonProps = MenuButtonProps & {
+  onExportCsv?: () => Promise<void>;
+  onExportExcel?: () => Promise<void>;
+  variant?: string;
+};
+
 export const ExportMenuButton = ({
   onExportCsv,
   onExportExcel,
   variant = "ghost",
-}: {
-  onExportCsv?: () => Promise<void>;
-  onExportExcel?: () => Promise<void>;
-  variant?: string;
-}) => {
+  ...rest
+}: ExportMenuButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleExportCsv = async () => {
@@ -67,6 +72,7 @@ export const ExportMenuButton = ({
       </Button>
     );
   }
+
   return (
     <Menu gutter={0}>
       <MenuButton
@@ -74,6 +80,7 @@ export const ExportMenuButton = ({
         variant={variant}
         size="md"
         leftIcon={<DownloadIcon />}
+        {...rest}
       >
         Exporter
       </MenuButton>
