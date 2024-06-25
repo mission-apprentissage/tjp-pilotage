@@ -10,11 +10,13 @@ import {
   Select,
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
+import qs from "qs";
 import { useContext, useEffect } from "react";
 
 import { client } from "@/api.client";
 
 import { CodeDepartementFilterContext } from "../../../layoutClient";
+import { DEFAULT_SEARCH_PARAMS } from "../layout";
 
 export function PanoramaSelection({
   departementsOptions,
@@ -28,13 +30,21 @@ export function PanoramaSelection({
 
   useEffect(() => {
     if (codeDepartementFilter != "") {
-      router.push(`/panorama/departement/${codeDepartementFilter}`);
+      router.push(
+        `/panorama/departement/${codeDepartementFilter}?${qs.stringify(
+          DEFAULT_SEARCH_PARAMS
+        )}`
+      );
     }
   }, []);
 
   const onCodeDepartementChanged = (codeDepartement: string) => {
     setCodeDepartementFilter(codeDepartement);
-    router.push(`/panorama/departement/${codeDepartement}`);
+    router.push(
+      `/panorama/departement/${codeDepartement}?${qs.stringify(
+        DEFAULT_SEARCH_PARAMS
+      )}`
+    );
   };
 
   return (

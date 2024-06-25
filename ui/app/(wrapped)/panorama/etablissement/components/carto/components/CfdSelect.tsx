@@ -5,12 +5,13 @@ import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../../../api.client";
+import { client } from "@/api.client";
 import {
   BadgeTypeFamille,
   TypeFamilleKeys,
-} from "../../../../../../../components/BadgeTypeFamille";
-import { themeDefinition } from "../../../../../../../theme/theme";
+} from "@/components/BadgeTypeFamille";
+import { themeDefinition } from "@/theme/theme";
+
 import { useEtablissementContext } from "../../../context/etablissementContext";
 import { AnalyseDetaillee } from "../../analyse-detaillee/types";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
@@ -124,7 +125,7 @@ export const CfdSelect = () => {
     );
     const queryResult: TCfdSearchResult[] = await client
       .ref("[GET]/diplome/search/:search")
-      .query({ params: { search } });
+      .query({ params: { search }, query: {} });
 
     const filteredQueryResult = queryResult.filter(
       (result) =>

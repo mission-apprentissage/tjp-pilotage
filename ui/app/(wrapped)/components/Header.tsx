@@ -15,6 +15,7 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
+  Tag,
   useToken,
   VStack,
 } from "@chakra-ui/react";
@@ -25,6 +26,7 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
+import { getEnv, isProduction } from "../../../config.public";
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
@@ -56,15 +58,38 @@ export const Header = () => {
         borderBottom={`1px solid ${greyColor}`}
       >
         <Flex align="center" as={Container} py={2} maxWidth={"container.xl"}>
-          <HStack as={Link} spacing={10} align="center" href="/">
-            <Img height="70px" src="/logo_gouvernement.svg" />
+          <HStack as={Link} spacing={1} align="center" href="/">
+            <Flex direction={"row"} gap={6}>
+              <Img
+                height="70px"
+                src="/logo_gouvernement.svg"
+                alt="Logo république Française"
+              />
+              <Img
+                height="60px"
+                src="/logo_orion.svg"
+                alt="Logo Orion"
+                my={"auto"}
+              />
+            </Flex>
             <Heading as={"h1"} size={"md"}>
-              Orion
               <Box as="span" display={["none", null, "unset"]}>
-                , outil d’aide à la transformation de la carte des formations
+                Outil d’aide à la transformation de la carte des formations
               </Box>
             </Heading>
           </HStack>
+          {getEnv() && !isProduction && (
+            <Tag
+              ml={4}
+              size="md"
+              backgroundColor={"info.950"}
+              color={"info.text"}
+              textTransform={"uppercase"}
+              fontWeight={700}
+            >
+              {getEnv()}
+            </Tag>
+          )}
           <Box ml="auto">
             {!auth && (
               <Button

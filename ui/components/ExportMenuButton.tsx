@@ -4,6 +4,7 @@ import {
   Flex,
   Menu,
   MenuButton,
+  MenuButtonProps,
   MenuItem,
   MenuList,
   Spinner,
@@ -31,17 +32,21 @@ const ExportButton = ({
     </MenuItem>
   );
 };
+
+type ExportMenuButtonProps = MenuButtonProps & {
+  onExportCsv?: () => Promise<void>;
+  onExportExcel?: () => Promise<void>;
+  variant?: string;
+  isQueryLoading?: boolean;
+};
+
 export const ExportMenuButton = ({
   onExportCsv,
   onExportExcel,
   variant = "ghost",
   isQueryLoading,
-}: {
-  onExportCsv?: () => Promise<void>;
-  onExportExcel?: () => Promise<void>;
-  variant?: string;
-  isQueryLoading?: boolean;
-}) => {
+  ...rest
+}: ExportMenuButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
 
   const handleExportCsv = async () => {
@@ -70,6 +75,7 @@ export const ExportMenuButton = ({
       </Button>
     );
   }
+
   return (
     <Menu gutter={0}>
       <MenuButton
@@ -77,6 +83,7 @@ export const ExportMenuButton = ({
         variant={variant}
         size="md"
         leftIcon={<DownloadIcon />}
+        {...rest}
       >
         <Flex minW={20}>
           {isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}

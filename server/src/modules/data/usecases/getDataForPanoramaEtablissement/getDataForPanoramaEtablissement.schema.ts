@@ -15,7 +15,6 @@ const FormationSchema = z.object({
   positionQuadrant: z.string().optional(),
   CPC: z.string().optional(),
   CPCSecteur: z.string().optional(),
-  CPCSousSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
   typeFamille: z.string().optional(),
   continuum: z

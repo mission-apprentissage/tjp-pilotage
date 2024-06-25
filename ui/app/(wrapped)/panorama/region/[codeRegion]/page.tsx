@@ -2,7 +2,6 @@
 
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
-import { useEffect } from "react";
 
 import { client } from "@/api.client";
 
@@ -36,7 +35,6 @@ export default function Panorama({
   const handleOrder = (column: OrderPanoramaFormation["orderBy"]) => {
     if (searchParams.orderBy !== column) {
       setSearchParams({
-        codeRegion,
         ...searchParams,
         order: "desc",
         orderBy: column,
@@ -44,7 +42,6 @@ export default function Panorama({
       return;
     }
     setSearchParams({
-      codeRegion,
       ...searchParams,
       order: searchParams.order === "asc" ? "desc" : "asc",
       orderBy: column,
@@ -55,11 +52,11 @@ export default function Panorama({
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
   ) => {
-    setSearchParams({ codeRegion, ...searchParams, [type]: value });
+    setSearchParams({ ...searchParams, [type]: value });
   };
 
   const onCodeRegionChanged = (codeRegion: string) => {
-    router.push(`/panorama/region/${codeRegion}`);
+    router.push(`/panorama/region/${codeRegion}?${qs.stringify(searchParams)}`);
   };
 
   const { data: regionOptions } = client.ref("[GET]/regions").useQuery(
@@ -92,18 +89,6 @@ export default function Panorama({
       },
       { keepPreviousData: true, staleTime: 10000000 }
     );
-
-  useEffect(() => {
-    // Pour les région, le 2e diplome est un bac pro
-    const defaultDiplome = data?.filters.diplomes[1].value;
-
-    if (defaultDiplome && !searchParams.codeNiveauDiplome) {
-      handleFilters(
-        "codeNiveauDiplome",
-        defaultDiplome ? [defaultDiplome] : undefined
-      );
-    }
-  }, [data]);
 
   return (
     <>

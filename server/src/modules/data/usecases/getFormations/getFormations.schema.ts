@@ -16,7 +16,7 @@ export const FormationLineSchema = z.object({
   libelleNiveauDiplome: z.string().optional(),
   nbEtablissement: z.coerce.number().optional(),
   anneeDebut: z.coerce.number().optional(),
-  effectif: z.coerce.number().optional(),
+  effectifEntree: z.coerce.number().optional(),
   effectif1: z.coerce.number().optional(),
   effectif2: z.coerce.number().optional(),
   effectif3: z.coerce.number().optional(),
@@ -27,7 +27,6 @@ export const FormationLineSchema = z.object({
   tauxDevenirFavorable: z.coerce.number().optional(),
   cpc: z.string().optional(),
   cpcSecteur: z.string().optional(),
-  cpcSousSecteur: z.string().optional(),
   libelleNsf: z.string().optional(),
   continuum: z
     .object({
@@ -38,7 +37,11 @@ export const FormationLineSchema = z.object({
   positionQuadrant: z.string().optional(),
   typeFamille: z.string().optional(),
   isHistoriqueCoExistant: z.coerce.boolean().optional(),
+  // CFD de l'éventuelle formation renovant la formation actuelle
   formationRenovee: z.string().optional(),
+  // Flag indiquant si la formation est renovée
+  isFormationRenovee: z.coerce.boolean().optional(),
+  dateFermeture: z.string().optional(),
 });
 
 export const getFormationSchema = {

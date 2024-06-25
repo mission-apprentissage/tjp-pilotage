@@ -1,11 +1,13 @@
 "use client";
 import { ArrowForwardIcon, ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Badge,
   Box,
   Flex,
   IconButton,
   Link,
   Skeleton,
+  Tag,
   Td,
   Text,
   Tr,
@@ -54,15 +56,14 @@ export const EtablissementLineContent = ({
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td minW={300} maxW={300} whiteSpace="normal">
       <Link
-        variant="text"
         as={NextLink}
         href={`/panorama/etablissement/${line.uai}`}
         target="_blank"
-        color="chakra-body-text"
         fontWeight={400}
         _hover={{
           textDecoration: "underline",
         }}
+        color={"bluefrance.113"}
       >
         <Flex justify={"start"}>{line.libelleEtablissement ?? "-"}</Flex>
       </Link>
@@ -75,14 +76,38 @@ export const EtablissementLineContent = ({
     <Td minW={450} whiteSpace="normal">
       <Flex>
         {formatAnneeCommuneLibelle(line, "long", "sm")}
+        {line.isFormationRenovee && (
+          <Badge
+            size="sm"
+            ms={2}
+            my={"auto"}
+            bgColor={"greenarchipel.950"}
+            color={"greenarchipel.391"}
+            h={"fit-content"}
+            flex={"shrink"}
+          >
+            RÉNOVÉE
+          </Badge>
+        )}
         {line.formationRenovee && (
           <Flex
             ms={2}
-            mt={"auto"}
+            my={"auto"}
             width={"fit-content"}
-            h={"1.5rem"}
+            h={"1.8rem"}
             whiteSpace={"nowrap"}
+            direction={"column"}
           >
+            {line.dateFermeture && (
+              <Tag
+                size="sm"
+                bgColor="grey.1000_active"
+                color={"grey.425"}
+                width={"fit-content"}
+              >
+                Fermeture au {line.dateFermeture}
+              </Tag>
+            )}
             <Link
               variant="text"
               as={NextLink}
@@ -106,7 +131,6 @@ export const EtablissementLineContent = ({
         )}
       </Flex>
     </Td>
-
     <Td isNumeric>{line.effectif1 ?? "-"}</Td>
     <Td isNumeric>{line.effectif2 ?? "-"}</Td>
     <Td isNumeric>{line.effectif3 ?? "-"}</Td>
@@ -114,10 +138,14 @@ export const EtablissementLineContent = ({
     <Td textAlign={"center"}>
       <TableBadge
         sx={getTauxPressionStyle(
-          line.tauxPression !== undefined ? line.tauxPression : undefined
+          line.tauxPression !== undefined
+            ? Math.round(line.tauxPression * 100) / 100
+            : undefined
         )}
       >
-        {line.tauxPression !== undefined ? line.tauxPression : "-"}
+        {line.tauxPression !== undefined
+          ? Math.round(line.tauxPression * 100) / 100
+          : "-"}
       </TableBadge>
     </Td>
     <Td textAlign={"center"}>
@@ -162,8 +190,8 @@ export const EtablissementLineContent = ({
     <Td>{line.cfd ?? "-"}</Td>
     <Td>{line.cpc ?? "-"}</Td>
     <Td>{line.cpcSecteur ?? "-"}</Td>
-    <Td>{line.cpcSousSecteur ?? "-"}</Td>
     <Td>{line.libelleNsf ?? "-"}</Td>
+    <Td>{line.effectifEntree ?? "-"}</Td>
   </>
 );
 

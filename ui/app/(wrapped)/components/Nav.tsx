@@ -193,6 +193,12 @@ export const Nav = () => {
   } = useDisclosure();
 
   const {
+    isOpen: isMenuConsoleOpen,
+    onOpen: onMenuConsoleOpen,
+    onClose: onMenuConsoleClose,
+  } = useDisclosure();
+
+  const {
     isOpen: isMenuIntentionOpen,
     onOpen: onMenuIntentionOpen,
     onClose: onMenuIntentionClose,
@@ -225,14 +231,14 @@ export const Nav = () => {
           onMouseLeave={onMenuPanoramaClose}
         >
           <MenuItem p="0">
-            <NavMenuLink href="/panorama/region" segment="panorama-region">
+            <NavMenuLink href="/panorama/region" segment="panorama/region">
               Région
             </NavMenuLink>
           </MenuItem>
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/departement"
-              segment="panorama-departement"
+              segment="panorama/departement"
             >
               Département
             </NavMenuLink>
@@ -240,28 +246,62 @@ export const Nav = () => {
           <MenuItem p="0">
             <NavMenuLink
               href="/panorama/etablissement"
-              segment="panorama-etablissement"
+              segment="panorama/etablissement"
+            >
+              Établissement
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/panorama/lien-metier-formation"
+              segment="panorama/lien-metier-formation"
+            >
+              Lien métier formation
+            </NavMenuLink>
+          </MenuItem>
+        </MenuList>
+      </Menu>
+      <Menu gutter={0} matchWidth={true} isOpen={isMenuConsoleOpen}>
+        <NavMenuButton
+          segment="console"
+          isOpen={isMenuConsoleOpen}
+          onMouseEnter={onMenuConsoleOpen}
+          onMouseLeave={onMenuConsoleClose}
+        >
+          Console
+        </NavMenuButton>
+        <MenuList
+          p="0"
+          borderTop="unset"
+          onMouseEnter={onMenuConsoleOpen}
+          onMouseLeave={onMenuConsoleClose}
+        >
+          <MenuItem p="0">
+            <NavMenuLink
+              href="/console/formations"
+              segment="/console/formations"
+            >
+              Formation
+            </NavMenuLink>
+          </MenuItem>
+          <MenuItem p="0">
+            <NavMenuLink
+              href={
+                uaiFilter
+                  ? createParametrizedUrl("/console/etablissements", {
+                      filters: {
+                        uai: [uaiFilter],
+                      },
+                    })
+                  : "/console/etablissements"
+              }
+              segment="panorama/etablissement"
             >
               Établissement
             </NavMenuLink>
           </MenuItem>
         </MenuList>
       </Menu>
-      <NavLink
-        mr="4"
-        href={
-          uaiFilter
-            ? createParametrizedUrl("/console/etablissements", {
-                filters: {
-                  uai: [uaiFilter],
-                },
-              })
-            : "/console/formations"
-        }
-        segment="console"
-      >
-        Console
-      </NavLink>
       {hasIntentionsMenu && (
         <Menu gutter={0} matchWidth={true} isOpen={isMenuIntentionOpen}>
           <NavMenuButton
