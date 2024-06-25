@@ -37,7 +37,11 @@ export const FormationLineSchema = z.object({
   positionQuadrant: z.string().optional(),
   typeFamille: z.string().optional(),
   isHistoriqueCoExistant: z.coerce.boolean().optional(),
+  // CFD de l'éventuelle formation renovant la formation actuelle
   formationRenovee: z.string().optional(),
+  // Flag indiquant si la formation est renovée
+  isFormationRenovee: z.coerce.boolean().optional(),
+  dateFermeture: z.string().optional(),
 });
 
 export const getFormationSchema = {
