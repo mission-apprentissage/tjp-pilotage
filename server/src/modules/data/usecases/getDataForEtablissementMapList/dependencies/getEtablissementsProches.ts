@@ -36,6 +36,12 @@ export const getEtablissementsProches = async ({
       "indicateurSortie.formationEtablissementId",
       "formationEtablissement.id"
     )
+    .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .innerJoin(
+      "academie",
+      "academie.codeAcademie",
+      "etablissement.codeAcademie"
+    )
     .distinct()
     .select((sb) => [
       sql<string[]>`array_agg(distinct ${sb.ref(
@@ -49,12 +55,14 @@ export const getEtablissementsProches = async ({
       "etablissement.commune",
       "etablissement.longitude",
       "etablissement.latitude",
+      "etablissement.secteur",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
         "etablissement.libelleEtablissement"
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
         "libelleEtablissement"
       ),
-      "etablissement.secteur",
+      "region.libelleRegion",
+      "academie.libelleAcademie",
       sb.fn.max(selectTauxPoursuite("indicateurSortie")).as("tauxPoursuite"),
       sb.fn
         .max(selectTauxInsertion6mois("indicateurSortie"))
@@ -101,5 +109,7 @@ export const getEtablissementsProches = async ({
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
       "etablissement.secteur",
+      "region.libelleRegion",
+      "academie.libelleAcademie",
     ])
     .execute();

@@ -1,14 +1,12 @@
+import { useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 
 import { client } from "@/api.client";
 import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablissement/components/carto/context/etablissementMapContext";
 import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
+import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
-import {
-  downloadCsv,
-  downloadExcel,
-} from "../../../../../../../utils/downloadExport";
 import { formatCommuneLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 
 const EXPORT_LIMIT = 1_000_000;
@@ -18,6 +16,10 @@ export const ExportList = () => {
 
   const { uai } = useEtablissementContext();
   const { bbox, cfdFilter } = useEtablissementMapContext();
+  const offre = useSearchParams().get("offre");
+  const { analyseDetaillee } = useEtablissementContext();
+  const analyseDetailleeOffre =
+    analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
 
   const { data: etablissementsList, isLoading } = client
     .ref("[GET]/etablissement/:uai/map/list")
@@ -39,6 +41,8 @@ export const ExportList = () => {
 
   const etablissementsProches = etablissementsList?.etablissementsProches;
 
+  console.log(analyseDetailleeOffre);
+
   return (
     <ExportMenuButton
       onExportCsv={async () => {
@@ -52,8 +56,12 @@ export const ExportList = () => {
               commune: etablissement.commune,
               codeDepartement: etablissement.codeDepartement,
             }),
+            libelleFormation: `${analyseDetailleeOffre?.libelleFormation} (${analyseDetailleeOffre?.libelleDispositif})`,
+            voie: analyseDetailleeOffre?.voie,
           })),
           {
+            libelleFormation: "Formation",
+            voie: "Voie",
             uai: "UAI",
             libelleEtablissement: "Libellé établissement",
             commune: "Commune",
@@ -61,6 +69,8 @@ export const ExportList = () => {
             effectif: "Effectif",
             tauxInsertion: "Taux d'insertion à 6 mois",
             tauxPoursuite: "Taux de poursuite d'études",
+            libelleAcademie: "Académie",
+            libelleRegion: "Région",
           }
         );
       }}
@@ -75,8 +85,12 @@ export const ExportList = () => {
               commune: etablissement.commune,
               codeDepartement: etablissement.codeDepartement,
             }),
+            libelleFormation: `${analyseDetailleeOffre?.libelleFormation} (${analyseDetailleeOffre?.libelleDispositif})`,
+            voie: analyseDetailleeOffre?.voie,
           })),
           {
+            libelleFormation: "Formation",
+            voie: "Voie",
             uai: "UAI",
             libelleEtablissement: "Libellé établissement",
             commune: "Commune",
@@ -84,6 +98,8 @@ export const ExportList = () => {
             effectif: "Effectif",
             tauxInsertion: "Taux d'insertion à 6 mois",
             tauxPoursuite: "Taux de poursuite d'études",
+            libelleAcademie: "Académie",
+            libelleRegion: "Région",
           }
         );
       }}
