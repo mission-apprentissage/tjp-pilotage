@@ -35,6 +35,12 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       "indicateurSortie.formationEtablissementId",
       "formationEtablissement.id"
     )
+    .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .innerJoin(
+      "academie",
+      "academie.codeAcademie",
+      "etablissement.codeAcademie"
+    )
     .distinct()
     .select((sb) => [
       sql<string[]>`array_agg(distinct ${sb.ref(
@@ -54,6 +60,8 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
         "libelleEtablissement"
       ),
+      "region.libelleRegion",
+      "academie.libelleAcademie",
       selectTauxPoursuite("indicateurSortie").as("tauxPoursuite"),
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
@@ -73,6 +81,8 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       "etablissement.latitude",
       "etablissement.secteur",
       "etablissement.libelleEtablissement",
+      "region.libelleRegion",
+      "academie.libelleAcademie",
       "indicateurSortie.effectifSortie",
       "indicateurSortie.nbSortants",
       "indicateurSortie.nbPoursuiteEtudes",

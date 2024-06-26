@@ -8,6 +8,8 @@ export const EtablissementSchema = z.object({
   commune: z.string(),
   codeDepartement: z.string(),
   libelleEtablissement: z.string(),
+  libelleAcademie: z.string(),
+  libelleRegion: z.string(),
   libellesDispositifs: z.array(z.string()),
   voies: z.array(z.string()),
   effectif: z.number().optional(),
