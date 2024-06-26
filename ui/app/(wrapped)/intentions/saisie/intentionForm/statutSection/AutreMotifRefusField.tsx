@@ -6,6 +6,7 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../../intentionForm/defaultFormValues";
@@ -16,11 +17,17 @@ export const AutreMotifRefusField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
-    const [motif] = watch(["motifRefus"]);
+    const motifRefus = watch("motifRefus");
+    const visible = motifRefus?.includes("autre");
 
-    const visible = motif?.includes("autre");
+    useEffect(() => {
+      if (!visible) {
+        setValue("autreMotifRefus", undefined);
+      }
+    }, [visible, setValue]);
 
     return (
       <Collapse in={visible} unmountOnExit>
@@ -33,7 +40,6 @@ export const AutreMotifRefusField = chakra(
           {visible && (
             <Textarea
               {...register("autreMotifRefus", {
-                shouldUnregister: true,
                 disabled,
                 required: "Veuillez préciser votre motif",
               })}

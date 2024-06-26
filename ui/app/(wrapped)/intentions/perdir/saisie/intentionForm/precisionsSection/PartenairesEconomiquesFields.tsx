@@ -8,7 +8,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
@@ -21,6 +21,7 @@ export const PartenairesEconomiquesFields = chakra(
       formState: { errors },
       watch,
       register,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const [
@@ -38,11 +39,23 @@ export const PartenairesEconomiquesFields = chakra(
       !isTypeFermeture(typeDemande) &&
       !isTypeDiminution(typeDemande);
 
-    if (!visible) return null;
-
     const [hasDoublePartenaire, setHasDoublePartenaire] = useState<boolean>(
       !!partenaireEconomique2
     );
+
+    useEffect(() => {
+      if (!visible) {
+        setValue("partenaireEconomique1", undefined);
+        setValue("partenaireEconomique2", undefined);
+      }
+    }, [visible, setValue]);
+
+    useEffect(() => {
+      if (!hasDoublePartenaire) {
+        setValue("partenaireEconomique2", undefined);
+      }
+    }, [hasDoublePartenaire, setValue]);
+
     if (!visible) return null;
 
     return (
@@ -62,7 +75,6 @@ export const PartenairesEconomiquesFields = chakra(
                 border={"1px solid"}
                 required
                 {...register("partenaireEconomique1", {
-                  shouldUnregister: true,
                   disabled: disabled,
                 })}
               />
@@ -75,7 +87,6 @@ export const PartenairesEconomiquesFields = chakra(
                   bgColor={"white"}
                   border={"1px solid"}
                   {...register("partenaireEconomique2", {
-                    shouldUnregister: true,
                     disabled: disabled,
                   })}
                 />
