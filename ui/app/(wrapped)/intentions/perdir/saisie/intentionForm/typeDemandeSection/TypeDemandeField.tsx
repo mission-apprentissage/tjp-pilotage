@@ -110,7 +110,6 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
-      watch,
       getValues,
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
@@ -118,9 +117,6 @@ export const TypeDemandeField = chakra(
     const libelleFCIL = getValues("libelleFCIL");
 
     const { campagne } = useContext(CampagneContext);
-    const watchE = watch();
-    console.log("libelleFCIL", watchE);
-    console.log("dispositif", getValues("codeDispositif"));
 
     return (
       <FormControl
