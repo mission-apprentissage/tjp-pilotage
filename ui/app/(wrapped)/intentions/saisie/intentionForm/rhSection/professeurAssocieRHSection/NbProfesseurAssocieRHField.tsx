@@ -9,6 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../../defaultFormValues";
@@ -19,9 +20,16 @@ export const NbProfesseurAssocieRHField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("professeurAssocieRH");
+
+    useEffect(() => {
+      if (!visible) {
+        setValue("nbProfesseurAssocieRH", undefined);
+      }
+    }, [visible, setValue]);
 
     if (!visible) return null;
 
@@ -33,7 +41,6 @@ export const NbProfesseurAssocieRHField = chakra(
         <FormLabel>Combien de professeurs associés ?</FormLabel>
         <Controller
           name="nbProfesseurAssocieRH"
-          shouldUnregister
           control={control}
           rules={{
             required: "Le champ est obligatoire",
