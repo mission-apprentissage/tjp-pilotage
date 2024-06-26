@@ -29,8 +29,10 @@ function getConfig(): PublicConfig {
   };
 }
 
-function getEnv(): ENV {
+export const getEnv = (): ENV => {
   return ENV.parse(process.env.NEXT_PUBLIC_ENV);
-}
+};
+
+export const isProduction = getEnv() === EnvEnum.production;
 
 export const publicConfig: PublicConfig = getConfig();
