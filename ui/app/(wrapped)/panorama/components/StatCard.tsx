@@ -1,4 +1,4 @@
-import { Box, Card, CardBody } from "@chakra-ui/react";
+import { Box, Card, CardBody, Tooltip } from "@chakra-ui/react";
 
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 
@@ -7,11 +7,13 @@ export const StatCard = ({
   value,
   isValeurAjoutee = false,
   color = "inherit",
+  tooltip,
 }: {
   label: string;
   value?: string | number;
   isValeurAjoutee?: boolean;
   color?: string;
+  tooltip?: string;
 }) => (
   <Card>
     <CardBody
@@ -32,9 +34,11 @@ export const StatCard = ({
           />
         )}
       </Box>
-      <Box fontWeight="bold" fontSize="2xl" textAlign="center">
-        {value ?? "-"}
-      </Box>
+      <Tooltip label={tooltip}>
+        <Box fontWeight="bold" fontSize="2xl" textAlign="center">
+          {value ?? "-"}
+        </Box>
+      </Tooltip>
     </CardBody>
   </Card>
 );

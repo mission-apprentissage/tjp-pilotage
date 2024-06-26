@@ -14,6 +14,7 @@ import {
 import { CURRENT_RENTREE } from "shared";
 
 import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
+import { displayPercentage } from "../../../../utils/displayPercent";
 import { FiltersPanoramaFormation, StatsFormations } from "../types";
 import { StatCard } from "./StatCard";
 
@@ -113,9 +114,10 @@ export const IndicateursSection = ({
               label="Taux poursuite étude dans votre région"
               value={
                 stats?.tauxPoursuite
-                  ? `${Math.round(stats.tauxPoursuite * 100)}%`
+                  ? displayPercentage(stats.tauxPoursuite, 0)
                   : undefined
               }
+              tooltip={displayPercentage(stats?.tauxPoursuite, 3)}
             />
             <StatCard
               label={`Taux de remplissage dans votre ${
@@ -123,17 +125,19 @@ export const IndicateursSection = ({
               }`}
               value={
                 stats?.tauxRemplissage
-                  ? `${Math.round(stats.tauxRemplissage * 100)}%`
+                  ? displayPercentage(stats.tauxInsertion, 0)
                   : undefined
               }
+              tooltip={displayPercentage(stats?.tauxInsertion, 3)}
             />
             <StatCard
               label="Taux d'emploi à 6 mois dans votre région"
               value={
                 stats?.tauxInsertion
-                  ? `${Math.round(stats.tauxInsertion * 100)}%`
+                  ? displayPercentage(stats.tauxInsertion, 0)
                   : undefined
               }
+              tooltip={displayPercentage(stats?.tauxInsertion, 3)}
             />
             <StatCard
               label={`Nombre de formations dans votre ${
@@ -142,7 +146,7 @@ export const IndicateursSection = ({
               value={stats?.nbFormations ?? "-"}
             />
             <StatCard
-              label={`Effectif en entrée dans votre ${
+              label={`Nombre d’élèves dans votre ${
                 typeTerritoire === "region" ? "région" : "département"
               }`}
               value={stats?.effectif ? stats.effectif : "-"}

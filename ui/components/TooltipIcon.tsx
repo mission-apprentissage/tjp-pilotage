@@ -9,7 +9,7 @@ export const TooltipIcon = chakra(
     onClick,
     placement,
   }: {
-    label: ReactNode;
+    label?: ReactNode;
     className?: string;
     onClick?: MouseEventHandler<SVGElement> | undefined;
     placement?: Placement;

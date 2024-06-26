@@ -3,6 +3,11 @@ import { Box, HStack, Text } from "@chakra-ui/react";
 import { GraphWrapper } from "@/components/GraphWrapper";
 
 import { InfoBlock } from "../../../../components/InfoBlock";
+import { TableBadge } from "../../../../components/TableBadge";
+import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { displayNumberRounded } from "../../../../utils/displayNumberRounded";
+import { getTauxPressionStyle } from "../../../../utils/getBgScale";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { PanoramaFormation } from "../types";
 
 export const FormationTooltipContent = ({
@@ -10,8 +15,10 @@ export const FormationTooltipContent = ({
 }: {
   formation: PanoramaFormation;
 }) => {
+  const { openGlossaire } = useGlossaireContext();
+
   return (
-    <Box bg="white" fontSize="xs">
+    <Box bg="white" fontSize="xs" w={"100%"}>
       <InfoBlock
         mb="2"
         label="Formation concernée :"
@@ -23,17 +30,34 @@ export const FormationTooltipContent = ({
         value={formation?.libelleDispositif}
       />
       <HStack mb="2" spacing={4}>
-        <InfoBlock flex={1} label="Effectif :" value={formation?.effectif} />
         <InfoBlock
-          flex={2}
+          flex={1}
+          label={
+            <span>
+              Effectif en entrée :
+              <TooltipIcon ml="1" onClick={() => openGlossaire("effectifs")} />
+            </span>
+          }
+          value={formation?.effectif}
+        />
+        <InfoBlock
+          flex={1}
           label="Nb Etablissements :"
           value={formation?.nbEtablissement}
         />
       </HStack>
+
       <InfoBlock
         mb="2"
         label="Taux de pression :"
-        value={formation.tauxPression ? formation?.tauxPression : "-"}
+        textBg="white"
+        value={
+          <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
+            {formation.tauxPression !== undefined
+              ? displayNumberRounded(formation?.tauxPression)
+              : "-"}
+          </TableBadge>
+        }
       />
       <Text mb="1" fontWeight="medium">
         Taux d'emploi régional :

@@ -13,6 +13,7 @@ import {
 
 import { TauxPressionScale } from "../app/(wrapped)/components/TauxPressionScale";
 import { useGlossaireContext } from "../app/(wrapped)/glossaire/glossaireContext";
+import { displayNumberRounded } from "../utils/displayNumberRounded";
 import { getTauxPressionStyle } from "../utils/getBgScale";
 import { GraphWrapper } from "./GraphWrapper";
 import { OrderIcon } from "./OrderIcon";
@@ -197,12 +198,12 @@ export const TableQuadrant = ({
                     <TableBadge
                       sx={getTauxPressionStyle(
                         formation.tauxPression !== undefined
-                          ? formation.tauxPression
+                          ? formation?.tauxPression
                           : undefined
                       )}
                     >
                       {formation.tauxPression !== undefined
-                        ? formation.tauxPression
+                        ? displayNumberRounded(formation?.tauxPression)
                         : "-"}
                     </TableBadge>
                   </Td>

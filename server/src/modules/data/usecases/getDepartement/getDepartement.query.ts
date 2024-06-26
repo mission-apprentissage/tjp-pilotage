@@ -13,7 +13,6 @@ import {
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
-import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 import { selectTauxPressionAgg } from "../../utils/tauxPression";
@@ -52,7 +51,6 @@ export const getDepartementStats = async ({
       "indicateurRegionSortie.codeRegion"
     )
     .where(notAnneeCommuneIndicateurRegionSortie)
-    .where(notHistoriqueIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
