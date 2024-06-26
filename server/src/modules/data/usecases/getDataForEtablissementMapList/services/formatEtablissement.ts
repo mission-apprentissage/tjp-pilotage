@@ -23,5 +23,6 @@ export function formatEtablissement(
     secteur: etablissement.secteur || undefined,
     libelleAcademie: etablissement.libelleAcademie,
     libelleRegion: etablissement.libelleRegion,
+    libelleFormation: etablissement.libelleFormation || "",
   };
 }
