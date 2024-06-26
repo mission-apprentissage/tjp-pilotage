@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const EtablissementSchema = z.object({
+  libelleFormation: z.string(),
   uai: z.string(),
   latitude: z.number(),
   longitude: z.number(),

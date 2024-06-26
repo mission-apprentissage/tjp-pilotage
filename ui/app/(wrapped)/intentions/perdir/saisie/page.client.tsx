@@ -45,7 +45,7 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 

@@ -1,4 +1,3 @@
-import { useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 
 import { client } from "@/api.client";
@@ -6,20 +5,28 @@ import { useEtablissementMapContext } from "@/app/(wrapped)/panorama/etablisseme
 import { useEtablissementContext } from "@/app/(wrapped)/panorama/etablissement/context/etablissementContext";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatArray } from "@/utils/formatUtils";
 
 import { formatCommuneLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 
 const EXPORT_LIMIT = 1_000_000;
+
+const formatLibelleFormation = (etablissement: {
+  libellesDispositifs: string[];
+  libelleFormation: string;
+}) => {
+  const dispositifs =
+    formatArray(etablissement.libellesDispositifs) !== ""
+      ? `(${formatArray(etablissement.libellesDispositifs)})`
+      : "";
+  return `${etablissement.libelleFormation} ${dispositifs}`;
+};
 
 export const ExportList = () => {
   const trackEvent = usePlausible();
 
   const { uai } = useEtablissementContext();
   const { bbox, cfdFilter } = useEtablissementMapContext();
-  const offre = useSearchParams().get("offre");
-  const { analyseDetaillee } = useEtablissementContext();
-  const analyseDetailleeOffre =
-    analyseDetaillee && offre ? analyseDetaillee?.formations[offre] : undefined;
 
   const { data: etablissementsList, isLoading } = client
     .ref("[GET]/etablissement/:uai/map/list")
@@ -40,9 +47,6 @@ export const ExportList = () => {
     });
 
   const etablissementsProches = etablissementsList?.etablissementsProches;
-
-  console.log(analyseDetailleeOffre);
-
   return (
     <ExportMenuButton
       onExportCsv={async () => {
@@ -56,8 +60,8 @@ export const ExportList = () => {
               commune: etablissement.commune,
               codeDepartement: etablissement.codeDepartement,
             }),
-            libelleFormation: `${analyseDetailleeOffre?.libelleFormation} (${analyseDetailleeOffre?.libelleDispositif})`,
-            voie: analyseDetailleeOffre?.voie,
+            libelleFormation: formatLibelleFormation(etablissement),
+            voie: formatArray(etablissement.voies),
           })),
           {
             libelleFormation: "Formation",
@@ -85,8 +89,8 @@ export const ExportList = () => {
               commune: etablissement.commune,
               codeDepartement: etablissement.codeDepartement,
             }),
-            libelleFormation: `${analyseDetailleeOffre?.libelleFormation} (${analyseDetailleeOffre?.libelleDispositif})`,
-            voie: analyseDetailleeOffre?.voie,
+            libelleFormation: formatLibelleFormation(etablissement),
+            voie: formatArray(etablissement.voies),
           })),
           {
             libelleFormation: "Formation",

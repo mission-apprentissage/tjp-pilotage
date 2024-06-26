@@ -22,6 +22,11 @@ export const getEtablissementsProches = async ({
       "etablissement.UAI"
     )
     .leftJoin(
+      "dataFormation",
+      "dataFormation.cfd",
+      "formationEtablissement.cfd"
+    )
+    .leftJoin(
       "indicateurEntree",
       "indicateurEntree.formationEtablissementId",
       "formationEtablissement.id"
@@ -44,6 +49,7 @@ export const getEtablissementsProches = async ({
     )
     .distinct()
     .select((sb) => [
+      "dataFormation.libelleFormation",
       sql<string[]>`array_agg(distinct ${sb.ref(
         "formationEtablissement.voie"
       )})`.as("voies"),
@@ -102,6 +108,7 @@ export const getEtablissementsProches = async ({
     })
     .limit(limit)
     .groupBy([
+      "dataFormation.libelleFormation",
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",

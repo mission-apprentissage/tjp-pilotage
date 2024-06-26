@@ -8,12 +8,11 @@ import {
   Tooltip,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import _ from "lodash";
 import { Role } from "shared";
 
 import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
-import { formatDate } from "@/utils/formatDate";
+import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
 import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../utils/formatLibelle";
 import {
@@ -27,22 +26,6 @@ const formatDifferenceCapacite = (difference?: number) => {
   if (!difference) return "+0";
   if (difference > 0) return `+${difference}`;
   return difference;
-};
-
-const formatBoolean = (value?: boolean) => {
-  if (value) return "Oui";
-  return "Non";
-};
-
-const formatArray = (values?: Array<string | number | undefined>): string => {
-  if (!values) return "Aucun(e)";
-  if (values.length === 1 && values[0]) return values[0].toString();
-  return _.capitalize(
-    values
-      .filter((value) => value)
-      .join(", ")
-      .toLowerCase()
-  );
 };
 
 const formatMotifArray = (values?: Array<string | undefined>): string => {
@@ -318,10 +301,13 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray([
-                    intention.discipline1RecrutementRH,
-                    intention.discipline2RecrutementRH,
-                  ])}
+                  {formatArray(
+                    [
+                      intention.discipline1RecrutementRH,
+                      intention.discipline2RecrutementRH,
+                    ],
+                    true
+                  )}
                 </Text>
               </Flex>
             </>
@@ -339,10 +325,13 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray([
-                    intention.discipline1ReconversionRH,
-                    intention.discipline2ReconversionRH,
-                  ])}
+                  {formatArray(
+                    [
+                      intention.discipline1ReconversionRH,
+                      intention.discipline2ReconversionRH,
+                    ],
+                    true
+                  )}
                 </Text>
               </Flex>
             </>
@@ -360,10 +349,13 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray([
-                    intention.discipline1ProfesseurAssocieRH,
-                    intention.discipline2ProfesseurAssocieRH,
-                  ])}
+                  {formatArray(
+                    [
+                      intention.discipline1ProfesseurAssocieRH,
+                      intention.discipline2ProfesseurAssocieRH,
+                    ],
+                    true
+                  )}
                 </Text>
               </Flex>
             </>
@@ -381,10 +373,13 @@ export const SyntheseSection = ({
               <Flex direction={"row"} gap={4} justify={"space-between"}>
                 <Text>Discipline(s)</Text>
                 <Text>
-                  {formatArray([
-                    intention.discipline1FormationRH,
-                    intention.discipline2FormationRH,
-                  ])}
+                  {formatArray(
+                    [
+                      intention.discipline1FormationRH,
+                      intention.discipline2FormationRH,
+                    ],
+                    true
+                  )}
                 </Text>
               </Flex>
             </>
