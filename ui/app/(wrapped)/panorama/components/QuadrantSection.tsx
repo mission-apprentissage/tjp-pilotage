@@ -40,6 +40,7 @@ import { Quadrant } from "../../../../components/Quadrant";
 import { TableQuadrant } from "../../../../components/TableQuadrant";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { downloadCsv } from "../../../../utils/downloadExport";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { Order, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
@@ -158,6 +159,7 @@ export const QuadrantSection = ({
 }) => {
   const segment = useSelectedLayoutSegment();
   const trackEvent = usePlausible();
+  const { openGlossaire } = useGlossaireContext();
 
   const [effectifMin, setEffectifMin] = useState(0);
   const tendancesDefaultValue = {
@@ -246,7 +248,10 @@ export const QuadrantSection = ({
             Analyse des formations
           </Heading>
           <FormControl>
-            <FormLabel>Effectif minimum (en entrée)</FormLabel>
+            <FormLabel>
+              Effectif minimum (en entrée){" "}
+              <TooltipIcon onClick={() => openGlossaire("effectifs")} />
+            </FormLabel>
             <Slider
               mt="6"
               onChange={setEffectifMin}
@@ -369,7 +374,7 @@ export const QuadrantSection = ({
               <ExportMenuButton
                 sx={{
                   display:
-                    "none" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
+                    "inherit" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
                 }}
                 onExportCsv={async () => {
                   if (!filteredFormations) return;
