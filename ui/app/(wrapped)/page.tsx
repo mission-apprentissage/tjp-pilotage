@@ -26,10 +26,10 @@ import { Hero } from "./components/Hero";
 import { LandingAccordionItem } from "./components/LandingAccordionItem";
 
 export default function Home() {
-  const nombreFormations = 509;
+  const nombreFormations = 501;
   const nombreEtablissements = 2952;
   const nombreEleves = 808209;
-  const tauxDInsertion = 43;
+  const tauxDInsertion = 41;
   const nombrePlacesDeFormation = 2595;
 
   const { auth } = useAuth();

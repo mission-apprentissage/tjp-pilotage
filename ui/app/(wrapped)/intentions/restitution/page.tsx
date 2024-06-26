@@ -88,7 +88,7 @@ const ColonneFiltersSection = chakra(
               Modifier l'affichage des colonnes
             </Button>
           }
-        ></GroupedMultiselect>
+        />
       </Flex>
     );
   }

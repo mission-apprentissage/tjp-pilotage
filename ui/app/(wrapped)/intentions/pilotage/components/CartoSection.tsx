@@ -139,7 +139,7 @@ export const CartoSection = ({
             <Text color={"bluefrance.113"} fontWeight={700}>
               VISUALISATION TERRITORIALE
             </Text>
-            <Flex flexDirection={"column"} position={"relative"} zIndex={100}>
+            <Flex flexDirection={"column"} position={"relative"} zIndex={1}>
               <Select
                 width="64"
                 size="sm"
