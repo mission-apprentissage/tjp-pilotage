@@ -10,7 +10,6 @@ import {
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
-import { notHistoriqueIndicateurRegionSortie } from "../../utils/notHistorique";
 import {
   selectDenominateurInsertion6moisAgg,
   selectNumerateurInsertion6MoisAgg,
@@ -55,7 +54,6 @@ export const getRegionStats = async ({
     .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
     .where(isScolaireIndicateurRegionSortie)
     .where(notAnneeCommuneIndicateurRegionSortie)
-    .where(notHistoriqueIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where(
