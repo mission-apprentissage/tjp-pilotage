@@ -11,7 +11,7 @@ import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemande
 
 export const getIntentionWithMetadata = async (id: string) => {
   const demande = await kdb
-    .selectFrom("intention")
+    .selectFrom("demandeIntentionView as intention")
     .selectAll("intention")
     .select((eb) => [
       jsonBuildObject({
