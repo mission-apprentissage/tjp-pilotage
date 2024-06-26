@@ -295,7 +295,7 @@ export const Nav = () => {
                     })
                   : "/console/etablissements"
               }
-              segment="panorama/etablissement"
+              segment="consoles/etablissements"
             >
               Établissement
             </NavMenuLink>
