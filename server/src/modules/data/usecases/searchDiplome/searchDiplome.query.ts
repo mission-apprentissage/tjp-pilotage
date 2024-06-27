@@ -90,22 +90,48 @@ export const findManyInDataFormationQuery = async ({
       return q;
     })
     .select((eb) =>
-      jsonArrayFrom(
-        eb
-          .selectFrom("dispositif")
-          .select(["libelleDispositif", "codeDispositif"])
-          .leftJoin("rawData", (join) =>
-            join
-              .onRef(
-                sql`"data"->>'DISPOSITIF_FORMATION'`,
+      eb
+        .case()
+        .when("dataFormation.codeNiveauDiplome", "in", [
+          "450", // BP]
+        ])
+        .then(
+          jsonArrayFrom(
+            eb
+              .selectFrom("dispositif")
+              .select(["libelleDispositif", "codeDispositif"])
+              .whereRef(
+                "dispositif.codeNiveauDiplome",
                 "=",
-                "dispositif.codeDispositif"
+                "dataFormation.codeNiveauDiplome"
               )
-              .on("rawData.type", "=", "nMef")
+              .distinctOn("codeDispositif")
           )
-          .whereRef(sql`"data"->>'FORMATION_DIPLOME'`, "=", "dataFormation.cfd")
-          .distinctOn("codeDispositif")
-      ).as("dispositifs")
+        )
+        .else(
+          jsonArrayFrom(
+            eb
+              .selectFrom("dispositif")
+              .select(["libelleDispositif", "codeDispositif"])
+              .leftJoin("rawData", (join) =>
+                join
+                  .onRef(
+                    sql`"data"->>'DISPOSITIF_FORMATION'`,
+                    "=",
+                    "dispositif.codeDispositif"
+                  )
+                  .on("rawData.type", "=", "nMef")
+              )
+              .whereRef(
+                sql`"data"->>'FORMATION_DIPLOME'`,
+                "=",
+                "dataFormation.cfd"
+              )
+              .distinctOn("codeDispositif")
+          )
+        )
+        .end()
+        .as("dispositifs")
     )
     .select((eb) => [
       "dataFormation.cfd as value",
