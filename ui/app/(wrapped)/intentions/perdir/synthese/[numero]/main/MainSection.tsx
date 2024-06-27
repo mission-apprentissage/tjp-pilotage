@@ -17,11 +17,13 @@ export const MainSection = ({
   displayType,
   displaySynthese,
   displayCommentairesEtAvis,
+  isCampagneEnCours,
 }: {
   intention: (typeof client.infer)["[GET]/intention/:numero"];
   displayType: DisplayTypeEnum;
   displaySynthese: () => void;
   displayCommentairesEtAvis: () => void;
+  isCampagneEnCours?: boolean;
 }) => {
   const toast = useToast();
   const queryClient = useQueryClient();
@@ -63,60 +65,62 @@ export const MainSection = ({
 
   return (
     <Flex bg="white" borderRadius={6} p={8} direction="column">
-      <Flex direction={"row"} justify={"space-between"}>
-        <TabsSection
-          displayType={displayType}
-          displaySynthese={displaySynthese}
-          displayCommentairesEtAvis={displayCommentairesEtAvis}
-        />
-        <Flex direction={"row"} gap={2}>
-          {canEditIntention({ intention, hasEditIntentionPermission }) && (
-            <Tooltip label="Modifier la demande">
+      {isCampagneEnCours && (
+        <Flex direction={"row"} justify={"space-between"}>
+          <TabsSection
+            displayType={displayType}
+            displaySynthese={displaySynthese}
+            displayCommentairesEtAvis={displayCommentairesEtAvis}
+          />
+          <Flex direction={"row"} gap={2}>
+            {canEditIntention({ intention, hasEditIntentionPermission }) && (
+              <Tooltip label="Modifier la demande">
+                <IconButton
+                  as={NextLink}
+                  href={`/intentions/perdir/saisie/${intention?.numero ?? ""}`}
+                  aria-label="Modifier la demande"
+                  color={"bluefrance.113"}
+                  bgColor={"transparent"}
+                  icon={<Icon width="24px" icon="ri:pencil-line" />}
+                />
+              </Tooltip>
+            )}
+            <Tooltip label="Dupliquer la demande">
               <IconButton
-                as={NextLink}
-                href={`/intentions/perdir/saisie/${intention?.numero ?? ""}`}
-                aria-label="Modifier la demande"
+                isDisabled
+                aria-label="Dupliquer la demande"
                 color={"bluefrance.113"}
                 bgColor={"transparent"}
-                icon={<Icon width="24px" icon="ri:pencil-line" />}
+                icon={<Icon width="24px" icon="ri:device-line" />}
               />
             </Tooltip>
-          )}
-          <Tooltip label="Dupliquer la demande">
-            <IconButton
-              isDisabled
-              aria-label="Dupliquer la demande"
-              color={"bluefrance.113"}
-              bgColor={"transparent"}
-              icon={<Icon width="24px" icon="ri:device-line" />}
-            />
-          </Tooltip>
-          <Tooltip label="Suivre la demande">
-            <IconButton
-              aria-label="Suivre la demande"
-              color={"bluefrance.113"}
-              bgColor={"transparent"}
-              icon={
-                intention.suiviId ? (
-                  <Icon width="24px" icon="ri:bookmark-fill" />
-                ) : (
-                  <Icon width="24px" icon="ri:bookmark-line" />
-                )
-              }
-              onClick={() => {
-                if (!intention.suiviId)
-                  submitSuivi({
-                    body: { intentionNumero: intention.numero },
-                  });
-                else
-                  deleteSuivi({
-                    params: { id: intention.suiviId },
-                  });
-              }}
-            />
-          </Tooltip>
+            <Tooltip label="Suivre la demande">
+              <IconButton
+                aria-label="Suivre la demande"
+                color={"bluefrance.113"}
+                bgColor={"transparent"}
+                icon={
+                  intention.suiviId ? (
+                    <Icon width="24px" icon="ri:bookmark-fill" />
+                  ) : (
+                    <Icon width="24px" icon="ri:bookmark-line" />
+                  )
+                }
+                onClick={() => {
+                  if (!intention.suiviId)
+                    submitSuivi({
+                      body: { intentionNumero: intention.numero },
+                    });
+                  else
+                    deleteSuivi({
+                      params: { id: intention.suiviId },
+                    });
+                }}
+              />
+            </Tooltip>
+          </Flex>
         </Flex>
-      </Flex>
+      )}
       <Flex mt={8}>
         {displayType === DisplayTypeEnum.synthese ? (
           <SyntheseSection intention={intention} />
