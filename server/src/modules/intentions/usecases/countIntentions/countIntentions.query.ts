@@ -21,7 +21,7 @@ export const countIntentionsQuery = async ({
   anneeCampagne,
 }: Filters) => {
   const countIntentions = kdb
-    .selectFrom("latestIntentionView as intention")
+    .selectFrom("latestDemandeIntentionView as intention")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (anneeCampagne) {
