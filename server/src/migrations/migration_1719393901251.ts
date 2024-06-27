@@ -4,6 +4,11 @@ import { kdb } from "../db/db";
 
 export const up = async (db: Kysely<unknown>) => {
   await db.schema
+    .dropView("demandeIntentionNonMaterializedView")
+    .ifExists()
+    .execute();
+
+  await db.schema
     .createView("demandeIntentionNonMaterializedView")
     .as(
       kdb
@@ -168,7 +173,6 @@ export const up = async (db: Kysely<unknown>) => {
             ])
         )
     )
-    .ifNotExists()
     .execute();
 };
 
