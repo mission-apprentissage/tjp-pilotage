@@ -218,6 +218,7 @@ export interface Demande {
 }
 
 export interface DemandeIntentionNonMaterializedView {
+  isIntention: boolean | null;
   numero: string | null;
   cfd: string | null;
   codeDispositif: string | null;
@@ -527,6 +528,7 @@ export interface Intention {
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
+  isIntention: boolean | null;
   numero: string | null;
   cfd: string | null;
   codeDispositif: string | null;

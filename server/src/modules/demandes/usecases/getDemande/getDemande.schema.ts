@@ -1,6 +1,12 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
+const UserSchema = z.object({
+  fullname: z.string().optional(),
+  id: z.string().optional(),
+  role: z.string().optional(),
+});
+
 const EtablissementMetadataSchema = z
   .object({
     libelleEtablissement: z.string().optional(),
@@ -93,6 +99,16 @@ const DemandeSchema = z.object({
   compensationCfd: z.string().optional(),
   compensationCodeDispositif: z.string().optional(),
   compensationRentreeScolaire: z.coerce.number().optional(),
+  updatedAt: z.string(),
+  createdBy: UserSchema,
+  updatedBy: UserSchema.optional(),
+  libelleEtablissement: z.string().optional(),
+  libelleDepartement: z.string(),
+  codeDepartement: z.string(),
+  libelleFormation: z.string(),
+  libelleDispositif: z.string(),
+  differenceCapaciteScolaire: z.coerce.number().optional(),
+  differenceCapaciteApprentissage: z.coerce.number().optional(),
 });
 
 export const getDemandeSchema = {

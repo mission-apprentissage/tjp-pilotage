@@ -94,6 +94,7 @@ const DemandeSchema = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   campagneId: z.string(),
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({
