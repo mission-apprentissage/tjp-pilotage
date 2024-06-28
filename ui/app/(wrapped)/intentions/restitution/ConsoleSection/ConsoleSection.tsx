@@ -81,11 +81,12 @@ export const ConsoleSection = ({
 }) => {
   const router = useRouter();
   const { auth } = useAuth();
-  const showFormulairePerdir =
+  const showFormulairePerdir = (isIntention?: boolean) =>
     hasRole({ user: auth?.user, role: "perdir" }) ||
-    isUserInRegionsExperimentation({
+    (isUserInRegionsExperimentation({
       user: auth?.user,
-    });
+    }) &&
+      isIntention);
 
   const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find(
@@ -156,8 +157,10 @@ export const ConsoleSection = ({
                         onClick={() =>
                           router.push(
                             `/intentions/${
-                              showFormulairePerdir ? "perdir/" : ""
-                            }saisie/${demande.numero}`
+                              showFormulairePerdir(demande.isIntention)
+                                ? "perdir/"
+                                : ""
+                            }synthese/${demande.numero}`
                           )
                         }
                         role="group"

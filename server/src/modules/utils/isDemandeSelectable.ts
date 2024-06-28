@@ -10,6 +10,7 @@ export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
     const { filter, draftFilter } = getDemandeSelectableFilters(user);
+    console.log("filter", filter);
     return eb.or([
       eb.and([
         eb("demande.statut", "=", DemandeStatutEnum["proposition"]),
