@@ -23,7 +23,7 @@ export const MainSection = ({
   displayType: DisplayTypeEnum;
   displaySynthese: () => void;
   displayCommentairesEtAvis: () => void;
-  isCampagneEnCours?: boolean;
+  isCampagneEnCours: boolean;
 }) => {
   const toast = useToast();
   const queryClient = useQueryClient();

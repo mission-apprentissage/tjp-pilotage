@@ -94,6 +94,7 @@ export default ({
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
               <GridItem colSpan={3}>
                 <MainSection
+                  isCampagneEnCours={isCampagneEnCours}
                   intention={intention}
                   displayType={
                     searchParams.displayType ?? DisplayTypeEnum.synthese
