@@ -15,6 +15,7 @@ import {
 import { useMemo } from "react";
 
 import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { PanoramaFormation, PanoramaFormations } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
@@ -81,6 +82,7 @@ const TopFlopChart = ({
 }: {
   topFlopFormations: { top: PanoramaFormations; flop: PanoramaFormations };
 }) => {
+  const { openGlossaire } = useGlossaireContext();
   return (
     <Box bg="grey.975" p="8" mt="4">
       <Flex justify={"flex-end"}>
@@ -90,6 +92,7 @@ const TopFlopChart = ({
         <TooltipIcon
           ml="2"
           label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation"
+          onClick={() => openGlossaire("taux-de-devenir-favorable")}
         />
       </Flex>
       <VStack alignItems="stretch" spacing="1">
