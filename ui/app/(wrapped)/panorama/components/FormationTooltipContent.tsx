@@ -72,9 +72,18 @@ export const FormationTooltipContent = ({
         Taux de poursuite d'études régional :
       </Text>
       <GraphWrapper
+        mb="2"
         w="100%"
         continuum={formation.continuum}
         value={formation.tauxPoursuite}
+      />
+      <Text mb="1" fontWeight="medium">
+        Taux de devenir favorable régional :
+      </Text>
+      <GraphWrapper
+        w="100%"
+        continuum={formation.continuum}
+        value={formation.tauxDevenirFavorable}
       />
     </Box>
   );
