@@ -77,7 +77,7 @@ export const LandingFooter = () => {
           <HStack
             justifyContent="start"
             width="100%"
-            spacing="8px 24px"
+            spacing="8px 16px"
             fontWeight={700}
             fontSize="14px"
             wrap="wrap"
@@ -160,6 +160,24 @@ export const LandingFooter = () => {
               }
             >
               Schéma pluriannuel d’accessibilité
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/confidentialite"
+              onClick={() => trackEvent("footer:confidentialite")}
+            >
+              Confidentialité
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/cgu"
+              onClick={() => trackEvent("footer:cgu")}
+            >
+              Condition générales d'utilisation
             </Link>
           </Box>
         </HStack>

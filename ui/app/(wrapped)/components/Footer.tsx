@@ -10,6 +10,11 @@ const LANDING_FOOTER_SEGMENTS = [
   "pilotage",
   "pilotage-reforme",
   "ressources",
+  "confidentialite",
+  "mentions-legales",
+  "statistiques",
+  "documentation",
+  "declaration-accessibilite",
 ];
 
 export const Footer = () => {
