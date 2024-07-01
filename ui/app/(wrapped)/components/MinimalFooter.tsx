@@ -90,6 +90,24 @@ export const MinimalFooter = () => {
               Schéma pluriannuel d’accessibilité
             </Link>
           </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/confidentialite"
+              onClick={() => trackEvent("footer:confidentialite")}
+            >
+              Confidentialité
+            </Link>
+          </Box>
+          <Box>
+            <Link
+              as={NextLink}
+              href="/cgu"
+              onClick={() => trackEvent("footer:cgu")}
+            >
+              Condition générales d'utilisation
+            </Link>
+          </Box>
         </HStack>
       </Stack>
     </VStack>
