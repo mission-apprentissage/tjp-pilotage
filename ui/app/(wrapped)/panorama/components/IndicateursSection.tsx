@@ -1,12 +1,8 @@
 import {
-  AspectRatio,
   Box,
-  Center,
   Flex,
-  FormControl,
-  FormLabel,
+  Heading,
   Img,
-  Select,
   SimpleGrid,
   Stack,
   Text,
@@ -15,145 +11,136 @@ import { CURRENT_RENTREE } from "shared";
 
 import { GlossaireShortcut } from "../../../../components/GlossaireShortcut";
 import { displayPercentage } from "../../../../utils/displayPercent";
-import { FiltersPanoramaFormation, StatsFormations } from "../types";
+import { roundNumber } from "../../../../utils/roundNumber";
+import { StatsFormations } from "../types";
 import { StatCard } from "./StatCard";
 
 export const IndicateursSection = ({
-  code,
-  onCodeChanged,
-  options,
+  libelleDiplome,
+  libelleTerritoire,
   stats,
-  handleFilters,
-  activeFilters,
-  diplomeOptions,
   typeTerritoire = "region",
 }: {
-  code?: string;
-  onCodeChanged: (code: string) => void;
-  handleFilters: (
-    type: keyof FiltersPanoramaFormation,
-    value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
-  ) => void;
-  activeFilters: Partial<FiltersPanoramaFormation>;
-  options?: { label: string; value: string }[];
+  libelleTerritoire?: string;
+  libelleDiplome?: string;
   stats?: StatsFormations;
-  diplomeOptions?: { value: string; label: string }[];
   typeTerritoire?: "region" | "departement";
 }) => {
-  const labelRegion = options?.find((item) => item.value === code)?.label;
-
   return (
-    <Box
-      px={[4, null, 8]}
+    <Stack
+      px={[4, null, "32px"]}
       mx={[-4, null, 0]}
       as="section"
-      pb={[8, null, 12]}
-      pt={[0, null, 6]}
+      py={[8, null, "24px"]}
+      my={[0, null, "16px"]}
       bg="grey.975"
       maxWidth={"container.xl"}
+      direction={["column", "row"]}
+      gap={[0, null, "16px"]}
     >
-      <Stack mt="8" direction={["column", "row"]} spacing="16" align="center">
-        <Flex direction="column" align="center" flex={1}>
-          <FormControl maxW="300px">
-            <FormLabel>
-              Choisissez{" "}
-              {typeTerritoire === "region" ? "une région" : "un département"}
-            </FormLabel>
-            <Select
-              onChange={(e) => onCodeChanged(e.target.value)}
-              variant="input"
-              value={code}
-              autoFocus={true}
-            >
-              {options?.map((option) => (
-                <option key={option.value} value={option.value}>
-                  {option.label}
-                </option>
-              ))}
-            </Select>
-            <FormLabel mt="4">Diplôme</FormLabel>
-            <Select
-              variant="input"
-              onChange={(e) => {
-                if (e.target.value) {
-                  handleFilters("codeNiveauDiplome", [e.target.value]);
-                }
-              }}
-              width="100%"
-              value={activeFilters.codeNiveauDiplome?.[0] ?? ""}
-              size="md"
-            >
-              {diplomeOptions?.map((diplome) => (
-                <option key={diplome.value} value={diplome.value}>
-                  {diplome.label}
-                </option>
-              ))}
-            </Select>
-          </FormControl>
-          <AspectRatio width="100%" maxW="300px" ratio={2.7} mt="4">
-            <Img src="/graphs_statistics.png" objectFit="contain" />
-          </AspectRatio>
-        </Flex>
-        <Box flex={1}>
-          <Flex direction={"row"}>
-            <Text>
-              Retrouvez ici les principaux indicateurs (chiffres{" "}
-              {CURRENT_RENTREE}) sur votre territoire.
-            </Text>
+      <Flex direction="column" align="space-between" flex={1}>
+        <Box>
+          <Heading as={"h1"} fontSize={"28px"}>
+            {libelleTerritoire}
+          </Heading>
+          <Heading as={"h2"} fontSize={"28px"}>
+            {libelleDiplome}
+          </Heading>
+        </Box>
+        <Flex direction={"row"} mt={"8px"}>
+          <Text>
+            Retrouvez ici les principaux indicateurs (chiffres {CURRENT_RENTREE}
+            ) sur votre territoire.{" "}
             <GlossaireShortcut
               display={"inline"}
               marginInline={1}
               iconSize={"16px"}
             />
-          </Flex>
-          <SimpleGrid spacing={3} columns={[2]} mt="4">
-            <Center fontSize="2xl" fontWeight="bold">
-              {labelRegion ?? "-"}
-            </Center>
-            <StatCard
-              label="Taux poursuite étude dans votre région"
-              value={
-                stats?.tauxPoursuite
-                  ? displayPercentage(stats.tauxPoursuite, 0)
-                  : undefined
-              }
-              tooltip={displayPercentage(stats?.tauxPoursuite, 3)}
-            />
-            <StatCard
-              label={`Taux de remplissage dans votre ${
-                typeTerritoire === "region" ? "région" : "département"
-              }`}
-              value={
-                stats?.tauxRemplissage
-                  ? displayPercentage(stats.tauxInsertion, 0)
-                  : undefined
-              }
-              tooltip={displayPercentage(stats?.tauxInsertion, 3)}
-            />
-            <StatCard
-              label="Taux d'emploi à 6 mois dans votre région"
-              value={
-                stats?.tauxInsertion
-                  ? displayPercentage(stats.tauxInsertion, 0)
-                  : undefined
-              }
-              tooltip={displayPercentage(stats?.tauxInsertion, 3)}
-            />
-            <StatCard
-              label={`Nombre de formations dans votre ${
-                typeTerritoire === "region" ? "région" : "département"
-              }`}
-              value={stats?.nbFormations ?? "-"}
-            />
-            <StatCard
-              label={`Nombre d’élèves dans votre ${
-                typeTerritoire === "region" ? "région" : "département"
-              }`}
-              value={stats?.effectif ? stats.effectif : "-"}
-            />
-          </SimpleGrid>
-        </Box>
-      </Stack>
-    </Box>
+          </Text>
+        </Flex>
+        <Img
+          alignSelf={"end"}
+          src="/design_search.svg"
+          objectFit="cover"
+          width={"auto"}
+          height={"100%"}
+          mt={"1rem"}
+        />
+      </Flex>
+      <SimpleGrid spacing={3} columns={[1, 3, 3]} flex={2}>
+        <StatCard
+          label={`Nombre de formations dans votre ${
+            typeTerritoire === "region" ? "région" : "département"
+          }`}
+          value={stats?.nbFormations ?? "-"}
+        />
+        <StatCard
+          label={`Nombre d’élèves dans votre ${
+            typeTerritoire === "region" ? "région" : "département"
+          }`}
+          value={stats?.effectif ? stats.effectif : "-"}
+        />
+        <StatCard
+          label={`Taux de remplissage dans votre ${
+            typeTerritoire === "region" ? "région" : "département"
+          }`}
+          value={
+            stats?.tauxRemplissage
+              ? roundNumber(stats.tauxRemplissage * 100, 0)
+              : undefined
+          }
+          tooltip={
+            stats?.tauxRemplissage
+              ? displayPercentage(stats?.tauxRemplissage, 3)
+              : "-"
+          }
+          type={"percentage"}
+        />
+        <StatCard
+          label={`Taux de devenir favorable dans votre ${
+            typeTerritoire === "region" ? "région" : "département"
+          }`}
+          value={
+            stats?.tauxDevenirFavorable
+              ? roundNumber(stats.tauxDevenirFavorable * 100, 0)
+              : undefined
+          }
+          tooltip={
+            stats?.tauxDevenirFavorable
+              ? displayPercentage(stats?.tauxDevenirFavorable, 3)
+              : "-"
+          }
+          type={"percentage"}
+        />
+        <StatCard
+          label="Taux de poursuite d'études dans votre région"
+          value={
+            stats?.tauxPoursuite
+              ? roundNumber(stats.tauxPoursuite * 100, 0)
+              : undefined
+          }
+          tooltip={
+            stats?.tauxPoursuite
+              ? displayPercentage(stats?.tauxPoursuite, 3)
+              : "-"
+          }
+          type={"percentage"}
+        />
+        <StatCard
+          label="Taux d'emploi à 6 mois dans votre région"
+          value={
+            stats?.tauxInsertion
+              ? roundNumber(stats.tauxInsertion * 100, 0)
+              : undefined
+          }
+          tooltip={
+            stats?.tauxInsertion
+              ? displayPercentage(stats?.tauxInsertion, 3)
+              : "-"
+          }
+          type={"percentage"}
+        />
+      </SimpleGrid>
+    </Stack>
   );
 };

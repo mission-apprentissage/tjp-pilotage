@@ -1,44 +1,42 @@
-import { Box, Card, CardBody, Tooltip } from "@chakra-ui/react";
+import { Card, CardBody, chakra, Flex, Text, Tooltip } from "@chakra-ui/react";
 
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-
-export const StatCard = ({
-  label,
-  value,
-  isValeurAjoutee = false,
-  color = "inherit",
-  tooltip,
-}: {
-  label: string;
-  value?: string | number;
-  isValeurAjoutee?: boolean;
-  color?: string;
-  tooltip?: string;
-}) => (
-  <Card>
-    <CardBody
-      color={color}
-      py="2"
-      px="3"
-      alignItems={"center"}
-      display={"flex"}
-      gap={[2, null, 4]}
-      flexDir={["column", null, "row"]}
-    >
-      <Box flex={1}>
-        {label}
-        {isValeurAjoutee && (
-          <TooltipIcon
-            ml="3"
-            label="Capacité de l’établissement à insérer, en prenant en compte le profil social des élèves et le taux de chômage de la zone d’emploi, comparativement au taux de référence d’établissements similaires."
-          />
-        )}
-      </Box>
-      <Tooltip label={tooltip}>
-        <Box fontWeight="bold" fontSize="2xl" textAlign="center">
-          {value ?? "-"}
-        </Box>
-      </Tooltip>
-    </CardBody>
-  </Card>
+export const StatCard = chakra(
+  ({
+    label,
+    value,
+    color = "inherit",
+    tooltip,
+    type = "absolute",
+  }: {
+    label: string;
+    value?: string | number;
+    color?: string;
+    tooltip?: string;
+    type?: "absolute" | "percentage";
+  }) => (
+    <Card>
+      <CardBody
+        color={color}
+        p={"16px"}
+        justifyContent={"space-between"}
+        display={"flex"}
+        gap={["4px", null, "8px"]}
+        flexDir={"column"}
+      >
+        <Text fontSize={"14px"}>{label}</Text>
+        <Tooltip label={tooltip}>
+          <Flex direction={"row"} alignItems={"baseline"}>
+            <Text fontWeight="bold" fontSize="40px">
+              {value ?? "-"}
+            </Text>
+            {type === "percentage" && typeof value !== "undefined" && (
+              <Text fontSize={"22px"} fontWeight={"bold"}>
+                &nbsp;%
+              </Text>
+            )}
+          </Flex>
+        </Tooltip>
+      </CardBody>
+    </Card>
+  )
 );
