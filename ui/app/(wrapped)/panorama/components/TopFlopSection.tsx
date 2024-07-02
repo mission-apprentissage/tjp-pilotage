@@ -30,8 +30,6 @@ export const TopFlopSection = ({
   isLoading,
 }: {
   topFlops?: PanoramaTopFlops;
-  meanPoursuite?: number;
-  meanInsertion?: number;
   isLoading: boolean;
 }) => {
   const topFlopFormations = useMemo(() => {
@@ -53,7 +51,7 @@ export const TopFlopSection = ({
     return { top, flop };
   }, [topFlops]);
 
-  const RenderTopFlop = () => {
+  const RenderTopFlop = useMemo(() => {
     if (isLoading) {
       return <Loader />;
     }
@@ -67,20 +65,23 @@ export const TopFlopSection = ({
         <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
       </Center>
     );
-  };
+  }, [topFlopFormations, isLoading, topFlops]);
 
   return (
     <Box as="section" py="6" maxWidth={"container.xl"}>
-      <Box ml={[null, null, "6"]} mb={4}>
-        <Heading fontWeight={"hairline"} maxWidth={250} as="h2" mb="4">
+      <Box width={"fit-content"} mb={"32px"}>
+        <Heading fontWeight={"bold"} as="h2" fontSize={"28px"}>
           Examiner les formations
         </Heading>
-        <Text>
-          Retrouvez les 10 formations avec un devenir favorable et les 10
-          formations à examiner
-        </Text>
+        <Box w={"33%"} mt={"16px"}>
+          <hr />
+        </Box>
       </Box>
-      {RenderTopFlop()}
+      <Text>
+        Retrouvez les 10 formations avec un devenir favorable et les 10
+        formations à examiner
+      </Text>
+      {RenderTopFlop}
     </Box>
   );
 };

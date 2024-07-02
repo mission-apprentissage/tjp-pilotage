@@ -9,14 +9,14 @@ import { createParametrizedUrl } from "../../../../../utils/createParametrizedUr
 import { FiltersSection } from "../../components/FiltersSection";
 import { IndicateursSection } from "../../components/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
-import { QuadrantSection } from "../../components/QuadrantSection";
+import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
 import { TopFlopSection } from "../../components/TopFlopSection";
 import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
   params: { codeRegion },
 }: {
-  params: {
+  readonly params: {
     codeRegion: string;
   };
 }) {
@@ -92,19 +92,25 @@ export default function Panorama({
 
   return (
     <>
-      <IndicateursSection
+      <FiltersSection
         onCodeChanged={onCodeRegionChanged}
         code={codeRegion}
         options={regionOptions}
-        stats={stats}
-        handleFilters={handleFilters}
-        activeFilters={searchParams}
         diplomeOptions={data?.filters.diplomes}
-      />
-      <FiltersSection
         handleFilters={handleFilters}
         activeFilters={searchParams}
         libelleNsfOptions={data?.filters.libellesNsf}
+      />
+      <IndicateursSection
+        stats={stats}
+        libelleTerritoire={
+          regionOptions?.find((item) => item.value === codeRegion)?.label
+        }
+        libelleDiplome={
+          data?.filters.diplomes?.find(
+            (item) => item.value === searchParams.codeNiveauDiplome?.[0]
+          )?.label
+        }
       />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
