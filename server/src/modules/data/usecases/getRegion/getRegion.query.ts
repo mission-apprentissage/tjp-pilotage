@@ -10,6 +10,7 @@ import {
   notAnneeCommuneIndicateurRegionSortie,
   notSpecialite,
 } from "../../utils/notAnneeCommune";
+import { selectTauxDevenirFavorableAgg } from "../../utils/tauxDevenirFavorable";
 import {
   selectDenominateurInsertion6moisAgg,
   selectNumerateurInsertion6MoisAgg,
@@ -65,6 +66,9 @@ export const getRegionStats = async ({
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
+      selectTauxDevenirFavorableAgg("indicateurRegionSortie").as(
+        "tauxDevenirFavorable"
+      ),
       selectDenominateurInsertion6moisAgg("indicateurRegionSortie").as(
         "denominateurInsertion6mois"
       ),
