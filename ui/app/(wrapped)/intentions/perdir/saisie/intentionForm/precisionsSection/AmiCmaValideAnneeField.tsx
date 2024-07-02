@@ -51,7 +51,6 @@ export const AmiCmaValideAnneeField = chakra(
           bgColor={"white"}
           border={"1px solid"}
           {...register("amiCmaValideAnnee", {
-            shouldUnregister: true,
             disabled: disabled,
             required:
               "Veuillez préciser l'année de validation de votre financement AMI/CMA",

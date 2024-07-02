@@ -5,6 +5,7 @@ import {
   FormLabel,
   Input,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../../defaultFormValues";
@@ -15,9 +16,18 @@ export const LibelleColorationField = chakra(
       formState: { errors },
       watch,
       register,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const [coloration] = watch(["coloration"]);
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "coloration") return;
+          setValue("libelleColoration", "");
+        }).unsubscribe
+    );
 
     return (
       <>
@@ -29,7 +39,6 @@ export const LibelleColorationField = chakra(
             <FormLabel>Complément du libellé formation</FormLabel>
             <Input
               {...register("libelleColoration", {
-                shouldUnregister: true,
                 disabled,
                 required: "Ce champ est obligatoire",
               })}

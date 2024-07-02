@@ -9,6 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../../defaultFormValues";
@@ -19,9 +20,17 @@ export const NbReconversionRHField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("reconversionRH");
+
+    useEffect(() => {
+      if (!visible) {
+        setValue("nbReconversionRH", undefined);
+      }
+    }, [visible, setValue]);
+
     if (!visible) return null;
 
     return (
@@ -29,7 +38,6 @@ export const NbReconversionRHField = chakra(
         <FormLabel>Combien de reconversions ?</FormLabel>
         <Controller
           name="nbReconversionRH"
-          shouldUnregister
           control={control}
           rules={{
             required: "Le champ est obligatoire",
