@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
+import { getPermissionScope, guardScope } from "shared";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
@@ -15,15 +16,32 @@ export const getIntentionsRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
+        const user = request.user;
         const { search, ...filters } = request.query;
-        if (!request.user) throw Boom.forbidden();
+        if (!user) throw Boom.forbidden();
 
         const result = await getIntentionsUsecase({
-          user: request.user,
+          user: user,
           ...filters,
           search,
         });
-        response.status(200).send(result);
+
+        const scope = getPermissionScope(
+          user.role,
+          "intentions-perdir/ecriture"
+        );
+
+        response.status(200).send({
+          ...result,
+          intentions: result.intentions.map((intention) => ({
+            ...intention,
+            canEdit: guardScope(scope?.default, {
+              uai: () => user.uais?.includes(intention.uai) ?? false,
+              region: () => user.codeRegion === intention.codeRegion,
+              national: () => true,
+            }),
+          })),
+        });
       },
     });
   });

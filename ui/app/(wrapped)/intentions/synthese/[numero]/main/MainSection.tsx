@@ -26,7 +26,7 @@ export const MainSection = ({
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}
-                  href={`/intentions/perdir/saisie/${demande?.numero ?? ""}`}
+                  href={`/intentions/saisie/${demande?.numero ?? ""}`}
                   aria-label="Modifier la demande"
                   color={"bluefrance.113"}
                   bgColor={"transparent"}
@@ -34,15 +34,6 @@ export const MainSection = ({
                 />
               </Tooltip>
             )}
-            <Tooltip label="Dupliquer la demande">
-              <IconButton
-                isDisabled
-                aria-label="Dupliquer la demande"
-                color={"bluefrance.113"}
-                bgColor={"transparent"}
-                icon={<Icon width="24px" icon="ri:device-line" />}
-              />
-            </Tooltip>
           </Flex>
         </Flex>
       )}

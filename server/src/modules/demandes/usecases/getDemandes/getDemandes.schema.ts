@@ -1,7 +1,7 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { z } from "zod";
 
-const DemandesItem = z.object({
+const DemandeItem = z.object({
   numero: z.string(),
   cfd: z.string().optional(),
   libelleFormation: z.string().optional(),
@@ -63,6 +63,7 @@ const DemandesItem = z.object({
   nbFormationRH: z.coerce.number().optional(),
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
+  canEdit: z.boolean(),
 });
 
 export const getDemandesSchema = {
@@ -70,7 +71,7 @@ export const getDemandesSchema = {
     statut: DemandeStatutZodType.exclude(["supprimée"]).optional(),
     search: z.string().optional(),
     order: z.enum(["asc", "desc"]).optional(),
-    orderBy: DemandesItem.keyof().optional(),
+    orderBy: DemandeItem.keyof().optional(),
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
     campagne: z.string().optional(),
@@ -78,7 +79,7 @@ export const getDemandesSchema = {
   response: {
     200: z.object({
       count: z.coerce.number(),
-      demandes: z.array(DemandesItem),
+      demandes: z.array(DemandeItem),
       campagnes: z.array(
         z.object({
           annee: z.string(),

@@ -13,7 +13,7 @@ export const canEditDemande = ({
   demande,
   hasEditDemandePermission,
 }: {
-  demande: { statut?: DemandeStatutType };
+  demande: { statut?: DemandeStatutType; canEdit: boolean };
   hasEditDemandePermission: boolean;
 }) => {
   return (
@@ -21,6 +21,7 @@ export const canEditDemande = ({
     hasEditDemandePermission &&
     demande &&
     demande.statut !== DemandeStatutEnum["demande validée"] &&
-    demande.statut !== DemandeStatutEnum["refusée"]
+    demande.statut !== DemandeStatutEnum["refusée"] &&
+    demande.canEdit
   );
 };

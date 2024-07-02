@@ -13,7 +13,7 @@ export const canEditIntention = ({
   intention,
   hasEditIntentionPermission,
 }: {
-  intention: { statut?: DemandeStatutType };
+  intention: { statut?: DemandeStatutType; canEdit: boolean };
   hasEditIntentionPermission: boolean;
 }) => {
   return (
@@ -21,6 +21,7 @@ export const canEditIntention = ({
     hasEditIntentionPermission &&
     intention &&
     intention.statut !== DemandeStatutEnum["demande validée"] &&
-    intention.statut !== DemandeStatutEnum["refusée"]
+    intention.statut !== DemandeStatutEnum["refusée"] &&
+    intention.canEdit
   );
 };

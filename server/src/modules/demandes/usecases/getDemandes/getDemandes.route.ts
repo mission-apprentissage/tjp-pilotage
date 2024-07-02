@@ -1,5 +1,6 @@
 import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
+import { getPermissionScope, guardScope } from "shared";
 
 import { Server } from "../../../../server";
 import { hasPermissionHandler } from "../../../core";
@@ -15,15 +16,28 @@ export const getDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
+        const user = request.user;
         const { search, ...filters } = request.query;
-        if (!request.user) throw Boom.forbidden();
+        if (!user) throw Boom.forbidden();
 
         const result = await getDemandesUsecase({
-          user: request.user,
+          user,
           ...filters,
           search,
         });
-        response.status(200).send(result);
+
+        const scope = getPermissionScope(user.role, "intentions/ecriture");
+
+        response.status(200).send({
+          ...result,
+          demandes: result.demandes.map((demande) => ({
+            ...demande,
+            canEdit: guardScope(scope?.default, {
+              region: () => user.codeRegion === demande.codeRegion,
+              national: () => true,
+            }),
+          })),
+        });
       },
     });
   });
