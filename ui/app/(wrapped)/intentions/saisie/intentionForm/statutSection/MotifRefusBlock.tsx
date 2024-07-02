@@ -29,7 +29,7 @@ export const MotifRefusBlock = chakra(
       setValue,
     } = useFormContext<IntentionForms>();
 
-    const statut = watch("statut");
+    const [statut, typeDemande] = watch(["statut", "typeDemande"]);
     const visible = statut === DemandeStatutEnum["refusée"];
 
     useEffect(
@@ -55,8 +55,9 @@ export const MotifRefusBlock = chakra(
         }));
     };
 
-    const [typeDemande] = watch(["typeDemande"]);
-    if (!typeDemande) return <></>;
+    if (!typeDemande) {
+      return null;
+    }
 
     return (
       <Collapse in={visible} unmountOnExit>
@@ -70,7 +71,6 @@ export const MotifRefusBlock = chakra(
           </FormLabel>
           <Controller
             name="motifRefus"
-            shouldUnregister
             disabled={disabled}
             control={control}
             rules={{ required: "Le motif de refus est obligatoire" }}

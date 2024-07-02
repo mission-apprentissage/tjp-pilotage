@@ -54,7 +54,7 @@ export const ColorationField = chakra(
         <Controller
           name="coloration"
           control={control}
-          shouldUnregister={true}
+          disabled={disabled}
           rules={{
             validate: (value) =>
               typeof value === "boolean" || "Le champ est obligatoire",

@@ -9,6 +9,7 @@ import {
   NumberInputField,
   NumberInputStepper,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
@@ -19,9 +20,17 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("augmentationCapaciteAccueilHebergement");
+
+    useEffect(() => {
+      if (!visible) {
+        setValue("augmentationCapaciteAccueilHebergementPlaces", undefined);
+      }
+    }, [visible, setValue]);
+
     if (!visible) return null;
 
     return (
@@ -32,7 +41,6 @@ export const AugmentationCapaciteAccueilHebergementPlacesField = chakra(
         <FormLabel>Combien de places ?</FormLabel>
         <Controller
           name="augmentationCapaciteAccueilHebergementPlaces"
-          shouldUnregister
           control={control}
           rules={{
             required: "Le champ est obligatoire",
