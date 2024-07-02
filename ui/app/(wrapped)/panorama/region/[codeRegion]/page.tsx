@@ -116,10 +116,7 @@ export default function Panorama({
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }
       />
-      <TopFlopSection
-        quadrantFormations={data?.formations}
-        isLoading={isLoading}
-      />
+      <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
       <InfoSection codeRegion={codeRegion} />
     </>
   );

@@ -1,28 +1,21 @@
 import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
-import z from "zod";
+import { getMillesimePrecedent } from "shared/utils/getMillesime";
+import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { getMillesimePrecedent } from "../../services/getMillesime";
-import { getRentreeScolairePrecedente } from "../../services/getRentreeScolaire";
-import { effectifAnnee } from "../../utils/effectifAnnee";
-import { hasContinuum } from "../../utils/hasContinuum";
-import { notAnneeCommune } from "../../utils/notAnneeCommune";
-import { notHistoriqueUnlessCoExistant } from "../../utils/notHistorique";
-import { withTauxDevenirFavorableReg } from "../../utils/tauxDevenirFavorable";
-import { withInsertionReg } from "../../utils/tauxInsertion6mois";
-import { withPoursuiteReg } from "../../utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../utils/tauxPression";
-import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
-import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
+import { kdb } from "../../../../../db/db";
+import { effectifAnnee } from "../../../utils/effectifAnnee";
+import { hasContinuum } from "../../../utils/hasContinuum";
+import { notAnneeCommune } from "../../../utils/notAnneeCommune";
+import { notHistoriqueUnlessCoExistant } from "../../../utils/notHistorique";
+import { withTauxDevenirFavorableReg } from "../../../utils/tauxDevenirFavorable";
+import { withInsertionReg } from "../../../utils/tauxInsertion6mois";
+import { withPoursuiteReg } from "../../../utils/tauxPoursuite";
+import { selectTauxPressionAgg } from "../../../utils/tauxPression";
+import { selectTauxRemplissageAgg } from "../../../utils/tauxRemplissage";
+import { Filters } from "../getDataForPanoramaDepartement.schema";
 
-export interface Filters
-  extends z.infer<typeof getDataForPanoramaDepartementSchema.querystring> {
-  rentreeScolaire?: string;
-  millesimeSortie?: string;
-}
-export const getFormationsDepartement = async ({
+export const getFormationsDepartementBase = ({
   codeDepartement,
   rentreeScolaire = CURRENT_RENTREE,
   millesimeSortie = CURRENT_IJ_MILLESIME,
@@ -162,18 +155,7 @@ export const getFormationsDepartement = async ({
       tauxPoursuite: number;
       tauxDevenirFavorable: number;
     }>()
-    .having(
-      (eb) =>
-        withInsertionReg({
-          eb,
-          millesimeSortie,
-          cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
-          codeRegionRef: "etablissement.codeRegion",
-        }),
-      "is not",
-      null
-    )
+
     .having(
       (eb) =>
         withPoursuiteReg({
@@ -200,58 +182,4 @@ export const getFormationsDepartement = async ({
       if (!orderBy || !order) return q;
       return q.orderBy(sql.ref(orderBy), sql`${sql.raw(order)} NULLS LAST`);
     })
-    .orderBy("libelleFormation", "asc")
-    .execute()
-    .then(cleanNull);
-
-export const getFilters = async ({
-  codeDepartement,
-}: {
-  codeDepartement?: string;
-}) => {
-  const filtersBase = kdb
-    .selectFrom("niveauDiplome")
-    .leftJoin(
-      "formationView",
-      "formationView.codeNiveauDiplome",
-      "niveauDiplome.codeNiveauDiplome"
-    )
-    .leftJoin(
-      "formationEtablissement",
-      "formationEtablissement.cfd",
-      "formationView.cfd"
-    )
-    .leftJoin(
-      "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
-    )
-    .$call((eb) => {
-      if (!codeDepartement) return eb;
-      return eb.where("etablissement.codeDepartement", "=", codeDepartement);
-    })
-    .distinct()
-    .$castTo<{ label: string; value: string }>()
-    .orderBy("label", "asc");
-
-  const diplomes = await filtersBase
-    .select([
-      "niveauDiplome.codeNiveauDiplome as value",
-      "niveauDiplome.libelleNiveauDiplome as label",
-    ])
-    .where("formationView.codeNiveauDiplome", "is not", null)
-    .execute();
-
-  const libellesNsf = await filtersBase
-    .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
-    .select(["nsf.libelleNsf as label", "formationView.codeNsf as value"])
-    .where("nsf.libelleNsf", "is not", null)
-    .execute();
-
-  return {
-    diplomes: diplomes.map(cleanNull),
-    libellesNsf: libellesNsf.map(cleanNull),
-  };
-};
-
-export const dependencies = { getFormationsDepartement, getFilters };
+    .orderBy("libelleFormation", "asc");

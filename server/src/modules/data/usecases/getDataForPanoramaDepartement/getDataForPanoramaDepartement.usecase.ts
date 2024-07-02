@@ -2,14 +2,19 @@ import z from "zod";
 
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies } from "./dependencies";
+import {
+  getFilters,
+  getFormationsDepartement,
+  getTopFlopFormationsDepartement,
+} from "./dependencies";
 import { getDataForPanoramaDepartementSchema } from "./getDataForPanoramaDepartement.schema";
 
 export const getDataForPanoramaDepartementFactory =
   (
     deps = {
-      getFormationsDepartement: dependencies.getFormationsDepartement,
-      getFilters: dependencies.getFilters,
+      getFormationsDepartement,
+      getFilters,
+      getTopFlopFormationsDepartement,
       getStatsSortieQuery,
       getPositionQuadrant,
     }
@@ -19,8 +24,9 @@ export const getDataForPanoramaDepartementFactory =
       typeof getDataForPanoramaDepartementSchema.querystring
     >
   ) => {
-    const [formations, filters, statsSortie] = await Promise.all([
+    const [formations, topFlops, filters, statsSortie] = await Promise.all([
       deps.getFormationsDepartement(activeFilters),
+      deps.getTopFlopFormationsDepartement(activeFilters),
       deps.getFilters(activeFilters),
       deps.getStatsSortieQuery(activeFilters),
     ]);
@@ -31,6 +37,7 @@ export const getDataForPanoramaDepartementFactory =
         positionQuadrant: deps.getPositionQuadrant(formation, statsSortie),
       })),
       filters,
+      topFlops,
     };
   };
 

@@ -16,7 +16,7 @@ import { useMemo } from "react";
 
 import { TooltipIcon } from "../../../../components/TooltipIcon";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
-import { PanoramaFormation, PanoramaFormations } from "../types";
+import { PanoramaTopFlop, PanoramaTopFlops } from "../types";
 import { FormationTooltipContent } from "./FormationTooltipContent";
 
 const Loader = () => (
@@ -26,17 +26,17 @@ const Loader = () => (
 );
 
 export const TopFlopSection = ({
-  quadrantFormations,
+  topFlops,
   isLoading,
 }: {
-  quadrantFormations?: PanoramaFormations;
+  topFlops?: PanoramaTopFlops;
   meanPoursuite?: number;
   meanInsertion?: number;
   isLoading: boolean;
 }) => {
   const topFlopFormations = useMemo(() => {
-    if (!quadrantFormations) return;
-    const filtered = quadrantFormations.filter((item) => {
+    if (!topFlops) return;
+    const filtered = topFlops.filter((item) => {
       return (
         item.codeDispositif && !["253", "240"].includes(item.codeDispositif)
       );
@@ -51,7 +51,23 @@ export const TopFlopSection = ({
     const flop = sorted.slice().reverse().slice(0, Math.floor(nbTopFlop));
 
     return { top, flop };
-  }, [quadrantFormations]);
+  }, [topFlops]);
+
+  const RenderTopFlop = () => {
+    if (isLoading) {
+      return <Loader />;
+    }
+
+    if (topFlopFormations && topFlops?.length) {
+      return <TopFlopChart topFlopFormations={topFlopFormations} />;
+    }
+
+    return (
+      <Center mt={20}>
+        <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
+      </Center>
+    );
+  };
 
   return (
     <Box as="section" py="6" maxWidth={"container.xl"}>
@@ -64,15 +80,7 @@ export const TopFlopSection = ({
           formations à examiner
         </Text>
       </Box>
-      {isLoading ? (
-        <Loader></Loader>
-      ) : topFlopFormations && quadrantFormations?.length ? (
-        <TopFlopChart topFlopFormations={topFlopFormations} />
-      ) : (
-        <Center mt={20}>
-          <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
-        </Center>
-      )}
+      {RenderTopFlop()}
     </Box>
   );
 };
@@ -80,7 +88,7 @@ export const TopFlopSection = ({
 const TopFlopChart = ({
   topFlopFormations,
 }: {
-  topFlopFormations: { top: PanoramaFormations; flop: PanoramaFormations };
+  topFlopFormations: { top: PanoramaTopFlops; flop: PanoramaTopFlops };
 }) => {
   const { openGlossaire } = useGlossaireContext();
   return (
@@ -127,7 +135,7 @@ const TopItem = ({
   value,
   color = "bluefrance.625",
 }: {
-  formation: PanoramaFormation;
+  formation: PanoramaTopFlop;
   value: number;
   color?: string;
 }) => {
