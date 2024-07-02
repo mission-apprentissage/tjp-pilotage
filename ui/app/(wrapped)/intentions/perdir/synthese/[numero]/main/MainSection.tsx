@@ -85,15 +85,6 @@ export const MainSection = ({
                 />
               </Tooltip>
             )}
-            <Tooltip label="Dupliquer la demande">
-              <IconButton
-                isDisabled
-                aria-label="Dupliquer la demande"
-                color={"bluefrance.113"}
-                bgColor={"transparent"}
-                icon={<Icon width="24px" icon="ri:device-line" />}
-              />
-            </Tooltip>
             <Tooltip label="Suivre la demande">
               <IconButton
                 aria-label="Suivre la demande"
