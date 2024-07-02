@@ -5,15 +5,17 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { InfoBlock } from "../../../../components/InfoBlock";
 import { TableBadge } from "../../../../components/TableBadge";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { displayNumberRounded } from "../../../../utils/displayNumberRounded";
 import { getTauxPressionStyle } from "../../../../utils/getBgScale";
+import { roundNumber } from "../../../../utils/roundNumber";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
-import { PanoramaFormation } from "../types";
+import { PanoramaFormation, PanoramaTopFlop } from "../types";
+
+type Formation = PanoramaFormation | PanoramaTopFlop;
 
 export const FormationTooltipContent = ({
   formation,
 }: {
-  formation: PanoramaFormation;
+  formation: Formation;
 }) => {
   const { openGlossaire } = useGlossaireContext();
 
@@ -54,7 +56,7 @@ export const FormationTooltipContent = ({
         value={
           <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
             {formation.tauxPression !== undefined
-              ? displayNumberRounded(formation?.tauxPression)
+              ? roundNumber(formation?.tauxPression)
               : "-"}
           </TableBadge>
         }

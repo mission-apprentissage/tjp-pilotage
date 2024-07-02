@@ -31,6 +31,10 @@ const FormationSchema = z.object({
     .optional(),
 });
 
+const TopFlopSchema = FormationSchema.extend({
+  tauxInsertion: z.coerce.number().optional(),
+}).omit({ positionQuadrant: true });
+
 export const getDataForPanoramaDepartementSchema = {
   querystring: z.object({
     codeDepartement: z.string(),
@@ -42,6 +46,7 @@ export const getDataForPanoramaDepartementSchema = {
   response: {
     200: z.object({
       formations: z.array(FormationSchema),
+      topFlops: z.array(TopFlopSchema),
       filters: z.object({
         diplomes: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
@@ -49,3 +54,9 @@ export const getDataForPanoramaDepartementSchema = {
     }),
   },
 };
+
+export interface Filters
+  extends z.infer<typeof getDataForPanoramaDepartementSchema.querystring> {
+  rentreeScolaire?: string;
+  millesimeSortie?: string;
+}

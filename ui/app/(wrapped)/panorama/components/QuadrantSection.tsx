@@ -374,7 +374,7 @@ export const QuadrantSection = ({
               <ExportMenuButton
                 sx={{
                   display:
-                    "inherit" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
+                    "none" /* Le boutton Exporter est désactivé tant qu'il n'y a pas eu l'harmonisation des données */,
                 }}
                 onExportCsv={async () => {
                   if (!filteredFormations) return;
