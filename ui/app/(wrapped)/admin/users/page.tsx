@@ -29,7 +29,7 @@ import {
   downloadExcel,
   ExportColumns,
 } from "@/utils/downloadExport";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 

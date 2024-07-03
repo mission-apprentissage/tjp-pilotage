@@ -3,6 +3,14 @@ import { ReactNode } from "react";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
 
+export const shouldDisplayColoration = (
+  typeDemande: TypeDemande,
+  libelleFCIL?: string
+) => {
+  if (!isTypeColoration(typeDemande)) return true;
+  return !libelleFCIL;
+};
+
 export const shouldDisplayTypeDemande = (
   typeDemande: TypeDemande,
   anneeCampagne: string

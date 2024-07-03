@@ -35,7 +35,7 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "national" },
   },
   admin_region: {
-    "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
     "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
@@ -58,11 +58,11 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   pilote_region: {
-    "intentions/lecture": { default: "region", draft: "region" },
+    "intentions/lecture": { default: "national", draft: "national" },
     "intentions/ecriture": { default: "region", draft: "region" },
-    "restitution-intentions/lecture": { default: "region" },
+    "restitution-intentions/lecture": { default: "national" },
     "pilotage-intentions/lecture": { default: "national" },
-    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir/lecture": { default: "national", draft: "national" },
     "intentions-perdir/ecriture": { default: "region" },
     "intentions-perdir-statut/ecriture": { default: "region" },
     "intentions-perdir-statut/lecture": { default: "region" },

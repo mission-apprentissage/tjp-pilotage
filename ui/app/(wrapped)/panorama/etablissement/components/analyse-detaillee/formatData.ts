@@ -4,6 +4,11 @@ export const formatTaux = (value?: number): number =>
 export const formatAbsolute = (value?: number): number =>
   Number((value ?? 0).toFixed(2));
 
+export const formatAbsoluteOrUndefined = (
+  value?: number
+): number | undefined =>
+  value === undefined ? undefined : Number((value ?? 0).toFixed(2));
+
 export const formatMillesime = (millesime: string): string =>
   `${millesime.split("_")[0]}+${millesime.split("_")[1].substring(2)}`;
 

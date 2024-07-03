@@ -4,7 +4,7 @@ import { GlossaireShortcut } from "../../../../../../../../components/GlossaireS
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
-import { formatAbsolute } from "../../formatData";
+import { formatAbsoluteOrUndefined } from "../../formatData";
 import { ChiffresEntreeOffre } from "../../types";
 
 const CODE_NIVEAU_DIPLOME_BTS = "320";
@@ -32,25 +32,25 @@ export const TauxPression = ({
   };
 
   const getData = (): {
-    établissement: number[];
-    départemental: number[];
-    régional: number[];
-    national: number[];
+    établissement: Array<number | undefined>;
+    départemental: Array<number | undefined>;
+    régional: Array<number | undefined>;
+    national: Array<number | undefined>;
   } => {
     if (chiffresEntreeOffre) {
       return {
-        établissement: Object.values(chiffresEntreeOffre)
-          .map((value) => formatAbsolute(value.tauxPression))
-          .filter((value) => value),
-        départemental: Object.values(chiffresEntreeOffre)
-          .map((value) => formatAbsolute(value.tauxPressionDepartemental))
-          .filter((value) => value),
-        régional: Object.values(chiffresEntreeOffre)
-          .map((value) => formatAbsolute(value.tauxPressionRegional))
-          .filter((value) => value),
-        national: Object.values(chiffresEntreeOffre)
-          .map((value) => formatAbsolute(value.tauxPressionNational))
-          .filter((value) => value),
+        établissement: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsoluteOrUndefined(value.tauxPression)
+        ),
+        départemental: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsoluteOrUndefined(value.tauxPressionDepartemental)
+        ),
+        régional: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsoluteOrUndefined(value.tauxPressionRegional)
+        ),
+        national: Object.values(chiffresEntreeOffre).map((value) =>
+          formatAbsoluteOrUndefined(value.tauxPressionNational)
+        ),
       };
     }
     return {
@@ -124,6 +124,11 @@ export const TauxPression = ({
     >
       {chiffresEntreeOffre && checkDataAvailability() ? (
         <LineChart
+          title={
+            codeNiveauDiplome === CODE_NIVEAU_DIPLOME_BTS
+              ? "Taux de demande"
+              : "Taux de pression"
+          }
           data={getData()}
           categories={getCategories()}
           colors={colors}

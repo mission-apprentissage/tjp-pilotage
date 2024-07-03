@@ -65,13 +65,13 @@ const OptionLabel = ({
 export const CfdAutocompleteInput = ({
   name,
   defaultValue,
-  active,
+  disabled,
   inError,
   onChange,
 }: {
   name: string;
   defaultValue?: { value: string; label: string };
-  active?: boolean;
+  disabled?: boolean;
   inError: boolean;
   onChange: (
     value?: (typeof client.infer)["[GET]/diplome/search/:search"][number]
@@ -132,7 +132,7 @@ export const CfdAutocompleteInput = ({
         inputValue ? "Pas de diplôme correspondant" : "Commencez à écrire..."
       }
       placeholder="Code diplôme ou libellé"
-      isDisabled={active === false}
+      isDisabled={disabled}
     />
   );
 };

@@ -7,8 +7,10 @@ import { getMillesime } from "shared/utils/getMillesime";
 import { formatMillesime } from "../formatData";
 
 export const VerticalBarChart = ({
+  title,
   data,
 }: {
+  title: string;
   data: {
     label: string;
     value: number;
@@ -49,6 +51,16 @@ export const VerticalBarChart = ({
           type: "shadow",
         },
         formatter: "{a} : {c}%",
+      },
+      toolbox: {
+        feature: {
+          saveAsImage: {
+            title: "Télécharger sous format .png",
+            name: title,
+            type: "png",
+            backgroundColor: "transparent",
+          },
+        },
       },
       legend: {
         data: getXAxisData(),

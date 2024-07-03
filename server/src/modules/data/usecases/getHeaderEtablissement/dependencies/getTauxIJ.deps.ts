@@ -62,8 +62,8 @@ const getBase = ({
 
 export const getChiffresIj = ({
   uai,
-  millesime = MILLESIMES_IJ_ETAB,
   rentreeScolaire,
+  millesime = MILLESIMES_IJ_ETAB,
 }: {
   uai: string;
   rentreeScolaire: string;

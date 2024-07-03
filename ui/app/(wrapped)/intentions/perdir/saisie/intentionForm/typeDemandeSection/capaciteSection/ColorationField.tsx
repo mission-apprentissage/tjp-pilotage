@@ -27,11 +27,22 @@ export const ColorationField = chakra(
     useEffect(
       () =>
         watch((_, { name }) => {
-          if (name !== "typeDemande") return;
-          if (isTypeColoration(getValues("typeDemande")))
+          if (
+            name === "typeDemande" &&
+            isTypeColoration(getValues("typeDemande"))
+          )
             setValue("coloration", true);
+          if (name === "libelleFCIL")
+            setValue("coloration", !getValues("libelleFCIL"));
         }).unsubscribe
     );
+
+    useEffect(() => {
+      if (getValues("libelleFCIL")) setValue("coloration", false);
+    }, []);
+
+    const libelleFCIL = watch("libelleFCIL");
+    const isColorationDisabled = !!libelleFCIL || disabled;
 
     return (
       <FormControl
@@ -63,7 +74,10 @@ export const ColorationField = chakra(
               <Radio
                 ref={ref}
                 value="true"
-                isReadOnly={isTypeColoration(getValues("typeDemande"))}
+                isReadOnly={
+                  isTypeColoration(getValues("typeDemande")) ||
+                  isColorationDisabled
+                }
                 _readOnly={{ cursor: "not-allowed", opacity: 0.5 }}
               >
                 Oui
@@ -71,7 +85,10 @@ export const ColorationField = chakra(
               <Radio
                 ref={ref}
                 value="false"
-                isReadOnly={isTypeColoration(getValues("typeDemande"))}
+                isReadOnly={
+                  isTypeColoration(getValues("typeDemande")) ||
+                  isColorationDisabled
+                }
                 _readOnly={{ cursor: "not-allowed", opacity: 0.5 }}
               >
                 Non

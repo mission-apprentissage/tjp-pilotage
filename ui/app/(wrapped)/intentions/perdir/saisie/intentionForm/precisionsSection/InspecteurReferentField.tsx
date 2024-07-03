@@ -21,7 +21,7 @@ export const InspecteurReferentField = chakra(
         className={className}
         isInvalid={!!errors.inspecteurReferent}
       >
-        <FormLabel>Inspecteur académique référent</FormLabel>
+        <FormLabel>Inspecteur disciplinaire concerné</FormLabel>
         <Input
           w="xs"
           bgColor={"white"}

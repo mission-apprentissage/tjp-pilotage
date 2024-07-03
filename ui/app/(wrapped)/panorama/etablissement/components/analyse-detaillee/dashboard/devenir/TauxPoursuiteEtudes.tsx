@@ -62,7 +62,10 @@ export const TauxPoursuiteEtudes = ({
       }
     >
       {checkDataAvailability() ? (
-        <VerticalBarChart data={getVerticalBarChartData()} />
+        <VerticalBarChart
+          title="Poursuite d'études"
+          data={getVerticalBarChartData()}
+        />
       ) : (
         <CounterChart />
       )}

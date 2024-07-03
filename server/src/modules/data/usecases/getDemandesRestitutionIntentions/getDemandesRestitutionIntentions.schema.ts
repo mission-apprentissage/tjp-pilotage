@@ -75,8 +75,10 @@ const DemandeSchema = z.object({
   besoinRHPrecisions: z.string().optional(),
   // Travaux et équipements
   travauxAmenagement: z.boolean().optional(),
+  travauxAmenagementCout: z.coerce.number().optional(),
   travauxAmenagementDescription: z.string().optional(),
   achatEquipement: z.boolean().optional(),
+  achatEquipementCout: z.coerce.number().optional(),
   achatEquipementDescription: z.string().optional(),
   // Internat et restauration
   augmentationCapaciteAccueilHebergement: z.boolean().optional(),
@@ -92,6 +94,7 @@ const DemandeSchema = z.object({
   updatedAt: z.string(),
   createdAt: z.string(),
   campagneId: z.string(),
+  isIntention: z.boolean(),
 });
 
 export const FiltersSchema = z.object({

@@ -50,7 +50,7 @@ export const getIntentionsQuery = async (
   const search_array = getNormalizedSearchArray(search);
 
   const intentions = await kdb
-    .selectFrom("latestIntentionView as intention")
+    .selectFrom("latestDemandeIntentionView as intention")
     .leftJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
     .leftJoin(

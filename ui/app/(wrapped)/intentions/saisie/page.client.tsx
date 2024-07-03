@@ -36,7 +36,7 @@ import {
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";

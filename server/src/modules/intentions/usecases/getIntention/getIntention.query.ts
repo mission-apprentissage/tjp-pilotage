@@ -30,7 +30,7 @@ export interface Filters extends z.infer<typeof getIntentionSchema.params> {
 
 export const getIntentionQuery = async ({ numero, user }: Filters) => {
   const intention = await kdb
-    .selectFrom("latestIntentionView as intention")
+    .selectFrom("latestDemandeIntentionView as intention")
     .leftJoin("changementStatut", (join) =>
       join
         .onRef("changementStatut.intentionNumero", "=", "intention.numero")

@@ -9,13 +9,13 @@ import { useAuth } from "@/utils/security/useAuth";
 export const UaiAutocomplete = ({
   name,
   defaultValue,
-  active,
+  disabled,
   inError,
   onChange,
 }: {
   name: string;
   defaultValue?: { value: string; label?: string; commune?: string };
-  active?: boolean;
+  disabled?: boolean;
   inError: boolean;
   onChange: (
     value?: (typeof client.infer)["[GET]/etablissement/perdir/search/:search"][number]
@@ -67,7 +67,7 @@ export const UaiAutocomplete = ({
           : "Commencez à écrire..."
       }
       placeholder="UAI, nom de l'établissement ou commune"
-      isDisabled={active === false}
+      isDisabled={disabled}
     />
   );
 };

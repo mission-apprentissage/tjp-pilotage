@@ -343,13 +343,22 @@ export const LineContent = ({
       >
         {demande.nbFormationRH}
       </ConditionalTd>
-
       <ConditionalTd
         colonneFilters={colonneFilters}
         colonne={"travauxAmenagement"}
         bgColor={getCellColor("travauxAmenagement")}
       >
         {formatBooleanValue(demande.travauxAmenagement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"travauxAmenagementCout"}
+        bgColor={getCellColor("travauxAmenagementCout")}
+        isNumeric
+      >
+        {demande.travauxAmenagementCout !== undefined
+          ? `${demande.travauxAmenagementCout}€`
+          : "-"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
@@ -364,6 +373,16 @@ export const LineContent = ({
         bgColor={getCellColor("achatEquipement")}
       >
         {formatBooleanValue(demande.achatEquipement)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"achatEquipementCout"}
+        bgColor={getCellColor("achatEquipementCout")}
+        isNumeric
+      >
+        {demande.achatEquipementCout !== undefined
+          ? `${demande.achatEquipementCout}€`
+          : "-"}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

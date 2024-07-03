@@ -206,21 +206,21 @@ export const IntentionForm = ({
     !isTypeFermeture(typeDemande) &&
     !isTypeDiminution(typeDemande);
 
-  const getStatutSubmit = (): Extract<
-    DemandeStatutType,
-    "proposition" | "projet de demande"
-  > => {
+  const getStatutSubmit = (
+    statutActuel?: Exclude<DemandeStatutType, "supprimée">
+  ): Exclude<DemandeStatutType, "supprimée"> => {
     if (
       hasRole({ user: auth?.user, role: "perdir" }) ||
       hasRole({ user: auth?.user, role: "expert_region" })
     ) {
       return DemandeStatutEnum["proposition"];
     }
+    if (statutActuel) return statutActuel;
     return DemandeStatutEnum["projet de demande"];
   };
 
   const getLabelSubmit = (
-    statut: Extract<DemandeStatutType, "proposition" | "projet de demande">,
+    statut: Exclude<DemandeStatutType, "supprimée">,
     statutPrecedent?: Exclude<DemandeStatutType, "supprimée">
   ): string => {
     if (statut === DemandeStatutEnum["projet de demande"]) {
@@ -392,7 +392,7 @@ export const IntentionForm = ({
                                   intention: {
                                     numero: formId,
                                     ...values,
-                                    statut: getStatutSubmit(),
+                                    statut: getStatutSubmit(values.statut),
                                     campagneId:
                                       values.campagneId ?? campagne?.id,
                                   },
@@ -402,7 +402,7 @@ export const IntentionForm = ({
                             leftIcon={<CheckIcon />}
                           >
                             {getLabelSubmit(
-                              getStatutSubmit(),
+                              getStatutSubmit(defaultValues.statut),
                               defaultValues.statut
                             )}
                           </Button>

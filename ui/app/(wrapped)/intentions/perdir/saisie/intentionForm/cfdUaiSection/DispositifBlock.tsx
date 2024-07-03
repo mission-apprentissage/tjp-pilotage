@@ -13,10 +13,10 @@ import { client } from "@/api.client";
 import { IntentionForms } from "../defaultFormValues";
 
 export const DispositifBlock = ({
-  active,
+  disabled,
   options,
 }: {
-  active: boolean;
+  disabled: boolean;
   options?: (typeof client.infer)["[GET]/diplome/search/:search"][number]["dispositifs"];
 }) => {
   const {
@@ -54,7 +54,7 @@ export const DispositifBlock = ({
               name={name}
               bg={"white"}
               color="chakra-body-text"
-              disabled={!options || !active}
+              disabled={!options || disabled}
               placeholder="Sélectionner une option"
               onChange={(selected) => {
                 onChange(selected.target.value);

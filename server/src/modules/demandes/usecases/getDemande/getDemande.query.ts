@@ -11,6 +11,10 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
 import {
+  countDifferenceCapaciteApprentissage,
+  countDifferenceCapaciteScolaire,
+} from "../../../utils/countCapacite";
+import {
   isDemandeNotDeleted,
   isDemandeSelectable,
 } from "../../../utils/isDemandeSelectable";
@@ -23,8 +27,25 @@ export interface Filters extends z.infer<typeof getDemandeSchema.params> {
 export const getDemandeQuery = async ({ numero, user }: Filters) => {
   const demande = await kdb
     .selectFrom("latestDemandeView as demande")
+    .innerJoin(
+      "dispositif",
+      "dispositif.codeDispositif",
+      "demande.codeDispositif"
+    )
+    .innerJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .innerJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .innerJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
     .selectAll()
     .select((eb) => [
+      "dispositif.libelleDispositif as libelleDispositif",
+      "dataFormation.libelleFormation",
+      "dataEtablissement.libelleEtablissement",
+      "departement.libelleDepartement",
+      "departement.codeDepartement",
       jsonObjectFrom(
         eb
           .selectFrom("campagne")
@@ -146,6 +167,34 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
             .limit(1)
         ),
       }).as("metadata"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.createdBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+      ).as("createdBy"),
+      jsonObjectFrom(
+        eb
+          .selectFrom("user")
+          .whereRef("user.id", "=", "demande.updatedBy")
+          .select((eb) => [
+            sql<string>`CONCAT(${eb.ref("user.firstname")}, ' ',${eb.ref(
+              "user.lastname"
+            )})`.as("fullname"),
+            "user.id",
+            "user.role",
+          ])
+      ).as("updatedBy"),
+      countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
+      countDifferenceCapaciteApprentissage(eb).as(
+        "differenceCapaciteApprentissage"
+      ),
     ])
     .where(isDemandeNotDeleted)
     .where(isDemandeSelectable({ user }))
@@ -177,6 +226,7 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       }),
       statut: castDemandeStatutWithoutSupprimee(demande.statut),
       createdAt: demande.createdAt?.toISOString(),
+      updatedAt: demande.updatedAt?.toISOString(),
       campagne: cleanNull({
         ...demande.campagne,
       }),

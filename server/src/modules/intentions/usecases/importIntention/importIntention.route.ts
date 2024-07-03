@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -15,8 +14,7 @@ export const importIntentionRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
-        const user = request.user;
-        if (!user) throw Boom.forbidden();
+        const user = request.user!;
 
         const intention = await importIntentionUsecase({
           numero: request.params.numero,

@@ -21,5 +21,8 @@ export function formatEtablissement(
     tauxInsertion: etablissement.tauxInsertion || undefined,
     tauxPoursuite: etablissement.tauxPoursuite || undefined,
     secteur: etablissement.secteur || undefined,
+    libelleAcademie: etablissement.libelleAcademie,
+    libelleRegion: etablissement.libelleRegion,
+    libelleFormation: etablissement.libelleFormation || "",
   };
 }

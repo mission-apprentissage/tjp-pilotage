@@ -4,6 +4,7 @@ import { createRef, useEffect, useState } from "react";
 import { useEtablissementContext } from "../../context/etablissementContext";
 import { CenterMap } from "./components/CenterMap";
 import { CfdSelect } from "./components/CfdSelect";
+import { ExportList } from "./components/ExportList";
 import { ListeEtablissementsProches } from "./components/ListEtablissementsProches";
 import { Map } from "./components/Map";
 import { EtablissementMapContextProvider } from "./context/etablissementMapContext";
@@ -49,6 +50,7 @@ export const EtablissementMap = () => {
             <CfdSelect />
           </Box>
           <CenterMap />
+          <ExportList />
         </HStack>
         <Grid
           templateColumns={"repeat(2,50%)"}
