@@ -15,7 +15,7 @@ import { useState } from "react";
 import { Role } from "shared";
 
 import { client } from "@/api.client";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { RoleTag } from "../../../../components/RoleTag";
