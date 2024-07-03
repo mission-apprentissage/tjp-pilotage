@@ -212,9 +212,84 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
+}
+
+export interface DemandeIntentionNonMaterializedView {
+  isIntention: boolean | null;
+  numero: string | null;
+  cfd: string | null;
+  codeDispositif: string | null;
+  uai: string | null;
+  rentreeScolaire: number | null;
+  typeDemande: string | null;
+  motif: string[] | null;
+  autreMotif: string | null;
+  coloration: boolean | null;
+  libelleColoration: string | null;
+  amiCma: boolean | null;
+  amiCmaValide: boolean | null;
+  amiCmaEnCoursValidation: boolean | null;
+  amiCmaValideAnnee: string | null;
+  statut: string | null;
+  commentaire: string | null;
+  codeRegion: string | null;
+  codeAcademie: string | null;
+  createdBy: string | null;
+  updatedBy: string | null;
+  createdAt: Timestamp | null;
+  capaciteScolaire: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissage: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteApprentissageColoree: number | null;
+  mixte: boolean | null;
+  updatedAt: Timestamp | null;
+  libelleFCIL: string | null;
+  motifRefus: string[] | null;
+  autreMotifRefus: string | null;
+  campagneId: string | null;
+  id: string | null;
+  numeroHistorique: string | null;
+  recrutementRH: boolean | null;
+  nbRecrutementRH: number | null;
+  discipline1RecrutementRH: string | null;
+  discipline2RecrutementRH: string | null;
+  reconversionRH: boolean | null;
+  nbReconversionRH: number | null;
+  discipline1ReconversionRH: string | null;
+  discipline2ReconversionRH: string | null;
+  professeurAssocieRH: boolean | null;
+  nbProfesseurAssocieRH: number | null;
+  discipline1ProfesseurAssocieRH: string | null;
+  discipline2ProfesseurAssocieRH: string | null;
+  formationRH: boolean | null;
+  nbFormationRH: number | null;
+  discipline1FormationRH: string | null;
+  discipline2FormationRH: string | null;
+  partenairesEconomiquesImpliques: boolean | null;
+  partenaireEconomique1: string | null;
+  partenaireEconomique2: string | null;
+  cmqImplique: boolean | null;
+  filiereCmq: string | null;
+  nomCmq: string | null;
+  inspecteurReferent: string | null;
+  besoinRHPrecisions: string | null;
+  travauxAmenagement: boolean | null;
+  travauxAmenagementDescription: string | null;
+  travauxAmenagementCout: number | null;
+  achatEquipement: boolean | null;
+  achatEquipementDescription: string | null;
+  achatEquipementCout: number | null;
+  augmentationCapaciteAccueilHebergement: boolean | null;
+  augmentationCapaciteAccueilHebergementPlaces: number | null;
+  augmentationCapaciteAccueilHebergementPrecisions: string | null;
+  augmentationCapaciteAccueilRestauration: boolean | null;
+  augmentationCapaciteAccueilRestaurationPlaces: number | null;
+  augmentationCapaciteAccueilRestaurationPrecisions: string | null;
 }
 
 export interface Departement {
@@ -448,9 +523,12 @@ export interface Intention {
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
   inspecteurReferent: string | null;
+  achatEquipementCout: number | null;
+  travauxAmenagementCout: number | null;
 }
 
 export interface LatestDemandeIntentionNonMaterializedView {
+  isIntention: boolean | null;
   numero: string | null;
   cfd: string | null;
   codeDispositif: string | null;
@@ -512,8 +590,10 @@ export interface LatestDemandeIntentionNonMaterializedView {
   besoinRHPrecisions: string | null;
   travauxAmenagement: boolean | null;
   travauxAmenagementDescription: string | null;
+  travauxAmenagementCout: number | null;
   achatEquipement: boolean | null;
   achatEquipementDescription: string | null;
+  achatEquipementCout: number | null;
   augmentationCapaciteAccueilHebergement: boolean | null;
   augmentationCapaciteAccueilHebergementPlaces: number | null;
   augmentationCapaciteAccueilHebergementPrecisions: string | null;
@@ -577,8 +657,8 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  amiCmaEnCoursValidation: boolean | null;
   autreBesoinRH: string | null;
+  amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
 
@@ -652,6 +732,8 @@ export interface LatestIntentionNonMaterializedView {
   augmentationCapaciteAccueilRestaurationPrecisions: string | null;
   updatedBy: string | null;
   inspecteurReferent: string | null;
+  achatEquipementCout: number | null;
+  travauxAmenagementCout: number | null;
 }
 
 export interface Metier {
@@ -719,6 +801,7 @@ export interface DB {
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;
+  demandeIntentionNonMaterializedView: DemandeIntentionNonMaterializedView;
   departement: Departement;
   diplomeProfessionnel: DiplomeProfessionnel;
   discipline: Discipline;

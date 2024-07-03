@@ -63,7 +63,10 @@ export const TauxEmploi = ({
       }
     >
       {checkDataAvailability() ? (
-        <VerticalBarChart data={getVerticalBarChartData()} />
+        <VerticalBarChart
+          title="Taux d'emploi à 6 mois"
+          data={getVerticalBarChartData()}
+        />
       ) : (
         <CounterChart />
       )}

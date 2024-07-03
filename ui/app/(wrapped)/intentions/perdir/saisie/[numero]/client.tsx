@@ -1,6 +1,7 @@
 "use client";
 
 import { client } from "@/api.client";
+import { usePermission } from "@/utils/security/usePermission";
 
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
@@ -14,24 +15,32 @@ export default ({
     numero: string;
   };
 }) => {
-  const { data, isLoading } = client.ref("[GET]/intention/:numero").useQuery(
-    { params: { numero: numero } },
-    {
-      cacheTime: 0,
-    }
+  const hasEditIntentionPermission = usePermission(
+    "intentions-perdir/ecriture"
   );
+  const { data: intention, isLoading } = client
+    .ref("[GET]/intention/:numero")
+    .useQuery(
+      { params: { numero: numero } },
+      {
+        cacheTime: 0,
+      }
+    );
 
   if (isLoading) return <IntentionSpinner />;
   return (
     <>
-      {data && (
+      {intention && (
         <IntentionFilesProvider numero={numero}>
           <IntentionForm
-            disabled={!data.canEdit || !canEditIntention(data)}
+            disabled={
+              !intention.canEdit ||
+              !canEditIntention({ intention, hasEditIntentionPermission })
+            }
             formId={numero}
-            defaultValues={data}
-            formMetadata={data.metadata}
-            campagne={data.campagne}
+            defaultValues={intention}
+            formMetadata={intention.metadata}
+            campagne={intention.campagne}
           />
         </IntentionFilesProvider>
       )}

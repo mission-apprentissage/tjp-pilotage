@@ -45,7 +45,7 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -68,6 +68,9 @@ export const PageClient = () => {
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const queryParams = useSearchParams();
+  const hasEditIntentionPermission = usePermission(
+    "intentions-perdir/ecriture"
+  );
   const searchParams: {
     filters?: Partial<Filters>;
     search?: string;
@@ -446,7 +449,10 @@ export const PageClient = () => {
                               }
                             />
                           </Tooltip>
-                          {canEditIntention(intention) && (
+                          {canEditIntention({
+                            intention,
+                            hasEditIntentionPermission,
+                          }) && (
                             <Tooltip label="Modifier la demande">
                               <IconButton
                                 as={NextLink}
@@ -508,7 +514,9 @@ export const PageClient = () => {
                               onClick={() => {
                                 if (!intention.suiviId)
                                   submitSuivi({
-                                    body: { intentionNumero: intention.numero },
+                                    body: {
+                                      intentionNumero: intention.numero,
+                                    },
                                   });
                                 else
                                   deleteSuivi({

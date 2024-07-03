@@ -19,6 +19,7 @@ import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import {
   isTypeDiminution,
   isTypeFermeture,
+  shouldDisplayColoration,
   shouldDisplayTypeDemande,
   TYPES_DEMANDES_OPTIONS,
 } from "../../../../utils/typeDemandeUtils";
@@ -95,9 +96,11 @@ export const TypeDemandeField = chakra(
     const {
       formState: { errors },
       control,
+      getValues,
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
+    const libelleFCIL = getValues("libelleFCIL");
 
     const { campagne } = useContext(CampagneContext);
 
@@ -128,7 +131,8 @@ export const TypeDemandeField = chakra(
                   shouldDisplayTypeDemande(
                     item.value,
                     campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE
-                  ) && (
+                  ) &&
+                  shouldDisplayColoration(item.value, libelleFCIL) && (
                     <RadioCard
                       selected={value === item.value}
                       key={item.value}

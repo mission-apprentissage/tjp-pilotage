@@ -72,6 +72,14 @@ export interface DB
     >;
   };
 }
+export interface DB
+  extends Omit<DBSchema, "demandeIntentionNonMaterializedView"> {
+  demandeIntentionView: {
+    [K in keyof DBSchema["demandeIntentionNonMaterializedView"]]: NonNullable<
+      DBSchema["demandeIntentionNonMaterializedView"][K]
+    >;
+  };
+}
 
 export const kdb = new Kysely<DB>({
   dialect: new PostgresDialect({ pool }),

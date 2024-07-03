@@ -64,7 +64,10 @@ export const TauxDevenirFavorable = ({
       }
     >
       {checkDataAvailability() ? (
-        <VerticalBarChart data={getVerticalBarChartData()} />
+        <VerticalBarChart
+          title="Devenir favorable"
+          data={getVerticalBarChartData()}
+        />
       ) : (
         <CounterChart />
       )}

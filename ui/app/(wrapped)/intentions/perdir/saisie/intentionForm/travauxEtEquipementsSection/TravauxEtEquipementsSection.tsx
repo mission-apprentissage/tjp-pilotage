@@ -2,8 +2,10 @@ import { Divider, Flex, Heading, Img } from "@chakra-ui/react";
 import { RefObject } from "react";
 
 import { SCROLL_OFFSET } from "../../../SCROLL_OFFSETS";
+import { AchatEquipementCoutField } from "./AchatEquipementCoutField";
 import { AchatEquipementDescriptionField } from "./AchatEquipementDescriptionField";
 import { AchatEquipementField } from "./AchatEquipementField";
+import { TravauxAmenagementCoutField } from "./TravauxAmenagementCoutField";
 import { TravauxAmenagementDescriptionField } from "./TravauxAmenagementDescriptionField";
 import { TravauxAmenagementField } from "./TravauxAmenagementField";
 
@@ -29,8 +31,10 @@ export const TravauxEtEquipementsSection = ({
       <Divider pt="4" mb="4" />
       <Flex gap="6" mb="6" direction={"column"}>
         <TravauxAmenagementField disabled={disabled} />
+        <TravauxAmenagementCoutField disabled={disabled} />
         <TravauxAmenagementDescriptionField disabled={disabled} />
         <AchatEquipementField disabled={disabled} />
+        <AchatEquipementCoutField disabled={disabled} />
         <AchatEquipementDescriptionField disabled={disabled} />
       </Flex>
     </Flex>

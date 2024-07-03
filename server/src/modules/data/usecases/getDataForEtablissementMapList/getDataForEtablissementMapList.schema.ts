@@ -1,6 +1,7 @@
 import { z } from "zod";
 
 export const EtablissementSchema = z.object({
+  libelleFormation: z.string(),
   uai: z.string(),
   latitude: z.number(),
   longitude: z.number(),
@@ -8,6 +9,8 @@ export const EtablissementSchema = z.object({
   commune: z.string(),
   codeDepartement: z.string(),
   libelleEtablissement: z.string(),
+  libelleAcademie: z.string(),
+  libelleRegion: z.string(),
   libellesDispositifs: z.array(z.string()),
   voies: z.array(z.string()),
   effectif: z.number().optional(),
@@ -28,6 +31,7 @@ export const getDataForEtablissementMapListSchema = {
       minLng: z.string(),
       maxLng: z.string(),
     }),
+    limit: z.coerce.number().optional(),
   }),
   response: {
     200: z.object({

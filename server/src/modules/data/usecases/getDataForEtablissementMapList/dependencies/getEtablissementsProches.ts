@@ -9,13 +9,22 @@ import { RouteQueryString } from "../getDataForEtablissementMapList.usecase";
 
 export interface Filters extends RouteQueryString {}
 
-export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
+export const getEtablissementsProches = async ({
+  cfd,
+  bbox,
+  limit = 100,
+}: Filters) =>
   await kdb
     .selectFrom("etablissement")
     .leftJoin(
       "formationEtablissement",
       "formationEtablissement.UAI",
       "etablissement.UAI"
+    )
+    .leftJoin(
+      "dataFormation",
+      "dataFormation.cfd",
+      "formationEtablissement.cfd"
     )
     .leftJoin(
       "indicateurEntree",
@@ -32,8 +41,15 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "indicateurSortie.formationEtablissementId",
       "formationEtablissement.id"
     )
+    .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .innerJoin(
+      "academie",
+      "academie.codeAcademie",
+      "etablissement.codeAcademie"
+    )
     .distinct()
     .select((sb) => [
+      "dataFormation.libelleFormation",
       sql<string[]>`array_agg(distinct ${sb.ref(
         "formationEtablissement.voie"
       )})`.as("voies"),
@@ -45,12 +61,14 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.commune",
       "etablissement.longitude",
       "etablissement.latitude",
+      "etablissement.secteur",
       sql<string>`trim(split_part(split_part(split_part(split_part(${sb.ref(
         "etablissement.libelleEtablissement"
       )},' - Lycée',1),' -Lycée',1),',',1),' : ',1))`.as(
         "libelleEtablissement"
       ),
-      "etablissement.secteur",
+      "region.libelleRegion",
+      "academie.libelleAcademie",
       sb.fn.max(selectTauxPoursuite("indicateurSortie")).as("tauxPoursuite"),
       sb.fn
         .max(selectTauxInsertion6mois("indicateurSortie"))
@@ -88,8 +106,9 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       }
       return q;
     })
-    .limit(100)
+    .limit(limit)
     .groupBy([
+      "dataFormation.libelleFormation",
       "etablissement.UAI",
       "etablissement.codeDepartement",
       "etablissement.commune",
@@ -97,5 +116,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "etablissement.latitude",
       "etablissement.libelleEtablissement",
       "etablissement.secteur",
+      "region.libelleRegion",
+      "academie.libelleAcademie",
     ])
     .execute();
