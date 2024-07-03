@@ -18,6 +18,8 @@ export const getFiltersQuery = async ({
   CPC,
   codeNsf,
   campagne,
+  codeAcademie,
+  codeRegion,
 }: Filters) => {
   const inStatus = (eb: ExpressionBuilder<DB, "demande">) => {
     if (!statut || statut === undefined) return sql<true>`true`;
@@ -102,6 +104,8 @@ export const getFiltersQuery = async ({
       eb.ref("region.codeRegion").as("value"),
       eb.ref("region.libelleRegion").as("label"),
     ])
+    .leftJoin("departement", "departement.codeRegion", "region.codeRegion")
+    .leftJoin("academie", "academie.codeRegion", "region.codeRegion")
     .where("region.codeRegion", "is not", null)
     .where(notPerimetreIJRegion)
     .distinct()
@@ -119,6 +123,13 @@ export const getFiltersQuery = async ({
     ])
     .where("academie.codeAcademie", "is not", null)
     .where(notPerimetreIJAcademie)
+    .$call((q) => {
+      if (codeRegion) {
+        return q.where("region.codeRegion", "=", codeRegion);
+      }
+
+      return q;
+    })
     .orderBy("label", "asc")
     .execute();
 
@@ -129,6 +140,17 @@ export const getFiltersQuery = async ({
     ])
     .where("departement.codeDepartement", "is not", null)
     .where(notPerimetreIJDepartement)
+    .$call((q) => {
+      if (codeRegion) {
+        return q.where("region.codeRegion", "=", codeRegion);
+      }
+
+      if (codeAcademie) {
+        return q.where("academie.codeAcademie", "=", codeAcademie);
+      }
+
+      return q;
+    })
     .orderBy("label", "asc")
     .execute();
 
