@@ -31,7 +31,9 @@ export const countIntentionsQuery = async ({
       })
     )
     .leftJoin("suivi", (join) =>
-      join.onRef("suivi.intentionNumero", "=", "intention.numero")
+      join
+        .onRef("suivi.intentionNumero", "=", "intention.numero")
+        .on("suivi.userId", "=", user.id)
     )
     .select((eb) =>
       sql<number>`count(${eb.ref("intention.numero")})`.as("total")
