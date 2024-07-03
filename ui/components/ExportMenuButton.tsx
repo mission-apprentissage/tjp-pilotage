@@ -1,6 +1,7 @@
 import { DownloadIcon } from "@chakra-ui/icons";
 import {
   Button,
+  Flex,
   Menu,
   MenuButton,
   MenuButtonProps,
@@ -36,12 +37,14 @@ type ExportMenuButtonProps = MenuButtonProps & {
   onExportCsv?: () => Promise<void>;
   onExportExcel?: () => Promise<void>;
   variant?: string;
+  isQueryLoading?: boolean;
 };
 
 export const ExportMenuButton = ({
   onExportCsv,
   onExportExcel,
   variant = "ghost",
+  isQueryLoading,
   ...rest
 }: ExportMenuButtonProps) => {
   const [isLoading, setIsLoading] = useState<boolean>(false);
@@ -82,7 +85,9 @@ export const ExportMenuButton = ({
         leftIcon={<DownloadIcon />}
         {...rest}
       >
-        Exporter
+        <Flex minW={20}>
+          {isQueryLoading ? <Spinner mr="2" size="sm" /> : "Exporter"}
+        </Flex>
       </MenuButton>
       <MenuList p={0} zIndex={"tooltip"}>
         <ExportButton onExport={handleExportCsv} />

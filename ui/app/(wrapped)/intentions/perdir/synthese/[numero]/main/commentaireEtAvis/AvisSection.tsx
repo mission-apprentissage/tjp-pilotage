@@ -26,7 +26,7 @@ import { hasRole } from "shared";
 
 import { client } from "@/api.client";
 import { AvisStatutTag } from "@/app/(wrapped)/intentions/perdir/components/AvisStatutTag";
-import { formatDate } from "@/utils/formatDate";
+import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 

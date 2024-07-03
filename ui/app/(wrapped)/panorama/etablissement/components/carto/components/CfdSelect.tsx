@@ -5,12 +5,13 @@ import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 import AsyncSelect from "react-select/async";
 
-import { client } from "../../../../../../../api.client";
+import { client } from "@/api.client";
 import {
   BadgeTypeFamille,
   TypeFamilleKeys,
-} from "../../../../../../../components/BadgeTypeFamille";
-import { themeDefinition } from "../../../../../../../theme/theme";
+} from "@/components/BadgeTypeFamille";
+import { themeDefinition } from "@/theme/theme";
+
 import { useEtablissementContext } from "../../../context/etablissementContext";
 import { AnalyseDetaillee } from "../../analyse-detaillee/types";
 import { useEtablissementMapContext } from "../context/etablissementMapContext";
@@ -122,12 +123,9 @@ export const CfdSelect = () => {
       ),
       "value"
     );
-    let queryResult: TCfdSearchResult[] = [];
-
-    if (search.length >= 3)
-      queryResult = await client
-        .ref("[GET]/diplome/search/:search")
-        .query({ params: { search }, query: {} });
+    const queryResult: TCfdSearchResult[] = await client
+      .ref("[GET]/diplome/search/:search")
+      .query({ params: { search }, query: {} });
 
     const filteredQueryResult = queryResult.filter(
       (result) =>
@@ -140,7 +138,9 @@ export const CfdSelect = () => {
         options: searchResults.map(formatSearchResultToOption),
       },
       {
-        label: `AUTRES (${filteredQueryResult.length})`,
+        label: `AUTRES (${filteredQueryResult.length}${
+          filteredQueryResult.length === 20 && "+"
+        })`,
         options: filteredQueryResult.map(formatSearchResultToOption),
       },
     ];
