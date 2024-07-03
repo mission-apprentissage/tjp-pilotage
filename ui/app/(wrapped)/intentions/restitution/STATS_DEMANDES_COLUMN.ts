@@ -60,8 +60,10 @@ export const STATS_DEMANDES_COLUMNS = {
   disciplinesFormationRH: "Disciplines des formations",
   // Travaux et achats
   travauxAmenagement: "Travaux ou aménagement ?",
+  travauxAmenagementCout: "Coût des travaux et aménagement",
   travauxAmenagementDescription: "Description des travaux et aménagement",
   achatEquipement: "Achat d'équipement ?",
+  achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
   augmentationCapaciteAccueilHebergement:
@@ -128,8 +130,10 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   nbFormationRH: "Nombre de formations",
   // Travaux et achats
   travauxAmenagement: "Travaux ou aménagement ?",
+  travauxAmenagementCout: "Coût des travaux et aménagement",
   travauxAmenagementDescription: "Description des travaux et aménagement",
   achatEquipement: "Achat d'équipement ?",
+  achatEquipementCout: "Coût des achats d'équipement",
   achatEquipementDescription: "Description des achats d'équipement",
   // Hébergement
   augmentationCapaciteAccueilHebergement:
