@@ -85,20 +85,6 @@ function RadioCard({
   );
 }
 
-// const getTypeDemandeOptions = ({
-//   annee,
-//   hasFCIL,
-// }: {
-//   annee?: string;
-//   hasFCIL: boolean;
-// }) => {
-//   return Object.values(TYPES_DEMANDES_OPTIONS).filter(
-//     (item) =>
-//       shouldDisplayTypeDemande(item.value, annee ?? CURRENT_ANNEE_CAMPAGNE) &&
-//       shouldDisplayColoration(item.value, hasFCIL)
-//   );
-// };
-
 export const TypeDemandeField = chakra(
   ({
     disabled = false,
