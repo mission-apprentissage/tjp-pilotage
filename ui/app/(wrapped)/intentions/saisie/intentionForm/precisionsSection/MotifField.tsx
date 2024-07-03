@@ -67,7 +67,8 @@ export const MotifField = chakra(
     );
 
     const [typeDemande, coloration] = watch(["typeDemande", "coloration"]);
-    if (!typeDemande) return <></>;
+
+    if (!typeDemande) return null;
 
     return (
       <FormControl className={className} isInvalid={!!errors.motif} isRequired>
@@ -77,7 +78,6 @@ export const MotifField = chakra(
         </FormLabel>
         <Controller
           name="motif"
-          shouldUnregister
           disabled={disabled}
           control={control}
           rules={{ required: "Le motif est obligatoire" }}
