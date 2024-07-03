@@ -5,11 +5,13 @@ import {
   Link,
   ListItem,
   Table,
+  TableContainer,
   Tbody,
   Td,
   Text,
   Th,
   Thead,
+  Tr,
   UnorderedList,
   VStack,
 } from "@chakra-ui/react";
@@ -20,7 +22,13 @@ export default function DeclarationAccessibilite() {
     <Container maxW="container.xl" py="24px" my={10}>
       <VStack gap="16px" alignItems="start">
         <Heading as="h1">Politique de confidentialité - Orion</Heading>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Qui est responsable d'Orion ?
         </Heading>
         <Text>
@@ -29,7 +37,13 @@ export default function DeclarationAccessibilite() {
           service public numérique qui contribue au pilotage de la révision et
           l’évolution de l’offre de formation des lycéens professionnels.
         </Text>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Pourquoi traitons-nous des données à caractère personnel ?
         </Heading>
         <Text>
@@ -37,7 +51,13 @@ export default function DeclarationAccessibilite() {
           l'expression et l'analyse de demandes d'évolution des formations
           proposées dans les lycées professionnels.
         </Text>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Quelles sont les données à caractère personnel que nous traitons ?
         </Heading>
         <Text>Orion traite les données suivantes :</Text>
@@ -53,7 +73,13 @@ export default function DeclarationAccessibilite() {
             </Highlight>
           </ListItem>
         </UnorderedList>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Qu’est-ce qui nous autorise à traiter des données à caractère
           personnel ?
         </Heading>
@@ -74,23 +100,41 @@ export default function DeclarationAccessibilite() {
           des sports et de l’enseignement supérieur et de la recherche, plus
           précisément son article 47.
         </Text>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Pendant combien de temps conservons-nous ces données ?
         </Heading>
-        <Table>
-          <Thead bgColor={"grey.850"}>
-            <Th fontWeight={700}>Catégories de données</Th>
-            <Th fontWeight={700}>Durée de conservation</Th>
-          </Thead>
-          <Tbody>
-            <Td>Données relatives aux utilisateurs</Td>
-            <Td>
-              Les données sont conservées pendant 2 ans à compteur du dernier
-              contact avec l'utilisateur
-            </Td>
-          </Tbody>
-        </Table>
-        <Heading as="h2" fontSize={14}>
+        <TableContainer>
+          <Table>
+            <Thead bgColor={"grey.850"}>
+              <Tr>
+                <Th fontWeight={700}>Catégories de données</Th>
+                <Th fontWeight={700}>Durée de conservation</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>Données relatives aux utilisateurs</Td>
+                <Td>
+                  Les données sont conservées pendant 2 ans à compteur du
+                  dernier contact avec l'utilisateur
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Quels sont vos droits ?
         </Heading>
         <Text>Vous disposez :</Text>
@@ -134,7 +178,13 @@ export default function DeclarationAccessibilite() {
           Nous nous engageons à vous répondre dans un délai raisonnable qui ne
           saurait dépasser 1 mois à compter de la réception de votre demande.
         </Text>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Qui va avoir accès à ces données ?
         </Heading>
         <Text>
@@ -145,7 +195,13 @@ export default function DeclarationAccessibilite() {
           <ListItem>Les membres habilités de l'équipe Orion ;</ListItem>
           <ListItem>Les administrateurs.</ListItem>
         </UnorderedList>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Quelles mesures de sécurité mettons-nous en place ?
         </Heading>
         <Text>
@@ -166,32 +222,50 @@ export default function DeclarationAccessibilite() {
             caractère personnel.
           </ListItem>
         </UnorderedList>
-        <Heading as="h2" fontSize={14}>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Qui nous aide à traiter les données à caractère personnel ?
         </Heading>
-        <Table>
-          <Thead bgColor={"grey.850"}>
-            <Th fontWeight={700}>Sous-traitant</Th>
-            <Th fontWeight={700}>Pays destinataire</Th>
-            <Th fontWeight={700}>Traitement réalisé</Th>
-            <Th fontWeight={700}>Garanties</Th>
-          </Thead>
-          <Tbody>
-            <Td>OVH</Td>
-            <Td>France</Td>
-            <Td>Hébergement</Td>
-            <Td>
-              <Link
-                as={NextLink}
-                color={"bluefrance.113"}
-                href="https://us.ovhcloud.com/legal/data-processing-agreement/"
-              >
-                https://us.ovhcloud.com/legal/data-processing-agreement/
-              </Link>
-            </Td>
-          </Tbody>
-        </Table>
-        <Heading as="h2" fontSize={14}>
+        <TableContainer>
+          <Table>
+            <Thead bgColor={"grey.850"}>
+              <Tr>
+                <Th fontWeight={700}>Sous-traitant</Th>
+                <Th fontWeight={700}>Pays destinataire</Th>
+                <Th fontWeight={700}>Traitement réalisé</Th>
+                <Th fontWeight={700}>Garanties</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>OVH</Td>
+                <Td>France</Td>
+                <Td>Hébergement</Td>
+                <Td>
+                  <Link
+                    as={NextLink}
+                    color={"bluefrance.113"}
+                    href="https://us.ovhcloud.com/legal/data-processing-agreement/"
+                  >
+                    https://us.ovhcloud.com/legal/data-processing-agreement/
+                  </Link>
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
+        <Heading
+          as="h2"
+          fontSize={14}
+          mb={3}
+          mt={1}
+          textDecoration={"underline"}
+        >
           Cookies
         </Heading>
         <Text>
@@ -259,32 +333,38 @@ export default function DeclarationAccessibilite() {
           pas de donnée à caractère personnel et ne dépose ni cookies ni
           traceurs.
         </Text>
-        <Table>
-          <Thead bgColor={"grey.850"}>
-            <Th fontWeight={700}>Nom du cookie</Th>
-            <Th fontWeight={700}>Pays destinataire</Th>
-            <Th fontWeight={700}>Traitement réalisé</Th>
-            <Th fontWeight={700}>Base légale</Th>
-            <Th fontWeight={700}>Durée de vie</Th>
-            <Th fontWeight={700}>Garanties</Th>
-          </Thead>
-          <Tbody>
-            <Td>Crisp.chat</Td>
-            <Td>France</Td>
-            <Td>Outil de support / Chatbot</Td>
-            <Td>Consentement</Td>
-            <Td>13 mois</Td>
-            <Td>
-              <Link
-                as={NextLink}
-                color={"bluefrance.113"}
-                href="https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/"
-              >
-                https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/
-              </Link>
-            </Td>
-          </Tbody>
-        </Table>
+        <TableContainer>
+          <Table>
+            <Thead bgColor={"grey.850"}>
+              <Tr>
+                <Th fontWeight={700}>Nom du cookie</Th>
+                <Th fontWeight={700}>Pays destinataire</Th>
+                <Th fontWeight={700}>Traitement réalisé</Th>
+                <Th fontWeight={700}>Base légale</Th>
+                <Th fontWeight={700}>Durée de vie</Th>
+                <Th fontWeight={700}>Garanties</Th>
+              </Tr>
+            </Thead>
+            <Tbody>
+              <Tr>
+                <Td>Crisp.chat</Td>
+                <Td>France</Td>
+                <Td>Outil de support / Chatbot</Td>
+                <Td>Consentement</Td>
+                <Td>13 mois</Td>
+                <Td>
+                  <Link
+                    as={NextLink}
+                    color={"bluefrance.113"}
+                    href="https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/"
+                  >
+                    https://help.crisp.chat/en/article/how-to-sign-my-gdpr-data-processing-agreement-dpa-1wfmngo/
+                  </Link>
+                </Td>
+              </Tr>
+            </Tbody>
+          </Table>
+        </TableContainer>
       </VStack>
     </Container>
   );
