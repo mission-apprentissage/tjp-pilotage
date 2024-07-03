@@ -342,9 +342,7 @@ export const PageClient = () => {
                     <OrderIcon {...order} column="statut" />
                     {INTENTIONS_COLUMNS.statut}
                   </Th>
-                  {/* {isCampagneEnCours && ( */}
                   <Th textAlign={"center"}>actions</Th>
-                  {/* )} */}
                   <Th
                     cursor="pointer"
                     onClick={() => handleOrder("typeDemande")}
@@ -423,7 +421,6 @@ export const PageClient = () => {
                       <Td textAlign={"center"} w={0}>
                         <StatutTag statut={intention.statut} size="md" />
                       </Td>
-                      {/* {isCampagneEnCours && ( */}
                       <Td textAlign={"center"}>
                         <Flex
                           direction={"row"}
@@ -541,7 +538,6 @@ export const PageClient = () => {
                           />
                         </Flex>
                       </Td>
-                      {/* )} */}
                       <Td textAlign={"center"}>
                         <Tag colorScheme="blue" size={"md"} h="fit-content">
                           {getTypeDemandeLabel(intention.typeDemande)}
