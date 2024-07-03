@@ -10,6 +10,7 @@ import {
   NumberInputStepper,
   Textarea,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
@@ -20,9 +21,17 @@ export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
       formState: { errors },
       control,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("augmentationCapaciteAccueilRestauration");
+
+    useEffect(() => {
+      if (!visible) {
+        setValue("augmentationCapaciteAccueilRestaurationPlaces", undefined);
+      }
+    }, [visible, setValue]);
+
     if (!visible) return null;
 
     return (
@@ -33,7 +42,6 @@ export const AugmentationCapaciteAccueilRestaurationPlacesField = chakra(
         <FormLabel>Combien de places ?</FormLabel>
         <Controller
           name="augmentationCapaciteAccueilRestaurationPlaces"
-          shouldUnregister
           control={control}
           rules={{
             required: "Le champ est obligatoire",
@@ -109,7 +117,7 @@ export const CommentaireField = chakra(
         <Textarea
           variant="grey"
           height={150}
-          {...register("commentaire", { shouldUnregister: true, disabled })}
+          {...register("commentaire", { disabled })}
         />
         {errors.commentaire && (
           <FormErrorMessage>{errors.commentaire.message}</FormErrorMessage>

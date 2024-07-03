@@ -33,7 +33,6 @@ export const CapaciteField = ({
     <FormControl className={className} isInvalid={!!errors[name]}>
       <Controller
         name={name}
-        shouldUnregister
         control={control}
         render={({ field: { onChange, value, onBlur, ref, name } }) => {
           return (

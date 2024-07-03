@@ -34,7 +34,6 @@ export const LibelleFCILField = chakra(
                 bgColor={"white"}
                 color="black"
                 {...register("libelleFCIL", {
-                  shouldUnregister: true,
                   required: "Ce champ est obligatoire",
                 })}
                 placeholder="Libellé FCIL"

@@ -5,6 +5,7 @@ import {
   FormLabel,
   Textarea,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
@@ -15,9 +16,19 @@ export const AugmentationCapaciteAccueilRestaurationPrecisionsField = chakra(
       formState: { errors },
       register,
       watch,
+      setValue,
     } = useFormContext<IntentionForms>();
 
     const visible = watch("augmentationCapaciteAccueilRestauration");
+
+    useEffect(() => {
+      if (!visible) {
+        setValue(
+          "augmentationCapaciteAccueilRestaurationPrecisions",
+          undefined
+        );
+      }
+    }, [visible, setValue]);
 
     if (!visible) return null;
 
@@ -31,7 +42,6 @@ export const AugmentationCapaciteAccueilRestaurationPrecisionsField = chakra(
           variant="grey"
           height={50}
           {...register("augmentationCapaciteAccueilRestaurationPrecisions", {
-            shouldUnregister: true,
             disabled,
           })}
         />

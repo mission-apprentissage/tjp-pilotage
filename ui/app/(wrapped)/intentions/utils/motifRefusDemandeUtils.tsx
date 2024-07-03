@@ -63,4 +63,6 @@ const motifs: Record<TypeDemande, MotifRefusLabel[]> = {
   augmentation_compensation: motifsRefusOuverture,
   fermeture: motifsRefusFermeture,
   diminution: motifsRefusFermeture,
+  transfert: motifsRefusOuverture,
+  coloration: motifsRefusOuverture,
 };

@@ -169,9 +169,7 @@ export const CfdUaiSection = ({
           active={active && !disabled}
         />
         <DispositifBlock options={dispositifs} active={active && !disabled} />
-        {isFCIL && (
-          <LibelleFCILField active={active && !disabled}></LibelleFCILField>
-        )}
+        <LibelleFCILField active={active && !disabled} isFCIL={isFCIL} />
         <Flex direction={"row"} justify={"space-between"}>
           <Flex direction="column" w="100%" maxW="752px">
             <Box mb="auto" w="100%" maxW="752px">

@@ -8,16 +8,34 @@ import {
   Input,
   LightMode,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import { IntentionForms } from "../defaultFormValues";
 
 export const LibelleFCILField = chakra(
-  ({ className, active }: { className?: string; active: boolean }) => {
+  ({
+    className,
+    active,
+    isFCIL,
+  }: {
+    className?: string;
+    active: boolean;
+    isFCIL: boolean;
+  }) => {
     const {
       formState: { errors },
       register,
+      setValue,
     } = useFormContext<IntentionForms>();
+
+    useEffect(() => {
+      if (!isFCIL) {
+        setValue("libelleFCIL", undefined);
+      }
+    }, [isFCIL, setValue]);
+
+    if (!isFCIL) return null;
 
     return (
       <LightMode>
@@ -35,7 +53,6 @@ export const LibelleFCILField = chakra(
                 bgColor={"white"}
                 color="black"
                 {...register("libelleFCIL", {
-                  shouldUnregister: true,
                   required: "Ce champ est obligatoire",
                 })}
                 placeholder="Libellé FCIL"

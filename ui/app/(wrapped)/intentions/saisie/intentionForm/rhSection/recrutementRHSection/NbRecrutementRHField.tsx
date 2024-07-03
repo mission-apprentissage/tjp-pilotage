@@ -28,7 +28,6 @@ export const NbRecrutementRHField = chakra(
         <FormLabel>Combien de recrutements ?</FormLabel>
         <Controller
           name="nbRecrutementRH"
-          shouldUnregister
           control={control}
           rules={{
             required: "Le champ est obligatoire",

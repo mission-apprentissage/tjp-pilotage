@@ -26,7 +26,6 @@ export const InspecteurReferentField = chakra(
           w="xs"
           bgColor={"white"}
           {...register("inspecteurReferent", {
-            shouldUnregister: true,
             disabled: disabled,
           })}
         />
