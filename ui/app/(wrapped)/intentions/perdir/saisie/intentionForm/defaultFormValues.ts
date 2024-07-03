@@ -57,8 +57,10 @@ export type IntentionForms = {
   besoinRHPrecisions?: string;
   // Travaux et équipements
   travauxAmenagement?: boolean;
+  travauxAmenagementCout?: number;
   travauxAmenagementDescription?: string;
   achatEquipement?: boolean;
+  achatEquipementCout?: number;
   achatEquipementDescription?: string;
   // Internat et restauration
   augmentationCapaciteAccueilHebergement?: boolean;

@@ -3,6 +3,7 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
@@ -54,6 +55,9 @@ export default ({
       displayType: DisplayTypeEnum.commentairesEtAvis,
     });
 
+  const isCampagneEnCours =
+    intention?.campagne?.statut === CampagneStatutEnum["en cours"];
+
   if (isLoading) return <SyntheseSpinner />;
   if (!intention) return null;
 
@@ -84,24 +88,35 @@ export default ({
             },
           ]}
         />
-        <Flex direction={"column"} gap={8}>
-          <StepperSection intention={intention} />
-          <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-            <GridItem colSpan={3}>
-              <MainSection
-                intention={intention}
-                displayType={
-                  searchParams.displayType ?? DisplayTypeEnum.synthese
-                }
-                displaySynthese={displaySynthese}
-                displayCommentairesEtAvis={displayCommentairesEtAvis}
-              />
-            </GridItem>
-            <GridItem colSpan={1}>
-              <ActionsSection intention={intention} />
-            </GridItem>
-          </Grid>
-        </Flex>
+        {isCampagneEnCours ? (
+          <Flex direction={"column"} gap={8}>
+            <StepperSection intention={intention} />
+            <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
+              <GridItem colSpan={3}>
+                <MainSection
+                  isCampagneEnCours={isCampagneEnCours}
+                  intention={intention}
+                  displayType={
+                    searchParams.displayType ?? DisplayTypeEnum.synthese
+                  }
+                  displaySynthese={displaySynthese}
+                  displayCommentairesEtAvis={displayCommentairesEtAvis}
+                />
+              </GridItem>
+              <GridItem colSpan={1}>
+                <ActionsSection intention={intention} />
+              </GridItem>
+            </Grid>
+          </Flex>
+        ) : (
+          <MainSection
+            intention={intention}
+            displayType={searchParams.displayType ?? DisplayTypeEnum.synthese}
+            displaySynthese={displaySynthese}
+            displayCommentairesEtAvis={displayCommentairesEtAvis}
+            isCampagneEnCours={isCampagneEnCours}
+          />
+        )}
       </Flex>
     </Flex>
   );
