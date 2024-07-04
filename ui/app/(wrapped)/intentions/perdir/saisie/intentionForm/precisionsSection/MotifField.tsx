@@ -23,6 +23,7 @@ import {
 } from "../../../../utils/motifDemandeUtils";
 import {
   getTypeDemandeLabel,
+  isTypeAjustement,
   isTypeFermeture,
   TypeDemande,
 } from "../../../../utils/typeDemandeUtils";
@@ -67,7 +68,10 @@ export const MotifField = chakra(
     );
 
     const [typeDemande, coloration] = watch(["typeDemande", "coloration"]);
-    if (!typeDemande) return null;
+
+    const isMotifVisible = typeDemande && !isTypeAjustement(typeDemande);
+
+    if (!isMotifVisible) return null;
 
     return (
       <FormControl className={className} isInvalid={!!errors.motif} isRequired>

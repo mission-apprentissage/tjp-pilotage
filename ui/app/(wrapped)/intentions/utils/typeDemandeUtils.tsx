@@ -13,8 +13,16 @@ export const shouldDisplayColoration = (
 
 export const shouldDisplayTypeDemande = (
   typeDemande: TypeDemande,
-  anneeCampagne: string
-) => TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne);
+  anneeCampagne: string,
+  rentreeScolaire?: number
+) => {
+  if (rentreeScolaire && parseInt(anneeCampagne) === rentreeScolaire)
+    return isTypeAjustement(typeDemande);
+  return (
+    TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne) &&
+    !isTypeAjustement(typeDemande)
+  );
+};
 
 export const isTypeFermeture = (typeDemande: TypeDemande) =>
   typeDemande === "fermeture";
@@ -38,6 +46,9 @@ export const isTypeTransfert = (typeDemande: TypeDemande) =>
 
 export const isTypeColoration = (typeDemande: TypeDemande) =>
   typeDemande === "coloration";
+
+export const isTypeAjustement = (typeDemande: TypeDemande) =>
+  typeDemande === "ajustement";
 
 export const getTypeDemandeLabelFiltre = (typeDemande?: TypeDemande): string =>
   typeDemande
@@ -235,6 +246,27 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           Si la formation n’est pas ouverte sur l’établissement actuellement,
           j’utilise le type de demande “Ouverture nette” et je coche Coloration
           dans la section “Précisions sur votre demande”.
+        </Text>
+      </>
+    ),
+  },
+  ajustement: {
+    value: "ajustement",
+    label: "Ajustement de rentrée",
+    campagnes: ["2024", "2025"],
+    desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à une hause imprévue des demandes sur la rentrée scolaire",
+    exemple: (
+      <>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour une ouverture :
+        </Text>
+        <Text>
+          J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
+          qui ne dispense pas cette formation.
+        </Text>
+        <Text>
+          Je saisis les capacités pour la première année de la spécialité (pas
+          la seconde commune).
         </Text>
       </>
     ),

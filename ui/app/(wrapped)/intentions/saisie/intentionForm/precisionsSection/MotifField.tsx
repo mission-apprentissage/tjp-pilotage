@@ -13,6 +13,8 @@ import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 import { isTypeColoration } from "shared/validators/demandeValidators";
 
+import { isTypeAjustement } from "@/app/(wrapped)/intentions/utils/typeDemandeUtils";
+
 import {
   getMotifsTypeDemande,
   MotifCampagne,
@@ -67,8 +69,9 @@ export const MotifField = chakra(
     );
 
     const [typeDemande, coloration] = watch(["typeDemande", "coloration"]);
+    const isMotifVisible = typeDemande && !isTypeAjustement(typeDemande);
 
-    if (!typeDemande) return null;
+    if (!isMotifVisible) return null;
 
     return (
       <FormControl className={className} isInvalid={!!errors.motif} isRequired>
