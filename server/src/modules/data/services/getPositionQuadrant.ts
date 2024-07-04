@@ -1,12 +1,12 @@
 const PREMIERE_COMMUNE = "1ere_commune";
 const SECONDE_COMMUNE = "2nde_commune";
 
-const Q1 = "Q1";
-const Q2 = "Q2";
-const Q3 = "Q3";
-const Q4 = "Q4";
-const HORS_QUADRANT = "Hors quadrant";
-const UNDEFINED_QUADRANT = "-";
+export const Q1 = "Q1";
+export const Q2 = "Q2";
+export const Q3 = "Q3";
+export const Q4 = "Q4";
+export const HORS_QUADRANT = "Hors quadrant";
+export const UNDEFINED_QUADRANT = "-";
 
 export const getPositionQuadrant = (
   formation: {

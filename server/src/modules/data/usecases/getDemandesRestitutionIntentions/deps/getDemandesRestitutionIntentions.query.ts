@@ -102,6 +102,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "departement.codeDepartement as codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
+      "dataFormation.typeFamille",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
