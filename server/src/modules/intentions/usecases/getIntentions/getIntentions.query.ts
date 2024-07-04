@@ -45,7 +45,8 @@ export const getIntentionsQuery = async (
     order,
     orderBy,
   }: Filters,
-  anneeCampagne: string
+  anneeCampagne: string,
+  shouldFetchOnlyIntention: boolean
 ) => {
   const search_array = getNormalizedSearchArray(search);
 
@@ -190,6 +191,11 @@ export const getIntentionsQuery = async (
             .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
             .on("suiviUtilisateur.userId", "=", user.id)
         );
+      return q;
+    })
+    .$call((q) => {
+      if (shouldFetchOnlyIntention)
+        return q.where("intention.isIntention", "=", true);
       return q;
     })
     .orderBy("updatedAt desc")

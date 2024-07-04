@@ -11,7 +11,9 @@ export const updateDemandeWithHistory = async (
   kdb
     .insertInto("demande")
     .values({
-      ...(_.omit(demande, ["id", "updatedAt"]) as Insertable<DB["demande"]>),
+      ...(_.omit(demande, ["id", "updatedAt", "isIntention"]) as Insertable<
+        DB["demande"]
+      >),
       id: generateId(),
       updatedAt: new Date(),
     })
