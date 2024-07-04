@@ -3,7 +3,7 @@ services:
   reverse_proxy:
     build:
       args:
-        - DIR=dev
+        - DIR=$REVERSE_PROXY_DIR
     volumes:
       - pilotage_nginx_data:/data:z
     extra_hosts:

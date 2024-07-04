@@ -1,0 +1,3 @@
+gzip on;
+gzip_types application/json;
+gzip_min_length 128;

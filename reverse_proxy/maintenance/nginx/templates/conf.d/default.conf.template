@@ -1,0 +1,22 @@
+# Nginx configuration for both HTTP and SSL
+
+
+map $http_upgrade $connection_upgrade {
+    default upgrade;
+    '' close;
+}
+
+server {
+    listen 80 default_server;
+    server_name localhost;
+
+    root /etc/nginx/html;
+    index /maintenance.html;
+
+    location * {    
+        try_files '' /maintenance.html;
+    }
+
+    error_page 404 /maintenance.html;
+}
+
