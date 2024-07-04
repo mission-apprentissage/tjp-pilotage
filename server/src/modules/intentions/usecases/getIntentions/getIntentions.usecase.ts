@@ -7,6 +7,8 @@ import {
   getIntentionsQuery,
 } from "./getIntentions.query";
 
+const CAMPAGNE_DEMANDE = "2023";
+
 const getIntentionsFactory =
   (
     deps = {
@@ -20,8 +22,14 @@ const getIntentionsFactory =
     const anneeCampagne =
       activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
+    const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
+
     const [intentions, campagne] = await Promise.all([
-      await deps.getIntentionsQuery(activeFilters, anneeCampagne),
+      await deps.getIntentionsQuery(
+        activeFilters,
+        anneeCampagne,
+        shouldFetchOnlyIntention
+      ),
       await deps.getCampagneQuery(anneeCampagne),
     ]);
 

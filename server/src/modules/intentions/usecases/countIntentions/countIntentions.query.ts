@@ -15,10 +15,12 @@ import { countIntentionsSchema } from "./countIntentions.schema";
 export interface Filters
   extends z.infer<typeof countIntentionsSchema.querystring> {
   user: RequestUser;
+  shouldFetchOnlyIntention?: boolean;
 }
 export const countIntentionsQuery = async ({
   user,
   anneeCampagne,
+  shouldFetchOnlyIntention,
 }: Filters) => {
   const countIntentions = kdb
     .selectFrom("latestDemandeIntentionView as intention")
@@ -156,6 +158,11 @@ export const countIntentionsQuery = async ({
     .where(isIntentionNotDeleted)
     .where(isIntentionSelectable({ user }))
     .where(isIntentionBrouillonVisible({ user }))
+    .$call((q) => {
+      if (shouldFetchOnlyIntention)
+        return q.where("intention.isIntention", "=", true);
+      return q;
+    })
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
