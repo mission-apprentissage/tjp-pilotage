@@ -52,6 +52,9 @@ COPY app/nginx/owasp-crs/rules/ /etc/modsecurity.d/owasp-crs/rules/
 COPY app/logrotate.d/logrotate.conf /etc/logrotate.conf
 RUN chmod 644 /etc/logrotate.conf
 
+#Maintenance files
+COPY files/maintenance.html /etc/nginx/html/maintenance.html
+
 #Nginx
 # COPY app/nginx /etc/nginx
 ARG DIR=app

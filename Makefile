@@ -2,7 +2,10 @@ install:
 	yarn install
 
 start:
-	docker-compose up --build --force-recreate
+	REVERSE_PROXY_DIR=dev docker-compose up --build --force-recreate
+
+maintenance:
+	REVERSE_PROXY_DIR=maintenance docker-compose up --build --force-recreate
 
 stop:
 	docker-compose stop
