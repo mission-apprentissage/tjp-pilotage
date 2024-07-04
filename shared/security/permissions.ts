@@ -91,7 +91,7 @@ export const PERMISSIONS = {
     "intentions-perdir-avis/lecture": { default: "region" },
   },
   perdir: {
-    "intentions/lecture": { default: "uai" },
+    "intentions/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/lecture": { default: "uai", draft: "uai" },
     "intentions-perdir/ecriture": { default: "uai", draft: "uai" },
     "restitution-intentions/lecture": { default: "uai" },

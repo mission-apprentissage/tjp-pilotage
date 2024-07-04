@@ -13,7 +13,7 @@ import {
 } from "@chakra-ui/react";
 import { useRouter } from "next/navigation";
 import { Fragment } from "react";
-import { hasRole, isUserInRegionsExperimentation } from "shared";
+import { getPermissionScope, guardScope } from "shared";
 
 import { GROUPED_STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/GROUPED_STATS_DEMANDES_COLUMN";
 import { useAuth } from "@/utils/security/useAuth";
@@ -81,12 +81,22 @@ export const ConsoleSection = ({
 }) => {
   const router = useRouter();
   const { auth } = useAuth();
-  const showFormulairePerdir = (isIntention?: boolean) =>
-    hasRole({ user: auth?.user, role: "perdir" }) ||
-    (isUserInRegionsExperimentation({
-      user: auth?.user,
-    }) &&
-      isIntention);
+
+  const showFormulairePerdir = (intention: {
+    isIntention: boolean;
+    uai: string;
+    codeRegion: string;
+  }) => {
+    const user = auth?.user;
+    const scope = getPermissionScope(user?.role, "intentions-perdir/lecture");
+    const isAllowed = guardScope(scope?.default, {
+      uai: () => user?.uais?.includes(intention.uai) ?? false,
+      region: () => user?.codeRegion === intention.codeRegion,
+      national: () => true,
+    });
+
+    return isAllowed && intention.isIntention;
+  };
 
   const getCellColor = (column: keyof typeof STATS_DEMANDES_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_STATS_DEMANDES_COLUMNS).find(
@@ -157,9 +167,7 @@ export const ConsoleSection = ({
                         onClick={() =>
                           router.push(
                             `/intentions/${
-                              showFormulairePerdir(demande.isIntention)
-                                ? "perdir/"
-                                : ""
+                              showFormulairePerdir(demande) ? "perdir/" : ""
                             }synthese/${demande.numero}`
                           )
                         }
