@@ -23,7 +23,7 @@ const IntentionsItem = z.object({
   codeDispositif: z.string(),
   libelleFCIL: z.string().optional(),
   // Type de demande
-  rentreeScolaire: z.coerce.number(),
+  rentreeScolaire: z.coerce.number().optional(),
   typeDemande: z.string(),
   coloration: z.boolean(),
   libelleColoration: z.string().optional(),
