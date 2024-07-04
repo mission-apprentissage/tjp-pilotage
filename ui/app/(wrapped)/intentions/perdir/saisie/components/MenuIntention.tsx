@@ -60,12 +60,10 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
+        mb={1.5}
+        variant="primary"
         isDisabled={isDisabled}
-        mb="4"
-        variant="createButton"
-        size={"md"}
-        width={"100%"}
-        minH={"35px"}
+        leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
         as={
           hasPermissionSubmitIntention && !isSaisieDisabled()
             ? NextLink
@@ -75,7 +73,6 @@ export const MenuIntention = ({
       >
         Nouvelle demande
       </Button>
-
       <VStack flex="1" align="flex-start" spacing={1}>
         {/* Toutes */}
         <Button
