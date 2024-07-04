@@ -96,6 +96,9 @@ export const isIntentionSelectable =
       ]),
       eb.and([
         eb("intention.statut", "!=", DemandeStatutEnum["proposition"]),
+        filter.uais
+          ? eb.or(filter.uais.map((uai) => eb("intention.uai", "=", uai)))
+          : sql<boolean>`true`,
         filter.codeRegion
           ? eb("intention.codeRegion", "=", filter.codeRegion)
           : sql<boolean>`true`,
