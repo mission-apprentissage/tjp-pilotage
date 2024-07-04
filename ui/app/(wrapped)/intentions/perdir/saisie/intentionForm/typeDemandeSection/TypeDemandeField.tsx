@@ -12,7 +12,7 @@ import {
   useToken,
 } from "@chakra-ui/react";
 import { useSearchParams } from "next/navigation";
-import { ComponentProps, ReactNode, useContext } from "react";
+import { ComponentProps, ReactNode, useContext, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
@@ -97,12 +97,22 @@ export const TypeDemandeField = chakra(
       formState: { errors },
       control,
       getValues,
+      watch,
+      setValue,
     } = useFormContext<IntentionForms>();
     const queryParams = useSearchParams();
     const compensation = queryParams.get("compensation");
     const libelleFCIL = getValues("libelleFCIL");
-
     const { campagne } = useContext(CampagneContext);
+    const rentreeScolaire = watch("rentreeScolaire");
+
+    useEffect(
+      () =>
+        watch((_, { name }) => {
+          if (name !== "rentreeScolaire") return;
+          setValue("typeDemande", "");
+        }).unsubscribe
+    );
 
     return (
       <FormControl
@@ -130,7 +140,8 @@ export const TypeDemandeField = chakra(
                 (item) =>
                   shouldDisplayTypeDemande(
                     item.value,
-                    campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE
+                    campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE,
+                    rentreeScolaire
                   ) &&
                   shouldDisplayColoration(item.value, libelleFCIL) && (
                     <RadioCard
