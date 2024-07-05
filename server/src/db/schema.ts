@@ -743,6 +743,10 @@ export interface LatestIntentionNonMaterializedView {
   travauxAmenagementCout: number | null;
 }
 
+export interface Maintenance {
+  isMaintenance: boolean;
+}
+
 export interface Metier {
   codeMetier: string;
   codeRome: string;
@@ -832,6 +836,7 @@ export interface DB {
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
+  maintenance: Maintenance;
   metier: Metier;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
