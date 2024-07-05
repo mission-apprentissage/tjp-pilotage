@@ -17,7 +17,8 @@ export default async function RootLayout({
   return (
     <>
       <EnvBandeau />
-      <Header isMaintenance={isMaintenance} />
+      <Header />
+      {children}
       {isMaintenance ? <MaintenancePage /> : children}
       <Footer />
     </>
