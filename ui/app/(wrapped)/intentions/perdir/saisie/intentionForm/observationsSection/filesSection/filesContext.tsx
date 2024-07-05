@@ -76,8 +76,8 @@ const useUploadFiles = (numberOfFiles: number) => {
           status: "error",
           title:
             numberOfFiles > 1
-              ? `Une erreur est survenue lors de l'envoie des fichiers`
-              : `Une erreur est survenue lors de l'envoie du fichier`,
+              ? `Une erreur est survenue lors de l'envoi des fichiers`
+              : `Une erreur est survenue lors de l'envoi du fichier`,
           description: e.message,
           variant: "left-accent",
         };
@@ -93,8 +93,8 @@ const useUploadFiles = (numberOfFiles: number) => {
           status: "info",
           title:
             numberOfFiles > 1
-              ? "Envoie des fichiers en cours"
-              : "Envoie du fichier en cours",
+              ? "Envoi des fichiers en cours"
+              : "Envoi du fichier en cours",
           variant: "left-accent",
         };
 
