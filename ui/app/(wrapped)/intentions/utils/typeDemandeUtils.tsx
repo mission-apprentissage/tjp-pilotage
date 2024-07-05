@@ -1,4 +1,4 @@
-import { ListItem, OrderedList, Text } from "@chakra-ui/react";
+import { List, ListItem, OrderedList, Text } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
@@ -258,16 +258,23 @@ export const TYPES_DEMANDES_OPTIONS: Record<
     exemple: (
       <>
         <Text mb="3" fontWeight="bold">
-          Exemple pour une ouverture :
+          Exemple pour un ajustement de rentrée :
         </Text>
-        <Text>
-          J’ouvre un BAC PRO Boucher Charcutier Traiteur dans un établissement
-          qui ne dispense pas cette formation.
+        <Text mb={2}>
+          J’augmente la capacité d'une formation existante dans mon
+          établissement :
         </Text>
-        <Text>
-          Je saisis les capacités pour la première année de la spécialité (pas
-          la seconde commune).
-        </Text>
+        <List mb={3} ps={2}>
+          <ListItem>capacité actuelle 10 ;</ListItem>
+          <ListItem>nouvelle capacité 15 ;</ListItem>
+          <ListItem>dont 5 colorées</ListItem>
+        </List>
+        <Text mb={2}>J'ouvre une formation dans mon établissement :</Text>
+        <List mb={3} ps={2}>
+          <ListItem>capacité actuelle 0 ;</ListItem>
+          <ListItem>nouvelle capacité 10</ListItem>
+        </List>
+        <Text>J’apporte des précisions en commentaire</Text>
       </>
     ),
   },

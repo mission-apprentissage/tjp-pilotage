@@ -13,6 +13,7 @@ import {
   Text,
   Tooltip,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
@@ -40,6 +41,11 @@ export const RentreeScolaireField = ({
   );
 
   const rentreeScolaire = watch("rentreeScolaire");
+
+  useEffect(() => {
+    if (rentreeScolaire === parseInt(campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE))
+      setValue("typeDemande", "ajustement");
+  }, [rentreeScolaire, setValue]);
 
   return (
     <FormControl
