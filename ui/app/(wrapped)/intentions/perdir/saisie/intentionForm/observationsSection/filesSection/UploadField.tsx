@@ -16,6 +16,9 @@ const validateFiles = (value?: FileList) => {
     if (file.size > MAX_FILE_SIZE) {
       errorMessage += `Le fichier ${file.name} est trop volumineux. La taille maximale est de ${MAX_FILE_SIZE_IN_MB} Mo. `;
     }
+    if (file.name.search(/["';=]/) !== -1) {
+      errorMessage += `Les caractères spéciaux " ' ; = ne sont pas autorisés dans les noms de fichiers. Veuillez changer le nom du fichier.`;
+    }
   }
 
   return errorMessage.length > 0 ? errorMessage : true;
