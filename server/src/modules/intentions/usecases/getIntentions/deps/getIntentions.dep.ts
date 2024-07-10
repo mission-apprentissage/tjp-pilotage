@@ -63,6 +63,12 @@ export const getIntentions = async (
         return eb;
       })
     )
+    .leftJoin("intentionAccessLog", (join) =>
+      join
+        .onRef("intentionAccessLog.intentionNumero", "=", "intention.numero")
+        .onRef("intentionAccessLog.updatedAt", ">", "intention.updatedAt")
+        .on("intentionAccessLog.userId", "=", user.id)
+    )
     .selectAll("intention")
     .select((eb) => [
       "suivi.id as suiviId",
@@ -76,6 +82,10 @@ export const getIntentions = async (
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",
+      sql<boolean>`(
+        "intentionAccessLog"."id" is not null
+         or "intention"."updatedBy" = ${user.id}
+      )`.as("alreadyAccessed"),
       sql<string>`count(*) over()`.as("count"),
       eb
         .selectFrom(({ selectFrom }) =>
@@ -217,6 +227,7 @@ export const getIntentions = async (
         statut: castDemandeStatutWithoutSupprimee(intention.statut),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
+        alreadyAccessed: intention.alreadyAccessed ?? true,
       })
     ),
     count: parseInt(intentions[0]?.count) || 0,
