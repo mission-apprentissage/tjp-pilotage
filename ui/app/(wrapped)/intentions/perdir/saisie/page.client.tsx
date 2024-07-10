@@ -35,9 +35,9 @@ import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale/fr";
+import { usePlausible } from "next-plausible";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
-import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -395,6 +395,8 @@ export const PageClient = () => {
                         height={"60px"}
                         key={intention.numero}
                         whiteSpace={"pre"}
+                        fontWeight={intention.alreadyAccessed ? "400" : "700"}
+                        bg={intention.alreadyAccessed ? "grey.975" : "white"}
                       >
                         <Td textAlign={"center"}>
                           <Tooltip
