@@ -301,7 +301,6 @@ export const PageClient = () => {
             <Table
               sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
               size="md"
-              variant="striped"
               fontSize="14px"
               gap="0"
             >
@@ -374,6 +373,8 @@ export const PageClient = () => {
                       height={"60px"}
                       key={intention.numero}
                       whiteSpace={"pre"}
+                      fontWeight={intention.alreadyAccessed ? "400" : "700"}
+                      bg={intention.alreadyAccessed ? "grey.975" : "white"}
                     >
                       <Td textAlign={"center"}>
                         <Tooltip
