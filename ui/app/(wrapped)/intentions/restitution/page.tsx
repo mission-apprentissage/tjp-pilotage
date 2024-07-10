@@ -411,6 +411,34 @@ export default () => {
                     minute: "2-digit",
                   }
                 ),
+                disciplinesRecrutementRH:
+                  demande.discipline1RecrutementRH &&
+                  `${demande.discipline1RecrutementRH} ${
+                    demande.discipline2RecrutementRH
+                      ? `- ${demande.discipline2RecrutementRH}`
+                      : ""
+                  }`,
+                disciplinesReconversionRH:
+                  demande.discipline1ReconversionRH &&
+                  `${demande.discipline1ReconversionRH} ${
+                    demande.discipline2ReconversionRH
+                      ? `- ${demande.discipline2ReconversionRH}`
+                      : ""
+                  }`,
+                disciplinesFormationRH:
+                  demande.discipline1FormationRH &&
+                  `${demande.discipline1FormationRH} ${
+                    demande.discipline2FormationRH
+                      ? `- ${demande.discipline2FormationRH}`
+                      : ""
+                  }`,
+                disciplinesProfesseurAssocieRH:
+                  demande.discipline1ProfesseurAssocieRH &&
+                  `${demande.discipline1ProfesseurAssocieRH} ${
+                    demande.discipline2ProfesseurAssocieRH
+                      ? `- ${demande.discipline2ProfesseurAssocieRH}`
+                      : ""
+                  }`,
               })),
               STATS_DEMANDES_COLUMNS
             );
