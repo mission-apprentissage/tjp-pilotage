@@ -99,6 +99,7 @@ const IntentionsItem = z.object({
   updatedBy: UserSchema.optional(),
   suiviId: z.string().optional(),
   canEdit: z.boolean(),
+  alreadyAccessed: z.boolean(),
 });
 
 export const getIntentionsSchema = {
