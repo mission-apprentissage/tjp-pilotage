@@ -48,6 +48,7 @@ export const TravauxAmenagementCoutField = chakra(
             {...register("travauxAmenagementCout", {
               shouldUnregister: true,
               disabled: disabled,
+              onChange: (value) => value.replace(/\D/g, ""),
             })}
             placeholder="Montant (en €)"
           />
