@@ -1,6 +1,9 @@
 import { getFormationsRenoveesEnseigneesQuery } from "../../queries/getFormationsRenovees/getFormationsRenovees";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+import {
+  getPositionQuadrant,
+  HORS_QUADRANT,
+} from "../../services/getPositionQuadrant";
 import { dependencies } from "./dependencies";
 
 const getFormationEtablissementsFactory =
@@ -60,7 +63,7 @@ const getFormationEtablissementsFactory =
                   etablissement.codeNiveauDiplome ?? ""
                 ] || {}
               )
-            : "Hors quadrant",
+            : HORS_QUADRANT,
       })),
     };
   };
