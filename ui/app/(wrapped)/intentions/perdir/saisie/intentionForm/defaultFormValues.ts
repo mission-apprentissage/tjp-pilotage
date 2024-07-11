@@ -24,7 +24,7 @@ export type IntentionForms = {
   capaciteApprentissage?: number;
   capaciteApprentissageColoree?: number;
   // Précisions
-  motif: string[];
+  motif?: string[];
   autreMotif?: string;
   amiCma?: boolean;
   amiCmaValide?: boolean;
