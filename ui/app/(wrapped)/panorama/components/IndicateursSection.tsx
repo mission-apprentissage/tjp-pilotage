@@ -48,9 +48,9 @@ export const IndicateursSection = ({
           </Heading>
         </Box>
         <Flex direction={"row"} mt={"8px"}>
-          <Text>
-            Retrouvez ici les principaux indicateurs (chiffres {CURRENT_RENTREE}
-            ) sur votre territoire.{" "}
+          <Text style={{ textWrap: "pretty" }}>
+            Retrouvez ici les principaux indicateurs sur votre territoire
+            (chiffres {CURRENT_RENTREE}).{" "}
             <GlossaireShortcut
               display={"inline"}
               marginInline={1}

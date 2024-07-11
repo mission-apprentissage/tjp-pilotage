@@ -6,6 +6,7 @@ import {
   Button,
   Center,
   Flex,
+  Img,
   Popover,
   PopoverCloseButton,
   PopoverContent,
@@ -13,6 +14,7 @@ import {
   Spinner,
   Text,
   Tooltip,
+  useToken,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
@@ -36,6 +38,34 @@ const Loader = () => (
     <Spinner size="xl" />
   </Center>
 );
+
+const EmptyCadran = () => {
+  const [bgGrey, textGrey] = useToken("colors", ["grey.975", "grey.625"]);
+  return (
+    <Flex
+      justifyContent={"center"}
+      alignItems={"center"}
+      flexDirection={"column"}
+      height={"100%"}
+      w={"100%"}
+      gap={"16px"}
+      bg={bgGrey}
+      color={textGrey}
+      p={"56px"}
+      textAlign={"center"}
+    >
+      <Text fontSize={"20px"} fontWeight={"700"}>
+        Aucune donnée à afficher pour les filtres sélectionnés
+      </Text>
+      <Text fontSize={"16px"} style={{ textWrap: "pretty" }}>
+        Aucune formation ne correspond à votre sélection, ou alors la donnée ne
+        peut pas être affichée pour des raisons statistiques (effectif inférieur
+        à 20, nouveau code formation, ...){" "}
+      </Text>
+      <Img src="/search.svg" alt="illustration de recherche" />
+    </Flex>
+  );
+};
 
 const useQuadrantDisplay = () => {
   const segment = useSelectedLayoutSegment();
@@ -153,11 +183,7 @@ export const QuadrantDisplay = ({
       );
     }
 
-    return (
-      <Flex>
-        <Text>Aucune donnée à afficher pour les filtres sélectionnés</Text>
-      </Flex>
-    );
+    return <EmptyCadran />;
   }, [
     isLoading,
     meanInsertion,
@@ -218,7 +244,9 @@ export const QuadrantDisplay = ({
               <Box>
                 <Text>
                   L'export de données sur les formations est accessible depuis
-                  la console Orion uniquement.{" "}
+                  la console Orion uniquement. <br />
+                  <br />
+                  <strong>Cliquer pour exporter depuis la console.</strong>
                 </Text>
               </Box>
             }
@@ -249,11 +277,6 @@ export const QuadrantDisplay = ({
       <AspectRatio ratio={1} mt={2}>
         {RenderQuadrant}
       </AspectRatio>
-      <Text color="grey" mt="4" fontSize="xs">
-        Données Inser Jeunes produites par la DEPP, les formations inférieures à
-        20 sortants sur deux ans, ne sont pas représentées dans ce quadrant pour
-        des raisons statistiques
-      </Text>
     </Box>
   );
 };
