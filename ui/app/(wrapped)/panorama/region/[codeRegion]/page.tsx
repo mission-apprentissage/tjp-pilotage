@@ -102,7 +102,15 @@ export default function Panorama({
         libelleNsfOptions={data?.filters.libellesNsf}
       />
       <IndicateursSection
-        stats={stats}
+        stats={
+          searchParams.codeNsf
+            ? {
+                libelleRegion: stats?.libelleRegion,
+                codeRegion,
+                libelleDepartement: "",
+              }
+            : stats
+        }
         libelleTerritoire={
           regionOptions?.find((item) => item.value === codeRegion)?.label
         }
