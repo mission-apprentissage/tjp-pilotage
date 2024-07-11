@@ -1,4 +1,4 @@
-import { ListItem, OrderedList, Text } from "@chakra-ui/react";
+import { ListItem, OrderedList, Text, UnorderedList } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 export type TypeDemande = keyof typeof TYPES_DEMANDES_OPTIONS;
@@ -13,8 +13,16 @@ export const shouldDisplayColoration = (
 
 export const shouldDisplayTypeDemande = (
   typeDemande: TypeDemande,
-  anneeCampagne: string
-) => TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne);
+  anneeCampagne: string,
+  rentreeScolaire?: number
+) => {
+  if (rentreeScolaire && parseInt(anneeCampagne) === rentreeScolaire)
+    return isTypeAjustement(typeDemande);
+  return (
+    TYPES_DEMANDES_OPTIONS[typeDemande].campagnes.includes(anneeCampagne) &&
+    !isTypeAjustement(typeDemande)
+  );
+};
 
 export const isTypeFermeture = (typeDemande: TypeDemande) =>
   typeDemande === "fermeture";
@@ -38,6 +46,9 @@ export const isTypeTransfert = (typeDemande: TypeDemande) =>
 
 export const isTypeColoration = (typeDemande: TypeDemande) =>
   typeDemande === "coloration";
+
+export const isTypeAjustement = (typeDemande: TypeDemande) =>
+  typeDemande === "ajustement";
 
 export const getTypeDemandeLabelFiltre = (typeDemande?: TypeDemande): string =>
   typeDemande
@@ -236,6 +247,34 @@ export const TYPES_DEMANDES_OPTIONS: Record<
           j’utilise le type de demande “Ouverture nette” et je coche Coloration
           dans la section “Précisions sur votre demande”.
         </Text>
+      </>
+    ),
+  },
+  ajustement: {
+    value: "ajustement",
+    label: "Ajustement de rentrée",
+    campagnes: ["2024", "2025"],
+    desc: "Ce formulaire doit être utilisé uniquement pour des ouvertures ou augmentations de places afin de répondre à une hause imprévue des demandes sur la rentrée scolaire.",
+    exemple: (
+      <>
+        <Text mb="3" fontWeight="bold">
+          Exemple pour un ajustement de rentrée :
+        </Text>
+        <Text mb={2}>
+          J’augmente la capacité d'une formation existante dans mon
+          établissement :
+        </Text>
+        <UnorderedList mb={3} ps={2}>
+          <ListItem>capacité actuelle 10 ;</ListItem>
+          <ListItem>nouvelle capacité 15 ;</ListItem>
+          <ListItem>dont 5 colorées</ListItem>
+        </UnorderedList>
+        <Text mb={2}>J'ouvre une formation dans mon établissement :</Text>
+        <UnorderedList mb={3} ps={2}>
+          <ListItem>capacité actuelle 0 ;</ListItem>
+          <ListItem>nouvelle capacité 10</ListItem>
+        </UnorderedList>
+        <Text>J’apporte des précisions en commentaire.</Text>
       </>
     ),
   },

@@ -22,7 +22,7 @@ export type IntentionForms = {
   capaciteApprentissage?: number;
   capaciteApprentissageColoree?: number;
   // Précisions
-  motif: string[];
+  motif?: string[];
   autreMotif?: string;
   coloration: boolean;
   libelleColoration?: string;

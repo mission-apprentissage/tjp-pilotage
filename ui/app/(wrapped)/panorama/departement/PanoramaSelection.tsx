@@ -16,7 +16,7 @@ import { useContext, useEffect } from "react";
 import { client } from "@/api.client";
 
 import { CodeDepartementFilterContext } from "../../../layoutClient";
-import { DEFAULT_SEARCH_PARAMS } from "../layout";
+import { DEFAULT_SEARCH_PARAMS } from "../types";
 
 export function PanoramaSelection({
   departementsOptions,
