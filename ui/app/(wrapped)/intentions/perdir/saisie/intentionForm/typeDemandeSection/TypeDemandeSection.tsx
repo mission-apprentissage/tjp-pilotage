@@ -56,11 +56,10 @@ const InfoAjustementSection = chakra(
               query={`${anneeCampagne}`}
               styles={{
                 color: "inherit",
-                textDecoration: "underline",
                 fontWeight: 700,
               }}
             >
-              {`Pour apporter un ajustement à la rentrée scolaire ${anneeCampagne}, sélectionner ${anneeCampagne} dans le champs ci-dessus`}
+              {`Pour apporter un ajustement à la rentrée scolaire ${anneeCampagne}, sélectionner ${anneeCampagne} dans le champ ci-dessus`}
             </Highlight>
           </Text>
           <Button
