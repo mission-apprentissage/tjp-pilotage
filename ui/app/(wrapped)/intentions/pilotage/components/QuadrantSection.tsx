@@ -207,6 +207,14 @@ export const QuadrantSection = ({
     });
   };
 
+  if (
+    !mergedFilters.codeRegion &&
+    (!mergedFilters.codeNiveauDiplome ||
+      mergedFilters.codeNiveauDiplome.length === 0)
+  ) {
+    return <></>;
+  }
+
   return (
     <>
       <Heading mb="4" fontSize="2xl">

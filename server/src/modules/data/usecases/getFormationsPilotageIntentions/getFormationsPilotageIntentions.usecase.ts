@@ -27,7 +27,10 @@ const getQuadrantPilotageIntentionsFactory =
       stats: statsSortie,
       formations: formations.map((formation) => ({
         ...formation,
-        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+        positionQuadrant:
+          activeFilters?.codeRegion || activeFilters?.codeNiveauDiplome
+            ? getPositionQuadrant(formation, statsSortie)
+            : undefined,
       })),
     };
   };

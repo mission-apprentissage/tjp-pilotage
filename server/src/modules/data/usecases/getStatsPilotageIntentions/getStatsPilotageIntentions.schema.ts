@@ -46,6 +46,9 @@ const QuerySchema = z.object({
     .keyof()
     .optional(),
   scope: scope.default(ScopeEnum.national),
+  codeRegion: z.string().optional(),
+  codeAcademie: z.string().optional(),
+  codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
 });
 
