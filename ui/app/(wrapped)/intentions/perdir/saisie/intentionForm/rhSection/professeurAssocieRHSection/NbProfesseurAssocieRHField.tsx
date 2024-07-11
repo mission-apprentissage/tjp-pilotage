@@ -51,7 +51,7 @@ export const NbProfesseurAssocieRHField = chakra(
               step={1}
               flex={1}
               isReadOnly={disabled}
-              onChange={onChange}
+              onChange={(value) => onChange(value.replace(/\D/g, ""))}
               ref={ref}
               name={name}
               isRequired={false}
