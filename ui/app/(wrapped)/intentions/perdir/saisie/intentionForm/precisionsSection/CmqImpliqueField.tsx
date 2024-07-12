@@ -1,21 +1,28 @@
 import {
+  Box,
   chakra,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { isTypeDiminution } from "shared/validators/demandeValidators";
 
+import { TooltipIcon } from "@/components/TooltipIcon";
+
+import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { isTypeFermeture } from "../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const CmqImpliqueField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+    const { openGlossaire } = useGlossaireContext();
     const {
       formState: { errors },
       control,
@@ -34,7 +41,20 @@ export const CmqImpliqueField = chakra(
         isInvalid={!!errors.cmqImplique}
         isRequired
       >
-        <FormLabel>Un CMQ est-il impliqué ?</FormLabel>
+        <Flex direction={"row"}>
+          <FormLabel>Un CMQ est-il impliqué ?</FormLabel>
+          <TooltipIcon
+            mt={"1"}
+            label={
+              <Box w={"fit-content"}>
+                <Text>Campus des Métiers et des Qualifications</Text>
+                <Text mt={2}>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("cmq")}
+            color={"bluefrance.113"}
+          />
+        </Flex>
         <Controller
           name="cmqImplique"
           control={control}
