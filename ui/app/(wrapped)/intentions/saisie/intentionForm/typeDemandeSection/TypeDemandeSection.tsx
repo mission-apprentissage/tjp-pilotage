@@ -8,11 +8,13 @@ import {
   Highlight,
   Stack,
   Text,
+  Tooltip,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { RefObject, useState } from "react";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
+import { TooltipIcon } from "@/components/TooltipIcon";
 import { themeDefinition } from "@/theme/theme";
 
 import { SCROLL_OFFSET } from "../../SCROLL_OFFSETS";
@@ -113,6 +115,22 @@ export const TypeDemandeSection = ({
         anneeCampagne={campagne?.annee ?? CURRENT_ANNEE_CAMPAGNE}
       />
       <TypeDemandeField disabled={disabled} maxWidth="752px" />
+      <Tooltip label="Pour transférer des places d’un établissement vers un autre, vous devez faire 2 demandes : une fermeture dans l’établissement initial, et une ouverture dans le nouvel établissement (plusieurs demandes d’ouverture si les places sont transférées à plusieurs établissements)">
+        <Flex
+          direction={"row"}
+          gap={2}
+          color={"bluefrance.113"}
+          textDecoration={"underline"}
+          cursor={"pointer"}
+          fontWeight={"700"}
+          width={"fit-content"}
+        >
+          <TooltipIcon mt={"1"} />
+          <Text>
+            Vous cherchez à faire un transfert de places entre établissements ?
+          </Text>
+        </Flex>
+      </Tooltip>
       <CapaciteSection disabled={disabled} />
     </Flex>
   );
