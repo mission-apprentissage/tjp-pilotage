@@ -13,8 +13,10 @@ import {
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useState } from "react";
 import { Role } from "shared";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { isChangementStatutAvisDisabled } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
@@ -24,7 +26,13 @@ import { ChangementStatut } from "../../../../types";
 import { UpdateChangementStatutForm } from "./UpdateChangementStatutForm";
 
 export const CommentaireSection = chakra(
-  ({ changementStatut }: { changementStatut: ChangementStatut }) => {
+  ({
+    changementStatut,
+    statut,
+  }: {
+    changementStatut: ChangementStatut;
+    statut: DemandeStatutType;
+  }) => {
     const hasPermissionModificationStatut = usePermission(
       "intentions-perdir-statut/ecriture"
     );
@@ -145,33 +153,36 @@ export const CommentaireSection = chakra(
                 Pas d'observation renseignée
               </Text>
             )}
-            {hasPermissionModificationStatut && !isDeleting && !isModifying && (
-              <Flex direction={"row"} gap={6}>
-                <Button
-                  isLoading={isDeleting || isModifying}
-                  variant={"link"}
-                  color="bluefrance.113"
-                  fontSize={12}
-                  fontWeight={400}
-                  onClick={() => {
-                    submitDeleteChangementStatutCommentaire();
-                    onToggleUpdateChangementStatut();
-                  }}
-                >
-                  Supprimer
-                </Button>
-                <Button
-                  variant={"link"}
-                  color="bluefrance.113"
-                  fontSize={12}
-                  fontWeight={400}
-                  isLoading={isDeleting || isModifying}
-                  onClick={() => setIsModifying(true)}
-                >
-                  Modifier
-                </Button>
-              </Flex>
-            )}
+            {hasPermissionModificationStatut &&
+              !isChangementStatutAvisDisabled(statut) &&
+              !isDeleting &&
+              !isModifying && (
+                <Flex direction={"row"} gap={6}>
+                  <Button
+                    isLoading={isDeleting || isModifying}
+                    variant={"link"}
+                    color="bluefrance.113"
+                    fontSize={12}
+                    fontWeight={400}
+                    onClick={() => {
+                      submitDeleteChangementStatutCommentaire();
+                      onToggleUpdateChangementStatut();
+                    }}
+                  >
+                    Supprimer
+                  </Button>
+                  <Button
+                    variant={"link"}
+                    color="bluefrance.113"
+                    fontSize={12}
+                    fontWeight={400}
+                    isLoading={isDeleting || isModifying}
+                    onClick={() => setIsModifying(true)}
+                  >
+                    Modifier
+                  </Button>
+                </Flex>
+              )}
           </Flex>
         </Box>
       </SlideFade>

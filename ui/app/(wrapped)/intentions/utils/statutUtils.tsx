@@ -71,6 +71,19 @@ export const getStepWorkflow = (statut?: DemandeStatutType): number => {
   }
 };
 
+export const isChangementStatutAvisDisabled = (
+  statut?: DemandeStatutType
+): boolean => {
+  switch (statut) {
+    case DemandeStatutEnum["demande validée"]:
+    case DemandeStatutEnum["refusée"]:
+    case DemandeStatutEnum["supprimée"]:
+      return true;
+    default:
+      return false;
+  }
+};
+
 export const isStatutStepWorkflowEnabled = (
   statut?: DemandeStatutType
 ): boolean => {

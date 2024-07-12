@@ -166,9 +166,13 @@ export const CommentairesEtAvisSection = ({
                     {Object.hasOwn(commentaireEtAvis, "statut") ? (
                       <CommentaireSection
                         changementStatut={commentaireEtAvis as ChangementStatut}
+                        statut={intention.statut}
                       />
                     ) : (
-                      <AvisSection avis={commentaireEtAvis as Avis} />
+                      <AvisSection
+                        avis={commentaireEtAvis as Avis}
+                        statut={intention.statut}
+                      />
                     )}
                   </Fragment>
                 ))}

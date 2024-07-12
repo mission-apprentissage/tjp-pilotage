@@ -9,6 +9,7 @@ import { client } from "@/api.client";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
+import { isChangementStatutAvisDisabled } from "../../../utils/statutUtils";
 import { ActionsSection } from "./actions/ActionsSection";
 import { InformationHeader } from "./components/InformationHeader";
 import { SyntheseSpinner } from "./components/SyntheseSpinner";
@@ -103,9 +104,11 @@ export default ({
                   displayCommentairesEtAvis={displayCommentairesEtAvis}
                 />
               </GridItem>
-              <GridItem colSpan={1}>
-                <ActionsSection intention={intention} />
-              </GridItem>
+              {!isChangementStatutAvisDisabled(intention.statut) && (
+                <GridItem colSpan={1}>
+                  <ActionsSection intention={intention} />
+                </GridItem>
+              )}
             </Grid>
           </Flex>
         ) : (
