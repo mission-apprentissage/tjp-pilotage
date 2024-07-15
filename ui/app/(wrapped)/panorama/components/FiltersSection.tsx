@@ -18,7 +18,6 @@ export const FiltersSection = ({
   onCodeChanged: (code: string) => void;
   options?: { label: string; value: string }[];
   diplomeOptions?: { value: string; label: string }[];
-  typeTerritoire?: "region" | "departement";
   handleFilters: (
     type: keyof FiltersPanoramaFormation,
     value: FiltersPanoramaFormation[keyof FiltersPanoramaFormation]
