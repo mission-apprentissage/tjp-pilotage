@@ -34,13 +34,9 @@ export const TopFlopSection = ({
 }) => {
   const topFlopFormations = useMemo(() => {
     if (!topFlops) return;
-    const filtered = topFlops.filter((item) => {
-      return (
-        item.codeDispositif && !["253", "240"].includes(item.codeDispositif)
-      );
-    });
-    const nbTopFlop = Math.min(filtered.length, 20) / 2;
-    const sorted = filtered
+
+    const nbTopFlop = Math.min(topFlops.length, 20) / 2;
+    const sorted = topFlops
       .slice()
       .sort((a, b) =>
         a.tauxDevenirFavorable < b.tauxDevenirFavorable ? 1 : -1
