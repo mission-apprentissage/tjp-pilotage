@@ -140,6 +140,7 @@ const findFormationEtablissementsInDb = async ({
     .leftJoin("nsf", "nsf.codeNsf", "formationView.codeNsf")
     .select((eb) => [
       "etablissement.libelleEtablissement",
+      "etablissement.secteur",
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
