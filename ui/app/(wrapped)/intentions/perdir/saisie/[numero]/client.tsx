@@ -1,8 +1,11 @@
 "use client";
 
+import { hasRole } from "shared";
+
 import { client } from "@/api.client";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { useAuth } from "../../../../../../utils/security/useAuth";
 import { IntentionSpinner } from "../components/IntentionSpinner";
 import { IntentionForm } from "../intentionForm/IntentionForm";
 import { IntentionFilesProvider } from "../intentionForm/observationsSection/filesSection/filesContext";
@@ -15,6 +18,11 @@ export default ({
     numero: string;
   };
 }) => {
+  const { auth } = useAuth();
+  const isPerdir = hasRole({
+    user: auth?.user,
+    role: "perdir",
+  });
   const hasEditIntentionPermission = usePermission(
     "intentions-perdir/ecriture"
   );
@@ -28,6 +36,7 @@ export default ({
     );
 
   if (isLoading) return <IntentionSpinner />;
+
   return (
     <>
       {intention && (
@@ -35,7 +44,11 @@ export default ({
           <IntentionForm
             disabled={
               !intention.canEdit ||
-              !canEditIntention({ intention, hasEditIntentionPermission })
+              !canEditIntention({
+                intention,
+                hasEditIntentionPermission,
+                isPerdir,
+              })
             }
             formId={numero}
             defaultValues={intention}
