@@ -9,8 +9,8 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Select,
   Skeleton,
+  Tag,
   Text,
 } from "@chakra-ui/react";
 
@@ -123,28 +123,80 @@ export const PrimaryFiltersSection = ({
                 </Box>
                 <Box justifyContent={"start"} flex={1}>
                   <FormLabel color="white">RENTRÉE SCOLAIRE</FormLabel>
-                  <Select
-                    width={[null, null, "64"]}
-                    size="md"
-                    variant={"newInput"}
-                    value={activeFilters.rentreeScolaire?.toString() ?? ""}
-                    onChange={(e) =>
-                      handleFilters("rentreeScolaire", e.target.value)
-                    }
-                    borderBottomColor={
-                      activeFilters.rentreeScolaire != undefined
-                        ? "info.525"
-                        : ""
-                    }
-                    placeholder={`TOUTES (${data?.filters.rentreesScolaires?.length})`}
-                    isDisabled={data?.filters.rentreesScolaires?.length === 0}
-                  >
-                    {data?.filters.rentreesScolaires?.map((option) => (
-                      <option key={option.value} value={option.value}>
-                        {option.label}
-                      </option>
-                    ))}
-                  </Select>
+                  <Flex direction={"column"} gap={1}>
+                    <Menu gutter={0} matchWidth={true} autoSelect={false}>
+                      <MenuButton
+                        as={Button}
+                        variant={"selectButton"}
+                        rightIcon={<ChevronDownIcon />}
+                        width={[null, null, "64"]}
+                        size="md"
+                        borderWidth="1px"
+                        borderStyle="solid"
+                        borderColor="grey.900"
+                        bg={"white"}
+                      >
+                        <Flex direction="row">
+                          <Text my={"auto"}>
+                            {data?.filters.rentreesScolaires?.find(
+                              (c) => c.value === activeFilters.rentreeScolaire
+                            )?.value ??
+                              `TOUTES (${data?.filters.rentreesScolaires?.length})`}
+                          </Text>
+                          {(activeFilters.rentreeScolaire ===
+                            data?.filters.campagnes?.find(
+                              (c) => c.value === activeFilters.campagne
+                            )?.value ??
+                            "") && (
+                            <Tag mx={3} colorScheme="red">
+                              Ajustement RS {activeFilters.rentreeScolaire}
+                            </Tag>
+                          )}
+                        </Flex>
+                      </MenuButton>
+                      <MenuList py={0} borderTopRadius={0}>
+                        <MenuItem
+                          p={2}
+                          onClick={() =>
+                            handleFilters("rentreeScolaire", undefined)
+                          }
+                        >
+                          <Flex direction="row">
+                            <Text
+                              my={"auto"}
+                            >{`TOUTES (${data?.filters.rentreesScolaires?.length})`}</Text>
+                          </Flex>
+                        </MenuItem>
+                        {data?.filters.rentreesScolaires?.map(
+                          (rentreeScolaire) => (
+                            <MenuItem
+                              p={2}
+                              key={rentreeScolaire.value}
+                              onClick={() =>
+                                handleFilters(
+                                  "rentreeScolaire",
+                                  rentreeScolaire.value
+                                )
+                              }
+                            >
+                              <Flex direction="row">
+                                <Text my={"auto"}>{rentreeScolaire.label}</Text>
+                                {(rentreeScolaire.value ===
+                                  data?.filters.campagnes?.find(
+                                    (c) => c.value === activeFilters.campagne
+                                  )?.value ??
+                                  "") && (
+                                  <Tag mx={3} colorScheme="red">
+                                    Ajustement RS {rentreeScolaire.value}
+                                  </Tag>
+                                )}
+                              </Flex>
+                            </MenuItem>
+                          )
+                        )}
+                      </MenuList>
+                    </Menu>
+                  </Flex>
                 </Box>
               </Flex>
               <Flex gap={4} display={["none", null, "flex"]}>

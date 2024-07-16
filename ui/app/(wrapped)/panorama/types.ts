@@ -1,5 +1,10 @@
 import { client } from "@/api.client";
 
+export const DEFAULT_SEARCH_PARAMS = {
+  // Sélection automatique des BAC PRO pour pré-filtrer les pages panorama
+  codeNiveauDiplome: ["400"],
+};
+
 export type QueryPanoramaFormation =
   | (typeof client.inferArgs)["[GET]/panorama/stats/region"]["query"]
   | (typeof client.inferArgs)["[GET]/panorama/stats/departement"]["query"];

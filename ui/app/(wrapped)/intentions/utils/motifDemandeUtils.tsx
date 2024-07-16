@@ -26,6 +26,7 @@ export const MOTIFS_LABELS = {
     maintien_specifique: "Maintien pour public spécifique",
     nouvel_etablissement: "Nouvel établissement",
     sauvegarde_metier_rare: "Sauvegarde métier rare",
+    ajustement_rentree: "Ajustement de rentrée",
     autre: "Autre motif (veuillez préciser)",
   },
   "2024": {
@@ -61,6 +62,7 @@ export const MOTIFS_LABELS = {
       "Mise en place ou poursuite d’un partenariat (préciser en commentaire)",
     favorise_attractivite_formation: "Favorise l’attractivité de la formation",
     projet_specifique_local: "Projet spécifique local",
+    ajustement_rentree: "Ajustement de rentrée",
     autre: "Autre motif (veuillez préciser)",
   },
 };
@@ -109,6 +111,8 @@ const motifsColoration = [
   "autre",
 ] as MotifLabel[];
 
+const motifsAjustement = ["ajustement_rentree"] as MotifLabel[];
+
 const motifsTriggerAutre = [
   "autre",
   "mise_en_place_partenariat",
@@ -121,6 +125,7 @@ const motifs: Record<TypeDemande, MotifLabel[]> = {
   diminution: motifsFermeture,
   transfert: motifsTransfert,
   coloration: motifsColoration,
+  ajustement: motifsAjustement,
 };
 
 export const getMotifLabel = ({
@@ -146,4 +151,5 @@ export const getLabelsMotifsOuverture = () => motifsOuverture;
 export const getLabelsMotifsFermeture = () => motifsFermeture;
 export const getLabelsMotifsTransfert = () => motifsTransfert;
 export const getLabelsMotifsColoration = () => motifsColoration;
+export const getLabelsMotifsAjustement = () => motifsAjustement;
 export const getMotifsTriggerAutre = () => motifsTriggerAutre;

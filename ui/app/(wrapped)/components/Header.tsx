@@ -15,7 +15,6 @@ import {
   MenuButton,
   MenuItem,
   MenuList,
-  Tag,
   useToken,
   VStack,
 } from "@chakra-ui/react";
@@ -26,7 +25,6 @@ import { useContext } from "react";
 import { client } from "@/api.client";
 import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 
-import { getEnv, isProduction } from "../../../config.public";
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
@@ -78,18 +76,6 @@ export const Header = () => {
               </Box>
             </Heading>
           </HStack>
-          {getEnv() && !isProduction && (
-            <Tag
-              ml={4}
-              size="md"
-              backgroundColor={"info.950"}
-              color={"info.text"}
-              textTransform={"uppercase"}
-              fontWeight={700}
-            >
-              {getEnv()}
-            </Tag>
-          )}
           <Box ml="auto">
             {!auth && (
               <Button
