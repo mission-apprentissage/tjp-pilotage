@@ -9,7 +9,7 @@ import {
   countDifferenceCapaciteScolaire,
 } from "../../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isIntentionVisible } from "../../../../utils/isIntentionVisible";
+import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
@@ -267,7 +267,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       );
     })
     .where(isDemandeNotDeleted)
-    .where(isIntentionVisible({ user }))
+    .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();

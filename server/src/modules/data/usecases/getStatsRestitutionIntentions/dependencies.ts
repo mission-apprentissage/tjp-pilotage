@@ -16,7 +16,7 @@ import {
   countOuverturesSco,
   countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
-import { isIntentionVisible } from "../../../utils/isIntentionVisible";
+import { isRestitutionIntentionVisible } from "../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { FiltersSchema } from "./getStatsRestitutionIntentions.schema";
 
@@ -349,7 +349,7 @@ const getStatsRestitutionIntentionsQuery = async ({
 
       return eb;
     })
-    .where(isIntentionVisible({ user }))
+    .where(isRestitutionIntentionVisible({ user }))
     .executeTakeFirstOrThrow()
     .then(cleanNull);
 
