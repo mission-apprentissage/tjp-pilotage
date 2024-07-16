@@ -14,11 +14,6 @@ import { ReactNode } from "react";
 
 import { Breadcrumb } from "../../../components/Breadcrumb";
 
-export const DEFAULT_SEARCH_PARAMS = {
-  // Sélection automatique des BAC PRO pour pré-filtrer les pages panorama
-  codeNiveauDiplome: ["400"],
-};
-
 const getTabIndex = (segment: string | null) => {
   if (segment === "region") return 0;
   if (segment === "departement") return 1;

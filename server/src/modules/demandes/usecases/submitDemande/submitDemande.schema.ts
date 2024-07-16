@@ -15,7 +15,7 @@ export const submitDemandeSchema = {
       compensationCfd: z.string().optional(),
       compensationCodeDispositif: z.string().optional(),
       compensationRentreeScolaire: z.coerce.number().optional(),
-      motif: z.array(z.string()),
+      motif: z.array(z.string()).optional(),
       autreMotif: z.string().optional(),
       libelleColoration: z.string().optional(),
       coloration: z.boolean(),

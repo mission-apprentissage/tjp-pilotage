@@ -464,6 +464,10 @@ export const PageClient = () => {
                           {canEditIntention({
                             intention,
                             hasEditIntentionPermission,
+                            isPerdir: hasRole({
+                              user: auth?.user,
+                              role: "perdir",
+                            }),
                           }) && (
                             <Tooltip label="Modifier la demande">
                               <IconButton

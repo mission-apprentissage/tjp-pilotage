@@ -86,8 +86,9 @@ export const NbRecrutementRHField = chakra(
           <FormErrorMessage>{errors.nbRecrutementRH.message}</FormErrorMessage>
         )}
         <FormHelperText>
-          Si le besoin en recrutement est inférieur à 1 ETP (i.e : 0.5),
-          veuillez saisir 1.
+          Si le besoin en recrutement est inférieur à 1 ETP veuillez saisir 1,
+          et préciser la quotité (0.2 ETP par ex) dans le champ
+          "commentaires/observations"
         </FormHelperText>
       </FormControl>
     );
