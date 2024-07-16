@@ -135,7 +135,7 @@ const getStatsRestitutionIntentionsQuery = async ({
         COALESCE(
           SUM(
             CASE WHEN
-            ${eb.ref("demande.amiCma")} = true
+            ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
             THEN ${countOuvertures(eb)}
             ELSE 0
             END
@@ -146,7 +146,7 @@ const getStatsRestitutionIntentionsQuery = async ({
         COALESCE(
           SUM(
             CASE WHEN
-            ${eb.ref("demande.amiCma")} = true
+            ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
             THEN ${countOuverturesSco(eb)}
             ELSE 0
             END
@@ -157,14 +157,14 @@ const getStatsRestitutionIntentionsQuery = async ({
         COALESCE(
           SUM(
             CASE WHEN
-            ${eb.ref("demande.amiCma")} = true
+            ${eb.ref("dataFormation.codeNiveauDiplome")} IN ('561', '461')
             THEN ${countOuverturesApprentissage(eb)}
             ELSE 0
             END
           ),
           0
         )`,
-      }).as("amiCMAs")
+      }).as("certifSpecialisation")
     )
     .select((eb) =>
       jsonBuildObject({
