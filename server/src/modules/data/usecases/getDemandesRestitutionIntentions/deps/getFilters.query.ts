@@ -381,32 +381,11 @@ export const getFilters = async ({
     })
     .execute();
 
-  const statutsFilters = await filtersBase
-    .select(["demande.statut as value", "demande.statut as label"])
-    .where("demande.statut", "not in", [
-      DemandeStatutEnum["supprimée"],
-      DemandeStatutEnum["brouillon"],
-    ])
-    .where((eb) => {
-      return eb.or([
-        eb.and([
-          inCodeRegion(eb),
-          inCodeDepartement(eb),
-          inCodeAcademie(eb),
-          inEtablissement(eb),
-          inRentreeScolaire(eb),
-          inTypeDemande(eb),
-          inCfd(eb),
-          inCodeNiveauDiplome(eb),
-          inColoration(eb),
-          inAmiCMA(eb),
-          inSecteur(eb),
-          inStatut(eb),
-          inCampagne(eb),
-        ]),
-      ]);
-    })
-    .execute();
+  const statutsFilters = _.values(DemandeStatutEnum).filter(
+    (statut) =>
+      statut !== DemandeStatutEnum["brouillon"] &&
+      statut !== DemandeStatutEnum["supprimée"]
+  );
 
   const filters = {
     regions: regionsFilters.map(cleanNull),
@@ -419,10 +398,10 @@ export const getFilters = async ({
     academies: academiesFilters.map(cleanNull),
     etablissements: etablissementsFilters.map(cleanNull),
     campagnes: campagnesFilters.map(cleanNull),
-    statuts: statutsFilters.map(({ value, label }) =>
+    statuts: statutsFilters.map((value) =>
       cleanNull({
         value,
-        label: _.capitalize(label),
+        label: _.capitalize(value),
       })
     ),
     secteurs: [
