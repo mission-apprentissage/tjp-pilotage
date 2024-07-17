@@ -1,9 +1,25 @@
-import { TabPanel, Text, VStack } from "@chakra-ui/react";
+import {
+  ListItem,
+  TabPanel,
+  Text,
+  UnorderedList,
+  VStack,
+} from "@chakra-ui/react";
 
 import { ShortLink } from "../../../../../components/ShortLink";
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 
-export const TabInformations = () => {
+export const TabInformations = ({
+  nbFormationsAffichee,
+  nbFormationsNonAffichee,
+  effectifEntreeAffiche,
+  effectifEntreeNonAffiche,
+}: {
+  nbFormationsAffichee?: number;
+  nbFormationsNonAffichee?: number;
+  effectifEntreeAffiche?: number;
+  effectifEntreeNonAffiche?: number;
+}) => {
   const { openGlossaire } = useGlossaireContext();
 
   return (
@@ -15,6 +31,22 @@ export const TabInformations = () => {
         alignItems={"start"}
         gap={"32px"}
       >
+        <VStack justifyContent={"start"} alignItems={"start"} gap={"8px"}>
+          <Text fontWeight={"bold"}>Sur le quadrant:</Text>
+          <UnorderedList>
+            <ListItem>
+              <strong>{nbFormationsAffichee} formations affichées,</strong> soit
+              un effectif en entrée de {effectifEntreeAffiche} élèves.
+            </ListItem>
+            <ListItem>
+              <strong>
+                {nbFormationsNonAffichee} formations non affichées{" "}
+              </strong>
+              (hors quadrant), soit un effectif en entrée de{" "}
+              {effectifEntreeNonAffiche} élèves.
+            </ListItem>
+          </UnorderedList>
+        </VStack>
         <VStack justifyContent={"start"} alignItems={"start"} gap={"8px"}>
           <Text fontWeight={"bold"} mb={"16px"}>
             Définitions et modes d'emploi

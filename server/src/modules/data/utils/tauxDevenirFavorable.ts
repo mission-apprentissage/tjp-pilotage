@@ -44,13 +44,25 @@ export const selectTauxDevenirFavorableAgg = (
         indicateurSortieAlias
       )} >= ${seuil}
       THEN (
-        (SUM(${sql.table(indicateurSortieAlias)}."nbPoursuiteEtudes")
-        + SUM(${sql.table(indicateurSortieAlias)}."nbInsertion6mois"))
+        SUM(${sql.table(
+          indicateurSortieAlias
+        )}."nbPoursuiteEtudes" + ${sql.table(
+          indicateurSortieAlias
+        )}."nbInsertion6mois")
       / ${selectDenominateurDevenirFavorableAgg(
         indicateurSortieAlias
       )})::NUMERIC
       END
     `;
+
+export const selectNumerateurDevenirFavorableAgg = (
+  indicateurSortieAlias: string
+) =>
+  sql<number>`SUM(${sql.table(
+    indicateurSortieAlias
+  )}."nbPoursuiteEtudes" + ${sql.table(
+    indicateurSortieAlias
+  )}."nbInsertion6mois")`;
 
 export function withTauxDevenirFavorableReg<
   EB extends

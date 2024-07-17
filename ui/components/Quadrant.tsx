@@ -61,7 +61,7 @@ export const Quadrant = function <
   meanInsertion?: number;
   TooltipContent?: FC<{ formation: F }>;
   InfoTootipContent?: FC;
-  effectifSizes: { max: number; size: number }[];
+  effectifSizes: { max?: number; min?: number; size: number }[];
   onClick?: (_: F) => void;
   currentFormationId?: string;
   dimensions?: Array<"tauxInsertion" | "tauxPoursuite">;
@@ -103,8 +103,8 @@ export const Quadrant = function <
 
   const displayTooltip = (formation: F) => {
     const [x, y] = chartRef.current?.convertToPixel("grid", [
-      formation.tauxPoursuite * 100 ?? 0,
-      formation.tauxInsertion * 100 ?? 0,
+      formation?.tauxPoursuite * 100 ?? 0,
+      formation?.tauxInsertion * 100 ?? 0,
     ]) ?? [0, 0];
     setDisplayedDetail({ x, y, formation });
   };
@@ -180,7 +180,7 @@ export const Quadrant = function <
       xAxis: [
         {
           type: "value",
-          name: "Taux de poursuite d'étude",
+          name: "Taux de poursuite d'études",
           show: dimensions?.includes("tauxPoursuite"),
           min: 0,
           max: 100,
@@ -254,10 +254,19 @@ export const Quadrant = function <
           type: "scatter",
           symbolSize: (_, { dataIndex }) => {
             const formation = data[dataIndex];
-            if (!formation) return 0;
+            const effectif = formation?.effectif;
+
+            if (!formation || !effectif) {
+              return 0;
+            }
+
             const size = effectifSizes.find(
-              ({ max }) => formation.effectif && formation.effectif < max
+              ({ max, min }) =>
+                effectif &&
+                (!min || effectif >= min) &&
+                (!max || effectif <= max)
             )?.size;
+
             return size ?? 0;
           },
           markLine: {

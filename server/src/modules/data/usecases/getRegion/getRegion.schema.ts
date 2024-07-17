@@ -9,7 +9,8 @@ export const getRegionSchema = {
   response: {
     200: z.object({
       libelleRegion: z.string(),
-      effectif: z.coerce.number().optional(),
+      effectifEntree: z.coerce.number().optional(),
+      effectifTotal: z.coerce.number().optional(),
       nbFormations: z.coerce.number().optional(),
       tauxPression: z.coerce.number().optional(),
       tauxRemplissage: z.coerce.number().optional(),

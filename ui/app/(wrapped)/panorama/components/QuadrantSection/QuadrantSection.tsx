@@ -123,12 +123,36 @@ const useQuadrantSection = (formations?: PanoramaFormations) => {
     [filters, formations]
   );
 
+  const effectifEntree: string = useMemo(
+    () =>
+      filteredFormations
+        ?.reduce((acc, { effectif }) => acc + (effectif ?? 0), 0)
+        .toString() ?? "-",
+    [filteredFormations]
+  );
+
   return {
     filters,
     setFilters,
     filteredFormations,
+    effectifEntree,
   };
 };
+
+interface QuadrantSectionProps {
+  quadrantFormations?: PanoramaFormations;
+  isLoading: boolean;
+  meanPoursuite?: number;
+  meanInsertion?: number;
+  order?: Partial<Order>;
+  handleOrder: (column: Order["orderBy"]) => void;
+  codeRegion?: string;
+  codeNiveauDiplome?: string;
+  codeNsf?: string;
+  codeDepartement?: string;
+  nbFormationsTotal?: number;
+  effectifEntreeTotal?: number;
+}
 
 export const QuadrantSection = ({
   quadrantFormations,
@@ -137,15 +161,14 @@ export const QuadrantSection = ({
   meanInsertion,
   order,
   handleOrder,
-}: {
-  quadrantFormations?: PanoramaFormations;
-  isLoading: boolean;
-  meanPoursuite?: number;
-  meanInsertion?: number;
-  order?: Partial<Order>;
-  handleOrder: (column: Order["orderBy"]) => void;
-}) => {
-  const { filteredFormations, filters, setFilters } =
+  codeRegion,
+  codeNiveauDiplome,
+  codeNsf,
+  codeDepartement,
+  nbFormationsTotal,
+  effectifEntreeTotal,
+}: QuadrantSectionProps) => {
+  const { filteredFormations, filters, setFilters, effectifEntree } =
     useQuadrantSection(quadrantFormations);
 
   return (
@@ -159,7 +182,21 @@ export const QuadrantSection = ({
         </Box>
       </Box>
       <Stack direction={["column", "row"]} spacing="72px">
-        <QuadrantTabs filters={filters} setFilters={setFilters} />
+        <QuadrantTabs
+          filters={filters}
+          setFilters={setFilters}
+          nbFormationsAffichee={filteredFormations.length}
+          nbFormationsNonAffichee={
+            (nbFormationsTotal ?? 0) - filteredFormations.length
+          }
+          effectifEntreeAffiche={
+            isNaN(Number(effectifEntree)) ? 0 : Number(effectifEntree)
+          }
+          effectifEntreeNonAffiche={
+            (effectifEntreeTotal ?? 0) -
+            (isNaN(Number(effectifEntree)) ? 0 : Number(effectifEntree))
+          }
+        />
         <QuadrantDisplay
           formations={filteredFormations}
           isLoading={isLoading}
@@ -167,6 +204,11 @@ export const QuadrantSection = ({
           meanPoursuite={meanPoursuite}
           order={order}
           handleOrder={handleOrder}
+          codeRegion={codeRegion}
+          codeNiveauDiplome={codeNiveauDiplome}
+          codeNsf={codeNsf}
+          codeDepartement={codeDepartement}
+          effectifEntree={effectifEntree}
         />
       </Stack>
     </Box>
