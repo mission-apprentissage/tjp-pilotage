@@ -274,7 +274,7 @@ export default () => {
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
-  useEffect(() => {
+  const setDefaultFilters = () => {
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
@@ -292,7 +292,8 @@ export default () => {
     ) {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
-    if (filters?.statut === undefined && statutFilter !== undefined) {
+
+    if (filters?.statut === undefined) {
       // Par défaut on affiche les demandes avec tous les status, sauf : supprimée, brouillon et refusée.
       filters.statut = _.values(DemandeStatutEnum).filter(
         (statut) =>
@@ -302,6 +303,10 @@ export default () => {
       );
     }
     setSearchParams({ filters: filters });
+  };
+
+  useEffect(() => {
+    setDefaultFilters();
   }, []);
 
   const onClickSearch = () => {
