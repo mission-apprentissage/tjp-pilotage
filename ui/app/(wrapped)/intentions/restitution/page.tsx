@@ -302,6 +302,11 @@ export default () => {
     });
   };
 
+  useEffect(() => {
+    const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
+    handleFilters("rentreeScolaire", campagneFilterNumber + 1);
+  }, [searchParams.filters?.campagne]);
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
