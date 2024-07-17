@@ -3,20 +3,14 @@ import { sql } from "kysely";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { kdb } from "../../../../db/db";
+import { cleanNull } from "../../../../utils/noNull";
 import { effectifAnnee } from "../../utils/effectifAnnee";
-import {
-  isScolaireFormationHistorique,
-  isScolaireIndicateurRegionSortie,
-} from "../../utils/isScolaire";
-import {
-  notAnneeCommune,
-  notAnneeCommuneIndicateurRegionSortie,
-  notSpecialite,
-} from "../../utils/notAnneeCommune";
+import { isScolaireIndicateurRegionSortie } from "../../utils/isScolaire";
+import { notAnneeCommuneIndicateurRegionSortie } from "../../utils/notAnneeCommune";
+import { notPerimetreIJDepartement } from "../../utils/notPerimetreIJ";
 import { selectTauxDevenirFavorableAgg } from "../../utils/tauxDevenirFavorable";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
-import { selectTauxPressionAgg } from "../../utils/tauxPression";
 import { selectTauxRemplissageAgg } from "../../utils/tauxRemplissage";
 
 export const getDepartementStats = async ({
@@ -41,18 +35,20 @@ export const getDepartementStats = async ({
 
   const statsSortie = await kdb
     .selectFrom("indicateurRegionSortie")
-    .leftJoin(
+    .innerJoin(
       "formationScolaireView as formationView",
       "formationView.cfd",
       "indicateurRegionSortie.cfd"
     )
-    .leftJoin(
+    .innerJoin(
       "departement",
-      "departement.codeRegion",
-      "indicateurRegionSortie.codeRegion"
+      "indicateurRegionSortie.codeRegion",
+      "departement.codeRegion"
     )
-    .where(notAnneeCommuneIndicateurRegionSortie)
     .where("departement.codeDepartement", "=", codeDepartement)
+    .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
+    .where(isScolaireIndicateurRegionSortie)
+    .where(notAnneeCommuneIndicateurRegionSortie)
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
       return q.where(
@@ -61,19 +57,6 @@ export const getDepartementStats = async ({
         codeNiveauDiplome
       );
     })
-    .where("indicateurRegionSortie.millesimeSortie", "=", millesimeSortie)
-    .where(isScolaireIndicateurRegionSortie)
-    .where((eb) =>
-      eb(
-        "indicateurRegionSortie.cfd",
-        "not in",
-        eb
-          .selectFrom("formationHistorique")
-          .distinct()
-          .select("ancienCFD")
-          .where(isScolaireFormationHistorique)
-      )
-    )
     .select([
       selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
       selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
@@ -84,68 +67,92 @@ export const getDepartementStats = async ({
     .executeTakeFirst();
 
   const baseStatsEntree = kdb
-    .selectFrom("formationEtablissement")
-    .leftJoin(
-      "formationScolaireView as formationView",
-      "formationView.cfd",
-      "formationEtablissement.cfd"
+    .selectFrom("formationScolaireView as formationView")
+    .innerJoin(
+      "niveauDiplome",
+      "niveauDiplome.codeNiveauDiplome",
+      "formationView.codeNiveauDiplome"
     )
-    .leftJoin("indicateurEntree", (join) =>
-      join.onRef(
-        "formationEtablissement.id",
-        "=",
-        "indicateurEntree.formationEtablissementId"
-      )
+    .innerJoin(
+      "formationEtablissement",
+      "formationEtablissement.cfd",
+      "formationView.cfd"
+    )
+    .innerJoin("indicateurEntree", (join) =>
+      join
+        .onRef(
+          "indicateurEntree.formationEtablissementId",
+          "=",
+          "formationEtablissement.id"
+        )
+        .on("rentreeScolaire", "=", rentreeScolaire)
     )
     .innerJoin(
       "etablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "etablissement.UAI",
+      "formationEtablissement.UAI"
     )
-    .innerJoin(
-      "departement",
-      "departement.codeDepartement",
-      "etablissement.codeDepartement"
-    )
-    .where("etablissement.codeDepartement", "=", codeDepartement)
-    .where("indicateurEntree.rentreeScolaire", "=", rentreeScolaire)
-    .$call((q) => {
-      if (!codeNiveauDiplome?.length) return q;
-      return q.where(
-        "formationView.codeNiveauDiplome",
-        "in",
-        codeNiveauDiplome
-      );
-    });
-
-  const nbFormations = await baseStatsEntree
-    .where(notAnneeCommune)
-    .select(
-      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
-        "nbFormations"
+    .innerJoin("region", "region.codeRegion", "etablissement.codeRegion")
+    .innerJoin("departement", (join) =>
+      join.onRef(
+        "departement.codeDepartement",
+        "=",
+        "etablissement.codeDepartement"
       )
     )
-    .executeTakeFirst();
+    .where(notPerimetreIJDepartement)
+    .where("departement.codeDepartement", "=", codeDepartement)
+    .where((w) => {
+      if (!codeNiveauDiplome?.length) {
+        return w.val(true);
+      }
+
+      return w("formationView.codeNiveauDiplome", "in", codeNiveauDiplome);
+    });
+
+  const effectifTotal = await baseStatsEntree
+    .select((eb) => [
+      eb.ref("departement.codeDepartement").as("codeDepartement"),
+      eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
+      sql<number>`sum(coalesce((effectifs->>0)::integer,0)) + sum(coalesce((effectifs->>1)::integer,0)) + sum(coalesce((effectifs->>2)::integer,0))`.as(
+        "effectifTotal"
+      ),
+    ])
+    .groupBy(["departement.codeDepartement", "formationView.codeNiveauDiplome"])
+    .executeTakeFirst()
+    .then(cleanNull);
 
   const statsEntree = await baseStatsEntree
-    .where(notSpecialite)
-    .select([
-      "departement.codeRegion",
-      "departement.libelleDepartement",
-      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
-      `.as("effectif"),
-      selectTauxPressionAgg("indicateurEntree", "formationView").as(
-        "tauxPression"
+    .where("formationView.cfd", "not in", (eb) =>
+      eb.selectFrom("familleMetier").select("cfdFamille")
+    )
+    .select((eb) => [
+      eb.ref("departement.codeRegion").as("codeRegion"),
+      eb.ref("departement.codeDepartement").as("codeDepartement"),
+      eb.ref("departement.libelleDepartement").as("libelleDepartement"),
+      eb.ref("formationView.codeNiveauDiplome").as("codeNiveauDiplome"),
+      eb.ref("libelleNiveauDiplome").as("libelleNiveauDiplome"),
+      sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+        "nbFormations"
       ),
+      sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})
+      `.as("effectifEntree"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
     ])
-    .groupBy(["departement.libelleDepartement", "departement.codeRegion"])
-    .executeTakeFirst();
+    .groupBy([
+      "departement.codeRegion",
+      "departement.codeDepartement",
+      "departement.libelleDepartement",
+      "niveauDiplome.libelleNiveauDiplome",
+      "formationView.codeNiveauDiplome",
+    ])
+    .executeTakeFirst()
+    .then(cleanNull);
 
   return {
     ...informationsDepartement,
     ...statsEntree,
-    ...nbFormations,
     ...statsSortie,
+    ...effectifTotal,
   };
 };
