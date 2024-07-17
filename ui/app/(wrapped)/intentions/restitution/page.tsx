@@ -307,6 +307,17 @@ export default () => {
     handleFilters("rentreeScolaire", campagneFilterNumber + 1);
   }, [searchParams.filters?.campagne]);
 
+  useEffect(() => {
+    if (filters?.statut === undefined) {
+      handleFilters(
+        "statut",
+        data?.filters.statuts
+          .filter((s) => s.value !== "supprimée" && s.value !== "refusée")
+          .map((s) => s.value) ?? []
+      );
+    }
+  }, [data?.filters.statuts, filters.statut]);
+
   return (
     <GuardPermission permission="restitution-intentions/lecture">
       <Container maxWidth={"100%"} pt={8} bg="blueecume.925" pb={20} flex={1}>
