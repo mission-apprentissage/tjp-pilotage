@@ -1,19 +1,26 @@
 import {
+  Box,
   chakra,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
   Radio,
   RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
+
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { toBoolean } from "../../utils/toBoolean";
 import { IntentionForms } from "../defaultFormValues";
 
 export const AmiCmaField = chakra(
   ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+    const { openGlossaire } = useGlossaireContext();
     const {
       formState: { errors },
       control,
@@ -21,7 +28,23 @@ export const AmiCmaField = chakra(
 
     return (
       <FormControl className={className} isInvalid={!!errors.amiCma} isRequired>
-        <FormLabel>AMI / CMA</FormLabel>
+        <Flex direction={"row"}>
+          <FormLabel>AMI / CMA</FormLabel>
+          <TooltipIcon
+            mt={"1"}
+            label={
+              <Box w={"fit-content"}>
+                <Text>
+                  Appel à Manifestation d'Intérêt « Compétences et métiers
+                  d’avenir »
+                </Text>
+                <Text mt={2}>Cliquez pour plus d'infos.</Text>
+              </Box>
+            }
+            onClick={() => openGlossaire("ami-cma")}
+            color={"bluefrance.113"}
+          />
+        </Flex>
         <Controller
           name="amiCma"
           control={control}
