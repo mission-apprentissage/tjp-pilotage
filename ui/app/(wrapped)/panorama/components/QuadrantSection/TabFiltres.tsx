@@ -54,9 +54,7 @@ export const TabFiltres = ({
           </FormLabel>
           <Slider
             mt="6"
-            onChange={(value) =>
-              setFilters({ ...filters, effectifMin: value as number })
-            }
+            onChange={(value) => setFilters({ ...filters, effectifMin: value })}
             min={0}
             max={500}
             value={filters.effectifMin}

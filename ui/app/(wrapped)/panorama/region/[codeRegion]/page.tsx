@@ -7,10 +7,10 @@ import { client } from "@/api.client";
 
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
-import { IndicateursSection } from "../../components/IndicateursSection";
+import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
 import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
-import { TopFlopSection } from "../../components/TopFlopSection";
+import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
 import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
@@ -129,6 +129,11 @@ export default function Panorama({
         handleOrder={(column?: string) =>
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }
+        codeRegion={codeRegion}
+        codeNiveauDiplome={searchParams.codeNiveauDiplome?.[0]}
+        codeNsf={searchParams.codeNsf?.[0]}
+        nbFormationsTotal={stats?.nbFormations}
+        effectifEntreeTotal={stats?.effectifEntree}
       />
       <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
       <InfoSection codeRegion={codeRegion} />

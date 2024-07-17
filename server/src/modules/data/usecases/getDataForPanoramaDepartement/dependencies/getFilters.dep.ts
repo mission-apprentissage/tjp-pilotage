@@ -9,7 +9,7 @@ export const getFilters = async ({
   const filtersBase = kdb
     .selectFrom("niveauDiplome")
     .leftJoin(
-      "formationView",
+      "formationScolaireView as formationView",
       "formationView.codeNiveauDiplome",
       "niveauDiplome.codeNiveauDiplome"
     )

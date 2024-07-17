@@ -21,9 +21,17 @@ enum QuadrantTabsEnum {
 export const QuadrantTabs = ({
   filters,
   setFilters,
+  nbFormationsAffichee,
+  nbFormationsNonAffichee,
+  effectifEntreeAffiche,
+  effectifEntreeNonAffiche,
 }: {
   filters: Filters;
   setFilters: (filters: Filters) => void;
+  nbFormationsAffichee?: number;
+  nbFormationsNonAffichee?: number;
+  effectifEntreeAffiche?: number;
+  effectifEntreeNonAffiche?: number;
 }) => {
   const [tabIndex, setTabIndex] = useState(QuadrantTabsEnum.filtres);
   return (
@@ -66,7 +74,12 @@ export const QuadrantTabs = ({
       </TabList>
       <TabPanels>
         <TabFiltres filters={filters} setFilters={setFilters} />
-        <TabInformations />
+        <TabInformations
+          nbFormationsAffichee={nbFormationsAffichee}
+          nbFormationsNonAffichee={nbFormationsNonAffichee}
+          effectifEntreeAffiche={effectifEntreeAffiche}
+          effectifEntreeNonAffiche={effectifEntreeNonAffiche}
+        />
       </TabPanels>
     </Tabs>
   );

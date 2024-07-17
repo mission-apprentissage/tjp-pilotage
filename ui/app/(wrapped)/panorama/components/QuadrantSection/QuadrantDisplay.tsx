@@ -18,11 +18,7 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import Link from "next/link";
-import {
-  useParams,
-  useSearchParams,
-  useSelectedLayoutSegment,
-} from "next/navigation";
+import { useSelectedLayoutSegment } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useEffect, useMemo, useState } from "react";
 
@@ -67,7 +63,17 @@ const EmptyCadran = () => {
   );
 };
 
-const useQuadrantDisplay = () => {
+const useQuadrantDisplay = ({
+  codeDepartement,
+  codeRegion,
+  codeNiveauDiplome,
+  codeNsf,
+}: {
+  codeDepartement?: string;
+  codeRegion?: string;
+  codeNiveauDiplome?: string;
+  codeNsf?: string;
+}) => {
   const segment = useSelectedLayoutSegment();
   const [typeVue, setTypeVue] = useState<"quadrant" | "tableau">("quadrant");
   const [exportPath, setExportPath] = useState<URL>(
@@ -81,22 +87,18 @@ const useQuadrantDisplay = () => {
   const [currentFormationId, setCurrentFormationId] = useState<
     string | undefined
   >();
-  const searchParams = useSearchParams();
-  const params = useParams<{ codeRegion: string; codeDepartement: string }>();
-  const codeNiveauDiplome = searchParams.get("codeNiveauDiplome[0]");
-  const codeNsf = searchParams.get("codeNsf[0]");
 
   useEffect(() => {
     const consoleUrl = new URL("/console/formations", publicConfig.baseUrl);
 
-    if (params.codeRegion) {
-      consoleUrl.searchParams.set("filters[codeRegion][0]", params.codeRegion);
+    if (codeRegion) {
+      consoleUrl.searchParams.set("filters[codeRegion][0]", codeRegion);
     }
 
-    if (params.codeDepartement) {
+    if (codeDepartement) {
       consoleUrl.searchParams.set(
         "filters[codeDepartement][0]",
-        params.codeDepartement
+        codeDepartement
       );
     }
 
@@ -109,7 +111,7 @@ const useQuadrantDisplay = () => {
     }
 
     setExportPath(consoleUrl);
-  }, [codeNiveauDiplome, codeNsf, params]);
+  }, [codeNiveauDiplome, codeNsf, codeDepartement, codeRegion]);
 
   return {
     typeVue,
@@ -129,6 +131,11 @@ export const QuadrantDisplay = ({
   order,
   handleOrder,
   isLoading,
+  codeDepartement,
+  codeRegion,
+  codeNiveauDiplome,
+  codeNsf,
+  effectifEntree,
 }: {
   formations: PanoramaFormations;
   meanPoursuite?: number;
@@ -136,6 +143,11 @@ export const QuadrantDisplay = ({
   order?: Partial<Order>;
   handleOrder: (column: Order["orderBy"]) => void;
   isLoading: boolean;
+  codeRegion?: string;
+  codeNiveauDiplome?: string;
+  codeNsf?: string;
+  codeDepartement?: string;
+  effectifEntree?: string;
 }) => {
   const {
     typeVue,
@@ -143,7 +155,12 @@ export const QuadrantDisplay = ({
     currentFormationId,
     setCurrentFormationId,
     exportPath,
-  } = useQuadrantDisplay();
+  } = useQuadrantDisplay({
+    codeDepartement,
+    codeRegion,
+    codeNiveauDiplome,
+    codeNsf,
+  });
 
   const RenderQuadrant = useMemo(() => {
     if (isLoading) {
@@ -203,7 +220,7 @@ export const QuadrantDisplay = ({
         flexDir={["column", null, "row"]}
         alignItems={"center"}
       >
-        <Flex gap={2}>
+        <Flex gap={0.5}>
           <Popover>
             <PopoverTrigger>
               <Button
@@ -214,7 +231,11 @@ export const QuadrantDisplay = ({
                 Légende
               </Button>
             </PopoverTrigger>
-            <PopoverContent _focusVisible={{ outline: "none" }} p="3">
+            <PopoverContent
+              _focusVisible={{ outline: "none" }}
+              p="3"
+              w={"fit-content"}
+            >
               <PopoverCloseButton />
               <InfoTooltipContent />
             </PopoverContent>
@@ -266,12 +287,8 @@ export const QuadrantDisplay = ({
           </Tooltip>
         </Flex>
         <Text color="grey.50" fontSize="sm" textAlign="center">
-          {formations?.length ?? "-"} certifications -{" "}
-          {formations?.reduce(
-            (acc, { effectif }) => acc + (effectif ?? 0),
-            0
-          ) ?? "-"}{" "}
-          élèves
+          <strong>{formations?.length ?? "-"}</strong> formations -{" "}
+          <strong>{effectifEntree}</strong> effectif en entrée
         </Text>
       </Flex>
       <AspectRatio ratio={1} mt={2}>
