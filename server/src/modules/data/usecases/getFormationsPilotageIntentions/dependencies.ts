@@ -75,6 +75,34 @@ const selectNbEtablissements = (
   eb: ExpressionBuilder<DB, "dataEtablissement">
 ) => eb.fn.count<number>("dataEtablissement.uai").distinct();
 
+export const getCodeRegionFromDepartement = (
+  codeDepartement: string | string[]
+) => {
+  return kdb
+    .selectFrom("departement")
+    .where((w) => {
+      if (Array.isArray(codeDepartement)) {
+        return w("codeDepartement", "in", codeDepartement);
+      }
+      return w("codeDepartement", "=", codeDepartement);
+    })
+    .select(["codeRegion"])
+    .executeTakeFirstOrThrow();
+};
+
+export const getCodeRegionFromAcademie = (codeAcademie: string | string[]) => {
+  return kdb
+    .selectFrom("academie")
+    .where((w) => {
+      if (Array.isArray(codeAcademie)) {
+        return w("codeAcademie", "in", codeAcademie);
+      }
+      return w("codeAcademie", "=", codeAcademie);
+    })
+    .select(["codeRegion"])
+    .executeTakeFirstOrThrow();
+};
+
 const getFormationsPilotageIntentionsQuery = ({
   statut,
   type,
