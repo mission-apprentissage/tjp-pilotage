@@ -297,7 +297,6 @@ export default () => {
       // Par défaut on affiche les demandes avec tous les status, sauf : supprimée, brouillon et refusée.
       filters.statut = _.values(DemandeStatutEnum).filter(
         (statut) =>
-          statut !== DemandeStatutEnum["supprimée"] &&
           statut !== DemandeStatutEnum["brouillon"] &&
           statut !== DemandeStatutEnum["refusée"]
       );
