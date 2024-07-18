@@ -51,6 +51,7 @@ import {
   SelectedScope,
   StatsPilotageIntentions,
 } from "../types";
+import QuadrantPlaceholder from "./QuadrantPlaceholder";
 
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
@@ -209,11 +210,12 @@ export const QuadrantSection = ({
   };
 
   if (
-    !mergedFilters.codeRegion &&
-    (!mergedFilters.codeNiveauDiplome ||
-      mergedFilters.codeNiveauDiplome.length === 0)
+    !mergedFilters.code ||
+    !mergedFilters.codeNiveauDiplome ||
+    mergedFilters.codeNiveauDiplome.length === 0 ||
+    mergedFilters.codeNiveauDiplome.length > 1
   ) {
-    return <></>;
+    return <QuadrantPlaceholder />;
   }
 
   return (
