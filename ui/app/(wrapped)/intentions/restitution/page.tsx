@@ -2,11 +2,15 @@
 
 import { Button, chakra, Container, Flex } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
+import _ from "lodash";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
 import { useContext, useEffect, useState } from "react";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { client } from "@/api.client";
@@ -270,7 +274,7 @@ export default () => {
 
   const [searchIntention, setSearchIntention] = useState<string>(search);
 
-  useEffect(() => {
+  const setDefaultFilters = () => {
     if (
       filters?.codeRegion === undefined &&
       filters?.codeAcademie === undefined &&
@@ -288,10 +292,21 @@ export default () => {
     ) {
       filters.rentreeScolaire = rentreeScolaireFilter;
     }
-    if (filters?.statut === undefined && statutFilter !== undefined) {
-      filters.statut = statutFilter;
+
+    if (filters?.statut === undefined) {
+      // Par défaut on affiche les demandes avec tous les status, sauf : supprimée, brouillon et refusée.
+      filters.statut = _.values(DemandeStatutEnum).filter(
+        (statut) =>
+          statut !== DemandeStatutEnum["supprimée"] &&
+          statut !== DemandeStatutEnum["brouillon"] &&
+          statut !== DemandeStatutEnum["refusée"]
+      ) as Exclude<DemandeStatutType, "supprimée">[];
     }
     setSearchParams({ filters: filters });
+  };
+
+  useEffect(() => {
+    setDefaultFilters();
   }, []);
 
   const onClickSearch = () => {
@@ -301,6 +316,11 @@ export default () => {
       search: searchIntention,
     });
   };
+
+  useEffect(() => {
+    const campagneFilterNumber = parseInt(searchParams.filters?.campagne ?? "");
+    handleFilters("rentreeScolaire", campagneFilterNumber + 1);
+  }, [searchParams.filters?.campagne]);
 
   return (
     <GuardPermission permission="restitution-intentions/lecture">
