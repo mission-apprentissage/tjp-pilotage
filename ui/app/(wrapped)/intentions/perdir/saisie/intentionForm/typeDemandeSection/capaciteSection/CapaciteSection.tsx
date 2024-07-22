@@ -25,7 +25,6 @@ import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
 import { ColorationField } from "./ColorationField";
 import { LibelleColorationField } from "./LibelleColorationField";
-import { MixteField } from "./MixteField";
 
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
@@ -86,7 +85,6 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
 
   return (
     <Flex gap="6" mb="4" direction={"column"}>
-      <MixteField disabled={disabled} />
       <ColorationField disabled={disabled} />
       <LibelleColorationField disabled={disabled} />
       <Table columnGap={1} rowGap={1}>

@@ -7,16 +7,16 @@ import { client } from "@/api.client";
 
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
-import { IndicateursSection } from "../../components/IndicateursSection";
+import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
-import { QuadrantSection } from "../../components/QuadrantSection";
-import { TopFlopSection } from "../../components/TopFlopSection";
+import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
+import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
 import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
   params: { codeDepartement },
 }: {
-  params: {
+  readonly params: {
     codeDepartement: string;
   };
 }) {
@@ -96,22 +96,39 @@ export default function Panorama({
       { keepPreviousData: true, staleTime: 10000000 }
     );
 
+  console.log({ stats });
+
   return (
     <>
-      <IndicateursSection
+      <FiltersSection
         onCodeChanged={onCodeDepartementChanged}
         code={codeDepartement}
         options={departementsOptions}
-        stats={stats}
-        handleFilters={handleFilters}
-        activeFilters={searchParams}
         diplomeOptions={data?.filters.diplomes}
-        typeTerritoire="departement"
-      />
-      <FiltersSection
-        activeFilters={searchParams}
         handleFilters={handleFilters}
+        activeFilters={searchParams}
         libelleNsfOptions={data?.filters.libellesNsf}
+      />
+      <IndicateursSection
+        stats={
+          searchParams.codeNsf
+            ? {
+                libelleRegion: "",
+                codeRegion: "",
+                libelleDepartement: stats?.libelleDepartement,
+              }
+            : stats
+        }
+        libelleTerritoire={
+          departementsOptions?.find((item) => item.value === codeDepartement)
+            ?.label
+        }
+        libelleDiplome={
+          data?.filters.diplomes?.find(
+            (item) => item.value === searchParams.codeNiveauDiplome?.[0]
+          )?.label
+        }
+        typeTerritoire={"departement"}
       />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
@@ -122,6 +139,12 @@ export default function Panorama({
         handleOrder={(column?: string) =>
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }
+        codeRegion={stats?.codeRegion}
+        codeDepartement={codeDepartement}
+        codeNiveauDiplome={searchParams.codeNiveauDiplome?.[0]}
+        codeNsf={searchParams.codeNsf?.[0]}
+        nbFormationsTotal={stats?.nbFormations}
+        effectifEntreeTotal={stats?.effectifEntree}
       />
       <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
       <InfoSection
