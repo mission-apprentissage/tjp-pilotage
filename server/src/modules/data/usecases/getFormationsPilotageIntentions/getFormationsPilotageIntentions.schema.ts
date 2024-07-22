@@ -6,6 +6,7 @@ const FormationTransformationStatsSchema = z.object({
   libelleDispositif: z.string().optional(),
   tauxInsertion: z.coerce.number(),
   tauxPoursuite: z.coerce.number(),
+  tauxDevenirFavorable: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
   codeDispositif: z.string().optional(),
   cfd: z.string(),

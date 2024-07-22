@@ -8,12 +8,10 @@ import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
 const getStatsSortieBase = ({
   codeRegion,
-  codeDepartement,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
-  codeDepartement?: string | string[];
   millesimeSortie?: string;
   codeNiveauDiplome?: string[];
 }) => {
@@ -29,24 +27,6 @@ const getStatsSortieBase = ({
       if (Array.isArray(codeRegion))
         return w("indicateurRegionSortie.codeRegion", "in", codeRegion);
       return w("indicateurRegionSortie.codeRegion", "=", codeRegion);
-    })
-    .$call((q) => {
-      if (!codeDepartement?.length) return q;
-      if (Array.isArray(codeDepartement))
-        return q
-          .innerJoin(
-            "departement",
-            "departement.codeRegion",
-            "indicateurRegionSortie.codeRegion"
-          )
-          .where("departement.codeDepartement", "in", codeDepartement);
-      return q
-        .innerJoin(
-          "departement",
-          "departement.codeRegion",
-          "indicateurRegionSortie.codeRegion"
-        )
-        .where("departement.codeDepartement", "=", codeDepartement);
     })
     .$call((q) => {
       if (!codeNiveauDiplome?.length) return q;
@@ -139,18 +119,15 @@ export const getStatsSortieParRegionsEtNiveauDiplomeQuery = async ({
 
 export const getStatsSortieParRegionsQuery = async ({
   codeRegion,
-  codeDepartement,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
-  codeDepartement?: string | string[];
   codeNiveauDiplome?: string[];
   millesimeSortie?: string;
 }) => {
   const statsSortie = await getStatsSortieBase({
     codeRegion,
-    codeDepartement,
     codeNiveauDiplome,
     millesimeSortie,
   })
@@ -172,18 +149,15 @@ export const getStatsSortieParRegionsQuery = async ({
 
 export const getStatsSortieQuery = async ({
   codeRegion,
-  codeDepartement,
   codeNiveauDiplome,
   millesimeSortie = CURRENT_IJ_MILLESIME,
 }: {
   codeRegion?: string | string[];
-  codeDepartement?: string | string[];
   codeNiveauDiplome?: string[];
   millesimeSortie?: string;
 }) => {
   const statsSortie = await getStatsSortieBase({
     codeRegion,
-    codeDepartement,
     codeNiveauDiplome,
     millesimeSortie,
   }).executeTakeFirstOrThrow();

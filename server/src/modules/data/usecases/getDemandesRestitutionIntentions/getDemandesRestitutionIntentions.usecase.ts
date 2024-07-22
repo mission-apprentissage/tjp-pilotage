@@ -5,7 +5,10 @@ import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieParRegionsEtNiveauDiplomeQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
+import {
+  getPositionQuadrant,
+  HORS_QUADRANT,
+} from "../../services/getPositionQuadrant";
 import { getDemandesRestitutionIntentionsQuery } from "./deps/getDemandesRestitutionIntentions.query";
 import { getFilters } from "./deps/getFilters.query";
 import { FiltersSchema } from "./getDemandesRestitutionIntentions.schema";
@@ -47,6 +50,7 @@ const getDemandesRestitutionIntentionsFactory =
             statsSortie && statsSortie[demande.codeRegion ?? ""]
               ? getPositionQuadrant(
                   {
+                    ...demande,
                     tauxInsertion: demande.tauxInsertionRegional,
                     tauxPoursuite: demande.tauxPoursuiteRegional,
                   },
@@ -54,7 +58,7 @@ const getDemandesRestitutionIntentionsFactory =
                     demande.codeNiveauDiplome ?? ""
                   ] || {}
                 )
-              : "Hors quadrant",
+              : HORS_QUADRANT,
         })
       ),
       campagne,

@@ -44,12 +44,14 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { useStateParams } from "@/utils/useFilters";
 
+import { roundNumber } from "../../../../../utils/roundNumber";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
   SelectedScope,
   StatsPilotageIntentions,
 } from "../types";
+import QuadrantPlaceholder from "./QuadrantPlaceholder";
 
 const EFFECTIF_SIZES = [
   { max: 15, size: 6 },
@@ -206,6 +208,15 @@ export const QuadrantSection = ({
       },
     });
   };
+
+  if (
+    !mergedFilters.code ||
+    !mergedFilters.codeNiveauDiplome ||
+    mergedFilters.codeNiveauDiplome.length === 0 ||
+    mergedFilters.codeNiveauDiplome.length > 1
+  ) {
+    return <QuadrantPlaceholder />;
+  }
 
   return (
     <>
@@ -408,31 +419,51 @@ export const QuadrantSection = ({
                     </Link>
                   </Box>
 
-                  <InfoBlock
-                    textBg="white"
-                    mb="4"
-                    label="Taux de pression"
-                    value={
-                      formation.tauxPression ? formation?.tauxPression : "-"
-                    }
-                  />
-                  <Text mb="1" fontWeight="medium">
-                    Taux d'emploi régional
-                  </Text>
-                  <GraphWrapper
-                    mb="4"
-                    w="100%"
-                    continuum={formation.continuum}
-                    value={formation.tauxInsertion}
-                  />
-                  <Text mb="1" fontWeight="medium">
-                    Taux de poursuite d'études régional
-                  </Text>
-                  <GraphWrapper
-                    w="100%"
-                    continuum={formation.continuum}
-                    value={formation.tauxPoursuite}
-                  />
+                  <VStack gap={4} alignItems="start" width="100%">
+                    <Box width="100%">
+                      <InfoBlock
+                        label="Taux de pression"
+                        textBg="white"
+                        value={
+                          formation.tauxPression
+                            ? roundNumber(formation?.tauxPression)
+                            : "-"
+                        }
+                      />
+                    </Box>
+                    <Box width="100%">
+                      <Text mb="1" fontWeight="medium">
+                        Taux d'emploi régional
+                      </Text>
+                      <GraphWrapper
+                        w="100%"
+                        continuum={formation.continuum}
+                        value={formation.tauxInsertion}
+                      />
+                    </Box>
+                    <Box width="100%">
+                      <Text mb="1" fontWeight="medium">
+                        Taux de poursuite d'études régional
+                      </Text>
+                      <GraphWrapper
+                        w="100%"
+                        continuum={formation.continuum}
+                        value={formation.tauxPoursuite}
+                      />
+                    </Box>
+                    {formation.tauxDevenirFavorable && (
+                      <Box width="100%">
+                        <Text mb="1" fontWeight="medium">
+                          Taux de devenir favorable régional
+                        </Text>
+                        <GraphWrapper
+                          w="100%"
+                          continuum={formation.continuum}
+                          value={formation.tauxDevenirFavorable}
+                        />
+                      </Box>
+                    )}
+                  </VStack>
                 </>
               )}
             </Box>
