@@ -70,7 +70,7 @@ export default function Formations() {
   );
 
   useEffect(() => {
-    if (codeRegionFilter !== "") {
+    if (codeRegionFilter !== "" && !filters.codeRegion?.length) {
       filters.codeRegion = [codeRegionFilter];
       setSearchParams({ filters: filters, withAnneeCommune });
     }
