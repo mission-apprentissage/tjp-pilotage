@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   Menu,
@@ -9,6 +10,7 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
+import { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
@@ -16,15 +18,15 @@ import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
-import { TablePageHandler } from "../../../../../components/TablePageHandler";
+import { Multiselect } from "../../../../../components/Multiselect";
 import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
 
 const EXPORT_LIMIT = 1_000_000;
-const PAGE_SIZE = 30;
 
 export const Header = ({
+  activeFilters,
   searchParams,
   setSearchParams,
   getDemandesQueryParameters,
@@ -32,10 +34,12 @@ export const Header = ({
   setSearchDemande,
   campagnes,
   campagne,
-  page,
-  count = 0,
-  onPageChange,
+  diplomes,
+  academies,
+  filterTracker,
+  handleFilters,
 }: {
+  activeFilters: Filters;
   searchParams: {
     search?: string;
     campagne?: string;
@@ -52,9 +56,10 @@ export const Header = ({
     annee: string;
     statut: string;
   };
-  page: number;
-  count?: number;
-  onPageChange: (newPage: number) => void;
+  filterTracker: (filterName: keyof Filters) => () => void;
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
+  diplomes: OptionSchema[];
+  academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
@@ -82,89 +87,120 @@ export const Header = ({
             </Text>
           </Flex>
         )}
-        <Flex direction={"row"} gap={1} flex={1}>
-          <Menu gutter={0} matchWidth={true} autoSelect={false}>
-            <MenuButton
-              as={Button}
-              variant={"selectButton"}
-              rightIcon={<ChevronDownIcon />}
-              w={"100%"}
-              maxW={"220px"}
-              borderWidth="1px"
-              borderStyle="solid"
-              borderColor="grey.900"
-            >
-              <Flex direction="row">
-                <Text my={"auto"}>
-                  Campagne{" "}
-                  {campagnes?.find((c) => c.annee === anneeCampagne)?.annee ??
-                    ""}
-                </Text>
-                <CampagneStatutTag
-                  statut={
-                    campagnes?.find((c) => c.annee === anneeCampagne)?.statut
-                  }
-                />
-              </Flex>
-            </MenuButton>
-            <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
-              {campagnes?.map((campagne) => (
-                <MenuItem
-                  p={2}
-                  key={campagne.annee}
-                  onClick={() => {
-                    setSearchParams({
-                      ...searchParams,
-                      campagne: campagne.annee,
-                    });
-                  }}
+        <Flex direction={"row"} flex={1} justifyContent={"space-between"}>
+          <Flex direction={"row"} gap={2} flex={1}>
+            <Flex direction={"column"}>
+              <Menu gutter={0} matchWidth={true} autoSelect={false}>
+                <MenuButton
+                  as={Button}
+                  variant={"selectButton"}
+                  rightIcon={<ChevronDownIcon />}
+                  w={"100%"}
+                  borderWidth="1px"
+                  borderStyle="solid"
+                  borderColor="grey.900"
                 >
                   <Flex direction="row">
-                    <Text my={"auto"}>Campagne {campagne.annee}</Text>
-                    <CampagneStatutTag statut={campagne.statut} />
+                    <Text my={"auto"}>
+                      Campagne{" "}
+                      {campagnes?.find((c) => c.annee === anneeCampagne)
+                        ?.annee ?? ""}
+                    </Text>
+                    <CampagneStatutTag
+                      statut={
+                        campagnes?.find((c) => c.annee === anneeCampagne)
+                          ?.statut
+                      }
+                    />
                   </Flex>
-                </MenuItem>
-              ))}
-            </MenuList>
-          </Menu>
+                </MenuButton>
+                <MenuList py={0} borderTopRadius={0} zIndex={"banner"}>
+                  {campagnes?.map((campagne) => (
+                    <MenuItem
+                      p={2}
+                      key={campagne.annee}
+                      onClick={() => {
+                        setSearchParams({
+                          ...searchParams,
+                          campagne: campagne.annee,
+                        });
+                      }}
+                    >
+                      <Flex direction="row">
+                        <Text my={"auto"}>Campagne {campagne.annee}</Text>
+                        <CampagneStatutTag statut={campagne.statut} />
+                      </Flex>
+                    </MenuItem>
+                  ))}
+                </MenuList>
+              </Menu>
+            </Flex>
+
+            <Box justifyContent={"start"}>
+              <Multiselect
+                onClose={filterTracker("codeAcademie")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) => handleFilters("codeAcademie", selected)}
+                options={academies}
+                value={activeFilters.codeAcademie ?? []}
+                disabled={academies.length === 0}
+                hasDefaultValue={false}
+              >
+                Académie: Tout ({academies.length ?? 0})
+              </Multiselect>
+            </Box>
+            <Box justifyContent={"start"}>
+              <Multiselect
+                onClose={filterTracker("codeNiveauDiplome")}
+                width={"64"}
+                size="md"
+                variant={"newInput"}
+                onChange={(selected) =>
+                  handleFilters("codeNiveauDiplome", selected)
+                }
+                options={diplomes}
+                value={activeFilters.codeNiveauDiplome ?? []}
+                disabled={diplomes.length === 0}
+                hasDefaultValue={false}
+              >
+                Diplôme: Tout ({diplomes.length ?? 0})
+              </Multiselect>
+            </Box>
+
+            <ExportMenuButton
+              onExportCsv={async () => {
+                trackEvent("saisie_demandes:export");
+                const data = await client.ref("[GET]/demandes").query({
+                  query: getDemandesQueryParameters(EXPORT_LIMIT),
+                });
+                downloadCsv(
+                  "export_saisie_demandes",
+                  data.demandes,
+                  DEMANDES_COLUMNS
+                );
+              }}
+              onExportExcel={async () => {
+                trackEvent("saisie_demandes:export-excel");
+                const data = await client.ref("[GET]/demandes").query({
+                  query: getDemandesQueryParameters(EXPORT_LIMIT),
+                });
+                downloadExcel(
+                  "export_saisie_demandes",
+                  data.demandes,
+                  DEMANDES_COLUMNS
+                );
+              }}
+              variant="externalLink"
+            />
+          </Flex>
+
           <SearchInput
             value={searchDemande}
             onChange={setSearchDemande}
             onClick={onClickSearchDemande}
             placeholder="Rechercher par diplôme, établissement, numéro,..."
-          />
-          <ExportMenuButton
-            onExportCsv={async () => {
-              trackEvent("saisie_demandes:export");
-              const data = await client.ref("[GET]/demandes").query({
-                query: getDemandesQueryParameters(EXPORT_LIMIT),
-              });
-              downloadCsv(
-                "export_saisie_demandes",
-                data.demandes,
-                DEMANDES_COLUMNS
-              );
-            }}
-            onExportExcel={async () => {
-              trackEvent("saisie_demandes:export-excel");
-              const data = await client.ref("[GET]/demandes").query({
-                query: getDemandesQueryParameters(EXPORT_LIMIT),
-              });
-              downloadExcel(
-                "export_saisie_demandes",
-                data.demandes,
-                DEMANDES_COLUMNS
-              );
-            }}
-            variant="externalLink"
-          />
-          <TablePageHandler
-            ms={"auto"}
-            mt={"auto"}
-            page={page}
-            pageSize={PAGE_SIZE}
-            count={count}
-            onPageChange={onPageChange}
           />
         </Flex>
       </Flex>
