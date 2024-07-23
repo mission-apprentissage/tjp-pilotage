@@ -22,23 +22,26 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
 import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { TableFooter } from "../../../../components/TableFooter";
 import { useStateParams } from "../../../../utils/useFilters";
+import {
+  formatCodeDepartement,
+  formatDepartementLibelleWithCodeDepartement,
+} from "../../utils/formatLibelle";
+import { StatutTag } from "../perdir/components/StatutTag";
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
@@ -48,31 +51,6 @@ import { Filters, Order } from "./types";
 import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
-
-const TagDemande = ({ statut }: { statut: string }) => {
-  switch (statut) {
-    case DemandeStatutEnum["projet de demande"]:
-      return (
-        <Tag size="sm" colorScheme={"orange"}>
-          Projet de demande
-        </Tag>
-      );
-    case DemandeStatutEnum["demande validée"]:
-      return (
-        <Tag size="sm" colorScheme={"green"}>
-          Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum["refusée"]:
-      return (
-        <Tag size="sm" colorScheme={"red"}>
-          Demande refusée
-        </Tag>
-      );
-    default:
-      return <></>;
-  }
-};
 
 export const PageClient = () => {
   const toast = useToast();
@@ -260,7 +238,13 @@ export const PageClient = () => {
                   zIndex={2}
                 >
                   <Tr>
-                    <Th>n° demande</Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("updatedAt")}
+                    >
+                      <OrderIcon {...order} column="updatedAt" />
+                      {DEMANDES_COLUMNS.updatedAt}
+                    </Th>
                     <Th
                       cursor="pointer"
                       onClick={() => handleOrder("libelleFormation")}
@@ -284,21 +268,19 @@ export const PageClient = () => {
                     </Th>
                     <Th
                       cursor="pointer"
-                      onClick={() => handleOrder("typeDemande")}
+                      onClick={() => handleOrder("statut")}
+                      textAlign={"center"}
                     >
-                      <OrderIcon {...order} column="typeDemande" />
-                      {DEMANDES_COLUMNS.typeDemande}
-                    </Th>
-                    <Th cursor="pointer" onClick={() => handleOrder("statut")}>
                       <OrderIcon {...order} column="statut" />
                       {DEMANDES_COLUMNS.statut}
                     </Th>
                     <Th
                       cursor="pointer"
-                      onClick={() => handleOrder("createdAt")}
+                      onClick={() => handleOrder("typeDemande")}
+                      textAlign={"center"}
                     >
-                      <OrderIcon {...order} column="createdAt" />
-                      {DEMANDES_COLUMNS.createdAt}
+                      <OrderIcon {...order} column="typeDemande" />
+                      {DEMANDES_COLUMNS.typeDemande}
                     </Th>
                     <Th
                       cursor="pointer"
@@ -307,13 +289,6 @@ export const PageClient = () => {
                     >
                       <OrderIcon {...order} column="userName" />
                       {DEMANDES_COLUMNS.userName}
-                    </Th>
-                    <Th
-                      cursor="pointer"
-                      onClick={() => handleOrder("updatedAt")}
-                    >
-                      <OrderIcon {...order} column="updatedAt" />
-                      {DEMANDES_COLUMNS.updatedAt}
                     </Th>
                     {data?.campagne.statut ===
                       CampagneStatutEnum["terminée"] && <Th />}
@@ -336,7 +311,19 @@ export const PageClient = () => {
                           router.push(`/intentions/saisie/${demande.numero}`);
                         }}
                       >
-                        <Td>{demande.numero}</Td>
+                        <Td textAlign={"center"}>
+                          <Tooltip
+                            label={`Le ${format(
+                              demande.updatedAt,
+                              "d MMMM yyyy à HH:mm",
+                              { locale: fr }
+                            )}`}
+                          >
+                            {format(demande.updatedAt, "d MMM HH:mm", {
+                              locale: fr,
+                            })}
+                          </Tooltip>
+                        </Td>
                         <Td>
                           <Text
                             textOverflow={"ellipsis"}
@@ -358,31 +345,33 @@ export const PageClient = () => {
                           </Text>
                         </Td>
                         <Td>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
+                          <Tooltip
+                            label={formatDepartementLibelleWithCodeDepartement({
+                              libelleDepartement: demande.libelleDepartement,
+                              codeDepartement: demande.codeDepartement,
+                            })}
                           >
-                            {demande.libelleDepartement}
-                          </Text>
+                            <Text
+                              textAlign={"center"}
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {formatCodeDepartement(demande.codeDepartement)}
+                            </Text>
+                          </Tooltip>
                         </Td>
-                        <Td>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {demande.typeDemande
-                              ? getTypeDemandeLabel(demande.typeDemande)
-                              : null}
-                          </Text>
+
+                        <Td textAlign={"center"} w={0}>
+                          <StatutTag statut={demande.statut} size="md" />
                         </Td>
-                        <Td align="center" w={0}>
-                          <TagDemande statut={demande.statut} />
+                        <Td textAlign={"center"}>
+                          <Tag colorScheme="blue" size={"md"} h="fit-content">
+                            {getTypeDemandeLabel(demande.typeDemande)}
+                          </Tag>
                         </Td>
-                        <Td>{formatDate({ date: demande.createdAt })}</Td>
+
                         <Td w="15" textAlign={"center"}>
                           <Tooltip label={demande.userName}>
                             <Avatar
@@ -395,9 +384,6 @@ export const PageClient = () => {
                               position={"unset"}
                             />
                           </Tooltip>
-                        </Td>
-                        <Td textAlign={"center"}>
-                          {formatDate({ date: demande.updatedAt })}
                         </Td>
                         {data?.campagne.statut ===
                           CampagneStatutEnum["terminée"] && (
