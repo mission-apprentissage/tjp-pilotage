@@ -1,40 +1,19 @@
-import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
-import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isIntentionCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 import {
   isIntentionBrouillonVisible,
   isIntentionSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { getIntentionsSchema } from "./getIntentions.schema";
+} from "../../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
+import { Filters } from "./getFilters.dep";
 
-export interface Filters
-  extends z.infer<typeof getIntentionsSchema.querystring> {
-  user: RequestUser;
-}
-
-export const getCampagneQuery = async (anneeCampagne: string) => {
-  const campagne = await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .where("annee", "=", anneeCampagne)
-    .executeTakeFirstOrThrow()
-    .catch(() => {
-      throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
-    });
-
-  return campagne;
-};
-
-export const getIntentionsQuery = async (
+export const getIntentions = async (
   {
     statut,
     suivies,
@@ -44,6 +23,8 @@ export const getIntentionsQuery = async (
     limit = 20,
     order,
     orderBy,
+    codeAcademie,
+    codeNiveauDiplome,
   }: Filters,
   anneeCampagne: string,
   shouldFetchOnlyIntention: boolean
@@ -197,6 +178,24 @@ export const getIntentionsQuery = async (
       if (shouldFetchOnlyIntention)
         return q.where("intention.isIntention", "=", true);
       return q;
+    })
+    .$call((eb) => {
+      if (codeAcademie) {
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      }
+
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome) {
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      }
+
+      return eb;
     })
     .orderBy("updatedAt desc")
     .where(isIntentionSelectable({ user }))
