@@ -134,41 +134,41 @@ export const Header = ({
         flexDirection={["column", null, "row"]}
         justifyContent={"space-between"}
         gap={2}
-        w={"100%"}
+        flex={1}
       >
-        <Box justifyContent={"start"}>
-          <Multiselect
-            onClose={filterTracker("codeAcademie")}
-            width={"64"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) => handleFilters("codeAcademie", selected)}
-            options={academies}
-            value={activeFilters.codeAcademie ?? []}
-            disabled={academies.length === 0}
-            hasDefaultValue={false}
-          >
-            Académie: Tout ({academies.length ?? 0})
-          </Multiselect>
-        </Box>
-        <Box justifyContent={"start"}>
-          <Multiselect
-            onClose={filterTracker("codeNiveauDiplome")}
-            width={"64"}
-            size="md"
-            variant={"newInput"}
-            onChange={(selected) =>
-              handleFilters("codeNiveauDiplome", selected)
-            }
-            options={diplomes}
-            value={activeFilters.codeNiveauDiplome ?? []}
-            disabled={diplomes.length === 0}
-            hasDefaultValue={false}
-          >
-            Diplôme: Tout ({diplomes.length ?? 0})
-          </Multiselect>
-        </Box>
-        <Flex mr="auto" ms={2}>
+        <Flex direction={"row"} gap={2} flex={1}>
+          <Box justifyContent={"start"}>
+            <Multiselect
+              onClose={filterTracker("codeAcademie")}
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              onChange={(selected) => handleFilters("codeAcademie", selected)}
+              options={academies}
+              value={activeFilters.codeAcademie ?? []}
+              disabled={academies.length === 0}
+              hasDefaultValue={false}
+            >
+              Académie: Tout ({academies.length ?? 0})
+            </Multiselect>
+          </Box>
+          <Box justifyContent={"start"}>
+            <Multiselect
+              onClose={filterTracker("codeNiveauDiplome")}
+              width={"64"}
+              size="md"
+              variant={"newInput"}
+              onChange={(selected) =>
+                handleFilters("codeNiveauDiplome", selected)
+              }
+              options={diplomes}
+              value={activeFilters.codeNiveauDiplome ?? []}
+              disabled={diplomes.length === 0}
+              hasDefaultValue={false}
+            >
+              Diplôme: Tout ({diplomes.length ?? 0})
+            </Multiselect>
+          </Box>
           <ExportMenuButton
             onExportCsv={async () => {
               trackEvent("saisie_intentions_perdir:export");
