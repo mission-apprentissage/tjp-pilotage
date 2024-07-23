@@ -60,6 +60,7 @@ export const getDemandes = async (
       )})`.as("userName"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
+      "departement.codeDepartement",
       "departement.libelleDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
