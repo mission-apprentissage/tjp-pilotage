@@ -1,8 +1,8 @@
 import Boom from "@hapi/boom";
 
-import { kdb } from "../../../../db/db";
+import { kdb } from "../../../../../db/db";
 
-export const getCampagneQuery = async (anneeCampagne: string) => {
+export const getCampagne = async (anneeCampagne: string) => {
   const campagne = await kdb
     .selectFrom("campagne")
     .selectAll()
