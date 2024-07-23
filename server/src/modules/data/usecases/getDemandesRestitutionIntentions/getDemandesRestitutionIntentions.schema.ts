@@ -1,10 +1,6 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { OptionSchema } from "shared/schema/optionSchema";
 import { z } from "zod";
-
-const OptionSchema = z.object({
-  label: z.coerce.string(),
-  value: z.coerce.string(),
-});
 
 const DemandeSchema = z.object({
   // Établissement
