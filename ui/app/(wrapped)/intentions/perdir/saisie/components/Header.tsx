@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from "@chakra-ui/icons";
 import {
+  Box,
   Button,
   Flex,
   Menu,
@@ -9,20 +10,20 @@ import {
   Text,
 } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
+import { OptionSchema } from "shared/schema/optionSchema";
 
 import { client } from "@/api.client";
 import { CampagneStatutTag } from "@/components/CampagneStatutTag";
 import { ExportMenuButton } from "@/components/ExportMenuButton";
-import { TablePageHandler } from "@/components/TablePageHandler";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
+import { Multiselect } from "../../../../../../components/Multiselect";
 import { SearchInput } from "../../../../../../components/SearchInput";
 import { INTENTIONS_COLUMNS } from "../INTENTIONS_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditIntention";
 
 const EXPORT_LIMIT = 1_000_000;
-const PAGE_SIZE = 30;
 
 export const Header = ({
   searchParams,
@@ -32,14 +33,18 @@ export const Header = ({
   setSearchIntention,
   campagnes,
   campagne,
-  page,
-  count,
-  onPageChange,
+  handleFilters,
+  diplomes,
+  academies,
+  filterTracker,
+  activeFilters,
 }: {
+  activeFilters: Filters;
   searchParams: {
     search?: string;
     campagne?: string;
   };
+  filterTracker: (filterName: keyof Filters) => () => void;
   setSearchParams: (params: { search?: string; campagne?: string }) => void;
   getIntentionsQueryParameters: (
     qLimit: number,
@@ -52,9 +57,9 @@ export const Header = ({
     annee: string;
     statut: string;
   };
-  page: number;
-  count?: number;
-  onPageChange: (newPage: number) => void;
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
+  diplomes: OptionSchema[];
+  academies: OptionSchema[];
 }) => {
   const trackEvent = usePlausible();
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
@@ -128,13 +133,41 @@ export const Header = ({
       <Flex
         flexDirection={["column", null, "row"]}
         justifyContent={"space-between"}
+        gap={2}
+        w={"100%"}
       >
-        <SearchInput
-          value={searchIntention}
-          onChange={setSearchIntention}
-          onClick={onClickSearchIntention}
-          placeholder="Rechercher par diplôme, établissement, numéro,..."
-        />
+        <Box justifyContent={"start"}>
+          <Multiselect
+            onClose={filterTracker("codeAcademie")}
+            width={"64"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) => handleFilters("codeAcademie", selected)}
+            options={academies}
+            value={activeFilters.codeAcademie ?? []}
+            disabled={academies.length === 0}
+            hasDefaultValue={false}
+          >
+            Académie: Tout ({academies.length ?? 0})
+          </Multiselect>
+        </Box>
+        <Box justifyContent={"start"}>
+          <Multiselect
+            onClose={filterTracker("codeNiveauDiplome")}
+            width={"64"}
+            size="md"
+            variant={"newInput"}
+            onChange={(selected) =>
+              handleFilters("codeNiveauDiplome", selected)
+            }
+            options={diplomes}
+            value={activeFilters.codeNiveauDiplome ?? []}
+            disabled={diplomes.length === 0}
+            hasDefaultValue={false}
+          >
+            Diplôme: Tout ({diplomes.length ?? 0})
+          </Multiselect>
+        </Box>
         <Flex mr="auto" ms={2}>
           <ExportMenuButton
             onExportCsv={async () => {
@@ -162,15 +195,14 @@ export const Header = ({
             variant="externalLink"
           />
         </Flex>
+
+        <SearchInput
+          value={searchIntention}
+          onChange={setSearchIntention}
+          onClick={onClickSearchIntention}
+          placeholder="Rechercher par diplôme, établissement, numéro,..."
+        />
       </Flex>
-      <TablePageHandler
-        ms={"auto"}
-        mt={"auto"}
-        page={page}
-        pageSize={PAGE_SIZE}
-        count={count}
-        onPageChange={onPageChange}
-      />
     </Flex>
   );
 };

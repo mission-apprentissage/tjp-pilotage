@@ -1,20 +1,17 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import {
-  Filters,
-  getCampagneQuery,
-  getIntentionsQuery,
-} from "./getIntentions.query";
+import { Filters, getCampagne, getFilters, getIntentions } from "./deps";
 
 const CAMPAGNE_DEMANDE = "2023";
 
 const getIntentionsFactory =
   (
     deps = {
-      getIntentionsQuery,
+      getCampagne,
       getCurrentCampagneQuery,
-      getCampagneQuery,
+      getIntentions,
+      getFilters,
     }
   ) =>
   async (activeFilters: Filters) => {
@@ -24,16 +21,17 @@ const getIntentionsFactory =
 
     const shouldFetchOnlyIntention = anneeCampagne !== CAMPAGNE_DEMANDE;
 
-    const [intentions, campagne] = await Promise.all([
-      await deps.getIntentionsQuery(
+    const [intentions, campagne, filters] = await Promise.all([
+      deps.getIntentions(
         activeFilters,
         anneeCampagne,
         shouldFetchOnlyIntention
       ),
-      await deps.getCampagneQuery(anneeCampagne),
+      deps.getCampagne(anneeCampagne),
+      deps.getFilters(activeFilters),
     ]);
 
-    return { ...intentions, currentCampagne, campagne };
+    return { ...intentions, currentCampagne, campagne, filters };
   };
 
 export const getIntentionsUsecase = getIntentionsFactory();
