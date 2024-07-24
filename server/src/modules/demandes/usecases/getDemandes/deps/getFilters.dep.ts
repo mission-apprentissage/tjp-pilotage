@@ -5,8 +5,9 @@ import { kdb } from "../../../../../db/db";
 import { DB } from "../../../../../db/schema";
 import { cleanNull } from "../../../../../utils/noNull";
 import { RequestUser } from "../../../../core/model/User";
+import { notPerimetreIJAcademie } from "../../../../data/utils/notPerimetreIJ";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isIntentionVisible } from "../../../../utils/isIntentionVisible";
+import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
 import { getDemandesSchema } from "../getDemandes.schema";
 
 export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
@@ -37,17 +38,7 @@ export const getFilters = async ({
       "academie.codeAcademie as value",
     ])
     .where("academie.codeAcademie", "is not", null)
-    .where("academie.codeAcademie", "not in", [
-      "00",
-      "54",
-      "61",
-      "62",
-      "63",
-      "67",
-      "66",
-      "91",
-      "99",
-    ])
+    .where(notPerimetreIJAcademie)
     .where((eb) => {
       return eb.or([
         user.codeRegion
@@ -77,7 +68,7 @@ export const getFilters = async ({
     .leftJoin("academie", "academie.codeRegion", "demande.codeRegion")
     .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .where(isDemandeNotDeleted)
-    .where(isIntentionVisible({ user }))
+    .where(isRestitutionIntentionVisible({ user }))
     .distinct()
     .$castTo<{ label: string; value: string }>()
     .orderBy("label", "asc");
