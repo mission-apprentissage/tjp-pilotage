@@ -149,7 +149,7 @@ export const Header = ({
               disabled={academies.length === 0}
               hasDefaultValue={false}
             >
-              Académie: Tout ({academies.length ?? 0})
+              Académie: Toutes ({academies.length ?? 0})
             </Multiselect>
           </Box>
           <Box justifyContent={"start"}>
@@ -166,7 +166,7 @@ export const Header = ({
               disabled={diplomes.length === 0}
               hasDefaultValue={false}
             >
-              Diplôme: Tout ({diplomes.length ?? 0})
+              Diplôme: Tous ({diplomes.length ?? 0})
             </Multiselect>
           </Box>
           <ExportMenuButton
