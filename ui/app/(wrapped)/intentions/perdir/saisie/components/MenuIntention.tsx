@@ -7,15 +7,11 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import _ from "lodash";
 import NextLink from "next/link";
-import { usePathname, useSearchParams } from "next/navigation";
-import qs from "qs";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Filters } from "../types";
 import { isSaisieDisabled } from "../utils/canEditIntention";
@@ -24,20 +20,22 @@ export const MenuIntention = ({
   isRecapView = false,
   hasPermissionSubmitIntention,
   campagne,
+  handleFilters,
+  searchParams,
 }: {
   isRecapView?: boolean;
   hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
-}) => {
-  const pathname = usePathname();
-  const queryParams = useSearchParams();
-  const searchParams: {
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
+  searchParams: {
     filters?: Partial<Filters>;
     campagne?: string;
-  } = qs.parse(queryParams.toString());
-
+  };
+}) => {
   const statut =
-    searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
+    searchParams.filters?.statut === undefined
+      ? "none"
+      : searchParams.filters?.statut;
   const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
@@ -78,14 +76,8 @@ export const MenuIntention = ({
         {/* Toutes */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ..._.omit(searchParams.filters, ["statut", "suivies"]),
-            },
-          })}
+          onClick={() => handleFilters("statut", undefined)}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -118,15 +110,10 @@ export const MenuIntention = ({
         {/* Dossiers complets */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["dossier complet"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["dossier complet"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -167,15 +154,10 @@ export const MenuIntention = ({
         {/* Dossiers incomplets */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["dossier incomplet"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["dossier incomplet"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -220,15 +202,10 @@ export const MenuIntention = ({
         {/* Propositions */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["proposition"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["proposition"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -273,15 +250,10 @@ export const MenuIntention = ({
         {/* Projet de demande */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["projet de demande"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["projet de demande"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -326,15 +298,10 @@ export const MenuIntention = ({
         {/* Prêts pour le vote */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["prêt pour le vote"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["prêt pour le vote"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -379,15 +346,10 @@ export const MenuIntention = ({
         {/* Demandes validées */}
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["demande validée"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["demande validée"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -430,15 +392,8 @@ export const MenuIntention = ({
         </Button>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["refusée"],
-            },
-          })}
+          onClick={() => handleFilters("statut", DemandeStatutEnum["refusée"])}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -486,15 +441,8 @@ export const MenuIntention = ({
 
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              suivies: true,
-            },
-          })}
+          onClick={() => handleFilters("suivies", true)}
           width={"100%"}
           iconSpacing={2}
           leftIcon={
@@ -529,15 +477,10 @@ export const MenuIntention = ({
         </Button>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["brouillon"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["brouillon"])
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={

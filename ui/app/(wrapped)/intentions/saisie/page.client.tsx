@@ -189,6 +189,8 @@ export const PageClient = () => {
         hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
+        handleFilters={handleFilters}
+        searchParams={searchParams}
       />
       <Box
         display={["none", null, "unset"]}
