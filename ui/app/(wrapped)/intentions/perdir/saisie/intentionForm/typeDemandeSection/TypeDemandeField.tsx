@@ -16,7 +16,11 @@ import { ComponentProps, ReactNode, useContext, useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { TooltipIcon } from "@/components/TooltipIcon";
+
 import {
+  isTypeColoration,
   isTypeDiminution,
   isTypeFermeture,
   shouldDisplayColoration,
@@ -33,6 +37,7 @@ function RadioCard({
   selected,
   disabled,
   invalid,
+  tooltip,
   ...props
 }: {
   value: string;
@@ -41,6 +46,7 @@ function RadioCard({
   selected: boolean;
   disabled: boolean;
   invalid: boolean;
+  tooltip: ReactNode;
 } & ComponentProps<"div">) {
   const bf113 = useToken("colors", "bluefrance.113");
 
@@ -77,6 +83,7 @@ function RadioCard({
         >
           {title}
         </Text>
+        {tooltip}
       </Flex>
       <Text fontSize="12px" mb="auto">
         {desc}
@@ -93,6 +100,7 @@ export const TypeDemandeField = chakra(
     disabled?: boolean;
     className?: string;
   }) => {
+    const { openGlossaire } = useGlossaireContext();
     const {
       formState: { errors },
       control,
@@ -158,6 +166,19 @@ export const TypeDemandeField = chakra(
                       }
                       invalid={!!errors.typeDemande}
                       onClick={() => onChange(item.value)}
+                      tooltip={
+                        isTypeColoration(item.value) && (
+                          <TooltipIcon
+                            mt={"1"}
+                            ml={2}
+                            onClick={(e) => {
+                              e.preventDefault();
+                              openGlossaire("coloration");
+                            }}
+                            color={"bluefrance.113"}
+                          />
+                        )
+                      }
                     />
                   )
               )}

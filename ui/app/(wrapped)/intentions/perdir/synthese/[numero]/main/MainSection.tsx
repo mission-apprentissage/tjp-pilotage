@@ -2,12 +2,14 @@ import { Flex, IconButton, Tooltip, useToast } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
+import { hasRole } from "shared";
 
 import { client } from "@/api.client";
 import { CommentairesEtAvisSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/commentaireEtAvis/CommentairesEtAvisSection";
 import { DisplayTypeEnum } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/main/displayTypeEnum";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { useAuth } from "../../../../../../../utils/security/useAuth";
 import { canEditIntention } from "../../../saisie/utils/canEditIntention";
 import { SyntheseSection } from "./synthese/SyntheseSection";
 import { TabsSection } from "./TabsSection";
@@ -25,6 +27,7 @@ export const MainSection = ({
   displayCommentairesEtAvis: () => void;
   isCampagneEnCours: boolean;
 }) => {
+  const { auth } = useAuth();
   const toast = useToast();
   const queryClient = useQueryClient();
   const hasEditIntentionPermission = usePermission(
@@ -73,7 +76,11 @@ export const MainSection = ({
             displayCommentairesEtAvis={displayCommentairesEtAvis}
           />
           <Flex direction={"row"} gap={2}>
-            {canEditIntention({ intention, hasEditIntentionPermission }) && (
+            {canEditIntention({
+              intention,
+              hasEditIntentionPermission,
+              isPerdir: hasRole({ user: auth?.user, role: "perdir" }),
+            }) && (
               <Tooltip label="Modifier la demande">
                 <IconButton
                   as={NextLink}

@@ -1,7 +1,12 @@
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
-import { dependencies, Filters } from "./dependencies";
+import {
+  dependencies,
+  Filters,
+  getCodeRegionFromAcademie,
+  getCodeRegionFromDepartement,
+} from "./dependencies";
 
 const getQuadrantPilotageIntentionsFactory =
   (
@@ -15,19 +20,41 @@ const getQuadrantPilotageIntentionsFactory =
   async (activeFilters: Filters) => {
     const campagne = await deps.getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? campagne.annee;
+    let codeRegion = activeFilters.codeRegion;
+
+    if (!codeRegion && activeFilters.codeDepartement) {
+      const { codeRegion: departementCodeRegion } =
+        await getCodeRegionFromDepartement(activeFilters.codeDepartement);
+      if (departementCodeRegion) {
+        codeRegion = departementCodeRegion;
+      }
+    }
+
+    if (!codeRegion && activeFilters.codeAcademie) {
+      const { codeRegion: academieCodeRegion } =
+        await getCodeRegionFromAcademie(activeFilters.codeAcademie);
+      if (academieCodeRegion) {
+        codeRegion = academieCodeRegion;
+      }
+    }
+
     const [formations, statsSortie] = await Promise.all([
       deps.getFormationsPilotageIntentionsQuery({
         campagne: anneeCampagne,
         ...activeFilters,
+        codeRegion,
       }),
-      getStatsSortieQuery(activeFilters),
+      getStatsSortieQuery({ ...activeFilters, codeRegion }),
     ]);
 
     return {
       stats: statsSortie,
       formations: formations.map((formation) => ({
         ...formation,
-        positionQuadrant: getPositionQuadrant(formation, statsSortie),
+        positionQuadrant:
+          activeFilters?.codeRegion || activeFilters?.codeNiveauDiplome
+            ? getPositionQuadrant(formation, statsSortie)
+            : undefined,
       })),
     };
   };

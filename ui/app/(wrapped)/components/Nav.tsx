@@ -76,11 +76,13 @@ const NavMenuLink = chakra(
     segment,
     href,
     className,
+    prefetch = true,
   }: {
     children: ReactNode;
     segment: string | null;
     href: string;
     className?: string;
+    prefetch?: boolean;
   }) => {
     const segments = useSelectedLayoutSegments();
     const isActive =
@@ -90,7 +92,7 @@ const NavMenuLink = chakra(
       <Link
         className={className}
         variant={"unstyled"}
-        as={NextLink}
+        as={prefetch ? NextLink : Link}
         href={href}
         fontSize={14}
         p={4}
@@ -378,6 +380,7 @@ export const Nav = () => {
                 <NavMenuLink
                   href="/intentions/restitution"
                   segment="restitution-intentions"
+                  prefetch={false}
                 >
                   Restitution
                 </NavMenuLink>

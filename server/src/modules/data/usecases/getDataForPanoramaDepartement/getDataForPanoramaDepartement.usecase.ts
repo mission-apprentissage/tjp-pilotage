@@ -3,6 +3,7 @@ import z from "zod";
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
 import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import {
+  getCodeRegionFromDepartement,
   getFilters,
   getFormationsDepartement,
   getTopFlopFormationsDepartement,
@@ -17,6 +18,7 @@ export const getDataForPanoramaDepartementFactory =
       getTopFlopFormationsDepartement,
       getStatsSortieQuery,
       getPositionQuadrant,
+      getCodeRegionFromDepartement,
     }
   ) =>
   async (
@@ -24,11 +26,15 @@ export const getDataForPanoramaDepartementFactory =
       typeof getDataForPanoramaDepartementSchema.querystring
     >
   ) => {
+    const { codeRegion } = await deps.getCodeRegionFromDepartement(
+      activeFilters.codeDepartement
+    );
+
     const [formations, topFlops, filters, statsSortie] = await Promise.all([
       deps.getFormationsDepartement(activeFilters),
       deps.getTopFlopFormationsDepartement(activeFilters),
       deps.getFilters(activeFilters),
-      deps.getStatsSortieQuery(activeFilters),
+      deps.getStatsSortieQuery({ ...activeFilters, codeRegion }),
     ]);
 
     return {
