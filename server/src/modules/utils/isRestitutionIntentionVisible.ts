@@ -1,14 +1,15 @@
 import Boom from "@hapi/boom";
 import { ExpressionBuilder, sql } from "kysely";
 import { getPermissionScope } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
 
-export const isIntentionVisible =
+export const isRestitutionIntentionVisible =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
-    const filter = getIntentionsVisiblesFilters(user);
+    const filter = getRestitutionIntentionsVisiblesFilters(user);
     return eb.and([
       filter.codeRegion
         ? eb("demande.codeRegion", "=", filter.codeRegion)
@@ -16,13 +17,20 @@ export const isIntentionVisible =
       filter.uais
         ? eb.or(filter.uais.map((uai) => eb("demande.uai", "=", uai)))
         : sql<boolean>`true`,
+      eb.or([
+        eb.and([
+          eb("demande.statut", "=", DemandeStatutEnum["brouillon"]),
+          eb("demande.createdBy", "=", user.id),
+        ]),
+        eb("demande.statut", "!=", DemandeStatutEnum["brouillon"]),
+      ]),
     ]);
   };
 
-export const isRegionVisible =
+export const isRestitutionIntentionRegionVisible =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "region">) => {
-    const filter = getIntentionsVisiblesFilters(user);
+    const filter = getRestitutionIntentionsVisiblesFilters(user);
     return eb.and([
       filter.codeRegion
         ? eb("region.codeRegion", "=", filter.codeRegion)
@@ -30,7 +38,7 @@ export const isRegionVisible =
     ]);
   };
 
-const getIntentionsVisiblesFilters = (user?: RequestUser) => {
+const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
   if (!user) throw new Error("missing variable user");
   const scope = getPermissionScope(
     user?.role,

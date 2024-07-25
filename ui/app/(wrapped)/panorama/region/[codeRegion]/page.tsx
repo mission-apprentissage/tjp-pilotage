@@ -7,16 +7,16 @@ import { client } from "@/api.client";
 
 import { createParametrizedUrl } from "../../../../../utils/createParametrizedUrl";
 import { FiltersSection } from "../../components/FiltersSection";
-import { IndicateursSection } from "../../components/IndicateursSection";
+import { IndicateursSection } from "../../components/IndicateursSection/IndicateursSection";
 import { InfoSection } from "../../components/InfoSection";
-import { QuadrantSection } from "../../components/QuadrantSection";
-import { TopFlopSection } from "../../components/TopFlopSection";
+import { QuadrantSection } from "../../components/QuadrantSection/QuadrantSection";
+import { TopFlopSection } from "../../components/TopFlopSection/TopFlopSection";
 import { FiltersPanoramaFormation, OrderPanoramaFormation } from "../../types";
 
 export default function Panorama({
   params: { codeRegion },
 }: {
-  params: {
+  readonly params: {
     codeRegion: string;
   };
 }) {
@@ -92,19 +92,33 @@ export default function Panorama({
 
   return (
     <>
-      <IndicateursSection
+      <FiltersSection
         onCodeChanged={onCodeRegionChanged}
         code={codeRegion}
         options={regionOptions}
-        stats={stats}
-        handleFilters={handleFilters}
-        activeFilters={searchParams}
         diplomeOptions={data?.filters.diplomes}
-      />
-      <FiltersSection
         handleFilters={handleFilters}
         activeFilters={searchParams}
         libelleNsfOptions={data?.filters.libellesNsf}
+      />
+      <IndicateursSection
+        stats={
+          searchParams.codeNsf
+            ? {
+                libelleRegion: stats?.libelleRegion,
+                codeRegion,
+                libelleDepartement: "",
+              }
+            : stats
+        }
+        libelleTerritoire={
+          regionOptions?.find((item) => item.value === codeRegion)?.label
+        }
+        libelleDiplome={
+          data?.filters.diplomes?.find(
+            (item) => item.value === searchParams.codeNiveauDiplome?.[0]
+          )?.label
+        }
       />
       <QuadrantSection
         meanInsertion={stats?.tauxInsertion}
@@ -115,6 +129,11 @@ export default function Panorama({
         handleOrder={(column?: string) =>
           handleOrder(column as OrderPanoramaFormation["orderBy"])
         }
+        codeRegion={codeRegion}
+        codeNiveauDiplome={searchParams.codeNiveauDiplome?.[0]}
+        codeNsf={searchParams.codeNsf?.[0]}
+        nbFormationsTotal={stats?.nbFormations}
+        effectifEntreeTotal={stats?.effectifEntree}
       />
       <TopFlopSection topFlops={data?.topFlops} isLoading={isLoading} />
       <InfoSection codeRegion={codeRegion} />

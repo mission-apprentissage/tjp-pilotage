@@ -1,5 +1,6 @@
 import {
   chakra,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -9,6 +10,8 @@ import {
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import { TooltipIcon } from "../../../../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../../../../glossaire/glossaireContext";
 import { toBoolean } from "../../../utils/toBoolean";
 import { IntentionForms } from "../../defaultFormValues";
 
@@ -18,6 +21,7 @@ export const ProfesseurAssocieRHField = chakra(
       formState: { errors },
       control,
     } = useFormContext<IntentionForms>();
+    const { openGlossaire } = useGlossaireContext();
 
     return (
       <FormControl
@@ -25,7 +29,18 @@ export const ProfesseurAssocieRHField = chakra(
         isInvalid={!!errors.professeurAssocieRH}
         isRequired
       >
-        <FormLabel>Un professeur associé ?</FormLabel>
+        <Flex direction={"row"}>
+          <FormLabel>Un professeur associé ?</FormLabel>
+          <TooltipIcon
+            mt={"1"}
+            ml={2}
+            onClick={(e) => {
+              e.preventDefault();
+              openGlossaire("professeur-associe");
+            }}
+            color={"bluefrance.113"}
+          />
+        </Flex>
         <Controller
           name="professeurAssocieRH"
           control={control}

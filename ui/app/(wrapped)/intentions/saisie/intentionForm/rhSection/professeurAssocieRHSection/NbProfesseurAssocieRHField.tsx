@@ -2,6 +2,7 @@ import {
   chakra,
   FormControl,
   FormErrorMessage,
+  FormHelperText,
   FormLabel,
   NumberDecrementStepper,
   NumberIncrementStepper,
@@ -50,7 +51,7 @@ export const NbProfesseurAssocieRHField = chakra(
               step={1}
               flex={1}
               isReadOnly={disabled}
-              onChange={onChange}
+              onChange={(value) => onChange(value.replace(/\D/g, ""))}
               ref={ref}
               name={name}
               isRequired={false}
@@ -98,6 +99,11 @@ export const NbProfesseurAssocieRHField = chakra(
             {errors.nbProfesseurAssocieRH.message}
           </FormErrorMessage>
         )}
+        <FormHelperText>
+          Si le besoin en recrutement est inférieur à 1 ETP veuillez saisir 1,
+          et préciser la quotité (0.2 ETP par ex) dans le champ
+          "commentaires/observations"
+        </FormHelperText>
       </FormControl>
     );
   }

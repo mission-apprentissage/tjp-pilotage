@@ -33,6 +33,8 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useQueryClient } from "@tanstack/react-query";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
@@ -45,11 +47,13 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatDate } from "@/utils/formatUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../utils/formatLibelle";
+import {
+  formatCodeDepartement,
+  formatDepartementLibelleWithCodeDepartement,
+} from "../../../utils/formatLibelle";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
 import { Header } from "./components/Header";
@@ -345,6 +349,7 @@ export const PageClient = () => {
                   <Th
                     cursor="pointer"
                     onClick={() => handleOrder("typeDemande")}
+                    textAlign={"center"}
                   >
                     <OrderIcon {...order} column="typeDemande" />
                     {INTENTIONS_COLUMNS.typeDemande}
@@ -372,14 +377,17 @@ export const PageClient = () => {
                       bg={intention.alreadyAccessed ? "grey.975" : "white"}
                     >
                       <Td textAlign={"center"}>
-                        {formatDate({
-                          date: intention.updatedAt,
-                          options: {
-                            dateStyle: "short",
-                            timeStyle: "short",
-                          },
-                          dateTimeSeparator: " à ",
-                        })}
+                        <Tooltip
+                          label={`Le ${format(
+                            intention.updatedAt,
+                            "d MMMM yyyy à HH:mm",
+                            { locale: fr }
+                          )}`}
+                        >
+                          {format(intention.updatedAt, "d MMM HH:mm", {
+                            locale: fr,
+                          })}
+                        </Tooltip>
                       </Td>
                       <Td>
                         <Tooltip label={intention.libelleFormation}>
@@ -413,10 +421,14 @@ export const PageClient = () => {
                           whiteSpace={"break-spaces"}
                           noOfLines={2}
                         >
-                          {formatDepartementLibelleWithCodeDepartement({
-                            libelleDepartement: intention.libelleDepartement,
-                            codeDepartement: intention.codeDepartement,
-                          })}
+                          <Tooltip
+                            label={formatDepartementLibelleWithCodeDepartement({
+                              libelleDepartement: intention.libelleDepartement,
+                              codeDepartement: intention.codeDepartement,
+                            })}
+                          >
+                            {formatCodeDepartement(intention.codeDepartement)}
+                          </Tooltip>
                         </Text>
                       </Td>
                       <Td textAlign={"center"} w={0}>
@@ -453,6 +465,10 @@ export const PageClient = () => {
                           {canEditIntention({
                             intention,
                             hasEditIntentionPermission,
+                            isPerdir: hasRole({
+                              user: auth?.user,
+                              role: "perdir",
+                            }),
                           }) && (
                             <Tooltip label="Modifier la demande">
                               <IconButton

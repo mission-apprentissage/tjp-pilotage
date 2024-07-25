@@ -40,7 +40,7 @@ export const CapaciteField = ({
               step={1}
               flex={1}
               isReadOnly={isReadOnly}
-              onChange={onChange}
+              onChange={(value) => onChange(value.replace(/\D/g, ""))}
               ref={ref}
               name={name}
               key={name}

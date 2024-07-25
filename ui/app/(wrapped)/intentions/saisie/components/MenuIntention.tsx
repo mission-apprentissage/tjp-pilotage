@@ -1,4 +1,5 @@
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
 import { useSearchParams } from "next/navigation";
@@ -49,11 +50,10 @@ export const MenuIntention = ({
   return (
     <Flex direction="column" pr={[null, null, 4]} minW={250} gap={4}>
       <Button
+        mb={1.5}
+        variant="primary"
         isDisabled={isDisabled}
-        mb="4"
-        variant="createButton"
-        size={"md"}
-        width={"100%"}
+        leftIcon={<Icon icon="ri:file-add-line" height={"20px"} />}
         as={
           hasPermissionSubmitIntention && !isSaisieDisabled()
             ? NextLink

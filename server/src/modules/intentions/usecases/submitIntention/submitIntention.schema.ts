@@ -22,7 +22,7 @@ export const submitIntentionSchema = {
       capaciteApprentissage: z.coerce.number().optional(),
       capaciteApprentissageColoree: z.coerce.number().optional(),
       // Précisions
-      motif: z.array(z.string()),
+      motif: z.array(z.string()).optional(),
       autreMotif: z.string().optional(),
       amiCma: z.boolean().optional(),
       amiCmaValide: z.boolean().optional(),

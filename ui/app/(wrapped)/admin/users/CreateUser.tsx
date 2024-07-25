@@ -37,6 +37,7 @@ export const CreateUser = ({
     formState: { errors },
     handleSubmit,
     reset,
+    setValue,
   } = useForm<(typeof client.inferArgs)["[POST]/users/:userId"]["body"]>({
     shouldUseNativeValidation: false,
     defaultValues: {
@@ -83,6 +84,12 @@ export const CreateUser = ({
     }
     return regions;
   })();
+
+  useEffect(() => {
+    if (isAdminRegion && filteredRegions && filteredRegions.length > 0) {
+      setValue("codeRegion", filteredRegions[0].value);
+    }
+  }, [filteredRegions]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
@@ -143,9 +150,20 @@ export const CreateUser = ({
               <FormErrorMessage>{errors.role.message}</FormErrorMessage>
             )}
           </FormControl>
-          <FormControl mb="4" isInvalid={!!errors.codeRegion}>
+          <FormControl
+            mb="4"
+            isInvalid={!!errors.codeRegion}
+            isRequired={isAdminRegion}
+          >
             <FormLabel>Code région</FormLabel>
-            <Select {...register("codeRegion")}>
+            <Select
+              {...register("codeRegion", {
+                required: {
+                  value: isAdminRegion,
+                  message: "Veuillez choisir une région",
+                },
+              })}
+            >
               {!isAdminRegion && <option value="">Aucune</option>}
               {filteredRegions?.map((region) => (
                 <option key={region.value} value={region.value}>
