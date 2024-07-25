@@ -23,12 +23,12 @@ export const FormationTooltipContent = ({
     <Box bg="white" fontSize="xs" w={"100%"}>
       <InfoBlock
         mb="2"
-        label="Formation concernée :"
+        label="Formation concernée"
         value={formation?.libelleFormation}
       />
       <InfoBlock
         mb="2"
-        label="Dispositif concerné :"
+        label="Dispositif concerné"
         value={formation?.libelleDispositif}
       />
       <HStack mb="2" spacing={4}>
@@ -36,7 +36,7 @@ export const FormationTooltipContent = ({
           flex={1}
           label={
             <span>
-              Effectif en entrée :
+              Effectif en entrée
               <TooltipIcon ml="1" onClick={() => openGlossaire("effectifs")} />
             </span>
           }
@@ -44,14 +44,14 @@ export const FormationTooltipContent = ({
         />
         <InfoBlock
           flex={1}
-          label="Nb Etablissements :"
+          label="Nb Etablissements"
           value={formation?.nbEtablissement}
         />
       </HStack>
 
       <InfoBlock
         mb="2"
-        label="Taux de pression :"
+        label="Taux de pression"
         textBg="white"
         value={
           <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
@@ -62,7 +62,7 @@ export const FormationTooltipContent = ({
         }
       />
       <Text mb="1" fontWeight="medium">
-        Taux d'emploi régional :
+        Taux d'emploi régional
       </Text>
       <GraphWrapper
         mb="2"
@@ -71,7 +71,7 @@ export const FormationTooltipContent = ({
         value={formation.tauxInsertion}
       />
       <Text mb="1" fontWeight="medium">
-        Taux de poursuite d'études régional :
+        Taux de poursuite d'études régional
       </Text>
       <GraphWrapper
         mb="2"
@@ -80,7 +80,7 @@ export const FormationTooltipContent = ({
         value={formation.tauxPoursuite}
       />
       <Text mb="1" fontWeight="medium">
-        Taux de devenir favorable régional :
+        Taux de devenir favorable régional
       </Text>
       <GraphWrapper
         w="100%"

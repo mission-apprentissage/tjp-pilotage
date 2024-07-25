@@ -48,6 +48,7 @@ export const AchatEquipementCoutField = chakra(
             {...register("achatEquipementCout", {
               shouldUnregister: true,
               disabled: disabled,
+              pattern: /^\d+$/,
             })}
             placeholder="Montant (en €)"
           />

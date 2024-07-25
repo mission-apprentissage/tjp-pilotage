@@ -29,6 +29,9 @@ export const isTypeTransfert = (typeDemande: string) =>
 export const isTypeColoration = (typeDemande: string) =>
   ["coloration"].includes(typeDemande);
 
+export const isTypeAjustement = (typeDemande: string) =>
+  ["ajustement"].includes(typeDemande);
+
 const isPositiveNumber = (value: number | undefined): value is number => {
   if (!Number.isInteger(value)) return false;
   if (value === undefined) return false;
@@ -41,7 +44,7 @@ export const intentionValidators: Record<
   (intention: Intention) => string | undefined
 > = {
   motif: (intention) => {
-    if (!intention.motif?.length) {
+    if (!isTypeAjustement(intention.typeDemande) && !intention.motif?.length) {
       return "Le champ 'motif' est obligatoire";
     }
   },
@@ -81,6 +84,7 @@ export const intentionValidators: Record<
    * - un nombre entier positif
    * - à 0 dans le cas d'une fermeture
    * - supérieure ou égale à la capacité actuelle dans le cas d'une augmentation
+   * - supérieure ou égale à la capacité actuelle dans le cas d'un ajustement
    * - inférieure ou égale à la capacité actuelle dans le cas d'une diminution
    * - inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage
    */
@@ -114,6 +118,12 @@ export const intentionValidators: Record<
       intention.capaciteScolaire >= intention.capaciteScolaireActuelle
     )
       return "La capacité scolaire devrait être inférieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage";
+    if (
+      isTypeAjustement(intention.typeDemande) &&
+      isPositiveNumber(intention.capaciteScolaireActuelle) &&
+      intention.capaciteScolaire < intention.capaciteScolaireActuelle
+    )
+      return "La capacité scolaire devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée";
   },
   /**
    *
@@ -177,6 +187,7 @@ export const intentionValidators: Record<
    * - un nombre entier positif
    * - à 0 dans le cas d'une fermeture
    * - supérieure ou égale à la capacité actuelle dans le cas d'une augmentation
+   * - supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée
    * - inférieure ou égale à la capacité actuelle dans le cas d'une diminution
    * - supérieure à 0 dans le cas d'un transfert vers l'apprentissage
    * - supérieure à la capacité actuelle dans le cas d'un transfert vers l'apprentissage
@@ -197,6 +208,13 @@ export const intentionValidators: Record<
       intention.capaciteApprentissage < intention.capaciteApprentissageActuelle
     )
       return "La capacité en apprentissage devrait être supérieure ou égale à la capacité actuelle dans le cas d'une augmentation";
+
+    if (
+      isTypeAjustement(intention.typeDemande) &&
+      isPositiveNumber(intention.capaciteApprentissageActuelle) &&
+      intention.capaciteApprentissage < intention.capaciteApprentissageActuelle
+    )
+      return "La capacité en apprentissage devrait être supérieure ou égale à la capacité actuelle dans le cas d'un ajustement de rentrée";
 
     if (
       isTypeDiminution(intention.typeDemande) &&
@@ -264,10 +282,14 @@ export const intentionValidators: Record<
   /**
    *
    * La somme des capacités actuelles doit être :
-   * - supérieure à 0 dans le cas d'autre chose qu'une ouverture
+   * - supérieure à 0 dans le cas d'autre chose qu'une ouverture ou d'un ajustement
    */
   sommeCapaciteActuelle: (intention) => {
-    if (isTypeOuverture(intention.typeDemande)) return;
+    if (
+      isTypeOuverture(intention.typeDemande) ||
+      isTypeAjustement(intention.typeDemande)
+    )
+      return;
 
     if (
       !intention.capaciteScolaireActuelle &&
@@ -280,6 +302,7 @@ export const intentionValidators: Record<
    * La somme des futures capacités doit être :
    * - supérieure à 0 dans le cas d'autre chose qu'une fermeture
    * - supérieure à la somme des capacités actuelles dans le cas d'une augmentation
+   * - supérieure à la somme des capacités actuelles dans le cas d'un ajustement de rentrée
    * - inférieure à la somme des capacités actuelles dans le cas d'une diminution
    */
   sommeCapacite: (intention) => {
@@ -305,6 +328,13 @@ export const intentionValidators: Record<
             intention.capaciteScolaireActuelle
       )
         return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'une augmentation";
+      if (
+        isTypeAjustement(intention.typeDemande) &&
+        intention.capaciteApprentissage + intention.capaciteScolaire <=
+          intention.capaciteApprentissageActuelle +
+            intention.capaciteScolaireActuelle
+      )
+        return "La somme des capacités doit être supérieure à la somme des capacités actuelles dans le cas d'un ajustement de rentrée";
       if (
         isTypeDiminution(intention.typeDemande) &&
         intention.capaciteApprentissage + intention.capaciteScolaire >=
@@ -334,7 +364,8 @@ export const intentionValidators: Record<
       return "La somme des capacités colorées doit être supérieure à 0";
     if (
       (isTypeOuverture(intention.typeDemande) ||
-        isTypeAugmentation(intention.typeDemande)) &&
+        isTypeAugmentation(intention.typeDemande) ||
+        isTypeAjustement(intention.typeDemande)) &&
       isPositiveNumber(intention.capaciteApprentissageColoree) &&
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissage) &&
@@ -348,6 +379,7 @@ export const intentionValidators: Record<
     if (
       !isTypeOuverture(intention.typeDemande) &&
       !isTypeAugmentation(intention.typeDemande) &&
+      !isTypeAjustement(intention.typeDemande) &&
       isPositiveNumber(intention.capaciteApprentissageColoree) &&
       isPositiveNumber(intention.capaciteScolaireColoree) &&
       isPositiveNumber(intention.capaciteApprentissageActuelle) &&

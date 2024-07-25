@@ -82,8 +82,8 @@ export const isStepWorkflowEnabled = (step: number): boolean => {
     case 0:
     case 1:
     case 2:
-      return true;
     case 3:
+      return true;
     case 4:
     default:
       return false;

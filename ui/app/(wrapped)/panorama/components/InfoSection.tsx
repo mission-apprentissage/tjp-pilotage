@@ -48,16 +48,19 @@ export const InfoSection = ({
   return (
     <>
       <Box as="section" pt="6" maxWidth={"container.xl"}>
-        <Box ml={[null, null, "6"]} mb="4">
-          <Heading fontWeight={"hairline"} maxWidth={250} as="h2" mb="4">
+        <Box width={"fit-content"} mb={"32px"}>
+          <Heading fontWeight={"bold"} as="h2" fontSize={"28px"}>
             Anticiper les besoins
           </Heading>
-          <Box>
-            Les enjeux de demain pour mieux anticiper les formations insérantes.
-            <br />
-            Trouvez ici une multitude d’informations pour venir enrichir vos
-            analyses.
+          <Box w={"33%"} mt={"16px"}>
+            <hr />
           </Box>
+        </Box>
+        <Box>
+          Les enjeux de demain pour mieux anticiper les formations insérantes.
+          <br />
+          Trouvez ici une multitude d’informations pour venir enrichir vos
+          analyses.
         </Box>
       </Box>
 
