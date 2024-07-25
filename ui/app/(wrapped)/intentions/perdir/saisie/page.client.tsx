@@ -146,7 +146,7 @@ export const PageClient = () => {
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { cacheTime: 0 }
+    { cacheTime: 0, keepPreviousData: true }
   );
 
   const hasPermissionSubmitIntention = usePermission(
@@ -269,8 +269,6 @@ export const PageClient = () => {
     );
   };
 
-  if (isLoading) return <IntentionSpinner />;
-
   return (
     <Container
       maxWidth="100%"
@@ -313,7 +311,8 @@ export const PageClient = () => {
           diplomes={data?.filters.diplomes ?? []}
           handleFilters={handleFilters}
         />
-        {data?.intentions.length ? (
+        {isLoading && <IntentionSpinner />}
+        {!isLoading && data?.intentions.length ? (
           <>
             <TableContainer overflowY="auto" flex={1}>
               <Table
