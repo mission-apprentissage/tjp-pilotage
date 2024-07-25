@@ -9,7 +9,7 @@ import {
 import { Icon } from "@iconify/react";
 import _ from "lodash";
 import NextLink from "next/link";
-import { useSearchParams } from "next/navigation";
+import { usePathname, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
@@ -29,6 +29,7 @@ export const MenuIntention = ({
   hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
 }) => {
+  const pathname = usePathname();
   const queryParams = useSearchParams();
   const searchParams: {
     filters?: Partial<Filters>;
@@ -79,7 +80,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ..._.omit(searchParams.filters, ["statut", "suivies"]),
@@ -119,7 +120,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -168,7 +169,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -221,7 +222,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -274,7 +275,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -327,7 +328,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -380,7 +381,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -431,7 +432,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -487,7 +488,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
@@ -530,7 +531,7 @@ export const MenuIntention = ({
           bgColor={"unset"}
           as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
+          href={createParametrizedUrl(pathname, {
             ...searchParams,
             filters: {
               ...searchParams.filters,
