@@ -5,7 +5,6 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB } from "../../db/db";
 import { RequestUser } from "../core/model/User";
-
 export const isDemandeSelectable =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "demande">) => {
@@ -63,18 +62,10 @@ export const isDemandeNotDeletedOrRefused = (
 export const isIntentionBrouillonVisible =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "intention">) => {
-    const { draftFilter } = getIntentionSelectableFilters(user);
     return eb.or([
       eb.and([
         eb("intention.statut", "=", DemandeStatutEnum["brouillon"]),
-        eb.or([
-          draftFilter.uais
-            ? eb.or(
-                draftFilter.uais.map((uai) => eb("intention.uai", "=", uai))
-              )
-            : sql<boolean>`false`,
-          eb("intention.createdBy", "=", user.id),
-        ]),
+        eb("intention.createdBy", "=", user.id),
       ]),
       eb("intention.statut", "!=", DemandeStatutEnum["brouillon"]),
     ]);

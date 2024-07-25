@@ -16,6 +16,10 @@ export const GLOSSAIRE_ENTRIES_KEYS = {
   ["taux-de-demande"]: "cfbbe0d1-b44f-45b6-b38e-b6f7c4a60039",
   ["domaine-professionnel-emploi"]: "89eb9b59-22b4-4d60-bfd7-6b022b263b71",
   ["metier-rome"]: "9782c64b-e9bc-4fa2-9907-98af5979071b",
+  ["ami-cma"]: "8a53c87833494253b95b7b712cdaad9f",
+  ["cmq"]: "e1c9a0da4476473c8b03d5cc24f8d90b",
+  ["coloration"]: "018685f470a9495684b27799143e5266",
+  ["professeur-associe"]: "5a3905c3-c3a3-4a4d-8714-0ded4200e891",
 };
 
 export type GlossaireEntryKey = keyof typeof GLOSSAIRE_ENTRIES_KEYS;

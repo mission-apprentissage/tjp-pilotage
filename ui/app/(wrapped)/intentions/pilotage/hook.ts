@@ -63,6 +63,18 @@ export const usePilotageIntentionsHook = () => {
         ...filters,
         ...order,
         scope: filters.scope!,
+        codeRegion:
+          filters?.scope === ScopeEnum.region && filters?.code
+            ? filters.code
+            : undefined,
+        codeAcademie:
+          filters?.scope === ScopeEnum.academie && filters?.code
+            ? filters.code
+            : undefined,
+        codeDepartement:
+          filters?.scope === ScopeEnum.departement && filters?.code
+            ? filters.code
+            : undefined,
       },
     },
     {
