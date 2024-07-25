@@ -93,7 +93,11 @@ export default ({
           <Flex direction={"column"} gap={8}>
             <StepperSection intention={intention} />
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
-              <GridItem colSpan={3}>
+              <GridItem
+                colSpan={
+                  isChangementStatutAvisDisabled(intention.statut) ? 4 : 3
+                }
+              >
                 <MainSection
                   isCampagneEnCours={isCampagneEnCours}
                   intention={intention}
