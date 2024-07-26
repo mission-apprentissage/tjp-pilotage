@@ -1,8 +1,10 @@
+import { formatNumber } from "@/utils/formatUtils";
+
 export const formatTaux = (value?: number): number =>
-  Number(((value ?? 0) * 100).toFixed(0));
+  formatNumber((value ?? 0) * 100);
 
 export const formatAbsolute = (value?: number): number =>
-  Number((value ?? 0).toFixed(2));
+  formatNumber(value, 2);
 
 export const formatAbsoluteOrUndefined = (
   value?: number

@@ -51,6 +51,7 @@ export function downloadCsv<D extends object>(
       string: stringExcelFormatter,
       number: numberFormatter({
         separator: ",",
+        decimals: 2,
       }),
       object: objectFormatter,
       undefined: () => "",
