@@ -42,7 +42,7 @@ export const getFilters = async ({
     .where((eb) => {
       return eb.or([
         user.codeRegion
-          ? eb("academie.codeRegion", "in", user.codeRegion)
+          ? eb("academie.codeRegion", "in", [user.codeRegion])
           : sql<boolean>`true`,
       ]);
     })
