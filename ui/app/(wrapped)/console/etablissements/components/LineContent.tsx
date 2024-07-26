@@ -19,6 +19,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
+import { formatNumber } from "../../../../../utils/formatUtils";
 import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
 import { Line } from "../types";
 
@@ -139,12 +140,12 @@ export const EtablissementLineContent = ({
       <TableBadge
         sx={getTauxPressionStyle(
           line.tauxPression !== undefined
-            ? Math.round(line.tauxPression * 100) / 100
+            ? formatNumber(line.tauxPression, 2)
             : undefined
         )}
       >
         {line.tauxPression !== undefined
-          ? Math.round(line.tauxPression * 100) / 100
+          ? formatNumber(line.tauxPression, 2)
           : "-"}
       </TableBadge>
     </Td>

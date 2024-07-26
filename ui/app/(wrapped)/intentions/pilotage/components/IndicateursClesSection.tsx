@@ -18,6 +18,7 @@ import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatNumber, formatPercentage } from "@/utils/formatUtils";
 
 import {
   FiltersStatsPilotageIntentions,
@@ -264,22 +265,16 @@ function generatePercentageDataOr(
       return or;
     }
 
-    return new Intl.NumberFormat("fr-FR", {
-      style: "percent",
-      maximumFractionDigits: 1,
-    }).format(
-      Number.parseFloat(
-        (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
-      ) / 100
+    return formatPercentage(
+      (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0) / 100,
+      1
     );
   };
 }
 
 function generateGetScopedData(code: string, data?: StatsPilotageIntentions) {
   return (statut: Statut, indicateur: Indicateur): number => {
-    return Number.parseFloat(
-      (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
-    );
+    return formatNumber(data?.[statut]?.[`_${code}`]?.[indicateur], 1);
   };
 }
 
@@ -391,14 +386,12 @@ export const IndicateursClesSection = ({
                     />
                     <Text>
                       {`
-                      ${(
-                        (getScopedData(
+                      ${formatPercentage(
+                        getScopedData(
                           DemandeStatutEnum["demande validée"],
                           "tauxTransformation"
-                        ) /
-                          6) *
-                        100
-                      ).toFixed(0)}% de l'objectif`}
+                        ) / 6
+                      )} de l'objectif`}
                     </Text>
                   </Flex>
                 </Flex>
@@ -436,14 +429,12 @@ export const IndicateursClesSection = ({
                     />
                     <Text>
                       {`
-                      ${(
-                        (getScopedData(
+                      ${formatPercentage(
+                        getScopedData(
                           DemandeStatutEnum["projet de demande"],
                           "tauxTransformation"
-                        ) /
-                          6) *
-                        100
-                      ).toFixed(0)}% de l'objectif`}
+                        ) / 6
+                      )} de l'objectif`}
                     </Text>
                   </Flex>
                 </Flex>
@@ -466,10 +457,11 @@ export const IndicateursClesSection = ({
                       : "orange.warning"
                   }
                 >
-                  {`${(
+                  {`${formatNumber(
                     getScopedData("all", "tauxTransformation") -
-                    getNationalData("all", "tauxTransformation")
-                  ).toFixed(1)} pts`}
+                      getNationalData("all", "tauxTransformation"),
+                    1
+                  )} pts`}
                 </Text>
               </StatCard>
             </GridItem>
@@ -586,11 +578,10 @@ export const IndicateursClesSection = ({
                   <>
                     <Divider w="100%" mb={2} />
                     <Delta
-                      delta={Number.parseFloat(
-                        (
-                          getScopedData("all", "ratioFermeture") -
-                          getNationalData("all", "ratioFermeture")
-                        ).toFixed(1)
+                      delta={formatNumber(
+                        getScopedData("all", "ratioFermeture") -
+                          getNationalData("all", "ratioFermeture"),
+                        1
                       )}
                     />
                   </>

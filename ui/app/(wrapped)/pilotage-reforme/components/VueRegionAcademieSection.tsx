@@ -14,6 +14,7 @@ import { Fragment } from "react";
 
 import { OrderIcon } from "../../../../components/OrderIcon";
 import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { formatPercentage } from "../../../../utils/formatUtils";
 import { Order, PilotageReformeStatsRegion } from "../types";
 
 const PILOTAGE_REFORME_STATS_REGIONS_COLUMNS = {
@@ -162,10 +163,10 @@ export const VueRegionAcademieSection = ({
                             {region.libelleRegion}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {Math.round((region.poursuite ?? 0) * 100)} %
+                            {formatPercentage((region.poursuite ?? 0) * 100)}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
-                            {Math.round((region.insertion ?? 0) * 100)} %
+                            {formatPercentage((region.insertion ?? 0) * 100)}
                           </Td>
                           <Td isNumeric backgroundColor={tdBgColor}>
                             {region.tauxChomage ?? "-"} %

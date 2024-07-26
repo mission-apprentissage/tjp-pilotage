@@ -11,6 +11,7 @@ import {
 } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
+import { formatNumber } from "../../../../utils/formatUtils";
 import { IndicateurType, PilotageReformeStats } from "../types";
 
 const EFFECTIF_FEATURE_FLAG = false;
@@ -223,7 +224,7 @@ const Delta = ({
   let deltaIcon;
 
   if (delta != null) {
-    if (Math.round(delta) < 0)
+    if (formatNumber(delta) < 0)
       deltaIcon = (
         <Flex>
           <TriangleDownIcon
@@ -232,20 +233,20 @@ const Delta = ({
             boxSize={4}
             color={"redmarianne.472"}
           />
-          <Text>{`${Math.round(delta)} pts`}</Text>
+          <Text>{`${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
-    else if (Math.round(delta) === 0)
+    else if (formatNumber(delta) === 0)
       deltaIcon = (
         <Flex>
-          <Text>{`+${Math.round(delta)} pts`}</Text>
+          <Text>{`+${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
     else
       deltaIcon = (
         <Flex>
           <TriangleUpIcon mt={1} me={2} boxSize={4} color={"success.850"} />
-          <Text>{`+${Math.round(delta)} pts`}</Text>
+          <Text>{`+${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
   } else {
@@ -356,11 +357,11 @@ const StatCard = ({
   const getValue = (type: IndicateurType) => {
     switch (type) {
       case "insertion":
-        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
+        return formatNumber((data?.annees[0].scoped.insertion ?? 0) * 100);
       case "poursuite":
-        return Math.round((data?.annees[0].scoped.poursuite ?? 0) * 100);
+        return formatNumber((data?.annees[0].scoped.poursuite ?? 0) * 100);
       default:
-        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
+        return formatNumber((data?.annees[0].scoped.insertion ?? 0) * 100);
     }
   };
 

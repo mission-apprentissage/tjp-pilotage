@@ -2,6 +2,8 @@ import { Box, useToken } from "@chakra-ui/react";
 import * as echarts from "echarts";
 import { useLayoutEffect, useMemo, useRef } from "react";
 
+import { formatNumber } from "../../../../utils/formatUtils";
+
 export type BarGraphData = {
   [key: string]: {
     annee: string;
@@ -36,8 +38,8 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
-      return Object.keys(graphData).map(
-        (annee) => graphData[annee].nationale ?? 0
+      return Object.keys(graphData).map((annee) =>
+        formatNumber(graphData[annee].nationale)
       );
     }
 
@@ -46,8 +48,8 @@ export const BarGraph = function <F extends BarGraphData>({
 
   const getFilteredSerieData = () => {
     if (isFiltered && graphData !== undefined) {
-      return Object.keys(graphData).map(
-        (annee) => graphData[annee].filtered?.toFixed(0) ?? 0
+      return Object.keys(graphData).map((annee) =>
+        formatNumber(graphData[annee].filtered)
       );
     }
 
@@ -64,6 +66,7 @@ export const BarGraph = function <F extends BarGraphData>({
         axisPointer: {
           type: "shadow",
         },
+        valueFormatter: (value) => `${value} %`,
       },
       legend: {
         left: "10%",
@@ -107,6 +110,9 @@ export const BarGraph = function <F extends BarGraphData>({
               barMaxWidth: 50,
               itemStyle: {
                 borderRadius: [15, 15, 0, 0],
+              },
+              label: {
+                formatter: "{c}%",
               },
             },
             {
