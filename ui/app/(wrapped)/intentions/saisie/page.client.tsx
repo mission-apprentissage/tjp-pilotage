@@ -236,7 +236,7 @@ export const PageClient = () => {
                   top="0"
                   boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
                   bg="white"
-                  zIndex={2}
+                  zIndex={"1"}
                 >
                   <Tr>
                     <Th
@@ -303,7 +303,6 @@ export const PageClient = () => {
                       <Tr
                         height={"60px"}
                         position={"relative"}
-                        zIndex={1}
                         key={demande.numero}
                         cursor={isSaisieDisabled() ? "initial" : "pointer"}
                         whiteSpace={"pre"}
