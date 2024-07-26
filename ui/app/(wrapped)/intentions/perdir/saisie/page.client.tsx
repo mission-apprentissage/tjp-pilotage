@@ -320,7 +320,6 @@ export const PageClient = () => {
               <Table
                 sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
                 size="md"
-                variant="striped"
                 fontSize="14px"
                 gap="0"
               >
