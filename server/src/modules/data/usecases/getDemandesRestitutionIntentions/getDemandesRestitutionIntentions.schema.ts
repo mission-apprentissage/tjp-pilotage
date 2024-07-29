@@ -13,6 +13,7 @@ const DemandeSchema = z.object({
   libelleAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   libelleDepartement: z.string().optional(),
+  secteur: z.string().optional(),
   // Formation
   libelleNsf: z.string().optional(),
   libelleFormation: z.string().optional(),
@@ -48,6 +49,7 @@ const DemandeSchema = z.object({
   nomCmq: z.string().optional(),
   commentaire: z.string().optional(),
   numero: z.string(),
+  inspecteurReferent: z.string().optional(),
   // Devenir favorable de la formation
   positionQuadrant: z.string().optional(),
   tauxInsertionRegional: z.coerce.number().optional(),
