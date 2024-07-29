@@ -96,6 +96,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
+      "dataEtablissement.secteur",
       "dispositif.libelleDispositif",
       "region.libelleRegion as libelleRegion",
       "departement.libelleDepartement",
@@ -123,6 +124,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
+      "demande.inspecteurReferent",
     ])
     .$call((eb) => {
       if (search)
