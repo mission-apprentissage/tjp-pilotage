@@ -402,6 +402,7 @@ export default () => {
                       ? `- ${demande.discipline2ProfesseurAssocieRH}`
                       : ""
                   }`,
+                secteur: demande.secteur === "PU" ? "Public" : "Privé",
               })),
               STATS_DEMANDES_COLUMNS
             );
@@ -431,6 +432,7 @@ export default () => {
                     minute: "2-digit",
                   }
                 ),
+                secteur: demande.secteur === "PU" ? "Public" : "Privé",
               })),
               STATS_DEMANDES_COLUMNS
             );

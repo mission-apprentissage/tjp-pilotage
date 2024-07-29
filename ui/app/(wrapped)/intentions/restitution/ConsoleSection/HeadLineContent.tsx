@@ -116,6 +116,15 @@ export const HeadLineContent = ({
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
+        colonne={"secteur"}
+        onClick={handleOrder}
+        bgColor={getCellColor("secteur")}
+      >
+        <OrderIcon {...order} column="secteur" />
+        {STATS_DEMANDES_COLUMNS.secteur}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
         colonne={"libelleNsf"}
         onClick={handleOrder}
         minW={200}
@@ -227,6 +236,78 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="amiCma" />
         {STATS_DEMANDES_COLUMNS.amiCma}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValide"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaValide")}
+      >
+        <OrderIcon {...order} column="amiCmaValide" />
+        {STATS_DEMANDES_COLUMNS.amiCmaValide}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaEnCoursValidation"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaEnCoursValidation")}
+      >
+        <OrderIcon {...order} column="amiCmaEnCoursValidation" />
+        {STATS_DEMANDES_COLUMNS.amiCmaEnCoursValidation}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValideAnnee"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaValideAnnee")}
+      >
+        <OrderIcon {...order} column="amiCmaValideAnnee" />
+        {STATS_DEMANDES_COLUMNS.amiCmaValideAnnee}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"filiereCmq"}
+        onClick={handleOrder}
+        bgColor={getCellColor("filiereCmq")}
+      >
+        <OrderIcon {...order} column="filiereCmq" />
+        {STATS_DEMANDES_COLUMNS.filiereCmq}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"nomCmq"}
+        onClick={handleOrder}
+        bgColor={getCellColor("nomCmq")}
+      >
+        <OrderIcon {...order} column="nomCmq" />
+        {STATS_DEMANDES_COLUMNS.nomCmq}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"inspecteurReferent"}
+        onClick={handleOrder}
+        bgColor={getCellColor("inspecteurReferent")}
+      >
+        <OrderIcon {...order} column="inspecteurReferent" />
+        {STATS_DEMANDES_COLUMNS.inspecteurReferent}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique1"}
+        onClick={handleOrder}
+        bgColor={getCellColor("partenaireEconomique1")}
+      >
+        <OrderIcon {...order} column="partenaireEconomique1" />
+        {STATS_DEMANDES_COLUMNS.partenaireEconomique1}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique2"}
+        onClick={handleOrder}
+        bgColor={getCellColor("partenaireEconomique2")}
+      >
+        <OrderIcon {...order} column="partenaireEconomique2" />
+        {STATS_DEMANDES_COLUMNS.partenaireEconomique2}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
