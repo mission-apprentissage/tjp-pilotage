@@ -1,3 +1,4 @@
+import { formatTauxTransformation } from "../../utils/formatTauxTransformation";
 import { dependencies } from "./dependencies";
 
 const getPilotageReformeStatsFactory =
@@ -5,6 +6,7 @@ const getPilotageReformeStatsFactory =
     deps = {
       getStats: dependencies.getStats,
       findFiltersInDb: dependencies.findFiltersInDb,
+      getTauxTransformationData: dependencies.getTauxTransformationData,
     }
   ) =>
   async (activeFilters: {
@@ -16,8 +18,14 @@ const getPilotageReformeStatsFactory =
       deps.findFiltersInDb(),
     ]);
 
+    const [{ transformes, effectif }] =
+      await deps.getTauxTransformationData(activeFilters);
+
+    const tauxTransformation = formatTauxTransformation(transformes, effectif);
+
     return {
       ...stats,
+      tauxTransformation,
       filters,
     };
   };
