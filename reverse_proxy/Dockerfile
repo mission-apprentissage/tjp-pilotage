@@ -1,5 +1,5 @@
 ARG NGINX_VERSION="1.20.2"
-FROM nginx:${NGINX_VERSION} as nginxModules
+FROM nginx:${NGINX_VERSION} AS nginxmodules
 
 ARG HEADERS_MORE_VERSION="v0.33"
 
@@ -43,7 +43,7 @@ FROM owasp/modsecurity-crs:3.3.2-nginx
 RUN apt-get update \
     && apt-get install -y logrotate
 
-COPY --from=nginxModules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
+COPY --from=nginxmodules /etc/nginx/modules/ngx_http_headers_more_filter_module.so /etc/nginx/modules/ngx_http_headers_more_filter_module.so
 
 # Disable some owasp-crs rules
 COPY app/nginx/owasp-crs/rules/ /etc/modsecurity.d/owasp-crs/rules/
@@ -56,5 +56,8 @@ RUN chmod 644 /etc/logrotate.conf
 # COPY app/nginx /etc/nginx
 ARG DIR=app
 COPY ${DIR}/nginx /etc/nginx
+
+# Copy maintenance page
+COPY html /etc/nginx/html
 
 VOLUME /data
