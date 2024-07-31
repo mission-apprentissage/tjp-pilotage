@@ -10,6 +10,15 @@ server {
     listen 80 default_server;
     server_name localhost;
 
+    # Maintenance flag and maintenance page paths
+    set $maintenance_flag /etc/nginx/html/maintenance.enable;
+    set $maintenance_page /etc/nginx/html/maintenance.html;
+
+    # Check if the maintenance flag file exists
+    if (-f $maintenance_flag) {
+        return 503;
+    }
+
     location /api {
         proxy_pass http://host.docker.internal:5000;
 
@@ -127,5 +136,16 @@ server {
 
         client_max_body_size    10M;
     }
+
+    # Error page configuration for maintenance mode
+    error_page 503 @maintenance;
+
+    # Serve the maintenance page for 503 errors
+    location @maintenance {
+        root /etc/nginx/html;
+        try_files /maintenance.html =503;
+    }
 }
+
+
 

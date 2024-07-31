@@ -18,26 +18,22 @@ import {
   useToken,
   VStack,
 } from "@chakra-ui/react";
-import { useQueryClient } from "@tanstack/react-query";
 import NextLink from "next/link";
-import { useContext } from "react";
 
-import { client } from "@/api.client";
-import { AuthContext } from "@/app/(wrapped)/auth/authContext";
+import { Auth } from "@/app/(wrapped)/auth/authContext";
 
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
-export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
-  const { auth, setAuth } = useContext(AuthContext);
-  const queryClient = useQueryClient();
-
-  const logout = async () => {
-    await client.ref("[POST]/auth/logout").query({});
-    setAuth(undefined);
-    queryClient.clear();
-  };
-
+export const Header = ({
+  isMaintenance,
+  auth,
+  logout,
+}: {
+  isMaintenance?: boolean;
+  auth?: Auth;
+  logout?: () => void;
+}) => {
   const greyColor = useToken("colors", "grey.900");
 
   return (
@@ -77,7 +73,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
             </Heading>
           </HStack>
           <Box ml="auto">
-            {!auth && (
+            {!isMaintenance && !auth && (
               <Button
                 fontWeight="light"
                 as={NextLink}
@@ -90,7 +86,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                 Se connecter
               </Button>
             )}
-            {!!auth && (
+            {!isMaintenance && !!auth && (
               <Menu isLazy autoSelect={false} placement="bottom-end">
                 <MenuButton
                   ml="auto"
@@ -106,7 +102,7 @@ export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
                   <ChevronDownIcon ml="2" />
                 </MenuButton>
                 <MenuList>
-                  <MenuItem onClick={logout} icon={<LoginIcon />}>
+                  <MenuItem onClick={() => logout?.()} icon={<LoginIcon />}>
                     Se déconnecter
                   </MenuItem>
                 </MenuList>

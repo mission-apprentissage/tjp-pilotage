@@ -13,8 +13,27 @@ server {
     server_name ${SERVER_NAME};
     set $always_redirect ${NGINX_ALWAYS_TLS_REDIRECT};
 
+    # Maintenance flag and maintenance page paths
+    set $maintenance_flag /etc/nginx/html/maintenance.enable;
+    set $maintenance_page /etc/nginx/html/maintenance.html;
+
+    # Check if the maintenance flag file exists
+    if (-f $maintenance_flag) {
+        return 503;
+    }
+
     include includes/location_*.conf;
     include includes/env/location_*.conf;
+
+    # Error page configuration for maintenance mode
+    error_page 503 @maintenance;
+
+
+    # Serve the maintenance page for 503 errors
+    location @maintenance {
+        root /etc/nginx/html;
+        try_files /maintenance.html =503;
+    }
 }
 
 server {
@@ -41,6 +60,25 @@ server {
 
     ssl_verify_client ${PROXY_SSL_VERIFY};
 
+    # Maintenance flag and maintenance page paths
+    set $maintenance_flag /etc/nginx/html/maintenance.enable;
+    set $maintenance_page /etc/nginx/html/maintenance.html;
+
+    # Check if the maintenance flag file exists
+    if (-f $maintenance_flag) {
+        return 503;
+    }
+
     include includes/location_*.conf;
     include includes/env/location_*.conf;
+
+    # Error page configuration for maintenance mode
+    error_page 503 @maintenance;
+
+
+    # Serve the maintenance page for 503 errors
+    location @maintenance {
+        root /etc/nginx/html;
+        try_files /maintenance.html =503;
+    }
 }
