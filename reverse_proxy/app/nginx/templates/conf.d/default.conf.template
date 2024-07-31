@@ -22,18 +22,11 @@ server {
         return 503;
     }
 
-    include includes/location_*.conf;
-    include includes/env/location_*.conf;
-
     # Error page configuration for maintenance mode
     error_page 503 @maintenance;
 
-
-    # Serve the maintenance page for 503 errors
-    location @maintenance {
-        root /etc/nginx/html;
-        try_files /maintenance.html =503;
-    }
+    include includes/location_*.conf;
+    include includes/env/location_*.conf;
 }
 
 server {
@@ -69,16 +62,9 @@ server {
         return 503;
     }
 
-    include includes/location_*.conf;
-    include includes/env/location_*.conf;
-
     # Error page configuration for maintenance mode
     error_page 503 @maintenance;
 
-
-    # Serve the maintenance page for 503 errors
-    location @maintenance {
-        root /etc/nginx/html;
-        try_files /maintenance.html =503;
-    }
+    include includes/location_*.conf;
+    include includes/env/location_*.conf;
 }
