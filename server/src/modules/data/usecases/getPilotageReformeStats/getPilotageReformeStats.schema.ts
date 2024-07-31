@@ -32,6 +32,7 @@ export const getPilotageReformeStatsSchema = {
         regions: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
       }),
+      tauxTransformation: z.number(),
       annees: z.array(StatsAnneeSchema),
     }),
   },
