@@ -172,6 +172,7 @@ export const getStats = async ({
 
     return {
       annee: finDanneeScolaireMillesime,
+      millesime: millesimeSortie.split("_"),
       scoped: {
         ...(await selectStatsEffectif({ isScoped: true, annee: offset })),
         ...(await selectStatsSortie({ isScoped: true, annee: offset + 1 })),

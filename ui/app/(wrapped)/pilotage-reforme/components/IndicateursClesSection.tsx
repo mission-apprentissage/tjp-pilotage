@@ -445,7 +445,14 @@ const DefinitionTauxTransfoModal = ({
   onClose: () => void;
 }) => {
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size="half">
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={{
+        sm: "full",
+        lg: "half",
+      }}
+    >
       <ModalOverlay />
       <ModalContent px="32px" paddingTop="32px" paddingBottom="40px">
         <ModalCloseButton />
@@ -469,7 +476,7 @@ const DefinitionTauxTransfoModal = ({
                 mx="10%"
                 backgroundColor={themeColors.bluefrance[975]}
                 width="80%"
-                alignItems="end"
+                alignItems="center"
                 fontSize="12px"
                 fontStyle="italic"
                 px="16px"
@@ -483,22 +490,13 @@ const DefinitionTauxTransfoModal = ({
                   </VStack>
                   <Text lineHeight="20px">=</Text>
                   <VStack lineHeight="20px">
-                    <Text fontWeight="700">
-                      Pl. ouvertes + Pl. fermées + Pl. existantes colorées *
-                    </Text>
+                    <Text fontWeight="700">Pl. ouvertes + Pl. fermées</Text>
                     <Text>issues des demandes validées en année N-1</Text>
                     <Divider borderColor="black" />
                     <Text fontWeight="700">Pl. effectivement occupées</Text>
                     <Text>Constat de rentrée N-1</Text>
                   </VStack>
                 </HStack>
-                <Text
-                  marginTop="12px"
-                  fontSize="10px"
-                  color={themeColors.info.text}
-                >
-                  * à partir de la Rentrée Scolaire 2025 seulement
-                </Text>
               </VStack>
             </VStack>
             <VStack
@@ -532,15 +530,9 @@ const DefinitionTauxTransfoModal = ({
                     </ListItem>
                     <ListItem>
                       ils sont rapportés à un total de places de la{" "}
-                      <b>Rentrée N-1</b>
-                      et non N
+                      <b>Rentrée N-1</b> et non N
                     </ListItem>
                   </UnorderedList>
-                </ListItem>
-                <ListItem>
-                  On peut également suivre dans Orion le taux de transformation
-                  prévisionnel <b>hors colorations</b> (à partir de la Rentrée
-                  Scolaire 2025)
                 </ListItem>
               </UnorderedList>
             </VStack>
@@ -583,13 +575,13 @@ const TauxTransfoCard = ({
                   Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
                 </Text>
                 <Text fontSize="32px" fontWeight="700" lineHeight="40px">
-                  {tauxTransformation}%
+                  {roundNumber(tauxTransformation, 1)} %
                 </Text>
               </Box>
               <Box width="100%">
                 <ProgressBar percentage={percentage} />
                 <Text color={themeColors.grey[425]} fontSize="12px">
-                  {roundNumber(percentage)}% de l'objectif
+                  {roundNumber(percentage, 1)}% de l'objectif
                 </Text>
               </Box>
             </VStack>
@@ -599,7 +591,7 @@ const TauxTransfoCard = ({
           <Text color={themeColors.bluefrance[113]}>
             <TooltipIcon
               mr="6px"
-              label="Nb d'élèves"
+              label="Cliquez ici pour plus d’infos"
               onClick={() => onOpen()}
             />
             Comprendre le calcul du taux de transformation
@@ -627,6 +619,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
             tooltip={
               <TooltipIcon
                 mr="6px"
+                label="Cliquez ici pour plus d’infos"
                 onClick={() => openGlossaire("taux-emploi-6-mois")}
               />
             }
@@ -638,6 +631,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
             tooltip={
               <TooltipIcon
                 mr="6px"
+                label="Cliquez ici pour plus d’infos"
                 onClick={() => openGlossaire("taux-poursuite-etudes")}
               />
             }

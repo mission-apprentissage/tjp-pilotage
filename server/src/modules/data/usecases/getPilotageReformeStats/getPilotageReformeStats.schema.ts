@@ -15,6 +15,7 @@ const StatsSchema = z.object({
 
 const StatsAnneeSchema = z.object({
   annee: z.number(),
+  millesime: z.array(z.string()),
   nationale: StatsSchema,
   scoped: StatsSchema,
 });

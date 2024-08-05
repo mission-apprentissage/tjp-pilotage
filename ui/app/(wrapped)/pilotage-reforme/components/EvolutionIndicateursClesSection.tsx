@@ -26,7 +26,7 @@ export const EvolutionIndicateursClesSection = ({
   data?.annees.forEach((anneeData) => {
     graphData[anneeData.annee.toString()] = {
       annee: anneeData.annee.toString(),
-      libelleAnnee: anneeData.annee.toString(),
+      libelleAnnee: anneeData.millesime.join("+"),
       filtered: (anneeData.scoped[indicateur] ?? 0) * 100,
       nationale: (anneeData.nationale[indicateur] ?? 0) * 100,
     };
