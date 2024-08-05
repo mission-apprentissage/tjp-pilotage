@@ -25,7 +25,7 @@ const getPilotageReformeStatsFactory =
 
     return {
       ...stats,
-      tauxTransformation,
+      tauxTransformation: tauxTransformation ?? 0,
       filters,
     };
   };
