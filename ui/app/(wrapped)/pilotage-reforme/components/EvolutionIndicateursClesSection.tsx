@@ -50,7 +50,7 @@ export const EvolutionIndicateursClesSection = ({
       borderColor="grey.900"
       bg="white"
       p={3}
-      height={"428"}
+      height={"328"}
       mt={8}
     >
       {isLoading ? (
