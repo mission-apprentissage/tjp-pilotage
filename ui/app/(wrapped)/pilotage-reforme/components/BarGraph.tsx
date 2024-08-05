@@ -94,7 +94,7 @@ export const BarGraph = function <F extends BarGraphData>({
         },
         splitNumber: 3,
         min: function (value) {
-          return value.min - 5;
+          return Math.floor(value.min - 5);
         },
       },
       series: isFiltered
@@ -153,7 +153,7 @@ export const BarGraph = function <F extends BarGraphData>({
         top="0"
         left="0"
         bottom="0"
-        height={380}
+        height={280}
       ></Box>
     </Box>
   );

@@ -563,35 +563,38 @@ const TauxTransfoCard = ({
     <>
       <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
       <VStack width="100%">
-        <VStack
-          backgroundColor="white"
-          width="100%"
-          px="8px"
-          padding="8px"
-          gap="16px"
-          color={themeColors.bluefrance[113]}
-          alignItems="start"
-        >
-          <Box>
-            <Text
-              fontSize="14px"
-              fontWeight="500"
-              lineHeight="24px"
-              textTransform="uppercase"
+        <Card width="100%">
+          <CardBody color="inherit" py="2" px="3" minHeight={40}>
+            <VStack
+              width="100%"
+              px="8px"
+              padding="8px"
+              gap="16px"
+              color={themeColors.bluefrance[113]}
+              alignItems="start"
             >
-              Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
-            </Text>
-            <Text fontSize="32px" fontWeight="700" lineHeight="40px">
-              {tauxTransformation}%
-            </Text>
-          </Box>
-          <Box width="100%">
-            <ProgressBar percentage={percentage} />
-            <Text color={themeColors.grey[425]} fontSize="12px">
-              {roundNumber(percentage)}% de l'objectif
-            </Text>
-          </Box>
-        </VStack>
+              <Box>
+                <Text
+                  fontSize="14px"
+                  fontWeight="500"
+                  lineHeight="24px"
+                  textTransform="uppercase"
+                >
+                  Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
+                </Text>
+                <Text fontSize="32px" fontWeight="700" lineHeight="40px">
+                  {tauxTransformation}%
+                </Text>
+              </Box>
+              <Box width="100%">
+                <ProgressBar percentage={percentage} />
+                <Text color={themeColors.grey[425]} fontSize="12px">
+                  {roundNumber(percentage)}% de l'objectif
+                </Text>
+              </Box>
+            </VStack>
+          </CardBody>
+        </Card>
         <HStack width="100%" justifyContent="start" alignItems="end">
           <Text color={themeColors.bluefrance[113]}>
             <TooltipIcon
@@ -615,30 +618,32 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
       <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
         INDICATEURS CLÉS DE LA RÉFORME
       </Text>
-      <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
-      <SimpleGrid spacing={3} columns={[2]} mt={4}>
-        <StatCard
-          label="taux d'emploi à 6 mois"
-          data={data}
-          tooltip={
-            <TooltipIcon
-              mr="6px"
-              onClick={() => openGlossaire("taux-emploi-6-mois")}
-            />
-          }
-        ></StatCard>
-        <StatCard
-          label="taux poursuite d'études"
-          data={data}
-          type="poursuite"
-          tooltip={
-            <TooltipIcon
-              mr="6px"
-              onClick={() => openGlossaire("taux-poursuite-etudes")}
-            />
-          }
-        ></StatCard>
-      </SimpleGrid>
+      <VStack width="100%" spacing="18px" mt="12px">
+        <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
+        <SimpleGrid spacing={3} columns={[2]} width="100%">
+          <StatCard
+            label="taux d'emploi à 6 mois"
+            data={data}
+            tooltip={
+              <TooltipIcon
+                mr="6px"
+                onClick={() => openGlossaire("taux-emploi-6-mois")}
+              />
+            }
+          ></StatCard>
+          <StatCard
+            label="taux poursuite d'études"
+            data={data}
+            type="poursuite"
+            tooltip={
+              <TooltipIcon
+                mr="6px"
+                onClick={() => openGlossaire("taux-poursuite-etudes")}
+              />
+            }
+          ></StatCard>
+        </SimpleGrid>
+      </VStack>
     </Flex>
   );
 };
