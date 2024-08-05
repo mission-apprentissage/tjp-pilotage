@@ -37,7 +37,7 @@ export const BarGraph = function <F extends BarGraphData>({
   const getNationalSerieData = () => {
     if (graphData !== undefined) {
       return Object.keys(graphData).map(
-        (annee) => graphData[annee].nationale ?? 0
+        (annee) => graphData[annee].nationale?.toFixed(0) ?? 0
       );
     }
 
