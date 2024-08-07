@@ -17,47 +17,19 @@ const processedCfds: Set<string> = new Set();
 const EMPTY_VALUE = "(VIDE)";
 
 /**
- * Si le premier mot c'est secteur (insensible à la case),
+ * Supprimer la regexp de la chaine de caractère,
  * retourner le contenu hors premier mot avec un trim.
  * Rajouter une majuscule pour la première lettre.
  */
-const normalizeCpcSecteur = (cpcSecteur?: string) => {
-  if (!cpcSecteur) return EMPTY_VALUE;
-  return (
-    _.capitalize(
-      cpcSecteur
-        .trim()
-        .replace(/^secteur/i, "")
-        .trim()
-    ) || EMPTY_VALUE
-  );
-};
-
-/**
- * Si le premier mot c'est CPC (insensible à la case),
- * retourner le contenu hors premier mot avec un trim.
- * Rajouter une majuscule pour la première lettre.
- */
-const normalizeCpc = (cpc?: string) => {
-  if (!cpc) return EMPTY_VALUE;
-  return _.capitalize(cpc.trim().replace(/^cpc/i, "").trim()) || EMPTY_VALUE;
-};
-
-/**
- * Si le premier mot c'est sous-secteur (insensible à la case),
- * retourner le contenu hors premier mot avec un trim.
- * Rajouter une majuscule pour la première lettre.
- */
-const normalizeCpcSousSecteur = (cpcSousSecteur?: string) => {
-  if (!cpcSousSecteur) return EMPTY_VALUE;
-  return (
-    _.capitalize(
-      cpcSousSecteur
-        .trim()
-        .replace(/^sous-secteur/i, "")
-        .trim()
-    ) || EMPTY_VALUE
-  );
+const normalizeWithReplace = ({
+  value,
+  regexp,
+}: {
+  value?: string;
+  regexp: RegExp;
+}) => {
+  if (!value) return EMPTY_VALUE;
+  return _.capitalize(value.trim().replace(regexp, "").trim()) || EMPTY_VALUE;
 };
 
 const getLineOverride = (line: DiplomeProfessionnelLine) => {
@@ -151,23 +123,38 @@ export const [importDataFormations] = inject(
           await deps
             .createDataFormation({
               cfd,
-              libelleFormation:
-                diplomeProfessionnel?.[
-                  "Intitulé de la spécialité (et options)"
-                ]?.replace(/"/g, "") ||
-                formatLibelle(nFormationDiplome.LIBELLE_LONG_200),
+              libelleFormation: diplomeProfessionnel?.[
+                "Intitulé de la spécialité (et options)"
+              ]
+                ? normalizeWithReplace({
+                    value:
+                      diplomeProfessionnel?.[
+                        "Intitulé de la spécialité (et options)"
+                      ],
+                    regexp: /"/g,
+                  })
+                : normalizeWithReplace({
+                    value: nFormationDiplome.LIBELLE_LONG_200,
+                    regexp: / \(.*\)/,
+                  }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
-              cpc: normalizeCpc(
-                diplomeProfessionnel?.[
-                  "Commission professionnelle consultative"
-                ]
-              ),
-              cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
-              cpcSousSecteur: normalizeCpcSousSecteur(
-                diplomeProfessionnel?.["Sous-secteur"]
-              ),
+              cpc: normalizeWithReplace({
+                value:
+                  diplomeProfessionnel?.[
+                    "Commission professionnelle consultative"
+                  ],
+                regexp: /^cpc/i,
+              }),
+              cpcSecteur: normalizeWithReplace({
+                value: diplomeProfessionnel?.Secteur,
+                regexp: /^secteur/i,
+              }),
+              cpcSousSecteur: normalizeWithReplace({
+                value: diplomeProfessionnel?.["Sous-secteur"],
+                regexp: /^sous-secteur/i,
+              }),
               codeNsf: cfd.slice(3, 6),
               codeNiveauDiplome: nFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
@@ -232,23 +219,38 @@ export const [importDataFormations] = inject(
           await deps
             .createDataFormation({
               cfd,
-              libelleFormation:
-                diplomeProfessionnel?.[
-                  "Intitulé de la spécialité (et options)"
-                ]?.replace(/"/g, "") ||
-                formatLibelle(vFormationDiplome.LIBELLE_LONG_200),
+              libelleFormation: diplomeProfessionnel?.[
+                "Intitulé de la spécialité (et options)"
+              ]
+                ? normalizeWithReplace({
+                    value:
+                      diplomeProfessionnel?.[
+                        "Intitulé de la spécialité (et options)"
+                      ],
+                    regexp: /"/g,
+                  })
+                : normalizeWithReplace({
+                    value: vFormationDiplome.LIBELLE_LONG_200,
+                    regexp: / \(.*\)/,
+                  }),
               rncp: diplomeProfessionnel?.["Code RNCP"]
                 ? parseInt(diplomeProfessionnel?.["Code RNCP"]) || undefined
                 : undefined,
-              cpc: normalizeCpc(
-                diplomeProfessionnel?.[
-                  "Commission professionnelle consultative"
-                ]
-              ),
-              cpcSecteur: normalizeCpcSecteur(diplomeProfessionnel?.Secteur),
-              cpcSousSecteur: normalizeCpcSousSecteur(
-                diplomeProfessionnel?.["Sous-secteur"]
-              ),
+              cpc: normalizeWithReplace({
+                value:
+                  diplomeProfessionnel?.[
+                    "Commission professionnelle consultative"
+                  ],
+                regexp: /^cpc/i,
+              }),
+              cpcSecteur: normalizeWithReplace({
+                value: diplomeProfessionnel?.Secteur,
+                regexp: /^secteur/i,
+              }),
+              cpcSousSecteur: normalizeWithReplace({
+                value: diplomeProfessionnel?.["Sous-secteur"],
+                regexp: /^sous-secteur/i,
+              }),
               codeNsf: cfd.slice(3, 6),
               codeNiveauDiplome: vFormationDiplome.FORMATION_DIPLOME.slice(
                 0,
@@ -287,6 +289,3 @@ export const [importDataFormations] = inject(
     );
   }
 );
-
-const formatLibelle = (libelleFormation: string) =>
-  libelleFormation && _.capitalize(libelleFormation).replace(/ \(.*\)/, "");
