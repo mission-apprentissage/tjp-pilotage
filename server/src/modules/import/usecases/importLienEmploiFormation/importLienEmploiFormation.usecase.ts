@@ -111,7 +111,7 @@ export const importLienEmploiFormationFactory =
         }),
       async (formation) => {
         const formationsRome = await findRawDatas({
-          type: "formation_rome",
+          type: "certif_info",
           filter: {
             Code_Scolarité: formation.cfd,
           },
