@@ -1,7 +1,10 @@
 import { sql } from "kysely";
+import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
+import { countDifferenceCapacite } from "../../../utils/countCapacite";
+import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
@@ -15,6 +18,7 @@ import {
   notHistoriqueFormation,
   notHistoriqueIndicateurRegionSortie,
 } from "../../utils/notHistorique";
+import { genericOnConstatRentree } from "../../utils/onConstatDeRentree";
 import { selectTauxInsertion6moisAgg } from "../../utils/tauxInsertion6mois";
 import { selectTauxPoursuiteAgg } from "../../utils/tauxPoursuite";
 
@@ -168,6 +172,7 @@ export const getStats = async ({
 
     return {
       annee: finDanneeScolaireMillesime,
+      millesime: millesimeSortie.split("_"),
       scoped: {
         ...(await selectStatsEffectif({ isScoped: true, annee: offset })),
         ...(await selectStatsSortie({ isScoped: true, annee: offset + 1 })),
@@ -232,7 +237,53 @@ const findFiltersInDb = async () => {
   };
 };
 
+const getTauxTransformationData = async (filters: {
+  codeNiveauDiplome?: string[];
+  codeRegion?: string;
+}) => {
+  return kdb
+    .selectFrom("latestDemandeView as demande")
+    .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .select((es) => [
+      es.fn
+        .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
+        .as("transformes"),
+      genericOnConstatRentree({ ...filters })()
+        .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
+        .as("effectif"),
+    ])
+    .where(isDemandeNotDeletedOrRefused)
+    .$call((eb) => {
+      return eb.where("demande.rentreeScolaire", "in", [
+        parseInt(NEXT_RENTREE),
+      ]);
+    })
+    .$call((eb) => {
+      if (filters.codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          filters.codeNiveauDiplome
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (filters.codeRegion) {
+        return eb.where(
+          "dataEtablissement.codeRegion",
+          "=",
+          filters.codeRegion
+        );
+      }
+      return eb;
+    })
+    .execute()
+    .then(cleanNull);
+};
+
 export const dependencies = {
   getStats,
   findFiltersInDb,
+  getTauxTransformationData,
 };

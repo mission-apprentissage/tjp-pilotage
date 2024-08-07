@@ -1,14 +1,10 @@
 import { Button, Flex, Text, VStack } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import _ from "lodash";
 import NextLink from "next/link";
-import { useSearchParams } from "next/navigation";
-import qs from "qs";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
@@ -17,17 +13,18 @@ export const MenuIntention = ({
   isRecapView = false,
   hasPermissionSubmitIntention,
   campagne,
+  handleFilters,
+  searchParams,
 }: {
   isRecapView?: boolean;
   hasPermissionSubmitIntention: boolean;
   campagne?: { annee: string; statut: string };
-}) => {
-  const queryParams = useSearchParams();
-  const searchParams: {
+  handleFilters: (type: keyof Filters, value: Filters[keyof Filters]) => void;
+  searchParams: {
     filters?: Partial<Filters>;
     campagne?: string;
-  } = qs.parse(queryParams.toString());
-
+  };
+}) => {
   const statut =
     searchParams.filters === undefined ? "none" : searchParams.filters?.statut;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
@@ -67,14 +64,8 @@ export const MenuIntention = ({
       <VStack flex="1" align="flex-start" spacing={2}>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ..._.omit(searchParams.filters, ["statut"]),
-            },
-          })}
+          onClick={() => handleFilters("statut", undefined)}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={<Text fontWeight={"normal"}>{countDemandes?.total}</Text>}
@@ -87,15 +78,10 @@ export const MenuIntention = ({
         </Button>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["demande validée"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["demande validée"])
+          }
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -116,15 +102,10 @@ export const MenuIntention = ({
         </Button>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["projet de demande"],
-            },
-          })}
+          onClick={() =>
+            handleFilters("statut", DemandeStatutEnum["projet de demande"])
+          }
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={
@@ -145,15 +126,8 @@ export const MenuIntention = ({
         </Button>
         <Button
           bgColor={"unset"}
-          as={NextLink}
           size="sm"
-          href={createParametrizedUrl(location.pathname, {
-            ...searchParams,
-            filters: {
-              ...searchParams.filters,
-              statut: DemandeStatutEnum["refusée"],
-            },
-          })}
+          onClick={() => handleFilters("statut", DemandeStatutEnum["refusée"])}
           width={"100%"}
           iconSpacing={"auto"}
           rightIcon={

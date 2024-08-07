@@ -22,6 +22,8 @@ import { TooltipIcon } from "./TooltipIcon";
 
 type Formation = {
   libelleFormation?: string;
+  libelleDispositif?: string;
+  libelleNiveauDiplome?: string;
   tauxPoursuite?: number;
   tauxInsertion?: number;
   tauxPression?: number;
@@ -181,6 +183,19 @@ export const TableQuadrant = ({
           <Tbody>
             {formations
               .filter((formation) => formation.effectif)
+              .map((f) => ({
+                ...f,
+                libelle: formations.some(
+                  (formation) =>
+                    formation.cfd === f.cfd &&
+                    formation.codeDispositif !== f.codeDispositif
+                )
+                  ? f.libelleFormation?.replace(
+                      `(${f.libelleNiveauDiplome})`,
+                      `(${f.libelleDispositif})`
+                    )
+                  : f.libelleFormation,
+              }))
               .map((formation, index) => (
                 <Tr
                   key={`${formation.cfd}-${index}`}
@@ -192,7 +207,7 @@ export const TableQuadrant = ({
                   cursor={handleClick ? "pointer" : "default"}
                 >
                   <Td whiteSpace="normal" color={getTdColor(formation)}>
-                    {formation.libelleFormation}
+                    {formation.libelle}
                   </Td>
                   <Td textAlign={"center"}>
                     <TableBadge

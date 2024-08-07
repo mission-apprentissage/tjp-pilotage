@@ -9,7 +9,7 @@ import {
   countDifferenceCapaciteScolaire,
 } from "../../../../utils/countCapacite";
 import { isDemandeNotDeleted } from "../../../../utils/isDemandeSelectable";
-import { isIntentionVisible } from "../../../../utils/isIntentionVisible";
+import { isRestitutionIntentionVisible } from "../../../../utils/isRestitutionIntentionVisible";
 import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
 import { isScolaireIndicateurRegionSortie } from "../../../utils/isScolaire";
 import { nbEtablissementFormationRegion } from "../../../utils/nbEtablissementFormationRegion";
@@ -96,12 +96,14 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       "nsf.libelleNsf as libelleNsf",
       "dataEtablissement.libelleEtablissement",
       "dataEtablissement.commune as commune",
+      "dataEtablissement.secteur",
       "dispositif.libelleDispositif",
       "region.libelleRegion as libelleRegion",
       "departement.libelleDepartement",
       "departement.codeDepartement as codeDepartement",
       "academie.libelleAcademie",
       "academie.codeAcademie as codeAcademie",
+      "dataFormation.typeFamille",
       countDifferenceCapaciteScolaire(eb).as("differenceCapaciteScolaire"),
       countDifferenceCapaciteApprentissage(eb).as(
         "differenceCapaciteApprentissage"
@@ -122,6 +124,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
         eb,
         rentreeScolaire: CURRENT_RENTREE,
       }).as("nbEtablissement"),
+      "demande.inspecteurReferent",
     ])
     .$call((eb) => {
       if (search)
@@ -266,7 +269,7 @@ export const getDemandesRestitutionIntentionsQuery = async ({
       );
     })
     .where(isDemandeNotDeleted)
-    .where(isIntentionVisible({ user }))
+    .where(isRestitutionIntentionVisible({ user }))
     .offset(offset)
     .limit(limit)
     .execute();

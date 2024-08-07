@@ -3,6 +3,7 @@
 import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
+import { useEffect } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
@@ -42,6 +43,14 @@ export default ({
         cacheTime: 0,
       }
     );
+
+  const { mutate: submitIntentionAccessLog } = client
+    .ref("[POST]/intention/access/submit")
+    .useMutation({});
+
+  useEffect(() => {
+    submitIntentionAccessLog({ body: { intention: { numero: numero } } });
+  }, []);
 
   const displaySynthese = () =>
     setSearchParams({

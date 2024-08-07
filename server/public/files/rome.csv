@@ -1,577 +1,610 @@
 code_rome;code_fiche_metier;code_ogr;libelle_rome;transition_eco;transition_num;transition_demo;emploi_reglemente;emploi_cadre;code_rome_parent
 A1101;11;6;Conducteur / Conductrice d'engins agricoles;;;;;;A1101
 A1102;30047;403950;Conducteur / Conductrice d'engins d'exploitation forestière;;;;;;A1101
-A1201;19;7;Bûcheronnage et élagage;;;;;;
-A1202;15;8;Entretien des espaces naturels;;;;;;
-A1203;16;9;Aménagement et entretien des espaces verts;;;;;;
-A1204;13;10;Protection du patrimoine naturel;;;;;;
-A1205;18;11;Sylviculture;;;;;;
-A1301;27;12;Conseil et assistance technique en agriculture et environnement naturel;;;;;;
-A1302;25;13;Contrôle et diagnostic technique en agriculture;;;;;;
-A1303;29;14;Ingénierie en agriculture et environnement naturel;;;;;;
+A1201;19;7;Élagueur / Élagueuse;Emploi Vert;;;;;
+A1202;15;8;Agent / Agente d'entretien des espaces naturels;Emploi Vert;;;;;
+A1203;16;9;Jardinier / Jardinière;Emploi Vert;;;;;
+A1204;13;10;Garde forestier / forestière;Emploi Vert;;;;;
+A1205;18;11;Forestier / Forestière;Emploi Vert;;;;;
+A1301;27;12;Technicien / Technicienne de culture maraîchère;;;;;;
+A1302;25;13;Technicien / Technicienne agricole;;;;;;
+A1303;29;14;Ingénieur / Ingénieure agronome;Emploi Vert;;;;;
 A1304;30050;403951;Conseiller / Conseillère technique agricole;;;;;;A1301
-A1401;34;15;Aide agricole de production fruitière ou viticole;;;;;;
-A1402;32;16;Aide agricole de production légumière ou végétale;;;;;;
-A1403;31;17;Aide d'élevage agricole et aquacole;;;;;;
-A1404;52;18;Aquaculture;;;;;;
-A1405;43;19;Arboriculture et viticulture;;;;;;
-A1406;61;20;Encadrement équipage de la pêche;;;;;;
-A1407;45;21;Élevage bovin ou équin;;;;;;
-A1408;51;22;Élevage d'animaux sauvages ou de compagnie;;;;;;
-A1409;48;23;Élevage de lapins et volailles;;;;;;
-A1410;46;24;Élevage ovin ou caprin;;;;;;
-A1411;47;25;Élevage porcin;;;;;;
-A1412;58;26;Fabrication et affinage de fromages;;;;;;
-A1413;60;27;Fermentation de boissons alcoolisées;;;;;;
-A1414;37;28;Horticulture et maraîchage;;;;;;
-A1415;56;29;Équipage de la pêche;;;;;;
-A1416;36;30;Polyculture, élevage;;;;;;
-A1417;54;31;Saliculture;;;;;;
+A1401;34;15;Vendangeur / Vendangeuse;;;;;;
+A1402;32;16;Aide horticole;;;;;;
+A1403;31;17;Aide d'élevage agricole;;;;;;A1403
+A1404;52;18;Aquaculteur / Aquacultrice;;;;;;
+A1405;43;19;Arboriculteur / Arboricultrice;;;;;;
+A1406;61;20;Capitaine de pêche;;;;O;;A1406
+A1407;45;21;Éleveur / Éleveuse de bovins;;;;;;
+A1408;51;22;Éleveur / Éleveuse d'animaux;;;;;;
+A1409;48;23;Aviculteur / Avicultrice;;;;;;
+A1410;46;24;Éleveur / Éleveuse d'ovins;;;;;;
+A1411;47;25;Éleveur / Éleveuse de porcins;;;;;;
+A1412;58;26;Fromager / Fromagère;;;;;;
+A1413;60;27;Brasseur / Brasseuse de bière;;;;;;
+A1414;37;28;Horticulteur / Horticultrice;;;;;;
+A1415;56;29;Marin-pêcheur;;;;;;
+A1416;36;30;Agriculteur / Agricultrice;;;;;;
+A1417;54;31;Saliculteur / Salicultrice;Emploi Vert;;;;;A1417
 A1418;30052;403953;Viticulteur / Viticultrice;;;;;;A1405
 A1419;30053;403955;Ouvrier agricole polyvalent / Ouvrière agricole polyvalente;;;;;;A1416
-A1420;30051;403956;Chef / Cheffe de culture responsable d'unité de production;;;;;;A1405
+A1420;30051;403956;Chef / Cheffe de culture responsable d'unité de production agricole;;;;;;A1405
 A1421;30054;403957;Palefrenier soigneur / Palefrenière soigneuse;;;;;;A1403
-A1501;66;32;Aide aux soins animaux;;;;;;
-A1502;69;33;Podologie animale;;;;;;
-A1503;68;34;Toilettage des animaux;;;;;;
-A1504;72;35;Santé animale;;;;;;
-B1101;8;36;Création en arts plastiques;;;;;;
-B1201;9;37;Réalisation d'objets décoratifs et utilitaires en céramique et matériaux de synthèse;;;;;;
-B1301;12;38;Décoration d'espaces de vente et d'exposition;;;;;;
-B1302;17;39;Décoration d'objets d'art et artisanaux;;;;;;
-B1303;14;40;Gravure - ciselure;;;;;;
-B1401;20;41;Réalisation d'objets en lianes, fibres et brins végétaux;;;;;;
-B1402;21;42;Reliure et restauration de livres et archives;;;;;;
-B1501;22;43;Fabrication et réparation d'instruments de musique;;;;;;
-B1601;24;44;Métallerie d'art;;;;;;
-B1602;30;45;Réalisation d'objets artistiques et fonctionnels en verre;;;;;;
-B1603;26;46;Réalisation d'ouvrages en bijouterie, joaillerie et orfèvrerie;;;;;;
-B1604;23;47;Réparation - montage en systèmes horlogers;;;;;;
-B1701;33;48;Conservation et reconstitution d'espèces animales;;;;;;
-B1801;39;49;Réalisation d'articles de chapellerie;;;;;;
-B1802;42;50;Réalisation d'articles en cuir et matériaux souples (hors vêtement);;;;;;
-B1803;41;51;Réalisation de vêtements sur mesure ou en petite série;;;;;;
-B1804;44;52;Réalisation d'ouvrages d'art en fils;;;;;;
-B1805;35;53;Stylisme;;;;;;
-B1806;38;54;Tapisserie - décoration en ameublement;;;;;;
-C1101;65;55;Conception - développement produits d'assurances;;;;;;
-C1102;50;56;Conseil clientèle en assurances;;;;;;
-C1103;59;57;Courtage en assurances;;;;;;
-C1104;55;58;Direction d'exploitation en assurances;;;;;;
-C1105;77;59;Études actuarielles en assurances;;;;;;
-C1106;74;60;Expertise risques en assurances;;;;;;
-C1107;75;61;Indemnisations en assurances;;;;;;
-C1108;57;62;Management de groupe et de service en assurances;;;;;;
-C1109;49;63;Rédaction et gestion en assurances;;;;;;
-C1110;53;64;Souscription d'assurances;;;;;;
-C1201;79;65;Accueil et services bancaires;;;;;;
-C1202;93;66;Analyse de crédits et risques bancaires;;;;;;
-C1203;88;67;Relation clients banque/finance;;;;;;
-C1204;91;68;Conception et expertise produits bancaires et financiers;;;;;;
+A1501;66;32;Soigneur animalier / Soigneuse animalière;;;;;;
+A1502;69;33;Maréchal-ferrant / Maréchale-ferrante;;;;;;A1502
+A1503;68;34;Toiletteur / Toiletteuse d'animaux;;;;;;A1503
+A1504;72;35;Vétérinaire;;;;;;
+B1101;8;36;Artiste plasticien / plasticienne;;;;;;
+B1201;9;37;Céramiste d'art;;;;;;
+B1301;12;38;Étalagiste;;;;;;
+B1302;17;39;Décorateur / Décoratrice d'objets d'art;;;;;;
+B1303;14;40;Graveur / Graveuse d'art;;;;;;
+B1401;20;41;Vannier / Vannière;;;;;;
+B1402;21;42;Relieur / Relieuse;;;;;;
+B1501;22;43;Facteur / Factrice d'instruments de musique;;;;;;
+B1601;24;44;Métallier / Métallière d'art;;;;;;
+B1602;30;45;Souffleur / Souffleuse de verre;;;;;;
+B1603;26;46;Opérateur / Opératrice en orfèvrerie et bijouterie;;;;;;
+B1604;23;47;Horloger / Horlogère;;;;;;
+B1605;30084;404957;Bijoutier / Bijoutière;;N;N;O;N;B1603
+B1606;30080;404968;Joaillier / Joaillière;;N;N;O;N;B1603
+B1607;30087;404969;Lapidaire / Diamantaire;;N;N;O;N;B1603
+B1608;30095;404972;Opérateur / Opératrice en bijouterie;;N;N;O;N;B1603
+B1609;30085;404976;Responsable d'atelier en bijouterie ou joaillerie;;N;N;O;O;B1603
+B1610;30083;404977;Sertisseur / Sertisseuse en bijouterie ou joaillerie;;N;N;O;N;B1603
+B1611;30088;404978;Trieur / Trieuse de pierres et perles;;N;N;O;N;B1603
+B1612;30089;404964;Concepteur / Conceptrice numérique en bijouterie joaillerie;;O;N;O;N;H1204
+B1701;33;48;Taxidermiste;;;;;;
+B1801;39;49;Chapelier / Chapelière;;;;;;
+B1802;42;50;Maroquinier / Maroquinière;;;;;;
+B1803;41;51;Couturier / Couturière;;;;;;
+B1804;44;52;Brodeur / Brodeuse;;;;;;
+B1805;35;53;Styliste;;;;;;
+B1806;38;54;Tapissier / Tapissière d'ameublement;;;;;;
+C1101;65;55;Chargé / Chargée de produit en assurances;;;;;;
+C1102;50;56;Conseiller / Conseillère en assurances;;;;;;
+C1103;59;57;Courtier / Courtière en assurance;;;;O;O;C1103
+C1104;55;58;Responsable d'agence en assurances;;;;;;
+C1105;77;59;Actuaire;;;;;;
+C1106;74;60;Expert / Experte risques en assurances;;;;;;
+C1107;75;61;Chargé / Chargée d'indemnisations en assurances;;;;;;
+C1108;57;62;Responsable de département en assurances;;;;;;
+C1109;49;63;Gestionnaire en assurances;;;;;;
+C1110;53;64;Souscripteur / Souscriptrice en assurances;;;;;;
+C1111;30072;404510;Mandataire en assurance;;;;O;N;C1103
+C1112;30073;404511;Agent général / Agente générale d'assurance;;;;O;O;C1103
+C1201;79;65;Chargé / Chargée d'accueil en banque;;;;;;
+C1202;93;66;Analyste de crédits et risques bancaires;;;;;;
+C1203;88;67;Chargé / Chargée d'affaires bancaires entreprise;;;;;;
+C1204;91;68;Gestionnaire de produits bancaires;;;;;;
 C1205;30032;69;Conseiller / Conseillère en gestion de patrimoine;;N;N;N;O;C1205
-C1206;84;70;Gestion de clientèle bancaire;;;;;;
-C1207;90;71;Management en exploitation bancaire;;;;;;
+C1206;84;70;Conseiller / Conseillère de clientèle bancaire;;;;;;
+C1207;90;71;Directeur / Directrice d'agence bancaire;;;;;;
 C1208;30033;403084;Courtier / Courtière en banque;;O;N;N;O;C1206
-C1301;96;72;Front office marchés financiers;;;;;;
-C1302;98;73;Gestion back et middle-office marchés financiers;;;;;;
-C1303;95;74;Gestion de portefeuilles sur les marchés financiers;;;;;;
-C1401;100;75;Gestion en banque et assurance;;;;;;
-C1501;104;76;Gérance immobilière;;;;;;
-C1502;102;77;Gestion locative immobilière;;;;;;
-C1503;108;78;Management de projet immobilier;;;;;;
+C1301;96;72;Trader;;;;;;
+C1302;98;73;Gestionnaire des opérations sur les marchés financiers;;;;;;
+C1303;95;74;Gérant / Gérante de portefeuille financier;;;;;;
+C1401;100;75;Agent administratif / Agente administrative banque ou assurance;;;;;;
+C1501;104;76;Gestionnaire de copropriété;;;;;;
+C1502;102;77;Chargé / Chargée de gestion locative en immobilier;;;;;;
+C1503;108;78;Chargé / Chargée d'opérations immobilières;;;;;;
 C1504;106;79;Conseiller / Conseillère immobilier;;;;;;C1504
 C1505;30036;403085;Responsable d'agence immobilière;;N;N;N;O;C1504
-D1101;82;80;Boucherie;;;;;;
-D1102;78;81;Boulangerie - viennoiserie;;;;;;
-D1103;85;82;Charcuterie - traiteur;;;;;;
-D1104;80;83;Pâtisserie, confiserie, chocolaterie et glacerie;;;;;;
-D1105;87;84;Poissonnerie;;;;;;
-D1106;76;85;Vente en alimentation;;;;;;
-D1107;73;86;Vente en gros de produits frais;;;;;;
-D1201;101;87;Achat vente d'objets d'art, anciens ou d'occasion;;;;;;
-D1202;109;88;Coiffure;;;;;;
-D1203;113;89;Hydrothérapie;;;;;;
-D1204;117;90;Location de véhicules ou de matériel de loisirs;;;;;;
-D1205;115;91;Nettoyage d'articles textiles ou cuirs;;;;;;
-D1206;105;92;Réparation d'articles en cuir et matériaux souples;;;;;;
-D1207;103;93;Retouches en habillement;;;;;;
-D1208;111;94;Soins esthétiques et corporels;;;;;;
-D1209;99;95;Vente de végétaux;;;;;;
-D1210;89;96;Vente en animalerie;;;;;;
-D1211;107;97;Vente en articles de sport et loisirs;;;;;;
-D1212;94;98;Vente en décoration et équipement du foyer;;;;;;
-D1213;92;99;Vente en gros de matériel et équipement;;;;;;
-D1214;97;100;Vente en habillement et accessoires de la personne;;;;;;
-D1301;120;101;Management de magasin de détail;;;;;;
+D1101;82;80;Boucher / Bouchère;;;;;;
+D1102;78;81;Boulanger / Boulangère;;;;;;
+D1103;85;82;Charcutier-traiteur / Charcutière-traiteuse;;;;;;
+D1104;80;83;Pâtissier / Pâtissière;;;;;;
+D1105;87;84;Poissonnier / Poissonnière;;;;;;
+D1106;76;85;Épicier / Épicière;;;;;;
+D1107;73;86;Grossiste en produits frais;;;;;;
+D1201;101;87;Brocanteur / Brocanteuse;;;;;;
+D1202;109;88;Coiffeur / Coiffeuse;;;;;;
+D1203;113;89;Agent thermal / Agente thermale;;;;;;
+D1204;117;90;Loueur / Loueuse de véhicules;;;;;;
+D1205;115;91;Employé / Employée de pressing;;;;;;
+D1206;105;92;Cordonnier / Cordonnière;;;;;;
+D1207;103;93;Retoucheur / Retoucheuse en habillement;;;;;;
+D1208;111;94;Esthéticien / Esthéticienne;;;;;;
+D1209;99;95;Fleuriste;;;;;;
+D1210;89;96;Vendeur / Vendeuse en animalerie;;;;;;
+D1211;107;97;Vendeur / Vendeuse d'articles de sport et loisirs;;;;;;
+D1212;94;98;Vendeur / Vendeuse en équipement de la maison;;;;;;
+D1213;92;99;Vendeur / Vendeuse grossiste de matériels et équipements;;;;;;
+D1214;97;100;Vendeur / Vendeuse en prêt-à-porter;;;;;;
+D1301;120;101;Responsable de magasin;;;;;;
 D1401;30031;102;Assistant commercial / Assistante commerciale;;O;N;N;O;D1401
-D1402;124;103;Relation commerciale grands comptes et entreprises;;;;;;
-D1403;127;104;Relation commerciale auprès de particuliers;;;;;;
-D1404;129;105;Relation commerciale en vente de véhicules;;;;;;
-D1405;131;106;Conseil en information médicale;;;;;;
-D1406;135;107;Management en force de vente;;;;;;
-D1407;30030;108;Technico-commercial / Technico-commerciale;;N;N;N;O;D1407
-D1408;122;109;Téléconseil et télévente;;;;;;
-D1409;125;403074;Gestion administrative des ventes;;;;;;D1401
+D1402;124;103;Commercial / Commerciale grands comptes et entreprises;Emploi stratégique pour la Transition écologique;;;;;
+D1403;127;104;Commercial / Commerciale auprès des particuliers;;;;;;
+D1404;129;105;Commercial / Commerciale en automobiles;;;;;;
+D1405;131;106;Délégué médical / Déléguée médicale;;;;;;
+D1406;135;107;Chef / Cheffe des ventes;;;;;;
+D1407;30030;108;Technico-commercial / Technico-commerciale;Emploi stratégique pour la Transition écologique;N;N;N;O;D1407
+D1408;122;109;Téléconseiller / Téléconseillère;;;;;;
+D1409;125;403074;Assistant / Assistante administration des ventes;;;;;;D1401
 D1410;30034;403086;Attaché commercial / Attachée commerciale;;N;N;N;O;D1401
 D1501;30035;110;Animateur / Animatrice des ventes;;N;N;N;N;D1501
-D1502;141;111;Management/gestion de rayon produits alimentaires;;;;;;
-D1503;142;112;Management/gestion de rayon produits non alimentaires;;;;;;
-D1504;150;113;Direction de magasin de grande distribution;;;;;;
-D1505;139;114;Personnel de caisse;;;;;;
-D1506;152;115;Marchandisage;;;;;;
-D1507;137;116;Mise en rayon libre-service;;;;;;
-D1508;144;117;Encadrement du personnel de caisses;;;;;;
-D1509;148;118;Responsable grande distribution;;;;;;D1509
+D1502;141;111;Chef / Cheffe de rayon alimentaire;;;;;;
+D1503;142;112;Chef / Cheffe de rayon de produits non alimentaires;;;;;;
+D1504;150;113;Directeur / Directrice de magasin;;;;;;
+D1505;139;114;Caissier / Caissière;;;;;;
+D1506;152;115;Marchandiseur / Marchandiseuse;;;;;;
+D1507;137;116;Employé / Employée de libre-service;;;;;;
+D1508;144;117;Responsable de caisses;;;;;;
+D1509;148;118;Responsable de département en grande distribution;;;;;;D1509
 D1510;30038;403087;Chef / Cheffe de secteur commercial;;N;N;N;O;D1509
-E1101;112;119;Animation de site multimédia;;O;;;;
-E1102;110;120;Écriture d'ouvrages, de livres;;;;;;
+E1101;112;119;Community manager;;O;;;;
+E1102;110;120;Écrivain / Écrivaine;;;;;;
 E1103;121;121;Chargé / Chargée de communication;;O;;;;E1103
-E1104;119;122;Conception de contenus multimédias;;;;;;
-E1105;123;123;Coordination d'édition;;;;;;
-E1106;116;124;Journalisme et information média;;;;;;
+E1104;119;122;Concepteur / Conceptrice de contenus multimedia;;;;;;
+E1105;123;123;Éditeur / Éditrice;;;;;;
+E1106;116;124;Journaliste;;;;;;
 E1107;30037;125;Chef / Cheffe de projet événementiel;;O;N;N;O;E1107
-E1108;126;126;Traduction, interprétariat;;;;;;
+E1108;126;126;Traducteur / Traductrice;;;;;;
 E1109;30039;403088;Directeur / Directrice de la communication;;N;N;N;O;E1103
-E1201;128;127;Photographie;;;;;;
-E1202;138;128;Production en laboratoire cinématographique;;;;;;
-E1203;136;129;Production en laboratoire photographique;;;;;;
-E1204;582;130;Projection cinéma;;;;;;
-E1205;134;131;Réalisation de contenus multimédias;;O;;;;
+E1201;128;127;Photographe;;;;;;
+E1202;138;128;Employé / Employée de laboratoire cinématographique;;;;;;
+E1203;136;129;Développeur / Développeuse de photographies;;;;;;
+E1204;582;130;Projectionniste;;;;;;
+E1205;134;131;Graphiste;;O;;;;
 E1206;30071;404036;UX - UI Designer;;O;;;;E1205
-E1301;149;132;Conduite de machines d'impression;;;;;;
-E1302;140;133;Conduite de machines de façonnage routage;;;;;;
-E1303;153;134;Encadrement des industries graphiques;;;;;;
-E1304;151;135;Façonnage et routage;;;;;;
-E1305;145;136;Préparation et correction en édition et presse;;;;;;
-E1306;147;137;Prépresse;;;;;;
-E1307;143;138;Reprographie;;;;;;
-E1308;154;139;Intervention technique en industrie graphique;;;;;;
-E1401;156;140;Développement et promotion publicitaire;;;;;;
-E1402;157;141;Élaboration de plan média;;;;;;
-F1101;161;142;Architecture du BTP et du paysage;;;;;;
+E1301;149;132;Conducteur / Conductrice de machines d'impression;;;;;;
+E1302;140;133;Conducteur / Conductrice de machines de façonnage routage;;;;;;
+E1303;153;134;Responsable d'atelier d'impression;;;;;;
+E1304;151;135;Agent / Agente de façonnage et routage;;;;;;
+E1305;145;136;Correcteur / Correctrice;;;;;;
+E1306;147;137;Opérateur / Opératrice de prépresse;;;;;;
+E1307;143;138;Reprographe;;;;;;
+E1308;154;139;Technicien / Technicienne des industries graphiques;;;;;;
+E1401;156;140;Chef / Cheffe de publicité;;;;;;
+E1402;157;141;Média planneur / planneuse;;;;;;
+F1101;161;142;Architecte;;;;;;
 F1102;30040;143;Architecte d'intérieur;;O;N;N;O;F1102
-F1103;169;144;Contrôle et diagnostic technique du bâtiment;;;;;;
-F1104;163;145;Dessin BTP et paysage;;;;;;
-F1105;172;146;Études géologiques;;;;;;
-F1106;167;147;Ingénierie et études du BTP;;;;;;
+F1103;169;144;Diagnostiqueur / Diagnostiqueuse immobilier;Emploi stratégique pour la Transition écologique;;;;;
+F1104;163;145;Dessinateur / Dessinatrice du BTP;Emploi stratégique pour la Transition écologique;;;;;
+F1105;172;146;Géologue;Emploi Vert;;;;;
+F1106;167;147;Ingénieur / Ingénieure d'études BTP;Emploi stratégique pour la Transition écologique;;;;;
 F1107;30043;148;Géomètre-topographe;;O;N;O;O;F1107
-F1108;171;149;Métré de la construction;;;;;;
-F1109;165;403075;Mesures topographiques;;;;;;F1107
+F1108;171;149;Métreur / Métreuse;Emploi stratégique pour la Transition écologique;;;;;
+F1109;165;403075;Assistant / Assistante géomètre;;;;;;F1107
 F1110;30024;403079;Dessinateur / Dessinatrice enveloppe du bâtiment;;;;;;F1104
 F1111;30041;403089;Ingénieur / Ingénieure génie civil;;O;N;N;O;F1106
 F1112;30042;403090;Ingénieur / Ingénieure calcul et structure;;O;N;N;O;F1106
-F1201;30044;150;Conducteur / Conductrice de travaux;;N;N;N;O;F1201
-F1202;30045;151;Chef / Cheffe de chantier;;O;N;N;O;F1202
-F1203;180;152;Direction et ingénierie d'exploitation de gisements et de carrières;;;;;;
-F1204;174;153;Qualité Sécurité Environnement et protection santé du BTP;;;;;;
+F1113;30096;404537;Chargé / Chargée d'affaires en rénovation énergétique;Emploi Vert;;;;O;F1106
+F1114;30097;404538;Conseiller / Conseillère en rénovation énergétique;Emploi Vert;;;;;F1106
+F1201;30044;150;Conducteur / Conductrice de travaux;Emploi stratégique pour la Transition écologique;N;N;N;O;F1201
+F1202;30045;151;Chef / Cheffe de chantier;Emploi stratégique pour la Transition écologique;O;N;N;O;F1202
+F1203;180;152;Responsable d'exploitation de gisements et de carrières;;;;;;
+F1204;174;153;Animateur / Animatrice QSE - Qualité Sécurité Environnement BTP;Emploi Vert;;;;;
 F1205;178;403076;Responsable de travaux BTP;;;;;;F1201
-F1301;184;154;Conduite de grue;;;;;;
-F1302;182;155;Conduite d'engins de terrassement et de carrière;;;;;;
-F1401;187;156;Extraction liquide et gazeuse;;;;;;
-F1402;185;157;Extraction solide;;;;;;
-F1501;190;158;Montage de structures et de charpentes bois;;;;;;
-F1502;188;159;Montage de structures métalliques;;;;;;
-F1503;192;160;Réalisation - installation d'ossatures bois;;;;;;
-F1601;220;161;Application et décoration en plâtre, stuc et staff;;;;;;
-F1602;199;162;Électricité bâtiment;;;;;;
-F1603;204;163;Installation d'équipements sanitaires et thermiques;;;;;;
-F1604;207;164;Montage d'agencements;;;;;;
-F1605;201;165;Montage de réseaux électriques et télécoms;;O;;;;
+F1301;184;154;Grutier / Grutière;;;;;;
+F1302;182;155;Conducteur / Conductrice d'engins de chantier;;;;;;
+F1401;187;156;Foreur / Foreuse;;;;;;
+F1402;185;157;Extracteur / Extractrice de roches;;;;;;
+F1501;190;158;Charpentier bois poseur / Charpentière bois poseuse;;;;;;
+F1502;188;159;Échafaudeur / Échafaudeuse;;;;;;
+F1503;192;160;Charpentier / Charpentière;Emploi stratégique pour la Transition écologique;;;;;
+F1601;220;161;Plâtrier / Plâtrière;;;;;;
+F1602;199;162;Électricien / Électricienne du bâtiment;Emploi stratégique pour la Transition écologique;;;;;
+F1603;204;163;Plombier / Plombière;Emploi stratégique pour la Transition écologique;;;;;
+F1604;207;164;Plaquiste;Emploi stratégique pour la Transition écologique;;;;;
+F1605;201;165;Électricien / Électricienne réseaux;Emploi stratégique pour la Transition écologique;O;;;;
 F1606;212;166;Peintre en bâtiment;;;;;;F1606
-F1607;30029;167;Menuisier / Menuisière aluminium;;;;;;F1607
-F1608;209;168;Pose de revêtements rigides;;;;;;
-F1609;211;169;Pose de revêtements souples;;;;;;
-F1610;196;170;Pose et restauration de couvertures;;;;;;
-F1611;215;171;Réalisation et restauration de façades;;;;;;
-F1612;217;172;Taille et décoration de pierres;;;;;;
-F1613;197;173;Travaux d'étanchéité et d'isolation;;;;;;
+F1607;30029;167;Menuisier / Menuisière aluminium;Emploi stratégique pour la Transition écologique;;;;;F1607
+F1608;209;168;Carreleur / Carreleuse;;;;;;
+F1609;211;169;Solier-moquettiste / Solière-moquettiste;;;;;;
+F1610;196;170;Monteur / Monteuse de panneaux photovoltaïques;Emploi stratégique pour la Transition écologique;;;;;
+F1611;215;171;Façadier / Façadière;;;;;;
+F1612;217;172;Tailleur / Tailleuse de pierre;;;;;;
+F1613;197;173;Étancheur / Étancheuse;;;;;;
 F1614;206;403073;Poseur / Poseuse en fermetures de bâtiment;;;;;;F1607
 F1615;30025;403080;Poseur / Poseuse de cloisons démontables et mobiles;;;;;;F1604
 F1616;30026;403081;Poseur / Poseuse de menuiseries extérieures;;;;;;F1607
 F1617;30028;403082;Poseur / Poseuse de véranda;;;;;;F1607
 F1618;30027;403083;Poseur / Poseuse de façade vitrée;;;;;;F1611
 F1619;30062;404037;Couvreur / Couvreuse;;;;O;;F1610
-F1701;227;174;Construction en béton;;;;;;
-F1702;224;175;Construction de routes et voies;;;;;;
-F1703;229;176;Maçonnerie;;;;;;
-F1704;222;177;Préparation du gros oeuvre et des travaux publics;;;;;;
-F1705;225;178;Pose de canalisations;;;;;;
-F1706;231;179;Préfabrication en béton industriel;;;;;;
+F1620;30098;404539;Installateur / Installatrice chauffage et climatisation;;;;;;F1603
+F1701;227;174;Coffreur / Coffreuse;Emploi stratégique pour la Transition écologique;;;;;
+F1702;224;175;Ouvrier / Ouvrière en voiries;;;;;;
+F1703;229;176;Maçon / Maçonne;Emploi stratégique pour la Transition écologique;;;;;
+F1704;222;177;Manœuvre bâtiment;;;;;;
+F1705;225;178;Canalisateur / Canalisatrice;;;;;;
+F1706;231;179;Armaturier / Armaturière de l'industrie du béton;;;;;;
 F1707;30048;403952;Maçon / Maçonne du paysage;;;;;;F1703
 F1708;30049;403954;Installateur-poseur / Installatrice-poseuse de piscines préfabriquées;;;;;;F1703
 F1709;30057;404038;Démolisseur / Démolisseuse;;;;N;;F1704
-G1101;160;180;Accueil touristique;;;;;;
-G1102;162;181;Promotion du tourisme local;;;;;;
-G1201;175;182;Accompagnement de voyages, d'activités culturelles ou sportives;;;;;;
-G1202;166;183;Animation d'activités culturelles ou ludiques;;;;;;
-G1203;164;184;Animation de loisirs auprès d'enfants ou d'adolescents;;;;;;
-G1204;30020;185;Éducateur sportif / Éducatrice sportive;;N;N;O;N;G1204
-G1205;170;186;Personnel d'attractions ou de structures de loisirs;;;;;;
-G1206;173;187;Personnel technique des jeux;;;;;;
-G1207;168;403072;Moniteur / Monitrice de sport;;;;;;G1204
+G1101;160;180;Hôte / Hôtesse d'accueil tourisme;;;;;;
+G1102;162;181;Chargé / Chargée de mission tourisme;;;;;;
+G1201;175;182;Guide touristique;;;;;;
+G1202;166;183;Animateur / Animatrice d'activités culturelles et de loisirs;;;O;;;
+G1203;164;184;Animateur / Animatrice auprès des jeunes;;;O;;;
+G1204;30020;185;Éducateur sportif / Éducatrice sportive;;N;O;O;N;G1204
+G1205;170;186;Opérateur / Opératrice d'attraction;;;;;;
+G1206;173;187;Croupier / Croupière;;;;;;
+G1207;168;403072;Surveillant / Surveillante de baignade;;;;O;;G1204
 G1208;30021;403077;Entraîneur / Entraîneure de sport professionnel et de haut niveau;;N;N;O;N;G1204
-G1209;30022;403078;Animateur de loisirs sportifs / Animatrice de loisirs sportifs;;N;N;O;N;G1204
+G1209;30022;403078;Animateur / Animatrice de loisirs sportifs;;N;N;O;N;G1204
 G1210;30055;403958;Enseignant / Enseignante d'équitation;;;;;;G1204
-G1301;179;188;Conception de produits touristiques;;;;;;
-G1302;181;189;Optimisation de produits touristiques;;;;;;
-G1303;177;190;Vente de voyages;;;;;;
-G1401;595;191;Assistance de direction d'hôtel-restaurant;;;;;;
-G1402;186;192;Management d'hôtel-restaurant;;;;;;
-G1403;191;193;Gestion de structure de loisirs ou d'hébergement touristique;;;;;;
+G1211;30081;404961;Analyste de la performance sportive;;O;N;N;N;G1204
+G1212;30086;404962;Animateur socio-sportif / Animatrice socio-sportive;;N;N;O;N;G1204
+G1213;30079;404963;Chargé / Chargée de développement d'activités sportives;;N;N;N;N;M1707
+G1214;30076;404966;Directeur sportif / Directrice sportive;;N;N;N;O;G1204
+G1215;30078;404967;Educateur sportif / Educatrice sportive Santé;;N;N;O;N;G1204
+G1216;30075;404970;Moniteur / Monitrice de sport nature;;N;N;O;N;G1201
+G1217;30082;404971;Moniteur / Monitrice en salle de sport;;N;N;O;N;G1204
+G1218;30077;404975;Préparateur / Préparatrice physique;;N;N;O;N;G1204
+G1301;179;188;Chef / Cheffe de produit touristique;;;;;;
+G1302;181;189;Yield manager;;;;;;
+G1303;177;190;Agent / Agente de voyages;;;;;;
+G1401;595;191;Assistant / Assistante manager en hôtellerie-restauration;;;;;;
+G1402;186;192;Directeur / Directrice en hôtellerie-restauration;;;;;;
+G1403;191;193;Directeur / Directrice de structure touristique;;;;;;
 G1404;189;194;Responsable d'établissement de restauration collective;;;;;O;G1404
-G1501;195;195;Personnel d'étage;;;;;;
-G1502;193;196;Personnel polyvalent d'hôtellerie;;;;;;
-G1503;198;197;Management du personnel d'étage;;;;;;
+G1405;30074;404965;Directeur / Directrice de structure sportive;;N;N;N;O;M1302
+G1501;195;195;Valet / Femme de chambre;;;;;;
+G1502;193;196;Employé / Employée d'hôtel;;;;;;
+G1503;198;197;Gouvernant / Gouvernante d'hôtel;;;;;;
 G1601;30046;198;Chef / Cheffe de cuisine;;N;N;N;O;G1601
-G1602;205;199;Personnel de cuisine;;;;;;
-G1603;208;200;Personnel polyvalent en restauration;;;;;;
-G1604;200;201;Fabrication de crêpes ou pizzas;;;;;;
-G1605;202;202;Plonge en restauration;;;;;;
+G1602;205;199;Commis / Commise de cuisine;;;;;;
+G1603;208;200;Équipier polyvalent / Équipière polyvalente de restauration rapide;;;;;;
+G1604;200;201;Pizzaïolo / Pizzaïola;;;;;;
+G1605;202;202;Plongeur officier / Plongeuse officière de cuisine;;;;;;G1605
 G1606;30058;404039;Cuisinier / Cuisinière de collectivité;;;;;;G1602
 G1607;30063;404040;Employé / Employée de restauration collective;;;;;;G1603
-G1701;218;203;Conciergerie en hôtellerie;;;;;;
-G1702;213;204;Personnel du hall;;;;;;
-G1703;216;205;Réception en hôtellerie;;;;;;
-G1801;223;206;Café, bar brasserie;;;;;;
-G1802;228;207;Management du service en restauration;;;;;;
-G1803;219;208;Service en restauration;;;;;;
-G1804;221;209;Sommellerie;;;;;;
-H1101;230;210;Assistance et support technique client;;;;;;
-H1102;232;211;Management et ingénierie d'affaires;;;;;;
-H1201;254;212;Expertise technique couleur en industrie;;;;;;
-H1202;242;213;Conception et dessin de produits électriques et électroniques;;;;;;
-H1203;237;214;Conception et dessin produits mécaniques;;;;;;
-H1204;234;215;Design industriel;;;;;;
-H1205;257;216;Études - modèles en industrie des matériaux souples;;;;;;
-H1206;252;217;Management et ingénierie études, recherche et développement industriel;;;;;;
-H1207;250;218;Rédaction technique;;;;;;
-H1208;247;219;Intervention technique en études et conception en automatisme;;O;;;;
-H1209;240;220;Intervention technique en études et développement électronique;;;;;;
-H1210;244;221;Intervention technique en études, recherche et développement;;O;O;;;
-H1301;262;222;Inspection de conformité;;;;;;
-H1302;264;223;Management et ingénierie Hygiène Sécurité Environnement -HSE- industriels;;;;;;
-H1303;259;224;Intervention technique en Hygiène Sécurité Environnement -HSE- industriel;;;;;;
-H1401;274;225;Management et ingénierie gestion industrielle et logistique;;;;;;
-H1402;270;226;Management et ingénierie méthodes et industrialisation;;;;;;
-H1403;268;227;Intervention technique en gestion industrielle et logistique;;;;;;
-H1404;266;228;Intervention technique en méthodes et industrialisation;;;;;;
-H1501;282;229;Direction de laboratoire d'analyse industrielle;;;;;;
-H1502;284;230;Management et ingénierie qualité industrielle;;;;;;
-H1503;281;231;Intervention technique en laboratoire d'analyse industrielle;;;;;;
-H1504;280;232;Intervention technique en contrôle essai qualité en électricité et électronique;;;;;;
-H1505;276;233;Intervention technique en formulation et analyse sensorielle;;;;;;
-H1506;278;234;Intervention technique qualité en mécanique et travail des métaux;;;;;;
-H2101;288;235;Abattage et découpe des viandes;;;;;;
-H2102;286;236;Conduite d'équipement de production alimentaire;;;;;;
+G1608;30099;404540;Ecailler / Ecaillère;Emploi stratégique pour la Transition écologique;;;;;G1605
+G1701;218;203;Concierge d'hôtel;;;;;;
+G1702;213;204;Bagagiste en établissement hôtelier;;;;;;
+G1703;216;205;Réceptionniste en hôtellerie;;;;;;
+G1801;223;206;Barman / Barmaid;;;;;;
+G1802;228;207;Maître / Maîtresse d'hôtel;;;;;;
+G1803;219;208;Serveur / Serveuse;;;;;;
+G1804;221;209;Sommelier / Sommelière;;;;;;
+H1101;230;210;Technicien / Technicienne support technique;Emploi stratégique pour la Transition écologique;;;;;
+H1102;232;211;Chargé / Chargée d'affaires en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1201;254;212;Coloriste en industrie;;;;;;
+H1202;242;213;Dessinateur / Dessinatrice en électricité-électronique;Emploi stratégique pour la Transition écologique;;;;;
+H1203;237;214;Dessinateur-projeteur / Dessinatrice-projeteuse en mécanique;Emploi stratégique pour la Transition écologique;;;;;
+H1204;234;215;Designer industriel / Designeuse industrielle;;;;;;
+H1205;257;216;Modéliste en industrie;;;;;;
+H1206;252;217;Ingénieur / Ingénieure R&D en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1207;250;218;Rédacteur / Rédactrice technique;;;;;;
+H1208;247;219;Automaticien / Automaticienne en bureau d'études;Emploi stratégique pour la Transition écologique;O;;;;
+H1209;240;220;Technicien / Technicienne études électroniques;Emploi stratégique pour la Transition écologique;;;;;
+H1210;244;221;Technicien / Technicienne R&D;Emploi stratégique pour la Transition écologique;O;O;;;
+H1211;30100;404541;Attaché / Attachée de recherche clinique (ARC);;;;O;O;H1206
+H1301;262;222;Inspecteur / Inspectrice de conformité;;;;;;
+H1302;264;223;Responsable Hygiène Sécurité Environnement (HSE) en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1303;259;224;Technicien / Technicienne en Hygiène, Sécurité, Environnement industriel (HSE);Emploi stratégique pour la Transition écologique;;;;;
+H1401;274;225;Responsable ordonnancement-lancement-planification en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1402;270;226;Ingénieur / Ingénieure méthodes et process;Emploi stratégique pour la Transition écologique;;;;;
+H1403;268;227;Gestionnaire de flux de production;Emploi stratégique pour la Transition écologique;;;;;
+H1404;266;228;Technicien / Technicienne méthodes;Emploi stratégique pour la Transition écologique;;;;;
+H1501;282;229;Responsable de laboratoire d'analyse industrielle;;;;;;
+H1502;284;230;Responsable qualité en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1503;281;231;Technicien / Technicienne de laboratoire en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H1504;280;232;Contrôleur / Contrôleuse technique en électricité-électronique;Emploi stratégique pour la Transition écologique;;;;;
+H1505;276;233;Nez;;;;;;
+H1506;278;234;Contrôleur / Contrôleuse technique en métallurgie;Emploi stratégique pour la Transition écologique;;;;;
+H1507;30101;404542;Chargé / Chargée des affaires règlementaires;;;;O;O;H1502
+H2101;288;235;Ouvrier / Ouvrière d'abattoir;;;;;;H2101
+H2102;286;236;Conducteur / Conductrice de ligne en industrie alimentaire;;;;;;
 H2103;30056;403959;Opérateur / Opératrice de transformation des viandes;;;;;;H2101
-H2201;294;237;Assemblage d'ouvrages en bois;;;;;;
-H2202;293;238;Conduite d'équipement de fabrication de l'ameublement et du bois;;;;;;
-H2203;289;239;Conduite d'installation de production de panneaux bois;;;;;;
-H2204;300;240;Encadrement des industries de l'ameublement et du bois;;;;;;
-H2205;291;241;Première transformation de bois d'oeuvre;;;;;;
-H2206;296;242;Réalisation de menuiserie bois et tonnellerie;;;;;;
-H2207;298;243;Réalisation de meubles en bois;;;;;;
-H2208;299;244;Réalisation d'ouvrages décoratifs en bois;;;;;;
-H2209;302;245;Intervention technique en ameublement et bois;;;;;;
-H2301;303;246;Conduite d'équipement de production chimique ou pharmaceutique;;;;;;
-H2401;307;247;Assemblage - montage d'articles en cuirs, peaux;;;;;;
-H2402;308;248;Assemblage - montage de vêtements et produits textiles;;;;;;
-H2403;320;249;Conduite de machine de fabrication de produits textiles;;;;;;
-H2404;317;250;Conduite de machine de production et transformation des fils;;;;;;
-H2405;322;251;Conduite de machine de textiles nontissés;;;;;;
-H2406;326;252;Conduite de machine de traitement textile;;;;;;
-H2407;324;253;Conduite de machine de transformation et de finition des cuirs et peaux;;;;;;
-H2408;327;254;Conduite de machine d'impression textile;;;;;;
-H2409;315;255;Coupe cuir, textile et matériaux souples;;;;;;
-H2410;311;256;Mise en forme, repassage et finitions en industrie textile;;;;;;
-H2411;310;257;Montage de prototype cuir et matériaux souples;;;;;;
-H2412;305;258;Patronnage - gradation;;;;;;
-H2413;318;259;Préparation de fils, montage de métiers textiles;;;;;;
-H2414;312;260;Préparation et finition d'articles en cuir et matériaux souples;;;;;;
-H2415;313;261;Contrôle en industrie du cuir et du textile;;;;;;
-H2501;330;262;Encadrement de production de matériel électrique et électronique;;;;;;
-H2502;334;263;Management et ingénierie de production;;;;;;
-H2503;329;264;Pilotage d'unité élémentaire de production mécanique ou de travail des métaux;;;;;;
-H2504;332;265;Encadrement d'équipe en industrie de transformation;;;;;;
-H2505;336;266;Encadrement d'équipe ou d'atelier en matériaux souples;;;;;;
-H2601;358;267;Bobinage électrique;;;;;;
-H2602;353;268;Câblage électrique et électromécanique;;;;;;
-H2603;352;269;Conduite d'installation automatisée de production électrique, électronique et microélectronique;;;;;;
-H2604;350;270;Montage de produits électriques et électroniques;;;;;;
-H2605;356;271;Montage et câblage électronique;;;;;;
-H2701;359;272;Pilotage d'installation énergétique et pétrochimique;;;;;;
-H2801;363;273;Conduite d'équipement de transformation du verre;;;;;;
-H2802;366;274;Conduite d'installation de production de matériaux de construction;;;;;;
-H2803;368;275;Façonnage et émaillage en industrie céramique;;;;;;
-H2804;364;276;Pilotage de centrale à béton prêt à l'emploi, ciment, enrobés et granulats;;;;;;
-H2805;361;277;Pilotage d'installation de production verrière;;;;;;
-H2901;385;278;Ajustement et montage de fabrication;;;;;;
-H2902;601;279;Chaudronnerie - tôlerie;;;;;;
-H2903;377;280;Conduite d'équipement d'usinage;;;;;;
-H2904;374;281;Conduite d'équipement de déformation des métaux;;;;;;
-H2905;373;282;Conduite d'équipement de formage et découpage des matériaux;;;;;;
-H2906;371;283;Conduite d'installation automatisée ou robotisée de fabrication mécanique;;;;;;
-H2907;389;284;Conduite d'installation de production des métaux;;;;;;
-H2908;391;285;Modelage de matériaux non métalliques;;;;;;
-H2909;378;286;Montage-assemblage mécanique;;;;;;
-H2910;393;287;Moulage sable;;;;;;
-H2911;382;288;Réalisation de structures métalliques;;;;;;
-H2912;387;289;Réglage d'équipement de production industrielle;;;;;;
-H2913;380;290;Soudage manuel;;;;;;
-H2914;384;291;Réalisation et montage en tuyauterie;;;;;;
-H3101;396;292;Conduite d'équipement de fabrication de papier ou de carton;;;;;;
-H3102;395;293;Conduite d'installation de pâte à papier;;;;;;
-H3201;401;294;Conduite d'équipement de formage des plastiques et caoutchoucs;;;;;;
-H3202;402;295;Réglage d'équipement de formage des plastiques et caoutchoucs;;;;;;
-H3203;398;296;Fabrication de pièces en matériaux composites;;;;;;
-H3301;404;297;Conduite d'équipement de conditionnement;;;;;;
-H3302;405;298;Opérations manuelles d'assemblage, tri ou emballage;;;;;;
-H3303;407;299;Préparation de matières et produits industriels (broyage, mélange, ...);;;;;;
-H3401;414;300;Conduite de traitement d'abrasion de surface;;;;;;
-H3402;410;301;Conduite de traitement par dépôt de surface;;;;;;
-H3403;409;302;Conduite de traitement thermique;;;;;;
-H3404;411;303;Peinture industrielle;;;;;;
-I1101;239;304;Direction et ingénierie en entretien infrastructure et bâti;;;;;;
-I1102;236;305;Management et ingénierie de maintenance industrielle;;;;;;
-I1103;583;306;Supervision d'entretien et gestion de véhicules;;;;;;
-I1201;246;307;Entretien d'affichage et mobilier urbain;;;;;;
-I1202;243;308;Entretien et surveillance du tracé routier;;;;;;
-I1203;241;309;Maintenance des bâtiments et des locaux;;;;;;
-I1301;260;310;Installation et maintenance d'ascenseurs;;;;;;
-I1302;258;311;Installation et maintenance d'automatismes;;;;;;
-I1303;248;312;Installation et maintenance de distributeurs automatiques;;;;;;
-I1304;256;313;Installation et maintenance d'équipements industriels et d'exploitation;;;;;;
-I1305;265;314;Installation et maintenance électronique;;;;;;
-I1306;263;315;Installation et maintenance en froid, conditionnement d'air;;;;;;
-I1307;253;316;Installation et maintenance télécoms et courants faibles;;;;;;
-I1308;261;317;Maintenance d'installation de chauffage;;;;;;
-I1309;251;318;Maintenance électrique;;;;;;
-I1310;249;319;Maintenance mécanique industrielle;;;;;;
-I1401;267;320;Maintenance informatique et bureautique;;O;;;;
-I1402;271;321;Réparation de biens électrodomestiques et multimédia;;;;;;
-I1501;275;322;Intervention en grande hauteur;;;;;;
-I1502;277;323;Intervention en milieu subaquatique;;;;;;
-I1503;273;324;Intervention en milieux et produits nocifs;;;;;;
-I1601;279;325;Installation et maintenance en nautisme;;;;;;
-I1602;292;326;Maintenance d'aéronefs;;;;;;
-I1603;584;327;Maintenance d'engins de chantier, levage, manutention et de machines agricoles;;;;;;
-I1604;285;328;Mécanique automobile et entretien de véhicules;;;;;;
-I1605;283;329;Mécanique de marine;;;;;;
-I1606;290;330;Réparation de carrosserie;;;;;;
-I1607;287;331;Réparation de cycles, motocycles et motoculteurs de loisirs;;;;;;
-J1101;295;332;Médecine de prévention;;;O;;;
-J1102;297;333;Médecine généraliste et spécialisée;;;O;;;
-J1103;301;334;Médecine dentaire;;;O;;;
-J1104;304;335;Suivi de la grossesse et de l'accouchement;;;O;;;
+H2201;294;237;Assembleur / Assembleuse d'ouvrages en bois;;;;;;
+H2202;293;238;Conducteur / Conductrice de machines à bois;Emploi stratégique pour la Transition écologique;;;;;
+H2203;289;239;Machiniste en fabrications de panneaux de bois;;;;;;
+H2204;300;240;Contremaître / Contremaîtresse en menuiserie;;;;;;
+H2205;291;241;Ouvrier / Ouvrière de scierie;;;;;;
+H2206;296;242;Menuisier / Menuisière;Emploi stratégique pour la Transition écologique;;;;;
+H2207;298;243;Ébéniste;;;;;;
+H2208;299;244;Sculpteur / Sculptrice sur bois;;;;;;
+H2209;302;245;Dessinateur / Dessinatrice de structures en bois;Emploi stratégique pour la Transition écologique;;;;;
+H2301;303;246;Conducteur / Conductrice de ligne en industrie chimique;Emploi stratégique pour la Transition écologique;;;;;
+H2401;307;247;Opérateur / Opératrice en maroquinerie industrielle;;;;;;
+H2402;308;248;Couturier industriel / Couturière industrielle de l'habillement;;;;;;
+H2403;320;249;Conducteur / Conductrice de machines à tisser;;;;;;
+H2404;317;250;Cardeur / Cardeuse en industrie textile;;;;;;
+H2405;322;251;Nappeur / Nappeuse en industrie textile;;;;;;
+H2406;326;252;Conducteur / Conductrice de machines de traitement textile;;;;;;
+H2407;324;253;Opérateur / Opératrice en tannerie;;;;;;
+H2408;327;254;Imprimeur / Imprimeuse textile;;;;;;
+H2409;315;255;Coupeur / Coupeuse textile;;;;;;
+H2410;311;256;Repasseur-presseur / Repasseuse-presseuse;;;;;;
+H2411;310;257;Mécanicien / Mécanicienne modèle;;;;;;
+H2412;305;258;Patronnier / Patronnière;;;;;;
+H2413;318;259;Opérateur / Opératrice de préparation en industrie textile;;;;;;
+H2414;312;260;Opérateur / Opératrice de finition en industrie textile;;;;;;
+H2415;313;261;Contrôleur / Contrôleuse en industrie textile;;;;;;
+H2501;330;262;Chef / Cheffe d'atelier production électricité-électronique;Emploi stratégique pour la Transition écologique;;;;;
+H2502;334;263;Responsable d'unité de production industrielle;Emploi stratégique pour la Transition écologique;;;;;
+H2503;329;264;Responsable d'îlot de production;Emploi stratégique pour la Transition écologique;;;;;
+H2504;332;265;Chef / Cheffe d'équipe en industrie;Emploi stratégique pour la Transition écologique;;;;;
+H2505;336;266;Chef / Cheffe d'équipe et d'atelier textile;;;;;;
+H2601;358;267;Bobinier / Bobinière;;;;;;
+H2602;353;268;Câbleur / Câbleuse d'armoires;;;;;;
+H2603;352;269;Opérateur / Opératrice sur machines automatisées en production électrique;;;;;;
+H2604;350;270;Assembleur / Assembleuse en produits électriques et électroniques;Emploi stratégique pour la Transition écologique;;;;;
+H2605;356;271;Monteur-câbleur / Monteuse-câbleuse en électronique;Emploi stratégique pour la Transition écologique;;;;;
+H2701;359;272;Technicien / Technicienne énergie;Emploi stratégique pour la Transition écologique;;;;;
+H2801;363;273;Agent / Agente de fabrication du verre;;;;;;
+H2802;366;274;Opérateur / Opératrice de fabrication en matériaux de construction;;;;;;
+H2803;368;275;Opérateur / Opératrice de production en céramique;;;;;;
+H2804;364;276;Pilote de centrale de béton;;;;;;
+H2805;361;277;Technicien / Technicienne de l'industrie du verre;;;;;;
+H2901;385;278;Ajusteur-monteur / Ajusteuse-monteuse;Emploi stratégique pour la Transition écologique;;;;;
+H2902;601;279;Chaudronnier / Chaudronnière;Emploi stratégique pour la Transition écologique;;;;;
+H2903;377;280;Tourneur-fraiseur / Tourneuse-fraiseuse;;;;;;
+H2904;374;281;Forgeron industriel / Forgeronne industrielle;Emploi stratégique pour la Transition écologique;;;;;
+H2905;373;282;Cisailleur / Cisailleuse en métallurgie;;;;;;
+H2906;371;283;Opérateur / Opératrice en fabrication mécanique;;;;;;
+H2907;389;284;Fondeur / Fondeuse en métallurgie;Emploi stratégique pour la Transition écologique;;;;;
+H2908;391;285;Modeleur / Modeleuse;;;;;;
+H2909;378;286;Assembleur monteur / Assembleuse monteuse;;;;;;
+H2910;393;287;Mouleur noyauteur / Mouleuse noyauteuse;;;;;;
+H2911;382;288;Métallier / Métallière;;;;;;
+H2912;387;289;Régleur / Régleuse d'équipements industriels;Emploi stratégique pour la Transition écologique;;;;;
+H2913;380;290;Soudeur / Soudeuse;Emploi stratégique pour la Transition écologique;;;;;
+H2914;384;291;Tuyauteur / Tuyauteuse;Emploi stratégique pour la Transition écologique;;;;;
+H3101;396;292;Conducteur / Conductrice de machines à papier ou carton;;;;;;
+H3102;395;293;Conducteur / Conductrice d'installation de pâte à papier;Emploi stratégique pour la Transition écologique;;;;;
+H3201;401;294;Plasturgiste;Emploi stratégique pour la Transition écologique;;;;;
+H3202;402;295;Monteur régleur / Monteuse régleuse en plasturgie;;;;;;
+H3203;398;296;Mouleur-stratifieur / Mouleuse-stratifieuse;;;;;;
+H3301;404;297;Conducteur / Conductrice de ligne de conditionnement;;;;;;
+H3302;405;298;Agent / Agente de conditionnement;;;;;;
+H3303;407;299;Cuisinier / Cuisinière en industrie chimique;;;;;;
+H3401;414;300;Opérateur / Opératrice de traitement d'abrasion de surface;Emploi stratégique pour la Transition écologique;;;;;
+H3402;410;301;Agent / Agente de traitement de surface;;;;;;
+H3403;409;302;Opérateur / Opératrice de traitement thermique;Emploi stratégique pour la Transition écologique;;;;;
+H3404;411;303;Peintre industriel / industrielle;;;;;;
+H3405;30094;404973;Polisseur / Polisseuse en bijouterie ou joaillerie;;N;N;O;N;H3401
+H3406;30090;404974;Opérateur / Opératrice en polissage de bijouterie;;N;N;O;N;H3401
+I1101;239;304;Directeur / Directrice des travaux bâtiment;Emploi stratégique pour la Transition écologique;;;;;
+I1102;236;305;Ingénieur / Ingénieure de maintenance industrielle;Emploi stratégique pour la Transition écologique;;;;;
+I1103;583;306;Chef d'atelier automobile;Emploi stratégique pour la Transition écologique;;;;;
+I1201;246;307;Afficheur / Afficheuse;;;;;;
+I1202;243;308;Agent / Agente d'entretien de la voirie;;;;;;
+I1203;241;309;Agent / Agente d'entretien du bâtiment;;;;;;
+I1301;260;310;Ascensoriste;;;;;;
+I1302;258;311;Automaticien / Automaticienne;Emploi stratégique pour la Transition écologique;;;;;
+I1303;248;312;Technicien / Technicienne de maintenance de distributeurs automatiques;;;;;;
+I1304;256;313;Technicien / Technicienne de maintenance industrielle;Emploi stratégique pour la Transition écologique;;;;;
+I1305;265;314;Électronicien / Électronicienne de maintenance;Emploi stratégique pour la Transition écologique;;;;;
+I1306;263;315;Frigoriste;Emploi stratégique pour la Transition écologique;;;;;
+I1307;253;316;Installateur / Installatrice fibre optique;Emploi stratégique pour la Transition écologique;;;;;
+I1308;261;317;Technicien / Technicienne chauffagiste;Emploi stratégique pour la Transition écologique;;;;;
+I1309;251;318;Électricien / Électricienne de maintenance;Emploi stratégique pour la Transition écologique;;;;;
+I1310;249;319;Mécanicien / Mécanicienne de maintenance industrielle;Emploi stratégique pour la Transition écologique;;;;;
+I1401;267;320;Technicien / Technicienne de maintenance en informatique;;O;;;;
+I1402;271;321;Technicien / Technicienne SAV;Emploi stratégique pour la Transition écologique;;;;;
+I1501;275;322;Cordiste;;;;;;
+I1502;277;323;Scaphandrier / Scaphandrière;;;;;;
+I1503;273;324;Technicien / Technicienne en risques technologiques;Emploi stratégique pour la Transition écologique;;;;;
+I1601;279;325;Préparateur / Préparatrice de bateau;;;;;;
+I1602;292;326;Mécanicien / Mécanicienne avion;;;;;;
+I1603;584;327;Mécanicien / Mécanicienne agricole;;;;;;
+I1604;285;328;Mécanicien / Mécanicienne automobile;Emploi stratégique pour la Transition écologique;;;;;
+I1605;283;329;Mécanicien / Mécanicienne de bateaux;;;;;;
+I1606;290;330;Carrossier / Carrossière;Emploi stratégique pour la Transition écologique;;;;;
+I1607;287;331;Mécanicien / Mécanicienne motocycles;;;;;;
+J1101;295;332;Médecin du travail;;;O;;;
+J1102;297;333;Médecin généraliste;;;O;;;
+J1103;301;334;Dentiste;;;O;;;
+J1104;304;335;Homme sage-femme / Sage-femme;;;O;;;
 J1105;30064;404041;Médecin coordonnateur;;;O;O;O;J1102
-J1201;306;336;Biologie médicale;;;O;;;
-J1202;309;337;Pharmacie;;;O;;;
+J1201;306;336;Biologiste médical / médicale;;;O;;;
+J1202;309;337;Pharmacien / Pharmacienne;;;O;;;
 J1301;316;338;Agent / Agente de service hospitalier (ASH);;;;N;N;J1301
-J1302;325;339;Analyses médicales;;;O;;;
-J1303;319;340;Assistance médico-technique;;;;;;
+J1302;325;339;Technicien / Technicienne de laboratoires d'analyses médicales;;;O;;;
+J1303;319;340;Assistant médical / Assistante médicale;;;;;;
 J1304;314;341;Auxiliaire de puériculture;;N;N;O;N;J1304
-J1305;321;342;Conduite de véhicules sanitaires;;;;;;
-J1306;328;343;Imagerie médicale;;;O;;;
-J1307;323;344;Préparation en pharmacie;;;O;;;
+J1305;321;342;Ambulancier / Ambulancière;;;;;;
+J1306;328;343;Manipulateur / Manipulatrice en radiologie;;;O;;;
+J1307;323;344;Préparateur / Préparatrice en pharmacie;;;O;;;
 J1308;30059;404042;Brancardier / Brancardière;;;;;;J1301
 J1309;30065;404043;Agent / Agente de stérilisation de service hospitalier;;N;N;N;N;J1301
-J1401;335;345;Audioprothèses;;;O;;;
-J1402;338;346;Diététique;;;O;;;
-J1403;340;347;Ergothérapie;;;O;;;
-J1404;331;348;Kinésithérapie;;;O;;;
-J1405;341;349;Optique - lunetterie;;;O;;;
-J1406;342;350;Orthophonie;;;O;;;
-J1407;343;351;Orthoptique;;;O;;;
-J1408;333;352;Ostéopathie et chiropraxie;;;O;;;
-J1409;344;353;Pédicurie et podologie;;;O;;;
-J1410;345;354;Prothèses dentaires;;;O;;;
-J1411;346;355;Prothèses et orthèses;;;O;;;
-J1412;347;356;Rééducation en psychomotricité;;;O;;;
+J1401;335;345;Audioprothésiste;;;O;;;
+J1402;338;346;Diététicien / Diététicienne;;;O;;;
+J1403;340;347;Ergothérapeute;;;O;;;
+J1404;331;348;Kinésithérapeute;;;O;;;
+J1405;341;349;Opticien / Opticienne;;;O;;;
+J1406;342;350;Orthophoniste;;;O;;;
+J1407;343;351;Orthoptiste;;;O;;;
+J1408;333;352;Ostéopathe;;;O;;;
+J1409;344;353;Podologue;;;O;;;
+J1410;345;354;Prothésiste dentaire;;;O;;;
+J1411;346;355;Orthoprothésiste;;;O;;;
+J1412;347;356;Psychomotricien / Psychomotricienne;;;O;;;
 J1501;349;357;Aide-soignant / Aide-soignante;;N;O;O;N;J1501
-J1502;357;358;Coordination de services médicaux ou paramédicaux;;;O;;;
+J1502;357;358;Cadre de santé;;;O;;;
 J1503;351;359;Infirmier / Infirmière anesthésiste (IADE);;;;O;;J1503
 J1504;360;360;Infirmier / Infirmière de bloc opératoire (IBODE);;O;N;O;N;J1504
-J1505;354;361;Soins infirmiers spécialisés en prévention;;;O;;;
+J1505;354;361;Infirmier / Infirmière de santé au travail;;;O;;;
 J1506;355;362;Infirmier / Infirmière en soins généraux (IDE);;;O;O;N;J1506
 J1507;362;363;Infirmier / Infirmière en puériculture;;N;N;O;N;J1507
-K1101;365;364;Accompagnement et médiation familiale;;;;;;
-K1102;367;365;Aide aux bénéficiaires d'une mesure de protection juridique;;;;;;
-K1103;370;366;Développement personnel et bien-être de la personne;;;O;;;
-K1104;372;367;Psychologie;;;O;;;
-K1201;590;368;Action sociale;;;;;;
-K1202;381;369;Éducation de jeunes enfants;;;;;;
-K1203;386;370;Encadrement technique en insertion professionnelle;;;;;;
-K1204;589;371;Médiation sociale et facilitation de la vie en société;;;;;;
-K1205;602;372;Information sociale;;;;;;
-K1206;379;373;Intervention socioculturelle;;;;;;
-K1207;383;374;Intervention socioéducative;;;;;;
-K1301;388;375;Accompagnement médicosocial;;;;;;
-K1302;392;376;Assistance auprès d'adultes;;;O;;;
-K1303;394;377;Assistance auprès d'enfants;;;O;;;
-K1304;390;378;Services domestiques;;;O;;;
-K1305;615;28964;Intervention sociale et familiale;;;;;;
+K1101;365;364;Médiateur familial / Médiatrice familiale;;;;;;
+K1102;367;365;Mandataire judiciaire à la protection des majeurs;;;;;;
+K1103;370;366;Coach en développement personnel;;;O;;;
+K1104;372;367;Psychologue;;;O;;;
+K1201;590;368;Assistant social / Assistante sociale;;;O;;;
+K1202;381;369;Éducateur / Éducatrice de jeunes enfants;;;O;;;
+K1203;386;370;Éducateur technique spécialisé / Éducatrice technique spécialisée;;;O;;;
+K1204;589;371;Médiateur social / Médiatrice sociale;;;O;;;
+K1205;602;372;Agent / Agente d'accueil social;;;O;;;
+K1206;379;373;Animateur socioculturel / Animatrice socioculturelle;;;O;;;
+K1207;383;374;Éducateur spécialisé / Éducatrice spécialisée;;;O;;;
+K1301;388;375;Accompagnateur médicosocial / Accompagnatrice médicosociale;;;O;;;
+K1302;392;376;Assistant / Assistante de vie dépendance;;;O;;;
+K1303;394;377;Garde d'enfant à domicile;;;O;;;
+K1304;390;378;Aide à domicile;;;O;;;
+K1305;615;28964;Technicien / Technicienne Intervention Sociale et Familiale -TISF-;;;O;;;
 K1306;30066;404044;Auxiliaire de Vie Sociale (AVS);;;O;N;N;K1302
-K1307;30067;404045;Animateur / Animatrice petite enfance;;;;N;N;K1303
+K1307;30067;404045;Animateur / Animatrice petite enfance;;;;;N;K1303
 K1308;30068;404046;Agent territorial spécialisé / Agente territoriale spécialisée des écoles maternelles (ATSEM);;;;;;K1303
-K1401;397;379;Conception et pilotage de la politique des pouvoirs publics;;;;;;
-K1402;406;380;Conseil en Santé Publique;;;O;;;
-K1403;592;381;Management de structure de santé, sociale ou pénitentiaire;;;O;;;
-K1404;400;382;Mise en oeuvre et pilotage de la politique des pouvoirs publics;;;;;;
-K1405;403;383;Représentation de l'État sur le territoire national ou international;;;;;;
-K1501;419;384;Application des règles financières publiques;;;;;;
-K1502;428;385;Contrôle et inspection des Affaires Sociales;;;;;;
-K1503;421;386;Contrôle et inspection des impôts;;;;;;
-K1504;426;387;Contrôle et inspection du Trésor Public;;;;;;
-K1505;423;388;Protection des consommateurs et contrôle des échanges commerciaux;;;;;;
-K1601;430;389;Gestion de l'information et de la documentation;;;;;;
-K1602;432;390;Gestion de patrimoine culturel;;;;;;
-K1701;440;391;Personnel de la Défense;;;;;;
-K1702;449;392;Direction de la sécurité civile et des secours;;;;;;
-K1703;438;393;Direction opérationnelle de la défense;;;;;;
-K1704;451;394;Management de la sécurité publique;;;;;;
-K1705;448;395;Sécurité civile et secours;;;;;;
-K1706;435;396;Sécurité publique;;;;;;
-K1707;442;397;Surveillance municipale;;;;;;
-K1801;452;398;Conseil en emploi et insertion socioprofessionnelle;;;;;;
-K1802;454;399;Développement local;;;;;;
-K1901;458;400;Aide et médiation judiciaire;;;;;;
-K1902;459;401;Collaboration juridique;;;;;;
-K1903;457;402;Défense et conseil juridique;;;;;;
-K1904;461;403;Magistrature;;;;;;
-K2101;465;404;Conseil en formation;;;;;;
-K2102;466;405;Coordination pédagogique;;;;;;
-K2103;480;406;Direction d'établissement et d'enseignement;;;;;;
-K2104;478;407;Éducation et surveillance au sein d'établissements d'enseignement;;;;;;
-K2105;468;408;Enseignement artistique;;;;;;
-K2106;470;409;Enseignement des écoles;;;;;;
-K2107;472;410;Enseignement général du second degré;;;;;;
-K2108;476;411;Enseignement supérieur;;;;;;
-K2109;474;412;Enseignement technique et professionnel;;;;;;
-K2110;483;413;Formation en conduite de véhicules;;;;;;
-K2111;464;414;Formation professionnelle;;;;;;
-K2112;482;415;Orientation scolaire et professionnelle;;;;;;
-K2201;489;416;Blanchisserie industrielle;;;;;;
-K2202;488;417;Lavage de vitres;;;;;;
-K2203;487;418;Management et inspection en propreté de locaux;;;;;;
-K2204;591;419;Nettoyage de locaux;;;;;;
-K2301;491;420;Distribution et assainissement d'eau;;;;;;
-K2302;494;421;Management et inspection en environnement urbain;;;;;;
-K2303;490;422;Nettoyage des espaces urbains;;;;;;
-K2304;497;423;Revalorisation de produits industriels;;;;;;
-K2305;493;424;Salubrité et traitement de nuisibles;;;;;;
-K2306;516;425;Supervision d'exploitation éco-industrielle;;;;;;
-K2401;498;426;Recherche en sciences de l'homme et de la société;;;;;;
-K2402;500;427;Recherche en sciences de l'univers, de la matière et du vivant;;O;;;;
-K2501;503;428;Gardiennage de locaux;;;;;;
-K2502;507;429;Management de sécurité privée;;;;;;
-K2503;505;430;Sécurité et surveillance privées;;;;;;
-K2601;509;431;Conduite d'opérations funéraires;;;;;;
-K2602;511;432;Conseil en services funéraires;;;;;;
-K2603;513;433;Thanatopraxie;;;;;;
-L1101;417;435;Animation musicale et scénique;;;;;;
-L1102;418;436;Mannequinat et pose artistique;;;;;;
-L1103;415;437;Présentation de spectacles ou d'émissions;;;;;;
-L1201;424;438;Danse;;;;;;
-L1202;422;439;Musique et chant;;;;;;
-L1203;420;440;Art dramatique;;;;;;
-L1204;425;441;Arts du cirque et arts visuels;;;;;;
-L1301;429;442;Mise en scène de spectacles vivants;;;;;;
-L1302;431;443;Production et administration spectacle, cinéma et audiovisuel;;;;;;
-L1303;433;444;Promotion d'artistes et de spectacles;;;;;;
-L1304;427;445;Réalisation cinématographique et audiovisuelle;;;;;;
+K1309;30103;404543;Accueillant familial / Accueillante familiale auprès d'enfants;;;O;O;;K1303
+K1310;30102;404544;Assistant maternel agréé / Assistante maternelle agréée;;;;O;;K1303
+K1401;397;379;Cadre dirigeant / dirigeante d'administration centrale;;;;;;
+K1402;406;380;Médecin conseil;;;O;;;
+K1403;592;381;Directeur / Directrice de structure de santé, sociale ou pénitentiaire;;;O;;;
+K1404;400;382;Chargé / Chargée de mission développement territorial;;;;;;
+K1405;403;383;Préfet / Préfète;;;;;;
+K1406;30104;404545;Secrétaire de mairie;;;;O;;K1404
+K1501;419;384;Agent / Agente de constatation des douanes;;;;;;
+K1502;428;385;Inspecteur / Inspectrice du travail;;;;;;
+K1503;421;386;Contrôleur / Contrôleuse des impôts;;;;;;
+K1504;426;387;Régisseur / Régisseuse de recettes;;;;;;
+K1505;423;388;Inspecteur / Inspectrice des douanes;;;;;;
+K1601;430;389;Documentaliste;;;;;;
+K1602;432;390;Conservateur / Conservatrice du patrimoine;;;;;;
+K1701;440;391;Soldat / Soldate;;;;;;
+K1702;449;392;Responsable de sécurité civile et de secours;;;;;;
+K1703;438;393;Responsable opérationnel / opérationnelle de la défense;;;;;;
+K1704;451;394;Officier / Officière de police;;;;;;
+K1705;448;395;Secouriste;;;;;;
+K1706;435;396;Gendarme;;;;;;
+K1707;442;397;Policier municipal / Policière municipale;;;;;;
+K1801;452;398;Conseiller / Conseillère en insertion professionnelle;;;;;;
+K1802;454;399;Chargé / Chargée de développement local;Emploi stratégique pour la Transition écologique;;;;;
+K1901;458;400;Notaire;;;;;;
+K1902;459;401;Clerc de notaire;;;;;;
+K1903;457;402;Juriste;;;;;;
+K1904;461;403;Juge;;;;;;
+K2101;465;404;Conseiller / Conseillère en formation;;;;;;
+K2102;466;405;Responsable pédagogique;;;;;;
+K2103;480;406;Chef d'établissement;;;;;;
+K2104;478;407;Surveillant / Surveillante en milieu scolaire;;;;;;
+K2105;468;408;Professeur / Professeure de musique;;;;;;
+K2106;470;409;Professeur / Professeure des écoles;;;;;;
+K2107;472;410;Professeur / Professeure de collège et de lycée;;;;;;
+K2108;476;411;Professeur / Professeure des universités;;;;;;
+K2109;474;412;Professeur / Professeure d'enseignement professionnel;;;;;;
+K2110;483;413;Moniteur / Monitrice d'auto-école;;;;;;
+K2111;464;414;Formateur / Formatrice;;;;;;
+K2112;482;415;Conseiller / Conseillère d'orientation;;;;;;
+K2113;30105;404546;Accompagnant / Accompagnante des élèves en situation de handicap (AESH);;;;;;K2104
+K2201;489;416;Blanchisseur industriel / Blanchisseuse industrielle;;;;;;
+K2202;488;417;Laveur / Laveuse de vitres;;;;;;
+K2203;487;418;Responsable de site nettoyage de locaux;;;;;;
+K2204;591;419;Agent / Agente d'entretien/propreté de locaux;;;;;;
+K2301;491;420;Agent / Agente d'assainissement;Emploi stratégique pour la Transition écologique;;;;;
+K2302;494;421;Directeur / Directrice collecte des déchets;Emploi Vert;;;;;
+K2303;490;422;Ripeur / Ripeuse;Emploi Vert;;;;;
+K2304;497;423;Agent / Agente de tri des déchets;Emploi Vert;;;;;
+K2305;493;424;Agent / Agente de désinsectisation;;;;;;
+K2306;516;425;Responsable de site éco-industriel;Emploi Vert;;;;;
+K2401;498;426;Chercheur / Chercheuse en sciences humaines et sociales;;;;;;
+K2402;500;427;Ingénieur / Ingénieure de recherche scientifique;;O;;;;
+K2403;30106;404547;Biostatisticien / Biostatisticienne;;;;O;O;K2402
+K2501;503;428;Gardien / Gardienne;;;;;;
+K2502;507;429;Responsable sécurité;;;;;;
+K2503;505;430;Agent / Agente de sécurité;;;;;;
+K2504;30107;404548;Agent / Agente de sécurité événementielle;;;;O;;K2503
+K2601;509;431;Porteur / Porteuse funéraire;;;;;;
+K2602;511;432;Conseiller / Conseillère funéraire;;;;;;
+K2603;513;433;Thanatopracteur / Thanatopractrice;;;;;;
+L1101;417;435;Disc-jockey;;;;;;
+L1102;418;436;Mannequin;;;;;;
+L1103;415;437;Animateur / Animatrice radio;;;;;;
+L1201;424;438;Danseur / Danseuse;;;;;;
+L1202;422;439;Musicien / Musicienne;;;;;;
+L1203;420;440;Comédien / Comédienne;;;;;;
+L1204;425;441;Artiste de cirque;;;;;;
+L1301;429;442;Metteur / Metteuse en scène;;;;;;
+L1302;431;443;Producteur / Productrice de film;;;;;;
+L1303;433;444;Agent / Agente d'artiste;;;;;;
+L1304;427;445;Réalisateur / Réalisatrice;;;;;;
 L1401;30023;446;Sportif professionnel / Sportive professionnelle;;N;N;N;N;L1401
-L1501;453;447;Coiffure et maquillage spectacle;;;;;;
-L1502;450;448;Costume et habillage spectacle;;;;;;
-L1503;446;449;Décor et accessoires spectacle;;;;;;
-L1504;443;450;Éclairage spectacle;;;;;;
-L1505;441;451;Image cinématographique et télévisuelle;;;;;;
-L1506;447;452;Machinerie spectacle;;;;;;
-L1507;455;453;Montage audiovisuel et post-production;;;;;;
-L1508;439;454;Prise de son et sonorisation;;;;;;
-L1509;456;455;Régie générale;;;;;;
-L1510;17377;39022;Films d'animation et effets spéciaux;;;;;;
-M1101;460;456;Achats;;;;;;
-M1102;463;457;Direction des achats;;;;;;
-M1201;477;458;Analyse et ingénierie financière;;;;;;
-M1202;471;459;Audit et contrôle comptables et financiers;;;;;;
-M1203;467;460;Comptabilité;;;;;;
-M1204;479;461;Contrôle de gestion;;;;;;
-M1205;473;462;Direction administrative et financière;;;;;;
-M1206;469;463;Management de groupe ou de service comptable;;;;;;
-M1207;475;464;Trésorerie et financement;;;;;;
-M1301;484;465;Direction de grande entreprise ou d'établissement public;;;;;;
-M1302;481;466;Direction de petite ou moyenne entreprise;;;;;;
-M1401;486;467;Conduite d'enquêtes;;;;;;
-M1402;496;468;Conseil en organisation et management d'entreprise;;;;;;
-M1403;499;469;Études et prospectives socio-économiques;;;;;;
-M1404;492;470;Management et gestion d'enquêtes;;;;;;
-M1405;30060;404047;Data Scientist;;O;N;N;O;M1403
-M1501;501;471;Assistanat en ressources humaines;;;;;;
-M1502;504;472;Développement des ressources humaines;;;;;;
-M1503;502;473;Management des ressources humaines;;;;;;
-M1601;508;474;Accueil et renseignements;;;;;;
-M1602;512;475;Opérations administratives;;;;;;
-M1603;506;476;Distribution de documents;;;;;;
-M1604;524;477;Assistanat de direction;;;;;;
-M1605;522;478;Assistanat technique et administratif;;;;;;
-M1606;510;479;Saisie de données;;;;;;
-M1607;514;480;Secrétariat;;;;;;
-M1608;519;481;Secrétariat comptable;;;;;;
-M1609;517;482;Secrétariat et assistanat médical ou médico-social;;;O;;;
-M1701;538;483;Administration des ventes;;;;;;
-M1702;526;484;Analyse de tendance;;;;;;
-M1703;532;485;Management et gestion de produit;;;;;;
-M1704;537;486;Management relation clientèle;;;;;;
-M1705;529;487;Marketing;;;;;;
-M1706;534;488;Promotion des ventes;;;;;;
-M1707;541;489;Stratégie commerciale;;;;;;
-M1801;551;490;Administration de systèmes d'information;;O;;;;
-M1802;571;491;Expertise et support en systèmes d'information;;O;;;;
-M1803;574;492;Direction des systèmes d'information;;O;;;;
-M1804;569;493;Études et développement de réseaux de télécoms;;O;;;;
-M1805;567;494;Études et développement informatique;;O;;;;
-M1806;545;495;Conseil et maîtrise d'ouvrage en systèmes d'information;;O;;;;
-M1807;575;496;Exploitation de systèmes de communication et de commandement;;;;;;
-M1808;577;497;Information géographique;;;;;;
-M1809;576;498;Information météorologique;;;;;;
-M1810;565;499;Production et exploitation de systèmes d'information;;O;;;;
+L1501;453;447;Maquilleur / Maquilleuse spectacle;;;;;;
+L1502;450;448;Costumier / Costumière;;;;;;
+L1503;446;449;Accessoiriste;;;;;;
+L1504;443;450;Éclairagiste;;;;;;
+L1505;441;451;Cadreur / Cadreuse;;;;;;
+L1506;447;452;Machiniste spectacle;;;;;;
+L1507;455;453;Monteur / Monteuse vidéo;;;;;;
+L1508;439;454;Régisseur / Régisseuse du son;;;;;;
+L1509;456;455;Régisseur général / Régisseuse générale;;;;;;
+L1510;17377;39022;Animateur / Animatrice 3D - films d'animation;;;;;;
+M1101;460;456;Acheteur / Acheteuse;;;;;;
+M1102;463;457;Responsable des achats;;;;;;
+M1201;477;458;Analyste financier / financière;;;;;;
+M1202;471;459;Expert-comptable / Experte-comptable;;;;;;
+M1203;467;460;Comptable;;;;;;
+M1204;479;461;Contrôleur / Contrôleuse de gestion;;;;;;
+M1205;473;462;Directeur administratif et financier / Directrice administrative et financière -DAF-;;;;;;
+M1206;469;463;Chef comptable;;;;;;
+M1207;475;464;Trésorier / Trésorière;;;;;;
+M1301;484;465;Président Directeur Général / Présidente Directrice Générale -PDG-;;;;;;
+M1302;481;466;Responsable de Petite ou Moyenne Entreprise -PME-;;;;;;
+M1401;486;467;Enquêteur / Enquêtrice sondage;Emploi stratégique pour la Transition écologique;;;;;
+M1402;496;468;Consultant / Consultante en organisation et management;;;;;;
+M1403;499;469;Chargé / Chargée d'études socio-économiques;Emploi stratégique pour la Transition écologique;;;;;
+M1404;492;470;Responsable d'enquêtes;;;;;;
+M1405;30060;404047;Data scientist;;O;N;N;O;M1403
+M1501;501;471;Assistant / Assistante ressources humaines;;;;;;
+M1502;504;472;Chargé / Chargée de recrutement;;;;;;
+M1503;502;473;Directeur / Directrice des Ressources Humaines -DRH-;;;;;;
+M1601;508;474;Agent / Agente d'accueil;;;;;;
+M1602;512;475;Agent administratif / Agente administrative;;;;;;M1602
+M1603;506;476;Facteur / Factrice;;;;;;
+M1604;524;477;Assistant / Assistante de direction;;;;;;
+M1605;522;478;Secrétaire technique;Emploi stratégique pour la Transition écologique;;;;;
+M1606;510;479;Opérateur / Opératrice de saisie;;;;;;M1606
+M1607;514;480;Secrétaire;;;;;;
+M1608;519;481;Secrétaire comptable;;;;;;
+M1609;517;482;Secrétaire médical / médicale;;;O;;;
+M1701;538;483;Responsable de l'administration des ventes;;;;;;
+M1702;526;484;Planneur / Planneuse stratégique;;;;;;
+M1703;532;485;Chef de produit;;;;;;
+M1704;537;486;Responsable relation client (CRM);;;;;;
+M1705;529;487;Responsable marketing;;;;;;
+M1706;534;488;Chef de promotion des ventes;;;;;;
+M1707;541;489;Responsable commercial / commerciale;;;;;;
+M1801;551;490;Administrateur / Administratrice réseau informatique;Emploi stratégique pour la Transition écologique;O;;;;
+M1802;571;491;Ingénieur / Ingénieure système informatique;Emploi stratégique pour la Transition écologique;O;;;;
+M1803;574;492;Directeur / Directrice des services informatiques -DSI-;Emploi stratégique pour la Transition écologique;O;;;;
+M1804;569;493;Ingénieur / Ingénieure télécoms;Emploi stratégique pour la Transition écologique;O;;;;
+M1805;567;494;Développeur / Développeuse web;Emploi stratégique pour la Transition écologique;O;;;;
+M1806;545;495;Product Owner;Emploi stratégique pour la Transition écologique;O;;;;
+M1807;575;496;Opérateur / Opératrice télécom aux armées;;;;;;
+M1808;577;497;Cartographe;;;;;;
+M1809;576;498;Météorologue;Emploi Vert;;;;;
+M1810;565;499;Technicien / Technicienne informatique;Emploi stratégique pour la Transition écologique;O;;;;
 M1811;30069;404048;Data engineer;;O;;;O;M1802
 M1812;30070;404049;Responsable de la Sécurité des Systèmes d'Information (RSSI);;O;;;O;M1803
 M1813;30061;404050;Intégrateur / Intégratrice logiciels métiers;;O;N;N;N;M1805
-N1101;521;500;Conduite d'engins de déplacement des charges;;;;;;
-N1102;525;501;Déménagement;;;;;;
-N1103;520;502;Magasinage et préparation de commandes;;;;;;
-N1104;518;503;Manoeuvre et conduite d'engins lourds de manutention;;;;;;
-N1105;523;504;Manutention manuelle de charges;;;;;;
-N1201;527;505;Affrètement transport;;;;;;
-N1202;528;506;Gestion des opérations de circulation internationale des marchandises;;;;;;
-N1301;535;507;Conception et organisation de la chaîne logistique;;;;;;
-N1302;536;508;Direction de site logistique;;;;;;
-N1303;533;509;Intervention technique d'exploitation logistique;;;;;;
-N2101;540;510;Navigation commerciale aérienne;;;;;;
-N2102;542;511;Pilotage et navigation technique aérienne;;;;;;
-N2201;544;512;Personnel d'escale aéroportuaire;;;;;;
-N2202;547;513;Contrôle de la navigation aérienne;;;;;;
-N2203;543;514;Exploitation des pistes aéroportuaires;;;;;;
-N2204;546;515;Préparation des vols;;;;;;
-N2205;548;516;Direction d'escale et exploitation aéroportuaire;;;;;;
-N3101;552;517;Encadrement de la navigation maritime;;;;;;
-N3102;549;518;Équipage de la navigation maritime;;;;;;
-N3103;550;519;Navigation fluviale;;;;;;
-N3201;554;520;Exploitation des opérations portuaires et du transport maritime;;;;;;
-N3202;593;521;Exploitation du transport fluvial;;;;;;
-N3203;553;522;Manutention portuaire;;;;;;
-N4101;573;523;Conduite de transport de marchandises sur longue distance;;;;;;
-N4102;566;524;Conduite de transport de particuliers;;;;;;
-N4103;568;525;Conduite de transport en commun sur route;;;;;;
-N4104;572;526;Courses et livraisons express;;;;;;
-N4105;570;527;Conduite et livraison par tournées sur courte distance;;;;;;
-N4201;564;528;Direction d'exploitation des transports routiers de marchandises;;;;;;
-N4202;562;529;Direction d'exploitation des transports routiers de personnes;;;;;;
-N4203;563;530;Intervention technique d'exploitation des transports routiers de marchandises;;;;;;
-N4204;561;531;Intervention technique d'exploitation des transports routiers de personnes;;;;;;
-N4301;559;532;Conduite sur rails;;;;;;
-N4302;558;533;Contrôle des transports en commun;;;;;;
-N4401;555;534;Circulation du réseau ferré;;;;;;
-N4402;556;535;Exploitation et manoeuvre des remontées mécaniques;;;;;;
-N4403;557;536;Manoeuvre du réseau ferré;;;;;;
+N1101;521;500;Cariste;;;;;;
+N1102;525;501;Déménageur / Déménageuse;;;;;;
+N1103;520;502;Préparateur / Préparatrice de commandes;;;;;;
+N1104;518;503;Pontier / Pontière;;;;;;
+N1105;523;504;Manutentionnaire;;;;;;
+N1201;527;505;Affréteur / Affréteuse;;;;;;
+N1202;528;506;Agent / Agente de transit;;;;;;
+N1301;535;507;Responsable logistique;;;;;;
+N1302;536;508;Responsable entrepôt logistique;;;;;;
+N1303;533;509;Approvisionneur / Approvisionneuse logistique;;;;;;
+N2101;540;510;Steward / Hôtesse de l'air;;;;;;
+N2102;542;511;Pilote de ligne;;;;;;
+N2201;544;512;Agent / Agente d'escale;;;;;;
+N2202;547;513;Contrôleur aérien / Contrôleuse aérienne;;;;;;
+N2203;543;514;Agent / Agente de piste;;;;;;
+N2204;546;515;Agent / Agente de trafic aérien;;;;;;
+N2205;548;516;Chef / Cheffe d'escale;;;;;;
+N3101;552;517;Capitaine de port;;;;;;
+N3102;549;518;Marin;;;;;;
+N3103;550;519;Matelot de la navigation fluviale;;;;;;
+N3201;554;520;Agent / Agente de port de plaisance;;;;;;
+N3202;593;521;Responsable d'exploitation transport fluvial;;;;;;
+N3203;553;522;Docker;;;;;;
+N4101;573;523;Conducteur / Conductrice de poids lourd;;;;;;
+N4102;566;524;Chauffeur / Chauffeuse VTC;;;;;;
+N4103;568;525;Conducteur / Conductrice de bus;;;;;;
+N4104;572;526;Coursier / Coursière;;;;;;
+N4105;570;527;Chauffeur-livreur / Chauffeuse-livreuse;;;;;;
+N4201;564;528;Responsable d'agence transport routier de marchandises;;;;;;
+N4202;562;529;Responsable d'exploitation transport routier de personnes;;;;;;
+N4203;563;530;Exploitant / Exploitante transport routier de marchandises;;;;;;
+N4204;561;531;Agent / Agente d'exploitation transport routier de personnes;;;;;;
+N4301;559;532;Conducteur / Conductrice de train;Emploi stratégique pour la Transition écologique;;;;;
+N4302;558;533;Agent / Agente de contrôle;;;;;;
+N4401;555;534;Aiguilleur / Aiguilleure du rail;Emploi stratégique pour la Transition écologique;;;;;
+N4402;556;535;Agent / Agente d'exploitation des remontées mécaniques;;;;;;
+N4403;557;536;Cheminot / Cheminote;;;;;;

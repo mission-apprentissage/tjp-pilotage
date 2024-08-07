@@ -12,6 +12,7 @@ export const STATS_DEMANDES_COLUMNS = {
   libelleAcademie: "Académie",
   codeDepartement: "CodeDepartement",
   libelleDepartement: "Département",
+  secteur: "Secteur",
   // formation
   cfd: "CFD",
   libelleNsf: "Domaine de formation (NSF)",
@@ -38,6 +39,11 @@ export const STATS_DEMANDES_COLUMNS = {
   amiCmaValide: "Financement AMI/CMA validé ?",
   amiCmaEnCoursValidation: "Demande de financement AMI/CMA en cours ?",
   amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
+  partenaireEconomique1: "Partenaire économique 1",
+  partenaireEconomique2: "Partenaire économique 2",
+  filiereCmq: "Filière CMQ",
+  nomCmq: "Nom CMQ",
+  inspecteurReferent: "Inspecteur référent",
   commentaire: "Commentaire",
   numero: "N° demande",
   createdAt: "Date de création",
@@ -88,6 +94,7 @@ export const STATS_DEMANDES_COLUMNS = {
     disciplinesReconversionRH: string;
     disciplinesProfesseurAssocieRH: string;
     disciplinesFormationRH: string;
+    inspecteurReferent: string;
   }
 >;
 
@@ -100,6 +107,7 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   libelleRegion: "Région",
   libelleAcademie: "Académie",
   libelleDepartement: "Département",
+  secteur: "Secteur Privé ou Public",
   // formation
   libelleNsf: "Domaine de formation (NSF)",
   libelleFormation: "Formation",
@@ -114,6 +122,14 @@ export const STATS_DEMANDES_COLUMNS_OPTIONAL: Partial<
   libelleColoration: "Libellé coloration",
   libelleFCIL: "Libellé FCIL",
   amiCma: "AMI/CMA ?",
+  amiCmaValide: "Financement AMI/CMA validé ?",
+  amiCmaEnCoursValidation: "Demande de financement AMI/CMA en cours ?",
+  amiCmaValideAnnee: "Année de validation de l'AMI/CMA",
+  partenaireEconomique1: "Partenaire économique 1",
+  partenaireEconomique2: "Partenaire économique 2",
+  filiereCmq: "Filière CMQ",
+  nomCmq: "Nom CMQ",
+  inspecteurReferent: "Inspecteur référent",
   commentaire: "Commentaire",
   numero: "N° demande",
   // Devenir favorable de la formation

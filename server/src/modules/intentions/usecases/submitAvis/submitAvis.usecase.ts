@@ -39,6 +39,11 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
       });
       if (!isAllowed) throw Boom.forbidden();
 
+      const newIntention = {
+        ...intentionData,
+        updatedAt: new Date(),
+      };
+
       const newAvis = {
         ...avis,
         createdBy: avis.createdBy ?? user.id,
@@ -47,7 +52,10 @@ export const [submitAvisUsecase, submitAvisFactory] = inject(
         updatedAt: new Date(),
       };
 
-      const createdAvis = await deps.createAvisQuery(newAvis);
+      const createdAvis = await deps.createAvisQuery(newAvis).then((avis) => {
+        deps.updateIntentionWithHistory(newIntention);
+        return avis;
+      });
 
       return createdAvis;
     }
