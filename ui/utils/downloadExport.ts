@@ -1,7 +1,4 @@
-import {
-  number as numberFormatter,
-  stringExcel as stringExcelFormatter,
-} from "@json2csv/formatters";
+import { number as numberFormatter } from "@json2csv/formatters";
 import { Parser } from "@json2csv/plainjs";
 import Excel from "exceljs";
 import { saveAs } from "file-saver";
@@ -48,7 +45,7 @@ export function downloadCsv<D extends object>(
       value: value,
     })),
     formatters: {
-      string: stringExcelFormatter,
+      string: (str: string) => str,
       number: numberFormatter({
         separator: ",",
       }),
