@@ -278,10 +278,6 @@ const getTauxTransformationData = async (filters: {
       }
       return eb;
     })
-    .$call((e) => {
-      console.log(e.compile().sql);
-      return e;
-    })
     .execute()
     .then(cleanNull);
 };
