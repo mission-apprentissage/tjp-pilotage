@@ -6,6 +6,7 @@ import {
 import { z } from "zod";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
+import { formatTauxTransformation } from "../../utils/formatTauxTransformation";
 import { getFiltersQuery } from "./deps/getFilters.query";
 import { getStatsPilotageIntentionsQuery } from "./deps/getStatsPilotageIntentions.query";
 import { getStatsPilotageIntentionsSchema } from "./getStatsPilotageIntentions.schema";
@@ -18,19 +19,6 @@ export interface Filters
 export type GetScopedStatsPilotageIntentionsType = Awaited<
   ReturnType<typeof getStatsPilotageIntentionsQuery>
 >;
-
-const formatTauxTransformation = (
-  transformes: number,
-  effectif: number | undefined
-) => {
-  if (typeof effectif === "undefined") {
-    return undefined;
-  }
-
-  if (effectif === 0) return 0;
-
-  return Math.round((transformes / effectif) * 10000) / 100;
-};
 
 const formatResult = (
   result: GetScopedStatsPilotageIntentionsType,
