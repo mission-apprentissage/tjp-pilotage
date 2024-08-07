@@ -5,12 +5,27 @@ import {
   CardBody,
   Divider,
   Flex,
+  HStack,
+  ListItem,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalOverlay,
   SimpleGrid,
   Skeleton,
   Text,
+  UnorderedList,
+  useDisclosure,
+  VStack,
 } from "@chakra-ui/react";
-import { CURRENT_RENTREE } from "shared";
+import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
+import { TooltipIcon } from "../../../../components/TooltipIcon";
+import { themeColors } from "../../../../theme/themeColors";
+import { roundNumber } from "../../../../utils/roundNumber";
+import { ProgressBar } from "../../components/ProgressBar";
+import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { IndicateurType, PilotageReformeStats } from "../types";
 
 const EFFECTIF_FEATURE_FLAG = false;
@@ -268,11 +283,13 @@ const StatCard = ({
   data,
   type = "insertion",
   color = "inherit",
+  tooltip,
 }: {
   label: string;
   data?: PilotageReformeStats;
   type?: IndicateurType;
   color?: string;
+  tooltip?: React.ReactNode;
 }) => {
   const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
     switch (type) {
@@ -373,15 +390,18 @@ const StatCard = ({
         alignItems={"center"}
         minHeight={40}
       >
-        <Box
+        <HStack
+          width="100%"
+          justifyContent={tooltip ? "space-between" : "start"}
           mr="4"
           flex={1}
           textTransform={"uppercase"}
           color={"bluefrance.113"}
           fontWeight={700}
         >
-          {label}
-        </Box>
+          <Text>{label}</Text>
+          {tooltip}
+        </HStack>
         <Box fontWeight="bold" fontSize="40" color={"bluefrance.113"}>
           {getValue(type) ? (
             `${getValue(type)} %`
@@ -417,21 +437,210 @@ const StatCard = ({
   );
 };
 
-const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => (
-  <Flex direction={"column"} w="100%">
-    <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
-      INDICATEURS CLÉS DE LA RÉFORME - DONNÉES {CURRENT_RENTREE}
-    </Text>
-    <SimpleGrid spacing={3} columns={[2]} mt={4}>
-      <StatCard label="taux d'emploi à 6 mois" data={data}></StatCard>
-      <StatCard
-        label="taux poursuite d'études"
-        data={data}
-        type="poursuite"
-      ></StatCard>
-    </SimpleGrid>
-  </Flex>
-);
+const DefinitionTauxTransfoModal = ({
+  isOpen,
+  onClose,
+}: {
+  isOpen: boolean;
+  onClose: () => void;
+}) => {
+  return (
+    <Modal
+      isOpen={isOpen}
+      onClose={onClose}
+      size={{
+        sm: "full",
+        lg: "half",
+      }}
+    >
+      <ModalOverlay />
+      <ModalContent px="32px" paddingTop="32px" paddingBottom="40px">
+        <ModalCloseButton />
+        <ModalBody>
+          <VStack width="100%" gap="24px">
+            <Text
+              fontWeight="700"
+              fontSize="14px"
+              textTransform="uppercase"
+              color={themeColors.bluefrance[113]}
+              width="100%"
+            >
+              Taux de transformation prévisionnel
+            </Text>
+            <VStack gap="16px" width="100%" alignItems="start">
+              <Text>
+                Dans Orion, le taux de transformation prévisionnel est défini
+                par défaut comme suit :
+              </Text>
+              <VStack
+                mx="10%"
+                backgroundColor={themeColors.bluefrance[975]}
+                width="80%"
+                alignItems="center"
+                fontSize="12px"
+                fontStyle="italic"
+                px="16px"
+                paddingTop="24px"
+                paddingBottom="8px"
+              >
+                <HStack>
+                  <VStack lineHeight="20px">
+                    <Text fontWeight="700">% de transformation</Text>
+                    <Text>Rentrée Scolaire N</Text>
+                  </VStack>
+                  <Text lineHeight="20px">=</Text>
+                  <VStack lineHeight="20px">
+                    <Text fontWeight="700">Pl. ouvertes + Pl. fermées</Text>
+                    <Text>issues des demandes validées en année N-1</Text>
+                    <Divider borderColor="black" />
+                    <Text fontWeight="700">Pl. effectivement occupées</Text>
+                    <Text>Constat de rentrée N-1</Text>
+                  </VStack>
+                </HStack>
+              </VStack>
+            </VStack>
+            <VStack
+              gap="16px"
+              alignItems="start"
+              width="100%"
+              paddingTop="16px"
+            >
+              <Text fontWeight="700" fontStyle="italic">
+                À noter :
+              </Text>
+              <UnorderedList spacing="16px">
+                <ListItem>
+                  <Text>
+                    Le calcul tient compte des places transformées en{" "}
+                    <b>voie scolaire</b> et en <b>apprentissage</b> (diplômes
+                    retenus : CAP, Bac Pro, CS, BTS, FCIL, BT, BP, DNMADE, BMA).
+                    Le dénominateur concerne les effectifs{" "}
+                    <b>en entrée de formation</b>.
+                  </Text>
+                </ListItem>
+                <ListItem>
+                  <Text>
+                    Les taux affichés dans Orion sont <b>prévisionnels</b>{" "}
+                    puisque :
+                  </Text>
+                  <UnorderedList>
+                    <ListItem>
+                      ils sont calculés à partir des transformations{" "}
+                      <b>prévues</b> et non constatées
+                    </ListItem>
+                    <ListItem>
+                      ils sont rapportés à un total de places de la{" "}
+                      <b>Rentrée N-1</b> et non N
+                    </ListItem>
+                  </UnorderedList>
+                </ListItem>
+              </UnorderedList>
+            </VStack>
+          </VStack>
+        </ModalBody>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+const TauxTransfoCard = ({
+  tauxTransformation,
+}: {
+  tauxTransformation: number;
+}) => {
+  const percentage = (tauxTransformation * 100) / 6;
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
+  return (
+    <>
+      <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
+      <VStack width="100%">
+        <Card width="100%">
+          <CardBody color="inherit" py="2" px="3" minHeight={40}>
+            <VStack
+              width="100%"
+              px="8px"
+              padding="8px"
+              gap="16px"
+              color={themeColors.bluefrance[113]}
+              alignItems="start"
+            >
+              <Box>
+                <Text
+                  fontSize="14px"
+                  fontWeight="500"
+                  lineHeight="24px"
+                  textTransform="uppercase"
+                >
+                  Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
+                </Text>
+                <Text fontSize="32px" fontWeight="700" lineHeight="40px">
+                  {roundNumber(tauxTransformation, 1)} %
+                </Text>
+              </Box>
+              <Box width="100%">
+                <ProgressBar percentage={percentage} />
+                <Text color={themeColors.grey[425]} fontSize="12px">
+                  {roundNumber(percentage, 1)}% de l'objectif
+                </Text>
+              </Box>
+            </VStack>
+          </CardBody>
+        </Card>
+        <HStack width="100%" justifyContent="start" alignItems="end">
+          <Text color={themeColors.bluefrance[113]}>
+            <TooltipIcon
+              mr="6px"
+              label="Cliquez ici pour plus d’infos"
+              onClick={() => onOpen()}
+            />
+            Comprendre le calcul du taux de transformation
+          </Text>
+        </HStack>
+      </VStack>
+    </>
+  );
+};
+
+const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
+  const { openGlossaire } = useGlossaireContext();
+
+  return (
+    <Flex direction={"column"} w="100%">
+      <Text fontSize={20} fontWeight={700} lineHeight={"31px"}>
+        INDICATEURS CLÉS DE LA RÉFORME
+      </Text>
+      <VStack width="100%" spacing="18px" mt="12px">
+        <TauxTransfoCard tauxTransformation={data?.tauxTransformation ?? 0} />
+        <SimpleGrid spacing={3} columns={[2]} width="100%">
+          <StatCard
+            label="taux d'emploi à 6 mois"
+            data={data}
+            tooltip={
+              <TooltipIcon
+                mr="6px"
+                label="Cliquez ici pour plus d’infos"
+                onClick={() => openGlossaire("taux-emploi-6-mois")}
+              />
+            }
+          ></StatCard>
+          <StatCard
+            label="taux poursuite d'études"
+            data={data}
+            type="poursuite"
+            tooltip={
+              <TooltipIcon
+                mr="6px"
+                label="Cliquez ici pour plus d’infos"
+                onClick={() => openGlossaire("taux-poursuite-etudes")}
+              />
+            }
+          ></StatCard>
+        </SimpleGrid>
+      </VStack>
+    </Flex>
+  );
+};
 
 export const IndicateursClesSection = ({
   data,

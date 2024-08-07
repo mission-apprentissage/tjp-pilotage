@@ -1,37 +1,27 @@
-import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
-import { isDemandeCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
-import { isDemandeSelectable } from "../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { getDemandesSchema } from "./getDemandes.schema";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isDemandeCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
+import { isDemandeSelectable } from "../../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
+import { Filters } from "./getFilters.dep";
 
-export interface Filters extends z.infer<typeof getDemandesSchema.querystring> {
-  user: RequestUser;
-}
-
-export const getCampagneQuery = async (anneeCampagne: string) => {
-  const campagne = await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .where("annee", "=", anneeCampagne)
-    .executeTakeFirstOrThrow()
-    .catch(() => {
-      throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
-    });
-
-  return campagne;
-};
-
-export const getDemandesQuery = async (
-  { statut, search, user, offset = 0, limit = 20, order, orderBy }: Filters,
+export const getDemandes = async (
+  {
+    statut,
+    search,
+    user,
+    offset = 0,
+    limit = 20,
+    order,
+    orderBy,
+    codeAcademie,
+    codeNiveauDiplome,
+  }: Filters,
   anneeCampagne: string
 ) => {
   const search_array = getNormalizedSearchArray(search);
@@ -70,6 +60,7 @@ export const getDemandesQuery = async (
       )})`.as("userName"),
       "dataFormation.libelleFormation",
       "dataEtablissement.libelleEtablissement",
+      "departement.codeDepartement",
       "departement.libelleDepartement",
       "academie.libelleAcademie",
       "region.libelleRegion",
@@ -145,6 +136,20 @@ export const getDemandesQuery = async (
         sql`${sql.ref(orderBy)}`,
         sql`${sql.raw(order)} NULLS LAST`
       );
+    })
+    .$call((eb) => {
+      if (codeAcademie)
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome)
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      return eb;
     })
     .orderBy("updatedAt desc")
     .where(isDemandeSelectable({ user }))

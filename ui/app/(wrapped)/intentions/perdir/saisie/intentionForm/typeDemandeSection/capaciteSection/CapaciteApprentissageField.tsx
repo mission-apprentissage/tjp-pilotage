@@ -15,9 +15,15 @@ export const CapaciteApprentissageField = chakra(
 
     useEffect(
       () =>
-        watch((_, { name }) => {
-          if (name !== "typeDemande") return;
-          setValue("capaciteApprentissage", 0);
+        watch(({ capaciteApprentissageActuelle, typeDemande }, { name }) => {
+          if (name === "typeDemande") {
+            setValue("capaciteApprentissage", 0);
+          } else if (
+            name === "capaciteApprentissageActuelle" &&
+            typeDemande === "coloration"
+          ) {
+            setValue("capaciteApprentissage", capaciteApprentissageActuelle);
+          }
         }).unsubscribe
     );
 

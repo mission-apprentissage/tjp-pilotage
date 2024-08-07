@@ -1,5 +1,6 @@
 import {
   chakra,
+  Flex,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -10,6 +11,8 @@ import {
 import { useEffect } from "react";
 import { Controller, useFormContext } from "react-hook-form";
 
+import { TooltipIcon } from "../../../../../../../../components/TooltipIcon";
+import { useGlossaireContext } from "../../../../../../glossaire/glossaireContext";
 import { isTypeColoration } from "../../../../../utils/typeDemandeUtils";
 import { toBoolean } from "../../../utils/toBoolean";
 import { IntentionForms } from "../../defaultFormValues";
@@ -23,6 +26,8 @@ export const ColorationField = chakra(
       setValue,
       getValues,
     } = useFormContext<IntentionForms>();
+
+    const { openGlossaire } = useGlossaireContext();
 
     useEffect(
       () =>
@@ -50,7 +55,18 @@ export const ColorationField = chakra(
         isInvalid={!!errors.coloration}
         isRequired
       >
-        <FormLabel>Coloration</FormLabel>
+        <Flex direction={"row"}>
+          <FormLabel>Coloration</FormLabel>
+          <TooltipIcon
+            mt={"1"}
+            ml={2}
+            onClick={(e) => {
+              e.preventDefault();
+              openGlossaire("coloration");
+            }}
+            color={"bluefrance.113"}
+          />
+        </Flex>
         <Controller
           name="coloration"
           control={control}

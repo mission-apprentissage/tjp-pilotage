@@ -35,7 +35,7 @@ export const getStatsRestitutionIntentionsSchema = {
       ouvertures: CountCapaciteStatsDemandesSchema,
       fermetures: CountCapaciteStatsDemandesSchema,
       coloration: CountCapaciteStatsDemandesSchema,
-      amiCMAs: CountCapaciteStatsDemandesSchema,
+      certifSpecialisation: CountCapaciteStatsDemandesSchema,
       FCILs: CountCapaciteStatsDemandesSchema,
     }),
   },

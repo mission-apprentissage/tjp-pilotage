@@ -22,23 +22,26 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { isAxiosError } from "axios";
+import { format } from "date-fns";
+import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import {
-  DemandeStatutEnum,
-  DemandeStatutType,
-} from "shared/enum/demandeStatutEnum";
+import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
-import { formatDate } from "@/utils/formatUtils";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { TableFooter } from "../../../../components/TableFooter";
+import { useStateParams } from "../../../../utils/useFilters";
+import {
+  formatCodeDepartement,
+  formatDepartementLibelleWithCodeDepartement,
+} from "../../utils/formatLibelle";
+import { StatutTag } from "../perdir/components/StatutTag";
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
 import { IntentionSpinner } from "./components/IntentionSpinner";
@@ -49,43 +52,24 @@ import { isSaisieDisabled } from "./utils/isSaisieDisabled";
 
 const PAGE_SIZE = 30;
 
-const TagDemande = ({ statut }: { statut: string }) => {
-  switch (statut) {
-    case DemandeStatutEnum["projet de demande"]:
-      return (
-        <Tag size="sm" colorScheme={"orange"}>
-          Projet de demande
-        </Tag>
-      );
-    case DemandeStatutEnum["demande validée"]:
-      return (
-        <Tag size="sm" colorScheme={"green"}>
-          Demande validée
-        </Tag>
-      );
-    case DemandeStatutEnum["refusée"]:
-      return (
-        <Tag size="sm" colorScheme={"red"}>
-          Demande refusée
-        </Tag>
-      );
-    default:
-      return <></>;
-  }
-};
-
 export const PageClient = () => {
   const toast = useToast();
   const router = useRouter();
-  const queryParams = useSearchParams();
-  const searchParams: {
+  const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
     search?: string;
     order?: Partial<Order>;
     page?: string;
     campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
-  } = qs.parse(queryParams.toString());
+  }>({
+    defaultValues: {
+      filters: {},
+      search: "",
+      order: { order: "asc" },
+      page: "0",
+    },
+  });
 
   const filters = searchParams.filters ?? {};
   const search = searchParams.search ?? "";
@@ -93,27 +77,35 @@ export const PageClient = () => {
   const campagne = searchParams.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
-  const setSearchParams = (params: {
-    filters?: typeof filters;
-    search?: typeof search;
-    order?: typeof order;
-    page?: typeof page;
-    campagne?: typeof campagne;
-  }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+  const trackEvent = usePlausible();
+
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("intentions:filtre", {
+      props: { filter_name: filterName },
+    });
   };
 
-  const trackEvent = usePlausible();
+  const handleFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    setSearchParams({
+      ...searchParams,
+      filters: { ...filters, [type]: value },
+    });
+  };
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("demandes:ordre", { props: { colonne: column } });
     if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
+      setSearchParams({
+        ...searchParams,
+        order: { order: "desc", orderBy: column },
+      });
       return;
     }
     setSearchParams({
+      ...searchParams,
       order: {
         order: order?.order === "asc" ? "desc" : "asc",
         orderBy: column,
@@ -134,7 +126,7 @@ export const PageClient = () => {
     {
       query: getDemandesQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { keepPreviousData: true, staleTime: 0 }
+    { keepPreviousData: true, cacheTime: 0 }
   );
 
   const hasPermissionSubmitIntention = usePermission("intentions/ecriture");
@@ -184,8 +176,6 @@ export const PageClient = () => {
 
   const [isImporting, setIsImporting] = useState(false);
 
-  if (isLoading) return <IntentionSpinner />;
-
   return (
     <Container
       maxWidth="100%"
@@ -199,6 +189,8 @@ export const PageClient = () => {
         hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
+        handleFilters={handleFilters}
+        searchParams={searchParams}
       />
       <Box
         display={["none", null, "unset"]}
@@ -215,6 +207,7 @@ export const PageClient = () => {
         minW={0}
       >
         <Header
+          activeFilters={filters}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           getDemandesQueryParameters={getDemandesQueryParameters}
@@ -222,207 +215,232 @@ export const PageClient = () => {
           setSearchDemande={setSearchDemande}
           campagnes={data?.campagnes}
           campagne={data?.campagne}
-          page={page}
-          count={data?.count}
-          onPageChange={(newPage) => setSearchParams({ page: newPage })}
+          filterTracker={filterTracker}
+          handleFilters={handleFilters}
+          diplomes={data?.filters.diplomes ?? []}
+          academies={data?.filters.academies ?? []}
         />
-        {data?.demandes.length ? (
-          <TableContainer overflowY="auto" flex={1}>
-            <Table
-              sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-              size="md"
-              variant="striped"
-              fontSize="14px"
-              gap="0"
-            >
-              <Thead
-                position="sticky"
-                top="0"
-                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                bg="white"
-                zIndex={2}
+        {isLoading && <IntentionSpinner />}
+        {!isLoading && data?.demandes.length ? (
+          <>
+            <TableContainer overflowY="auto" flex={1}>
+              <Table
+                sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
+                size="md"
+                variant="striped"
+                fontSize="14px"
+                gap="0"
               >
-                <Tr>
-                  <Th>n° demande</Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleFormation")}
-                  >
-                    <OrderIcon {...order} column="libelleFormation" />
-                    {DEMANDES_COLUMNS.libelleFormation}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleEtablissement")}
-                  >
-                    <OrderIcon {...order} column="libelleEtablissement" />
-                    {DEMANDES_COLUMNS.libelleEtablissement}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleDepartement")}
-                  >
-                    <OrderIcon {...order} column="libelleDepartement" />
-                    {DEMANDES_COLUMNS.libelleDepartement}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("typeDemande")}
-                  >
-                    <OrderIcon {...order} column="typeDemande" />
-                    {DEMANDES_COLUMNS.typeDemande}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("statut")}>
-                    <OrderIcon {...order} column="statut" />
-                    {DEMANDES_COLUMNS.statut}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("createdAt")}>
-                    <OrderIcon {...order} column="createdAt" />
-                    {DEMANDES_COLUMNS.createdAt}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("userName")}
-                    w="15"
-                  >
-                    <OrderIcon {...order} column="userName" />
-                    {DEMANDES_COLUMNS.userName}
-                  </Th>
-                  <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
-                    <OrderIcon {...order} column="updatedAt" />
-                    {DEMANDES_COLUMNS.updatedAt}
-                  </Th>
-                  {data?.campagne.statut === CampagneStatutEnum["terminée"] && (
-                    <Th />
-                  )}
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data?.demandes.map(
-                  (
-                    demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
-                  ) => (
-                    <Tr
-                      height={"60px"}
-                      position={"relative"}
-                      zIndex={1}
-                      key={demande.numero}
-                      cursor={isSaisieDisabled() ? "initial" : "pointer"}
-                      whiteSpace={"pre"}
-                      onClick={() => {
-                        if (isSaisieDisabled()) return;
-                        router.push(`/intentions/saisie/${demande.numero}`);
-                      }}
+                <Thead
+                  position="sticky"
+                  top="0"
+                  boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                  bg="white"
+                  zIndex={"1"}
+                >
+                  <Tr>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("updatedAt")}
                     >
-                      <Td>{demande.numero}</Td>
-                      <Td>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
-                          {demande.libelleFormation}
-                        </Text>
-                      </Td>
-                      <Td>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
-                          {demande.libelleEtablissement}
-                        </Text>
-                      </Td>
-                      <Td>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
-                          {demande.libelleDepartement}
-                        </Text>
-                      </Td>
-                      <Td>
-                        <Text
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
-                          {demande.typeDemande
-                            ? getTypeDemandeLabel(demande.typeDemande)
-                            : null}
-                        </Text>
-                      </Td>
-                      <Td align="center" w={0}>
-                        <TagDemande statut={demande.statut} />
-                      </Td>
-                      <Td>{formatDate({ date: demande.createdAt })}</Td>
-                      <Td w="15" textAlign={"center"}>
-                        <Tooltip label={demande.userName}>
-                          <Avatar
-                            name={demande.userName}
-                            colorScheme={getAvatarBgColor(
-                              demande.userName ?? ""
-                            )}
-                            bg={getAvatarBgColor(demande.userName ?? "")}
-                            color={"white"}
-                            position={"unset"}
-                          />
-                        </Tooltip>
-                      </Td>
-                      <Td textAlign={"center"}>
-                        {formatDate({ date: demande.updatedAt })}
-                      </Td>
-                      {data?.campagne.statut ===
-                        CampagneStatutEnum["terminée"] && (
-                        <Td>
-                          {demande.numeroDemandeImportee ? (
-                            <Button
-                              as={NextLink}
-                              variant="link"
-                              href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                              leftIcon={<ExternalLinkIcon />}
-                              me={"auto"}
-                              passHref
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              Demande dupliquée {demande.numeroDemandeImportee}
-                            </Button>
-                          ) : (
-                            <Button
-                              leftIcon={<Icon icon="ri:import-line" />}
-                              variant={"newInput"}
-                              onClick={(e) => {
-                                setIsImporting(true);
-                                if (demande.numeroDemandeImportee) return;
-                                e.preventDefault();
-                                e.stopPropagation();
-                                importDemande({
-                                  params: { numero: demande.numero },
-                                });
-                              }}
-                              isDisabled={
-                                !!demande.numeroDemandeImportee ||
-                                isSubmitting ||
-                                isImporting ||
-                                !hasPermissionSubmitIntention
-                              }
-                            >
-                              Dupliquer cette demande
-                            </Button>
-                          )}
+                      <OrderIcon {...order} column="updatedAt" />
+                      {DEMANDES_COLUMNS.updatedAt}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleFormation")}
+                    >
+                      <OrderIcon {...order} column="libelleFormation" />
+                      {DEMANDES_COLUMNS.libelleFormation}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleEtablissement")}
+                    >
+                      <OrderIcon {...order} column="libelleEtablissement" />
+                      {DEMANDES_COLUMNS.libelleEtablissement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleDepartement")}
+                    >
+                      <OrderIcon {...order} column="libelleDepartement" />
+                      {DEMANDES_COLUMNS.libelleDepartement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("statut")}
+                      textAlign={"center"}
+                    >
+                      <OrderIcon {...order} column="statut" />
+                      {DEMANDES_COLUMNS.statut}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("typeDemande")}
+                      textAlign={"center"}
+                    >
+                      <OrderIcon {...order} column="typeDemande" />
+                      {DEMANDES_COLUMNS.typeDemande}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("userName")}
+                      w="15"
+                    >
+                      <OrderIcon {...order} column="userName" />
+                      {DEMANDES_COLUMNS.userName}
+                    </Th>
+                    {data?.campagne.statut ===
+                      CampagneStatutEnum["terminée"] && <Th />}
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data?.demandes.map(
+                    (
+                      demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0]
+                    ) => (
+                      <Tr
+                        height={"60px"}
+                        position={"relative"}
+                        key={demande.numero}
+                        cursor={isSaisieDisabled() ? "initial" : "pointer"}
+                        whiteSpace={"pre"}
+                        onClick={() => {
+                          if (isSaisieDisabled()) return;
+                          router.push(`/intentions/saisie/${demande.numero}`);
+                        }}
+                      >
+                        <Td textAlign={"center"}>
+                          <Tooltip
+                            label={`Le ${format(
+                              demande.updatedAt,
+                              "d MMMM yyyy à HH:mm",
+                              { locale: fr }
+                            )}`}
+                          >
+                            {format(demande.updatedAt, "d MMM HH:mm", {
+                              locale: fr,
+                            })}
+                          </Tooltip>
                         </Td>
-                      )}
-                    </Tr>
-                  )
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {demande.libelleFormation}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Text
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            {demande.libelleEtablissement}
+                          </Text>
+                        </Td>
+                        <Td>
+                          <Tooltip
+                            label={formatDepartementLibelleWithCodeDepartement({
+                              libelleDepartement: demande.libelleDepartement,
+                              codeDepartement: demande.codeDepartement,
+                            })}
+                          >
+                            <Text
+                              textAlign={"center"}
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {formatCodeDepartement(demande.codeDepartement)}
+                            </Text>
+                          </Tooltip>
+                        </Td>
+
+                        <Td textAlign={"center"} w={0}>
+                          <StatutTag statut={demande.statut} size="md" />
+                        </Td>
+                        <Td textAlign={"center"}>
+                          <Tag colorScheme="blue" size={"md"} h="fit-content">
+                            {getTypeDemandeLabel(demande.typeDemande)}
+                          </Tag>
+                        </Td>
+
+                        <Td w="15" textAlign={"center"}>
+                          <Tooltip label={demande.userName}>
+                            <Avatar
+                              name={demande.userName}
+                              colorScheme={getAvatarBgColor(
+                                demande.userName ?? ""
+                              )}
+                              bg={getAvatarBgColor(demande.userName ?? "")}
+                              color={"white"}
+                              position={"unset"}
+                            />
+                          </Tooltip>
+                        </Td>
+                        {data?.campagne.statut ===
+                          CampagneStatutEnum["terminée"] && (
+                          <Td>
+                            {demande.numeroDemandeImportee ? (
+                              <Button
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                leftIcon={<ExternalLinkIcon />}
+                                me={"auto"}
+                                passHref
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                Demande dupliquée{" "}
+                                {demande.numeroDemandeImportee}
+                              </Button>
+                            ) : (
+                              <Button
+                                leftIcon={<Icon icon="ri:import-line" />}
+                                variant={"newInput"}
+                                onClick={(e) => {
+                                  setIsImporting(true);
+                                  if (demande.numeroDemandeImportee) return;
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  importDemande({
+                                    params: { numero: demande.numero },
+                                  });
+                                }}
+                                isDisabled={
+                                  !!demande.numeroDemandeImportee ||
+                                  isSubmitting ||
+                                  isImporting ||
+                                  !hasPermissionSubmitIntention
+                                }
+                              >
+                                Dupliquer cette demande
+                              </Button>
+                            )}
+                          </Td>
+                        )}
+                      </Tr>
+                    )
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+            <TableFooter
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) =>
+                setSearchParams({ ...searchParams, page: `${newPage}` })
+              }
+            />
+          </>
         ) : (
           <Center mt={12}>
             <Flex flexDirection={"column"}>
