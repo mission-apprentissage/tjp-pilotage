@@ -11,8 +11,8 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
     .selectFrom("etablissement")
     .leftJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .leftJoin(
       "indicateurEntree",
@@ -22,7 +22,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .distinct()
     .select((sb) => [
@@ -32,7 +32,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       sql<string[]>`array_agg(distinct ${sb.ref(
         "dispositif.libelleDispositif"
       )})`.as("libellesDispositifs"),
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",
@@ -69,7 +69,7 @@ export const getEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       return q;
     })
     .groupBy([
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",

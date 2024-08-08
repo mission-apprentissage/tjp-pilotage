@@ -35,7 +35,7 @@ export const getChiffresIj = async ({
       sql<string>`CONCAT(
         ${eb.ref("dataEtablissement.uai")},
         ${eb.ref("dataFormation.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.dispositifId")},''),
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       "millesimeSortie",
@@ -47,14 +47,14 @@ export const getChiffresIj = async ({
         eb: eb2,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxPoursuiteRegional"),
       withPoursuiteReg({
         eb: eb2,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("tauxInsertionRegional"),
       "dataFormation.cfd",
@@ -67,7 +67,7 @@ export const getChiffresIj = async ({
         eb: eb2,
         millesimeSortie,
         cfdRef: "formationEtablissement.cfd",
-        codeDispositifRef: "formationEtablissement.dispositifId",
+        codeDispositifRef: "formationEtablissement.codeDispositif",
         codeRegionRef: "dataEtablissement.codeRegion",
       }).as("continuum"),
     ])
@@ -83,7 +83,7 @@ export const getChiffresIj = async ({
     .groupBy([
       "dataEtablissement.uai",
       "dataFormation.cfd",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "formationEtablissement.cfd",
       "voie",
       "millesimeSortie",

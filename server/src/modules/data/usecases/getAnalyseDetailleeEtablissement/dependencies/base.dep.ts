@@ -14,7 +14,7 @@ export const getBase = ({
     .innerJoin(
       "dataEtablissement",
       "dataEtablissement.uai",
-      "formationEtablissement.UAI"
+      "formationEtablissement.uai"
     )
     .innerJoin(
       "dataFormation",
@@ -31,7 +31,7 @@ export const getBase = ({
         .onRef(
           "dispositif.codeDispositif",
           "=",
-          "formationEtablissement.dispositifId"
+          "formationEtablissement.codeDispositif"
         )
         .on("formationEtablissement.voie", "=", "scolaire")
     )
@@ -50,6 +50,6 @@ export const getBase = ({
           w("indicateurEntree.rentreeScolaire", "=", rentreeScolaire),
           w("indicateurEntree.rentreeScolaire", "is", null),
         ]),
-        w("formationEtablissement.UAI", "=", uai),
+        w("formationEtablissement.uai", "=", uai),
       ])
     );

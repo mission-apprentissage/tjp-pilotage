@@ -30,7 +30,7 @@ const getAllEtablisementNsfs = ({ uai }: { uai: string }) =>
         eb.selectFrom("familleMetier").select("cfdFamille")
       )
     )
-    .where("formationEtablissement.UAI", "=", uai)
+    .where("formationEtablissement.uai", "=", uai)
     .select((eb) => [
       "nsf.codeNsf",
       "nsf.libelleNsf",
@@ -38,9 +38,9 @@ const getAllEtablisementNsfs = ({ uai }: { uai: string }) =>
       "formationEtablissement.voie",
       sql<number>`count(distinct ${eb.ref(
         "formationEtablissement.cfd"
-      )} || coalesce(${eb.ref("formationEtablissement.dispositifId")},''))`.as(
-        "nbFormations"
-      ),
+      )} || coalesce(${eb.ref(
+        "formationEtablissement.codeDispositif"
+      )},''))`.as("nbFormations"),
     ])
     .groupBy(["libelleNsf", "codeNsf", "rentreeScolaire", "voie"])
     .distinct()

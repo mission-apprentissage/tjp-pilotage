@@ -10,9 +10,9 @@ export const createFormationEtablissement = async (
     .values(formationEtablissement)
     .onConflict((oc) =>
       oc
-        .column("UAI")
+        .column("uai")
         .column("cfd")
-        .column("dispositifId")
+        .column("codeDispositif")
         .column("voie")
         .doUpdateSet(formationEtablissement)
     )

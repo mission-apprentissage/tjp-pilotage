@@ -10,8 +10,8 @@ export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
     .selectFrom("etablissement")
     .leftJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .leftJoin(
       "indicateurEntree",
@@ -23,7 +23,7 @@ export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       "indicateurSortie.formationEtablissementId",
       "formationEtablissement.id"
     )
-    .select((sb) => sb.fn.count<number>("etablissement.UAI").over().as("count"))
+    .select((sb) => sb.fn.count<number>("etablissement.uai").over().as("count"))
     .where((eb) =>
       eb.or([
         eb("indicateurEntree.rentreeScolaire", "=", CURRENT_RENTREE),
@@ -55,6 +55,6 @@ export const getCountEtablissementsProches = async ({ cfd, bbox }: Filters) =>
       }
       return q;
     })
-    .groupBy(["etablissement.UAI", "formationEtablissement.cfd"])
+    .groupBy(["etablissement.uai", "formationEtablissement.cfd"])
     .limit(1)
     .execute();

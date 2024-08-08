@@ -9,5 +9,5 @@ export const getEtablissementCfds = async ({ uai }: Filters) =>
     .selectFrom("formationEtablissement")
     .select("cfd")
     .distinct()
-    .where("UAI", "=", uai)
+    .where("uai", "=", uai)
     .execute();

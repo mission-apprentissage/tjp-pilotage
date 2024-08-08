@@ -18,11 +18,11 @@ export const [importIndicateursRegionSortie] = inject(
   (deps) =>
     async ({
       cfd,
-      dispositifId,
+      codeDispositif,
       mefstat,
     }: {
       cfd: string;
-      dispositifId: string;
+      codeDispositif: string;
       mefstat: string;
     }) => {
       for (const [_crij, codeRegion] of Object.entries(regionAcademiqueMapping))
@@ -36,7 +36,7 @@ export const [importIndicateursRegionSortie] = inject(
           if (!mefstatData) {
             const continuumData = await getContinuumData({
               cfd,
-              dispositifId,
+              codeDispositif,
               codeRegion,
               millesimeSortie,
               voie: "scolaire",
@@ -53,7 +53,7 @@ export const [importIndicateursRegionSortie] = inject(
 
           await deps.createIndicateurRegionSortie({
             cfd,
-            dispositifId,
+            codeDispositif,
             voie: "scolaire",
             codeRegion,
             millesimeSortie,
@@ -87,7 +87,7 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
           if (!cfdData) {
             const continuumData = await getContinuumData({
               cfd,
-              dispositifId: null,
+              codeDispositif: null,
               codeRegion,
               millesimeSortie,
               voie: "apprentissage",
@@ -104,7 +104,7 @@ export const [importIndicateursRegionSortieApprentissage] = inject(
 
           await deps.createIndicateurRegionSortie({
             cfd,
-            dispositifId: null,
+            codeDispositif: null,
             voie: "apprentissage",
             codeRegion,
             millesimeSortie,
@@ -128,13 +128,13 @@ const [getContinuumData] = inject(
   (deps) =>
     async ({
       cfd,
-      dispositifId,
+      codeDispositif,
       codeRegion,
       millesimeSortie,
       voie,
     }: {
       cfd: string;
-      dispositifId: string | null;
+      codeDispositif: string | null;
       codeRegion: string;
       millesimeSortie: string;
       voie: string;
@@ -153,7 +153,7 @@ const [getContinuumData] = inject(
 
       return await deps.findIndicateurRegionSortie({
         cfd: cfdContinuum,
-        codeDispositif: dispositifId,
+        codeDispositif: codeDispositif,
         codeRegion,
         millesimeSortie,
         voie,

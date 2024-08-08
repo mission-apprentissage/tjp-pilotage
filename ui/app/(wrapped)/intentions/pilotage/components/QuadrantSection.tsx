@@ -63,7 +63,7 @@ const EFFECTIF_SIZES = [
 
 const generateRestitutionUrl = (
   cfd: string,
-  dispositifId?: string,
+  codeDispositif?: string,
   scope?: SelectedScope,
   filters?: {
     tauxPression?: "faible" | "eleve";
@@ -75,7 +75,7 @@ const generateRestitutionUrl = (
   const urlFilters: Record<string, unknown> = {
     rentreeScolaire: "2024",
     cfd: [cfd],
-    codeDispositif: [dispositifId],
+    codeDispositif: [codeDispositif],
   };
 
   if (filters?.type) {

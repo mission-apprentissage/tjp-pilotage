@@ -90,8 +90,8 @@ export const getStats = async ({
       )
       .leftJoin(
         "etablissement",
-        "etablissement.UAI",
-        "formationEtablissement.UAI"
+        "etablissement.uai",
+        "formationEtablissement.uai"
       )
       .$call((q) => {
         if (!isScoped || !codeRegion) return q;
@@ -108,10 +108,10 @@ export const getStats = async ({
       .where(notHistorique)
       .where(notAnneeCommune)
       .select([
-        sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."dispositifId"))`.as(
+        sql<number>`COUNT(distinct CONCAT("formationEtablissement"."cfd", "formationEtablissement"."codeDispositif"))`.as(
           "nbFormations"
         ),
-        sql<number>`COUNT(distinct "formationEtablissement"."UAI")`.as(
+        sql<number>`COUNT(distinct "formationEtablissement"."uai")`.as(
           "nbEtablissements"
         ),
         sql<number>`COALESCE(SUM(${effectifAnnee({
@@ -208,8 +208,8 @@ const findFiltersInDb = async () => {
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .where(notHistoriqueFormation)
