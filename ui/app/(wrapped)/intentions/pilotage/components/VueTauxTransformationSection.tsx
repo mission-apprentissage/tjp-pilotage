@@ -16,7 +16,7 @@ import { ScopeEnum } from "shared";
 
 import { Legend } from "@/components/Legend";
 import { OrderIcon } from "@/components/OrderIcon";
-import { displayPercentage } from "@/utils/displayPercent";
+import { formatPercentage } from "@/utils/formatUtils";
 
 import {
   OrderStatsPilotageIntentions,
@@ -205,7 +205,7 @@ export const ScopedTable = ({
                 const tauxTransformation =
                   typeof territoire.tauxTransformation === "undefined"
                     ? "-"
-                    : displayPercentage(territoire.tauxTransformation / 100);
+                    : formatPercentage(territoire.tauxTransformation / 100);
 
                 return (
                   <Tr

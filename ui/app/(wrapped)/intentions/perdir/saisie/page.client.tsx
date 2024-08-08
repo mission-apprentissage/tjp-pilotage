@@ -36,9 +36,8 @@ import { useQueryClient } from "@tanstack/react-query";
 import { format } from "date-fns";
 import { fr } from "date-fns/locale/fr";
 import NextLink from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
-import qs from "qs";
 import { useState } from "react";
 import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
@@ -46,10 +45,11 @@ import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
+import { TableFooter } from "../../../../../components/TableFooter";
+import { useStateParams } from "../../../../../utils/useFilters";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
@@ -71,18 +71,26 @@ export const PageClient = () => {
   const toast = useToast();
   const router = useRouter();
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const queryParams = useSearchParams();
-  const hasEditIntentionPermission = usePermission(
-    "intentions-perdir/ecriture"
-  );
-  const searchParams: {
+
+  const [searchParams, setSearchParams] = useStateParams<{
     filters?: Partial<Filters>;
     search?: string;
     order?: Partial<Order>;
     page?: string;
     campagne?: string;
     action?: Exclude<DemandeStatutType, "supprimée">;
-  } = qs.parse(queryParams.toString());
+  }>({
+    defaultValues: {
+      filters: {},
+      search: "",
+      order: { order: "asc" },
+      page: "0",
+    },
+  });
+
+  const hasEditIntentionPermission = usePermission(
+    "intentions-perdir/ecriture"
+  );
 
   const filters = searchParams.filters ?? {};
   const search = searchParams.search ?? "";
@@ -90,31 +98,38 @@ export const PageClient = () => {
   const campagne = searchParams.campagne;
   const page = searchParams.page ? parseInt(searchParams.page) : 0;
 
-  const setSearchParams = (params: {
-    filters?: typeof filters;
-    search?: typeof search;
-    order?: typeof order;
-    page?: typeof page;
-    campagne?: typeof campagne;
-  }) => {
-    router.replace(
-      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
-    );
+  const trackEvent = usePlausible();
+
+  const filterTracker = (filterName: keyof Filters) => () => {
+    trackEvent("intentions:filtre", {
+      props: { filter_name: filterName },
+    });
   };
 
-  const trackEvent = usePlausible();
+  const handleFilters = (
+    type: keyof Filters,
+    value: Filters[keyof Filters]
+  ) => {
+    setSearchParams({
+      ...searchParams,
+      filters: { ...filters, [type]: value },
+    });
+  };
 
   const handleOrder = (column: Order["orderBy"]) => {
     trackEvent("intentions:ordre", { props: { colonne: column } });
-    if (order?.orderBy !== column) {
-      setSearchParams({ order: { order: "desc", orderBy: column } });
-      return;
-    }
+
+    const newOrder = {
+      order:
+        order?.orderBy === column && order?.order === "asc"
+          ? "desc"
+          : ("asc" as "asc" | "desc"),
+      orderBy: column,
+    };
+
     setSearchParams({
-      order: {
-        order: order?.order === "asc" ? "desc" : "asc",
-        orderBy: column,
-      },
+      ...searchParams,
+      order: newOrder,
     });
   };
 
@@ -131,7 +146,7 @@ export const PageClient = () => {
     {
       query: getIntentionsQueryParameters(PAGE_SIZE, page * PAGE_SIZE),
     },
-    { cacheTime: 0 }
+    { cacheTime: 0, keepPreviousData: true }
   );
 
   const hasPermissionSubmitIntention = usePermission(
@@ -254,8 +269,6 @@ export const PageClient = () => {
     );
   };
 
-  if (isLoading) return <IntentionSpinner />;
-
   return (
     <Container
       maxWidth="100%"
@@ -269,6 +282,8 @@ export const PageClient = () => {
         hasPermissionSubmitIntention={hasPermissionSubmitIntention}
         isRecapView
         campagne={data?.campagne}
+        handleFilters={handleFilters}
+        searchParams={searchParams}
       />
       <Box
         display={["none", null, "unset"]}
@@ -285,6 +300,7 @@ export const PageClient = () => {
         minW={0}
       >
         <Header
+          activeFilters={filters}
           searchParams={searchParams}
           setSearchParams={setSearchParams}
           getIntentionsQueryParameters={getIntentionsQueryParameters}
@@ -292,332 +308,357 @@ export const PageClient = () => {
           setSearchIntention={setSearchIntention}
           campagnes={data?.campagnes}
           campagne={data?.campagne}
-          page={page}
-          count={data?.count}
-          onPageChange={(newPage) => setSearchParams({ page: newPage })}
+          filterTracker={filterTracker}
+          academies={data?.filters.academies ?? []}
+          diplomes={data?.filters.diplomes ?? []}
+          handleFilters={handleFilters}
         />
-        {data?.intentions.length ? (
-          <TableContainer overflowY="auto" flex={1}>
-            <Table
-              sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
-              size="md"
-              variant="striped"
-              fontSize="14px"
-              gap="0"
-            >
-              <Thead
-                position="sticky"
-                top="0"
-                boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-                bg="white"
-                zIndex={"1"}
+        {isLoading && <IntentionSpinner />}
+        {!isLoading && data?.intentions.length ? (
+          <>
+            <TableContainer overflowY="auto" flex={1}>
+              <Table
+                sx={{ td: { py: "2", px: 4 }, th: { px: 4 } }}
+                size="md"
+                fontSize="14px"
+                gap="0"
               >
-                <Tr>
-                  <Th cursor="pointer" onClick={() => handleOrder("updatedAt")}>
-                    <OrderIcon {...order} column="updatedAt" />
-                    {INTENTIONS_COLUMNS.updatedAt}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleFormation")}
-                  >
-                    <OrderIcon {...order} column="libelleFormation" />
-                    {INTENTIONS_COLUMNS.libelleFormation}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleEtablissement")}
-                  >
-                    <OrderIcon {...order} column="libelleEtablissement" />
-                    {INTENTIONS_COLUMNS.libelleEtablissement}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("libelleDepartement")}
-                  >
-                    <OrderIcon {...order} column="libelleDepartement" />
-                    {INTENTIONS_COLUMNS.libelleDepartement}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("statut")}
-                    textAlign={"center"}
-                  >
-                    <OrderIcon {...order} column="statut" />
-                    {INTENTIONS_COLUMNS.statut}
-                  </Th>
-                  <Th textAlign={"center"}>actions</Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("typeDemande")}
-                    textAlign={"center"}
-                  >
-                    <OrderIcon {...order} column="typeDemande" />
-                    {INTENTIONS_COLUMNS.typeDemande}
-                  </Th>
-                  <Th
-                    cursor="pointer"
-                    onClick={() => handleOrder("userName")}
-                    w="15"
-                  >
-                    <OrderIcon {...order} column="userName" />
-                    {INTENTIONS_COLUMNS.userName}
-                  </Th>
-                </Tr>
-              </Thead>
-              <Tbody>
-                {data?.intentions.map(
-                  (
-                    intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]
-                  ) => (
-                    <Tr
-                      height={"60px"}
-                      key={intention.numero}
-                      whiteSpace={"pre"}
+                <Thead
+                  position="sticky"
+                  top="0"
+                  boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
+                  bg="white"
+                  zIndex={"1"}
+                >
+                  <Tr>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("updatedAt")}
                     >
-                      <Td textAlign={"center"}>
-                        <Tooltip
-                          label={`Le ${format(
-                            intention.updatedAt,
-                            "d MMMM yyyy à HH:mm",
-                            { locale: fr }
-                          )}`}
-                        >
-                          {format(intention.updatedAt, "d MMM HH:mm", {
-                            locale: fr,
-                          })}
-                        </Tooltip>
-                      </Td>
-                      <Td>
-                        <Tooltip label={intention.libelleFormation}>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {intention.libelleFormation}
-                          </Text>
-                        </Tooltip>
-                      </Td>
-                      <Td>
-                        <Tooltip label={intention.libelleEtablissement}>
-                          <Text
-                            textOverflow={"ellipsis"}
-                            overflow={"hidden"}
-                            whiteSpace={"break-spaces"}
-                            noOfLines={2}
-                          >
-                            {intention.libelleEtablissement}
-                          </Text>
-                        </Tooltip>
-                      </Td>
-                      <Td>
-                        <Text
-                          textAlign={"center"}
-                          textOverflow={"ellipsis"}
-                          overflow={"hidden"}
-                          whiteSpace={"break-spaces"}
-                          noOfLines={2}
-                        >
+                      <OrderIcon {...order} column="updatedAt" />
+                      {INTENTIONS_COLUMNS.updatedAt}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleFormation")}
+                    >
+                      <OrderIcon {...order} column="libelleFormation" />
+                      {INTENTIONS_COLUMNS.libelleFormation}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleEtablissement")}
+                    >
+                      <OrderIcon {...order} column="libelleEtablissement" />
+                      {INTENTIONS_COLUMNS.libelleEtablissement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("libelleDepartement")}
+                    >
+                      <OrderIcon {...order} column="libelleDepartement" />
+                      {INTENTIONS_COLUMNS.libelleDepartement}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("statut")}
+                      textAlign={"center"}
+                    >
+                      <OrderIcon {...order} column="statut" />
+                      {INTENTIONS_COLUMNS.statut}
+                    </Th>
+                    <Th textAlign={"center"}>actions</Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("typeDemande")}
+                      textAlign={"center"}
+                    >
+                      <OrderIcon {...order} column="typeDemande" />
+                      {INTENTIONS_COLUMNS.typeDemande}
+                    </Th>
+                    <Th
+                      cursor="pointer"
+                      onClick={() => handleOrder("userName")}
+                      w="15"
+                    >
+                      <OrderIcon {...order} column="userName" />
+                      {INTENTIONS_COLUMNS.userName}
+                    </Th>
+                  </Tr>
+                </Thead>
+                <Tbody>
+                  {data?.intentions.map(
+                    (
+                      intention: (typeof client.infer)["[GET]/intentions"]["intentions"][0]
+                    ) => (
+                      <Tr
+                        height={"60px"}
+                        key={intention.numero}
+                        whiteSpace={"pre"}
+                        fontWeight={intention.alreadyAccessed ? "400" : "700"}
+                        bg={intention.alreadyAccessed ? "grey.975" : "white"}
+                      >
+                        <Td textAlign={"center"}>
                           <Tooltip
-                            label={formatDepartementLibelleWithCodeDepartement({
-                              libelleDepartement: intention.libelleDepartement,
-                              codeDepartement: intention.codeDepartement,
-                            })}
+                            label={`Le ${format(
+                              intention.updatedAt,
+                              "d MMMM yyyy à HH:mm",
+                              { locale: fr }
+                            )}`}
                           >
-                            {formatCodeDepartement(intention.codeDepartement)}
+                            {format(intention.updatedAt, "d MMM HH:mm", {
+                              locale: fr,
+                            })}
                           </Tooltip>
-                        </Text>
-                      </Td>
-                      <Td textAlign={"center"} w={0}>
-                        <StatutTag statut={intention.statut} size="md" />
-                      </Td>
-                      <Td textAlign={"center"}>
-                        <Flex
-                          direction={"row"}
-                          gap={0}
-                          justifyContent={"center"}
-                        >
-                          <Tooltip label="Voir la demande">
-                            <IconButton
-                              as={NextLink}
-                              variant="link"
-                              href={`/intentions/perdir/synthese/${intention.numero}`}
-                              onClick={(e) => {
-                                e.preventDefault();
-                                e.stopPropagation();
-                                router.push(
-                                  `/intentions/perdir/synthese/${intention.numero}`
-                                );
-                              }}
-                              aria-label="Voir la demande"
-                              icon={
-                                <Icon
-                                  icon="ri:eye-line"
-                                  width={"24px"}
-                                  color={bluefrance113}
-                                />
-                              }
-                            />
+                        </Td>
+                        <Td>
+                          <Tooltip label={intention.libelleFormation}>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {intention.libelleFormation}
+                            </Text>
                           </Tooltip>
-                          {canEditIntention({
-                            intention,
-                            hasEditIntentionPermission,
-                            isPerdir: hasRole({
-                              user: auth?.user,
-                              role: "perdir",
-                            }),
-                          }) && (
-                            <Tooltip label="Modifier la demande">
+                        </Td>
+                        <Td>
+                          <Tooltip label={intention.libelleEtablissement}>
+                            <Text
+                              textOverflow={"ellipsis"}
+                              overflow={"hidden"}
+                              whiteSpace={"break-spaces"}
+                              noOfLines={2}
+                            >
+                              {intention.libelleEtablissement}
+                            </Text>
+                          </Tooltip>
+                        </Td>
+                        <Td>
+                          <Text
+                            textAlign={"center"}
+                            textOverflow={"ellipsis"}
+                            overflow={"hidden"}
+                            whiteSpace={"break-spaces"}
+                            noOfLines={2}
+                          >
+                            <Tooltip
+                              label={formatDepartementLibelleWithCodeDepartement(
+                                {
+                                  libelleDepartement:
+                                    intention.libelleDepartement,
+                                  codeDepartement: intention.codeDepartement,
+                                }
+                              )}
+                            >
+                              {formatCodeDepartement(intention.codeDepartement)}
+                            </Tooltip>
+                          </Text>
+                        </Td>
+                        <Td textAlign={"center"} w={0}>
+                          <StatutTag statut={intention.statut} size="md" />
+                        </Td>
+                        <Td textAlign={"center"}>
+                          <Flex
+                            direction={"row"}
+                            gap={0}
+                            justifyContent={"center"}
+                          >
+                            <Tooltip label="Voir la demande">
                               <IconButton
                                 as={NextLink}
                                 variant="link"
-                                href={`/intentions/perdir/saisie/${intention.numero}`}
+                                href={`/intentions/perdir/synthese/${intention.numero}`}
                                 onClick={(e) => {
                                   e.preventDefault();
                                   e.stopPropagation();
                                   router.push(
-                                    `/intentions/perdir/saisie/${intention.numero}`
+                                    `/intentions/perdir/synthese/${intention.numero}`
                                   );
                                 }}
-                                aria-label="Modifier la demande"
+                                aria-label="Voir la demande"
                                 icon={
                                   <Icon
-                                    icon="ri:pencil-line"
+                                    icon="ri:eye-line"
                                     width={"24px"}
                                     color={bluefrance113}
                                   />
                                 }
                               />
                             </Tooltip>
-                          )}
-                          {canDelete() && (
-                            <Tooltip
-                              label="Supprimer la demande"
-                              closeOnScroll={true}
-                            >
-                              <IconButton
-                                variant={"link"}
-                                onClick={(e) => {
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  onOpen();
-                                }}
-                                aria-label="Supprimer la demande"
-                                icon={
-                                  <Icon
-                                    icon="ri:delete-bin-line"
-                                    width={"24px"}
-                                    color={bluefrance113}
-                                  />
-                                }
-                              />
-                            </Tooltip>
-                          )}
-                          <Tooltip label="Suivre la demande">
-                            <IconButton
-                              aria-label="Suivre la demande"
-                              color={"bluefrance.113"}
-                              bgColor={"transparent"}
-                              icon={
-                                intention.suiviId ? (
-                                  <Icon width="24px" icon="ri:bookmark-fill" />
-                                ) : (
-                                  <Icon width="24px" icon="ri:bookmark-line" />
-                                )
-                              }
-                              onClick={() => {
-                                if (!intention.suiviId)
-                                  submitSuivi({
-                                    body: {
-                                      intentionNumero: intention.numero,
-                                    },
-                                  });
-                                else
-                                  deleteSuivi({
-                                    params: { id: intention.suiviId },
-                                  });
-                              }}
-                            />
-                          </Tooltip>
-                          <ModalDeleteIntention
-                            isOpen={isOpen}
-                            onClose={onClose}
-                            numero={intention.numero}
-                            isDeleting={isDeleting}
-                            deleteIntention={() => {
-                              deleteIntention({
-                                params: { numero: intention.numero },
-                              });
-                            }}
-                          />
-                        </Flex>
-                      </Td>
-                      <Td textAlign={"center"}>
-                        <Tag colorScheme="blue" size={"md"} h="fit-content">
-                          {getTypeDemandeLabel(intention.typeDemande)}
-                        </Tag>
-                      </Td>
-                      <Td w="15" textAlign={"center"}>
-                        <Tooltip label={intention.userName}>
-                          <Avatar
-                            name={intention.userName}
-                            colorScheme={getAvatarBgColor(
-                              intention.userName ?? ""
+                            {canEditIntention({
+                              intention,
+                              hasEditIntentionPermission,
+                              isPerdir: hasRole({
+                                user: auth?.user,
+                                role: "perdir",
+                              }),
+                            }) && (
+                              <Tooltip label="Modifier la demande">
+                                <IconButton
+                                  as={NextLink}
+                                  variant="link"
+                                  href={`/intentions/perdir/saisie/${intention.numero}`}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    router.push(
+                                      `/intentions/perdir/saisie/${intention.numero}`
+                                    );
+                                  }}
+                                  aria-label="Modifier la demande"
+                                  icon={
+                                    <Icon
+                                      icon="ri:pencil-line"
+                                      width={"24px"}
+                                      color={bluefrance113}
+                                    />
+                                  }
+                                />
+                              </Tooltip>
                             )}
-                            bg={getAvatarBgColor(intention.userName ?? "")}
-                            color={"white"}
-                            position={"unset"}
-                          />
-                        </Tooltip>
-                      </Td>
-                      {data?.campagne.statut ===
-                        CampagneStatutEnum["terminée"] && (
-                        <Td>
-                          {intention.numeroDemandeImportee ? (
-                            <Button
-                              as={NextLink}
-                              variant="link"
-                              href={`/intentions/perdir/saisie/${intention.numeroDemandeImportee}`}
-                              leftIcon={<ExternalLinkIcon />}
-                              me={"auto"}
-                              onClick={(e) => e.stopPropagation()}
-                            >
-                              intention dupliquée{" "}
-                              {intention.numeroDemandeImportee}
-                            </Button>
-                          ) : (
-                            <Button
-                              leftIcon={<Icon icon="ri:import-line" />}
-                              variant={"newInput"}
-                              onClick={(e) => {
-                                setIsImporting(true);
-                                if (intention.numeroDemandeImportee) return;
-                                e.preventDefault();
-                                e.stopPropagation();
-                                importDemande({
+                            {canDelete() && (
+                              <Tooltip
+                                label="Supprimer la demande"
+                                closeOnScroll={true}
+                              >
+                                <IconButton
+                                  variant={"link"}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    onOpen();
+                                  }}
+                                  aria-label="Supprimer la demande"
+                                  icon={
+                                    <Icon
+                                      icon="ri:delete-bin-line"
+                                      width={"24px"}
+                                      color={bluefrance113}
+                                    />
+                                  }
+                                />
+                              </Tooltip>
+                            )}
+                            <Tooltip label="Suivre la demande">
+                              <IconButton
+                                aria-label="Suivre la demande"
+                                color={"bluefrance.113"}
+                                bgColor={"transparent"}
+                                icon={
+                                  intention.suiviId ? (
+                                    <Icon
+                                      width="24px"
+                                      icon="ri:bookmark-fill"
+                                    />
+                                  ) : (
+                                    <Icon
+                                      width="24px"
+                                      icon="ri:bookmark-line"
+                                    />
+                                  )
+                                }
+                                onClick={() => {
+                                  if (!intention.suiviId)
+                                    submitSuivi({
+                                      body: {
+                                        intentionNumero: intention.numero,
+                                      },
+                                    });
+                                  else
+                                    deleteSuivi({
+                                      params: { id: intention.suiviId },
+                                    });
+                                }}
+                              />
+                            </Tooltip>
+                            <ModalDeleteIntention
+                              isOpen={isOpen}
+                              onClose={onClose}
+                              numero={intention.numero}
+                              isDeleting={isDeleting}
+                              deleteIntention={() => {
+                                deleteIntention({
                                   params: { numero: intention.numero },
                                 });
                               }}
-                              isDisabled={
-                                !!intention.numeroDemandeImportee ||
-                                isSubmitting ||
-                                isImporting ||
-                                !hasPermissionSubmitIntention
-                              }
-                            >
-                              Dupliquer cette intention
-                            </Button>
-                          )}
+                            />
+                          </Flex>
                         </Td>
-                      )}
-                    </Tr>
-                  )
-                )}
-              </Tbody>
-            </Table>
-          </TableContainer>
+                        <Td textAlign={"center"}>
+                          <Tag colorScheme="blue" size={"md"} h="fit-content">
+                            {getTypeDemandeLabel(intention.typeDemande)}
+                          </Tag>
+                        </Td>
+                        <Td w="15" textAlign={"center"}>
+                          <Tooltip label={intention.userName}>
+                            <Avatar
+                              name={intention.userName}
+                              colorScheme={getAvatarBgColor(
+                                intention.userName ?? ""
+                              )}
+                              bg={getAvatarBgColor(intention.userName ?? "")}
+                              color={"white"}
+                              position={"unset"}
+                            />
+                          </Tooltip>
+                        </Td>
+                        {data?.campagne.statut ===
+                          CampagneStatutEnum["terminée"] && (
+                          <Td>
+                            {intention.numeroDemandeImportee ? (
+                              <Button
+                                as={NextLink}
+                                variant="link"
+                                href={`/intentions/perdir/saisie/${intention.numeroDemandeImportee}`}
+                                leftIcon={<ExternalLinkIcon />}
+                                me={"auto"}
+                                onClick={(e) => e.stopPropagation()}
+                              >
+                                intention dupliquée{" "}
+                                {intention.numeroDemandeImportee}
+                              </Button>
+                            ) : (
+                              <Button
+                                leftIcon={<Icon icon="ri:import-line" />}
+                                variant={"newInput"}
+                                onClick={(e) => {
+                                  setIsImporting(true);
+                                  if (intention.numeroDemandeImportee) return;
+                                  e.preventDefault();
+                                  e.stopPropagation();
+                                  importDemande({
+                                    params: { numero: intention.numero },
+                                  });
+                                }}
+                                isDisabled={
+                                  !!intention.numeroDemandeImportee ||
+                                  isSubmitting ||
+                                  isImporting ||
+                                  !hasPermissionSubmitIntention
+                                }
+                              >
+                                Dupliquer cette intention
+                              </Button>
+                            )}
+                          </Td>
+                        )}
+                      </Tr>
+                    )
+                  )}
+                </Tbody>
+              </Table>
+            </TableContainer>
+            <TableFooter
+              page={page}
+              pageSize={PAGE_SIZE}
+              count={data?.count}
+              onPageChange={(newPage) =>
+                setSearchParams({ ...searchParams, page: `${newPage}` })
+              }
+            />
+          </>
         ) : (
           <Center mt={12}>
             <Flex flexDirection={"column"}>

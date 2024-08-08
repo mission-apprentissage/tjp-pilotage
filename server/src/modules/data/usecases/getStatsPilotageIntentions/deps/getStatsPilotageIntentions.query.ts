@@ -1,5 +1,5 @@
-import { ExpressionBuilder, expressionBuilder, sql } from "kysely";
-import { CURRENT_RENTREE, ScopeEnum } from "shared";
+import { ExpressionBuilder, sql } from "kysely";
+import { ScopeEnum } from "shared";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -16,47 +16,8 @@ import {
   notPerimetreIJDepartement,
   notPerimetreIJRegion,
 } from "../../../utils/notPerimetreIJ";
+import { genericOnConstatRentree } from "../../../utils/onConstatDeRentree";
 import { Filters } from "../getStatsPilotageIntentions.usecase";
-
-const genericOnConstatRentree =
-  ({
-    codeNiveauDiplome,
-    CPC,
-    codeNsf,
-  }: {
-    codeNiveauDiplome?: string[];
-    CPC?: string[];
-    codeNsf?: string[];
-  }) =>
-  () => {
-    return expressionBuilder<DB, keyof DB>()
-      .selectFrom("constatRentree")
-      .leftJoin(
-        "dataEtablissement",
-        "dataEtablissement.uai",
-        "constatRentree.uai"
-      )
-      .leftJoin("dataFormation", "dataFormation.cfd", "constatRentree.cfd")
-      .where("constatRentree.rentreeScolaire", "=", CURRENT_RENTREE)
-      .where("constatRentree.anneeDispositif", "=", 1)
-      .$call((eb) => {
-        if (CPC) return eb.where("dataFormation.cpc", "in", CPC);
-        return eb;
-      })
-      .$call((eb) => {
-        if (codeNsf) return eb.where("dataFormation.codeNsf", "in", codeNsf);
-        return eb;
-      })
-      .$call((eb) => {
-        if (codeNiveauDiplome)
-          return eb.where(
-            "dataFormation.codeNiveauDiplome",
-            "in",
-            codeNiveauDiplome
-          );
-        return eb;
-      });
-  };
 
 const selectNbDemandes = (eb: ExpressionBuilder<DB, "demande">) =>
   eb.fn.count<number>("demande.numero");

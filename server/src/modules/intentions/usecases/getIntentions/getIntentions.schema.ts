@@ -1,4 +1,5 @@
 import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
+import { OptionSchema } from "shared/schema/optionSchema";
 import { z } from "zod";
 
 const UserSchema = z.object({
@@ -98,6 +99,7 @@ const IntentionsItem = z.object({
   updatedBy: UserSchema.optional(),
   suiviId: z.string().optional(),
   canEdit: z.boolean(),
+  alreadyAccessed: z.boolean(),
 });
 
 export const getIntentionsSchema = {
@@ -110,6 +112,8 @@ export const getIntentionsSchema = {
     offset: z.coerce.number().optional(),
     limit: z.coerce.number().optional(),
     campagne: z.string().optional(),
+    codeAcademie: z.array(z.string()).optional(),
+    codeNiveauDiplome: z.array(z.string()).optional(),
   }),
   response: {
     200: z.object({
@@ -130,6 +134,10 @@ export const getIntentionsSchema = {
         annee: z.string(),
         statut: z.string(),
         id: z.string(),
+      }),
+      filters: z.object({
+        academies: z.array(OptionSchema),
+        diplomes: z.array(OptionSchema),
       }),
     }),
   },

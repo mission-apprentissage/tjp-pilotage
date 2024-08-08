@@ -1,40 +1,19 @@
-import Boom from "@hapi/boom";
 import { sql } from "kysely";
 import { jsonObjectFrom } from "kysely/helpers/postgres";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
-import { z } from "zod";
 
-import { kdb } from "../../../../db/db";
-import { cleanNull } from "../../../../utils/noNull";
-import { RequestUser } from "../../../core/model/User";
-import { castDemandeStatutWithoutSupprimee } from "../../../utils/castDemandeStatut";
-import { isIntentionCampagneEnCours } from "../../../utils/isDemandeCampagneEnCours";
+import { kdb } from "../../../../../db/db";
+import { cleanNull } from "../../../../../utils/noNull";
+import { castDemandeStatutWithoutSupprimee } from "../../../../utils/castDemandeStatut";
+import { isIntentionCampagneEnCours } from "../../../../utils/isDemandeCampagneEnCours";
 import {
   isIntentionBrouillonVisible,
   isIntentionSelectable,
-} from "../../../utils/isDemandeSelectable";
-import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
-import { getIntentionsSchema } from "./getIntentions.schema";
+} from "../../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../../utils/normalizeSearch";
+import { Filters } from "./getFilters.dep";
 
-export interface Filters
-  extends z.infer<typeof getIntentionsSchema.querystring> {
-  user: RequestUser;
-}
-
-export const getCampagneQuery = async (anneeCampagne: string) => {
-  const campagne = await kdb
-    .selectFrom("campagne")
-    .selectAll()
-    .where("annee", "=", anneeCampagne)
-    .executeTakeFirstOrThrow()
-    .catch(() => {
-      throw Boom.notFound(`Aucune campagne pour l'année ${anneeCampagne}`);
-    });
-
-  return campagne;
-};
-
-export const getIntentionsQuery = async (
+export const getIntentions = async (
   {
     statut,
     suivies,
@@ -44,6 +23,8 @@ export const getIntentionsQuery = async (
     limit = 20,
     order,
     orderBy,
+    codeAcademie,
+    codeNiveauDiplome,
   }: Filters,
   anneeCampagne: string,
   shouldFetchOnlyIntention: boolean
@@ -82,6 +63,12 @@ export const getIntentionsQuery = async (
         return eb;
       })
     )
+    .leftJoin("intentionAccessLog", (join) =>
+      join
+        .onRef("intentionAccessLog.intentionNumero", "=", "intention.numero")
+        .onRef("intentionAccessLog.updatedAt", ">", "intention.updatedAt")
+        .on("intentionAccessLog.userId", "=", user.id)
+    )
     .selectAll("intention")
     .select((eb) => [
       "suivi.id as suiviId",
@@ -95,6 +82,10 @@ export const getIntentionsQuery = async (
       "academie.libelleAcademie",
       "region.libelleRegion",
       "dispositif.libelleDispositif as libelleDispositif",
+      sql<boolean>`(
+        "intentionAccessLog"."id" is not null
+         or "intention"."updatedBy" = ${user.id}
+      )`.as("alreadyAccessed"),
       sql<string>`count(*) over()`.as("count"),
       eb
         .selectFrom(({ selectFrom }) =>
@@ -198,6 +189,24 @@ export const getIntentionsQuery = async (
         return q.where("intention.isIntention", "=", true);
       return q;
     })
+    .$call((eb) => {
+      if (codeAcademie) {
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      }
+
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome) {
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      }
+
+      return eb;
+    })
     .orderBy("updatedAt desc")
     .where(isIntentionSelectable({ user }))
     .where(isIntentionBrouillonVisible({ user }))
@@ -218,6 +227,7 @@ export const getIntentionsQuery = async (
         statut: castDemandeStatutWithoutSupprimee(intention.statut),
         createdAt: intention.createdAt?.toISOString(),
         updatedAt: intention.updatedAt?.toISOString(),
+        alreadyAccessed: intention.alreadyAccessed ?? true,
       })
     ),
     count: parseInt(intentions[0]?.count) || 0,

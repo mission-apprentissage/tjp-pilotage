@@ -79,8 +79,8 @@ const getStatsRegions = async ({
       "indicateurRegionSortie.codeRegion",
       "region.libelleRegion",
       "indicateurRegion.tauxChomage",
-      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
-      selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
+      selectTauxInsertion6moisAgg("indicateurRegionSortie").as("tauxInsertion"),
+      selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
     ])
     .groupBy([
       "indicateurRegionSortie.codeRegion",

@@ -1,11 +1,12 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
-import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
-import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
-import { OrderDemandesRestitutionIntentions } from "@/app/(wrapped)/intentions/restitution/types";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
+
+import { STATS_DEMANDES_COLUMNS } from "../STATS_DEMANDES_COLUMN";
+import { OrderDemandesRestitutionIntentions } from "../types";
 
 const ConditionalTh = chakra(
   ({
@@ -27,30 +28,33 @@ const ConditionalTh = chakra(
   }) => {
     if (colonneFilters.includes(colonne))
       return (
-        <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
-          <Th
-            className={className}
-            style={style}
-            isNumeric={isNumeric}
-            maxW={170}
-            p={2}
-            cursor={onClick ? "pointer" : "default"}
-            whiteSpace="nowrap"
-            onClick={() =>
-              onClick &&
-              onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
-            }
-            fontSize={12}
-            fontWeight={700}
-            lineHeight={"20px"}
-            textTransform={"uppercase"}
-            textOverflow={"ellipsis"}
-            alignSelf={"stretch"}
-            isTruncated
-          >
-            {children}
-          </Th>
-        </Tooltip>
+        <Th
+          maxW={170}
+          p={2}
+          className={className}
+          style={style}
+          isNumeric={isNumeric}
+          cursor={onClick ? "pointer" : "default"}
+          onClick={() =>
+            onClick &&
+            onClick(colonne as OrderDemandesRestitutionIntentions["orderBy"])
+          }
+        >
+          <Tooltip label={STATS_DEMANDES_COLUMNS[colonne]} placement="top">
+            <Box
+              fontSize={12}
+              fontWeight={700}
+              lineHeight={"20px"}
+              textTransform={"uppercase"}
+              textOverflow={"ellipsis"}
+              alignSelf={"stretch"}
+              isTruncated
+              whiteSpace="nowrap"
+            >
+              {children}
+            </Box>
+          </Tooltip>
+        </Th>
       );
     return null;
   }
@@ -113,6 +117,15 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="libelleAcademie" />
         {STATS_DEMANDES_COLUMNS.libelleAcademie}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"secteur"}
+        onClick={handleOrder}
+        bgColor={getCellColor("secteur")}
+      >
+        <OrderIcon {...order} column="secteur" />
+        {STATS_DEMANDES_COLUMNS.secteur}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -227,6 +240,78 @@ export const HeadLineContent = ({
       >
         <OrderIcon {...order} column="amiCma" />
         {STATS_DEMANDES_COLUMNS.amiCma}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValide"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaValide")}
+      >
+        <OrderIcon {...order} column="amiCmaValide" />
+        {STATS_DEMANDES_COLUMNS.amiCmaValide}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaEnCoursValidation"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaEnCoursValidation")}
+      >
+        <OrderIcon {...order} column="amiCmaEnCoursValidation" />
+        {STATS_DEMANDES_COLUMNS.amiCmaEnCoursValidation}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValideAnnee"}
+        onClick={handleOrder}
+        bgColor={getCellColor("amiCmaValideAnnee")}
+      >
+        <OrderIcon {...order} column="amiCmaValideAnnee" />
+        {STATS_DEMANDES_COLUMNS.amiCmaValideAnnee}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"filiereCmq"}
+        onClick={handleOrder}
+        bgColor={getCellColor("filiereCmq")}
+      >
+        <OrderIcon {...order} column="filiereCmq" />
+        {STATS_DEMANDES_COLUMNS.filiereCmq}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"nomCmq"}
+        onClick={handleOrder}
+        bgColor={getCellColor("nomCmq")}
+      >
+        <OrderIcon {...order} column="nomCmq" />
+        {STATS_DEMANDES_COLUMNS.nomCmq}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"inspecteurReferent"}
+        onClick={handleOrder}
+        bgColor={getCellColor("inspecteurReferent")}
+      >
+        <OrderIcon {...order} column="inspecteurReferent" />
+        {STATS_DEMANDES_COLUMNS.inspecteurReferent}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique1"}
+        onClick={handleOrder}
+        bgColor={getCellColor("partenaireEconomique1")}
+      >
+        <OrderIcon {...order} column="partenaireEconomique1" />
+        {STATS_DEMANDES_COLUMNS.partenaireEconomique1}
+      </ConditionalTh>
+      <ConditionalTh
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique2"}
+        onClick={handleOrder}
+        bgColor={getCellColor("partenaireEconomique2")}
+      >
+        <OrderIcon {...order} column="partenaireEconomique2" />
+        {STATS_DEMANDES_COLUMNS.partenaireEconomique2}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}

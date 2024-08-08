@@ -9,6 +9,7 @@ import { cardTheme } from "./Card.theme";
 import { checkboxTheme } from "./Checkbox.theme";
 import { formStyle } from "./Label.theme";
 import { linkTheme } from "./Link.theme";
+import { modalTheme } from "./Modal.theme";
 import { radioTheme } from "./Radio.theme";
 import { selectTheme } from "./Select.theme";
 import { sliderTheme } from "./Slider.theme";
@@ -49,6 +50,7 @@ export const themeDefinition = {
     Checkbox: checkboxTheme,
     Badge: badgeTheme,
     Textarea: textareaTheme,
+    Modal: modalTheme,
   },
 };
 

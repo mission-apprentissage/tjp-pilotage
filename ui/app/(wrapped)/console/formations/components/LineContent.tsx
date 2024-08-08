@@ -60,9 +60,9 @@ export const FormationLineContent = ({
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
     <Td minW={450} whiteSpace={"normal"}>
       <Flex>
-        <Text w={"fit-content"} my={"auto"}>
+        <Flex w={"fit-content"} my={"auto"}>
           {formatAnneeCommuneLibelle(line, "long", "sm")}
-        </Text>
+        </Flex>
         {line.isFormationRenovee && (
           <Badge
             size="sm"
