@@ -7,7 +7,7 @@ export function formatEtablissement(
   etablissement: EtablissementWithDistance
 ): z.infer<typeof EtablissementSchema> {
   return {
-    uai: etablissement.UAI,
+    uai: etablissement.uai,
     latitude: etablissement.latitude || +Infinity,
     longitude: etablissement.longitude || +Infinity,
     voies: etablissement.voies || [],

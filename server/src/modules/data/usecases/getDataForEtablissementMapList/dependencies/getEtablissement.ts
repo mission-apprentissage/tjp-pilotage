@@ -17,8 +17,8 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
     .selectFrom("etablissement")
     .leftJoin(
       "formationEtablissement",
-      "formationEtablissement.UAI",
-      "etablissement.UAI"
+      "formationEtablissement.uai",
+      "etablissement.uai"
     )
     .leftJoin(
       "dataFormation",
@@ -33,7 +33,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
     .leftJoin(
       "dispositif",
       "dispositif.codeDispositif",
-      "formationEtablissement.dispositifId"
+      "formationEtablissement.codeDispositif"
     )
     .leftJoin(
       "indicateurSortie",
@@ -55,7 +55,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       sql<string[]>`array_agg(distinct ${sb.ref(
         "dispositif.libelleDispositif"
       )})`.as("libellesDispositifs"),
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",
@@ -72,7 +72,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
       selectTauxInsertion6mois("indicateurSortie").as("tauxInsertion"),
       effectifAnnee({ alias: "indicateurEntree" }).as("effectif"),
     ])
-    .where("etablissement.UAI", "=", uai)
+    .where("etablissement.uai", "=", uai)
     .$call((q) => {
       if (cfd !== undefined && cfd.length > 0) {
         return q.where("formationEtablissement.cfd", "in", cfd);
@@ -81,7 +81,7 @@ export const getEtablissement = async ({ uai, cfd }: Filters) =>
     })
     .groupBy([
       "dataFormation.libelleFormation",
-      "etablissement.UAI",
+      "etablissement.uai",
       "etablissement.codeDepartement",
       "etablissement.commune",
       "etablissement.longitude",

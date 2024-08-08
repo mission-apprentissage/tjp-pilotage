@@ -38,7 +38,7 @@ export const DonneesIndisponiblesSection = ({
             href={createParametrizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
-                dispositifId: [currentFormation?.codeDispositif ?? ""],
+                codeDispositif: [currentFormation?.codeDispositif ?? ""],
                 codeRegion: [etablissement?.codeRegion ?? ""],
               },
             })}
@@ -69,7 +69,7 @@ export const DonneesIndisponiblesSection = ({
             href={createParametrizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
-                dispositifId: [currentFormation?.codeDispositif ?? ""],
+                codeDispositif: [currentFormation?.codeDispositif ?? ""],
                 codeRegion: [etablissement?.codeRegion ?? ""],
               },
             })}
@@ -100,7 +100,7 @@ export const DonneesIndisponiblesSection = ({
             href={createParametrizedUrl("/console/formations", {
               filters: {
                 cfd: [currentFormation?.cfd ?? ""],
-                dispositifId: [currentFormation?.codeDispositif ?? ""],
+                codeDispositif: [currentFormation?.codeDispositif ?? ""],
                 codeRegion: [etablissement?.codeRegion ?? ""],
               },
             })}

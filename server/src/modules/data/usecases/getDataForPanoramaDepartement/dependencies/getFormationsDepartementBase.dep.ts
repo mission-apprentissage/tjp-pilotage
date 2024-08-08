@@ -38,7 +38,7 @@ export const getFormationsDepartementBase = ({
     )
     .leftJoin(
       "dispositif",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "dispositif.codeDispositif"
     )
     .leftJoin("indicateurEntree", (join) =>
@@ -52,8 +52,8 @@ export const getFormationsDepartementBase = ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin("indicateurEntree as iep", (join) =>
       join
@@ -81,11 +81,11 @@ export const getFormationsDepartementBase = ({
     })
     .select((eb) => [
       "formationView.cfd",
-      "formationEtablissement.dispositifId as codeDispositif",
+      "formationEtablissement.codeDispositif as codeDispositif",
       "libelleDispositif",
       "libelleNiveauDiplome",
       "formationView.codeNiveauDiplome",
-      sql<number>`COUNT(etablissement."UAI")`.as("nbEtablissement"),
+      sql<number>`COUNT(etablissement."uai")`.as("nbEtablissement"),
       selectTauxRemplissageAgg("indicateurEntree").as("tauxRemplissage"),
       sql<number>`SUM(${effectifAnnee({ alias: "indicateurEntree" })})`.as(
         "effectif"
@@ -106,7 +106,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertionPrecedent"),
       (eb) =>
@@ -114,7 +114,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie: getMillesimePrecedent(millesimeSortie),
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuitePrecedent"),
       (eb) =>
@@ -122,7 +122,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxInsertion"),
       (eb) =>
@@ -130,7 +130,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxPoursuite"),
       (eb) =>
@@ -138,7 +138,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("continuum"),
       (eb) =>
@@ -146,7 +146,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }).as("tauxDevenirFavorable"),
     ])
@@ -162,7 +162,7 @@ export const getFormationsDepartementBase = ({
           eb,
           millesimeSortie,
           cfdRef: "formationEtablissement.cfd",
-          codeDispositifRef: "formationEtablissement.dispositifId",
+          codeDispositifRef: "formationEtablissement.codeDispositif",
           codeRegionRef: "etablissement.codeRegion",
         }),
       "is not",
@@ -174,7 +174,7 @@ export const getFormationsDepartementBase = ({
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "dispositif.codeDispositif",
       "niveauDiplome.libelleNiveauDiplome",
     ])

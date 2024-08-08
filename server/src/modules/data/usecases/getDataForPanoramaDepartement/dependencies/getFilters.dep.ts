@@ -20,8 +20,8 @@ export const getFilters = async ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .$call((eb) => {
       if (!codeDepartement) return eb;

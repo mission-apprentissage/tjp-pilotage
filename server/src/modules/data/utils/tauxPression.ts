@@ -148,8 +148,8 @@ export const tauxPressionFormationRegional = ({
     )
     .leftJoin(
       "etablissement",
-      "etablissement.UAI",
-      "formationEtablissement.UAI"
+      "etablissement.uai",
+      "formationEtablissement.uai"
     )
     .leftJoin("region", "region.codeRegion", "etablissement.codeRegion")
     .innerJoin(
@@ -159,7 +159,7 @@ export const tauxPressionFormationRegional = ({
     )
     .whereRef("formationView.cfd", "=", "demande.cfd")
     .whereRef(
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "=",
       "demande.codeDispositif"
     )
@@ -177,7 +177,7 @@ export const tauxPressionFormationRegional = ({
     .groupBy([
       "formationView.cfd",
       "formationView.codeNiveauDiplome",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "region.codeRegion",
     ]);
 };
@@ -214,17 +214,17 @@ export const withTauxPressionReg = <
           return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
         })
     )
-    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
     .whereRef("subFE.cfd", "=", cfdRef)
-    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
+    .whereRef("subFE.codeDispositif", "=", codeDispositifRef)
     .whereRef(
       "subEtab.codeRegion",
       "=",
       sql`ANY(array_agg(${eb.ref(codeRegionRef)}))`
     )
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "dispositifId"]);
+    .groupBy(["subFE.cfd", "codeDispositif"]);
 };
 
 export const withTauxPressionDep = <
@@ -259,17 +259,17 @@ export const withTauxPressionDep = <
           return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
         })
     )
-    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
     .whereRef("subFE.cfd", "=", cfdRef)
-    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
+    .whereRef("subFE.codeDispositif", "=", codeDispositifRef)
     .whereRef(
       "subEtab.codeDepartement",
       "=",
       sql`ANY(array_agg(${eb.ref(codeDepartementRef)}))`
     )
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "codeDispositif"]);
 };
 
 export const withTauxPressionNat = <
@@ -302,10 +302,10 @@ export const withTauxPressionNat = <
           return j.on("subIE.rentreeScolaire", "=", CURRENT_RENTREE);
         })
     )
-    .innerJoin("etablissement as subEtab", "subEtab.UAI", "subFE.UAI")
+    .innerJoin("etablissement as subEtab", "subEtab.uai", "subFE.uai")
     .innerJoin("dataFormation as subF", "subF.cfd", "subFE.cfd")
     .whereRef("subFE.cfd", "=", cfdRef)
-    .whereRef("subFE.dispositifId", "=", codeDispositifRef)
+    .whereRef("subFE.codeDispositif", "=", codeDispositifRef)
     .select([selectTauxPressionAgg("subIE", "subF", withTauxDemande).as("s")])
-    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "dispositifId"]);
+    .groupBy(["subFE.cfd", "subF.codeNiveauDiplome", "codeDispositif"]);
 };

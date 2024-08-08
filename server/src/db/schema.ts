@@ -322,7 +322,7 @@ export interface DomaineProfessionnel {
 
 export interface Etablissement {
   id: Generated<string>;
-  UAI: string;
+  uai: string;
   siret: string | null;
   codeAcademie: string | null;
   natureUAI: string | null;
@@ -366,8 +366,8 @@ export interface Formation {
 export interface FormationEtablissement {
   id: Generated<string>;
   cfd: string;
-  UAI: string;
-  dispositifId: string | null;
+  uai: string;
+  codeDispositif: string | null;
   voie: string;
 }
 
@@ -414,7 +414,7 @@ export interface IndicateurEntree {
 }
 
 export interface IndicateurEtablissement {
-  UAI: string;
+  uai: string;
   millesime: string;
   valeurAjoutee: number | null;
 }
@@ -427,7 +427,7 @@ export interface IndicateurRegion {
 
 export interface IndicateurRegionSortie {
   cfd: string;
-  dispositifId: string | null;
+  codeDispositif: string | null;
   codeRegion: string;
   voie: string;
   millesimeSortie: string;

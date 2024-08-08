@@ -43,7 +43,7 @@ export const getChiffresEntree = async ({
       sql<string>`CONCAT(
         ${eb.ref("dataEtablissement.uai")},
         ${eb.ref("dataFormation.cfd")},
-        COALESCE(${eb.ref("formationEtablissement.dispositifId")},''),
+        COALESCE(${eb.ref("formationEtablissement.codeDispositif")},''),
         ${eb.ref("formationEtablissement.voie")}
       )`.as("offre"),
       eb.fn
@@ -52,7 +52,7 @@ export const getChiffresEntree = async ({
       "voie",
       "uai",
       "dataFormation.cfd",
-      "dispositifId",
+      "codeDispositif",
       sql<number>`EXTRACT('year' FROM ${eb.ref(
         "dataFormation.dateOuverture"
       )})`.as("dateOuverture"),
@@ -102,7 +102,7 @@ export const getChiffresEntree = async ({
     .groupBy([
       "ie.rentreeScolaire",
       "formationEtablissement.voie",
-      "formationEtablissement.dispositifId",
+      "formationEtablissement.codeDispositif",
       "codeDispositif",
       "dataEtablissement.uai",
       "dataFormation.cfd",

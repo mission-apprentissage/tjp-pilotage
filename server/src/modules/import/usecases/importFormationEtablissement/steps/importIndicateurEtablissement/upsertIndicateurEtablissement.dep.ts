@@ -9,7 +9,7 @@ export const upsertIndicateurEtablissement = async (
     .insertInto("indicateurEtablissement")
     .values(indicateurEtablissement)
     .onConflict((oc) =>
-      oc.column("UAI").column("millesime").doUpdateSet(indicateurEtablissement)
+      oc.column("uai").column("millesime").doUpdateSet(indicateurEtablissement)
     )
     .execute();
 };
