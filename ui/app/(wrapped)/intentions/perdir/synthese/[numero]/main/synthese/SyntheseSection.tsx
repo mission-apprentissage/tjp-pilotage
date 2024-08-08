@@ -208,10 +208,6 @@ export const SyntheseSection = ({
               <Text fontSize={14}>{intention.libelleColoration}</Text>
             </Flex>
           )}
-          <Flex direction={"row"} gap={4} justify={"space-between"}>
-            <Text>Mixité scolaire / apprentissage</Text>
-            <Text fontSize={14}>{formatBoolean(intention.mixte)}</Text>
-          </Flex>
           <Divider my={3} borderColor={"grey.900"} />
           <Flex direction={"row"} gap={4} justify={"space-between"}>
             <Heading as={"h6"} fontSize={14}>
