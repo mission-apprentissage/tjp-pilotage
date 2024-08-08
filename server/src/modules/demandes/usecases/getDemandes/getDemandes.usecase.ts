@@ -1,18 +1,15 @@
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
-import {
-  Filters,
-  getCampagneQuery,
-  getDemandesQuery,
-} from "./getDemandes.query";
+import { Filters, getCampagne, getDemandes, getFilters } from "./deps";
 
 const getDemandesFactory =
   (
     deps = {
-      getDemandesQuery,
+      getDemandes,
       getCurrentCampagneQuery,
-      getCampagneQuery,
+      getCampagne,
+      getFilters,
     }
   ) =>
   async (activeFilters: Filters) => {
@@ -20,12 +17,13 @@ const getDemandesFactory =
     const anneeCampagne =
       activeFilters.campagne ?? currentCampagne.annee ?? CURRENT_ANNEE_CAMPAGNE;
 
-    const [demandes, campagne] = await Promise.all([
-      await deps.getDemandesQuery(activeFilters, anneeCampagne),
-      await deps.getCampagneQuery(anneeCampagne),
+    const [demandes, campagne, filters] = await Promise.all([
+      deps.getDemandes(activeFilters, anneeCampagne),
+      deps.getCampagne(anneeCampagne),
+      deps.getFilters(activeFilters),
     ]);
 
-    return { ...demandes, currentCampagne, campagne };
+    return { ...demandes, currentCampagne, campagne, filters };
   };
 
 export const getDemandesUsecase = getDemandesFactory();

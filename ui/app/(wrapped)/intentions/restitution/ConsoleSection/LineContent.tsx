@@ -144,6 +144,13 @@ export const LineContent = ({
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}
+        colonne={"secteur"}
+        bgColor={getCellColor("secteur")}
+      >
+        {demande.secteur === "PU" ? "Public" : "Privé"}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
         colonne={"libelleNsf"}
         minW={300}
         maxW={300}
@@ -247,6 +254,62 @@ export const LineContent = ({
         bgColor={getCellColor("amiCma")}
       >
         {formatBooleanValue(demande.amiCma)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValide"}
+        bgColor={getCellColor("amiCmaValide")}
+      >
+        {formatBooleanValue(demande.amiCmaValide)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaEnCoursValidation"}
+        bgColor={getCellColor("amiCmaEnCoursValidation")}
+      >
+        {formatBooleanValue(demande.amiCmaEnCoursValidation)}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"amiCmaValideAnnee"}
+        bgColor={getCellColor("amiCmaValideAnnee")}
+      >
+        {demande.amiCmaValideAnnee}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"filiereCmq"}
+        bgColor={getCellColor("filiereCmq")}
+      >
+        {demande.filiereCmq}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"nomCmq"}
+        bgColor={getCellColor("nomCmq")}
+      >
+        {demande.nomCmq}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"inspecteurReferent"}
+        bgColor={getCellColor("inspecteurReferent")}
+      >
+        {demande.inspecteurReferent}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique1"}
+        bgColor={getCellColor("partenaireEconomique1")}
+      >
+        {demande.partenaireEconomique1}
+      </ConditionalTd>
+      <ConditionalTd
+        colonneFilters={colonneFilters}
+        colonne={"partenaireEconomique2"}
+        bgColor={getCellColor("partenaireEconomique2")}
+      >
+        {demande.partenaireEconomique2}
       </ConditionalTd>
       <ConditionalTd
         colonneFilters={colonneFilters}

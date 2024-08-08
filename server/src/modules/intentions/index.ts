@@ -16,6 +16,7 @@ import { searchEtablissementPerdirRoute } from "./usecases/searchEtablissementPe
 import { submitAvisRoute } from "./usecases/submitAvis/submitAvis.route";
 import { submitChangementStatutRoute } from "./usecases/submitChangementStatut/submitChangementStatut.route";
 import { submitIntentionRoute } from "./usecases/submitIntention/submitIntention.route";
+import { submitIntentionAccessLogRoute } from "./usecases/submitIntentionAccessLog/submitIntentionAccessLog.route";
 import { submitSuiviRoute } from "./usecases/submitSuivi/submitSuivi.route";
 import { uploadIntentionFilesRoute } from "./usecases/uploadIntentionFiles/uploadIntentionFiles.route";
 
@@ -44,5 +45,6 @@ export const registerIntentionsExpeModule = ({
     ...submitSuiviRoute({ server }),
     ...deleteSuiviRoute(server),
     ...getEditoRoute(server),
+    ...submitIntentionAccessLogRoute({ server }),
   };
 };

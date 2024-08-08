@@ -42,9 +42,9 @@ import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatNumber } from "@/utils/formatUtils";
 import { useStateParams } from "@/utils/useFilters";
 
-import { roundNumber } from "../../../../../utils/roundNumber";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
@@ -426,7 +426,7 @@ export const QuadrantSection = ({
                         textBg="white"
                         value={
                           formation.tauxPression
-                            ? roundNumber(formation?.tauxPression)
+                            ? formatNumber(formation?.tauxPression)
                             : "-"
                         }
                       />

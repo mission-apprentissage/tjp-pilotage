@@ -527,6 +527,13 @@ export interface Intention {
   travauxAmenagementCout: number | null;
 }
 
+export interface IntentionAccessLog {
+  id: Generated<string>;
+  intentionNumero: string | null;
+  userId: string | null;
+  updatedAt: Timestamp | null;
+}
+
 export interface LatestDemandeIntentionNonMaterializedView {
   isIntention: boolean | null;
   numero: string | null;
@@ -821,6 +828,7 @@ export interface DB {
   indicateurRegionSortie: IndicateurRegionSortie;
   indicateurSortie: IndicateurSortie;
   intention: Intention;
+  intentionAccessLog: IntentionAccessLog;
   latestDemandeIntentionNonMaterializedView: LatestDemandeIntentionNonMaterializedView;
   latestDemandeNonMaterializedView: LatestDemandeNonMaterializedView;
   latestIntentionNonMaterializedView: LatestIntentionNonMaterializedView;
