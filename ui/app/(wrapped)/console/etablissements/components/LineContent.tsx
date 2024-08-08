@@ -28,12 +28,16 @@ export const EtablissementLineContent = ({
   onClickExpend,
   onClickCollapse,
   expended = false,
+  isFirstColumnSticky,
+  isSecondColumnSticky,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
   onClickExpend?: () => void;
   onClickCollapse?: () => void;
   expended?: boolean;
+  isFirstColumnSticky?: boolean;
+  isSecondColumnSticky?: boolean;
 }) => (
   <>
     <Td pr="0" py="1">
@@ -54,7 +58,19 @@ export const EtablissementLineContent = ({
       )}
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
-    <Td minW={300} maxW={300} whiteSpace="normal">
+    <Td
+      minW={300}
+      maxW={300}
+      whiteSpace="normal"
+      left={0}
+      zIndex={1}
+      bgColor={"white"}
+      position={{ lg: "relative", xl: "sticky" }}
+      boxShadow={{
+        lg: "none",
+        xl: isFirstColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Link
         as={NextLink}
         href={`/panorama/etablissement/${line.uai}`}
@@ -73,7 +89,18 @@ export const EtablissementLineContent = ({
     </Td>
     <Td>{line.libelleDepartement ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-    <Td minW={450} whiteSpace="normal">
+    <Td
+      minW={450}
+      whiteSpace="normal"
+      zIndex={1}
+      bgColor={"white"}
+      position={{ lg: "relative", xl: "sticky" }}
+      left={{ lg: "unset", xl: "299" }}
+      boxShadow={{
+        lg: "none",
+        xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Flex>
         {formatAnneeCommuneLibelle(line, "long", "sm")}
         {line.isFormationRenovee && (
