@@ -20,6 +20,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
+import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { Line } from "../types";
 
 export const EtablissementLineContent = ({
@@ -59,8 +60,8 @@ export const EtablissementLineContent = ({
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td
-      minW={300}
-      maxW={300}
+      minW={ETABLISSEMENT_COLUMN_WIDTH}
+      maxW={ETABLISSEMENT_COLUMN_WIDTH}
       whiteSpace="normal"
       left={0}
       zIndex={1}
@@ -95,7 +96,7 @@ export const EtablissementLineContent = ({
       zIndex={1}
       bgColor={"white"}
       position={{ lg: "relative", xl: "sticky" }}
-      left={{ lg: "unset", xl: "299" }}
+      left={{ lg: "unset", xl: ETABLISSEMENT_COLUMN_WIDTH - 1 }}
       boxShadow={{
         lg: "none",
         xl: isSecondColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
