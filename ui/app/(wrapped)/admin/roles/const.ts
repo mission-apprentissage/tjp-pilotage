@@ -53,6 +53,10 @@ export const ROLES_LABELS: {
     description:
       "Membres du Conseil régional, il a un rôle d'analyse et de décision. Il émet un avis préalable sur les propositions puis les sur les projets de demande. Il peut consulter les avis des Experts, l'avis du DRAFPIC et la décision du Recteur.",
   }),
+  invite: () => ({
+    label: "Invité",
+    description: "lorem ipsum",
+  }),
 };
 
 export const PERMISSION_GROUP_LABELS: {
