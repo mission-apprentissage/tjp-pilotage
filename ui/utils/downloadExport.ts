@@ -45,7 +45,8 @@ export function downloadCsv<D extends object>(
       value: value,
     })),
     formatters: {
-      string: (str: string) => str,
+      string: (str: string) =>
+        `"${str.replace(/"/g, '\\"').replace(/(\r\n|\r|\n)/g, " ")}"`,
       number: numberFormatter({
         separator: ",",
       }),
