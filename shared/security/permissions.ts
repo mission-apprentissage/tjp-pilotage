@@ -99,6 +99,14 @@ export const PERMISSIONS = {
     "intentions-perdir-statut/lecture": { default: "uai" },
     "intentions-perdir-avis/lecture": { default: "uai" },
   },
+  invite: {
+    "intentions/lecture": { default: "region", draft: "region" },
+    "pilotage-intentions/lecture": { default: "national" },
+    "restitution-intentions/lecture": { default: "region" },
+    "intentions-perdir/lecture": { default: "region", draft: "region" },
+    "intentions-perdir-statut/lecture": { default: "region" },
+    "intentions-perdir-avis/lecture": { default: "region" },
+  },
 } satisfies {
   [R: string]: {
     [s: string]: Record<string, Scope>;
@@ -120,7 +128,13 @@ export const HIERARCHY: {
     scope: "national",
   },
   admin_region: {
-    sub: ["gestionnaire_region", "pilote_region", "expert_region", "region"],
+    sub: [
+      "gestionnaire_region",
+      "pilote_region",
+      "expert_region",
+      "region",
+      "invite",
+    ],
     scope: "region",
   },
   region: {
@@ -142,5 +156,9 @@ export const HIERARCHY: {
   perdir: {
     sub: [],
     scope: "uai",
+  },
+  invite: {
+    sub: [],
+    scope: "region",
   },
 };
