@@ -1,4 +1,4 @@
-import { humanFileSize } from "../humanFileSize";
+import { humanFileSize } from "./humanFileSize";
 
 describe("Utils: human readable file size", () => {
   it.each`
