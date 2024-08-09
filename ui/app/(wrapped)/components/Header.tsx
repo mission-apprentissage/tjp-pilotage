@@ -28,7 +28,7 @@ import { AuthContext } from "@/app/(wrapped)/auth/authContext";
 import { InformationHeader } from "./InformationHeader";
 import { Nav } from "./Nav";
 
-export const Header = () => {
+export const Header = ({ isMaintenance }: { isMaintenance?: boolean }) => {
   const { auth, setAuth } = useContext(AuthContext);
   const queryClient = useQueryClient();
 
@@ -115,18 +115,20 @@ export const Header = () => {
           </Box>
         </Flex>
       </VStack>
-      <Box
-        boxShadow="0 2px 3px rgba(0,0,18,0.16)"
-        position="sticky"
-        top={0}
-        left={0}
-        zIndex="banner"
-        backgroundColor="white"
-      >
-        <Container maxWidth={"container.xl"} px={0}>
-          <Nav />
-        </Container>
-      </Box>
+      {!isMaintenance && (
+        <Box
+          boxShadow="0 2px 3px rgba(0,0,18,0.16)"
+          position="sticky"
+          top={0}
+          left={0}
+          zIndex="banner"
+          backgroundColor="white"
+        >
+          <Container maxWidth={"container.xl"} px={0}>
+            <Nav />
+          </Container>
+        </Box>
+      )}
       <InformationHeader />
     </>
   );
