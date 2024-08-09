@@ -13,7 +13,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useRouter, useSearchParams } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import qs from "qs";
-import { Fragment, useContext, useEffect, useState } from "react";
+import { Fragment, useContext, useEffect, useRef, useState } from "react";
 import { CURRENT_RENTREE, RENTREES_SCOLAIRES } from "shared";
 
 import { client } from "@/api.client";
@@ -188,6 +188,37 @@ export default function Etablissements() {
     },
   });
 
+  const [isFirstColumnSticky, setIsFirstColumnSticky] = useState(false);
+  const [isSecondColumnSticky, setIsSecondColumnSticky] = useState(false);
+  const tableRef = useRef<HTMLDivElement>(null);
+
+  const handleScroll = () => {
+    if (tableRef.current) {
+      const scrollLeft = tableRef.current.scrollLeft;
+      console.log(scrollLeft);
+      if (scrollLeft > 90 && scrollLeft <= 470) {
+        setIsFirstColumnSticky(true);
+      } else {
+        setIsFirstColumnSticky(false);
+      }
+      if (scrollLeft > 475) {
+        setIsSecondColumnSticky(true);
+      } else {
+        setIsSecondColumnSticky(false);
+      }
+    }
+  };
+
+  useEffect(() => {
+    const box = tableRef.current;
+    if (box) {
+      box.addEventListener("scroll", handleScroll);
+      return () => {
+        box.removeEventListener("scroll", handleScroll);
+      };
+    }
+  }, []);
+
   return (
     <>
       <ConsoleFilters
@@ -217,9 +248,14 @@ export default function Etablissements() {
           count={data?.count}
           onPageChange={(newPage) => setSearchParams({ page: newPage })}
         />
-        <TableContainer overflowY="auto">
+        <TableContainer overflowY="auto" ref={tableRef}>
           <Table variant="simple" size={"sm"}>
-            <HeadLineContent order={order} setSearchParams={setSearchParams} />
+            <HeadLineContent
+              isFirstColumnSticky={isFirstColumnSticky}
+              isSecondColumnSticky={isSecondColumnSticky}
+              order={order}
+              setSearchParams={setSearchParams}
+            />
             <Tbody>
               {data?.etablissements.map((line) => (
                 <Fragment
@@ -227,6 +263,8 @@ export default function Etablissements() {
                 >
                   <Tr h="12">
                     <EtablissementLineContent
+                      isFirstColumnSticky={isFirstColumnSticky}
+                      isSecondColumnSticky={isSecondColumnSticky}
                       line={line}
                       defaultRentreeScolaire={CURRENT_RENTREE}
                       expended={
@@ -253,7 +291,11 @@ export default function Etablissements() {
                             key={`${historiqueLine.cfd}_${historiqueLine.codeDispositif}`}
                             bg={"grey.975"}
                           >
-                            <EtablissementLineContent line={historiqueLine} />
+                            <EtablissementLineContent
+                              isFirstColumnSticky={isFirstColumnSticky}
+                              isSecondColumnSticky={isSecondColumnSticky}
+                              line={historiqueLine}
+                            />
                           </Tr>
                         ))}
 

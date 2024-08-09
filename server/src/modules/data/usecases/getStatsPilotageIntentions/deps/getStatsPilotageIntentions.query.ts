@@ -33,7 +33,7 @@ const genericOnDemandes =
   }: Filters) =>
   (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
-      .selectFrom("latestDemandeView as demande")
+      .selectFrom("latestDemandeIntentionView as demande")
       .innerJoin("campagne", (join) =>
         join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
           if (campagne) return eb.on("campagne.annee", "=", campagne);
