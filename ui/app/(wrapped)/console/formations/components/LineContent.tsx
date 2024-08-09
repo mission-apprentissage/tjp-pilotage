@@ -29,6 +29,7 @@ export const FormationLineContent = ({
   onClickCollapse,
   expended = false,
   canShowQuadrantPosition,
+  isSticky,
 }: {
   line: Partial<Line>;
   defaultRentreeScolaire?: string;
@@ -36,6 +37,7 @@ export const FormationLineContent = ({
   onClickCollapse?: () => void;
   expended?: boolean;
   canShowQuadrantPosition?: boolean;
+  isSticky?: boolean;
 }) => (
   <>
     <Td pr="0" py="1">
@@ -57,11 +59,22 @@ export const FormationLineContent = ({
     </Td>
     <Td>{line.rentreeScolaire ?? defaultRentreeScolaire ?? "-"}</Td>
     <Td>{line.libelleNiveauDiplome ?? "-"}</Td>
-    <Td minW={450} whiteSpace={"normal"}>
+    <Td
+      minW={450}
+      whiteSpace={"normal"}
+      left={0}
+      zIndex={1}
+      bgColor="white"
+      position={{ lg: "relative", xl: "sticky" }}
+      boxShadow={{
+        lg: "none",
+        xl: isSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+      }}
+    >
       <Flex>
-        <Text w={"fit-content"} my={"auto"}>
+        <Flex w={"fit-content"} my={"auto"}>
           {formatAnneeCommuneLibelle(line, "long", "sm")}
-        </Text>
+        </Flex>
         {line.isFormationRenovee && (
           <Badge
             size="sm"
