@@ -6,11 +6,15 @@ import { OrderIcon } from "@/components/OrderIcon";
 import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
+import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
 import { Filters, Order } from "../types";
+
 export const HeadLineContent = ({
   order,
   setSearchParams,
+  isFirstColumnSticky,
+  isSecondColumnSticky,
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
@@ -19,6 +23,8 @@ export const HeadLineContent = ({
     order?: Partial<Order>;
     page?: number;
   }) => void;
+  isFirstColumnSticky?: boolean;
+  isSecondColumnSticky?: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
@@ -42,7 +48,7 @@ export const HeadLineContent = ({
       top="0"
       bg="white"
       boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-      zIndex={1}
+      zIndex={2}
     >
       <Tr>
         <Th />
@@ -50,6 +56,14 @@ export const HeadLineContent = ({
         <Th
           cursor="pointer"
           onClick={() => handleOrder("libelleEtablissement")}
+          left={0}
+          zIndex={1}
+          bgColor={"white"}
+          position={{ lg: "relative", xl: "sticky" }}
+          boxShadow={{
+            lg: "none",
+            xl: isFirstColumnSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+          }}
         >
           <OrderIcon {...order} column="libelleEtablissement" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleEtablissement}
@@ -69,7 +83,20 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="libelleNiveauDiplome" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleNiveauDiplome}
         </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")}>
+        <Th
+          cursor="pointer"
+          onClick={() => handleOrder("libelleFormation")}
+          zIndex={1}
+          bgColor={"white"}
+          position={{ lg: "relative", xl: "sticky" }}
+          left={{ lg: "unset", xl: ETABLISSEMENT_COLUMN_WIDTH - 1 }}
+          boxShadow={{
+            lg: "none",
+            xl: isSecondColumnSticky
+              ? "inset -2px 0px 0px 0px #E2E8F0"
+              : "none",
+          }}
+        >
           <OrderIcon {...order} column="libelleFormation" />
           {FORMATION_ETABLISSEMENT_COLUMNS.libelleFormation}
         </Th>

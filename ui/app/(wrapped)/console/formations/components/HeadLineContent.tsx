@@ -13,6 +13,7 @@ export const HeadLineContent = ({
   order,
   setSearchParams,
   canShowQuadrantPosition,
+  isSticky,
 }: {
   order: Partial<Order>;
   setSearchParams: (params: {
@@ -22,6 +23,7 @@ export const HeadLineContent = ({
     page?: number;
   }) => void;
   canShowQuadrantPosition?: boolean;
+  isSticky?: boolean;
 }) => {
   const { openGlossaire } = useGlossaireContext();
   const trackEvent = usePlausible();
@@ -45,7 +47,7 @@ export const HeadLineContent = ({
       top="0"
       bg="white"
       boxShadow="0 0 6px 0 rgb(0,0,0,0.15)"
-      zIndex={1}
+      zIndex={2}
     >
       <Tr>
         <Th />
@@ -54,7 +56,18 @@ export const HeadLineContent = ({
           <OrderIcon {...order} column="codeNiveauDiplome" />
           {FORMATION_COLUMNS.libelleNiveauDiplome}
         </Th>
-        <Th cursor="pointer" onClick={() => handleOrder("libelleFormation")}>
+        <Th
+          cursor="pointer"
+          onClick={() => handleOrder("libelleFormation")}
+          left={0}
+          zIndex={1}
+          bgColor="white"
+          position={{ lg: "relative", xl: "sticky" }}
+          boxShadow={{
+            lg: "none",
+            xl: isSticky ? "inset -2px 0px 0px 0px #E2E8F0" : "none",
+          }}
+        >
           <OrderIcon {...order} column="libelleFormation" />
           {FORMATION_COLUMNS.libelleFormation}
         </Th>
