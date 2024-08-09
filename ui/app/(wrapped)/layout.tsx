@@ -13,7 +13,6 @@ export default async function RootLayout({
   readonly children: React.ReactNode;
 }) {
   const { isMaintenance } = await client.ref("[GET]/maintenance").query({});
-  console.log(isMaintenance);
 
   return (
     <>
