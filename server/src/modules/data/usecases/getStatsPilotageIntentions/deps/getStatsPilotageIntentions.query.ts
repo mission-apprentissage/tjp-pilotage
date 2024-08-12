@@ -1,5 +1,6 @@
 import { ExpressionBuilder, sql } from "kysely";
 import { ScopeEnum } from "shared";
+import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { DB, kdb } from "../../../../../db/db";
 import { cleanNull } from "../../../../../utils/noNull";
@@ -87,7 +88,11 @@ const genericOnDemandes =
         return eb;
       })
       .$call((q) => {
-        if (!statut) return q;
+        if (!statut)
+          return q.where("demande.statut", "in", [
+            DemandeStatutEnum["demande validée"],
+            DemandeStatutEnum["projet de demande"],
+          ]);
         return q.where("demande.statut", "=", statut);
       });
 
@@ -154,7 +159,11 @@ const getNationalData = async (filters: Filters) => {
       return eb;
     })
     .$call((q) => {
-      if (!filters.statut) return q;
+      if (!filters.statut)
+        return q.where("demande.statut", "in", [
+          DemandeStatutEnum["demande validée"],
+          DemandeStatutEnum["projet de demande"],
+        ]);
       return q.where("demande.statut", "=", filters.statut);
     })
     .execute()
