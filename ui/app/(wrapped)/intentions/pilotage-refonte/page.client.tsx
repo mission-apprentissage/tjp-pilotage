@@ -7,6 +7,7 @@ import { client } from "../../../../api.client";
 import { themeDefinition } from "../../../../theme/theme";
 import { useStateParams } from "../../../../utils/useFilters";
 import { FiltersSection } from "./components/FiltersSection";
+import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { FiltersStatsPilotageIntentions } from "./types";
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
@@ -48,6 +49,7 @@ export const PilotageNationalClient = () => {
   return (
     <VStack px="120px" backgroundColor={themeDefinition.colors.blueecume[950]}>
       <FiltersSection filters={filters} setFilters={setFilters} data={data} />
+      <IndicateursClesSection data={data} />
     </VStack>
   );
 };
