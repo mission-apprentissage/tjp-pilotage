@@ -82,6 +82,7 @@ export const FiltersSection = ({
       paddingTop="16px"
       paddingBottom="8px"
       templateColumns="repeat(6, minmax(0, 1fr))"
+      width="100%"
     >
       <GridItem>
         <FormLabel>Campagne</FormLabel>

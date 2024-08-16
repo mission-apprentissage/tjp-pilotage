@@ -49,7 +49,7 @@ export const PilotageNationalClient = () => {
   return (
     <VStack px="120px" backgroundColor={themeDefinition.colors.blueecume[950]}>
       <FiltersSection filters={filters} setFilters={setFilters} data={data} />
-      <IndicateursClesSection data={data} />
+      <IndicateursClesSection data={data} filters={filters} />
     </VStack>
   );
 };
