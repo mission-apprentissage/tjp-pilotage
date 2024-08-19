@@ -59,6 +59,10 @@ export const isDemandeNotDeletedOrRefused = (
     DemandeStatutEnum["refusée"],
   ]);
 
+export const isDemandeNotAjustementRentree = (
+  eb: ExpressionBuilder<DB, "demande">
+) => eb("demande.typeDemande", "not in", ["ajustement"]);
+
 export const isIntentionBrouillonVisible =
   ({ user }: { user: RequestUser }) =>
   (eb: ExpressionBuilder<DB, "intention">) => {
