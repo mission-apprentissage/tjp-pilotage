@@ -85,7 +85,7 @@ const getStatsPilotageIntentionsFactory =
   async (activeFilters: Filters) => {
     const currentCampagne = await getCurrentCampagneQuery();
     const anneeCampagne = activeFilters.campagne ?? currentCampagne.annee;
-    const [filters, propositions, validees, all] = await Promise.all([
+    const [filters, projets, validees, all] = await Promise.all([
       deps.getFiltersQuery({
         ...activeFilters,
         campagne: anneeCampagne,
@@ -108,7 +108,7 @@ const getStatsPilotageIntentionsFactory =
 
     return {
       ["projet de demande"]: formatResult(
-        propositions,
+        projets,
         activeFilters.order,
         activeFilters.orderBy
       ),
