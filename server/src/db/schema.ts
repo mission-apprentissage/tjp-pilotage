@@ -800,6 +800,9 @@ export interface Rome {
   codeRome: string;
   libelleRome: string;
   codeDomaineProfessionnel: string;
+  transitionEcologique: Generated<boolean>;
+  transitionNumerique: Generated<boolean>;
+  transitionDemographique: Generated<boolean>;
 }
 
 export interface Suivi {
