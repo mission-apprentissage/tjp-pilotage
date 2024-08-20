@@ -14,7 +14,7 @@ import { client } from "@/api.client";
 import { RoleTag } from "@/app/(wrapped)/intentions/perdir/components/RoleTag";
 import { formatArray, formatBoolean, formatDate } from "@/utils/formatUtils";
 
-import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../utils/formatLibelle";
+import { formatDepartementLibelleWithCodeDepartement } from "../../../../../../../../utils/formatLibelle";
 import {
   getMotifLabel,
   MotifLabel,

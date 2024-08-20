@@ -191,7 +191,6 @@ export default function Formations() {
   const handleScroll = () => {
     if (tableRef.current) {
       const scrollLeft = tableRef.current.scrollLeft;
-      console.log(scrollLeft);
       if (scrollLeft > 200) {
         setIsSticky(true);
       } else {

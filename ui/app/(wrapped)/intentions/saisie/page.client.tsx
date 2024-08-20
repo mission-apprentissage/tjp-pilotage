@@ -29,18 +29,21 @@ import { useRouter } from "next/navigation";
 import { usePlausible } from "next-plausible";
 import { useState } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
-import { DemandeStatutType } from "shared/enum/demandeStatutEnum";
+import {
+  DemandeStatutEnum,
+  DemandeStatutType,
+} from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
 import { OrderIcon } from "@/components/OrderIcon";
-import { usePermission } from "@/utils/security/usePermission";
-
-import { TableFooter } from "../../../../components/TableFooter";
-import { useStateParams } from "../../../../utils/useFilters";
+import { TableFooter } from "@/components/TableFooter";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
-} from "../../utils/formatLibelle";
+} from "@/utils/formatLibelle";
+import { usePermission } from "@/utils/security/usePermission";
+import { useStateParams } from "@/utils/useFilters";
+
 import { StatutTag } from "../perdir/components/StatutTag";
 import { getTypeDemandeLabel } from "../utils/typeDemandeUtils";
 import { Header } from "./components/Header";
@@ -292,7 +295,9 @@ export const PageClient = () => {
                       {DEMANDES_COLUMNS.userName}
                     </Th>
                     {data?.campagne.statut ===
-                      CampagneStatutEnum["terminée"] && <Th />}
+                      CampagneStatutEnum["terminée"] && (
+                      <Th textAlign={"center"}>Actions</Th>
+                    )}
                   </Tr>
                 </Thead>
                 <Tbody>
@@ -388,42 +393,61 @@ export const PageClient = () => {
                         {data?.campagne.statut ===
                           CampagneStatutEnum["terminée"] && (
                           <Td>
-                            {demande.numeroDemandeImportee ? (
-                              <Button
-                                as={NextLink}
-                                variant="link"
-                                href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
-                                leftIcon={<ExternalLinkIcon />}
-                                me={"auto"}
-                                passHref
-                                onClick={(e) => e.stopPropagation()}
-                              >
-                                Demande dupliquée{" "}
-                                {demande.numeroDemandeImportee}
-                              </Button>
-                            ) : (
-                              <Button
-                                leftIcon={<Icon icon="ri:import-line" />}
-                                variant={"newInput"}
-                                onClick={(e) => {
-                                  setIsImporting(true);
-                                  if (demande.numeroDemandeImportee) return;
-                                  e.preventDefault();
-                                  e.stopPropagation();
-                                  importDemande({
-                                    params: { numero: demande.numero },
-                                  });
-                                }}
-                                isDisabled={
-                                  !!demande.numeroDemandeImportee ||
-                                  isSubmitting ||
-                                  isImporting ||
-                                  !hasPermissionSubmitIntention
-                                }
-                              >
-                                Dupliquer cette demande
-                              </Button>
-                            )}
+                            <Flex gap={2}>
+                              {demande.statut ===
+                                DemandeStatutEnum["demande validée"] && (
+                                <Button
+                                  leftIcon={<Icon icon="ri:edit-2-line" />}
+                                  variant={"newInput"}
+                                  isDisabled={!!demande.correction}
+                                  onClick={(e) => {
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    router.push(
+                                      `/intentions/corrections/${demande.numero}`
+                                    );
+                                  }}
+                                >
+                                  {demande.correction ? "Corrigée" : "Corriger"}
+                                </Button>
+                              )}
+                              {demande.numeroDemandeImportee ? (
+                                <Button
+                                  as={NextLink}
+                                  variant={"link"}
+                                  padding={4}
+                                  href={`/intentions/saisie/${demande.numeroDemandeImportee}`}
+                                  leftIcon={<ExternalLinkIcon />}
+                                  me={"auto"}
+                                  passHref
+                                  onClick={(e) => e.stopPropagation()}
+                                >
+                                  {demande.numeroDemandeImportee}
+                                </Button>
+                              ) : (
+                                <Button
+                                  leftIcon={<Icon icon="ri:import-line" />}
+                                  variant={"newInput"}
+                                  onClick={(e) => {
+                                    setIsImporting(true);
+                                    if (demande.numeroDemandeImportee) return;
+                                    e.preventDefault();
+                                    e.stopPropagation();
+                                    importDemande({
+                                      params: { numero: demande.numero },
+                                    });
+                                  }}
+                                  isDisabled={
+                                    !!demande.numeroDemandeImportee ||
+                                    isSubmitting ||
+                                    isImporting ||
+                                    !hasPermissionSubmitIntention
+                                  }
+                                >
+                                  Dupliquer
+                                </Button>
+                              )}
+                            </Flex>
                           </Td>
                         )}
                       </Tr>

@@ -65,6 +65,7 @@ const DemandeItem = z.object({
   discipline1FormationRH: z.string().optional(),
   discipline2FormationRH: z.string().optional(),
   canEdit: z.boolean(),
+  correction: z.string().optional(),
 });
 
 export const getDemandesSchema = {

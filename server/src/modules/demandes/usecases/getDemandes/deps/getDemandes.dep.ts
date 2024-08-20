@@ -97,6 +97,14 @@ export const getDemandes = async (
         )
         .as("numeroDemandeImportee"),
     ])
+    .select((eb) =>
+      eb
+        .selectFrom("correction")
+        .whereRef("correction.intentionNumero", "=", "demande.numero")
+        .select("correction.id")
+        .limit(1)
+        .as("correction")
+    )
     .$call((eb) => {
       if (statut) return eb.where("demande.statut", "=", statut);
       return eb;

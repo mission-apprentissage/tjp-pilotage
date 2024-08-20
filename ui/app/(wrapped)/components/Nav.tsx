@@ -386,6 +386,17 @@ export const Nav = () => {
                 </NavMenuLink>
               </MenuItem>
             )}
+            {hasPermission(auth?.user.role, "intentions/lecture") && (
+              <MenuItem p="0" w="100%">
+                <NavMenuLink
+                  href="/intentions/corrections"
+                  segment="corrections"
+                  prefetch={false}
+                >
+                  Corrections
+                </NavMenuLink>
+              </MenuItem>
+            )}
           </MenuList>
         </Menu>
       )}

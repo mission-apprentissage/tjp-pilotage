@@ -19,7 +19,7 @@ import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { formatAnneeCommuneLibelle } from "../../../utils/formatLibelle";
+import { formatAnneeCommuneLibelle } from "../../../../../utils/formatLibelle";
 import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { Line } from "../types";
 
