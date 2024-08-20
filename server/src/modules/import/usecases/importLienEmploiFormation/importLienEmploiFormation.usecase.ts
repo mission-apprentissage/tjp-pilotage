@@ -67,6 +67,11 @@ export const importLienEmploiFormationFactory =
           codeRome: item.code_rome,
           libelleRome: item.libelle_rome,
           codeDomaineProfessionnel: item.code_rome.substring(0, 3),
+          transitionEcologique: item.transition_eco?.includes(
+            "Emploi stratégique pour la Transition écologique"
+          ),
+          transitionNumerique: item.transition_num?.includes("O"),
+          transitionDemographique: item.transition_demo?.includes("O"),
         };
 
         await createRome(data);
@@ -111,7 +116,7 @@ export const importLienEmploiFormationFactory =
         }),
       async (formation) => {
         const formationsRome = await findRawDatas({
-          type: "formation_rome",
+          type: "certif_info",
           filter: {
             Code_Scolarité: formation.cfd,
           },

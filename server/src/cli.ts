@@ -180,7 +180,7 @@ cli
       ...getImports("domaine_professionnel"),
       ...getImports("rome"),
       ...getImports("metier"),
-      ...getImports("formation_rome"),
+      ...getImports("certif_info"),
       ...getImports("discipline"),
     };
 
