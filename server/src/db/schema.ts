@@ -76,6 +76,28 @@ export interface ConstatRentree {
   cfd: string | null;
 }
 
+export interface Correction {
+  id: Generated<string>;
+  intentionNumero: string;
+  createdBy: string;
+  updatedBy: string;
+  createdAt: Generated<Timestamp>;
+  updatedAt: Generated<Timestamp>;
+  raison: string | null;
+  motif: string[] | null;
+  autreMotif: string | null;
+  commentaire: string | null;
+  capaciteScolaire: number | null;
+  capaciteApprentissage: number | null;
+  capaciteScolaireActuelle: number | null;
+  capaciteApprentissageActuelle: number | null;
+  capaciteScolaireColoree: number | null;
+  capaciteApprentissageColoree: number | null;
+  coloration: boolean | null;
+  libelleColoration: string | null;
+  campagneId: string | null;
+}
+
 export interface DataEtablissement {
   uai: string;
   libelleEtablissement: string | null;
@@ -744,7 +766,7 @@ export interface LatestIntentionNonMaterializedView {
 }
 
 export interface Maintenance {
-  isMaintenance: boolean;
+  isMaintenance: Generated<boolean>;
 }
 
 export interface Metier {
@@ -809,6 +831,7 @@ export interface DB {
   changeLog: ChangeLog;
   changementStatut: ChangementStatut;
   constatRentree: ConstatRentree;
+  correction: Correction;
   dataEtablissement: DataEtablissement;
   dataFormation: DataFormation;
   demande: Demande;

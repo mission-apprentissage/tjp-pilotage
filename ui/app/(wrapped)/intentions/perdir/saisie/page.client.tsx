@@ -49,11 +49,11 @@ import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { TableFooter } from "../../../../../components/TableFooter";
-import { useStateParams } from "../../../../../utils/useFilters";
 import {
   formatCodeDepartement,
   formatDepartementLibelleWithCodeDepartement,
-} from "../../../utils/formatLibelle";
+} from "../../../../../utils/formatLibelle";
+import { useStateParams } from "../../../../../utils/useFilters";
 import { getTypeDemandeLabel } from "../../utils/typeDemandeUtils";
 import { StatutTag } from "../components/StatutTag";
 import { Header } from "./components/Header";

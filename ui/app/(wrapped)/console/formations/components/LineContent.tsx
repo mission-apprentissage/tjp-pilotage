@@ -14,10 +14,10 @@ import {
 } from "@chakra-ui/react";
 import NextLink from "next/link";
 
-import { formatAnneeCommuneLibelle } from "@/app/(wrapped)/utils/formatLibelle";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
 import { Line } from "../types";

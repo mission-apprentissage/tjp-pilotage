@@ -22,10 +22,6 @@ export const CampagneStatutTag = ({ statut }: { statut?: string }) => {
         </Tag>
       );
     default:
-      return (
-        <Tag size="md" colorScheme={"yellow"} ml={2}>
-          {statut}
-        </Tag>
-      );
+      return <></>;
   }
 };
