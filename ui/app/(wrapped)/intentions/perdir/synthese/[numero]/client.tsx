@@ -4,11 +4,14 @@ import { Container, Flex, Grid, GridItem } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { useEffect } from "react";
+import { hasRole } from "shared";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
+import { EditoSection } from "@/app/(wrapped)/intentions/perdir/synthese/[numero]/actions/EditoSection";
 import { Breadcrumb } from "@/components/Breadcrumb";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { useAuth } from "@/utils/security/useAuth";
 
 import { isChangementStatutAvisDisabled } from "../../../utils/statutUtils";
 import { ActionsSection } from "./actions/ActionsSection";
@@ -25,6 +28,8 @@ export default ({
     numero: string;
   };
 }) => {
+  const { auth } = useAuth();
+  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
   const router = useRouter();
   const queryParams = useSearchParams();
   const searchParams: {
@@ -104,7 +109,9 @@ export default ({
             <Grid templateColumns={"repeat(4, 1fr)"} gap={6}>
               <GridItem
                 colSpan={
-                  isChangementStatutAvisDisabled(intention.statut) ? 4 : 3
+                  isChangementStatutAvisDisabled(intention.statut) && !isPerdir
+                    ? 4
+                    : 3
                 }
               >
                 <MainSection
@@ -117,6 +124,11 @@ export default ({
                   displayCommentairesEtAvis={displayCommentairesEtAvis}
                 />
               </GridItem>
+              {isPerdir && (
+                <GridItem colSpan={1}>
+                  <EditoSection />
+                </GridItem>
+              )}
               {!isChangementStatutAvisDisabled(intention.statut) && (
                 <GridItem colSpan={1}>
                   <ActionsSection intention={intention} />
