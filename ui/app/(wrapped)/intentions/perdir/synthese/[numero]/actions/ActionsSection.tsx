@@ -13,7 +13,6 @@ import { usePermission } from "@/utils/security/usePermission";
 import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
-import { EditoSection } from "./EditoSection";
 
 export const ActionsSection = ({
   intention,
@@ -21,7 +20,6 @@ export const ActionsSection = ({
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
   const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
   const hasPermissionModificationStatut = usePermission(
     "intentions-perdir-statut/ecriture"
   );
@@ -56,7 +54,6 @@ export const ActionsSection = ({
       {hasPermissionModificationStatut && (
         <ChangementStatutForm intention={intention} />
       )}
-      {isPerdir && <EditoSection />}
     </Flex>
   );
 };
