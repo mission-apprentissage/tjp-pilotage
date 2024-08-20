@@ -28,12 +28,12 @@ export const ROLES_LABELS: {
   pilote_region: () => ({
     label: "Pilote RA",
     description:
-      "Il a un rôle d’analyse et de décision. Il peut saisir des projets, valider les demandes. Il peut émettre un avis Pilote (dont avis obligatoire DRAFPIC et décision Recteur) ; il voit tous les avis déposés par les pilotes et les experts. Il a accès à la console de restitution et à la page de pilotage.",
+      "Il a un rôle d’analyse et de décision. Il peut saisir des projets, valider les demandes. Il a accès à la console de restitution et à la page de pilotage. En région Occitanie et AURA : il peut émettre un avis Pilote (dont avis obligatoire DRAFPIC et décision Recteur) ; il voit tous les avis déposés par les pilotes et les experts.",
   }),
   expert_region: () => ({
     label: "Expert RA",
     description:
-      "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il peut émettre un avis Expert ; il voit tous les avis déposés par les experts uniquement. Il a accès à la console de restitution et à la page de pilotage.",
+      "Il a un rôle d'expertise et de conseil. Il peut consulter les propositions et projets émis sur toute la région académique, il a accès à la console de restitution et à la page de pilotage. En région Occitanie et AURA il peut émettre un avis Expert ; il voit tous les avis déposés par les experts uniquement et les avis pilotes rendus publics.",
   }),
   perdir: (codeRegion) => {
     if (codeRegion && CODES_REGIONS_EXPE.includes(codeRegion)) {
@@ -51,7 +51,12 @@ export const ROLES_LABELS: {
   region: () => ({
     label: "Région",
     description:
-      "Membres du Conseil régional, il a un rôle d'analyse et de décision. Il émet un avis préalable sur les propositions puis les sur les projets de demande. Il peut consulter les avis des Experts, l'avis du DRAFPIC et la décision du Recteur.",
+      "Membre du conseil régional en Occitanie ou AURA il a un rôle d'analyse et de décision. Il émet un avis préalable sur les propositions puis sur les projets de demande. Il peut consulter les avis des Experts, l'avis du DRAFPIC et la décision du Recteur.",
+  }),
+  invite: () => ({
+    label: "Invité",
+    description:
+      "Il a un rôle dans la formation professionnelle initiale, en région ou en académie (membre du conseil régional, directeur de CMQ…). Il  peut visualiser les propositions puis les projets de demandes, en consultant les avis émis et la décision finale. Il a accès à la console de restitution et à la page de pilotage.",
   }),
 };
 
