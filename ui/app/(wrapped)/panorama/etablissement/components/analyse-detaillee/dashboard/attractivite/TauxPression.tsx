@@ -1,6 +1,7 @@
 import { Box, Text, useToken } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { LineChart } from "../../components/LineChart";
