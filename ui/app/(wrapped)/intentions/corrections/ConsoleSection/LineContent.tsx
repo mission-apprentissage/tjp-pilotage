@@ -4,8 +4,8 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
-import { roundNumber } from "@/utils/roundNumber";
 
+import { formatNumber } from "../../../../../utils/formatUtils";
 import {
   getMotifCorrectionLabel,
   MotifCorrectionCampagne,
@@ -216,7 +216,7 @@ export const LineContent = ({
       >
         <TableBadge sx={getTauxPressionStyle(correction.tauxPressionRegional)}>
           {typeof correction.tauxPressionRegional !== "undefined"
-            ? roundNumber(correction.tauxPressionRegional)
+            ? formatNumber(correction.tauxPressionRegional)
             : "-"}
         </TableBadge>
       </ConditionalTd>

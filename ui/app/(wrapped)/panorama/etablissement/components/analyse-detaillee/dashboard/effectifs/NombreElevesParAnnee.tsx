@@ -1,6 +1,7 @@
 import { Badge } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 import { HorizontalBarChart } from "../../components/HorizontalBarChart";

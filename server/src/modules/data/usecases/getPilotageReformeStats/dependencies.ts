@@ -162,8 +162,10 @@ export const getStats = async ({
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
-        selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
-        selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
+        selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
+          "tauxInsertion"
+        ),
+        selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
       ])
       .executeTakeFirstOrThrow();
 

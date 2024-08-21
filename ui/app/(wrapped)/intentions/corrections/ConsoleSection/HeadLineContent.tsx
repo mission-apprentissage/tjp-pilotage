@@ -1,9 +1,8 @@
 import { Box, chakra, Th, Tooltip } from "@chakra-ui/react";
 import { CSSProperties } from "react";
 
-import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
-import { STATS_DEMANDES_COLUMNS } from "@/app/(wrapped)/intentions/restitution/STATS_DEMANDES_COLUMN";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { CORRECTIONS_COLUMNS } from "../CORRECTIONS_COLUMN";
@@ -164,7 +163,7 @@ export const HeadLineContent = ({
           me="1"
           label="Positionnement du point de la formation dans le quadrant par rapport aux moyennes régionales des taux d'emploi et de poursuite d'études appliquées au niveau de diplôme."
         />
-        {STATS_DEMANDES_COLUMNS.positionQuadrant}
+        {CORRECTIONS_COLUMNS.positionQuadrant}
       </ConditionalTh>
       <ConditionalTh
         colonneFilters={colonneFilters}
@@ -176,7 +175,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("tauxInsertionRegional")}
       >
         <OrderIcon {...order} column="tauxInsertionRegional" />
-        {STATS_DEMANDES_COLUMNS.tauxInsertionRegional}
+        {CORRECTIONS_COLUMNS.tauxInsertionRegional}
         <TooltipIcon
           ml="1"
           label="La part de ceux qui sont en emploi 6 mois après leur sortie d’étude pour cette formation à l'échelle régionale (voie scolaire)."
@@ -190,7 +189,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("tauxPoursuiteRegional")}
       >
         <OrderIcon {...order} column="tauxPoursuiteRegional" />
-        {STATS_DEMANDES_COLUMNS.tauxPoursuiteRegional}
+        {CORRECTIONS_COLUMNS.tauxPoursuiteRegional}
         <TooltipIcon
           ml="1"
           label="Tout élève inscrit à N+1 (réorientation et redoublement compris) pour cette formation à l'échelle régionale (voie scolaire)."
@@ -204,7 +203,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("tauxDevenirFavorableRegional")}
       >
         <OrderIcon {...order} column="tauxDevenirFavorableRegional" />
-        {STATS_DEMANDES_COLUMNS.tauxDevenirFavorableRegional}
+        {CORRECTIONS_COLUMNS.tauxDevenirFavorableRegional}
         <TooltipIcon
           ml="2"
           label="(nombre d'élèves inscrits en formation + nombre d'élèves en emploi) / nombre d'élèves en entrée en dernière année de formation pour cette formation à l'échelle régionale (voie scolaire)."
@@ -218,7 +217,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("tauxPressionRegional")}
       >
         <OrderIcon {...order} column="tauxPressionRegional" />
-        {STATS_DEMANDES_COLUMNS.tauxPressionRegional}
+        {CORRECTIONS_COLUMNS.tauxPressionRegional}
         <TooltipIcon
           ml="1"
           label={
@@ -242,7 +241,7 @@ export const HeadLineContent = ({
         bgColor={getCellColor("nbEtablissement")}
       >
         <OrderIcon {...order} column="nbEtablissement" />
-        {STATS_DEMANDES_COLUMNS.nbEtablissement}
+        {CORRECTIONS_COLUMNS.nbEtablissement}
         <TooltipIcon
           ml="1"
           label="Le nombre d'établissement dispensant la formation dans la région."

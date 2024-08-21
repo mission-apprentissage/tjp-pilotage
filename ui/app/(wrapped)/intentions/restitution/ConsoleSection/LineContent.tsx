@@ -4,8 +4,8 @@ import { formatStatut } from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { formatCommuneLibelleWithCodeDepartement } from "@/utils/formatLibelle";
+import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
-import { roundNumber } from "@/utils/roundNumber";
 
 import {
   getMotifLabel,
@@ -368,9 +368,7 @@ export const LineContent = ({
         bgColor={getCellColor("tauxPressionRegional")}
       >
         <TableBadge sx={getTauxPressionStyle(demande.tauxPressionRegional)}>
-          {typeof demande.tauxPressionRegional !== "undefined"
-            ? roundNumber(demande.tauxPressionRegional)
-            : "-"}
+          {formatNumber(demande.tauxPressionRegional, 2) || "-"}
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd
