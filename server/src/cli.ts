@@ -25,6 +25,7 @@ import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDip
 import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
+import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
 import { refreshViews } from "./modules/import/usecases/refreshViews/refreshViews.usecase";
 
 cli.command("migrateDB").action(async () => {
@@ -247,6 +248,13 @@ cli
         await usecase();
       }
     }
+  });
+
+cli
+  .command("importTensionDepartementRome")
+  .description("Import des données de tension depuis France Travail")
+  .action(async () => {
+    await importTensionDepartementRome();
   });
 
 cli.parse(process.argv);

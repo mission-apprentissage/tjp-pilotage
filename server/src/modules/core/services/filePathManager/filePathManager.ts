@@ -4,6 +4,7 @@ import { ovhFilePathManager } from "./ovhFilePathManager";
 
 export interface FilePathManager {
   getIntentionFilePath: (id: string, filename?: string) => string;
+  getFranceTravailIndicateurTensionStatsFilePath: () => string;
 }
 
 export const filePathManagerFactory = (): FilePathManager =>
