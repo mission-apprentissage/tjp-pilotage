@@ -14,6 +14,7 @@ import { useState } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
 import { client } from "@/api.client";
+import { formatNumber, formatPercentage } from "@/utils/formatUtils";
 
 import { themeDefinition } from "../../../../../../../../../theme/theme";
 import { useEtablissementMapContext } from "../../../context/etablissementMapContext";
@@ -25,7 +26,7 @@ interface CustomListItemProps {
 }
 
 const formatDistance = (distance: number) => {
-  return `${Math.round(distance * 10) / 10} km`;
+  return `${formatNumber(distance, 1)} km`;
 };
 
 const formatDispositifs = (dispositifs: string[]) => {
@@ -34,10 +35,6 @@ const formatDispositifs = (dispositifs: string[]) => {
     .map((d) => {
       return d.replace(/\sen\s/i, " ").replace(/professionnel/i, "PRO");
     });
-};
-
-const formatPercentage = (percentage: number) => {
-  return Math.round(percentage * 100) + "%";
 };
 
 const formatSecteur = (secteur: string) => {

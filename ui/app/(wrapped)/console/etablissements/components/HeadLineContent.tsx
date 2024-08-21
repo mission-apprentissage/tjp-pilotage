@@ -1,14 +1,15 @@
 import { Box, Text, Th, Thead, Tr } from "@chakra-ui/react";
 import { usePlausible } from "next-plausible";
 
-import { TauxPressionScale } from "@/app/(wrapped)/components/TauxPressionScale";
 import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
 import { OrderIcon } from "@/components/OrderIcon";
+import { TauxPressionScale } from "@/components/TauxPressionScale";
 import { TooltipIcon } from "@/components/TooltipIcon";
 
 import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { FORMATION_ETABLISSEMENT_COLUMNS } from "../FORMATION_ETABLISSEMENT_COLUMNS";
 import { Filters, Order } from "../types";
+
 export const HeadLineContent = ({
   order,
   setSearchParams,

@@ -13,9 +13,9 @@ import { Icon } from "@iconify/react";
 import { useMemo } from "react";
 import { CURRENT_IJ_MILLESIME, CURRENT_RENTREE } from "shared";
 
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
 import { Quadrant } from "@/components/Quadrant";
 
-import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
 import {
   ChiffresEntree,
   ChiffresIJ,
