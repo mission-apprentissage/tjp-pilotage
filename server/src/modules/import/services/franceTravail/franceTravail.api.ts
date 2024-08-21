@@ -3,22 +3,18 @@ import rateLimit from "axios-rate-limit";
 import axiosRetry, { isNetworkError } from "axios-retry";
 
 import { config } from "../../../../../config/config";
+import { FranceTravailStatsPerspectiveRecrutementResponse } from "./franceTravailResponse";
 
 let loggingIn = false;
 
 const instance = rateLimit(
   axios.create({
-    baseURL: "https://entreprise.francetravail.fr",
-    responseType: "json",
+    baseURL: "https://api.francetravail.io",
   }),
   {
     maxRPS: 10,
   }
 );
-
-const setInstanceBearerToken = (token: string) => {
-  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
-};
 
 const retryCondition = async (error: AxiosError) => {
   const response = error?.response;
@@ -28,15 +24,16 @@ const retryCondition = async (error: AxiosError) => {
   }
 
   if (![401, undefined].includes(response?.status)) {
-    console.log(`[ERROR] unknown.`, JSON.stringify(response));
+    console.error(`[ERROR] unknown.`, JSON.stringify(response));
+    return false;
   }
 
   if (!loggingIn) {
     loggingIn = true;
-    console.log("--- Refreshing insertjeunes API token");
+    console.log("--- Refreshing FranceTravail API token");
     const token = await login();
     setInstanceBearerToken(token);
-    console.log("--- Refreshed insertjeunes API token");
+    console.log("--- Refreshed FranceTravail API token");
     loggingIn = false;
   } else {
     console.log(
@@ -48,24 +45,58 @@ const retryCondition = async (error: AxiosError) => {
   return true;
 };
 
+axiosRetry(instance, {
+  retries: 3,
+  retryCondition,
+  shouldResetTimeout: true,
+  retryDelay: axiosRetry.exponentialDelay,
+});
+
+const setInstanceBearerToken = (token: string) => {
+  instance.defaults.headers.common["Authorization"] = `Bearer ${token}`;
+};
+
 export const login = async () => {
-  const response = await instance.post(
-    "/connexion/oauth2/access_token?realm=%2Fpartenaire",
-    undefined,
+  const response = await axios.post<{ access_token: string }>(
+    "https://entreprise.francetravail.fr/connexion/oauth2/access_token?realm=%2Fpartenaire",
+    {
+      grant_type: "client_credentials",
+      client_id: config.franceTravail.client,
+      client_secret: config.franceTravail.secret,
+      scope: "api_stats-offres-demandes-emploiv1 offresetdemandesemploi",
+    },
     {
       headers: {
-        username: config.PILOTAGE_INSERJEUNES_USERNAME,
-        password: config.PILOTAGE_INSERJEUNES_PASSWORD,
+        "Content-Type": "application/x-www-form-urlencoded",
       },
     }
   );
-  const { access_token: token } = response.data;
-  return token;
+  const { access_token } = response.data;
+
+  return access_token;
 };
 
-axiosRetry(instance, {
-  retries: 3,
-  retryDelay: axiosRetry.exponentialDelay,
-  retryCondition,
-  shouldResetTimeout: true,
-});
+export const getStatsPerspectivesRecrutement = async (
+  codeRome: string,
+  codeDepartement: string
+) => {
+  const response =
+    await instance.post<FranceTravailStatsPerspectiveRecrutementResponse>(
+      `/partenaire/stats-offres-demandes-emploi/v1/indicateur/stat-perspective-employeur`,
+      {
+        codeTypeTerritoire: "DEP",
+        codeTerritoire: codeDepartement,
+        codeTypeActivite: "ROME",
+        codeActivite: codeRome,
+        codeTypePeriode: "ANNEE",
+        codeTypeNomenclature: "TYPE_TENSION",
+      },
+      {
+        headers: {
+          Accept: "application/json",
+        },
+      }
+    );
+
+  return response.data?.listeValeursParPeriode;
+};
