@@ -2,7 +2,8 @@ import { Badge, Box, Flex, Img, Text, Tooltip } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 import { getRentreeScolairePrecedente } from "shared/utils/getRentreeScolaire";
 
-import { GlossaireShortcut } from "../../../../../../../../components/GlossaireShortcut";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+
 import { DashboardCard } from "../../../DashboardCard";
 import { CounterChart } from "../../components/CounterChart";
 

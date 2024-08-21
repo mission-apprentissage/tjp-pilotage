@@ -3,14 +3,16 @@ import { hasRole } from "shared";
 import { AvisTypeEnum } from "shared/enum/avisTypeEnum";
 
 import { client } from "@/api.client";
-import { getTypeAvis } from "@/app/(wrapped)/intentions/utils/statutUtils";
+import {
+  getTypeAvis,
+  isChangementStatutAvisDisabled,
+} from "@/app/(wrapped)/intentions/utils/statutUtils";
 import { useAuth } from "@/utils/security/useAuth";
 import { usePermission } from "@/utils/security/usePermission";
 
 import { STICKY_OFFSET } from "../../../SCROLL_OFFSETS";
 import { AvisForm } from "./AvisForm";
 import { ChangementStatutForm } from "./ChangementStatutForm";
-import { EditoSection } from "./EditoSection";
 
 export const ActionsSection = ({
   intention,
@@ -18,7 +20,6 @@ export const ActionsSection = ({
   intention: (typeof client.infer)["[GET]/intention/:numero"];
 }) => {
   const { auth } = useAuth();
-  const isPerdir = hasRole({ user: auth?.user, role: "perdir" });
   const hasPermissionModificationStatut = usePermission(
     "intentions-perdir-statut/ecriture"
   );
@@ -30,6 +31,7 @@ export const ActionsSection = ({
   /**
    * Les user région ne peuvent pas donner d'avis consultatif
    * Les experts régionaux ne peuvent donner que des avis consultatif
+   * Une fois la demande validée ou refusée, on ne peut plus donner d'avis
    * @returns {boolean}
    */
   const canSubmitAvis = () => {
@@ -37,7 +39,8 @@ export const ActionsSection = ({
       (hasRole({ user: auth?.user, role: "expert_region" }) &&
         getTypeAvis(intention.statut) != AvisTypeEnum["consultatif"]) ||
       (hasRole({ user: auth?.user, role: "region" }) &&
-        getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"])
+        getTypeAvis(intention.statut) === AvisTypeEnum["consultatif"]) ||
+      isChangementStatutAvisDisabled(intention.statut)
     )
       return false;
     return true;
@@ -51,7 +54,6 @@ export const ActionsSection = ({
       {hasPermissionModificationStatut && (
         <ChangementStatutForm intention={intention} />
       )}
-      {isPerdir && <EditoSection />}
     </Flex>
   );
 };

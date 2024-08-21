@@ -17,9 +17,10 @@ import NextLink from "next/link";
 import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
+import { formatAnneeCommuneLibelle } from "@/utils/formatLibelle";
+import { formatNumber } from "@/utils/formatUtils";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { formatAnneeCommuneLibelle } from "../../../../../utils/formatLibelle";
 import { ETABLISSEMENT_COLUMN_WIDTH } from "../ETABLISSEMENT_COLUMN_WIDTH";
 import { Line } from "../types";
 
@@ -167,12 +168,12 @@ export const EtablissementLineContent = ({
       <TableBadge
         sx={getTauxPressionStyle(
           line.tauxPression !== undefined
-            ? Math.round(line.tauxPression * 100) / 100
+            ? formatNumber(line.tauxPression, 2)
             : undefined
         )}
       >
         {line.tauxPression !== undefined
-          ? Math.round(line.tauxPression * 100) / 100
+          ? formatNumber(line.tauxPression, 2)
           : "-"}
       </TableBadge>
     </Td>
