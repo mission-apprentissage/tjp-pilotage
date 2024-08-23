@@ -10,8 +10,10 @@ import {
   useToken,
 } from "@chakra-ui/react";
 
-import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
-import { TooltipIcon } from "../../../../../../../components/TooltipIcon";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatNumber } from "@/utils/formatUtils";
+
 import { useGlossaireContext } from "../../../../../glossaire/glossaireContext";
 import { CounterChart } from "../../analyse-detaillee/components/CounterChart";
 import { DashboardCard } from "../../DashboardCard";
@@ -82,7 +84,7 @@ const IndicateurValeurAjoutee = ({
     }
   >
     <CounterChart
-      data={indicateur?.value.toFixed(0)}
+      data={formatNumber(indicateur?.value)}
       type="absolute"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -122,7 +124,7 @@ const IndicateurTauxEmploi6mois = ({
     }
   >
     <CounterChart
-      data={indicateur?.value?.toFixed(0)}
+      data={formatNumber(indicateur?.value)}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -161,7 +163,7 @@ const IndicateurPoursuiteDetudes = ({
     }
   >
     <CounterChart
-      data={indicateur?.value?.toFixed(0)}
+      data={formatNumber(indicateur?.value)}
       type="percentage"
       compareData={getCompareData(indicateur?.compareTo)}
     />
@@ -203,7 +205,7 @@ const IndicateurTauxDevenirFavorable = ({
       }
     >
       <CounterChart
-        data={indicateur?.value?.toFixed(0)}
+        data={formatNumber(indicateur?.value)}
         compareData={getCompareData(indicateur?.compareTo)}
         type="percentage"
       />

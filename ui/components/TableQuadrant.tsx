@@ -11,13 +11,14 @@ import {
   Tr,
 } from "@chakra-ui/react";
 
-import { TauxPressionScale } from "../app/(wrapped)/components/TauxPressionScale";
-import { useGlossaireContext } from "../app/(wrapped)/glossaire/glossaireContext";
-import { getTauxPressionStyle } from "../utils/getBgScale";
-import { roundNumber } from "../utils/roundNumber";
+import { useGlossaireContext } from "@/app/(wrapped)/glossaire/glossaireContext";
+import { formatNumber } from "@/utils/formatUtils";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
+
 import { GraphWrapper } from "./GraphWrapper";
 import { OrderIcon } from "./OrderIcon";
 import { TableBadge } from "./TableBadge";
+import { TauxPressionScale } from "./TauxPressionScale";
 import { TooltipIcon } from "./TooltipIcon";
 
 type Formation = {
@@ -218,7 +219,7 @@ export const TableQuadrant = ({
                       )}
                     >
                       {formation.tauxPression !== undefined
-                        ? roundNumber(formation?.tauxPression)
+                        ? formatNumber(formation?.tauxPression, 2)
                         : "-"}
                     </TableBadge>
                   </Td>

@@ -18,6 +18,8 @@ export const formatRole = (role: Role): string => {
       return "Admin région";
     case "perdir":
       return "Perdir";
+    case "invite":
+      return "Invité";
     default:
       return "";
   }
