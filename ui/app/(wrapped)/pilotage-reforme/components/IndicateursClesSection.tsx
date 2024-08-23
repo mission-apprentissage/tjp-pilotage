@@ -21,10 +21,11 @@ import {
 } from "@chakra-ui/react";
 import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { themeColors } from "../../../../theme/themeColors";
-import { roundNumber } from "../../../../utils/roundNumber";
-import { ProgressBar } from "../../components/ProgressBar";
+import { ProgressBar } from "@/components/ProgressBar";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { themeColors } from "@/theme/themeColors";
+import { formatNumber } from "@/utils/formatUtils";
+
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { IndicateurType, PilotageReformeStats } from "../types";
 
@@ -238,7 +239,7 @@ const Delta = ({
   let deltaIcon;
 
   if (delta != null) {
-    if (Math.round(delta) < 0)
+    if (formatNumber(delta) < 0)
       deltaIcon = (
         <Flex>
           <TriangleDownIcon
@@ -247,20 +248,20 @@ const Delta = ({
             boxSize={4}
             color={"redmarianne.472"}
           />
-          <Text>{`${Math.round(delta)} pts`}</Text>
+          <Text>{`${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
-    else if (Math.round(delta) === 0)
+    else if (formatNumber(delta) === 0)
       deltaIcon = (
         <Flex>
-          <Text>{`+${Math.round(delta)} pts`}</Text>
+          <Text>{`+${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
     else
       deltaIcon = (
         <Flex>
           <TriangleUpIcon mt={1} me={2} boxSize={4} color={"success.850"} />
-          <Text>{`+${Math.round(delta)} pts`}</Text>
+          <Text>{`+${formatNumber(delta)} pts`}</Text>
         </Flex>
       );
   } else {
@@ -281,7 +282,7 @@ const Delta = ({
 const StatCard = ({
   label,
   data,
-  type = "insertion",
+  type = "tauxInsertion",
   color = "inherit",
   tooltip,
 }: {
@@ -293,36 +294,36 @@ const StatCard = ({
 }) => {
   const getDeltaAnneeNMoins1 = (type: IndicateurType): number | null => {
     switch (type) {
-      case "insertion":
+      case "tauxInsertion":
         if (
-          data?.annees[0].scoped.insertion &&
-          data?.annees[1].scoped.insertion
+          data?.annees[0].scoped.tauxInsertion &&
+          data?.annees[1].scoped.tauxInsertion
         )
           return (
-            (data?.annees[0].scoped.insertion -
-              data?.annees[1].scoped.insertion) *
+            (data?.annees[0].scoped.tauxInsertion -
+              data?.annees[1].scoped.tauxInsertion) *
             100
           );
         return null;
-      case "poursuite":
+      case "tauxPoursuite":
         if (
-          data?.annees[0].scoped.poursuite &&
-          data?.annees[1].scoped.poursuite
+          data?.annees[0].scoped.tauxPoursuite &&
+          data?.annees[1].scoped.tauxPoursuite
         )
           return (
-            (data?.annees[0].scoped.poursuite -
-              data?.annees[1].scoped.poursuite) *
+            (data?.annees[0].scoped.tauxPoursuite -
+              data?.annees[1].scoped.tauxPoursuite) *
             100
           );
         return null;
       default:
         if (
-          data?.annees[0].scoped.insertion &&
-          data?.annees[1].scoped.insertion
+          data?.annees[0].scoped.tauxInsertion &&
+          data?.annees[1].scoped.tauxInsertion
         ) {
           return (
-            (data?.annees[0].scoped.insertion -
-              data?.annees[1].scoped.insertion) *
+            (data?.annees[0].scoped.tauxInsertion -
+              data?.annees[1].scoped.tauxInsertion) *
             100
           );
         }
@@ -334,36 +335,36 @@ const StatCard = ({
     type: IndicateurType
   ): number | null => {
     switch (type) {
-      case "insertion":
+      case "tauxInsertion":
         if (
-          data?.annees[0].scoped.insertion &&
-          data?.annees[1].nationale.insertion
+          data?.annees[0].scoped.tauxInsertion &&
+          data?.annees[1].nationale.tauxInsertion
         )
           return (
-            (data?.annees[0].scoped.insertion -
-              data?.annees[1].nationale.insertion) *
+            (data?.annees[0].scoped.tauxInsertion -
+              data?.annees[1].nationale.tauxInsertion) *
             100
           );
         return null;
-      case "poursuite":
+      case "tauxPoursuite":
         if (
-          data?.annees[0].scoped.poursuite &&
-          data?.annees[1].nationale.poursuite
+          data?.annees[0].scoped.tauxPoursuite &&
+          data?.annees[1].nationale.tauxPoursuite
         )
           return (
-            (data?.annees[0].scoped.poursuite -
-              data?.annees[1].nationale.poursuite) *
+            (data?.annees[0].scoped.tauxPoursuite -
+              data?.annees[1].nationale.tauxPoursuite) *
             100
           );
         return null;
       default:
         if (
-          data?.annees[0].scoped.insertion &&
-          data?.annees[1].nationale.insertion
+          data?.annees[0].scoped.tauxInsertion &&
+          data?.annees[1].nationale.tauxInsertion
         )
           return (
-            (data?.annees[0].scoped.insertion -
-              data?.annees[1].nationale.insertion) *
+            (data?.annees[0].scoped.tauxInsertion -
+              data?.annees[1].nationale.tauxInsertion) *
             100
           );
         return null;
@@ -372,12 +373,12 @@ const StatCard = ({
 
   const getValue = (type: IndicateurType) => {
     switch (type) {
-      case "insertion":
-        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
-      case "poursuite":
-        return Math.round((data?.annees[0].scoped.poursuite ?? 0) * 100);
+      case "tauxInsertion":
+        return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
+      case "tauxPoursuite":
+        return formatNumber((data?.annees[0].scoped.tauxPoursuite ?? 0) * 100);
       default:
-        return Math.round((data?.annees[0].scoped.insertion ?? 0) * 100);
+        return formatNumber((data?.annees[0].scoped.tauxInsertion ?? 0) * 100);
     }
   };
 
@@ -575,13 +576,13 @@ const TauxTransfoCard = ({
                   Taux de transformation prévisionnel - Rentrée {NEXT_RENTREE}{" "}
                 </Text>
                 <Text fontSize="32px" fontWeight="700" lineHeight="40px">
-                  {roundNumber(tauxTransformation, 1)} %
+                  {formatNumber(tauxTransformation, 1)} %
                 </Text>
               </Box>
               <Box width="100%">
                 <ProgressBar percentage={percentage} />
                 <Text color={themeColors.grey[425]} fontSize="12px">
-                  {roundNumber(percentage, 1)}% de l'objectif
+                  {formatNumber(percentage, 1)}% de l'objectif
                 </Text>
               </Box>
             </VStack>
@@ -627,7 +628,7 @@ const IndicateursSortie = ({ data }: { data?: PilotageReformeStats }) => {
           <StatCard
             label="taux poursuite d'études"
             data={data}
-            type="poursuite"
+            type="tauxPoursuite"
             tooltip={
               <TooltipIcon
                 mr="6px"

@@ -3,9 +3,10 @@ import { Box, Flex, Text } from "@chakra-ui/react";
 import {
   BadgeTypeFamille,
   TypeFamilleKeys,
-} from "../../../../../../../components/BadgeTypeFamille";
-import { BadgeVoieApprentissage } from "../../../../../../../components/BadgeVoieApprentissage";
-import { GlossaireShortcut } from "../../../../../../../components/GlossaireShortcut";
+} from "@/components/BadgeTypeFamille";
+import { BadgeVoieApprentissage } from "@/components/BadgeVoieApprentissage";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+
 import { InformationDonneeIncompletes } from "../components/InformationDonneeIncompletes";
 import { ChiffresEntreeOffre, ChiffresIJOffre, Formation } from "../types";
 import { AttractiviteSection } from "./attractivite/AttractiviteSection";

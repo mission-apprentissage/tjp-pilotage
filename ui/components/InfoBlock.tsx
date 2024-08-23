@@ -1,5 +1,5 @@
 "use client";
-import { Box, chakra, Text } from "@chakra-ui/react";
+import { Box, chakra, Flex } from "@chakra-ui/react";
 import { ReactNode } from "react";
 
 export const InfoBlock = chakra(
@@ -16,12 +16,12 @@ export const InfoBlock = chakra(
   }) => {
     return (
       <Box className={className}>
-        <Text mb="1" fontWeight="medium">
+        <Flex mb="1" fontWeight="medium">
           {label}
-        </Text>
-        <Text py="1" px="1.5" bg={textBg}>
+        </Flex>
+        <Flex py="1" px="1.5" bg={textBg}>
           {value}
-        </Text>
+        </Flex>
       </Box>
     );
   }

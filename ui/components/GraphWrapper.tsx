@@ -1,7 +1,7 @@
 "use client";
 import { Box, chakra, Flex, Tooltip } from "@chakra-ui/react";
 
-import { displayPercentage } from "../utils/displayPercent";
+import { formatPercentage } from "../utils/formatUtils";
 import { Graph } from "./Graph";
 
 export const GraphWrapper = chakra(
@@ -33,9 +33,9 @@ export const GraphWrapper = chakra(
             display="inline-block"
             mr="1"
           />
-          <Tooltip label={displayPercentage(value)}>
+          <Tooltip label={formatPercentage(value)}>
             <Box textAlign="center" w="10">
-              {displayPercentage(value, 0)}
+              {formatPercentage(value, 0)}
             </Box>
           </Tooltip>
         </>

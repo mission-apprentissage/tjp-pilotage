@@ -102,20 +102,20 @@ export default withAuth("pilotage_reforme/lecture", function PilotageReforme() {
   const indicateurOptions = [
     {
       label: "Taux d'emploi à 6 mois",
-      value: "insertion",
+      value: "tauxInsertion",
       isDefault: true,
     },
     {
       label: "Taux de poursuite d'études",
-      value: "poursuite",
+      value: "tauxPoursuite",
       isDefault: false,
     },
   ];
 
-  const [indicateur, setIndicateur] = useState<IndicateurType>("insertion");
+  const [indicateur, setIndicateur] = useState<IndicateurType>("tauxInsertion");
 
   const handleIndicateurChange = (indicateur: string): void => {
-    if (indicateur === "insertion" || indicateur === "poursuite")
+    if (indicateur === "tauxInsertion" || indicateur === "tauxPoursuite")
       setIndicateur(indicateur);
   };
 

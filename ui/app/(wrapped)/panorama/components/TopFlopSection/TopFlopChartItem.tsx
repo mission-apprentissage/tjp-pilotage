@@ -7,6 +7,7 @@ import {
   PopoverTrigger,
 } from "@chakra-ui/react";
 
+import { formatPercentage } from "../../../../../utils/formatUtils";
 import { PanoramaTopFlop } from "../../types";
 import { FormationTooltipContent } from "../FormationTooltipContent";
 
@@ -47,7 +48,7 @@ export const TopFlopChartItem = ({
               fontSize={11}
               whiteSpace="nowrap"
             >
-              {`${(formation.tauxDevenirFavorable * 100).toFixed()}%`}
+              {formatPercentage(formation.tauxDevenirFavorable)}
             </Flex>
           </PopoverTrigger>
         </Box>
