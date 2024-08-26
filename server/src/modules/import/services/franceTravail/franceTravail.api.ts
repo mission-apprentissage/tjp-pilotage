@@ -20,12 +20,18 @@ const retryCondition = async (error: AxiosError) => {
   const response = error?.response;
 
   if (isNetworkError(error)) {
+    console.warn(`[WARN] Network error, status: ${response?.status}`);
     return true;
   }
 
   if (![401, undefined].includes(response?.status)) {
     console.error(`[ERROR] unknown.`, JSON.stringify(response));
     return false;
+  }
+
+  if (response?.status === 429) {
+    console.warn(`[WARN] Too many requests`);
+    return true;
   }
 
   if (!loggingIn) {
@@ -39,7 +45,7 @@ const retryCondition = async (error: AxiosError) => {
     console.log(
       "--- Already refreshing insertjeunes API token, triggering a 10s delay"
     );
-    await new Promise((resolve) => setTimeout(resolve, 10000));
+    await new Promise((resolve) => setTimeout(resolve, 3000));
   }
 
   return true;
@@ -71,6 +77,9 @@ export const login = async () => {
       },
     }
   );
+
+  console.log({ status: response.status, data: response.data });
+
   const { access_token } = response.data;
 
   return access_token;

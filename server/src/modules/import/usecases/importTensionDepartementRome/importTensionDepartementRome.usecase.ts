@@ -1,72 +1,88 @@
-import { AxiosError } from "axios";
 import { inject } from "injecti";
+import { Insertable } from "kysely";
 
-import { localFilePathManager } from "../../../core/services/filePathManager/localFilePathManager";
-import { getStatsPerspectivesRecrutement } from "../../services/franceTravail/franceTravail.api";
+import { DB } from "../../../../db/schema";
+import { dataDI } from "../../data.di";
+import { streamIt } from "../../utils/streamIt";
 import {
-  appendFranceTravailTensionFile,
-  createFranceTravailTensionFile,
-  findAllDepartements,
-  findAllRomeCodes,
+  createTension,
+  createTensionDepartementRome,
+  deleteTension,
+  deleteTensionDepartementRome,
 } from "./importTensionDepartementRome.dep";
+
+const formatCodeDepartement = (codeDepartement: string) =>
+  codeDepartement.length > 2 ? codeDepartement : `0${codeDepartement}`;
 
 export const [importTensionDepartementRome] = inject(
   {
-    findAllRomeCodes,
-    findAllDepartements,
-    createFranceTravailTensionFile,
-    filePathManager: localFilePathManager,
-    appendFranceTravailTensionFile,
+    findRawDatas: dataDI.rawDataRepository.findRawDatas,
+    createTension,
+    createTensionDepartementRome,
+    deleteTension,
+    deleteTensionDepartementRome,
   },
   (deps) => async () => {
-    // Create new file
-    deps.createFranceTravailTensionFile(
-      deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath()
-    );
+    console.log(`Suppression des tensions`);
+    await deleteTension();
+    console.log(`Suppression des tensions departement/rome`);
+    await deleteTensionDepartementRome();
 
-    // Lister tous les ROMES pour lesquels il faut importer les données de tension
-    const romes = await deps.findAllRomeCodes();
+    console.log(`\nImport des données de tension departement/rome`);
 
-    console.log(`romes ? ${romes.length}`);
+    let tensionCount = 0;
 
-    // Lister tous les départements qu'il existe
-    const departements = await deps.findAllDepartements();
+    const insertedTensions: Set<string> = new Set();
 
-    console.log(`departements ? ${departements.length}`);
+    await streamIt(
+      (offset) =>
+        deps.findRawDatas({
+          type: "tension_departement_rome",
+          limit: 100,
+          offset,
+        }),
+      async (tension) => {
+        const tensionKey = `${tension.codeNomenclature}_${tension.libNomenclature}`;
 
-    // Pour chaque ROME et chaque département, requêter les informations auprès de france travail
+        if (!insertedTensions.has(tensionKey)) {
+          console.log(`Insertion de tension ${tensionKey} en db`);
 
-    let indexDepartement = 0,
-      indexRome = 0;
-    for (const departement of departements) {
-      indexDepartement++;
-      for (const rome of romes) {
+          const tensionData: Insertable<DB["tension"]> = {
+            codeTension: tension.codeNomenclature,
+            libelleTension: tension.libNomenclature,
+          };
+
+          await createTension(tensionData);
+
+          insertedTensions.add(tensionKey);
+        }
+
+        const tensionRomeDepartementData: Insertable<
+          DB["tensionRomeDepartement"]
+        > = {
+          codeRome: tension.codeActivite,
+          codeDepartement: formatCodeDepartement(tension.codeTerritoire),
+          codeTension: tension.codeNomenclature,
+          annee: tension.codePeriode,
+          valeur: Number(tension.valeurPrincipaleNom),
+        };
+
         try {
-          indexRome++;
-
-          console.log(
-            `Département (${indexDepartement}/${departements.length}) ${departement.codeDepartement} et rome (${indexRome}/${romes.length}) ${rome.codeRome}`
-          );
-
-          const result = await getStatsPerspectivesRecrutement(
-            rome.codeRome,
-            departement.codeDepartement
-          );
-
-          if (result?.length) {
-            await deps.appendFranceTravailTensionFile(
-              deps.filePathManager.getFranceTravailIndicateurTensionStatsFilePath(),
-              result
-            );
-          }
+          await createTensionDepartementRome(tensionRomeDepartementData);
         } catch (e) {
-          if (e instanceof AxiosError) {
-            console.error(
-              `ERROR [DEP=${departement.codeDepartement},ROME=${rome.codeRome}] ${e.response?.data?.message}`
-            );
+          if (typeof e === "object" && e && "detail" in e) {
+            console.error(`\rErreur : ${e.detail}`);
+          } else {
+            console.error(e);
           }
         }
+
+        tensionCount++;
+        process.stdout.write(`\r${tensionCount} tension ajoutées`);
+      },
+      {
+        parallel: 20,
       }
-    }
+    );
   }
 );

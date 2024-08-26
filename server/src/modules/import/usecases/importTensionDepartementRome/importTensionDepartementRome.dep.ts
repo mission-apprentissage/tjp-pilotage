@@ -1,86 +1,33 @@
-import fs from "fs";
-import { sql } from "kysely";
+import { Insertable } from "kysely";
 
-import { kdb } from "../../../../db/db";
-import { notPerimetreIJDepartement } from "../../../data/utils/notPerimetreIJ";
-import { FranceTravailStatsPerspectiveRecrutementValeurParPeriode } from "../../services/franceTravail/franceTravailResponse";
+import { DB, kdb } from "../../../../db/db";
 
-export const findAllRomeCodes = (filter?: string) =>
-  kdb
-    .selectFrom("rome")
-    .select("codeRome")
-    .$call((q) => {
-      if (!filter) {
-        return q;
-      }
-
-      return q.where("codeRome", "ilike", `%${filter}%`);
-    })
-    .orderBy("codeRome", "asc")
-    .distinct()
+export const createTension = async (data: Insertable<DB["tension"]>) => {
+  return kdb
+    .insertInto("tension")
+    .values(data)
+    .onConflict((oc) => oc.doNothing())
     .execute();
-
-export const findAllDepartements = (filter?: string) =>
-  kdb
-    .selectFrom("departement")
-    .where(notPerimetreIJDepartement)
-    .$call((q) => {
-      if (!filter) {
-        return q;
-      }
-
-      return q.where("codeDepartement", "ilike", `%${filter}%`);
-    })
-    .select(({ ref }) => [
-      sql<string>`RIGHT(${ref("codeDepartement")}, 2)`.as("codeDepartement"),
-    ])
-    .orderBy("codeDepartement", "asc")
-    .distinct()
-    .execute();
-
-export const createFranceTravailTensionFile = async (filepath: string) => {
-  if (fs.existsSync(filepath)) {
-    fs.truncateSync(filepath);
-  } else {
-    fs.writeFileSync(filepath, "");
-  }
-  const file = fs.createWriteStream(filepath);
-
-  file.write(
-    `datMaj;codeTypeTerritoire;codeTerritoire;libTerritoire;codeTypeActivite;codeActivite;libActivite;codeNomenclature;libNomenclature;codeTypePeriode;codePeriode;libPeriode;valeurPrincipaleNom\n`
-  );
-
-  return file;
 };
 
-export const appendFranceTravailTensionFile = async (
-  filepath: string,
-  data: FranceTravailStatsPerspectiveRecrutementValeurParPeriode[]
+export const createTensionDepartementRome = async (
+  data: Insertable<DB["tensionRomeDepartement"]>
 ) => {
-  const file = fs.createWriteStream(filepath, { flags: "a" });
-  data.map((item) =>
-    file.write(
-      [
-        item.datMaj,
-        item.codeTypeTerritoire,
-        item.codeTerritoire,
-        item.libTerritoire,
-        item.codeTypeActivite,
-        item.codeActivite,
-        item.libActivite,
-        item.codeNomenclature,
-        item.libNomenclature,
-        item.codeTypePeriode,
-        item.codePeriode,
-        item.libPeriode,
-        item.valeurPrincipaleNom,
-      ].join(";") + "\n"
+  return kdb
+    .insertInto("tensionRomeDepartement")
+    .values(data)
+    .onConflict((oc) =>
+      oc
+        .columns(["annee", "codeDepartement", "codeRome", "codeTension"])
+        .doUpdateSet(data)
     )
-  );
+    .execute();
 };
 
-export const importFranceTravailDeps = {
-  findAllRomeCodes,
-  findAllDepartements,
-  createFranceTravailTensionFile,
+export const deleteTension = async () => {
+  return kdb.deleteFrom("tension").execute();
+};
+
+export const deleteTensionDepartementRome = async () => {
+  return kdb.deleteFrom("tensionRomeDepartement").execute();
 };
