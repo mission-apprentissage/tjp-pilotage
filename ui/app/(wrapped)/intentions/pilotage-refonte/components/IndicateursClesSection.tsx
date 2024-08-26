@@ -1,12 +1,21 @@
-import { Box, Grid, GridItem, HStack, Text, VStack } from "@chakra-ui/react";
+import {
+  Box,
+  Flex,
+  Grid,
+  GridItem,
+  HStack,
+  Stack,
+  Text,
+  VStack,
+} from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
-import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
-import { client } from "../../../../../api.client";
+import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { themeDefinition } from "../../../../../theme/theme";
+import { themeColors } from "../../../../../theme/themeColors";
 import { roundNumber } from "../../../../../utils/roundNumber";
 import { ProgressBar } from "../../../components/ProgressBar";
 import { useScopeCode } from "../hooks";
@@ -42,6 +51,7 @@ const Card = ({
         fontSize="14px"
         fontWeight="500"
         lineHeight="24px"
+        textTransform="uppercase"
       >
         {title}
       </Text>
@@ -49,30 +59,6 @@ const Card = ({
     </VStack>
   );
 };
-
-// À passer côté API si possible
-function generatePercentageDataOr(
-  code: string | undefined,
-  data?: StatsPilotageIntentions,
-  or: string = "-"
-) {
-  return (statut: Statut, indicateur: Indicateur) => {
-    if (
-      typeof code === "undefined" ||
-      typeof data?.[statut]?.[`_${code}`]?.[indicateur] === "undefined" ||
-      (indicateur === "tauxTransformation" &&
-        data?.[statut]?.[`_${code}`].effectif === 0)
-    ) {
-      return or;
-    }
-
-    return (
-      Number.parseFloat(
-        (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
-      ) / 100
-    );
-  };
-}
 
 function generateGetScopedData(
   code: string | undefined,
@@ -91,11 +77,15 @@ const NumberWithLabel = ({
   label,
   percentage,
   objective,
+  symbol,
+  round = 2,
 }: {
   icon?: React.ReactNode;
   label?: string;
-  percentage: number | string;
+  percentage: number;
   objective?: number;
+  symbol?: string;
+  round?: number;
 }) => {
   return (
     <VStack
@@ -112,16 +102,13 @@ const NumberWithLabel = ({
       </HStack>
       <VStack gap="16px" width="100%" alignItems="start">
         <Text fontSize="32px" lineHeight="40px" fontWeight="700">
-          {typeof percentage === "string"
-            ? percentage
-            : roundNumber(percentage * 100)}
-          %
+          {percentage === 0 ? "-" : roundNumber(percentage, round)} {symbol}
         </Text>
-        {objective && typeof percentage !== "string" && (
+        {objective && (
           <Box width="100%">
-            <ProgressBar percentage={(percentage / objective) * 100} />
+            <ProgressBar percentage={percentage / objective} />
             <Text color={themeDefinition.colors.grey[425]}>
-              {roundNumber((percentage * 100) / objective, 0)}% de l'objectif
+              {roundNumber(percentage / objective, 0)}% de l'objectif
             </Text>
           </Box>
         )}
@@ -130,51 +117,75 @@ const NumberWithLabel = ({
   );
 };
 
+const NumberWithProgressBars = ({
+  all,
+  demandeValidee,
+  projetDeDemande,
+  title,
+}: {
+  all: number;
+  demandeValidee: number;
+  projetDeDemande: number;
+  title: string;
+}) => {
+  return (
+    <Flex
+      flexDirection={"column"}
+      gap="8px"
+      height="100%"
+      backgroundColor="white"
+      borderRadius={4}
+      padding="8px"
+      borderColor={themeDefinition.colors.grey[900]}
+      borderWidth="1px"
+      borderStyle="solid"
+    >
+      <Text
+        pb="8px"
+        fontSize="14px"
+        fontStyle="normal"
+        fontWeight="500"
+        lineHeight="24px"
+        textTransform="uppercase"
+        color={themeColors.bluefrance[113]}
+      >
+        {title}
+      </Text>
+      <Text fontSize="40px" fontWeight="800" color="bluefrance.113">
+        {all}
+      </Text>
+      <ProgressBar
+        percentage={100}
+        rightLabel="Validées"
+        leftLabel={demandeValidee}
+        colorScheme={themeColors.success[975]}
+      />
+      <ProgressBar
+        percentage={100}
+        rightLabel="En projet"
+        leftLabel={projetDeDemande}
+        colorScheme={themeColors.grey[975]}
+      />
+    </Flex>
+  );
+};
+
 export const IndicateursClesSection = ({
   data,
   filters,
+  setFilters,
+  onOpenTauxTransfoDefinition,
 }: {
   data: StatsPilotageIntentions | undefined;
   filters: FiltersStatsPilotageIntentions;
+  setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  onOpenTauxTransfoDefinition: () => void;
 }) => {
-  console.log(data);
-  const { data: nationalStats } = client
-    .ref("[GET]/pilotage-intentions/stats")
-    .useQuery(
-      {
-        query: {
-          ...filters,
-          scope: ScopeEnum.national,
-        },
-      },
-      {
-        keepPreviousData: true,
-        staleTime: 10000000,
-      }
-    );
-
   const { code } = useScopeCode(filters);
 
   const getScopedData = useMemo(
     () => generateGetScopedData(code, data),
     [generateGetScopedData, data, code]
-  );
-
-  const getPercentageDataOr = useMemo(() => {
-    console.log("getPercentageDataOr", code, data, "-");
-    return generatePercentageDataOr(code, data, "-");
-  }, [generatePercentageDataOr, data, code]);
-
-  const getNationalData = useMemo(
-    () => generateGetScopedData(ScopeEnum.national, nationalStats),
-    [generateGetScopedData, nationalStats]
-  );
-
-  console.log(
-    getPercentageDataOr(
-      DemandeStatutEnum["demande validée"],
-      "tauxTransformation"
-    )
   );
 
   return (
@@ -187,89 +198,131 @@ export const IndicateursClesSection = ({
       <Text fontWeight="700" fontSize="20px" lineHeight="28px">
         Indicateurs clés de la transformation
       </Text>
-      <Grid
-        templateColumns="minmax(0, 5fr) minmax(0, 4fr)"
-        width="100%"
-        gap="16px"
-      >
-        <GridItem>
-          <Grid
-            backgroundColor="red"
-            templateColumns="repeat(3, minmax(0, 1fr))"
-            templateRows="repeat(3, minmax(0, 1fr))"
-            height="100%"
-            gap="16px"
-          >
-            <GridItem colSpan={2} backgroundColor="blue">
-              <Card title="Taux de transformation (Prévisionnel)">
-                <Grid
-                  templateColumns="repeat(2, minmax(0, 1fr))"
-                  width="100%"
-                  gap="24px"
-                >
-                  <GridItem height="100%">
-                    <NumberWithLabel
-                      label="Projets"
-                      icon={<Icon icon="ri:file-text-line" />}
-                      percentage={getPercentageDataOr(
-                        DemandeStatutEnum["projet de demande"],
-                        "tauxTransformation"
-                      )}
-                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    />
-                  </GridItem>
-                  <GridItem height="100%">
-                    <NumberWithLabel
-                      label="Demandes validées"
-                      icon={<Icon icon="ri:checkbox-circle-line" />}
-                      percentage={getPercentageDataOr(
-                        DemandeStatutEnum["demande validée"],
-                        "tauxTransformation"
-                      )}
-                      objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
-                    />
-                  </GridItem>
-                </Grid>
-              </Card>
-            </GridItem>
-            <GridItem backgroundColor="violet" height="100%">
-              <Card title="Ratio de fermetures">
+      <Stack width="100%" gap="16px" direction="row">
+        <Grid
+          flex="1"
+          templateColumns="repeat(3, minmax(0, 1fr))"
+          templateRows="repeat(2, minmax(0, 1fr)) auto"
+          gap="16px"
+        >
+          <GridItem colSpan={2}>
+            <Card title="Taux de transformation (Prévisionnel)">
+              <Grid
+                templateColumns="repeat(2, minmax(0, 1fr))"
+                width="100%"
+                gap="24px"
+              >
                 <GridItem height="100%">
-                  {
-                    //TODO
-                  }
-                  <NumberWithLabel label=" " percentage={0.2} />
+                  <NumberWithLabel
+                    label="Projets"
+                    icon={<Icon icon="ri:file-text-line" />}
+                    percentage={getScopedData(
+                      DemandeStatutEnum["projet de demande"],
+                      "tauxTransformation"
+                    )}
+                    objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                    symbol="%"
+                  />
                 </GridItem>
-              </Card>
-            </GridItem>
-            {
-              //TODO
-            }
-            <GridItem backgroundColor="green" />
-            <GridItem backgroundColor="green" />
-            <GridItem backgroundColor="green" />
-            <GridItem colSpan={3} backgroundColor="black" />
-          </Grid>
-        </GridItem>
-        <GridItem>
-          <Grid backgroundColor="yellow" height="100%">
-            <CartoSection
-              indicateur="tauxTransformation"
-              handleIndicateurChange={() => {}}
-              indicateurOptions={[
-                {
-                  label: "taux de transformation",
-                  value: "tauxTransformation",
-                  isDefault: true,
-                },
-              ]}
-              filters={filters}
-              data={data}
-              handleFilters={() => {}}
+                <GridItem height="100%">
+                  <NumberWithLabel
+                    label="Demandes validées"
+                    icon={<Icon icon="ri:checkbox-circle-line" />}
+                    percentage={getScopedData(
+                      DemandeStatutEnum["demande validée"],
+                      "tauxTransformation"
+                    )}
+                    objective={OBJECTIF_TAUX_TRANSFO_PERCENTAGE}
+                    symbol="%"
+                  />
+                </GridItem>
+              </Grid>
+            </Card>
+          </GridItem>
+          <GridItem height="100%">
+            <Card title="Ratio de fermetures">
+              <GridItem height="100%">
+                <NumberWithLabel
+                  label=" "
+                  percentage={getScopedData("all", "ratioFermeture")}
+                  symbol="%"
+                  round={0}
+                />
+              </GridItem>
+            </Card>
+          </GridItem>
+          <GridItem>
+            <NumberWithProgressBars
+              all={getScopedData("all", "placesOuvertes")}
+              title="Pl. Ouverte"
+              demandeValidee={getScopedData(
+                DemandeStatutEnum["demande validée"],
+                "placesOuvertes"
+              )}
+              projetDeDemande={getScopedData(
+                DemandeStatutEnum["projet de demande"],
+                "placesOuvertes"
+              )}
             />
-          </Grid>
-        </GridItem>
-      </Grid>
+          </GridItem>
+          <GridItem>
+            <NumberWithProgressBars
+              all={getScopedData("all", "placesFermees")}
+              title="Pl. Fermée"
+              demandeValidee={getScopedData(
+                DemandeStatutEnum["demande validée"],
+                "placesFermees"
+              )}
+              projetDeDemande={getScopedData(
+                DemandeStatutEnum["projet de demande"],
+                "placesFermees"
+              )}
+            />
+          </GridItem>
+          <GridItem>
+            <NumberWithProgressBars
+              all={getScopedData("all", "placesFermees")}
+              title="Pl. Colorées"
+              demandeValidee={getScopedData(
+                DemandeStatutEnum["demande validée"],
+                "placesFermees"
+              )}
+              projetDeDemande={getScopedData(
+                DemandeStatutEnum["projet de demande"],
+                "placesFermees"
+              )}
+            />
+          </GridItem>
+          <GridItem colSpan={3}>
+            <HStack width="100%" justifyContent="start" alignItems="end">
+              <Text color={themeColors.bluefrance[113]}>
+                <TooltipIcon
+                  mr="6px"
+                  label="Cliquez ici pour plus d’infos"
+                  onClick={() => onOpenTauxTransfoDefinition()}
+                />
+                Comprendre le calcul du taux de transformation
+              </Text>
+            </HStack>
+          </GridItem>
+        </Grid>
+        <Grid minW="500px">
+          <CartoSection
+            indicateur="tauxTransformation"
+            handleIndicateurChange={() => {}}
+            indicateurOptions={[
+              {
+                label: "taux de transformation",
+                value: "tauxTransformation",
+                isDefault: true,
+              },
+            ]}
+            filters={filters}
+            data={data}
+            handleFilters={(f) => setFilters({ ...filters, ...f })}
+          />
+        </Grid>
+      </Stack>
     </VStack>
   );
 };

@@ -98,18 +98,10 @@ export const CartoSection = ({
     (code: string | undefined) =>
       handleFilters({
         scope: filters.scope,
-        codeRegion:
-          filters.scope === ScopeEnum.region && scopeCode === code
-            ? undefined
-            : code,
-        codeAcademie:
-          filters.scope === ScopeEnum.academie && scopeCode === code
-            ? undefined
-            : code,
+        codeRegion: filters.scope !== ScopeEnum.region ? undefined : code,
+        codeAcademie: filters.scope !== ScopeEnum.academie ? undefined : code,
         codeDepartement:
-          filters.scope === ScopeEnum.departement && scopeCode === code
-            ? undefined
-            : code,
+          filters.scope !== ScopeEnum.departement ? undefined : code,
       }),
     [handleFilters, filters, scopeCode]
   );
@@ -122,7 +114,6 @@ export const CartoSection = ({
       borderColor="grey.900"
       bg="white"
       p={3}
-      mt={12}
     >
       {data === undefined ? (
         <Skeleton opacity="0.3" height="100%" />

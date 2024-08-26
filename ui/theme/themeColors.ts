@@ -125,6 +125,7 @@ export const themeColors = {
     950: "#b8fec9",
     "950_hover": "#46fd89",
     "950_active": "#34eb7b",
+    975: "#DFFEE6",
   },
   orange: {
     draft: "#FEEBCA",
