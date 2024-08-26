@@ -12,7 +12,7 @@ const ProgressBar = ({
   rightLabel?: string | number;
 }) => {
   return (
-    <Flex flexDirection={"column"}>
+    <Flex flexDirection={"column"} width="100%">
       <Flex
         w="100%"
         bgColor="gray.100"

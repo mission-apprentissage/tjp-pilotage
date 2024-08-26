@@ -2,7 +2,6 @@
 
 import { FormLabel, Grid, GridItem, Select } from "@chakra-ui/react";
 import _ from "lodash";
-import { useEffect } from "react";
 import { ScopeEnum } from "shared";
 
 import { Multiselect } from "../../../../../components/Multiselect";
@@ -35,10 +34,6 @@ export const FiltersSection = ({
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
   data: StatsPilotageIntentions | undefined;
 }) => {
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
-
   const onUpdateFilter = <T,>({
     key,
     selected,
@@ -128,13 +123,14 @@ export const FiltersSection = ({
           onChange={(e) => {
             onUpdateFilter({ key: "scope", selected: e.target.value });
           }}
-          placeholder="Choisir une granularité"
         >
-          {Object.keys(ScopeEnum).map((scope) => (
-            <option key={scope} value={scope}>
-              {_.capitalize(scope)}
-            </option>
-          ))}
+          {Object.keys(ScopeEnum)
+            .filter((s) => s !== ScopeEnum.national)
+            .map((scope) => (
+              <option key={scope} value={scope}>
+                {_.capitalize(scope)}
+              </option>
+            ))}
         </Select>
       </GridItem>
       <GridItem>

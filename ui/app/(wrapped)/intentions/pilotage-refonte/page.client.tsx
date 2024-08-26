@@ -1,11 +1,11 @@
 "use client";
 
-import { VStack } from "@chakra-ui/react";
+import { Container, useDisclosure, VStack } from "@chakra-ui/react";
 import { ScopeEnum } from "shared";
 
 import { client } from "../../../../api.client";
-import { themeDefinition } from "../../../../theme/theme";
 import { useStateParams } from "../../../../utils/useFilters";
+import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
 import { FiltersStatsPilotageIntentions } from "./types";
@@ -46,10 +46,26 @@ export const PilotageNationalClient = () => {
     }
   );
 
+  const { isOpen, onOpen, onClose } = useDisclosure();
+
   return (
-    <VStack px="120px" backgroundColor={themeDefinition.colors.blueecume[950]}>
-      <FiltersSection filters={filters} setFilters={setFilters} data={data} />
-      <IndicateursClesSection data={data} filters={filters} />
-    </VStack>
+    <>
+      <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
+      <Container maxWidth={"container.xl"}>
+        <VStack>
+          <FiltersSection
+            filters={filters}
+            setFilters={setFilters}
+            data={data}
+          />
+          <IndicateursClesSection
+            data={data}
+            filters={filters}
+            setFilters={setFilters}
+            onOpenTauxTransfoDefinition={onOpen}
+          />
+        </VStack>
+      </Container>
+    </>
   );
 };
