@@ -21,6 +21,12 @@ export const up = async (db: Kysely<unknown>) => {
     )
     .addColumn("annee", "varchar(4)", (c) => c.notNull())
     .addColumn("valeur", "integer", (c) => c.notNull())
+    .addUniqueConstraint("tensionRomeDepartement_unique", [
+      "codeRome",
+      "codeDepartement",
+      "codeTension",
+      "annee",
+    ])
     .execute();
 };
 
