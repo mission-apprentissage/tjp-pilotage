@@ -68,6 +68,34 @@ export const FiltersSection = ({
       };
     }
 
+    // Valeurs par défaut pour les codes
+    switch (key) {
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.academie,
+          };
+        }
+        break;
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.region,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.departement,
+          };
+        }
+        break;
+    }
+
     setFilters({ ...filters, ...newFilters });
   };
 
