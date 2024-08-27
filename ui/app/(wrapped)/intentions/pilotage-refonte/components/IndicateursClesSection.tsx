@@ -10,9 +10,11 @@ import {
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
 import { useMemo } from "react";
+import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
+import { client } from "../../../../../api.client";
 import { TooltipIcon } from "../../../../../components/TooltipIcon";
 import { themeDefinition } from "../../../../../theme/theme";
 import { themeColors } from "../../../../../theme/themeColors";
@@ -187,10 +189,27 @@ export const IndicateursClesSection = ({
   onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { code } = useScopeCode(filters);
+  const { data: nationalStats } = client
+    .ref("[GET]/pilotage-intentions/stats")
+    .useQuery(
+      {
+        query: {
+          ...filters,
+          scope: ScopeEnum.national,
+        },
+      },
+      {
+        keepPreviousData: true,
+        staleTime: 10000000,
+      }
+    );
 
   const getScopedData = useMemo(
-    () => generateGetScopedData(code, data),
-    [generateGetScopedData, data, code]
+    () =>
+      code
+        ? generateGetScopedData(code, data)
+        : generateGetScopedData(ScopeEnum.national, nationalStats),
+    [generateGetScopedData, data, code, nationalStats]
   );
 
   return (
@@ -316,7 +335,7 @@ export const IndicateursClesSection = ({
           </GridItem>
           <GridItem colSpan={3}>
             <HStack width="100%" justifyContent="start" alignItems="end">
-              <Text color={themeColors.bluefrance[113]}>
+              <Text color={themeColors.bluefrance[113]} fontWeight="700">
                 <TooltipIcon
                   mr="6px"
                   label="Cliquez ici pour plus d’infos"
