@@ -141,6 +141,7 @@ const findFormationEtablissementsInDb = async ({
     .select((eb) => [
       "etablissement.libelleEtablissement",
       "etablissement.secteur",
+      "etablissement.commune",
       "formationView.cfd",
       "formationView.libelleFormation",
       "formationView.codeNiveauDiplome",
