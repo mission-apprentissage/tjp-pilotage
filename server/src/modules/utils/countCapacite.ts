@@ -201,7 +201,7 @@ export const countOuverturesApprentissageColoree = ({
     ELSE 0
     END`;
 
-export const countOuverturesColoree = ({
+export const countOuverturesColorees = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;

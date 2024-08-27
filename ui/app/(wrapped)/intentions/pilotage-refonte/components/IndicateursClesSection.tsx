@@ -122,11 +122,13 @@ const NumberWithProgressBars = ({
   demandeValidee,
   projetDeDemande,
   title,
+  icon,
 }: {
   all: number;
   demandeValidee: number;
   projetDeDemande: number;
   title: string;
+  icon?: React.ReactNode;
 }) => {
   return (
     <Flex
@@ -140,17 +142,20 @@ const NumberWithProgressBars = ({
       borderWidth="1px"
       borderStyle="solid"
     >
-      <Text
-        pb="8px"
-        fontSize="14px"
-        fontStyle="normal"
-        fontWeight="500"
-        lineHeight="24px"
-        textTransform="uppercase"
-        color={themeColors.bluefrance[113]}
-      >
-        {title}
-      </Text>
+      <HStack width="100%" justifyContent="start" alignItems="start">
+        {icon}
+        <Text
+          pb="8px"
+          fontSize="14px"
+          fontStyle="normal"
+          fontWeight="500"
+          lineHeight="24px"
+          textTransform="uppercase"
+          color={themeColors.bluefrance[113]}
+        >
+          {title}
+        </Text>
+      </HStack>
       <Text fontSize="40px" fontWeight="800" color="bluefrance.113">
         {all}
       </Text>
@@ -199,12 +204,7 @@ export const IndicateursClesSection = ({
         Indicateurs clés de la transformation
       </Text>
       <Stack width="100%" gap="16px" direction="row">
-        <Grid
-          flex="1"
-          templateColumns="repeat(3, minmax(0, 1fr))"
-          templateRows="repeat(2, minmax(0, 1fr)) auto"
-          gap="16px"
-        >
+        <Grid flex="1" templateColumns="repeat(3, minmax(0, 1fr))" gap="16px">
           <GridItem colSpan={2}>
             <Card title="Taux de transformation (Prévisionnel)">
               <Grid
@@ -254,7 +254,14 @@ export const IndicateursClesSection = ({
           <GridItem>
             <NumberWithProgressBars
               all={getScopedData("all", "placesOuvertes")}
-              title="Pl. Ouverte"
+              icon={
+                <Icon
+                  width="24px"
+                  icon="ri:user-add-fill"
+                  color={themeDefinition.colors.bluefrance[525]}
+                />
+              }
+              title="Pl. Ouvertes"
               demandeValidee={getScopedData(
                 DemandeStatutEnum["demande validée"],
                 "placesOuvertes"
@@ -268,7 +275,14 @@ export const IndicateursClesSection = ({
           <GridItem>
             <NumberWithProgressBars
               all={getScopedData("all", "placesFermees")}
-              title="Pl. Fermée"
+              icon={
+                <Icon
+                  width="24px"
+                  icon="ri:user-unfollow-fill"
+                  color={themeDefinition.colors.success["425_active"]}
+                />
+              }
+              title="Pl. Fermées"
               demandeValidee={getScopedData(
                 DemandeStatutEnum["demande validée"],
                 "placesFermees"
@@ -281,15 +295,22 @@ export const IndicateursClesSection = ({
           </GridItem>
           <GridItem>
             <NumberWithProgressBars
-              all={getScopedData("all", "placesFermees")}
+              all={getScopedData("all", "placesOuvertesColorees")}
+              icon={
+                <Icon
+                  width="24px"
+                  icon="ri:account-pin-box-fill"
+                  color={themeDefinition.colors.purpleglycine["850_active"]}
+                />
+              }
               title="Pl. Colorées"
               demandeValidee={getScopedData(
                 DemandeStatutEnum["demande validée"],
-                "placesFermees"
+                "placesOuvertesColorees"
               )}
               projetDeDemande={getScopedData(
                 DemandeStatutEnum["projet de demande"],
-                "placesFermees"
+                "placesOuvertesColorees"
               )}
             />
           </GridItem>
