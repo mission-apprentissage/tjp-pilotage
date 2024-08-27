@@ -9,7 +9,7 @@ import {
   VStack,
 } from "@chakra-ui/react";
 import { Icon } from "@iconify/react";
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
@@ -27,7 +27,7 @@ import {
   StatsPilotageIntentions,
   Statut,
 } from "../types";
-import { CartoSection } from "./Carto";
+import { CartoSection, IndicateurType } from "./Carto";
 
 const Card = ({
   children,
@@ -189,6 +189,9 @@ export const IndicateursClesSection = ({
   onOpenTauxTransfoDefinition: () => void;
 }) => {
   const { code } = useScopeCode(filters);
+  const [indicateur, setIndicateur] =
+    useState<IndicateurType>("tauxTransformation");
+
   const { data: nationalStats } = client
     .ref("[GET]/pilotage-intentions/stats")
     .useQuery(
@@ -211,6 +214,19 @@ export const IndicateursClesSection = ({
         : generateGetScopedData(ScopeEnum.national, nationalStats),
     [generateGetScopedData, data, code, nationalStats]
   );
+
+  const indicateurOptions = [
+    {
+      label: "Taux de transformation",
+      value: "tauxTransformation",
+      isDefault: true,
+    },
+    {
+      label: "Ratio de fermetures",
+      value: "ratioFermeture",
+      isDefault: false,
+    },
+  ];
 
   return (
     <VStack
@@ -348,15 +364,11 @@ export const IndicateursClesSection = ({
         </Grid>
         <Grid minW="500px">
           <CartoSection
-            indicateur="tauxTransformation"
-            handleIndicateurChange={() => {}}
-            indicateurOptions={[
-              {
-                label: "taux de transformation",
-                value: "tauxTransformation",
-                isDefault: true,
-              },
-            ]}
+            indicateur={indicateur}
+            handleIndicateurChange={(newIndicateur) =>
+              setIndicateur(newIndicateur as IndicateurType)
+            }
+            indicateurOptions={indicateurOptions}
             filters={filters}
             data={data}
             handleFilters={(f) => setFilters({ ...filters, ...f })}
