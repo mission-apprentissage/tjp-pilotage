@@ -100,6 +100,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("codeAcademie", selected)}
         options={data?.filters.academies}
         value={filters.codeAcademie ?? []}
+        menuZIndex={3}
       >
         Académie
       </Multiselect>
@@ -110,6 +111,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("codeDepartement", selected)}
         options={data?.filters.departements}
         value={filters.codeDepartement ?? []}
+        menuZIndex={3}
       >
         Département
       </Multiselect>
@@ -120,6 +122,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("commune", selected)}
         options={data?.filters.communes}
         value={filters.commune ?? []}
+        menuZIndex={3}
       >
         Commune
       </Multiselect>
@@ -129,6 +132,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("uai", selected)}
         options={data?.filters.etablissements}
         value={filters.uai ?? []}
+        menuZIndex={3}
       >
         Établissement
       </Multiselect>
@@ -141,6 +145,7 @@ export const ConsoleFilters = ({
           { label: "PU", value: "PU" },
         ]}
         value={filters.secteur ?? []}
+        menuZIndex={3}
       >
         Secteur
       </Multiselect>
@@ -150,6 +155,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("codeDiplome", selected)}
         options={data?.filters.diplomes}
         value={filters.codeDiplome ?? []}
+        menuZIndex={3}
       >
         Diplôme
       </Multiselect>
@@ -159,6 +165,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("codeDispositif", selected)}
         options={data?.filters.dispositifs}
         value={filters.codeDispositif ?? []}
+        menuZIndex={3}
       >
         Dispositif
       </Multiselect>
@@ -168,6 +175,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("cfdFamille", selected)}
         options={data?.filters.familles}
         value={filters.cfdFamille ?? []}
+        menuZIndex={3}
       >
         Famille
       </Multiselect>
@@ -177,6 +185,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("cfd", selected)}
         options={data?.filters.formations}
         value={filters.cfd ?? []}
+        menuZIndex={3}
       >
         Formation
       </Multiselect>
@@ -186,6 +195,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("cpc", selected)}
         options={data?.filters.cpcs}
         value={filters.cpc ?? []}
+        menuZIndex={3}
       >
         CPC
       </Multiselect>
@@ -195,6 +205,7 @@ export const ConsoleFilters = ({
         onChange={(selected) => handleFilters("codeNsf", selected)}
         options={data?.filters.libellesNsf}
         value={filters.codeNsf ?? []}
+        menuZIndex={3}
       >
         Domaine de formation (NSF)
       </Multiselect>
