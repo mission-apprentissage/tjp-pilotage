@@ -31,6 +31,7 @@ const genericOnDemandes =
     CPC,
     codeNsf,
     campagne,
+    secteur,
   }: Filters) =>
   (eb: ExpressionBuilder<DB, "region" | "academie" | "departement">) =>
     eb
@@ -42,6 +43,7 @@ const genericOnDemandes =
         })
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+      .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
       .select((es) => [
         es.fn
           .coalesce(eb.fn.sum<number>(countOuverturesSco(es)), sql`0`)
@@ -91,8 +93,12 @@ const genericOnDemandes =
         return eb;
       })
       .$call((q) => {
-        if (!statut) return q;
+        if (!statut || statut.length === 0) return q;
         return q.where("demande.statut", "=", statut);
+      })
+      .$call((q) => {
+        if (!secteur || secteur.length === 0) return q;
+        return q.where("dataEtablissement.secteur", "=", secteur);
       });
 
 const getNationalData = async (filters: Filters) => {
@@ -106,6 +112,7 @@ const getNationalData = async (filters: Filters) => {
       })
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .select((es) => [
       es.fn
         .coalesce(es.fn.sum<number>(countOuverturesSco(es)), sql`0`)
@@ -161,8 +168,12 @@ const getNationalData = async (filters: Filters) => {
       return eb;
     })
     .$call((q) => {
-      if (!filters.statut) return q;
+      if (!filters.statut || filters.statut.length === 0) return q;
       return q.where("demande.statut", "=", filters.statut);
+    })
+    .$call((q) => {
+      if (!filters.secteur || filters.secteur.length === 0) return q;
+      return q.where("dataEtablissement.secteur", "=", filters.secteur);
     })
     .execute()
     .then(cleanNull);
@@ -359,6 +370,7 @@ export const getStatsPilotageIntentionsQuery = async ({
   codeNsf,
   scope,
   campagne,
+  secteur,
 }: Filters) => {
   switch (scope) {
     case ScopeEnum.academie:
@@ -370,6 +382,7 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
       });
 
     case ScopeEnum.departement:
@@ -381,6 +394,7 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
       });
     case ScopeEnum.region:
       return getRegionData({
@@ -391,6 +405,7 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
       });
     case ScopeEnum.national:
     default:
@@ -402,6 +417,7 @@ export const getStatsPilotageIntentionsQuery = async ({
         codeNsf,
         campagne,
         scope,
+        secteur,
       });
   }
 };

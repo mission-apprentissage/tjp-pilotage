@@ -219,6 +219,24 @@ export const getFiltersQuery = async ({
     )
     .execute();
 
+  const secteurFilters = await base
+    .select((eb) => [
+      "dataEtablissement.secteur as value",
+      eb
+        .case()
+        .when("dataEtablissement.secteur", "=", "PU")
+        .then("Public")
+        .when("dataEtablissement.secteur", "=", "PR")
+        .then("Privé")
+        .end()
+        .as("label"),
+    ])
+    .execute();
+
+  const statutFilters = await base
+    .select(["demande.statut as value", "demande.statut as label"])
+    .execute();
+
   return {
     campagnes: campagnesFilters.map(cleanNull),
     rentreesScolaires: rentreesScolairesFilters.map(cleanNull),
@@ -228,5 +246,7 @@ export const getFiltersQuery = async ({
     CPCs: CPCFilters.map(cleanNull),
     libellesNsf: libellesNsf.map(cleanNull),
     diplomes: diplomesFilters.map(cleanNull),
+    secteurFilters: secteurFilters.map(cleanNull),
+    statutFilters: statutFilters.map(cleanNull),
   };
 };
