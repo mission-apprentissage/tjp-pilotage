@@ -8,9 +8,10 @@ import {
   countFermeturesApprentissage,
   countFermeturesSco,
   countOuverturesApprentissage,
+  countOuverturesColorees,
   countOuverturesSco,
 } from "../../../../utils/countCapacite";
-import { isDemandeNotDeletedOrRefused } from "../../../../utils/isDemandeSelectable";
+import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
 import {
   notPerimetreIJAcademie,
   notPerimetreIJDepartement,
@@ -57,9 +58,12 @@ const genericOnDemandes =
         es.fn
           .coalesce(eb.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
           .as("transformes"),
+        es.fn
+          .coalesce(es.fn.sum<number>(countOuverturesColorees(es)), sql`0`)
+          .as("placesOuvertesColorees"),
         selectNbDemandes(es).as("countDemande"),
       ])
-      .where(isDemandeNotDeletedOrRefused)
+      .where(isDemandeProjetOrValidee)
       .$call((eb) => {
         if (rentreeScolaire)
           return eb.where(
@@ -93,7 +97,7 @@ const genericOnDemandes =
 
 const getNationalData = async (filters: Filters) => {
   return kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "demande.campagneId").$call((eb) => {
         if (filters.campagne)
@@ -115,6 +119,9 @@ const getNationalData = async (filters: Filters) => {
       es.fn
         .coalesce(es.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
         .as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${es.fn.sum<number>(
+        countOuverturesColorees(es)
+      )}, 0)`.as("placeOuvertesColorees"),
       es.fn
         .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
         .as("transformes"),
@@ -125,7 +132,7 @@ const getNationalData = async (filters: Filters) => {
       sql<string>`'national'`.as("code"),
       sql<string>`'national'`.as("libelle"),
     ])
-    .where(isDemandeNotDeletedOrRefused)
+    .where(isDemandeProjetOrValidee)
     .$call((eb) => {
       if (filters.rentreeScolaire)
         return eb.where(
@@ -201,6 +208,9 @@ const getRegionData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref(
         "demandes.placesFermeesApprentissage"
       )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesColorees")}, 0)`.as(
+        "placeOuvertesColorees"
+      ),
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
       ),
@@ -255,6 +265,9 @@ const getAcademieData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref(
         "demandes.placesFermeesApprentissage"
       )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesColorees")}, 0)`.as(
+        "placeOuvertesColorees"
+      ),
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
       ),
@@ -323,6 +336,9 @@ const getDepartementData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref(
         "demandes.placesFermeesApprentissage"
       )}, 0)`.as("placesFermeesApprentissage"),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesColorees")}, 0)`.as(
+        "placeOuvertesColorees"
+      ),
       sql<number>`COALESCE(${eb.ref("demandes.transformes")}, 0)`.as(
         "transformes"
       ),

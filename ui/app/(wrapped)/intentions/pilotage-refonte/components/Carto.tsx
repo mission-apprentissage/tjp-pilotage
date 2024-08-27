@@ -143,7 +143,7 @@ export const CartoSection = ({
               </Select>
             </Flex>
           </Flex>
-          <Box mt={"-20"}>
+          <Box mt={"-20px"}>
             <CartoGraph
               graphData={getGraphData()}
               scope={filters.scope}

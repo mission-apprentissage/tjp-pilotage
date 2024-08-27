@@ -21,6 +21,7 @@ const ScopedStatsTransfoSchema = z.object({
   placesOuvertesApprentissage: z.number(),
   placesFermeesApprentissage: z.number(),
   placesOuvertes: z.number(),
+  placesOuvertesColorees: z.number(),
   placesFermees: z.number(),
   ratioOuverture: z.number(),
   ratioFermeture: z.number(),

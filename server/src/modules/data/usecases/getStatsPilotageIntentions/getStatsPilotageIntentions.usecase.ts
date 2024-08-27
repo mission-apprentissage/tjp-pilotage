@@ -44,6 +44,7 @@ const formatResult = (
         item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
       placesFermees:
         item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
+      placesOuvertesColorees: item.placeOuvertesColorees || 0,
       ratioOuverture:
         Math.round(
           ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
