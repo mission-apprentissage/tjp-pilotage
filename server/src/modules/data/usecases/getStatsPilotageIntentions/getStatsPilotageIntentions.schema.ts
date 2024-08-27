@@ -1,5 +1,7 @@
 import { ScopeEnum } from "shared";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { scope } from "shared/enum/scopeEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -51,6 +53,8 @@ const QuerySchema = z.object({
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  statut: z.array(DemandeStatutZodType).optional(),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;
@@ -83,6 +87,8 @@ export const getStatsPilotageIntentionsSchema = {
         CPCs: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
+        secteurFilters: z.array(OptionSchema),
+        statutFilters: z.array(OptionSchema),
       }),
     }),
   },

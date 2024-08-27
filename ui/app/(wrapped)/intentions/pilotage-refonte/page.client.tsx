@@ -8,7 +8,10 @@ import { useStateParams } from "../../../../utils/useFilters";
 import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
-import { FiltersStatsPilotageIntentions } from "./types";
+import {
+  FiltersStatsPilotageIntentions,
+  StatsPilotageIntentions,
+} from "./types";
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
 export const PilotageNationalClient = () => {
@@ -28,23 +31,33 @@ export const PilotageNationalClient = () => {
       staleTime: 10000000,
       onSuccess: (data) => {
         if (!filters.campagne) {
-          const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
-            data.campagne.annee,
-            data.filters.rentreesScolaires
-          );
-          if (rentreeScolaire) {
-            setFilters({
-              ...filters,
-              campagne: data.campagne.annee,
-              rentreeScolaire: [rentreeScolaire],
-            });
-          } else {
-            setFilters({ ...filters, campagne: data.campagne.annee });
-          }
+          setDefaultFilters(data);
         }
       },
     }
   );
+
+  const setDefaultFilters = (data: StatsPilotageIntentions | undefined) => {
+    if (!data) return;
+    const rentreeScolaire = findDefaultRentreeScolaireForCampagne(
+      data.campagne.annee,
+      data.filters.rentreesScolaires
+    );
+
+    setFilters({
+      campagne: data.campagne.annee,
+      rentreeScolaire: rentreeScolaire ? [rentreeScolaire] : undefined,
+      codeRegion: undefined,
+      codeAcademie: undefined,
+      codeDepartement: undefined,
+      codeNsf: undefined,
+      codeNiveauDiplome: undefined,
+      CPC: undefined,
+      scope: ScopeEnum.region,
+      secteur: undefined,
+      statut: undefined,
+    });
+  };
 
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -57,6 +70,7 @@ export const PilotageNationalClient = () => {
             filters={filters}
             setFilters={setFilters}
             data={data}
+            setDefaultFilters={() => setDefaultFilters(data)}
           />
           <IndicateursClesSection
             data={data}
