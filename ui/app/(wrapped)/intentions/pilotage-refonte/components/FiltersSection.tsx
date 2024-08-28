@@ -285,15 +285,6 @@ export const FiltersSection = ({
           Tous
         </Multiselect>
       </GridItem>
-      {/* <CustomInput label="Statut demandes" />
-      <CustomInput
-        label="Inclure colorations"
-        options={[true, false].map((includeColoration) => ({
-          label: _.capitalize(includeColoration ? "Oui" : "Non"),
-          value: includeColoration,
-        }))}
-      />
-      <CustomInput label="Secteur Public/Privé" /> */}
       <GridItem>
         <VStack width="100%" height="100%" justifyContent="end">
           <Button

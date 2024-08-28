@@ -4,6 +4,11 @@ import { ScopeEnum } from "shared";
 
 import { CartoGraph } from "@/components/CartoGraph";
 
+import { ExportMenuButton } from "../../../../../components/ExportMenuButton";
+import {
+  downloadCsv,
+  downloadExcel,
+} from "../../../../../utils/downloadExport";
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -106,6 +111,8 @@ export const CartoSection = ({
     [handleFilters, filters, scopeCode]
   );
 
+  console.log(getGraphData());
+
   return (
     <Box
       flex={1}
@@ -156,6 +163,33 @@ export const CartoSection = ({
               }}
             />
           </Box>
+          <Flex justifyContent="end">
+            <ExportMenuButton
+              onExportCsv={async () => {
+                downloadCsv(
+                  `visulaisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              onExportExcel={async () => {
+                downloadExcel(
+                  `visulaisation_territoriale_${indicateur}_${filters.scope}`,
+                  getGraphData(),
+                  {
+                    name: "Nom",
+                    value: indicateur,
+                    code: "Code",
+                  }
+                );
+              }}
+              variant="ghost"
+            />
+          </Flex>
         </Box>
       )}
     </Box>
