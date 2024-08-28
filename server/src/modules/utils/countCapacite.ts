@@ -1,4 +1,5 @@
 import { ExpressionBuilder, ExpressionWrapper, RawBuilder, sql } from "kysely";
+import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import { DB } from "../../db/db";
 
@@ -185,30 +186,34 @@ export const countOuverturesScolaireColoree = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`
-    CASE WHEN
-      (${eb.ref("demande.capaciteScolaireColoree")}) >= 0
-    THEN
-      (
-        ${eb.ref("demande.capaciteScolaireColoree")}
-      )
-    ELSE 0
-    END`;
+  eb
+    .case()
+    .when(
+      eb.and([
+        eb("demande.capaciteScolaireColoree", ">=", 0),
+        eb("demande.typeDemande", "=", eb.val(DemandeTypeEnum.coloration)),
+      ])
+    )
+    .then(eb.ref("demande.capaciteScolaireColoree"))
+    .else(0)
+    .end();
 
 export const countOuverturesApprentissageColoree = ({
   eb,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  sql<number>`
-    CASE WHEN
-      (${eb.ref("demande.capaciteApprentissageColoree")}) >= 0
-    THEN
-      (
-        ${eb.ref("demande.capaciteApprentissageColoree")}
-      )
-    ELSE 0
-    END`;
+  eb
+    .case()
+    .when(
+      eb.and([
+        eb("demande.capaciteApprentissageColoree", ">=", 0),
+        eb("demande.typeDemande", "=", eb.val(DemandeTypeEnum.coloration)),
+      ])
+    )
+    .then(eb.ref("demande.capaciteApprentissageColoree"))
+    .else(0)
+    .end();
 
 export const countOuverturesColorees = ({
   eb,
