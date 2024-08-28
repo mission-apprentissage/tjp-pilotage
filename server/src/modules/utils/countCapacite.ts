@@ -1,4 +1,4 @@
-import { ExpressionBuilder, RawBuilder, sql } from "kysely";
+import { ExpressionBuilder, ExpressionWrapper, RawBuilder, sql } from "kysely";
 
 import { DB } from "../../db/db";
 
@@ -84,20 +84,29 @@ export const countFermeturesSco = ({
 export const countFermeturesApprentissage = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande">;
+  eb: ExpressionBuilder<DB, "demande" | "campagne">;
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`
-    CASE WHEN
-    (${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-      "demande.capaciteApprentissageActuelle"
-    )}) <= 0
-    THEN abs(${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-      "demande.capaciteApprentissageActuelle"
-    )})
-    ELSE 0
-    END`,
+    count: eb
+      .case()
+      .when(
+        eb.and([
+          eb(
+            "demande.capaciteApprentissage",
+            "<=",
+            eb.ref("demande.capaciteApprentissageActuelle")
+          ),
+          eb("campagne.annee", "=", eb.val("2023")),
+        ])
+      )
+      .then(
+        sql<number>`abs(${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+          "demande.capaciteApprentissageActuelle"
+        )})`
+      )
+      .else(0)
+      .end(),
   });
 
 export const countDifferenceCapaciteScolaire = ({
@@ -215,7 +224,9 @@ const exceptionColoration = ({
   count,
 }: {
   eb: ExpressionBuilder<DB, "demande">;
-  count: RawBuilder<number>;
+  count:
+    | RawBuilder<number>
+    | ExpressionWrapper<DB, "demande" | "campagne", number>;
 }) =>
   sql<number>`CASE WHEN ${eb.ref("demande.typeDemande")} = 'coloration'
     THEN 0
