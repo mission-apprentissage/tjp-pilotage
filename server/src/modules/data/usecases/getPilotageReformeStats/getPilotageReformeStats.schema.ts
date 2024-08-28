@@ -9,8 +9,8 @@ const StatsSchema = z.object({
   effectif: z.coerce.number().optional(),
   nbFormations: z.coerce.number().optional(),
   nbEtablissements: z.coerce.number().optional(),
-  poursuite: z.coerce.number().optional(),
-  insertion: z.coerce.number().optional(),
+  tauxPoursuite: z.coerce.number().optional(),
+  tauxInsertion: z.coerce.number().optional(),
 });
 
 const StatsAnneeSchema = z.object({

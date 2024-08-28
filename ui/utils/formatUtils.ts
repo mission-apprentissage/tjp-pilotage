@@ -43,3 +43,22 @@ export const formatArray = (
   if (values.length === 1 && values[0]) return values[0].toString();
   return values.filter((value) => value).join(", ");
 };
+
+export const formatNumber = (
+  value?: number,
+  numberOfDigits: number = 0
+): number => {
+  if (!value) return 0;
+  return Number.parseFloat(value.toFixed(numberOfDigits));
+};
+
+export const formatPercentage = (
+  value?: number,
+  numberOfDigits: number = 0
+): string => {
+  if (!value) return "0 %";
+  return new Intl.NumberFormat("fr-FR", {
+    style: "percent",
+    maximumFractionDigits: numberOfDigits,
+  }).format(value);
+};

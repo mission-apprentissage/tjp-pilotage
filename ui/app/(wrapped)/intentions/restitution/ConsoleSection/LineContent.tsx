@@ -6,7 +6,7 @@ import { GraphWrapper } from "@/components/GraphWrapper";
 import { TableBadge } from "@/components/TableBadge";
 import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { roundNumber } from "../../../../../utils/roundNumber";
+import { formatNumber } from "../../../../../utils/formatUtils";
 import {
   getMotifLabel,
   MotifCampagne,
@@ -368,9 +368,7 @@ export const LineContent = ({
         bgColor={getCellColor("tauxPressionRegional")}
       >
         <TableBadge sx={getTauxPressionStyle(demande.tauxPressionRegional)}>
-          {typeof demande.tauxPressionRegional !== "undefined"
-            ? roundNumber(demande.tauxPressionRegional)
-            : "-"}
+          {formatNumber(demande.tauxPressionRegional, 2) || "-"}
         </TableBadge>
       </ConditionalTd>
       <ConditionalTd
