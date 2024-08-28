@@ -308,7 +308,6 @@ const getDepartementData = async (filters: Filters) => {
     .leftJoin(
       (eb) =>
         genericOnDemandes(filters)(eb)
-          .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
           .select((es) => [
             es.ref("dataEtablissement.codeDepartement").as("codeDepartement"),
           ])
