@@ -1,12 +1,12 @@
 import { Box, HStack, Text } from "@chakra-ui/react";
 
 import { GraphWrapper } from "@/components/GraphWrapper";
+import { InfoBlock } from "@/components/InfoBlock";
+import { TableBadge } from "@/components/TableBadge";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatNumber } from "@/utils/formatUtils";
+import { getTauxPressionStyle } from "@/utils/getBgScale";
 
-import { InfoBlock } from "../../../../components/InfoBlock";
-import { TableBadge } from "../../../../components/TableBadge";
-import { TooltipIcon } from "../../../../components/TooltipIcon";
-import { getTauxPressionStyle } from "../../../../utils/getBgScale";
-import { roundNumber } from "../../../../utils/roundNumber";
 import { useGlossaireContext } from "../../glossaire/glossaireContext";
 import { PanoramaFormation, PanoramaTopFlop } from "../types";
 
@@ -56,7 +56,7 @@ export const FormationTooltipContent = ({
         value={
           <TableBadge sx={getTauxPressionStyle(formation?.tauxPression)}>
             {formation.tauxPression !== undefined
-              ? roundNumber(formation?.tauxPression)
+              ? formatNumber(formation?.tauxPression, 2)
               : "-"}
           </TableBadge>
         }

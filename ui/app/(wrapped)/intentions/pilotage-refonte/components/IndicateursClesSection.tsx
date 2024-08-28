@@ -14,12 +14,13 @@ import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
-import { client } from "../../../../../api.client";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
-import { themeDefinition } from "../../../../../theme/theme";
-import { themeColors } from "../../../../../theme/themeColors";
-import { roundNumber } from "../../../../../utils/roundNumber";
-import { ProgressBar } from "../../../components/ProgressBar";
+import { client } from "@/api.client";
+import { ProgressBar } from "@/components/ProgressBar";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { themeDefinition } from "@/theme/theme";
+import { themeColors } from "@/theme/themeColors";
+import { formatNumber } from "@/utils/formatUtils";
+
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -104,13 +105,13 @@ const NumberWithLabel = ({
       </HStack>
       <VStack gap="16px" width="100%" alignItems="start">
         <Text fontSize="32px" lineHeight="40px" fontWeight="700">
-          {percentage === 0 ? "-" : roundNumber(percentage, round)} {symbol}
+          {percentage === 0 ? "-" : formatNumber(percentage, round)} {symbol}
         </Text>
         {objective && (
           <Box width="100%">
             <ProgressBar percentage={percentage / objective} />
             <Text color={themeDefinition.colors.grey[425]}>
-              {roundNumber(percentage / objective, 0)}% de l'objectif
+              {formatNumber(percentage / objective, 0)}% de l'objectif
             </Text>
           </Box>
         )}

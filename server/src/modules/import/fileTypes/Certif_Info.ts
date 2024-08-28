@@ -1,4 +1,4 @@
-export type Formation_Rome = {
+export type Certif_Info = {
   Code_Diplome: string;
   Libelle_Diplome: string;
   Libelle_Type_Diplome: string;

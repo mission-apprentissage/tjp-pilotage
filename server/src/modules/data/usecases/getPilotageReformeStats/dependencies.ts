@@ -4,7 +4,10 @@ import { NEXT_RENTREE } from "shared/time/NEXT_RENTREE";
 import { kdb } from "../../../../db/db";
 import { cleanNull } from "../../../../utils/noNull";
 import { countDifferenceCapacite } from "../../../utils/countCapacite";
-import { isDemandeNotDeletedOrRefused } from "../../../utils/isDemandeSelectable";
+import {
+  isDemandeNotAjustementRentree,
+  isDemandeNotDeletedOrRefused,
+} from "../../../utils/isDemandeSelectable";
 import { getMillesimeFromRentreeScolaire } from "../../services/getMillesime";
 import { getRentreeScolaire } from "../../services/getRentreeScolaire";
 import { effectifAnnee } from "../../utils/effectifAnnee";
@@ -159,8 +162,10 @@ export const getStats = async ({
       .where(notAnneeCommuneIndicateurRegionSortie)
       .where(notHistoriqueIndicateurRegionSortie)
       .select([
-        selectTauxInsertion6moisAgg("indicateurRegionSortie").as("insertion"),
-        selectTauxPoursuiteAgg("indicateurRegionSortie").as("poursuite"),
+        selectTauxInsertion6moisAgg("indicateurRegionSortie").as(
+          "tauxInsertion"
+        ),
+        selectTauxPoursuiteAgg("indicateurRegionSortie").as("tauxPoursuite"),
       ])
       .executeTakeFirstOrThrow();
 
@@ -242,7 +247,7 @@ const getTauxTransformationData = async (filters: {
   codeRegion?: string;
 }) => {
   return kdb
-    .selectFrom("latestDemandeView as demande")
+    .selectFrom("latestDemandeIntentionView as demande")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .select((es) => [
@@ -254,6 +259,7 @@ const getTauxTransformationData = async (filters: {
         .as("effectif"),
     ])
     .where(isDemandeNotDeletedOrRefused)
+    .where(isDemandeNotAjustementRentree)
     .$call((eb) => {
       return eb.where("demande.rentreeScolaire", "in", [
         parseInt(NEXT_RENTREE),

@@ -9,10 +9,10 @@ import {
 } from "@chakra-ui/react";
 import { CURRENT_RENTREE } from "shared";
 
-import { GlossaireShortcut } from "../../../../../components/GlossaireShortcut";
-import { TooltipIcon } from "../../../../../components/TooltipIcon";
-import { displayPercentage } from "../../../../../utils/displayPercent";
-import { roundNumber } from "../../../../../utils/roundNumber";
+import { GlossaireShortcut } from "@/components/GlossaireShortcut";
+import { TooltipIcon } from "@/components/TooltipIcon";
+import { formatNumber, formatPercentage } from "@/utils/formatUtils";
+
 import { useGlossaireContext } from "../../../glossaire/glossaireContext";
 import { StatsFormations } from "../../types";
 import { StatCard } from "./StatCard";
@@ -51,7 +51,7 @@ export const IndicateursSection = ({
           </Heading>
         </Box>
         <Flex direction={"row"} mt={"8px"}>
-          <Text style={{ textWrap: "pretty" }}>
+          <Flex style={{ textWrap: "pretty" }}>
             Retrouvez ici les principaux indicateurs sur votre territoire (Voie
             scolaire, Chiffres {CURRENT_RENTREE}).{" "}
             <GlossaireShortcut
@@ -59,7 +59,7 @@ export const IndicateursSection = ({
               marginInline={1}
               iconSize={"16px"}
             />
-          </Text>
+          </Flex>
         </Flex>
         <Img
           alignSelf={"end"}
@@ -123,12 +123,12 @@ export const IndicateursSection = ({
           }`}
           value={
             stats?.tauxRemplissage
-              ? roundNumber(stats.tauxRemplissage * 100, 0)
+              ? formatNumber(stats.tauxRemplissage * 100, 0)
               : undefined
           }
           tooltip={
             stats?.tauxRemplissage
-              ? displayPercentage(stats?.tauxRemplissage)
+              ? formatPercentage(stats?.tauxRemplissage)
               : "-"
           }
           type={"percentage"}
@@ -152,12 +152,12 @@ export const IndicateursSection = ({
           label={`Taux de devenir favorable dans votre région`}
           value={
             stats?.tauxDevenirFavorable
-              ? roundNumber(stats.tauxDevenirFavorable * 100, 0)
+              ? formatNumber(stats.tauxDevenirFavorable * 100, 0)
               : undefined
           }
           tooltip={
             stats?.tauxDevenirFavorable
-              ? displayPercentage(stats?.tauxDevenirFavorable)
+              ? formatPercentage(stats?.tauxDevenirFavorable)
               : "-"
           }
           type={"percentage"}
@@ -182,11 +182,11 @@ export const IndicateursSection = ({
           label="Taux de poursuite d'études dans votre région"
           value={
             stats?.tauxPoursuite
-              ? roundNumber(stats.tauxPoursuite * 100, 0)
+              ? formatNumber(stats.tauxPoursuite * 100, 0)
               : undefined
           }
           tooltip={
-            stats?.tauxPoursuite ? displayPercentage(stats?.tauxPoursuite) : "-"
+            stats?.tauxPoursuite ? formatPercentage(stats?.tauxPoursuite) : "-"
           }
           type={"percentage"}
           glossaire={
@@ -209,11 +209,11 @@ export const IndicateursSection = ({
           label="Taux d'emploi à 6 mois dans votre région"
           value={
             stats?.tauxInsertion
-              ? roundNumber(stats.tauxInsertion * 100, 0)
+              ? formatNumber(stats.tauxInsertion * 100, 0)
               : undefined
           }
           tooltip={
-            stats?.tauxInsertion ? displayPercentage(stats?.tauxInsertion) : "-"
+            stats?.tauxInsertion ? formatPercentage(stats?.tauxInsertion) : "-"
           }
           type={"percentage"}
           glossaire={

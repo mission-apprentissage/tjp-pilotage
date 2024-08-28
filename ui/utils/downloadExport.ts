@@ -49,6 +49,7 @@ export function downloadCsv<D extends object>(
         `"${str.replace(/"/g, '\\"').replace(/(\r\n|\r|\n)/g, " ")}"`,
       number: numberFormatter({
         separator: ",",
+        decimals: 2,
       }),
       object: objectFormatter,
       undefined: () => "",
