@@ -28,4 +28,5 @@ export type Indicateur =
   | "placesFermees"
   | "ratioFermeture"
   | "ratioOuverture"
-  | "placesOuvertesColorees";
+  | "placesOuvertesColorees"
+  | "placesOuvertesTransformationEcologique";
