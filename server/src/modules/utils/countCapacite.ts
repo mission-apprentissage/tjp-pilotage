@@ -3,6 +3,54 @@ import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 
 import { DB } from "../../db/db";
 
+export const countOuverturesTransitionEcologique = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "rome">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: sql<number>`${countOuverturesScoTransitionEcologique(
+      eb
+    )} + ${countOuverturesApprentissageTransitionEcologique(eb)}`,
+  });
+
+export const countOuverturesScoTransitionEcologique = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "rome">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: sql<number>`
+    CASE WHEN
+    (${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
+      "demande.capaciteScolaireActuelle"
+    )}) >= 0 AND (${eb.ref("rome.transitionEcologique")} = ${sql<true>`true`})
+    THEN (${eb.ref("demande.capaciteScolaire")} -
+    ${eb.ref("demande.capaciteScolaireActuelle")})
+    ELSE 0
+    END`,
+  });
+
+export const countOuverturesApprentissageTransitionEcologique = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande" | "rome">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: sql<number>`
+    CASE WHEN
+    (${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+      "demande.capaciteApprentissageActuelle"
+    )}) >= 0 AND (${eb.ref("rome.transitionEcologique")} = ${sql<true>`true`})
+    THEN (${eb.ref("demande.capaciteApprentissage")} -
+    ${eb.ref("demande.capaciteApprentissageActuelle")})
+    ELSE 0
+    END`,
+  });
+
 export const countOuvertures = ({
   eb,
 }: {
@@ -224,7 +272,7 @@ export const countOuverturesColorees = ({
     eb
   )} + ${countOuverturesApprentissageColoree(eb)}`;
 
-const exceptionColoration = ({
+export const exceptionColoration = ({
   eb,
   count,
 }: {
@@ -233,19 +281,23 @@ const exceptionColoration = ({
     | RawBuilder<number>
     | ExpressionWrapper<DB, "demande" | "campagne", number>;
 }) =>
-  sql<number>`CASE WHEN ${eb.ref("demande.typeDemande")} = 'coloration'
+  sql<number>`CASE WHEN ${eb.ref("demande.typeDemande")} = ${eb.val(
+    DemandeTypeEnum.coloration
+  )}
     THEN 0
     ELSE ${count}
     END`;
 
-const exceptionColorationIntention = ({
+export const exceptionColorationIntention = ({
   eb,
   count,
 }: {
   eb: ExpressionBuilder<DB, "intention">;
   count: RawBuilder<number>;
 }) =>
-  sql<number>`CASE WHEN ${eb.ref("intention.typeDemande")} = 'coloration'
+  sql<number>`CASE WHEN ${eb.ref("intention.typeDemande")} = ${eb.val(
+    DemandeTypeEnum.coloration
+  )}
       THEN 0
       ELSE ${count}
       END`;

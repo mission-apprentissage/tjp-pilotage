@@ -8,9 +8,11 @@ import {
   countDifferenceCapacite,
   countFermeturesApprentissage,
   countFermeturesSco,
+  countOuvertures,
   countOuverturesApprentissage,
   countOuverturesColorees,
   countOuverturesSco,
+  countOuverturesTransitionEcologique,
 } from "../../../../utils/countCapacite";
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
 import {
@@ -45,6 +47,8 @@ const genericOnDemandes =
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
       .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+      .leftJoin("formationRome", "demande.cfd", "formationRome.cfd")
+      .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
       .select((es) => [
         es.fn
           .coalesce(eb.fn.sum<number>(countOuverturesSco(es)), sql`0`)
@@ -56,6 +60,9 @@ const genericOnDemandes =
           .coalesce(eb.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
           .as("placesOuvertesApprentissage"),
         es.fn
+          .coalesce(es.fn.sum<number>(countOuvertures(es)), sql`0`)
+          .as("placesOuvertes"),
+        es.fn
           .coalesce(eb.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
           .as("placesFermeesApprentissage"),
         es.fn
@@ -64,6 +71,12 @@ const genericOnDemandes =
         es.fn
           .coalesce(es.fn.sum<number>(countOuverturesColorees(es)), sql`0`)
           .as("placesOuvertesColorees"),
+        es.fn
+          .coalesce(
+            es.fn.sum<number>(countOuverturesTransitionEcologique({ eb: es })),
+            sql`0`
+          )
+          .as("placesOuvertesTransformationEcologique"),
         selectNbDemandes(es).as("countDemande"),
       ])
       .where(isDemandeProjetOrValidee)
@@ -119,6 +132,8 @@ const getNationalData = async (filters: Filters) => {
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
+    .leftJoin("formationRome", "demande.cfd", "formationRome.cfd")
+    .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
     .select((es) => [
       es.fn
         .coalesce(es.fn.sum<number>(countOuverturesSco(es)), sql`0`)
@@ -132,6 +147,9 @@ const getNationalData = async (filters: Filters) => {
       es.fn
         .coalesce(es.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
         .as("placesFermeesApprentissage"),
+      es.fn
+        .coalesce(es.fn.sum<number>(countOuvertures(es)), sql`0`)
+        .as("placesOuvertes"),
       sql<number>`COALESCE(${es.fn.sum<number>(
         countOuverturesColorees(es)
       )}, 0)`.as("placeOuvertesColorees"),
@@ -139,6 +157,12 @@ const getNationalData = async (filters: Filters) => {
         .coalesce(es.fn.sum<number>(countDifferenceCapacite(es)), sql`0`)
         .as("transformes"),
       selectNbDemandes(es).as("countDemande"),
+      es.fn
+        .coalesce(
+          es.fn.sum<number>(countOuverturesTransitionEcologique({ eb: es })),
+          sql`0`
+        )
+        .as("placesOuvertesTransformationEcologique"),
       genericOnConstatRentree(filters)()
         .select((eb) => sql<number>`SUM(${eb.ref("effectif")})`.as("effectif"))
         .as("effectif"),
@@ -239,6 +263,12 @@ const getRegionData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
         "countDemande"
       ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertes")}, 0)`.as(
+        "placesOuvertes"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesTransformationEcologique"
+      )}, 0)`.as("placesOuvertesTransformationEcologique"),
     ])
     .where(notPerimetreIJRegion)
     .execute()
@@ -296,6 +326,12 @@ const getAcademieData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
         "countDemande"
       ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertes")}, 0)`.as(
+        "placesOuvertes"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesTransformationEcologique"
+      )}, 0)`.as("placesOuvertesTransformationEcologique"),
     ])
     .where(notPerimetreIJAcademie)
     .execute()
@@ -317,7 +353,6 @@ const getDepartementData = async (filters: Filters) => {
         join.onRef(
           "demandes.codeDepartement",
           "=",
-
           "departement.codeDepartement"
         )
     )
@@ -366,6 +401,12 @@ const getDepartementData = async (filters: Filters) => {
       sql<number>`COALESCE(${eb.ref("demandes.countDemande")}, 0)`.as(
         "countDemande"
       ),
+      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertes")}, 0)`.as(
+        "placesOuvertes"
+      ),
+      sql<number>`COALESCE(${eb.ref(
+        "demandes.placesOuvertesTransformationEcologique"
+      )}, 0)`.as("placesOuvertesTransformationEcologique"),
     ])
     .where(notPerimetreIJDepartement)
     .execute()

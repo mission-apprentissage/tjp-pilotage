@@ -36,8 +36,9 @@ const formatResult = (
       placesFermeesScolaire: item.placesFermeesScolaire || 0,
       placesOuvertesApprentissage: item.placesOuvertesApprentissage || 0,
       placesFermeesApprentissage: item.placesFermeesApprentissage || 0,
-      placesOuvertes:
-        item.placesOuvertesScolaire + item.placesOuvertesApprentissage || 0,
+      placesOuvertes: item.placesOuvertes || 0,
+      placesOuvertesTransformationEcologique:
+        item.placesOuvertesTransformationEcologique || 0,
       placesFermees:
         item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
       placesOuvertesColorees: item.placeOuvertesColorees || 0,

@@ -1,5 +1,6 @@
 import {
   Box,
+  Divider,
   Flex,
   Grid,
   GridItem,
@@ -91,12 +92,7 @@ const NumberWithLabel = ({
   round?: number;
 }) => {
   return (
-    <VStack
-      alignItems="start"
-      height="100%"
-      justifyContent="start"
-      minWidth="200px"
-    >
+    <VStack alignItems="start" justifyContent="start" minWidth="200px">
       <HStack>
         {icon}
         <Text fontSize="12px" fontWeight="700" lineHeight="20px">
@@ -126,18 +122,19 @@ const NumberWithProgressBars = ({
   projetDeDemande,
   title,
   icon,
+  children,
 }: {
   all: number;
   demandeValidee: number;
   projetDeDemande: number;
   title: string;
   icon?: React.ReactNode;
+  children?: React.ReactNode;
 }) => {
   return (
     <Flex
       flexDirection={"column"}
       gap="8px"
-      height="100%"
       backgroundColor="white"
       borderRadius={4}
       padding="8px"
@@ -174,6 +171,7 @@ const NumberWithProgressBars = ({
         leftLabel={projetDeDemande}
         colorScheme={themeColors.grey[975]}
       />
+      {children}
     </Flex>
   );
 };
@@ -306,7 +304,35 @@ export const IndicateursClesSection = ({
                 DemandeStatutEnum["projet de demande"],
                 "placesOuvertes"
               )}
-            />
+            >
+              <Divider />
+              <VStack
+                width="100%"
+                color={themeDefinition.colors.grey[425]}
+                fontSize="12px"
+              >
+                <Text alignSelf="end">dont</Text>
+                <HStack
+                  justifyContent="space-between"
+                  width="100%"
+                  alignItems="start"
+                >
+                  <Text>
+                    {formatNumber(
+                      (getScopedData(
+                        "all",
+                        "placesOuvertesTransformationEcologique"
+                      ) /
+                        getScopedData("all", "placesOuvertes")) *
+                        100,
+                      0
+                    )}
+                    %
+                  </Text>
+                  <Text>Métiers de la transition écologique</Text>
+                </HStack>
+              </VStack>
+            </NumberWithProgressBars>
           </GridItem>
           <GridItem>
             <NumberWithProgressBars
