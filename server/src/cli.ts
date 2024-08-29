@@ -23,6 +23,7 @@ import { importIndicateursRegion } from "./modules/import/usecases/importIndicat
 import { importLienEmploiFormation } from "./modules/import/usecases/importLienEmploiFormation/importLienEmploiFormation.usecase";
 import { importNiveauxDiplome } from "./modules/import/usecases/importNiveauxDiplome/importNiveauxDiplome.usecase";
 import { importNSF } from "./modules/import/usecases/importNSF/importNSF.usecase";
+import { ImportPositionsQuadrant } from "./modules/import/usecases/importPositionsQuadrant/importPositionsQuadrant";
 import { importRawFile } from "./modules/import/usecases/importRawFile/importRawFile.usecase";
 import { importLieuxGeographiques } from "./modules/import/usecases/importRegions/importLieuxGeographiques.usecase";
 import { importTensionDepartementRome } from "./modules/import/usecases/importTensionDepartementRome/importTensionDepartementRome.usecase";
@@ -258,6 +259,13 @@ cli
   .description("Import des données de tension depuis France Travail")
   .action(async () => {
     await importTensionFranceTravail();
+  });
+
+cli
+  .command("importPositionsQuadrant")
+  .description("Calcul des positions quadrants")
+  .action(async () => {
+    await ImportPositionsQuadrant();
   });
 
 cli.parse(process.argv);
