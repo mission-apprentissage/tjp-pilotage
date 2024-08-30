@@ -767,8 +767,8 @@ export interface PositionFormationRegionaleQuadrant {
   codeNiveauDiplome: string;
   positionQuadrant: string;
   millesimeSortie: string;
-  moyenneInsertionCfdRegion: number;
-  moyennePoursuiteEtudeCfdRegion: number;
+  moyenneInsertionCfdRegion: number | null;
+  moyennePoursuiteEtudeCfdRegion: number | null;
 }
 
 export interface RawData {

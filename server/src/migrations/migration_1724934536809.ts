@@ -8,8 +8,8 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("codeNiveauDiplome", "varchar(3)", (c) => c.notNull())
     .addColumn("positionQuadrant", "varchar", (c) => c.notNull())
     .addColumn("millesimeSortie", "varchar(9)", (c) => c.notNull())
-    .addColumn("moyenneInsertionCfdRegion", "float8", (c) => c.notNull())
-    .addColumn("moyennePoursuiteEtudeCfdRegion", "float8", (c) => c.notNull())
+    .addColumn("moyenneInsertionCfdRegion", "float8")
+    .addColumn("moyennePoursuiteEtudeCfdRegion", "float8")
     .addUniqueConstraint(
       "positionFormationRegionaleQuadrant_unique_constraint",
       ["cfd", "codeRegion", "millesimeSortie", "codeNiveauDiplome"]
