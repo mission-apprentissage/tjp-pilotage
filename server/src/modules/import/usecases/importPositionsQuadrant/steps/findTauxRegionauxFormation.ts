@@ -10,14 +10,14 @@ import {
   selectSortants,
 } from "../utils";
 
-export const findTauxIJ = async ({
+export const findTauxRegionauxFormation = async ({
   millesimeSortie,
   codeRegion,
-  codeNiveauDiplome,
+  cfd,
 }: {
-  millesimeSortie: string | undefined;
+  millesimeSortie?: string | undefined;
   codeRegion?: string | undefined;
-  codeNiveauDiplome?: string | undefined;
+  cfd?: string | undefined;
 }) =>
   await kdb
     .selectFrom("indicateurRegionSortie")
@@ -81,11 +81,12 @@ export const findTauxIJ = async ({
         )
         .end()
         .as("tauxDevenirFavorable"),
+      "formationView.cfd",
     ])
     .groupBy([
       "millesimeSortie",
       "indicateurRegionSortie.codeRegion",
-      "formationView.codeNiveauDiplome",
+      "formationView.cfd",
       "formationView.voie",
     ])
     .where((eb) =>
@@ -102,12 +103,8 @@ export const findTauxIJ = async ({
       return q;
     })
     .$call((q) => {
-      if (codeNiveauDiplome) {
-        return q.where(
-          "niveauDiplome.codeNiveauDiplome",
-          "=",
-          codeNiveauDiplome
-        );
+      if (cfd) {
+        return q.where("formationView.cfd", "=", cfd);
       }
       return q;
     })
