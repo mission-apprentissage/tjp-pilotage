@@ -34,6 +34,7 @@ import { GuardPermission } from "@/utils/security/GuardPermission";
 import { useStateParams } from "@/utils/useFilters";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import { useAuth } from "../../../../utils/security/useAuth";
 import { CreateUser } from "./CreateUser";
 
@@ -148,13 +149,21 @@ export default () => {
                 const data = await client.ref("[GET]/users").query({
                   query: { ...filters, ...order, limit: 1000000 },
                 });
-                downloadCsv("users_export", data.users, Columns);
+                downloadCsv(
+                  formatExportFilename("users_export"),
+                  data.users,
+                  Columns
+                );
               }}
               onExportExcel={async () => {
                 const data = await client.ref("[GET]/users").query({
                   query: { ...filters, ...order, limit: 1000000 },
                 });
-                downloadExcel("users_export", data.users, Columns);
+                downloadExcel(
+                  formatExportFilename("users_export"),
+                  data.users,
+                  Columns
+                );
               }}
             />
           </Flex>

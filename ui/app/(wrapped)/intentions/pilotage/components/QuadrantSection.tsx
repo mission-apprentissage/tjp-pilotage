@@ -45,6 +45,7 @@ import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatNumber } from "@/utils/formatUtils";
 import { useStateParams } from "@/utils/useFilters";
 
+import { formatExportFilename } from "../../../../../utils/formatExportFilename";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
@@ -244,7 +245,7 @@ export const QuadrantSection = ({
                 onExportCsv={async () => {
                   if (!formations) return;
                   downloadCsv(
-                    "formations_transformees",
+                    formatExportFilename("formations_transformees"),
                     formations.map((formation) => ({
                       ...formation,
                       libelleRegion:
@@ -288,7 +289,7 @@ export const QuadrantSection = ({
                 onExportExcel={async () => {
                   if (!formations) return;
                   downloadExcel(
-                    "formations_transformees",
+                    formatExportFilename("formations_transformees"),
                     formations.map((formation) => ({
                       ...formation,
                       libelleRegion:
