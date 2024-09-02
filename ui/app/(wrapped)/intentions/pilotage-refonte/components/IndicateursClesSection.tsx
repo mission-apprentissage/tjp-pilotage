@@ -71,7 +71,7 @@ function generateGetScopedData(
   return (statut: Statut, indicateur: Indicateur): number => {
     if (!code) return 0;
     return Number.parseFloat(
-      (data?.[statut]?.[`_${code}`]?.[indicateur] ?? 0).toFixed(1)
+      ((data?.[statut]?.[`_${code}`]?.[indicateur] as number) ?? 0).toFixed(1)
     );
   };
 }
@@ -353,7 +353,32 @@ export const IndicateursClesSection = ({
                 DemandeStatutEnum["projet de demande"],
                 "placesFermees"
               )}
-            />
+            >
+              <Divider />
+              <VStack
+                width="100%"
+                color={themeDefinition.colors.grey[425]}
+                fontSize="12px"
+              >
+                <Text alignSelf="end">dont</Text>
+                <HStack
+                  justifyContent="space-between"
+                  width="100%"
+                  alignItems="start"
+                >
+                  <Text>
+                    {formatNumber(
+                      (getScopedData("all", "placesFermeesQ3Q4") /
+                        getScopedData("all", "placesFermees")) *
+                        100,
+                      0
+                    )}
+                    %
+                  </Text>
+                  <Text>places en Q3 / Q4</Text>
+                </HStack>
+              </VStack>
+            </NumberWithProgressBars>
           </GridItem>
           <GridItem>
             <NumberWithProgressBars
@@ -374,7 +399,32 @@ export const IndicateursClesSection = ({
                 DemandeStatutEnum["projet de demande"],
                 "placesOuvertesColorees"
               )}
-            />
+            >
+              <Divider />
+              <VStack
+                width="100%"
+                color={themeDefinition.colors.grey[425]}
+                fontSize="12px"
+              >
+                <Text alignSelf="end">dont</Text>
+                <HStack
+                  justifyContent="space-between"
+                  width="100%"
+                  alignItems="start"
+                >
+                  <Text>
+                    {formatNumber(
+                      (getScopedData("all", "placesOuvertesColoreesQ3Q4") /
+                        getScopedData("all", "placesOuvertesColorees")) *
+                        100,
+                      0
+                    )}
+                    %
+                  </Text>
+                  <Text>places en Q3 / Q4</Text>
+                </HStack>
+              </VStack>
+            </NumberWithProgressBars>
           </GridItem>
           <GridItem colSpan={3}>
             <HStack width="100%" justifyContent="start" alignItems="end">

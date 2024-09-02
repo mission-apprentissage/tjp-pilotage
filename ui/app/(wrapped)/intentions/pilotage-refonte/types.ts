@@ -17,16 +17,4 @@ export type Statut =
   | Extract<DemandeStatutType, "demande validée" | "projet de demande">
   | "all";
 
-export type Indicateur =
-  | "tauxTransformation"
-  | "countDemande"
-  | "placesOuvertesScolaire"
-  | "placesFermeesScolaire"
-  | "placesOuvertesApprentissage"
-  | "placesFermeesApprentissage"
-  | "placesOuvertes"
-  | "placesFermees"
-  | "ratioFermeture"
-  | "ratioOuverture"
-  | "placesOuvertesColorees"
-  | "placesOuvertesTransformationEcologique";
+export type Indicateur = keyof StatsPilotageIntentions["all"][string];
