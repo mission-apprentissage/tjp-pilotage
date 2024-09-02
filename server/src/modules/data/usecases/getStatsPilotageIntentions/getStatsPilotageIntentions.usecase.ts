@@ -41,7 +41,11 @@ const formatResult = (
         item.placesOuvertesTransformationEcologique || 0,
       placesFermees:
         item.placesFermeesScolaire + item.placesFermeesApprentissage || 0,
+      placesFermeesQ3Q4:
+        item.placesFermeesScolaireQ3Q4 + item.placesFermeesApprentissageQ3Q4 ||
+        0,
       placesOuvertesColorees: item.placeOuvertesColorees || 0,
+      placesOuvertesColoreesQ3Q4: item.placesOuvertesColoreesQ3Q4 || 0,
       ratioOuverture:
         Math.round(
           ((item.placesOuvertesScolaire + item.placesOuvertesApprentissage) /
@@ -103,6 +107,8 @@ const getStatsPilotageIntentionsFactory =
         campagne: anneeCampagne,
       }),
     ]);
+
+    console.log(all);
 
     return {
       ["projet de demande"]: formatResult(
