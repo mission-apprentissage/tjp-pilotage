@@ -15,15 +15,9 @@ async function retryCondition(error: AxiosError) {
     return true;
   }
 
-  if (![500, 401, undefined].includes(response?.status)) {
-    if (response?.status === 400) {
-      console.log(
-        `[ERROR] ${JSON.stringify(response?.data)} : ${error.config?.url}`
-      );
-      return false;
-    } else {
-      console.log(`[ERROR] unknown.`, JSON.stringify(response));
-    }
+  if (![401, undefined].includes(response?.status)) {
+    console.log(`[ERROR] unknown.`, JSON.stringify(response));
+    return false;
   }
 
   if (!loggingIn) {

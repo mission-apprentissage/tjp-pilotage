@@ -12,7 +12,7 @@ import {
   Portal,
   Text,
 } from "@chakra-ui/react";
-import React, {
+import {
   ChangeEventHandler,
   memo,
   ReactNode,
@@ -134,6 +134,7 @@ export const Multiselect = chakra(
     size,
     hasDefaultValue = true,
     variant = "input",
+    menuZIndex,
   }: {
     children: ReactNode;
     options?: { label: string; value: string }[];
@@ -145,6 +146,7 @@ export const Multiselect = chakra(
     size?: "sm" | "md";
     hasDefaultValue?: boolean;
     variant?: string;
+    menuZIndex?: number;
   }) => {
     const stateValue = useRef<Map<string, string>>(new Map([["090", ""]]));
 
@@ -236,7 +238,7 @@ export const Multiselect = chakra(
           </ButtonContent>
         </MenuButton>
         <Portal>
-          <MenuList maxWidth={450} pt="0">
+          <MenuList maxWidth={450} pt="0" zIndex={menuZIndex}>
             <Flex borderBottom="1px solid" borderBottomColor="grey.900">
               <Input
                 ref={inputRef}

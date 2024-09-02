@@ -790,6 +790,19 @@ export interface Suivi {
   createdAt: Generated<Timestamp>;
 }
 
+export interface Tension {
+  codeTension: string;
+  libelleTension: string;
+}
+
+export interface TensionRomeDepartement {
+  codeRome: string;
+  codeDepartement: string;
+  codeTension: string;
+  annee: string;
+  valeur: number;
+}
+
 export interface User {
   id: Generated<string>;
   email: string;
@@ -847,5 +860,7 @@ export interface DB {
   region: Region;
   rome: Rome;
   suivi: Suivi;
+  tension: Tension;
+  tensionRomeDepartement: TensionRomeDepartement;
   user: User;
 }
