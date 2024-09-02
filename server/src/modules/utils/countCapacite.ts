@@ -14,6 +14,7 @@ export const countOuvertures = ({
     )} + ${countOuverturesApprentissage(eb)}`,
   });
 
+// TODO: remplacer par GREATEST((${eb.ref("demande.capaciteScolaire")} - ${eb.ref("demande.capaciteScolaireActuelle")}),0)
 export const countOuverturesSco = ({
   eb,
 }: {
