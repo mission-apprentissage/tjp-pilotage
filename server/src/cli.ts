@@ -243,6 +243,7 @@ cli
     const usecases = {
       importFormations,
       refreshViews,
+      ImportPositionsQuadrant,
     };
 
     if (usecaseName) {
