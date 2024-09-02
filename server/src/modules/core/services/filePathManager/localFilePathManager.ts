@@ -5,6 +5,9 @@ export const localFilePathManagerFactory = (): FilePathManager => {
     getIntentionFilePath: (id: string, filename: string = "") => {
       return `./public/upload/${id}/${filename}`;
     },
+    getFranceTravailIndicateurTensionStatsFilePath: () => {
+      return "./public/files/tension_departement_rome.csv";
+    },
   };
 };
 

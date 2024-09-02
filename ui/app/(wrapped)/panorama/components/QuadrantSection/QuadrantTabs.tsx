@@ -33,7 +33,7 @@ export const QuadrantTabs = ({
   effectifEntreeAffiche?: number;
   effectifEntreeNonAffiche?: number;
 }) => {
-  const [tabIndex, setTabIndex] = useState(QuadrantTabsEnum.filtres);
+  const [tabIndex, setTabIndex] = useState(QuadrantTabsEnum.informations);
   return (
     <Tabs
       isLazy={true}
