@@ -5,6 +5,9 @@ export const ovhFilePathManagerFactory = (): FilePathManager => {
     getIntentionFilePath: (id: string, filename: string = "") => {
       return `intentions/${id}/${filename}`;
     },
+    getFranceTravailIndicateurTensionStatsFilePath: () => {
+      return "files/tension_departement_rome.csv";
+    },
   };
 };
 
