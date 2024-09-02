@@ -5,10 +5,11 @@ import { ScopeEnum } from "shared";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 import { OBJECTIF_TAUX_TRANSFO_PERCENTAGE } from "shared/objectives/TAUX_TRANSFO";
 
-import { client } from "../../../../../api.client";
-import { themeDefinition } from "../../../../../theme/theme";
-import { roundNumber } from "../../../../../utils/roundNumber";
-import { ProgressBar } from "../../../components/ProgressBar";
+import { client } from "@/api.client";
+import { ProgressBar } from "@/components/ProgressBar";
+import { themeDefinition } from "@/theme/theme";
+import { formatNumber } from "@/utils/formatUtils";
+
 import { useScopeCode } from "../hooks";
 import {
   FiltersStatsPilotageIntentions,
@@ -114,14 +115,14 @@ const NumberWithLabel = ({
         <Text fontSize="32px" lineHeight="40px" fontWeight="700">
           {typeof percentage === "string"
             ? percentage
-            : roundNumber(percentage * 100)}
+            : formatNumber(percentage * 100)}
           %
         </Text>
         {objective && typeof percentage !== "string" && (
           <Box width="100%">
             <ProgressBar percentage={(percentage / objective) * 100} />
             <Text color={themeDefinition.colors.grey[425]}>
-              {roundNumber((percentage * 100) / objective, 0)}% de l'objectif
+              {formatNumber((percentage * 100) / objective, 0)}% de l'objectif
             </Text>
           </Box>
         )}
@@ -137,7 +138,6 @@ export const IndicateursClesSection = ({
   data: StatsPilotageIntentions | undefined;
   filters: FiltersStatsPilotageIntentions;
 }) => {
-  console.log(data);
   const { data: nationalStats } = client
     .ref("[GET]/pilotage-intentions/stats")
     .useQuery(
