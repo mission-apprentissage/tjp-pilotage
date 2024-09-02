@@ -7,6 +7,7 @@ import { ExportMenuButton } from "@/components/ExportMenuButton";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 import { formatArray } from "@/utils/formatUtils";
 
+import { formatExportFilename } from "../../../../../../../utils/formatExportFilename";
 import { formatCommuneLibelleWithCodeDepartement } from "../../../../../utils/formatLibelle";
 
 const EXPORT_LIMIT = 1_000_000;
@@ -53,7 +54,7 @@ export const ExportList = () => {
         if (!etablissementsProches) return;
         trackEvent("panorama-etablissement-liste-carte:export");
         downloadCsv(
-          "etablissements_proches",
+          formatExportFilename("etablissements_proches"),
           etablissementsProches.map((etablissement) => ({
             ...etablissement,
             commune: formatCommuneLibelleWithCodeDepartement({
@@ -82,7 +83,7 @@ export const ExportList = () => {
         if (!etablissementsProches) return;
         trackEvent("panorama-etablissement-liste-carte:export-excel");
         downloadExcel(
-          "etablissements_proches",
+          formatExportFilename("etablissements_proches"),
           etablissementsProches.map((etablissement) => ({
             ...etablissement,
             commune: formatCommuneLibelleWithCodeDepartement({

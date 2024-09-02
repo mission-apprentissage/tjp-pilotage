@@ -22,6 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import { CodeRegionFilterContext } from "../../../layoutClient";
 import { ConsoleFilters } from "./components/ConsoleFilters";
 import { HeadLineContent } from "./components/HeadLineContent";
@@ -135,7 +136,11 @@ export default function Formations() {
       ? columns
       : _.omit(columns, "positionQuadrant");
 
-    downloadCsv("formations_export", formations, filteredColumns);
+    downloadCsv(
+      formatExportFilename("formation_export", filters?.codeRegion),
+      formations,
+      filteredColumns
+    );
   };
 
   const onExportExcel = async () => {
@@ -150,7 +155,11 @@ export default function Formations() {
       ? columns
       : _.omit(columns, "positionQuadrant");
 
-    downloadExcel("formations_export", formations, filteredColumns);
+    downloadExcel(
+      formatExportFilename("formation_export", filters?.codeRegion),
+      formations,
+      filteredColumns
+    );
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();
