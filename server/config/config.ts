@@ -94,4 +94,8 @@ export const config = {
   metabase: {
     token: env.get("METABASE_AUTH_TOKEN").required().asString(),
   },
+  franceTravail: {
+    client: env.get("FRANCE_TRAVAIL_CLIENT").asString(),
+    secret: env.get("FRANCE_TRAVAIL_SECRET").asString(),
+  },
 };
