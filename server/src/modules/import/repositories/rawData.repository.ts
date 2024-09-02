@@ -24,6 +24,7 @@ import { OptionsBTSLine } from "../fileTypes/OptionsBTS";
 import { Regroupement } from "../fileTypes/Regroupement";
 import { Rome } from "../fileTypes/Rome";
 import { StructureDenseignement } from "../fileTypes/Structures_denseignement";
+import { Tension_Departement_Rome } from "../fileTypes/Tension_Departement_rome";
 import { VFormationDiplomeLine } from "../fileTypes/VFormationDiplome";
 import { IjRegionData } from "../services/inserJeunesApi/formatRegionData";
 import { IJUaiData } from "../services/inserJeunesApi/formatUaiData";
@@ -58,6 +59,7 @@ export type LineTypes = {
   metier: Metier;
   certif_info: Certif_Info;
   discipline: Discipline;
+  tension_departement_rome: Tension_Departement_Rome;
 };
 
 const findRawData = async <T extends keyof LineTypes>({
