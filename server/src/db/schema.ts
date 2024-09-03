@@ -763,6 +763,16 @@ export interface Nsf {
   libelleNsf: string;
 }
 
+export interface PositionFormationRegionaleQuadrant {
+  cfd: string;
+  codeRegion: string;
+  codeNiveauDiplome: string;
+  positionQuadrant: string;
+  millesimeSortie: string;
+  moyenneInsertionCfdRegion: number | null;
+  moyennePoursuiteEtudeCfdRegion: number | null;
+}
+
 export interface RawData {
   type: string;
   data: Json | null;
@@ -788,6 +798,15 @@ export interface Suivi {
   intentionNumero: string;
   userId: string;
   createdAt: Generated<Timestamp>;
+}
+
+export interface TauxIJNiveauDiplomeRegion {
+  codeRegion: string;
+  codeNiveauDiplome: string;
+  millesimeSortie: string;
+  tauxInsertion6mois: number;
+  tauxPoursuite: number;
+  tauxDevenirFavorable: number;
 }
 
 export interface Tension {
@@ -856,10 +875,12 @@ export interface DB {
   metier: Metier;
   niveauDiplome: NiveauDiplome;
   nsf: Nsf;
+  positionFormationRegionaleQuadrant: PositionFormationRegionaleQuadrant;
   rawData: RawData;
   region: Region;
   rome: Rome;
   suivi: Suivi;
+  tauxIJNiveauDiplomeRegion: TauxIJNiveauDiplomeRegion;
   tension: Tension;
   tensionRomeDepartement: TensionRomeDepartement;
   user: User;
