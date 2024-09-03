@@ -51,8 +51,21 @@ const genericOnDemandes =
       )
       .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
       .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-      .leftJoin("formationRome", "demande.cfd", "formationRome.cfd")
-      .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
+      .leftJoin(
+        (seb) =>
+          seb
+            .selectFrom("formationRome")
+            .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
+            .select((sseb) => [
+              "formationRome.cfd",
+              sql<boolean>`bool_or(${sseb.ref(
+                "rome.transitionEcologique"
+              )})`.as("transitionEcologique"),
+            ])
+            .groupBy("cfd")
+            .as("rome"),
+        (join) => join.onRef("rome.cfd", "=", "demande.cfd")
+      )
       .leftJoin("positionFormationRegionaleQuadrant", (join) =>
         join.on((eb) =>
           eb.and([
@@ -174,8 +187,21 @@ const getNationalData = async (filters: Filters) => {
     )
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
-    .leftJoin("formationRome", "demande.cfd", "formationRome.cfd")
-    .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
+    .leftJoin(
+      (seb) =>
+        seb
+          .selectFrom("formationRome")
+          .leftJoin("rome", "rome.codeRome", "formationRome.codeRome")
+          .select((sseb) => [
+            "formationRome.cfd",
+            sql<boolean>`bool_or(${sseb.ref("rome.transitionEcologique")})`.as(
+              "transitionEcologique"
+            ),
+          ])
+          .groupBy("cfd")
+          .as("rome"),
+      (join) => join.onRef("rome.cfd", "=", "demande.cfd")
+    )
     .leftJoin("positionFormationRegionaleQuadrant", (join) =>
       join.on((eb) =>
         eb.and([

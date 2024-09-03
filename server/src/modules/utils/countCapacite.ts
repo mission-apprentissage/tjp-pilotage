@@ -14,7 +14,7 @@ const inQ3Q4 = (
 export const countOuverturesTransitionEcologique = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande" | "rome">;
+  eb: ExpressionBuilder<DB, "demande">;
 }) =>
   exceptionColoration({
     eb,
