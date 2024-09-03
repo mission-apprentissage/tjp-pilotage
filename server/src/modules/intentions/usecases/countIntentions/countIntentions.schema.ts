@@ -4,6 +4,9 @@ import { z } from "zod";
 export const countIntentionsSchema = {
   querystring: z.object({
     anneeCampagne: z.string().optional(),
+    search: z.string().optional(),
+    codeAcademie: z.array(z.string()).optional(),
+    codeNiveauDiplome: z.array(z.string()).optional(),
   }),
   response: {
     200: z.object({
