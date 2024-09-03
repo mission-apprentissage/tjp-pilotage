@@ -319,17 +319,14 @@ export const IndicateursClesSection = ({
                 >
                   <Text>
                     {formatNumber(
-                      (getScopedData(
-                        "all",
-                        "placesOuvertesTransformationEcologique"
-                      ) /
+                      (getScopedData("all", "placesOuvertesQ1Q2") /
                         getScopedData("all", "placesOuvertes")) *
                         100,
                       0
                     )}
                     %
                   </Text>
-                  <Text>Métiers de la transition écologique</Text>
+                  <Text>places en Q1 / Q2</Text>
                 </HStack>
               </VStack>
             </NumberWithProgressBars>

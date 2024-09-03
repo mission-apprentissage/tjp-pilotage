@@ -13,9 +13,11 @@ import {
   countFermeturesScoQ3Q4,
   countOuvertures,
   countOuverturesApprentissage,
+  countOuverturesApprentissageQ1Q2,
   countOuverturesColorees,
   countOuverturesColoreesQ3Q4,
   countOuverturesSco,
+  countOuverturesScoQ1Q2,
   countOuverturesTransitionEcologique,
 } from "../../../../utils/countCapacite";
 import { isDemandeProjetOrValidee } from "../../../../utils/isDemandeProjetOrValidee";
@@ -97,6 +99,9 @@ const genericOnDemandes =
           .coalesce(eb.fn.sum<number>(countOuverturesSco(es)), sql`0`)
           .as("placesOuvertesScolaire"),
         es.fn
+          .coalesce(es.fn.sum<number>(countOuverturesScoQ1Q2(es)), sql`0`)
+          .as("placesOuvertesScolaireQ1Q2"),
+        es.fn
           .coalesce(eb.fn.sum<number>(countFermeturesSco(es)), sql`0`)
           .as("placesFermeesScolaire"),
         es.fn
@@ -105,6 +110,12 @@ const genericOnDemandes =
         es.fn
           .coalesce(eb.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
           .as("placesOuvertesApprentissage"),
+        es.fn
+          .coalesce(
+            es.fn.sum<number>(countOuverturesApprentissageQ1Q2(es)),
+            sql`0`
+          )
+          .as("placesOuvertesApprentissageQ1Q2"),
         es.fn
           .coalesce(es.fn.sum<number>(countOuvertures(es)), sql`0`)
           .as("placesOuvertes"),
@@ -233,6 +244,9 @@ const getNationalData = async (filters: Filters) => {
         .coalesce(es.fn.sum<number>(countOuverturesSco(es)), sql`0`)
         .as("placesOuvertesScolaire"),
       es.fn
+        .coalesce(es.fn.sum<number>(countOuverturesScoQ1Q2(es)), sql`0`)
+        .as("placesOuvertesScolaireQ1Q2"),
+      es.fn
         .coalesce(es.fn.sum<number>(countFermeturesSco(es)), sql`0`)
         .as("placesFermeesScolaire"),
       es.fn
@@ -241,6 +255,12 @@ const getNationalData = async (filters: Filters) => {
       es.fn
         .coalesce(es.fn.sum<number>(countOuverturesApprentissage(es)), sql`0`)
         .as("placesOuvertesApprentissage"),
+      es.fn
+        .coalesce(
+          es.fn.sum<number>(countOuverturesApprentissageQ1Q2(es)),
+          sql`0`
+        )
+        .as("placesOuvertesApprentissageQ1Q2"),
       es.fn
         .coalesce(es.fn.sum<number>(countFermeturesApprentissage(es)), sql`0`)
         .as("placesFermeesApprentissage"),
@@ -348,21 +368,27 @@ const getRegionData = async (filters: Filters) => {
       eb.ref("region.codeRegion").as("code"),
       eb.ref("region.libelleRegion").as("libelle"),
       eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
       eb.fn
-        .coalesce(eb.ref("placesFermeesScolaireQ3Q4"), eb.val(0))
+        .coalesce(eb.ref("demandes.placesOuvertesScolaire"), eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesScolaireQ1Q2"), eb.val(0))
+        .as("placesOuvertesScolaireQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaire"), eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaireQ3Q4"), eb.val(0))
         .as("placesFermeesScolaireQ3Q4"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissage"), eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissageQ1Q2"), eb.val(0))
+        .as("placesOuvertesApprentissageQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesApprentissage"), eb.val(0))
+        .as("placesFermeesApprentissage"),
       eb.fn
         .coalesce(eb.ref("placesFermeesApprentissageQ3Q4"), eb.val(0))
         .as("placesFermeesApprentissageQ3Q4"),
@@ -420,21 +446,27 @@ const getAcademieData = async (filters: Filters) => {
       eb.ref("academie.codeAcademie").as("code"),
       eb.ref("academie.libelleAcademie").as("libelle"),
       eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
       eb.fn
-        .coalesce(eb.ref("placesFermeesScolaireQ3Q4"), eb.val(0))
+        .coalesce(eb.ref("demandes.placesOuvertesScolaire"), eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesScolaireQ1Q2"), eb.val(0))
+        .as("placesOuvertesScolaireQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaire"), eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaireQ3Q4"), eb.val(0))
         .as("placesFermeesScolaireQ3Q4"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissage"), eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissageQ1Q2"), eb.val(0))
+        .as("placesOuvertesApprentissageQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesApprentissage"), eb.val(0))
+        .as("placesFermeesApprentissage"),
       eb.fn
         .coalesce(eb.ref("placesFermeesApprentissageQ3Q4"), eb.val(0))
         .as("placesFermeesApprentissageQ3Q4"),
@@ -502,23 +534,28 @@ const getDepartementData = async (filters: Filters) => {
     .select((eb) => [
       eb.ref("departement.codeDepartement").as("code"),
       eb.ref("departement.libelleDepartement").as("libelle"),
-      eb.ref("academie.libelleAcademie").as("libelleAcademie"),
       eb.ref("effectifs.effectif").as("effectif"),
-      sql<number>`COALESCE(${eb.ref("demandes.placesOuvertesScolaire")}, 0)`.as(
-        "placesOuvertesScolaire"
-      ),
-      sql<number>`COALESCE(${eb.ref("demandes.placesFermeesScolaire")}, 0)`.as(
-        "placesFermeesScolaire"
-      ),
       eb.fn
-        .coalesce(eb.ref("placesFermeesScolaireQ3Q4"), eb.val(0))
+        .coalesce(eb.ref("demandes.placesOuvertesScolaire"), eb.val(0))
+        .as("placesOuvertesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesScolaireQ1Q2"), eb.val(0))
+        .as("placesOuvertesScolaireQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaire"), eb.val(0))
+        .as("placesFermeesScolaire"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesScolaireQ3Q4"), eb.val(0))
         .as("placesFermeesScolaireQ3Q4"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesOuvertesApprentissage"
-      )}, 0)`.as("placesOuvertesApprentissage"),
-      sql<number>`COALESCE(${eb.ref(
-        "demandes.placesFermeesApprentissage"
-      )}, 0)`.as("placesFermeesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissage"), eb.val(0))
+        .as("placesOuvertesApprentissage"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesOuvertesApprentissageQ1Q2"), eb.val(0))
+        .as("placesOuvertesApprentissageQ1Q2"),
+      eb.fn
+        .coalesce(eb.ref("demandes.placesFermeesApprentissage"), eb.val(0))
+        .as("placesFermeesApprentissage"),
       eb.fn
         .coalesce(eb.ref("placesFermeesApprentissageQ3Q4"), eb.val(0))
         .as("placesFermeesApprentissageQ3Q4"),

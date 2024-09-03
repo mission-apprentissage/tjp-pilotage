@@ -11,6 +11,14 @@ const inQ3Q4 = (
     "Q4",
   ]);
 
+const inQ1Q2 = (
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">
+) =>
+  eb(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"), "in", [
+    "Q1",
+    "Q2",
+  ]);
+
 export const countOuverturesTransitionEcologique = ({
   eb,
 }: {
@@ -78,15 +86,50 @@ export const countOuverturesSco = ({
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`
-    CASE WHEN
-    (${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
-      "demande.capaciteScolaireActuelle"
-    )}) >= 0
-    THEN (${eb.ref("demande.capaciteScolaire")} -
-    ${eb.ref("demande.capaciteScolaireActuelle")})
-    ELSE 0
-    END`,
+    count: eb
+      .case()
+      .when(
+        sql<number>`${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
+          "demande.capaciteScolaireActuelle"
+        )}`,
+        ">=",
+        eb.val(0)
+      )
+      .then(
+        sql<number>`${eb.ref("demande.capaciteScolaire")} -
+    ${eb.ref("demande.capaciteScolaireActuelle")}`
+      )
+      .else(0)
+      .end(),
+  });
+
+export const countOuverturesScoQ1Q2 = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: eb
+      .case()
+      .when(
+        eb.and([
+          eb(
+            sql<number>`${eb.ref("demande.capaciteScolaire")} - ${eb.ref(
+              "demande.capaciteScolaireActuelle"
+            )}`,
+            ">=",
+            eb.val(0)
+          ),
+          eb(inQ1Q2(eb), "=", true),
+        ])
+      )
+      .then(
+        sql<number>`${eb.ref("demande.capaciteScolaire")} -
+      ${eb.ref("demande.capaciteScolaireActuelle")}`
+      )
+      .else(0)
+      .end(),
   });
 
 export const countOuverturesApprentissage = ({
@@ -96,15 +139,50 @@ export const countOuverturesApprentissage = ({
 }) =>
   exceptionColoration({
     eb,
-    count: sql<number>`
-    CASE WHEN
-    (${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
-      "demande.capaciteApprentissageActuelle"
-    )}) >= 0
-    THEN (${eb.ref("demande.capaciteApprentissage")} -
-    ${eb.ref("demande.capaciteApprentissageActuelle")})
-    ELSE 0
-    END`,
+    count: eb
+      .case()
+      .when(
+        sql<number>`${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+          "demande.capaciteApprentissageActuelle"
+        )}`,
+        ">=",
+        eb.val(0)
+      )
+      .then(
+        sql<number>`${eb.ref("demande.capaciteApprentissage")} -
+  ${eb.ref("demande.capaciteApprentissageActuelle")}`
+      )
+      .else(0)
+      .end(),
+  });
+
+export const countOuverturesApprentissageQ1Q2 = ({
+  eb,
+}: {
+  eb: ExpressionBuilder<DB, "demande">;
+}) =>
+  exceptionColoration({
+    eb,
+    count: eb
+      .case()
+      .when(
+        eb.and([
+          eb(
+            sql<number>`${eb.ref("demande.capaciteApprentissage")} - ${eb.ref(
+              "demande.capaciteApprentissageActuelle"
+            )}`,
+            ">=",
+            eb.val(0)
+          ),
+          eb(inQ1Q2(eb), "=", true),
+        ])
+      )
+      .then(
+        sql<number>`${eb.ref("demande.capaciteApprentissage")} -
+    ${eb.ref("demande.capaciteApprentissageActuelle")}`
+      )
+      .else(0)
+      .end(),
   });
 
 export const countFermetures = ({
