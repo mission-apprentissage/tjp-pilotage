@@ -30,6 +30,7 @@ export const MenuIntention = ({
   searchParams: {
     filters?: Partial<Filters>;
     campagne?: string;
+    search?: string;
   };
 }) => {
   const statut =
@@ -39,6 +40,10 @@ export const MenuIntention = ({
   const suivies = searchParams.filters?.suivies;
   const anneeCampagne = searchParams.campagne ?? campagne?.annee;
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
+  const search = searchParams.search;
+  const codeAcademie = searchParams.filters?.codeAcademie;
+  const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
+
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
 
@@ -46,6 +51,9 @@ export const MenuIntention = ({
     {
       query: {
         anneeCampagne,
+        codeAcademie,
+        codeNiveauDiplome,
+        search,
       },
     },
     {
