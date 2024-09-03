@@ -7,6 +7,7 @@ export const countIntentionsSchema = {
     search: z.string().optional(),
     codeAcademie: z.array(z.string()).optional(),
     codeNiveauDiplome: z.array(z.string()).optional(),
+    suivies: z.coerce.boolean().optional(),
   }),
   response: {
     200: z.object({
