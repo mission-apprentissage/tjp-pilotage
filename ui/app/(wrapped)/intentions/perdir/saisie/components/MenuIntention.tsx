@@ -54,6 +54,7 @@ export const MenuIntention = ({
         codeAcademie,
         codeNiveauDiplome,
         search,
+        suivies,
       },
     },
     {
@@ -450,7 +451,12 @@ export const MenuIntention = ({
         <Button
           bgColor={"unset"}
           size="sm"
-          onClick={() => handleFilters("suivies", true)}
+          onClick={() =>
+            handleFilters(
+              "suivies",
+              searchParams.filters?.suivies ? undefined : true
+            )
+          }
           width={"100%"}
           iconSpacing={2}
           leftIcon={

@@ -25,6 +25,7 @@ export const countIntentionsQuery = async ({
   search,
   codeAcademie,
   codeNiveauDiplome,
+  suivies,
 }: Filters) => {
   const search_array = getNormalizedSearchArray(search);
   const countIntentions = kdb
@@ -228,6 +229,15 @@ export const countIntentionsQuery = async ({
       }
 
       return eb;
+    })
+    .$call((q) => {
+      if (suivies)
+        return q.innerJoin("suivi as suiviUtilisateur", (join) =>
+          join
+            .onRef("suiviUtilisateur.intentionNumero", "=", "intention.numero")
+            .on("suiviUtilisateur.userId", "=", user.id)
+        );
+      return q;
     })
     .executeTakeFirstOrThrow()
     .then(cleanNull);
