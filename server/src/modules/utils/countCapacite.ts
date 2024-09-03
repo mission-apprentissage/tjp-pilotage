@@ -4,7 +4,7 @@ import { DemandeTypeEnum } from "shared/enum/demandeTypeEnum";
 import { DB } from "../../db/db";
 
 const inQ3Q4 = (
-  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">
+  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant">
 ) =>
   eb(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"), "in", [
     "Q3",
@@ -12,7 +12,7 @@ const inQ3Q4 = (
   ]);
 
 const inQ1Q2 = (
-  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">
+  eb: ExpressionBuilder<DB, "positionFormationRegionaleQuadrant">
 ) =>
   eb(eb.ref("positionFormationRegionaleQuadrant.positionQuadrant"), "in", [
     "Q1",
@@ -106,7 +106,7 @@ export const countOuverturesSco = ({
 export const countOuverturesScoQ1Q2 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande">;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   exceptionColoration({
     eb,
@@ -159,7 +159,7 @@ export const countOuverturesApprentissage = ({
 export const countOuverturesApprentissageQ1Q2 = ({
   eb,
 }: {
-  eb: ExpressionBuilder<DB, "demande">;
+  eb: ExpressionBuilder<DB, "demande" | "positionFormationRegionaleQuadrant">;
 }) =>
   exceptionColoration({
     eb,
@@ -174,7 +174,7 @@ export const countOuverturesApprentissageQ1Q2 = ({
             ">=",
             eb.val(0)
           ),
-          eb(inQ1Q2(eb), "=", true),
+          inQ1Q2(eb),
         ])
       )
       .then(
