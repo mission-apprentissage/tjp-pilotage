@@ -10,6 +10,7 @@ import {
   isIntentionNotDeleted,
   isIntentionSelectable,
 } from "../../../utils/isDemandeSelectable";
+import { getNormalizedSearchArray } from "../../../utils/normalizeSearch";
 import { countIntentionsSchema } from "./countIntentions.schema";
 
 export interface Filters
@@ -21,9 +22,26 @@ export const countIntentionsQuery = async ({
   user,
   anneeCampagne,
   shouldFetchOnlyIntention,
+  search,
+  codeAcademie,
+  codeNiveauDiplome,
 }: Filters) => {
+  const search_array = getNormalizedSearchArray(search);
   const countIntentions = kdb
     .selectFrom("latestDemandeIntentionView as intention")
+    .leftJoin("dataFormation", "dataFormation.cfd", "intention.cfd")
+    .leftJoin("dataEtablissement", "dataEtablissement.uai", "intention.uai")
+    .leftJoin(
+      "departement",
+      "departement.codeDepartement",
+      "dataEtablissement.codeDepartement"
+    )
+    .leftJoin(
+      "academie",
+      "academie.codeAcademie",
+      "dataEtablissement.codeAcademie"
+    )
+    .leftJoin("user", "user.id", "intention.createdBy")
     .innerJoin("campagne", (join) =>
       join.onRef("campagne.id", "=", "intention.campagneId").$call((eb) => {
         if (anneeCampagne) {
@@ -37,6 +55,7 @@ export const countIntentionsQuery = async ({
         .onRef("suivi.intentionNumero", "=", "intention.numero")
         .on("suivi.userId", "=", user.id)
     )
+
     .select((eb) =>
       sql<number>`count(${eb.ref("intention.numero")})`.as("total")
     )
@@ -162,6 +181,53 @@ export const countIntentionsQuery = async ({
       if (shouldFetchOnlyIntention)
         return q.where("intention.isIntention", "=", true);
       return q;
+    })
+    .$call((eb) => {
+      if (search)
+        return eb.where((eb) =>
+          eb.and(
+            search_array.map((search_word) =>
+              eb(
+                sql`concat(
+                  unaccent(${eb.ref("intention.numero")}),
+                  ' ',
+                  unaccent(${eb.ref("intention.cfd")}),
+                  ' ',
+                  unaccent(${eb.ref("dataFormation.libelleFormation")}),
+                  ' ',
+                  unaccent(${eb.ref("departement.libelleDepartement")}),
+                  ' ',
+                  unaccent(${eb.ref("dataEtablissement.libelleEtablissement")}),
+                  ' ',
+                  unaccent(${eb.ref("user.firstname")}),
+                  ' ',
+                  unaccent(${eb.ref("user.lastname")})
+                )`,
+                "ilike",
+                `%${search_word}%`
+              )
+            )
+          )
+        );
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeAcademie) {
+        return eb.where("academie.codeAcademie", "in", codeAcademie);
+      }
+
+      return eb;
+    })
+    .$call((eb) => {
+      if (codeNiveauDiplome) {
+        return eb.where(
+          "dataFormation.codeNiveauDiplome",
+          "in",
+          codeNiveauDiplome
+        );
+      }
+
+      return eb;
     })
     .executeTakeFirstOrThrow()
     .then(cleanNull);
