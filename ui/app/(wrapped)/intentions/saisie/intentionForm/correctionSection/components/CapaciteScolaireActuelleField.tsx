@@ -5,10 +5,18 @@ import { CapaciteField } from "../../../components/CapaciteField";
 import { Intention } from "../types";
 
 export const CapaciteScolaireActuelleField = chakra(
-  ({ demande, className }: { demande: Intention; className?: string }) => {
+  ({
+    demande,
+    disabled = false,
+    className,
+  }: {
+    demande: Intention;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const typeDemande = demande?.typeDemande;
     const isReadOnly =
-      typeDemande !== undefined && isTypeOuverture(typeDemande);
+      (typeDemande !== undefined && isTypeOuverture(typeDemande)) || disabled;
 
     return (
       <CapaciteField

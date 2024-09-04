@@ -10,7 +10,13 @@ import { useFormContext } from "react-hook-form";
 import { CorrectionForms } from "../defaultFormValues";
 
 export const CommentaireField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  ({
+    disabled = false,
+    className,
+  }: {
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       register,
