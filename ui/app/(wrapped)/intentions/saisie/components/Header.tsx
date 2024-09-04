@@ -19,6 +19,7 @@ import { SearchInput } from "@/components/SearchInput";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { Multiselect } from "../../../../../components/Multiselect";
+import { formatExportFilename } from "../../../../../utils/formatExportFilename";
 import { DEMANDES_COLUMNS } from "../DEMANDES_COLUMNS";
 import { Campagnes, Filters } from "../types";
 import { isSaisieDisabled } from "../utils/isSaisieDisabled";
@@ -176,7 +177,10 @@ export const Header = ({
                   query: getDemandesQueryParameters(EXPORT_LIMIT),
                 });
                 downloadCsv(
-                  "export_saisie_demandes",
+                  formatExportFilename(
+                    "recueil_demandes",
+                    activeFilters.codeAcademie
+                  ),
                   data.demandes,
                   DEMANDES_COLUMNS
                 );
@@ -187,7 +191,10 @@ export const Header = ({
                   query: getDemandesQueryParameters(EXPORT_LIMIT),
                 });
                 downloadExcel(
-                  "export_saisie_demandes",
+                  formatExportFilename(
+                    "recueil_demandes",
+                    activeFilters.codeAcademie
+                  ),
                   data.demandes,
                   DEMANDES_COLUMNS
                 );
