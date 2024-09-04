@@ -22,6 +22,7 @@ import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
 
 import { TableHeader } from "../../../../components/TableHeader";
+import { formatExportFilename } from "../../../../utils/formatExportFilename";
 import {
   CodeRegionFilterContext,
   UaiFilterContext,
@@ -144,7 +145,11 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadCsv("etablissements_export", etablissements, columns);
+    downloadCsv(
+      formatExportFilename("etablissement_export", filters?.codeRegion),
+      etablissements,
+      columns
+    );
   };
 
   const onExportExcel = async () => {
@@ -155,7 +160,11 @@ export default function Etablissements() {
 
     const { columns, etablissements } = getDataForExport(data);
 
-    downloadExcel("etablissements_export", etablissements, columns);
+    downloadExcel(
+      formatExportFilename("etablissement_export", filters?.codeRegion),
+      etablissements,
+      columns
+    );
   };
 
   const [historiqueId, setHistoriqueId] = useState<LineId>();

@@ -30,6 +30,7 @@ export const MenuIntention = ({
   searchParams: {
     filters?: Partial<Filters>;
     campagne?: string;
+    search?: string;
   };
 }) => {
   const statut =
@@ -41,11 +42,17 @@ export const MenuIntention = ({
   const isCampagneEnCours = campagne?.statut === CampagneStatutEnum["en cours"];
   const isDisabled =
     !isCampagneEnCours || isSaisieDisabled() || !hasPermissionSubmitIntention;
+  const search = searchParams.search;
+  const codeAcademie = searchParams.filters?.codeAcademie;
+  const codeNiveauDiplome = searchParams.filters?.codeNiveauDiplome;
 
   const { data: countDemandes } = client.ref("[GET]/intentions/count").useQuery(
     {
       query: {
         anneeCampagne,
+        search,
+        codeAcademie,
+        codeNiveauDiplome,
       },
     },
     {

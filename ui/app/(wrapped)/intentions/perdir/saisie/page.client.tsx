@@ -112,7 +112,7 @@ export const PageClient = () => {
   ) => {
     setSearchParams({
       ...searchParams,
-      filters: { ...filters, [type]: value },
+      filters: { ...searchParams.filters, [type]: value },
     });
   };
 
@@ -134,7 +134,7 @@ export const PageClient = () => {
   };
 
   const getIntentionsQueryParameters = (qLimit: number, qOffset?: number) => ({
-    ...filters,
+    ...searchParams.filters,
     search,
     ...order,
     offset: qOffset,

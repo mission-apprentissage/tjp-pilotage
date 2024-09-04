@@ -14,11 +14,11 @@ export const countIntentionsRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions-perdir/lecture"),
       handler: async (request, response) => {
-        const { anneeCampagne } = request.query;
+        const filters = request.query;
         const { user } = request;
         const result = await countIntentionsUsecase({
           user: user!,
-          anneeCampagne,
+          ...filters,
         });
         response.status(200).send(result);
       },
