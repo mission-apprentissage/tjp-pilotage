@@ -2,13 +2,13 @@ import Boom from "@hapi/boom";
 import { inject } from "injecti";
 
 import { RequestUser } from "../../../core/model/User";
-import { findOneIntention } from "../../repositories/findOneIntention.query";
+import { findOneDemande } from "../../repositories/findOneDemande.query";
 import { createSuiviQuery } from "./submitSuivi.query";
 
 export const [submitSuiviUsecase, submitSuiviFactory] = inject(
   {
     createSuiviQuery,
-    findOneIntention,
+    findOneDemande,
   },
   (deps) =>
     async ({
@@ -18,7 +18,7 @@ export const [submitSuiviUsecase, submitSuiviFactory] = inject(
       user: Pick<RequestUser, "id" | "role" | "codeRegion" | "uais">;
       intentionNumero: string;
     }) => {
-      const intentionData = await findOneIntention(intentionNumero);
+      const intentionData = await findOneDemande(intentionNumero);
       if (!intentionData) throw Boom.notFound("Intention not found");
 
       const createdSuivi = await deps.createSuiviQuery({

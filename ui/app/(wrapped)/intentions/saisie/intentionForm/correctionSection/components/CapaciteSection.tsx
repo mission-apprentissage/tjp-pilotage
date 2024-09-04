@@ -2,6 +2,7 @@ import {
   Box,
   Flex,
   FormErrorMessage,
+  Heading,
   Input,
   Table,
   Tbody,
@@ -10,21 +11,21 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 
 import {
   isTypeColoration,
   isTypeFermeture,
 } from "../../../../utils/typeDemandeUtils";
-import { IntentionForms } from "../../defaultFormValues";
+import { CorrectionForms } from "../defaultFormValues";
+import { Intention } from "../types";
 import { CapaciteApprentissageActuelleField } from "./CapaciteApprentissageActuelleField";
 import { CapaciteApprentissageColoreeField } from "./CapaciteApprentissageColoreeField";
 import { CapaciteApprentissageField } from "./CapaciteApprentissageField";
 import { CapaciteScolaireActuelleField } from "./CapaciteScolaireActuelleField";
 import { CapaciteScolaireColoreeField } from "./CapaciteScolaireColoreeField";
 import { CapaciteScolaireField } from "./CapaciteScolaireField";
-import { ColorationField } from "./ColorationField";
-import { LibelleColorationField } from "./LibelleColorationField";
 
 const ConstanteField = ({ value }: { value: string | number | undefined }) => (
   <Input
@@ -43,40 +44,65 @@ const ConstanteField = ({ value }: { value: string | number | undefined }) => (
 );
 
 const differenceCapacité = (
-  valueA: number | undefined,
+  valueA: number | undefined = 0,
   valueB: number | undefined = 0
 ) => {
   if (valueB === undefined || valueA === undefined) return "-";
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
+export const CapaciteSection = ({ demande }: { demande: Intention }) => {
   const {
     watch,
     formState: { errors },
-  } = useFormContext<IntentionForms>();
+    setValue,
+  } = useFormContext<CorrectionForms>();
 
-  const coloration = watch("coloration");
-  const typeDemande = watch("typeDemande");
-  const fermeture = isTypeFermeture(typeDemande);
-  const showColoration = coloration && !fermeture;
+  const typeDemande = demande?.typeDemande;
+  const coloration =
+    typeDemande !== undefined &&
+    (isTypeColoration(typeDemande) ||
+      (!isTypeFermeture(typeDemande) && watch("coloration")));
 
-  const [capaciteScolaire, capaciteScolaireActuelle] = watch([
-    "capaciteScolaire",
+  const [
+    capaciteScolaireActuelle,
+    capaciteScolaire,
+    capaciteApprentissageActuelle,
+    capaciteApprentissage,
+  ] = watch([
     "capaciteScolaireActuelle",
-  ]);
-  const [capaciteApprentissage, capaciteApprentissageActuelle] = watch([
-    "capaciteApprentissage",
+    "capaciteScolaire",
     "capaciteApprentissageActuelle",
+    "capaciteApprentissage",
   ]);
+
+  useEffect(() => {
+    setValue("capaciteApprentissage", demande?.capaciteApprentissage ?? 0);
+    setValue(
+      "capaciteApprentissageActuelle",
+      demande?.capaciteApprentissageActuelle ?? 0
+    );
+    setValue(
+      "capaciteApprentissageColoree",
+      demande?.capaciteApprentissageColoree ?? 0
+    );
+    setValue("capaciteScolaire", demande?.capaciteScolaire ?? 0);
+    setValue(
+      "capaciteScolaireActuelle",
+      demande?.capaciteScolaireActuelle ?? 0
+    );
+    setValue("capaciteScolaireColoree", demande?.capaciteScolaireColoree ?? 0);
+    nouvellesPlacesScolaire;
+    nouvellesPlacesApprentissage;
+  }, []);
 
   const nouvellesPlacesScolaire = (() => {
-    if (isTypeColoration(typeDemande)) return "-";
+    if (coloration) return "-";
     return differenceCapacité(capaciteScolaire, capaciteScolaireActuelle);
   })();
 
   const nouvellesPlacesApprentissage = (() => {
-    if (isTypeColoration(typeDemande)) return "-";
+    if (coloration) return "-";
     return differenceCapacité(
       capaciteApprentissage,
       capaciteApprentissageActuelle
@@ -84,9 +110,10 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
   })();
 
   return (
-    <Flex gap="6" direction={"column"}>
-      <ColorationField disabled={disabled} />
-      <LibelleColorationField disabled={disabled} />
+    <Flex gap="4" direction={"column"}>
+      <Heading as={"h3"} fontSize="lg" mt={3}>
+        Rectification des effectifs
+      </Heading>
       <Table columnGap={1} rowGap={1}>
         <Thead>
           <Tr borderBottom={"2px solid black"} bgColor={"grey.975"}>
@@ -97,9 +124,9 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
             <Th textAlign={"end"} p={2} pe={0}>
               Nouvelle capacité
             </Th>
-            {showColoration && (
+            {coloration && (
               <Th textAlign={"end"} p={2} pe={0}>
-                Dont colorée
+                Dont places colorées
               </Th>
             )}
             <Th textAlign={"end"} p={2} pe={0}>
@@ -113,22 +140,14 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteScolaireActuelleField flex={1} demande={demande} />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireField disabled={disabled} maxW={240} flex={1} />
+              <CapaciteScolaireField flex={1} demande={demande} />
             </Td>
-            {showColoration && (
+            {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField
-                  disabled={disabled}
-                  maxW={240}
-                  flex={1}
-                />
+                <CapaciteScolaireColoreeField flex={1} demande={demande} />
               </Td>
             )}
             <Td p={0} border={"none"}>
@@ -140,26 +159,14 @@ export const CapaciteSection = ({ disabled }: { disabled: boolean }) => {
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteApprentissageActuelleField flex={1} demande={demande} />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField
-                disabled={disabled}
-                maxW={240}
-                flex={1}
-              />
+              <CapaciteApprentissageField flex={1} demande={demande} />
             </Td>
-            {showColoration && (
+            {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField
-                  disabled={disabled}
-                  maxW={240}
-                  flex={1}
-                />
+                <CapaciteApprentissageColoreeField flex={1} demande={demande} />
               </Td>
             )}
             <Td p={0} border={"none"}>

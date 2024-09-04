@@ -48,6 +48,13 @@ export const getDemandeQuery = async ({ numero, user }: Filters) => {
       "departement.codeDepartement",
       jsonObjectFrom(
         eb
+          .selectFrom("correction")
+          .selectAll("correction")
+          .whereRef("correction.intentionNumero", "=", "demande.numero")
+          .limit(1)
+      ).as("correction"),
+      jsonObjectFrom(
+        eb
           .selectFrom("campagne")
           .selectAll("campagne")
           .whereRef("campagne.id", "=", "demande.campagneId")

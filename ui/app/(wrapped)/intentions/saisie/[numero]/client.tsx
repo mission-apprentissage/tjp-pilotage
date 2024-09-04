@@ -28,6 +28,7 @@ export default ({
           disabled={!data.canEdit || isSaisieDisabled()}
           formId={numero}
           defaultValues={data}
+          demande={data}
           formMetadata={data.metadata}
           campagne={data.campagne}
         />

@@ -1,6 +1,7 @@
 "use client";
 
 import { Container, Flex } from "@chakra-ui/react";
+import { useEffect } from "react";
 import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
@@ -25,6 +26,14 @@ export default ({
         cacheTime: 0,
       }
     );
+
+  const { mutate: submitIntentionAccessLog } = client
+    .ref("[POST]/demande/access/submit")
+    .useMutation({});
+
+  useEffect(() => {
+    submitIntentionAccessLog({ body: { intention: { numero: numero } } });
+  }, []);
 
   const isCampagneEnCours =
     demande?.campagne?.statut === CampagneStatutEnum["en cours"];

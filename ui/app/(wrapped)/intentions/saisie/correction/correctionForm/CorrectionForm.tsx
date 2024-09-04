@@ -8,7 +8,6 @@ import {
   AlertTitle,
   Box,
   Button,
-  Container,
   Flex,
   UnorderedList,
   useToast,
@@ -30,7 +29,6 @@ import { client } from "@/api.client";
 import { SectionBlock } from "@/app/(wrapped)/intentions/saisie/components/SectionBlock";
 
 import { CapaciteSection } from "./capaciteSection/CapaciteSection";
-import { CfdUaiSection } from "./cfdUaiSection/CfdUaiSection";
 import { CorrectionForms } from "./defaultFormValues";
 import { MotifSection } from "./motifSection/MotifSection";
 import { Campagne, Intention } from "./types";
@@ -88,11 +86,6 @@ export const CorrectionForm = ({
   });
 
   const isActionsDisabled = isSuccess || isSubmitting;
-
-  const [isFCIL, _setIsFCIL] = useState<boolean>(
-    demande?.metadata?.formation?.isFCIL ?? false
-  );
-
   const { setCampagne } = useContext(CampagneContext);
 
   const campagneValue = useMemo(() => ({ campagne, setCampagne }), [campagne]);
@@ -115,60 +108,52 @@ export const CorrectionForm = ({
             })
           )}
         >
-          <Container maxW={"container.xl"} pt="4" mb={24}>
-            <CfdUaiSection
-              isFCIL={isFCIL}
-              campagne={campagne}
-              demande={demande}
-            />
-            <Flex direction="column" gap={6} mt={6}>
-              <SectionBlock>
-                <CapaciteSection demande={demande} />
-              </SectionBlock>
-              <SectionBlock>
-                <MotifSection campagne={campagne} />
-              </SectionBlock>
-              <Box justifyContent={"center"} ms={"auto"}>
-                <Button
-                  isDisabled={isActionsDisabled}
-                  isLoading={isSubmitting}
-                  variant="primary"
-                  onClick={handleSubmit((values) =>
-                    submitCorrection({
-                      body: {
-                        correction: {
-                          ...values,
-                          intentionNumero: demande.numero ?? "",
-                          campagneId: values.campagneId ?? campagne?.id,
-                        },
+          <Flex direction="column" gap={6} mt={6}>
+            <SectionBlock>
+              <CapaciteSection demande={demande} />
+            </SectionBlock>
+            <SectionBlock>
+              <MotifSection campagne={campagne} />
+            </SectionBlock>
+            <Box justifyContent={"center"} ms={"auto"}>
+              <Button
+                isDisabled={isActionsDisabled}
+                isLoading={isSubmitting}
+                variant="primary"
+                onClick={handleSubmit((values) =>
+                  submitCorrection({
+                    body: {
+                      correction: {
+                        ...values,
+                        intentionNumero: demande.numero ?? "",
+                        campagneId: values.campagneId ?? campagne?.id,
                       },
-                    })
-                  )}
-                  leftIcon={<CheckIcon />}
-                >
-                  {"Enregistrer la correction"}
-                </Button>
-              </Box>
-            </Flex>
-
-            <Box position="relative">
-              {errors && (
-                <Alert mt="8" alignItems="flex-start" status="error">
-                  <AlertIcon />
-                  <Box>
-                    <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
-                    <AlertDescription mt="2">
-                      <UnorderedList>
-                        {Object.entries(errors).map(([key, msg]) => (
-                          <li key={key}>{msg}</li>
-                        ))}
-                      </UnorderedList>
-                    </AlertDescription>
-                  </Box>
-                </Alert>
-              )}
+                    },
+                  })
+                )}
+                leftIcon={<CheckIcon />}
+              >
+                {"Enregistrer la correction"}
+              </Button>
             </Box>
-          </Container>
+          </Flex>
+          <Box position="relative">
+            {errors && (
+              <Alert mt="8" alignItems="flex-start" status="error">
+                <AlertIcon />
+                <Box>
+                  <AlertTitle>Erreur(s) lors de l'envoi</AlertTitle>
+                  <AlertDescription mt="2">
+                    <UnorderedList>
+                      {Object.entries(errors).map(([key, msg]) => (
+                        <li key={key}>{msg}</li>
+                      ))}
+                    </UnorderedList>
+                  </AlertDescription>
+                </Box>
+              </Alert>
+            )}
+          </Box>
         </Box>
       </FormProvider>
     </CampagneContext.Provider>

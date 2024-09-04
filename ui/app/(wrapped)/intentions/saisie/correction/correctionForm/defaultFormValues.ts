@@ -21,7 +21,7 @@ export type CorrectionForms = {
   coloration: boolean;
   libelleColoration?: string;
   raison: string;
-  motif: string[];
+  motif: string;
   autreMotif?: string;
   commentaire?: string;
   // Hidden

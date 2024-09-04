@@ -10,7 +10,7 @@ const CorrectionSchema = z.object({
   capaciteApprentissageActuelle: z.coerce.number(),
   capaciteApprentissage: z.coerce.number(),
   capaciteApprentissageColoree: z.coerce.number(),
-  motif: z.array(z.string()),
+  motif: z.string(),
   autreMotif: z.string().optional(),
   raison: z.string(),
   commentaire: z.string().optional(),

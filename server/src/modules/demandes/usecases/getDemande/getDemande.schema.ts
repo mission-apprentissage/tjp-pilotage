@@ -36,6 +36,23 @@ const MetadataSchema = z.object({
   formationCompensation: FormationMetadataSchema,
 });
 
+const CorrectionSchema = z.object({
+  intentionNumero: z.string(),
+  libelleColoration: z.string().optional(),
+  coloration: z.boolean(),
+  capaciteScolaireActuelle: z.coerce.number(),
+  capaciteScolaire: z.coerce.number(),
+  capaciteScolaireColoree: z.coerce.number(),
+  capaciteApprentissageActuelle: z.coerce.number(),
+  capaciteApprentissage: z.coerce.number(),
+  capaciteApprentissageColoree: z.coerce.number(),
+  motif: z.string(),
+  autreMotif: z.string().optional(),
+  raison: z.string(),
+  commentaire: z.string().optional(),
+  campagneId: z.string(),
+});
+
 const DemandeSchema = z.object({
   uai: z.string(),
   cfd: z.string(),
@@ -109,6 +126,7 @@ const DemandeSchema = z.object({
   libelleDispositif: z.string(),
   differenceCapaciteScolaire: z.coerce.number().optional(),
   differenceCapaciteApprentissage: z.coerce.number().optional(),
+  correction: CorrectionSchema.optional(),
 });
 
 export const getDemandeSchema = {

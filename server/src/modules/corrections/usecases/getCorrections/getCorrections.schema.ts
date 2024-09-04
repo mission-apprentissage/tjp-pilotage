@@ -35,7 +35,7 @@ const CorrectionItem = z.object({
   ecartScolaire: z.coerce.number(),
   ecartApprentissage: z.coerce.number(),
   raisonCorrection: z.string().optional(),
-  motifCorrection: z.array(z.string()).optional(),
+  motifCorrection: z.string().optional(),
   autreMotifCorrection: z.string().optional(),
   // Devenir favorable de la formation
   positionQuadrant: z.string().optional(),
