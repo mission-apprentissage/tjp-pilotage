@@ -1,33 +1,35 @@
 import {
   chakra,
-  Checkbox,
-  CheckboxGroup,
   FormControl,
+  FormErrorMessage,
   FormLabel,
+  Radio,
+  RadioGroup,
   Stack,
+  Text,
 } from "@chakra-ui/react";
 import { Controller, useFormContext } from "react-hook-form";
 import { CURRENT_ANNEE_CAMPAGNE } from "shared/time/CURRENT_ANNEE_CAMPAGNE";
 
 import {
-  MotifCorrectionCampagne,
-  MOTIFS_CORRECTION_LABELS,
-} from "../../../../utils/motifCorrectionUtils";
+  RaisonCorrectionCampagne,
+  RAISONS_CORRECTION_LABELS,
+} from "../../../../utils/raisonCorrectionUtils";
 import { CorrectionForms } from "../defaultFormValues";
 import { Campagne } from "../types";
 
-const getMotifCorrectionOptions = (
+const getRaisonCorrectionOptions = (
   campagne: string = CURRENT_ANNEE_CAMPAGNE
 ) => {
   return Object.entries(
-    MOTIFS_CORRECTION_LABELS[campagne as MotifCorrectionCampagne]
+    RAISONS_CORRECTION_LABELS[campagne as RaisonCorrectionCampagne]
   ).map(([value, label]) => ({
     value,
     label,
   }));
 };
 
-export const MotifField = chakra(
+export const RaisonField = chakra(
   ({ campagne, className }: { campagne?: Campagne; className?: string }) => {
     const {
       formState: { errors },
@@ -35,38 +37,37 @@ export const MotifField = chakra(
     } = useFormContext<CorrectionForms>();
 
     return (
-      <FormControl className={className} isInvalid={!!errors.motif} isRequired>
-        <FormLabel>
-          Merci de préciser le(s) motif(s) de votre correction
-        </FormLabel>
+      <FormControl className={className} isInvalid={!!errors.raison} isRequired>
+        <FormLabel>Merci de préciser la raison de votre correction</FormLabel>
         <Controller
-          name="motif"
+          name="raison"
           control={control}
-          rules={{ required: "Le motif est obligatoire" }}
+          rules={{ required: "Le raison est obligatoire" }}
           render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
-              <CheckboxGroup onChange={onChange} value={value}>
+              <RadioGroup onChange={onChange} value={value}>
                 <Stack spacing={[3]} ms={6}>
-                  {getMotifCorrectionOptions(campagne?.annee)?.map(
+                  {getRaisonCorrectionOptions(campagne?.annee)?.map(
                     ({ value, label }) => (
-                      <Checkbox
+                      <Radio
                         ref={ref}
                         name={name}
                         key={`${name}_${label}`}
                         onBlur={onBlur}
                         value={value}
-                        _checked={{ fontWeight: "bold !important" }}
-                        fontWeight={"400 !important"}
                       >
-                        {label}
-                      </Checkbox>
+                        <Text fontWeight={"normal !important"}>{label}</Text>
+                      </Radio>
                     )
                   )}
                 </Stack>
-              </CheckboxGroup>
+              </RadioGroup>
             );
           }}
         />
+        {errors.raison && (
+          <FormErrorMessage>{errors.raison.message}</FormErrorMessage>
+        )}
       </FormControl>
     );
   }

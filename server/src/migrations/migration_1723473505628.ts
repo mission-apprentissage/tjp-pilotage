@@ -16,7 +16,7 @@ export const up = async (db: Kysely<unknown>) => {
       c.notNull().defaultTo(sql`NOW()`)
     )
     .addColumn("raison", "varchar")
-    .addColumn("motif", sql`varchar[]`)
+    .addColumn("motif", "varchar")
     .addColumn("autreMotif", "varchar")
     .addColumn("commentaire", "varchar")
     .addColumn("capaciteScolaire", "integer")

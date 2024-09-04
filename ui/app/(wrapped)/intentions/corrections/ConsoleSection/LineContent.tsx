@@ -50,24 +50,20 @@ const handleRaisonLabel = ({
 };
 
 const handleMotifCorrectionLabel = ({
-  motifsCorrection,
+  motifCorrection,
   autreMotif,
   campagne,
 }: {
-  motifsCorrection?: string[];
+  motifCorrection?: string;
   campagne?: string;
   autreMotif?: string;
 }) => {
-  if (!motifsCorrection || motifsCorrection.length === 0) return undefined;
-  const formattedMotifs = motifsCorrection?.map((motifCorrection) =>
-    motifCorrection === "autre"
-      ? `Autre : ${autreMotif}`
-      : getMotifCorrectionLabel({
-          motifCorrection: motifCorrection as MotifCorrectionLabel,
-          campagne: campagne as MotifCorrectionCampagne,
-        })
-  );
-  return `(${formattedMotifs.length}) ${formattedMotifs?.join(", ")}`;
+  return motifCorrection === "autre"
+    ? `Autre : ${autreMotif}`
+    : getMotifCorrectionLabel({
+        motifCorrection: motifCorrection as MotifCorrectionLabel,
+        campagne: campagne as MotifCorrectionCampagne,
+      });
 };
 const ConditionalTd = chakra(
   ({
@@ -288,7 +284,7 @@ export const LineContent = ({
         bgColor={getCellColor("motifCorrection")}
       >
         {handleMotifCorrectionLabel({
-          motifsCorrection: correction.motifCorrection,
+          motifCorrection: correction.motifCorrection,
           autreMotif: correction.autreMotifCorrection,
           campagne: campagne,
         })}

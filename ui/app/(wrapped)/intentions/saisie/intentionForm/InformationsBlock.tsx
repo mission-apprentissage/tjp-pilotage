@@ -13,12 +13,14 @@ import {
   useDisclosure,
 } from "@chakra-ui/react";
 import { useMutation } from "@tanstack/react-query";
-import { useRouter } from "next/navigation";
-import { ReactNode, RefObject } from "react";
+import { useRouter, useSearchParams } from "next/navigation";
+import { ReactNode, RefObject, useEffect } from "react";
 import { useFormContext } from "react-hook-form";
 import { DemandeStatutEnum } from "shared/enum/demandeStatutEnum";
 
 import { client } from "@/api.client";
+import { CorrectionSection } from "@/app/(wrapped)/intentions/saisie/intentionForm/correctionSection/CorrectionSection";
+import { Demande } from "@/app/(wrapped)/intentions/saisie/types";
 
 import { SectionBlock } from "../components/SectionBlock";
 import { Campagne } from "../types";
@@ -35,12 +37,14 @@ export const InformationsBlock = ({
   disabled,
   footerActions,
   campagne,
+  demande,
 }: {
   refs: Record<string, RefObject<HTMLDivElement>>;
   formId?: string;
   disabled: boolean;
   footerActions: ReactNode;
   campagne?: Campagne;
+  demande?: Demande;
 }) => {
   const { push } = useRouter();
   const { setValue } = useFormContext<IntentionForms>();
@@ -55,6 +59,13 @@ export const InformationsBlock = ({
     },
   });
 
+  const queryParams = useSearchParams();
+  const isCorrection = queryParams.get("correction");
+
+  useEffect(() => {
+    refs["correction"].current?.scrollIntoView({ behavior: "smooth" });
+  }, [isCorrection]);
+
   return (
     <Flex direction="column" gap={6} mt={6}>
       <SectionBlock>
@@ -62,8 +73,18 @@ export const InformationsBlock = ({
           typeDemandeRef={refs["typeDemande"]}
           disabled={disabled}
           campagne={campagne}
+          demande={demande}
         />
       </SectionBlock>
+      {isCorrection && demande && (
+        <SectionBlock borderColor={"red"} borderWidth={"1px"}>
+          <CorrectionSection
+            correctionRef={refs["correction"]}
+            demande={demande}
+            campagne={campagne}
+          />
+        </SectionBlock>
+      )}
       <SectionBlock>
         <PrecisionsSection
           motifsEtPrecisionsRef={refs["motifsEtPrecisions"]}

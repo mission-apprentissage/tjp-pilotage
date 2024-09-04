@@ -84,7 +84,7 @@ export interface Correction {
   createdAt: Generated<Timestamp>;
   updatedAt: Generated<Timestamp>;
   raison: string | null;
-  motif: string[] | null;
+  motif: string | null;
   autreMotif: string | null;
   commentaire: string | null;
   capaciteScolaire: number | null;
