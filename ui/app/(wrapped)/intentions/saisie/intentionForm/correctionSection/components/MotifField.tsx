@@ -27,7 +27,15 @@ const getMotifCorrectionOptions = (
 };
 
 export const MotifField = chakra(
-  ({ campagne, className }: { campagne?: Campagne; className?: string }) => {
+  ({
+    campagne,
+    disabled = false,
+    className,
+  }: {
+    campagne?: Campagne;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       control,
@@ -42,6 +50,7 @@ export const MotifField = chakra(
           name="motif"
           control={control}
           rules={{ required: "Le motif est obligatoire" }}
+          disabled={disabled}
           render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
               <Select
@@ -53,6 +62,7 @@ export const MotifField = chakra(
                 onBlur={onBlur}
                 ref={ref}
                 placeholder="Sélectionner un motif de correction"
+                disabled={disabled}
               >
                 {getMotifCorrectionOptions(campagne?.annee).map((motif) => (
                   <option key={motif.value} value={motif.value}>

@@ -13,7 +13,13 @@ import { getMotifsTriggerAutre } from "../../../../utils/motifDemandeUtils";
 import { CorrectionForms } from "../defaultFormValues";
 
 export const AutreMotifField = chakra(
-  ({ disabled, className }: { disabled?: boolean; className?: string }) => {
+  ({
+    disabled = false,
+    className,
+  }: {
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       register,

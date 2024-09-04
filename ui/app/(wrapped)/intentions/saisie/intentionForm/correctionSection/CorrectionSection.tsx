@@ -18,7 +18,6 @@ import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, Dispatch, SetStateAction, useState } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { CampagneStatutEnum } from "shared/enum/campagneStatutEnum";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
@@ -61,7 +60,7 @@ export const CorrectionSection = ({
     },
     mode: "onTouched",
     reValidateMode: "onChange",
-    disabled: campagne?.statut !== CampagneStatutEnum["en cours"],
+    disabled: !!demande.correction,
   });
 
   const { handleSubmit } = form;
@@ -93,7 +92,8 @@ export const CorrectionSection = ({
     },
   });
 
-  const isActionsDisabled = isSuccess || isSubmitting;
+  const isCorrectionDisabled =
+    isSuccess || isSubmitting || !!demande.correction;
 
   return (
     <Flex
@@ -121,42 +121,49 @@ export const CorrectionSection = ({
               Rappel des capacités saisies
             </Heading>
             <CapaciteConstanteSection demande={demande} />
-            <RaisonField campagne={campagne} />
+            <RaisonField campagne={campagne} disabled={isCorrectionDisabled} />
             <Text fontSize={14}>
               Vous vous apprêtez à enregistrer de nouvelles capacités sur cette
               demande. Pour rappel : ces modifications ne seront pas prises en
               compte dans le taux de transformation affiché dans la page de
               pilotage. Attention une seule saisie est possible par demande
             </Text>
-            <CapaciteSection demande={demande} />
-            <MotifField campagne={campagne} />
-            <AutreMotifField />
-            <CommentaireField />
-            <Text color="info.text" fontSize={14}>
-              Après validation de ce formulaire, vous ne pourrez plus apporter
-              aucune modification
-            </Text>
-            <Box justifyContent={"center"} ms={"auto"}>
-              <Button
-                isDisabled={isActionsDisabled}
-                isLoading={isSubmitting}
-                variant="secondary"
-                color="bluefrance.113"
-                onClick={handleSubmit((values) =>
-                  submitCorrection({
-                    body: {
-                      correction: {
-                        ...values,
-                        intentionNumero: demande.numero ?? "",
-                      },
-                    },
-                  })
-                )}
-                leftIcon={<Icon icon="ri:save-3-line" />}
-              >
-                {"Enregistrer la correction"}
-              </Button>
-            </Box>
+            <CapaciteSection
+              demande={demande}
+              disabled={isCorrectionDisabled}
+            />
+            <MotifField campagne={campagne} disabled={isCorrectionDisabled} />
+            <AutreMotifField disabled={isCorrectionDisabled} />
+            <CommentaireField disabled={isCorrectionDisabled} />
+            {!isCorrectionDisabled && (
+              <>
+                <Text color="info.text" fontSize={14}>
+                  Après validation de ce formulaire, vous ne pourrez plus
+                  apporter aucune modification
+                </Text>
+                <Box justifyContent={"center"} ms={"auto"}>
+                  <Button
+                    isDisabled={isCorrectionDisabled}
+                    isLoading={isSubmitting}
+                    variant="secondary"
+                    color="bluefrance.113"
+                    onClick={handleSubmit((values) =>
+                      submitCorrection({
+                        body: {
+                          correction: {
+                            ...values,
+                            intentionNumero: demande.numero ?? "",
+                          },
+                        },
+                      })
+                    )}
+                    leftIcon={<Icon icon="ri:save-3-line" />}
+                  >
+                    {"Enregistrer la correction"}
+                  </Button>
+                </Box>
+              </>
+            )}
           </Flex>
           <Box position="relative">
             {errors && (

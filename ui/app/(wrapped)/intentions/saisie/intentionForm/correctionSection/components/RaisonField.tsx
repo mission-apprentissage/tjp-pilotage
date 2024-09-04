@@ -30,7 +30,15 @@ const getRaisonCorrectionOptions = (
 };
 
 export const RaisonField = chakra(
-  ({ campagne, className }: { campagne?: Campagne; className?: string }) => {
+  ({
+    campagne,
+    disabled,
+    className,
+  }: {
+    campagne?: Campagne;
+    disabled?: boolean;
+    className?: string;
+  }) => {
     const {
       formState: { errors },
       control,
@@ -42,10 +50,15 @@ export const RaisonField = chakra(
         <Controller
           name="raison"
           control={control}
+          disabled={disabled}
           rules={{ required: "Le raison est obligatoire" }}
           render={({ field: { onChange, value, onBlur, ref, name } }) => {
             return (
-              <RadioGroup onChange={onChange} value={value}>
+              <RadioGroup
+                onChange={onChange}
+                value={value}
+                isDisabled={disabled}
+              >
                 <Stack spacing={[3]} ms={6}>
                   {getRaisonCorrectionOptions(campagne?.annee)?.map(
                     ({ value, label }) => (
@@ -55,6 +68,8 @@ export const RaisonField = chakra(
                         key={`${name}_${label}`}
                         onBlur={onBlur}
                         value={value}
+                        isReadOnly={disabled}
+                        _readOnly={{ cursor: "not-allowed", opacity: 0.5 }}
                       >
                         <Text fontWeight={"normal !important"}>{label}</Text>
                       </Radio>

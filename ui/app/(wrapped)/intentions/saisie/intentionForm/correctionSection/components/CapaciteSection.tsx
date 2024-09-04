@@ -51,7 +51,13 @@ const differenceCapacité = (
   return valueA - valueB > 0 ? `+${valueA - valueB}` : valueA - valueB;
 };
 
-export const CapaciteSection = ({ demande }: { demande: Intention }) => {
+export const CapaciteSection = ({
+  demande,
+  disabled,
+}: {
+  demande: Intention;
+  disabled?: boolean;
+}) => {
   const {
     watch,
     formState: { errors },
@@ -140,14 +146,26 @@ export const CapaciteSection = ({ demande }: { demande: Intention }) => {
               Capacité en voie scolaire
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireActuelleField flex={1} demande={demande} />
+              <CapaciteScolaireActuelleField
+                flex={1}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteScolaireField flex={1} demande={demande} />
+              <CapaciteScolaireField
+                flex={1}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteScolaireColoreeField flex={1} demande={demande} />
+                <CapaciteScolaireColoreeField
+                  flex={1}
+                  demande={demande}
+                  disabled={disabled}
+                />
               </Td>
             )}
             <Td p={0} border={"none"}>
@@ -159,14 +177,26 @@ export const CapaciteSection = ({ demande }: { demande: Intention }) => {
               Capacité en apprentissage
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageActuelleField flex={1} demande={demande} />
+              <CapaciteApprentissageActuelleField
+                flex={1}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             <Td p={0} border={"none"}>
-              <CapaciteApprentissageField flex={1} demande={demande} />
+              <CapaciteApprentissageField
+                flex={1}
+                demande={demande}
+                disabled={disabled}
+              />
             </Td>
             {coloration && (
               <Td p={0} border={"none"}>
-                <CapaciteApprentissageColoreeField flex={1} demande={demande} />
+                <CapaciteApprentissageColoreeField
+                  flex={1}
+                  demande={demande}
+                  disabled={disabled}
+                />
               </Td>
             )}
             <Td p={0} border={"none"}>
