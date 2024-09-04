@@ -1,4 +1,3 @@
-import Boom from "@hapi/boom";
 import { createRoute } from "@http-wizard/core";
 
 import { Server } from "../../../../server";
@@ -15,12 +14,15 @@ export const countDemandesRoute = (server: Server) => {
       ...props,
       preHandler: hasPermissionHandler("intentions/lecture"),
       handler: async (request, response) => {
-        const { anneeCampagne } = request.query;
-        if (!request.user) throw Boom.forbidden();
+        const { anneeCampagne, codeAcademie, codeNiveauDiplome, search } =
+          request.query;
 
         const result = await countDemandesUsecase({
-          user: request.user,
+          user: request.user!,
           anneeCampagne,
+          codeAcademie,
+          codeNiveauDiplome,
+          search,
         });
         response.status(200).send(result);
       },
