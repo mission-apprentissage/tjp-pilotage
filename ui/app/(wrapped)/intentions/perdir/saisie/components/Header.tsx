@@ -181,7 +181,22 @@ export const Header = ({
                   "recueil_demandes",
                   activeFilters.codeAcademie
                 ),
-                data.intentions,
+                [
+                  ...data.intentions.map((intention) => ({
+                    ...intention,
+                    ...intention.avis.reduce(
+                      (acc, current, index) => {
+                        acc[`avis${index}`] = [
+                          current.fonction!.toUpperCase(),
+                          `Avis ${current.statut}`,
+                          current.commentaire,
+                        ].join(" - ");
+                        return acc;
+                      },
+                      {} as Record<string, string>
+                    ),
+                  })),
+                ],
                 INTENTIONS_COLUMNS
               );
             }}
@@ -195,7 +210,22 @@ export const Header = ({
                   "recueil_demandes",
                   activeFilters.codeAcademie
                 ),
-                data.intentions,
+                [
+                  ...data.intentions.map((intention) => ({
+                    ...intention,
+                    ...intention.avis.reduce(
+                      (acc, current, index) => {
+                        acc[`avis${index}`] = [
+                          current.fonction!.toUpperCase(),
+                          `Avis ${current.statut}`,
+                          current.commentaire,
+                        ].join(" - ");
+                        return acc;
+                      },
+                      {} as Record<string, string>
+                    ),
+                  })),
+                ],
                 INTENTIONS_COLUMNS
               );
             }}
