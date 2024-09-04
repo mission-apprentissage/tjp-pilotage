@@ -337,14 +337,11 @@ export const countDifferenceCapacite = ({
 }: {
   eb: ExpressionBuilder<DB, "demande">;
 }) =>
-  exceptionColoration({
-    eb,
-    count: sql<number>`ABS(
-      ${eb.ref("demande.capaciteScolaire")}
-      -${eb.ref("demande.capaciteScolaireActuelle")})
-      +GREATEST(${eb.ref("demande.capaciteApprentissage")}
-      -${eb.ref("demande.capaciteApprentissageActuelle")}, 0)`,
-  });
+  sql<number>`${countOuverturesSco(eb)} + ${countFermeturesSco(
+    eb
+  )} + ${countOuverturesApprentissage(eb)} + ${countFermeturesApprentissage(
+    eb
+  )} + ${countOuverturesColorees(eb)}`;
 
 export const countDifferenceCapaciteScolaireIntention = ({
   eb,
