@@ -27,7 +27,7 @@ export const up = async (db: Kysely<unknown>) => {
     .addColumn("capaciteApprentissageColoree", "integer")
     .addColumn("coloration", "boolean")
     .addColumn("libelleColoration", "varchar")
-    .addColumn("campagneId", "uuid")
+    .addColumn("campagneId", "uuid", (c) => c.notNull())
     .execute();
 
   await db.schema

@@ -76,6 +76,7 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
           ...correction,
           createdBy: user.id,
           updatedBy: user.id,
+          campagneId: campagne.id,
         },
         user,
       });

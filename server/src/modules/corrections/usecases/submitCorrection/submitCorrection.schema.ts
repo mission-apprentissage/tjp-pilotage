@@ -14,7 +14,6 @@ const CorrectionSchema = z.object({
   autreMotif: z.string().optional(),
   raison: z.string(),
   commentaire: z.string().optional(),
-  campagneId: z.string(),
 });
 
 export const submitCorrectionSchema = {
