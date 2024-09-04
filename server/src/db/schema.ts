@@ -95,7 +95,7 @@ export interface Correction {
   capaciteApprentissageColoree: number | null;
   coloration: boolean | null;
   libelleColoration: string | null;
-  campagneId: string | null;
+  campagneId: string;
 }
 
 export interface DataEtablissement {

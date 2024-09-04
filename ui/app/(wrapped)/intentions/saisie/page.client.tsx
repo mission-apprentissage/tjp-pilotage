@@ -552,214 +552,8 @@ export const PageClient = () => {
                                   }}
                                 />
                               </Tooltip>
-                              <CorrectionDemande
-                                demande={demande}
-                                campagneId={data?.campagne.id}
-                              />
-                              {/* {demande.statut ===
-                                DemandeStatutEnum["demande validée"] &&
-                                (demande.correction ? (
-                                  <Tooltip label="Demande déjà corrigée">
-                                    <Button
-                                      ms={2}
-                                      disabled={true}
-                                      rightIcon={
-                                        <Icon
-                                          icon="ri:arrow-down-s-line"
-                                          color={bluefrance113}
-                                        />
-                                      }
-                                      bgColor={"transparent"}
-                                      border={"1px solid"}
-                                      borderColor={bluefrance113}
-                                      borderRadius="0"
-                                      p={2}
-                                      h={"fit-content"}
-                                      opacity={0.3}
-                                      cursor={"not-allowed"}
-                                    >
-                                      <Flex direction={"row"} gap={2}>
-                                        <Text color={bluefrance113}>
-                                          Corriger la demande
-                                        </Text>
-                                      </Flex>
-                                    </Button>
-                                  </Tooltip>
-                                ) : (
-                                  <Menu gutter={0} matchWidth={true}>
-                                    <MenuButton
-                                      ms={2}
-                                      as={Button}
-                                      rightIcon={
-                                        <Icon
-                                          icon="ri:arrow-down-s-line"
-                                          color={bluefrance113}
-                                        />
-                                      }
-                                      bgColor={"transparent"}
-                                      border={"1px solid"}
-                                      borderColor={bluefrance113}
-                                      borderRadius="0"
-                                      p={2}
-                                      h={"fit-content"}
-                                      onClick={(e) => {
-                                        e.stopPropagation();
-                                      }}
-                                    >
-                                      <Flex direction={"row"} gap={2}>
-                                        <Text color={bluefrance113}>
-                                          Corriger la demande
-                                        </Text>
-                                      </Flex>
-                                    </MenuButton>
-                                    <MenuList p={0}>
-                                      <MenuItem
-                                        px={2}
-                                        py={3}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          router.push(
-                                            `/intentions/corrections/${demande.numero}`
-                                          );
-                                        }}
-                                      >
-                                        <Flex
-                                          direction={"row"}
-                                          h={"100%"}
-                                          gap={2}
-                                        >
-                                          <Icon
-                                            icon="ri:scales-3-line"
-                                            color={bluefrance113}
-                                            width={"18px"}
-                                          />
-                                          <Text color={bluefrance113}>
-                                            Rectifier les capacités
-                                          </Text>
-                                        </Flex>
-                                      </MenuItem>
-                                      <MenuItem
-                                        px={2}
-                                        py={3}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          onOpenModalReport();
-                                        }}
-                                      >
-                                        <Flex
-                                          direction={"row"}
-                                          h={"100%"}
-                                          gap={2}
-                                        >
-                                          <Icon
-                                            icon="ri:corner-up-left-line"
-                                            color={bluefrance113}
-                                            width={"18px"}
-                                          />
-                                          <Text color={bluefrance113}>
-                                            Reporter la demande
-                                          </Text>
-                                        </Flex>
-                                      </MenuItem>
-                                      <MenuItem
-                                        px={2}
-                                        py={3}
-                                        onClick={(e) => {
-                                          e.preventDefault();
-                                          e.stopPropagation();
-                                          onOpenModalAnnulation();
-                                        }}
-                                      >
-                                        <Flex
-                                          direction={"row"}
-                                          h={"100%"}
-                                          gap={2}
-                                        >
-                                          <Icon
-                                            icon="ri:close-line"
-                                            color={bluefrance113}
-                                            width={"18px"}
-                                          />
-                                          <Text color={bluefrance113}>
-                                            Annuler la demande
-                                          </Text>
-                                        </Flex>
-                                      </MenuItem>
-                                    </MenuList>
-                                  </Menu>
-                                ))} */}
+                              <CorrectionDemande demande={demande} />
                             </Flex>
-                            {/* <ModalCorrectionAnnulation
-                              isOpenModalAnnulation={isOpenModalAnnulation}
-                              onCloseModalAnnulation={onCloseModalAnnulation}
-                              submitCorrection={(correction: {
-                                motif: string;
-                              }) => {
-                                submitCorrection({
-                                  body: {
-                                    correction: {
-                                      ...demande,
-                                      intentionNumero: demande.numero,
-                                      capaciteScolaire:
-                                        demande.capaciteScolaireActuelle ?? 0,
-                                      capaciteApprentissage:
-                                        demande.capaciteApprentissageActuelle ??
-                                        0,
-                                      capaciteScolaireActuelle:
-                                        demande.capaciteScolaireActuelle ?? 0,
-                                      capaciteScolaireColoree: 0,
-                                      capaciteApprentissageActuelle:
-                                        demande.capaciteApprentissageActuelle ??
-                                        0,
-                                      capaciteApprentissageColoree: 0,
-                                      coloration: demande.coloration ?? false,
-                                      libelleColoration:
-                                        demande.libelleColoration,
-                                      campagneId: data?.campagne.id ?? "",
-                                      raison: "report",
-                                      motif: correction.motif,
-                                    },
-                                  },
-                                });
-                              }}
-                            />
-                            <ModalCorrectionReport
-                              numero={demande.numero}
-                              isOpenModalReport={isOpenModalReport}
-                              onCloseModalReport={onCloseModalReport}
-                              submitCorrection={(correction: {
-                                motif: string;
-                              }) => {
-                                submitCorrection({
-                                  body: {
-                                    correction: {
-                                      ...demande,
-                                      intentionNumero: demande.numero,
-                                      capaciteScolaire:
-                                        demande.capaciteScolaireActuelle ?? 0,
-                                      capaciteApprentissage:
-                                        demande.capaciteApprentissageActuelle ??
-                                        0,
-                                      capaciteScolaireActuelle:
-                                        demande.capaciteScolaireActuelle ?? 0,
-                                      capaciteScolaireColoree: 0,
-                                      capaciteApprentissageActuelle:
-                                        demande.capaciteApprentissageActuelle ??
-                                        0,
-                                      capaciteApprentissageColoree: 0,
-                                      coloration: demande.coloration ?? false,
-                                      libelleColoration:
-                                        demande.libelleColoration,
-                                      campagneId: data?.campagne.id ?? "",
-                                      raison: "report",
-                                      motif: correction.motif,
-                                    },
-                                  },
-                                });
-                              }}
-                            /> */}
                           </Td>
                         )}
                         <Td textAlign={"center"}>
@@ -825,10 +619,8 @@ export const PageClient = () => {
 const CorrectionDemande = chakra(
   ({
     demande,
-    campagneId,
   }: {
     demande: (typeof client.infer)["[GET]/demandes"]["demandes"][0];
-    campagneId: string;
   }) => {
     const toast = useToast();
     const queryClient = useQueryClient();
@@ -1071,7 +863,6 @@ const CorrectionDemande = chakra(
                         capaciteApprentissageColoree: 0,
                         coloration: demande.coloration ?? false,
                         libelleColoration: demande.libelleColoration,
-                        campagneId,
                         raison: "report",
                         motif: correction.motif,
                       },
@@ -1199,7 +990,6 @@ const CorrectionDemande = chakra(
                         capaciteApprentissageColoree: 0,
                         coloration: demande.coloration ?? false,
                         libelleColoration: demande.libelleColoration,
-                        campagneId,
                         raison: "annulation",
                         motif: correction.motif,
                       },

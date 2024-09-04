@@ -148,7 +148,6 @@ export const CorrectionSection = ({
                       correction: {
                         ...values,
                         intentionNumero: demande.numero ?? "",
-                        campagneId: values.campagneId ?? campagne?.id,
                       },
                     },
                   })

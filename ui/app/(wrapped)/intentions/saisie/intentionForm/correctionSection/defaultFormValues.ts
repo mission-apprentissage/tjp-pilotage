@@ -17,6 +17,4 @@ export type CorrectionForms = {
   motif: string;
   autreMotif?: string;
   commentaire?: string;
-  // Hidden
-  campagneId: string;
 };
