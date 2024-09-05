@@ -248,6 +248,7 @@ const getTauxTransformationData = async (filters: {
 }) => {
   return kdb
     .selectFrom("latestDemandeIntentionView as demande")
+    .leftJoin("campagne", "campagne.id", "demande.campagneId")
     .leftJoin("dataFormation", "dataFormation.cfd", "demande.cfd")
     .leftJoin("dataEtablissement", "dataEtablissement.uai", "demande.uai")
     .select((es) => [
