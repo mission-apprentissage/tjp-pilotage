@@ -35,16 +35,6 @@ export const PositiveNegativeBarChart = ({
     return Object.keys(data).slice(0, limit);
   };
 
-  const getTauxTransformation = () => {
-    return Object.keys(data)
-      .map((key) =>
-        data[key].tauxTransformation
-          ? formatPercentage(data[key].tauxTransformation, 2)
-          : "-"
-      )
-      .slice(0, limit);
-  };
-
   const getSolde = () => {
     return Object.keys(data)
       .map((key) => (data[key].solde > 0 ? "+" : "") + data[key].solde)
@@ -69,9 +59,6 @@ export const PositiveNegativeBarChart = ({
       animationDelay: 0.5,
       responsive: true,
       maintainAspectRatio: true,
-      axisPointer: {
-        type: "shadow",
-      },
       title: {
         text: title,
         show: true,
@@ -88,6 +75,49 @@ export const PositiveNegativeBarChart = ({
           trigger: "axis",
           axisPointer: {
             type: "shadow",
+          },
+          textStyle: {
+            width: "fit-content",
+          },
+
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
+          formatter: (params: any) => {
+            return `
+            <div style="min-width: fit-content;">
+              <span>${params[0]?.name} :</span>
+              ${
+                data[params[0]?.name].tauxTransformation
+                  ? `
+                <div>
+                  (taux de transformation :
+                  ${formatPercentage(
+                    data[params[0]?.name].tauxTransformation,
+                    2
+                  )})
+                </div>
+                `
+                  : ""
+              }
+              <br />
+              <div style="display: inline-block; margin-top: 5px;">
+                <span style="width:15px; height:15px; background-color:${params[0]
+                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span>${params[0]?.seriesName} : ${params[0]?.data}</span>
+              </div>
+              <br />
+              <div style="display: inline-block; margin-top: 5px;">
+                <span style="width:15px; height:15px; background-color:${params[1]
+                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span >${params[1]?.seriesName} : ${params[1]?.data}</span>
+              </div>
+              <br />
+              <div style="display: inline-block; margin-top: 5px;">
+                <span style="width:15px; height:15px; background-color:${params[2]
+                  ?.color}; margin-right: 6px; margin-top: 1px; float: left;"></span>
+                <span>${params[2]?.seriesName} : ${params[2]?.data}</span>
+              </div>
+            </div>
+            `;
           },
         },
         {
@@ -132,8 +162,6 @@ export const PositiveNegativeBarChart = ({
               width: 20,
             },
             icon: "image://../icons/download.svg",
-            // icon: `data:image/svg+xml;base64,${btoa(downloadIcon)}`,
-            // icon: `path://M8.66667 7.99955H10.6667L8 10.6662L5.33333 7.99955H7.33333V5.33289H8.66667V7.99955ZM10 2.66622H3.33333V13.3329H12.6667V5.33289H10V2.66622ZM2 1.99422C2 1.62889 2.298 1.33289 2.666 1.33289H10.6667L14 4.66622V13.9949C14.0006 14.0824 13.984 14.1692 13.951 14.2504C13.9181 14.3315 13.8695 14.4053 13.808 14.4677C13.7466 14.53 13.6734 14.5796 13.5928 14.6137C13.5121 14.6478 13.4255 14.6656 13.338 14.6662H2.662C2.48692 14.665 2.31934 14.595 2.19548 14.4712C2.07161 14.3475 2.0014 14.18 2 14.0049V1.99422Z`,
           },
         },
       },
@@ -162,14 +190,11 @@ export const PositiveNegativeBarChart = ({
           },
         ],
       },
-      grid: [
-        {
-          id: 1,
-          width: type === "domaines" ? "40%" : "50%",
-          left: type === "domaines" ? "40%" : "30%",
-          right: 0,
-        },
-      ],
+      grid: {
+        id: 1,
+        left: "35%",
+        top: "20%",
+      },
       xAxis: {
         type: "value",
         show: false,
@@ -180,29 +205,26 @@ export const PositiveNegativeBarChart = ({
       yAxis: [
         {
           name: type,
+          nameLocation: "end",
           nameTextStyle: {
             fontSize: 12,
             color: grey425,
             fontFamily: "Marianne",
+            margin: 0,
             align: "left",
           },
-          yAxisIndex: 0,
           type: "category",
-          left: 0,
-          offset: type === "domaines" ? 300 : 200,
           show: true,
           data: getYAxisTitle(),
+          offset: 170,
           axisLabel: {
             show: true,
             fontSize: 14,
             fontWeight: 400,
             color: "black",
             align: "left",
-
-            formatter: (value: string) => {
-              // Truncate label if too long and add ellipsis
-              return value.length > 30 ? value.substring(0, 30) + "..." : value;
-            },
+            width: 150,
+            overflow: "truncate",
           },
           axisTick: {
             show: false,
@@ -211,32 +233,8 @@ export const PositiveNegativeBarChart = ({
             show: false,
             onZero: false,
           },
-        },
-        {
-          name: "taux de transfo.",
-          nameTextStyle: {
-            fontSize: 12,
-            color: grey425,
-            fontFamily: "Marianne",
-          },
-          yAxisIndex: 1,
-          position: "left",
-          type: "category",
-          show: true,
-          data: getTauxTransformation(),
-          axisLabel: {
-            show: true,
-            fontSize: 14,
-            fontWeight: 400,
-            color: "black",
-            overflow: "break",
-          },
-          axisTick: {
+          splitArea: {
             show: false,
-          },
-          axisLine: {
-            show: false,
-            onZero: false,
           },
         },
         {
@@ -248,7 +246,6 @@ export const PositiveNegativeBarChart = ({
             fontFamily: "Marianne",
             align: "left",
           },
-          yAxisIndex: 3,
           type: "category",
           show: true,
           data: getSolde(),
@@ -270,6 +267,7 @@ export const PositiveNegativeBarChart = ({
       series: [
         {
           data: Object.keys(data)
+            .filter((key) => key !== "Total")
             .map((key) => data[key].placesColorees ?? null)
             .slice(0, limit),
           position: "right",
@@ -283,6 +281,7 @@ export const PositiveNegativeBarChart = ({
         },
         {
           data: Object.keys(data)
+            .filter((key) => key !== "Total")
             .map((key) => -data[key].placesFermees ?? null)
             .slice(0, limit),
           position: "left",
@@ -299,6 +298,7 @@ export const PositiveNegativeBarChart = ({
         },
         {
           data: Object.keys(data)
+            .filter((key) => key !== "Total")
             .map((key) => data[key].placesOuvertes ?? null)
             .slice(0, limit),
           position: "right",
@@ -325,9 +325,9 @@ export const PositiveNegativeBarChart = ({
   }, [data]);
 
   return (
-    <AspectRatio ratio={4} w={"100%"}>
+    <AspectRatio ratio={2}>
       <Box position="relative" overflow={"visible !important"}>
-        <Box ref={containerRef} height={"100%"} w={"100%"}></Box>
+        <Box ref={containerRef} h={"100%"} w={"100%"}></Box>
       </Box>
     </AspectRatio>
   );

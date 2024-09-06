@@ -3,8 +3,6 @@ import {
   AspectRatio,
   Box,
   Button,
-  Card,
-  CardBody,
   Flex,
   FormControl,
   FormLabel,
@@ -42,9 +40,9 @@ import { TableQuadrant } from "@/components/TableQuadrant";
 import { TooltipIcon } from "@/components/TooltipIcon";
 import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 import { downloadCsv, downloadExcel } from "@/utils/downloadExport";
+import { formatNumber } from "@/utils/formatUtils";
 import { useStateParams } from "@/utils/useFilters";
 
-import { roundNumber } from "../../../../../utils/roundNumber";
 import {
   FiltersStatsPilotageIntentions,
   OrderFormationsPilotageIntentions,
@@ -210,7 +208,6 @@ export const QuadrantSection = ({
   };
 
   if (
-    !mergedFilters.code ||
     !mergedFilters.codeNiveauDiplome ||
     mergedFilters.codeNiveauDiplome.length === 0 ||
     mergedFilters.codeNiveauDiplome.length > 1
@@ -220,11 +217,8 @@ export const QuadrantSection = ({
 
   return (
     <>
-      <Heading mb="4" fontSize="2xl">
-        DÉTAILS SUR LES FORMATIONS TRANSFORMÉES
-      </Heading>
-      <Card>
-        <CardBody p="8">
+      <Box width={"100%"}>
+        <Box p="8">
           <Flex align="center" gap={6}>
             <Heading fontSize="md" mr="auto" color="bluefrance.113">
               RÉPARTITION DES OFFRES DE FORMATIONS TRANSFORMÉES
@@ -426,7 +420,7 @@ export const QuadrantSection = ({
                         textBg="white"
                         value={
                           formation.tauxPression
-                            ? roundNumber(formation?.tauxPression)
+                            ? formatNumber(formation?.tauxPression)
                             : "-"
                         }
                       />
@@ -531,11 +525,18 @@ export const QuadrantSection = ({
                         meanInsertion={stats?.tauxInsertion}
                         meanPoursuite={stats?.tauxPoursuite}
                         currentFormationId={currentFormationId}
-                        data={formations?.map((formation) => ({
-                          ...formation,
-                          codeDispositif: formation.codeDispositif ?? "",
-                          effectif: formation.differencePlaces,
-                        }))}
+                        data={formations
+                          .filter(
+                            (formation) =>
+                              formation.tauxInsertion && formation.tauxPoursuite
+                          )
+                          ?.map((formation) => ({
+                            ...formation,
+                            codeDispositif: formation.codeDispositif ?? "",
+                            effectif: formation.differencePlaces,
+                            tauxPoursuite: formation.tauxPoursuite ?? 0,
+                            tauxInsertion: formation.tauxInsertion ?? 0,
+                          }))}
                         effectifSizes={EFFECTIF_SIZES}
                       />
                     ) : (
@@ -619,8 +620,8 @@ export const QuadrantSection = ({
               </FormControl>
             </Box>
           </Flex>
-        </CardBody>
-      </Card>
+        </Box>
+      </Box>
     </>
   );
 };

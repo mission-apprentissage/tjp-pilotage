@@ -12,7 +12,7 @@ import {
   countOuvertures,
   countOuverturesApprentissage,
   countOuverturesApprentissageColoree,
-  countOuverturesColoree,
+  countOuverturesColorees,
   countOuverturesSco,
   countOuverturesScolaireColoree,
 } from "../../../utils/countCapacite";
@@ -120,7 +120,7 @@ const getStatsRestitutionIntentionsQuery = async ({
     )
     .select((eb) =>
       jsonBuildObject({
-        total: sql<number>`COALESCE(SUM(${countOuverturesColoree(eb)}),0)`,
+        total: sql<number>`COALESCE(SUM(${countOuverturesColorees(eb)}),0)`,
         scolaire: sql<number>`COALESCE(
           SUM(${countOuverturesScolaireColoree(eb)}),0
         )`,

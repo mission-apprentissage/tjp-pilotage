@@ -74,7 +74,9 @@ export const getDomainesQuery = async ({ filters }: { filters: Filters }) => {
     )
     .selectAll("demandesAvecEffectif")
     .select((eb) => [
-      "demandesAvecEffectif.placesEffectivementOccupees",
+      sql<number>`COALESCE(${eb.ref(
+        "demandesAvecEffectif.placesEffectivementOccupees"
+      )},0)`.as("placesEffectivementOccupees"),
       sql<string>`COALESCE(${eb.ref("demandesAvecEffectif.codeNsf")}, '')`.as(
         "code"
       ),
