@@ -1,8 +1,15 @@
 "use client";
 
-import { FormLabel, Grid, GridItem, Select } from "@chakra-ui/react";
+import {
+  Button,
+  FormLabel,
+  Grid,
+  GridItem,
+  Select,
+  VStack,
+} from "@chakra-ui/react";
+import { Icon } from "@iconify/react";
 import _ from "lodash";
-import { useEffect } from "react";
 import { ScopeEnum } from "shared";
 
 import { Multiselect } from "../../../../../components/Multiselect";
@@ -29,16 +36,14 @@ const findDefaultRentreeScolaireForCampagne = (
 export const FiltersSection = ({
   filters,
   setFilters,
+  setDefaultFilters,
   data,
 }: {
   filters: FiltersStatsPilotageIntentions;
   setFilters: (filters: FiltersStatsPilotageIntentions) => void;
+  setDefaultFilters: () => void;
   data: StatsPilotageIntentions | undefined;
 }) => {
-  useEffect(() => {
-    console.log(filters);
-  }, [filters]);
-
   const onUpdateFilter = <T,>({
     key,
     selected,
@@ -71,6 +76,34 @@ export const FiltersSection = ({
           ? [defaultRentreeScolaire]
           : undefined,
       };
+    }
+
+    // Valeurs par défaut pour les codes
+    switch (key) {
+      case "codeAcademie":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.academie,
+          };
+        }
+        break;
+      case "codeRegion":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.region,
+          };
+        }
+        break;
+      case "codeDepartement":
+        if (value !== undefined) {
+          newFilters = {
+            ...newFilters,
+            scope: ScopeEnum.departement,
+          };
+        }
+        break;
     }
 
     setFilters({ ...filters, ...newFilters });
@@ -128,13 +161,14 @@ export const FiltersSection = ({
           onChange={(e) => {
             onUpdateFilter({ key: "scope", selected: e.target.value });
           }}
-          placeholder="Choisir une granularité"
         >
-          {Object.keys(ScopeEnum).map((scope) => (
-            <option key={scope} value={scope}>
-              {_.capitalize(scope)}
-            </option>
-          ))}
+          {Object.keys(ScopeEnum)
+            .filter((s) => s !== ScopeEnum.national)
+            .map((scope) => (
+              <option key={scope} value={scope}>
+                {_.capitalize(scope)}
+              </option>
+            ))}
         </Select>
       </GridItem>
       <GridItem>
@@ -147,7 +181,7 @@ export const FiltersSection = ({
           onChange={(e) => {
             onUpdateFilter({ key: "codeRegion", selected: e.target.value });
           }}
-          placeholder="Choisir une région"
+          placeholder="Tous"
         >
           {data?.filters.regions.map((region) => (
             <option key={region.value} value={region.value}>
@@ -166,7 +200,7 @@ export const FiltersSection = ({
           onChange={(e) => {
             onUpdateFilter({ key: "codeAcademie", selected: e.target.value });
           }}
-          placeholder="Choisir une Académie"
+          placeholder="Tous"
         >
           {data?.filters.academies.map((academie) => (
             <option key={academie.value} value={academie.value}>
@@ -188,7 +222,7 @@ export const FiltersSection = ({
               selected: e.target.value,
             });
           }}
-          placeholder="Choisir un département"
+          placeholder="Tous"
         >
           {data?.filters.departements.map((departement) => (
             <option key={departement.value} value={departement.value}>
@@ -209,7 +243,7 @@ export const FiltersSection = ({
           options={data?.filters.diplomes}
           value={filters.codeNiveauDiplome ?? []}
         >
-          Diplôme
+          Tous
         </Multiselect>
       </GridItem>
       <GridItem>
@@ -222,18 +256,47 @@ export const FiltersSection = ({
           options={data?.filters.libellesNsf}
           value={filters.codeNsf ?? []}
         >
-          Domaine (NSF)
+          Tous
         </Multiselect>
       </GridItem>
-      {/* <CustomInput label="Statut demandes" />
-      <CustomInput
-        label="Inclure colorations"
-        options={[true, false].map((includeColoration) => ({
-          label: _.capitalize(includeColoration ? "Oui" : "Non"),
-          value: includeColoration,
-        }))}
-      />
-      <CustomInput label="Secteur Public/Privé" /> */}
+      <GridItem>
+        <FormLabel>Public / Privé</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "secteur", selected })}
+          options={data?.filters.secteurFilters}
+          value={filters.secteur ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <FormLabel>Statut de la demande</FormLabel>
+        <Multiselect
+          width={"100%"}
+          size="md"
+          variant="newInput"
+          onChange={(selected) => onUpdateFilter({ key: "statut", selected })}
+          options={data?.filters.statutFilters}
+          value={filters.statut ?? []}
+        >
+          Tous
+        </Multiselect>
+      </GridItem>
+      <GridItem>
+        <VStack width="100%" height="100%" justifyContent="end">
+          <Button
+            leftIcon={<Icon icon="ri:refresh-line" />}
+            variant="ghost"
+            color="bluefrance.113"
+            onClick={() => setDefaultFilters()}
+          >
+            Réinitialiser les filtres
+          </Button>
+        </VStack>
+      </GridItem>
     </Grid>
   );
 };

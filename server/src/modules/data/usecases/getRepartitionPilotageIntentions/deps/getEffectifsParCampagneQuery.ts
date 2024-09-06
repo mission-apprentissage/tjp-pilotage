@@ -31,7 +31,6 @@ export const getEffectifsParCampagneQuery = ({ ...filters }: Filters) => {
       "rentreeScolaire",
       sql<number>`SUM(${eb.ref("constatRentree.effectif")})`.as("denominateur"),
     ])
-
     .$call((eb) => {
       if (filters.campagne)
         return eb.where("campagne.annee", "=", filters.campagne);

@@ -5,7 +5,7 @@ import { z } from "zod";
 export const StatsSchema = z.object({
   libelle: z.string(),
   code: z.string(),
-  placesEffectivementOccupees: z.number().optional(),
+  placesEffectivementOccupees: z.number(),
   placesOuvertes: z.number(),
   placesFermees: z.number(),
   placesColorees: z.number(),
@@ -37,6 +37,10 @@ export const FiltersSchema = z.object({
     placesOuvertes: true,
     placesTransformees: true,
     tauxTransformation: true,
+    tauxTransformationColorations: true,
+    tauxTransformationFermetures: true,
+    tauxTransformationOuvertures: true,
+    solde: true,
   })
     .keyof()
     .optional(),

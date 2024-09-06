@@ -1,24 +1,39 @@
-import { Flex, Text } from "@chakra-ui/react";
+import { Flex } from "@chakra-ui/react";
 
-import { RepartitionPilotageIntentions } from "@/app/(wrapped)/intentions/pilotage-refonte/types";
-
-import { FiltersStatsPilotageIntentions } from "../types";
+import { QuadrantSection } from "../components/QuadrantSection";
+import { useScopeCode } from "../hooks";
+import {
+  FiltersStatsPilotageIntentions,
+  OrderRepartitionPilotageIntentions,
+  RepartitionPilotageIntentions,
+  StatsPilotageIntentions,
+} from "../types";
 import { DisplayTypeEnum } from "./displayTypeEnum";
 import { RepartitionSection } from "./repartition/RepartitionSection";
 import { TabsSection } from "./TabsSection";
 
 export const MainSection = ({
-  filters,
   displayType,
   displayRepartition,
   displayQuadrant,
+  quadrantData,
   repartitionData,
+  filters,
+  order,
+  setSearchParams,
 }: {
-  filters: FiltersStatsPilotageIntentions;
   displayType: DisplayTypeEnum;
   displayRepartition: () => void;
   displayQuadrant: () => void;
+  quadrantData?: StatsPilotageIntentions;
   repartitionData?: RepartitionPilotageIntentions;
+  filters: FiltersStatsPilotageIntentions;
+  order: Partial<OrderRepartitionPilotageIntentions>;
+  setSearchParams: (params: {
+    displayType?: DisplayTypeEnum;
+    filters?: Partial<FiltersStatsPilotageIntentions>;
+    order?: Partial<OrderRepartitionPilotageIntentions>;
+  }) => void;
 }) => {
   return (
     <Flex direction="column" w={"100%"} mb={16}>
@@ -32,13 +47,23 @@ export const MainSection = ({
         bgColor={"white"}
         borderBottomRadius={4}
         borderTopRightRadius={4}
-        minH={500}
         borderLeftWidth={1}
       >
         {displayType === DisplayTypeEnum.repartition ? (
-          <RepartitionSection repartitionData={repartitionData} />
+          <RepartitionSection
+            repartitionData={repartitionData}
+            order={order}
+            setSearchParams={setSearchParams}
+          />
         ) : displayType === DisplayTypeEnum.quadrant ? (
-          <Text>quadrant</Text>
+          <QuadrantSection
+            parentFilters={filters}
+            scopeFilters={quadrantData?.filters}
+            scope={{
+              type: filters.scope,
+              value: useScopeCode(filters).code,
+            }}
+          />
         ) : null}
       </Flex>
     </Flex>

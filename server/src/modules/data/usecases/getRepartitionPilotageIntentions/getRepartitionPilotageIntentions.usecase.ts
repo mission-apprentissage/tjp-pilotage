@@ -17,16 +17,60 @@ export interface Filters
   user: RequestUser;
 }
 
+const calculateTotal = (
+  statsRepartition: z.infer<typeof StatsSchema>[]
+): z.infer<typeof StatsSchema>[] => {
+  const total = {
+    libelle: "Total",
+    code: "total",
+    placesEffectivementOccupees: 0,
+    placesOuvertes: 0,
+    placesFermees: 0,
+    placesColorees: 0,
+    placesTransformees: 0,
+    solde: 0,
+    tauxTransformation: 0,
+    tauxTransformationOuvertures: 0,
+    tauxTransformationFermetures: 0,
+    tauxTransformationColorations: 0,
+    ratioOuverture: 0,
+    ratioFermeture: 0,
+  };
+
+  // Iterate through each entry and sum up the values
+  Object.values(statsRepartition).forEach((stats) => {
+    total.placesEffectivementOccupees += stats.placesEffectivementOccupees;
+    total.placesOuvertes += stats.placesOuvertes;
+    total.placesFermees += stats.placesFermees;
+    total.placesColorees += stats.placesColorees;
+    total.placesTransformees += stats.placesTransformees;
+    total.solde += stats.solde;
+  });
+
+  total.tauxTransformation =
+    total.placesTransformees / total.placesEffectivementOccupees;
+  total.tauxTransformationOuvertures =
+    total.placesOuvertes / total.placesEffectivementOccupees;
+  total.tauxTransformationFermetures =
+    total.placesFermees / total.placesEffectivementOccupees;
+  total.tauxTransformationColorations =
+    total.placesColorees / total.placesEffectivementOccupees;
+
+  // Add the "total" entry to the repartition
+  return [...statsRepartition, total];
+};
+
 const formatResult = (
   result: z.infer<typeof StatsSchema>[],
   order: "asc" | "desc" = "asc",
   orderBy?: string
 ) => {
-  return _.chain(result)
+  return _.chain(calculateTotal(result))
     .map((item) => ({
       ...item,
       libelle: item.libelle ?? item.code,
-      placesEffectivementOccupees: item.placesEffectivementOccupees ?? 0,
+      ratioFermeture: (item.placesFermees || 0) / item.placesTransformees,
+      ratioOuverture: (item.placesOuvertes || 0) / item.placesTransformees,
     }))
     .orderBy((item) => {
       if (orderBy) return item[orderBy as keyof typeof item];
@@ -52,22 +96,20 @@ const getRepartitionPilotageIntentionsFactory =
       deps.getDomainesQuery({
         filters: {
           ...activeFilters,
-          campagne: "2023",
         },
       }),
       deps.getNiveauxDiplomeQuery({
         filters: {
           ...activeFilters,
-          campagne: "2023",
         },
       }),
       deps.getZonesGeographiquesQuery({
         filters: {
           ...activeFilters,
-          campagne: "2023",
         },
       }),
     ]);
+
     return {
       domaines: formatResult(
         domaines,

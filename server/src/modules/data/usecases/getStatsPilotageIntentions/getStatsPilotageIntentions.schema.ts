@@ -1,5 +1,7 @@
 import { ScopeEnum } from "shared";
+import { DemandeStatutZodType } from "shared/enum/demandeStatutEnum";
 import { scope } from "shared/enum/scopeEnum";
+import { SecteurZodType } from "shared/enum/secteurEnum";
 import { z } from "zod";
 
 const OptionSchema = z.object({
@@ -17,11 +19,20 @@ const ScopedStatsTransfoSchema = z.object({
   placesTransformees: z.number(),
   tauxTransformation: z.number().optional(),
   placesOuvertesScolaire: z.number(),
+  placesOuvertesScolaireQ1Q2: z.number(),
   placesFermeesScolaire: z.number(),
+  placesFermeesScolaireQ3Q4: z.number(),
   placesOuvertesApprentissage: z.number(),
+  placesOuvertesApprentissageQ1Q2: z.number(),
   placesFermeesApprentissage: z.number(),
-  placesOuvertes: z.number(),
+  placesFermeesApprentissageQ3Q4: z.number(),
   placesFermees: z.number(),
+  placesFermeesQ3Q4: z.number(),
+  placesOuvertes: z.number(),
+  placesOuvertesQ1Q2: z.number(),
+  placesOuvertesColorees: z.number(),
+  placesOuvertesColoreesQ3Q4: z.number(),
+  placesOuvertesTransformationEcologique: z.number(),
   ratioOuverture: z.number(),
   ratioFermeture: z.number(),
 });
@@ -31,25 +42,13 @@ const QuerySchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
-  orderBy: ScopedStatsTransfoSchema.pick({
-    libelle: true,
-    effectif: true,
-    ratioFermeture: true,
-    ratioOuverture: true,
-    code: true,
-    placesFermees: true,
-    placesOuvertes: true,
-    placesTransformees: true,
-    tauxTransformation: true,
-  })
-    .keyof()
-    .optional(),
   scope: scope.default(ScopeEnum.national),
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),
   codeDepartement: z.string().optional(),
   campagne: z.string().optional(),
+  secteur: z.array(SecteurZodType).optional(),
+  statut: z.array(DemandeStatutZodType).optional(),
 });
 
 export type QuerySchema = z.infer<typeof QuerySchema>;
@@ -82,6 +81,8 @@ export const getStatsPilotageIntentionsSchema = {
         CPCs: z.array(OptionSchema),
         libellesNsf: z.array(OptionSchema),
         diplomes: z.array(OptionSchema),
+        secteurFilters: z.array(OptionSchema),
+        statutFilters: z.array(OptionSchema),
       }),
     }),
   },

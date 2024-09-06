@@ -83,11 +83,22 @@ export const getNiveauxDiplomeQuery = async ({
             return eb.where("demandes.annee", "=", filters.campagne);
           return eb;
         })
+        .$call((eb) => {
+          if (filters.rentreeScolaire)
+            return eb.where(
+              "demandes.rentreeScolaire",
+              "in",
+              filters.rentreeScolaire.map((rs) => Number.parseInt(rs))
+            );
+          return eb;
+        })
         .as("demandesAvecEffectif")
     )
     .selectAll("demandesAvecEffectif")
     .select((eb) => [
-      "demandesAvecEffectif.placesEffectivementOccupees",
+      sql<number>`COALESCE(${eb.ref(
+        "demandesAvecEffectif.placesEffectivementOccupees"
+      )}, 0)`.as("placesEffectivementOccupees"),
       sql<string>`COALESCE(${eb.ref(
         "demandesAvecEffectif.codeNiveauDiplome"
       )}, '')`.as("code"),
@@ -99,22 +110,6 @@ export const getNiveauxDiplomeQuery = async ({
         ${eb.ref("placesFermees")} +
         ${eb.ref("placesColorees")}
       `.as("placesTransformees"),
-      sql<number>`
-        ${eb.ref("placesFermees")} /
-        (
-          ${eb.ref("placesOuvertes")} +
-          ${eb.ref("placesFermees")} +
-          ${eb.ref("placesColorees")}
-        )
-      `.as("ratioFermeture"),
-      sql<number>`
-        ${eb.ref("placesOuvertes")} /
-        (
-          ${eb.ref("placesOuvertes")} +
-          ${eb.ref("placesFermees")} +
-          ${eb.ref("placesColorees")}
-        )
-      `.as("ratioOuverture"),
       sql<number>`
         ${eb.ref("placesOuvertes")} -
         ${eb.ref("placesFermees")}
