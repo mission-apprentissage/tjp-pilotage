@@ -42,20 +42,6 @@ const QuerySchema = z.object({
   codeNiveauDiplome: z.array(z.string()).optional(),
   CPC: z.array(z.string()).optional(),
   codeNsf: z.array(z.string()).optional(),
-  order: z.enum(["asc", "desc"]).optional(),
-  orderBy: ScopedStatsTransfoSchema.pick({
-    libelle: true,
-    effectif: true,
-    ratioFermeture: true,
-    ratioOuverture: true,
-    code: true,
-    placesFermees: true,
-    placesOuvertes: true,
-    placesTransformees: true,
-    tauxTransformation: true,
-  })
-    .keyof()
-    .optional(),
   scope: scope.default(ScopeEnum.national),
   codeRegion: z.string().optional(),
   codeAcademie: z.string().optional(),

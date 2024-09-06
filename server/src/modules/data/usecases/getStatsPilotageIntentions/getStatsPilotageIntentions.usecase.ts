@@ -16,11 +16,7 @@ export type GetScopedStatsPilotageIntentionsType = Awaited<
   ReturnType<typeof getStatsPilotageIntentionsQuery>
 >;
 
-const formatResult = (
-  result: GetScopedStatsPilotageIntentionsType,
-  order: "asc" | "desc" = "asc",
-  orderBy?: string
-) => {
+const formatResult = (result: GetScopedStatsPilotageIntentionsType) => {
   return _.chain(result)
     .map((item) => ({
       ...item,
@@ -71,10 +67,6 @@ const formatResult = (
       ),
       effectif: item.effectif,
     }))
-    .orderBy((item) => {
-      if (orderBy) return item[orderBy as keyof typeof item];
-      return item.libelle;
-    }, order)
     .keyBy("key")
     .value();
 };
@@ -111,20 +103,10 @@ const getStatsPilotageIntentionsFactory =
       }),
     ]);
 
-    console.log(all);
-
     return {
-      ["projet de demande"]: formatResult(
-        projets,
-        activeFilters.order,
-        activeFilters.orderBy
-      ),
-      ["demande validée"]: formatResult(
-        validees,
-        activeFilters.order,
-        activeFilters.orderBy
-      ),
-      all: formatResult(all, activeFilters.order, activeFilters.orderBy),
+      ["projet de demande"]: formatResult(projets),
+      ["demande validée"]: formatResult(validees),
+      all: formatResult(all),
       campagne: currentCampagne,
       filters,
     };
