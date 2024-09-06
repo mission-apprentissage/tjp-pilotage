@@ -1,6 +1,5 @@
 import { getCurrentCampagneQuery } from "../../queries/getCurrentCampagne/getCurrentCampagne.query";
 import { getStatsSortieQuery } from "../../queries/getStatsSortie/getStatsSortie";
-import { getPositionQuadrant } from "../../services/getPositionQuadrant";
 import {
   dependencies,
   Filters,
@@ -51,10 +50,6 @@ const getQuadrantPilotageIntentionsFactory =
       stats: statsSortie,
       formations: formations.map((formation) => ({
         ...formation,
-        positionQuadrant:
-          activeFilters?.codeRegion || activeFilters?.codeNiveauDiplome
-            ? getPositionQuadrant(formation, statsSortie)
-            : undefined,
       })),
     };
   };

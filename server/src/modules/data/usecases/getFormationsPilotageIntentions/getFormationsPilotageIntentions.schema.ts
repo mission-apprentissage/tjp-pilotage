@@ -4,8 +4,8 @@ import { z } from "zod";
 const FormationTransformationStatsSchema = z.object({
   libelleFormation: z.string().optional(),
   libelleDispositif: z.string().optional(),
-  tauxInsertion: z.coerce.number(),
-  tauxPoursuite: z.coerce.number(),
+  tauxInsertion: z.coerce.number().optional(),
+  tauxPoursuite: z.coerce.number().optional(),
   tauxDevenirFavorable: z.coerce.number().optional(),
   tauxPression: z.coerce.number().optional(),
   codeDispositif: z.string().optional(),

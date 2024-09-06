@@ -1,20 +1,54 @@
 "use client";
 
 import { Container, useDisclosure, VStack } from "@chakra-ui/react";
+import { useRouter, useSearchParams } from "next/navigation";
+import qs from "qs";
 import { ScopeEnum } from "shared";
+
+import { createParametrizedUrl } from "@/utils/createParametrizedUrl";
 
 import { client } from "../../../../api.client";
 import { useStateParams } from "../../../../utils/useFilters";
 import { DefinitionTauxTransfoModal } from "../../components/TauxTransformationCard";
 import { FiltersSection } from "./components/FiltersSection";
 import { IndicateursClesSection } from "./components/IndicateursClesSection";
+import { DisplayTypeEnum } from "./main/displayTypeEnum";
+import { MainSection } from "./main/MainSection";
 import {
   FiltersStatsPilotageIntentions,
+  OrderRepartitionPilotageIntentions,
   StatsPilotageIntentions,
 } from "./types";
 import { findDefaultRentreeScolaireForCampagne } from "./utils";
 
 export const PilotageNationalClient = () => {
+  const router = useRouter();
+  const queryParams = useSearchParams();
+  const searchParams: {
+    displayType?: DisplayTypeEnum;
+    filters?: Partial<FiltersStatsPilotageIntentions>;
+    order?: Partial<OrderRepartitionPilotageIntentions>;
+  } = qs.parse(queryParams.toString(), { arrayLimit: Infinity });
+  const order = searchParams.order ?? { order: "asc" };
+
+  const setSearchParams = (params: typeof searchParams) => {
+    router.replace(
+      createParametrizedUrl(location.pathname, { ...searchParams, ...params })
+    );
+  };
+
+  const displayRepartition = () =>
+    setSearchParams({
+      ...searchParams,
+      displayType: DisplayTypeEnum.repartition,
+    });
+
+  const displayQuadrant = () =>
+    setSearchParams({
+      ...searchParams,
+      displayType: DisplayTypeEnum.quadrant,
+    });
+
   const [filters, setFilters] = useStateParams<FiltersStatsPilotageIntentions>({
     defaultValues: {
       scope: ScopeEnum.region,
@@ -22,10 +56,17 @@ export const PilotageNationalClient = () => {
     },
   });
 
+  const { data: repartitionData } = client
+    .ref("[GET]/pilotage-intentions/repartition")
+    .useQuery({
+      query: { ...filters, ...order },
+    });
+
   const { data } = client.ref("[GET]/pilotage-intentions/stats").useQuery(
     {
       query: { ...filters },
     },
+
     {
       keepPreviousData: true,
       staleTime: 10000000,
@@ -77,6 +118,18 @@ export const PilotageNationalClient = () => {
             filters={filters}
             setFilters={setFilters}
             onOpenTauxTransfoDefinition={onOpen}
+          />
+          <MainSection
+            displayType={
+              searchParams.displayType ?? DisplayTypeEnum.repartition
+            }
+            filters={filters}
+            displayRepartition={displayRepartition}
+            displayQuadrant={displayQuadrant}
+            quadrantData={data}
+            repartitionData={repartitionData}
+            order={order}
+            setSearchParams={setSearchParams}
           />
         </VStack>
       </Container>

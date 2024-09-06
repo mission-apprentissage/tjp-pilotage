@@ -17,6 +17,7 @@ import { getPilotageReformeStatsRoute } from "./usecases/getPilotageReformeStats
 import { getPilotageReformeStatsRegionsRoute } from "./usecases/getPilotageReformeStatsRegions/getPilotageReformeStatsRegions.route";
 import { getRegionRoute } from "./usecases/getRegion/getRegion.route";
 import { getRegionsRoute } from "./usecases/getRegions/getRegions.route";
+import { getRepartitionPilotageIntentionsRoute } from "./usecases/getRepartitionPilotageIntentions/getRepartitionPilotageIntentions.route";
 import { getStatsPilotageIntentionsRoute } from "./usecases/getStatsPilotageIntentions/getStatsPilotageIntentions.route";
 import { getStatsRestitutionIntentionsRoute } from "./usecases/getStatsRestitutionIntentions/getStatsRestitutionIntentions.route";
 import { searchCampusRoute } from "./usecases/searchCampus/searchCampus.route";
@@ -60,5 +61,6 @@ export const registerFormationModule = ({ server }: { server: Server }) => {
     ...searchDisciplineRoute({ server }),
     ...searchFiliereRoute(server),
     ...searchCampusRoute(server),
+    ...getRepartitionPilotageIntentionsRoute({ server }),
   };
 };
