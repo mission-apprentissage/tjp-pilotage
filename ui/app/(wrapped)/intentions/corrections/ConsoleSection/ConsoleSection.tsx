@@ -11,6 +11,7 @@ import {
   Thead,
   Tr,
 } from "@chakra-ui/react";
+import { useRouter } from "next/navigation";
 import { Fragment } from "react";
 
 import { CORRECTIONS_COLUMNS } from "../CORRECTIONS_COLUMN";
@@ -72,6 +73,7 @@ export const ConsoleSection = ({
   campagne?: string;
   colonneFilters: (keyof typeof CORRECTIONS_COLUMNS)[];
 }) => {
+  const router = useRouter();
   const getCellColor = (column: keyof typeof CORRECTIONS_COLUMNS) => {
     const groupLabel = Object.keys(GROUPED_CORRECTIONS_COLUMNS).find(
       (groupLabel) => {
@@ -135,7 +137,16 @@ export const ConsoleSection = ({
                 (correction: Corrections["corrections"][0]) => {
                   return (
                     <Fragment key={`${correction.intentionNumero}`}>
-                      <Tr h="12" role="group">
+                      <Tr
+                        h="12"
+                        role="group"
+                        cursor={"pointer"}
+                        onClick={() =>
+                          router.push(
+                            `/intentions/saisie/${correction.intentionNumero}?correction=true`
+                          )
+                        }
+                      >
                         <LineContent
                           correction={correction}
                           campagne={campagne}
