@@ -1,16 +1,31 @@
 import Boom from "@hapi/boom";
 import { inject } from "injecti";
 import { getPermissionScope, guardScope } from "shared";
+import { correctionValidators } from "shared/validators/correctionValidators";
 import { z } from "zod";
 
+import { logger } from "../../../../logger";
+import { cleanNull } from "../../../../utils/noNull";
 import { RequestUser } from "../../../core/model/User";
 import { getCurrentCampagneQuery } from "../../../demandes/queries/getCurrentCampagne/getCurrentCampagne.query";
 import { findOneDemande } from "../../../demandes/repositories/findOneDemande.query";
+import { submitDemandeSchema } from "../../../demandes/usecases/submitDemande/submitDemande.schema";
 import { createCorrectionQuery } from "./deps/createCorrection.query";
 import { getCorrectionByIntentionNumeroQuery } from "./deps/getCorrectionByIntentionNumero.query";
 import { submitCorrectionSchema } from "./submitCorrection.schema";
 
 type Correction = z.infer<typeof submitCorrectionSchema.body>["correction"];
+type Demande = z.infer<typeof submitDemandeSchema.body>["demande"];
+
+const validateCorrection = (correction: Correction, demande: Demande) => {
+  let errors: Record<string, string> = {};
+  for (const [key, validator] of Object.entries(correctionValidators)) {
+    const error = validator(correction, demande);
+    if (!error) continue;
+    errors = { ...errors, [key]: error };
+  }
+  return Object.keys(errors).length ? errors : undefined;
+};
 
 export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
   {
@@ -70,6 +85,18 @@ export const [submitCorrectionUsecase, submitCorrectionFactory] = inject(
       });
 
       if (!isAllowed) throw Boom.forbidden();
+
+      const errors = validateCorrection(
+        cleanNull(correction),
+        cleanNull(demande) as Demande
+      );
+      if (errors) {
+        logger.info("Correction incorrecte", {
+          errors,
+          correction: correction,
+        });
+        throw Boom.badData("Donnée incorrectes", { errors });
+      }
 
       const result = await deps.createCorrectionQuery({
         correction: {

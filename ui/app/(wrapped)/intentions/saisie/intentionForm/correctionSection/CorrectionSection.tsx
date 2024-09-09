@@ -7,6 +7,7 @@ import {
   AlertTitle,
   Box,
   Button,
+  Collapse,
   Flex,
   Heading,
   Text,
@@ -16,8 +17,15 @@ import {
 import { Icon } from "@iconify/react";
 import { AxiosError } from "axios";
 import { useRouter } from "next/navigation";
-import { createContext, Dispatch, SetStateAction, useState } from "react";
+import {
+  createContext,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { FormProvider, useForm } from "react-hook-form";
+import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
@@ -63,7 +71,7 @@ export const CorrectionSection = ({
     disabled: !!demande.correction,
   });
 
-  const { handleSubmit } = form;
+  const { handleSubmit, watch } = form;
 
   const [errors, setErrors] = useState<Record<string, string>>();
 
@@ -73,7 +81,7 @@ export const CorrectionSection = ({
     isSuccess,
   } = client.ref("[POST]/correction/submit").useMutation({
     onSuccess: (_body) => {
-      push(`/intentions/saisie`);
+      push(`/intentions/saisie?campagne=${campagne?.annee}`);
 
       let message: string | null = null;
       message = "Correction enregistrée avec succès";
@@ -95,6 +103,19 @@ export const CorrectionSection = ({
   const isCorrectionDisabled =
     isSuccess || isSubmitting || !!demande.correction;
 
+  const [isModificationCapacite, setIsModificationCapacite] =
+    useState<boolean>(true);
+
+  useEffect(
+    () =>
+      watch((values, { name }) => {
+        if (name === "raison") {
+          setIsModificationCapacite(
+            values.raison === RaisonCorrectionEnum["modification_capacite"]
+          );
+        }
+      }).unsubscribe
+  );
   return (
     <Flex
       ref={correctionRef}
@@ -122,16 +143,30 @@ export const CorrectionSection = ({
             </Heading>
             <CapaciteConstanteSection demande={demande} />
             <RaisonField campagne={campagne} disabled={isCorrectionDisabled} />
-            <Text fontSize={14}>
-              Vous vous apprêtez à enregistrer de nouvelles capacités sur cette
-              demande. Pour rappel : ces modifications ne seront pas prises en
-              compte dans le taux de transformation affiché dans la page de
-              pilotage. Attention une seule saisie est possible par demande
-            </Text>
-            <CapaciteSection
-              demande={demande}
-              disabled={isCorrectionDisabled}
-            />
+            <Flex direction={"column"}>
+              {isModificationCapacite ? (
+                <Text color="info.text">
+                  Vous vous apprêtez à enregistrer de nouvelles capacités sur
+                  cette demande.
+                </Text>
+              ) : (
+                <Text color="info.text">
+                  Si vous annulez ou reportez la demande, les capacités de la
+                  formation seront remises au niveau antérieur à la validation
+                  de votre demande.
+                </Text>
+              )}
+              <Text fontSize={14} color={"info.text"} mb={4}>
+                Pour rappel : ces modifications ne seront pas prises en compte
+                dans le taux de transformation affiché dans la page de pilotage.
+              </Text>
+              <Collapse in={isModificationCapacite} unmountOnExit>
+                <CapaciteSection
+                  demande={demande}
+                  disabled={isCorrectionDisabled}
+                />
+              </Collapse>
+            </Flex>
             <MotifField campagne={campagne} disabled={isCorrectionDisabled} />
             <AutreMotifField disabled={isCorrectionDisabled} />
             <CommentaireField disabled={isCorrectionDisabled} />
@@ -147,16 +182,40 @@ export const CorrectionSection = ({
                     isLoading={isSubmitting}
                     variant="secondary"
                     color="bluefrance.113"
-                    onClick={handleSubmit((values) =>
-                      submitCorrection({
+                    onClick={handleSubmit((correction) => {
+                      if (isModificationCapacite) {
+                        return submitCorrection({
+                          body: {
+                            correction: {
+                              ...correction,
+                              intentionNumero: demande.numero ?? "",
+                            },
+                          },
+                        });
+                      }
+                      return submitCorrection({
                         body: {
                           correction: {
-                            ...values,
+                            ...correction,
+                            ...demande,
                             intentionNumero: demande.numero ?? "",
+                            capaciteScolaire:
+                              demande.capaciteScolaireActuelle ?? 0,
+                            capaciteApprentissage:
+                              demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteScolaireActuelle:
+                              demande.capaciteScolaireActuelle ?? 0,
+                            capaciteScolaireColoree: 0,
+                            capaciteApprentissageActuelle:
+                              demande.capaciteApprentissageActuelle ?? 0,
+                            capaciteApprentissageColoree: 0,
+                            coloration: demande.coloration ?? false,
+                            libelleColoration: demande.libelleColoration,
+                            motif: correction.motif,
                           },
                         },
-                      })
-                    )}
+                      });
+                    })}
                     leftIcon={<Icon icon="ri:save-3-line" />}
                   >
                     {"Enregistrer la correction"}

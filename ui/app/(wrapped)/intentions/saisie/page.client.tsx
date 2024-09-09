@@ -9,7 +9,9 @@ import {
   chakra,
   Container,
   Flex,
+  FormControl,
   FormErrorMessage,
+  FormLabel,
   IconButton,
   Menu,
   MenuButton,
@@ -29,6 +31,7 @@ import {
   Tbody,
   Td,
   Text,
+  Textarea,
   Th,
   Thead,
   Tooltip,
@@ -661,6 +664,7 @@ const CorrectionDemande = chakra(
 
     const formReport = useForm<{
       motif: string;
+      commentaire?: string;
     }>({
       mode: "onTouched",
       reValidateMode: "onChange",
@@ -668,6 +672,7 @@ const CorrectionDemande = chakra(
 
     const formAnnulation = useForm<{
       motif: string;
+      commentaire?: string;
     }>({
       mode: "onTouched",
       reValidateMode: "onChange",
@@ -878,28 +883,40 @@ const CorrectionDemande = chakra(
                   Merci de préciser le motif
                 </ModalHeader>
                 <ModalBody>
-                  <Text mb={4}>
-                    Pour quel motif êtes vous amené à modifier les capacités de
-                    cette demande ?
-                  </Text>
-                  <Select
-                    {...formReport.register("motif", {
-                      required: "Veuillez choisir un motif",
-                    })}
-                    mb={4}
-                  >
-                    {getMotifCorrectionLabel().map((motif) => (
-                      <option key={motif.value} value={motif.value}>
-                        {motif.label}
-                      </option>
-                    ))}
-                  </Select>
-
-                  {!!formReport.formState.errors.motif && (
-                    <FormErrorMessage>
-                      {formReport.formState.errors.motif.message}
-                    </FormErrorMessage>
-                  )}
+                  <FormControl isRequired>
+                    <FormLabel mb={4}>
+                      Pour quel motif êtes vous amené à modifier les capacités
+                      de cette demande ?
+                    </FormLabel>
+                    <Select
+                      {...formReport.register("motif", {
+                        required: "Veuillez choisir un motif",
+                      })}
+                      mb={4}
+                    >
+                      {getMotifCorrectionLabel().map((motif) => (
+                        <option key={motif.value} value={motif.value}>
+                          {motif.label}
+                        </option>
+                      ))}
+                    </Select>
+                    {!!formReport.formState.errors.motif && (
+                      <FormErrorMessage>
+                        {formReport.formState.errors.motif.message}
+                      </FormErrorMessage>
+                    )}
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      Commentaires / Observations sur la correction
+                    </FormLabel>
+                    <Textarea
+                      variant="grey"
+                      height={150}
+                      {...formReport.register("commentaire")}
+                      placeholder="Merci de détailler les éléments de contexte de la correction"
+                    />
+                  </FormControl>
                   <Text mb={4} color={"info.text"}>
                     Après validation de ce formulaire, vous ne pourrez plus
                     apporter aucune modification
@@ -1004,24 +1021,37 @@ const CorrectionDemande = chakra(
                   <ArrowForwardIcon mr="2" verticalAlign={"middle"} />
                   Merci de préciser le motif
                 </ModalHeader>
-                <ModalBody>
-                  <Text mb={4}>
-                    Pour quel motif êtes vous amené à modifier les capacités de
-                    cette demande ?
-                  </Text>
-                  <Select
-                    {...formAnnulation.register("motif", {
-                      required: "Veuillez choisir un role",
-                    })}
-                    isRequired={true}
-                    mb={4}
-                  >
-                    {getMotifCorrectionLabel().map((motif) => (
-                      <option key={motif.value} value={motif.value}>
-                        {motif.label}
-                      </option>
-                    ))}
-                  </Select>
+                <ModalBody gap={6}>
+                  <FormControl isRequired>
+                    <FormLabel mb={4}>
+                      Pour quel motif êtes vous amené à modifier les capacités
+                      de cette demande ?
+                    </FormLabel>
+                    <Select
+                      {...formAnnulation.register("motif", {
+                        required: "Veuillez choisir un role",
+                      })}
+                      isRequired={true}
+                      mb={4}
+                    >
+                      {getMotifCorrectionLabel().map((motif) => (
+                        <option key={motif.value} value={motif.value}>
+                          {motif.label}
+                        </option>
+                      ))}
+                    </Select>
+                  </FormControl>
+                  <FormControl>
+                    <FormLabel>
+                      Commentaires / Observations sur la correction
+                    </FormLabel>
+                    <Textarea
+                      variant="grey"
+                      height={150}
+                      {...formAnnulation.register("commentaire")}
+                      placeholder="Merci de détailler les éléments de contexte de la correction"
+                    />
+                  </FormControl>
                   <Text mb={4} color={"info.text"}>
                     Après validation de ce formulaire, vous ne pourrez plus
                     apporter aucune modification
