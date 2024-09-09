@@ -11,6 +11,9 @@ export const isRestitutionIntentionVisible =
   (eb: ExpressionBuilder<DB, "demande">) => {
     const filter = getRestitutionIntentionsVisiblesFilters(user);
     return eb.and([
+      filter.role === "invite"
+        ? eb("demande.statut", "=", DemandeStatutEnum["demande validée"])
+        : sql<boolean>`true`,
       filter.codeRegion
         ? eb("demande.codeRegion", "=", filter.codeRegion)
         : sql<boolean>`true`,
@@ -51,6 +54,7 @@ const getRestitutionIntentionsVisiblesFilters = (user?: RequestUser) => {
     region: { codeRegion: user.codeRegion },
     user: {},
     uai: { uais: user.uais },
+    role: { codeRegion: user.codeRegion, role: user.role },
   }[scope?.default];
 
   return filter;
