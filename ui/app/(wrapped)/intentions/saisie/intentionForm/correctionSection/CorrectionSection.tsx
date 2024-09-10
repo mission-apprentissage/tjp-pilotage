@@ -25,7 +25,10 @@ import {
   useState,
 } from "react";
 import { FormProvider, useForm } from "react-hook-form";
-import { RaisonCorrectionEnum } from "shared/enum/raisonCorrectionEnum";
+import {
+  RaisonCorrectionEnum,
+  RaisonCorrectionType,
+} from "shared/enum/raisonCorrectionEnum";
 
 import { client } from "@/api.client";
 import { SCROLL_OFFSET } from "@/app/(wrapped)/intentions/saisie/SCROLL_OFFSETS";
@@ -103,16 +106,27 @@ export const CorrectionSection = ({
   const isCorrectionDisabled =
     isSuccess || isSubmitting || !!demande.correction;
 
-  const [isModificationCapacite, setIsModificationCapacite] =
-    useState<boolean>(true);
+  const [raison, setRaison] = useState<RaisonCorrectionType>(
+    RaisonCorrectionEnum["modification_capacite"]
+  );
+
+  const isRaisonModificationCapacite = () => {
+    return raison === RaisonCorrectionEnum["modification_capacite"];
+  };
+
+  const isRaisonAnnulation = () => {
+    return raison === RaisonCorrectionEnum["annulation"];
+  };
+
+  const isRaisonReport = () => {
+    return raison === RaisonCorrectionEnum["report"];
+  };
 
   useEffect(
     () =>
       watch((values, { name }) => {
         if (name === "raison") {
-          setIsModificationCapacite(
-            values.raison === RaisonCorrectionEnum["modification_capacite"]
-          );
+          setRaison(values.raison as RaisonCorrectionType);
         }
       }).unsubscribe
   );
@@ -144,23 +158,30 @@ export const CorrectionSection = ({
             <CapaciteConstanteSection demande={demande} />
             <RaisonField campagne={campagne} disabled={isCorrectionDisabled} />
             <Flex direction={"column"}>
-              {isModificationCapacite ? (
+              {isRaisonModificationCapacite() ? (
                 <Text color="info.text">
                   Vous vous apprêtez à enregistrer de nouvelles capacités sur
                   cette demande.
                 </Text>
-              ) : (
+              ) : isRaisonAnnulation() ? (
                 <Text color="info.text">
-                  Si vous annulez ou reportez la demande, les capacités de la
-                  formation seront remises au niveau antérieur à la validation
-                  de votre demande.
+                  Annuler la demande indique que le projet ne sera pas mis en
+                  oeuvre. Pour rappel : ces modifications ne seront pas prises
+                  en compte dans le taux de transformation affiché dans la page
+                  de pilotage.
                 </Text>
-              )}
+              ) : isRaisonReport() ? (
+                <Text color="info.text">
+                  Reporter la demande indique que le projet sera mis en oeuvre
+                  ultérieurement. Une nouvelle saisie ou une duplication devront
+                  avoir lieu lors d’une prochaine campagne.
+                </Text>
+              ) : null}
               <Text fontSize={14} color={"info.text"} mb={4}>
                 Pour rappel : ces modifications ne seront pas prises en compte
                 dans le taux de transformation affiché dans la page de pilotage.
               </Text>
-              <Collapse in={isModificationCapacite} unmountOnExit>
+              <Collapse in={isRaisonModificationCapacite()} unmountOnExit>
                 <CapaciteSection
                   demande={demande}
                   disabled={isCorrectionDisabled}
@@ -183,7 +204,7 @@ export const CorrectionSection = ({
                     variant="secondary"
                     color="bluefrance.113"
                     onClick={handleSubmit((correction) => {
-                      if (isModificationCapacite) {
+                      if (isRaisonModificationCapacite()) {
                         return submitCorrection({
                           body: {
                             correction: {
