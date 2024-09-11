@@ -16,8 +16,27 @@ export const getDemandesBaseQuery = ({ ...filters }: Filters) => {
     )
     .innerJoin("nsf", "dataFormation.codeNsf", "nsf.codeNsf")
     .innerJoin("region", "dataEtablissement.codeRegion", "region.codeRegion")
+    .innerJoin("positionFormationRegionaleQuadrant", (join) =>
+      join
+        .onRef(
+          "positionFormationRegionaleQuadrant.codeRegion",
+          "=",
+          "dataEtablissement.codeRegion"
+        )
+        .onRef(
+          "positionFormationRegionaleQuadrant.cfd",
+          "=",
+          "dataFormation.cfd"
+        )
+        .onRef(
+          "positionFormationRegionaleQuadrant.codeNiveauDiplome",
+          "=",
+          "dataFormation.codeNiveauDiplome"
+        )
+    )
     .innerJoin("campagne", "demande.campagneId", "campagne.id")
     .select((eb) => [
+      "positionFormationRegionaleQuadrant.positionQuadrant",
       "rentreeScolaire",
       "campagne.annee",
       "nsf.libelleNsf",

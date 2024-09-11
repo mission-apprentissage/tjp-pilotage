@@ -111,8 +111,6 @@ export const CartoSection = ({
     [handleFilters, filters, scopeCode]
   );
 
-  console.log(getGraphData());
-
   return (
     <Box
       flex={1}

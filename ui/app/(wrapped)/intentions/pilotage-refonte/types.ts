@@ -49,6 +49,7 @@ export type SelectedScope = {
   type: Scope;
   value?: string;
 };
+
 export type FormationsPilotageIntentionsQuery =
   (typeof client.inferArgs)["[GET]/pilotage-intentions/formations"]["query"];
 

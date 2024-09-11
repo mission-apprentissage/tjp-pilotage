@@ -1,6 +1,6 @@
 "use client";
 
-import { Container, useDisclosure, VStack } from "@chakra-ui/react";
+import { Box, Container, useDisclosure, VStack } from "@chakra-ui/react";
 import { useRouter, useSearchParams } from "next/navigation";
 import qs from "qs";
 import { ScopeEnum } from "shared";
@@ -103,7 +103,7 @@ export const PilotageNationalClient = () => {
   const { isOpen, onOpen, onClose } = useDisclosure();
 
   return (
-    <>
+    <Box bg="blueecume.950">
       <DefinitionTauxTransfoModal isOpen={isOpen} onClose={onClose} />
       <Container maxWidth={"container.xl"}>
         <VStack>
@@ -133,6 +133,6 @@ export const PilotageNationalClient = () => {
           />
         </VStack>
       </Container>
-    </>
+    </Box>
   );
 };
