@@ -1,5 +1,5 @@
 - name: "Clone du repository (branche : {{ git_revision }})"
-  become: yes
+  become: true
   git:
     repo: "https://github.com/mission-apprentissage/tjp-pilotage.git"
     version: "{{ git_revision }}"
@@ -8,7 +8,7 @@
     dest: /opt/pilotage/repository
 
 - name: Prune docker images
-  become: yes
+  become: true
   community.docker.docker_prune:
     timeout: 300
     images: true
@@ -16,7 +16,7 @@
       until: 12h
 
 - name: Create and start services
-  become: yes
+  become: true
   community.docker.docker_compose:
     project_src: /opt/pilotage/repository
     build: true

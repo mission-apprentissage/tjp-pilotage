@@ -12,17 +12,3 @@ services:
     volumes:
       - /opt/pilotage/data/nginx:/data
       - /opt/pilotage/data/ssl:/ssl:ro
-
-  metabase:
-    image: metabase/metabase:v0.49.11
-    container_name: pilotage_metabase
-    mem_limit: 2g
-    volumes:
-      - /opt/pilotage/data/metabase:/data/metabase
-      - /opt/pilotage/backups/metabase:/data/backups
-    environment:
-      MB_DB_FILE: /data/metabase/metabase.db
-      MB_SITE_LOCALE: fr
-    restart: always
-    networks:
-      - pilotage_network
