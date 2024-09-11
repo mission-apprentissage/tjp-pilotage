@@ -166,9 +166,7 @@ export const CorrectionSection = ({
               ) : isRaisonAnnulation() ? (
                 <Text color="info.text">
                   Annuler la demande indique que le projet ne sera pas mis en
-                  oeuvre. Pour rappel : ces modifications ne seront pas prises
-                  en compte dans le taux de transformation affiché dans la page
-                  de pilotage.
+                  oeuvre.
                 </Text>
               ) : isRaisonReport() ? (
                 <Text color="info.text">
