@@ -216,6 +216,7 @@ export interface Demande {
   campagneId: string | null;
   id: Generated<string>;
   numeroHistorique: string | null;
+  autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
   recrutementRH: boolean | null;
@@ -234,7 +235,6 @@ export interface Demande {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
@@ -394,8 +394,8 @@ export interface FormationEtablissement {
 }
 
 export interface FormationHistorique {
-  ancienCFD: string;
   cfd: string;
+  ancienCFD: string;
   voie: string;
 }
 
@@ -430,8 +430,8 @@ export interface IndicateurEntree {
   formationEtablissementId: string;
   rentreeScolaire: string;
   effectifs: Json | null;
-  anneeDebut: number | null;
   capacites: Json | null;
+  anneeDebut: number | null;
   premiersVoeux: Json | null;
 }
 
@@ -668,6 +668,7 @@ export interface LatestDemandeNonMaterializedView {
   campagneId: string | null;
   id: string | null;
   numeroHistorique: string | null;
+  autreBesoinRH: string | null;
   amiCmaValide: boolean | null;
   amiCmaValideAnnee: string | null;
   recrutementRH: boolean | null;
@@ -686,7 +687,6 @@ export interface LatestDemandeNonMaterializedView {
   nbFormationRH: number | null;
   discipline1FormationRH: string | null;
   discipline2FormationRH: string | null;
-  autreBesoinRH: string | null;
   amiCmaEnCoursValidation: boolean | null;
   updatedBy: string | null;
 }
@@ -798,7 +798,7 @@ export interface PositionFormationRegionaleQuadrant {
 export interface RawData {
   type: string;
   data: Json | null;
-  id: Generated<string | null>;
+  id: Generated<string>;
 }
 
 export interface Region {
